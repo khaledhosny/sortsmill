@@ -28,7 +28,7 @@
  */
 
 #include <atomic_ops.h>
-#include <sortsmillff/xgc.h>                // Includes gc.h and pthreads.h in the right order.
+#include <sortsmill/xgc.h>                // Includes gc.h and pthreads.h in the right order.
 
 #include <assert.h>
 #include <stdio.h>
@@ -36,8 +36,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <intl.h>
-#include <sortsmillff/xunistring.h>
-#include <sortsmillff/rexp.h>
+#include <sortsmill/xunistring.h>
+#include <sortsmill/rexp.h>
 
 static void
 finalize_rexp_t (void *obj, void *UNUSED (client_data))

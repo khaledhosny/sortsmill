@@ -31,8 +31,8 @@
 #include <Python.h>
 #endif
 
-#include <sortsmillff/fontforge_main.h>
-#include <sortsmillff/xdie_on_null.h>
+#include <sortsmill/fontforge_main.h>
+#include <sortsmill/xdie_on_null.h>
 #include "fontforgeui.h"
 #include "annotations.h"
 #include <xalloc.h>

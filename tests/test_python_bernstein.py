@@ -2,7 +2,7 @@
 #-*- coding:utf-8; python-indent: 2; -*-
 
 import array
-import sortsmillff.polyspline as spline
+import sortsmill.polyspline as spline
 import sys
 
 epsilon = sys.float_info.epsilon

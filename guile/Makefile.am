@@ -53,60 +53,60 @@ nobase_nodist_guilemodule_DATA = $(CONFIGURE_GENERATED_SCM_FILES)	\
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 
-DIST_SCM_FILES += sortsmillff/alloc.scm sortsmillff/gsl.scm	\
-	sortsmillff/iconv.scm sortsmillff/linalg.scm			\
-	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
-	sortsmillff/sfd-to-sxml.scm sortsmillff/views.scm		\
-	sortsmillff/api-syntax.scm sortsmillff/notices.scm		\
-	sortsmillff/strings.scm
-#sortsmillff/precompute.scm
-GO_FILES += sortsmillff/alloc.go sortsmillff/gsl.go		\
-	sortsmillff/iconv.go sortsmillff/linalg.go			\
-	sortsmillff/polyspline.go sortsmillff/brentroot.go	\
-	sortsmillff/sfd-to-sxml.go sortsmillff/views.go		\
-	sortsmillff/api-syntax.go sortsmillff/notices.go	\
-	sortsmillff/strings.go
+DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/gsl.scm	\
+	sortsmill/iconv.scm sortsmill/linalg.scm			\
+	sortsmill/polyspline.scm sortsmill/brentroot.scm	\
+	sortsmill/sfd-to-sxml.scm sortsmill/views.scm		\
+	sortsmill/api-syntax.scm sortsmill/notices.scm		\
+	sortsmill/strings.scm
+#sortsmill/precompute.scm
+GO_FILES += sortsmill/alloc.go sortsmill/gsl.go		\
+	sortsmill/iconv.go sortsmill/linalg.go			\
+	sortsmill/polyspline.go sortsmill/brentroot.go	\
+	sortsmill/sfd-to-sxml.go sortsmill/views.go		\
+	sortsmill/api-syntax.go sortsmill/notices.go	\
+	sortsmill/strings.go
 
-DIST_SCM_IN_FILES += sortsmillff/i18n.scm.in						\
-	sortsmillff/machine.scm.in sortsmillff/math-constants.scm.in	\
-	sortsmillff/pkg-info.scm.in sortsmillff/python.scm.in			\
-	sortsmillff/pure.scm.in
-CONFIGURE_GENERATED_SCM_FILES += sortsmillff/i18n.scm		\
-	sortsmillff/machine.scm sortsmillff/math-constants.scm	\
-	sortsmillff/pkg-info.scm sortsmillff/python.scm			\
-	sortsmillff/pure.scm
-GO_FILES += sortsmillff/i18n.go sortsmillff/machine.go		\
-	sortsmillff/math-constants.go sortsmillff/pkg-info.go	\
-	sortsmillff/python.go sortsmillff/pure.go
+DIST_SCM_IN_FILES += sortsmill/i18n.scm.in						\
+	sortsmill/machine.scm.in sortsmill/math-constants.scm.in	\
+	sortsmill/pkg-info.scm.in sortsmill/python.scm.in			\
+	sortsmill/pure.scm.in
+CONFIGURE_GENERATED_SCM_FILES += sortsmill/i18n.scm		\
+	sortsmill/machine.scm sortsmill/math-constants.scm	\
+	sortsmill/pkg-info.scm sortsmill/python.scm			\
+	sortsmill/pure.scm
+GO_FILES += sortsmill/i18n.go sortsmill/machine.go		\
+	sortsmill/math-constants.go sortsmill/pkg-info.go	\
+	sortsmill/python.go sortsmill/pure.go
 
-MAKEFILE_GENERATED_SCM_FILES += sortsmillff/fontforge-api.scm
-GO_FILES += sortsmillff/fontforge-api.go
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
+GO_FILES += sortsmill/fontforge-api.go
 
 if HAVE_GUI
 
-DIST_SCM_FILES += sortsmillff/usermenu.scm
-GO_FILES += sortsmillff/usermenu.go
+DIST_SCM_FILES += sortsmill/usermenu.scm
+GO_FILES += sortsmill/usermenu.go
 
-MAKEFILE_GENERATED_SCM_FILES += sortsmillff/gdraw-api.scm
-GO_FILES += sortsmillff/gdraw-api.go
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/gdraw-api.scm
+GO_FILES += sortsmill/gdraw-api.go
 
 endif HAVE_GUI
 
-sortsmillff/fontforge-api.scm:							\
+sortsmill/fontforge-api.scm:							\
 		$(top_builddir)/fontforge/fontforge.types.apii	\
 		$(srcdir)/generate-guile-api.scm				\
 		ff-internal/generate-types.scm
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
-			'(sortsmillff fontforge-api)' $(filter %.apii, $^) > $@-tmp
+			'(sortsmill fontforge-api)' $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-sortsmillff/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
+sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
 		$(srcdir)/generate-guile-api.scm							\
 		ff-internal/generate-types.scm
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
-			'(sortsmillff gdraw-api)' $< > $@-tmp
+			'(sortsmill gdraw-api)' $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
@@ -124,55 +124,55 @@ AM_LDFLAGS = -module -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)
 
 lib_LTLIBRARIES =
 
-lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
-libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
-libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
+lib_LTLIBRARIES += libguile-sortsmill_iconv.la
+libguile_sortsmill_iconv_la_SOURCES = guile_iconv.c
+libguile_sortsmill_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 if HAVE_PURE_API
-lib_LTLIBRARIES += libguile-sortsmillff_pure.la
-libguile_sortsmillff_pure_la_SOURCES = guile_pure.c
-libguile_sortsmillff_pure_la_CFLAGS = $(AM_CFLAGS) $(PURE_CFLAGS)
-libguile_sortsmillff_pure_la_LDFLAGS = -module -release $(VERSION)	\
+lib_LTLIBRARIES += libguile-sortsmill_pure.la
+libguile_sortsmill_pure_la_SOURCES = guile_pure.c
+libguile_sortsmill_pure_la_CFLAGS = $(AM_CFLAGS) $(PURE_CFLAGS)
+libguile_sortsmill_pure_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PURE_LIBS)
-libguile_sortsmillff_pure_la_LIBADD = $(top_builddir)/lib/libgnu.la
+libguile_sortsmill_pure_la_LIBADD = $(top_builddir)/lib/libgnu.la
 endif HAVE_PURE_API
 
 if HAVE_PYTHON_API
-lib_LTLIBRARIES += libguile-sortsmillff_python.la
-libguile_sortsmillff_python_la_SOURCES = guile_python.c
-libguile_sortsmillff_python_la_LDFLAGS = -module -release $(VERSION)	\
+lib_LTLIBRARIES += libguile-sortsmill_python.la
+libguile_sortsmill_python_la_SOURCES = guile_python.c
+libguile_sortsmill_python_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PYTHON_LIBS)
-libguile_sortsmillff_python_la_LIBADD =				\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+libguile_sortsmill_python_la_LIBADD =				\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 endif HAVE_PYTHON_API
 
-lib_LTLIBRARIES += libguile-sortsmillff_aux.la
-libguile_sortsmillff_aux_la_SOURCES = guile_polyspline.c	\
+lib_LTLIBRARIES += libguile-sortsmill_aux.la
+libguile_sortsmill_aux_la_SOURCES = guile_polyspline.c	\
 	guile_brentroot.c guile_gsl.c
-libguile_sortsmillff_aux_la_LIBADD =				\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+libguile_sortsmill_aux_la_LIBADD =				\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 
-lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
-libguile_sortsmillff_fontforge_la_SOURCES = guile_notices.c
-libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-libguile_sortsmillff_fontforge_la_LIBADD =					\
-	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
-	$(top_builddir)/gdraw/libsortsmillff_gdraw.la			\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la			\
+lib_LTLIBRARIES += libguile-sortsmill_fontforge.la
+libguile_sortsmill_fontforge_la_SOURCES = guile_notices.c
+libguile_sortsmill_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+libguile_sortsmill_fontforge_la_LIBADD =					\
+	$(top_builddir)/fontforge/libsortsmill_fontforge.la	\
+	$(top_builddir)/gdraw/libsortsmill_gdraw.la			\
+	$(top_builddir)/gutils/libsortsmill_gutils.la			\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
 	$(top_builddir)/lib/libgnu.la
 
 if HAVE_GUI
-lib_LTLIBRARIES += libguile-sortsmillff_fontforgeexe.la
-libguile_sortsmillff_fontforgeexe_la_SOURCES = guile_usermenu.c
-libguile_sortsmillff_fontforgeexe_la_LIBADD =					\
-	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
-	$(top_builddir)/fontforge/libsortsmillff_fontforge.la		\
-	$(top_builddir)/gdraw/libsortsmillff_gdraw.la				\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la				\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la				\
+lib_LTLIBRARIES += libguile-sortsmill_fontforgeexe.la
+libguile_sortsmill_fontforgeexe_la_SOURCES = guile_usermenu.c
+libguile_sortsmill_fontforgeexe_la_LIBADD =					\
+	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
+	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
+	$(top_builddir)/gdraw/libsortsmill_gdraw.la				\
+	$(top_builddir)/gutils/libsortsmill_gutils.la				\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la				\
 	$(top_builddir)/lib/libgnu.la
 endif HAVE_GUI
 

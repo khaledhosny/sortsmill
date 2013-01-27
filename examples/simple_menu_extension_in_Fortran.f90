@@ -1,5 +1,5 @@
-! This is a tiny example of how to write a FontForge menu extension
-! in Fortran
+! This is a tiny example of how to write a sortsmill-editor menu
+! extension in Fortran.
 !
 ! Copying and distribution of this file, with or without
 ! modification, are permitted in any medium without royalty. This
@@ -7,18 +7,17 @@
 !
 !-------------------------------------------------------------------------
 !
-! Install Sorts Mill FontForge. Then compile your extension into a
-! dynamically loadable library -- preferably using autoconf,
-! automake, and libtool, but on GNU/Linux it is likely you can do
-! this:
+! Install Sorts Mill Tools. Then compile your extension into a
+! dynamically loadable library -- preferably using autoconf, automake,
+! and libtool, but on GNU/Linux it is likely you can do this:
 !
 !    gfortran -fPIC -shared -I/usr/include \
 !          simple_menu_extension_in_Fortran.f90 \
 !          -o simple_menu_extension_in_Fortran.so \
-!          -lsortsmillff_fortran_api
+!          -lsortsmill_fortran_api
 !
 ! Add something like the following to
-! ${HOME}/.config/sortsmill-fontforge/user-init.scm:
+! ${HOME}/.config/sortsmill-tools/user-init.scm:
 !
 ! (let ((dll (dynamic-link
 !              "/full/path/to/simple_menu_extension_in_Fortran.so")))
@@ -45,13 +44,13 @@
 ! install the shared module somewhere that libltdl can find it. See
 ! http://www.gnu.org/software/libtool/manual/html_node/Using-libltdl.html
 !
-! Now run Sorts Mill FontForge from the command line; there should be
-! some new menu entries, and clicking on them should print some stuff
-! to your terminal emulator.
+! Now run sortsmill-editor from the command line; there should be some
+! new menu entries, and clicking on them should print some stuff to
+! your terminal emulator.
 
 module simple_menu_extension_in_Fortran
   use iso_c_binding
-  use sortsmillff_fontforge_api
+  use sortsmill_fontforge_api
   implicit none
 
   interface

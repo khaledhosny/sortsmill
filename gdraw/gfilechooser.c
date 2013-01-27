@@ -38,7 +38,7 @@
 
 #include <stdlib.h>
 #include <xgetcwd.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include <xunistring.h>
 
 /* This isn't really a gadget, it's just a collection of gadgets with some glue*/

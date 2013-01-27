@@ -46,7 +46,7 @@ AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_BDF_GLYPH_RANGES],
          bdf/pcf) fonts which gave a quick view about what glyphs were
          in a bdf font. From what I gather this property has been
          dropped because it was redundant.  If you would like
-         FontForge to generate it, set this to 1.])
+         Sorts Mill Tools to generate it, set this to 1.])
 
 test x"${FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION}" = x && FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION=0
 AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION],

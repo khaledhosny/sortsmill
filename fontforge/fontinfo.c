@@ -38,7 +38,7 @@
 #include <null_passthru.h>
 #include <xunistring.h>
 #include <invoke_funcs.h>
-#include <sortsmillff/ps_number.h>
+#include <sortsmill/ps_number.h>
 
 extern int _GScrollBar_Width;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)

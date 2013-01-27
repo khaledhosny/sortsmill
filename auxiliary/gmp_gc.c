@@ -17,8 +17,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <sortsmillff/gmp_gc.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/gmp_gc.h>
+#include <sortsmill/xgc.h>
 #include <stddef.h>
 #include <stdarg.h>
 

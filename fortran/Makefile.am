@@ -28,12 +28,12 @@ include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/fortran.mk
 include $(top_srcdir)/mk/guile.mk
 
-lib_LTLIBRARIES = libsortsmillff_fortran_api.la
+lib_LTLIBRARIES = libsortsmill_fortran_api.la
 
-libsortsmillff_fortran_api_la_SOURCES =
-nodist_libsortsmillff_fortran_api_la_SOURCES = fontforge_api.f90
+libsortsmill_fortran_api_la_SOURCES =
+nodist_libsortsmill_fortran_api_la_SOURCES = fontforge_api.f90
 
-FORTRAN_MODULES = sortsmillff_fontforge_api
+FORTRAN_MODULES = sortsmill_fontforge_api
 
 fontforge_api.f90: $(top_builddir)/fontforge/fontforge.types.apii	\
 		$(srcdir)/generate-fortran-api.scm							\

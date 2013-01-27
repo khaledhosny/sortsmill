@@ -33,7 +33,7 @@
 #include <string.h>
 #include <c-ctype.h>
 #include <xstrndup.h>
-#include <sortsmillff/ps_number.h>
+#include <sortsmill/ps_number.h>
 
 static const char digits[] = "0123456789";
 static const char letters[] = "abcdefghijklmnopqrstuvwxyz";

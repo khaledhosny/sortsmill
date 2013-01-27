@@ -52,7 +52,7 @@ AC_ARG_ENABLE([python-compatibility],
         [AS_HELP_STRING([--disable-python-compatibility],
                         [do not install the Python modules `fontforge' and `psMat'
                          that are for compatibility with traditional FontForge;
-                         you can still use `sortsmillff.ffcompat' and `sortsmillff.psMat'
+                         you can still use `sortsmill.ffcompat' and `sortsmill.psMat'
                          for the same functionality])],
         [i_do_have_python_compatibility="${enableval}"],
         [i_do_have_python_compatibility=yes])

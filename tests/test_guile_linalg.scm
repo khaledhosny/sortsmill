@@ -18,7 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmillff linalg))
+ (sortsmill linalg))
 
 (define expression
   (call-with-input-string (cadr (command-line)) read))

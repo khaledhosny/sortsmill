@@ -49,7 +49,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <libguile.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 
 #if PY_MAJOR_VERSION >= 3
 #include <wchar.h>

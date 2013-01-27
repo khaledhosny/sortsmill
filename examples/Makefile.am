@@ -29,7 +29,7 @@ lib_LTLIBRARIES =
 # To try 'simple_menu_extension_in_C' without installing it,
 # use the full path to
 # $(build_dir)/simple_menu_extension_in_C.la in your
-# ${HOME}/.config/sortsmill-fontforge/user-init.scm file:
+# ${HOME}/.config/sortsmill-tools/user-init.scm file:
 #
 # (let ((dll (dynamic-link
 #              "/full/path/to/simple_menu_extension_in_C.la")))
@@ -65,7 +65,7 @@ if HAVE_FORTRAN_API
 # To try 'simple_menu_extension_in_Fortran' without installing it,
 # use the full path to
 # $(build_dir)/simple_menu_extension_in_Fortran.la in your
-# ${HOME}/.config/sortsmill-fontforge/user-init.scm file:
+# ${HOME}/.config/sortsmill-tools/user-init.scm file:
 #
 # (let ((dll (dynamic-link
 #              "/full/path/to/simple_menu_extension_in_Fortran.la")))
@@ -95,7 +95,7 @@ simple_menu_extension_in_Fortran_la_FCFLAGS = $(AM_FCFLAGS)	\
 	$(FC_MODINC)$(top_builddir)/fortran						\
 	$(FC_MODINC)$(top_srcdir)/fortran
 simple_menu_extension_in_Fortran_la_LDFLAGS = -prefer-pic -module	\
-	''-shared -avoid-version -lsortsmillff_fortran_api
+	''-shared -avoid-version -lsortsmill_fortran_api
 
 mostlyclean-modules:
 	-test -z "$(FC_MODEXT)" || rm -f *.$(FC_MODEXT)

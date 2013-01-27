@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/guile/notices.h>
+#include <sortsmill/guile/notices.h>
 #include <uiinterface.h>
 #include <stdlib.h>
 
-void init_guile_sortsmillff_notices (void);
+void init_guile_sortsmill_notices (void);
 
 //-------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ scm_post_fontforge_error (SCM title, SCM message)
 //-------------------------------------------------------------------------
 
 VISIBLE void
-init_guile_sortsmillff_notices (void)
+init_guile_sortsmill_notices (void)
 {
   scm_c_define_gsubr ("log-fontforge-warning", 1, 0, 0,
                       scm_log_fontforge_warning);

@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sortsmillff/guile/views.h>
+#include <sortsmill/guile/views.h>
 #include <fontforgeui.h>
 #include <usermenu.h>
 #include <stdio.h>
@@ -39,14 +39,14 @@ static gmenuitem_moveto_t
 moveto_func (void)
 {
   return (gmenuitem_moveto_t)
-    scm_to_pointer (scm_c_private_ref ("sortsmillff usermenu", "moveto-proc-ptr"));
+    scm_to_pointer (scm_c_private_ref ("sortsmill usermenu", "moveto-proc-ptr"));
 }
 
 static gmenuitem_invoke_t
 invoke_func (void)
 {
   return (gmenuitem_moveto_t)
-    scm_to_pointer (scm_c_private_ref ("sortsmillff usermenu", "invoke-proc-ptr"));
+    scm_to_pointer (scm_c_private_ref ("sortsmill usermenu", "invoke-proc-ptr"));
 }
 
 // FIXME: Get rid of this. It is needed now only because the menus are
@@ -107,7 +107,7 @@ register_fontforge_menu_entry (int window, const char **menu_path, SCM action,
 
   SCM shortcut_object = (shortcut != NULL) ? scm_from_utf8_string (shortcut) : SCM_BOOL_F;
 
-  scm_call_5 (scm_c_private_ref ("sortsmillff usermenu",
+  scm_call_5 (scm_c_private_ref ("sortsmill usermenu",
                                  "register-fontforge-menu-entry-from-c-code"),
               window_symbol, make_string_list (menu_path), action, enabled, shortcut_object);
 }

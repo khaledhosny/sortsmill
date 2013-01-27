@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Copyright (C) 2000-2012 by George Williams
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -29,10 +29,10 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_PREREQ([2.69])
-AC_INIT([Sorts Mill FontForge],
+AC_INIT([Sorts Mill Tools],
         [2.0.0_alpha1],
         [http://bitbucket.org/sortsmill/sortsmill-fontforge/issues],
-        [sortsmill-fontforge],
+        [sortsmill-tools],
         [http://bitbucket.org/sortsmill/sortsmill-fontforge])
 
 AC_CONFIG_SRCDIR([fontforge/splinerefigure.c])
@@ -159,7 +159,7 @@ fi
 FONTFORGE_ARG_ENABLE_REAL
 
 AC_ARG_ENABLE([programs],
-        [AS_HELP_STRING([--disable-programs],[do not build `fontforge' and related programs
+        [AS_HELP_STRING([--disable-programs],[do not build `sortsmill-editor' and related programs
                                               (but do build libraries and possibly the Python extensions)])],
         [i_do_have_programs="${enableval}"],
         [i_do_have_programs=yes])
@@ -173,8 +173,8 @@ FONTFORGE_ARG_ENABLE_PURE_API
 
 AC_ARG_ENABLE([freetype-debugger],
         [AS_HELP_STRING([--enable-freetype-debugger[[=DIR]]],
-                [use internal freetype debugger within fontforge; requires source code of the
-                 freetype library with which fontforge will be linked.
+                [use internal freetype debugger within sortsmill-editor; requires source code of the
+                 freetype library with which sortsmill-editor will be linked.
                  You need to set DIR to the top directory of the freetype sources,
                  or alternatively set the environment variable FREETYPE_SOURCE (see below)])],
         [i_do_have_freetype_debugger="${enableval}"],
@@ -269,6 +269,35 @@ if test x"${i_do_have_python_scripting}" = xyes; then
 #   CFLAGS="${__cflags}"
 #   LIBS="${__libs}"
 fi
+
+__cflags="${CFLAGS}"
+__libs="${LIBS}"
+CFLAGS="${CFLAGS} ${GUILE_CFLAGS}"
+LIBS="${LIBS} ${GUILE_LIBS}"
+
+FONTFORGE_C_CONST([SCM_EOL],[fontforge_cv_c_const_SCM_EOL],["%p"],[#include <libguile.h>])
+AC_SUBST([SCM_EOL],["${fontforge_cv_c_const_SCM_EOL}"])
+
+FONTFORGE_C_CONST([SCM_EOF_VAL],[fontforge_cv_c_const_SCM_EOF_VAL],["%p"],[#include <libguile.h>])
+AC_SUBST([SCM_EOF_VAL],["${fontforge_cv_c_const_SCM_EOF_VAL}"])
+
+FONTFORGE_C_CONST([SCM_UNSPECIFIED],[fontforge_cv_c_const_SCM_UNSPECIFIED],["%p"],[#include <libguile.h>])
+AC_SUBST([SCM_UNSPECIFIED],["${fontforge_cv_c_const_SCM_UNSPECIFIED}"])
+
+FONTFORGE_C_CONST([SCM_UNDEFINED],[fontforge_cv_c_const_SCM_UNDEFINED],["%p"],[#include <libguile.h>])
+AC_SUBST([SCM_UNDEFINED],["${fontforge_cv_c_const_SCM_UNDEFINED}"])
+
+FONTFORGE_C_CONST([SCM_F_DYNWIND_REWINDABLE],
+                  [fontforge_cv_c_const_SCM_F_DYNWIND_REWINDABLE],["%d"],[#include <libguile.h>])
+AC_SUBST([SCM_F_DYNWIND_REWINDABLE],["${fontforge_cv_c_const_SCM_F_DYNWIND_REWINDABLE}"])
+
+FONTFORGE_C_CONST([SCM_F_WIND_EXPLICITLY],
+                  [fontforge_cv_c_const_SCM_F_WIND_EXPLICITLY],["%d"],[#include <libguile.h>])
+AC_SUBST([SCM_F_WIND_EXPLICITLY],["${fontforge_cv_c_const_SCM_F_WIND_EXPLICITLY}"])
+
+CFLAGS="${__cflags}"
+LIBS="${__libs}"
+
 
 #--------------------------------------------------------------------------
 #
@@ -475,20 +504,20 @@ AC_CONFIG_FILES([examples/Makefile])
 AC_CONFIG_FILES([mk/xgettext_search.mk])
 
 AC_CONFIG_FILES([inc/config-extra.h])
-AC_CONFIG_COMMANDS([fontforge/sortsmillff],[AS_MKDIR_P([fontforge/sortsmillff])])
-AC_CONFIG_FILES([inc/sortsmillff/cython/config.pxi])
+AC_CONFIG_COMMANDS([fontforge/sortsmill],[AS_MKDIR_P([fontforge/sortsmill])])
+AC_CONFIG_FILES([inc/sortsmill/cython/config.pxi])
 AC_CONFIG_FILES([python/fontforge.py])
 AC_CONFIG_FILES([python/psMat.py])
-AC_CONFIG_FILES([python/sortsmillff/__init__.py])
-AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
-AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
-AC_CONFIG_FILES([python/sortsmillff/internal/__init__.py])
-AC_CONFIG_FILES([guile/sortsmillff/i18n.scm])
-AC_CONFIG_FILES([guile/sortsmillff/machine.scm])
-AC_CONFIG_FILES([guile/sortsmillff/math-constants.scm])
-AC_CONFIG_FILES([guile/sortsmillff/pkg-info.scm])
-AC_CONFIG_FILES([guile/sortsmillff/pure.scm])
-AC_CONFIG_FILES([guile/sortsmillff/python.scm])
+AC_CONFIG_FILES([python/sortsmill/__init__.py])
+AC_CONFIG_FILES([python/sortsmill/fontforge_compat.py])
+AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
+AC_CONFIG_FILES([python/sortsmill/internal/__init__.py])
+AC_CONFIG_FILES([guile/sortsmill/i18n.scm])
+AC_CONFIG_FILES([guile/sortsmill/machine.scm])
+AC_CONFIG_FILES([guile/sortsmill/math-constants.scm])
+AC_CONFIG_FILES([guile/sortsmill/pkg-info.scm])
+AC_CONFIG_FILES([guile/sortsmill/pure.scm])
+AC_CONFIG_FILES([guile/sortsmill/python.scm])
 
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_INDENT_PRO        

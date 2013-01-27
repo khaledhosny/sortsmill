@@ -15,12 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/guile/iconv.h>
+#include <sortsmill/guile/iconv.h>
 #include <iconv.h>
 #include <stdlib.h>
 #include <string.h>
 
-void init_guile_sortsmillff_iconv (void);
+void init_guile_sortsmill_iconv (void);
 
 VISIBLE SCM
 scm_embedded_utf7_to_string (SCM str)
@@ -75,7 +75,7 @@ scm_embedded_utf7_to_string (SCM str)
 }
 
 VISIBLE void
-init_guile_sortsmillff_iconv (void)
+init_guile_sortsmill_iconv (void)
 {
   (void) scm_c_define_gsubr ("embedded-utf7->string", 1, 0, 0,
                              scm_embedded_utf7_to_string);

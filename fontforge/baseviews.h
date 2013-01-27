@@ -28,7 +28,7 @@
 #define _BASEVIEWS_H
 
 #include "splinefont.h"
-#include <sortsmillff/usermenu.h>
+#include <sortsmill/usermenu.h>
 
 enum widthtype
 {

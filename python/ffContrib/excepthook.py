@@ -6,19 +6,19 @@
 
 import sys
 import traceback
-import sortsmillff.notices
+import sortsmill.notices
 
 # FIXME: Eliminate this dependency.
-import sortsmillff.ffcompat
+import sortsmill.ffcompat
 
 def excepthook (*args):
     tb = ''.join (traceback.format_exception (*args))
     message = ''.join (traceback.format_exception_only (*args[:2])).strip ()
 
-    sortsmillff.notices.log_fontforge_warning (tb.replace ('%', '%%'))
-    sortsmillff.notices.post_fontforge_error ('Unhandled exception',
+    sortsmill.notices.log_fontforge_warning (tb.replace ('%', '%%'))
+    sortsmill.notices.post_fontforge_error ('Unhandled exception',
                                               message.replace ('%','%%'))
 
-if sortsmillff.ffcompat.hasUserInterface ():
+if sortsmill.ffcompat.hasUserInterface ():
     # only install the hook if this session has a UI.
     sys.excepthook = excepthook

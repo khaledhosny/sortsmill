@@ -18,7 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (ff-internal generate-types)
-        (sortsmillff machine)
+        (sortsmill machine)
         (rnrs)
         (ice-9 match)
         (ice-9 format))
@@ -229,7 +229,7 @@
 (format #t "from libc.stdint cimport int8_t, int16_t, int32_t, int64_t\n")
 (format #t "from libc.stdint cimport uint8_t, uint16_t, uint32_t, uint64_t\n")
 (format #t "\n")
-(format #t "cdef extern from 'sortsmillff/xgc.h':\n")
+(format #t "cdef extern from 'sortsmill/xgc.h':\n")
 (format #t "  void *x_gc_malloc (size_t sz)\n")
 (format #t "  void GC_free (void *)\n")
 (format #t "\n")

@@ -19,7 +19,7 @@
 #include <libguile.h>
 #include <stdio.h>
 
-void init_guile_sortsmillff_pure (void);
+void init_guile_sortsmill_pure (void);
 
 static SCM value_and_exception (pure_expr * value, pure_expr * exception);
 
@@ -41,7 +41,7 @@ scm_scm_pointer_to_pure_expr (SCM p)
   /* @var{pointer->pure-expr} sets up reference counting for the Pure
      garbage collector, then wraps the pointer as a @var{pure-expr}
      object. */
-  return scm_call_1 (scm_c_public_ref ("sortsmillff pure",
+  return scm_call_1 (scm_c_public_ref ("sortsmill pure",
                                        "pointer->pure-expr"), p);
 }
 
@@ -54,7 +54,7 @@ scm_pointer_to_pure_expr (void *p)
 static SCM
 scm_pure_expr_to_scm_pointer (SCM x)
 {
-  return scm_call_1 (scm_c_private_ref ("sortsmillff pure",
+  return scm_call_1 (scm_c_private_ref ("sortsmill pure",
                                         "procedure:pure-expr->pointer"), x);
 }
 
@@ -289,7 +289,7 @@ value_and_exception (pure_expr * value, pure_expr * exception)
 }
 
 VISIBLE void
-init_guile_sortsmillff_pure (void)
+init_guile_sortsmill_pure (void)
 {
   scm_c_define_gsubr ("scm-pure-new", 1, 0, 0, scm_pure_new);
   scm_c_define_gsubr ("big-integer->pure-expr", 1, 0, 0,

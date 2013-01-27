@@ -11,9 +11,9 @@ AC_DEFUN([FONTFORGE_CREATE_INDENT_PRO],
       if test "${ac_srcdir}" -ef "${ac_builddir}"; then
          :
       else
-         for dir in . inc inc/sortsmillff inc/sortsmillff/guile \
+         for dir in . inc inc/sortsmill inc/sortsmill/guile \
                  auxiliary gutils gdraw fontforge guile main    \
-                 python/sortsmillff fortran pure tests          \
+                 python/sortsmill fortran pure tests          \
                  fonttools
          do
              AS_MKDIR_P(["${ac_builddir}/${dir}"])

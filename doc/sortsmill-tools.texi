@@ -1,0 +1,73 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename sortsmill-tools.info
+@settitle Sorts Mill Tools
+@c @setchapternewpage off
+@c %**end of header
+
+@include version.texi
+
+@copying
+
+FIXME: Tools is not just a font editor.
+
+This manual is for Sorts Mill Tools, a font editor.
+
+Copyright @copyright{} 2012 Barry Schwartz
+
+@end copying
+
+@dircategory Development
+@direntry
+* Sorts Mill Tools: (sortsmill-tools).  A font editor.
+@end direntry
+
+@titlepage
+@title Sorts Mill Tools
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+
+@ifnottex
+@node Top
+@top Sorts Mill Tools
+
+@insertcopying
+
+@menu
+* Introduction::    What is Sorts Mill Tools?
+* Installing::      How to install Sorts Mill Tools.
+* psMat::           The psMat Python module.
+* Implementation::  The implementation of Sorts Mill Tools.
+@end menu
+
+@end ifnottex
+
+
+@node Introduction
+@chapter What is Sorts Mill Tools?
+
+Sorts Mill Tools is a font editor.
+
+@node Installing
+@chapter Installing Sorts Mill Tools
+
+For installation instructions, see the file @file{INSTALL} that
+accompanies the source code.
+
+@node psMat
+@chapter The psMat Python module
+
+@include psMat.interface.texi
+
+@node Implementation
+@chapter The implementation of Sorts Mill Tools
+
+@section @file{libsortsmill_aux.la} (subdirectory @file{auxiliary})
+
+@subsection Handling of PostScript numbers
+@include ps_number.visible.texi
+
+@bye

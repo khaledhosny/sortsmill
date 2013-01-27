@@ -77,9 +77,9 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
 	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
-	sortsmillff_linalg.at sortsmillff_precompute.at					\
+	sortsmill_linalg.at sortsmill_precompute.at					\
 	precomputed_data.at bernstein.at monomial.at gmp_constants.at	\
-	brentroot.at linalg.at sortsmillff_iconv.at psMat.at			\
+	brentroot.at linalg.at sortsmill_iconv.at psMat.at			\
 	old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
@@ -134,11 +134,11 @@ check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 $(check_PROGRAMS): main_with_guile.x
 
 AM_DEFAULT_SOURCE_EXT = .c
-LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
-	$(top_builddir)/gdraw/libsortsmillff_gdraw.la					\
-	$(top_builddir)/fontforge/libsortsmillff_fontforge.la			\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la					\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la					\
+LDADD = $(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
+	$(top_builddir)/gdraw/libsortsmill_gdraw.la					\
+	$(top_builddir)/fontforge/libsortsmill_fontforge.la			\
+	$(top_builddir)/gutils/libsortsmill_gutils.la					\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la					\
 	$(top_builddir)/lib/libgnu.la
 AM_LDFLAGS = -export-dynamic -avoid-version
 

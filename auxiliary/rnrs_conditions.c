@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/guile/rnrs_conditions.h>
+#include <sortsmill/guile/rnrs_conditions.h>
 #include <intl.h>
 
 VISIBLE SCM

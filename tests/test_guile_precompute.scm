@@ -18,8 +18,8 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmillff precompute)
- (sortsmillff linalg))
+ (sortsmill precompute)
+ (sortsmill linalg))
 
 (define expression
   (call-with-input-string (cadr (command-line)) read))

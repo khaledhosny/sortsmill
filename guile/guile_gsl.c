@@ -16,11 +16,11 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
-#include <sortsmillff/guile/gsl.h>
+#include <sortsmill/guile/gsl.h>
 #include <libguile.h>
 #include <gsl/gsl_blas.h>
 
-void init_guile_sortsmillff_gsl (void);
+void init_guile_sortsmill_gsl (void);
 
 /*
   int  gsl_blas_dgemm (CBLAS_TRANSPOSE_t TransA,
@@ -265,7 +265,7 @@ scm_array_f64_matrix_sub (SCM a, SCM b)
 }
 
 VISIBLE void
-init_guile_sortsmillff_gsl (void)
+init_guile_sortsmill_gsl (void)
 {
   scm_c_define_gsubr ("matrix-f64*", 2, 0, 0, scm_array_f64_matrix_mult);
   scm_c_define_gsubr ("matrix-f64+", 2, 0, 0, scm_array_f64_matrix_add);

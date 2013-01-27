@@ -88,7 +88,7 @@ distclean-local:
 	if test '$(top_srcdir)' -ef '$(top_builddir)'; then			\
 		:;														\
 	else														\
-		for dir in . inc inc/sortsmillff inc/sortsmillff/guile	\
+		for dir in . inc inc/sortsmill inc/sortsmill/guile		\
 				auxiliary gutils gdraw fontforge pyhook main	\
 				tests fonttools examples; do					\
              rm -f "$(top_builddir)/$${dir}/.indent.pro";		\
@@ -209,7 +209,7 @@ CYCLO_SOURCEFILES = $(top_srcdir)/inc/*.[ch]					\
 	$(top_srcdir)/auxiliary/*.[ch] $(top_srcdir)/gutils/*.[ch]	\
 	$(top_srcdir)/gdraw/*.[ch] $(top_srcdir)/fontforge/*.[ch]
 
-cyclo-fontforge.html: $(CYCLO_SOURCEFILES)
+cyclo-tools.html: $(CYCLO_SOURCEFILES)
 	$(PMCCABE) $(CYCLO_SOURCEFILES) \
 		| sort -n -r \
 		| $(AWK) -f $(top_srcdir)/config/pmccabe2html \

@@ -3,7 +3,7 @@
 
 import gmpy
 import sys
-import sortsmillff.linalg as lin
+import sortsmill.linalg as lin
 
 write = sys.stdout.write
 

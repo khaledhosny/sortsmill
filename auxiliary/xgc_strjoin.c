@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include <stdarg.h>
 #include <string.h>
 

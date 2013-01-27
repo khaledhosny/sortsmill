@@ -28,9 +28,9 @@
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/tig.mk
 
-lib_LTLIBRARIES = libsortsmillff_gdraw.la
+lib_LTLIBRARIES = libsortsmill_gdraw.la
 
-libsortsmillff_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c			\
+libsortsmill_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c			\
 	gaskdlg.c gbuttons.c gcolor.c gcontainer.c gdraw.c gdrawerror.c		\
 	gdrawtxt.c gfilechooser.c gfiledlg.c ggadgets.c ggroupbox.c			\
 	gimageclut.c gimagecvt.c gdrawgimage.c gkeysym.c glist.c gmenu.c	\
@@ -40,12 +40,12 @@ libsortsmillff_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c			\
 	gspacer.c xkeysyms_unicode.c colorP.h gdrawP.h gresourceP.h			\
 	gxcdrawP.h fontP.h ggadgetP.h gwidgetP.h gxdrawP.h
 
-libsortsmillff_gdraw_la_LIBADD =					\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la	\
+libsortsmill_gdraw_la_LIBADD =					\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
+	$(top_builddir)/gutils/libsortsmill_gutils.la	\
 	$(top_builddir)/lib/libgnu.la
-libsortsmillff_gdraw_la_LDFLAGS = $(call ldflags)
-libsortsmillff_gdraw_la_DEPENDENCIES = Makefile $(libsortsmillff_gdraw_la_LIBADD)
+libsortsmill_gdraw_la_LDFLAGS = $(call ldflags)
+libsortsmill_gdraw_la_DEPENDENCIES = Makefile $(libsortsmill_gdraw_la_LIBADD)
 
 #--------------------------------------------------------------------------
 #
