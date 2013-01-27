@@ -721,8 +721,6 @@ MMW_Close (MMW * mmw)
   for (i = 0; i < mmw->lcnt; ++i)
     MMDetachNew (mmw->loaded[i]);
   free (mmw->loaded);
-  for (i = 0; i < 4; ++i)
-    mmw->mm->axismaps[i].axisnames = NULL;
   MMSetFreeContents (mmw->mm);
   free (mmw->mm);
   mmw->done = true;
@@ -1650,7 +1648,6 @@ MMW_DoNext (MMW * mmw)
                              _("Please set the Axis Type field"));
               return;           /* Failure */
             }
-          mmw->mm->axismaps[i].axisnames = NULL;
           err = false;
           start = GetReal8 (mmw->subwins[mmw_axes], CID_AxisBegin + i * 100,
                             _("Begin:"), &err);

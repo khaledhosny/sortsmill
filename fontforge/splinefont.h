@@ -915,14 +915,6 @@ struct opentype_str
   int16_t bsln_off;
 };
 
-struct macname
-{
-  struct macname *next;
-  uint16_t enc;                 /* Platform specific encoding. 0=>mac roman, 1=>sjis, 7=>russian */
-  uint16_t lang;                /* Mac languages 0=>english, 1=>french, 2=>german */
-  char *name;                   /* Not a unicode string, uninterpreted mac encoded string */
-};
-
 /* Wow, the GPOS 'size' feature stores a string in the name table just as mac */
 /*  features do */
 /* And now (OTF 1.6) GSUB 'ss01'-'ss20' do too */
@@ -939,15 +931,6 @@ struct otffeatname
   struct otfname *names;
   struct otffeatname *next;
   uint16_t nid;                 /* temporary value */
-};
-
-struct macsetting
-{
-  struct macsetting *next;
-  uint16_t setting;
-  uint16_t strid;
-  struct macname *setname;
-  bool initially_enabled;
 };
 
 typedef struct refbdfc
@@ -2167,13 +2150,6 @@ struct axismap
   real *blends;                 /* between [0,1] ordered so that blend[0]<blend[1]<... */
   real *designs;                /* between the design ranges for this axis, typically [1,999] or [6,72] */
   real min, def, max;           /* For mac */
-  struct macname *axisnames;    /* For mac */
-};
-
-struct named_instance
-{                               /* For mac */
-  real *coords;                 /* array[axis], these are in user units */
-  struct macname *names;
 };
 
 /* I am going to simplify my life and not encourage intermediate designs */
@@ -2192,8 +2168,6 @@ typedef struct mmset
   real *defweights;             /* array[instance] saying how much of each instance makes the normal font */
   struct axismap *axismaps;     /* array[axis] */
   char *cdv, *ndv;              /* for adobe */
-  int named_instance_count;
-  struct named_instance *named_instances;
   bool changed;
 } MMSet;
 
@@ -2672,9 +2646,6 @@ VISIBLE extern void FPSTClassesFree (FPST *fpst);
 VISIBLE extern void FPSTRulesFree (struct fpst_rule *r,
                                    enum fpossub_format format, int rcnt);
 VISIBLE extern void FPSTFree (FPST *fpst);
-VISIBLE extern struct macname *MacNameCopy (struct macname *mn);
-VISIBLE extern void MacNameListFree (struct macname *mn);
-VISIBLE extern void MacSettingListFree (struct macsetting *ms);
 VISIBLE extern void GlyphVariantsFree (struct glyphvariants *gv);
 VISIBLE extern struct glyphvariants *GlyphVariantsCopy (struct glyphvariants
                                                         *gv);
@@ -3617,8 +3588,6 @@ extern int CanEncodingWinLangAsMac (int winlang);
 extern const int32_t *MacEncToUnicode (int script, int lang);
 extern int MacLangFromLocale (void);
 extern char *MacLanguageFromCode (int code);
-extern char *FindEnglishNameInMacName (struct macname *mn);
-VISIBLE extern char *PickNameFromMacName (struct macname *mn);
 
 VISIBLE extern int32_t UniFromEnc (int enc, Encoding *encname);
 VISIBLE extern int32_t EncFromUni (int32_t uni, Encoding *encname);

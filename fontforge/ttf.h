@@ -69,12 +69,6 @@ struct variations {
 
 enum gsub_inusetype { git_normal, git_justinuse, git_findnames };
 	
-struct macidname {
-    int id;
-    struct macname *head, *last;
-    struct macidname *next;
-};
-
 struct savetab {
     uint32_t tag;
     uint32_t offset;
@@ -253,7 +247,6 @@ struct ttfinfo {
     int lookup_cnt;		/* Max lookup in current GPOS/GSUB table */
     int feature_cnt;		/* Max feature in current GPOS/GSUB table */
     struct variations *variations;
-    struct macidname *macstrids;
     struct fontdict *fd;	/* For reading in Type42 fonts. Glyph names in postscript section must be associated with glyphs in TTF section */
     int savecnt;
     struct savetab *savetab;
@@ -569,11 +562,6 @@ struct vorg {
 #endif
 };
 
-struct feat_name {
-    int strid;
-    struct macname *mn, *smn;
-};
-
 struct alltabs {
     struct tabdir tabdir;
     struct head head;
@@ -672,9 +660,6 @@ struct alltabs {
     struct fd2data *fds;
     int next_strid;
 
-    struct feat_name *feat_name;
-    struct macname2 *ordered_feat;
-
     int next_lookup;	/* for doing nested lookups in contextual features */
     short *gn_sid;
     enum fontformat format;
@@ -749,12 +734,6 @@ extern void otf_dump_dummydsig(struct alltabs *at, SplineFont *sf);
 VISIBLE extern int gdefclass(SplineChar *sc);
 
 extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
-
-struct macsettingname {
-    int mac_feature_type;
-    int mac_feature_setting;
-    uint32_t otf_tag;
-};
 
     /* TrueType instructions */
 VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);

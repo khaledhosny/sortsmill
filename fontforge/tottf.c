@@ -4029,29 +4029,6 @@ return;		/* Should not happen, but it did */
     nt->cur = ne - nt->entries;
 }
 
-static void AddMacName(NamTab *nt,struct macname *mn, int strid) {
-    NameEntry *ne;
-
-    if ( nt->cur+1>=nt->max ) {
-	if ( nt->cur==0 )
-	    nt->entries = xmalloc((nt->max=100)*sizeof(NameEntry));
-	else
-	    nt->entries = xrealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
-    }
-
-    ne = nt->entries + nt->cur;
-
-    ne->platform = 1;		/* apple non-unicode encoding */
-    ne->specific = mn->enc;	/* whatever */
-    ne->lang     = mn->lang;
-    ne->strid    = strid;
-    ne->offset   = ftell(nt->strings);
-    ne->len      = strlen(mn->name);
-    dumpstr(nt->strings,mn->name);
-
-    ++nt->cur;
-}
-
 /* There's an inconsistancy here. Apple's docs say there most be only one */
 /*  nameid==6 and that name must be ascii (presumably plat=1, spec=0, lang=0) */
 /* The opentype docs say there must be two (psl=1,0,0 & psl=3,1,0x409) any */
@@ -4063,7 +4040,6 @@ static void AddMacName(NamTab *nt,struct macname *mn, int strid) {
 static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format) {
     int i,j;
     struct ttflangname dummy, *cur, *useng = NULL;
-    struct macname *mn;
     NamTab nt;
     struct otfname *otfn;
     struct otffeatname *fn;
@@ -4095,22 +4071,6 @@ static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format)
 		    AddEncodedName(&nt,cur->names[i],cur->lang,i);
     }
 
-    /* The examples I've seen of the feature table only contain platform==mac */
-    /*  so I'm not including apple unicode */
-    if ( at->feat_name!=NULL ) {
-	for ( i=0; at->feat_name[i].strid!=0; ++i ) {
-	    for ( mn=at->feat_name[i].mn; mn!=NULL; mn=mn->next )
-		AddMacName(&nt,mn,at->feat_name[i].strid);
-#if 0	/* I'm not sure why I keep track of these alternates */
-	/*  Dumping them out like this is a bad idea. It might be worth */
-	/*  something if we searched through the alternate sets for languages */
-	/*  not found in the main set, but at the moment I don't think so */
-	/*  What happens now is that I get duplicate names output */
-	    for ( mn=at->feat_name[i].smn; mn!=NULL; mn=mn->next )
-		AddMacName(&nt,mn,at->feat_name[i].strid);
-#endif
-	}
-    }
     /* Wow, the GPOS 'size' feature uses the name table in a very mac-like way*/
     if ( at->fontstyle_name_strid!=0 && sf->fontstyle_name!=NULL ) {
 	for ( otfn = sf->fontstyle_name; otfn!=NULL; otfn = otfn->next )
@@ -4149,7 +4109,6 @@ static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format)
 	if ( useng==NULL || dummy.names[i]!=useng->names[i] )
 	    free( dummy.names[i]);
     free( nt.entries );
-    free( at->feat_name );
 
 #if 0
     /* Windows changed it's mind. This is ok again */

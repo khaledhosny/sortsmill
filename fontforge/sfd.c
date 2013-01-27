@@ -2100,27 +2100,6 @@ SFDDumpEncoding (FILE *sfd, Encoding * encname, char *keyword)
 }
 
 static void
-SFDDumpMacName (FILE *sfd, struct macname *mn)
-{
-  char *pt;
-
-  while (mn != NULL)
-    {
-      fprintf (sfd, "MacName: %d %d %d \"", mn->enc, mn->lang,
-               (int) strlen (mn->name));
-      for (pt = mn->name; *pt; ++pt)
-        {
-          if (*pt < ' ' || *pt >= 0x7f || *pt == '\\' || *pt == '"')
-            fprintf (sfd, "\\%03o", *(uint8_t *) pt);
-          else
-            putc (*pt, sfd);
-        }
-      fprintf (sfd, "\"\n");
-      mn = mn->next;
-    }
-}
-
-static void
 SFDDumpBaseLang (FILE *sfd, struct baselangextent *bl)
 {
 
@@ -2959,7 +2938,7 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
   int err = false;
 
   fprintf (sfd, "MMCounts: %d %d %d %d\n", mm->instance_count, mm->axis_count,
-           false /*mm->apple*/, mm->named_instance_count);
+           false /*mm->apple*/, 0 /*mm->named_instance_count*/);
   fprintf (sfd, "MMAxis:");
   for (i = 0; i < mm->axis_count; ++i)
     fprintf (sfd, " %s", mm->axes[i]);
@@ -2979,7 +2958,6 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
         fprintf (sfd, " %g=>%g", (double) mm->axismaps[i].blends[j],
                  (double) mm->axismaps[i].designs[j]);
       fputc ('\n', sfd);
-      SFDDumpMacName (sfd, mm->axismaps[i].axisnames);
     }
   if (mm->cdv != NULL)
     {
@@ -2992,14 +2970,6 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
       fprintf (sfd, "MMNDV:\n");
       fputs (mm->ndv, sfd);
       fprintf (sfd, "\nEndMMSubroutine\n");
-    }
-  for (i = 0; i < mm->named_instance_count; ++i)
-    {
-      fprintf (sfd, "MMNamedInstance: %d ", i);
-      for (j = 0; j < mm->axis_count; ++j)
-        fprintf (sfd, " %g", (double) mm->named_instances[i].coords[j]);
-      fputc ('\n', sfd);
-      SFDDumpMacName (sfd, mm->named_instances[i].names);
     }
 
   if (todir)
@@ -6893,51 +6863,6 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok,
 
 }
 
-static struct macname *
-SFDParseMacNames (FILE *sfd, char *tok)
-{
-  struct macname *head = NULL, *last = NULL, *cur;
-  int enc, lang, len;
-  char *pt;
-  int ch;
-
-  while (strcmp (tok, "MacName:") == 0)
-    {
-      cur = (struct macname *) xzalloc (sizeof (struct macname));
-      if (last == NULL)
-        head = cur;
-      else
-        last->next = cur;
-      last = cur;
-
-      getint (sfd, &enc);
-      getint (sfd, &lang);
-      getint (sfd, &len);
-      cur->enc = enc;
-      cur->lang = lang;
-      cur->name = pt = xmalloc (len + 1);
-
-      while ((ch = nlgetc (sfd)) == ' ');
-      if (ch == '"')
-        ch = nlgetc (sfd);
-      while (ch != '"' && ch != EOF && pt < cur->name + len)
-        {
-          if (ch == '\\')
-            {
-              *pt = (nlgetc (sfd) - '0') << 6;
-              *pt |= (nlgetc (sfd) - '0') << 3;
-              *pt |= (nlgetc (sfd) - '0');
-            }
-          else
-            *pt++ = ch;
-          ch = nlgetc (sfd);
-        }
-      *pt = '\0';
-      copy_to_tok (tok, getname (sfd));
-    }
-  return (head);
-}
-
 static char *
 SFDParseMMSubroutine (FILE *sfd)
 {
@@ -7662,7 +7587,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
   FPST *lastfp = NULL;
   OTLookup *lastpotl = NULL, *lastsotl = NULL;
   struct axismap *lastaxismap = NULL;
-  struct named_instance *lastnamedinstance = NULL;
   int pushedbacktok = false;
   Encoding *enc = &custom;
   struct remap *remap = NULL;
@@ -8563,7 +8487,9 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                || strcasecmp (tok, "MacSimple:") == 0
                || strcasecmp (tok, "MacKern:") == 0
                || strcasecmp (tok, "MacInsert:") == 0
-               || strcasecmp (tok, "MacFeat:") == 0)
+               || strcasecmp (tok, "MacFeat:") == 0
+               || strcasecmp (tok, "MacName:") == 0
+               || strcasecmp (tok, "MMNamedInstance:") == 0)
         {
           LogError (_("AAT features are no longer supported: \"%s\" ignored"), tok);
         }
@@ -8777,19 +8703,14 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           else
             {
               int temp;
-              getint (sfd, &temp);
-              /* ignore; mm->apple = temp; */
-              getint (sfd, &mm->named_instance_count);
+              getint (sfd, &temp /*&mm->apple*/);
+              getint (sfd, &temp /*&mm->named_instance_count*/);
             }
           mm->instances = xcalloc (mm->instance_count, sizeof (SplineFont *));
           mm->positions =
             xmalloc (mm->instance_count * mm->axis_count * sizeof (real));
           mm->defweights = xmalloc (mm->instance_count * sizeof (real));
           mm->axismaps = xcalloc (mm->axis_count, sizeof (struct axismap));
-          if (mm->named_instance_count != 0)
-            mm->named_instances =
-              xcalloc (mm->named_instance_count,
-                       sizeof (struct named_instance));
         }
       else if (strcasecmp (tok, "MMAxis:") == 0)
         {
@@ -8844,32 +8765,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                   getreal (sfd, &mm->axismaps[index].designs[i]);
                 }
               lastaxismap = &mm->axismaps[index];
-              lastnamedinstance = NULL;
             }
-        }
-      else if (strcasecmp (tok, "MMNamedInstance:") == 0)
-        {
-          MMSet *mm = sf->mm;
-          if (mm != NULL)
-            {
-              int index;
-              getint (sfd, &index);
-              mm->named_instances[index].coords =
-                xmalloc (mm->axis_count * sizeof (real));
-              for (i = 0; i < mm->axis_count; ++i)
-                getreal (sfd, &mm->named_instances[index].coords[i]);
-              lastnamedinstance = &mm->named_instances[index];
-              lastaxismap = NULL;
-            }
-        }
-      else if (strcasecmp (tok, "MacName:") == 0)
-        {
-          struct macname *names = SFDParseMacNames (sfd, tok);
-          if (lastaxismap != NULL)
-            lastaxismap->axisnames = names;
-          else if (lastnamedinstance != NULL)
-            lastnamedinstance->names = names;
-          pushedbacktok = true;
         }
       else if (strcasecmp (tok, "MMCDV:") == 0)
         {

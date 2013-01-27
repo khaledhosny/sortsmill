@@ -1321,58 +1321,6 @@ return( found );
 return( found );
 }
 
-char *PickNameFromMacName(struct macname *mn) {
-    int lang = MacLangFromLocale();
-    struct macname *first=mn, *english=NULL;
-
-    while ( mn!=NULL ) {
-	if ( mn->lang==lang )
-    break;
-	else if ( mn->lang==0 )
-	    english = mn;
-	mn = mn->next;
-    }
-    if ( mn==NULL )
-	mn = english;
-    if ( mn==NULL )
-	mn = first;
-    if ( mn==NULL )
-return( NULL );
-
-return( MacStrToUtf8(mn->name,mn->enc,mn->lang));
-}
-
-char *FindEnglishNameInMacName(struct macname *mn) {
-
-    while ( mn!=NULL ) {
-	if ( mn->lang==0 )
-    break;
-	mn = mn->next;
-    }
-    if ( mn==NULL )
-return( NULL );
-
-return( MacStrToUtf8(mn->name,mn->enc,mn->lang));
-}
-
-struct macname *MacNameCopy(struct macname *mn) {
-    struct macname *head=NULL, *last, *cur;
-
-    while ( mn!=NULL ) {
-	cur = (struct macname *) xzalloc(sizeof (struct macname));
-	cur->enc = mn->enc;
-	cur->lang = mn->lang;
-	cur->name = xstrdup_or_null(mn->name);
-	if ( head==NULL )
-	    head = cur;
-	else
-	    last->next = cur;
-	last = cur;
-	mn = mn->next;
-    }
-return( head );
-}
-
 /* Sigh. This list is duplicated in macencui.c */
 static struct { char *name; int code; } localmaclang[] = {
     {NC_("Language", "English"), 0},

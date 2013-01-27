@@ -7700,34 +7700,6 @@ KernClassListFree (KernClass * kc)
 }
 
 void
-MacNameListFree (struct macname *mn)
-{
-  struct macname *next;
-
-  while (mn != NULL)
-    {
-      next = mn->next;
-      free (mn->name);
-      free (mn);
-      mn = next;
-    }
-}
-
-void
-MacSettingListFree (struct macsetting *ms)
-{
-  struct macsetting *next;
-
-  while (ms != NULL)
-    {
-      next = ms->next;
-      MacNameListFree (ms->setname);
-      free (ms);
-      ms = next;
-    }
-}
-
-void
 OtfNameListFree (struct otfname *on)
 {
   struct otfname *on_next;
@@ -8104,17 +8076,10 @@ MMSetFreeContents (MMSet *mm)
       free (mm->axes[i]);
       free (mm->axismaps[i].blends);
       free (mm->axismaps[i].designs);
-      MacNameListFree (mm->axismaps[i].axisnames);
     }
   free (mm->axismaps);
   free (mm->cdv);
   free (mm->ndv);
-  for (i = 0; i < mm->named_instance_count; ++i)
-    {
-      free (mm->named_instances[i].coords);
-      MacNameListFree (mm->named_instances[i].names);
-    }
-  free (mm->named_instances);
 }
 
 void
