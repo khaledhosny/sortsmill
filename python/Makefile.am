@@ -134,17 +134,17 @@ sortsmill_internal___exec_la_SOURCES = sortsmill/internal/__exec.c
 sortsmill_internal___exec_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
 sortsmill_internal___exec_la_LIBADD = $(BASELIBADD)
 
-nobase_pyexec_LTLIBRARIES += sortsmill/internal/guile_python_pyx.la
-sortsmill_internal_guile_python_pyx_la_SOURCES =	\
-	sortsmill/internal/guile_python_pyx.c
-sortsmill_internal_guile_python_pyx_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
-sortsmill_internal_guile_python_pyx_la_LIBADD = $(BASELIBADD)
+nobase_pyexec_LTLIBRARIES += sortsmill/internal/__guile_support.la
+sortsmill_internal___guile_support_la_SOURCES =	\
+	sortsmill/internal/__guile_support.c
+sortsmill_internal___guile_support_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
+sortsmill_internal___guile_support_la_LIBADD = $(BASELIBADD)
 
 PYX_FILES = sortsmill/views.pyx sortsmill/ffcompat.pyx					\
 	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
 	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
 	sortsmill/brentroot.pyx sortsmill/internal/__exec.pyx				\
-	sortsmill/internal/guile_python_pyx.pyx
+	sortsmill/internal/__guile_support.pyx
 if HAVE_GUI
 PYX_FILES += sortsmill/usermenu.pyx
 endif HAVE_GUI
@@ -196,8 +196,8 @@ MOSTLYCLEANFILES = site_init.py sortsmill/fontforge_api.pyx				\
 	sortsmill/notices.c sortsmill/guile.c sortsmill/linalg.c			\
 	sortsmill/polyspline.c sortsmill/brentroot.c						\
 	sortsmill/internal/__exec.c sortsmill/internal/__exec.h				\
-	sortsmill/internal/guile_python_pyx.c								\
-	sortsmill/internal/guile_python_pyx.h
+	sortsmill/internal/__guile_support.c								\
+	sortsmill/internal/__guile_support.h
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -224,7 +224,7 @@ all-local: all-local-HAVE_GUI sortsmill/psMat.so					\
 	sortsmill/guile.so sortsmill/linalg.so sortsmill/polyspline.so	\
 	sortsmill/brentroot.so sortsmill/legacy/fontforge.so			\
 	sortsmill/internal/__exec.so									\
-	sortsmill/internal/guile_python_pyx.so
+	sortsmill/internal/__guile_support.so
 if HAVE_GUI
 all-local-HAVE_GUI: sortsmill/usermenu.so
 else !HAVE_GUI

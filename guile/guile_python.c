@@ -25,7 +25,7 @@
 #include <intl.h>
 
 #include <atomic_ops.h>
-#include <sortsmill/xgc.h>    // Includes gc.h and pthreads.h in the right order.
+#include <sortsmill/xgc.h>      // Includes gc.h and pthreads.h in the right order.
 
 void init_guile_sortsmill_python (void);
 
@@ -99,26 +99,29 @@ scm_py_failure (SCM who, SCM irritants)
       SCM scm_ptype = PyObject_ptr_to_scm_pyobject (ptype);
       SCM scm_pvalue = PyObject_ptr_to_scm_pyobject (pvalue);
       SCM scm_ptraceback = PyObject_ptr_to_scm_pyobject (ptraceback);
-      SCM exc_info = scm_list_to_pytuple (scm_list_3 (scm_ptype, scm_pvalue, scm_ptraceback));
+      SCM exc_info =
+        scm_list_to_pytuple (scm_list_3
+                             (scm_ptype, scm_pvalue, scm_ptraceback));
       scm_throw (scm_from_utf8_symbol ("python-exception"),
-		 scm_list_2 (scm_from_utf8_string ("scm_py_failure"), exc_info));
+                 scm_list_2 (scm_from_utf8_string ("scm_py_failure"),
+                             exc_info));
       /*
-      scm_error_scm (scm_from_utf8_symbol ("python-error"), who,
-		     scm_from_utf8_string (_("Python error: ~a")),
-		     scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
-				 PyObject_ptr_to_scm_pyobject (pvalue),
-				 PyObject_ptr_to_scm_pyobject (ptraceback)),
-		     scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
-				 PyObject_ptr_to_scm_pyobject (pvalue),
-				 PyObject_ptr_to_scm_pyobject (ptraceback)));
-      */
+         scm_error_scm (scm_from_utf8_symbol ("python-error"), who,
+         scm_from_utf8_string (_("Python error: ~a")),
+         scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
+         PyObject_ptr_to_scm_pyobject (pvalue),
+         PyObject_ptr_to_scm_pyobject (ptraceback)),
+         scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
+         PyObject_ptr_to_scm_pyobject (pvalue),
+         PyObject_ptr_to_scm_pyobject (ptraceback)));
+       */
       /*
-      rnrs_raise_condition
-        (scm_list_3
+         rnrs_raise_condition
+         (scm_list_3
          (rnrs_c_make_python_error (ptype, pvalue, ptraceback),
-          rnrs_make_who_condition (who),
-          rnrs_make_irritants_condition (irritants)));
-      */
+         rnrs_make_who_condition (who),
+         rnrs_make_irritants_condition (irritants)));
+       */
     }
   else
     rnrs_raise_condition
@@ -529,14 +532,16 @@ static SCM
 scm_py_locals (void)
 {
   PyObject *obj = PyEval_GetLocals ();
-  return (obj == NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
+  return (obj ==
+          NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
 }
 
 static SCM
 scm_py_globals (void)
 {
   PyObject *obj = PyEval_GetGlobals ();
-  return (obj == NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
+  return (obj ==
+          NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
 }
 
 // FIXME: This function should be written differently for Python 3.2+,
@@ -562,47 +567,47 @@ scm_python_module_get_file_name (SCM obj)
 
 //-------------------------------------------------------------------------
 //
-// Access to the sortsmill.internal.guile_python_pyx Cython module.
+// Access to the sortsmill.internal.__guile_support Cython module.
 // The module will be imported the first time it is accessed.
 //
 
 // FIXME: Come up with a way to do this more directly in Guile, and
 // more generally.
-static volatile AO_t guile_python_pyx_pymodule_is_initialized = false;
-static pthread_mutex_t guile_python_pyx_pymodule_mutex =
+static volatile AO_t __guile_support_pymodule_is_initialized = false;
+static pthread_mutex_t __guile_support_pymodule_mutex =
   PTHREAD_MUTEX_INITIALIZER;
-static SCM guile_python_pyx_pymodule = SCM_BOOL_F;
+static SCM __guile_support_pymodule = SCM_BOOL_F;
 
 // This function returns a Cython module we use in the implementation
 // of (sortsmill python).
 static SCM
-scm_guile_python_pyx_pymodule (void)
+scm_guile_support_pymodule (void)
 {
-  if (!AO_load_acquire_read (&guile_python_pyx_pymodule_is_initialized))
+  if (!AO_load_acquire_read (&__guile_support_pymodule_is_initialized))
     {
-      pthread_mutex_lock (&guile_python_pyx_pymodule_mutex);
-      if (!guile_python_pyx_pymodule_is_initialized)
+      pthread_mutex_lock (&__guile_support_pymodule_mutex);
+      if (!__guile_support_pymodule_is_initialized)
         {
-          guile_python_pyx_pymodule =
+          __guile_support_pymodule =
             scm_pyimport (scm_from_utf8_string
-                          ("sortsmill.internal.guile_python_pyx"));
-          if (scm_is_true (guile_python_pyx_pymodule))
-            scm_permanent_object (guile_python_pyx_pymodule);
-          AO_store_release_write (&guile_python_pyx_pymodule_is_initialized,
-                                  scm_is_true (guile_python_pyx_pymodule));
+                          ("sortsmill.internal.__guile_support"));
+          if (scm_is_true (__guile_support_pymodule))
+            scm_permanent_object (__guile_support_pymodule);
+          AO_store_release_write (&__guile_support_pymodule_is_initialized,
+                                  scm_is_true (__guile_support_pymodule));
         }
-      pthread_mutex_unlock (&guile_python_pyx_pymodule_mutex);
-      if (scm_is_false (guile_python_pyx_pymodule))
+      pthread_mutex_unlock (&__guile_support_pymodule_mutex);
+      if (scm_is_false (__guile_support_pymodule))
         rnrs_raise_condition
           (scm_list_4
            (rnrs_make_error (),
-            rnrs_c_make_who_condition ("scm_guile_python_pyx_pymodule"),
+            rnrs_c_make_who_condition ("scm_guile_support_pymodule"),
             rnrs_c_make_message_condition
             (_
-             ("failed to import Python module sortsmill.internal.guile_python_pyx")),
+             ("failed to import Python module sortsmill.internal.__guile_support")),
             rnrs_make_irritants_condition (SCM_EOL)));
     }
-  return guile_python_pyx_pymodule;
+  return __guile_support_pymodule;
 }
 
 //-------------------------------------------------------------------------
@@ -662,8 +667,8 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pyimport", 1, 0, 0, scm_pyimport);
   scm_c_define_gsubr ("python-module-get-file-name", 1, 0, 0,
                       scm_python_module_get_file_name);
-  scm_c_define_gsubr ("guile-python-pyx-pymodule", 0, 0, 0,
-                      scm_guile_python_pyx_pymodule);
+  scm_c_define_gsubr ("guile-support-pymodule", 0, 0, 0,
+                      scm_guile_support_pymodule);
 }
 
 //-------------------------------------------------------------------------
