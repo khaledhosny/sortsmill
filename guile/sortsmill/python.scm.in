@@ -129,6 +129,10 @@
          py-name
          py-dict
 
+         py-builtins
+         py-locals
+         py-globals
+
          procedure->pycallable
          pycallable->procedure
          pycallable?
@@ -137,6 +141,9 @@
          pyexec
          pyexec-file-name
          pyeval
+         pyexec-in-main
+         pyexec-file-name-in-main
+         pyeval-in-main
 
          python-module
          current-python-module
@@ -264,14 +271,17 @@
  (define-guile-python-pyx-procedure '* "__c_pyguile_address" '(*))
  (define-guile-python-pyx-procedure '* "__pyguile_check" '(*))
  (define-guile-python-pyx-procedure '* "__exec_python" '(*))
+ (define-guile-python-pyx-procedure '* "__exec_python_in_module" '(*))
  (define-guile-python-pyx-procedure '* "__exec_python_file_name" '(*))
+ (define-guile-python-pyx-procedure '* "__exec_python_file_name_in_module" '(*))
+ (define-guile-python-pyx-procedure '* "__eval_python" '(*))
+ (define-guile-python-pyx-procedure '* "__eval_python_in_module" '(*))
  (define-guile-python-pyx-procedure '* "__c_py_wrap_function" '(*))
  (define-guile-python-pyx-procedure '* "__apply_python_callable" '(* * *))
  (define-guile-python-pyx-procedure '* "__py_raise_guile_exception" '(*))
  (define-guile-python-pyx-procedure '* "__py_exception_description" '(*))
  (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
- (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
  (define-guile-python-pyx-procedure '* "__python_module" '(*))
  (define-guile-python-pyx-procedure '* "__current_python_module" '())
  (define-guile-python-pyx-procedure '* "__pylong_to_pympz" '(*))
@@ -286,17 +296,27 @@
  (define-guile-python-pyx-procedure '* "__python_alist_to_pydict" '(*))
 
  (define-py-to-py-filter pyguile?-base __pyguile_check)
+
  (define-py-to-py-filter pyexec-base __exec_python)
+ (define-py-to-py-filter pyexec-in-module-base __exec_python_in_module)
  (define-py-to-py-filter pyexec-file-name-base __exec_python_file_name)
+ (define-py-to-py-filter pyexec-file-name-in-module-base __exec_python_file_name_in_module)
+ (define-py-to-py-filter pyeval-base __eval_python)
+ (define-py-to-py-filter pyeval-in-module-base __eval_python_in_module)
+
  (define-py-to-py-filter py-raise-guile-exception __py_raise_guile_exception)
  (define-py-to-py-filter py-exception-description-base __py_exception_description)
+
  (define-py-to-py-filter python-module-base __python_module)
+
  (define-py-to-py-filter pylong->pympz __pylong_to_pympz)
  (define-py-to-py-filter pympz->pylong __pympz_to_pylong)
+
  (define-py-to-py-filter py-repr __py_repr)
  (define-py-to-py-filter py-str __py_str)
  (define-py-to-py-filter py-name __py_name)
  (define-py-to-py-filter py-dict __py_dict)
+
  (define-py-to-py-filter pyindexed-ref-core __pyindexed_ref)
  (define-py-to-py-filter pyindexed-set!-core __pyindexed_set)
  (define-py-to-py-filter python-alist->pydict __python_alist_to_pydict)
@@ -380,16 +400,59 @@
           (map pystring->string
                (pylist->list (py-exception-description-base exc-info)))))
 
- (define (pyexec s)
-   (cond
-    [[or (string? s) (pystring? s)] (pyexec-base (string->pystring s))]
-    [else (string-or-pystring-failure 'pyexec s)]))
+ (define (pyexec-in-main python-code)
+   (assert (or (string? python-code) (pystring? python-code)))
+   (match python-code
+     [(? string? s)   (pyexec-base (string->pystring s))]
+     [(? pystring? s) (pyexec-base s)] ))
 
- (define (pyexec-file-name file-name)
-   (cond
-    [[or (string? file-name) (pystring? file-name)]
-     (pyexec-file-name-base (string->pystring file-name))]
-    [else (string-or-pystring-failure 'pyexec-file-name file-name)]))
+ (define (pyexec-file-name-in-main file-name)
+   (assert (or (string? file-name) (pystring? file-name)))
+   (match file-name
+     [(? string? s)   (pyexec-file-name-base (string->pystring s))]
+     [(? pystring? s) (pyexec-file-name-base s)] ))
+
+ (define (pyeval-in-main python-code)
+   (assert (or (string? python-code) (pystring? python-code)))
+   (match python-code
+     [(? string? s)   (pyeval-base (string->pystring s))]
+     [(? pystring? s) (pyeval-base s)] ))
+
+ (define (pyexec module python-code)
+   (assert (or (string? python-code) (pystring? python-code)))
+   (assert (or (string? module) (pystring? module) (pymodule? module)))
+   (match python-code
+     [(? string? s) (pyexec module (string->pystring s))]
+     [(? pystring? s)
+      (match module
+        [(? pymodule? m) (pyexec-in-module-base (make-pytuple m s))]
+        [(? pystring? m) (pyexec-in-module-base (make-pytuple m s))]
+        [(? string? m)   (pyexec-in-module-base
+                          (make-pytuple (string->pystring m) s))] )] ))
+
+ (define (pyexec-file-name module file-name)
+   (assert (or (string? file-name) (pystring? file-name)))
+   (assert (or (string? module) (pystring? module) (pymodule? module)))
+   (match file-name
+     [(? string? s) (pyexec-file-name module (string->pystring s))]
+     [(? pystring? s)
+      (match module
+        [(? pymodule? m) (pyexec-file-name-in-module-base (make-pytuple m s))]
+        [(? pystring? m) (pyexec-file-name-in-module-base (make-pytuple m s))]
+        [(? string? m)   (pyexec-file-name-in-module-base
+                          (make-pytuple (string->pystring m) s))] )] ))
+
+ (define (pyeval module python-code)
+   (assert (or (string? python-code) (pystring? python-code)))
+   (assert (or (string? module) (pystring? module) (pymodule? module)))
+   (match python-code
+     [(? string? s) (pyeval module (string->pystring s))]
+     [(? pystring? s)
+      (match module
+        [(? pymodule? m) (pyeval-in-module-base (make-pytuple m s))]
+        [(? pystring? m) (pyeval-in-module-base (make-pytuple m s))]
+        [(? string? m)   (pyeval-in-module-base
+                          (make-pytuple (string->pystring m) s))] )] ))
 
  (define integer->pylong (compose pympz->pylong integer->pympz))
  (define pylong->integer (compose pympz->integer pylong->pympz))
@@ -419,12 +482,6 @@
                       ((__python_string_to_c_string) (pyobject->pointer s)))]
     [(? string? s) s]
     [other (string-or-pystring-failure 'pystring->string other)] ))
-
- (define pyeval
-   (match-lambda
-    [(? string? s) (pointer->pyobject ((__c_eval_python) (string->pointer s)))]
-    [(? pystring? s) (pyeval (pystring->string s))]
-    [other (string-or-pystring-failure 'pyeval other)] ))
 
  (define (string-or-pystring-failure who obj)
    (assertion-failure who (_ "expected a string or Python string") obj))

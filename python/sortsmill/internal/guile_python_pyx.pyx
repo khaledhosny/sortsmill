@@ -36,8 +36,13 @@ ctypedef object (*tuple_func_t) (object)
 
 import sys
 import gmpy
+import inspect
 import importlib
 import traceback
+
+from sortsmill.cython.internal.__exec cimport \
+    exec_python, exec_python_file_name, eval_python
+import sortsmill.internal.__exec as __exec
 
 #--------------------------------------------------------------------------
 
@@ -110,40 +115,42 @@ cdef public object __py_exception_description (object exc_info):
 #--------------------------------------------------------------------------
 
 cdef public object __exec_python (object python_code):
-  cdef SCM scm_info
-  try:
-    exec python_code in globals (), {}
-  except (object, BaseException, Exception) as exc:
-    info = sys.exc_info ()
-    scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                     "pointer->pyobject"),
-                               scm.scm_from_pointer (<PyObject *> info, NULL))
-    scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
-                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec"), scm_info))
+  main_dict = sys.modules['__main__'].__dict__
+  return exec_python ('pyexec-in-main', python_code, main_dict, main_dict)
 
 cdef public object __exec_python_file_name (object file_name):
-  cdef SCM scm_info
-  try:
-    execfile (file_name, globals (), {})
-  except (object, BaseException, Exception) as exc:
-    info = sys.exc_info ()
-    scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                     "pointer->pyobject"),
-                               scm.scm_from_pointer (<PyObject *> info, NULL))
-    scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
-                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec-file-name"), scm_info))
+  main_dict = sys.modules['__main__'].__dict__
+  return exec_python_file_name ('pyexec-file-name-in-main', file_name, main_dict, main_dict)
 
-cdef public object __c_eval_python (char *python_code):
-  try:
-    py_code = python_code
-    retval = eval (py_code.decode ('UTF-8'))
-  except (object, BaseException, Exception) as exc:
-    info = sys.exc_info ()
-    scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                     "pointer->pyobject"),
-                               scm.scm_from_pointer (<PyObject *> info, NULL))
-    scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
-                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyeval"), scm_info))
+cdef public object __eval_python (object python_code):
+  main_dict = sys.modules['__main__'].__dict__
+  return eval_python ('pyeval-in-main', python_code, main_dict, main_dict)
+
+cdef public object __exec_python_in_module (object module_and_code):
+  (module, python_code) = module_and_code
+  if inspect.ismodule (module):
+    the_dict = module.__dict__
+  else:
+    the_dict = sys.modules[module].__dict__
+  return exec_python ('pyexec', python_code, the_dict, the_dict)
+
+cdef public object __exec_python_file_name_in_module (object module_and_file_name):
+  (module, file_name) = module_and_file_name
+  if inspect.ismodule (module):
+    the_dict = module.__dict__
+  else:
+    the_dict = sys.modules[module].__dict__
+  return exec_python_file_name ('pyexec-file-name', file_name, the_dict, the_dict)
+
+cdef public object __eval_python_in_module (object module_and_code):
+  (module, python_code) = module_and_code
+  if inspect.ismodule (module):
+    the_dict = module.__dict__
+  else:
+    the_dict = sys.modules[module].__dict__
+  return eval_python ('pyeval', python_code, the_dict, the_dict)
+
+#--------------------------------------------------------------------------
 
 def __py_wrap_function (uintptr_t func_address):
   def wrapped_func (*args):

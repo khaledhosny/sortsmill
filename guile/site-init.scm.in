@@ -23,6 +23,8 @@
 ;;
 ;; Try to ensure access to Sorts Mill Tools’s Guile modules.
 ;;
+;; FIXME: Try to ensure access to LTDL modules, too.
+;;
 (eval-when (compile load eval)
            (let ((guilemoduledir "@guilemoduledir@"))
              (unless (member guilemoduledir %load-path)
@@ -78,7 +80,7 @@
     ;;
     (let ((py-init "@pkgpythondatadir@/site_init.py"))
       (if (file-exists? py-init)
-          (pyexec-file-name py-init))))
+          (pyexec-file-name-in-main py-init))))
 
    ) ;; end of thunk.
  )   ;; end of fontforge-call-with-error-handling.

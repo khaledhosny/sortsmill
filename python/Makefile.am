@@ -37,7 +37,7 @@ BASELIBADD = $(top_builddir)/lib/libgnu.la
 
 AUXLIBADD = $(BASELIBADD) $(top_builddir)/auxiliary/libsortsmill_aux.la
 
-FFLIBADD = $(AUXLIBADD)										\
+FFLIBADD = $(AUXLIBADD)									\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la	\
 	$(top_builddir)/gutils/libsortsmill_gutils.la
 
@@ -114,7 +114,8 @@ sortsmill_pkg_info_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/guile.la
 sortsmill_guile_la_SOURCES = sortsmill/guile.c
-sortsmill_guile_la_LIBADD = $(AUXLIBADD) $(GUILE_LIBS)
+sortsmill_guile_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
+sortsmill_guile_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/linalg.la
 sortsmill_linalg_la_SOURCES = sortsmill/linalg.c
@@ -128,16 +129,21 @@ nobase_pyexec_LTLIBRARIES += sortsmill/brentroot.la
 sortsmill_brentroot_la_SOURCES = sortsmill/brentroot.c
 sortsmill_brentroot_la_LIBADD = $(AUXLIBADD)
 
+nobase_pyexec_LTLIBRARIES += sortsmill/internal/__exec.la
+sortsmill_internal___exec_la_SOURCES = sortsmill/internal/__exec.c
+sortsmill_internal___exec_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
+sortsmill_internal___exec_la_LIBADD = $(BASELIBADD)
+
 nobase_pyexec_LTLIBRARIES += sortsmill/internal/guile_python_pyx.la
 sortsmill_internal_guile_python_pyx_la_SOURCES =	\
 	sortsmill/internal/guile_python_pyx.c
+sortsmill_internal_guile_python_pyx_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
 sortsmill_internal_guile_python_pyx_la_LIBADD = $(BASELIBADD)
 
-PYX_FILES = sortsmill/views.pyx sortsmill/ffcompat.pyx	\
-	sortsmill/psMat.pyx sortsmill/pkg_info.pyx			\
-	sortsmill/notices.pyx sortsmill/guile.pyx			\
-	sortsmill/linalg.pyx sortsmill/polyspline.pyx		\
-	sortsmill/brentroot.pyx								\
+PYX_FILES = sortsmill/views.pyx sortsmill/ffcompat.pyx					\
+	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
+	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
+	sortsmill/brentroot.pyx sortsmill/internal/__exec.pyx				\
 	sortsmill/internal/guile_python_pyx.pyx
 if HAVE_GUI
 PYX_FILES += sortsmill/usermenu.pyx
@@ -189,6 +195,7 @@ MOSTLYCLEANFILES = site_init.py sortsmill/fontforge_api.pyx				\
 	sortsmill/ffcompat.c sortsmill/psMat.c sortsmill/pkg_info.c			\
 	sortsmill/notices.c sortsmill/guile.c sortsmill/linalg.c			\
 	sortsmill/polyspline.c sortsmill/brentroot.c						\
+	sortsmill/internal/__exec.c sortsmill/internal/__exec.h				\
 	sortsmill/internal/guile_python_pyx.c								\
 	sortsmill/internal/guile_python_pyx.h
 
@@ -211,12 +218,12 @@ sortsmill/%.so: sortsmill/%.la
 	cp sortsmill/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
-all-local: all-local-HAVE_GUI sortsmill/psMat.so						\
+all-local: all-local-HAVE_GUI sortsmill/psMat.so					\
 	sortsmill/ffcompat.so sortsmill/fontforge_api.so				\
-	sortsmill/views.so sortsmill/pkg_info.so						\
-	sortsmill/notices.so sortsmill/guile.so sortsmill/linalg.so	\
-	sortsmill/polyspline.so sortsmill/brentroot.so					\
-	sortsmill/legacy/fontforge.so										\
+	sortsmill/views.so sortsmill/pkg_info.so sortsmill/notices.so	\
+	sortsmill/guile.so sortsmill/linalg.so sortsmill/polyspline.so	\
+	sortsmill/brentroot.so sortsmill/legacy/fontforge.so			\
+	sortsmill/internal/__exec.so									\
 	sortsmill/internal/guile_python_pyx.so
 if HAVE_GUI
 all-local-HAVE_GUI: sortsmill/usermenu.so

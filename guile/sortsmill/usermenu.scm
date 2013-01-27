@@ -63,7 +63,7 @@
   (guile-export pure-menu-entry-function->procedure))
 
  (if-fontforge-has-python-api
-  (guile-export python-menu-entry-function->procedure))
+  (guile-export python-menu-entry-callable->procedure))
 
  ;;-------------------------------------------------------------------------
  ;;
@@ -397,19 +397,25 @@
                         (checkable? #f)
                         (checked? #f)
                         (image-precedes-text? #t))
-   ;;
-   ;; FIXME: Check types of input parameters.
-   ;;
-   (append `[(text      ,text)
-             (action    ,action)
-             (enabled   ,enabled)
-             (foreground-color ,foreground-color)
-             (background-color ,background-color)
-             (disabled  ,disabled?)
-             (checkable ,checkable?)
-             (checked   ,checked?)
-             (image-precedes-text ,image-precedes-text?)]
-           [if image `((image ,image)) '()]))
+   (let ([action^ (cond [(pycallable? action)
+                         (python-menu-entry-callable->procedure action)]
+                        [else action])]
+         [enabled^ (cond [(pycallable? enabled)
+                          (python-menu-entry-callable->procedure enabled)]
+                         [else enabled])])
+     ;;
+     ;; FIXME: Check types of input parameters.
+     ;;
+     (append `[(text      ,text)
+               (action    ,action^)
+               (enabled   ,enabled^)
+               (foreground-color ,foreground-color)
+               (background-color ,background-color)
+               (disabled  ,disabled?)
+               (checkable ,checkable?)
+               (checked   ,checked?)
+               (image-precedes-text ,image-precedes-text?)]
+             [if image `((image ,image)) '()]) ))
 
  (define (separator-line)
    `[(is-line #t)])
@@ -582,8 +588,7 @@
       "Wrap either an ‘action’ or an ‘enabled’ function that is written
 in Pure. If the function is specified as a string, it will first be
 evaluated as Pure source code. The Guile return value of the wrapped
-function is always a boolean. Optionally the function can be compiled
-immediately."
+function is always a boolean."
       (cond
        [(string? f) (pure-menu-entry-function->procedure (pure-eval f))]
        [else
@@ -620,6 +625,16 @@ immediately."
                                     [else (assert false)])]
              [view-class (pyindexed-ref views-dict (string->pystring view-class-name))])
         ((pycallable->procedure view-class) (pointer->pylong (view->pointer v))))))
+
+  (define python-menu-entry-callable->procedure
+    (lambda (f)
+      "Wrap either a Python callable to serve as an ‘action’ or
+‘enabled’ function. The Guile return value of the wrapped function is
+always a boolean."
+      (let ([f-wrapped (pycallable->procedure f)])
+        [lambda (view)
+          (let ([result (f-wrapped (view->python-view view))])
+            (pybool->boolean (py-not-not result)))] )))
 
   ) ;; end of if-fontforge-has-python-api
 

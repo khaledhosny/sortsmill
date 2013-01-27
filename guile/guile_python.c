@@ -519,6 +519,26 @@ scm_pyimport (SCM obj)
   return PyObject_ptr_to_scm_pyobject (module);
 }
 
+static SCM
+scm_py_builtins (void)
+{
+  return borrowed_PyObject_ptr_to_scm_pyobject (PyEval_GetBuiltins ());
+}
+
+static SCM
+scm_py_locals (void)
+{
+  PyObject *obj = PyEval_GetLocals ();
+  return (obj == NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
+}
+
+static SCM
+scm_py_globals (void)
+{
+  PyObject *obj = PyEval_GetGlobals ();
+  return (obj == NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
+}
+
 // FIXME: This function should be written differently for Python 3.2+,
 // because PyModule_GetFilename is deprecated then. Wrapping
 // PyModule_GetFilenameObject to look like PyModule_GetFilename seems
@@ -634,6 +654,10 @@ init_guile_sortsmill_python (void)
 
   scm_c_define_gsubr ("pytuple->list", 1, 0, 0, scm_pytuple_to_list);
   scm_c_define_gsubr ("pylist->list", 1, 0, 0, scm_pylist_to_list);
+
+  scm_c_define_gsubr ("py-builtins", 0, 0, 0, scm_py_builtins);
+  scm_c_define_gsubr ("py-locals", 0, 0, 0, scm_py_locals);
+  scm_c_define_gsubr ("py-globals", 0, 0, 0, scm_py_globals);
 
   scm_c_define_gsubr ("pyimport", 1, 0, 0, scm_pyimport);
   scm_c_define_gsubr ("python-module-get-file-name", 1, 0, 0,
