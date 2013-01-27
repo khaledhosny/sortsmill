@@ -54,8 +54,6 @@ FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
 
 #--------------------------------------------------------------------------
 
-nodist_pkgpythondata_PYTHON = site_init.py
-
 if HAVE_PYTHON_COMPATIBILITY
 nodist_python_PYTHON = fontforge.py psMat.py
 endif HAVE_PYTHON_COMPATIBILITY
@@ -180,17 +178,9 @@ EXTRA_DIST += generate-python-api.scm
 $(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 $(NODIST_PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 
-site_init.py: site_init.py.in Makefile
-	$(AM_V_GEN)
-	$(AM_V_at)$(SED) 													\
-		-e 's|@''PYTHON_COMPATIBILITY''@|$(PYTHON_COMPATIBILITY)|g'		\
-		-e 's|@''PACKAGE''@|$(PACKAGE)|g' 								\
-		-e 's|@''sysconfdir''@|$(sysconfdir)|g' < $< > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
+EXTRA_DIST += $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
 
-EXTRA_DIST += $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
-
-MOSTLYCLEANFILES = site_init.py sortsmill/fontforge_api.pyx				\
+MOSTLYCLEANFILES = sortsmill/fontforge_api.pyx							\
 	sortsmill/fontforge_api.c sortsmill/views.c sortsmill/usermenu.c	\
 	sortsmill/ffcompat.c sortsmill/psMat.c sortsmill/pkg_info.c			\
 	sortsmill/notices.c sortsmill/guile.c sortsmill/linalg.c			\

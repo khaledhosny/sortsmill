@@ -27,7 +27,6 @@
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/scheme.mk
 include $(top_srcdir)/mk/tig.mk
-include $(top_srcdir)/mk/cython.mk
 
 FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
 	'-I$(top_srcdir)/fontforge'

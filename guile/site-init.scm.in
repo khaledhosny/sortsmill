@@ -18,7 +18,13 @@
 (import (sortsmill notices)
         (sortsmill pure)
         (sortsmill python)
+        (only (sortsmill i18n) _)
         (system foreign))
+
+(if (not (getenv "HOME"))
+    ((@ (rnrs) error)
+     "site-init.scm"
+     (_ "the HOME environment variable is not set; please set it")))
 
 ;;
 ;; Try to ensure access to Sorts Mill Tools’s Guile modules.
@@ -39,48 +45,84 @@
  "site-init.scm"
  (lambda () ;; start of thunk.
 
-   (if-fontforge-has-pure-api
-    (pure-create-interp '("sortsmill-editor")))
+   [if-fontforge-has-pure-api
+    (pure-create-interp '("sortsmill-editor"))]
 
-   (if-fontforge-has-python-api
-    (py-initialize))
+   [if-fontforge-has-python-api
+    (py-initialize)
+    (pyexec-in-main
+     (lines-begin-with
+      ";; —"
+      #«
+      ;; —# FIXME: Get rid of this dependency.
+      ;; —import sortsmill.ffcompat
+      ;; —
+      ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
+      ;; —  import fontforge
+      ;; —sortsmill.ffcompat.__windowing_ui (True)
+      ;; —sortsmill.ffcompat.__running_script (False)
+      ;; —import sortsmill.psMat
+      ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
+      ;; —  import psMat
+      ;; —import ffContrib.excepthook
+      »#))
+    ] ;; end of if-fontforge-has-python-api.
 
    ;;
-   ;; Load local-init.scm, which typically is in
-   ;; /etc/sortsmill-tools/
+   ;; Load local-init.scm, which typically is in /etc/sortsmill-tools/
    ;;
-   (let ((local-init "@sysconfdir@/@PACKAGE@/local-init.scm"))
+   (let ([local-init "@sysconfdir@/@PACKAGE@/local-init.scm"])
      (if (file-exists? local-init)
          (fontforge-call-with-error-handling
           "local-init.scm"
           (lambda () (primitive-load local-init)))))
 
+   [if-fontforge-has-python-api
+    ;;
+    ;; Load local_init.py, which typically is in /etc/sortsmill-tools/
+    ;;
+    (let ([local-init "@sysconfdir@/@PACKAGE@/local_init.py"])
+      (if (file-exists? local-init)
+          (fontforge-call-with-error-handling
+           "local_init.py"
+           (lambda () (pyexec-file-name-in-mail local-init)))))]
+
    ;;
    ;; Load user-init.scm, which typically is in
    ;; ${HOME}/.config/sortsmill-tools/
    ;;
-   (let* ((xdg-config-home (getenv "XDG_CONFIG_HOME"))
-          (home (getenv "HOME"))
-          (user-config-dir
-           (cond
-            (xdg-config-home)
-            (home (string-append (getenv "HOME") "/.config"))
-            (else #f))))
+   (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
+          [home (getenv "HOME")]
+          [user-config-dir
+           (cond [xdg-config-home]
+                 [home (string-append (getenv "HOME") "/.config")]
+                 [else #f] )] )
      (if user-config-dir
-         (let ((user-init (string-append user-config-dir
-                                         "/@PACKAGE@/user-init.scm")))
+         (let ([user-init (string-append user-config-dir
+                                         "/@PACKAGE@/user-init.scm")])
            (if (file-exists? user-init)
                (fontforge-call-with-error-handling
                 "user-init.scm"
                 (lambda () (primitive-load user-init)))))))
 
-   (if-fontforge-has-python-api
+   [if-fontforge-has-python-api
     ;;
-    ;; Load site_init.py.
+    ;; Load user_init.py, which typically is in
+    ;; ${HOME}/.config/sortsmill-tools/
     ;;
-    (let ((py-init "@pkgpythondatadir@/site_init.py"))
-      (if (file-exists? py-init)
-          (pyexec-file-name-in-main py-init))))
+    (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
+           [home (getenv "HOME")]
+           [user-config-dir
+            (cond [xdg-config-home]
+                  [home (string-append (getenv "HOME") "/.config")]
+                  [else #f] )] )
+      (if user-config-dir
+          (let ([user-init (string-append user-config-dir
+                                          "/@PACKAGE@/user_init.py")])
+            (if (file-exists? user-init)
+                (fontforge-call-with-error-handling
+                 "user_init.py"
+                 (lambda () (pyexec-file-name-in-main user-init)))))))]
 
    ) ;; end of thunk.
  )   ;; end of fontforge-call-with-error-handling.
