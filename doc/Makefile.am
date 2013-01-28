@@ -31,7 +31,7 @@ nodist_man_MANS =
 
 DISTCLEANFILES = $(nodist_man_MANS)
 
-info_TEXINFOS = sortsmill-tools.texi
+dist_info_TEXINFOS = sortsmill-tools.texi
 sortsmill_tools_TEXINFOS = psMat.interface.texi	\
 	ps_number.visible.texi
 

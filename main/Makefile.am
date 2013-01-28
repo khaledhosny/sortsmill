@@ -42,33 +42,22 @@ LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la \
 		$(top_builddir)/gutils/libsortsmill_gutils.la \
 		$(top_builddir)/lib/libgnu.la
 
-INSTALL_HOOKS =
-UNINSTALL_HOOKS =
-
-install-exec-hook: $(INSTALL_HOOKS)
-uninstall-hook: $(UNINSTALL_HOOKS)
-
 #--------------------------------------------------------------------------
 
 if THE_PROGRAMS
 if HAVE_GUI
 
-bin_PROGRAMS += sortsmill-editor
+bin_PROGRAMS += sortsmill-editor smed
 
-sortsmill_editor_SOURCES = editor.c
+dist_sortsmill_editor_SOURCES = editor.c
 sortsmill_editor_LDADD =									\
 	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/lib/libgnu.la
 sortsmill_editor_LDFLAGS = $(AM_LDFLAGS) -export-dynamic
 
-INSTALL_HOOKS += install-smed
-UNINSTALL_HOOKS += uninstall-smed
-
-install-smed: uninstall-smed
-	cd $(DESTDIR)$(bindir) && $(LN_S) sortsmill-editor$(EXEEXT) smed$(EXEEXT)
-
-uninstall-smed:
-	-rm -f $(DESTDIR)$(bindir)/smed$(EXEEXT)
+dist_smed_SOURCES = $(dist_sortsmill_editor_SOURCES)
+smed_LDADD = $(sortsmill_editor_LDADD)
+smed = $(sortsmill_editor_LDFLAGS)
 
 endif HAVE_GUI
 endif THE_PROGRAMS
@@ -78,26 +67,16 @@ endif THE_PROGRAMS
 if THE_PROGRAMS
 
 bin_PROGRAMS += sortsmill-lint sortsmill-image sortsmill-compare
+bin_PROGRAMS += smlint smimage smcompare
 
 dist_sortsmill_lint_SOURCES = $(srcdir)/lint.c
+dist_smlint_SOURCES = $(dist_sortsmill_lint_SOURCES)
 
 dist_sortsmill_image_SOURCES = $(srcdir)/image.c
+dist_smimage_SOURCES = $(dist_sortsmill_image_SOURCES)
 
 dist_sortsmill_compare_SOURCES = $(srcdir)/compare.c
-
-INSTALL_HOOKS += install-lint-etc
-UNINSTALL_HOOKS += uninstall-lint-etc
-
-install-lint-etc: uninstall-lint-etc
-	cd $(DESTDIR)$(bindir) &&									\
-		$(LN_S) sortsmill-lint$(EXEEXT) smlint$(EXEEXT) &&		\
-		$(LN_S) sortsmill-image$(EXEEXT) smimage$(EXEEXT) &&	\
-		$(LN_S) sortsmill-compare$(EXEEXT) smcompare$(EXEEXT)
-
-uninstall-lint-etc:
-	-rm -f $(DESTDIR)$(bindir)/smlint$(EXEEXT)	\
-		$(DESTDIR)$(bindir)/smimage$(EXEEXT)	\
-		$(DESTDIR)$(bindir)/smcompare$(EXEEXT)
+dist_smcompare_SOURCES = $(dist_sortsmill_compare_SOURCES)
 
 endif THE_PROGRAMS
 
