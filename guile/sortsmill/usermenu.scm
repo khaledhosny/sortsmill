@@ -33,7 +33,7 @@
          c-menu-entry-action->procedure
          c-menu-entry-enabled->procedure
 
-         register-fontforge-menu-entry   ; FIXME: Get rid of this.
+         register-fontforge-menu-entry ; FIXME: Get rid of this or make it private.
          )
 
  (import (sortsmill fontforge-api)
@@ -49,7 +49,7 @@
                dynamic-func dynamic-link dynamic-pointer
                negate)
          (rename (guile) (export guile-export))
-         (srfi :1)
+         (except (srfi :1) map)
          (only (srfi :26) cut)
          (only (srfi :27) random-integer)
          (only (ice-9 match) match match-lambda)
@@ -449,7 +449,7 @@
 
  ;;-------------------------------------------------------------------------
 ;;;;;
-;;;;; FIXME: Get rid of these.
+;;;;; FIXME: Get rid of these or alter them.
 ;;;;;
 
  (load-extension "libguile-sortsmill_fontforgeexe"
@@ -644,27 +644,32 @@ always a boolean."
           (let ([result (f-wrapped (view->python-view view))])
             (pybool->boolean (py-not-not result)))] )))
 
+  (define (register-python-menu-entry window menu-path action enabled shortcut)
+    (let ([window^    (if (pyobject? window)    window    (pointer->pyobject window))]
+          [menu-path^ (if (pyobject? menu-path) menu-path (pointer->pyobject menu-path))]
+          [action^    (if (pyobject? action)    action    (pointer->pyobject action))]
+          [enabled^   (if (pyobject? enabled)   enabled   (pointer->pyobject enabled))]
+          [shortcut^  (if (pyobject? shortcut)  shortcut  (pointer->pyobject shortcut))])
+      (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
+            [menu-path-® (map pystring->string (pytuple->list menu-path^))]
+            [action-®    (python-menu-entry-callable->procedure action^)]
+            [enabled-®   (if (not (pynone? enabled^))
+                             (python-menu-entry-callable->procedure enabled^)
+                             (lambda (view) #t))]
+            [shortcut-®  (if (not (pynone? shortcut^))
+                             (pystring->string shortcut^)
+                             #f)])
+        (register-fontforge-menu-entry #:window window-®
+                                       #:menu-path menu-path-®
+                                       #:action action-®
+                                       #:enabled enabled-®
+                                       #:shortcut shortcut-®))))
+
   ) ;; end of if-fontforge-has-python-api
 
  ;;-------------------------------------------------------------------------
  ;;
- ;; Functions that are privately used in the Python API.
-
- (define font_view_p__
-   (lambda (obj) (font-view? obj)))
-
- (define glyph_view_p__
-   (lambda (obj) (glyph-view? obj)))
-
- (define font_view_to_pointer__
-   (lambda (obj) (font-view->pointer obj)))
-
- (define glyph_view_to_pointer__
-   (lambda (obj) (glyph-view->pointer obj)))
-
- (define closure_maker__
-   (lambda (cython-func py-func)
-     (lambda (view) (cython-func view py-func))))
+ ;; A private procedure for internal use by our C code.
 
  (define (register-fontforge-menu-entry-from-c-code
           window menu-path action enabled shortcut)
