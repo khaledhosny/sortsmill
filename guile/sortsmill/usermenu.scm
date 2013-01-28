@@ -63,7 +63,9 @@
   (guile-export pure-menu-entry-function->procedure))
 
  (if-fontforge-has-python-api
-  (guile-export python-menu-entry-callable->procedure))
+  (guile-export python-menu-entry-callable->procedure
+                register-python-menu-entry    ; Support for the legacy menu interface.
+                ))
 
  ;;-------------------------------------------------------------------------
  ;;
