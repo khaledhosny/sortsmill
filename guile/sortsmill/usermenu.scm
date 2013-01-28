@@ -47,7 +47,7 @@
          (rnrs)
          (only (guile) *unspecified* define* load-extension
                dynamic-func dynamic-link dynamic-pointer
-               negate)
+               negate compose)
          (rename (guile) (export guile-export))
          (except (srfi :1) map)
          (only (srfi :26) cut)
@@ -64,7 +64,10 @@
 
  (if-fontforge-has-python-api
   (guile-export python-menu-entry-callable->procedure
-                register-python-menu-entry    ; Support for the legacy menu interface.
+
+                ;; FIXME: Get rid of this, make it private, or revise
+                ;; it for the menu design we end up with.
+                register-python-menu-entry
                 ))
 
  ;;-------------------------------------------------------------------------
@@ -619,7 +622,71 @@ function is always a boolean."
                 ;; function will be noticed.
                 #f)))))])))
 
+  ) ;; end of if-fontforge-has-pure-api
+
+ ;;-------------------------------------------------------------------------
+
+ (if-fontforge-has-python-api
+
+  (define view->python-view
+    (lambda (v)
+      (assert (view? v))
+      (let* ([views (python-module "sortsmill.views")]
+             [views-dict (py-dict views)]
+             [view-class-name (cond [(glyph-view? v) "glyph_view"]
+                                    [(font-view? v)  "font_view"]
+                                    [else (assert false)])]
+             [view-class (pyindexed-ref views-dict (string->pystring view-class-name))])
+        ((pycallable->procedure view-class) (pointer->pylong (view->pointer v))))))
+
+  (define python-menu-entry-callable->procedure
+    (lambda (f)
+      "Wrap either a Python callable to serve as an ‘action’ or
+‘enabled’ function. The Guile return value of the wrapped function is
+always a boolean."
+      (let ([f-wrapped (pycallable->procedure f)])
+        [lambda (view)
+          (let ([result (f-wrapped (view->python-view view))])
+            (pybool->boolean (py-not-not result)))] )))
+
   (define python-dll (dynamic-link "libguile-sortsmill_fontforgeexe"))
+
+  (define no-windowing-ui?
+    (let ([proc (pointer->procedure
+                 _Bool (dynamic-func "get_no_windowing_ui" python-dll) '())])
+      (lambda () (not (fxzero? (proc))))))
+
+  (define (register-python-menu-entry window menu-path action enabled shortcut)
+    (unless (no-windowing-ui?)
+      (let ([window^    (if (pyobject? window)
+                            window
+                            (borrowed-pointer->pyobject window))]
+            [menu-path^ (if (pyobject? menu-path)
+                            menu-path
+                            (borrowed-pointer->pyobject menu-path))]
+            [action^    (if (pyobject? action)
+                            action
+                            (borrowed-pointer->pyobject action))]
+            [enabled^   (if (pyobject? enabled)
+                            enabled
+                            (borrowed-pointer->pyobject enabled))]
+            [shortcut^  (if (pyobject? shortcut)
+                            shortcut
+                            (borrowed-pointer->pyobject shortcut))])
+        (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
+              [menu-path-® (map pystring->string (pytuple->list menu-path^))]
+              [action-®    (python-menu-entry-callable->procedure action^)]
+              [enabled-®   (if (not (pynone? enabled^))
+                               (python-menu-entry-callable->procedure enabled^)
+                               (lambda (view) #t))]
+              [shortcut-®  (if (not (pynone? shortcut^))
+                               (pystring->string shortcut^)
+                               #f)])
+          (register-fontforge-menu-entry #:window window-®
+                                         #:menu-path menu-path-®
+                                         #:action action-®
+                                         #:enabled enabled-®
+                                         #:shortcut shortcut-®)))))
 
   (define fv-active-in-ui (pointer->bytevector
                            (dynamic-pointer "fv_active_in_ui" python-dll)
@@ -648,23 +715,25 @@ function is always a boolean."
     (assert (view? v))
     (cond [(glyph-view? v)
            (let* ([cvb   (glyph-view->CharViewBase v)]
-                  [sc    (CharViewBase:sc-ref cvb)]
+                  [sc    (CharViewBase:sc-dref cvb)]
                   [layer (CVLayer (CharViewBase->pointer cvb))])
 
              ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
-             (set-pointer! sc-active-in-ui sc)
-             (bytevector-sint-set! layer-active-in-ui 0 (native-endianness) layer)
+             (set-pointer! sc-active-in-ui (SplineChar->pointer sc))
+             (bytevector-sint-set! layer-active-in-ui 0 layer
+                                   (native-endianness) (sizeof int))
 
              (borrowed-pointer->pyobject
               (SC->PySC (SplineChar->pointer sc))))]
 
           [(font-view? v)
-           (let ([fvb   (font-view->FontViewBase v)]
-                 [layer (FontViewBase:active-layer-ref fvb)])
+           (let* ([fvb   (font-view->FontViewBase v)]
+                  [layer (FontViewBase:active-layer-ref fvb)])
 
              ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
-             (set-pointer! fv-active-in-ui fvb)
-             (bytevector-sint-set! layer-active-in-ui 0 (native-endianness) layer)
+             (set-pointer! fv-active-in-ui (FontViewBase->pointer fvb))
+             (bytevector-sint-set! layer-active-in-ui 0 layer
+                                   (native-endianness) (sizeof int))
 
              (borrowed-pointer->pyobject
               (FV->PyFV (FontViewBase->pointer fvb))))] ))
@@ -673,7 +742,8 @@ function is always a boolean."
     (assert (view? v))
     (cond [(glyph-view? v)
            (set-pointer! sc-active-in-ui %null-pointer)
-           (bytevector-sint-set! layer-active-in-ui 0 (native-endianness) ly-fore)]
+           (bytevector-sint-set! layer-active-in-ui 0 ly-fore
+                                 (native-endianness) (sizeof int))]
           [(font-view? v)
            (set-pointer! fv-active-in-ui %null-pointer)]))
 
@@ -686,64 +756,60 @@ function is always a boolean."
           (reset-legacy-python-globals! v)
           (pybool->boolean (py-not-not retval))))))
 
+  (define (registerMenuItem-one-window action enabled data window shortcut menu-path)
+    (unless (no-windowing-ui?)
+      (let ([window^    (if (pyobject? window)
+                            window
+                            (borrowed-pointer->pyobject window))]
+            [menu-path^ (if (pyobject? menu-path)
+                            menu-path
+                            (borrowed-pointer->pyobject menu-path))]
+            [action^    (if (pyobject? action)
+                            action
+                            (borrowed-pointer->pyobject action))]
+            [enabled^   (if (pyobject? enabled)
+                            enabled
+                            (borrowed-pointer->pyobject enabled))]
+            [shortcut^  (if (pyobject? shortcut)
+                            shortcut
+                            (borrowed-pointer->pyobject shortcut))]
+            [data^      (if (pyobject? data)
+                            data
+                            (borrowed-pointer->pyobject data))])
+        (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
+              [menu-path-® (map pystring->string (pytuple->list menu-path^))]
+              [action-®    (legacy-python-callable->procedure data^ action^)]
+              [enabled-®   (if (not (pynone? enabled^))
+                               (legacy-python-callable->procedure data^ enabled^)
+                               (lambda (view) #t))]
+              [shortcut-®  (cond [(pynone? shortcut^) #f]
+                                 [(string=? (pystring->string shortcut^) "None") #f]
+                                 [else (pystring->string shortcut^)])])
+          (register-fontforge-menu-entry #:window window-®
+                                         #:menu-path menu-path-®
+                                         #:action action-®
+                                         #:enabled enabled-®
+                                         #:shortcut shortcut-®)))))
 
-  ) ;; end of if-fontforge-has-pure-api
-
- ;;-------------------------------------------------------------------------
-
- (if-fontforge-has-python-api
-
-  (define view->python-view
-    (lambda (v)
-      (assert (view? v))
-      (let* ([views (python-module "sortsmill.views")]
-             [views-dict (py-dict views)]
-             [view-class-name (cond [(glyph-view? v) "glyph_view"]
-                                    [(font-view? v)  "font_view"]
-                                    [else (assert false)])]
-             [view-class (pyindexed-ref views-dict (string->pystring view-class-name))])
-        ((pycallable->procedure view-class) (pointer->pylong (view->pointer v))))))
-
-  (define python-menu-entry-callable->procedure
-    (lambda (f)
-      "Wrap either a Python callable to serve as an ‘action’ or
-‘enabled’ function. The Guile return value of the wrapped function is
-always a boolean."
-      (let ([f-wrapped (pycallable->procedure f)])
-        [lambda (view)
-          (let ([result (f-wrapped (view->python-view view))])
-            (pybool->boolean (py-not-not result)))] )))
-
-  (define (register-python-menu-entry window menu-path action enabled shortcut)
-    (let ([window^    (if (pyobject? window)
-                          window
-                          (borrowed-pointer->pyobject window))]
-          [menu-path^ (if (pyobject? menu-path)
-                          menu-path
-                          (borrowed-pointer->pyobject menu-path))]
-          [action^    (if (pyobject? action)
-                          action
-                          (borrowed-pointer->pyobject action))]
-          [enabled^   (if (pyobject? enabled)
-                          enabled
-                          (borrowed-pointer->pyobject enabled))]
-          [shortcut^  (if (pyobject? shortcut)
-                          shortcut
-                          (borrowed-pointer->pyobject shortcut))])
-      (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
-            [menu-path-® (map pystring->string (pytuple->list menu-path^))]
-            [action-®    (python-menu-entry-callable->procedure action^)]
-            [enabled-®   (if (not (pynone? enabled^))
-                             (python-menu-entry-callable->procedure enabled^)
-                             (lambda (view) #t))]
-            [shortcut-®  (if (not (pynone? shortcut^))
-                             (pystring->string shortcut^)
-                             #f)])
-        (register-fontforge-menu-entry #:window window-®
-                                       #:menu-path menu-path-®
-                                       #:action action-®
-                                       #:enabled enabled-®
-                                       #:shortcut shortcut-®))))
+  (define (registerMenuItem action enabled data windows shortcut menu-path)
+    (cond [(pytuple? windows)
+           (let ([scm-windows (map (compose string-downcase pystring->string)
+                                   (pytuple->list windows))])
+             (when (or (member "glyph" scm-windows) (member "char" scm-windows))
+               (registerMenuItem-one-window action enabled data
+                                            (string->pystring "glyph")
+                                            shortcut menu-path))
+             (when (member "font" scm-windows)
+               (registerMenuItem-one-window action enabled data
+                                            (string->pystring "font")
+                                            shortcut menu-path)))]
+          [(pystring? windows)
+           (registerMenuItem action enabled data (make-pytuple windows)
+                             shortcut menu-path)]
+          [else
+           (registerMenuItem action enabled data
+                             (borrowed-pointer->pyobject windows)
+                             shortcut menu-path)]))
 
   ) ;; end of if-fontforge-has-python-api
 

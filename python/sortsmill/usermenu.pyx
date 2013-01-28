@@ -18,29 +18,23 @@
 cdef extern from 'config.h':
   pass
 
-cdef extern from "stdbool.h":
-  pass
-from libcpp cimport bool
-
 from cpython.ref cimport PyObject
 
 from sortsmill.cython.guile cimport SCM
 cimport sortsmill.cython.guile as scm
 
-cdef extern from "fontforge.h":
-  bool get_no_windowing_ui ()
-
+# FIXME: Get rid of this or revise it for the menu design we end up
+# with.
 def register_fontforge_menu_entry (window not None,
                                    menu_path not None,
                                    action not None,
                                    enabled = None,
                                    shortcut = None):
-  if not get_no_windowing_ui ():
-    menu_path = tuple (menu_path)
-    scm.scm_call_5 (scm.scm_c_public_ref ('sortsmill usermenu',
-                                          'register-python-menu-entry'),
-                    scm.scm_from_pointer (<PyObject *> window, NULL),
-                    scm.scm_from_pointer (<PyObject *> menu_path, NULL),
-                    scm.scm_from_pointer (<PyObject *> action, NULL),
-                    scm.scm_from_pointer (<PyObject *> enabled, NULL),
-                    scm.scm_from_pointer (<PyObject *> shortcut, NULL))
+  menu_path = tuple (menu_path)
+  scm.scm_call_5 (scm.scm_c_public_ref ('sortsmill usermenu',
+                                        'register-python-menu-entry'),
+                  scm.scm_from_pointer (<PyObject *> window, NULL),
+                  scm.scm_from_pointer (<PyObject *> menu_path, NULL),
+                  scm.scm_from_pointer (<PyObject *> action, NULL),
+                  scm.scm_from_pointer (<PyObject *> enabled, NULL),
+                  scm.scm_from_pointer (<PyObject *> shortcut, NULL))

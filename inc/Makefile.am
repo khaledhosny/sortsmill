@@ -63,8 +63,7 @@ nobase_include_HEADERS += sortsmill/__init__.pxd						\
 	sortsmill/cython/guile.pxd sortsmill/cython/linalg.pxd				\
 	sortsmill/cython/splinefont.pxd sortsmill/cython/xgc.pxd			\
 	sortsmill/cython/config.pxi sortsmill/cython/gmpy.pxd				\
-	sortsmill/cython/gsl.pxd sortsmill/cython/polyspline.pxd			\
-	sortsmill/cython/usermenu.pxd
+	sortsmill/cython/gsl.pxd sortsmill/cython/polyspline.pxd
 nobase_include_HEADERS += sortsmill/cython/internal/__init__.pxd	\
 	sortsmill/cython/internal/__exec.pxd
 endif HAVE_PYTHON_API

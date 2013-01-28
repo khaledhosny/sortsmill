@@ -152,11 +152,11 @@ NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
 cythonbuildinc = $(top_builddir)/inc/sortsmill/cython
 cythonsrcinc = $(top_srcdir)/inc/sortsmill/cython
 
-PXD_FILES = $(cythonsrcinc)/usermenu.pxd $(cythonsrcinc)/xgc.pxd	\
-	$(cythonsrcinc)/guile.pxd $(cythonsrcinc)/gsl.pxd				\
-	$(cythonsrcinc)/linalg.pxd $(cythonsrcinc)/brentroot.pxd		\
-	$(cythonsrcinc)/gmpy.pxd $(cythonsrcinc)/polyspline.pxd			\
-	$(cythonsrcinc)/contour_interface.pxd							\
+PXD_FILES = $(cythonsrcinc)/xgc.pxd $(cythonsrcinc)/guile.pxd	\
+	$(cythonsrcinc)/gsl.pxd $(cythonsrcinc)/linalg.pxd			\
+	$(cythonsrcinc)/brentroot.pxd $(cythonsrcinc)/gmpy.pxd		\
+	$(cythonsrcinc)/polyspline.pxd								\
+	$(cythonsrcinc)/contour_interface.pxd						\
 	$(cythonsrcinc)/splinefont.pxd
 
 PXI_FILES = $(cythonsrcinc)/gmpy.pxi

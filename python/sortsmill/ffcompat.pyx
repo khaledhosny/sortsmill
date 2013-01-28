@@ -1,6 +1,6 @@
 # -*- coding: utf-8; python-indent: 2; -*-
 
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 # Based in part on python.c by George Williams, which is
 #   Copyright (C) 2007-2012 by George Williams
 #
@@ -41,6 +41,9 @@ cimport sortsmill.cython.xgc as xgc
 from cpython.ref cimport PyObject, Py_XINCREF, Py_XDECREF
 from cpython.object cimport PyObject_CallObject, PyObject_IsTrue
 from libc.stdint cimport uintptr_t
+
+from sortsmill.cython.guile cimport SCM
+cimport sortsmill.cython.guile as scm
 
 cdef extern from "baseviews.h":
   ctypedef struct CharViewBase:
@@ -198,86 +201,26 @@ def postError (win_title, msg):
   notices.post_fontforge_error (win_title, msg)
 
 #--------------------------------------------------------------------------
-#
-# Implementation of registerMenuItem in terms of
-# usermenu.register_fontforge_menu_entry.
 
 IF HAVE_GUI:
-  from sortsmill.usermenu import register_fontforge_menu_entry
-
-  def __default_enabled (view):
-    return True
-
   def registerMenuItem (menu_function not None,
                         enable_function,
                         data,
                         which_window not None,
                         shortcut_string,
                         *submenu_names):
-
-    def canonical_window (window):
-      w = window.lower ()
-      if w == 'char':
-        w = 'glyph'
-      if w not in ('glyph', 'font'):
-        raise ValueError ("Expected 'glyph' or 'font', but got " + str (w))
-      return w
-
-    def call_with_globals_set_for_glyph (func, data, gv):
-      cdef uintptr_t cvb = gv.to_internal_type().ptr
-      cdef uintptr_t sc = fontforge_api.CharViewBase (cvb)._sc
-
-      # Set globals that are used in the legacy python.c code.
-      sc_active_in_ui = <SplineChar *> sc
-      layer_active_in_ui = CVLayer (<CharViewBase *> cvb)
-
-      legacy_glyph_obj = PySC_From_SC_I (<SplineChar *> sc)
-      result = func (data, legacy_glyph_obj)
-      Py_XDECREF (<PyObject *> legacy_glyph_obj)
-
-      # We are done with those globals.
-      sc_active_in_ui = NULL
-      layer_active_in_ui = ly_fore
-
-      return result
-
-    def call_with_globals_set_for_font (func, data, fv):
-      cdef uintptr_t fvb = fv.to_internal_type().ptr
-      cdef int active_layer = fontforge_api.FontViewBase (fvb)._active_layer
-
-      # Set globals that are used in the legacy python.c code.
-      fv_active_in_ui = <FontViewBase *> fvb
-      layer_active_in_ui = active_layer
-
-      legacy_font_obj = PyFV_From_FV_I (<FontViewBase *> fvb)
-      result = func (data, legacy_font_obj)
-      Py_XDECREF (<PyObject *> legacy_font_obj)
-
-      # We are done with those globals.
-      fv_active_in_ui = NULL
-
-      return result
-
-    if isinstance (which_window, str):
-      which_window = (which_window,)
-    windows = {canonical_window (w) for w in which_window}
-
-    if enable_function is None:
-      enable_function = __default_enabled
-
-    for w in windows:
-
-      call_with_globals_set = call_with_globals_set_for_font
-      if w == 'glyph':
-        call_with_globals_set = call_with_globals_set_for_glyph
-
-      action = lambda obj: call_with_globals_set (menu_function, data, obj)
-      Py_XINCREF (<PyObject *> action)
-      enabled = lambda obj: call_with_globals_set (enable_function, data, obj)
-      Py_XINCREF (<PyObject *> enabled)
-
-      register_fontforge_menu_entry (w, submenu_names, action, enabled,
-                                     shortcut_string)
+    action = menu_function
+    enabled = enable_function
+    windows = which_window if isinstance (which_window, str) else tuple (which_window)
+    shortcut = shortcut_string
+    menu_path = tuple (submenu_names)
+    scm.scm_call_6 (scm.scm_c_private_ref ('sortsmill usermenu', 'registerMenuItem'),
+                    scm.scm_from_pointer (<PyObject *> action, NULL),
+                    scm.scm_from_pointer (<PyObject *> enabled, NULL),
+                    scm.scm_from_pointer (<PyObject *> data, NULL),
+                    scm.scm_from_pointer (<PyObject *> windows, NULL),
+                    scm.scm_from_pointer (<PyObject *> shortcut, NULL),
+                    scm.scm_from_pointer (<PyObject *> menu_path, NULL))
 
 IF not HAVE_GUI:
   def registerMenuItem (menu_function not None,
