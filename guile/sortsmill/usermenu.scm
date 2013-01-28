@@ -53,7 +53,7 @@
          (only (srfi :26) cut)
          (only (srfi :27) random-integer)
          (only (ice-9 match) match match-lambda)
-         (only (system foreign) sizeof void
+         (only (system foreign) sizeof void int
                %null-pointer null-pointer?
                pointer? pointer-address string->pointer
                procedure->pointer pointer->procedure
@@ -618,7 +618,75 @@ function is always a boolean."
                 ;; more likely, perhaps, that breakage of an ‘enabled’
                 ;; function will be noticed.
                 #f)))))])))
+
+  (define python-dll (dynamic-link "libguile-sortsmill_fontforgeexe"))
+
+  (define fv-active-in-ui (pointer->bytevector
+                           (dynamic-pointer "fv_active_in_ui" python-dll)
+                           (sizeof '*)))
+
+  (define sc-active-in-ui (pointer->bytevector
+                           (dynamic-pointer "sc_active_in_ui" python-dll)
+                           (sizeof '*)))
+
+  (define layer-active-in-ui (pointer->bytevector
+                              (dynamic-pointer "layer_active_in_ui" python-dll)
+                              (sizeof int)))
+
+  (define SC->PySC
+    (pointer->procedure '* (dynamic-func "PySC_From_SC" python-dll) '(*)))
+
+  (define FV->PyFV
+    (pointer->procedure '* (dynamic-func "PyFV_From_FV" python-dll) '(*)))
+
+  (define CVLayer
+    (pointer->procedure int (dynamic-func "CVLayer" python-dll) '(*)))
+
+  (define ly-fore 1)
   
+  (define (view->legacy-python-view! v)
+    (assert (view? v))
+    (cond [(glyph-view? v)
+           (let* ([cvb   (glyph-view->CharViewBase v)]
+                  [sc    (CharViewBase:sc-ref cvb)]
+                  [layer (CVLayer (CharViewBase->pointer cvb))])
+
+             ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
+             (set-pointer! sc-active-in-ui sc)
+             (bytevector-sint-set! layer-active-in-ui 0 (native-endianness) layer)
+
+             (borrowed-pointer->pyobject
+              (SC->PySC (SplineChar->pointer sc))))]
+
+          [(font-view? v)
+           (let ([fvb   (font-view->FontViewBase v)]
+                 [layer (FontViewBase:active-layer-ref fvb)])
+
+             ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
+             (set-pointer! fv-active-in-ui fvb)
+             (bytevector-sint-set! layer-active-in-ui 0 (native-endianness) layer)
+
+             (borrowed-pointer->pyobject
+              (FV->PyFV (FontViewBase->pointer fvb))))] ))
+
+  (define (reset-legacy-python-globals! v)
+    (assert (view? v))
+    (cond [(glyph-view? v)
+           (set-pointer! sc-active-in-ui %null-pointer)
+           (bytevector-sint-set! layer-active-in-ui 0 (native-endianness) ly-fore)]
+          [(font-view? v)
+           (set-pointer! fv-active-in-ui %null-pointer)]))
+
+  (define (legacy-python-callable->procedure data callable)
+    (assert (pyobject? data))
+    (assert (pycallable? callable))
+    (let ([proc (pycallable->procedure callable)])
+      (lambda (v)
+        (let ([retval (proc data (view->legacy-python-view! v))])
+          (reset-legacy-python-globals! v)
+          (pybool->boolean (py-not-not retval))))))
+
+
   ) ;; end of if-fontforge-has-pure-api
 
  ;;-------------------------------------------------------------------------
@@ -647,11 +715,21 @@ always a boolean."
             (pybool->boolean (py-not-not result)))] )))
 
   (define (register-python-menu-entry window menu-path action enabled shortcut)
-    (let ([window^    (if (pyobject? window)    window    (pointer->pyobject window))]
-          [menu-path^ (if (pyobject? menu-path) menu-path (pointer->pyobject menu-path))]
-          [action^    (if (pyobject? action)    action    (pointer->pyobject action))]
-          [enabled^   (if (pyobject? enabled)   enabled   (pointer->pyobject enabled))]
-          [shortcut^  (if (pyobject? shortcut)  shortcut  (pointer->pyobject shortcut))])
+    (let ([window^    (if (pyobject? window)
+                          window
+                          (borrowed-pointer->pyobject window))]
+          [menu-path^ (if (pyobject? menu-path)
+                          menu-path
+                          (borrowed-pointer->pyobject menu-path))]
+          [action^    (if (pyobject? action)
+                          action
+                          (borrowed-pointer->pyobject action))]
+          [enabled^   (if (pyobject? enabled)
+                          enabled
+                          (borrowed-pointer->pyobject enabled))]
+          [shortcut^  (if (pyobject? shortcut)
+                          shortcut
+                          (borrowed-pointer->pyobject shortcut))])
       (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
             [menu-path-® (map pystring->string (pytuple->list menu-path^))]
             [action-®    (python-menu-entry-callable->procedure action^)]

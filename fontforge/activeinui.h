@@ -31,6 +31,10 @@
 
 extern FontViewBase *fv_active_in_ui;
 extern SplineChar *sc_active_in_ui;
+
+/* Do not change the type of the following variable unless you know
+   what you are doing. It may be accessed from Guile and other
+   languages that have to assume its type. */
 extern int layer_active_in_ui;
 
 #endif	/* _INTERNAL_ACTIVEINUI_H */
