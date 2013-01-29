@@ -34,13 +34,13 @@ POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
 
 lib_LTLIBRARIES = libsortsmill_aux.la
 
-dist_libsortsmill_aux_la_SOURCES = ArabicForms.c alphabet.c			\
+dist_libsortsmill_aux_la_SOURCES = ArabicForms.c alphabet.c				\
 	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c				\
 	combiners.h xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c			\
 	xuniconv.c xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c		\
 	rexp.c brentroot.c qbrentroot.c gmp_constants.c gmp_gc.c linalg.c	\
 	precomputed_gmp_polyspline_data.c polyspline_data.c polyspline.c	\
-	rnrs_conditions.c
+	rnrs_conditions.c scm_python.c
 
 nodist_libsortsmill_aux_la_SOURCES = precomputed_polyspline_data.c
 

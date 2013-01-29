@@ -674,7 +674,7 @@ always a boolean."
                             shortcut
                             (borrowed-pointer->pyobject shortcut))])
         (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
-              [menu-path-® (map pystring->string (pytuple->list menu-path^))]
+              [menu-path-® (map pystring->string (pysequence->list menu-path^))]
               [action-®    (python-menu-entry-callable->procedure action^)]
               [enabled-®   (if (not (pynone? enabled^))
                                (python-menu-entry-callable->procedure enabled^)
@@ -777,7 +777,7 @@ always a boolean."
                             data
                             (borrowed-pointer->pyobject data))])
         (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
-              [menu-path-® (map pystring->string (pytuple->list menu-path^))]
+              [menu-path-® (map pystring->string (pysequence->list menu-path^))]
               [action-®    (legacy-python-callable->procedure data^ action^)]
               [enabled-®   (if (not (pynone? enabled^))
                                (legacy-python-callable->procedure data^ enabled^)
@@ -792,9 +792,9 @@ always a boolean."
                                          #:shortcut shortcut-®)))))
 
   (define (registerMenuItem action enabled data windows shortcut menu-path)
-    (cond [(pytuple? windows)
+    (cond [(pysequence? windows)
            (let ([scm-windows (map (compose string-downcase pystring->string)
-                                   (pytuple->list windows))])
+                                   (pysequence->list windows))])
              (when (or (member "glyph" scm-windows) (member "char" scm-windows))
                (registerMenuItem-one-window action enabled data
                                             (string->pystring "glyph")
@@ -803,9 +803,6 @@ always a boolean."
                (registerMenuItem-one-window action enabled data
                                             (string->pystring "font")
                                             shortcut menu-path)))]
-          [(pystring? windows)
-           (registerMenuItem action enabled data (make-pytuple windows)
-                             shortcut menu-path)]
           [else
            (registerMenuItem action enabled data
                              (borrowed-pointer->pyobject windows)

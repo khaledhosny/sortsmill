@@ -22,24 +22,13 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <sortsmill/guile/rnrs_conditions.h>
+#include <sortsmill/guile/python.h>
 #include <intl.h>
 
 #include <atomic_ops.h>
 #include <sortsmill/xgc.h>      // Includes gc.h and pthreads.h in the right order.
 
 void init_guile_sortsmill_python (void);
-
-// FIXME: Put these in the auxiliary library, but with more
-// comprehensible names.
-SCM PyObject_ptr_to_scm_pyobject (PyObject *p);
-SCM borrowed_PyObject_ptr_to_scm_pyobject (PyObject *p);
-PyObject *pyobject_to_PyObject_ptr (SCM obj);
-
-// FIXME: Put these (and much more) in the auxiliary library.
-SCM scm_list_to_pytuple (SCM obj);
-SCM scm_pytuple_to_list (SCM obj);
-SCM scm_list_to_pylist (SCM obj);
-SCM scm_pylist_to_list (SCM obj);
 
 //-------------------------------------------------------------------------
 
@@ -63,27 +52,6 @@ initialize_gmpy_pymodule_if_necessary (void)
 
 //-------------------------------------------------------------------------
 
-/*
-// FIXME: Put this in the auxiliary library.
-static SCM
-rnrs_make_python_error (SCM ptype, SCM pvalue, SCM ptraceback)
-{
-  return scm_call_3 (scm_c_public_ref ("sortsmill python",
-                                       "make-python-error"),
-                     ptype, pvalue, ptraceback);
-}
-
-// FIXME: Put this in the auxiliary library.
-static SCM
-rnrs_c_make_python_error (PyObject *ptype, PyObject *pvalue,
-                          PyObject *ptraceback)
-{
-  return rnrs_make_python_error (PyObject_ptr_to_scm_pyobject (ptype),
-                                 PyObject_ptr_to_scm_pyobject (pvalue),
-                                 PyObject_ptr_to_scm_pyobject (ptraceback));
-}
-*/
-
 static SCM
 scm_py_failure (SCM who, SCM irritants)
 {
@@ -96,32 +64,15 @@ scm_py_failure (SCM who, SCM irritants)
       PyObject *pvalue;
       PyObject *ptraceback;
       PyErr_Fetch (&ptype, &pvalue, &ptraceback);
-      SCM scm_ptype = PyObject_ptr_to_scm_pyobject (ptype);
-      SCM scm_pvalue = PyObject_ptr_to_scm_pyobject (pvalue);
-      SCM scm_ptraceback = PyObject_ptr_to_scm_pyobject (ptraceback);
+      SCM scm_ptype = scm_from_PyObject_ptr (ptype);
+      SCM scm_pvalue = scm_from_PyObject_ptr (pvalue);
+      SCM scm_ptraceback = scm_from_PyObject_ptr (ptraceback);
       SCM exc_info =
         scm_list_to_pytuple (scm_list_3
                              (scm_ptype, scm_pvalue, scm_ptraceback));
       scm_throw (scm_from_utf8_symbol ("python-exception"),
                  scm_list_2 (scm_from_utf8_string ("scm_py_failure"),
                              exc_info));
-      /*
-         scm_error_scm (scm_from_utf8_symbol ("python-error"), who,
-         scm_from_utf8_string (_("Python error: ~a")),
-         scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
-         PyObject_ptr_to_scm_pyobject (pvalue),
-         PyObject_ptr_to_scm_pyobject (ptraceback)),
-         scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
-         PyObject_ptr_to_scm_pyobject (pvalue),
-         PyObject_ptr_to_scm_pyobject (ptraceback)));
-       */
-      /*
-         rnrs_raise_condition
-         (scm_list_3
-         (rnrs_c_make_python_error (ptype, pvalue, ptraceback),
-         rnrs_make_who_condition (who),
-         rnrs_make_irritants_condition (irritants)));
-       */
     }
   else
     rnrs_raise_condition
@@ -142,100 +93,40 @@ scm_c_py_failure (const char *who, SCM irritants)
 
 //-------------------------------------------------------------------------
 
-static void
-pyobject_finalizer (void *x)
+static SCM
+scm_grab_pyref (SCM p)
 {
-  Py_XDECREF ((PyObject *) x);
-}
-
-static inline SCM
-scm_pyobject_to_scm (PyObject *obj)
-{
-  return scm_from_pointer (obj, pyobject_finalizer);
-}
-
-static inline SCM
-scm_borrowed_pyobject_to_scm (PyObject *obj)
-{
-  Py_XINCREF (obj);
-  return scm_pyobject_to_scm (obj);
+  return scm_from_pyref ((PyObject *) scm_to_pointer (p));
 }
 
 static SCM
-scm_grab_pyobject_reference (SCM p)
+scm_grab_borrowed_pyref (SCM p)
 {
-  return scm_pyobject_to_scm ((PyObject *) scm_to_pointer (p));
+  return scm_from_borrowed_pyref ((PyObject *) scm_to_pointer (p));
 }
-
-static SCM
-scm_grab_borrowed_pyobject_reference (SCM p)
-{
-  return scm_borrowed_pyobject_to_scm ((PyObject *) scm_to_pointer (p));
-}
-
-static SCM
-scm_pointer_to_scm_pyobject (SCM p)
-{
-  return scm_call_1 (scm_c_public_ref ("sortsmill python",
-                                       "pointer->pyobject"), p);
-}
-
-static SCM
-scm_borrowed_pointer_to_scm_pyobject (SCM p)
-{
-  return scm_call_1 (scm_c_public_ref ("sortsmill python",
-                                       "borrowed-pointer->pyobject"), p);
-}
-
-SCM
-PyObject_ptr_to_scm_pyobject (PyObject *p)
-{
-  return scm_pointer_to_scm_pyobject (scm_from_pointer (p, NULL));
-}
-
-SCM
-borrowed_PyObject_ptr_to_scm_pyobject (PyObject *p)
-{
-  return scm_borrowed_pointer_to_scm_pyobject (scm_from_pointer (p, NULL));
-}
-
-static SCM
-scm_pyobject_to_scm_pointer (SCM obj)
-{
-  return
-    scm_call_1 (scm_c_public_ref ("sortsmill python", "pyobject->pointer"),
-                obj);
-}
-
-PyObject *
-pyobject_to_PyObject_ptr (SCM obj)
-{
-  return (PyObject *) scm_to_pointer (scm_pyobject_to_scm_pointer (obj));
-}
-
 
 static SCM
 scm_py_none (void)
 {
-  return borrowed_PyObject_ptr_to_scm_pyobject (Py_None);
+  return borrowed_scm_from_PyObject_ptr (Py_None);
 }
 
 static SCM
 scm_py_false (void)
 {
-  return borrowed_PyObject_ptr_to_scm_pyobject (Py_False);
+  return borrowed_scm_from_PyObject_ptr (Py_False);
 }
 
 static SCM
 scm_py_true (void)
 {
-  return borrowed_PyObject_ptr_to_scm_pyobject (Py_True);
+  return borrowed_scm_from_PyObject_ptr (Py_True);
 }
 
 static SCM
 scm_py_not (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   int is_true = PyObject_Not (py_obj);
   if (is_true == -1)
     scm_c_py_failure ("scm_py_not", scm_list_1 (obj));
@@ -245,7 +136,7 @@ scm_py_not (SCM obj)
 static SCM
 scm_py_not_not (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   int is_true = PyObject_IsTrue (py_obj);
   if (is_true == -1)
     scm_c_py_failure ("scm_py_not_not", scm_list_1 (obj));
@@ -261,17 +152,17 @@ scm_is_pyobject (SCM obj)
                   ("sortsmill python", "procedure:pyobject?"), obj));
 }
 
-#define _SCM_TYPECHECK_P(NAME, TYPECHECK)			\
-  static SCM							\
-  NAME (SCM obj)						\
-  {								\
-    bool result = false;					\
-    if (scm_is_pyobject (obj))					\
-      {								\
-	PyObject *py_obj = pyobject_to_PyObject_ptr (obj);	\
-	result = TYPECHECK (py_obj);				\
-      }								\
-    return scm_from_bool (result);				\
+#define _SCM_TYPECHECK_P(NAME, TYPECHECK)		\
+  static SCM						\
+  NAME (SCM obj)					\
+  {							\
+    bool result = false;				\
+    if (scm_is_pyobject (obj))				\
+      {							\
+	PyObject *py_obj = scm_to_PyObject_ptr (obj);	\
+	result = TYPECHECK (py_obj);			\
+      }							\
+    return scm_from_bool (result);			\
   }
 
 #define _FF_PYNONE_CHECK(py_obj) ((py_obj) == Py_None)
@@ -292,6 +183,7 @@ _SCM_TYPECHECK_P (scm_pylist_p, PyList_Check);
 _SCM_TYPECHECK_P (scm_pydict_p, PyDict_Check);
 _SCM_TYPECHECK_P (scm_pycallable_p, PyCallable_Check);
 _SCM_TYPECHECK_P (scm_pymodule_p, PyModule_Check);
+_SCM_TYPECHECK_P (scm_pysequence_p, PySequence_Check);
 
 static SCM
 scm_pympz_p (SCM obj)
@@ -309,7 +201,7 @@ scm_boolean_to_pybool (SCM obj)
 static SCM
 scm_pybool_to_boolean (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   if (!PyBool_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
@@ -326,13 +218,13 @@ scm_pybool_to_boolean (SCM obj)
 static SCM
 scm_integer_to_pyint (SCM obj)
 {
-  return PyObject_ptr_to_scm_pyobject (PyInt_FromLong (scm_to_long (obj)));
+  return scm_from_PyObject_ptr (PyInt_FromLong (scm_to_long (obj)));
 }
 
 static SCM
 scm_pyint_to_integer (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   if (!PyInt_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
@@ -352,14 +244,14 @@ scm_integer_to_pympz (SCM obj)
   initialize_gmpy_pymodule_if_necessary ();
   PympzObject *z = Pympz_new ();
   scm_to_mpz (obj, Pympz_AS_MPZ (z));
-  return PyObject_ptr_to_scm_pyobject ((PyObject *) z);
+  return scm_from_PyObject_ptr ((PyObject *) z);
 }
 
 static SCM
 scm_pympz_to_integer (SCM obj)
 {
   initialize_gmpy_pymodule_if_necessary ();
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   if (!Pympz_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
@@ -376,13 +268,13 @@ scm_pointer_to_pylong (SCM p)
   PyObject *obj = PyLong_FromVoidPtr (scm_to_pointer (p));
   if (obj == NULL)
     scm_c_py_failure ("scm_pointer_to_pylong", scm_list_1 (p));
-  return PyObject_ptr_to_scm_pyobject (obj);
+  return scm_from_PyObject_ptr (obj);
 }
 
 static SCM
 scm_pylong_to_pointer (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   if (!PyLong_Check (py_obj) && !PyInt_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
@@ -407,7 +299,7 @@ scm_list_to_pytuple (SCM obj)
   SCM p = obj;
   for (ssize_t i = 0; i < n; i++)
     {
-      PyObject *py_element = pyobject_to_PyObject_ptr (SCM_CAR (p));
+      PyObject *py_element = scm_to_PyObject_ptr (SCM_CAR (p));
       if (py_element == NULL)
         scm_c_py_failure (who, scm_list_1 (SCM_CAR (p)));
       PyTuple_SET_ITEM (tup, i, py_element);
@@ -423,13 +315,13 @@ scm_list_to_pytuple (SCM obj)
       PyTuple_SET_ITEM (tup, i, py_element);
     }
 
-  return PyObject_ptr_to_scm_pyobject (tup);
+  return scm_from_PyObject_ptr (tup);
 }
 
 SCM
 scm_pytuple_to_list (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   if (!PyTuple_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
@@ -441,7 +333,8 @@ scm_pytuple_to_list (SCM obj)
   SCM p = SCM_EOL;
   for (ssize_t i = length - 1; 0 <= i; i--)
     {
-      SCM element = PyObject_ptr_to_scm_pyobject (PyTuple_GET_ITEM (py_obj, i));
+      SCM element =
+        borrowed_scm_from_PyObject_ptr (PyTuple_GET_ITEM (py_obj, i));
       p = scm_cons (element, p);
     }
   return p;
@@ -460,7 +353,7 @@ scm_list_to_pylist (SCM obj)
   SCM p = obj;
   for (ssize_t i = 0; i < n; i++)
     {
-      PyObject *py_element = pyobject_to_PyObject_ptr (SCM_CAR (p));
+      PyObject *py_element = scm_to_PyObject_ptr (SCM_CAR (p));
       if (py_element == NULL)
         scm_c_py_failure (who, scm_list_1 (SCM_CAR (p)));
       PyList_SET_ITEM (lst, i, py_element);
@@ -476,13 +369,13 @@ scm_list_to_pylist (SCM obj)
       PyList_SET_ITEM (lst, i, py_element);
     }
 
-  return PyObject_ptr_to_scm_pyobject (lst);
+  return scm_from_PyObject_ptr (lst);
 }
 
 SCM
 scm_pylist_to_list (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   if (!PyList_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
@@ -494,9 +387,37 @@ scm_pylist_to_list (SCM obj)
   SCM p = SCM_EOL;
   for (ssize_t i = length - 1; 0 <= i; i--)
     {
-      SCM element = PyObject_ptr_to_scm_pyobject (PyList_GET_ITEM (py_obj, i));
+      SCM element =
+        borrowed_scm_from_PyObject_ptr (PyList_GET_ITEM (py_obj, i));
       p = scm_cons (element, p);
     }
+  return p;
+}
+
+SCM
+scm_pysequence_to_list (SCM obj)
+{
+  const char *who = "scm_pysequence_to_list";
+
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
+  if (!PySequence_Check (py_obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("expected a Python sequence")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  PyObject *tup = PySequence_Tuple (py_obj);
+  if (tup == NULL)
+    scm_c_py_failure (who, scm_list_1 (obj));
+  ssize_t length = PyTuple_GET_SIZE (tup);
+  SCM p = SCM_EOL;
+  for (ssize_t i = length - 1; 0 <= i; i--)
+    {
+      SCM element = borrowed_scm_from_PyObject_ptr (PyTuple_GET_ITEM (tup, i));
+      p = scm_cons (element, p);
+    }
+  Py_DECREF (tup);
   return p;
 }
 
@@ -519,29 +440,27 @@ scm_pyimport (SCM obj)
 
   scm_dynwind_end ();
 
-  return PyObject_ptr_to_scm_pyobject (module);
+  return scm_from_PyObject_ptr (module);
 }
 
 static SCM
 scm_py_builtins (void)
 {
-  return borrowed_PyObject_ptr_to_scm_pyobject (PyEval_GetBuiltins ());
+  return borrowed_scm_from_PyObject_ptr (PyEval_GetBuiltins ());
 }
 
 static SCM
 scm_py_locals (void)
 {
   PyObject *obj = PyEval_GetLocals ();
-  return (obj ==
-          NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
+  return (obj == NULL) ? scm_py_none () : borrowed_scm_from_PyObject_ptr (obj);
 }
 
 static SCM
 scm_py_globals (void)
 {
   PyObject *obj = PyEval_GetGlobals ();
-  return (obj ==
-          NULL) ? scm_py_none () : borrowed_PyObject_ptr_to_scm_pyobject (obj);
+  return (obj == NULL) ? scm_py_none () : borrowed_scm_from_PyObject_ptr (obj);
 }
 
 // FIXME: This function should be written differently for Python 3.2+,
@@ -551,7 +470,7 @@ scm_py_globals (void)
 static SCM
 scm_python_module_get_file_name (SCM obj)
 {
-  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
   if (!PyModule_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
@@ -617,10 +536,8 @@ init_guile_sortsmill_python (void)
 {
   scm_c_define_gsubr ("py-failure", 2, 0, 0, scm_py_failure);
 
-  scm_c_define_gsubr ("grab-pyobject-reference", 1, 0, 0,
-                      scm_grab_pyobject_reference);
-  scm_c_define_gsubr ("grab-borrowed-pyobject-reference", 1, 0, 0,
-                      scm_grab_borrowed_pyobject_reference);
+  scm_c_define_gsubr ("grab-pyref", 1, 0, 0, scm_grab_pyref);
+  scm_c_define_gsubr ("grab-borrowed-pyref", 1, 0, 0, scm_grab_borrowed_pyref);
 
   scm_c_define_gsubr ("py-none", 0, 0, 0, scm_py_none);
   scm_c_define_gsubr ("py-false", 0, 0, 0, scm_py_false);
@@ -641,6 +558,7 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pydict?", 1, 0, 0, scm_pydict_p);
   scm_c_define_gsubr ("pycallable?", 1, 0, 0, scm_pycallable_p);
   scm_c_define_gsubr ("pymodule?", 1, 0, 0, scm_pymodule_p);
+  scm_c_define_gsubr ("pysequence?", 1, 0, 0, scm_pysequence_p);
 
   scm_c_define_gsubr ("boolean->pybool", 1, 0, 0, scm_boolean_to_pybool);
   scm_c_define_gsubr ("pybool->boolean", 1, 0, 0, scm_pybool_to_boolean);
@@ -659,6 +577,7 @@ init_guile_sortsmill_python (void)
 
   scm_c_define_gsubr ("pytuple->list", 1, 0, 0, scm_pytuple_to_list);
   scm_c_define_gsubr ("pylist->list", 1, 0, 0, scm_pylist_to_list);
+  scm_c_define_gsubr ("pysequence->list", 1, 0, 0, scm_pysequence_to_list);
 
   scm_c_define_gsubr ("py-builtins", 0, 0, 0, scm_py_builtins);
   scm_c_define_gsubr ("py-locals", 0, 0, 0, scm_py_locals);

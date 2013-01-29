@@ -30,7 +30,6 @@ def register_fontforge_menu_entry (window not None,
                                    action not None,
                                    enabled = None,
                                    shortcut = None):
-  menu_path = tuple (menu_path)
   scm.scm_call_5 (scm.scm_c_public_ref ('sortsmill usermenu',
                                         'register-python-menu-entry'),
                   scm.scm_from_pointer (<PyObject *> window, NULL),

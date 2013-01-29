@@ -86,9 +86,11 @@
 
          pytuple->list
          pylist->list
+         pysequence->list
 
          pytuple?
          pylist?
+         pysequence?
 
          pytuple-map
          pylist-map
@@ -186,13 +188,30 @@
            (format port "#<pyobject repr:~a str:~s 0x~x>" repr str
                    (pointer-address (pyobject->pointer obj)))))))
 
- (define (pointer->pyobject p)
-   (private:pointer->pyobject (grab-pyobject-reference p)))
+ (define scm-from-pyref
+   (pointer->procedure
+    '* (dynamic-func "scm_from_pyref" python-dll) '(*)))
+
+ (define scm-from-borrowed-pyref
+   (pointer->procedure
+    '* (dynamic-func "scm_from_borrowed_pyref" python-dll) '(*)))
+
+#| (define (pointer->pyobject p)
+   (private:pointer->pyobject
+    (#|pointer->scm|#identity (scm-from-pyref (#|scm->pointer|#identity p)))))
 
  (define (borrowed-pointer->pyobject p)
-   (private:pointer->pyobject (grab-borrowed-pyobject-reference p)))
+   (private:pointer->pyobject
+    (#|pointer->scm|#identity (scm-from-borrowed-pyref (#|scm->pointer|#identity p)))))
+ |#
 
- (define (pyobject->pointer obj)
+ (define (pointer->pyobject p)
+   (private:pointer->pyobject (grab-pyref p)))
+ 
+ (define (borrowed-pointer->pyobject p)
+   (private:pointer->pyobject (grab-borrowed-pyref p)))
+
+(define (pyobject->pointer obj)
    (unless (pyobject? obj)
      (assertion-violation 'pyobject->pointer (_ "expected a Python object") obj))
    (private:pyobject->pointer obj))

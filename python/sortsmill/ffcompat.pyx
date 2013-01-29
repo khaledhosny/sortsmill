@@ -211,7 +211,10 @@ IF HAVE_GUI:
                         *submenu_names):
     action = menu_function
     enabled = enable_function
-    windows = which_window if isinstance (which_window, str) else tuple (which_window)
+    if isinstance (which_window, str):
+      windows = (which_window,)
+    else:
+      windows = tuple (which_window)
     shortcut = shortcut_string
     menu_path = tuple (submenu_names)
     scm.scm_call_6 (scm.scm_c_private_ref ('sortsmill usermenu', 'registerMenuItem'),
