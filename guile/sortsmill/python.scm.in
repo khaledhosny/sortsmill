@@ -95,6 +95,8 @@
          pytuple?
          pylist?
          pysequence?
+         pyiterable?
+         pygenerator?
 
          pytuple-map
          pylist-map

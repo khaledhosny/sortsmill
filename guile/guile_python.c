@@ -184,6 +184,8 @@ _SCM_TYPECHECK_P (scm_pydict_p, PyDict_Check);
 _SCM_TYPECHECK_P (scm_pycallable_p, PyCallable_Check);
 _SCM_TYPECHECK_P (scm_pymodule_p, PyModule_Check);
 _SCM_TYPECHECK_P (scm_pysequence_p, PySequence_Check);
+_SCM_TYPECHECK_P (scm_pyiterable_p, PyIter_Check);
+_SCM_TYPECHECK_P (scm_pygenerator_p, PyGen_Check);
 
 static SCM
 scm_pympz_p (SCM obj)
@@ -559,6 +561,8 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pycallable?", 1, 0, 0, scm_pycallable_p);
   scm_c_define_gsubr ("pymodule?", 1, 0, 0, scm_pymodule_p);
   scm_c_define_gsubr ("pysequence?", 1, 0, 0, scm_pysequence_p);
+  scm_c_define_gsubr ("pyiterable?", 1, 0, 0, scm_pyiterable_p);
+  scm_c_define_gsubr ("pygenerator?", 1, 0, 0, scm_pygenerator_p);
 
   scm_c_define_gsubr ("boolean->pybool", 1, 0, 0, scm_boolean_to_pybool);
   scm_c_define_gsubr ("pybool->boolean", 1, 0, 0, scm_pybool_to_boolean);
