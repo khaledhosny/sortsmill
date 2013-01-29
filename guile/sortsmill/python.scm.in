@@ -156,20 +156,16 @@
          current-python-module
          python-module-get-file-name
          pyimport
-         pymodule?
-
-         ;; FIXME: These are exported merely to get rid of ‘possibly
-         ;; unbound variable’ warnings. A better method is
-         ;; desired. Avoid using these variables (though one could
-         ;; certainly make a case for exporting py-failure).
-         py-failure
-         grab-pyref
-         grab-borrowed-pyref
-         guile-support-pymodule)
+         pymodule?)
 
  (define python-dll
    (dynamic-link "libguile-sortsmill_python"))
 
+ ;; These variables will be redefined by the dynamic-call.
+ (define py-failure *unspecified*)
+ (define grab-pyref *unspecified*)
+ (define grab-borrowed-pyref *unspecified*)
+ (define guile-support-pymodule *unspecified*)
  (dynamic-call "init_guile_sortsmill_python" python-dll)
 
  (define py-initialize

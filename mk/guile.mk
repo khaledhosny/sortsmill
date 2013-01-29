@@ -39,12 +39,6 @@ GUILE_INTERPRET = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) --no-auto-compile -s
 
 GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch	\
 -Wduplicate-case-datum -Wbad-case-datum -Wformat
-# -Wunbound-variable <-- This one gets confused by definitions
-#                        imported from C, unless they also are
-#                        exported. Is there a way to get around that?
-#                        I suppose one possibility is to declare them
-#                        using the foreign function interface rather
-#                        than defining them with scm_c_define_gsubr.
 
 GUILE_COMPILE = $(GUILE_ENV) $(GUILE_TOOLS) compile $(GUILE_WARNINGS)	\
 	$(GUILE_FLAGS)

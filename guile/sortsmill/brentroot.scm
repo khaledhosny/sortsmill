@@ -27,19 +27,15 @@
  (export flbrentroot
          flbrentroot-values
          qbrentroot
-         qbrentroot-values
-
-         ;; FIXME: These are exported merely to get rid of ‘possibly
-         ;; unbound variable’ warnings. A better method is
-         ;; desired. Avoid using these variables.
-         f64-brentroot
-         mpq-brentroot
-         )
+         qbrentroot-values)
 
  (import (sortsmill math-constants)
          (rnrs)
          (except (guile) error))
- 
+
+ ;; These variables will be redefined by the load-extension.
+ (define f64-brentroot *unspecified*)
+ (define mpq-brentroot *unspecified*)
  (load-extension "libguile-sortsmill_aux"
                  "init_guile_sortsmill_brentroot")
 
