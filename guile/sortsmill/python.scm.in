@@ -88,6 +88,9 @@
          pytuple->list
          pylist->list
          pysequence->list
+         pysequence->pyiterator
+         pyiterator->!procedure
+         pysequence->!procedure
 
          pytuple?
          pylist?
@@ -200,7 +203,7 @@
  (define (borrowed-pointer->pyobject p)
    (private:pointer->pyobject (grab-borrowed-pyref p)))
 
-(define (pyobject->pointer obj)
+ (define (pyobject->pointer obj)
    (unless (pyobject? obj)
      (assertion-violation 'pyobject->pointer (_ "expected a Python object") obj))
    (private:pyobject->pointer obj))
@@ -306,6 +309,8 @@
  (define-guile-support-procedure '* "__pyindexed_ref" '(*))
  (define-guile-support-procedure '* "__pyindexed_set" '(*))
  (define-guile-support-procedure '* "__python_alist_to_pydict" '(*))
+ (define-guile-support-procedure '* "__make_pyiterator" '(*))
+ (define-guile-support-procedure '* "__pyiterator_next" '(*))
 
  (define-py-to-py-filter pyguile?-base __pyguile_check)
 
@@ -332,6 +337,7 @@
  (define-py-to-py-filter pyindexed-ref-core __pyindexed_ref)
  (define-py-to-py-filter pyindexed-set!-core __pyindexed_set)
  (define-py-to-py-filter python-alist->pydict __python_alist_to_pydict)
+ (define-py-to-py-filter pysequence->pyiterator __make_pyiterator)
 
  (define (procedure->pycallable proc)
    (let* ([wrapped-proc
@@ -510,6 +516,18 @@
 
  (define alist->pydict
    (compose python-alist->pydict alist->python-alist))
+
+ (define pyiterator->!procedure
+   (lambda (obj)
+     (let ([next! (__pyiterator_next)]
+           [obj-ptr (pyobject->pointer obj)])
+       (lambda ()
+         (let ([next-value (next! obj-ptr)])
+           (cond [(null-pointer? next-value) #f]
+                 [else (pointer->pyobject next-value)]))))))
+
+ (define pysequence->!procedure
+   (compose pyiterator->!procedure pysequence->pyiterator))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

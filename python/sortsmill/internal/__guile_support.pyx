@@ -221,4 +221,16 @@ cdef public object __pyindexed_set (object args):
 cdef public object __python_alist_to_pydict (object alist):
   return { key: value for (key, value) in alist }
 
+cdef public object __make_pyiterator (object iterable):
+  return iter (iterable)
+
+cdef public PyObject *__pyiterator_next (object iter):
+  cdef PyObject *result
+  try:
+    py_result = iter.next ()
+    result = <PyObject *> py_result
+  except StopIteration:
+    result = NULL
+  return result
+
 #--------------------------------------------------------------------------
