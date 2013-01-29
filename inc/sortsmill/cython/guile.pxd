@@ -331,6 +331,12 @@ cdef extern from "libguile.h":
 #--------------------------------------------------------------------------
 
 cdef extern from "sortsmill/guile/python.h":
+  SCM scm_pointer_from_pyref (PyObject *obj)
+  SCM scm_pointer_from_borrowed_pyref (PyObject *obj)
+
+  SCM scm_from_scm_pyref (SCM p)
+  SCM scm_from_borrowed_scm_pyref (SCM p)
+
   SCM scm_from_PyObject_ptr (PyObject *p)
   SCM borrowed_scm_from_PyObject_ptr (PyObject *p)
   PyObject *scm_to_PyObject_ptr (SCM obj)
@@ -339,6 +345,7 @@ cdef extern from "sortsmill/guile/python.h":
   SCM scm_pytuple_to_list (SCM obj)
   SCM scm_list_to_pylist (SCM obj)
   SCM scm_pylist_to_list (SCM obj)
+  SCM scm_pysequence_to_list (SCM obj)
 
 #--------------------------------------------------------------------------
 

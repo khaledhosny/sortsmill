@@ -29,14 +29,25 @@ extern "C"
 }
 #endif
 
-SCM scm_from_pyref (PyObject *obj);
-SCM scm_from_borrowed_pyref (PyObject *obj);
+/* reference -> foreign pointer */
+SCM scm_pointer_from_pyref (PyObject *obj);
 
-SCM scm_pointer_to_pyobject (SCM p);
-SCM scm_borrowed_pointer_to_pyobject (SCM p);
+/* borrowed reference -> foreign pointer */
+SCM scm_pointer_from_borrowed_pyref (PyObject *obj);
 
+/* @var{pointer->pyobject} */
+SCM scm_from_scm_pyref (SCM p);
+
+/* @var{borrowed-pointer->pyobject} */
+SCM scm_from_borrowed_scm_pyref (SCM p);
+
+/* reference -> pyobject */
 SCM scm_from_PyObject_ptr (PyObject *p);
+
+/* borrowed reference -> pyobject */
 SCM borrowed_scm_from_PyObject_ptr (PyObject *p);
+
+/* pyobject -> reference */
 PyObject *scm_to_PyObject_ptr (SCM obj);
 
 SCM scm_list_to_pytuple (SCM obj);
@@ -53,4 +64,3 @@ SCM scm_pysequence_to_list (SCM obj);
 #endif
 
 #endif /* _SORTSMILL_PYTHON_H */
-

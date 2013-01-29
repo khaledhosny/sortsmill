@@ -96,13 +96,13 @@ scm_c_py_failure (const char *who, SCM irritants)
 static SCM
 scm_grab_pyref (SCM p)
 {
-  return scm_from_pyref ((PyObject *) scm_to_pointer (p));
+  return scm_pointer_from_pyref ((PyObject *) scm_to_pointer (p));
 }
 
 static SCM
 scm_grab_borrowed_pyref (SCM p)
 {
-  return scm_from_borrowed_pyref ((PyObject *) scm_to_pointer (p));
+  return scm_pointer_from_borrowed_pyref ((PyObject *) scm_to_pointer (p));
 }
 
 static SCM

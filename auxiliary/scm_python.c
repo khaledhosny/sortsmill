@@ -28,27 +28,27 @@ pyref_finalizer (void *obj)
 }
 
 VISIBLE SCM
-scm_from_pyref (PyObject *obj)
+scm_pointer_from_pyref (PyObject *obj)
 {
   return scm_from_pointer (obj, pyref_finalizer);
 }
 
 VISIBLE SCM
-scm_from_borrowed_pyref (PyObject *obj)
+scm_pointer_from_borrowed_pyref (PyObject *obj)
 {
   Py_XINCREF (obj);
-  return scm_from_pyref (obj);
+  return scm_pointer_from_pyref (obj);
 }
 
 VISIBLE SCM
-scm_pointer_to_pyobject (SCM p)
+scm_from_scm_pyref (SCM p)
 {
   return scm_call_1 (scm_c_public_ref ("sortsmill python",
                                        "pointer->pyobject"), p);
 }
 
 VISIBLE SCM
-scm_borrowed_pointer_to_pyobject (SCM p)
+scm_from_borrowed_scm_pyref (SCM p)
 {
   return scm_call_1 (scm_c_public_ref ("sortsmill python",
                                        "borrowed-pointer->pyobject"), p);
@@ -57,13 +57,13 @@ scm_borrowed_pointer_to_pyobject (SCM p)
 VISIBLE SCM
 scm_from_PyObject_ptr (PyObject *p)
 {
-  return scm_pointer_to_pyobject (scm_from_pointer (p, NULL));
+  return scm_from_scm_pyref (scm_from_pointer (p, NULL));
 }
 
 VISIBLE SCM
 borrowed_scm_from_PyObject_ptr (PyObject *p)
 {
-  return scm_borrowed_pointer_to_pyobject (scm_from_pointer (p, NULL));
+  return scm_from_borrowed_scm_pyref (scm_from_pointer (p, NULL));
 }
 
 static SCM
