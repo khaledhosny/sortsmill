@@ -88,9 +88,9 @@
          pytuple->list
          pylist->list
          pysequence->list
-         pysequence->pyiterator
+         pyiterable->pyiterator
          pyiterator->!procedure
-         pysequence->!procedure
+         pyiterable->!procedure
 
          pytuple?
          pylist?
@@ -337,7 +337,7 @@
  (define-py-to-py-filter pyindexed-ref-core __pyindexed_ref)
  (define-py-to-py-filter pyindexed-set!-core __pyindexed_set)
  (define-py-to-py-filter python-alist->pydict __python_alist_to_pydict)
- (define-py-to-py-filter pysequence->pyiterator __make_pyiterator)
+ (define-py-to-py-filter pyiterable->pyiterator __make_pyiterator)
 
  (define (procedure->pycallable proc)
    (let* ([wrapped-proc
@@ -526,8 +526,8 @@
            (cond [(null-pointer? next-value) #f]
                  [else (pointer->pyobject next-value)]))))))
 
- (define pysequence->!procedure
-   (compose pyiterator->!procedure pysequence->pyiterator))
+ (define pyiterable->!procedure
+   (compose pyiterator->!procedure pyiterable->pyiterator))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
