@@ -40,18 +40,20 @@
 ;; only machines for which this is true, but these tests should not
 ;; hurt.
 (cond
- ((not (= 4 float-size))
+ [(not (= 4 float-size))
   (error
+   #f
    (format
     #f
     "The size of a C float is required to be 4 bytes, but on this machine it is ~a bytes."
-    (number->string float-size))))
- ((not (= 8 double-size))
+    (number->string float-size)))]
+ [(not (= 8 double-size))
   (error
+   #f
    (format
     #f
     "The size of a C double is required to be 8 bytes, but on this machine it is ~a bytes."
-    (number->string double-size)))))
+    (number->string double-size)))])
 
 ;; Dynamically scoped bindings to avoid passing around a lot of
 ;; syntax context.

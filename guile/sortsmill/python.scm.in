@@ -25,7 +25,8 @@
         (rnrs)
         (only (srfi :26) cut)
         (system foreign)
-        (ice-9 match))
+        (ice-9 match)
+        (ice-9 format))
 
 (export if-fontforge-has-python-api)
 

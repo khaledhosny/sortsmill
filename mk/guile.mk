@@ -1,28 +1,25 @@
-# Copyright (C) 2012 by Barry Schwartz
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#
-# Redistributions of source code must retain the above copyright notice, this
-# list of conditions and the following disclaimer.
-#
-# Redistributions in binary form must reproduce the above copyright notice,
-# this list of conditions and the following disclaimer in the documentation
-# and/or other materials provided with the distribution.
-#
-# The name of the author may not be used to endorse or promote products
-# derived from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
-# EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# Copyright (C) 2012, 2013 Barry Schwartz
+# Based in part on am/guilec which is part of Guile 2.0.7.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+#--------------------------------------------------------------------------
+
+# Borrowed from am/guilec of the Guile sources.
+AM_V_GUILEC = $(AM_V_GUILEC_$(V))
+AM_V_GUILEC_ = $(AM_V_GUILEC_$(AM_DEFAULT_VERBOSITY))
+AM_V_GUILEC_0 = @echo "  GUILEC" $@;
 
 GUILE_ENV = GUILE_AUTO_COMPILE=0									\
 	LTDL_LIBRARY_PATH="$(top_builddir)/guile:$${LTDL_LIBRARY_PATH}"
@@ -31,12 +28,23 @@ GUILE_FLAGS = -L $(top_builddir)/guile -L $(top_srcdir)/guile
 
 GUILE_INTERPRET = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) --no-auto-compile -s
 
-GUILE_COMPILE = $(GUILE_ENV) $(GUILE_TOOLS) compile $(GUILE_FLAGS)
+GUILE_WARNINGS = -Warity-mismatch -Wduplicate-case-datum	\
+-Wbad-case-datum -Wformat
+# -Wunbound-variable <-- This gets confused by definitions imported
+#                        from C. Is there a way to get around that?  I
+#                        suppose one possibility is to declare them
+#                        using the foreign function interface rather
+#                        than defining them with scm_c_define_gsubr.
+
+GUILE_COMPILE = $(GUILE_ENV) $(GUILE_TOOLS) compile $(GUILE_WARNINGS)	\
+	$(GUILE_FLAGS)
 
 %.go: %.scm
-	$(GUILE_COMPILE) $< -o $@
+	$(AM_V_GUILEC)$(GUILE_COMPILE) $< -o $@
 
 %.scm: %.scm.in
 	$(AM_V_GEN)
 	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+#--------------------------------------------------------------------------

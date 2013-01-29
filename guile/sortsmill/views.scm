@@ -91,7 +91,7 @@
       ((= tag font-view-flag) (pointer->font-view p))
       (else (assertion-violation
              'pointer->view
-             (format #f (_ "illegal ViewBase tag ‘%d’ at address") tag)
+             (format #f (_ "illegal ViewBase tag ‘~d’ at address") tag)
              p)))))
 
  (define (view->pointer v)
