@@ -35,6 +35,7 @@ EXTRA_DIST =
 
 BASELIBADD = $(top_builddir)/lib/libgnu.la
 
+# This pulls in the Guile libraries, PCRE, etc.
 AUXLIBADD = $(BASELIBADD) $(top_builddir)/auxiliary/libsortsmill_aux.la
 
 FFLIBADD = $(AUXLIBADD)									\
@@ -112,7 +113,6 @@ sortsmill_pkg_info_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/guile.la
 sortsmill_guile_la_SOURCES = sortsmill/guile.c
-sortsmill_guile_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
 sortsmill_guile_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/linalg.la
@@ -129,14 +129,12 @@ sortsmill_brentroot_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/internal/__exec.la
 sortsmill_internal___exec_la_SOURCES = sortsmill/internal/__exec.c
-sortsmill_internal___exec_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
-sortsmill_internal___exec_la_LIBADD = $(BASELIBADD)
+sortsmill_internal___exec_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/internal/__guile_support.la
 sortsmill_internal___guile_support_la_SOURCES =	\
 	sortsmill/internal/__guile_support.c
-sortsmill_internal___guile_support_la_LDFLAGS = $(GUILE_CFLAGS) $(GUILE_LIBS) $(AM_LDFLAGS)
-sortsmill_internal___guile_support_la_LIBADD = $(BASELIBADD)
+sortsmill_internal___guile_support_la_LIBADD = $(AUXLIBADD)
 
 PYX_FILES = sortsmill/views.pyx sortsmill/ffcompat.pyx					\
 	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\

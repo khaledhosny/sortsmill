@@ -24,6 +24,9 @@ include "sortsmill/cython/config.pxi"
 cdef extern from 'config.h':
   pass
 
+cdef extern from 'sortsmill/xdie_on_null.h':
+  pass
+
 from cpython.ref cimport PyObject
 from libc.stdint cimport uintptr_t, uintmax_t
 cimport sortsmill.cython.xgc as xgc

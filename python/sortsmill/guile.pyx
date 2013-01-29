@@ -18,9 +18,34 @@
 from sortsmill.cython.guile cimport SCM
 cimport sortsmill.cython.guile as scm
 
+from sortsmill.cython.const_pointers cimport const_char_ptr
+
+from sortsmill.internal.__guile_support import pyguile
+from libc.stdint cimport uintptr_t
+
 #--------------------------------------------------------------------------
 
 def init_guile ():
   scm.scm_init_guile ()
+
+def resolve_guile_module (name not None):
+  if isinstance (name, unicode):
+    name = name.encode ('UTF-8')
+  cdef SCM module = scm.scm_c_resolve_module (name)
+  return pyguile (<uintptr_t> module)
+
+def current_guile_module ():
+  cdef SCM module = scm.scm_current_module ()
+  return pyguile (<uintptr_t> module)
+
+def set_current_guile_module (module not None):
+  assert isinstance (module, pyguile)
+  cdef SCM old_module = scm.scm_set_current_module (<SCM> module.address)
+  return pyguile (<uintptr_t> old_module)
+
+def use_guile_module (name not None):
+  if isinstance (name, unicode):
+    name = name.encode ('UTF-8')
+  scm.scm_c_use_module (name)
 
 #--------------------------------------------------------------------------
