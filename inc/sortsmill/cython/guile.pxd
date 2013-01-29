@@ -392,4 +392,7 @@ cdef inline SCM scm_undefined ():
 cdef inline int scm_unbndp (SCM x):
   return (scm_is_eq (x, scm_undefined ()))
 
+cdef inline SCM scm_from_pyguile_object (object obj):
+  return <SCM> <uintptr_t> obj.address
+
 #--------------------------------------------------------------------------

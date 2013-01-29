@@ -25,6 +25,17 @@ from libc.stdint cimport uintptr_t
 
 #--------------------------------------------------------------------------
 
+# FIXME: Make this available to other modules.
+cdef SCM scm_from_string_object (object string):
+  assert isinstance (string, unicode) or isinstance (string, bytes)
+  if isinstance (string, unicode):
+    string = string.encode ('UTF-8')
+  cdef char *s = string
+  cdef SCM scm_string = scm.scm_from_utf8_string (s)
+  return scm_string
+
+#--------------------------------------------------------------------------
+
 def init_guile ():
   scm.scm_init_guile ()
 
@@ -40,12 +51,41 @@ def current_guile_module ():
 
 def set_current_guile_module (module not None):
   assert isinstance (module, pyguile)
-  cdef SCM old_module = scm.scm_set_current_module (<SCM> module.address)
+  cdef SCM module_pointer = scm.scm_from_pyguile_object (module)
+  cdef SCM old_module = scm.scm_set_current_module (module_pointer)
   return pyguile (<uintptr_t> old_module)
 
 def use_guile_module (name not None):
   if isinstance (name, unicode):
     name = name.encode ('UTF-8')
   scm.scm_c_use_module (name)
+
+def guile_interaction_environment ():
+  cdef SCM env = scm.scm_interaction_environment ()
+  return pyguile (<uintptr_t> env)
+
+def guile_eval (expression not None, module not None):
+  assert isinstance (expression, pyguile)
+  assert isinstance (module, pyguile)
+  cdef SCM expression_pointer = scm.scm_from_pyguile_object (expression)
+  cdef SCM module_pointer = scm.scm_from_pyguile_object (module)
+  cdef SCM result = scm.scm_eval (expression_pointer, module_pointer)
+  return pyguile (<uintptr_t> result)
+
+def guile_eval_string (string not None, module = None):
+  cdef SCM result
+  cdef SCM module_pointer
+  cdef SCM scm_string = scm_from_string_object (string)
+  if module is None:
+    result = scm.scm_eval_string (scm_string)
+  else:
+    assert isinstance (module, pyguile)
+    module_pointer = scm.scm_from_pyguile_object (module)
+    result = scm.scm_eval_string_in_module (scm_string, module_pointer)
+  return pyguile (<uintptr_t> result)
+
+def guile_string (string not None):
+  cdef SCM scm_string = scm_from_string_object (string)
+  return pyguile (<uintptr_t> scm_string)
 
 #--------------------------------------------------------------------------
