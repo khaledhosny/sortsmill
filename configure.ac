@@ -255,19 +255,6 @@ if test x"${i_do_have_python_scripting}" = xyes; then
 
    FONTFORGE_REQUIRE_PYTHON_MODULE([gmpy])
    FONTFORGE_PROG_CYTHON_WORKS
-
-#   __cflags="${CFLAGS}"
-#   __libs="${LIBS}"
-#   CFLAGS="${CFLAGS} ${PYTHON_CFLAGS}"
-#   LIBS="${LIBS} ${PYTHON_LIBS}"
-#   FONTFORGE_C_CONST([Py_single_input],[fontforge_cv_c_const_Py_single_input],["%d"],[#include <Python.h>])
-#   FONTFORGE_C_CONST([Py_file_input],[fontforge_cv_c_const_Py_file_input],["%d"],[#include <Python.h>])
-#   FONTFORGE_C_CONST([Py_eval_input],[fontforge_cv_c_const_Py_eval_input],["%d"],[#include <Python.h>])
-#   AC_SUBST([Py_single_input],["${fontforge_cv_c_const_Py_single_input}"])
-#   AC_SUBST([Py_file_input],["${fontforge_cv_c_const_Py_file_input}"])
-#   AC_SUBST([Py_eval_input],["${fontforge_cv_c_const_Py_eval_input}"])
-#   CFLAGS="${__cflags}"
-#   LIBS="${__libs}"
 fi
 
 __cflags="${CFLAGS}"
@@ -433,6 +420,18 @@ AC_FUNC_STRTOD
 AC_CHECK_FUNCS([endpwent])
 AC_CHECK_FUNCS([munmap])
 AC_CHECK_FUNCS([socket])
+
+__cflags="${CFLAGS}"
+__libs="${LIBS}"
+CFLAGS="${CFLAGS} ${GUILE_CFLAGS}"
+LIBS="${LIBS} ${GUILE_LIBS}"
+AC_CHECK_FUNCS([scm_init_guile])
+if test x"${i_do_have_python_scripting}" = xyes -a x"${ac_cv_func_scm_init_guile}" != xyes; then
+   AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires that Guile support the scm_init_guile() function,
+                  which was not found.])
+fi
+CFLAGS="${__cflags}"
+LIBS="${__libs}"
 
 FONTFORGE_ICONV_CHOOSE_ENCODING([MY_ICONV_UCS4LE],[UCS-4LE ucs-4le UCS4LE ucs4le UTF-32LE utf-32le UTF32LE utf32le])
 FONTFORGE_ICONV_CHOOSE_ENCODING([MY_ICONV_UCS4BE],[UCS-4BE ucs-4be UCS4BE ucs4be UTF-32BE utf-32be UTF32BE utf32be])
