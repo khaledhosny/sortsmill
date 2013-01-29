@@ -103,7 +103,7 @@
             column)
       #f))
 
-(define (sfd-private-dict-entry line)
+(define (sfd-private-dict-entry port line)
   (let ((m (regexp-exec sfd-private-dict-entry-re line)))
     (if m
         (let* ((key (match:substring m 1))
@@ -288,7 +288,7 @@
                                             #:line-end #t)))
          (lines (map-in-order (lambda _ (expect-line port))
                               (make-list num-entries)))
-         (entries (map sfd-private-dict-entry lines))
+         (entries (map sfd-private-dict-entry port lines))
          (tags (map sfd-private-dict-entry-tag entries)))
     (expect-end-keyword 'endprivate port)
     (sfd-add-entry contents key tags)))

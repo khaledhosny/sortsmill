@@ -21,18 +21,28 @@ AM_V_GUILEC = $(AM_V_GUILEC_$(V))
 AM_V_GUILEC_ = $(AM_V_GUILEC_$(AM_DEFAULT_VERBOSITY))
 AM_V_GUILEC_0 = @echo "  GUILEC" $@;
 
-GUILE_ENV = GUILE_AUTO_COMPILE=0									\
-	LTDL_LIBRARY_PATH="$(top_builddir)/guile:$${LTDL_LIBRARY_PATH}"
+ENV_GUILE_LOAD_PATH = "$${GUILE_LOAD_PATH}"
+ENV_GUILE_LOAD_COMPILED_PATH = "$${GUILE_LOAD_COMPILED_PATH}"
+ENV_LTDL_LIBRARY_PATH = "$${LTDL_LIBRARY_PATH}"
+MY_GUILE_LOAD_PATH = $(if $${GUILE_LOAD_PATH},":$${GUILE_LOAD_PATH}")
+MY_GUILE_LOAD_COMPILED_PATH = $(if $${GUILE_LOAD_COMPILED_PATH},":$${GUILE_LOAD_COMPILED_PATH}")
+MY_LTDL_LIBRARY_PATH = $(if $${LTDL_LIBRARY_PATH},":$${LTDL_LIBRARY_PATH}")
+
+GUILE_ENV = GUILE_AUTO_COMPILE=0														\
+	GUILE_LOAD_PATH="$(top_srcdir)/guile:$(top_builddir)/guile$${MY_GUILE_LOAD_PATH}"	\
+	GUILE_LOAD_COMPILED_PATH="$(top_builddir)/guile$${MY_GUILE_LOAD_COMPILED_PATH}"		\
+	LTDL_LIBRARY_PATH="$(top_builddir)/guile$${MY_LTDL_LIBRARY_PATH}"
 
 GUILE_FLAGS = -L $(top_builddir)/guile -L $(top_srcdir)/guile
 
 GUILE_INTERPRET = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) --no-auto-compile -s
 
-GUILE_WARNINGS = -Warity-mismatch -Wduplicate-case-datum	\
--Wbad-case-datum -Wformat
-# -Wunbound-variable <-- This gets confused by definitions imported
-#                        from C. Is there a way to get around that?  I
-#                        suppose one possibility is to declare them
+GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch	\
+-Wduplicate-case-datum -Wbad-case-datum -Wformat
+# -Wunbound-variable <-- This one gets confused by definitions
+#                        imported from C, unless they also are
+#                        exported. Is there a way to get around that?
+#                        I suppose one possibility is to declare them
 #                        using the foreign function interface rather
 #                        than defining them with scm_c_define_gsubr.
 

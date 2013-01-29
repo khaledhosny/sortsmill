@@ -81,6 +81,9 @@ GO_FILES += sortsmill/i18n.go sortsmill/machine.go		\
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
 GO_FILES += sortsmill/fontforge-api.go
 
+sortsmill/views.go: sortsmill/fontforge-api.go
+sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+
 if HAVE_GUI
 
 DIST_SCM_FILES += sortsmill/usermenu.scm

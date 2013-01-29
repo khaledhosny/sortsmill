@@ -635,7 +635,7 @@ function is always a boolean."
              [views-dict (py-dict views)]
              [view-class-name (cond [(glyph-view? v) "glyph_view"]
                                     [(font-view? v)  "font_view"]
-                                    [else (assert false)])]
+                                    [else (assert #f)])]
              [view-class (pyindexed-ref views-dict (string->pystring view-class-name))])
         ((pycallable->procedure view-class) (pointer->pylong (view->pointer v))))))
 

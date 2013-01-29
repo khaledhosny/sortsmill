@@ -156,7 +156,16 @@
          current-python-module
          python-module-get-file-name
          pyimport
-         pymodule?)
+         pymodule?
+
+         ;; FIXME: These are exported merely to get rid of ‘possibly
+         ;; unbound variable’ warnings. A better method is
+         ;; desired. Avoid using these variables (though one could
+         ;; certainly make a case for exporting py-failure).
+         py-failure
+         grab-pyref
+         grab-borrowed-pyref
+         guile-support-pymodule)
 
  (define python-dll
    (dynamic-link "libguile-sortsmill_python"))
@@ -201,8 +210,8 @@
    (private:pyobject->pointer obj))
 
  (define procedure:pyobject?
-   ;; Wrap the syntax transformer @var{pyobject?} in a
-   ;; procedure, so C code can use it.
+   ;; Wrap the syntax transformer @code{pyobject?} in a procedure, so
+   ;; C code can use it.
    (lambda (obj) (pyobject? obj)))
 
  (define (pair->pytuple pair)
@@ -270,8 +279,8 @@
                     (py-failure (quote c-func) (list obj))
                     (pointer->pyobject result)))]
              [else
-              (assertion-failure (quote filter-name)
-                                 (_ "expected a Python object") obj)] ))]
+              (assertion-violation (quote filter-name)
+                                   (_ "expected a Python object") obj)] ))]
        )))
 
  (define-guile-support-procedure '* "__c_pyguile_make" '(*))
@@ -369,7 +378,7 @@
                                                 (alist->pydict keyword-args))]
        [else
         (unless (pycallable? func)
-          (assertion-failure 'pyapply (_ "expected a Python callable") func))
+          (assertion-violation 'pyapply (_ "expected a Python callable") func))
         (pointer->pyobject ((__apply_python_callable)
                             (pyobject->pointer func)
                             (pyobject->pointer args) 
@@ -491,7 +500,7 @@
     [other (string-or-pystring-failure 'pystring->string other)] ))
 
  (define (string-or-pystring-failure who obj)
-   (assertion-failure who (_ "expected a string or Python string") obj))
+   (assertion-violation who (_ "expected a string or Python string") obj))
 
  (define (python-module module-name)
    (pointer->pyobject

@@ -80,31 +80,39 @@
          pure-expr->integer
          pure-expr->small-integer
          pure-expr->big-integer
+         pure-expr->small-integer-or-f
+         pure-expr->big-integer-or-f
          pure-expr-is-integer?
          pure-expr-is-small-integer?
          pure-expr-is-big-integer?
 
          rational->pure-expr
          pure-expr->rational
+         pure-expr->rational-or-f
          pure-expr-is-rational?
 
          inexact->pure-expr
          flonum->pure-expr
          pure-expr->inexact
          pure-expr->flonum
+         pure-expr->inexact-or-f
+         pure-expr->flonum-or-f
          pure-expr-is-inexact?
          pure-expr-is-flonum?
 
          complex->pure-expr
          pure-expr->complex
+         pure-expr->complex-or-f
          pure-expr-is-complex?
 
          pointer->pointer-pure-expr
          pointer-pure-expr->pointer
+         pointer-pure-expr->pointer-or-f
          pure-expr-is-pointer?
 
          string->pure-expr
          pure-expr->string
+         pure-expr->string-or-f
          pure-expr-is-string?
 
          pure-lasterr
@@ -133,6 +141,14 @@
          pure-current-interp
 
          pure-finalize
+
+         ;; FIXME: These are exported merely to get rid of ‘possibly
+         ;; unbound variable’ warnings. A better method is
+         ;; desired. Avoid using these variables.
+         symbol-pure-expr->small-integer-or-f
+         scm-pure-new
+         private:pure-eval
+         private:eval-pure-symbol
          )
 
  (define pure-dll
@@ -245,7 +261,7 @@
       ((integer? n) (integer->pure-expr n))
       ((rational? n) (rational->pure-expr n))
       (else (error 'number->pure-expr
-                   (_ "not a number") x)))))
+                   (_ "not a number") n)))))
 
  (define pure-expr->number
    (lambda (x)
@@ -373,6 +389,9 @@
 
  (define-syntax pure-expr->flonum
    (identifier-syntax pure-expr->inexact))
+
+ (define-syntax pure-expr->flonum-or-f
+   (identifier-syntax pure-expr->inexact-or-f))
 
  (define pure-expr-is-inexact?
    (lambda (x)

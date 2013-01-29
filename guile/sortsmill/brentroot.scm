@@ -1,6 +1,6 @@
-;; -*- mode: scheme; coding: utf-8 -*-
+;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
 
-;; Copyright (C) 2012 Barry Schwartz
+;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,38 +21,50 @@
 ;; that chooses the C implementation if t1 or t2 is ‘inexact’.
 ;;
 
-(define-module (sortsmill brentroot)
-  #:use-module ((rnrs) :version (6))
-  #:use-module (srfi srfi-31)           ; (rec ...)
-  #:use-module (sortsmill math-constants)
-  #:export (flbrentroot
-            flbrentroot-values
-            qbrentroot
-            qbrentroot-values))
+(library
+ (sortsmill brentroot)
 
-(load-extension "libguile-sortsmill_aux"
-                "init_guile_sortsmill_brentroot")
+ (export flbrentroot
+         flbrentroot-values
+         qbrentroot
+         qbrentroot-values
 
-;;-------------------------------------------------------------------------
+         ;; FIXME: These are exported merely to get rid of ‘possibly
+         ;; unbound variable’ warnings. A better method is
+         ;; desired. Avoid using these variables.
+         f64-brentroot
+         mpq-brentroot
+         )
 
-(define* (flbrentroot-values t1 t2 func #:key (max-iters -1) (tol -1))
-  (f64-brentroot max-iters tol t1 t2 func))
+ (import (sortsmill math-constants)
+         (rnrs)
+         (except (guile) error))
+ 
+ (load-extension "libguile-sortsmill_aux"
+                 "init_guile_sortsmill_brentroot")
 
-(define* (flbrentroot t1 t2 func #:key (max-iters -1) (tol -1))
-  (let-values (((root _err _iter-no)
-                (f64-brentroot max-iters tol t1 t2 func)))
-    root))
+ ;;-------------------------------------------------------------------------
 
-;;-------------------------------------------------------------------------
+ (define* (flbrentroot-values t1 t2 func #:key (max-iters -1) (tol -1))
+   (f64-brentroot max-iters tol t1 t2 func))
 
-(define* (qbrentroot-values t1 t2 func
-                            #:key (max-iters -1) (tol -1) (epsilon -1))
-  (mpq-brentroot max-iters tol epsilon t1 t2 func))
+ (define* (flbrentroot t1 t2 func #:key (max-iters -1) (tol -1))
+   (let-values (((root _err _iter-no)
+                 (f64-brentroot max-iters tol t1 t2 func)))
+     root))
 
-(define* (qbrentroot t1 t2 func
-                     #:key (max-iters -1) (tol -1) (epsilon -1))
-  (let-values (((root _err _iter-no)
-                (mpq-brentroot max-iters tol epsilon t1 t2 func)))
-    root))
+ ;;-------------------------------------------------------------------------
 
-;;-------------------------------------------------------------------------
+ (define* (qbrentroot-values t1 t2 func
+                             #:key (max-iters -1) (tol -1) (epsilon -1))
+   (mpq-brentroot max-iters tol epsilon t1 t2 func))
+
+ (define* (qbrentroot t1 t2 func
+                      #:key (max-iters -1) (tol -1) (epsilon -1))
+   (let-values (((root _err _iter-no)
+                 (mpq-brentroot max-iters tol epsilon t1 t2 func)))
+     root))
+
+ ;;-------------------------------------------------------------------------
+
+ ) ;; end of library.
