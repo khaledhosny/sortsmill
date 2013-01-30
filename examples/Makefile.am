@@ -24,6 +24,8 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+dist_noinst_SCRIPTS = hello.py
+
 lib_LTLIBRARIES =
 
 # To try 'simple_menu_extension_in_C' without installing it,
