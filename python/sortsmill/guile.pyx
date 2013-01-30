@@ -39,28 +39,28 @@ cdef SCM scm_from_string_object (object string):
 def init_guile ():
   scm.scm_init_guile ()
 
-def resolve_guile_module (name not None):
+def resolve_module (name not None):
   if isinstance (name, unicode):
     name = name.encode ('UTF-8')
   cdef SCM module = scm.scm_c_resolve_module (name)
   return pyguile (<uintptr_t> module)
 
-def current_guile_module ():
+def current_module ():
   cdef SCM module = scm.scm_current_module ()
   return pyguile (<uintptr_t> module)
 
-def set_current_guile_module (module not None):
+def set_current_module (module not None):
   assert isinstance (module, pyguile)
   cdef SCM module_pointer = scm.scm_from_pyguile_object (module)
   cdef SCM old_module = scm.scm_set_current_module (module_pointer)
   return pyguile (<uintptr_t> old_module)
 
-def use_guile_module (name not None):
+def use_module (name not None):
   if isinstance (name, unicode):
     name = name.encode ('UTF-8')
   scm.scm_c_use_module (name)
 
-def guile_interaction_environment ():
+def interaction_environment ():
   cdef SCM env = scm.scm_interaction_environment ()
   return pyguile (<uintptr_t> env)
 
@@ -87,5 +87,9 @@ def guile_eval_string (string not None, module = None):
 def guile_string (string not None):
   cdef SCM scm_string = scm_from_string_object (string)
   return pyguile (<uintptr_t> scm_string)
+
+#--------------------------------------------------------------------------
+
+init_guile ()
 
 #--------------------------------------------------------------------------
