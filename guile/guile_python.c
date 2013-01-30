@@ -587,7 +587,7 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("py-locals", 0, 0, 0, scm_py_locals);
   scm_c_define_gsubr ("py-globals", 0, 0, 0, scm_py_globals);
 
-  scm_c_define_gsubr ("pyimport", 1, 0, 0, scm_pyimport);
+  // scm_c_define_gsubr ("private:pyimport", 1, 0, 0, scm_pyimport);
   scm_c_define_gsubr ("python-module-get-file-name", 1, 0, 0,
                       scm_python_module_get_file_name);
   scm_c_define_gsubr ("guile-support-pymodule", 0, 0, 0,

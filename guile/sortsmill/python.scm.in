@@ -94,6 +94,7 @@
 
          pytuple?
          pylist?
+         pydict?
          pysequence?
          pyiterable?
          pygenerator?
@@ -150,12 +151,28 @@
          pycallable?
 
          pyapply
+
          pyexec
-         pyexec-file-name
-         pyeval
+         pyexec-in
          pyexec-in-main
+
+         pyexec-file-name
+         pyexec-file-name-in
          pyexec-file-name-in-main
+
+         pyeval
+         pyeval-in
          pyeval-in-main
+
+         ;; Bind an object to a Python identifier.
+         pydef-in
+         pydef
+
+         ;; Import a module and bind it to a Python identifier.
+         pydefimp-in
+         pydefimp
+
+         ;; Define a function and bind it to a Python identifier.
          pydefun-in
          pydefun
 
@@ -171,6 +188,7 @@
 
  ;; These variables will be redefined by the dynamic-call.
  (define py-failure *unspecified*)
+ (define private:pyimport *unspecified*)
  (define grab-pyref *unspecified*)
  (define grab-borrowed-pyref *unspecified*)
  (define guile-support-pymodule *unspecified*)
@@ -235,7 +253,7 @@
  (define pytuple-map (compose list->pytuple map pytuple->list))
  (define pylist-map (compose list->pylist map pylist->list))
 
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;;--------------------------------------------------------------------------
 
  (eval-when
   (compile eval load)
@@ -303,7 +321,7 @@
  (define-guile-support-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-support-procedure '* "__python_string_to_c_string" '(*))
  (define-guile-support-procedure '* "__python_module" '(*))
-;;; (define-guile-support-procedure '* "__current_python_module" '())
+ (define-guile-support-procedure '* "__python_import" '(*))
  (define-guile-support-procedure '* "__pylong_to_pympz" '(*))
  (define-guile-support-procedure '* "__pympz_to_pylong" '(*))
  (define-guile-support-procedure '* "__is_pympz" '(*))
@@ -330,6 +348,7 @@
  (define-py-to-py-filter py-exception-description-base __py_exception_description)
 
  (define-py-to-py-filter python-module-base __python_module)
+ (define-py-to-py-filter python-import-base __python_import)
 
  (define-py-to-py-filter pylong->pympz __pylong_to_pympz)
  (define-py-to-py-filter pympz->pylong __pympz_to_pylong)
@@ -423,29 +442,14 @@
           (map pystring->string
                (pylist->list (py-exception-description-base exc-info)))))
 
- (define (pyexec-in-main python-code)
-   (assert (or (string? python-code) (pystring? python-code)))
-   (match python-code
-     [(? string? s)   (pyexec-base (string->pystring s))]
-     [(? pystring? s) (pyexec-base s)] ))
+ (define (pyexec python-code)
+   (pyexec-in (current-python-module) python-code))
 
- (define (pyexec-file-name-in-main file-name)
-   (assert (or (string? file-name) (pystring? file-name)))
-   (match file-name
-     [(? string? s)   (pyexec-file-name-base (string->pystring s))]
-     [(? pystring? s) (pyexec-file-name-base s)] ))
-
- (define (pyeval-in-main python-code)
-   (assert (or (string? python-code) (pystring? python-code)))
-   (match python-code
-     [(? string? s)   (pyeval-base (string->pystring s))]
-     [(? pystring? s) (pyeval-base s)] ))
-
- (define (pyexec module python-code)
+ (define (pyexec-in module python-code)
    (assert (or (string? python-code) (pystring? python-code)))
    (assert (or (string? module) (pystring? module) (pymodule? module)))
    (match python-code
-     [(? string? s) (pyexec module (string->pystring s))]
+     [(? string? s) (pyexec-in module (string->pystring s))]
      [(? pystring? s)
       (match module
         [(? pymodule? m) (pyexec-in-module-base (make-pytuple m s))]
@@ -453,29 +457,42 @@
         [(? string? m)   (pyexec-in-module-base
                           (make-pytuple (string->pystring m) s))] )] ))
 
- (define (pyexec-file-name module file-name)
+ (define (pyexec-in-main python-code)
+   (assert (or (string? python-code) (pystring? python-code)))
+   (match python-code
+     [(? string? s)   (pyexec-base (string->pystring s))]
+     [(? pystring? s) (pyexec-base s)] ))
+
+ (define (pyexec-file-name file-name)
+   (pyexec-file-name-in (current-python-module) file-name))
+
+ (define (pyexec-file-name-in module file-name)
    (assert (or (string? file-name) (pystring? file-name)))
    (assert (or (string? module) (pystring? module) (pymodule? module)))
-   (match file-name
-     [(? string? s) (pyexec-file-name module (string->pystring s))]
-     [(? pystring? s)
-      (match module
-        [(? pymodule? m) (pyexec-file-name-in-module-base (make-pytuple m s))]
-        [(? pystring? m) (pyexec-file-name-in-module-base (make-pytuple m s))]
-        [(? string? m)   (pyexec-file-name-in-module-base
-                          (make-pytuple (string->pystring m) s))] )] ))
+   (let ([fname (string->pystring file-name)]
+         [m (if (pymodule? module) module
+                (force-pystring
+                 'pyeval-in
+                 (_ "expected a pymodule, string, pystring, or symbol")
+                 module))])
+     (pyexec-file-name-in-module-base (make-pytuple m fname))))
 
- (define (pyeval module python-code)
-   (assert (or (string? python-code) (pystring? python-code)))
-   (assert (or (string? module) (pystring? module) (pymodule? module)))
-   (match python-code
-     [(? string? s) (pyeval module (string->pystring s))]
-     [(? pystring? s)
-      (match module
-        [(? pymodule? m) (pyeval-in-module-base (make-pytuple m s))]
-        [(? pystring? m) (pyeval-in-module-base (make-pytuple m s))]
-        [(? string? m)   (pyeval-in-module-base
-                          (make-pytuple (string->pystring m) s))] )] ))
+ (define (pyexec-file-name-in-main file-name)
+   (pyexec-file-name-base
+    (force-pystring 'pyexec-file-name-in-main file-name)))
+
+ (define (pyeval python-code)
+   (pyeval-in-module-base
+    (make-pytuple (current-python-module)
+                  (force-pystring 'pyeval python-code))))
+
+ (define (pyeval-in module python-code)
+   (pyeval-in-module-base
+    (make-pytuple (force-pymodule 'pyeval-in module)
+                  (force-pystring 'pyeval-in python-code))))
+
+ (define (pyeval-in-main python-code)
+   (pyeval-base (force-pystring 'pyeval-in-main python-code)))
 
  (define integer->pylong (compose pympz->pylong integer->pympz))
  (define pylong->integer (compose pympz->integer pylong->pympz))
@@ -511,24 +528,28 @@
 
  (define (python-module module-name)
    (pointer->pyobject
-    ((__python_module) (pyobject->pointer (string->pystring module-name)))))
+    ((__python_module) (pyobject->pointer
+                        (force-pystring 'python-module module-name)))))
 
-;;; This definition seems useless in practice.
-;;;
-;;; (define (current-python-module)
-;;;   (pointer->pyobject ((__current_python_module))))
+ (define* (pyimport module-name #:key
+                    [globals (py-dict (current-python-module))]
+                    [locals #f]
+                    [from '()]
+                    [level -1])
+   (pointer->pyobject
+    ((__python_import) (pyobject->pointer
+                        (make-pytuple (force-pystring 'pyimport module-name)
+                                      globals
+                                      (if locals locals globals)
+                                      (list->pylist from)
+                                      (integer->pyint level))))))
 
  (define current-python-module-parameter
    (make-parameter #f
                    (match-lambda
                     [#f #f]
-                    [(? string? s)   (python-module s)]
-                    [(? pystring? s) (python-module s)]
                     [(? pymodule? m) m]
-                    [other (assertion-violation
-                            'current-python-module
-                            (_ "expected a string, pystring, pymodule, or #f")
-                            other)])))
+                    [s (python-module s)])))
 
  (define (current-python-module)
    (let ([param (current-python-module-parameter)])
@@ -556,27 +577,83 @@
  (define pyiterable->!procedure
    (compose pyiterator->!procedure pyiterable->pyiterator))
 
- (define (pydefun-in object name func)
-   (pyindexed-set! (py-dict object)
-                   (match name
-                     [(? pystring? s) s]
-                     [(? string? s) (string->pystring name)]
-                     [(? symbol? s) (string->pystring (symbol->string s))]
-                     [else (assertion-violation
-                            'pydefun-in
-                            (_ "expected a string, symbol, or pystring")
-                            name)])
-                   (match func
-                     [(? pycallable? callable) callable]
-                     [(? procedure? proc) (procedure->pycallable proc)]
-                     [else (assertion-violation
-                            'pydefun-in
-                            (_ "expected a procedure or pycallable")
-                            func)])))
+ ;;--------------------------------------------------------------------------
+
+ (define (pydef-base caller container name obj)
+   (when (and container name)
+     (pyindexed-set! (if (pydict? container) container (py-dict container))
+                     (force-pystring caller name)
+                     obj))
+   obj)
+
+ (define (pydefimp-base caller container name module)
+   (let ([module^ (begin (pyimport module)
+                         (python-module module))])
+     (match name
+       [#t (pydef-base caller container module module^)]
+       [s  (pydef-base caller container s module^)])))
+
+ (define (pydefun-base caller container name func)
+   (pydef-base caller container name
+               (match func
+                 [(? pycallable? callable) callable]
+                 [(? procedure? proc) (procedure->pycallable proc)]
+                 [else (assertion-violation
+                        caller
+                        (_ "expected a procedure or pycallable")
+                        func)] )))
+
+ (define (pydef name obj)
+   (pydef-base 'pydef (current-python-module) name obj))
+
+ (define (pydef-in container name obj)
+   (pydef-base 'pydef-in container name obj))
+
+ (define (pydefimp name module)
+   (pydefimp-base 'pydefimp (current-python-module) name module))
+
+ (define (pydefimp-in container name module)
+   (pydefimp-base 'pydefimp-in container name module))
 
  (define (pydefun name func)
-   (pydefun-in (current-python-module) name func))
+   (pydefun-base 'pydefun (current-python-module) name func))
 
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ (define (pydefun-in container name func)
+   (pydefun-base 'pydefun-in container name func))
+
+ ;;--------------------------------------------------------------------------
+
+ (define force-string
+   (case-lambda
+     [(caller obj)
+      (force-string caller obj (_ "expected a string, pystring, or symbol"))]
+     [(caller obj message)
+      (match obj
+        [(? pystring? s) (pystring->string s)]
+        [(? string? s) s]
+        [(? symbol? s) (symbol->string s)]
+        [other (assertion-violation caller message other)] )] ))
+
+ (define force-pystring
+   (case-lambda
+     [(caller obj)
+      (force-pystring caller obj (_ "expected a string, pystring, or symbol"))]
+     [(caller obj message)
+      (match obj
+        [(? pystring? s) s]
+        [(? string? s) (string->pystring s)]
+        [(? symbol? s) (string->pystring (symbol->string s))]
+        [other (assertion-violation caller message other)] )] ))
+
+ (define force-pymodule
+   (case-lambda
+     [(caller obj)
+      (force-pymodule caller obj
+                      (_ "expected a pymodule, string, pystring, or symbol"))]
+     [(caller obj message)
+      (match obj
+        [(? pymodule? m) m]
+        [s (python-module (force-pystring caller obj message))] )] ))
+
 
  ) ;; end of if-fontforge-has-python-api

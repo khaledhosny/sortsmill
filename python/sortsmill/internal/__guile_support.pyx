@@ -40,12 +40,22 @@ ctypedef object (*tuple_func_t) (object)
 import sys
 import gmpy
 import inspect
-import importlib
 import traceback
 
 from sortsmill.cython.internal.__exec cimport \
     exec_python, exec_python_file_name, eval_python
 import sortsmill.internal.__exec as __exec
+
+#--------------------------------------------------------------------------
+
+# FIXME: Make this available to other modules.
+cdef SCM scm_from_string_object (object string):
+  assert isinstance (string, unicode) or isinstance (string, bytes)
+  if isinstance (string, unicode):
+    string = string.encode ('UTF-8')
+  cdef char *s = string
+  cdef SCM scm_string = scm.scm_from_utf8_string (s)
+  return scm_string
 
 #--------------------------------------------------------------------------
 
@@ -186,14 +196,30 @@ cdef public object __c_string_to_python_string (char *s):
   return py_s.decode ('UTF-8')
 
 cdef public object __python_module (object module_name):
+  cdef SCM scm_pymodule
+  cdef SCM scm_module_ptr
+  cdef PyObject *py_module
   try:
     module = sys.modules[module_name]
   except:
-    module = importlib.import_module (module_name)
+    scm_pymodule = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                         "pyimport"),
+                                   scm_from_string_object (module_name))
+    scm_module_ptr = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                           "pyobject->pointer"),
+                                     scm_pymodule)
+    py_module = <PyObject *> scm.scm_to_pointer (scm_module_ptr)
+    module = <object> py_module
   return module
 
-#####cdef public object __current_python_module ():
-#####  return sys.modules[__name__]
+cdef public object __python_import (object args):
+  (name, glob, locl, fromlist, level) = args
+  try:
+    result = __import__ (name, glob, locl, fromlist, level)
+  except:
+    __exec.wrap_exception_and_throw_to_guile ("__python_import", sys.exc_info ())
+    result = None
+  return result
 
 cdef public object __pylong_to_pympz (object obj):
   return gmpy.mpz (obj)

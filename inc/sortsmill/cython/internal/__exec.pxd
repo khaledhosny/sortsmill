@@ -18,8 +18,6 @@
 import sys
 import sortsmill.internal.__exec as __exec
 
-cpdef extern object wrap_exception_and_throw_to_guile (object who, object exc_info)
-
 cdef inline object exec_python (object who, object python_code, object glob, object locl):
   try:
     exec python_code in glob, locl

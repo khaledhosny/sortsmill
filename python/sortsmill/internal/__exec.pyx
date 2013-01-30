@@ -28,7 +28,10 @@ import sys
 import sortsmill
 
 cpdef object wrap_exception_and_throw_to_guile (object who, object exc_info):
-  who_bytes = who.encode ("UTF-8")
+  if isinstance (who, unicode):
+    who_bytes = who.encode ("UTF-8")
+  else:
+    who_bytes = who
   cdef char *c_who = who_bytes
   cdef SCM scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
                                                             "pointer->pyobject"),
