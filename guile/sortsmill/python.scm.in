@@ -156,9 +156,12 @@
          pyexec-in-main
          pyexec-file-name-in-main
          pyeval-in-main
+         pydefun-in
+         pydefun
 
          python-module
          current-python-module
+         in-python-module
          python-module-get-file-name
          pyimport
          pymodule?)
@@ -300,7 +303,7 @@
  (define-guile-support-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-support-procedure '* "__python_string_to_c_string" '(*))
  (define-guile-support-procedure '* "__python_module" '(*))
- (define-guile-support-procedure '* "__current_python_module" '())
+;;; (define-guile-support-procedure '* "__current_python_module" '())
  (define-guile-support-procedure '* "__pylong_to_pympz" '(*))
  (define-guile-support-procedure '* "__pympz_to_pylong" '(*))
  (define-guile-support-procedure '* "__is_pympz" '(*))
@@ -510,8 +513,30 @@
    (pointer->pyobject
     ((__python_module) (pyobject->pointer (string->pystring module-name)))))
 
+;;; This definition seems useless in practice.
+;;;
+;;; (define (current-python-module)
+;;;   (pointer->pyobject ((__current_python_module))))
+
+ (define current-python-module-parameter
+   (make-parameter #f
+                   (match-lambda
+                    [#f #f]
+                    [(? string? s)   (python-module s)]
+                    [(? pystring? s) (python-module s)]
+                    [(? pymodule? m) m]
+                    [other (assertion-violation
+                            'current-python-module
+                            (_ "expected a string, pystring, pymodule, or #f")
+                            other)])))
+
  (define (current-python-module)
-   (pointer->pyobject ((__current_python_module))))
+   (let ([param (current-python-module-parameter)])
+     (if param param (python-module "__main__"))))
+
+ (define-syntax-rule (in-python-module module body body* ...)
+   (parameterize ([current-python-module-parameter module])
+     body body* ...))
 
  (define (alist->python-alist alist)
    (list->pylist (map pair->pytuple alist)))
@@ -530,6 +555,27 @@
 
  (define pyiterable->!procedure
    (compose pyiterator->!procedure pyiterable->pyiterator))
+
+ (define (pydefun-in object name func)
+   (pyindexed-set! (py-dict object)
+                   (match name
+                     [(? pystring? s) s]
+                     [(? string? s) (string->pystring name)]
+                     [(? symbol? s) (string->pystring (symbol->string s))]
+                     [else (assertion-violation
+                            'pydefun-in
+                            (_ "expected a string, symbol, or pystring")
+                            name)])
+                   (match func
+                     [(? pycallable? callable) callable]
+                     [(? procedure? proc) (procedure->pycallable proc)]
+                     [else (assertion-violation
+                            'pydefun-in
+                            (_ "expected a procedure or pycallable")
+                            func)])))
+
+ (define (pydefun name func)
+   (pydefun-in (current-python-module) name func))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

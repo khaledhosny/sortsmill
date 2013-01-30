@@ -192,8 +192,8 @@ cdef public object __python_module (object module_name):
     module = importlib.import_module (module_name)
   return module
 
-cdef public object __current_python_module ():
-  return sys.modules[__name__]
+#####cdef public object __current_python_module ():
+#####  return sys.modules[__name__]
 
 cdef public object __pylong_to_pympz (object obj):
   return gmpy.mpz (obj)
