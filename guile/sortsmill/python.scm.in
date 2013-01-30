@@ -443,39 +443,27 @@
                (pylist->list (py-exception-description-base exc-info)))))
 
  (define (pyexec python-code)
-   (pyexec-in (current-python-module) python-code))
+   (pyexec-in-module-base
+    (make-pytuple (current-python-module)
+                  (force-pystring 'pyexec python-code))))
 
  (define (pyexec-in module python-code)
-   (assert (or (string? python-code) (pystring? python-code)))
-   (assert (or (string? module) (pystring? module) (pymodule? module)))
-   (match python-code
-     [(? string? s) (pyexec-in module (string->pystring s))]
-     [(? pystring? s)
-      (match module
-        [(? pymodule? m) (pyexec-in-module-base (make-pytuple m s))]
-        [(? pystring? m) (pyexec-in-module-base (make-pytuple m s))]
-        [(? string? m)   (pyexec-in-module-base
-                          (make-pytuple (string->pystring m) s))] )] ))
+   (pyexec-in-module-base
+    (make-pytuple (force-pymodule 'pyexec-in module)
+                  (force-pystring 'pyexec-in python-code))))
 
  (define (pyexec-in-main python-code)
-   (assert (or (string? python-code) (pystring? python-code)))
-   (match python-code
-     [(? string? s)   (pyexec-base (string->pystring s))]
-     [(? pystring? s) (pyexec-base s)] ))
+   (pyexec-base (force-pystring 'pyexec-in-main python-code)))
 
  (define (pyexec-file-name file-name)
-   (pyexec-file-name-in (current-python-module) file-name))
+   (pyexec-file-name-in-module-base
+    (make-pytuple (current-python-module)
+                  (force-pystring 'pyeval-file-name-in file-name))))
 
  (define (pyexec-file-name-in module file-name)
-   (assert (or (string? file-name) (pystring? file-name)))
-   (assert (or (string? module) (pystring? module) (pymodule? module)))
-   (let ([fname (string->pystring file-name)]
-         [m (if (pymodule? module) module
-                (force-pystring
-                 'pyeval-in
-                 (_ "expected a pymodule, string, pystring, or symbol")
-                 module))])
-     (pyexec-file-name-in-module-base (make-pytuple m fname))))
+   (pyexec-file-name-in-module-base
+    (make-pytuple (force-pymodule 'pyeval-file-name-in module)
+                  (force-pystring 'pyeval-file-name-in file-name))))
 
  (define (pyexec-file-name-in-main file-name)
    (pyexec-file-name-base
