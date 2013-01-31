@@ -59,5 +59,6 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''SIZEOF_INTPTR_T''@|$(SIZEOF_INTPTR_T)|g'				\
 		-e 's|@''SIZEOF_UINTPTR_T''@|$(SIZEOF_UINTPTR_T)|g'				\
 		-e 's|@''i_do_have_python_scripting''@|$(i_do_have_python_scripting)|g'	\
+		-e 's|@''i_do_have_python_api''@|$(i_do_have_python_api)|g'		\
 		-e 's|@''i_do_have_pure_api''@|$(i_do_have_pure_api)|g'			\
 		-e 's|@''PYTHON_COMPATIBILITY''@|$(PYTHON_COMPATIBILITY)|g'

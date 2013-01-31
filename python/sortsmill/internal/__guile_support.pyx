@@ -41,16 +41,11 @@ import sys
 import gmpy
 import inspect
 import traceback
+from sortsmill.pyguile import pyguile
 
 #--------------------------------------------------------------------------
 
-## FIXME: Get rid of __exec
-##
-#########from sortsmill.cython.internal.__exec cimport \
-#########    exec_python, exec_python_file_name, eval_python
-#########import sortsmill.internal.__exec as __exec
-
-cpdef object wrap_exception_and_throw_to_guile (object who, object exc_info):
+cdef object wrap_exception_and_throw_to_guile (object who, object exc_info):
   if isinstance (who, unicode):
     who_bytes = who.encode ("UTF-8")
   else:
@@ -84,7 +79,6 @@ cdef inline object eval_python (object who, object python_code, object glob, obj
 
 #--------------------------------------------------------------------------
 
-# FIXME: Make this available to other modules.
 cdef SCM scm_from_string_object (object string):
   assert isinstance (string, unicode) or isinstance (string, bytes)
   if isinstance (string, unicode):
@@ -94,42 +88,6 @@ cdef SCM scm_from_string_object (object string):
   return scm_string
 
 #--------------------------------------------------------------------------
-
-# ‘pyguile’ objects stay in this container until they are destroyed,
-# to help ensure that the Boehm GC does not collect them. FIXME: Is
-# this container needed, and is it adequate?
-__pyguile_objects = set ()
-
-cdef class pyguile (object):
-  """An opaque representation of Guile objects."""
-
-  # This address should be kept in uintptr_t format rather than as a
-  # Python long, so the Boehm GC can recognize it
-  cdef public uintptr_t address # The Guile ‘object-address’.
-
-  def __cinit__ (self):
-    self.address = <uintptr_t> NULL
-
-  def __init__ (self, uintptr_t address):
-    global __pyguile_objects
-    self.address = address
-    __pyguile_objects.add (self)
-
-  def __del__ (self):
-    global __pyguile_objects
-    __pyguile_objects.remove (self)
-
-  def __repr__ (self):
-    return "pyguile(0x{:x})".format (long (self.address))
-
-  def __str__ (self):
-    cdef SCM obj = <SCM> <void *> self.address
-    cdef SCM port = scm.scm_open_output_string ()
-    scm.scm_write (obj, port)
-    cdef SCM scm_string = scm.scm_get_output_string (port)
-    scm.scm_close_port (port)
-    cdef char *string = xgc.x_gc_grabstr (scm.scm_to_utf8_stringn (scm_string, NULL))
-    return "<pyguile {} 0x{:x}>".format (string, long (self.address))
 
 cdef public object __c_pyguile_make (void *pointer):
   cdef uintptr_t address = <uintptr_t> pointer

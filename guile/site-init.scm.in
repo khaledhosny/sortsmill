@@ -16,9 +16,10 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (sortsmill notices)
-        (sortsmill pure)
-        (sortsmill python)
+        (sortsmill pkg-info)
         (system foreign))
+
+(@ (sortsmill strings) enable-hash-guillemet-strings)
 
 (if (not (getenv "HOME"))
     (let ([rnrs-error (@ (rnrs) error)]
@@ -46,29 +47,33 @@
  "site-init.scm"
  (lambda () ;; start of thunk.
 
-   [if-fontforge-has-pure-api
-    (pure-create-interp '("sortsmill-editor"))]
+   [if pkg-info:have-pure-api?
+       (let ([pure-create-interp (@ (sortsmill pure) pure-create-interp)])
+         (pure-create-interp '("sortsmill-editor")))]
 
-   [if-fontforge-has-python-api
-    (unless (py-initialized?) (py-initialize))
-    (pyexec-in-main
-     (lines-begin-with
-      ";; —"
-      #«
-      ;; —# FIXME: Get rid of this dependency.
-      ;; —import sortsmill.ffcompat
-      ;; —
-      ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
-      ;; —  import fontforge
-      ;; —sortsmill.ffcompat.__windowing_ui (True)
-      ;; —sortsmill.ffcompat.__running_script (False)
-      ;; —import sortsmill.psMat
-      ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
-      ;; —  import psMat
-      ;; —import ffContrib.excepthook
-      »#))
-    ] ;; end of if-fontforge-has-python-api.
-   (format (current-error-port) "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n")
+   [if pkg-info:have-python-api?
+       (let ([py-initialized?  (@ (sortsmill python) py-initialized?)]
+             [py-initialize    (@ (sortsmill python) py-initialize)]
+             [pyexec-in-main   (@ (sortsmill python) pyexec-in-main)]
+             [lines-begin-with (@ (sortsmill python) lines-begin-with)])
+         (unless (py-initialized?) (py-initialize))
+         (pyexec-in-main
+          (lines-begin-with
+           ";; —"
+           #«
+           ;; —# FIXME: Get rid of this dependency.
+           ;; —import sortsmill.ffcompat
+           ;; —
+           ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
+           ;; —  import fontforge
+           ;; —sortsmill.ffcompat.__windowing_ui (True)
+           ;; —sortsmill.ffcompat.__running_script (False)
+           ;; —import sortsmill.psMat
+           ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
+           ;; —  import psMat
+           ;; —import ffContrib.excepthook
+           »#))
+         )]
 
    ;;
    ;; Load local-init.scm, which typically is in /etc/sortsmill-tools/
@@ -79,15 +84,17 @@
           "local-init.scm"
           (lambda () (primitive-load local-init)))))
 
-   [if-fontforge-has-python-api
-    ;;
-    ;; Load local_init.py, which typically is in /etc/sortsmill-tools/
-    ;;
-    (let ([local-init "@sysconfdir@/@PACKAGE@/local_init.py"])
-      (if (file-exists? local-init)
-          (fontforge-call-with-error-handling
-           "local_init.py"
-           (lambda () (pyexec-file-name-in-main local-init)))))]
+   [if pkg-info:have-python-api?
+       ;;
+       ;; Load local_init.py, which typically is in /etc/sortsmill-tools/
+       ;;
+       (let ([local-init "@sysconfdir@/@PACKAGE@/local_init.py"]
+             [pyexec-file-name-in-main (@ (sortsmill python)
+                                          pyexec-file-name-in-main)])
+         (if (file-exists? local-init)
+             (fontforge-call-with-error-handling
+              "local_init.py"
+              (lambda () (pyexec-file-name-in-main local-init)))))]
 
    ;;
    ;; Load user-init.scm, which typically is in
@@ -107,24 +114,26 @@
                 "user-init.scm"
                 (lambda () (primitive-load user-init)))))))
 
-   [if-fontforge-has-python-api
-    ;;
-    ;; Load user_init.py, which typically is in
-    ;; ${HOME}/.config/sortsmill-tools/
-    ;;
-    (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
-           [home (getenv "HOME")]
-           [user-config-dir
-            (cond [xdg-config-home]
-                  [home (string-append (getenv "HOME") "/.config")]
-                  [else #f] )] )
-      (if user-config-dir
-          (let ([user-init (string-append user-config-dir
-                                          "/@PACKAGE@/user_init.py")])
-            (if (file-exists? user-init)
-                (fontforge-call-with-error-handling
-                 "user_init.py"
-                 (lambda () (pyexec-file-name-in-main user-init)))))))]
+   [if pkg-info:have-python-api?
+       ;;
+       ;; Load user_init.py, which typically is in
+       ;; ${HOME}/.config/sortsmill-tools/
+       ;;
+       (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
+              [home (getenv "HOME")]
+              [user-config-dir
+               (cond [xdg-config-home]
+                     [home (string-append (getenv "HOME") "/.config")]
+                     [else #f] )]
+              [pyexec-file-name-in-main (@ (sortsmill python)
+                                           pyexec-file-name-in-main)])
+         (if user-config-dir
+             (let ([user-init (string-append user-config-dir
+                                             "/@PACKAGE@/user_init.py")])
+               (if (file-exists? user-init)
+                   (fontforge-call-with-error-handling
+                    "user_init.py"
+                    (lambda () (pyexec-file-name-in-main user-init)))))))]
 
    ) ;; end of thunk.
  )   ;; end of fontforge-call-with-error-handling.

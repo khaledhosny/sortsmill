@@ -83,11 +83,23 @@ GO_FILES += sortsmill/fontforge-api.go
 
 sortsmill/views.go: sortsmill/fontforge-api.go
 sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
 
 if HAVE_GUI
 
 DIST_SCM_FILES += sortsmill/usermenu.scm
 GO_FILES += sortsmill/usermenu.go
+
+if HAVE_PURE_API
+DIST_SCM_FILES += sortsmill/usermenu/pure.scm
+GO_FILES += sortsmill/usermenu/pure.go
+endif HAVE_PURE_API
+
+if HAVE_PYTHON_API
+DIST_SCM_FILES += sortsmill/usermenu/python.scm
+GO_FILES += sortsmill/usermenu/python.go
+endif HAVE_PYTHON_API
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/gdraw-api.scm
 GO_FILES += sortsmill/gdraw-api.go

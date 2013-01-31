@@ -1,6 +1,6 @@
-;; -*- mode: scheme; coding: utf-8 -*-
+;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
 
-;; Copyright (C) 2012 Barry Schwartz
+;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,83 +15,107 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmill machine))
+(library (sortsmill machine)
 
-(use-modules ((sortsmill math-constants)
-              #:select (c-flt-epsilon
-                        c-dbl-epsilon
-                        c-flt-epsilon-exact
-                        c-dbl-epsilon-exact))
-             (system foreign))
+  (export Bool-size                     ; sizeof(_Bool)
+          intptr_t-size                 ; sizeof(intptr_t)
+          uintptr_t-size                ; sizeof(uintptr_t)
+          float-size                    ; sizeof(float)
+          double-size                   ; sizeof(double)
+          c-float-type
+          c-int-type
+          c-uint-type
+          _Bool
+          set-pointer!
 
-(re-export c-flt-epsilon
-           c-dbl-epsilon
-           c-flt-epsilon-exact
-           c-dbl-epsilon-exact
-           )
+          ;; Re-exported from (sortsmill math-constants).
+          c-flt-epsilon
+          c-dbl-epsilon
+          c-flt-epsilon-exact
+          c-dbl-epsilon-exact)
 
-(export Bool-size                       ; sizeof(_Bool)
-        intptr_t-size                   ; sizeof(intptr_t)
-        uintptr_t-size                  ; sizeof(uintptr_t)
-        float-size                      ; sizeof(float)
-        double-size                     ; sizeof(double)
-        c-float-type
-        c-int-type
-        c-uint-type
-        _Bool
-        )
+  (import (only (sortsmill math-constants)
+                c-flt-epsilon c-dbl-epsilon
+                c-flt-epsilon-exact c-dbl-epsilon-exact)
+          (rnrs)
+          (ice-9 match)
+          (system foreign))
 
-(define-syntax Bool-size
-  (identifier-syntax @SIZEOF__BOOL@))
+  (define-syntax Bool-size
+    (identifier-syntax @SIZEOF__BOOL@))
 
-(define-syntax intptr_t-size
-  (identifier-syntax @SIZEOF_INTPTR_T@))
+  (define-syntax intptr_t-size
+    (identifier-syntax @SIZEOF_INTPTR_T@))
 
-(define-syntax uintptr_t-size
-  (identifier-syntax @SIZEOF_UINTPTR_T@))
+  (define-syntax uintptr_t-size
+    (identifier-syntax @SIZEOF_UINTPTR_T@))
 
-(define-syntax float-size
-  (make-variable-transformer
-   (lambda (x)
-     (syntax-case x ()
-       (ident (identifier? #'ident)
-              (datum->syntax x (sizeof float)))))))
+  (define-syntax float-size
+    (make-variable-transformer
+     (lambda (x)
+       (syntax-case x ()
+         (ident (identifier? #'ident)
+                (datum->syntax x (sizeof float)))))))
 
-(define-syntax double-size
-  (make-variable-transformer
-   (lambda (x)
-     (syntax-case x ()
-       (ident (identifier? #'ident)
-              (datum->syntax x (sizeof double)))))))
+  (define-syntax double-size
+    (make-variable-transformer
+     (lambda (x)
+       (syntax-case x ()
+         (ident (identifier? #'ident)
+                (datum->syntax x (sizeof double)))))))
 
-(define (c-float-type n)
-  (cond
-   ((= n float-size) 'float)
-   ((= n double-size) 'double)))
+  (define (c-float-type n)
+    (cond
+     ((= n float-size) 'float)
+     ((= n double-size) 'double)))
 
-(define (c-int-type n)
-  (case n
-    ((1) 'int8_t)
-    ((2) 'int16_t)
-    ((4) 'int32_t)
-    ((8) 'int64_t)))
+  (define (c-int-type n)
+    (case n
+      ((1) 'int8_t)
+      ((2) 'int16_t)
+      ((4) 'int32_t)
+      ((8) 'int64_t)))
 
-(define (c-uint-type n)
-  (case n
-    ((1) 'uint8_t)
-    ((2) 'uint16_t)
-    ((4) 'uint32_t)
-    ((8) 'uint64_t)))
+  (define (c-uint-type n)
+    (case n
+      ((1) 'uint8_t)
+      ((2) 'uint16_t)
+      ((4) 'uint32_t)
+      ((8) 'uint64_t)))
 
-(define-syntax _Bool
-  (make-variable-transformer
-   (lambda (x)
-     (syntax-case x ()
-       (var (identifier? #'var)
-            (case Bool-size
-              ((1) #'uint8)             ; Probably.
-              ((2) #'uint16)            ; Very unlikely.
-              ((4) #'uint32)            ; Very, very unlikely.
+  (define-syntax _Bool
+    (make-variable-transformer
+     (lambda (x)
+       (syntax-case x ()
+         (var (identifier? #'var)
+              (case Bool-size
+                [(1) #'uint8]             ; Probably.
+                [(2) #'uint16]            ; Very unlikely.
+                [(4) #'uint32]            ; Very, very unlikely.
+                [else (error
+                       '_Bool
+                       ;; Do not bother putting this in translation files.
+                       "we do not know how to handle _Bool of this size"
+                       Bool-size)] ))))))
 
-              ;; FIXME: Catch this at configure time.
-              (else (error "What architecture is this?"))))))))
+  (define-syntax bytevector-address-native-set!
+    (lambda (x)
+      (syntax-case x ()
+        ((_ bv index value)
+         (match (sizeof '*)
+           (4 #'(bytevector-u32-native-set! bv index value))
+           (8 #'(bytevector-u64-native-set! bv index value))
+           (else (error
+                  'bytevector-address-native-set!
+                  ;; Do not bother putting this in translation files.
+                  "we do not know how to handle addresses of this size"
+                  (sizeof '*))
+                 #'#f))))))
+
+  (define (bytevector-pointer-native-set! bv index p)
+    (bytevector-address-native-set! bv index (pointer-address p)))
+
+  (define (set-pointer! bv p)
+    (bytevector-pointer-native-set! bv 0 p))
+
+  ) ;; end of library.

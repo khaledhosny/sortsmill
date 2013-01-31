@@ -217,7 +217,7 @@ IF HAVE_GUI:
       windows = tuple (which_window)
     shortcut = shortcut_string
     menu_path = tuple (submenu_names)
-    scm.scm_call_6 (scm.scm_c_private_ref ('sortsmill usermenu', 'registerMenuItem'),
+    scm.scm_call_6 (scm.scm_c_private_ref ('sortsmill usermenu python', 'registerMenuItem'),
                     scm.scm_from_pointer (<PyObject *> action, NULL),
                     scm.scm_from_pointer (<PyObject *> enabled, NULL),
                     scm.scm_from_pointer (<PyObject *> data, NULL),

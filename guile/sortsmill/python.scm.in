@@ -182,7 +182,11 @@
          in-python-module
          python-module-get-file-name
          pyimport
-         pymodule?)
+         pymodule?
+
+         py-incref ;; Should not be needed very often.
+         py-decref ;; Should not be needed very often.
+         )
 
  (define python-dll
    (dynamic-link "libguile-sortsmill_python"))
@@ -191,7 +195,6 @@
  (define py-failure *unspecified*)
  (define grab-pyref *unspecified*)
  (define grab-borrowed-pyref *unspecified*)
-;;;;; (define guile-support-pymodule *unspecified*)
  (define guile-support-dll *unspecified*)
  (dynamic-call "init_guile_sortsmill_python" python-dll)
 
@@ -208,6 +211,22 @@
  (define py-finalize
    (pointer->procedure
     void (dynamic-func "Py_Finalize" python-dll) `()))
+
+ (define py-incref
+   (let ([proc (pointer->procedure
+                void (dynamic-func "Py_IncRef" python-dll)
+                '(*))])
+     (lambda (obj)
+       (assert (pyobject? obj))
+       (proc (pyobject->pointer obj)))))
+
+ (define py-decref
+   (let ([proc (pointer->procedure
+                void (dynamic-func "Py_DecRef" python-dll)
+                '(*))])
+     (lambda (obj)
+       (assert (pyobject? obj))
+       (proc (pyobject->pointer obj)))))
 
  (define-condition-type &python-error &error
    make-python-error python-error?

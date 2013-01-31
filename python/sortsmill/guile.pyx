@@ -20,7 +20,7 @@ cimport sortsmill.cython.guile as scm
 
 from sortsmill.cython.const_pointers cimport const_char_ptr
 
-from sortsmill.internal.__guile_support import pyguile
+from sortsmill.pyguile import pyguile
 from libc.stdint cimport uintptr_t
 
 #--------------------------------------------------------------------------

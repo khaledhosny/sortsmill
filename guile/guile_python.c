@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-////////////////////#include <sortsmill/null_passthru.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/python.h>
 #include <intl.h>
@@ -430,32 +429,6 @@ scm_pysequence_to_list (SCM obj)
   return p;
 }
 
-/*
-  static SCM
-scm_pyimport (SCM obj)
-{
-  scm_dynwind_begin (0);
-
-  char *s = scm_to_utf8_stringn (obj, NULL);
-  scm_dynwind_free (s);
-
-  PyObject *py_string = PyUnicode_FromString (s);
-  if (py_string == NULL)
-    scm_c_py_failure ("scm_c_pyimport", scm_list_1 (obj));
-
-  fprintf (stderr, "llllllllllllllllllllllllllllllllllllll %s\n",s);
-  PyObject *module = PyImport_Import (py_string);
-  fprintf (stderr, "llllllllllllllllllllllllllllllllllllll %s\n",s);
-  Py_DECREF (py_string);
-  if (module == NULL)
-    scm_c_py_failure ("scm_c_pyimport", scm_list_1 (obj));
-
-  scm_dynwind_end ();
-
-  return scm_from_PyObject_ptr (module);
-}
-*/
-
 static SCM
 scm_py_builtins (void)
 {
@@ -497,57 +470,6 @@ scm_python_module_get_file_name (SCM obj)
   return scm_from_utf8_string (file_name);
 }
 
-/*
-//-------------------------------------------------------------------------
-//
-// Access to the sortsmill.internal.__guile_support Cython module.
-// The module will be imported the first time it is accessed.
-//
-
-// FIXME: Come up with a way to do this more directly in Guile, and
-// more generally.
-static volatile AO_t __guile_support_pymodule_is_initialized = false;
-static pthread_mutex_t __guile_support_pymodule_mutex =
-  PTHREAD_MUTEX_INITIALIZER;
-static SCM __guile_support_pymodule = SCM_BOOL_F;
-
-// This function returns a Cython module we use in the implementation
-// of (sortsmill python).
-static SCM
-scm_guile_support_pymodule (void)
-{
-  if (!AO_load_acquire_read (&__guile_support_pymodule_is_initialized))
-    {
-      pthread_mutex_lock (&__guile_support_pymodule_mutex);
-      if (!__guile_support_pymodule_is_initialized)
-        {
-	  //	  PyRun_SimpleString ("import sortsmill.internal.__guile_support;import sys;print sys.modules;");
-	  fprintf(stderr,"========================================================================\n");
-	  //	  PyObject *module = PyImport_ImportModuleNoBlock ("sortsmill.internal.__guile_support");
-	  //	  Py_XINCREF (module);
-	  __guile_support_pymodule =
-	    scm_pyimport (scm_from_utf8_string ("sortsmill.internal.__guile_support"));
-	  fprintf(stderr,"========================================================================\n");
-          if (scm_is_true (__guile_support_pymodule))
-            scm_permanent_object (__guile_support_pymodule);
-          AO_store_release_write (&__guile_support_pymodule_is_initialized,
-                                  scm_is_true (__guile_support_pymodule));
-        }
-      pthread_mutex_unlock (&__guile_support_pymodule_mutex);
-      if (scm_is_false (__guile_support_pymodule))
-        rnrs_raise_condition
-          (scm_list_4
-           (rnrs_make_error (),
-            rnrs_c_make_who_condition ("scm_guile_support_pymodule"),
-            rnrs_c_make_message_condition
-            (_
-             ("failed to import Python module sortsmill.internal.__guile_support")),
-            rnrs_make_irritants_condition (SCM_EOL)));
-    }
-  return __guile_support_pymodule;
-}
-*/
-
 //-------------------------------------------------------------------------
 
 VISIBLE void
@@ -555,6 +477,8 @@ init_guile_sortsmill_python (void)
 {
   if (!Py_IsInitialized ())
     Py_Initialize ();
+
+  PyRun_SimpleString ("import sortsmill.internal.__guile_support");
 
   // FIXME: Preferably GUILE_SUPPORT_DLL should not be hard-coded, or
   // else should be in $(libdir).

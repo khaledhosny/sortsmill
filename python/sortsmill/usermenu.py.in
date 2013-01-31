@@ -17,6 +17,7 @@
 
 # |#
 
+'''
 pass;from sortsmill import guile
 pass;guile.guile_eval_string ("""
 
@@ -40,3 +41,4 @@ pass;guile.guile_eval_string ("""
   ) ;; end of in-python-module.
 
 ;;""")
+'''

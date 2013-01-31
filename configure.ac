@@ -314,6 +314,9 @@ AC_TYPE_SIZE_T
 AC_CHECK_SIZEOF([_Bool])
 SIZEOF__BOOL=${ac_cv_sizeof__Bool}
 AC_SUBST([SIZEOF__BOOL])
+if test ${SIZEOF__BOOL} -ne 1 -a ${SIZEOF__BOOL} -ne 2 -a ${SIZEOF__BOOL} -ne 4; then
+   AC_MSG_ERROR([${PACKAGE_NAME} cannot handle this _Bool size.])
+fi
 
 AC_CHECK_ALIGNOF([_Bool])
 ALIGNOF__BOOL=${ac_cv_alignof__Bool}
@@ -450,7 +453,12 @@ AH_BOTTOM([#include <config-extra.h>])
 
 #--------------------------------------------------------------------------
 
-AM_CONDITIONAL([HAVE_PYTHON_API],[test x"${i_do_have_python_scripting}" = xyes])
+# FIXME: Replace `i_do_have_python_scripting' with
+# `i_do_have_python_api' throughout.
+i_do_have_python_api="${i_do_have_python_scripting}"
+AC_SUBST([i_do_have_python_api])
+
+AM_CONDITIONAL([HAVE_PYTHON_API],[test x"${i_do_have_python_api}" = xyes])
 AM_CONDITIONAL([HAVE_PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}" = xyes])
 AM_CONDITIONAL([HAVE_PURE_API],[test x"${i_do_have_pure_api}" = xyes])
 AM_CONDITIONAL([HAVE_FORTRAN_API],[test x"${i_do_have_fortran_api}" = xyes])
