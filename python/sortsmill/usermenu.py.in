@@ -1,0 +1,42 @@
+#| -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+
+# Copyright (C) 2012, 2013 Barry Schwartz
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+# |#
+
+pass;from sortsmill import guile
+pass;guile.guile_eval_string ("""
+
+(import (sortsmill usermenu)
+        (sortsmill python))
+
+(in-python-module "sortsmill.usermenu"
+
+  (pydefun "register_fontforge_menu_entry"
+    (case-lambda
+      [(window menu_path action enabled shortcut)
+       (register-python-menu-entry
+        window menu_path action enabled shortcut)]
+      [(window menu_path action enabled)
+       (register-python-menu-entry
+        window menu_path action enabled (py-none))]
+      [(window menu_path action)
+       (register-python-menu-entry
+        window menu_path action (py-none) (py-none))]))
+
+  ) ;; end of in-python-module.
+
+;;""")

@@ -136,12 +136,19 @@ libguile_sortsmill_pure_la_SOURCES = guile_pure.c
 libguile_sortsmill_pure_la_CFLAGS = $(AM_CFLAGS) $(PURE_CFLAGS)
 libguile_sortsmill_pure_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PURE_LIBS)
-libguile_sortsmill_pure_la_LIBADD = $(top_builddir)/lib/libgnu.la
+libguile_sortsmill_pure_la_LIBADD =					\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
+	$(top_builddir)/lib/libgnu.la
 endif HAVE_PURE_API
 
 if HAVE_PYTHON_API
 lib_LTLIBRARIES += libguile-sortsmill_python.la
 libguile_sortsmill_python_la_SOURCES = guile_python.c
+# FIXME: Preferably the location of __guile_support should not have to
+# be hard-coded. Maybe we could simply move it to $(libdir), since it
+# doubles as both a Python and a Guile extension.
+libguile_sortsmill_python_la_CPPFLAGS = $(AM_CPPFLAGS)						\
+	'-DGUILE_SUPPORT_DLL="$(pyexecdir)/sortsmill/internal/__guile_support"'
 libguile_sortsmill_python_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PYTHON_LIBS)
 libguile_sortsmill_python_la_LIBADD =				\
@@ -152,18 +159,18 @@ endif HAVE_PYTHON_API
 lib_LTLIBRARIES += libguile-sortsmill_aux.la
 libguile_sortsmill_aux_la_SOURCES = guile_polyspline.c	\
 	guile_brentroot.c guile_gsl.c
-libguile_sortsmill_aux_la_LIBADD =				\
+libguile_sortsmill_aux_la_LIBADD =					\
 	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmill_fontforge.la
 libguile_sortsmill_fontforge_la_SOURCES = guile_notices.c
 libguile_sortsmill_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-libguile_sortsmill_fontforge_la_LIBADD =					\
+libguile_sortsmill_fontforge_la_LIBADD =				\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la	\
 	$(top_builddir)/gdraw/libsortsmill_gdraw.la			\
-	$(top_builddir)/gutils/libsortsmill_gutils.la			\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
+	$(top_builddir)/gutils/libsortsmill_gutils.la		\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la		\
 	$(top_builddir)/lib/libgnu.la
 
 if HAVE_GUI
@@ -173,8 +180,8 @@ libguile_sortsmill_fontforgeexe_la_LIBADD =					\
 	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
 	$(top_builddir)/gdraw/libsortsmill_gdraw.la				\
-	$(top_builddir)/gutils/libsortsmill_gutils.la				\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la				\
+	$(top_builddir)/gutils/libsortsmill_gutils.la			\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
 	$(top_builddir)/lib/libgnu.la
 endif HAVE_GUI
 

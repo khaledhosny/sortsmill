@@ -15,70 +15,66 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-;;;;;;
-;;;;;; FIXME: Get Emacs to treat ‘library’ as a special form.
-;;;;;;
-(library
- (sortsmill notices)
+(library (sortsmill notices)
 
- (export log-fontforge-warning
-         post-fontforge-notice
-         post-fontforge-error
-         fontforge-call-with-error-handling)
+  (export log-fontforge-warning
+          post-fontforge-notice
+          post-fontforge-error
+          fontforge-call-with-error-handling)
 
- (import (rnrs)
-         (system repl error-handling)
-         (only (guile)
-               *unspecified* define* load-extension
-               format getenv)
-         (only (ice-9 match) match))
+  (import (rnrs)
+          (system repl error-handling)
+          (only (guile)
+                *unspecified* define* load-extension
+                format getenv)
+          (only (ice-9 match) match))
 
- (load-extension "libguile-sortsmill_fontforge"
-                 "init_guile_sortsmill_notices")
+  (load-extension "libguile-sortsmill_fontforge"
+                  "init_guile_sortsmill_notices")
 
- (define* (fontforge-call-with-error-handling
-           window-title thunk #:key (value-after-catch *unspecified*))
-   (let ([retval value-after-catch]
-         [*on-error* (match (getenv "FONTFORGE_GUILE_ON_ERROR")
-                       (#f 'pass)
-                       ("pass" 'pass)
-                       ("debug" 'debug)
-                       (_ 'pass))])
-     (call-with-error-handling thunk
-                               #:on-error *on-error*
-                               #:post-error (post-error-handler window-title))
-     retval))
+  (define* (fontforge-call-with-error-handling
+            window-title thunk #:key (value-after-catch *unspecified*))
+    (let ([retval value-after-catch]
+          [*on-error* (match (getenv "FONTFORGE_GUILE_ON_ERROR")
+                        (#f 'pass)
+                        ("pass" 'pass)
+                        ("debug" 'debug)
+                        (_ 'pass))])
+      (call-with-error-handling thunk
+                                #:on-error *on-error*
+                                #:post-error (post-error-handler window-title))
+      retval))
 
- (define (post-error-handler window-title)
-   (lambda (key . args)
-     (post-fontforge-error
-      window-title
-      (let ([in-proc (lambda (proc)
-                       (if proc (format #f "In procedure ~a : " proc) ""))])
-        (match args
+  (define (post-error-handler window-title)
+    (lambda (key . args)
+      (post-fontforge-error
+       window-title
+       (let ([in-proc (lambda (proc)
+                        (if proc (format #f "In procedure ~a : " proc) ""))])
+         (match args
           ;;;;
           ;;;; FIXME FIXME FIXME: Add a case for R⁶RS exceptions. Or use Guile internals more.
           ;;;;
 
-          ;; A conventional Guile-style error exception
-          ;; without format arguments.
-          [[(? (lambda (p) (or (eq? p #f) (string? p))) proc)
-            (? string? str)
-            #f
-            (? (lambda (d) (or (eq? d #f) (list? d))) data)]
-           (format #f "~a~a" (in-proc proc) str)]
+           ;; A conventional Guile-style error exception
+           ;; without format arguments.
+           [[(? (lambda (p) (or (eq? p #f) (string? p))) proc)
+             (? string? str)
+             #f
+             (? (lambda (d) (or (eq? d #f) (list? d))) data)]
+            (format #f "~a~a" (in-proc proc) str)]
 
-          ;; A conventional Guile-style error exception
-          ;; with format arguments.
-          [[(? (lambda (p) (or (eq? p #f) (string? p))) proc)
-            (? string? fmt)
-            (? list? args)
-            (? (lambda (d) (or (eq? d #f) (list? d))) data)]
-           (format #f "~a~a" (in-proc proc) (apply format #f fmt args))]
+           ;; A conventional Guile-style error exception
+           ;; with format arguments.
+           [[(? (lambda (p) (or (eq? p #f) (string? p))) proc)
+             (? string? fmt)
+             (? list? args)
+             (? (lambda (d) (or (eq? d #f) (list? d))) data)]
+            (format #f "~a~a" (in-proc proc) (apply format #f fmt args))]
 
-          ;; Anything else.
-          [_ (format
-              #f "Guile exception thrown to key '~a with arguments ~a"
-              key args)] )))))
+           ;; Anything else.
+           [_ (format
+               #f "Guile exception thrown to key '~a with arguments ~a"
+               key args)] )))))
 
- ) ;; end of library.
+  ) ;; end of library.

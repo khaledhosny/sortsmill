@@ -15,126 +15,125 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library
- (sortsmill views)
+(library (sortsmill views)
 
- (export font-view-flag
-         glyph-view-flag
+  (export font-view-flag
+          glyph-view-flag
 
-         font-view?
-         pointer->font-view
-         font-view->pointer
+          font-view?
+          pointer->font-view
+          font-view->pointer
 
-         glyph-view?
-         pointer->glyph-view
-         glyph-view->pointer
+          glyph-view?
+          pointer->glyph-view
+          glyph-view->pointer
 
-         view?
-         pointer->view
-         view->pointer
+          view?
+          pointer->view
+          view->pointer
 
-         glyph-view->CharViewBase
-         CharViewBase->glyph-view
+          glyph-view->CharViewBase
+          CharViewBase->glyph-view
 
-         font-view->FontViewBase
-         FontViewBase->font-view
+          font-view->FontViewBase
+          FontViewBase->font-view
 
-         glyph-view->ViewBase
-         ViewBase->glyph-view
-         font-view->ViewBase
-         ViewBase->font-view
+          glyph-view->ViewBase
+          ViewBase->glyph-view
+          font-view->ViewBase
+          ViewBase->font-view
 
-         ViewBase->CharViewBase
-         CharViewBase->ViewBase
-         ViewBase->FontViewBase
-         FontViewBase->ViewBase)
+          ViewBase->CharViewBase
+          CharViewBase->ViewBase
+          ViewBase->FontViewBase
+          FontViewBase->ViewBase)
 
- (import (sortsmill fontforge-api)
-         (sortsmill i18n)
-         (rnrs)
-         (only (guile) compose)
-         (system foreign)
-         (ice-9 format))
+  (import (sortsmill fontforge-api)
+          (sortsmill i18n)
+          (rnrs)
+          (only (guile) compose)
+          (system foreign)
+          (ice-9 format))
 
- (define font-view-flag 1)
- (define glyph-view-flag 2)
+  (define font-view-flag 1)
+  (define glyph-view-flag 2)
 
- (define-wrapped-pointer-type font-view
-   font-view?
-   pointer->font-view font-view->pointer
-   (lambda (fv port)
-     (let* ((fvb (font-view->FontViewBase fv))
-            (sf (FontViewBase:sf-dref fvb)))
-       (format port "#<font-view ~s 0x~x>"
-               (pointer->string (SplineFont:font-name-ref sf))
-               (pointer-address (font-view->pointer fv))))))
+  (define-wrapped-pointer-type font-view
+    font-view?
+    pointer->font-view font-view->pointer
+    (lambda (fv port)
+      (let* ((fvb (font-view->FontViewBase fv))
+             (sf (FontViewBase:sf-dref fvb)))
+        (format port "#<font-view ~s 0x~x>"
+                (pointer->string (SplineFont:font-name-ref sf))
+                (pointer-address (font-view->pointer fv))))))
 
- (define-wrapped-pointer-type glyph-view
-   glyph-view?
-   pointer->glyph-view glyph-view->pointer
-   (lambda (gv port)
-     (let* ((cvb (glyph-view->CharViewBase gv))
-            (sc (CharViewBase:sc-dref cvb))
-            (sf (SplineChar:parent-dref sc)))
-       (format port "#<glyph-view ~s:~s 0x~x>"
-               (pointer->string (SplineFont:font-name-ref sf))
-               (pointer->string (SplineChar:name-ref sc))
-               (pointer-address (glyph-view->pointer gv))))))
+  (define-wrapped-pointer-type glyph-view
+    glyph-view?
+    pointer->glyph-view glyph-view->pointer
+    (lambda (gv port)
+      (let* ((cvb (glyph-view->CharViewBase gv))
+             (sc (CharViewBase:sc-dref cvb))
+             (sf (SplineChar:parent-dref sc)))
+        (format port "#<glyph-view ~s:~s 0x~x>"
+                (pointer->string (SplineFont:font-name-ref sf))
+                (pointer->string (SplineChar:name-ref sc))
+                (pointer-address (glyph-view->pointer gv))))))
 
- (define (view? v)
-   (or (glyph-view? v) (font-view? v)))
+  (define (view? v)
+    (or (glyph-view? v) (font-view? v)))
 
- (define (pointer->view p)
-   (let ((tag (ViewBase:tag-ref (pointer->ViewBase p))))
-     (cond
-      ((= tag glyph-view-flag) (pointer->glyph-view p))
-      ((= tag font-view-flag) (pointer->font-view p))
-      (else (assertion-violation
-             'pointer->view
-             (format #f (_ "illegal ViewBase tag ‘~d’ at address") tag)
-             p)))))
+  (define (pointer->view p)
+    (let ((tag (ViewBase:tag-ref (pointer->ViewBase p))))
+      (cond
+       ((= tag glyph-view-flag) (pointer->glyph-view p))
+       ((= tag font-view-flag) (pointer->font-view p))
+       (else (assertion-violation
+              'pointer->view
+              (format #f (_ "illegal ViewBase tag ‘~d’ at address") tag)
+              p)))))
 
- (define (view->pointer v)
-   (cond ((glyph-view? v) (glyph-view->pointer v))
-         ((font-view? v) (font-view->pointer v))
-         (else (assertion-violation
-                'view->pointer
-                (_ "expected a font-view or glyph-view") v))))
+  (define (view->pointer v)
+    (cond ((glyph-view? v) (glyph-view->pointer v))
+          ((font-view? v) (font-view->pointer v))
+          (else (assertion-violation
+                 'view->pointer
+                 (_ "expected a font-view or glyph-view") v))))
 
- (define font-view->FontViewBase
-   (compose pointer->FontViewBase font-view->pointer))
+  (define font-view->FontViewBase
+    (compose pointer->FontViewBase font-view->pointer))
 
- (define FontViewBase->font-view
-   (compose pointer->font-view FontViewBase->pointer))
+  (define FontViewBase->font-view
+    (compose pointer->font-view FontViewBase->pointer))
 
- (define glyph-view->CharViewBase
-   (compose pointer->CharViewBase glyph-view->pointer))
+  (define glyph-view->CharViewBase
+    (compose pointer->CharViewBase glyph-view->pointer))
 
- (define CharViewBase->glyph-view
-   (compose pointer->glyph-view CharViewBase->pointer))
+  (define CharViewBase->glyph-view
+    (compose pointer->glyph-view CharViewBase->pointer))
 
- (define glyph-view->ViewBase
-   (compose pointer->ViewBase glyph-view->pointer))
+  (define glyph-view->ViewBase
+    (compose pointer->ViewBase glyph-view->pointer))
 
- (define ViewBase->glyph-view
-   (compose pointer->glyph-view ViewBase->pointer))
+  (define ViewBase->glyph-view
+    (compose pointer->glyph-view ViewBase->pointer))
 
- (define font-view->ViewBase
-   (compose pointer->ViewBase font-view->pointer))
+  (define font-view->ViewBase
+    (compose pointer->ViewBase font-view->pointer))
 
- (define ViewBase->font-view
-   (compose pointer->font-view ViewBase->pointer))
+  (define ViewBase->font-view
+    (compose pointer->font-view ViewBase->pointer))
 
- (define ViewBase->CharViewBase
-   (compose pointer->CharViewBase ViewBase->pointer))
+  (define ViewBase->CharViewBase
+    (compose pointer->CharViewBase ViewBase->pointer))
 
- (define CharViewBase->ViewBase
-   (compose pointer->ViewBase CharViewBase->pointer))
+  (define CharViewBase->ViewBase
+    (compose pointer->ViewBase CharViewBase->pointer))
 
- (define ViewBase->FontViewBase
-   (compose pointer->FontViewBase ViewBase->pointer))
+  (define ViewBase->FontViewBase
+    (compose pointer->FontViewBase ViewBase->pointer))
 
- (define FontViewBase->ViewBase
-   (compose pointer->ViewBase FontViewBase->pointer))
+  (define FontViewBase->ViewBase
+    (compose pointer->ViewBase FontViewBase->pointer))
 
- ) ;; end of library.
+  ) ;; end of library.

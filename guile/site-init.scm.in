@@ -18,13 +18,14 @@
 (import (sortsmill notices)
         (sortsmill pure)
         (sortsmill python)
-        (only (sortsmill i18n) _)
         (system foreign))
 
 (if (not (getenv "HOME"))
-    ((@ (rnrs) error)
-     "site-init.scm"
-     (_ "the HOME environment variable is not set; please set it")))
+    (let ([rnrs-error (@ (rnrs) error)]
+          [_          (@ (sortsmill i18n) _)])
+      (rnrs-error
+       "site-init.scm"
+       (_ "the HOME environment variable is not set; please set it"))))
 
 ;;
 ;; Try to ensure access to Sorts Mill Tools’s Guile modules.
@@ -49,7 +50,7 @@
     (pure-create-interp '("sortsmill-editor"))]
 
    [if-fontforge-has-python-api
-    (py-initialize)
+    (unless (py-initialized?) (py-initialize))
     (pyexec-in-main
      (lines-begin-with
       ";; —"
@@ -67,6 +68,7 @@
       ;; —import ffContrib.excepthook
       »#))
     ] ;; end of if-fontforge-has-python-api.
+   (format (current-error-port) "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n")
 
    ;;
    ;; Load local-init.scm, which typically is in /etc/sortsmill-tools/

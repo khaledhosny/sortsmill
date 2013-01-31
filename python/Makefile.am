@@ -65,6 +65,9 @@ nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 nobase_nodist_python_PYTHON = sortsmill/__init__.py				\
 	sortsmill/legacy/__init__.py sortsmill/internal/__init__.py
 #sortsmill/fontforge_compat.py
+if HAVE_GUI
+nobase_nodist_python_PYTHON += sortsmill/usermenu.py
+endif HAVE_GUI
 
 nobase_pyexec_LTLIBRARIES =
 
@@ -95,12 +98,12 @@ sortsmill_views_la_SOURCES = sortsmill/views.c
 sortsmill_views_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmill_views_la_LIBADD = $(FFLIBADD)
 
-if HAVE_GUI
-nobase_pyexec_LTLIBRARIES += sortsmill/usermenu.la
-sortsmill_usermenu_la_SOURCES = sortsmill/usermenu.c
-sortsmill_usermenu_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-sortsmill_usermenu_la_LIBADD = $(EXELIBADD)
-endif HAVE_GUI
+#if HAVE_GUI
+#nobase_pyexec_LTLIBRARIES += sortsmill/usermenu.la
+#sortsmill_usermenu_la_SOURCES = sortsmill/usermenu.c
+#sortsmill_usermenu_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+#sortsmill_usermenu_la_LIBADD = $(EXELIBADD)
+#endif HAVE_GUI
 
 nobase_pyexec_LTLIBRARIES += sortsmill/notices.la
 sortsmill_notices_la_SOURCES = sortsmill/notices.c
@@ -142,7 +145,7 @@ PYX_FILES = sortsmill/views.pyx sortsmill/ffcompat.pyx					\
 	sortsmill/brentroot.pyx sortsmill/internal/__exec.pyx				\
 	sortsmill/internal/__guile_support.pyx
 if HAVE_GUI
-PYX_FILES += sortsmill/usermenu.pyx
+##PYX_FILES += sortsmill/usermenu.pyx
 endif HAVE_GUI
 
 NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
@@ -179,13 +182,13 @@ $(NODIST_PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 EXTRA_DIST += $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
 
 MOSTLYCLEANFILES = sortsmill/fontforge_api.pyx							\
-	sortsmill/fontforge_api.c sortsmill/views.c sortsmill/usermenu.c	\
-	sortsmill/ffcompat.c sortsmill/psMat.c sortsmill/pkg_info.c			\
-	sortsmill/notices.c sortsmill/guile.c sortsmill/linalg.c			\
-	sortsmill/polyspline.c sortsmill/brentroot.c						\
-	sortsmill/internal/__exec.c sortsmill/internal/__exec.h				\
-	sortsmill/internal/__guile_support.c								\
+	sortsmill/fontforge_api.c sortsmill/views.c sortsmill/ffcompat.c	\
+	sortsmill/psMat.c sortsmill/pkg_info.c sortsmill/notices.c			\
+	sortsmill/guile.c sortsmill/linalg.c sortsmill/polyspline.c			\
+	sortsmill/brentroot.c sortsmill/internal/__exec.c					\
+	sortsmill/internal/__exec.h sortsmill/internal/__guile_support.c	\
 	sortsmill/internal/__guile_support.h
+########sortsmill/usermenu.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -214,7 +217,8 @@ all-local: all-local-HAVE_GUI sortsmill/psMat.so					\
 	sortsmill/internal/__exec.so									\
 	sortsmill/internal/__guile_support.so
 if HAVE_GUI
-all-local-HAVE_GUI: sortsmill/usermenu.so
+#######all-local-HAVE_GUI: sortsmill/usermenu.so
+all-local-HAVE_GUI:
 else !HAVE_GUI
 all-local-HAVE_GUI:
 endif !HAVE_GUI

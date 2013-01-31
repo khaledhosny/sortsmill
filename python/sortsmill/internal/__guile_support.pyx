@@ -42,9 +42,45 @@ import gmpy
 import inspect
 import traceback
 
-from sortsmill.cython.internal.__exec cimport \
-    exec_python, exec_python_file_name, eval_python
-import sortsmill.internal.__exec as __exec
+#--------------------------------------------------------------------------
+
+## FIXME: Get rid of __exec
+##
+#########from sortsmill.cython.internal.__exec cimport \
+#########    exec_python, exec_python_file_name, eval_python
+#########import sortsmill.internal.__exec as __exec
+
+cpdef object wrap_exception_and_throw_to_guile (object who, object exc_info):
+  if isinstance (who, unicode):
+    who_bytes = who.encode ("UTF-8")
+  else:
+    who_bytes = who
+  cdef char *c_who = who_bytes
+  cdef SCM scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                            "pointer->pyobject"),
+                                      scm.scm_from_pointer (<PyObject *> exc_info, NULL))
+  scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
+                 scm.scm_list_2 (scm.scm_from_utf8_symbol (c_who), scm_info))
+
+cdef inline object exec_python (object who, object python_code, object glob, object locl):
+  try:
+    exec python_code in glob, locl
+  except:
+    wrap_exception_and_throw_to_guile (who, sys.exc_info ())
+
+cdef inline object exec_python_file_name (object who, object file_name, object glob, object locl):
+  try:
+    execfile (file_name, glob, locl)
+  except:
+    wrap_exception_and_throw_to_guile (who, sys.exc_info ())
+
+cdef inline object eval_python (object who, object python_code, object glob, object locl):
+  try:
+    retval = eval (python_code, glob, locl)
+  except:
+    wrap_exception_and_throw_to_guile (who, sys.exc_info ())
+    retval = None
+  return retval
 
 #--------------------------------------------------------------------------
 
@@ -217,7 +253,7 @@ cdef public object __python_import (object args):
   try:
     result = __import__ (name, glob, locl, fromlist, level)
   except:
-    __exec.wrap_exception_and_throw_to_guile ("__python_import", sys.exc_info ())
+    wrap_exception_and_throw_to_guile ("__python_import", sys.exc_info ())
     result = None
   return result
 

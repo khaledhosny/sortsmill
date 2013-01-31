@@ -15,49 +15,33 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmill alloc))
+(library (sortsmill alloc)
 
-(export c:zalloc ;; Allocate and fill with zeroes.
-        c:free
-        c:gc-zalloc ;; Garbage-collected.
-        c:gc-free)
+  (export c:zalloc ;; Allocate and fill with zeroes.
+          c:free
+          c:gc-zalloc ;; Garbage-collected.
+          c:gc-free)
 
-(import (rnrs base)
-        (system foreign))
+  (import (rnrs)
+          (except (guile) error)
+          (system foreign))
 
-(define c:zalloc
-  (pointer->procedure '*
-                      (dynamic-func "scm_calloc" (dynamic-link))
-                      (list size_t)))
+  (define aux-dll (dynamic-link "libguile-sortsmill_aux"))
 
-(define c:free
-  (pointer->procedure void
-                      (dynamic-func "free" (dynamic-link))
-                      (list '*)))
+  (define c:zalloc
+    (pointer->procedure
+     '* (dynamic-func "scm_calloc" aux-dll) `(,size_t)))
 
-(define GC_malloc_error_
-  (pointer->procedure void
-                      (dynamic-func "scm_memory_error" (dynamic-link))
-                      (list '*)))
+  (define c:free
+    (pointer->procedure
+     void (dynamic-func "free" aux-dll) '(*)))
 
-(define GC_malloc_error_msg_
-  (string->pointer "GC_malloc"))
+  (define c:gc-zalloc
+    (pointer->procedure
+     '* (dynamic-func "x_gc_malloc" aux-dll) `(,size_t)))
 
-(define (GC-malloc-error)
-  (GC_malloc_error_ GC_malloc_error_msg_))
+  (define c:gc-free
+    (pointer->procedure
+     void (dynamic-func "GC_free" aux-dll) '(*)))
 
-(define GC_malloc
-  (pointer->procedure '*
-                      (dynamic-func "GC_malloc" (dynamic-link))
-                      (list size_t)))
-
-(define (c:gc-zalloc size)
-  (let ((ptr (GC_malloc size)))
-    (when (null-pointer? ptr)
-      (GC-malloc-error))
-    ptr))
-
-(define c:gc-free
-  (pointer->procedure void
-                      (dynamic-func "GC_free" (dynamic-link))
-                      (list '*)))
+  ) ;; end of library.

@@ -21,46 +21,45 @@
 ;; that chooses the C implementation if t1 or t2 is ‘inexact’.
 ;;
 
-(library
- (sortsmill brentroot)
+(library (sortsmill brentroot)
 
- (export flbrentroot
-         flbrentroot-values
-         qbrentroot
-         qbrentroot-values)
+  (export flbrentroot
+          flbrentroot-values
+          qbrentroot
+          qbrentroot-values)
 
- (import (sortsmill math-constants)
-         (rnrs)
-         (except (guile) error))
+  (import (sortsmill math-constants)
+          (rnrs)
+          (except (guile) error))
 
- ;; These variables will be redefined by the load-extension.
- (define f64-brentroot *unspecified*)
- (define mpq-brentroot *unspecified*)
- (load-extension "libguile-sortsmill_aux"
-                 "init_guile_sortsmill_brentroot")
+  ;; These variables will be redefined by the load-extension.
+  (define f64-brentroot *unspecified*)
+  (define mpq-brentroot *unspecified*)
+  (load-extension "libguile-sortsmill_aux"
+                  "init_guile_sortsmill_brentroot")
 
- ;;-------------------------------------------------------------------------
+  ;;-------------------------------------------------------------------------
 
- (define* (flbrentroot-values t1 t2 func #:key (max-iters -1) (tol -1))
-   (f64-brentroot max-iters tol t1 t2 func))
+  (define* (flbrentroot-values t1 t2 func #:key (max-iters -1) (tol -1))
+    (f64-brentroot max-iters tol t1 t2 func))
 
- (define* (flbrentroot t1 t2 func #:key (max-iters -1) (tol -1))
-   (let-values (((root _err _iter-no)
-                 (f64-brentroot max-iters tol t1 t2 func)))
-     root))
+  (define* (flbrentroot t1 t2 func #:key (max-iters -1) (tol -1))
+    (let-values (((root _err _iter-no)
+                  (f64-brentroot max-iters tol t1 t2 func)))
+      root))
 
- ;;-------------------------------------------------------------------------
+  ;;-------------------------------------------------------------------------
 
- (define* (qbrentroot-values t1 t2 func
-                             #:key (max-iters -1) (tol -1) (epsilon -1))
-   (mpq-brentroot max-iters tol epsilon t1 t2 func))
+  (define* (qbrentroot-values t1 t2 func
+                              #:key (max-iters -1) (tol -1) (epsilon -1))
+    (mpq-brentroot max-iters tol epsilon t1 t2 func))
 
- (define* (qbrentroot t1 t2 func
-                      #:key (max-iters -1) (tol -1) (epsilon -1))
-   (let-values (((root _err _iter-no)
-                 (mpq-brentroot max-iters tol epsilon t1 t2 func)))
-     root))
+  (define* (qbrentroot t1 t2 func
+                       #:key (max-iters -1) (tol -1) (epsilon -1))
+    (let-values (((root _err _iter-no)
+                  (mpq-brentroot max-iters tol epsilon t1 t2 func)))
+      root))
 
- ;;-------------------------------------------------------------------------
+  ;;-------------------------------------------------------------------------
 
- ) ;; end of library.
+  ) ;; end of library.

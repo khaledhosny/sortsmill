@@ -48,6 +48,7 @@
 
  (export python-dll
 
+         py-initialized?
          py-initialize
          py-finalize
 
@@ -188,11 +189,17 @@
 
  ;; These variables will be redefined by the dynamic-call.
  (define py-failure *unspecified*)
- (define private:pyimport *unspecified*)
  (define grab-pyref *unspecified*)
  (define grab-borrowed-pyref *unspecified*)
- (define guile-support-pymodule *unspecified*)
+;;;;; (define guile-support-pymodule *unspecified*)
+ (define guile-support-dll *unspecified*)
  (dynamic-call "init_guile_sortsmill_python" python-dll)
+
+ (define py-initialized?
+   (let ([proc (pointer->procedure
+                int (dynamic-func "Py_IsInitialized" python-dll)
+                '())])
+     (lambda () (not (fxzero? (proc))))))
 
  (define py-initialize
    (pointer->procedure
@@ -255,12 +262,15 @@
 
  ;;--------------------------------------------------------------------------
 
- (eval-when
-  (compile eval load)
-  [define (guile-support-func func-name)
-    (dynamic-func func-name
-                  (dynamic-link (python-module-get-file-name
-                                 (guile-support-pymodule))))] )
+;;;; (load-extension "/home/trashman/lib64/python2.7/site-packages/sortsmill/internal/__guile_support"
+;;;;                 "init__guile_support")
+
+ (eval-when (compile eval load)
+   [define (guile-support-func func-name)
+     (dynamic-func func-name guile-support-dll)])
+;;;;                   (dynamic-link (python-module-get-file-name
+;;;;                                  (guile-support-pymodule))))] )
+;;;;;;                   (dynamic-link "/home/trashman/lib64/python2.7/site-packages/sortsmill/internal/__guile_support"))])
 
  (define-syntax define-guile-support-procedure
    (lambda (x)
@@ -532,20 +542,25 @@
                                       (list->pylist from)
                                       (integer->pyint level))))))
 
- (define current-python-module-parameter
-   (make-parameter #f
-                   (match-lambda
-                    [#f #f]
-                    [(? pymodule? m) m]
-                    [s (python-module s)])))
+ (define %current-python-module-fluid (make-fluid #f))
 
  (define (current-python-module)
-   (let ([param (current-python-module-parameter)])
-     (if param param (python-module "__main__"))))
+   (let ([pymod (fluid-ref %current-python-module-fluid)])
+     (if pymod pymod
+         (begin
+           (unless (py-initialized?) (py-initialize))
+           (let ([main (python-module "__main__")])
+             (fluid-set! %current-python-module-fluid main)
+             main)))))
 
- (define-syntax-rule (in-python-module module body body* ...)
-   (parameterize ([current-python-module-parameter module])
-     body body* ...))
+ (define-syntax in-python-module
+   (syntax-rules ()
+     [(_ module body body* ...)
+      (begin
+        (unless (py-initialized?) (py-initialize))
+        (with-fluids ([%current-python-module-fluid
+                       (force-pymodule 'in-python-module module)])
+          body body* ...))]))
 
  (define (alist->python-alist alist)
    (list->pylist (map pair->pytuple alist)))

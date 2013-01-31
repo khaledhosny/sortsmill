@@ -24,7 +24,11 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-dist_noinst_SCRIPTS = hello.py
+dist_noinst_DATA =
+dist_noinst_SCRIPTS =
+
+dist_noinst_DATA += sortsmill-scheme.el
+dist_noinst_SCRIPTS += hello.py
 
 lib_LTLIBRARIES =
 

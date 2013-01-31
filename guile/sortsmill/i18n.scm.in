@@ -15,48 +15,47 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library
- (sortsmill i18n)
+(library (sortsmill i18n)
 
- (export ff_textdomain
-         _ C_
-         dgettext
-         dpgettext)
+  (export ff_textdomain
+          _ C_
+          dgettext
+          dpgettext)
 
- (import (rnrs)
-         (except (guile) error)
-         (system foreign))
+  (import (rnrs)
+          (except (guile) error)
+          (system foreign))
 
- (define glib-dll (dynamic-link "libguile-sortsmill_aux"))
+  (define glib-dll (dynamic-link "libguile-sortsmill_aux"))
 
- (define ff_textdomain "@FF_TEXTDOMAIN@")
+  (define ff_textdomain "@FF_TEXTDOMAIN@")
 
- (define _
-   (lambda (msg) (dgettext ff_textdomain msg)))
+  (define _
+    (lambda (msg) (dgettext ff_textdomain msg)))
 
- (define C_
-   (let ([separator (string #\eot)])
-     (lambda (context msg)
-       (dpgettext ff_textdomain
-                  (string-append context separator msg)
-                  (+ 1 (string-length context))))))
+  (define C_
+    (let ([separator (string #\eot)])
+      (lambda (context msg)
+        (dpgettext ff_textdomain
+                   (string-append context separator msg)
+                   (+ 1 (string-length context))))))
 
- (define dgettext
-   (let ([proc (pointer->procedure
-                '* (dynamic-func "g_dgettext" glib-dll)
-                `(* *))])
-     (lambda (domain msgid)
-       (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]
-             [msgid^ (string->pointer msgid "UTF-8")])
-         (pointer->string (proc domain^ msgid^))))))
+  (define dgettext
+    (let ([proc (pointer->procedure
+                 '* (dynamic-func "g_dgettext" glib-dll)
+                 `(* *))])
+      (lambda (domain msgid)
+        (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]
+              [msgid^ (string->pointer msgid "UTF-8")])
+          (pointer->string (proc domain^ msgid^))))))
 
- (define dpgettext
-   (let ([proc (pointer->procedure
-                '* (dynamic-func "g_dpgettext" glib-dll)
-                `(* * ,size_t))])
-     (lambda (domain msgctxtid msgidoffset)
-       (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]
-             [msgctxtid^ (string->pointer msgctxtid "UTF-8")])
-         (pointer->string (proc domain^ msgctxtid^ msgidoffset))))))
+  (define dpgettext
+    (let ([proc (pointer->procedure
+                 '* (dynamic-func "g_dpgettext" glib-dll)
+                 `(* * ,size_t))])
+      (lambda (domain msgctxtid msgidoffset)
+        (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]
+              [msgctxtid^ (string->pointer msgctxtid "UTF-8")])
+          (pointer->string (proc domain^ msgctxtid^ msgidoffset))))))
 
- ) ;; end of library.
+  ) ;; end of library.
