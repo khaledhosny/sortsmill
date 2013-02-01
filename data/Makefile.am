@@ -29,17 +29,17 @@ include $(top_srcdir)/mk/layout.am
 
 SUBDIRS = cidmap cursors pixmaps
 
-desktop_in_files = fontforge.desktop.in
+desktop_in_files = sortsmill-editor.desktop.in
 nodist_desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 
-dist_hicolor16x16_DATA = icons/16x16/apps/fontforge.png
-dist_hicolor22x22_DATA = icons/22x22/apps/fontforge.png
-dist_hicolor24x24_DATA = icons/24x24/apps/fontforge.png
-dist_hicolor32x32_DATA = icons/32x32/apps/fontforge.png
-dist_hicolor48x48_DATA = icons/48x48/apps/fontforge.png
-dist_hicolorscalable_DATA = icons/scalable/apps/fontforge.svg
+dist_hicolor16x16_DATA = icons/16x16/apps/sortsmill-editor.png
+dist_hicolor22x22_DATA = icons/22x22/apps/sortsmill-editor.png
+dist_hicolor24x24_DATA = icons/24x24/apps/sortsmill-editor.png
+dist_hicolor32x32_DATA = icons/32x32/apps/sortsmill-editor.png
+dist_hicolor48x48_DATA = icons/48x48/apps/sortsmill-editor.png
+dist_hicolorscalable_DATA = icons/scalable/apps/sortsmill-editor.svg
 
 mimepackages_in_files = fontforge.xml.in
 nodist_mimepackages_DATA = $(mimepackages_in_files:.xml.in=.xml)

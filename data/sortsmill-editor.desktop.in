@@ -1,8 +1,8 @@
 [Desktop Entry]
-_Name=FontForge
+_Name=Sorts Mill Editor
 _Comment=An outline font editor
-Exec=fontforge %U
-Icon=fontforge
+Exec=sortsmill-editor %U
+Icon=sortsmill-editor
 StartupWMClass=fontforge
 Terminal=false
 Type=Application
