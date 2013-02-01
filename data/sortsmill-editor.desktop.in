@@ -8,3 +8,4 @@ Terminal=false
 Type=Application
 Categories=Graphics;
 MimeType=application/vnd.font-fontforge-sfd;application/x-font-ttf;application/x-font-otf;application/x-font-type1;application/x-font-bdf;application/x-font-pcf;
+_Keywords=font;fonts;editor;TTF;OTF;typeface;
