@@ -15,25 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-cdef extern from 'config.h':
-  pass
-
-from cpython.ref cimport PyObject
-
-from sortsmill.cython.guile cimport SCM
-cimport sortsmill.cython.guile as scm
+from . import guile
 
 # FIXME: Get rid of this or revise it for the menu design we end up
 # with.
-def register_fontforge_menu_entry (window not None,
-                                   menu_path not None,
-                                   action not None,
+def register_fontforge_menu_entry (window, menu_path, action,
                                    enabled = None,
                                    shortcut = None):
-  scm.scm_call_5 (scm.scm_c_public_ref ('sortsmill usermenu python',
-                                        'register-python-menu-entry'),
-                  scm.scm_from_pointer (<PyObject *> window, NULL),
-                  scm.scm_from_pointer (<PyObject *> menu_path, NULL),
-                  scm.scm_from_pointer (<PyObject *> action, NULL),
-                  scm.scm_from_pointer (<PyObject *> enabled, NULL),
-                  scm.scm_from_pointer (<PyObject *> shortcut, NULL))
+  assert window is not None
+  assert menu_path is not None
+  assert action is not None
+  guile.call (guile.public_ref ('sortsmill usermenu python',
+                                'register-python-menu-entry'),
+              guile.pyobject (window),
+              guile.pyobject (menu_path),
+              guile.pyobject (action),
+              guile.pyobject (enabled),
+              guile.pyobject (shortcut))

@@ -27,9 +27,13 @@
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/scheme.mk
 include $(top_srcdir)/mk/tig.mk
+include $(top_srcdir)/mk/cython.mk
 
 FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
 	'-I$(top_srcdir)/fontforge'
+
+AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
+	'-I$(builddir)/sortsmill' '-I$(srcdir)/sortsmill'
 
 EXTRA_DIST =
 MOSTLYCLEANFILES =
@@ -163,6 +167,7 @@ libguile_sortsmill_pure_la_LIBADD =					\
 endif HAVE_PURE_API
 
 if HAVE_PYTHON_API
+
 lib_LTLIBRARIES += libguile-sortsmill_python.la
 libguile_sortsmill_python_la_SOURCES = guile_python.c
 libguile_sortsmill_python_la_LDFLAGS = -module -release $(VERSION)	\
@@ -170,6 +175,26 @@ libguile_sortsmill_python_la_LDFLAGS = -module -release $(VERSION)	\
 libguile_sortsmill_python_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
 	$(top_builddir)/lib/libgnu.la
+
+lib_LTLIBRARIES += libguile-sortsmill_cython.la
+libguile_sortsmill_cython_la_SOURCES = libguile_sortsmill_cython.c
+libguile_sortsmill_cython_la_CFLAGS = $(AM_CFLAGS)	\
+	$(CYTHON_EXTRA_CFLAGS)
+libguile_sortsmill_cython_la_LDFLAGS = -module -release $(VERSION)	\
+	$(PYTHON_LIBS)
+libguile_sortsmill_cython_la_LIBADD =				\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
+	$(top_builddir)/lib/libgnu.la
+
+libguile_sortsmill_cython.c: libguile_sortsmill_cython.pyx	\
+	$(top_builddir)/inc/sortsmill/cython/config.pxi			\
+	$(top_srcdir)/inc/sortsmill/cython/guile.pxd			\
+	$(top_srcdir)/inc/sortsmill/cython/xgc.pxd
+
+EXTRA_DIST += libguile_sortsmill_cython.pyx
+MOSTLYCLEANFILES += libguile_sortsmill_cython.c	\
+	libguile_sortsmill_cython.h
+
 endif HAVE_PYTHON_API
 
 lib_LTLIBRARIES += libguile-sortsmill_aux.la

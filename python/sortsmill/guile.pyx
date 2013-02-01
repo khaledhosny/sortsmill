@@ -19,13 +19,15 @@ from sortsmill.cython.guile cimport SCM
 cimport sortsmill.cython.guile as scm
 
 from sortsmill.cython.const_pointers cimport const_char_ptr
+from cpython.ref cimport PyObject
+from libc.stdint cimport uintptr_t
 
 from sortsmill.pyguile import pyguile
-from libc.stdint cimport uintptr_t
 
 #--------------------------------------------------------------------------
 
-# FIXME: Make this available to other modules.
+# FIXME: Make this available to other modules. What is the best way to
+# do this in Cython?
 cdef SCM scm_from_string_object (object string):
   assert isinstance (string, unicode) or isinstance (string, bytes)
   if isinstance (string, unicode):
@@ -87,6 +89,47 @@ def guile_eval_string (string not None, module = None):
 def guile_string (string not None):
   cdef SCM scm_string = scm_from_string_object (string)
   return pyguile (<uintptr_t> scm_string)
+
+def pyobject (obj):
+  cdef SCM result = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                          "borrowed-pointer->pyobject"),
+                                    scm.scm_from_pointer (<PyObject *> obj, NULL))
+  return pyguile (<uintptr_t> result)
+
+def public_ref (module_name not None, name not None):
+  assert isinstance (module_name, unicode) or isinstance (module_name, bytes)
+  assert isinstance (name, unicode) or isinstance (name, bytes)
+  if isinstance (module_name, unicode):
+    module_name = module_name.encode ('UTF-8')
+  if isinstance (name, unicode):
+    name = name.encode ('UTF-8')
+  cdef char *modname = module_name
+  cdef char *varname = name
+  cdef SCM value = scm.scm_c_public_ref (modname, varname)
+  return pyguile (<uintptr_t> value)
+
+def private_ref (module_name not None, name not None):
+  assert isinstance (module_name, unicode) or isinstance (module_name, bytes)
+  assert isinstance (name, unicode) or isinstance (name, bytes)
+  if isinstance (module_name, unicode):
+    module_name = module_name.encode ('UTF-8')
+  if isinstance (name, unicode):
+    name = name.encode ('UTF-8')
+  cdef char *modname = module_name
+  cdef char *varname = name
+  cdef SCM value = scm.scm_c_private_ref (modname, varname)
+  return pyguile (<uintptr_t> value)
+
+def call (procedure, *args):
+  cdef SCM proc = scm.scm_from_pyguile_object (procedure)
+  cdef SCM arglist = scm.scm_eol ()
+  cdef ssize_t i
+  cdef SCM arg
+  for i in range (len (args) - 1, -1, -1):
+    arg = scm.scm_from_pyguile_object (args[i])
+    arglist = scm.scm_cons (arg, arglist)
+  cdef SCM result = scm.scm_apply_0 (proc, arglist)
+  return pyguile (<uintptr_t> result)
 
 #--------------------------------------------------------------------------
 

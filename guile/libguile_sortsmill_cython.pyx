@@ -79,6 +79,8 @@ cdef inline object eval_python (object who, object python_code, object glob, obj
 
 #--------------------------------------------------------------------------
 
+# FIXME: Make this available to other modules. What is the best way to
+# do this in Cython?
 cdef SCM scm_from_string_object (object string):
   assert isinstance (string, unicode) or isinstance (string, bytes)
   if isinstance (string, unicode):
