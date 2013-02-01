@@ -21,7 +21,7 @@ from . import (guile)
 guile.init_guile ()
 
 from . import (ffcompat, psMat)
-from . import (pkg_info, usermenu, views, notices)
+from . import (pkg_info, views, usermenu, notices)
 
 from . import (brentroot)
 #from . import (linalg, polyspline)

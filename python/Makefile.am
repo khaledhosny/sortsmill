@@ -65,9 +65,6 @@ nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 nobase_nodist_python_PYTHON = sortsmill/__init__.py	\
 	sortsmill/legacy/__init__.py
 #sortsmill/fontforge_compat.py
-if HAVE_GUI
-nobase_nodist_python_PYTHON += sortsmill/usermenu.py
-endif HAVE_GUI
 
 lib_LTLIBRARIES =
 nobase_pyexec_LTLIBRARIES =
@@ -98,6 +95,13 @@ nobase_pyexec_LTLIBRARIES += sortsmill/views.la
 sortsmill_views_la_SOURCES = sortsmill/views.c
 sortsmill_views_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmill_views_la_LIBADD = $(FFLIBADD)
+
+if HAVE_GUI
+nobase_pyexec_LTLIBRARIES += sortsmill/usermenu.la
+sortsmill_usermenu_la_SOURCES = sortsmill/usermenu.c
+sortsmill_usermenu_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+sortsmill_usermenu_la_LIBADD = $(EXELIBADD)
+endif HAVE_GUI
 
 nobase_pyexec_LTLIBRARIES += sortsmill/notices.la
 sortsmill_notices_la_SOURCES = sortsmill/notices.c
@@ -137,7 +141,7 @@ PYX_FILES = libguile_sortsmill_cython.pyx sortsmill/views.pyx			\
 	sortsmill/ffcompat.pyx sortsmill/psMat.pyx sortsmill/pkg_info.pyx	\
 	sortsmill/notices.pyx sortsmill/guile.pyx sortsmill/linalg.pyx		\
 	sortsmill/polyspline.pyx sortsmill/brentroot.pyx					\
-	sortsmill/pyguile.pyx
+	sortsmill/pyguile.pyx sortsmill/usermenu.pyx
 
 NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
 
@@ -177,7 +181,7 @@ MOSTLYCLEANFILES = libguile_sortsmill_cython.c							\
 	sortsmill/fontforge_api.c sortsmill/views.c sortsmill/ffcompat.c	\
 	sortsmill/psMat.c sortsmill/pkg_info.c sortsmill/notices.c			\
 	sortsmill/guile.c sortsmill/linalg.c sortsmill/polyspline.c			\
-	sortsmill/brentroot.c sortsmill/pyguile.c
+	sortsmill/brentroot.c sortsmill/pyguile.c sortsmill/usermenu.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -194,12 +198,13 @@ sortsmill/%.so: sortsmill/%.la
 	cp sortsmill/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
-all-local: sortsmill/psMat.so sortsmill/ffcompat.so					\
+all-local: $(HAVE_GUI_SO) sortsmill/psMat.so sortsmill/ffcompat.so	\
 	sortsmill/fontforge_api.so sortsmill/views.so					\
 	sortsmill/pkg_info.so sortsmill/notices.so sortsmill/guile.so	\
 	sortsmill/linalg.so sortsmill/polyspline.so						\
 	sortsmill/brentroot.so sortsmill/legacy/fontforge.so			\
 	sortsmill/pyguile.so
+HAVE_GUI_SO = sortsmill/usermenu.so
 
 check-local: all-local
 
