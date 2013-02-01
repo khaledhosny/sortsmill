@@ -1011,7 +1011,7 @@ static void BuildGSUBscript(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( languages[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1158,7 +1158,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( languages[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1470,7 +1470,7 @@ return;
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( scripts[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1508,7 +1508,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( scripts[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
