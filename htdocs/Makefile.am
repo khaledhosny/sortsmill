@@ -206,8 +206,7 @@ ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
 	spacekappaiotaspace.png Spacem_1.png Spacem_2.png spacer1x20.png	\
 	spironextconstraint.png spiropointinfo.png							\
 	spiroprevconstraint.png splinefont.html splines.gif src.html		\
-	statemachine-context.png statemachine.html statemachine-indic.png	\
-	statemachine-insert.png strokechar.png Styles.html					\
+	strokechar.png Styles.html					\
 	SubSuperDlg.png subtable-ffi.png subtable-gpos-anchor.png			\
 	subtable-gpos-kernpair.png subtable-gpos-singlefull.png				\
 	subtable-gpos-singlehide.png subtable-gsub-ligature.png				\

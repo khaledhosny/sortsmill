@@ -71,25 +71,12 @@ Required for bitmaps
 	bhed		for apple bitmap only fonts, replaces head
 Optional for bitmaps
 	EBSC		bitmap scaling table (used in windows "bitmap-only" fonts)
-"Advanced Typograpy"
-  Apple
-	feat		(mapping between morx features and 'name' names)
-	kern		(if data are present)
-	lcar		(ligature caret, if data present)
-	morx		(substitutions, if data present)
-	prop		(glyph properties, if data present)
-	opbd		(optical bounds, if data present)
-  OpenType
+OpenType
 	GPOS		(opentype, if kern,anchor data are present)
 	GSUB		(opentype, if ligature (other subs) data are present)
 	GDEF		(opentype, if anchor data are present)
 MATH
 	MATH		(MS proposal, if math data present)
-Apple variation tables (for distortable (multiple master type) fonts)
-	fvar		(font variations)
-	gvar		(glyph variations)
-	cvar		(cvt variations)
-	avar		(axis variations)
 additional tables
 	cvt		for hinting
 	gasp		to control when things should be hinted
@@ -1134,8 +1121,6 @@ static void dumpcomposite(SplineChar *sc, struct glyphinfo *gi) {
     int i, ptcnt, ctcnt, flags, sptcnt, rd;
     SplineSet *ss;
     RefChar *ref;
-    SplineChar *isc = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
-		sc->parent->mm->normal->glyphs[sc->orig_pos] : sc;
     int arg1, arg2;
 
 #if 0
@@ -1170,7 +1155,7 @@ static void dumpcomposite(SplineChar *sc, struct glyphinfo *gi) {
 	    flags |= _USE_MY_METRICS;
 	if ( ref->next!=NULL )
 	    flags |= _MORE;		/* More components */
-	else if ( isc->ttf_instrs_len!=0 )	/* Composits also inherit instructions */
+	else if ( sc->ttf_instrs_len!=0 )	/* Composits also inherit instructions */
 	    flags |= _INSTR;		/* Instructions appear after last ref */
 	if ( ref->transform[1]!=0 || ref->transform[2]!=0 )
 	    flags |= _MATRIX;		/* Need a full matrix */
@@ -1233,8 +1218,8 @@ static void dumpcomposite(SplineChar *sc, struct glyphinfo *gi) {
 	    gi->maxp->maxcomponentdepth = rd;
     }
 
-    if ( isc->ttf_instrs_len!=0 )
-	dumpinstrs(gi,isc->ttf_instrs,isc->ttf_instrs_len);
+    if ( sc->ttf_instrs_len!=0 )
+	dumpinstrs(gi,sc->ttf_instrs,sc->ttf_instrs_len);
 
     gi->pointcounts[gi->next_glyph++] = ptcnt;
     if ( gi->maxp->maxnumcomponents<i ) gi->maxp->maxnumcomponents = i;
@@ -1253,8 +1238,6 @@ static void dumpglyph(SplineChar *sc, struct glyphinfo *gi) {
     int contourcnt, ptcnt, origptcnt;
     BasePoint *bp;
     char *fs;
-    SplineChar *isc = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
-		sc->parent->mm->normal->glyphs[sc->orig_pos] : sc;
 
     /* This must have been an error on my part, can't just remove points */
     /* they might be matched to anchors or something */
@@ -1299,7 +1282,7 @@ return;
 	IError( "Point count wrong calculated=%d, actual=%d in %.20s", origptcnt, ptcnt, sc->name );
     gi->pointcounts[gi->next_glyph++] = ptcnt;
 
-    dumpinstrs(gi,isc->ttf_instrs,isc->ttf_instrs_len);
+    dumpinstrs(gi,sc->ttf_instrs,sc->ttf_instrs_len);
 	
     dumppointarrays(gi,bp,fs,ptcnt);
     SplinePointListsFree(ttfss);
@@ -2808,8 +2791,7 @@ void cvt_unix_to_1904( long time, int32_t result[2]) {
 static void sethead(struct head *head,SplineFont *sf,struct alltabs *at,
 	enum fontformat format, int32_t *bsizes) {
     time_t now;
-    int i, lr, rl, indic_rearrange, arabic;
-    ASM *sm;
+    int i, lr, rl, arabic;
     struct ttflangname *useng;
     float vn;
 
@@ -2884,16 +2866,8 @@ static void sethead(struct head *head,SplineFont *sf,struct alltabs *at,
     /* Bit 6 must be zero */
     if ( arabic )
 	head->flags |= (1<<7);
-    if ( sf->sm )
-	head->flags |= (1<<8);		/* has metamorphesis effects */
     if ( rl )
 	head->flags |= (1<<9);
-    indic_rearrange = 0;
-    for ( sm = sf->sm; sm!=NULL; sm=sm->next )
-	if ( sm->type == asm_indic )
-	    indic_rearrange = true;
-    if ( indic_rearrange )
-	head->flags |= (1<<10);
 /* End apple flags */
     if ( sf->head_optimized_for_cleartype )
 	head->flags |= (1<<13);
@@ -4055,29 +4029,6 @@ return;		/* Should not happen, but it did */
     nt->cur = ne - nt->entries;
 }
 
-static void AddMacName(NamTab *nt,struct macname *mn, int strid) {
-    NameEntry *ne;
-
-    if ( nt->cur+1>=nt->max ) {
-	if ( nt->cur==0 )
-	    nt->entries = xmalloc((nt->max=100)*sizeof(NameEntry));
-	else
-	    nt->entries = xrealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
-    }
-
-    ne = nt->entries + nt->cur;
-
-    ne->platform = 1;		/* apple non-unicode encoding */
-    ne->specific = mn->enc;	/* whatever */
-    ne->lang     = mn->lang;
-    ne->strid    = strid;
-    ne->offset   = ftell(nt->strings);
-    ne->len      = strlen(mn->name);
-    dumpstr(nt->strings,mn->name);
-
-    ++nt->cur;
-}
-
 /* There's an inconsistancy here. Apple's docs say there most be only one */
 /*  nameid==6 and that name must be ascii (presumably plat=1, spec=0, lang=0) */
 /* The opentype docs say there must be two (psl=1,0,0 & psl=3,1,0x409) any */
@@ -4089,8 +4040,6 @@ static void AddMacName(NamTab *nt,struct macname *mn, int strid) {
 static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format) {
     int i,j;
     struct ttflangname dummy, *cur, *useng = NULL;
-    struct macname *mn;
-    struct other_names *on, *onn;
     NamTab nt;
     struct otfname *otfn;
     struct otffeatname *fn;
@@ -4122,29 +4071,6 @@ static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format)
 		    AddEncodedName(&nt,cur->names[i],cur->lang,i);
     }
 
-    /* The examples I've seen of the feature table only contain platform==mac */
-    /*  so I'm not including apple unicode */
-    if ( at->feat_name!=NULL ) {
-	for ( i=0; at->feat_name[i].strid!=0; ++i ) {
-	    for ( mn=at->feat_name[i].mn; mn!=NULL; mn=mn->next )
-		AddMacName(&nt,mn,at->feat_name[i].strid);
-#if 0	/* I'm not sure why I keep track of these alternates */
-	/*  Dumping them out like this is a bad idea. It might be worth */
-	/*  something if we searched through the alternate sets for languages */
-	/*  not found in the main set, but at the moment I don't think so */
-	/*  What happens now is that I get duplicate names output */
-	    for ( mn=at->feat_name[i].smn; mn!=NULL; mn=mn->next )
-		AddMacName(&nt,mn,at->feat_name[i].strid);
-#endif
-	}
-    }
-    /* And the names used by the fvar table aren't mac unicode either */
-    for ( on = at->other_names; on!=NULL; on=onn ) {
-	for ( mn = on->mn; mn!=NULL ; mn = mn->next )
-	    AddMacName(&nt,mn,on->strid);
-	onn = on->next;
-	free(on);
-    }
     /* Wow, the GPOS 'size' feature uses the name table in a very mac-like way*/
     if ( at->fontstyle_name_strid!=0 && sf->fontstyle_name!=NULL ) {
 	for ( otfn = sf->fontstyle_name; otfn!=NULL; otfn = otfn->next )
@@ -4183,7 +4109,6 @@ static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format)
 	if ( useng==NULL || dummy.names[i]!=useng->names[i] )
 	    free( dummy.names[i]);
     free( nt.entries );
-    free( at->feat_name );
 
 #if 0
     /* Windows changed it's mind. This is ok again */
@@ -5215,32 +5140,10 @@ static void AbortTTF(struct alltabs *at, SplineFont *sf) {
     if ( at->ebsc!=NULL )
 	fclose(at->ebsc);
 
-    if ( at->prop!=NULL )
-	fclose(at->prop);
-    if ( at->opbd!=NULL )
-	fclose(at->opbd);
-    if ( at->acnt!=NULL )
-	fclose(at->acnt);
-    if ( at->lcar!=NULL )
-	fclose(at->lcar);
-    if ( at->feat!=NULL )
-	fclose(at->feat);
-    if ( at->morx!=NULL )
-	fclose(at->morx);
-
     if ( at->pfed!=NULL )
 	fclose(at->pfed);
     if ( at->tex!=NULL )
 	fclose(at->tex);
-
-    if ( at->gvar!=NULL )
-	fclose(at->gvar);
-    if ( at->fvar!=NULL )
-	fclose(at->fvar);
-    if ( at->cvar!=NULL )
-	fclose(at->cvar);
-    if ( at->avar!=NULL )
-	fclose(at->avar);
 
     for ( i=0; i<sf->subfontcnt; ++i ) {
 	if ( at->fds[i].private!=NULL )
@@ -5259,9 +5162,6 @@ static void AbortTTF(struct alltabs *at, SplineFont *sf) {
 int SFHasInstructions(SplineFont *sf) {
     int i;
 
-    if ( sf->mm!=NULL && sf->mm->apple )
-	sf = sf->mm->normal;
-
     if ( sf->subfontcnt!=0 )
 return( false );		/* Truetype doesn't support cid keyed fonts */
 
@@ -5278,8 +5178,6 @@ static void MaxpFromTable(struct alltabs *at,SplineFont *sf) {
     struct ttf_table *maxp;
 
     maxp = SFFindTable(sf,CHR('m','a','x','p'));
-    if ( maxp==NULL && sf->mm!=NULL && sf->mm->apple )
-	maxp = SFFindTable(sf->mm->normal,CHR('m','a','x','p'));
     if ( maxp==NULL || maxp->len<13*sizeof(uint16_t) )
 return;
     /* We can figure out the others ourselves, but these depend on the contents */
@@ -5296,8 +5194,6 @@ static FILE *dumpstoredtable(SplineFont *sf,uint32_t tag,int *len) {
     struct ttf_table *tab = SFFindTable(sf,tag);
     FILE *out;
 
-    if ( tab==NULL && sf->mm!=NULL && sf->mm->apple )
-	tab = SFFindTable(sf->mm->normal,tag);
     if ( tab==NULL ) {
 	*len = 0;
 return( NULL );
@@ -5380,22 +5276,10 @@ static void initATTables(struct alltabs *at, SplineFont *sf,
 	if ( at->gi.flags & ttf_flag_dummyDSIG )
 	    otf_dump_dummydsig(at,sf);
     }
-    if ( at->dovariations )
-	ttf_dumpvariations(at,sf);
-    if ( at->applemode ) {
-	if ( !at->opentypemode )
-	    SFFindUnusedLookups(sf);
-	ttf_dumpkerns(at,sf);
-	aat_dumplcar(at,sf);
-	aat_dumpmorx(at,sf);		/* Sets the feat table too */
-	aat_dumpopbd(at,sf);
-	aat_dumpprop(at,sf);
-	aat_dumpbsln(at,sf);
-    }
-    if ( !at->applemode && (!at->opentypemode || (at->gi.flags&ttf_flag_oldkern)) )
+    if (!at->opentypemode || (at->gi.flags&ttf_flag_oldkern))
 	ttf_dumpkerns(at,sf);		/* everybody supports a mimimal kern table */
 
-    dumpnames(at,sf,format);		/* Must be after dumpmorx which may create extra names */
+    dumpnames(at,sf,format);
 					    /* GPOS 'size' can also create names (so must be after that too) */
     redoos2(at);
 }
@@ -5418,10 +5302,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 
     if ( format==ff_otf || format==ff_otfcid ) {
 	at->tabdir.version = CHR('O','T','T','O');
-#if FONTFORGE_CONFIG_APPLE_ONLY_TTF /* This means that Windows will reject the font. In general not a good idea */
-    } else if ( at->applemode && !at->opentypemode ) {
-	at->tabdir.version = CHR('t','r','u','e');
-#endif
     } else {
 	at->tabdir.version = 0x00010000;
     }
@@ -5432,12 +5312,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i].tag = CHR('B','A','S','E');
 	at->tabdir.tabs[i].data = at->base;
 	at->tabdir.tabs[i++].length = at->baselen;
-    }
-
-    if ( at->bsln!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('b','s','l','n');
-	at->tabdir.tabs[i].data = at->bsln;
-	at->tabdir.tabs[i++].length = at->bslnlen;
     }
 
     if ( at->bdf!=NULL ) {
@@ -5539,12 +5413,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i++].length = at->vorglen;
     }
 
-    if ( at->acnt!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('a','c','n','t');
-	at->tabdir.tabs[i].data = at->acnt;
-	at->tabdir.tabs[i++].length = at->acntlen;
-    }
-
     if ( at->bdat!=NULL && at->applebitmaps ) {
 	at->tabdir.tabs[i].tag = CHR('b','d','a','t');
 	if ( !at->msbitmaps ) {
@@ -5588,12 +5456,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	    at->tabdir.tabs[i].data = at->cvtf;
 	    at->tabdir.tabs[i++].length = at->cvtlen;
 	}
-    }
-
-    if ( at->feat!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('f','e','a','t');
-	at->tabdir.tabs[i].data = at->feat;
-	at->tabdir.tabs[i++].length = at->featlen;
     }
 
     if ( at->fpgmf!=NULL ) {
@@ -5647,12 +5509,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i++].length = at->kernlen;
     }
 
-    if ( at->lcar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('l','c','a','r');
-	at->tabdir.tabs[i].data = at->lcar;
-	at->tabdir.tabs[i++].length = at->lcarlen;
-    }
-
     if ( at->loca!=NULL ) {
 	at->tabdir.tabs[i].tag = CHR('l','o','c','a');
 	at->tabdir.tabs[i].data = at->loca;
@@ -5663,22 +5519,10 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
     at->tabdir.tabs[i].data = at->maxpf;
     at->tabdir.tabs[i++].length = at->maxplen;
 
-    if ( at->morx!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('m','o','r','x');
-	at->tabdir.tabs[i].data = at->morx;
-	at->tabdir.tabs[i++].length = at->morxlen;
-    }
-
     if ( at->name!=NULL ) {
 	at->tabdir.tabs[i].tag = CHR('n','a','m','e');
 	at->tabdir.tabs[i].data = at->name;
 	at->tabdir.tabs[i++].length = at->namelen;
-    }
-
-    if ( at->opbd!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('o','p','b','d');
-	at->tabdir.tabs[i].data = at->opbd;
-	at->tabdir.tabs[i++].length = at->opbdlen;
     }
 
     if ( at->post!=NULL ) {
@@ -5695,12 +5539,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	}
     }
 
-    if ( at->prop!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('p','r','o','p');
-	at->tabdir.tabs[i].data = at->prop;
-	at->tabdir.tabs[i++].length = at->proplen;
-    }
-
     if ( at->vheadf!=NULL ) {
 	at->tabdir.tabs[i].tag = CHR('v','h','e','a');
 	at->tabdir.tabs[i].data = at->vheadf;
@@ -5709,27 +5547,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i].tag = CHR('v','m','t','x');
 	at->tabdir.tabs[i].data = at->gi.vmtx;
 	at->tabdir.tabs[i++].length = at->gi.vmtxlen;
-    }
-
-    if ( at->fvar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('f','v','a','r');
-	at->tabdir.tabs[i].data = at->fvar;
-	at->tabdir.tabs[i++].length = at->fvarlen;
-    }
-    if ( at->gvar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('g','v','a','r');
-	at->tabdir.tabs[i].data = at->gvar;
-	at->tabdir.tabs[i++].length = at->gvarlen;
-    }
-    if ( at->cvar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('c','v','a','r');
-	at->tabdir.tabs[i].data = at->cvar;
-	at->tabdir.tabs[i++].length = at->cvarlen;
-    }
-    if ( at->avar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('a','v','a','r');
-	at->tabdir.tabs[i].data = at->avar;
-	at->tabdir.tabs[i++].length = at->avarlen;
     }
 
     if ( i>=MAX_TAB )
@@ -6161,14 +5978,6 @@ static void ATinit(struct alltabs *at,SplineFont *sf,EncMap *map,int flags, int 
     at->isotf = format==ff_otf || format==ff_otfcid;
     at->format = format;
     at->next_strid = 256;
-    if ( at->applemode && sf->mm!=NULL && sf->mm->apple &&
-	    (format==ff_ttf || format==ff_ttfsym ||  format==ff_ttfmacbin ||
-			format==ff_ttfdfont) &&
-	    MMValid(sf->mm,false)) {
-	at->dovariations = true;
-	at->gi.dovariations = true;
-	sf = sf->mm->normal;
-    }
     at->sf = sf;
     at->map = map;
 }

@@ -99,7 +99,7 @@ CLEANFILES += fontforge_type_inspector.c fontforge.types.apii
 
 lib_LTLIBRARIES += libsortsmill_fontforge.la
 
-libsortsmill_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
+libsortsmill_fontforge_la_SOURCES = autohint.c autosave.c	\
 	autotrace.c autowidth.c bezctx_ff.c bitmapchar.c bitmapcontrol.c	\
 	bvedit.c clipnoui.c crctab.c cvexport.c cvimages.c cvundoes.c		\
 	dumpbdf.c dumppfa.c effects.c encoding.c featurefile.c				\
@@ -108,12 +108,12 @@ libsortsmill_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	mathconstants.c mm.c namelist.c namelist_data.c nonlineartrans.c	\
 	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
 	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
-	parsettf.c parsettfvar.c print.c psread.c pua.c python.c			\
+	parsettf.c print.c psread.c pua.c python.c			\
 	generatefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c				\
 	splinechar.c splinefill.c splinefont.c splineorder2.c				\
 	splineoverlap.c splinesaveafm.c splinesave.c splinestroke.c			\
 	splineutil2.c splineutil.c start.c stemdb.c svg.c tottfaat.c		\
-	tottfgpos.c tottf.c tottfvar.c ttfinstrs.c ttfspecial.c ufo.c		\
+	tottfgpos.c tottf.c ttfinstrs.c ttfspecial.c ufo.c		\
 	unicoderange.c utils.c winfonts.c zapfnomen.c groups.c langfreq.c	\
 	autowidth2.c woff.c activeinui.c is_LIGATURE.c flaglist.c			\
 	contour_interface.c freetype.c ftdelta.c some_global_variables.c	\
@@ -176,10 +176,10 @@ libsortsmill_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 	cvshapes.c cvstroke.c cvtranstools.c displayfonts.c effectsui.c		\
 	encodingui.c fontinfo.c fontview.c freetypeui.c fvfontsdlg.c		\
 	fvmetricsdlg.c gotodlg.c groupsdlg.c histograms.c kernclass.c		\
-	layer2layer.c lookupui.c macencui.c math.c metricsview.c mmdlg.c	\
+	layer2layer.c lookupui.c math.c metricsview.c mmdlg.c	\
 	nonlineartransui.c openfontdlg.c prefs.c problems.c generatefontdlg.c	\
 	scriptingdlg.c scstylesui.c searchview.c sftextfield.c showatt.c	\
-	simplifydlg.c startui.c statemachine.c tilepath.c transform.c		\
+	simplifydlg.c startui.c tilepath.c transform.c		\
 	ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c deltaui.c			\
 	usermenu.c
 

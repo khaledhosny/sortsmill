@@ -87,8 +87,6 @@ extern int new_em_size;         /* in splineutil2.c */
 extern int new_fonts_are_order2;        /* in splineutil2.c */
 extern int loaded_fonts_same_as_new;    /* in splineutil2.c */
 extern int use_second_indic_scripts;    /* in tottfgpos.c */
-extern MacFeat *default_mac_feature_map,        /* from macenc.c */
- *user_mac_feature_map;
 extern int allow_utf8_glyphnames;       /* in charinfo.c */
 extern int ask_user_for_cmap;   /* in parsettf.c */
 extern NameList *force_names_when_opening;
@@ -592,35 +590,6 @@ static struct prefs_list
 core_list, extras, NULL};
 
 static int
-UserSettingsDiffer (void)
-{
-  int i, j;
-
-  if (user_macfeat_otftag == NULL)
-    return (false);
-
-  for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i);
-  for (j = 0; macfeat_otftag[j].otf_tag != 0; ++j);
-  if (i != j)
-    return (true);
-  for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i)
-    {
-      for (j = 0; macfeat_otftag[j].otf_tag != 0; ++j)
-        {
-          if (macfeat_otftag[j].mac_feature_type ==
-              user_macfeat_otftag[i].mac_feature_type &&
-              macfeat_otftag[j].mac_feature_setting ==
-              user_macfeat_otftag[i].mac_feature_setting &&
-              macfeat_otftag[j].otf_tag == user_macfeat_otftag[i].otf_tag)
-            break;
-        }
-      if (macfeat_otftag[j].otf_tag == 0)
-        return (true);
-    }
-  return (false);
-}
-
-static int
 NOUI_GetPrefs (char *name, Val *val)
 {
   int i, j;
@@ -818,41 +787,12 @@ NOUI_SetDefaults (void)
 }
 
 static void
-ParseMacMapping (char *pt, struct macsettingname *ms)
-{
-  char *end;
-
-  ms->mac_feature_type = strtol (pt, &end, 10);
-  if (*end == ',')
-    ++end;
-  ms->mac_feature_setting = strtol (end, &end, 10);
-  if (*end == ' ')
-    ++end;
-  ms->otf_tag =
-    ((end[0] & 0xff) << 24) |
-    ((end[1] & 0xff) << 16) | ((end[2] & 0xff) << 8) | (end[3] & 0xff);
-}
-
-static void
-ParseNewMacFeature (FILE *p, char *line)
-{
-  fseek (p, -(strlen (line) - strlen ("MacFeat:")), SEEK_CUR);
-  line[strlen ("MacFeat:")] = '\0';
-  default_mac_feature_map = SFDParseMacFeatures (p, line);
-  fseek (p, -strlen (line), SEEK_CUR);
-  if (user_mac_feature_map != NULL)
-    MacFeatListFree (user_mac_feature_map);
-  user_mac_feature_map = default_mac_feature_map;
-}
-
-static void
 NOUI_LoadPrefs (void)
 {
   char *prefs = getPfaEditPrefs ();
   FILE *p;
   char line[1100];
   int i, j, ri = 0, mn = 0, ms = 0 /*, fn=0, ff=0, filt_max=0 */ ;
-  int msp = 0, msc = 0;
   char *pt;
   struct prefs_list *pl;
 
@@ -917,23 +857,6 @@ NOUI_LoadPrefs (void)
                     user_font_filters[ff++].filter = xstrdup_or_null (pt);
                 }
 #endif
-              else if (strncmp (line, "MacMapCnt:", strlen ("MacSetCnt:")) ==
-                       0)
-                {
-                  sscanf (pt, "%d", &msc);
-                  msp = 0;
-                  user_macfeat_otftag =
-                    xcalloc (msc + 1, sizeof (struct macsettingname));
-                }
-              else if (strncmp (line, "MacMapping:", strlen ("MacMapping:"))
-                       == 0 && msp < msc)
-                {
-                  ParseMacMapping (pt, &user_macfeat_otftag[msp++]);
-                }
-              else if (strncmp (line, "MacFeat:", strlen ("MacFeat:")) == 0)
-                {
-                  ParseNewMacFeature (p, line);
-                }
               continue;
             }
           switch (pl->type)
@@ -1075,24 +998,6 @@ NOUI_SavePrefs (int not_if_script)
         }
     }
 #endif
-  if (user_macfeat_otftag != NULL && UserSettingsDiffer ())
-    {
-      for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i);
-      fprintf (p, "MacMapCnt: %d\n", i);
-      for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i)
-        {
-          fprintf (p, "MacMapping: %d,%d %c%c%c%c\n",
-                   user_macfeat_otftag[i].mac_feature_type,
-                   user_macfeat_otftag[i].mac_feature_setting,
-                   (int) (user_macfeat_otftag[i].otf_tag >> 24),
-                   (int) ((user_macfeat_otftag[i].otf_tag >> 16) & 0xff),
-                   (int) ((user_macfeat_otftag[i].otf_tag >> 8) & 0xff),
-                   (int) (user_macfeat_otftag[i].otf_tag & 0xff));
-        }
-    }
-
-  if (UserFeaturesDiffer ())
-    SFDDumpMacFeat (p, default_mac_feature_map);
 
   fclose (p);
 }

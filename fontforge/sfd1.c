@@ -290,48 +290,6 @@ static OTLookup *CreateACLookup(SplineFont1 *sf,AnchorClass1 *ac) {
 return( otl );
 }
 
-static OTLookup *CreateMacLookup(SplineFont1 *sf,ASM1 *sm) {
-    OTLookup *otl = (OTLookup *) xzalloc(sizeof (OTLookup));
-    int i, ch;
-    char *pt, *start;
-    SplineChar *sc;
-
-    otl->features = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
-    if ( sm->sm.type == asm_kern ) {
-	otl->lookup_type = kern_statemachine;
-	otl->next = sf->sf.gpos_lookups;
-	sf->sf.gpos_lookups = otl;
-	otl->features->featuretag = (sm->sm.flags&0x8000) ? CHR('v','k','r','n') : CHR('k','e','r','n');
-    } else {
-	otl->lookup_type = sm->sm.type==asm_indic ? morx_indic : sm->sm.type==asm_context ? morx_context : morx_insert;
-	otl->next = sf->sf.gsub_lookups;
-	sf->sf.gsub_lookups = otl;
-	otl->features->featuretag = (sm->feature<<16) | (sm->setting);
-	otl->features->ismac = true;
-    }
-    otl->lookup_flags = 0;
-
-    for ( i=4; i<sm->sm.class_cnt; ++i ) {
-	for ( start=sm->sm.classes[i]; ; start = pt ) {
-	    while ( *start==' ' ) ++start;
-	    if ( *start=='\0' )
-	break;
-	    for ( pt=start ; *pt!='\0' && *pt!=' '; ++pt );
-	    ch = *pt; *pt = '\0';
-	    sc = SFGetChar(&sf->sf,-1,start);
-	    if ( sc!=NULL )
-		FListAppendScriptLang(otl->features,SCScriptFromUnicode(sc),
-			DEFAULT_LANG);
-	    *pt = ch;
-	}
-    }
-    
-    /* We will set the lookup_index after we've ordered the list */
-    /* We will set the lookup_name after we've assigned the index */
-    /* We will add one subtable soon */
-return( otl );
-}
-
 static struct lookup_subtable *CreateSubtable(OTLookup *otl,SplineFont1 *sf) {
     struct lookup_subtable *cur, *prev;
 
@@ -393,19 +351,6 @@ return;
 		--fpst->rules[i].lookup_cnt;
 	    }
 	}
-    }
-}
-
-static void ASMReplaceTagsWithLookups(ASM *sm,SplineFont1 *sf) {
-    int i;
-
-    if ( sm->type != asm_context )
-return;
-    for ( i=0; i<sm->class_cnt*sm->state_cnt; ++i ) {
-	if ( sm->state[i].u.context.mark_lookup!=NULL )
-	    sm->state[i].u.context.mark_lookup = FindNestedLookupByTag(sf,(uint32_t) (intptr_t) (sm->state[i].u.context.mark_lookup) );
-	if ( sm->state[i].u.context.cur_lookup!=NULL )
-	    sm->state[i].u.context.cur_lookup = FindNestedLookupByTag(sf,(uint32_t) (intptr_t) (sm->state[i].u.context.cur_lookup) );
     }
 }
 
@@ -659,7 +604,6 @@ void SFD_AssignLookups(SplineFont1 *sf) {
     KernPair1 *kp, *kp2;
     KernClass1 *kc, *kc2;
     FPST1 *fpst;
-    ASM1 *sm;
     AnchorClass1 *ac, *ac2;
     int gid, gid2, cnt, i, k, isgpos;
     SplineFont1 *subsf;
@@ -769,7 +713,7 @@ void SFD_AssignLookups(SplineFont1 *sf) {
 	}
     }
 
-    /* Every FPST and ASM lives in its own lookup with one subtable */
+    /* Every FPST lives in its own lookup with one subtable */
     /* But the old format refered to nested lookups by tag, and now we refer */
     /*  to the lookup itself, so fix that up */
     for ( fpst=(FPST1 *) sf->sf.possub; fpst!=NULL; fpst=((FPST1 *) fpst->fpst.next) ) {
@@ -780,15 +724,6 @@ void SFD_AssignLookups(SplineFont1 *sf) {
 	sub->fpst = &fpst->fpst;
 	fpst->fpst.subtable = sub;
 	FPSTReplaceTagsWithLookups(&fpst->fpst,sf);
-    }
-    for ( sm=(ASM1 *) sf->sf.sm; sm!=NULL; sm=((ASM1 *) sm->sm.next) ) {
-	otl = CreateMacLookup(sf,sm);
-	sub = CreateSubtable(otl,sf);
-	sub->per_glyph_pst_or_kern = false;
-	sub->sm = &sm->sm;
-	sm->sm.subtable = sub;
-	if ( sm->sm.type==asm_context )
-	    ASMReplaceTagsWithLookups(&sm->sm,sf);
     }
 
     /* We retained the old nested feature tags so we could do the above conversion */

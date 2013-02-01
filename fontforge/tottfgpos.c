@@ -2037,6 +2037,19 @@ static void dumpg___ContextChainGlyphs(FILE *lfile,SplineFont *sf,
 	at->os2.maxContext = maxcontext;
 }
 
+
+static int ClassesMatch(int cnt1,char **classes1,int cnt2,char **classes2) {
+    int i;
+
+    if ( cnt1!=cnt2 )
+return( false );
+    for ( i=1; i<cnt2; ++i )
+       if ( strcmp(classes1[i],classes2[i])!=0 )
+return( false );
+
+return( true );
+}
+
 static void dumpg___ContextChainClass(FILE *lfile,SplineFont *sf,
 	struct lookup_subtable *sub, struct alltabs *at) {
     FPST *fpst = sub->fpst;
@@ -2366,72 +2379,6 @@ static int lookup_size_cmp(const void *_l1, const void *_l2) {
 return( l1->lookup_length-l2->lookup_length );
 }
 
-static int FPSTRefersToOTL(FPST *fpst,OTLookup *otl) {
-    int i, j;
-
-    if ( fpst==NULL || fpst->type == pst_reversesub )
-return( false );
-    for ( i=0; i<fpst->rule_cnt; ++i ) {
-	for ( j=0; j< fpst->rules[i].lookup_cnt; ++j )
-	    if ( fpst->rules[i].lookups[j].lookup == otl )
-return( true );
-    }
-return( false );
-}
-
-static int OnlyMac(OTLookup *otl, OTLookup *all) {
-    FeatureScriptLangList *features = otl->features;
-    int anymac = 0;
-    struct lookup_subtable *sub;
-
-    switch ( otl->lookup_type ) {
-    /* These two lookup types are mac only */
-      case kern_statemachine: case morx_indic: case morx_context: case morx_insert:
-return( true );
-    /* These lookup types are OpenType only */
-      case gsub_multiple: case gsub_alternate: case gsub_context:
-      case gsub_contextchain: case gsub_reversecchain:
-      case gpos_single: case gpos_cursive: case gpos_mark2base:
-      case gpos_mark2ligature: case gpos_mark2mark:
-      case gpos_context: case gpos_contextchain:
-return( false );
-    /* These two can be expressed in both, and might be either */
-     case gpos_pair: case gsub_single: case gsub_ligature:
-	for ( features = otl->features; features!=NULL; features = features->next ) {
-	    if ( !features->ismac )
-return( false );
-	    else
-		anymac = true;
-	}
-	/* Either it has no features at all (nested), or all its features */
-	/*  are mac feature settings. Even if all are mac feature settings it */
-	/*  might still be used as under control of a contextual feature */
-	/*  so in both cases check for nested */
-	while ( all!=NULL ) {
-	    if ( all!=otl && !all->unused &&
-		    (all->lookup_type==gpos_context ||
-		     all->lookup_type==gpos_contextchain ||
-		     all->lookup_type==gsub_context ||
-		     all->lookup_type==gsub_contextchain /*||
-		     all->lookup_type==gsub_reversecchain*/ )) {
-		for ( sub=all->subtables; sub!=NULL; sub=sub->next ) if ( !sub->unused && sub->fpst!=NULL ) {
-		    if ( FPSTRefersToOTL(sub->fpst,otl) )
-return( false );
-		}
-	    }
-	    all = all->next;
-	}
-	if ( anymac )
-return( true );
-	/* As far as I can tell, this lookup isn't used at all */
-	/*  Let's output it anyway, just in case we ever support some other */
-	/*  table that uses GPOS/GSUB lookups (I think JUST) */
-return( false );
-    }
-    /* Should never get here, but gcc probably thinks we might */
-return( true );		    
-}
-
 static void otf_dumpALookup(FILE *lfile, OTLookup *otl, SplineFont *sf,
 	struct alltabs *at) {
     struct lookup_subtable *sub;
@@ -2521,7 +2468,7 @@ static FILE *G___figureLookups(SplineFont *sf,int is_gpos,
 
     index = 0;
     for ( otl=all; otl!=NULL; otl=otl->next ) {
-	if ( otl->unused || OnlyMac(otl,all) || otl->only_jstf || otl->temporary_kern )
+	if ( otl->unused || otl->only_jstf || otl->temporary_kern )
 	    otl->lookup_index = -1;
 	else
 	    otl->lookup_index = index++;

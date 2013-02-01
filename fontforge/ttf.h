@@ -37,44 +37,8 @@ struct dup {
     struct dup *prev;
 };
 
-struct taxis {
-    uint32_t tag;
-    real min, def, max;	/* in user design space */
-    int nameid;
-    int paircount;
-    real *mapfrom;		/* after conversion from [-1,1] */
-    real *mapto;		/* secondary conversiont to [-1,1] */
-};
-
-struct tinstance {
-    int nameid;
-    real *coords;	/* Location along axes array[axis_count] */
-};
-
-struct tuples {
-    real *coords;	/* Location along axes array[axis_count] */
-    SplineChar **chars;	/* Varied glyphs, array parallels one in info */
-    struct ttf_table *cvt;
-    KernClass *khead, *klast, *vkhead, *vklast; /* Varied kern classes */
-};
-
-struct variations {
-    int axis_count;
-    struct taxis *axes;		/* Array of axis_count entries */
-    int instance_count;	/* Not master designs, but named interpolations in design space */
-    struct tinstance *instances;
-    int tuple_count;
-    struct tuples *tuples;
-};
-
 enum gsub_inusetype { git_normal, git_justinuse, git_findnames };
 	
-struct macidname {
-    int id;
-    struct macname *head, *last;
-    struct macidname *next;
-};
-
 struct savetab {
     uint32_t tag;
     uint32_t offset;
@@ -173,11 +137,6 @@ struct ttfinfo {
 		/* EBLT, bloc */
     uint32_t bitmaploc_start;	/* Offset to start of bitmap locator data */
     uint32_t bitmaploc_length;
-		/* gvar, etc. */
-    uint32_t gvar_start, gvar_len;
-    uint32_t fvar_start, fvar_len;
-    uint32_t avar_start, avar_len;
-    uint32_t cvar_start, cvar_len;
 		/* head */
     uint32_t head_start;
 		/* hhea */
@@ -220,16 +179,6 @@ struct ttfinfo {
 		/* FFTM -- FontForge timestamps */
     uint32_t fftm_start;
 
-		/* Apple Advanced Typography Tables */
-    uint32_t prop_start;
-    uint32_t lcar_start;
-    uint32_t opbd_start;
-    uint32_t acnt_start;
-    uint32_t feat_start;
-    uint32_t mort_start;
-    uint32_t morx_start;
-    uint32_t bsln_start;
-
 		/* MATH Table */
     uint32_t math_start;
     uint32_t math_length;
@@ -261,23 +210,12 @@ struct ttfinfo {
 
     OTLookup *gpos_lookups, *gsub_lookups, *cur_lookups;
 
-    OTLookup *mort_subs_lookup, *mort_pos_lookup2;
-    int mort_r2l, mort_tag_mac, mort_feat, mort_setting, mort_is_nested;
-    uint16_t *morx_classes;
-    uint16_t *bsln_values;
-
-    int mort_max;
-
     struct ttf_table *tabs;
     FPST *possub;
-    ASM *sm;
-    MacFeat *features;
     char *chosenname;
     int macstyle;
     int lookup_cnt;		/* Max lookup in current GPOS/GSUB table */
     int feature_cnt;		/* Max feature in current GPOS/GSUB table */
-    struct variations *variations;
-    struct macidname *macstrids;
     struct fontdict *fd;	/* For reading in Type42 fonts. Glyph names in postscript section must be associated with glyphs in TTF section */
     int savecnt;
     struct savetab *savetab;
@@ -293,8 +231,6 @@ struct ttfinfo {
     int mark_set_cnt;
     char **mark_sets;			/* glyph name list */
     char **mark_set_names;		/* used within ff (utf8) */
-    uint8_t warned_morx_out_of_bounds_glyph;
-    int badgid_cnt, badgid_max;		/* Used when parsing apple morx tables*/
     SplineChar **badgids;		/* which use out of range glyph IDs as temporary flags */
 #ifdef HAVE_LONG_LONG_INT
     long long creationtime;		/* seconds since 1970 */
@@ -571,7 +507,6 @@ struct glyphinfo {
     int flags;
     int fixed_width;
     int32_t *bsizes;
-    bool dovariations;
     bool onlybitmaps;
     bool has_instrs;
     bool is_ttf;
@@ -594,17 +529,6 @@ struct vorg {
 	short vertOrigin;
     } origins[];
 #endif
-};
-
-struct feat_name {
-    int strid;
-    struct macname *mn, *smn;
-};
-
-struct other_names {
-    int strid;
-    struct macname *mn;
-    struct other_names *next;
 };
 
 struct alltabs {
@@ -674,34 +598,12 @@ struct alltabs {
     int bloclen;
     FILE *ebsc;
     int ebsclen;
-    FILE *prop;
-    int proplen;
-    FILE *opbd;
-    int opbdlen;
-    FILE *acnt;
-    int acntlen;
-    FILE *lcar;
-    int lcarlen;
-    FILE *feat;
-    int featlen;
-    FILE *morx;
-    int morxlen;
-    FILE *bsln;
-    int bslnlen;
     FILE *pfed;
     int pfedlen;
     FILE *tex;
     int texlen;
     FILE *bdf;
     int bdflen;
-    FILE *gvar;
-    int gvarlen;
-    FILE *fvar;
-    int fvarlen;
-    FILE *cvar;
-    int cvarlen;
-    FILE *avar;
-    int avarlen;
     FILE *fftmf;
     int fftmlen;
     FILE *dsigf;
@@ -721,16 +623,11 @@ struct alltabs {
     bool applebitmaps;
     bool otbbitmaps;
     bool isotf;
-    bool dovariations;	/* Output Apple *var tables (for mm fonts) */
     bool error;
     struct glyphinfo gi;
     int isfixed;
     struct fd2data *fds;
     int next_strid;
-
-    struct feat_name *feat_name;
-    struct other_names *other_names;
-    struct macname2 *ordered_feat;
 
     int next_lookup;	/* for doing nested lookups in contextual features */
     short *gn_sid;
@@ -805,37 +702,7 @@ extern void otf_dumpjstf(struct alltabs *at, SplineFont *sf);
 extern void otf_dump_dummydsig(struct alltabs *at, SplineFont *sf);
 VISIBLE extern int gdefclass(SplineChar *sc);
 
-    /* Apple Advanced Typography Tables */
-extern void aat_dumpacnt(struct alltabs *at, SplineFont *sf);
 extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
-extern void aat_dumplcar(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpmorx(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpopbd(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpprop(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpbsln(struct alltabs *at, SplineFont *sf);
-extern int LookupHasDefault(OTLookup *otl);
-VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
-extern int FPSTisMacable(SplineFont *sf, FPST *fpst);
-extern uint32_t MacFeatureToOTTag(int featureType,int featureSetting);
-VISIBLE extern int OTTagToMacFeature(uint32_t tag, int *featureType,int *featureSetting);
-VISIBLE extern uint16_t *props_array(SplineFont *sf,struct glyphinfo *gi);
-VISIBLE extern int haslrbounds(SplineChar *sc, PST **left, PST **right);
-VISIBLE extern int16_t *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
-VISIBLE extern void FigureBaseOffsets(SplineFont *sf,int def_bsln,int offsets[32]);
-
-    /* Apple variation tables */
-extern int ContourPtNumMatch(MMSet *mm, int gid);
-VISIBLE extern int16_t **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
-VISIBLE extern int16_t **CvtFindDeltas(MMSet *mm, int *_ptcnt);
-extern void ttf_dumpvariations(struct alltabs *at, SplineFont *sf);
-
-struct macsettingname {
-    int mac_feature_type;
-    int mac_feature_setting;
-    uint32_t otf_tag;
-};
-
-VISIBLE extern struct macsettingname macfeat_otftag[], *user_macfeat_otftag;
 
     /* TrueType instructions */
 VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);
@@ -846,7 +713,6 @@ extern int TTF__getcvtval(SplineFont *sf,int val);
 extern int TTF_getcvtval(SplineFont *sf,int val);
 extern void SCinitforinstrs(SplineChar *sc);
 extern int SSAddPoints(SplineSet *ss,int ptcnt,BasePoint *bp, char *flags);
-extern int Macable(SplineFont *sf, OTLookup *otl);
 
     /* Used by both otf and apple */
 extern int LigCaretCnt(SplineChar *sc);
@@ -890,23 +756,13 @@ extern void otf_read_math_used(FILE *ttf,struct ttfinfo *info);
 extern void GuessNamesFromMATH(FILE *ttf,struct ttfinfo *info);
 
     /* Parsing advanced typography */
-extern void readmacfeaturemap(FILE *ttf,struct ttfinfo *info);
 extern void readttfkerns(FILE *ttf,struct ttfinfo *info);
-extern void readttfmort(FILE *ttf,struct ttfinfo *info);
-extern void readttfmort_glyphsused(FILE *ttf,struct ttfinfo *info);
-extern void readttfopbd(FILE *ttf,struct ttfinfo *info);
-extern void readttflcar(FILE *ttf,struct ttfinfo *info);
-extern void readttfprop(FILE *ttf,struct ttfinfo *info);
-extern void readttfbsln(FILE *ttf,struct ttfinfo *info);
 extern void readttfgsubUsed(FILE *ttf,struct ttfinfo *info);
 extern void GuessNamesFromGSUB(FILE *ttf,struct ttfinfo *info);
 extern void readttfgpossub(FILE *ttf,struct ttfinfo *info,int gpos);
 extern void readttfgdef(FILE *ttf,struct ttfinfo *info);
 extern void readttfbase(FILE *ttf,struct ttfinfo *info);
 extern void readttfjstf(FILE *ttf,struct ttfinfo *info);
-
-extern void VariationFree(struct ttfinfo *info);
-extern void readttfvariations(struct ttfinfo *info, FILE *ttf);
 
 extern struct otfname *FindAllLangEntries(FILE *ttf, struct ttfinfo *info, int id );
 

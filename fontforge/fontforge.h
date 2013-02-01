@@ -81,7 +81,4 @@ extern jmp_buf exit_jmp_buf;
 // FIXME: Eliminate this.
 #define SCRIPT_MENU_MAX	10
 
-
-VISIBLE extern MacFeat *default_mac_feature_map;
-
 #endif

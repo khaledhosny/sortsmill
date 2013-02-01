@@ -876,7 +876,7 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.popup_msg =
     (uint32_t *)
     _
-    ("Apple and MS/Adobe differ about the format of truetype and opentype files\nThis allows you to select which standard to follow for your font.\nThe main differences are:\n The requirements for the 'postscript' name in the name table conflict\n Bitmap data are stored in different tables\n Scaled composite characters are treated differently\n Use of GSUB rather than morx(t)/feat\n Use of GPOS rather than kern/opbd\n Use of GDEF rather than lcar/prop");
+    ("Apple and MS/Adobe differ about the format of truetype and opentype files\nThis allows you to select which standard to follow for your font.\nThe main differences are:\n The requirements for the 'postscript' name in the name table conflict\n Bitmap data are stored in different tables\n Scaled composite characters are treated differently");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_AppleMode;
   gcd[k].gd.handle_controlevent = OPT_Applemode;
@@ -892,7 +892,7 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.popup_msg =
     (uint32_t *)
     _
-    ("Apple and MS/Adobe differ about the format of truetype and opentype files\nThis allows you to select which standard to follow for your font.\nThe main differences are:\n The requirements for the 'postscript' name in the name table conflict\n Bitmap data are stored in different tables\n Scaled composite glyphs are treated differently\n Use of GSUB rather than morx(t)/feat\n Use of GPOS rather than kern/opbd\n Use of GDEF rather than lcar/prop");
+    ("Apple and MS/Adobe differ about the format of truetype and opentype files\nThis allows you to select which standard to follow for your font.\nThe main differences are:\n The requirements for the 'postscript' name in the name table conflict\n Bitmap data are stored in different tables\n Scaled composite glyphs are treated differently");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_OpenTypeMode;
   gcd[k++].creator = GCheckBoxCreate;
@@ -2826,7 +2826,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     formattypes[i].disabled = !any;
   formattypes[ff_ptype0].disabled = sf->onlybitmaps || map->enc->only_1byte;
   formattypes[ff_mma].disabled = formattypes[ff_mmb].disabled =
-    sf->mm == NULL || sf->mm->apple || !MMValid (sf->mm, false);
+    sf->mm == NULL || !MMValid (sf->mm, false);
   formattypes[ff_cffcid].disabled = sf->cidmaster == NULL;
   formattypes[ff_cid].disabled = sf->cidmaster == NULL;
   formattypes[ff_otfcid].disabled = sf->cidmaster == NULL;

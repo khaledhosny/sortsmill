@@ -760,8 +760,6 @@ _FVMenuSaveAs (FontView *fv)
         strcat (temp, "CID");
       else if (sf->mm == NULL)
         ;
-      else if (sf->mm->apple)
-        strcat (temp, "Var");
       else
         strcat (temp, "MM");
       strcat (temp, save_to_dir ? ".sfdir" : ".sfd");
@@ -990,9 +988,6 @@ SFAnyChanged (SplineFont *sf)
       for (i = 0; i < mm->instance_count; ++i)
         if (sf->mm->instances[i]->changed)
           return (true);
-      /* Changes to the blended font aren't real (for Adobe fonts). */
-      if (mm->apple && mm->normal->changed)
-        return (true);
 
       return (false);
     }
@@ -5155,8 +5150,6 @@ FVMenuChangeMMBlend (GWindow gw, struct gmenuitem *UNUSED (mi),
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   MMSet *mm = fv->b.sf->mm;
 
-  if (mm == NULL || mm->apple)
-    return;
   MMChangeBlend (mm, fv, false);
 }
 
@@ -5221,8 +5214,6 @@ htlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         case MID_HintSubsPt:
           mi->ti.disabled = fv->b.sf->layers[fv->b.active_layer].order2
             || anychars == -1 || multilayer;
-          if (fv->b.sf->mm != NULL && fv->b.sf->mm->apple)
-            mi->ti.disabled = true;
           break;
         case MID_AutoCounter:
         case MID_DontAutoHint:
@@ -10575,7 +10566,7 @@ mmlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           mi->ti.disabled = mm == NULL;
           break;
         case MID_ChangeMMBlend:
-          mi->ti.disabled = mm == NULL || mm->apple;
+          mi->ti.disabled = mm == NULL;
           break;
         }
     }
@@ -11404,14 +11395,6 @@ FVMakeChar (FontView *fv, int enc)
       else if (fl == NULL)
         {
           feat_sc->name = strconcat (base_sc->name, ".unknown");
-        }
-      else if (fl->ismac)
-        {
-          /* mac feature/setting */
-          feat_sc->name = xmalloc (strlen (base_sc->name) + 14);
-          sprintf (feat_sc->name, "%s.m%d_%d", base_sc->name,
-                   (int) (fl->featuretag >> 16),
-                   (int) ((fl->featuretag) & 0xffff));
         }
       else
         {

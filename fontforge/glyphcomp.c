@@ -2305,7 +2305,7 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
 
   /* These are complex to check and involve testing nested lookups which we */
   /*  might not have worked out yet */
-  if (sub1->fpst != NULL || sub1->sm != NULL)
+  if (sub1->fpst != NULL)
     return (false);
   if (sub1->kc != NULL || sub2->kc != NULL)
     {

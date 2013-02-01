@@ -141,10 +141,6 @@ static GTextInfo gsub_lookuptypes[] = {
     { (uint32_t *) NC_("Lookup Type", "Contextual Substitution"), NULL, 0, 0, (void *) gsub_context, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Contextual Chaining Substitution"), NULL, 0, 0, (void *) gsub_contextchain, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Reverse Chaining Substitution"), NULL, 0, 0, (void *) gsub_reversecchain, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-	GTEXTINFO_LINE,
-    { (uint32_t *) NC_("Lookup Type", "Mac Indic State Machine"), NULL, 0, 0, (void *) morx_indic, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NC_("Lookup Type", "Mac Contextual State Machine"), NULL, 0, 0, (void *) morx_context, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NC_("Lookup Type", "Mac Insertion State Machine"), NULL, 0, 0, (void *) morx_insert, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo gpos_lookuptypes[] = {
@@ -157,11 +153,9 @@ static GTextInfo gpos_lookuptypes[] = {
     { (uint32_t *) NC_("Lookup Type", "Mark to Mark Position"), NULL, 0, 0, (void *) gpos_mark2mark, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Contextual Position"), NULL, 0, 0, (void *) gpos_context, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Contextual Chaining Position"), NULL, 0, 0, (void *) gpos_contextchain, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-	GTEXTINFO_LINE,
-    { (uint32_t *) NC_("Lookup Type", "Mac Kerning State Machine"), NULL, 0, 0, (void *) kern_statemachine, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
-static GTextInfo *lookuptypes[2] = { gsub_lookuptypes, gpos_lookuptypes };
+static GTextInfo *lookuptypes[3] = { gsub_lookuptypes, gpos_lookuptypes, NULL};
 
     /* see also list in tottfgpos.c mapping code points to scripts */
     /* see also list in lookups.c for non-ui access to these data */
@@ -1199,19 +1193,13 @@ static FeatureScriptLangList *LK_ParseFL(struct matrix_data *strings, int rows )
     unsigned char foo[4];
     uint32_t *langs=NULL;
     int lmax=0, lcnt=0;
-    int feature, setting;
 
     fhead = flast = NULL;
     for ( i=0; i<rows; ++i ) {
 	fl = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
-	if ( sscanf(strings[2*i+0].u.md_str,"<%d,%d>", &feature, &setting )== 2 ) {
-	    fl->ismac = true;
-	    fl->featuretag = (feature<<16)|setting;
-	} else {
-	    memset(foo,' ',sizeof(foo));
-	    for ( j=0, pt = strings[2*i+0].u.md_str; j<4 && *pt; foo[j++] = *pt++ );
-	    fl->featuretag = (foo[0]<<24) | (foo[1]<<16) | (foo[2]<<8) | foo[3];
-	}
+	memset(foo,' ',sizeof(foo));
+	for ( j=0, pt = strings[2*i+0].u.md_str; j<4 && *pt; foo[j++] = *pt++ );
+	fl->featuretag = (foo[0]<<24) | (foo[1]<<16) | (foo[2]<<8) | foo[3];
 	if ( flast==NULL )
 	    fhead = fl;
 	else
@@ -1370,10 +1358,7 @@ static void LKMatrixInit(struct matrixinit *mi,OTLookup *otl) {
 	cnt = 0;
 	for ( fl=otl->features; fl!=NULL; fl=fl->next ) {
 	    if ( k ) {
-		if ( fl->ismac )
-		    sprintf( featbuf, "<%d,%d>", fl->featuretag>>16, fl->featuretag&0xffff );
-		else
-		    sprintf( featbuf, "%c%c%c%c", fl->featuretag>>24, fl->featuretag>>16,
+		sprintf( featbuf, "%c%c%c%c", fl->featuretag>>24, fl->featuretag>>16,
 			    fl->featuretag>>8, fl->featuretag );
 		md[2*cnt+0].u.md_str = xstrdup_or_null(featbuf);
 		bpos=0;
@@ -1469,14 +1454,10 @@ static int MaskFromLookupType(int lookup_type ) {
 return( 1<<(lookup_type-1));
       case gsub_reversecchain:
 return( gsub_reversecchain_mask );
-      case morx_indic: case morx_context: case morx_insert:
-return( morx_indic_mask<<(lookup_type-morx_indic) );
       case gpos_single: case gpos_pair: case gpos_cursive:
       case gpos_mark2base: case gpos_mark2ligature: case gpos_mark2mark:
       case gpos_context: case gpos_contextchain:
 return( gpos_single_mask<<(lookup_type-gpos_single) );
-      case kern_statemachine:
-return( kern_statemachine_mask );
       default:
 return( 0 );
     }
@@ -5443,19 +5424,6 @@ void _LookupSubtableContents(SplineFont *sf, struct lookup_subtable *sub,
 	sub->fpst->subtable = sub;
 	sub->fpst->next = sf->possub;
 	sf->possub = sub->fpst;
-    } else if ( (lookup_type == morx_indic ||
-		lookup_type == morx_context ||
-		lookup_type == morx_insert ||
-		lookup_type == kern_statemachine) &&
-	    sub->sm==NULL ) {
-	sub->sm = (ASM *) xzalloc(sizeof (ASM));
-	sub->sm->type = lookup_type == morx_indic ? asm_indic :
-		lookup_type == morx_context ? asm_context :
-		lookup_type == morx_insert ? asm_insert :
-		 asm_kern;
-	sub->sm->subtable = sub;
-	sub->sm->next = sf->sm;
-	sf->sm = sub->sm;
     } else if ( lookup_type==gpos_pair &&
 		sub->kc==NULL &&
 		!sub->per_glyph_pst_or_kern ) {
@@ -5530,8 +5498,6 @@ return;
 
     if ( sub->fpst && sf->fontinfo!=NULL ) {
 	ContextChainEdit(sf,sub->fpst,sf->fontinfo,NULL,def_layer);
-    } else if ( sub->sm && sf->fontinfo!=NULL ) {
-	StateMachineEdit(sf,sub->sm,sf->fontinfo);
     } else if ( sub->kc!=NULL ) {
 	KernClassD(sub->kc,sf,def_layer,sub->vertical_kerning);
     } else if ( sub->lookup->lookup_type>=gpos_cursive &&

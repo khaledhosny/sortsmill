@@ -1335,10 +1335,6 @@ static void dump_lookup(FILE *out, SplineFont *sf, OTLookup *otl) {
     int isv;
     KernPair *kp;
 
-    if ( otl->lookup_type == morx_indic || otl->lookup_type==morx_context ||
-	    otl->lookup_type==morx_insert || otl->lookup_type==kern_statemachine )
-return;					/* No support for apple "lookups" */
-
     otl->ticked = true;
 
     if ( otl->lookup_type==gsub_context || otl->lookup_type==gsub_contextchain ||

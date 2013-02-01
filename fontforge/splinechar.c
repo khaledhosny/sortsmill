@@ -2440,8 +2440,6 @@ void _CVMenuMakeLine(CharViewBase *cv,int do_arc,int ellipse_to_back) {
 }
 
 void SCClearInstrsOrMark(SplineChar *sc, int layer, int complain) {
-    uint8_t *instrs = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
-		sc->parent->mm->normal->glyphs[sc->orig_pos]->ttf_instrs : sc->ttf_instrs;
     struct splinecharlist *dep;
     SplineSet *ss;
     SplinePoint *sp;
@@ -2449,7 +2447,7 @@ void SCClearInstrsOrMark(SplineChar *sc, int layer, int complain) {
     int had_ap, had_dep, had_instrs;
 
     had_ap = had_dep = had_instrs = 0;
-    if ( instrs!=NULL ) {
+    if ( sc->ttf_instrs!=NULL ) {
 	if ( clear_tt_instructions_when_needed ) {
 	    free(sc->ttf_instrs); sc->ttf_instrs = NULL;
 	    sc->ttf_instrs_len = 0;
@@ -2558,15 +2556,12 @@ static void SCHintsChng(SplineChar *sc) {
 }
 
 void instrcheck(SplineChar *sc,int layer) {
-    uint8_t *instrs = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
-		sc->parent->mm->normal->glyphs[sc->orig_pos]->ttf_instrs : sc->ttf_instrs;
-
     if ( !sc->layers[layer].order2 || sc->layers[layer].background )
 return;
 
     if ( sc->instructions_out_of_date && no_windowing_ui && sc->anchor==NULL )
 return;
-    if ( instrs==NULL && sc->dependents==NULL && no_windowing_ui && sc->anchor==NULL )
+    if ( sc->ttf_instrs==NULL && sc->dependents==NULL && no_windowing_ui && sc->anchor==NULL )
 return;
     /* If the points are no longer in order then the instructions are not valid */
     /*  (because they'll refer to the wrong points) and should be removed */

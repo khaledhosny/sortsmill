@@ -2268,13 +2268,8 @@ static int mgAsk(struct problems *p,char **_str,char *str, char *end,uint32_t ta
 	N_("alternate subs"), N_("multiple subs"), N_("ligature"), NULL };
     static char *fpstnames[] = { N_("Contextual position"), N_("Contextual substitution"),
 	N_("Chaining position"), N_("Chaining substitution"), N_("Reverse chaining subs"), NULL };
-    static char *asmnames[] = { N_("Indic reordering"), N_("Contextual substitution"),
-	N_("Lig"), NULL, N_("Simple"), N_("Contextual insertion"), NULL, NULL, NULL,
-	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	N_("Kerning"), NULL };
     PST *pst = data;
     FPST *fpst = data;
-    ASM *sm = data;
     KernClass *kc = data;
     char end_ch;
     GRect pos;
@@ -2298,11 +2293,6 @@ static int mgAsk(struct problems *p,char **_str,char *str, char *end,uint32_t ta
 		_("%1$s from lookup subtable %2$.50s"),
 		_(fpstnames[fpst->type-pst_contextpos]),
 		fpst->subtable->subtable_name );
-    else if ( which == mg_asm )
-	snprintf(buffer,sizeof(buffer),
-		_("%1$s from lookup subtable %2$.50s"),
-		_(asmnames[sm->type]),
-		sm->subtable->subtable_name );
     else
 	snprintf(buffer,sizeof(buffer),
 		_("%1$s from lookup subtable %2$.50s"),
@@ -2550,15 +2540,6 @@ static int FPSTMissingGlyph(struct problems *p,FPST *fpst) {
 return( found );
 }
 
-static int ASMMissingGlyph(struct problems *p,ASM *sm) {
-    int j;
-    int found = false;
-
-    for ( j=4; j<sm->class_cnt; ++j )
-	found |= StrMissingGlyph(p,&sm->classes[j],NULL,mg_asm,sm);
-return( found );
-}
-
 static int LookupFeaturesMissScript(struct problems *p,OTLookup *otl,OTLookup *nested,
 	uint32_t script, SplineFont *sf, char *glyph_name) {
     OTLookup *invokers, *any;
@@ -2735,7 +2716,6 @@ static int CheckForATT(struct problems *p) {
     int found = false;
     int i,k;
     FPST *fpst;
-    ASM *sm;
     KernClass *kc;
     SplineFont *_sf, *sf;
     static char *buts[3];
@@ -2765,8 +2745,6 @@ static int CheckForATT(struct problems *p) {
 		found |= KCMissingGlyph(p,kc,true);
 	    for ( fpst=_sf->possub; fpst!=NULL && !p->finish && p->missingglyph; fpst=fpst->next )
 		found |= FPSTMissingGlyph(p,fpst);
-	    for ( sm=_sf->sm; sm!=NULL && !p->finish && p->missingglyph; sm=sm->next )
-		found |= ASMMissingGlyph(p,sm);
 	}
 	ClearMissingState(p);
     }

@@ -34,7 +34,6 @@
 
 struct gfi_data;
 struct contextchaindlg;
-struct statemachinedlg;
 
 extern struct cvshows
 {
@@ -858,16 +857,6 @@ extern void FVReplaceOutlineWithReference (FontView *fv, double fudge);
 extern void SVDestroy (struct searchview *sv);
 
 extern int SLICount (SplineFont *sf);
-extern uint32_t *ClassName (const char *name, uint32_t feature_tag,
-                            uint16_t flags, int script_lang_index,
-                            int merge_with, int act_type, int macfeature,
-                            SplineFont *sf);
-extern uint32_t *DecomposeClassName (const uint32_t *clsnm, uint32_t **name,
-                                     uint32_t *feature_tag, int *macfeature,
-                                     uint16_t *flags,
-                                     uint16_t *script_lang_index,
-                                     int *merge_with, int *act_type,
-                                     SplineFont *sf);
 extern PST *AddSubs (PST *last, uint32_t tag, char *name, uint16_t flags,
                      uint16_t sli, SplineChar *sc);
 
@@ -896,8 +885,6 @@ extern void _aplistbuild (struct gmenuitem *mi, SplineFont *sf,
                           void (*func) (GWindow, struct gmenuitem *,
                                         GEvent *));
 extern int32_t *ParseBitmapSizes (GGadget *g, char *msg, int *err);
-extern GTextInfo *AddMacFeatures (GTextInfo *opentype, enum possub_type type,
-                                  SplineFont *sf);
 extern uint32_t *AskNameTag (char *title, uint32_t *def, uint32_t def_tag,
                              uint16_t flags, int script_lang_index,
                              enum possub_type type, SplineFont *sf,
@@ -1181,15 +1168,6 @@ extern void PointerDlg (CharView *cv);
 extern void GListAddStr (GGadget *list, uint32_t *str, void *ud);
 extern void GListReplaceStr (GGadget *list, int index, uint32_t *str,
                              void *ud);
-extern struct macname *NameGadgetsGetNames (GWindow gw);
-extern void NameGadgetsSetEnabled (GWindow gw, int enable);
-extern int GCDBuildNames (GGadgetCreateData *gcd, GTextInfo *label, int pos,
-                          struct macname *names);
-extern void GCDFillMacFeat (GGadgetCreateData *mfgcd, GTextInfo *mflabels,
-                            int width, MacFeat *all, int fromprefs,
-                            GGadgetCreateData *boxes,
-                            GGadgetCreateData **array);
-extern void Prefs_ReplaceMacFeatures (GGadget *list);
 
 extern uint32_t *FVOpenFont (char *title, const char *defaultfile, int mult);
 
@@ -1269,10 +1247,6 @@ extern void ContextChainEdit (SplineFont *sf, FPST *fpst,
                               struct gfi_data *gfi, uint32_t *newname,
                               int layer);
 extern char *cu_copybetween (const uint32_t *start, const uint32_t *end);
-
-extern void StateMachineEdit (SplineFont *sf, ASM *sm, struct gfi_data *d);
-extern void GFI_FinishSMNew (struct gfi_data *d, ASM *sm, int success,
-                             int isnew);
 
 extern void MMChangeBlend (MMSet *mm, FontView *fv, int tonew);
 extern void MMWizard (MMSet *mm);

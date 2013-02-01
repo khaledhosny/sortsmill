@@ -2100,56 +2100,6 @@ SFDDumpEncoding (FILE *sfd, Encoding * encname, char *keyword)
 }
 
 static void
-SFDDumpMacName (FILE *sfd, struct macname *mn)
-{
-  char *pt;
-
-  while (mn != NULL)
-    {
-      fprintf (sfd, "MacName: %d %d %d \"", mn->enc, mn->lang,
-               (int) strlen (mn->name));
-      for (pt = mn->name; *pt; ++pt)
-        {
-          if (*pt < ' ' || *pt >= 0x7f || *pt == '\\' || *pt == '"')
-            fprintf (sfd, "\\%03o", *(uint8_t *) pt);
-          else
-            putc (*pt, sfd);
-        }
-      fprintf (sfd, "\"\n");
-      mn = mn->next;
-    }
-}
-
-void
-SFDDumpMacFeat (FILE *sfd, MacFeat * mf)
-{
-  struct macsetting *ms;
-
-  if (mf == NULL)
-    return;
-
-  while (mf != NULL)
-    {
-      if (mf->featname != NULL)
-        {
-          fprintf (sfd, "MacFeat: %d %d %d\n", mf->feature, mf->ismutex,
-                   mf->default_setting);
-          SFDDumpMacName (sfd, mf->featname);
-          for (ms = mf->settings; ms != NULL; ms = ms->next)
-            {
-              if (ms->setname != NULL)
-                {
-                  fprintf (sfd, "MacSetting: %d\n", ms->setting);
-                  SFDDumpMacName (sfd, ms->setname);
-                }
-            }
-        }
-      mf = mf->next;
-    }
-  fprintf (sfd, "EndMacFeatures\n");
-}
-
-static void
 SFDDumpBaseLang (FILE *sfd, struct baselangextent *bl)
 {
 
@@ -2284,7 +2234,6 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   struct ttf_table *tab;
   KernClass *kc;
   FPST *fpst;
-  ASM *sm;
   int isv;
   int *newgids = NULL;
   int err = false;
@@ -2449,7 +2398,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   if (sf->macstyle != -1)
     fprintf (sfd, "MacStyle: %d\n", sf->macstyle);
   /* Must come before any kerning classes, anchor classes, conditional psts */
-  /* state machines, psts, kerning pairs, etc. */
+  /* psts, kerning pairs, etc. */
   for (isgpos = 0; isgpos < 2; ++isgpos)
     {
       for (otl = isgpos ? sf->gpos_lookups : sf->gsub_lookups; otl != NULL;
@@ -2480,11 +2429,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
           fprintf (sfd, "} [");
           for (fl = otl->features; fl != NULL; fl = fl->next)
             {
-              if (fl->ismac)
-                fprintf (sfd, "<%d,%d> (", (int) (fl->featuretag >> 16),
-                         (int) (fl->featuretag & 0xffff));
-              else
-                fprintf (sfd, "'%c%c%c%c' (", (int) (fl->featuretag >> 24),
+              fprintf (sfd, "'%c%c%c%c' (", (int) (fl->featuretag >> 24),
                          (int) ((fl->featuretag >> 16) & 0xff),
                          (int) ((fl->featuretag >> 8) & 0xff),
                          (int) (fl->featuretag & 0xff));
@@ -2682,68 +2627,6 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
                             "FClassNames");
       fprintf (sfd, "EndFPST\n");
     }
-  for (sm = sf->sm; sm != NULL; sm = sm->next)
-    {
-      static char *keywords[] =
-        { "MacIndic2:", "MacContext2:", "MacLigature2:", "unused",
-        "MacSimple2:", "MacInsert2:",
-        "unused", "unused", "unused", "unused", "unused", "unused",
-        "unused", "unused", "unused", "unused", "unused", "MacKern2:",
-        NULL
-      };
-      fprintf (sfd, "%s ", keywords[sm->type - asm_indic]);
-      SFDDumpUTF7Str (sfd, sm->subtable->subtable_name);
-      fprintf (sfd, " %d %d %d\n", sm->flags, sm->class_cnt, sm->state_cnt);
-      for (i = 4; i < sm->class_cnt; ++i)
-        fprintf (sfd, "  Class: %d %s\n", (int) strlen (sm->classes[i]),
-                 sm->classes[i]);
-      for (i = 0; i < sm->class_cnt * sm->state_cnt; ++i)
-        {
-          fprintf (sfd, " %d %d ", sm->state[i].next_state,
-                   sm->state[i].flags);
-          if (sm->type == asm_context)
-            {
-              if (sm->state[i].u.context.mark_lookup == NULL)
-                putc ('~', sfd);
-              else
-                SFDDumpUTF7Str (sfd,
-                                sm->state[i].u.context.
-                                mark_lookup->lookup_name);
-              putc (' ', sfd);
-              if (sm->state[i].u.context.cur_lookup == 0)
-                putc ('~', sfd);
-              else
-                SFDDumpUTF7Str (sfd,
-                                sm->state[i].u.context.
-                                cur_lookup->lookup_name);
-              putc (' ', sfd);
-            }
-          else if (sm->type == asm_insert)
-            {
-              if (sm->state[i].u.insert.mark_ins == NULL)
-                fprintf (sfd, "0 ");
-              else
-                fprintf (sfd, "%d %s ",
-                         (int) strlen (sm->state[i].u.insert.mark_ins),
-                         sm->state[i].u.insert.mark_ins);
-              if (sm->state[i].u.insert.cur_ins == NULL)
-                fprintf (sfd, "0 ");
-              else
-                fprintf (sfd, "%d %s ",
-                         (int) strlen (sm->state[i].u.insert.cur_ins),
-                         sm->state[i].u.insert.cur_ins);
-            }
-          else if (sm->type == asm_kern)
-            {
-              fprintf (sfd, "%d ", sm->state[i].u.kern.kcnt);
-              for (j = 0; j < sm->state[i].u.kern.kcnt; ++j)
-                fprintf (sfd, "%d ", sm->state[i].u.kern.kerns[j]);
-            }
-          putc ('\n', sfd);
-        }
-      fprintf (sfd, "EndASM\n");
-    }
-  SFDDumpMacFeat (sfd, sf->features);
   SFDDumpJustify (sfd, sf);
   for (tab = sf->ttf_tables; tab != NULL; tab = tab->next)
     SFDDumpTtfTable (sfd, tab, sf);
@@ -3055,7 +2938,7 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
   int err = false;
 
   fprintf (sfd, "MMCounts: %d %d %d %d\n", mm->instance_count, mm->axis_count,
-           mm->apple, mm->named_instance_count);
+           false /*mm->apple*/, 0 /*mm->named_instance_count*/);
   fprintf (sfd, "MMAxis:");
   for (i = 0; i < mm->axis_count; ++i)
     fprintf (sfd, " %s", mm->axes[i]);
@@ -3075,7 +2958,6 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
         fprintf (sfd, " %g=>%g", (double) mm->axismaps[i].blends[j],
                  (double) mm->axismaps[i].designs[j]);
       fputc ('\n', sfd);
-      SFDDumpMacName (sfd, mm->axismaps[i].axisnames);
     }
   if (mm->cdv != NULL)
     {
@@ -3088,14 +2970,6 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
       fprintf (sfd, "MMNDV:\n");
       fputs (mm->ndv, sfd);
       fprintf (sfd, "\nEndMMSubroutine\n");
-    }
-  for (i = 0; i < mm->named_instance_count; ++i)
-    {
-      fprintf (sfd, "MMNamedInstance: %d ", i);
-      for (j = 0; j < mm->axis_count; ++j)
-        fprintf (sfd, " %g", (double) mm->named_instances[i].coords[j]);
-      fputc ('\n', sfd);
-      SFDDumpMacName (sfd, mm->named_instances[i].names);
     }
 
   if (todir)
@@ -4903,61 +4777,6 @@ LigaCreateFromOldStyleMultiple (PST1 * liga)
   return (last);
 }
 
-#if FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES
-static struct
-{
-  int feature, setting;
-  uint32_t tag;
-} formertags[] =
-{
-  {
-  1, 6, CHR ('M', 'L', 'O', 'G')},
-  {
-  1, 8, CHR ('M', 'R', 'E', 'B')},
-  {
-  1, 10, CHR ('M', 'D', 'L', 'G')},
-  {
-  1, 12, CHR ('M', 'S', 'L', 'G')},
-  {
-  1, 14, CHR ('M', 'A', 'L', 'G')},
-  {
-  8, 0, CHR ('M', 'S', 'W', 'I')},
-  {
-  8, 2, CHR ('M', 'S', 'W', 'F')},
-  {
-  8, 4, CHR ('M', 'S', 'L', 'I')},
-  {
-  8, 6, CHR ('M', 'S', 'L', 'F')},
-  {
-  8, 8, CHR ('M', 'S', 'N', 'F')},
-  {
-  22, 1, CHR ('M', 'W', 'I', 'D')},
-  {
-  27, 1, CHR ('M', 'U', 'C', 'M')},
-  {
-  103, 2, CHR ('M', 'W', 'I', 'D')},
-  {
--1, -1, 0xffffffff},};
-
-static void
-CvtOldMacFeature (PST1 * pst)
-{
-  int i;
-
-  if (pst->macfeature)
-    return;
-  for (i = 0; formertags[i].feature != -1; ++i)
-    {
-      if (pst->tag == formertags[i].tag)
-        {
-          pst->macfeature = true;
-          pst->tag = (formertags[i].feature << 16) | formertags[i].setting;
-          return;
-        }
-    }
-}
-#endif
-
 static void
 SFDSetEncMap (SplineFont *sf, int orig_pos, int enc)
 {
@@ -5854,7 +5673,6 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                   getint (sfd, &temp);
                   ((PST1 *) pst)->tag |= temp;
                   nlgetc (sfd); /* close '>' */
-                  ((PST1 *) pst)->macfeature = true;
                 }
               else
                 ungetc (ch, sfd);
@@ -5950,10 +5768,6 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                       (PST *) LigaCreateFromOldStyleMultiple ((PST1 *) pst);
                 }
             }
-#if FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES
-          if (old)
-            CvtOldMacFeature ((PST1 *) pst);
-#endif
         }
       else if (strcasecmp (tok, "Colour:") == 0)
         {
@@ -7049,186 +6863,6 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok,
 
 }
 
-static void
-SFDParseStateMachine (FILE *sfd, SplineFont *sf, ASM * sm, char *tok, int old)
-{
-  int i, temp;
-
-  sm->type =
-    strncasecmp (tok, "MacIndic", 8) == 0 ?
-    asm_indic : strncasecmp (tok, "MacContext", 10) == 0 ?
-    asm_context : strncasecmp (tok, "MacLigature", 11) == 0 ?
-    asm_lig : strncasecmp (tok, "MacSimple", 9) == 0 ?
-    asm_simple : strncasecmp (tok, "MacKern", 7) == 0 ? asm_kern : asm_insert;
-  if (old)
-    {
-      getusint (sfd, &((ASM1 *) sm)->feature);
-      nlgetc (sfd);             /* Skip comma */
-      getusint (sfd, &((ASM1 *) sm)->setting);
-    }
-  else
-    {
-      sm->subtable =
-        SFFindLookupSubtableAndFreeName (sf, SFDReadUTF7Str (sfd));
-      sm->subtable->sm = sm;
-    }
-  getusint (sfd, &sm->flags);
-  getusint (sfd, &sm->class_cnt);
-  getusint (sfd, &sm->state_cnt);
-
-  sm->classes = xmalloc (sm->class_cnt * sizeof (char *));
-  sm->classes[0] = sm->classes[1] = sm->classes[2] = sm->classes[3] = NULL;
-  for (i = 4; i < sm->class_cnt; ++i)
-    {
-      copy_to_tok (tok, getname (sfd));
-      getint (sfd, &temp);
-      sm->classes[i] = xmalloc (temp + 1);
-      sm->classes[i][temp] = '\0';
-      nlgetc (sfd);             /* skip space */
-      fread (sm->classes[i], 1, temp, sfd);
-    }
-
-  sm->state =
-    xmalloc (sm->class_cnt * sm->state_cnt * sizeof (struct asm_state));
-  for (i = 0; i < sm->class_cnt * sm->state_cnt; ++i)
-    {
-      getusint (sfd, &sm->state[i].next_state);
-      getusint (sfd, &sm->state[i].flags);
-      if (sm->type == asm_context)
-        {
-          sm->state[i].u.context.mark_lookup =
-            SFD_ParseNestedLookup (sfd, sf, old);
-          sm->state[i].u.context.cur_lookup =
-            SFD_ParseNestedLookup (sfd, sf, old);
-        }
-      else if (sm->type == asm_insert)
-        {
-          getint (sfd, &temp);
-          if (temp == 0)
-            sm->state[i].u.insert.mark_ins = NULL;
-          else
-            {
-              sm->state[i].u.insert.mark_ins = xmalloc (temp + 1);
-              sm->state[i].u.insert.mark_ins[temp] = '\0';
-              nlgetc (sfd);     /* skip space */
-              fread (sm->state[i].u.insert.mark_ins, 1, temp, sfd);
-            }
-          getint (sfd, &temp);
-          if (temp == 0)
-            sm->state[i].u.insert.cur_ins = NULL;
-          else
-            {
-              sm->state[i].u.insert.cur_ins = xmalloc (temp + 1);
-              sm->state[i].u.insert.cur_ins[temp] = '\0';
-              nlgetc (sfd);     /* skip space */
-              fread (sm->state[i].u.insert.cur_ins, 1, temp, sfd);
-            }
-        }
-      else if (sm->type == asm_kern)
-        {
-          int j;
-          getint (sfd, &sm->state[i].u.kern.kcnt);
-          if (sm->state[i].u.kern.kcnt != 0)
-            sm->state[i].u.kern.kerns =
-              xmalloc (sm->state[i].u.kern.kcnt * sizeof (int16_t));
-          for (j = 0; j < sm->state[i].u.kern.kcnt; ++j)
-            {
-              getint (sfd, &temp);
-              sm->state[i].u.kern.kerns[j] = temp;
-            }
-        }
-    }
-  copy_to_tok (tok, getname (sfd));     /* EndASM */
-}
-
-static struct macname *
-SFDParseMacNames (FILE *sfd, char *tok)
-{
-  struct macname *head = NULL, *last = NULL, *cur;
-  int enc, lang, len;
-  char *pt;
-  int ch;
-
-  while (strcmp (tok, "MacName:") == 0)
-    {
-      cur = (struct macname *) xzalloc (sizeof (struct macname));
-      if (last == NULL)
-        head = cur;
-      else
-        last->next = cur;
-      last = cur;
-
-      getint (sfd, &enc);
-      getint (sfd, &lang);
-      getint (sfd, &len);
-      cur->enc = enc;
-      cur->lang = lang;
-      cur->name = pt = xmalloc (len + 1);
-
-      while ((ch = nlgetc (sfd)) == ' ');
-      if (ch == '"')
-        ch = nlgetc (sfd);
-      while (ch != '"' && ch != EOF && pt < cur->name + len)
-        {
-          if (ch == '\\')
-            {
-              *pt = (nlgetc (sfd) - '0') << 6;
-              *pt |= (nlgetc (sfd) - '0') << 3;
-              *pt |= (nlgetc (sfd) - '0');
-            }
-          else
-            *pt++ = ch;
-          ch = nlgetc (sfd);
-        }
-      *pt = '\0';
-      copy_to_tok (tok, getname (sfd));
-    }
-  return (head);
-}
-
-MacFeat *
-SFDParseMacFeatures (FILE *sfd, char *tok)
-{
-  MacFeat *cur, *head = NULL, *last = NULL;
-  struct macsetting *slast, *scur;
-  int feat, ism, def, set;
-
-  while (strcmp (tok, "MacFeat:") == 0)
-    {
-      cur = (MacFeat *) xzalloc (sizeof (MacFeat));
-      if (last == NULL)
-        head = cur;
-      else
-        last->next = cur;
-      last = cur;
-
-      getint (sfd, &feat);
-      getint (sfd, &ism);
-      getint (sfd, &def);
-      cur->feature = feat;
-      cur->ismutex = ism;
-      cur->default_setting = def;
-      copy_to_tok (tok, getname (sfd));
-      cur->featname = SFDParseMacNames (sfd, tok);
-      slast = NULL;
-      while (strcmp (tok, "MacSetting:") == 0)
-        {
-          scur = (struct macsetting *) xzalloc (sizeof (struct macsetting));
-          if (slast == NULL)
-            cur->settings = scur;
-          else
-            slast->next = scur;
-          slast = scur;
-
-          getint (sfd, &set);
-          scur->setting = set;
-          copy_to_tok (tok, getname (sfd));
-          scur->setname = SFDParseMacNames (sfd, tok);
-        }
-    }
-  return (head);
-}
-
 static char *
 SFDParseMMSubroutine (FILE *sfd)
 {
@@ -7254,31 +6888,6 @@ SFDParseMMSubroutine (FILE *sfd)
   if (len > 0 && sofar[len - 1] == '\n')
     sofar[len - 1] = '\0';
   return (sofar);
-}
-
-static void
-MMInferStuff (MMSet *mm)
-{
-  int i, j;
-
-  if (mm == NULL)
-    return;
-  if (mm->apple)
-    {
-      for (i = 0; i < mm->axis_count; ++i)
-        {
-          for (j = 0; j < mm->axismaps[i].points; ++j)
-            {
-              real val = mm->axismaps[i].blends[j];
-              if (val == -1.)
-                mm->axismaps[i].min = mm->axismaps[i].designs[j];
-              else if (val == 0)
-                mm->axismaps[i].def = mm->axismaps[i].designs[j];
-              else if (val == 1)
-                mm->axismaps[i].max = mm->axismaps[i].designs[j];
-            }
-        }
-    }
 }
 
 static void
@@ -7412,7 +7021,6 @@ SFD_FigureDirType (SplineFont *sf, char *tok, char *dirname, Encoding * enc,
       MMSet *mm = sf->mm;
       int ipos, i = 0;
 
-      MMInferStuff (sf->mm);
       ff_progress_change_stages (2 * (mm->instance_count + 1));
       while ((ent = readdir (dir)) != NULL)
         {
@@ -7612,26 +7220,28 @@ SFDParseLookup (FILE *sfd, SplineFont *sf, OTLookup * otl)
           while ((ch = nlgetc (sfd)) == ' ');
           if (ch == ']')
             break;
-          fl =
-            (FeatureScriptLangList *)
-            xzalloc (sizeof (FeatureScriptLangList));
+
+          if (ch == '<')
+            {
+              int ft = 0, fs = 0;
+              fscanf (sfd, "%d,%d>", &ft, &fs);
+              LogError (_("AAT-style feature tags are no longer supported: \"<%d,%d>\" tag ignored"), ft, fs);
+              break;
+            }
+
+          fl = (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
           if (lastfl == NULL)
             otl->features = fl;
           else
             lastfl->next = fl;
           lastfl = fl;
-          if (ch == '<')
-            {
-              int ft = 0, fs = 0;
-              fscanf (sfd, "%d,%d>", &ft, &fs);
-              fl->ismac = true;
-              fl->featuretag = (ft << 16) | fs;
-            }
-          else if (ch == '\'')
+
+          if (ch == '\'')
             {
               ungetc (ch, sfd);
               fl->featuretag = gettag (sfd);
             }
+
           while ((ch = nlgetc (sfd)) == ' ');
           if (ch == '(')
             {
@@ -7975,15 +7585,12 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
   struct ttf_table *lastttf[2];
   KernClass *lastkc = NULL, *kc, *lastvkc = NULL;
   FPST *lastfp = NULL;
-  ASM *lastsm = NULL;
   OTLookup *lastpotl = NULL, *lastsotl = NULL;
   struct axismap *lastaxismap = NULL;
-  struct named_instance *lastnamedinstance = NULL;
   int pushedbacktok = false;
   Encoding *enc = &custom;
   struct remap *remap = NULL;
   int hadtimes = false, haddupenc;
-  int old;
   int old_style_order2 = false;
   struct Base *last_base = NULL;
   struct basescript *last_base_script = NULL;
@@ -8879,34 +8486,12 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                || strcasecmp (tok, "MacLigature:") == 0
                || strcasecmp (tok, "MacSimple:") == 0
                || strcasecmp (tok, "MacKern:") == 0
-               || strcasecmp (tok, "MacInsert:") == 0)
+               || strcasecmp (tok, "MacInsert:") == 0
+               || strcasecmp (tok, "MacFeat:") == 0
+               || strcasecmp (tok, "MacName:") == 0
+               || strcasecmp (tok, "MMNamedInstance:") == 0)
         {
-          ASM *sm;
-          if (strchr (tok, '2') != NULL)
-            {
-              old = false;
-              sm = (ASM *) xzalloc (sizeof (ASM));
-            }
-          else
-            {
-              old = true;
-              sm = (ASM *) xzalloc (sizeof (ASM1));
-            }
-          if ((sf->sfd_version < 2) != old)
-            {
-              IError ("Version mixup in state machine of sfd file.");
-              exit (1);
-            }
-          if (lastsm == NULL)
-            sf->sm = sm;
-          else
-            lastsm->next = sm;
-          lastsm = sm;
-          SFDParseStateMachine (sfd, sf, sm, tok, old);
-        }
-      else if (strcasecmp (tok, "MacFeat:") == 0)
-        {
-          sf->features = SFDParseMacFeatures (sfd, tok);
+          LogError (_("AAT features are no longer supported: \"%s\" ignored"), tok);
         }
       else if (strcasecmp (tok, "TeXData:") == 0)
         {
@@ -9118,19 +8703,14 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           else
             {
               int temp;
-              getint (sfd, &temp);
-              mm->apple = temp;
-              getint (sfd, &mm->named_instance_count);
+              getint (sfd, &temp /*&mm->apple*/);
+              getint (sfd, &temp /*&mm->named_instance_count*/);
             }
           mm->instances = xcalloc (mm->instance_count, sizeof (SplineFont *));
           mm->positions =
             xmalloc (mm->instance_count * mm->axis_count * sizeof (real));
           mm->defweights = xmalloc (mm->instance_count * sizeof (real));
           mm->axismaps = xcalloc (mm->axis_count, sizeof (struct axismap));
-          if (mm->named_instance_count != 0)
-            mm->named_instances =
-              xcalloc (mm->named_instance_count,
-                       sizeof (struct named_instance));
         }
       else if (strcasecmp (tok, "MMAxis:") == 0)
         {
@@ -9185,32 +8765,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                   getreal (sfd, &mm->axismaps[index].designs[i]);
                 }
               lastaxismap = &mm->axismaps[index];
-              lastnamedinstance = NULL;
             }
-        }
-      else if (strcasecmp (tok, "MMNamedInstance:") == 0)
-        {
-          MMSet *mm = sf->mm;
-          if (mm != NULL)
-            {
-              int index;
-              getint (sfd, &index);
-              mm->named_instances[index].coords =
-                xmalloc (mm->axis_count * sizeof (real));
-              for (i = 0; i < mm->axis_count; ++i)
-                getreal (sfd, &mm->named_instances[index].coords[i]);
-              lastnamedinstance = &mm->named_instances[index];
-              lastaxismap = NULL;
-            }
-        }
-      else if (strcasecmp (tok, "MacName:") == 0)
-        {
-          struct macname *names = SFDParseMacNames (sfd, tok);
-          if (lastaxismap != NULL)
-            lastaxismap->axisnames = names;
-          else if (lastnamedinstance != NULL)
-            lastnamedinstance->names = names;
-          pushedbacktok = true;
         }
       else if (strcasecmp (tok, "MMCDV:") == 0)
         {
@@ -9231,7 +8786,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           getint (sfd, &realcnt);
           ff_progress_change_stages (cnt);
           ff_progress_change_total (realcnt);
-          MMInferStuff (sf->mm);
           break;
         }
       else if (strcasecmp (tok, "BeginSubFonts:") == 0)

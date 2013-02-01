@@ -880,12 +880,6 @@ void SCEditInstructions(SplineChar *sc) {
     CharView *cv;
     RefChar *ref;
 
-    /* In a multiple master font, the instructions for all glyphs reside in */
-    /*  the "normal" instance of the font. The instructions are the same for */
-    /*  all instances (the cvt table might be different) */
-    if ( sc->parent->mm!=NULL && sc->parent->mm->apple )
-	sc = sc->parent->mm->normal->glyphs[sc->orig_pos];
-
     for ( id = sc->parent->instr_dlgs; id!=NULL && id->sc!=sc; id=id->next );
     if ( id!=NULL ) {
 	GDrawSetVisible(id->id->gw,true);
@@ -1408,8 +1402,6 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     sf->cvt_dlg = sv;
     sv->tag = tag;
 
-    if ( tab==NULL && sf->mm!=NULL && sf->mm->apple )
-	tab = SFFindTable(sf->mm->normal,tag);
     if ( tab!=NULL ) {
 	sv->len = tab->len;
 	sv->edits = xmalloc(tab->len+1);
@@ -1730,10 +1722,6 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
     char buffer[6][20];
     int k, hv;
 
-    if ( tab==NULL && sf->mm!=NULL && sf->mm->apple ) {
-	sf = sf->mm->normal;
-	tab = SFFindTable(sf,tag);
-    }
     memset(&mp,0,sizeof(mp));
     mp.sf = sf;
     mp.tab = tab;
@@ -1949,13 +1937,6 @@ void SFEditTable(SplineFont *sf, uint32_t tag) {
     struct ttf_table *tab;
     char name[12];
     char title[100];
-
-    /* In multiple master fonts the 'fpgm' and 'prep' tables are stored in the*/
-    /*  normal instance of the font. The other instances must share it */
-    /* On the other hand, everyone can have their own cvt table */
-    if ( tag!=CHR('c','v','t',' ') )
-	if ( sf->mm!=NULL && sf->mm->apple )
-	    sf = sf->mm->normal;
 
     tab = SFFindTable(sf,tag);
     if ( tag==CHR('m','a','x','p') ) {
