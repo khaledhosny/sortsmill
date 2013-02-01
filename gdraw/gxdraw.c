@@ -1151,8 +1151,8 @@ return( NULL );
 	XChangeProperty(display,nw->w,gdisp->atoms.wm_protocols,XA_ATOM,32,
 		PropModeReplace,(unsigned char *) &gdisp->atoms.wm_del_window, 1);
     }
-    ch.res_class = "fontforge";
-    ch.res_name = "fontforge";
+    ch.res_class = "sortsmill-editor";
+    ch.res_name = "sortsmill-editor";
     XSetClassHint(display,nw->w,&ch);
     XSaveContext(display,nw->w,gdisp->mycontext,(void *) nw);
     if ( eh!=NULL ) {
@@ -3944,7 +3944,7 @@ return( NULL );
 #ifdef X_HAVE_UTF8_STRING	/* Don't even try without this. I don't want to have to guess encodings myself... */
     /* X Input method initialization */
     XSetLocaleModifiers("");
-    gdisp->im = XOpenIM(display, XrmGetDatabase(display), "fontforge", "fontforge");
+    gdisp->im = XOpenIM(display, XrmGetDatabase(display), "sortsmill-editor", "sortsmill-editor");
     /* The only reason this seems to fail is if XMODIFIERS contains an @im */
     /*  which points to something that isn't running. If XMODIFIERS is not */
     /*  defined we get some kind of built-in default method. If it doesn't */
