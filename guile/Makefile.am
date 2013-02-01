@@ -68,25 +68,25 @@ GO_FILES += sortsmill/alloc.go sortsmill/gsl.go		\
 
 DIST_SCM_IN_FILES += sortsmill/i18n.scm.in						\
 	sortsmill/machine.scm.in sortsmill/math-constants.scm.in	\
-	sortsmill/pkg-info.scm.in sortsmill/python.scm.in			\
-	sortsmill/pure.scm.in
+	sortsmill/pkg-info.scm.in
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/i18n.scm		\
 	sortsmill/machine.scm sortsmill/math-constants.scm	\
-	sortsmill/pkg-info.scm sortsmill/python.scm			\
-	sortsmill/pure.scm
+	sortsmill/pkg-info.scm
 GO_FILES += sortsmill/i18n.go sortsmill/machine.go		\
-	sortsmill/math-constants.go sortsmill/pkg-info.go	\
-	sortsmill/python.go sortsmill/pure.go
+	sortsmill/math-constants.go sortsmill/pkg-info.go
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
 GO_FILES += sortsmill/fontforge-api.go
 
-sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
-sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
-sortsmill/views.go: sortsmill/fontforge-api.go
-sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/usermenu.go
+if HAVE_PURE_API
+DIST_SCM_FILES += sortsmill/pure.scm
+GO_FILES += sortsmill/pure.go
+endif HAVE_PURE_API
+
+if HAVE_PYTHON_API
+DIST_SCM_FILES += sortsmill/python.scm
+GO_FILES += sortsmill/python.go
+endif HAVE_PYTHON_API
 
 if HAVE_GUI
 
@@ -107,6 +107,13 @@ MAKEFILE_GENERATED_SCM_FILES += sortsmill/gdraw-api.scm
 GO_FILES += sortsmill/gdraw-api.go
 
 endif HAVE_GUI
+
+sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
+sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
+sortsmill/views.go: sortsmill/fontforge-api.go
+sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/usermenu.go
 
 sortsmill/fontforge-api.scm:							\
 		$(top_builddir)/fontforge/fontforge.types.apii	\

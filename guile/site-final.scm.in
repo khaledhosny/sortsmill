@@ -19,8 +19,8 @@
 ;;;;; FIXME: Add local-final.scm and user-final.scm support.
 ;;;;;
 
-(if-fontforge-has-pure-api
- (pure-finalize))
+(if pkg-info:have-pure-api?
+    ((@ (sortsmill pure) pure-finalize)))
 
-(if-fontforge-has-python-api
- (py-finalize))
+(if pkg-info:have-python-api?
+    ((@ (sortsmill python) py-finalize)))

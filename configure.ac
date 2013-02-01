@@ -516,16 +516,12 @@ AC_CONFIG_FILES([inc/sortsmill/cython/config.pxi])
 AC_CONFIG_FILES([python/fontforge.py])
 AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmill/__init__.py])
-##AC_CONFIG_FILES([python/sortsmill/fontforge_compat.py])
 AC_CONFIG_FILES([python/sortsmill/usermenu.py])
 AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
-AC_CONFIG_FILES([python/sortsmill/internal/__init__.py])
 AC_CONFIG_FILES([guile/sortsmill/i18n.scm])
 AC_CONFIG_FILES([guile/sortsmill/machine.scm])
 AC_CONFIG_FILES([guile/sortsmill/math-constants.scm])
 AC_CONFIG_FILES([guile/sortsmill/pkg-info.scm])
-AC_CONFIG_FILES([guile/sortsmill/pure.scm])
-AC_CONFIG_FILES([guile/sortsmill/python.scm])
 
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_INDENT_PRO        
