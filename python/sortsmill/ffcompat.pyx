@@ -37,50 +37,15 @@ cdef extern from "stdbool.h":
   pass
 from libcpp cimport bool
 
-cimport sortsmill.cython.xgc as xgc
-from cpython.ref cimport PyObject, Py_XINCREF, Py_XDECREF
-from cpython.object cimport PyObject_CallObject, PyObject_IsTrue
-from libc.stdint cimport uintptr_t
-
-from sortsmill.cython.guile cimport SCM
-cimport sortsmill.cython.guile as scm
-
-cdef extern from "baseviews.h":
-  ctypedef struct CharViewBase:
-    pass
-  ctypedef struct FontViewBase:
-    pass
-  int CVLayer (CharViewBase *cv)
-
-cdef extern from "splinefont.h":
-  ctypedef struct SplineChar:
-    pass
-  cdef enum layer_type:
-    ly_all = -2
-    ly_grid = -1
-    ly_back = 0
-    ly_fore = 1
-    ly_none = -3
-
-cdef extern from "activeinui.h":
-  FontViewBase *fv_active_in_ui
-  SplineChar *sc_active_in_ui
-  int layer_active_in_ui
-
-cdef extern from "ffpython.h":
-  object PyFV_From_FV_I (FontViewBase *)
-  object PySC_From_SC_I (SplineChar *)
-
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
   void set_no_windowing_ui (bool)
   bool get_running_script ()
   void set_running_script (bool)
 
-import sys
 import warnings
 import traceback
-from . import (fontforge_api, notices)
+from . import (guile, notices)
 
 from sortsmill.legacy.fontforge import (
   layer,
@@ -168,7 +133,6 @@ __version__ = FF_MODULE_VERSION
 def version ():
   warnings.warn ('version() is deprecated; use __version__ instead.',
                  DeprecationWarning)
-
   # A workaround: return a big value so, in old scripts, checking for
   # a minimal version always succeeds.
   return '99999999'
@@ -203,35 +167,32 @@ def postError (win_title, msg):
 #--------------------------------------------------------------------------
 
 IF HAVE_GUI:
-  def registerMenuItem (menu_function not None,
-                        enable_function,
-                        data,
-                        which_window not None,
-                        shortcut_string,
-                        *submenu_names):
-    action = menu_function
-    enabled = enable_function
+  def registerMenuItem (menu_function, enable_function, data,
+                        which_window, shortcut_string, *submenu_names):
+    assert menu_function is not None
+    assert which_window is not None
     if isinstance (which_window, str):
       windows = (which_window,)
     else:
       windows = tuple (which_window)
-    shortcut = shortcut_string
     menu_path = tuple (submenu_names)
-    scm.scm_call_6 (scm.scm_c_private_ref ('sortsmill usermenu python', 'registerMenuItem'),
-                    scm.scm_from_pointer (<PyObject *> action, NULL),
-                    scm.scm_from_pointer (<PyObject *> enabled, NULL),
-                    scm.scm_from_pointer (<PyObject *> data, NULL),
-                    scm.scm_from_pointer (<PyObject *> windows, NULL),
-                    scm.scm_from_pointer (<PyObject *> shortcut, NULL),
-                    scm.scm_from_pointer (<PyObject *> menu_path, NULL))
+    action = menu_function
+    enabled = enable_function
+    shortcut = shortcut_string
+    guile.call (guile.private_ref ('sortsmill usermenu python',
+                                   'registerMenuItem'),
+                guile.pyobject (action),
+                guile.pyobject (enabled),
+                guile.pyobject (data),
+                guile.pyobject (windows),
+                guile.pyobject (shortcut),
+                guile.pyobject (menu_path))
 
 IF not HAVE_GUI:
-  def registerMenuItem (menu_function not None,
-                        enable_function,
-                        data,
-                        which_window not None,
-                        shortcut_string,
-                        *submenu_names):
+  def registerMenuItem (menu_function, enable_function, data,
+                        which_window, shortcut_string, *submenu_names):
+    assert menu_function is not None
+    assert which_window is not None
     pass
 
 #--------------------------------------------------------------------------
