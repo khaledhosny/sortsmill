@@ -21,17 +21,6 @@ AC_DEFINE_UNQUOTED([BACK_LAYER_MAX],[${BACK_LAYER_MAX}],
          (this includes the default foreground and background layers)
          -- this does not limit type3 fonts.])
 
-test x"${FONTFORGE_CONFIG_APPLE_ONLY_TTF}" = x && FONTFORGE_CONFIG_APPLE_ONLY_TTF=0
-AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_APPLE_ONLY_TTF],
-        [${FONTFORGE_CONFIG_APPLE_ONLY_TTF}],
-        [Apple suggests using a sfnt version of 'true' for fonts
-         designed for use only on a mac (windows refuses such
-         fonts). I generally prefer to have a font work everywhere, so
-         normally ff produces fonts with version 1.0. Set this to 1 if you
-         want Apple only fonts (produced when Apple mode is set and
-         Opentype mode is unset in the Generate Fonts-Options
-         dialog).])
-
 test x"${FONTFORGE_CONFIG_APPLE_UNICODE_NAMES}" = x && FONTFORGE_CONFIG_APPLE_UNICODE_NAMES=0
 AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_APPLE_UNICODE_NAMES],
         [${FONTFORGE_CONFIG_APPLE_UNICODE_NAMES}],
