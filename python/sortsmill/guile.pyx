@@ -36,6 +36,16 @@ cdef SCM scm_from_string_object (object string):
   cdef SCM scm_string = scm.scm_from_utf8_string (s)
   return scm_string
 
+cdef SCM scm_pyobject_from_object (object obj):
+  return scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                               "pointer->pyobject"),
+                         scm.scm_from_pointer (<PyObject *> obj, NULL))
+
+cdef SCM scm_pyobject_from_borrowed_object (object obj):
+  return scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                               "borrowed-pointer->pyobject"),
+                         scm.scm_from_pointer (<PyObject *> obj, NULL))
+
 #--------------------------------------------------------------------------
 
 def init_guile ():
@@ -91,10 +101,20 @@ def guile_string (string not None):
   return pyguile (<uintptr_t> scm_string)
 
 def pyobject (obj):
-  cdef SCM result = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                          "borrowed-pointer->pyobject"),
-                                    scm.scm_from_pointer (<PyObject *> obj, NULL))
-  return pyguile (<uintptr_t> result)
+  cdef SCM pyobj = scm_pyobject_from_borrowed_object (obj)
+  return pyguile (<uintptr_t> pyobj)
+
+def bool_to_pyguile (v):
+  assert isinstance (v, bool)
+  cdef SCM b = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                     "pybool->boolean"),
+                               scm_pyobject_from_object (v))
+  return pyguile (<uintptr_t> b)
+
+def pyguile_to_bool (pyg_obj):
+  assert isinstance (pyg_obj, pyguile)
+  cdef bint b = scm.scm_is_true (scm.scm_from_pyguile_object (pyg_obj))
+  return b
 
 def public_ref (module_name not None, name not None):
   assert isinstance (module_name, unicode) or isinstance (module_name, bytes)

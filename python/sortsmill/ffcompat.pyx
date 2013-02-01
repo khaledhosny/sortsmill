@@ -33,16 +33,6 @@ include 'sortsmill/cython/config.pxi'
 cdef extern from "config.h":
   pass
 
-cdef extern from "stdbool.h":
-  pass
-from libcpp cimport bool
-
-cdef extern from "fontforge.h":
-  bool get_no_windowing_ui ()
-  void set_no_windowing_ui (bool)
-  bool get_running_script ()
-  void set_running_script (bool)
-
 import warnings
 import traceback
 from . import (guile, notices)
@@ -114,16 +104,34 @@ from sortsmill.legacy.fontforge import (
 
 #--------------------------------------------------------------------------
 
-def __windowing_ui (bool setting):
-  cdef bool old_setting = not get_no_windowing_ui ()
+def __get_no_windowing_ui ():
+  guile.pyguile_to_bool (guile.call (guile.public_ref ('sortsmill ffcompat',
+                                                       'no_windowing_ui-ref')))
+
+def __set_no_windowing_ui (setting):
+  assert isinstance (setting, bool)
+  guile.call (guile.public_ref ('sortsmill ffcompat', 'no_windowing_ui-set!'),
+              guile.bool_to_pyguile (setting))
+
+def __get_running_script ():
+  guile.pyguile_to_bool (guile.call (guile.public_ref ('sortsmill ffcompat',
+                                                       'running_script-ref')))
+
+def __set_running_script (setting):
+  assert isinstance (setting, bool)
+  guile.call (guile.public_ref ('sortsmill ffcompat', 'running_script-set!'),
+              guile.bool_to_pyguile (setting))
+
+def __windowing_ui (setting):
+  old_setting = not __get_no_windowing_ui ()
   if setting is not None:
-    set_no_windowing_ui (not setting)
+    __set_no_windowing_ui (not setting)
   return old_setting
 
-def __running_script (bool setting):
-  cdef bool old_setting = get_running_script ()
+def __running_script (setting):
+  old_setting = __get_running_script ()
   if setting is not None:
-    set_running_script (setting)
+    __set_running_script (setting)
   return old_setting
 
 #--------------------------------------------------------------------------
@@ -148,7 +156,7 @@ def loadPluginDir (dirname):
                  DeprecationWarning)
 
 def hasUserInterface ():
-  return not get_no_windowing_ui ()
+  return not __get_no_windowing_ui ()
 
 def hasSpiro ():
   return True

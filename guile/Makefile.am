@@ -61,14 +61,14 @@ DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/gsl.scm	\
 	sortsmill/polyspline.scm sortsmill/brentroot.scm	\
 	sortsmill/sfd-to-sxml.scm sortsmill/views.scm		\
 	sortsmill/api-syntax.scm sortsmill/notices.scm		\
-	sortsmill/strings.scm
+	sortsmill/strings.scm sortsmill/ffcompat.scm
 #sortsmill/precompute.scm
 GO_FILES += sortsmill/alloc.go sortsmill/gsl.go		\
 	sortsmill/iconv.go sortsmill/linalg.go			\
 	sortsmill/polyspline.go sortsmill/brentroot.go	\
 	sortsmill/sfd-to-sxml.go sortsmill/views.go		\
 	sortsmill/api-syntax.go sortsmill/notices.go	\
-	sortsmill/strings.go
+	sortsmill/strings.go sortsmill/ffcompat.go
 
 DIST_SCM_IN_FILES += sortsmill/i18n.scm.in						\
 	sortsmill/machine.scm.in sortsmill/math-constants.scm.in	\
