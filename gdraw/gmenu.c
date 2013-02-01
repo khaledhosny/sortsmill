@@ -222,7 +222,22 @@ typedef struct gmenu
 } GMenu;
 
 static void
-_shorttext (int shortcut, int short_mask, uint32_t *buf)
+translate_shortcut (int i, char *modifier)
+{
+  char buffer[32];
+  char *temp;
+
+  sprintf (buffer, "Flag0x%02x", 1 << i);
+  temp = dgettext (GMenuGetShortcutDomain (), buffer);
+
+  if (strcmp (temp, buffer) != 0)
+    modifier = temp;
+  else
+    modifier = dgettext (GMenuGetShortcutDomain (), modifier);
+}
+
+static void
+shorttext (GMenuItem *gi, uint32_t *buf)
 {
   uint32_t *pt = buf;
   static int initted = false;
@@ -254,17 +269,27 @@ _shorttext (int shortcut, int short_mask, uint32_t *buf)
 
   if (!initted)
     {
-      char *temp;
       for (i = 0; i < 8; ++i)
         {
-          sprintf (buffer, "Flag0x%02x", 1 << i);
-          temp = dgettext (GMenuGetShortcutDomain (), buffer);
-          if (strcmp (temp, buffer) != 0)
-            mods[i].modifier = temp;
+          if (mac_menu_icons)
+            {
+              if (mods[i].mask == ksm_cmdmacosx)
+                mods[i].modifier = "⌘";
+              else if (mods[i].mask == ksm_control)
+                mods[i].modifier = "⌃";
+              else if (mods[i].mask == ksm_meta)
+                mods[i].modifier = "⎇";
+              else if (mods[i].mask == ksm_shift)
+                mods[i].modifier = "⇧";
+              else
+                translate_shortcut (i, mods[i].modifier);
+            }
           else
-            mods[i].modifier =
-              dgettext (GMenuGetShortcutDomain (), mods[i].modifier);
+            {
+              translate_shortcut (i, mods[i].modifier);
+            }
         }
+
       /* It used to be that the Command key was available to X on the mac */
       /*  but no longer. So we used to use it, but we can't now */
       /* It's sort of available. X11->Preferences->Input->Enable Keyboard shortcuts under X11 needs to be OFF */
@@ -276,7 +301,7 @@ _shorttext (int shortcut, int short_mask, uint32_t *buf)
           kb_mac ? "Opt+" : keyboard == kb_ppc ? "Cmd+" : "Meta+";
     }
 
-  if (shortcut == 0)
+  if (gi->shortcut_char == 0)
     {
       *pt = '\0';
       return;
@@ -284,126 +309,23 @@ _shorttext (int shortcut, int short_mask, uint32_t *buf)
 
   for (i = 7; i >= 0; --i)
     {
-      if (short_mask & (1 << i))
+      if (gi->short_mask & (1 << i))
         {
           u32_strcpy (pt, x_gc_u8_to_u32 (mods[i].modifier));
           pt += u32_strlen (pt);
         }
     }
 
-  if (shortcut >= 0xff00 && GDrawKeysyms[shortcut - 0xff00])
+  if (gi->shortcut_char >= 0xff00 && GDrawKeysyms[gi->shortcut_char - 0xff00])
     {
-      u8_strcpy (buffer, x_gc_u32_to_u8 (GDrawKeysyms[shortcut - 0xff00]));
+      u8_strcpy (buffer, x_gc_u32_to_u8 (GDrawKeysyms[gi->shortcut_char - 0xff00]));
       utf82u_strcpy (pt, dgettext (GMenuGetShortcutDomain (), buffer));
     }
   else
     {
-      *pt++ = islower (shortcut) ? toupper (shortcut) : shortcut;
+      *pt++ = islower (gi->shortcut_char) ? toupper (gi->shortcut_char) : gi->shortcut_char;
       *pt = '\0';
     }
-}
-
-static void
-shorttext (GMenuItem *gi, uint32_t *buf)
-{
-  _shorttext (gi->shortcut_char, gi->short_mask, buf);
-}
-
-static int
-GMenuDrawMacIcons (struct gmenu *m, Color fg, int ybase, int x, int mask)
-{
-  int h = 3 * (m->as / 3);
-  int seg = h / 3;
-
-  if (mask & ksm_cmdmacosx)
-    {
-      GDrawDrawLine (m->w, x, ybase - 1, x, ybase - (seg - 1), fg);
-      GDrawDrawLine (m->w, x, ybase - (2 * seg), x, ybase - (h - 2), fg);
-      GDrawDrawLine (m->w, x + h - 1, ybase - 1, x + h - 1, ybase - (seg - 1),
-                     fg);
-      GDrawDrawLine (m->w, x + h - 1, ybase - (2 * seg), x + h - 1,
-                     ybase - (h - 2), fg);
-      GDrawDrawLine (m->w, x + 1, ybase, x + seg - 1, ybase, fg);
-      GDrawDrawLine (m->w, x + 2 * seg, ybase, x + h - 2, ybase, fg);
-      GDrawDrawLine (m->w, x + 1, ybase - (h - 1), x + seg - 1,
-                     ybase - (h - 1), fg);
-      GDrawDrawLine (m->w, x + 2 * seg, ybase - (h - 1), x + h - 2,
-                     ybase - (h - 1), fg);
-
-      GDrawDrawLine (m->w, x + seg, ybase - 1, x + seg, ybase - (h - 2), fg);
-      GDrawDrawLine (m->w, x + 2 * seg - 1, ybase - 1, x + 2 * seg - 1,
-                     ybase - (h - 2), fg);
-      GDrawDrawLine (m->w, x + 1, ybase - seg, x + h - 2, ybase - seg, fg);
-      GDrawDrawLine (m->w, x + 1, ybase - (2 * seg - 1), x + h - 2,
-                     ybase - (2 * seg - 1), fg);
-      x += h + seg - 1;
-    }
-  if (mask & ksm_control)
-    {
-      int half = h / 2;
-      int top = h - 1, midy = top - half;
-      GPoint pts[3];
-      GDrawSetLineWidth (m->w, seg - 1);
-      pts[0].x = x;
-      pts[0].y = ybase - midy;
-      pts[1].x = x + half;
-      pts[1].y = ybase - top;
-      pts[2].x = x + 2 * half;
-      pts[2].y = ybase - midy;
-      GDrawDrawPoly (m->w, pts, 3, fg);
-      GDrawSetLineWidth (m->w, 0);
-      x += h + seg - 1;
-    }
-  if (mask & ksm_meta)
-    {
-      int off = (seg - 1) / 2;
-      GDrawSetLineWidth (m->w, seg - 1);
-      GDrawDrawLine (m->w, x, ybase - off, x + seg + 1, ybase - off, fg);
-      GDrawDrawLine (m->w, x + seg + 1, ybase - off, x + 2 * seg + 1,
-                     ybase - (h - off - 1), fg);
-      GDrawDrawLine (m->w, x + 2 * seg + 1, ybase - (h - off - 1),
-                     x + 4 * seg - 1, ybase - (h - off - 1), fg);
-      GDrawDrawLine (m->w, x + 2 * seg + 1, ybase - off, x + 4 * seg - 1,
-                     ybase - off, fg);
-      GDrawSetLineWidth (m->w, 0);
-      x += h + 2 * seg - 1;
-    }
-  if (mask & ksm_shift)
-    {
-      int half = h / 2;
-      int top = h - 1, midy = top - half;
-      GDrawDrawLine (m->w, x, ybase - midy, x + half, ybase - top, fg);
-      GDrawDrawLine (m->w, x + 2 * half, ybase - midy, x + half, ybase - top,
-                     fg);
-      GDrawDrawLine (m->w, x, ybase - midy, x + seg - 1, ybase - midy, fg);
-      GDrawDrawLine (m->w, x + 2 * half, ybase - midy,
-                     x + 2 * half - (seg - 1), ybase - midy, fg);
-      GDrawDrawLine (m->w, x + seg - 1, ybase - midy, x + seg - 1, ybase, fg);
-      GDrawDrawLine (m->w, x + 2 * half - (seg - 1), ybase - midy,
-                     x + 2 * half - (seg - 1), ybase, fg);
-      GDrawDrawLine (m->w, x + seg - 1, ybase, x + 2 * half - (seg - 1),
-                     ybase, fg);
-      x += h + seg - 1;
-    }
-  return (x);
-}
-
-static int
-GMenuMacIconsWidth (struct gmenu *m, int mask)
-{
-  int h = 3 * (m->as / 3);
-  int seg = h / 3;
-  int x = 0;
-
-  if (mask & ksm_cmdmacosx)
-    x += h + seg - 1;
-  if (mask & ksm_shift)
-    x += h + seg - 1;
-  if (mask & ksm_control)
-    x += h + seg - 1;
-  if (mask & ksm_meta)
-    x += h + 2 * seg - 1;
-  return x;
 }
 
 static void
@@ -506,16 +428,6 @@ GMenuDrawMenuLine (struct gmenu *m, GMenuItem *mi, int y, GWindow pixmap)
 
   if (mi->sub != NULL)
     GMenuDrawArrow (m, fg, ybase);
-  else if (mi->shortcut_char != 0 && (mi->short_mask & 0xffe0) == 0
-           && mac_menu_icons)
-    {
-      _shorttext (mi->shortcut_char, 0, shortbuf);
-      width = GDrawGetTextWidth (pixmap, shortbuf, -1)
-        + GMenuMacIconsWidth (m, mi->short_mask);
-      int x = GMenuDrawMacIcons (m, fg, ybase, m->rightedge - width,
-                                 mi->short_mask);
-      GDrawDrawText (pixmap, x, ybase, shortbuf, -1, fg);
-    }
   else if (mi->shortcut_char != 0)
     {
       shorttext (mi, shortbuf);
@@ -523,7 +435,9 @@ GMenuDrawMenuLine (struct gmenu *m, GMenuItem *mi, int y, GWindow pixmap)
       width = GDrawGetTextWidth (pixmap, shortbuf, -1);
       GDrawDrawText (pixmap, m->rightedge - width, ybase, shortbuf, -1, fg);
     }
+
   GDrawPopClip (pixmap, &old);
+
   return (y + h);
 }
 
@@ -1333,25 +1247,19 @@ _GMenu_Create (GWindow owner, GMenuItem *mi, GPoint *where,
       if (mi[i].ti.checkable)
         m->hasticks = true;
       temp = GTextInfoGetWidth (m->w, &mi[i].ti, m->font);
+
       if (temp > width)
         width = temp;
-      if (mi[i].shortcut_char != 0 && (mi[i].short_mask & 0xffe0) == 0
-          && mac_menu_icons)
-        {
-          _shorttext (mi[i].shortcut_char, 0, buffer);
-          temp =
-            GDrawGetTextWidth (m->w, buffer, -1) +
-            GMenuMacIconsWidth (m, mi[i].short_mask);
-        }
-      else
-        {
-          shorttext (&mi[i], buffer);
-          temp = GDrawGetTextWidth (m->w, buffer, -1);
-        }
+
+      shorttext (&mi[i], buffer);
+      temp = GDrawGetTextWidth (m->w, buffer, -1);
+
       if (temp > keywidth)
         keywidth = temp;
+
       if (mi[i].sub != NULL && 3 * m->as > keywidth)
         keywidth = 3 * m->as;
+
       temp = GTextInfoGetHeight (m->w, &mi[i].ti, m->font);
       if (temp > lh)
         {
