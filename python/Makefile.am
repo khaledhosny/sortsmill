@@ -62,13 +62,14 @@ endif HAVE_PYTHON_COMPATIBILITY
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py ffContrib/allow_core.py
 
-nobase_nodist_python_PYTHON = sortsmill/__init__.py				\
-	sortsmill/legacy/__init__.py sortsmill/internal/__init__.py
+nobase_nodist_python_PYTHON = sortsmill/__init__.py	\
+	sortsmill/legacy/__init__.py
 #sortsmill/fontforge_compat.py
 if HAVE_GUI
 nobase_nodist_python_PYTHON += sortsmill/usermenu.py
 endif HAVE_GUI
 
+lib_LTLIBRARIES =
 nobase_pyexec_LTLIBRARIES =
 
 nobase_pyexec_LTLIBRARIES += sortsmill/ffcompat.la
@@ -127,16 +128,16 @@ nobase_pyexec_LTLIBRARIES += sortsmill/pyguile.la
 sortsmill_pyguile_la_SOURCES = sortsmill/pyguile.c
 sortsmill_pyguile_la_LIBADD = $(AUXLIBADD)
 
-nobase_pyexec_LTLIBRARIES += sortsmill/internal/__guile_support.la
-sortsmill_internal___guile_support_la_SOURCES =	\
-	sortsmill/internal/__guile_support.c
-sortsmill_internal___guile_support_la_LIBADD = $(AUXLIBADD)
+lib_LTLIBRARIES += libguile-sortsmill_cython.la
+libguile_sortsmill_cython_la_SOURCES = libguile_sortsmill_cython.c
+libguile_sortsmill_cython_la_LDFLAGS = -prefer-pic -module -shared
+libguile_sortsmill_cython_la_LIBADD = $(AUXLIBADD)
 
-PYX_FILES = sortsmill/views.pyx sortsmill/ffcompat.pyx					\
-	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
-	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
-	sortsmill/brentroot.pyx sortsmill/pyguile.pyx						\
-	sortsmill/internal/__guile_support.pyx
+PYX_FILES = libguile_sortsmill_cython.pyx sortsmill/views.pyx			\
+	sortsmill/ffcompat.pyx sortsmill/psMat.pyx sortsmill/pkg_info.pyx	\
+	sortsmill/notices.pyx sortsmill/guile.pyx sortsmill/linalg.pyx		\
+	sortsmill/polyspline.pyx sortsmill/brentroot.pyx					\
+	sortsmill/pyguile.pyx
 
 NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
 
@@ -171,13 +172,12 @@ $(NODIST_PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 
 EXTRA_DIST += $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
 
-MOSTLYCLEANFILES = sortsmill/fontforge_api.pyx							\
+MOSTLYCLEANFILES = libguile_sortsmill_cython.c							\
+	libguile_sortsmill_cython.h sortsmill/fontforge_api.pyx				\
 	sortsmill/fontforge_api.c sortsmill/views.c sortsmill/ffcompat.c	\
 	sortsmill/psMat.c sortsmill/pkg_info.c sortsmill/notices.c			\
 	sortsmill/guile.c sortsmill/linalg.c sortsmill/polyspline.c			\
-	sortsmill/brentroot.c sortsmill/pyguile.c							\
-	sortsmill/internal/__guile_support.c								\
-	sortsmill/internal/__guile_support.h
+	sortsmill/brentroot.c sortsmill/pyguile.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -189,10 +189,6 @@ sortsmill/legacy/%.so: sortsmill/legacy/%.la
 	-rm -f $@
 	cp sortsmill/legacy/$(LT_OBJDIR)$*.so $@
 
-sortsmill/internal/%.so: sortsmill/internal/%.la
-	-rm -f $@
-	cp sortsmill/internal/$(LT_OBJDIR)$*.so $@
-
 sortsmill/%.so: sortsmill/%.la
 	-rm -f $@
 	cp sortsmill/$(LT_OBJDIR)$*.so $@
@@ -203,7 +199,7 @@ all-local: sortsmill/psMat.so sortsmill/ffcompat.so					\
 	sortsmill/pkg_info.so sortsmill/notices.so sortsmill/guile.so	\
 	sortsmill/linalg.so sortsmill/polyspline.so						\
 	sortsmill/brentroot.so sortsmill/legacy/fontforge.so			\
-	sortsmill/pyguile.so sortsmill/internal/__guile_support.so
+	sortsmill/pyguile.so
 
 check-local: all-local
 
@@ -225,4 +221,3 @@ mostlyclean-local:
 	done
 	-rm -f $(builddir)/sortsmill/*.so
 	-rm -f $(builddir)/sortsmill/legacy/*.so
-	-rm -f $(builddir)/sortsmill/internal/*.so

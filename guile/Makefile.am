@@ -81,10 +81,12 @@ GO_FILES += sortsmill/i18n.go sortsmill/machine.go		\
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
 GO_FILES += sortsmill/fontforge-api.go
 
+sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
+sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
 sortsmill/views.go: sortsmill/fontforge-api.go
 sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
 sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/usermenu.go
 
 if HAVE_GUI
 
@@ -156,11 +158,6 @@ endif HAVE_PURE_API
 if HAVE_PYTHON_API
 lib_LTLIBRARIES += libguile-sortsmill_python.la
 libguile_sortsmill_python_la_SOURCES = guile_python.c
-# FIXME: Preferably the location of __guile_support should not have to
-# be hard-coded. Maybe we could simply move it to $(libdir), since it
-# doubles as both a Python and a Guile extension.
-libguile_sortsmill_python_la_CPPFLAGS = $(AM_CPPFLAGS)						\
-	'-DGUILE_SUPPORT_DLL="$(pyexecdir)/sortsmill/internal/__guile_support"'
 libguile_sortsmill_python_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PYTHON_LIBS)
 libguile_sortsmill_python_la_LIBADD =				\

@@ -17,28 +17,26 @@
 
 # |#
 
-'''
-pass;from sortsmill import guile
-pass;guile.guile_eval_string ("""
-
-(import (sortsmill usermenu)
-        (sortsmill python))
-
-(in-python-module "sortsmill.usermenu"
-
-  (pydefun "register_fontforge_menu_entry"
-    (case-lambda
-      [(window menu_path action enabled shortcut)
-       (register-python-menu-entry
-        window menu_path action enabled shortcut)]
-      [(window menu_path action enabled)
-       (register-python-menu-entry
-        window menu_path action enabled (py-none))]
-      [(window menu_path action)
-       (register-python-menu-entry
-        window menu_path action (py-none) (py-none))]))
-
-  ) ;; end of in-python-module.
-
-;;""")
-'''
+####pass;from sortsmill import guile
+####pass;guile.guile_eval_string ("""
+####
+####(import (sortsmill usermenu)
+####        (sortsmill python))
+####
+####(in-python-module "sortsmill.usermenu"
+####
+####  (pydefun "register_fontforge_menu_entry"
+####    (case-lambda
+####      [(window menu_path action enabled shortcut)
+####       (register-python-menu-entry
+####        window menu_path action enabled shortcut)]
+####      [(window menu_path action enabled)
+####       (register-python-menu-entry
+####        window menu_path action enabled (py-none))]
+####      [(window menu_path action)
+####       (register-python-menu-entry
+####        window menu_path action (py-none) (py-none))]))
+####
+####  ) ;; end of in-python-module.
+####
+####;;""")

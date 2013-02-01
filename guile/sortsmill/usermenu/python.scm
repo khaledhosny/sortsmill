@@ -26,15 +26,44 @@
 
   (import (sortsmill python)
           (sortsmill usermenu)
+          (rename (sortsmill usermenu)
+                  (action-entry action-entry^))
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
           (sortsmill machine)
           (sortsmill views)
           (rnrs)
-          (only (guile)
-                compose
-                dynamic-link dynamic-func dynamic-pointer)
+          (except (guile) error)
           (system foreign))
+
+  (export! action-entry)
+
+  (define* (action-entry #:key text action
+                         (id #f)
+                         (enabled (lambda (view) #t))
+                         (shortcut #f)
+                         (image #f)
+                         (foreground-color menu-color-default)
+                         (background-color menu-color-default)
+                         (disabled? #f)
+                         (checkable? #f)
+                         (checked? #f)
+                         (image-precedes-text? #t))
+    (let ([action^ (cond [(pycallable? action)
+                          (python-menu-entry-callable->procedure action)]
+                         [else action])]
+          [enabled^ (cond [(pycallable? enabled)
+                           (python-menu-entry-callable->procedure enabled)]
+                          [else enabled])])
+      (action-entry^ #:text text #:id id
+                     #:action action^ #:enabled enabled^
+                     #:shortcut shortcut #:image image
+                     #:foreground-color foreground-color
+                     #:background-color background-color
+                     #:disabled? disabled?
+                     #:checkable? checkable?
+                     #:checked? checked?
+                     #:image-precedes-text? image-precedes-text?)))
 
   (define view->python-view
     (lambda (v)

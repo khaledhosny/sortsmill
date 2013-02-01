@@ -188,8 +188,7 @@
          py-decref ;; Should not be needed very often.
          )
 
- (define python-dll
-   (dynamic-link "libguile-sortsmill_python"))
+ (define python-dll (dynamic-link "libguile-sortsmill_python"))
 
  ;; These variables will be redefined by the dynamic-call.
  (define py-failure *unspecified*)

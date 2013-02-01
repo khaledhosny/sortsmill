@@ -30,10 +30,14 @@
 
 void init_guile_sortsmill_python (void);
 
+static const char *guile_support_dll_name = "libguile-sortsmill_cython";
+
 #if PY_MAJOR_VERSION < 3
-static const char *guile_support_init_function = "init__guile_support";
+static const char *guile_support_init_function =
+  "initlibguile_sortsmill_cython";
 #else
-static const char *guile_support_init_function = "PyInit___guile_support";
+static const char *guile_support_init_function =
+  "PyInit_libguile_sortsmill_cython";
 #endif
 
 //-------------------------------------------------------------------------
@@ -478,13 +482,11 @@ init_guile_sortsmill_python (void)
   if (!Py_IsInitialized ())
     Py_Initialize ();
 
-  PyRun_SimpleString ("import sortsmill.internal.__guile_support");
-
-  // FIXME: Preferably GUILE_SUPPORT_DLL should not be hard-coded, or
-  // else should be in $(libdir).
-  SCM guile_support_dll = scm_dynamic_link (scm_from_utf8_string (GUILE_SUPPORT_DLL));
-  SCM guile_support_init = scm_dynamic_func (scm_from_utf8_string (guile_support_init_function),
-					     guile_support_dll);
+  SCM guile_support_dll =
+    scm_dynamic_link (scm_from_utf8_string (guile_support_dll_name));
+  SCM guile_support_init =
+    scm_dynamic_func (scm_from_utf8_string (guile_support_init_function),
+                      guile_support_dll);
   scm_dynamic_call (guile_support_init, guile_support_dll);
   scm_c_define ("guile-support-dll", guile_support_dll);
 

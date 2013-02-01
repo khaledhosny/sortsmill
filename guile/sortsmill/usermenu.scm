@@ -25,6 +25,7 @@
           activate-glyph-view-tools
           activate-font-view-tools
 
+          menu-color-default
           action-entry
           separator-line
           submenu-entry
@@ -41,9 +42,8 @@
           (sortsmill machine)
           (sortsmill notices)
           (sortsmill views)
-          (sortsmill pkg-info)
           (rnrs)
-          (only (guile) @ *unspecified* define* load-extension
+          (only (guile) *unspecified* define* load-extension
                 dynamic-func dynamic-link dynamic-pointer
                 negate compose use-modules)
           (except (srfi :1) map)
@@ -56,13 +56,6 @@
                 pointer? pointer-address string->pointer
                 procedure->pointer pointer->procedure
                 pointer->bytevector))
-
-  (define (pycallable? . args) #f)
-  (define (python-menu-entry-callable->procedure . args) #f)
-  (when pkg-info:have-python-api?
-    (set! pycallable? (@ (sortsmill python) pycallable?))
-    (set! python-menu-entry-callable->procedure
-          (@ (sortsmill usermenu python) python-menu-entry-callable->procedure)))
 
   ;;-------------------------------------------------------------------------
   ;;
@@ -217,7 +210,7 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define color-default #xfffffffe)
+  (define menu-color-default #xfffffffe)
 
   (define glyph-view-tools #f)
   (define font-view-tools #f)
@@ -297,8 +290,8 @@
   (define (set-menu-item-defaults! menu-item)
     (bytevector-fill! (cdr menu-item) 0)
     (let ((ti (GMenuItem:ti-ref menu-item)))
-      (GTextInfo:fg-set! ti color-default)
-      (GTextInfo:bg-set! ti color-default)
+      (GTextInfo:fg-set! ti menu-color-default)
+      (GTextInfo:bg-set! ti menu-color-default)
       (GTextInfo:text-is-1byte-set! ti #t)
       (GTextInfo:text-has-mnemonic-set! ti #t)
       (GTextInfo:image-precedes-set! ti #t)))
@@ -373,32 +366,23 @@
                          (enabled (lambda (view) #t))
                          (shortcut #f)
                          (image #f)
-                         (foreground-color color-default)
-                         (background-color color-default)
+                         (foreground-color menu-color-default)
+                         (background-color menu-color-default)
                          (disabled? #f)
                          (checkable? #f)
                          (checked? #f)
                          (image-precedes-text? #t))
-    (let ([action^ (cond [(pycallable? action)
-                          (python-menu-entry-callable->procedure action)]
-                         [else action])]
-          [enabled^ (cond [(pycallable? enabled)
-                           (python-menu-entry-callable->procedure enabled)]
-                          [else enabled])])
-      ;;
-      ;; FIXME: Check types of input parameters.
-      ;;
-      (append `[(id        ,id)
-                (text      ,text)
-                (action    ,action^)
-                (enabled   ,enabled^)
-                (foreground-color ,foreground-color)
-                (background-color ,background-color)
-                (disabled  ,disabled?)
-                (checkable ,checkable?)
-                (checked   ,checked?)
-                (image-precedes-text ,image-precedes-text?)]
-              [if image `((image ,image)) '()]) ))
+    (append `[(id        ,id)
+              (text      ,text)
+              (action    ,action)
+              (enabled   ,enabled)
+              (foreground-color ,foreground-color)
+              (background-color ,background-color)
+              (disabled  ,disabled?)
+              (checkable ,checkable?)
+              (checked   ,checked?)
+              (image-precedes-text ,image-precedes-text?)]
+            [if image `((image ,image)) '()]) )
 
   (define* (separator-line #:key (id #f))
     `[(id ,id)
@@ -408,8 +392,8 @@
                           (id #f)
                           (moveto moveto-proc)
                           (image #f)
-                          (foreground-color color-default)
-                          (background-color color-default)
+                          (foreground-color menu-color-default)
+                          (background-color menu-color-default)
                           (disabled? #f)
                           (image-precedes-text? #t))
     ;;
