@@ -2983,7 +2983,7 @@ compareg___ (struct font_diff *fd)
         {
           for (sub = otl->subtables; sub != NULL; sub = sub->next)
             {
-              if (fd->s2match1[sub->subtable_offset] == NULL)
+              if (fd->s2match1[sub->subtable_offset] != NULL)
                 {
                   fd->cur_sub1 = sub;
                   fd->cur_sub2 = fd->s2match1[sub->subtable_offset];
