@@ -1,5 +1,5 @@
 # Copyright (C) 2000-2012 by George Williams
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -192,5 +192,19 @@ endif !HAVE_GUI
 libsortsmill_fontforgeexe_la_LIBADD = libsortsmill_fontforge.la		\
 	$(LTDLDEPS) $(LIBADD) $(GUILIBADD) $(top_builddir)/lib/libgnu.la
 libsortsmill_fontforgeexe_la_LDFLAGS = $(call ldflags)
+
+#--------------------------------------------------------------------------
+
+if HAVE_GUI
+lib_LTLIBRARIES += libguile-sortsmill_fontforgeexe.la
+libguile_sortsmill_fontforgeexe_la_SOURCES =	\
+	libguile_sortsmill_fontforgeexe.c
+libguile_sortsmill_fontforgeexe_la_LIBADD =					\
+	libsortsmill_fontforgeexe.la libsortsmill_fontforge.la	\
+	$(top_builddir)/gdraw/libsortsmill_gdraw.la				\
+	$(top_builddir)/gutils/libsortsmill_gutils.la			\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
+	$(top_builddir)/lib/libgnu.la
+endif HAVE_GUI
 
 #--------------------------------------------------------------------------

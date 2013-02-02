@@ -428,9 +428,6 @@
 ;;;;; FIXME: Get rid of these or alter them.
 ;;;;;
 
-  (load-extension "libguile-sortsmill_fontforgeexe"
-                  "init_guile_sortsmill_usermenu")
-
   (define* (register-fontforge-menu-entry #:key window menu-path action
                                           (enabled (lambda (view) #t))
                                           (shortcut #f))

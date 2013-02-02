@@ -203,17 +203,17 @@ libguile_sortsmill_fontforge_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmill_aux.la		\
 	$(top_builddir)/lib/libgnu.la
 
-if HAVE_GUI
-lib_LTLIBRARIES += libguile-sortsmill_fontforgeexe.la
-libguile_sortsmill_fontforgeexe_la_SOURCES = guile_usermenu.c
-libguile_sortsmill_fontforgeexe_la_LIBADD =					\
-	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
-	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
-	$(top_builddir)/gdraw/libsortsmill_gdraw.la				\
-	$(top_builddir)/gutils/libsortsmill_gutils.la			\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
-	$(top_builddir)/lib/libgnu.la
-endif HAVE_GUI
+#if HAVE_GUI
+#lib_LTLIBRARIES += libguile-sortsmill_fontforgeexe.la
+#libguile_sortsmill_fontforgeexe_la_SOURCES =
+#libguile_sortsmill_fontforgeexe_la_LIBADD =					\
+#	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
+#	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
+#	$(top_builddir)/gdraw/libsortsmill_gdraw.la				\
+#	$(top_builddir)/gutils/libsortsmill_gutils.la			\
+#	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
+#	$(top_builddir)/lib/libgnu.la
+#endif HAVE_GUI
 
 #--------------------------------------------------------------------------
 
