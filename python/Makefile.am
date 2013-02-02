@@ -61,6 +61,10 @@ endif HAVE_PYTHON_COMPATIBILITY
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py ffContrib/allow_core.py
+	sortsmill/ffcompat.py
+if HAVE_GUI
+nobase_dist_python_PYTHON += sortsmill/usermenu.py
+endif HAVE_GUI
 
 nobase_nodist_python_PYTHON = sortsmill/__init__.py	\
 	sortsmill/legacy/__init__.py
@@ -132,11 +136,10 @@ nobase_pyexec_LTLIBRARIES += sortsmill/pyguile.la
 sortsmill_pyguile_la_SOURCES = sortsmill/pyguile.c
 sortsmill_pyguile_la_LIBADD = $(AUXLIBADD)
 
-PYX_FILES = sortsmill/views.pyx\
-	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
-	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
-	sortsmill/brentroot.pyx sortsmill/pyguile.pyx						\
-	sortsmill/usermenu.py sortsmill/ffcompat.py
+PYX_FILES = sortsmill/views.pyx sortsmill/psMat.pyx						\
+	sortsmill/pkg_info.pyx sortsmill/notices.pyx sortsmill/guile.pyx	\
+	sortsmill/linalg.pyx sortsmill/polyspline.pyx						\
+	sortsmill/brentroot.pyx sortsmill/pyguile.pyx
 
 NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
 
