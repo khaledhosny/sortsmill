@@ -60,7 +60,7 @@ nodist_python_PYTHON = fontforge.py psMat.py
 endif HAVE_PYTHON_COMPATIBILITY
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
-	ffContrib/excepthook.py ffContrib/allow_core.py
+	ffContrib/excepthook.py ffContrib/allow_core.py	\
 	sortsmill/ffcompat.py
 if HAVE_GUI
 nobase_dist_python_PYTHON += sortsmill/usermenu.py
