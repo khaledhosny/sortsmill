@@ -36,15 +36,43 @@ lib_LTLIBRARIES =
 
 lib_LTLIBRARIES += libsortsmill_aux.la
 
-dist_libsortsmill_aux_la_SOURCES = ArabicForms.c alphabet.c				\
-	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c				\
-	combiners.h xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c			\
-	xuniconv.c xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c		\
-	rexp.c brentroot.c qbrentroot.c gmp_constants.c gmp_gc.c linalg.c	\
-	precomputed_gmp_polyspline_data.c polyspline_data.c polyspline.c	\
-	rnrs_conditions.c scm_python.c
+dist_libsortsmill_aux_la_SOURCES =
+nodist_libsortsmill_aux_la_SOURCES =
 
-nodist_libsortsmill_aux_la_SOURCES = precomputed_polyspline_data.c
+# Source files inherited from FontForge.
+dist_libsortsmill_aux_la_SOURCES += ArabicForms.c alphabet.c	\
+	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c		\
+	combiners.h
+
+# Recognition of numbers written in PostScript’s notation.
+dist_libsortsmill_aux_la_SOURCES += ps_number.c
+
+# Extensions to xalloc and Boehm GC.
+dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c xgc.c	\
+	xgc_strjoin.c
+
+# Extensions to PCRE.
+dist_libsortsmill_aux_la_SOURCES += rexp.c
+
+# Extensions to GNU MP.
+dist_libsortsmill_aux_la_SOURCES += gmp_constants.c gmp_gc.c linalg.c
+
+# Extensions to libunistring.
+dist_libsortsmill_aux_la_SOURCES += xunicase.c xuniconv.c xuninorm.c	\
+	xunistr.c xunistr_strjoin.c
+
+# Polynomial splines.
+dist_libsortsmill_aux_la_SOURCES += precomputed_gmp_polyspline_data.c	\
+	polyspline_data.c polyspline.c guile_polyspline.c
+nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
+
+# Brent’s root-finding algorithm.
+dist_libsortsmill_aux_la_SOURCES += brentroot.c qbrentroot.c	\
+	guile_brentroot.c
+
+# Miscellaneous C interface to Guile and Guile extensions.
+dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c scm_python.c	\
+	guile_gsl.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
@@ -69,8 +97,7 @@ MOSTLYCLEANFILES = precomputed_polyspline_data.c
 #--------------------------------------------------------------------------
 
 lib_LTLIBRARIES += libguile-sortsmill_aux.la
-libguile_sortsmill_aux_la_SOURCES = guile_polyspline.c	\
-	guile_brentroot.c guile_gsl.c
+libguile_sortsmill_aux_la_SOURCES = libguile_sortsmill_aux.c
 libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
 	$(MY_CFLAGS) $(MY_LIBS)
 libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la	\
