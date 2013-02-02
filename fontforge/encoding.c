@@ -1671,10 +1671,6 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
   new->texdata = cidmaster->texdata;
   new->possub = cidmaster->possub;
   cidmaster->possub = NULL;
-  new->sm = cidmaster->sm;
-  cidmaster->sm = NULL;
-  new->features = cidmaster->features;
-  cidmaster->features = NULL;
   new->macstyle = cidmaster->macstyle;
   new->origname = xstrdup_or_null (cidmaster->origname);
   new->display_size = cidmaster->display_size;

@@ -40,7 +40,7 @@
 
 extern int _GScrollBar_Width;
 
-/* This file contains routines to build a dialog showing GPOS/GSUB/morx */
+/* This file contains routines to build a dialog showing GPOS/GSUB */
 /*  tables and their contents */
 
 struct att_dlg;
@@ -48,7 +48,6 @@ struct node {
     bool open;
     bool children_checked;
     bool used;
-    bool macfeat;
     bool monospace;
     bool horizontal;
     uint16_t cnt;
@@ -655,124 +654,6 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
     }
 }
 
-static void BuildASM(struct node *node,struct att_dlg *att) {
-    ASM *sm = node->u.sub->sm;
-    int len, i, j, k, scnt = 0;
-    struct node *lines;
-    char buf[200], *space;
-    static char *type[] = { N_("Indic Reordering"), N_("Contextual Substitution"),
-	    N_("Ligatures"), N_("<undefined>"), N_("Simple Substitution"),
-	    N_("Glyph Insertion"), N_("<undefined>"),  N_("<undefined>"), N_("<undefined>"),
-	    N_("<undefined>"), N_("<undefined>"), N_("<undefined>"),N_("<undefined>"),
-	    N_("<undefined>"), N_("<undefined>"), N_("<undefined>"), N_("<undefined>"),
-	    N_("Kern by State") };
-    OTLookup **used;
-
-    if ( sm->type == asm_context ) {
-	used = xmalloc(sm->class_cnt*sm->state_cnt*2*sizeof(OTLookup *));
-	for ( i=scnt=0; i<sm->class_cnt*sm->state_cnt; ++i ) {
-	    OTLookup *otl;
-	    otl = sm->state[i].u.context.mark_lookup;
-	    if ( otl!=NULL ) {
-		for ( k=0; k<scnt && used[k]!=otl; ++k );
-		if ( k==scnt ) used[scnt++] = otl;
-	    }
-	    otl = sm->state[i].u.context.cur_lookup;
-	    if ( otl!=NULL ) {
-		for ( k=0; k<scnt && used[k]!=otl; ++k );
-		if ( k==scnt ) used[scnt++] = otl;
-	    }
-	}
-    }
-
-    lines = NULL;
-    space = xmalloc( 81*sm->class_cnt+40 );
-    for ( i=0; i<2; ++i ) {
-	len = 0;
-
-	if ( i ) {
-	    lines[len].label = xstrdup_or_null(_(type[sm->type]));
-	    lines[len].parent = node;
-	}
-	++len;
-	for ( j=4; j<sm->class_cnt ; ++j ) {
-	    if ( i ) {
-		sprintf(buf, _("Class %d: "), j);
-		lines[len].label = xmalloc((strlen(buf)+strlen(sm->classes[j])+1));
-		strcpy(lines[len].label,buf);
-		strcat(lines[len].label,sm->classes[j]);
-		lines[len].parent = node;
-	    }
-	    ++len;
-	}
-	for ( j=0; j<sm->state_cnt; ++j ) {
-	    if ( i ) {
-/* TRANSLATORS: You're in a state machine, and this is describing the %4d'th state of */
-/* that machine. From the state the next state will be a list of */
-/* state-numbers which are appended to this string. */
-		sprintf(space, _("State %4d Next: "), j );
-		for ( k=0; k<sm->class_cnt; ++k )
-		    sprintf( space+strlen(space), "%5d", sm->state[j*sm->class_cnt+k].next_state );
-		lines[len].label = xstrdup_or_null(space);
-		lines[len].parent = node;
-		lines[len].monospace = true;
-	    }
-	    ++len;
-	    if ( i ) {
-		sprintf(space, _("State %4d Flags:"), j );
-		for ( k=0; k<sm->class_cnt; ++k )
-		    sprintf( space+strlen(space), " %04x", sm->state[j*sm->class_cnt+k].flags );
-		lines[len].label = xstrdup_or_null(space);
-		lines[len].parent = node;
-		lines[len].monospace = true;
-	    }
-	    ++len;
-	    if ( sm->type==asm_context ) {
-		if ( i ) {
-		    sprintf(space, _("State %4d Mark: "), j );
-		    for ( k=0; k<sm->class_cnt; ++k )
-			if ( sm->state[j*sm->class_cnt+k].u.context.mark_lookup==NULL )
-			    strcat(space,"     ");
-			else
-			    sprintf( space+strlen(space), " %.80s", sm->state[j*sm->class_cnt+k].u.context.mark_lookup->lookup_name );
-		    lines[len].label = xstrdup_or_null(space);
-		    lines[len].parent = node;
-		    lines[len].monospace = true;
-		}
-		++len;
-		if ( i ) {
-		    sprintf(space, _("State %4d Cur:  "), j );
-		    for ( k=0; k<sm->class_cnt; ++k )
-			if ( sm->state[j*sm->class_cnt+k].u.context.cur_lookup==NULL )
-			    strcat(space,"     ");
-			else
-			    sprintf( space+strlen(space), " %.80s", sm->state[j*sm->class_cnt+k].u.context.cur_lookup->lookup_name );
-		    lines[len].label = xstrdup_or_null(space);
-		    lines[len].parent = node;
-		    lines[len].monospace = true;
-		}
-		++len;
-	    }
-	}
-	for ( j=0; j<scnt; ++j ) {
-	    if ( i ) {
-		sprintf(buf, _("Nested Substitution %.80s"), used[j]->lookup_name );
-		lines[len].label = xstrdup_or_null(buf);
-		lines[len].parent = node;
-		lines[len].u.otl = used[j];
-		lines[len].build = BuildGSUBlookups;
-	    }
-	    ++len;
-	}
-	if ( i==0 ) {
-	    node->children = lines = xcalloc(len+1,sizeof(struct node));
-	    node->cnt = len;
-	}
-    }
-    free(space);
-    free(used);
-}
-
 static void BuildKern2(struct node *node,struct att_dlg *att) {
     struct lookup_subtable *sub = node->parent->u.sub;
     SplineChar *base = node->u.sc;
@@ -1003,10 +884,6 @@ return;
       case gsub_single: case gsub_multiple: case gsub_alternate: case gsub_ligature:
 	BuildPST(node,att);
 return;
-      case morx_indic: case morx_context: case morx_insert:
-      case kern_statemachine:
-	BuildASM(node,att);
-return;
     }
     IError( "Unknown lookup type in BuildDispatch");
 }
@@ -1095,7 +972,7 @@ static void BuildGSUBlang(struct node *node,struct att_dlg *att) {
 	featnodes[i].tag = featlist[i];
 	featnodes[i].parent = node;
 	featnodes[i].build = BuildGSUBfeatures;
-	featnodes[i].label = TagFullName(_sf,featnodes[i].tag,false,false);
+	featnodes[i].label = TagFullName(_sf,featnodes[i].tag,false);
     }
     free( featlist );
 
@@ -1134,7 +1011,7 @@ static void BuildGSUBscript(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( languages[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1281,7 +1158,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( languages[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Language", (char *) languages[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1562,279 +1439,6 @@ static void BuildBASE(struct node *node,struct att_dlg *att) {
     }
 }
 
-static void BuildBsLnTable(struct node *node,struct att_dlg *att) {
-    SplineFont *_sf = att->sf;
-    int def_baseline;
-    int offsets[32];
-    int16_t *baselines;
-    char buffer[300];
-    struct node *glyphs;
-    int gid,i;
-    SplineChar *sc;
-
-    baselines = PerGlyphDefBaseline(_sf,&def_baseline);
-    FigureBaseOffsets(_sf,def_baseline&0x1f,offsets);
-
-    node->children = xcalloc(3+1,sizeof(struct node));
-    node->cnt = 3;
-
-    sprintf( buffer, _("Default Baseline: '%s'"),
-	    (def_baseline&0x1f)==0 ? "romn" :
-	    (def_baseline&0x1f)==1 ? "idcn" :
-	    (def_baseline&0x1f)==2 ? "ideo" :
-	    (def_baseline&0x1f)==3 ? "hang" :
-	    (def_baseline&0x1f)==4 ? "math" : "????" );
-    node->children[0].label = xstrdup_or_null(buffer);
-    node->children[0].parent = node;
-    sprintf( buffer, _("Offsets from def. baseline:  romn: %d  idcn: %d  ideo: %d  hang: %d  math: %d"),
-	    offsets[0], offsets[1], offsets[2], offsets[3], offsets[4] );
-    node->children[1].label = xstrdup_or_null(buffer);
-    node->children[1].parent = node;
-    if ( def_baseline&0x100 ) {
-	node->children[2].label = xstrdup_or_null(_("All glyphs have the same baseline"));
-	node->children[2].parent = node;
-    } else {
-	node->children[2].label = xstrdup_or_null(_("Per glyph baseline data"));
-	node->children[2].parent = node;
-	node->children[2].children_checked = true;
-	node->children[2].children = glyphs = xcalloc(_sf->glyphcnt+1,sizeof(struct node));
-	for ( gid=i=0; gid<_sf->glyphcnt; ++gid ) if ( (sc=_sf->glyphs[gid])!=NULL ) {
-	    sprintf( buffer, "%s: %s", sc->name,
-		    (baselines[gid])==0 ? "romn" :
-		    (baselines[gid])==1 ? "idcn" :
-		    (baselines[gid])==2 ? "ideo" :
-		    (baselines[gid])==3 ? "hang" :
-		    (baselines[gid])==4 ? "math" : "????" );
-	    glyphs[i].label = xstrdup_or_null(buffer);
-	    glyphs[i++].parent = &node->children[2];
-	}
-	node->children[2].cnt = i;
-    }
-    free(baselines);
-}
-
-static void BuildOpticalBounds(struct node *node,struct att_dlg *att) {
-    SplineFont *sf, *_sf = att->sf;
-    int i, cmax, l,j, ccnt;
-    SplineChar *sc;
-    struct node *chars;
-    char buffer[200];
-    PST *left, *right;
-
-    cmax = 0;
-    l = 0;
-    do {
-	sf = _sf->subfonts==NULL ? _sf : _sf->subfonts[l];
-	if ( cmax<sf->glyphcnt ) cmax = sf->glyphcnt;
-	++l;
-    } while ( l<_sf->subfontcnt );
-
-    chars = NULL;
-    for ( j=0; j<2; ++j ) {
-	ccnt = 0;
-	for ( i=0; i<cmax; ++i ) {
-	    l = 0;
-	    sc = NULL;
-	    do {
-		sf = _sf->subfonts==NULL ? _sf : _sf->subfonts[l];
-		if ( i<sf->glyphcnt && sf->glyphs[i]!=NULL ) {
-		    sc = sf->glyphs[i];
-	    break;
-		}
-		++l;
-	    } while ( l<_sf->subfontcnt );
-	    if ( sc!=NULL && SCWorthOutputting(sc) &&
-		    haslrbounds(sc,&left,&right)) {
-		if ( chars!=NULL ) {
-		    strncpy(buffer,sc->name,70);
-		    if ( left!=NULL )
-			sprintf(buffer+strlen(buffer), _("  Left Bound=%d"),
-				left->u.pos.xoff );
-		    if ( right!=NULL )
-			sprintf(buffer+strlen(buffer), _("  Right Bound=%d"),
-				-right->u.pos.h_adv_off );
-		    chars[ccnt].parent = node;
-		    chars[ccnt].label = xstrdup_or_null(buffer);
-		}
-		++ccnt;
-	    }
-	}
-	if ( ccnt==0 )
-return;
-	if ( chars==NULL ) {
-	    node->children = chars = xcalloc(ccnt+1,sizeof(struct node));
-	    node->cnt = ccnt;
-	}
-    }
-}
-
-static void BuildProperties(struct node *node,struct att_dlg *att) {
-    SplineFont *sf, *_sf = att->sf;
-    int i, cmax, l,j,k, ccnt;
-    SplineChar *sc;
-    struct node *chars;
-    uint16_t *props;
-    char buffer[200];
-
-    cmax = 0;
-    l = 0;
-    do {
-	sf = _sf->subfonts==NULL ? _sf : _sf->subfonts[l];
-	if ( cmax<sf->glyphcnt ) cmax = sf->glyphcnt;
-	++l;
-    } while ( l<_sf->subfontcnt );
-
-    chars = NULL; props = NULL;
-    for ( j=0; j<2; ++j ) {
-	ccnt = 0;
-	for ( i=0; i<cmax; ++i ) {
-	    l = 0;
-	    sc = NULL;
-	    do {
-		sf = _sf->subfonts==NULL ? _sf : _sf->subfonts[l];
-		if ( i<sf->glyphcnt && sf->glyphs[i]!=NULL ) {
-		    sc = sf->glyphs[i];
-	    break;
-		}
-		++l;
-	    } while ( l<_sf->subfontcnt );
-	    if ( sc!=NULL ) {
-		if ( chars==NULL ) {
-		    if ( SCWorthOutputting(sc))
-			sc->ttf_glyph = ccnt++;
-		    else
-			sc->ttf_glyph = -1;
-		} else if ( sc->ttf_glyph!=-1 ) {
-		    int prop = props[sc->ttf_glyph], offset;
-		    sprintf( buffer, "%.70s  dir=%s", sc->name,
-			(prop&0x7f)==0 ? _("Strong Left to Right"):
-			(prop&0x7f)==1 ? _("Strong Right to Left"):
-			(prop&0x7f)==2 ? _("Arabic Right to Left"):
-			(prop&0x7f)==3 ? _("European Number"):
-			(prop&0x7f)==4 ? _("European Number Separator"):
-			(prop&0x7f)==5 ? _("European Number Terminator"):
-			(prop&0x7f)==6 ? _("Arabic Number"):
-			(prop&0x7f)==7 ? _("Common Number Separator"):
-			(prop&0x7f)==8 ? _("Block Separator"):
-			(prop&0x7f)==9 ? _("Segment Separator"):
-			(prop&0x7f)==10 ? _("White Space"):
-			(prop&0x7f)==11 ? _("Neutral"):
-			    _("<Unknown direction>") );
-		    if ( prop&0x8000 )
-			strcat(buffer,_("  Floating accent"));
-		    if ( prop&0x4000 )
-			strcat(buffer,_("  Hang left"));
-		    if ( prop&0x2000 )
-			strcat(buffer,_("  Hang right"));
-		    if ( prop&0x80 )
-			strcat(buffer,_("  Attach right"));
-		    if ( prop&0x1000 ) {
-			offset = (prop&0xf00)>>8;
-			if ( offset&0x8 )
-			    offset |= 0xfffffff0;
-			if ( offset>0 ) {
-			    for ( k=i+offset; k<sf->glyphcnt; ++k )
-				if ( sf->glyphs[k]!=NULL && sf->glyphs[k]->ttf_glyph==sc->ttf_glyph+offset ) {
-				    sprintf( buffer+strlen(buffer), _("  Mirror=%.30s"), sf->glyphs[k]->name );
-			    break;
-				}
-			} else {
-			    for ( k=i+offset; k>=0; --k )
-				if ( sf->glyphs[k]!=NULL && sf->glyphs[k]->ttf_glyph==sc->ttf_glyph+offset ) {
-				    sprintf( buffer+strlen(buffer), _("  Mirror=%.30s"), sf->glyphs[k]->name );
-			    break;
-				}
-			}
-		    }
-		    chars[ccnt].parent = node;
-		    chars[ccnt++].label = xstrdup_or_null(buffer);
-		}
-	    }
-	}
-	if ( chars==NULL ) {
-	    struct glyphinfo gi;
-	    memset(&gi,0,sizeof(gi)); gi.gcnt = _sf->glyphcnt;
-	    props = props_array(_sf,&gi);
-	    if ( props==NULL )
-return;
-	    node->children = chars = xcalloc(ccnt+1,sizeof(struct node));
-	}
-	node->cnt = ccnt;
-    }
-    free(props);
-}
-
-static void BuildKernTable(struct node *node,struct att_dlg *att) {
-    SplineFont *_sf = att->sf;
-    OTLookup *otl;
-    FeatureScriptLangList *fl;
-    int doit, cnt;
-    struct node *kerns = NULL;
-
-    if ( _sf->cidmaster ) _sf = _sf->cidmaster;
-
-    for ( doit=0; doit<2; ++doit ) {
-	cnt = 0;
-	for ( otl = _sf->gpos_lookups; otl!=NULL ; otl=otl->next ) {
-	    for ( fl=otl->features; fl!=NULL; fl=fl->next ) {
-		if ( (fl->featuretag==CHR('k','e','r','n') || fl->featuretag==CHR('v','k','r','n')) &&
-			scriptsHaveDefault(fl->scripts))
-	    break;
-	    }
-	    if ( otl->lookup_type == gpos_pair && fl!=NULL ) {
-		if ( doit ) {
-		    kerns[cnt].parent = node;
-		    kerns[cnt].build = BuildGSUBlookups;
-		    kerns[cnt].label = xstrdup_or_null(otl->lookup_name);
-		    kerns[cnt].u.otl = otl;
-		}
-		++cnt;
-	    }
-	}
-	if ( !doit ) {
-	    node->children = kerns = xcalloc(cnt+1,sizeof(struct node));
-	    node->cnt = cnt;
-	}
-    }
-}
-
-static void BuildMorxTable(struct node *node,struct att_dlg *att) {
-    SplineFont *_sf = att->sf;
-    OTLookup *otl;
-    FeatureScriptLangList *fl;
-    int doit, cnt;
-    struct node *lookups = NULL;
-    int feat, set;
-
-    if ( _sf->cidmaster ) _sf = _sf->cidmaster;
-
-    for ( doit=0; doit<2; ++doit ) {
-	cnt = 0;
-	for ( otl = _sf->gsub_lookups; otl!=NULL ; otl=otl->next ) {
-	    for ( fl=otl->features; fl!=NULL; fl=fl->next ) {
-		if ( fl->ismac ||
-			(OTTagToMacFeature(fl->featuretag,&feat,&set) &&
-			 scriptsHaveDefault(fl->scripts) &&
-			 (otl->lookup_type==gsub_single || otl->lookup_type==gsub_ligature)))
-		break;
-	    }
-	    if ( fl!=NULL ) {
-		if ( doit ) {
-		    lookups[cnt].parent = node;
-		    lookups[cnt].build = BuildGSUBlookups;
-		    lookups[cnt].label = xstrdup_or_null(otl->lookup_name);
-		    lookups[cnt].u.otl = otl;
-		}
-		++cnt;
-	    }
-	}
-	if ( !doit ) {
-	    node->children = lookups = xcalloc(cnt+1,sizeof(struct node));
-	    node->cnt = cnt;
-	}
-    }
-}
-
 static void BuildTable(struct node *node,struct att_dlg *att) {
     SplineFont *_sf = att->sf;
     int script_max;
@@ -1866,7 +1470,7 @@ return;
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( scripts[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1904,7 +1508,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( scripts[j].text!=NULL ) {
-	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[i].text));
+	    strcpy(buf+7, g_dpgettext2(NULL, "Script", (char *) scripts[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1921,9 +1525,6 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 static void BuildTop(struct att_dlg *att) {
     SplineFont *sf, *_sf = att->sf;
     int hasgsub=0, hasgpos=0, hasgdef=0, hasbase=0, hasjstf=0;
-    int hasmorx=0, haskern=0, hasvkern=0, haslcar=0, hasprop=0, hasopbd=0, hasbsln=0;
-    int haskc=0, hasvkc=0;
-    int feat, set;
     struct node *tables;
     PST *pst;
     SplineChar *sc;
@@ -1937,37 +1538,17 @@ static void BuildTop(struct att_dlg *att) {
 
     for ( otl=_sf->gsub_lookups; otl!=NULL; otl=otl->next ) {
 	for ( fl = otl->features; fl!=NULL ; fl=fl->next ) {
-	    if ( !fl->ismac )
-		hasgsub = true;
-	    if ( fl->ismac ||
-		    (OTTagToMacFeature(fl->featuretag,&feat,&set) &&
-		     scriptsHaveDefault(fl->scripts) &&
-		     (otl->lookup_type==gsub_single || otl->lookup_type==gsub_ligature)))
-		hasmorx = true;
+	    hasgsub = true;
 	}
     }
     for ( otl=_sf->gpos_lookups; otl!=NULL; otl=otl->next ) {
-	if ( otl->lookup_type==kern_statemachine )
-	    haskern = true;
-	else
-	    hasgpos = true;
-	if ( otl->lookup_type == gpos_single )
-	    for ( fl = otl->features; fl!=NULL ; fl=fl->next ) {
-		if ( fl->featuretag==CHR('l','f','b','d') || fl->featuretag==CHR('r','t','b','d') )
-		    hasopbd = true;
-	    }
+	hasgpos = true;
     }
 	    
     k=0;
     do {
 	sf = _sf->subfonts==NULL ? _sf : _sf->subfonts[k];
 	for ( i=0; i<sf->glyphcnt; ++i ) if ( (sc=sf->glyphs[i])!=NULL ) {
-	    if (( sc->unicodeenc>=0x10800 && sc->unicodeenc<=0x103ff ) ||
-		    ( sc->unicodeenc!=-1 && sc->unicodeenc<0x10fff &&
-			isrighttoleft(sc->unicodeenc)) ||
-			ScriptIsRightToLeft(SCScriptFromUnicode(sc)) ) {
-		hasprop = true;
-	    }
 	    if ( sc->glyph_class!=0 )
 		hasgdef = true;
 	    for ( pst=sc->possub; pst!=NULL; pst=pst->next ) {
@@ -1976,16 +1557,16 @@ static void BuildTop(struct att_dlg *att) {
 			if ( pst->u.lcaret.carets[j]!=0 )
 		    break;
 		    if ( j!=-1 )
-			hasgdef = haslcar = true;
+			hasgdef = true;
 		}
 	    }
 	    if ( sc->kerns!=NULL || sc->vkerns!=NULL )
-		haskern = hasgpos = true;
+		hasgpos = true;
 	}
 	++k;
     } while ( k<_sf->subfontcnt );
     if ( _sf->vkerns!=NULL || _sf->kerns!=NULL )
-	haskern = hasgpos = true;
+	hasgpos = true;
     if ( _sf->anchor!=NULL )
 	hasgpos = true;
     for ( ac = sf->anchor; ac!=NULL; ac=ac->next ) {
@@ -1995,15 +1576,13 @@ static void BuildTop(struct att_dlg *att) {
     if ( ac!=NULL )
 	hasgdef = true;
     hasbase = ( _sf->horiz_base!=NULL || _sf->vert_base!=NULL );
-    hasbsln = ( _sf->horiz_base!=NULL && _sf->horiz_base->baseline_cnt!=0 );
     hasjstf = ( _sf->justify!=NULL );
 
-    if ( hasgsub+hasgpos+hasgdef+hasmorx+haskern+haslcar+hasopbd+hasprop+hasbase+hasjstf==0 ) {
+    if ( hasgsub+hasgpos+hasgdef+hasbase+hasjstf==0 ) {
 	tables = xcalloc(2,sizeof(struct node));
 	tables[0].label = xstrdup_or_null(_("No Advanced Typography"));
     } else {
-	tables = xcalloc((hasgsub||hasgpos||hasgdef||hasbase||hasjstf)+
-	    (hasmorx||haskern||haslcar||hasopbd||hasprop||hasbsln)+1,sizeof(struct node));
+	tables = xcalloc((hasgsub||hasgpos||hasgdef||hasbase||hasjstf)+1,sizeof(struct node));
 	i=0;
 	if ( hasgsub || hasgpos || hasgdef || hasbase || hasjstf ) {
 	    tables[i].label = xstrdup_or_null(_("OpenType Tables"));
@@ -2063,50 +1642,6 @@ static void BuildTop(struct att_dlg *att) {
 		tables[i].children[k].tag = CHR('J','S','T','F');
 		tables[i].children[k].parent = &tables[i];
 		tables[i].children[k].build = BuildJSTFTable;
-	    }
-	    ++i;
-	}
-	if ( hasmorx || haskern || haslcar || hasopbd || hasprop || hasbsln ) {
-	    int j = 0;
-	    tables[i].label = xstrdup_or_null(_("Apple Advanced Typography"));
-	    tables[i].children_checked = true;
-	    tables[i].children = xcalloc(hasmorx+haskern+haslcar+hasopbd+hasprop+hasvkern+haskc+hasvkc+hasbsln+1,sizeof(struct node));
-	    tables[i].cnt = hasmorx+haskern+hasopbd+hasprop+haslcar+hasvkern+haskc+hasvkc+hasbsln;
-	    if ( hasbsln ) {
-		tables[i].children[j].label = xstrdup_or_null(_("'bsln' Horizontal Baseline Table"));
-		tables[i].children[j].tag = CHR('b','s','l','n');
-		tables[i].children[j].build = BuildBsLnTable;
-		tables[i].children[j++].parent = &tables[i];
-	    }
-	    if ( haskern ) {
-		tables[i].children[j].label = xstrdup_or_null(_("'kern' Horizontal Kerning Table"));
-		tables[i].children[j].tag = CHR('k','e','r','n');
-		tables[i].children[j].build = BuildKernTable;
-		tables[i].children[j++].parent = &tables[i];
-	    }
-	    if ( haslcar ) {
-		tables[i].children[j].label = xstrdup_or_null(_("'lcar' Ligature Caret Table"));
-		tables[i].children[j].tag = CHR('l','c','a','r');
-		tables[i].children[j].build = BuildLcar;
-		tables[i].children[j++].parent = &tables[i];
-	    }
-	    if ( hasmorx ) {
-		tables[i].children[j].label = xstrdup_or_null(_("'morx' Glyph Extended Metamorphosis Table"));
-		tables[i].children[j].tag = CHR('m','o','r','x');
-		tables[i].children[j].build = BuildMorxTable;
-		tables[i].children[j++].parent = &tables[i];
-	    }
-	    if ( hasopbd ) {
-		tables[i].children[j].label = xstrdup_or_null(_("'opbd' Optical Bounds Table"));
-		tables[i].children[j].tag = CHR('o','p','b','d');
-		tables[i].children[j].build = BuildOpticalBounds;
-		tables[i].children[j++].parent = &tables[i];
-	    }
-	    if ( hasprop ) {
-		tables[i].children[j].label = xstrdup_or_null(_("'prop' Glyph Properties Table"));
-		tables[i].children[j].tag = CHR('p','r','o','p');
-		tables[i].children[j].build = BuildProperties;
-		tables[i].children[j++].parent = &tables[i];
 	    }
 	    ++i;
 	}

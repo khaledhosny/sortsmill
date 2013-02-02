@@ -436,7 +436,6 @@ static void Base_FinishEdit(GGadget *g, int r, int c, int wasnew) {
 	uint32_t bsln;
 	int i,j,k;
 
-/* This if is duplicated (almost) in tottfaat.c: PerGlyphDefBaseline */
 	if ( script==CHR('k','a','n','a') || script==CHR('h','a','n','g') ||
 		script==CHR('h','a','n','i') || script==CHR('b','o','p','o') ||
 		script==CHR('j','a','m','o') || script==CHR('y','i',' ',' '))

@@ -379,44 +379,6 @@ static void FPSTsAdd(SplineFont *into, SplineFont *from,struct sfmergecontext *m
     }
 }
 
-static void ASMsAdd(SplineFont *into, SplineFont *from,struct sfmergecontext *mc) {
-    ASM *sm, *nsm, *last;
-    int i;
-
-    last = NULL;
-    if ( into->sm!=NULL )
-	for ( last = into->sm; last->next!=NULL; last=last->next );
-    for ( sm = from->sm; sm!=NULL; sm=sm->next ) {
-	nsm = (ASM *) xzalloc(sizeof (ASM));
-	*nsm = *sm;
-	nsm->subtable = MCConvertSubtable(mc,sm->subtable);
-	nsm->subtable->sm = nsm;
-	nsm->classes = xmalloc(nsm->class_cnt*sizeof(char *));
-	for ( i=0; i<nsm->class_cnt; ++i )
-	    nsm->classes[i] = xstrdup_or_null(sm->classes[i]);
-	nsm->state = xmalloc(nsm->class_cnt*nsm->state_cnt*sizeof(struct asm_state));
-	memcpy(nsm->state,sm->state,nsm->class_cnt*nsm->state_cnt*sizeof(struct asm_state));
-	if ( nsm->type == asm_kern ) {
-	    for ( i=nsm->class_cnt*nsm->state_cnt-1; i>=0; --i ) {
-		nsm->state[i].u.kern.kerns = xmalloc(nsm->state[i].u.kern.kcnt*sizeof(int16_t));
-		memcpy(nsm->state[i].u.kern.kerns,sm->state[i].u.kern.kerns,nsm->state[i].u.kern.kcnt*sizeof(int16_t));
-	    }
-	} else if ( nsm->type == asm_context ) {
-	    for ( i=0; i<nsm->class_cnt*nsm->state_cnt; ++i ) {
-		nsm->state[i].u.context.mark_lookup = MCConvertLookup(mc,
-			nsm->state[i].u.context.mark_lookup);
-		nsm->state[i].u.context.cur_lookup = MCConvertLookup(mc,
-			nsm->state[i].u.context.cur_lookup);
-	    }
-	} else if ( nsm->type == asm_insert ) {
-	    for ( i=nsm->class_cnt*nsm->state_cnt-1; i>=0; --i ) {
-		nsm->state[i].u.insert.mark_ins = xstrdup_or_null(sm->state[i].u.insert.mark_ins);
-		nsm->state[i].u.insert.cur_ins = xstrdup_or_null(sm->state[i].u.insert.cur_ins);
-	    }
-	}
-    }
-}
-
 static KernClass *_KernClassCopy(KernClass *kc,SplineFont *into,SplineFont *from,struct sfmergecontext *mc) {
     KernClass *nkc;
 
@@ -1126,7 +1088,6 @@ static void __MergeFont(SplineFont *into,SplineFont *other, int preserveCrossFon
 
     AnchorClassesAdd(into,other,&mc);
     FPSTsAdd(into,other,&mc);
-    ASMsAdd(into,other,&mc);
     KernClassesAdd(into,other,&mc);
 
     _MergeFont(into,other,&mc);
@@ -1146,7 +1107,6 @@ static void CIDMergeFont(SplineFont *into,SplineFont *other, int preserveCrossFo
 
     AnchorClassesAdd(into,other,&mc);
     FPSTsAdd(into,other,&mc);
-    ASMsAdd(into,other,&mc);
     KernClassesAdd(into,other,&mc);
 
     k = 0;

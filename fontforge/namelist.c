@@ -913,7 +913,6 @@ static void SFRenameLookupsByHash(SplineFont *sf,struct glyphnamehash *hash) {
     SplineChar *sc, *rpl;
     PST *pst;
     FPST *fpst;
-    ASM *sm;
     struct glyphvariants *gv;
     KernClass *kc;
 
@@ -980,11 +979,6 @@ static void SFRenameLookupsByHash(SplineFont *sf,struct glyphnamehash *hash) {
 	    }
 	  break;
 	}
-    }
-
-    for ( sm = sf->sm; sm!=NULL; sm=sm->next ) {
-	for ( i=0; i<sm->class_cnt; ++i )
-	    ReplaceByHash(&sm->classes[i],hash);
     }
 
     for ( h=0; h<2; ++h ) {

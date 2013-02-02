@@ -2655,6 +2655,95 @@ CanBeSimple (FPST * fpst)
   return (true);
 }
 
+
+static char **classcopy(char **names,int nextclass) {
+    char **ret;
+    int i;
+
+    if ( nextclass <= 1 )
+return( NULL );
+
+    ret = xmalloc(nextclass*sizeof(char *));
+    ret[0] = NULL;
+    for ( i=1; i<nextclass; ++i )
+	ret[i] = xstrdup_or_null(names[i]);
+return( ret );
+}
+
+static FPST *FPSTGlyphToClass(FPST *fpst) {
+    FPST *new;
+    int nextclass=0, i,j,k, max, cnt, ch;
+    char *pt, *end;
+    char **names;
+
+    if ( fpst->format!=pst_glyphs )
+return( NULL );
+
+    new = (FPST *) xzalloc(sizeof (FPST));
+    new->type = fpst->type;
+    new->format = pst_class;
+    new->subtable = fpst->subtable;
+    new->rule_cnt = fpst->rule_cnt;
+    new->rules = xcalloc(fpst->rule_cnt,sizeof(struct fpst_rule));
+
+    max = 100; nextclass=1;
+    names = xmalloc(max*sizeof(char *));
+    names[0] = NULL;
+    for ( i=0; i<fpst->rule_cnt; ++i ) {
+	for ( j=0; j<3; ++j ) {
+	    cnt = 0;
+	    if ( (&fpst->rules[i].u.glyph.names)[j]!=NULL && *(&fpst->rules[i].u.glyph.names)[j]!='\0' ) {
+		 for ( pt=(&fpst->rules[i].u.glyph.names)[j]; *pt; ) {
+		     while ( *pt==' ' ) ++pt;
+		     if ( *pt=='\0' )
+		 break;
+		     while ( *pt!=' ' && *pt!='\0' ) ++pt;
+		     ++cnt;
+		 }
+	    }
+	    (&new->rules[i].u.class.ncnt)[j] = cnt;
+	    if ( cnt!=0 ) {
+		 (&new->rules[i].u.class.nclasses)[j] = xmalloc(cnt*sizeof(uint16_t));
+		 cnt = 0;
+		 for ( pt=(&fpst->rules[i].u.glyph.names)[j]; *pt; pt=end ) {
+		     while ( *pt==' ' ) ++pt;
+		     if ( *pt=='\0' )
+		 break;
+		     for ( end=pt ; *end!=' ' && *end!='\0'; ++end );
+		     ch = *end; *end='\0';
+		     for ( k=1; k<nextclass; ++k )
+			  if ( strcmp(pt,names[k])==0 )
+		     break;
+		     if ( k==nextclass ) {
+			  if ( nextclass>=max )
+			      names = xrealloc(names,(max+=100)*sizeof(char *));
+			  names[nextclass++] = xstrdup_or_null(pt);
+		     }
+		     *end = ch;
+		     (&new->rules[i].u.class.nclasses)[j][cnt++] = k;
+		 }
+	    }
+	}
+	new->rules[i].lookup_cnt = fpst->rules[i].lookup_cnt;
+	new->rules[i].lookups = xmalloc(fpst->rules[i].lookup_cnt*sizeof(struct seqlookup));
+	memcpy(new->rules[i].lookups,fpst->rules[i].lookups,
+		 fpst->rules[i].lookup_cnt*sizeof(struct seqlookup));
+    }
+    new->nccnt = nextclass;
+    new->nclass = names;
+    new->nclassnames = xcalloc(nextclass,sizeof(char *));      /* Leave as NULL */
+    if ( fpst->type==pst_chainpos || fpst->type==pst_chainsub ) {
+	/* our class set has one "class" for each glyph used anywhere */
+	/*  all three class sets are the same */
+	new->bccnt = new->fccnt = nextclass;
+	new->bclass = classcopy(names,nextclass);
+	new->fclass = classcopy(names,nextclass);
+	new->bclassnames = xcalloc(nextclass,sizeof(char *));   /* Leave as NULL */
+	new->fclassnames = xcalloc(nextclass,sizeof(char *));   /* Leave as NULL */
+    }
+return( new );
+}
+
 void
 ContextChainEdit (SplineFont *sf, FPST * fpst,
                   struct gfi_data *gfi, uint32_t *newname, int layer)

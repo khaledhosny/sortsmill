@@ -16176,7 +16176,7 @@ CVMenuReblend (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   char *err;
   MMSet *mm = cv->b.sc->parent->mm;
 
-  if (mm == NULL || mm->apple || cv->b.sc->parent != mm->normal)
+  if (mm == NULL || cv->b.sc->parent != mm->normal)
     return;
   err = MMBlendChar (mm, cv->b.sc->orig_pos);
   if (mm->normal->glyphs[cv->b.sc->orig_pos] != NULL)
@@ -16270,8 +16270,7 @@ mmlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           mml[i].ti.fg = mml[i].ti.bg = COLOR_DEFAULT;
         }
     }
-  mml[0].ti.disabled = (mm == NULL || cv->b.sc->parent != mm->normal
-                        || mm->apple);
+  mml[0].ti.disabled = (mm == NULL || cv->b.sc->parent != mm->normal);
   GMenuItemArrayFree (mi->sub);
   mi->sub = GMenuItemArrayCopy (mml, NULL);
   if (mml != mmlist)

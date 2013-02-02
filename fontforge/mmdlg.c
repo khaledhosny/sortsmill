@@ -140,44 +140,25 @@ ExecConvertDesignVector (real *designs, int dcnt, char *ndv, char *cdv,
 }
 
 static int
-StandardPositions (MMSet *mm, int instance_count, int axis_count, int isapple)
+StandardPositions (MMSet *mm, int instance_count, int axis_count)
 {
-  int i, j, factor, v;
-
-  if (!isapple)
+  for (int i = 0; i < instance_count; ++i)
     {
-      for (i = 0; i < instance_count; ++i)
-        {
-          for (j = 0; j < axis_count; ++j)
-            if (mm->positions[i * mm->axis_count + j] !=
-                ((i & (1 << j)) ? 1 : 0))
-              return (false);
-        }
-    }
-  else
-    {
-      for (i = 0; i < instance_count; ++i)
-        {
-          factor = 1;
-          for (j = 0; j < axis_count; ++j)
-            {
-              v = (i / factor) % 3 - 1;
-              if (mm->positions[i * mm->axis_count + j] != v)
-                return (false);
-              factor *= 3;
-            }
-        }
+      for (int j = 0; j < axis_count; ++j)
+        if (mm->positions[i * mm->axis_count + j] !=
+            ((i & (1 << j)) ? 1 : 0))
+          return (false);
     }
   return (true);
 }
 
 static int
-OrderedPositions (MMSet *mm, int instance_count, int isapple)
+OrderedPositions (MMSet *mm, int instance_count)
 {
   /* For a 1 axis system, check that the positions are ordered */
   int i;
 
-  if (mm->positions[0] != isapple ? -1 : 0)     /* must start at 0 */
+  if (mm->positions[0] != 0)     /* must start at 0 */
     return (false);
   if (mm->positions[(instance_count - 1) * 4] != 1)     /* and end at 1 */
     return (false);
@@ -198,7 +179,7 @@ MMDesignCoords (MMSet *mm)
   real axiscoords[4];
 
   if (mm->instance_count != (1 << mm->axis_count) ||
-      !StandardPositions (mm, mm->instance_count, mm->axis_count, false))
+      !StandardPositions (mm, mm->instance_count, mm->axis_count))
     return (x_u8_to_u32 (""));
   MMWeightsUnMap (mm->defweights, axiscoords, mm->axis_count);
   pt = buffer;
@@ -209,190 +190,6 @@ MMDesignCoords (MMSet *mm)
     }
   pt[-1] = ' ';
   return (x_u8_to_u32 (buffer));
-}
-
-static real
-DoDelta (int16_t ** deltas, int pt, int is_y, real *blends, int instance_count)
-{
-  real diff = 0;
-  int j;
-
-  for (j = 0; j < instance_count; ++j)
-    {
-      if (blends[j] != 0 && deltas[2 * j + is_y] != NULL)
-        diff += blends[j] * deltas[2 * j + is_y][pt];
-    }
-  return (diff);
-}
-
-static void
-DistortChar (SplineFont *sf, MMSet *mm, int gid, real *blends)
-{
-  int i, j, ptcnt;
-  int16_t **deltas;
-  SplineSet *ss;
-  SplinePoint *sp;
-  RefChar *ref;
-  SplineChar *sc = sf->glyphs[gid];
-  Spline *s, *first;
-
-  if (sc == NULL)
-    return;
-  deltas = SCFindDeltas (mm, gid, &ptcnt);
-  if (deltas == NULL)
-    return;
-  /* I never delta the left side bearing or top */
-  sc->width += DoDelta (deltas, ptcnt - 3, 0, blends, mm->instance_count);
-  sc->vwidth += DoDelta (deltas, ptcnt - 1, 1, blends, mm->instance_count);
-  if (sc->layers[ly_fore].refs != NULL)
-    {
-      for (i = 0, ref = sc->layers[ly_fore].refs; ref != NULL;
-           ref = ref->next, ++i)
-        {
-          ref->transform[4] +=
-            DoDelta (deltas, i, 0, blends, mm->instance_count);
-          ref->transform[5] +=
-            DoDelta (deltas, i, 1, blends, mm->instance_count);
-        }
-    }
-  else
-    {
-      for (ss = sc->layers[ly_fore].splines; ss != NULL; ss = ss->next)
-        {
-          for (sp = ss->first;;)
-            {
-              if (sp->ttfindex != 0xffff)
-                {
-                  sp->me.x +=
-                    DoDelta (deltas, sp->ttfindex, 0, blends,
-                             mm->instance_count);
-                  sp->me.y +=
-                    DoDelta (deltas, sp->ttfindex, 1, blends,
-                             mm->instance_count);
-                }
-              if (sp->nextcpindex != 0xffff)
-                {
-                  sp->nextcp.x +=
-                    DoDelta (deltas, sp->nextcpindex, 0, blends,
-                             mm->instance_count);
-                  sp->nextcp.y +=
-                    DoDelta (deltas, sp->nextcpindex, 1, blends,
-                             mm->instance_count);
-                }
-              else
-                sp->nextcp = sp->me;
-              if (sp->next != NULL)
-                sp->next->to->prevcp = sp->nextcp;
-              if (sp->next == NULL)
-                break;
-              sp = sp->next->to;
-              if (sp == ss->first)
-                break;
-            }
-          for (sp = ss->first;;)
-            {
-              if (sp->ttfindex == 0xffff)
-                {
-                  sp->me.x = (sp->prevcp.x + sp->nextcp.x) / 2;
-                  sp->me.y = (sp->prevcp.y + sp->nextcp.y) / 2;
-                }
-              if (sp->next == NULL)
-                break;
-              sp = sp->next->to;
-              if (sp == ss->first)
-                break;
-            }
-          first = NULL;
-          for (s = ss->first->next; s != NULL && s != first; s = s->to->next)
-            {
-              SplineRefigure (s);
-              if (first == NULL)
-                first = s;
-            }
-        }
-    }
-  for (j = 0; j < 2 * mm->instance_count; ++j)
-    free (deltas[j]);
-  free (deltas);
-}
-
-static void
-DistortCvt (struct ttf_table *cvt, MMSet *mm, real *blends)
-{
-  int i, j, ptcnt;
-  real diff;
-  int16_t **deltas;
-
-  deltas = CvtFindDeltas (mm, &ptcnt);
-  if (deltas == NULL)
-    return;
-  for (i = 0; i < ptcnt; ++i)
-    {
-      diff = 0;
-      for (j = 0; j < mm->instance_count; ++j)
-        {
-          if (blends[j] != 0 && deltas[j] != NULL)
-            diff += blends[j] * deltas[j][i];
-        }
-      memputshort (cvt->data, 2 * i,
-                   memushort (cvt->data, cvt->len, 2 * i) + rint (diff));
-    }
-  for (j = 0; j < mm->instance_count; ++j)
-    free (deltas[j]);
-  free (deltas);
-}
-
-static void
-MakeAppleBlend (FontView * fv, MMSet *mm, real *blends, real *normalized)
-{
-  SplineFont *base = mm->normal;
-  SplineFont *sf = _MMNewFont (mm, -2, base->familyname, normalized);
-  int i;
-  struct ttf_table *tab, *cvt = NULL, *last = NULL, *cur;
-  RefChar *ref;
-
-  sf->mm = NULL;
-  for (i = 0; i < base->glyphcnt && i < sf->glyphcnt; ++i)
-    if (base->glyphs[i] != NULL)
-      {
-        sf->glyphs[i] = SplineCharCopy (base->glyphs[i], base, NULL);
-        for (ref = sf->glyphs[i]->layers[ly_fore].refs; ref != NULL;
-             ref = ref->next)
-          ref->sc = NULL;
-        sf->glyphs[i]->orig_pos = i;
-        DistortChar (sf, mm, i, blends);
-      }
-  for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
-      ttfFixupRef (sf->glyphs, i);
-  for (tab = base->ttf_tables; tab != NULL; tab = tab->next)
-    {
-      cur = (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
-      cur->tag = tab->tag;
-      cur->len = tab->len;
-      cur->data = xmalloc (tab->len);
-      memcpy (cur->data, tab->data, tab->len);
-      if (cur->tag == CHR ('c', 'v', 't', ' '))
-        cvt = cur;
-      if (last == NULL)
-        sf->ttf_tables = cur;
-      else
-        last->next = cur;
-      last = cur;
-    }
-  if (cvt != NULL)
-    DistortCvt (cvt, mm, blends);
-  /* I don't know how to blend kerns */
-  /* Apple's Skia has 5 kerning classes (one for the base font and one for */
-  /*  some of the instances) and the classes have different glyph classes */
-  /* I can't make a kern class out of them. I suppose I could generate a bunch */
-  /*  of kern pairs, but ug. */
-  /* Nor is it clear whether the kerning info is a delta or not */
-
-  sf->changed = true;
-  EncMapFree (sf->map);
-  sf->map = EncMapFromEncoding (sf, fv->b.map->enc);
-  FontViewCreate (sf, false);
 }
 
 struct mmcb
@@ -409,50 +206,6 @@ struct mmcb
 #define CID_NewBlends		6003
 #define CID_NewDesign		6004
 #define CID_Knowns		6005
-
-static GTextInfo *
-MMCB_KnownValues (MMSet *mm)
-{
-  GTextInfo *ti = xcalloc (mm->named_instance_count + 2, sizeof (GTextInfo));
-  int i;
-
-  ti[0].text = x_u8_to_u32 (" --- ");
-  ti[0].bg = ti[0].fg = COLOR_DEFAULT;
-  for (i = 0; i < mm->named_instance_count; ++i)
-    {
-      ti[i + 1].text =
-        (uint32_t *) PickNameFromMacName (mm->named_instances[i].names);
-      ti[i + 1].text_is_1byte = true;
-      ti[i + 1].bg = ti[i + 1].fg = COLOR_DEFAULT;
-    }
-  return (ti);
-}
-
-static int
-MMCB_PickedKnown (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
-    {
-      struct mmcb *mmcb = GDrawGetUserData (GGadgetGetWindow (g));
-      int which = GGadgetGetFirstListSelectedItem (g);
-      char buffer[32];
-      int i;
-      uint32_t *temp;
-
-      --which;
-      if (which < 0)
-        return (true);
-      for (i = 0; i < mmcb->mm->axis_count; ++i)
-        {
-          sprintf (buffer, "%.4g",
-                   (double) mmcb->mm->named_instances[which].coords[i]);
-          temp = x_u8_to_u32 (buffer);
-          GGadgetSetTitle (GWidgetGetControl (mmcb->gw, 1000 + i), temp);
-          free (temp);
-        }
-    }
-  return (true);
-}
 
 static int
 MMCB_Changed (GGadget * g, GEvent * e)
@@ -529,76 +282,6 @@ GetWeights (GWindow gw, real blends[MmMax], MMSet *mm,
 }
 
 static int
-MMCB_OKApple (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      struct mmcb *mmcb = GDrawGetUserData (GGadgetGetWindow (g));
-      real newcoords[4];
-      int i, j, k, err = false;
-      real blends[AppleMmMax];
-      MMSet *mm = mmcb->mm;
-
-      for (i = 0; i < mm->axis_count; ++i)
-        newcoords[i] =
-          rint (GetReal8 (mmcb->gw, 1000 + i, _(axistablab[i]), &err) *
-                8096) / 8096;
-      if (err)
-        return (true);
-      /* Now normalize each */
-      for (i = 0; i < mm->axis_count; ++i)
-        {
-          for (j = 1; j < mm->axismaps[i].points; ++j)
-            {
-              if (newcoords[i] <= mm->axismaps[i].designs[j]
-                  || j == mm->axismaps[i].points - 1)
-                {
-                  if (mm->axismaps[i].designs[j] ==
-                      mm->axismaps[i].designs[j - 1])
-                    newcoords[i] = mm->axismaps[i].blends[j];
-                  else
-                    newcoords[i] = mm->axismaps[i].blends[j - 1] +
-                      (newcoords[i] - mm->axismaps[i].designs[j - 1]) /
-                      (mm->axismaps[i].designs[j] -
-                       mm->axismaps[i].designs[j -
-                                               1]) *
-                      (mm->axismaps[i].blends[j] -
-                       mm->axismaps[i].blends[j - 1]);
-                  newcoords[i] = rint (8096 * newcoords[i]) / 8096;     /* Apple's fixed numbers have a fair amount of rounding error */
-                  break;
-                }
-            }
-        }
-      /* Now figure out the contribution of each design */
-      for (k = 0; k < mm->instance_count; ++k)
-        {
-          real factor = 1.0;
-          for (i = 0; i < mm->axis_count; ++i)
-            {
-              if ((newcoords[i] <= 0
-                   && mm->positions[k * mm->axis_count + i] > 0)
-                  || (newcoords[i] >= 0
-                      && mm->positions[k * mm->axis_count + i] < 0))
-                {
-                  factor = 0;
-                  break;
-                }
-              if (newcoords[i] == 0)
-                continue;
-              if (newcoords[i] < 0)
-                factor *= -newcoords[i];
-              else
-                factor *= newcoords[i];
-            }
-          blends[k] = factor;
-        }
-      MakeAppleBlend (mmcb->fv, mm, blends, newcoords);
-      mmcb->done = true;
-    }
-  return (true);
-}
-
-static int
 MMCB_OK (GGadget * g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
@@ -647,63 +330,12 @@ mmcb_e_h (GWindow gw, GEvent * event)
   return (true);
 }
 
-static int
-GCDFillupMacWeights (GGadgetCreateData * gcd, GTextInfo * label, int k,
-                     char *axisnames[4], char axisval[4][24],
-                     real *defcoords, int axis_count, MMSet *mm)
-{
-  int i;
-  char *an;
-  char axisrange[80];
-
-  for (i = 0; i < axis_count; ++i)
-    {
-      sprintf (axisrange, " [%.4g %.4g %.4g]", (double) mm->axismaps[i].min,
-               (double) mm->axismaps[i].def, (double) mm->axismaps[i].max);
-      an = PickNameFromMacName (mm->axismaps[i].axisnames);
-      if (an == NULL)
-        an = xstrdup_or_null (mm->axes[i]);
-      axisnames[i] = xmalloc (strlen (axisrange) + 3 + strlen (an));
-      strcpy (axisnames[i], an);
-      strcat (axisnames[i], axisrange);
-      sprintf (axisval[i], "%.4g", (double) defcoords[i]);
-      free (an);
-    }
-  for (; i < 4; ++i)
-    {
-      axisnames[i] = _(axistablab[i]);
-      axisval[i][0] = '\0';
-    }
-
-  for (i = 0; i < 4; ++i)
-    {
-      label[k].text = (uint32_t *) axisnames[i];
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 5;
-      gcd[k].gd.pos.y = k == 0 ? 4 : gcd[k - 1].gd.pos.y + 28;
-      gcd[k].gd.flags =
-        i < axis_count ? (gg_visible | gg_enabled) : gg_visible;
-      gcd[k++].creator = GLabelCreate;
-
-      label[k].text = (uint32_t *) axisval[i];
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 15;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 12;
-      gcd[k].gd.flags = gcd[k - 1].gd.flags;
-      gcd[k].gd.cid = 1000 + i;
-      gcd[k++].creator = GTextFieldCreate;
-    }
-  return (k);
-}
-
 void
 MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
 {
   char buffer[MmMax * 20], *pt;
   uint32_t ubuf[MmMax * 20];
-  int i, k, j, def_name;
+  int i, k;
   struct mmcb mmcb;
   GRect pos;
   GWindow gw;
@@ -711,9 +343,6 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
   GGadgetCreateData gcd[14];
   GTextInfo label[14];
   uint32_t *utemp;
-  char axisval[4][24];
-  char *axisnames[4];
-  real defcoords[4];
 
   if (mm == NULL)
     return;
@@ -736,216 +365,136 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
     tonew ? _("Blend to New Font") : _("MM Change Def Weights");
   pos.x = pos.y = 0;
 
-  if (!mm->apple)
+  pt = buffer;
+  for (i = 0; i < mm->instance_count; ++i)
     {
-      pt = buffer;
-      for (i = 0; i < mm->instance_count; ++i)
-        {
-          sprintf (pt, "%g ", (double) mm->defweights[i]);
-          pt += strlen (pt);
-        }
-      if (pt > buffer)
-        pt[-2] = '\0';
-      u32_strcpy (ubuf, x_gc_u8_to_u32 (buffer));
+      sprintf (pt, "%g ", (double) mm->defweights[i]);
+      pt += strlen (pt);
+    }
+  if (pt > buffer)
+    pt[-2] = '\0';
+  u32_strcpy (ubuf, x_gc_u8_to_u32 (buffer));
 
-      pos.width = GDrawPointsToPixels (NULL, GGadgetScale (270));
-      pos.height = GDrawPointsToPixels (NULL, 200);
-      mmcb.gw = gw =
-        GDrawCreateTopWindow (NULL, &pos, mmcb_e_h, &mmcb, &wattrs);
+  pos.width = GDrawPointsToPixels (NULL, GGadgetScale (270));
+  pos.height = GDrawPointsToPixels (NULL, 200);
+  mmcb.gw = gw =
+    GDrawCreateTopWindow (NULL, &pos, mmcb_e_h, &mmcb, &wattrs);
 
-      memset (&gcd, 0, sizeof (gcd));
-      memset (&label, 0, sizeof (label));
+  memset (&gcd, 0, sizeof (gcd));
+  memset (&label, 0, sizeof (label));
 
-      k = 0;
+  k = 0;
 /* TRANSLATORS: The following strings should be concatenated together, the result */
 /* translated, and then broken into lines by hand. I'm sure it would */
 /* be better to specify this all as one string, but my widgets won't support */
 /* that */
-      label[k].text =
-        (uint32_t *) (tonew ?
-                       _("You may specify the new instance of this font") :
-                       _("You may change the default instance of this font"));
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 10;
-      gcd[k].gd.pos.y = 10;
-      gcd[k].gd.flags = gg_visible | gg_enabled;
-      gcd[k++].creator = GLabelCreate;
+  label[k].text =
+    (uint32_t *) (tonew ?
+                   _("You may specify the new instance of this font") :
+                   _("You may change the default instance of this font"));
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 10;
+  gcd[k].gd.pos.y = 10;
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k++].creator = GLabelCreate;
 
-      label[k].text =
-        (uint32_t *) _("either by explicitly entering the contribution");
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 10;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 13;
-      gcd[k].gd.flags = gg_visible | gg_enabled;
-      gcd[k++].creator = GLabelCreate;
+  label[k].text =
+    (uint32_t *) _("either by explicitly entering the contribution");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 10;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 13;
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k++].creator = GLabelCreate;
 
-      label[k].text =
-        (uint32_t *) _("of each master design, or by entering the design");
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 10;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 13;
-      gcd[k].gd.flags = gg_visible | gg_enabled;
-      gcd[k++].creator = GLabelCreate;
+  label[k].text =
+    (uint32_t *) _("of each master design, or by entering the design");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 10;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 13;
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k++].creator = GLabelCreate;
 
-      label[k].text = (uint32_t *) _("values for each axis");
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 10;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 13;
-      gcd[k].gd.flags = gg_visible | gg_enabled;
-      gcd[k++].creator = GLabelCreate;
+  label[k].text = (uint32_t *) _("values for each axis");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 10;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 13;
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k++].creator = GLabelCreate;
 
-      label[k].text = (uint32_t *) _("Contribution of each master design");
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 10;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 16;
-      gcd[k].gd.flags = gg_visible | gg_enabled | gg_cb_on;
-      gcd[k].gd.cid = CID_Explicit;
-      gcd[k].gd.handle_controlevent = MMCB_Changed;
-      gcd[k++].creator = GRadioCreate;
+  label[k].text = (uint32_t *) _("Contribution of each master design");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 10;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 16;
+  gcd[k].gd.flags = gg_visible | gg_enabled | gg_cb_on;
+  gcd[k].gd.cid = CID_Explicit;
+  gcd[k].gd.handle_controlevent = MMCB_Changed;
+  gcd[k++].creator = GRadioCreate;
 
-      label[k].text = (uint32_t *) _("Design Axis Values");
-      label[k].text_is_1byte = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 10;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 45;
-      gcd[k].gd.flags = gg_visible | gg_enabled;
-      gcd[k].gd.cid = CID_ByDesign;
-      gcd[k].gd.handle_controlevent = MMCB_Changed;
-      gcd[k++].creator = GRadioCreate;
+  label[k].text = (uint32_t *) _("Design Axis Values");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 10;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 45;
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k].gd.cid = CID_ByDesign;
+  gcd[k].gd.handle_controlevent = MMCB_Changed;
+  gcd[k++].creator = GRadioCreate;
 
-      label[k].text = ubuf;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 15;
-      gcd[k].gd.pos.y = gcd[k - 2].gd.pos.y + 18;
-      gcd[k].gd.pos.width = 240;
-      gcd[k].gd.flags = gg_visible | gg_enabled;
-      gcd[k].gd.cid = CID_NewBlends;
-      gcd[k++].creator = GTextFieldCreate;
+  label[k].text = ubuf;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 15;
+  gcd[k].gd.pos.y = gcd[k - 2].gd.pos.y + 18;
+  gcd[k].gd.pos.width = 240;
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k].gd.cid = CID_NewBlends;
+  gcd[k++].creator = GTextFieldCreate;
 
-      label[k].text = utemp = MMDesignCoords (mm);
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.pos.x = 15;
-      gcd[k].gd.pos.y = gcd[k - 2].gd.pos.y + 18;
-      gcd[k].gd.pos.width = 240;
-      gcd[k].gd.flags = gg_visible;
-      gcd[k].gd.cid = CID_NewDesign;
-      gcd[k++].creator = GTextFieldCreate;
+  label[k].text = utemp = MMDesignCoords (mm);
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.pos.x = 15;
+  gcd[k].gd.pos.y = gcd[k - 2].gd.pos.y + 18;
+  gcd[k].gd.pos.width = 240;
+  gcd[k].gd.flags = gg_visible;
+  gcd[k].gd.cid = CID_NewDesign;
+  gcd[k++].creator = GTextFieldCreate;
 
-      gcd[k].gd.pos.x = 30 - 3;
-      gcd[k].gd.pos.y = GDrawPixelsToPoints (NULL, pos.height) - 35 - 3;
-      gcd[k].gd.pos.width = -1;
-      gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-      label[k].text = (uint32_t *) _("_OK");
-      label[k].text_is_1byte = true;
-      label[k].text_has_mnemonic = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.handle_controlevent = MMCB_OK;
-      gcd[k++].creator = GButtonCreate;
+  gcd[k].gd.pos.x = 30 - 3;
+  gcd[k].gd.pos.y = GDrawPixelsToPoints (NULL, pos.height) - 35 - 3;
+  gcd[k].gd.pos.width = -1;
+  gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
+  label[k].text = (uint32_t *) _("_OK");
+  label[k].text_is_1byte = true;
+  label[k].text_has_mnemonic = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.handle_controlevent = MMCB_OK;
+  gcd[k++].creator = GButtonCreate;
 
-      gcd[k].gd.pos.x = -30;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;
-      gcd[k].gd.pos.width = -1;
-      gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-      label[k].text = (uint32_t *) _("_Cancel");
-      label[k].text_is_1byte = true;
-      label[k].text_has_mnemonic = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.handle_controlevent = MMCB_Cancel;
-      gcd[k++].creator = GButtonCreate;
+  gcd[k].gd.pos.x = -30;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;
+  gcd[k].gd.pos.width = -1;
+  gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
+  label[k].text = (uint32_t *) _("_Cancel");
+  label[k].text_is_1byte = true;
+  label[k].text_has_mnemonic = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.handle_controlevent = MMCB_Cancel;
+  gcd[k++].creator = GButtonCreate;
 
-      gcd[k].gd.pos.x = 2;
-      gcd[k].gd.pos.y = 2;
-      gcd[k].gd.pos.width = pos.width - 4;
-      gcd[k].gd.pos.height = pos.height - 4;
-      gcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
-      gcd[k].creator = GGroupCreate;
+  gcd[k].gd.pos.x = 2;
+  gcd[k].gd.pos.y = 2;
+  gcd[k].gd.pos.width = pos.width - 4;
+  gcd[k].gd.pos.height = pos.height - 4;
+  gcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
+  gcd[k].creator = GGroupCreate;
 
-      GGadgetsCreate (gw, gcd);
-      free (utemp);
-    }
-  else
-    {
-      pos.width = GDrawPointsToPixels (NULL, GGadgetScale (270));
-      pos.height = GDrawPointsToPixels (NULL, 200);
-      mmcb.gw = gw =
-        GDrawCreateTopWindow (NULL, &pos, mmcb_e_h, &mmcb, &wattrs);
-
-      memset (&gcd, 0, sizeof (gcd));
-      memset (&label, 0, sizeof (label));
-
-      memset (defcoords, 0, sizeof (defcoords));
-      for (i = 0; i < mm->axis_count; ++i)
-        defcoords[i] = mm->axismaps[i].def;
-      def_name = -1;
-      for (i = 0; i < mm->named_instance_count; ++i)
-        {
-          for (j = 0; j < mm->axis_count; ++j)
-            if (!RealNear (mm->named_instances[i].coords[j], defcoords[j]))
-              break;
-          if (j == mm->axis_count)
-            {
-              def_name = i;
-              break;
-            }
-        }
-
-      k = 0;
-      k = GCDFillupMacWeights (gcd, label, k, axisnames, axisval, defcoords,
-                               mm->axis_count, mm);
-
-      gcd[k].gd.pos.x = 130;
-      gcd[k].gd.pos.y = gcd[k - 4].gd.pos.y - 12;
-      gcd[k].gd.flags = gg_visible | gg_enabled;
-      if (mm->named_instance_count == 0)
-        gcd[k].gd.flags = 0;
-      gcd[k].gd.u.list = MMCB_KnownValues (mm);
-      if (def_name != -1)
-        gcd[k].gd.u.list[def_name + 1].selected = true;
-      gcd[k].gd.cid = CID_Knowns;
-      gcd[k].gd.handle_controlevent = MMCB_PickedKnown;
-      gcd[k++].creator = GListButtonCreate;
-
-      gcd[k].gd.pos.x = 30 - 3;
-      gcd[k].gd.pos.y = GDrawPixelsToPoints (NULL, pos.height) - 35 - 3;
-      gcd[k].gd.pos.width = -1;
-      gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-      label[k].text = (uint32_t *) _("_OK");
-      label[k].text_is_1byte = true;
-      label[k].text_has_mnemonic = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.handle_controlevent = MMCB_OKApple;
-      gcd[k++].creator = GButtonCreate;
-
-      gcd[k].gd.pos.x = -30;
-      gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;
-      gcd[k].gd.pos.width = -1;
-      gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-      label[k].text = (uint32_t *) _("_Cancel");
-      label[k].text_is_1byte = true;
-      label[k].text_has_mnemonic = true;
-      gcd[k].gd.label = &label[k];
-      gcd[k].gd.handle_controlevent = MMCB_Cancel;
-      gcd[k++].creator = GButtonCreate;
-
-      gcd[k].gd.pos.x = 2;
-      gcd[k].gd.pos.y = 2;
-      gcd[k].gd.pos.width = pos.width - 4;
-      gcd[k].gd.pos.height = pos.height - 4;
-      gcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
-      gcd[k++].creator = GGroupCreate;
-
-      GGadgetsCreate (gw, gcd);
-      for (i = 0; i < 4; ++i)
-        free (axisnames[i]);
-      GTextInfoListFree (gcd[k - 4].gd.u.list);
-      GWidgetIndicateFocusGadget (gcd[1].ret);
-    }
-
+  GGadgetsCreate (gw, gcd);
+  free (utemp);
+  
   GDrawSetVisible (gw, true);
 
   while (!mmcb.done)
@@ -1013,29 +562,9 @@ GTextInfo mastercounts[] = {
    0, '\0'},
   {(uint32_t *) "17", NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(uint32_t *) "18", NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "19", NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "20", NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "21", NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "22", NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "23", NULL, 0, 0, (void *) 23, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "24", NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "25", NULL, 0, 0, (void *) 25, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "26", NULL, 0, 0, (void *) 26, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) "27", NULL, 0, 0, (void *) 27, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-#if AppleMmMax!=26
-#error "The mastercounts array needs to be expanded to match AppleMmMax"
-  /* Actually it should be one bigger than AppleMmMax */
+#if MmMax!=16
+#error "The mastercounts array needs to be expanded to match MmMax"
+  /* Actually it should be one bigger than MmMax */
 #endif
   GTEXTINFO_EMPTY
 };
@@ -1075,8 +604,6 @@ typedef struct mmw
 
 #define CID_AxisCount	2001
 #define CID_MasterCount	2002
-#define CID_Adobe	2003
-#define CID_Apple	2004
 
 #define CID_WhichAxis			3000
 #define CID_AxisType			3001    /* +[0,3]*100 */
@@ -1100,276 +627,27 @@ typedef struct mmw
 #define CID_ForceBoldThreshold	6005
 #define CID_FamilyName		6006
 
-#define CID_NamedDesigns	7001
-#define CID_NamedNew		7002
-#define CID_NamedEdit		7003
-#define CID_NamedDelete		7004
-
-struct esd
-{
-  GWindow gw;
-  MMW *mmw;
-  GGadget *list;
-  int index;
-  int done;
-};
-
-static void
-ESD_Close (struct esd *esd)
-{
-  MacNameListFree (NameGadgetsGetNames (esd->gw));
-  esd->done = true;
-}
-
-static int
-ESD_Cancel (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      struct esd *esd = GDrawGetUserData (GGadgetGetWindow (g));
-      ESD_Close (esd);
-    }
-  return (true);
-}
-
-static int
-ESD_OK (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      struct esd *esd = GDrawGetUserData (GGadgetGetWindow (g));
-      int i, axis_count;
-      int err = false;
-      real coords[4];
-      struct macname *mn;
-      char buffer[120], *pt;
-      uint32_t *name;
-      char *style;
-
-      for (i = 0; i < esd->mmw->axis_count && i < 4; ++i)
-        coords[i] =
-          rint (GetReal8 (esd->gw, 1000 + i, _(axistablab[i]), &err) * 8096) /
-          8096;
-      if (err)
-        return (true);
-      axis_count = i;
-      mn = NameGadgetsGetNames (esd->gw);
-      if (mn == NULL)
-        {
-          ff_post_error (_("Bad Multiple Master Font"),
-                         _("You must provide at least one name here"));
-          return (true);
-        }
-      pt = buffer;
-      *pt++ = ' ';
-      *pt++ = '[';
-      for (i = 0; i < axis_count; ++i)
-        {
-          sprintf (pt, "%g ", (double) coords[i]);
-          pt += strlen (pt);
-        }
-      pt[-1] = ']';
-      *pt = '\0';
-      style = PickNameFromMacName (mn);
-      name =
-        xmalloc (((pt - buffer) + strlen (style) + 1) * sizeof (uint32_t));
-      utf82u_strcpy (name, style);
-      u32_strcat (name, x_gc_u8_to_u32 ( buffer));
-      free (style);
-      if (esd->index == -1)
-        GListAppendLine (esd->list, name, false)->userdata = mn;
-      else
-        {
-          GTextInfo *ti = GGadgetGetListItem (esd->list, esd->index);
-          MacNameListFree (ti->userdata);
-          GListChangeLine (esd->list, esd->index, name)->userdata = mn;
-        }
-      esd->done = true;
-    }
-  return (true);
-}
-
-static int
-esd_eh (GWindow gw, GEvent * event)
-{
-  if (event->type == et_close)
-    {
-      struct esd *esd = GDrawGetUserData (gw);
-      ESD_Close (esd);
-    }
-  else if (event->type == et_char)
-    {
-      if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
-        {
-          help ("multiplemaster.html#NamedStyles");
-          return (true);
-        }
-      else if (GMenuIsCommand (event, H_ ("Quit|Ctl+Q")))
-        {
-          MenuExit (NULL, NULL, NULL);
-          return (true);
-        }
-      else if (GMenuIsCommand (event, H_ ("Close|Ctl+Shft+Q")))
-        {
-          ESD_Close (GDrawGetUserData (gw));
-          return (true);
-        }
-      return (false);
-    }
-  return (true);
-}
-
-static void
-EditStyleName (MMW * mmw, int index)
-{
-  GGadget *list =
-    GWidgetGetControl (mmw->subwins[mmw_named], CID_NamedDesigns);
-  GTextInfo *ti = NULL;
-  int i, k;
-  uint32_t *pt = NULL, *end;
-  real axes[4];
-  struct macname *mn = NULL;
-  char axisval[4][24];
-  char *axisnames[4];
-  GGadgetCreateData gcd[17];
-  GTextInfo label[17];
-  GRect pos;
-  GWindow gw;
-  GWindowAttrs wattrs;
-  struct esd esd;
-
-  for (i = 0; i < mmw->axis_count; ++i)
-    axes[i] = mmw->mm->axismaps[i].def;
-  if (index != -1)
-    {
-      ti = GGadgetGetListItem (list, index);
-      if (ti != NULL)
-        {
-          pt = u32_strchr (ti->text, '[');
-          mn = ti->userdata;
-        }
-      if (pt != NULL)
-        {
-          for (i = 0, ++pt; i < 4 && (*pt != ']' || *pt != '\0'); ++i)
-            {
-              axes[i] = u32_strtod (pt, &end);
-              pt = end;
-            }
-        }
-    }
-
-  memset (&esd, 0, sizeof (esd));
-  esd.mmw = mmw;
-  esd.index = index;
-  esd.list = list;
-
-  memset (&wattrs, 0, sizeof (wattrs));
-  wattrs.mask =
-    wam_events | wam_cursor | wam_utf8_wtitle | wam_undercursor | wam_isdlg |
-    wam_restrict;
-  wattrs.event_masks = ~(1 << et_charup);
-  wattrs.is_dlg = true;
-  wattrs.restrict_input_to_me = true;
-  wattrs.undercursor = 1;
-  wattrs.cursor = ct_pointer;
-  wattrs.utf8_window_title = _("Named Styles");
-  pos.x = pos.y = 0;
-  pos.width = GDrawPointsToPixels (NULL, GGadgetScale (ESD_Width));
-  pos.height = GDrawPointsToPixels (NULL, ESD_Height);
-  esd.gw = gw = GDrawCreateTopWindow (NULL, &pos, esd_eh, &esd, &wattrs);
-
-  memset (gcd, 0, sizeof (gcd));
-  memset (label, 0, sizeof (label));
-  k = 0;
-
-  k = GCDFillupMacWeights (gcd, label, k, axisnames, axisval, axes,
-                           mmw->axis_count, mmw->mm);
-  k = GCDBuildNames (gcd, label, k, mn);
-
-  gcd[k].gd.pos.x = 20;
-  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 33 - 3;
-  gcd[k].gd.pos.width = -1;
-  gcd[k].gd.pos.height = 0;
-  gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[k].text = (uint32_t *) _("_OK");
-  label[k].text_is_1byte = true;
-  label[k].text_has_mnemonic = true;
-  gcd[k].gd.label = &label[k];
-  gcd[k].gd.handle_controlevent = ESD_OK;
-  gcd[k++].creator = GButtonCreate;
-
-  gcd[k].gd.pos.x = -20;
-  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;
-  gcd[k].gd.pos.width = -1;
-  gcd[k].gd.pos.height = 0;
-  gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  label[k].text = (uint32_t *) _("_Cancel");
-  label[k].text_is_1byte = true;
-  label[k].text_has_mnemonic = true;
-  gcd[k].gd.label = &label[k];
-  gcd[k].gd.handle_controlevent = ESD_Cancel;
-  gcd[k++].creator = GButtonCreate;
-
-  gcd[k].gd.pos.x = 2;
-  gcd[k].gd.pos.y = 2;
-  gcd[k].gd.pos.width = pos.width - 4;
-  gcd[k].gd.pos.height = pos.height - 4;
-  gcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
-  gcd[k].creator = GGroupCreate;
-
-  GGadgetsCreate (gw, gcd);
-
-  for (i = 0; i < 4; ++i)
-    free (axisnames[i]);
-
-  GDrawSetVisible (gw, true);
-
-  while (!esd.done)
-    GDrawProcessOneEvent (NULL);
-
-  GDrawDestroyWindow (gw);
-}
-
 static void
 SetMasterToAxis (MMW * mmw, int initial)
 {
-  int i, cnt, def, isadobe;
+  int i, cnt, def;
 
   cnt =
     GGadgetGetFirstListSelectedItem (GWidgetGetControl
                                      (mmw->subwins[mmw_counts],
                                       CID_AxisCount)) + 1;
-  isadobe =
-    GGadgetIsChecked (GWidgetGetControl
-                      (mmw->subwins[mmw_counts], CID_Adobe));
-  if (cnt != mmw->old_axis_count || isadobe != mmw->old_adobe)
+  if (cnt != mmw->old_axis_count)
     {
       GGadget *list =
         GWidgetGetControl (mmw->subwins[mmw_counts], CID_MasterCount);
       int32_t len;
       GTextInfo **ti = GGadgetGetList (list, &len);
-      if (isadobe)
-        {
-          for (i = 0; i < MmMax; ++i)
-            ti[i]->disabled = (i + 1) < (1 << cnt);
-          for (; i < AppleMmMax + 1; ++i)
-            ti[i]->disabled = true;
-          def = (1 << cnt);
-        }
-      else
-        {
-          for (i = 0; i < AppleMmMax + 1; ++i)
-            ti[i]->disabled = (i + 1) < cnt;
-          def = 1;
-          for (i = 0; i < cnt; ++i)
-            def *= 3;
-          if (def > AppleMmMax + 1)
-            def = AppleMmMax + 1;
-        }
+      for (i = 0; i < MmMax; ++i)
+        ti[i]->disabled = (i + 1) < (1 << cnt);
+      def = (1 << cnt);
       if (!initial)
         GGadgetSelectOneListItem (list, def - 1);
       mmw->old_axis_count = cnt;
-      mmw->old_adobe = isadobe;
     }
 }
 
@@ -1380,34 +658,6 @@ MMW_AxisCntChanged (GGadget * g, GEvent * e)
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
       SetMasterToAxis (GDrawGetUserData (GGadgetGetWindow (g)), false);
-    }
-  return (true);
-}
-
-static int
-MMW_TypeChanged (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
-    {
-      MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
-      int isapple =
-        GGadgetIsChecked (GWidgetGetControl
-                          (mmw->subwins[mmw_counts], CID_Apple));
-      int i;
-      SetMasterToAxis (mmw, false);
-      for (i = 0; i < 4; ++i)
-        {
-          GGadgetSetEnabled (GWidgetGetControl
-                             (mmw->subwins[mmw_axes],
-                              CID_AxisDefault + i * 100), isapple);
-          GGadgetSetEnabled (GWidgetGetControl
-                             (mmw->subwins[mmw_axes],
-                              CID_AxisDefaultLabel + i * 100), isapple);
-          NameGadgetsSetEnabled (GTabSetGetSubwindow
-                                 (GWidgetGetControl
-                                  (mmw->subwins[mmw_axes], CID_WhichAxis), i),
-                                 isapple);
-        }
     }
   return (true);
 }
@@ -1467,24 +717,10 @@ static void
 MMW_Close (MMW * mmw)
 {
   int i;
-  GGadget *list =
-    GWidgetGetControl (mmw->subwins[mmw_named], CID_NamedDesigns);
-  int32_t len;
-  GTextInfo **ti = GGadgetGetList (list, &len);
 
-  for (i = 0; i < len; ++i)
-    if (ti[i]->userdata != NULL)
-      MacNameListFree (ti[i]->userdata);
-  for (i = 0; i < 4; ++i)
-    MacNameListFree (NameGadgetsGetNames
-                     (GTabSetGetSubwindow
-                      (GWidgetGetControl
-                       (mmw->subwins[mmw_axes], CID_WhichAxis), i)));
   for (i = 0; i < mmw->lcnt; ++i)
     MMDetachNew (mmw->loaded[i]);
   free (mmw->loaded);
-  for (i = 0; i < 4; ++i)
-    mmw->mm->axismaps[i].axisnames = NULL;
   MMSetFreeContents (mmw->mm);
   free (mmw->mm);
   mmw->done = true;
@@ -1555,8 +791,7 @@ ParseWeights (GWindow gw, int cid, char *str,
 
 static int
 ParseList (GWindow gw, int cid, char *str8, int *err, real start,
-           real def, real end, real **_list, int tabset_cid, int aspect,
-           int isapple)
+           real def, real end, real **_list, int tabset_cid, int aspect)
 {
   int i, cnt;
   const uint32_t *ret, *pt;
@@ -1578,9 +813,7 @@ ParseList (GWindow gw, int cid, char *str8, int *err, real start,
     }
   if (start != end)
     cnt += 2;
-  if (isapple && start != end)
-    ++cnt;
-  if (!isapple || start == end)
+  else
     defdone = true;
   list = xmalloc (cnt * sizeof (real));
   if (start == end)
@@ -1888,10 +1121,10 @@ MMW_FuncsValid (MMW * mmw)
         ut = x_u8_to_u32 (u8_force_valid (mmw->old->cdv));
       else if (mmw->instance_count == (1 << mmw->axis_count) &&
                StandardPositions (mmw->mm, mmw->instance_count,
-                                  mmw->axis_count, false))
+                                  mmw->axis_count))
         ut = x_u8_to_u32 (u8_force_valid (standard_cdvs[mmw->axis_count]));
       else if (mmw->axis_count == 1 &&
-               OrderedPositions (mmw->mm, mmw->instance_count, false))
+               OrderedPositions (mmw->mm, mmw->instance_count))
         ut = Figure1AxisCDV (mmw);
       else
         ut = x_u8_to_u32 ("");
@@ -1987,45 +1220,6 @@ MMW_WeightsValid (MMW * mmw)
 }
 
 static GTextInfo *
-NamedDesigns (MMW * mmw)
-{
-  int cnt, i, j;
-  GTextInfo *ti;
-  char buffer[120], *pt;
-  char *ustyle;
-
-  if (!mmw->mm->apple || mmw->old == NULL)
-    return (NULL);
-
-  cnt = mmw->old->named_instance_count;
-  ti = xcalloc ((cnt + 1), sizeof (GTextInfo));
-  for (i = 0; i < mmw->old->named_instance_count; ++i)
-    {
-      pt = buffer;
-      *pt++ = '[';
-      for (j = 0; j < mmw->old->axis_count; ++j)
-        {
-          sprintf (pt, "%.4g ",
-                   (double) mmw->old->named_instances[i].coords[j]);
-          pt += strlen (pt);
-        }
-      pt[-1] = ']';
-      ustyle = PickNameFromMacName (mmw->old->named_instances[i].names);
-      ti[i].bg = ti[i].fg = COLOR_DEFAULT;
-      ti[i].text =
-        xmalloc ((strlen (buffer) + 3 +
-                   strlen (ustyle)) * sizeof (uint32_t));
-      utf82u_strcpy (ti[i].text, ustyle);
-      u32_strcat (ti[i].text, x_gc_u8_to_u32 ( " "));
-      u32_strcat (ti[i].text, x_gc_u8_to_u32 ( buffer));
-      ti[i].userdata = MacNameCopy (mmw->old->named_instances[i].names);
-      free (ustyle);
-    }
-
-  return (ti);
-}
-
-static GTextInfo *
 TiFromFont (SplineFont *sf)
 {
   GTextInfo *ti = xcalloc (1, sizeof (GTextInfo));
@@ -2046,8 +1240,6 @@ FontList (MMW * mmw, int instance, int *sel)
   if (mmw->old != NULL)
     {
       cnt = mmw->old->instance_count;
-      if (mmw->old->apple)
-        ++cnt;
     }
   for (fv = fv_list; fv != NULL; fv = (FontView *) (fv->b.next))
     {
@@ -2069,12 +1261,6 @@ FontList (MMW * mmw, int instance, int *sel)
           if (mmw->old->instances[i] == mmw->mm->instances[instance])
             pos = cnt;
           ti[cnt++] = TiFromFont (mmw->old->instances[i]);
-        }
-      if (mmw->old->apple)
-        {
-          if (mmw->old->normal == mmw->mm->instances[instance])
-            pos = cnt;
-          ti[cnt++] = TiFromFont (mmw->old->normal);
         }
     }
   for (fv = fv_list; fv != NULL; fv = (FontView *) (fv->b.next))
@@ -2143,67 +1329,26 @@ MMW_DesignsSetup (MMW * mmw)
 }
 
 static void
-MMW_ParseNamedStyles (MMSet *setto, MMW * mmw)
-{
-  GGadget *list =
-    GWidgetGetControl (mmw->subwins[mmw_named], CID_NamedDesigns);
-  int32_t i, j, len;
-  GTextInfo **ti = GGadgetGetList (list, &len);
-  uint32_t *upt, *end;
-
-  setto->named_instance_count = len;
-  if (len != 0)
-    {
-      setto->named_instances = xcalloc (len, sizeof (struct named_instance));
-      for (i = 0; i < len; ++i)
-        {
-          setto->named_instances[i].coords =
-            xcalloc (setto->axis_count, sizeof (real));
-          upt = u32_strchr (ti[i]->text, '[');
-          if (upt != NULL)
-            {
-              for (j = 0, ++upt; j < setto->axis_count; ++j)
-                {
-                  setto->named_instances[i].coords[j] =
-                    rint (u32_strtod (upt, &end) * 8096) / 8096;
-                  if (*end == ' ')
-                    ++end;
-                  upt = end;
-                }
-            }
-          setto->named_instances[i].names = ti[i]->userdata;
-          ti[i]->userdata = NULL;
-        }
-    }
-}
-
-static void
 MMW_DoOK (MMW * mmw)
 {
-  real weights[AppleMmMax + 1];
+  real weights[MmMax + 1];
   real fbt;
   int err = false;
   char *familyname, *fn, *origname = NULL;
   int i, j;
   MMSet *setto, *dlgmm;
   FontView *fv = NULL;
-  int isapple =
-    GGadgetIsChecked (GWidgetGetControl
-                      (mmw->subwins[mmw_counts], CID_Apple));
   int defpos;
   struct psdict *oldprivate = NULL;
   Encoding *enc = NULL;
 
-  if (!isapple)
-    {
-      if (!GetWeights
-          (mmw->gw, weights, mmw->mm, mmw->instance_count, mmw->axis_count))
-        return;
-      fbt = GetReal8 (mmw->subwins[mmw_others], CID_ForceBoldThreshold,
-                      _("Force Bold Threshold:"), &err);
-      if (err)
-        return;
-    }
+  if (!GetWeights
+      (mmw->gw, weights, mmw->mm, mmw->instance_count, mmw->axis_count))
+    return;
+  fbt = GetReal8 (mmw->subwins[mmw_others], CID_ForceBoldThreshold,
+                  _("Force Bold Threshold:"), &err);
+  if (err)
+    return;
 
   familyname =
     x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle
@@ -2308,33 +1453,14 @@ MMW_DoOK (MMW * mmw)
     }
   else
     setto = (MMSet *) xzalloc (sizeof (MMSet));
-  setto->apple = isapple;
   setto->axis_count = mmw->axis_count;
   setto->instance_count = mmw->instance_count;
   defpos = mmw->instance_count;
-  if (isapple)
-    {
-      for (defpos = 0; defpos < mmw->instance_count; ++defpos)
-        {
-          for (j = 0; j < mmw->axis_count; ++j)
-            if (dlgmm->positions[defpos * dlgmm->axis_count + j] != 0)
-              break;
-          if (j == mmw->axis_count)
-            break;
-        }
-      if (defpos == mmw->instance_count)
-        --defpos;
-      --setto->instance_count;
-      setto->normal = dlgmm->instances[defpos];
-      if (setto->normal != NULL)
-        setto->normal->mm = setto;
-    }
   for (i = 0; i < setto->axis_count; ++i)
     setto->axes[i] = dlgmm->axes[i];
   setto->axismaps = dlgmm->axismaps;
   setto->defweights = xcalloc (setto->instance_count, sizeof (real));
-  if (!isapple)
-    memcpy (setto->defweights, weights,
+  memcpy (setto->defweights, weights,
             setto->instance_count * sizeof (real));
   free (dlgmm->defweights);
   setto->positions =
@@ -2363,25 +1489,17 @@ MMW_DoOK (MMW * mmw)
       setto->normal = MMNewFont (setto, -1, familyname);
       setto->normal->private = oldprivate;
     }
-  if (!isapple)
+  if (fbt > 0 && fbt <= 1)
     {
-      if (fbt > 0 && fbt <= 1)
-        {
-          char buffer[20];
-          sprintf (buffer, "%g", (double) fbt);
-          if (oldprivate == NULL)
-            setto->normal->private = xcalloc (1, sizeof (struct psdict));
-          PSDictChangeEntry (setto->normal->private, "ForceBoldThreshold",
-                             buffer);
-        }
+      char buffer[20];
+      sprintf (buffer, "%g", (double) fbt);
+      if (oldprivate == NULL)
+        setto->normal->private = xcalloc (1, sizeof (struct psdict));
+      PSDictChangeEntry (setto->normal->private, "ForceBoldThreshold",
+                         buffer);
     }
-  if (!isapple)
-    {
-      setto->cdv = dlgmm->cdv;
-      setto->ndv = dlgmm->ndv;
-    }
-  else
-    MMW_ParseNamedStyles (setto, mmw);
+  setto->cdv = dlgmm->cdv;
+  setto->ndv = dlgmm->ndv;
   for (i = 0; i < setto->instance_count; ++i)
     {
       if (setto->instances[i] == NULL)
@@ -2408,8 +1526,7 @@ MMW_DoOK (MMW * mmw)
           setto->instances[i]->origname = xstrdup_or_null (setto->normal->origname);
         }
     }
-  if (!isapple)
-    MMReblend ((FontViewBase *) fv, setto);
+  MMReblend ((FontViewBase *) fv, setto);
   if (fv != NULL)
     {
       for (i = 0; i < setto->instance_count; ++i)
@@ -2467,9 +1584,6 @@ MMW_DoNext (MMW * mmw)
   int i, err;
   real start, end, def, *designs, *norm;
   int n, n2;
-  int isapple =
-    GGadgetIsChecked (GWidgetGetControl
-                      (mmw->subwins[mmw_counts], CID_Apple));
   char *yesno[3];
   yesno[0] = _("_Yes");
   yesno[1] = _("_No");
@@ -2494,7 +1608,7 @@ MMW_DoNext (MMW * mmw)
         GTabSetSetEnabled (GWidgetGetControl
                            (mmw->subwins[mmw_axes], CID_WhichAxis), i,
                            i < mmw->axis_count);
-      for (i = 0; i < AppleMmMax + 1; ++i)
+      for (i = 0; i < MmMax + 1; ++i)
         GTabSetSetEnabled (GWidgetGetControl
                            (mmw->subwins[mmw_designs], CID_WhichDesign), i,
                            i < mmw->instance_count);
@@ -2505,45 +1619,15 @@ MMW_DoNext (MMW * mmw)
           mmw->axis_count)
         GTabSetSetSel (GWidgetGetControl
                        (mmw->subwins[mmw_axes], CID_WhichAxis), 0);
-      if (isapple)
+      if (mmw->instance_count == (1 << mmw->axis_count))
         {
-          int cnt = 1;
-          for (i = 0; i < mmw->axis_count; ++i)
-            cnt *= 3;
-          if (mmw->instance_count == cnt)
+          for (i = (mmw->old == NULL) ? 0 : mmw->old->instance_count;
+               i < mmw->instance_count; ++i)
             {
-              for (i = (mmw->old == NULL) ? 0 : mmw->old->instance_count;
-                   i < mmw->instance_count - 1; ++i)
-                {
-                  int j = (i >= (cnt - 1) / 2) ? i + 1 : i;
-                  mmw->mm->positions[i * 4] =
-                    (j % 3 == 0) ? -1 : (j % 3 == 1) ? 0 : 1;
-                  mmw->mm->positions[i * 4 + 1] =
-                    ((j / 3) % 3 == 0) ? -1 : ((j / 3) % 3 == 1) ? 0 : 1;
-                  mmw->mm->positions[i * 4 + 2] =
-                    ((j / 9) % 3 == 0) ? -1 : ((j / 9) % 3 == 1) ? 0 : 1;
-                  mmw->mm->positions[i * 4 + 3] =
-                    ((j / 27) % 3 == 0) ? -1 : ((j / 27) % 3 == 1) ? 0 : 1;
-                }
-              /* Place the default psuedo-instance last */
-              mmw->mm->positions[i * 4] = 0;
-              mmw->mm->positions[i * 4 + 1] = 0;
-              mmw->mm->positions[i * 4 + 2] = 0;
-              mmw->mm->positions[i * 4 + 3] = 0;
-            }
-        }
-      else
-        {
-          if (mmw->instance_count == (1 << mmw->axis_count))
-            {
-              for (i = (mmw->old == NULL) ? 0 : mmw->old->instance_count;
-                   i < mmw->instance_count; ++i)
-                {
-                  mmw->mm->positions[i * 4] = (i & 1) ? 1 : 0;
-                  mmw->mm->positions[i * 4 + 1] = (i & 2) ? 1 : 0;
-                  mmw->mm->positions[i * 4 + 2] = (i & 4) ? 1 : 0;
-                  mmw->mm->positions[i * 4 + 3] = (i & 8) ? 1 : 0;
-                }
+              mmw->mm->positions[i * 4] = (i & 1) ? 1 : 0;
+              mmw->mm->positions[i * 4 + 1] = (i & 2) ? 1 : 0;
+              mmw->mm->positions[i * 4 + 2] = (i & 4) ? 1 : 0;
+              mmw->mm->positions[i * 4 + 3] = (i & 8) ? 1 : 0;
             }
         }
     }
@@ -2564,45 +1648,12 @@ MMW_DoNext (MMW * mmw)
                              _("Please set the Axis Type field"));
               return;           /* Failure */
             }
-          /* Don't free the current value. If it is non-null then it just */
-          /*  points into the data structure that the Names gadgets manipulate */
-          /*  and they will have done any freeing that needs doing. Freeing */
-          /*  it here would destroy the data they work on */
-          /*MacNameListFree(mmw->mm->axismaps[i].axisnames); */
-          mmw->mm->axismaps[i].axisnames = NULL;
-          if (isapple)
-            {
-              mmw->mm->axismaps[i].axisnames =
-                NameGadgetsGetNames (GTabSetGetSubwindow
-                                     (GWidgetGetControl
-                                      (mmw->subwins[mmw_axes], CID_WhichAxis),
-                                      i));
-              if (mmw->mm->axismaps[i].axisnames == NULL)
-                {
-                  GTabSetSetSel (GWidgetGetControl
-                                 (mmw->subwins[mmw_axes], CID_WhichAxis), i);
-                  ff_post_error (_("Bad Axis"),
-                                 _
-                                 ("When building an Apple distortable font, you must specify at least one name for the axis"));
-                  return;       /* Failure */
-                }
-            }
           err = false;
           start = GetReal8 (mmw->subwins[mmw_axes], CID_AxisBegin + i * 100,
                             _("Begin:"), &err);
           end = GetReal8 (mmw->subwins[mmw_axes], CID_AxisEnd + i * 100,
                           _("End:"), &err);
-          if (isapple)
-            {
-              def =
-                rint (GetReal8
-                      (mmw->subwins[mmw_axes], CID_AxisDefault + i * 100,
-                       (char *) C_("AxisValue", "Default"), &err) * 8096) / 8096;
-              start = rint (start * 8096) / 8096;
-              end = rint (end * 8096) / 8096;
-            }
-          else
-            def = start;
+          def = start;
           if (start >= end || def < start || def > end)
             {
               GTabSetSetSel (GWidgetGetControl
@@ -2614,12 +1665,12 @@ MMW_DoNext (MMW * mmw)
             ParseList (mmw->subwins[mmw_axes],
                        CID_IntermediateDesign + i * 100,
                        _("Design Settings:"), &err, start, def, end, &designs,
-                       CID_WhichAxis, i, isapple);
+                       CID_WhichAxis, i);
           n2 =
             ParseList (mmw->subwins[mmw_axes],
                        CID_IntermediateNormalized + i * 100,
-                       _("Normalized Settings:"), &err, isapple ? -1 : 0, 0,
-                       1, &norm, CID_WhichAxis, i, isapple);
+                       _("Normalized Settings:"), &err, 0, 0,
+                       1, &norm, CID_WhichAxis, i);
           if (n != n2 || err)
             {
               GTabSetSetSel (GWidgetGetControl
@@ -2644,10 +1695,10 @@ MMW_DoNext (MMW * mmw)
     }
   else if (mmw->state == mmw_designs)
     {
-      real positions[AppleMmMax + 1][4];
-      int used[AppleMmMax + 1];
-      int j, k, mask, mul;
-      SplineFont *sfs[AppleMmMax + 1];
+      real positions[MmMax + 1][4];
+      int used[MmMax + 1];
+      int j, k, mask;
+      SplineFont *sfs[MmMax + 1];
       GTextInfo *ti;
 
       memset (used, 0, sizeof (used));
@@ -2660,34 +1711,15 @@ MMW_DoNext (MMW * mmw)
                _("Normalized position of this design along each axis"),
                positions[i], mmw->axis_count, CID_WhichDesign, i))
             return;
-          if (isapple)
+          mask = 0;
+          for (j = 0; j < mmw->axis_count; ++j)
             {
-              mask = 0;
-              mul = 1;
-              for (j = 0; j < mmw->axis_count; ++j)
-                {
-                  if (positions[i][j] == -1)
-                    /* Do Nothing */ ;
-                  else if (positions[i][j] == 0.0)
-                    mask += mul;
-                  else if (positions[i][j] == 1.0)
-                    mask += 2 * mul;
-                  else
-                    break;
-                }
-            }
-          else
-            {
-              mask = 0;
-              for (j = 0; j < mmw->axis_count; ++j)
-                {
-                  if (positions[i][j] == 0)
-                    /* Do Nothing */ ;
-                  else if (positions[i][j] == 1.0)
-                    mask |= (1 << j);
-                  else
-                    break;
-                }
+              if (positions[i][j] == 0)
+                /* Do Nothing */ ;
+              else if (positions[i][j] == 1.0)
+                mask |= (1 << j);
+              else
+                break;
             }
           if (j == mmw->axis_count)
             used[mask] = true;
@@ -2745,24 +1777,11 @@ MMW_DoNext (MMW * mmw)
                 sprintf (pt, "%d ", (i & (1 << j)) ? 1 : 0);
                 pt += 2;
               }
-            if (!isapple)
-              {
-                ff_post_error (_("Bad Multiple Master Font"),
-                               _
-                               ("The set of positions, %.30s, is not specified in any design (and should be)"),
-                               buffer);
-                return;
-              }
-            else
-              {
-                if (gwwv_ask
-                    (_("Bad Multiple Master Font"), (const char **) yesno, 0,
-                     1,
-                     _
-                     ("The set of positions, %.30s, is not specified in any design.\nIs that what you want?"),
-                     buffer) == 1)
-                  return;
-              }
+            ff_post_error (_("Bad Multiple Master Font"),
+                           _
+                           ("The set of positions, %.30s, is not specified in any design (and should be)"),
+                           buffer);
+            return;
           }
       memcpy (mmw->mm->positions, positions, sizeof (positions));
       for (i = 0; i < mmw->instance_count; ++i)
@@ -2775,13 +1794,13 @@ MMW_DoNext (MMW * mmw)
         ;
       else if (mmw->instance_count == (1 << mmw->axis_count)
                && StandardPositions (mmw->mm, mmw->instance_count,
-                                     mmw->axis_count, isapple))
+                                     mmw->axis_count))
         /* It's arranged as we expect it to be */ ;
       else if (mmw->axis_count == 1 &&
-               OrderedPositions (mmw->mm, mmw->instance_count, isapple))
+               OrderedPositions (mmw->mm, mmw->instance_count))
         /* It's arranged according to our secondary expectations */ ;
-      else if (!isapple && (mmw->instance_count == (1 << mmw->axis_count) ||
-                            mmw->axis_count == 1))
+      else if (mmw->instance_count == (1 << mmw->axis_count) ||
+                            mmw->axis_count == 1)
         {
           if (gwwv_ask
               (_("Disordered designs"), (const char **) yesno, 0, 1,
@@ -2813,7 +1832,7 @@ MMW_DoNext (MMW * mmw)
 				      (GWidgetGetControl (mmw->subwins[mmw_funcs], CID_CDV))));
     }
 
-  if (mmw->state == mmw_designs && !isapple)
+  if (mmw->state == mmw_designs)
     mmw->state += 2;
   else
     ++mmw->state;
@@ -2876,81 +1895,6 @@ MMW_Prev (GGadget * g, GEvent * e)
 }
 
 static int
-MMW_NamedNew (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
-      EditStyleName (mmw, -1);
-    }
-  return (true);
-}
-
-static int
-MMW_NamedEdit (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
-      EditStyleName (mmw,
-                     GGadgetGetFirstListSelectedItem (GWidgetGetControl
-                                                      (mmw->subwins
-                                                       [mmw_named],
-                                                       CID_NamedDesigns)));
-    }
-  return (true);
-}
-
-static int
-MMW_NamedDelete (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      GWindow gw = GGadgetGetWindow (g);
-      GGadget *list = GWidgetGetControl (gw, CID_NamedDesigns);
-      int32_t i, len;
-      GTextInfo **ti = GGadgetGetList (list, &len);
-      for (i = 0; i < len; ++i)
-        {
-          if (ti[i]->selected)
-            {
-              MacNameListFree (ti[i]->userdata);
-              ti[i]->userdata = NULL;
-            }
-        }
-      GListDelSelected (list);
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_NamedDelete), false);
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_NamedEdit), false);
-    }
-  return (true);
-}
-
-static int
-MMW_NamedSel (GGadget * g, GEvent * e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
-    {
-      int32_t len;
-      GTextInfo **ti = GGadgetGetList (g, &len);
-      GWindow gw = GGadgetGetWindow (g);
-      int i, sel_cnt = 0;
-      for (i = 0; i < len; ++i)
-        if (ti[i]->selected)
-          ++sel_cnt;
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_NamedDelete),
-                         sel_cnt != 0);
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_NamedEdit), sel_cnt == 1);
-    }
-  else if (e->type == et_controlevent
-           && e->u.control.subtype == et_listdoubleclick)
-    {
-      MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
-      EditStyleName (mmw, GGadgetGetFirstListSelectedItem (g));
-    }
-  return (true);
-}
-
-static int
 MMW_CheckOptical (GGadget * g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_textchanged)
@@ -2987,14 +1931,6 @@ MMW_CheckOptical (GGadget * g, GEvent * e)
           top = "22";
           def = "0";
           bottom = "-22";
-        }
-      else
-        if (GGadgetIsChecked
-            (GWidgetGetControl (mmw->subwins[mmw_counts], CID_Apple)))
-        {
-          top = "2.0";
-          bottom = "0.5";
-          def = "1.0";
         }
       else
         {
@@ -3162,21 +2098,18 @@ MMCopy (MMSet *orig)
   /*  lose data when they shrink and then restore a value */
 
   mm = (MMSet *) xzalloc (sizeof (MMSet));
-  mm->apple = orig->apple;
-  mm->instance_count = AppleMmMax + 1;
+  mm->instance_count = MmMax + 1;
   mm->axis_count = 4;
   for (i = 0; i < orig->axis_count; ++i)
     mm->axes[i] = xstrdup_or_null (orig->axes[i]);
-  mm->instances = xcalloc (AppleMmMax + 1, sizeof (SplineFont *));
+  mm->instances = xcalloc (MmMax + 1, sizeof (SplineFont *));
   memcpy (mm->instances, orig->instances,
           orig->instance_count * sizeof (SplineFont *));
-  if (mm->apple)
-    mm->instances[orig->instance_count] = orig->normal;
-  mm->positions = xcalloc ((AppleMmMax + 1) * 4, sizeof (real));
+  mm->positions = xcalloc ((MmMax + 1) * 4, sizeof (real));
   for (i = 0; i < orig->instance_count; ++i)
     memcpy (mm->positions + i * 4, orig->positions + i * orig->axis_count,
             orig->axis_count * sizeof (real));
-  mm->defweights = xcalloc (AppleMmMax + 1, sizeof (real));
+  mm->defweights = xcalloc (MmMax + 1, sizeof (real));
   memcpy (mm->defweights, orig->defweights,
           orig->instance_count * sizeof (real));
   mm->axismaps = xcalloc (4, sizeof (struct axismap));
@@ -3207,25 +2140,23 @@ MMWizard (MMSet *mm)
   GRect pos, subpos;
   GWindow gw;
   GWindowAttrs wattrs;
-  GTabInfo axisaspects[5], designaspects[AppleMmMax + 1 + 1];
-  GGadgetCreateData bgcd[8], cntgcd[11], axisgcd[4][20],
-    designgcd[AppleMmMax + 1][5], agcd[2], dgcd[3], ogcd[7], ngcd[7];
-  GTextInfo blabel[8], cntlabel[11], axislabel[4][20],
-    designlabel[AppleMmMax + 1][5], dlabel, olabels[7], nlabel[5];
+  GTabInfo axisaspects[5], designaspects[MmMax + 1 + 1];
+  GGadgetCreateData bgcd[8], cntgcd[9], axisgcd[4][20],
+    designgcd[MmMax + 1][5], agcd[2], dgcd[3], ogcd[7];
+  GTextInfo blabel[8], cntlabel[9], axislabel[4][20],
+    designlabel[MmMax + 1][5], dlabel, olabels[7];
   char axisbegins[4][20], axisends[4][20], axisdefs[4][20];
   char *normalized[4], *designs[4];
   char *pt, *freeme;
   int i, k;
-  int isadobe = mm == NULL || !mm->apple;
   int space, blen =
     GIntGetResource (_NUM_Buttonsize) * 100 / GGadgetScale (100);
   static char *designtablab[] = { "1", "2", "3", "4", "5", "6", "7", "8",
-    "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-    "20", "21", "22", "23", "24", "25", "26", "27", NULL
+    "9", "10", "11", "12", "13", "14", "15", "16", "17", NULL
   };
-#if AppleMmMax!=26
-#error "The designtablab array needs to be expanded to match AppleMmMax"
-  /* Actually it should be one bigger than AppleMmMax */
+#if MmMax!=16
+#error "The designtablab array needs to be expanded to match MmMax"
+  /* Actually it should be one bigger than MmMax */
 #endif
 
   memset (&mmw, 0, sizeof (mmw));
@@ -3235,8 +2166,6 @@ MMWizard (MMSet *mm)
       mmw.mm = MMCopy (mm);
       mmw.axis_count = mm->axis_count;
       mmw.instance_count = mm->instance_count;
-      if (mm->apple)
-        ++mmw.instance_count;   /* Normal (default) design is a master in the mac format */
     }
   else
     {
@@ -3244,10 +2173,10 @@ MMWizard (MMSet *mm)
       mmw.axis_count = 1;
       mmw.instance_count = 2;
       mmw.mm->axis_count = 4;
-      mmw.mm->instance_count = AppleMmMax + 1;
-      mmw.mm->instances = xcalloc (AppleMmMax + 1, sizeof (SplineFont *));
-      mmw.mm->positions = xcalloc ((AppleMmMax + 1) * 4, sizeof (real));
-      mmw.mm->defweights = xcalloc (AppleMmMax + 1, sizeof (real));
+      mmw.mm->instance_count = MmMax + 1;
+      mmw.mm->instances = xcalloc (MmMax + 1, sizeof (SplineFont *));
+      mmw.mm->positions = xcalloc ((MmMax + 1) * 4, sizeof (real));
+      mmw.mm->defweights = xcalloc (MmMax + 1, sizeof (real));
       mmw.mm->axismaps = xcalloc (4, sizeof (struct axismap));
       mmw.isnew = true;
     }
@@ -3348,41 +2277,11 @@ MMWizard (MMSet *mm)
   memset (&cntgcd, 0, sizeof (cntgcd));
 
   k = 0;
-  cntlabel[k].text = (uint32_t *) _("Type of distortable font:");
-  cntlabel[k].text_is_1byte = true;
-  cntgcd[k].gd.label = &cntlabel[k];
-  cntgcd[k].gd.pos.x = 5;
-  cntgcd[k].gd.pos.y = 11;
-  cntgcd[k].gd.flags = gg_visible | gg_enabled;
-  cntgcd[k++].creator = GLabelCreate;
-
-  cntlabel[k].text = (uint32_t *) _("Adobe");
-  cntlabel[k].text_is_1byte = true;
-  cntgcd[k].gd.label = &cntlabel[k];
-  cntgcd[k].gd.pos.x = 10;
-  cntgcd[k].gd.pos.y = cntgcd[k - 1].gd.pos.y + 12;
-  cntgcd[k].gd.flags = isadobe ? (gg_visible | gg_enabled | gg_cb_on) :
-    (gg_visible | gg_enabled);
-  cntgcd[k].gd.cid = CID_Adobe;
-  cntgcd[k].gd.handle_controlevent = MMW_TypeChanged;
-  cntgcd[k++].creator = GRadioCreate;
-
-  cntlabel[k].text = (uint32_t *) _("Apple");
-  cntlabel[k].text_is_1byte = true;
-  cntgcd[k].gd.label = &cntlabel[k];
-  cntgcd[k].gd.pos.x = 70;
-  cntgcd[k].gd.pos.y = cntgcd[k - 1].gd.pos.y;
-  cntgcd[k].gd.flags = !isadobe ? (gg_visible | gg_enabled | gg_cb_on) :
-    (gg_visible | gg_enabled);
-  cntgcd[k].gd.cid = CID_Apple;
-  cntgcd[k].gd.handle_controlevent = MMW_TypeChanged;
-  cntgcd[k++].creator = GRadioCreate;
-
   cntlabel[k].text = (uint32_t *) _("Number of Axes:");
   cntlabel[k].text_is_1byte = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 5;
-  cntgcd[k].gd.pos.y = cntgcd[k - 1].gd.pos.y + 18;
+  cntgcd[k].gd.pos.y = 11;
   cntgcd[k].gd.flags = gg_visible | gg_enabled;
   cntgcd[k++].creator = GLabelCreate;
 
@@ -3413,7 +2312,7 @@ MMWizard (MMSet *mm)
   cntgcd[k].gd.label = &mastercounts[mmw.instance_count - 1];
   cntgcd[k].gd.cid = CID_MasterCount;
   cntgcd[k++].creator = GListButtonCreate;
-  for (i = 0; i < AppleMmMax + 1; ++i)
+  for (i = 0; i < MmMax + 1; ++i)
     mastercounts[i].selected = false;
   mastercounts[mmw.instance_count - 1].selected = true;
 
@@ -3496,11 +2395,8 @@ MMWizard (MMSet *mm)
                    (double) mmw.mm->axismaps[i].designs[mmw.mm->
                                                         axismaps[i].points -
                                                         1]);
-          if (mmw.mm->apple)
-            sprintf (axisdefs[i], "%.4g", (double) mmw.mm->axismaps[i].def);
-          else
-            sprintf (axisdefs[i], "%g",
-                     (double) (mmw.mm->axismaps[i].designs[0] +
+          sprintf (axisdefs[i], "%g",
+                   (double) (mmw.mm->axismaps[i].designs[0] +
                                mmw.mm->axismaps[i].designs[mmw.mm->axismaps
                                                            [i].points -
                                                            1]) / 2);
@@ -3529,8 +2425,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 110;
       axisgcd[i][k].gd.pos.y = axisgcd[i][k - 2].gd.pos.y;
-      axisgcd[i][k].gd.flags =
-        mmw.mm->apple ? (gg_visible | gg_enabled) : gg_visible;
+      axisgcd[i][k].gd.flags = gg_visible; // apple
       axisgcd[i][k].gd.cid = CID_AxisDefaultLabel + i * 100;
       axisgcd[i][k++].creator = GLabelCreate;
 
@@ -3540,8 +2435,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.pos.x = 148;
       axisgcd[i][k].gd.pos.y = axisgcd[i][k - 2].gd.pos.y;
       axisgcd[i][k].gd.pos.width = 50;
-      axisgcd[i][k].gd.flags =
-        mmw.mm->apple ? (gg_visible | gg_enabled) : gg_visible;
+      axisgcd[i][k].gd.flags = gg_visible; // apple
       axisgcd[i][k].gd.cid = CID_AxisDefault + i * 100;
       axisgcd[i][k++].creator = GTextFieldCreate;
 
@@ -3573,7 +2467,7 @@ MMWizard (MMSet *mm)
 
       normalized[i] = NULL;
       designs[i] = NULL;
-      if (mmw.mm->axismaps[i].points > 2 + mmw.mm->apple)
+      if (mmw.mm->axismaps[i].points > 2)
         {
           int l, j, len1, len2;
           char buffer[30];
@@ -3582,10 +2476,6 @@ MMWizard (MMSet *mm)
             {
               for (j = 1; j < mmw.mm->axismaps[i].points - 1; ++j)
                 {
-                  if (mmw.mm->apple
-                      && mmw.mm->axismaps[i].designs[j] ==
-                      mmw.mm->axismaps[i].def)
-                    continue;
                   /* I wanted to separate things with commas, but that isn't */
                   /*  a good idea in Europe (comma==decimal point) */
                   sprintf (buffer, "%g ",
@@ -3652,10 +2542,6 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.cid = CID_IntermediateNormalized + i * 100;
       axisgcd[i][k++].creator = GTextFieldCreate;
 
-      k = GCDBuildNames (axisgcd[i], axislabel[i], k, mm == NULL
-                         || i >=
-                         mm->axis_count ? NULL : mm->axismaps[i].axisnames);
-
       axisaspects[i].text = (uint32_t *) _(axistablab[i]);
       axisaspects[i].text_is_1byte = true;
       axisaspects[i].gcd = axisgcd[i];
@@ -3685,7 +2571,7 @@ MMWizard (MMSet *mm)
   memset (&dlabel, 0, sizeof (dlabel));
   memset (&designaspects, 0, sizeof (designaspects));
 
-  for (i = 0; i < AppleMmMax + 1; ++i)
+  for (i = 0; i < MmMax + 1; ++i)
     {
       designlabel[i][0].text =
         (uint32_t *) _("Source from which this design is to be taken");
@@ -3744,67 +2630,6 @@ MMWizard (MMSet *mm)
   dgcd[1].creator = GTabSetCreate;
 
   GGadgetsCreate (mmw.subwins[mmw_designs], dgcd);
-
-  memset (&ngcd, 0, sizeof (ngcd));
-  memset (&nlabel, 0, sizeof (nlabel));
-
-  nlabel[0].text = (uint32_t *) _("Named Styles");
-  nlabel[0].text_is_1byte = true;
-  ngcd[0].gd.label = &nlabel[0];
-  ngcd[0].gd.pos.x = 3;
-  ngcd[0].gd.pos.y = 4;
-  ngcd[0].gd.flags = gg_visible | gg_enabled;
-  ngcd[0].creator = GLabelCreate;
-
-  ngcd[1].gd.pos.x = 3;
-  ngcd[1].gd.pos.y = 18;
-  ngcd[1].gd.pos.width = MMW_Width - 10;
-  ngcd[1].gd.pos.height = MMW_Height - 100;
-  ngcd[1].gd.u.list = NamedDesigns (&mmw);
-  ngcd[1].gd.flags = gg_visible | gg_enabled | gg_list_multiplesel;
-  ngcd[1].gd.cid = CID_NamedDesigns;
-  ngcd[1].gd.handle_controlevent = MMW_NamedSel;
-  ngcd[1].creator = GListCreate;
-
-  ngcd[2].gd.pos.x = 20;
-  ngcd[2].gd.pos.y = ngcd[1].gd.pos.y + ngcd[1].gd.pos.height + 5;
-  ngcd[2].gd.pos.width = -1;
-  ngcd[2].gd.flags = gg_visible | gg_enabled;
-  nlabel[2].text = (uint32_t *) C_("Design", "_New...");
-  nlabel[2].text_is_1byte = true;
-  nlabel[2].text_has_mnemonic = true;
-  ngcd[2].gd.label = &nlabel[2];
-  ngcd[2].gd.cid = CID_NamedNew;
-  ngcd[2].gd.handle_controlevent = MMW_NamedNew;
-  ngcd[2].creator = GButtonCreate;
-
-  ngcd[3].gd.pos.x = 20 + blen + 10;
-  ngcd[3].gd.pos.y = ngcd[2].gd.pos.y;
-  ngcd[3].gd.pos.width = -1;
-  ngcd[3].gd.flags = gg_visible;
-  nlabel[3].text = (uint32_t *) _("_Delete");
-  nlabel[3].text_is_1byte = true;
-  nlabel[3].text_has_mnemonic = true;
-  ngcd[3].gd.label = &nlabel[3];
-  ngcd[3].gd.cid = CID_NamedDelete;
-  ngcd[3].gd.handle_controlevent = MMW_NamedDelete;
-  ngcd[3].creator = GButtonCreate;
-
-  ngcd[4].gd.pos.x = 20 + 2 * blen + 20;
-  ngcd[4].gd.pos.y = ngcd[2].gd.pos.y;
-  ngcd[4].gd.pos.width = -1;
-  ngcd[4].gd.flags = gg_visible;
-  nlabel[4].text = (uint32_t *) _("_Edit...");
-  nlabel[4].text_is_1byte = true;
-  nlabel[4].text_has_mnemonic = true;
-  ngcd[4].gd.label = &nlabel[4];
-  ngcd[4].gd.cid = CID_NamedEdit;
-  ngcd[4].gd.handle_controlevent = MMW_NamedEdit;
-  ngcd[4].creator = GButtonCreate;
-
-  GGadgetsCreate (mmw.subwins[mmw_named], ngcd);
-  if (ngcd[1].gd.u.list != NULL)
-    GTextInfoListFree (ngcd[1].gd.u.list);
 
   memset (&ogcd, 0, sizeof (ogcd));
   memset (&olabels, 0, sizeof (olabels));

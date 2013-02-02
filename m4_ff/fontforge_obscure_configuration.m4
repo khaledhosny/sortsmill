@@ -21,17 +21,6 @@ AC_DEFINE_UNQUOTED([BACK_LAYER_MAX],[${BACK_LAYER_MAX}],
          (this includes the default foreground and background layers)
          -- this does not limit type3 fonts.])
 
-test x"${FONTFORGE_CONFIG_APPLE_ONLY_TTF}" = x && FONTFORGE_CONFIG_APPLE_ONLY_TTF=0
-AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_APPLE_ONLY_TTF],
-        [${FONTFORGE_CONFIG_APPLE_ONLY_TTF}],
-        [Apple suggests using a sfnt version of 'true' for fonts
-         designed for use only on a mac (windows refuses such
-         fonts). I generally prefer to have a font work everywhere, so
-         normally ff produces fonts with version 1.0. Set this to 1 if you
-         want Apple only fonts (produced when Apple mode is set and
-         Opentype mode is unset in the Generate Fonts-Options
-         dialog).])
-
 test x"${FONTFORGE_CONFIG_APPLE_UNICODE_NAMES}" = x && FONTFORGE_CONFIG_APPLE_UNICODE_NAMES=0
 AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_APPLE_UNICODE_NAMES],
         [${FONTFORGE_CONFIG_APPLE_UNICODE_NAMES}],
@@ -63,18 +52,6 @@ AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_WRITE_PFM],
          without creating a font along with it. I don't see the need
          for this, but he provided a patch. Set this to 1 to
          enable his patch.])
-
-test x"${FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES}" = x && FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES=0
-AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES],
-        [${FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES}],
-        [Prior to late Sept of 2003 FontForge converted certain Mac
-         feature/settings into opentype-like tags. Some features could
-         be converted directly but for a few I made up tags.  Now
-         Sorts Mill Tools is capable of using the Mac feature settings
-         directly. If you set this flag to 1, then, when Sorts Mill Tools loads in
-         an sfd file with these non-standard opentype tags, it will
-         convert them into the appropriate Mac feature/setting
-         combinations.])
 
 test x"${FONTFORGE_CONFIG_PS_REFS_GET_SUBRS}" = x && FONTFORGE_CONFIG_PS_REFS_GET_SUBRS=0
 AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_PS_REFS_GET_SUBRS],

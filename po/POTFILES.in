@@ -1,5 +1,5 @@
 [encoding: UTF-8]
-data/fontforge.desktop.in
+data/sortsmill-editor.desktop.in
 data/fontforge.xml.in
 auxiliary/rexp.c
 auxiliary/rnrs_conditions.c
@@ -68,7 +68,6 @@ fontforge/lookups.c
 fontforge/lookupui.c
 fontforge/macbinary.c
 fontforge/macenc.c
-fontforge/macencui.c
 fontforge/math.c
 fontforge/mathconstants.c
 fontforge/metricsview.c
@@ -88,7 +87,6 @@ fontforge/parsepfa.c
 fontforge/parsettfatt.c
 fontforge/parsettfbmf.c
 fontforge/parsettf.c
-fontforge/parsettfvar.c
 fontforge/prefs.c
 fontforge/print.c
 fontforge/problems.c
@@ -115,7 +113,6 @@ fontforge/splinestroke.c
 fontforge/splineutil2.c
 fontforge/splineutil.c
 fontforge/startui.c
-fontforge/statemachine.c
 fontforge/svg.c
 fontforge/tilepath.c
 fontforge/tottfaat.c
