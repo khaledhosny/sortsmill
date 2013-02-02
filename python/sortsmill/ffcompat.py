@@ -97,25 +97,32 @@ from sortsmill.legacy.fontforge import (
   spiroLeft,
   )
 
+__registerMenuItem = guile.private_ref ('sortsmill usermenu python',
+                                        'registerMenuItem')
+__no_windowing_ui_ref = guile.public_ref ('sortsmill ffcompat',
+                                          'no_windowing_ui-ref')
+__no_windowing_ui_set = guile.public_ref ('sortsmill ffcompat',
+                                          'no_windowing_ui-set!')
+__running_script_ref = guile.public_ref ('sortsmill ffcompat',
+                                         'running_script-ref')
+__running_script_set = guile.public_ref ('sortsmill ffcompat',
+                                         'running_script-set!')
+
 #--------------------------------------------------------------------------
 
 def __get_no_windowing_ui ():
-  guile.pyguile_to_bool (guile.call (guile.public_ref ('sortsmill ffcompat',
-                                                       'no_windowing_ui-ref')))
+  guile.pyguile_to_bool (guile.call (__no_windowing_ui_ref))
 
 def __set_no_windowing_ui (setting):
   assert isinstance (setting, bool)
-  guile.call (guile.public_ref ('sortsmill ffcompat', 'no_windowing_ui-set!'),
-              guile.bool_to_pyguile (setting))
+  guile.call (__no_windowing_ui_set, guile.bool_to_pyguile (setting))
 
 def __get_running_script ():
-  guile.pyguile_to_bool (guile.call (guile.public_ref ('sortsmill ffcompat',
-                                                       'running_script-ref')))
+  guile.pyguile_to_bool (guile.call (__running_script_ref))
 
 def __set_running_script (setting):
   assert isinstance (setting, bool)
-  guile.call (guile.public_ref ('sortsmill ffcompat', 'running_script-set!'),
-              guile.bool_to_pyguile (setting))
+  guile.call (__running_script_set, guile.bool_to_pyguile (setting))
 
 def __windowing_ui (setting):
   old_setting = not __get_no_windowing_ui ()
@@ -182,8 +189,7 @@ def registerMenuItem (menu_function, enable_function, data,
     action = menu_function
     enabled = enable_function
     shortcut = shortcut_string
-    guile.call (guile.private_ref ('sortsmill usermenu python',
-                                   'registerMenuItem'),
+    guile.call (__registerMenuItem,
                 guile.pyobject (action),
                 guile.pyobject (enabled),
                 guile.pyobject (data),
