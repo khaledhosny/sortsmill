@@ -2975,15 +2975,19 @@ compareg___ (struct font_diff *fd)
     }
 
   fd->middle_diff = false;
-  for (otl =
-       fd->is_gpos ? fd->sf1_mst->gpos_lookups : fd->sf1_mst->gsub_lookups;
-       otl != NULL; otl = otl->next)
+
+  if (fd->is_gpos)
+    otl = fd->sf1_mst->gpos_lookups;
+  else
+    otl = fd->sf1_mst->gsub_lookups;
+
+  while (otl != NULL)
     {
       if (fd->l1match2[otl->lookup_index] != NULL)
         {
           for (sub = otl->subtables; sub != NULL; sub = sub->next)
             {
-              if (fd->s2match1[sub->subtable_offset] == NULL)
+              if (fd->s2match1[sub->subtable_offset] != NULL)
                 {
                   fd->cur_sub1 = sub;
                   fd->cur_sub2 = fd->s2match1[sub->subtable_offset];
@@ -2992,6 +2996,7 @@ compareg___ (struct font_diff *fd)
                 }
             }
         }
+      otl = otl->next;
     }
 
   free (fd->l2match1);

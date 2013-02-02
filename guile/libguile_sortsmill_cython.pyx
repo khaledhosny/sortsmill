@@ -182,12 +182,6 @@ cdef public object __apply_python_callable (object func, object args, object key
     retval = func (*args, **keyword_args)
   return retval
 
-# FIXME: Rewrite this in C and put it in the aux library.
-cdef public char *__python_string_to_c_string (object s):
-  py_s = s.encode ('UTF-8') if isinstance (s, unicode) else s
-  cdef char *c_s = py_s
-  return xgc.x_gc_strdup (c_s)
-
 cdef public object __python_module (object module_name):
   cdef SCM scm_pymodule
   cdef SCM scm_module_ptr

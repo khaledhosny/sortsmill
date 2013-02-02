@@ -102,6 +102,7 @@ SCM scm_pointer_to_pylong (SCM obj);
 SCM scm_pylong_to_pointer (SCM obj);
 
 SCM scm_string_to_pystring (SCM obj);
+SCM scm_pystring_to_string (SCM obj);
 
 SCM scm_list_to_pytuple (SCM obj);
 SCM scm_list_to_pylist (SCM obj);

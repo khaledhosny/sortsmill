@@ -198,9 +198,11 @@ _VISIBLE_SCM_TYPECHECK_P (scm_pystring_p, scm_is_pystring, _FF_PYSTRING_CHECK);
 _VISIBLE_SCM_TYPECHECK_P (scm_pytuple_p, scm_is_pytuple, PyTuple_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pylist_p, scm_is_pylist, PyList_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pydict_p, scm_is_pydict, PyDict_Check);
-_VISIBLE_SCM_TYPECHECK_P (scm_pycallable_p, scm_is_pycallable, PyCallable_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pycallable_p, scm_is_pycallable,
+                          PyCallable_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pymodule_p, scm_is_pymodule, PyModule_Check);
-_VISIBLE_SCM_TYPECHECK_P (scm_pysequence_p, scm_is_pysequence, PySequence_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pysequence_p, scm_is_pysequence,
+                          PySequence_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pyiterable_p, scm_is_pyiterable, PyIter_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pygenerator_p, scm_is_pygenerator, PyGen_Check);
 
@@ -315,9 +317,18 @@ scm_pylong_to_pointer (SCM obj)
 VISIBLE SCM
 scm_string_to_pystring (SCM obj)
 {
+  const char *who = "scm_string_to_pystring";
+
   SCM result = SCM_UNDEFINED;
   if (scm_is_pystring (obj))
     result = obj;
+  else if (!scm_is_string (obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("expected a string or pystring")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
   else
     {
       scm_dynwind_begin (0);
@@ -327,12 +338,62 @@ scm_string_to_pystring (SCM obj)
       scm_dynwind_free (s);
 
       PyObject *py_s = PyUnicode_FromStringAndSize (s, n);
-      if (py_s == NULL)
-	scm_c_py_failure ("scm_string_to_pystring", scm_list_1 (obj));
 
       scm_dynwind_end ();
 
+      if (py_s == NULL)
+        scm_c_py_failure (who, scm_list_1 (obj));
+
       result = scm_from_PyObject_ptr (py_s);
+    }
+  return result;
+}
+
+// As a convenience, scm_pystring_to_string accepts strings and
+// returns them unmodified.
+VISIBLE SCM
+scm_pystring_to_string (SCM obj)
+{
+  const char *who = "scm_pystring_to_string";
+
+  SCM result = SCM_UNDEFINED;
+  if (scm_is_string (obj))
+    result = obj;
+  else
+    {
+      PyObject *py_obj = scm_to_PyObject_ptr (obj);
+      if (PyUnicode_Check (py_obj))
+        {
+          py_obj = PyUnicode_AsEncodedString (py_obj, "UTF-8", "strict");
+          if (py_obj == NULL)
+            scm_c_py_failure (who, scm_list_1 (obj));
+        }
+      else if (!PyBytes_Check (py_obj))
+        rnrs_raise_condition
+          (scm_list_4
+           (rnrs_make_assertion_violation (),
+            rnrs_c_make_who_condition (who),
+            rnrs_c_make_message_condition (_("expected a string or pystring")),
+            rnrs_make_irritants_condition (scm_list_1 (obj))));
+      else
+        Py_INCREF (py_obj);
+
+      char *buffer;
+      ssize_t n;
+      int errval = PyBytes_AsStringAndSize (py_obj, &buffer, &n);
+      if (errval == -1)
+        {
+          Py_DECREF (py_obj);
+          scm_c_py_failure (who, scm_list_1 (obj));
+        }
+      else
+        {
+          // scm_from_utf8_stringn copies the string, possibly
+          // decoding it.
+          result = scm_from_utf8_stringn (buffer, n);
+
+          Py_DECREF (py_obj);
+        }
     }
   return result;
 }
@@ -543,6 +604,10 @@ init_guile_sortsmill_python (void)
   // As a convenience, string->pystring accepts pystrings and returns
   // them unmodified.
   scm_c_define_gsubr ("string->pystring", 1, 0, 0, scm_string_to_pystring);
+
+  // As a convenience, pystring->string accepts strings and returns
+  // them unmodified.
+  scm_c_define_gsubr ("pystring->string", 1, 0, 0, scm_pystring_to_string);
 
   scm_c_define_gsubr ("list->pytuple", 1, 0, 0, scm_list_to_pytuple);
   scm_c_define_gsubr ("list->pylist", 1, 0, 0, scm_list_to_pylist);
