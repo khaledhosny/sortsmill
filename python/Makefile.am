@@ -1,5 +1,5 @@
 # Copyright (C) 2000-2012 by George Williams
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -62,8 +62,8 @@ endif HAVE_PYTHON_COMPATIBILITY
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py ffContrib/allow_core.py
 
-nobase_nodist_python_PYTHON = sortsmill/__init__.py	\
-	sortsmill/legacy/__init__.py
+nobase_nodist_python_PYTHON = sortsmill/__init__.py		\
+	sortsmill/version.py sortsmill/legacy/__init__.py
 #sortsmill/fontforge_compat.py
 
 lib_LTLIBRARIES =
@@ -132,18 +132,13 @@ nobase_pyexec_LTLIBRARIES += sortsmill/pyguile.la
 sortsmill_pyguile_la_SOURCES = sortsmill/pyguile.c
 sortsmill_pyguile_la_LIBADD = $(AUXLIBADD)
 
-#lib_LTLIBRARIES += libguile-sortsmill_cython.la
-#libguile_sortsmill_cython_la_SOURCES = libguile_sortsmill_cython.c
-#libguile_sortsmill_cython_la_LDFLAGS = -prefer-pic -module -shared
-#libguile_sortsmill_cython_la_LIBADD = $(AUXLIBADD)
-
-PYX_FILES = sortsmill/views.pyx sortsmill/ffcompat.pyx					\
+PYX_FILES = sortsmill/views.pyx\
 	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
 	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
 	sortsmill/brentroot.pyx sortsmill/pyguile.pyx						\
 	sortsmill/usermenu.py
 
-NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
+NODIST_PYX_FILES = sortsmill/fontforge_api.pyx sortsmill/ffcompat.py
 
 cythonbuildinc = $(top_builddir)/inc/sortsmill/cython
 cythonsrcinc = $(top_srcdir)/inc/sortsmill/cython

@@ -28,14 +28,9 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-include 'sortsmill/cython/config.pxi'
-
-cdef extern from "config.h":
-  pass
-
 import warnings
 import traceback
-from . import (guile, notices)
+from . import (pkg_info, guile, notices)
 
 from sortsmill.legacy.fontforge import (
   layer,
@@ -136,7 +131,7 @@ def __running_script (setting):
 
 #--------------------------------------------------------------------------
 
-__version__ = FF_MODULE_VERSION
+__version__ = pkg_info.version
 
 def version ():
   warnings.warn ('version() is deprecated; use __version__ instead.',
@@ -147,12 +142,12 @@ def version ():
 
 def loadPlugin (filename):
   warnings.warn ('loadPlugin() is deprecated in {} and does nothing.'
-                 .format (PACKAGE_NAME),
+                 .format (pkg_info.package_name),
                  DeprecationWarning)
 
 def loadPluginDir (dirname):
   warnings.warn ('loadPluginDir() is deprecated in {} and does nothing.'
-                 .format (PACKAGE_NAME),
+                 .format (pkg_info.package_name),
                  DeprecationWarning)
 
 def hasUserInterface ():
@@ -174,11 +169,11 @@ def postError (win_title, msg):
 
 #--------------------------------------------------------------------------
 
-IF HAVE_GUI:
-  def registerMenuItem (menu_function, enable_function, data,
-                        which_window, shortcut_string, *submenu_names):
-    assert menu_function is not None
-    assert which_window is not None
+def registerMenuItem (menu_function, enable_function, data,
+                      which_window, shortcut_string, *submenu_names):
+  assert menu_function is not None
+  assert which_window is not None
+  if pkg_info.have_gui and not __get_no_windowing_ui ():
     if isinstance (which_window, str):
       windows = (which_window,)
     else:
@@ -195,12 +190,5 @@ IF HAVE_GUI:
                 guile.pyobject (windows),
                 guile.pyobject (shortcut),
                 guile.pyobject (menu_path))
-
-IF not HAVE_GUI:
-  def registerMenuItem (menu_function, enable_function, data,
-                        which_window, shortcut_string, *submenu_names):
-    assert menu_function is not None
-    assert which_window is not None
-    pass
 
 #--------------------------------------------------------------------------

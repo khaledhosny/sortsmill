@@ -30,3 +30,7 @@ version_minor = VERSION_MINOR
 version_patch = VERSION_PATCH
 version_extra = VERSION_EXTRA
 version_extra_short = VERSION_EXTRA_SHORT
+version = '{}.{}.{}{}'.format (version_major, version_minor,
+                               version_patch, version_extra_short)
+
+have_gui = HAVE_GUI
