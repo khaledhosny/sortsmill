@@ -16,11 +16,6 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 
-/////
-///// FIXME: Export a bunch of this stuff.
-/////
-
-
 #include <Python.h>
 #include <libguile.h>
 #include <gmpy.h>
@@ -58,7 +53,7 @@ initialize_gmpy_pymodule_if_necessary (void)
 
 //-------------------------------------------------------------------------
 
-static SCM
+VISIBLE SCM
 scm_py_failure (SCM who, SCM irritants)
 {
   assert (scm_list_p (irritants));
@@ -91,7 +86,7 @@ scm_py_failure (SCM who, SCM irritants)
   return SCM_UNSPECIFIED;
 }
 
-static SCM
+VISIBLE SCM
 scm_c_py_failure (const char *who, SCM irritants)
 {
   return scm_py_failure (scm_from_utf8_string (who), irritants);
@@ -111,25 +106,25 @@ scm_grab_borrowed_pyref (SCM p)
   return scm_pointer_from_borrowed_pyref ((PyObject *) scm_to_pointer (p));
 }
 
-static SCM
+VISIBLE SCM
 scm_py_none (void)
 {
   return borrowed_scm_from_PyObject_ptr (Py_None);
 }
 
-static SCM
+VISIBLE SCM
 scm_py_false (void)
 {
   return borrowed_scm_from_PyObject_ptr (Py_False);
 }
 
-static SCM
+VISIBLE SCM
 scm_py_true (void)
 {
   return borrowed_scm_from_PyObject_ptr (Py_True);
 }
 
-static SCM
+VISIBLE SCM
 scm_py_not (SCM obj)
 {
   PyObject *py_obj = scm_to_PyObject_ptr (obj);
@@ -139,7 +134,7 @@ scm_py_not (SCM obj)
   return (is_true) ? scm_py_true () : scm_py_false ();
 }
 
-static SCM
+VISIBLE SCM
 scm_py_not_not (SCM obj)
 {
   PyObject *py_obj = scm_to_PyObject_ptr (obj);
@@ -149,16 +144,29 @@ scm_py_not_not (SCM obj)
   return (is_true) ? scm_py_true () : scm_py_false ();
 }
 
-static bool
+VISIBLE bool
 scm_is_pyobject (SCM obj)
 {
   return
     scm_is_true (scm_call_1
-                 (scm_c_private_ref
-                  ("sortsmill python", "procedure:pyobject?"), obj));
+                 (scm_c_private_ref ("sortsmill python", "procedure:pyobject?"),
+                  obj));
 }
 
 #define _SCM_TYPECHECK_P(NAME, TYPECHECK)		\
+  VISIBLE SCM						\
+  NAME (SCM obj)					\
+  {							\
+    bool result = false;				\
+    if (scm_is_pyobject (obj))				\
+      {							\
+	PyObject *py_obj = scm_to_PyObject_ptr (obj);	\
+	result = TYPECHECK (py_obj);			\
+      }							\
+    return scm_from_bool (result);			\
+  }
+
+#define _STATIC_SCM_TYPECHECK_P(NAME, TYPECHECK)	\
   static SCM						\
   NAME (SCM obj)					\
   {							\
@@ -180,7 +188,6 @@ _SCM_TYPECHECK_P (scm_pynone_p, _FF_PYNONE_CHECK);
 _SCM_TYPECHECK_P (scm_pybool_p, PyBool_Check);
 _SCM_TYPECHECK_P (scm_pyint_p, PyInt_Check);
 _SCM_TYPECHECK_P (scm_pylong_p, PyLong_Check);
-_SCM_TYPECHECK_P (scm_pympz_p_core, Pympz_Check);
 _SCM_TYPECHECK_P (scm_pyunicode_p, PyUnicode_Check);
 _SCM_TYPECHECK_P (scm_pybytes_p, PyBytes_Check);
 _SCM_TYPECHECK_P (scm_pystring_p, _FF_PYSTRING_CHECK);
@@ -193,20 +200,22 @@ _SCM_TYPECHECK_P (scm_pysequence_p, PySequence_Check);
 _SCM_TYPECHECK_P (scm_pyiterable_p, PyIter_Check);
 _SCM_TYPECHECK_P (scm_pygenerator_p, PyGen_Check);
 
-static SCM
+_STATIC_SCM_TYPECHECK_P (scm_pympz_p_core, Pympz_Check);
+
+VISIBLE SCM
 scm_pympz_p (SCM obj)
 {
   initialize_gmpy_pymodule_if_necessary ();
   return scm_pympz_p_core (obj);
 }
 
-static SCM
+VISIBLE SCM
 scm_boolean_to_pybool (SCM obj)
 {
   return (scm_to_bool (obj)) ? scm_py_true () : scm_py_false ();
 }
 
-static SCM
+VISIBLE SCM
 scm_pybool_to_boolean (SCM obj)
 {
   PyObject *py_obj = scm_to_PyObject_ptr (obj);
@@ -223,13 +232,13 @@ scm_pybool_to_boolean (SCM obj)
   return (is_true) ? SCM_BOOL_T : SCM_BOOL_F;
 }
 
-static SCM
+VISIBLE SCM
 scm_integer_to_pyint (SCM obj)
 {
   return scm_from_PyObject_ptr (PyInt_FromLong (scm_to_long (obj)));
 }
 
-static SCM
+VISIBLE SCM
 scm_pyint_to_integer (SCM obj)
 {
   PyObject *py_obj = scm_to_PyObject_ptr (obj);
@@ -246,7 +255,7 @@ scm_pyint_to_integer (SCM obj)
   return scm_from_long (n);
 }
 
-static SCM
+VISIBLE SCM
 scm_integer_to_pympz (SCM obj)
 {
   initialize_gmpy_pymodule_if_necessary ();
@@ -255,7 +264,7 @@ scm_integer_to_pympz (SCM obj)
   return scm_from_PyObject_ptr ((PyObject *) z);
 }
 
-static SCM
+VISIBLE SCM
 scm_pympz_to_integer (SCM obj)
 {
   initialize_gmpy_pymodule_if_necessary ();
@@ -270,7 +279,7 @@ scm_pympz_to_integer (SCM obj)
   return scm_from_mpz (Pympz_AS_MPZ (py_obj));
 }
 
-static SCM
+VISIBLE SCM
 scm_pointer_to_pylong (SCM p)
 {
   PyObject *obj = PyLong_FromVoidPtr (scm_to_pointer (p));
@@ -279,7 +288,7 @@ scm_pointer_to_pylong (SCM p)
   return scm_from_PyObject_ptr (obj);
 }
 
-static SCM
+VISIBLE SCM
 scm_pylong_to_pointer (SCM obj)
 {
   PyObject *py_obj = scm_to_PyObject_ptr (obj);
@@ -429,20 +438,20 @@ scm_pysequence_to_list (SCM obj)
   return p;
 }
 
-static SCM
+VISIBLE SCM
 scm_py_builtins (void)
 {
   return borrowed_scm_from_PyObject_ptr (PyEval_GetBuiltins ());
 }
 
-static SCM
+VISIBLE SCM
 scm_py_locals (void)
 {
   PyObject *obj = PyEval_GetLocals ();
   return (obj == NULL) ? scm_py_none () : borrowed_scm_from_PyObject_ptr (obj);
 }
 
-static SCM
+VISIBLE SCM
 scm_py_globals (void)
 {
   PyObject *obj = PyEval_GetGlobals ();
