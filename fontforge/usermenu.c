@@ -27,7 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sortsmill/guile/views.h>
 #include <fontforgeui.h>
 #include <usermenu.h>
 #include <stdio.h>
