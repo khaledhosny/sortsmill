@@ -15,10 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-int something_to_ensure_this_source_is_nonempty = 0;
-
-#ifndef _NO_PYTHON
-
 #include <sortsmill/guile/python.h>
 
 static void
@@ -79,5 +75,3 @@ scm_to_PyObject_ptr (SCM obj)
 {
   return (PyObject *) scm_to_pointer (scm_pyobject_to_scm_pointer (obj));
 }
-
-#endif	// _NO_PYTHON

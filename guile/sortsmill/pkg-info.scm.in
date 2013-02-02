@@ -32,9 +32,41 @@
           pkg-info:version-extra-short
 
           pkg-info:have-pure-api?
-          pkg-info:have-python-api?)
 
-  (import (rnrs))
+          pkg-info:have-python-api?
+          pkg-info:py-major-version
+          pkg-info:py-minor-version
+          pkg-info:py-micro-version
+          pkg-info:py-release-level
+          pkg-info:py-release-serial
+          pkg-info:py-version
+          pkg-info:py-version-hex)
+
+  (import (rnrs)
+          (only (guile) string-prefix? string-suffix?))
+
+  (define-syntax yes?
+    (lambda (x)
+      (syntax-case x ()
+        [(_ yes-or-no)
+         (if (string=? (syntax->datum #'yes-or-no) "yes")
+             #'#t #'#f)] )))
+
+  (define-syntax expansion-or-f
+    (lambda (x)
+      (syntax-case x ()
+        [(_ possible-expansion)
+         (let ([maybe-symbol (syntax->datum #'possible-expansion)])
+           (if (symbol? maybe-symbol)
+               [let ([s (symbol->string maybe-symbol)])
+                 (if (and (<= 3 (string-length s))
+                          (string-prefix? "@" s)
+                          (string-suffix? "@" s))
+                     #'#f                 ; Expansion did not happen.
+                     #'possible-expansion ; Expansion did happen.
+                     )]
+               #'possible-expansion ; Expansion did happen.
+               ))] )))
 
   (define pkg-info:package "@PACKAGE@")
   (define pkg-info:package-bugreport "@PACKAGE_BUGREPORT@")
@@ -50,15 +82,15 @@
   (define pkg-info:version-extra "@VERSION_EXTRA@")
   (define pkg-info:version-extra_short "@VERSION_EXTRA_SHORT@")
 
-  (define-syntax yes?
-    (lambda (x)
-      (syntax-case x ()
-        [(_ yes-or-no)
-         (if (string=? (syntax->datum #'yes-or-no) "yes")
-             #'#t #'#f)] )))
-
   (define pkg-info:have-pure-api? (yes? "@i_do_have_pure_api@"))
 
   (define pkg-info:have-python-api? (yes? "@i_do_have_python_api@"))
+  (define pkg-info:py-major-version (expansion-or-f @PY_MAJOR_VERSION@))
+  (define pkg-info:py-minor-version (expansion-or-f @PY_MINOR_VERSION@))
+  (define pkg-info:py-micro-version (expansion-or-f @PY_MICRO_VERSION@))
+  (define pkg-info:py-release-level (expansion-or-f @PY_RELEASE_LEVEL@))
+  (define pkg-info:py-release-serial (expansion-or-f @PY_RELEASE_SERIAL@))
+  (define pkg-info:py-version (expansion-or-f @PY_VERSION_QUOTED@))
+  (define pkg-info:py-version-hex (expansion-or-f @PY_VERSION_HEX@))
 
   ) ;; end of library.

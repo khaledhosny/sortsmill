@@ -164,13 +164,13 @@ endif HAVE_PURE_API
 
 if HAVE_PYTHON_API
 
-lib_LTLIBRARIES += libguile-sortsmill_python.la
-libguile_sortsmill_python_la_SOURCES = guile_python.c
-libguile_sortsmill_python_la_LDFLAGS = -module -release $(VERSION)	\
-	$(PYTHON_LIBS)
-libguile_sortsmill_python_la_LIBADD =				\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
-	$(top_builddir)/lib/libgnu.la
+#lib_LTLIBRARIES += libguile-sortsmill_python.la
+#libguile_sortsmill_python_la_SOURCES = guile_python.c
+#libguile_sortsmill_python_la_LDFLAGS = -module -release $(VERSION)	\
+#	$(PYTHON_LIBS)
+#libguile_sortsmill_python_la_LIBADD =				\
+#	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
+#	$(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmill_cython.la
 libguile_sortsmill_cython_la_SOURCES = libguile_sortsmill_cython.c

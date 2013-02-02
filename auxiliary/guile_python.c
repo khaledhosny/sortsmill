@@ -15,6 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+
+/////
+///// FIXME: Export a bunch of this stuff.
+/////
+
+
 #include <Python.h>
 #include <libguile.h>
 #include <gmpy.h>
@@ -29,16 +35,6 @@
 #include <sortsmill/xgc.h>      // Includes gc.h and pthreads.h in the right order.
 
 void init_guile_sortsmill_python (void);
-
-static const char *guile_support_dll_name = "libguile-sortsmill_cython";
-
-#if PY_MAJOR_VERSION < 3
-static const char *guile_support_init_function =
-  "initlibguile_sortsmill_cython";
-#else
-static const char *guile_support_init_function =
-  "PyInit_libguile_sortsmill_cython";
-#endif
 
 //-------------------------------------------------------------------------
 
@@ -453,27 +449,6 @@ scm_py_globals (void)
   return (obj == NULL) ? scm_py_none () : borrowed_scm_from_PyObject_ptr (obj);
 }
 
-// FIXME: This function should be written differently for Python 3.2+,
-// because PyModule_GetFilename is deprecated then. Wrapping
-// PyModule_GetFilenameObject to look like PyModule_GetFilename seems
-// a good approach.
-static SCM
-scm_python_module_get_file_name (SCM obj)
-{
-  PyObject *py_obj = scm_to_PyObject_ptr (obj);
-  if (!PyModule_Check (py_obj))
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition ("scm_python_module_get_file_name"),
-        rnrs_c_make_message_condition (_("expected a Python module")),
-        rnrs_make_irritants_condition (scm_list_1 (obj))));
-  char *file_name = PyModule_GetFilename (py_obj);
-  if (file_name == NULL)
-    scm_c_py_failure ("scm_python_module_get_file_name", scm_list_1 (obj));
-  return scm_from_utf8_string (file_name);
-}
-
 //-------------------------------------------------------------------------
 
 VISIBLE void
@@ -481,14 +456,6 @@ init_guile_sortsmill_python (void)
 {
   if (!Py_IsInitialized ())
     Py_Initialize ();
-
-  SCM guile_support_dll =
-    scm_dynamic_link (scm_from_utf8_string (guile_support_dll_name));
-  SCM guile_support_init =
-    scm_dynamic_func (scm_from_utf8_string (guile_support_init_function),
-                      guile_support_dll);
-  scm_dynamic_call (guile_support_init, guile_support_dll);
-  scm_c_define ("guile-support-dll", guile_support_dll);
 
   scm_c_define_gsubr ("py-failure", 2, 0, 0, scm_py_failure);
 
@@ -540,12 +507,6 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("py-builtins", 0, 0, 0, scm_py_builtins);
   scm_c_define_gsubr ("py-locals", 0, 0, 0, scm_py_locals);
   scm_c_define_gsubr ("py-globals", 0, 0, 0, scm_py_globals);
-
-  //scm_c_define_gsubr ("private:pyimport", 1, 0, 0, scm_pyimport);
-  scm_c_define_gsubr ("python-module-get-file-name", 1, 0, 0,
-                      scm_python_module_get_file_name);
-  //scm_c_define_gsubr ("guile-support-pymodule", 0, 0, 0,
-  //                    scm_guile_support_pymodule);
 }
 
 //-------------------------------------------------------------------------

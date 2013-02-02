@@ -70,9 +70,16 @@ nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
 dist_libsortsmill_aux_la_SOURCES += brentroot.c qbrentroot.c	\
 	guile_brentroot.c
 
+# Guile-Python interface.
+if HAVE_PYTHON_API
+# FIXME: Now that all this Guile-Python support has been moved to one
+# library, the source files can be merged or broken up differently.
+dist_libsortsmill_aux_la_SOURCES += scm_python.c guile_python.c
+endif HAVE_PYTHON_API
+
 # Miscellaneous C interface to Guile and Guile extensions.
-dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c scm_python.c	\
-	guile_gsl.c guile_iconv.c
+dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c guile_gsl.c	\
+	guile_iconv.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'

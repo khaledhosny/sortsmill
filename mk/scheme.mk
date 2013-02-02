@@ -61,4 +61,12 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''i_do_have_python_scripting''@|$(i_do_have_python_scripting)|g'	\
 		-e 's|@''i_do_have_python_api''@|$(i_do_have_python_api)|g'		\
 		-e 's|@''i_do_have_pure_api''@|$(i_do_have_pure_api)|g'			\
-		-e 's|@''PYTHON_COMPATIBILITY''@|$(PYTHON_COMPATIBILITY)|g'
+		-e 's|@''PYTHON_COMPATIBILITY''@|$(PYTHON_COMPATIBILITY)|g'		\
+		-e 's|@''PY_MAJOR_VERSION''@|$(PY_MAJOR_VERSION)|g'				\
+		-e 's|@''PY_MINOR_VERSION''@|$(PY_MINOR_VERSION)|g'				\
+		-e 's|@''PY_MICRO_VERSION''@|$(PY_MICRO_VERSION)|g'				\
+		-e 's|@''PY_RELEASE_LEVEL''@|$(PY_RELEASE_LEVEL)|g'				\
+		-e 's|@''PY_RELEASE_SERIAL''@|$(PY_RELEASE_SERIAL)|g'			\
+		-e 's|@''PY_VERSION''@|$(PY_VERSION)|g'							\
+		-e 's|@''PY_VERSION_QUOTED''@|$(PY_VERSION_QUOTED)|g'			\
+		-e 's|@''PY_VERSION_HEX''@|$(PY_VERSION_HEX)|g'

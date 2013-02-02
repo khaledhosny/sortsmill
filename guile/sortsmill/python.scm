@@ -151,9 +151,9 @@
           python-module
           current-python-module
           in-python-module
-          python-module-get-file-name
           pyimport
           pymodule?
+          pyinit-function-name
 
           py-incref ;; Should not be needed very often.
           py-decref ;; Should not be needed very often.
@@ -164,6 +164,7 @@
           lines-begin-with)
 
   (import (sortsmill i18n)
+          (sortsmill pkg-info)
           (only (sortsmill strings)
                 enable-hash-guillemet-strings
                 disable-hash-guillemet-strings
@@ -175,7 +176,20 @@
           (ice-9 match)
           (ice-9 format))
 
-  (define python-dll (dynamic-link "libguile-sortsmill_python"))
+  (define-syntax pyinit-prefix
+    (make-variable-transformer
+     (lambda (x)
+       (syntax-case x ()
+         [var (identifier? #'var)
+              (if (< pkg-info:py-major-version 3)
+                  #'"init"
+                  #'"PyInit_")] ))))
+
+  (eval-when (compile load eval)
+    [define (pyinit-function-name python-module-name)
+      (string-append pyinit-prefix python-module-name)])
+
+  (define python-dll (dynamic-link "libguile-sortsmill_aux"))
 
   ;; These variables will be redefined by the dynamic-call.
   (define py-failure *unspecified*)
@@ -267,15 +281,17 @@
 
   ;;--------------------------------------------------------------------------
 
-;;;; (load-extension "/home/trashman/lib64/python2.7/site-packages/sortsmill/internal/__guile_support"
-;;;;                 "init__guile_support")
-
   (eval-when (compile eval load)
-    [define (guile-support-func func-name)
-      (dynamic-func func-name guile-support-dll)])
-;;;;                   (dynamic-link (python-module-get-file-name
-;;;;                                  (guile-support-pymodule))))] )
-;;;;;;                   (dynamic-link "/home/trashman/lib64/python2.7/site-packages/sortsmill/internal/__guile_support"))])
+
+    (define guile-support-dll (dynamic-link "libguile-sortsmill_cython"))
+
+    (define (guile-support-func func-name)
+      (dynamic-func func-name guile-support-dll))
+
+    ) ;; end of eval-when.
+
+  (load-extension "libguile-sortsmill_cython"
+                  (pyinit-function-name "libguile_sortsmill_cython"))
 
   (define-syntax define-guile-support-procedure
     (lambda (x)
@@ -385,20 +401,6 @@
                                               (pointer->pyobject args)))))]
            [func (procedure->pointer '* wrapped-proc '(*))])
       (pointer->pyobject ((__c_py_wrap_function) func))))
-
-;;;;;
-;;;;; This version that catches Guile exceptions and wraps them in
-;;;;; Python exceptions seems not to be worth the trouble.
-;;;;;
-;;; (define (procedure->pycallable proc)
-;;;   (let* ([wrapped-proc
-;;;           (lambda (args)
-;;;             (catch #t (lambda ()
-;;;                         (pyobject->pointer
-;;;                          (apply proc (pytuple->list (pointer->pyobject args)))))
-;;;               pycallable-catch-handler))]
-;;;          [func (procedure->pointer '* wrapped-proc '(*))])
-;;;     (pointer->pyobject ((__c_py_wrap_function) func))))
 
   (define (pycallable-catch-handler key . args)
     (let ([py-key (string->pystring (symbol->string key))]
