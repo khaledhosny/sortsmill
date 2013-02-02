@@ -188,12 +188,6 @@ cdef public char *__python_string_to_c_string (object s):
   cdef char *c_s = py_s
   return xgc.x_gc_strdup (c_s)
 
-# FIXME: Rewrite this in C and put it in the aux library.
-cdef public object __c_string_to_python_string (char *s):
-  cdef bytes py_bytes = s
-  py_s = py_bytes.decode ('UTF-8')
-  return py_s
-
 cdef public object __python_module (object module_name):
   cdef SCM scm_pymodule
   cdef SCM scm_module_ptr

@@ -54,22 +54,32 @@ PyObject *scm_to_PyObject_ptr (SCM obj);
 SCM scm_py_failure (SCM who, SCM irritants);
 SCM scm_c_py_failure (const char *who, SCM irritants);
 
-SCM scm_pynone_p (SCM obj);
-SCM scm_pybool_p (SCM obj);
-SCM scm_pyint_p (SCM obj);
-SCM scm_pylong_p (SCM obj);
-SCM scm_pympz_p (SCM obj);
-SCM scm_pyunicode_p (SCM obj);
-SCM scm_pybytes_p (SCM obj);
-SCM scm_pystring_p (SCM obj);
-SCM scm_pytuple_p (SCM obj);
-SCM scm_pylist_p (SCM obj);
-SCM scm_pydict_p (SCM obj);
-SCM scm_pycallable_p (SCM obj);
-SCM scm_pymodule_p (SCM obj);
-SCM scm_pysequence_p (SCM obj);
-SCM scm_pyiterable_p (SCM obj);
-SCM scm_pygenerator_p (SCM obj);
+#define _FF_VISIBLE_SCM_TYPECHECK_P_DECL(P_NAME, C_NAME)	\
+  SCM P_NAME (SCM obj);						\
+  inline bool C_NAME (SCM obj);					\
+								\
+  inline bool							\
+  C_NAME (SCM obj)						\
+  {								\
+    return scm_is_true (P_NAME (obj));				\
+  }
+
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pynone_p, scm_is_pynone);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pybool_p, scm_is_pybool);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyint_p, scm_is_pyint);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pylong_p, scm_is_pylong);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pympz_p, scm_is_pympz);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyunicode_p, scm_is_pyunicode);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pybytes_p, scm_is_pybytes);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pystring_p, scm_is_pystring);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pytuple_p, scm_is_pytuple);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pylist_p, scm_is_pylist);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pydict_p, scm_is_pydict);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pycallable_p, scm_is_pycallable);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pymodule_p, scm_is_pymodule);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pysequence_p, scm_is_pysequence);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyiterable_p, scm_is_pyiterable);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pygenerator_p, scm_is_pygenerator);
 
 bool scm_is_pyobject (SCM obj);
 
@@ -90,6 +100,8 @@ SCM scm_pympz_to_integer (SCM obj);
 
 SCM scm_pointer_to_pylong (SCM obj);
 SCM scm_pylong_to_pointer (SCM obj);
+
+SCM scm_string_to_pystring (SCM obj);
 
 SCM scm_list_to_pytuple (SCM obj);
 SCM scm_list_to_pylist (SCM obj);

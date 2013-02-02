@@ -153,22 +153,26 @@ scm_is_pyobject (SCM obj)
                   obj));
 }
 
-#define _SCM_TYPECHECK_P(NAME, TYPECHECK)		\
-  VISIBLE SCM						\
-  NAME (SCM obj)					\
-  {							\
-    bool result = false;				\
-    if (scm_is_pyobject (obj))				\
-      {							\
-	PyObject *py_obj = scm_to_PyObject_ptr (obj);	\
-	result = TYPECHECK (py_obj);			\
-      }							\
-    return scm_from_bool (result);			\
-  }
+#define _VISIBLE_SCM_TYPECHECK_P(P_NAME, C_NAME, TYPECHECK)		\
+									\
+  VISIBLE SCM								\
+  P_NAME (SCM obj)							\
+  {									\
+    bool result = false;						\
+    if (scm_is_pyobject (obj))						\
+      {									\
+	PyObject *py_obj = scm_to_PyObject_ptr (obj);			\
+	result = TYPECHECK (py_obj);					\
+      }									\
+    return scm_from_bool (result);					\
+  }									\
+									\
+  /* Generate code from an inline definition that is elsewhere. */	\
+  VISIBLE bool C_NAME (SCM obj);
 
-#define _STATIC_SCM_TYPECHECK_P(NAME, TYPECHECK)	\
+#define _STATIC_SCM_TYPECHECK_P(P_NAME, TYPECHECK)	\
   static SCM						\
-  NAME (SCM obj)					\
+  P_NAME (SCM obj)					\
   {							\
     bool result = false;				\
     if (scm_is_pyobject (obj))				\
@@ -177,28 +181,28 @@ scm_is_pyobject (SCM obj)
 	result = TYPECHECK (py_obj);			\
       }							\
     return scm_from_bool (result);			\
-  }
+  }							\
 
 #define _FF_PYNONE_CHECK(py_obj) ((py_obj) == Py_None)
 
 #define _FF_PYSTRING_CHECK(py_obj)			\
   (PyUnicode_Check (py_obj) || PyBytes_Check (py_obj))
 
-_SCM_TYPECHECK_P (scm_pynone_p, _FF_PYNONE_CHECK);
-_SCM_TYPECHECK_P (scm_pybool_p, PyBool_Check);
-_SCM_TYPECHECK_P (scm_pyint_p, PyInt_Check);
-_SCM_TYPECHECK_P (scm_pylong_p, PyLong_Check);
-_SCM_TYPECHECK_P (scm_pyunicode_p, PyUnicode_Check);
-_SCM_TYPECHECK_P (scm_pybytes_p, PyBytes_Check);
-_SCM_TYPECHECK_P (scm_pystring_p, _FF_PYSTRING_CHECK);
-_SCM_TYPECHECK_P (scm_pytuple_p, PyTuple_Check);
-_SCM_TYPECHECK_P (scm_pylist_p, PyList_Check);
-_SCM_TYPECHECK_P (scm_pydict_p, PyDict_Check);
-_SCM_TYPECHECK_P (scm_pycallable_p, PyCallable_Check);
-_SCM_TYPECHECK_P (scm_pymodule_p, PyModule_Check);
-_SCM_TYPECHECK_P (scm_pysequence_p, PySequence_Check);
-_SCM_TYPECHECK_P (scm_pyiterable_p, PyIter_Check);
-_SCM_TYPECHECK_P (scm_pygenerator_p, PyGen_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pynone_p, scm_is_pynone, _FF_PYNONE_CHECK);
+_VISIBLE_SCM_TYPECHECK_P (scm_pybool_p, scm_is_pybool, PyBool_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pyint_p, scm_is_pyint, PyInt_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pylong_p, scm_is_pylong, PyLong_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pyunicode_p, scm_is_pyunicode, PyUnicode_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pybytes_p, scm_is_pybytes, PyBytes_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pystring_p, scm_is_pystring, _FF_PYSTRING_CHECK);
+_VISIBLE_SCM_TYPECHECK_P (scm_pytuple_p, scm_is_pytuple, PyTuple_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pylist_p, scm_is_pylist, PyList_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pydict_p, scm_is_pydict, PyDict_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pycallable_p, scm_is_pycallable, PyCallable_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pymodule_p, scm_is_pymodule, PyModule_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pysequence_p, scm_is_pysequence, PySequence_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pyiterable_p, scm_is_pyiterable, PyIter_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pygenerator_p, scm_is_pygenerator, PyGen_Check);
 
 _STATIC_SCM_TYPECHECK_P (scm_pympz_p_core, Pympz_Check);
 
@@ -208,6 +212,9 @@ scm_pympz_p (SCM obj)
   initialize_gmpy_pymodule_if_necessary ();
   return scm_pympz_p_core (obj);
 }
+
+// Generate code from an inline definition that is elsewhere.
+VISIBLE bool scm_is_pympz (SCM obj);
 
 VISIBLE SCM
 scm_boolean_to_pybool (SCM obj)
@@ -301,6 +308,33 @@ scm_pylong_to_pointer (SCM obj)
         rnrs_make_irritants_condition (scm_list_1 (obj))));
   void *p = PyLong_AsVoidPtr (py_obj);
   return scm_from_pointer (p, NULL);
+}
+
+// As a convenience, scm_string_to_pystring accepts pystrings and
+// returns them unmodified.
+VISIBLE SCM
+scm_string_to_pystring (SCM obj)
+{
+  SCM result = SCM_UNDEFINED;
+  if (scm_is_pystring (obj))
+    result = obj;
+  else
+    {
+      scm_dynwind_begin (0);
+
+      size_t n;
+      char *s = scm_to_utf8_stringn (obj, &n);
+      scm_dynwind_free (s);
+
+      PyObject *py_s = PyUnicode_FromStringAndSize (s, n);
+      if (py_s == NULL)
+	scm_c_py_failure ("scm_string_to_pystring", scm_list_1 (obj));
+
+      scm_dynwind_end ();
+
+      result = scm_from_PyObject_ptr (py_s);
+    }
+  return result;
 }
 
 SCM
@@ -505,6 +539,10 @@ init_guile_sortsmill_python (void)
 
   scm_c_define_gsubr ("pointer->pylong", 1, 0, 0, scm_pointer_to_pylong);
   scm_c_define_gsubr ("pylong->pointer", 1, 0, 0, scm_pylong_to_pointer);
+
+  // As a convenience, string->pystring accepts pystrings and returns
+  // them unmodified.
+  scm_c_define_gsubr ("string->pystring", 1, 0, 0, scm_string_to_pystring);
 
   scm_c_define_gsubr ("list->pytuple", 1, 0, 0, scm_list_to_pytuple);
   scm_c_define_gsubr ("list->pylist", 1, 0, 0, scm_list_to_pylist);

@@ -196,6 +196,7 @@
   (define grab-pyref *unspecified*)
   (define grab-borrowed-pyref *unspecified*)
   (define guile-support-dll *unspecified*)
+  (define string->pystring *unspecified*)
   (dynamic-call "init_guile_sortsmill_python" python-dll)
 
   (define py-initialized?
@@ -349,7 +350,6 @@
   (define-guile-support-procedure '* "__apply_python_callable" '(* * *))
   (define-guile-support-procedure '* "__py_raise_guile_exception" '(*))
   (define-guile-support-procedure '* "__py_exception_description" '(*))
-  (define-guile-support-procedure '* "__c_string_to_python_string" '(*))
   (define-guile-support-procedure '* "__python_string_to_c_string" '(*))
   (define-guile-support-procedure '* "__python_module" '(*))
   (define-guile-support-procedure '* "__python_import" '(*))
@@ -509,15 +509,6 @@
   (define (pyindexed-set! obj i v)
     (assert (pyobject? obj))
     (pyindexed-set!-core (list->pytuple (list obj i v))))
-
-  ;; As a convenience, string->pystring accepts pystrings and returns
-  ;; them unmodified.
-  (define string->pystring
-    (match-lambda
-     [(? string? s) (pointer->pyobject
-                     ((__c_string_to_python_string) (string->pointer s)))]
-     [(? pystring? s) s]
-     [other (string-or-pystring-failure 'string->pystring other)] ))
 
   ;; As a convenience, pystring->string accepts Scheme strings and
   ;; returns them unmodified.
