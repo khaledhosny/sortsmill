@@ -30,9 +30,11 @@ include $(top_srcdir)/mk/guile.mk
 
 POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
 
+lib_LTLIBRARIES =
+
 #--------------------------------------------------------------------------
 
-lib_LTLIBRARIES = libsortsmill_aux.la
+lib_LTLIBRARIES += libsortsmill_aux.la
 
 dist_libsortsmill_aux_la_SOURCES = ArabicForms.c alphabet.c				\
 	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c				\
@@ -63,6 +65,16 @@ precomputed_polyspline_data.c: precompute-polyspline-data.scm Makefile
 EXTRA_DIST = $(LINALG_EXTRAS) precompute-polyspline-data.scm
 
 MOSTLYCLEANFILES = precomputed_polyspline_data.c
+
+#--------------------------------------------------------------------------
+
+lib_LTLIBRARIES += libguile-sortsmill_aux.la
+libguile_sortsmill_aux_la_SOURCES = guile_polyspline.c	\
+	guile_brentroot.c guile_gsl.c
+libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
+	$(MY_CFLAGS) $(MY_LIBS)
+libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la	\
+	$(top_builddir)/lib/libgnu.la
 
 #--------------------------------------------------------------------------
 #

@@ -197,13 +197,6 @@ MOSTLYCLEANFILES += libguile_sortsmill_cython.c	\
 
 endif HAVE_PYTHON_API
 
-lib_LTLIBRARIES += libguile-sortsmill_aux.la
-libguile_sortsmill_aux_la_SOURCES = guile_polyspline.c	\
-	guile_brentroot.c guile_gsl.c
-libguile_sortsmill_aux_la_LIBADD =					\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
-	$(top_builddir)/lib/libgnu.la
-
 lib_LTLIBRARIES += libguile-sortsmill_fontforge.la
 libguile_sortsmill_fontforge_la_SOURCES = guile_notices.c
 libguile_sortsmill_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
