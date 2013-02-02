@@ -97,8 +97,6 @@ from sortsmill.legacy.fontforge import (
   spiroLeft,
   )
 
-__registerMenuItem = guile.private_ref ('sortsmill usermenu python',
-                                        'registerMenuItem')
 __no_windowing_ui_ref = guile.public_ref ('sortsmill ffcompat',
                                           'no_windowing_ui-ref')
 __no_windowing_ui_set = guile.public_ref ('sortsmill ffcompat',
@@ -180,6 +178,8 @@ def registerMenuItem (menu_function, enable_function, data,
                       which_window, shortcut_string, *submenu_names):
   assert menu_function is not None
   assert which_window is not None
+  __registerMenuItem = guile.private_ref ('sortsmill usermenu python',
+                                          'registerMenuItem')
   if pkg_info.have_gui and not __get_no_windowing_ui ():
     if isinstance (which_window, str):
       windows = (which_window,)
