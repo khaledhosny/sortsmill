@@ -193,16 +193,6 @@ MOSTLYCLEANFILES += libguile_sortsmill_cython.c	\
 
 endif HAVE_PYTHON_API
 
-lib_LTLIBRARIES += libguile-sortsmill_fontforge.la
-libguile_sortsmill_fontforge_la_SOURCES = guile_notices.c
-libguile_sortsmill_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-libguile_sortsmill_fontforge_la_LIBADD =				\
-	$(top_builddir)/fontforge/libsortsmill_fontforge.la	\
-	$(top_builddir)/gdraw/libsortsmill_gdraw.la			\
-	$(top_builddir)/gutils/libsortsmill_gutils.la		\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la		\
-	$(top_builddir)/lib/libgnu.la
-
 #--------------------------------------------------------------------------
 
 all-local: $(GO_FILES)
