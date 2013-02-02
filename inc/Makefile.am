@@ -47,13 +47,12 @@ nobase_include_HEADERS = sortsmill/attributes.h						\
 # whether the functions they declare need to be moved into the
 # auxiliary library. If they are declared here, they probably should
 # be moved, rather than left in DLLs.
-nobase_include_HEADERS += sortsmill/guile/iconv.h		\
-	sortsmill/guile/usermenu.h sortsmill/guile/views.h	\
-	sortsmill/guile/notices.h
+nobase_include_HEADERS += sortsmill/guile/usermenu.h	\
+	sortsmill/guile/views.h sortsmill/guile/notices.h
 
-nobase_include_HEADERS += sortsmill/guile/polyspline.h	\
-	sortsmill/guile/brentroot.h sortsmill/guile/gsl.h	\
-	sortsmill/guile/rnrs_conditions.h
+nobase_include_HEADERS += sortsmill/guile/iconv.h				\
+	sortsmill/guile/polyspline.h sortsmill/guile/brentroot.h	\
+	sortsmill/guile/gsl.h sortsmill/guile/rnrs_conditions.h
 
 if HAVE_PYTHON_API
 nobase_include_HEADERS += sortsmill/__init__.pxd						\

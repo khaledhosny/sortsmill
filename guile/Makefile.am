@@ -151,10 +151,6 @@ AM_LDFLAGS = -module -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)
 
 lib_LTLIBRARIES =
 
-lib_LTLIBRARIES += libguile-sortsmill_iconv.la
-libguile_sortsmill_iconv_la_SOURCES = guile_iconv.c
-libguile_sortsmill_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
-
 if HAVE_PURE_API
 lib_LTLIBRARIES += libguile-sortsmill_pure.la
 libguile_sortsmill_pure_la_SOURCES = guile_pure.c

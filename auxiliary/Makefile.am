@@ -72,7 +72,7 @@ dist_libsortsmill_aux_la_SOURCES += brentroot.c qbrentroot.c	\
 
 # Miscellaneous C interface to Guile and Guile extensions.
 dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c scm_python.c	\
-	guile_gsl.c
+	guile_gsl.c guile_iconv.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
