@@ -158,8 +158,8 @@ guile/guile_python.c
 guile/sortsmill/sfd-to-sxml.scm
 guile/sortsmill/usermenu.scm
 guile/sortsmill/views.scm
-guile/sortsmill/pure.scm.in
-guile/sortsmill/python.scm.in
+guile/sortsmill/pure.scm
+guile/sortsmill/python.scm
 main/compare.c
 main/image.c
 main/lint.c

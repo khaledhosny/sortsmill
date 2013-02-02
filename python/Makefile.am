@@ -62,8 +62,8 @@ endif HAVE_PYTHON_COMPATIBILITY
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py ffContrib/allow_core.py
 
-nobase_nodist_python_PYTHON = sortsmill/__init__.py		\
-	sortsmill/version.py sortsmill/legacy/__init__.py
+nobase_nodist_python_PYTHON = sortsmill/__init__.py	\
+	sortsmill/legacy/__init__.py
 #sortsmill/fontforge_compat.py
 
 lib_LTLIBRARIES =
@@ -136,9 +136,9 @@ PYX_FILES = sortsmill/views.pyx\
 	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
 	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
 	sortsmill/brentroot.pyx sortsmill/pyguile.pyx						\
-	sortsmill/usermenu.py
+	sortsmill/usermenu.py sortsmill/ffcompat.py
 
-NODIST_PYX_FILES = sortsmill/fontforge_api.pyx sortsmill/ffcompat.py
+NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
 
 cythonbuildinc = $(top_builddir)/inc/sortsmill/cython
 cythonsrcinc = $(top_srcdir)/inc/sortsmill/cython

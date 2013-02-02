@@ -2,7 +2,6 @@ lib/
 build/
 
 # FIXME: Is there a bug in intltool that causes us to have to list
-# these files that do not exist? Is it confused by VPATH builds?
+# this files that does not exist? Is intltool confused by VPATH
+# builds?
 guile/site-init.scm
-guile/sortsmill/pure.scm
-guile/sortsmill/python.scm
