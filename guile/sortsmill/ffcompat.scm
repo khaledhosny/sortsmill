@@ -16,7 +16,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 ;;;
-;;; Support for FontForge’s legacy Python interface.
+;;; Some of the support for FontForge’s legacy Python interface.
 ;;;
 
 (library (sortsmill ffcompat)

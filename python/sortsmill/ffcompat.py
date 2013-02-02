@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-# Based in part on python.c by George Williams, which is copyright and
-# licensed as follows:
+# Based in part on python.c by George Williams, for which copyright
+# and license are as follows:
 #
 # Copyright (C) 2007-2012 by George Williams
 #
@@ -195,8 +195,8 @@ def registerMenuItem (menu_function, enable_function, data,
   assert menu_function is not None
   assert which_window is not None
   if pkg_info.have_gui and not __get_no_windowing_ui ():
-    __registerMenuItem = guile.private_ref ('sortsmill usermenu python',
-                                            'registerMenuItem')
+    __registerMenuItem = guile.public_ref ('sortsmill usermenu python',
+                                           'registerMenuItem')
     if isinstance (which_window, str):
       windows = (which_window,)
     else:

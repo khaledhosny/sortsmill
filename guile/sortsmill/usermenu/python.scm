@@ -22,7 +22,9 @@
           ;; FIXME: Get rid of this, make it private, or revise
           ;; it for the menu design we end up with.
           register-python-menu-entry
-          )
+
+          ;; Legacy Python support.
+          registerMenuItem)
 
   (import (sortsmill python)
           (sortsmill usermenu)
