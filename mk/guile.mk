@@ -21,17 +21,17 @@ AM_V_GUILEC = $(AM_V_GUILEC_$(V))
 AM_V_GUILEC_ = $(AM_V_GUILEC_$(AM_DEFAULT_VERBOSITY))
 AM_V_GUILEC_0 = @echo "  GUILEC" $@;
 
-ENV_GUILE_LOAD_PATH = "$${GUILE_LOAD_PATH}"
-ENV_GUILE_LOAD_COMPILED_PATH = "$${GUILE_LOAD_COMPILED_PATH}"
-ENV_LTDL_LIBRARY_PATH = "$${LTDL_LIBRARY_PATH}"
-MY_GUILE_LOAD_PATH = $(if $${GUILE_LOAD_PATH},":$${GUILE_LOAD_PATH}")
-MY_GUILE_LOAD_COMPILED_PATH = $(if $${GUILE_LOAD_COMPILED_PATH},":$${GUILE_LOAD_COMPILED_PATH}")
-MY_LTDL_LIBRARY_PATH = $(if $${LTDL_LIBRARY_PATH},":$${LTDL_LIBRARY_PATH}")
+ENV_GUILE_LOAD_PATH := $(shell echo $(ECHO_N) "$${GUILE_LOAD_PATH}$(ECHO_C)")
+ENV_GUILE_LOAD_COMPILED_PATH := $(shell echo $(ECHO_N) "$${GUILE_LOAD_COMPILED_PATH}$(ECHO_C)")
+ENV_LTDL_LIBRARY_PATH := $(shell echo $(ECHO_N) "$${LTDL_LIBRARY_PATH}$(ECHO_C)")
+MY_GUILE_LOAD_PATH = $(if $(ENV_GUILE_LOAD_PATH),:$(ENV_GUILE_LOAD_PATH))
+MY_GUILE_LOAD_COMPILED_PATH = $(if $(ENV_GUILE_LOAD_COMPILED_PATH),:$(ENV_GUILE_LOAD_COMPILED_PATH))
+MY_LTDL_LIBRARY_PATH = $(if $(ENV_LTDL_LIBRARY_PATH),:$(ENV_LTDL_LIBRARY_PATH))
 
-GUILE_ENV = GUILE_AUTO_COMPILE=0														\
-	GUILE_LOAD_PATH="$(top_srcdir)/guile:$(top_builddir)/guile$${MY_GUILE_LOAD_PATH}"	\
-	GUILE_LOAD_COMPILED_PATH="$(top_builddir)/guile$${MY_GUILE_LOAD_COMPILED_PATH}"		\
-	LTDL_LIBRARY_PATH="$(top_builddir)/auxiliary:$(top_builddir)/fontforge:$(top_builddir)/guile$${MY_LTDL_LIBRARY_PATH}"
+GUILE_ENV = GUILE_AUTO_COMPILE=0																\
+	GUILE_LOAD_PATH='$(abs_top_srcdir)/guile:$(abs_top_builddir)/guile$(MY_GUILE_LOAD_PATH)'	\
+	GUILE_LOAD_COMPILED_PATH='$(abs_top_builddir)/guile$(MY_GUILE_LOAD_COMPILED_PATH)'			\
+	LTDL_LIBRARY_PATH='$(abs_top_builddir)/auxiliary:$(abs_top_builddir)/fontforge:$(abs_top_builddir)/guile$(MY_LTDL_LIBRARY_PATH)'
 
 GUILE_FLAGS = -L $(top_builddir)/guile -L $(top_srcdir)/guile
 

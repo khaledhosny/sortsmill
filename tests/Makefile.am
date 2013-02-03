@@ -26,6 +26,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
+include $(top_srcdir)/mk/guile.mk
 
 # The `:;' works around a Bash 3.2 bug when the output is not writable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
@@ -57,11 +58,9 @@ installcheck-local: atconfig atlocal $(TESTSUITE)
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
 
-check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no						\
-	LC_ALL="C" PYTHONPATH="$(abs_top_builddir)/python"								\
-	LTDL_LIBRARY_PATH="${abs_top_builddir}/guile"									\
-	GUILE_LOAD_PATH="${abs_top_builddir}/guile:${abs_top_srcdir}/guile"				\
-	GUILE_LOAD_COMPILED_PATH="${abs_top_builddir}/guile:${abs_top_srcdir}/guile"
+check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no	\
+	LC_ALL="C" PYTHONPATH="$(abs_top_builddir)/python"			\
+	$(GUILE_ENV)
 
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
 	LC_ALL="C" PYTHONPATH="$(pythondir)"								\
