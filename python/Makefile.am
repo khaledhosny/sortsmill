@@ -61,7 +61,7 @@ endif HAVE_PYTHON_COMPATIBILITY
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py ffContrib/allow_core.py	\
-	sortsmill/ffcompat.py
+	sortsmill/ffcompat.py sortsmill/pyguile.py
 if HAVE_GUI
 nobase_dist_python_PYTHON += sortsmill/usermenu.py
 endif HAVE_GUI
@@ -143,7 +143,7 @@ __sortsmill_____pyguile___la_LIBADD = $(AUXLIBADD)
 PYX_FILES = __sortsmill__/__pyguile__.pyx sortsmill/views.pyx			\
 	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
 	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
-	sortsmill/brentroot.pyx sortsmill/pyguile.pyx
+	sortsmill/brentroot.pyx
 
 NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
 
@@ -199,8 +199,12 @@ sortsmill/%.so: sortsmill/%.la
 	-rm -f $@
 	cp sortsmill/$(LT_OBJDIR)$*.so $@
 
+__sortsmill__/%.so: __sortsmill__/%.la
+	-rm -f $@
+	cp __sortsmill__/$(LT_OBJDIR)$*.so $@
+
 # These shared object files are needed by the test suite.
-all-local: $(HAVE_GUI_SO) __sortsmill__/__pyguile__.pyx				\
+all-local: $(HAVE_GUI_SO) __sortsmill__/__pyguile__.so				\
 	sortsmill/psMat.so sortsmill/ffcompat.so						\
 	sortsmill/fontforge_api.so sortsmill/views.so					\
 	sortsmill/pkg_info.so sortsmill/notices.so sortsmill/guile.so	\
