@@ -107,8 +107,7 @@ lib_LTLIBRARIES += libguile-sortsmill_aux.la
 libguile_sortsmill_aux_la_SOURCES = libguile_sortsmill_aux.c
 libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
 	$(MY_CFLAGS) $(MY_LIBS)
-libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la	\
-	$(top_builddir)/lib/libgnu.la
+libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la
 
 #--------------------------------------------------------------------------
 #
