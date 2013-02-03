@@ -31,9 +31,6 @@
 #ifdef __VMS
 #include <vms_x_fix.h>
 #endif
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
 
 #ifndef X_DISPLAY_MISSING
 # include <X11/X.h>

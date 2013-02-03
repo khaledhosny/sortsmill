@@ -133,7 +133,7 @@ libsortsmill_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
 # without optimization.
 splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
 	$(AM_V_CC) $(LIBTOOL) $(AM_V_lt) --mode=compile $(CC) -g	\
-	-DHAVE_CONFIG_H -c -o splinerefigure.lo $(AM_CPPFLAGS)		\
+	-c -o splinerefigure.lo $(AM_CPPFLAGS)						\
 	$(srcdir)/splinerefigure.c
 
 EXTRA_SCRIPTS += generate_codepoint_selector.py
