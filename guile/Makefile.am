@@ -182,7 +182,7 @@ all-local: $(GO_FILES)
 # dependencies. Consolation: it is no worse than if we used a
 # whole-program compiler.
 $(GO_FILES): $(DIST_SCM_FILES) $(CONFIGURE_GENERATED_SCM_FILES)	\
-	$(MAKEFILE_GENERATED_SCM_FILES)
+	$(MAKEFILE_GENERATED_SCM_FILES) $(lib_LTLIBRARIES)
 
 # Try to ensure that the installed bitcode files are newer than the
 # installed source files, by installing the bitcode files with this

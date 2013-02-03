@@ -186,19 +186,14 @@
                   #'"PyInit_")] ))))
 
   (eval-when (compile load eval)
-    [define (pyinit-function-name python-module-name)
-      (string-append pyinit-prefix python-module-name)])
+    (define (pyinit-function-name python-module-name)
+      (string-append pyinit-prefix python-module-name)))
 
-  (define python-dll (dynamic-link "libguile-sortsmill_aux"))
+  (eval-when (compile load eval)
+    (define python-dll (dynamic-link "libguile-sortsmill_aux")))
 
-  ;; These variables will be redefined by the dynamic-call.
-  (define py-failure *unspecified*)
-  (define grab-pyref *unspecified*)
-  (define grab-borrowed-pyref *unspecified*)
-  (define guile-support-dll *unspecified*)
-  (define string->pystring *unspecified*)
-  (define pystring->string *unspecified*)
-  (dynamic-call "init_guile_sortsmill_python" python-dll)
+  (eval-when (compile load eval)
+    (dynamic-call "init_guile_sortsmill_python" python-dll))
 
   (define py-initialized?
     (let ([proc (pointer->procedure
@@ -284,43 +279,27 @@
   ;;--------------------------------------------------------------------------
 
   (eval-when (compile eval load)
+    (define guile-support-dll (dynamic-link "libguile-sortsmill_cython")))
 
-    (define guile-support-dll (dynamic-link "libguile-sortsmill_cython"))
-
+  (eval-when (compile eval load)
     (define (guile-support-func func-name)
-      (dynamic-func func-name guile-support-dll))
+      (dynamic-func func-name guile-support-dll)))
 
-    ) ;; end of eval-when.
-
-  (load-extension "libguile-sortsmill_cython"
-                  (pyinit-function-name "libguile_sortsmill_cython"))
+  (eval-when (compile eval load)
+    (load-extension "libguile-sortsmill_cython"
+                    (pyinit-function-name "libguile_sortsmill_cython")))
 
   (define-syntax define-guile-support-procedure
     (lambda (x)
       (syntax-case x ()
         [(_ return-type c-func arg-types)
-         (let* ([my-fluid
-                 (datum->syntax
-                  x (make-symbol
-                     (string-append "*" (syntax->datum #'c-func) "*")))]
-                [get-my-proc
-                 (datum->syntax
-                  x (string->symbol (syntax->datum #'c-func)))])
-           #`(begin
-               ;; Thread local storage for the procedure, once we have
-               ;; created it.
-               (define #,my-fluid (make-fluid #f))
-
-               (define #,get-my-proc
-                 (lambda ()
-                   (let ((my-proc (fluid-ref #,my-fluid)))
-                     (if my-proc my-proc
-                         [let ((new-proc
-                                [pointer->procedure return-type
-                                                    (guile-support-func c-func)
-                                                    arg-types]))
-                           (fluid-set! #,my-fluid new-proc)
-                           new-proc] ))))))] )))
+         (let ([my-proc
+                (datum->syntax
+                 x (string->symbol (syntax->datum #'c-func)))])
+           #`(eval-when (compile eval load)
+               (define #,my-proc
+                 (pointer->procedure
+                  return-type (guile-support-func c-func) arg-types))))] )))
 
   (define-syntax define-py-to-py-filter
     (lambda (x)
@@ -329,7 +308,7 @@
          #`(define (filter-name obj)
              (cond
               [(pyobject? obj)
-               (let ((result ((c-func) (pyobject->pointer obj))))
+               (let ([result (c-func (pyobject->pointer obj))])
                  (if (null-pointer? result)
                      (py-failure (quote c-func) (list obj))
                      (pointer->pyobject result)))]
@@ -355,7 +334,6 @@
   (define-guile-support-procedure '* "__python_import" '(*))
   (define-guile-support-procedure '* "__pylong_to_pympz" '(*))
   (define-guile-support-procedure '* "__pympz_to_pylong" '(*))
-  (define-guile-support-procedure '* "__is_pympz" '(*))
   (define-guile-support-procedure '* "__py_repr" '(*))
   (define-guile-support-procedure '* "__py_str" '(*))
   (define-guile-support-procedure '* "__py_name" '(*))
@@ -400,7 +378,7 @@
               (pyobject->pointer (apply proc (pytuple->list
                                               (pointer->pyobject args)))))]
            [func (procedure->pointer '* wrapped-proc '(*))])
-      (pointer->pyobject ((__c_py_wrap_function) func))))
+      (pointer->pyobject (__c_py_wrap_function func))))
 
   (define (pycallable-catch-handler key . args)
     (let ([py-key (string->pystring (symbol->string key))]
@@ -422,21 +400,21 @@
         [else
          (unless (pycallable? func)
            (assertion-violation 'pyapply (_ "expected a Python callable") func))
-         (pointer->pyobject ((__apply_python_callable)
+         (pointer->pyobject (__apply_python_callable
                              (pyobject->pointer func)
                              (pyobject->pointer args) 
                              (pyobject->pointer keyword-args)))] )] ))
 
   (define (scm->pyguile obj)
-    (pointer->pyobject ((__c_pyguile_make) (scm->pointer obj))))
+    (pointer->pyobject (__c_pyguile_make (scm->pointer obj))))
 
   (define (scm->pyobject obj)
     (cond [(pyobject? obj) obj]
-          [else (pointer->pyobject ((__c_pyguile_make) (scm->pointer obj)))]))
+          [else (pointer->pyobject (__c_pyguile_make (scm->pointer obj)))]))
 
   (define (pyguile->scm obj)
     (cond [(pyguile? obj)
-           (pointer->scm ((__c_pyguile_address) (pyobject->pointer obj)))]
+           (pointer->scm (__c_pyguile_address (pyobject->pointer obj)))]
           [else (assertion-violation 'pyguile->scm
                                      (_ "expected a pyguile object")
                                      obj)]))
@@ -515,8 +493,8 @@
 
   (define (python-module module-name)
     (pointer->pyobject
-     ((__python_module) (pyobject->pointer
-                         (force-pystring 'python-module module-name)))))
+     (__python_module (pyobject->pointer
+                       (force-pystring 'python-module module-name)))))
 
   (define* (pyimport module-name #:key
                      [globals (py-dict (current-python-module))]
@@ -524,12 +502,12 @@
                      [from '()]
                      [level -1])
     (pointer->pyobject
-     ((__python_import) (pyobject->pointer
-                         (make-pytuple (force-pystring 'pyimport module-name)
-                                       globals
-                                       (if locals locals globals)
-                                       (list->pylist from)
-                                       (integer->pyint level))))))
+     (__python_import (pyobject->pointer
+                       (make-pytuple (force-pystring 'pyimport module-name)
+                                     globals
+                                     (if locals locals globals)
+                                     (list->pylist from)
+                                     (integer->pyint level))))))
 
   (define %current-python-module-fluid (make-fluid #f))
 
@@ -559,7 +537,7 @@
 
   (define pyiterator->!procedure
     (lambda (obj)
-      (let ([next! (__pyiterator_next)]
+      (let ([next! __pyiterator_next]
             [obj-ptr (pyobject->pointer obj)])
         (lambda ()
           (let ([next-value (next! obj-ptr)])

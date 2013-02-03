@@ -22,7 +22,7 @@ from sortsmill.cython.const_pointers cimport const_char_ptr
 from cpython.ref cimport PyObject
 from libc.stdint cimport uintptr_t
 
-from sortsmill.pyguile import pyguile
+from __sortsmill__.__pyguile__ import pyguile
 
 #--------------------------------------------------------------------------
 

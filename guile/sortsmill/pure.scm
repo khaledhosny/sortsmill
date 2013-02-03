@@ -130,15 +130,12 @@
           (ice-9 format)
           (system foreign))
 
-  (define pure-dll
-    (dynamic-link "libguile-sortsmill_aux"))
+  (eval-when (compile load eval)
+    (define pure-dll
+      (dynamic-link "libguile-sortsmill_aux")))
 
-  ;; These variables will be redefined by the dynamic-call.
-  (define symbol-pure-expr->small-integer-or-f *unspecified*)
-  (define scm-pure-new *unspecified*)
-  (define private:pure-eval *unspecified*)
-  (define private:eval-pure-symbol *unspecified*)
-  (dynamic-call "init_guile_sortsmill_pure" pure-dll)
+  (eval-when (compile load eval)
+    (dynamic-call "init_guile_sortsmill_pure" pure-dll))
 
   (define pure-op-infix 0)
   (define pure-op-infixl 1)

@@ -32,11 +32,9 @@
           (rnrs)
           (except (guile) error))
 
-  ;; These variables will be redefined by the load-extension.
-  (define f64-brentroot *unspecified*)
-  (define mpq-brentroot *unspecified*)
-  (load-extension "libguile-sortsmill_aux"
-                  "init_guile_sortsmill_brentroot")
+  (eval-when (compile load eval)
+    (load-extension "libguile-sortsmill_aux"
+                    "init_guile_sortsmill_brentroot"))
 
   ;;-------------------------------------------------------------------------
 
