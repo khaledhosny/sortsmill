@@ -188,7 +188,7 @@ MOSTLYCLEANFILES = __sortsmill__/__pyguile__.c						\
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
 AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
-	'-I$(builddir)/sortsmill' '-I$(srcdir)/sortsmill'
+	'-I$(top_builddir)/python' '-I$(top_srcdir)/python'
 
 # FIXME: Maybe support extensions other than .so.
 sortsmill/legacy/%.so: sortsmill/legacy/%.la

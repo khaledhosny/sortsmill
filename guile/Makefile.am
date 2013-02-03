@@ -33,7 +33,7 @@ FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
 	'-I$(top_srcdir)/fontforge'
 
 AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
-	'-I$(builddir)/sortsmill' '-I$(srcdir)/sortsmill'
+	'-I$(top_builddir)/python' '-I$(top_srcdir)/python'
 
 EXTRA_DIST =
 MOSTLYCLEANFILES =

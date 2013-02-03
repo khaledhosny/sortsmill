@@ -253,7 +253,7 @@ def qbrentroot_values (t1, t2, func not None,
 #
 
 from sortsmill.cython.gmpy cimport *
-include "sortsmill/cython/gmpy.pxi"
+include 'sortsmill/cython/gmpy.pxi'
 
 cdef void _call_qfunc (__mpq_struct *result, __mpq_struct *x, void *func_p):
   py_x = py_from_mpq (x)

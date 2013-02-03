@@ -24,6 +24,9 @@ from libc.stdint cimport uintptr_t
 
 from __sortsmill__.__pyguile__ import pyguile
 
+# Start Guile mode if it is not already started.
+scm.scm_init_guile ()
+
 #--------------------------------------------------------------------------
 
 # FIXME: Make this available to other modules. What is the best way to
@@ -150,9 +153,5 @@ def call (procedure, *args):
     arglist = scm.scm_cons (arg, arglist)
   cdef SCM result = scm.scm_apply_0 (proc, arglist)
   return pyguile (<uintptr_t> result)
-
-#--------------------------------------------------------------------------
-
-init_guile ()
 
 #--------------------------------------------------------------------------

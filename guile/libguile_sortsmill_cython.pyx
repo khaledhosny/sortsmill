@@ -41,7 +41,7 @@ import sys
 import gmpy
 import inspect
 import traceback
-from sortsmill.pyguile import pyguile
+from __sortsmill__.__pyguile__ import pyguile
 
 #--------------------------------------------------------------------------
 
