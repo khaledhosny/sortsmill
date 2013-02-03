@@ -131,7 +131,7 @@
           (system foreign))
 
   (define pure-dll
-    (dynamic-link "libguile-sortsmill_pure"))
+    (dynamic-link "libguile-sortsmill_aux"))
 
   ;; These variables will be redefined by the dynamic-call.
   (define symbol-pure-expr->small-integer-or-f *unspecified*)

@@ -70,6 +70,11 @@ nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
 dist_libsortsmill_aux_la_SOURCES += brentroot.c qbrentroot.c	\
 	guile_brentroot.c
 
+# Guile-Pure interface
+if HAVE_PURE_API
+dist_libsortsmill_aux_la_SOURCES += guile_pure.c
+endif HAVE_PURE_API
+
 # Guile-Python interface.
 if HAVE_PYTHON_API
 # FIXME: Now that all this Guile-Python support has been moved to one

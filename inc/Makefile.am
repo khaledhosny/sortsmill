@@ -53,6 +53,10 @@ nobase_include_HEADERS += sortsmill/guile/iconv.h				\
 	sortsmill/guile/polyspline.h sortsmill/guile/brentroot.h	\
 	sortsmill/guile/gsl.h sortsmill/guile/rnrs_conditions.h
 
+if HAVE_PURE_API
+nobase_include_HEADERS += sortsmill/guile/pure.h
+endif HAVE_PURE_API
+
 if HAVE_PYTHON_API
 nobase_include_HEADERS += sortsmill/__init__.pxd						\
 	sortsmill/cython/__init__.pxd sortsmill/cython/const_pointers.pxd	\

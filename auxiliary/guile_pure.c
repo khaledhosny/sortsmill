@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+#include <sortsmill/guile/pure.h>
 #include <pure/runtime.h>
 #include <libguile.h>
 #include <stdio.h>
@@ -70,7 +71,7 @@ mpz_clear_void_ptr (void *z)
   mpz_clear (*(mpz_t *) z);
 }
 
-static SCM
+VISIBLE SCM
 scm_big_integer_to_pure_expr (SCM n)
 {
   scm_dynwind_begin (0);
@@ -87,7 +88,7 @@ scm_big_integer_to_pure_expr (SCM n)
   return scm_pointer_to_pure_expr (result);
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_to_small_integer_or_f (SCM x)
 {
   int32_t n;
@@ -95,7 +96,7 @@ scm_pure_expr_to_small_integer_or_f (SCM x)
   return (success) ? scm_from_int32 (n) : SCM_BOOL_F;
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_to_big_integer_or_f (SCM x)
 {
   scm_dynwind_begin (0);
@@ -112,7 +113,7 @@ scm_pure_expr_to_big_integer_or_f (SCM x)
   return result;
 }
 
-static SCM
+VISIBLE SCM
 scm_rational_to_pure_expr (SCM r)
 {
   scm_dynwind_begin (0);
@@ -131,7 +132,7 @@ scm_rational_to_pure_expr (SCM r)
   return scm_pointer_to_pure_expr (result);
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_to_rational_or_f (SCM x)
 {
   scm_dynwind_begin (0);
@@ -151,7 +152,7 @@ scm_pure_expr_to_rational_or_f (SCM x)
   return result;
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_to_inexact_or_f (SCM x)
 {
   double r;
@@ -159,7 +160,7 @@ scm_pure_expr_to_inexact_or_f (SCM x)
   return (success) ? scm_from_double (r) : SCM_BOOL_F;
 }
 
-static SCM
+VISIBLE SCM
 scm_complex_to_pure_expr (SCM z)
 {
   double c[2];
@@ -168,7 +169,7 @@ scm_complex_to_pure_expr (SCM z)
   return scm_pointer_to_pure_expr (pure_complex (c));
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_to_complex_or_f (SCM x)
 {
   double c[2];
@@ -180,7 +181,7 @@ scm_pure_expr_to_complex_or_f (SCM x)
   return result;
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_to_pointer_or_f (SCM x)
 {
   void *p;
@@ -188,7 +189,7 @@ scm_pure_expr_to_pointer_or_f (SCM x)
   return (success) ? scm_from_pointer (p, NULL) : SCM_BOOL_F;
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_to_string_or_f (SCM x)
 {
   scm_dynwind_begin (0);
@@ -207,7 +208,7 @@ scm_pure_expr_to_string_or_f (SCM x)
   return result;
 }
 
-static SCM
+VISIBLE SCM
 scm_pure_expr_is_string (SCM x)
 {
   const char *s;
@@ -215,7 +216,7 @@ scm_pure_expr_is_string (SCM x)
   return scm_from_bool (success);
 }
 
-static SCM
+VISIBLE SCM
 scm_symbol_pure_expr_to_small_integer_or_f (SCM x)
 {
   int32_t sym;
