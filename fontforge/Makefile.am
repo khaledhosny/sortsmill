@@ -198,6 +198,8 @@ lib_LTLIBRARIES += libguile-sortsmill_fontforge.la
 libguile_sortsmill_fontforge_la_SOURCES =		\
 	libguile_sortsmill_fontforge.c
 libguile_sortsmill_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+libguile_sortsmill_fontforge_la_LDFLAGS = -module -release $(VERSION)	\
+	$(MY_CFLAGS) $(MY_LIBS)
 libguile_sortsmill_fontforge_la_LIBADD = libsortsmill_fontforge.la	\
 	$(top_builddir)/gdraw/libsortsmill_gdraw.la						\
 	$(top_builddir)/gutils/libsortsmill_gutils.la					\
@@ -207,6 +209,8 @@ if HAVE_GUI
 lib_LTLIBRARIES += libguile-sortsmill_fontforgeexe.la
 libguile_sortsmill_fontforgeexe_la_SOURCES =	\
 	libguile_sortsmill_fontforgeexe.c
+libguile_sortsmill_fontforgeexe_la_LDFLAGS = -module -release	\
+	$(VERSION) $(MY_CFLAGS) $(MY_LIBS)
 libguile_sortsmill_fontforgeexe_la_LIBADD =					\
 	libsortsmill_fontforgeexe.la libsortsmill_fontforge.la	\
 	$(top_builddir)/gdraw/libsortsmill_gdraw.la				\
