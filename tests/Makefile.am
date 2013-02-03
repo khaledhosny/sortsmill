@@ -64,9 +64,7 @@ check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no	\
 
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
 	LC_ALL="C" PYTHONPATH="$(pythondir)"								\
-	LTDL_LIBRARY_PATH="$(guileextensiondir)"							\
-	GUILE_LOAD_PATH="$(guilemoduledir)"									\
-	GUILE_LOAD_COMPILED_PATH="$(guileobjmoduledir)"
+	$(GUILE_INSTALLED_ENV)
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
