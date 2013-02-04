@@ -19,6 +19,7 @@
 
   (export sortsmill-dynlink-dll
           sortsmill-dynlink-func
+          sortsmill-dynlink-load-extension
           extract-dynlink-symbols
           extract-dynlink-symbols-from-input
           extract-dynlink-symbols-from-files
@@ -32,22 +33,45 @@
           (ice-9 match)
           (ice-9 format))
 
+  (define (module-for-evals) (resolve-module '(sortsmill pkg-info)))
+
   (eval-when (compile load eval)
     (define sortsmill-dynlink-dll
       (dynamic-link "libguile-sortsmill_symbols")))
 
-  (define (sortsmill-dynlink-func func-name include-files)
+  (define (sortsmill-dynlink-func func-name declarations)
     (dynamic-func func-name sortsmill-dynlink-dll))
 
-  (define extract-dynlink-symbols
-    (match-lambda
-     [['sortsmill-dynlink-func
-       (? string? symbol-name)
-       (? string? include-files)]
-      (list (list symbol-name include-files))]
-     [(h . t) (append (extract-dynlink-symbols h)
-                      (extract-dynlink-symbols t))]
-     [_ '()] ))
+  (define (sortsmill-dynlink-load-extension init-func-name)
+    (dynamic-call
+     (dynamic-func init-func-name sortsmill-dynlink-dll)
+     sortsmill-dynlink-dll))
+
+  (define (string-or-list? obj)
+    (or (string? obj) (list? obj)))
+
+  (define (extract-dynlink-symbols expression)
+    (match expression
+      [['sortsmill-dynlink-func
+        (? string-or-list? func-name)
+        (? string-or-list? declarations)]
+       (list (list (eval-in-context func-name)
+                   (eval-in-context declarations)))]
+
+      [['sortsmill-dynlink-load-extension
+        (? string-or-list? init-func-name)]
+       (list (list (eval-in-context init-func-name)
+                   (format #f "void ~a (void);" init-func-name)))]
+
+      [(h . t) (append (extract-dynlink-symbols h)
+                       (extract-dynlink-symbols t))]
+
+      [_ '()] ))
+
+  (eval-when (compile load eval)
+    (define eval-in-context
+      (let ([context (resolve-interface '(sortsmill pkg-info))])
+        (lambda (expression) (eval expression context)))))
 
   (define* (extract-dynlink-symbols-from-input
             #:optional (port (current-input-port)))
@@ -68,22 +92,19 @@
                       (extract-dynlink-symbols-from-input))))
                 more-names)))
 
-  (define (extract-dynlink-symbols-from-file-list file-names)
-    (append (map extract-dynlink-symbols-from-file file-names)))
-
-  (define* (write-dynlink-include-files
+  (define* (write-dynlink-declarations
             dynlink-data #:optional (port (current-output-port)))
     (match dynlink-data
       ['() *unspecified*]
-      [((symbol-name include-files) . tail)
-       (format port "~a\n" include-files)
-       (write-dynlink-include-files tail port)] ))
+      [((symbol-name declarations) . tail)
+       (format port "~a\n" declarations)
+       (write-dynlink-declarations tail port)] ))
 
   (define* (write-dynlink-symbol-use-statements
             dynlink-data #:optional (port (current-output-port)))
     (match dynlink-data
       ['() *unspecified*]
-      [((symbol-name include-files) . tail)
+      [((symbol-name declarations) . tail)
        (format port "  printf (\"%p\", &~a);\n" symbol-name)
        (write-dynlink-symbol-use-statements tail port)] ))
 
@@ -92,7 +113,7 @@
     (format port "#include <config.h>\n")
     (format port "#include <stdio.h>\n")
     (format port "\n")
-    (write-dynlink-include-files dynlink-data port)
+    (write-dynlink-declarations dynlink-data port)
     (format port "\n")
     (format port "void function_that_imports_symbols (void);\n")
     (format port "\n")
