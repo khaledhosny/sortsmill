@@ -145,8 +145,11 @@ MOSTLYCLEANFILES += site-init.scm site-final.scm
 
 #--------------------------------------------------------------------------
 
-libguile_sortsmill_symbols.c:
-	echo "static int nothing_yet = 0;" > $@
+libguile_sortsmill_symbols.c: $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET)										\
+		$(srcdir)/generate-libguile-sortsmill_symbols.scm $^ > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
 CLEANFILES += libguile_sortsmill_symbols.c
 
@@ -156,6 +159,8 @@ lib_LTLIBRARIES =
 
 lib_LTLIBRARIES += libguile-sortsmill_symbols.la
 libguile_sortsmill_symbols_la_SOURCES = libguile_sortsmill_symbols.c
+libguile_sortsmill_symbols_la_CFLAGS = $(AM_CFLAGS)	\
+	$(NO_OPTIMIZATION_EXTRA_CFLAGS)
 libguile_sortsmill_symbols_la_LIBADD =						\
 	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\

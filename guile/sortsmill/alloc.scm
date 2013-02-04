@@ -22,27 +22,33 @@
           c:gc-zalloc ;; Garbage-collected.
           c:gc-free)
 
-  (import (rnrs)
+  (import (sortsmill dynlink)
+          (rnrs)
           (except (guile) error)
           (system foreign))
 
-  (eval-when (compile load eval)
-    (define aux-dll (dynamic-link "libsortsmill_aux")))
-
   (define c:zalloc
     (pointer->procedure
-     '* (dynamic-func "x_zalloc" aux-dll) `(,size_t)))
+     '*
+     (sortsmill-dynlink-func "x_zalloc" "#include <sortsmill/x_alloc.h>")
+     `(,size_t)))
 
   (define c:free
     (pointer->procedure
-     void (dynamic-func "free" aux-dll) '(*)))
+     void
+     (sortsmill-dynlink-func "free" "#include <stdlib.h>")
+     '(*)))
 
   (define c:gc-zalloc
     (pointer->procedure
-     '* (dynamic-func "x_gc_malloc" aux-dll) `(,size_t)))
+     '*
+     (sortsmill-dynlink-func "x_gc_malloc" "#include <sortsmill/xgc.h>")
+     `(,size_t)))
 
   (define c:gc-free
     (pointer->procedure
-     void (dynamic-func "GC_free" aux-dll) '(*)))
+     void
+     (sortsmill-dynlink-func "GC_free" "#include <sortsmill/xgc.h>")
+     '(*)))
 
   ) ;; end of library.
