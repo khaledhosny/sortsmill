@@ -26,8 +26,9 @@
           (except (guile) error)
           (system foreign))
 
+;;;;;;; FIXME: locate this library more reliably, or use C code.
   (eval-when (compile load eval)
-    (define glib-dll (dynamic-link "libsortsmill_aux")))
+    (define glib-dll (dynamic-link "libglib-2.0")))
 
 ;;;;;;; FIXME: Move this to (sortsmill pkg-info).
   (define ff_textdomain "@FF_TEXTDOMAIN@")
