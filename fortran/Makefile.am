@@ -25,8 +25,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/fortran.mk
-include $(top_srcdir)/mk/guile.mk
+@includemk@ $(top_srcdir)/mk/fortran.mk
+@includemk@ $(top_srcdir)/mk/guile.mk
 
 lib_LTLIBRARIES = libsortsmill_fortran_api.la
 

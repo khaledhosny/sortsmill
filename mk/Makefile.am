@@ -1,4 +1,4 @@
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -24,25 +24,5 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#--------------------------------------------------------------------------
-
-define compile-cython
-$(AM_V_GEN)
-$(AM_V_at)$(CYTHON) $(AM_CYTHONFLAGS) $(CYTHONFLAGS) --force -o $@-tmp $<
-$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
-	s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
-	print $$_' $@-tmp
-$(AM_V_at)mv $@-tmp $@
-endef
-
-%.c: %.pyx
-	$(compile_cython)
-
-# Sometimes we will want to use ‘pure’ Python, if only to demonstrate
-# how to write CPython code for Sorts Mill Tools. Nevertheless, we can
-# compile such code with Cython, which has a ‘pure’ Python mode.
-# Cython checks the code more thoroughly than does CPython, and
-# produces C code that is compatible with both CPython 2.7 and
-# CPython 3.x.
-%.c: %.py
-	$(compile_cython)
+EXTRA_DIST = cython.mk fortran.mk guile.mk scheme.mk tig.mk	\
+	xgettext_search.mk

@@ -25,7 +25,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/guile.mk
+@includemk@ $(top_srcdir)/mk/guile.mk
 
 nodist_bin_SCRIPTS = sfd2sxml sfd2xml
 

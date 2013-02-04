@@ -26,8 +26,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/cython.mk
-include $(top_srcdir)/mk/guile.mk
+@includemk@ $(top_srcdir)/mk/cython.mk
+@includemk@ $(top_srcdir)/mk/guile.mk
 
 EXTRA_DIST =
 

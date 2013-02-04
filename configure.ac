@@ -484,6 +484,11 @@ AH_BOTTOM([#include <config-extra.h>])
 
 #--------------------------------------------------------------------------
 
+# Use @includemk@ to invoke GNU Make’s ‘include’ command, bypassing
+# Automake’s. (FIXME: Is there a different and canonical way to do
+# this? Although, in any case, this method works fine.)
+AC_SUBST([includemk],[include])
+
 # FIXME: Replace `i_do_have_python_scripting' with
 # `i_do_have_python_api' throughout.
 i_do_have_python_api="${i_do_have_python_scripting}"
@@ -514,6 +519,7 @@ FONTFORGE_SET_MY_CFLAGS
 FONTFORGE_SET_MY_LIBS
 
 AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([mk/Makefile])
 AC_CONFIG_FILES([lib/Makefile])
 AC_CONFIG_FILES([inc/Makefile])
 AC_CONFIG_FILES([auxiliary/Makefile])
@@ -537,9 +543,6 @@ AC_CONFIG_FILES([sfd2sxml/Makefile])
 AC_CONFIG_FILES([fortran/Makefile])
 AC_CONFIG_FILES([pure/Makefile])
 AC_CONFIG_FILES([examples/Makefile])
-
-# Makefile snippets for use with "include".
-AC_CONFIG_FILES([mk/xgettext_search.mk])
 
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_COMMANDS([fontforge/sortsmill],[AS_MKDIR_P([fontforge/sortsmill])])

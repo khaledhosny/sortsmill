@@ -26,7 +26,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/guile.mk
+@includemk@ $(top_srcdir)/mk/guile.mk
 
 POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
 

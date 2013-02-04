@@ -31,7 +31,7 @@ include $(top_srcdir)/mk/layout.am
 
 #--------------------------------------------------------------------------
 
-SUBDIRS = lib inc auxiliary gutils
+SUBDIRS = mk lib inc auxiliary gutils
 
 if HAVE_GUI
 SUBDIRS += gdraw data
@@ -104,7 +104,7 @@ extract-text:
 
 #--------------------------------------------------------------------------
 
-include $(top_builddir)/mk/xgettext_search.mk
+@includemk@ $(top_srcdir)/mk/xgettext_search.mk
 
 XGETTEXT_OPTIONS = --keyword=H_ --from-code=utf-8 --language=C	\
 --sort-by-file
