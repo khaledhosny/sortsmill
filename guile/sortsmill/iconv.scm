@@ -19,9 +19,10 @@
 
   (export embedded-utf7->string)
 
-  (import (only (guile) load-extension))
+  (import (only (guile) eval-when load-extension))
 
-  (load-extension "libguile-sortsmill_aux"
-                  "init_guile_sortsmill_iconv")
+  (eval-when (compile load eval)
+    (load-extension "libsortsmill_aux"
+                    "init_guile_sortsmill_iconv"))
 
   ) ;; end of library.

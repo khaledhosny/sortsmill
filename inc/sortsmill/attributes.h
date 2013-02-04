@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Barry Schwartz
+ * Copyright (C) 2012, 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,6 +115,14 @@
 #define _FF_ATTRIBUTE_MALLOC __attribute__ ((__malloc__))
 #else
 #define _FF_ATTRIBUTE_MALLOC    /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_ALLOC_SIZE
+#if _FF_GNUC_VERSION_AT_LEAST (4, 3)
+#define _FF_ATTRIBUTE_ALLOC_SIZE(ARGS) __attribute__ ((__alloc_size__ ARGS))
+#else
+#define _FF_ATTRIBUTE_ALLOC_SIZE(ARGS)
 #endif
 #endif
 

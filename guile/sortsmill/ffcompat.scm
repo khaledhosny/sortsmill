@@ -31,7 +31,8 @@
           (rnrs)
           (except (guile) error))
 
-  (define ff-dll (dynamic-link "libguile-sortsmill_fontforge"))
+  (eval-when (compile load eval)
+    (define ff-dll (dynamic-link "libsortsmill_fontforge")))
 
   (define no_windowing_ui-ref
     (let ([proc (pointer->procedure

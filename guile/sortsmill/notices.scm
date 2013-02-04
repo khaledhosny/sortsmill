@@ -25,12 +25,13 @@
   (import (rnrs)
           (system repl error-handling)
           (only (guile)
-                *unspecified* define* load-extension
+                *unspecified* define* load-extension eval-when
                 format getenv)
           (only (ice-9 match) match))
 
-  (load-extension "libguile-sortsmill_fontforge"
-                  "init_guile_sortsmill_notices")
+  (eval-when (compile load eval)
+    (load-extension "libsortsmill_fontforge"
+                    "init_guile_sortsmill_notices"))
 
   (define* (fontforge-call-with-error-handling
             window-title thunk #:key (value-after-catch *unspecified*))

@@ -26,7 +26,8 @@
           (except (guile) error)
           (system foreign))
 
-  (define aux-dll (dynamic-link "libguile-sortsmill_aux"))
+  (eval-when (compile load eval)
+    (define aux-dll (dynamic-link "libsortsmill_aux")))
 
   (define c:zalloc
     (pointer->procedure

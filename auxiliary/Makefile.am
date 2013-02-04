@@ -48,7 +48,7 @@ dist_libsortsmill_aux_la_SOURCES += ArabicForms.c alphabet.c	\
 dist_libsortsmill_aux_la_SOURCES += ps_number.c
 
 # Extensions to xalloc and Boehm GC.
-dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c xgc.c	\
+dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c x_alloc.c xgc.c	\
 	xgc_strjoin.c
 
 # Extensions to PCRE.
@@ -89,7 +89,7 @@ dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c guile_gsl.c	\
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
 libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
-libsortsmill_aux_la_LDFLAGS = $(call ldflags)
+libsortsmill_aux_la_LDFLAGS = $(call ldflags) -export-dynamic
 libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 
 LINALG_EXTRAS = linalg_matrix_init.c linalg_matrix_set.c			\
@@ -105,14 +105,6 @@ precomputed_polyspline_data.c: precompute-polyspline-data.scm Makefile
 EXTRA_DIST = $(LINALG_EXTRAS) precompute-polyspline-data.scm
 
 MOSTLYCLEANFILES = precomputed_polyspline_data.c
-
-#--------------------------------------------------------------------------
-
-lib_LTLIBRARIES += libguile-sortsmill_aux.la
-libguile_sortsmill_aux_la_SOURCES = libguile_sortsmill_aux.c
-libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
-	$(MY_CFLAGS) $(MY_LIBS)
-libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la
 
 #--------------------------------------------------------------------------
 #

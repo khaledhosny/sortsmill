@@ -1,6 +1,6 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
-;; Copyright (C) 2012 Barry Schwartz
+;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,22 +15,28 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmill polyspline)
-  #:export (f64vector-sbern->bern
-            f64vector-bern->sbern
-            f64vector-sbern->mono
-            f64vector-mono->sbern
-            f64vector-bern->mono
-            f64vector-mono->bern
+(library (sortsmill polyspline)
 
-            f64vector-eval-sbern
-            f64vector-eval-bern
-            f64vector-evaldc-sbern
-            f64vector-evaldc-bern
-            f64vector-eval-mono
+  (export f64vector-sbern->bern
+          f64vector-bern->sbern
+          f64vector-sbern->mono
+          f64vector-mono->sbern
+          f64vector-bern->mono
+          f64vector-mono->bern
 
-            f64vector-subdiv-sbern
-            f64vector-subdiv-bern))
+          f64vector-eval-sbern
+          f64vector-eval-bern
+          f64vector-evaldc-sbern
+          f64vector-evaldc-bern
+          f64vector-eval-mono
 
-(load-extension "libguile-sortsmill_aux"
-                "init_guile_sortsmill_polyspline")
+          f64vector-subdiv-sbern
+          f64vector-subdiv-bern)
+
+  (import (only (guile) eval-when load-extension))
+
+  (eval-when (compile load eval)
+    (load-extension "libsortsmill_aux"
+                    "init_guile_sortsmill_polyspline"))
+
+  ) ;; end of library.

@@ -28,8 +28,6 @@
 
   (import (sortsmill python)
           (sortsmill usermenu)
-          (rename (sortsmill usermenu)
-                  (action-entry action-entry^))
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
           (sortsmill machine)
@@ -59,7 +57,8 @@ always a boolean."
           (let ([result (f-wrapped (view->python-view view))])
             (pybool->boolean (py-not-not result)))] )))
 
-  (define python-dll (dynamic-link "libguile-sortsmill_fontforgeexe"))
+  (eval-when (compile load eval)
+      (define python-dll (dynamic-link "libsortsmill_fontforgeexe")))
 
   (define no-windowing-ui?
     (let ([proc (pointer->procedure

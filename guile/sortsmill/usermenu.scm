@@ -43,7 +43,7 @@
           (sortsmill notices)
           (sortsmill views)
           (rnrs)
-          (only (guile) *unspecified* define* load-extension
+          (only (guile) eval-when *unspecified* define*
                 dynamic-func dynamic-link dynamic-pointer
                 negate compose use-modules)
           (except (srfi :1) map)
@@ -175,7 +175,8 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define exe-dll (dynamic-link "libguile-sortsmill_fontforgeexe"))
+  (eval-when (compile load eval)
+    (define exe-dll (dynamic-link "libsortsmill_fontforgeexe")))
 
   (define (window-name->flag window-name)
     (if (symbol? window-name)

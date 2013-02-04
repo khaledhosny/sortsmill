@@ -132,7 +132,7 @@
 
   (eval-when (compile load eval)
     (define pure-dll
-      (dynamic-link "libguile-sortsmill_aux")))
+      (dynamic-link "libsortsmill_aux")))
 
   (eval-when (compile load eval)
     (dynamic-call "init_guile_sortsmill_pure" pure-dll))

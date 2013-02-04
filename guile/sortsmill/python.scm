@@ -190,7 +190,7 @@
       (string-append pyinit-prefix python-module-name)))
 
   (eval-when (compile load eval)
-    (define python-dll (dynamic-link "libguile-sortsmill_aux")))
+    (define python-dll (dynamic-link "libsortsmill_aux")))
 
   (eval-when (compile load eval)
     (dynamic-call "init_guile_sortsmill_python" python-dll))

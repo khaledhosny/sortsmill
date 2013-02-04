@@ -1,6 +1,6 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
-;; Copyright (C) 2012 Barry Schwartz
+;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,11 +15,16 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmill gsl)
-  #:export (matrix-f64*
-            matrix-f64+
-            matrix-f64-
-            ))
+(library (sortsmill gsl)
 
-(load-extension "libguile-sortsmill_aux"
-                "init_guile_sortsmill_gsl")
+  (export matrix-f64*
+          matrix-f64+
+          matrix-f64-)
+
+  (import (only (guile) eval-when load-extension))
+
+  (eval-when (compile load eval)
+    (load-extension "libsortsmill_aux"
+                    "init_guile_sortsmill_gsl"))
+
+  ) ;; end of library.
