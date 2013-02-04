@@ -20,42 +20,74 @@
 
 // Exported wrappers around otherwise hidden xalloc routines.
 
-VISIBLE void x_alloc_die (void)
+VISIBLE void
+x_alloc_die (void)
 {
   xalloc_die ();
 }
 
-VISIBLE void *x_malloc (size_t s)
+VISIBLE void *
+x_malloc (size_t s)
 {
   return xmalloc (s);
 }
 
-VISIBLE void *x_zalloc (size_t s)
+VISIBLE void *
+x_zalloc (size_t s)
 {
   return xzalloc (s);
 }
 
-VISIBLE void *x_calloc (size_t n, size_t s)
+VISIBLE void *
+x_calloc (size_t n, size_t s)
 {
   return xcalloc (n, s);
 }
 
-VISIBLE void *x_realloc (void *p, size_t s)
+VISIBLE void *
+x_realloc (void *p, size_t s)
 {
   return xrealloc (p, s);
 }
 
-VISIBLE void *x_2realloc (void *p, size_t *pn)
+VISIBLE void *
+x_2realloc (void *p, size_t *pn)
 {
   return x2realloc (p, pn);
 }
 
-VISIBLE void *x_memdup (void const *p, size_t s)
+VISIBLE void *
+x_memdup (void const *p, size_t s)
 {
   return xmemdup (p, s);
 }
 
-VISIBLE char *x_strdup (char const *str)
+VISIBLE char *
+x_strdup (char const *str)
 {
   return xstrdup (str);
+}
+
+VISIBLE void *
+x_nmalloc (size_t n, size_t s)
+{
+  return xnmalloc (n, s);
+}
+
+VISIBLE void *
+x_nrealloc (void *p, size_t n, size_t s)
+{
+  return xnrealloc (p, n, s);
+}
+
+VISIBLE void *
+x_2nrealloc (void *p, size_t *pn, size_t s)
+{
+  return x2nrealloc (p, pn, s);
+}
+
+VISIBLE char *
+x_charalloc (size_t n)
+{
+  return xcharalloc (n);
 }

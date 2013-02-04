@@ -26,19 +26,52 @@
 #include <sortsmill/attributes.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if 0
 }
 #endif
 
-_FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1)) void *x_malloc (size_t s);
-_FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1)) void *x_zalloc (size_t s);
-_FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1, 2)) void *x_calloc (size_t n, size_t s);
-_FF_ATTRIBUTE_ALLOC_SIZE ((2)) void *x_realloc (void *p, size_t s);
+_FF_ATTRIBUTE_NORETURN void x_alloc_die (void);
+
+/* *INDENT-OFF* */
+
+void *x_malloc (size_t s)
+     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1));
+
+void *x_zalloc (size_t s)
+     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1));
+
+void *x_calloc (size_t n, size_t s)
+     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1, 2));
+
+void *x_realloc (void *p, size_t s) _FF_ATTRIBUTE_ALLOC_SIZE ((2));
+
 void *x_2realloc (void *p, size_t *pn);
-_FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((2)) void *x_memdup (void const *p, size_t s);
-_FF_ATTRIBUTE_MALLOC char *x_strdup (char const *str);
+
+void *x_memdup (const void *p, size_t s)
+     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((2));
+
+char *x_strdup (const char *str) _FF_ATTRIBUTE_MALLOC;
+
+void *x_nmalloc (size_t n, size_t s)
+     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1, 2));
+
+void *x_nrealloc (void *p, size_t n, size_t s)
+     _FF_ATTRIBUTE_ALLOC_SIZE ((2, 3));
+
+void *x_2nrealloc (void *p, size_t *pn, size_t s);
+
+char *x_charalloc (size_t n)
+     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1));
+
+/* *INDENT-ON* */
+
+#define X_MALLOC(t) ((t *) x_malloc (sizeof (t)))
+#define X_NMALLOC(n, t) ((t *) (sizeof (t) == 1 ? x_malloc (n) : x_nmalloc ((n), sizeof (t))))
+#define X_ZALLOC(t) ((t *) x_zalloc (sizeof (t)))
+#define X_CALLOC(n, t) ((t *) (sizeof (t) == 1 ? x_zalloc (n) : x_calloc ((n), sizeof (t))))
 
 #if 0
 {

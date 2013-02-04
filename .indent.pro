@@ -7,14 +7,25 @@
 --line-length80
 
 -T FILE
+
 -T int8_t
 -T int16_t
 -T int32_t
+-T int64_t
+-T int128_t
+-T intptr_t
+-T intmax_t
+-T ssize_t
+
 -T uint8_t
 -T uint16_t
 -T uint32_t
--T intptr_t
+-T uint64_t
+-T uint128_t
 -T uintptr_t
+-T uintmax_t
+-T size_t
+
 -T SCM
 -T pthread_mutex_t
 -T cairo_t
