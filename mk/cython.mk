@@ -26,17 +26,13 @@
 
 #--------------------------------------------------------------------------
 
-define compile-cython =
+%.c: %.pyx
 	$(AM_V_GEN)
 	$(AM_V_at)$(CYTHON) $(AM_CYTHONFLAGS) $(CYTHONFLAGS) --force -o $@-tmp $<
 	$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
 		s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
 		print $$_' $@-tmp
 	$(AM_V_at)mv $@-tmp $@
-endef
-
-%.c: %.pyx
-	$(compile-cython)
 
 # Sometimes we will want to use ‘pure’ Python, if only to demonstrate
 # how to write CPython code for Sorts Mill Tools. Nevertheless, we can
@@ -45,4 +41,9 @@ endef
 # produces C code that is compatible with both CPython 2.7 and
 # CPython 3.x.
 %.c: %.py
-	$(compile-cython)
+	$(AM_V_GEN)
+	$(AM_V_at)$(CYTHON) $(AM_CYTHONFLAGS) $(CYTHONFLAGS) --force -o $@-tmp $<
+	$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
+		s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
+		print $$_' $@-tmp
+	$(AM_V_at)mv $@-tmp $@
