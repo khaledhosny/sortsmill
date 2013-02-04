@@ -61,22 +61,21 @@ DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/gsl.scm					\
 	sortsmill/brentroot.scm sortsmill/sfd-to-sxml.scm					\
 	sortsmill/views.scm sortsmill/api-syntax.scm						\
 	sortsmill/notices.scm sortsmill/strings.scm							\
-	sortsmill/ffcompat.scm sortsmill/i18n.scm
+	sortsmill/ffcompat.scm sortsmill/i18n.scm sortsmill/dynlink.scm
 #sortsmill/precompute.scm
-GO_FILES += sortsmill/alloc.go sortsmill/gsl.go		\
-	sortsmill/iconv.go sortsmill/linalg.go			\
-	sortsmill/polyspline.go sortsmill/brentroot.go	\
-	sortsmill/sfd-to-sxml.go sortsmill/views.go		\
-	sortsmill/api-syntax.go sortsmill/notices.go	\
-	sortsmill/strings.go sortsmill/ffcompat.go
+GO_FILES += sortsmill/alloc.go sortsmill/gsl.go sortsmill/iconv.go	\
+	sortsmill/linalg.go sortsmill/polyspline.go						\
+	sortsmill/brentroot.go sortsmill/sfd-to-sxml.go					\
+	sortsmill/views.go sortsmill/api-syntax.go sortsmill/notices.go	\
+	sortsmill/strings.go sortsmill/ffcompat.go sortsmill/i18n.go	\
+	sortsmill/dynlink.go
 
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
 	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in
-CONFIGURE_GENERATED_SCM_FILES += sortsmill/i18n.scm		\
-	sortsmill/machine.scm sortsmill/math-constants.scm	\
-	sortsmill/pkg-info.scm
-GO_FILES += sortsmill/i18n.go sortsmill/machine.go		\
-	sortsmill/math-constants.go sortsmill/pkg-info.go
+CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm	\
+	sortsmill/math-constants.scm sortsmill/pkg-info.scm
+GO_FILES += sortsmill/machine.go sortsmill/math-constants.go	\
+	sortsmill/pkg-info.go
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
 GO_FILES += sortsmill/fontforge-api.go
@@ -146,9 +145,21 @@ MOSTLYCLEANFILES += site-init.scm site-final.scm
 
 #--------------------------------------------------------------------------
 
+libguile_sortsmill_symbols.c:
+	echo "static int nothing_yet = 0;" > $@
+
+CLEANFILES += libguile_sortsmill_symbols.c
+
 AM_LDFLAGS = -module -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)
 
 lib_LTLIBRARIES =
+
+lib_LTLIBRARIES += libguile-sortsmill_symbols.la
+libguile_sortsmill_symbols_la_SOURCES = libguile_sortsmill_symbols.c
+libguile_sortsmill_symbols_la_LIBADD =						\
+	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
+	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la
 
 if HAVE_PYTHON_API
 
