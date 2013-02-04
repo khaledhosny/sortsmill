@@ -40,7 +40,9 @@
           pkg-info:py-release-level
           pkg-info:py-release-serial
           pkg-info:py-version
-          pkg-info:py-version-hex)
+          pkg-info:py-version-hex
+
+          pkg-info:textdomain)
 
   (import (rnrs)
           (only (guile) string-prefix? string-suffix?))
@@ -92,5 +94,7 @@
   (define pkg-info:py-release-serial (expansion-or-f @PY_RELEASE_SERIAL@))
   (define pkg-info:py-version (expansion-or-f @PY_VERSION_QUOTED@))
   (define pkg-info:py-version-hex (expansion-or-f @PY_VERSION_HEX@))
+
+  (define pkg-info:textdomain "@FF_TEXTDOMAIN@")
 
   ) ;; end of library.

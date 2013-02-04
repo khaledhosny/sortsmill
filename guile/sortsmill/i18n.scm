@@ -17,29 +17,27 @@
 
 (library (sortsmill i18n)
 
-  (export ff_textdomain
-          _ C_
+  (export _ C_
           dgettext
-          dpgettext)
+          dpgettext
+          pkg-info:textdomain ;; Reëxported from (sortsmill pkg-info).
+          )
 
-  (import (rnrs)
+  (import (sortsmill pkg-info)
+          (rnrs)
           (except (guile) error)
           (system foreign))
 
-;;;;;;; FIXME: locate this library more reliably, or use C code.
   (eval-when (compile load eval)
-    (define glib-dll (dynamic-link "libglib-2.0")))
-
-;;;;;;; FIXME: Move this to (sortsmill pkg-info).
-  (define ff_textdomain "@FF_TEXTDOMAIN@")
+    (define glib-dll (dynamic-link "libsortsmill_fontforge")))
 
   (define _
-    (lambda (msg) (dgettext ff_textdomain msg)))
+    (lambda (msg) (dgettext pkg-info:textdomain msg)))
 
   (define C_
     (let ([separator (string #\eot)])
       (lambda (context msg)
-        (dpgettext ff_textdomain
+        (dpgettext pkg-info:textdomain
                    (string-append context separator msg)
                    (+ 1 (string-length context))))))
 
