@@ -2330,7 +2330,8 @@ EncMapFromEncoding (SplineFont *sf, Encoding * enc)
   else if (enc->char_cnt <= 0x10000)
     base = 0x10000;
   encoded = xmalloc (base * sizeof (int));
-  memset (encoded, -1, base * sizeof (int));
+  if (base != 0)
+    memset (encoded, -1, base * sizeof (int));
   unencoded = xmalloc (sf->glyphcnt * sizeof (int));
   unmax = sf->glyphcnt;
 
