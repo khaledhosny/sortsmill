@@ -33,10 +33,10 @@
           f64vector-subdiv-sbern
           f64vector-subdiv-bern)
 
-  (import (only (guile) eval-when load-extension))
+  (import (sortsmill dynlink)
+          (only (guile) eval-when))
 
   (eval-when (compile load eval)
-    (load-extension "libsortsmill_aux"
-                    "init_guile_sortsmill_polyspline"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_polyspline"))
 
   ) ;; end of library.

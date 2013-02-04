@@ -24,12 +24,10 @@
           )
 
   (import (sortsmill pkg-info)
+          (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
           (system foreign))
-
-  (eval-when (compile load eval)
-    (define glib-dll (dynamic-link "libsortsmill_fontforge")))
 
   (define _
     (lambda (msg) (dgettext pkg-info:textdomain msg)))
@@ -43,7 +41,8 @@
 
   (define dgettext
     (let ([proc (pointer->procedure
-                 '* (dynamic-func "g_dgettext" glib-dll)
+                 '*
+                 (sortsmill-dynlink-func "g_dgettext" "#include <glib.h>")
                  `(* *))])
       (lambda (domain msgid)
         (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]
@@ -52,7 +51,8 @@
 
   (define dpgettext
     (let ([proc (pointer->procedure
-                 '* (dynamic-func "g_dpgettext" glib-dll)
+                 '*
+                 (sortsmill-dynlink-func "g_dpgettext" "#include <glib.h>")
                  `(* * ,size_t))])
       (lambda (domain msgctxtid msgidoffset)
         (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]

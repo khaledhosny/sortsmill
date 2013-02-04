@@ -32,6 +32,7 @@
           (sortsmill gdraw-api)
           (sortsmill machine)
           (sortsmill views)
+          (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
           (system foreign))
@@ -57,12 +58,12 @@ always a boolean."
           (let ([result (f-wrapped (view->python-view view))])
             (pybool->boolean (py-not-not result)))] )))
 
-  (eval-when (compile load eval)
-      (define python-dll (dynamic-link "libsortsmill_fontforgeexe")))
-
   (define no-windowing-ui?
     (let ([proc (pointer->procedure
-                 _Bool (dynamic-func "get_no_windowing_ui" python-dll) '())])
+                 _Bool
+                 (sortsmill-dynlink-func "get_no_windowing_ui"
+                                         "#include <fontforge.h>")
+                 '())])
       (lambda () (not (fxzero? (proc))))))
 
   (define (register-python-menu-entry window menu-path action enabled shortcut)
@@ -98,25 +99,37 @@ always a boolean."
                                          #:shortcut shortcut-®)))))
 
   (define fv-active-in-ui (pointer->bytevector
-                           (dynamic-pointer "fv_active_in_ui" python-dll)
+                           (sortsmill-dynlink-pointer "fv_active_in_ui"
+                                                      "#include <activeinui.h>")
                            (sizeof '*)))
 
   (define sc-active-in-ui (pointer->bytevector
-                           (dynamic-pointer "sc_active_in_ui" python-dll)
+                           (sortsmill-dynlink-pointer "sc_active_in_ui"
+                                                      "#include <activeinui.h>")
                            (sizeof '*)))
 
   (define layer-active-in-ui (pointer->bytevector
-                              (dynamic-pointer "layer_active_in_ui" python-dll)
+                              (sortsmill-dynlink-pointer "layer_active_in_ui"
+                                                         "#include <activeinui.h>")
                               (sizeof int)))
 
   (define SC->PySC
-    (pointer->procedure '* (dynamic-func "PySC_From_SC" python-dll) '(*)))
+    (pointer->procedure '*
+                        (sortsmill-dynlink-func "PySC_From_SC"
+                                                "#include <ffpython.h>")
+                        '(*)))
 
   (define FV->PyFV
-    (pointer->procedure '* (dynamic-func "PyFV_From_FV" python-dll) '(*)))
+    (pointer->procedure '*
+                        (sortsmill-dynlink-func "PyFV_From_FV"
+                                                "#include <ffpython.h>")
+                        '(*)))
 
   (define CVLayer
-    (pointer->procedure int (dynamic-func "CVLayer" python-dll) '(*)))
+    (pointer->procedure int
+                        (sortsmill-dynlink-func "CVLayer"
+                                                "#include <ffpython.h>")
+                        '(*)))
 
   (define ly-fore 1)
   

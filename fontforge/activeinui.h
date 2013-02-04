@@ -29,6 +29,9 @@
 #ifndef _INTERNAL_ACTIVEINUI_H
 #define _INTERNAL_ACTIVEINUI_H
 
+#include <baseviews.h>
+#include <splinefont.h>
+
 extern FontViewBase *fv_active_in_ui;
 extern SplineChar *sc_active_in_ui;
 

@@ -36,7 +36,8 @@
           register-fontforge-menu-entry ; FIXME: Get rid of this or make it private.
           )
 
-  (import (sortsmill fontforge-api)
+  (import (sortsmill dynlink)
+          (sortsmill fontforge-api)
           (sortsmill gdraw-api)
           (sortsmill i18n)
           (sortsmill machine)
@@ -175,9 +176,6 @@
 
   ;;-------------------------------------------------------------------------
 
-  (eval-when (compile load eval)
-    (define exe-dll (dynamic-link "libsortsmill_fontforgeexe")))
-
   (define (window-name->flag window-name)
     (if (symbol? window-name)
         (window-name->flag (symbol->string window-name))
@@ -190,7 +188,10 @@
                       window-name)))))
 
   (define GDrawGetUserData
-    (pointer->procedure '* (dynamic-func "GDrawGetUserData" exe-dll) '(*)))
+    (pointer->procedure
+     '*
+     (sortsmill-dynlink-func "GDrawGetUserData" "#include <gdraw.h>")
+     '(*)))
 
   (define (moveto-proc window-ptr menu-item-ptr event)
     (tools-list-check menu-item-ptr
@@ -230,11 +231,13 @@
 
   (define glyph-view-tools-internal
     (pointer->bytevector
-     (dynamic-pointer "cv_menu" exe-dll) (sizeof '*)))
+     (sortsmill-dynlink-pointer "cv_menu" "#include <usermenu.h>")
+     (sizeof '*)))
 
   (define font-view-tools-internal
     (pointer->bytevector
-     (dynamic-pointer "fv_menu" exe-dll) (sizeof '*)))
+     (sortsmill-dynlink-pointer "fv_menu" "#include <usermenu.h>")
+     (sizeof '*)))
 
   (define (activate-gui-tools)
     (activate-glyph-view-tools)

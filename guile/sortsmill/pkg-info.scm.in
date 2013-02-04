@@ -41,6 +41,7 @@
           pkg-info:py-release-serial
           pkg-info:py-version
           pkg-info:py-version-hex
+          pkg-info:pyinit-function-name
 
           pkg-info:textdomain)
 
@@ -94,6 +95,14 @@
   (define pkg-info:py-release-serial (expansion-or-f @PY_RELEASE_SERIAL@))
   (define pkg-info:py-version (expansion-or-f @PY_VERSION_QUOTED@))
   (define pkg-info:py-version-hex (expansion-or-f @PY_VERSION_HEX@))
+
+  (define pkg-info:pyinit-function-name
+    (if pkg-info:have-python-api?
+        [let ([prefix
+               (if (< pkg-info:py-major-version 3) "init" "PyInit_")])
+          (lambda (python-module-name)
+            (string-append prefix python-module-name))]
+        [lambda (python-module-name) #f] ))
 
   (define pkg-info:textdomain "@FF_TEXTDOMAIN@")
 

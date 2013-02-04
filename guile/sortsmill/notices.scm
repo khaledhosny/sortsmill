@@ -22,7 +22,8 @@
           post-fontforge-error
           fontforge-call-with-error-handling)
 
-  (import (rnrs)
+  (import (sortsmill dynlink)
+          (rnrs)
           (system repl error-handling)
           (only (guile)
                 *unspecified* define* load-extension eval-when
@@ -30,8 +31,7 @@
           (only (ice-9 match) match))
 
   (eval-when (compile load eval)
-    (load-extension "libsortsmill_fontforge"
-                    "init_guile_sortsmill_notices"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_notices"))
 
   (define* (fontforge-call-with-error-handling
             window-title thunk #:key (value-after-catch *unspecified*))

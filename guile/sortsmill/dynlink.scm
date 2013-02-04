@@ -18,6 +18,7 @@
 (library (sortsmill dynlink)
 
   (export sortsmill-dynlink-dll
+          sortsmill-dynlink-pointer
           sortsmill-dynlink-func
           sortsmill-dynlink-load-extension
           extract-dynlink-symbols
@@ -28,7 +29,8 @@
           write-dynlink-symbol-use-statements
           write-dynlink-symbol-use-c-code)
 
-  (import (rnrs)
+  (import (sortsmill pkg-info)
+          (rnrs)
           (except (guile) error)
           (ice-9 match)
           (ice-9 format))
@@ -38,6 +40,9 @@
   (eval-when (compile load eval)
     (define sortsmill-dynlink-dll
       (dynamic-link "libguile-sortsmill_symbols")))
+
+  (define (sortsmill-dynlink-pointer func-name declarations)
+    (dynamic-pointer func-name sortsmill-dynlink-dll))
 
   (define (sortsmill-dynlink-func func-name declarations)
     (dynamic-func func-name sortsmill-dynlink-dll))
@@ -52,7 +57,7 @@
 
   (define (extract-dynlink-symbols expression)
     (match expression
-      [['sortsmill-dynlink-func
+      [[(or 'sortsmill-dynlink-pointer 'sortsmill-dynlink-func)
         (? string-or-list? func-name)
         (? string-or-list? declarations)]
        (list (list (eval-in-context func-name)
@@ -96,7 +101,8 @@
     (match dynlink-data
       ['() *unspecified*]
       [((symbol-name declarations) . tail)
-       (format port "~a\n" declarations)
+       (unless (string=? declarations "")
+         (format port "~a\n" declarations))
        (write-dynlink-declarations tail port)] ))
 
   (define* (write-dynlink-symbol-use-statements
@@ -110,6 +116,11 @@
   (define* (write-dynlink-symbol-use-c-code
             dynlink-data #:optional (port (current-output-port)))
     (format port "#include <config.h>\n")
+    (when pkg-info:have-python-api?
+      ;; In our experience, Python headers are badly behaved and
+      ;; prefer to appear early. So include them here, and leave them
+      ;; out of your dynlink calls.
+      (format port "#include <Python.h>\n"))
     (format port "#include <stdio.h>\n")
     (format port "\n")
     (write-dynlink-declarations dynlink-data port)

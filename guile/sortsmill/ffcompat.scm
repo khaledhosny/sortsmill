@@ -27,34 +27,40 @@
           running_script-set!)
 
   (import (sortsmill machine)
+          (sortsmill dynlink)
           (system foreign)
           (rnrs)
           (except (guile) error))
 
-  (eval-when (compile load eval)
-    (define ff-dll (dynamic-link "libsortsmill_fontforge")))
-
   (define no_windowing_ui-ref
     (let ([proc (pointer->procedure
-                 _Bool (dynamic-func "get_no_windowing_ui" ff-dll)
+                 _Bool
+                 (sortsmill-dynlink-func "get_no_windowing_ui"
+                                         "#include <fontforge.h>")
                  '())])
       (lambda () (not (fxzero? (proc))))))
 
   (define no_windowing_ui-set!
     (let ([proc (pointer->procedure
-                 void (dynamic-func "set_no_windowing_ui" ff-dll)
+                 void
+                 (sortsmill-dynlink-func "set_no_windowing_ui"
+                                         "#include <fontforge.h>")
                  `(,_Bool))])
       (lambda (v) (proc (if v 1 0)))))
 
   (define running_script-ref
     (let ([proc (pointer->procedure
-                 _Bool (dynamic-func "get_running_script" ff-dll)
+                 _Bool
+                 (sortsmill-dynlink-func "get_running_script"
+                                         "#include <fontforge.h>")
                  '())])
       (lambda () (not (fxzero? (proc))))))
 
   (define running_script-set!
     (let ([proc (pointer->procedure
-                 void (dynamic-func "set_running_script" ff-dll)
+                 void
+                 (sortsmill-dynlink-func "set_running_script"
+                                         "#include <fontforge.h>")
                  `(,_Bool))])
       (lambda (v) (proc (if v 1 0)))))
 

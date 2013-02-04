@@ -29,12 +29,12 @@
           qbrentroot-values)
 
   (import (sortsmill math-constants)
+          (sortsmill dynlink)
           (rnrs)
           (except (guile) error))
 
   (eval-when (compile load eval)
-    (load-extension "libsortsmill_aux"
-                    "init_guile_sortsmill_brentroot"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_brentroot"))
 
   ;;-------------------------------------------------------------------------
 

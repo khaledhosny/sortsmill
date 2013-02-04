@@ -21,10 +21,10 @@
           matrix-f64+
           matrix-f64-)
 
-  (import (only (guile) eval-when load-extension))
+  (import (sortsmill dynlink)
+          (only (guile) eval-when))
 
   (eval-when (compile load eval)
-    (load-extension "libsortsmill_aux"
-                    "init_guile_sortsmill_gsl"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_gsl"))
 
   ) ;; end of library.

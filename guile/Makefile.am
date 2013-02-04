@@ -159,6 +159,7 @@ lib_LTLIBRARIES =
 
 lib_LTLIBRARIES += libguile-sortsmill_symbols.la
 libguile_sortsmill_symbols_la_SOURCES = libguile_sortsmill_symbols.c
+libguile_sortsmill_symbols_la_CPPFLAGS = $(AM_CPPFLAGS) $(FFINCLDIRS)
 libguile_sortsmill_symbols_la_CFLAGS = $(AM_CFLAGS)	\
 	$(NO_OPTIMIZATION_EXTRA_CFLAGS)
 libguile_sortsmill_symbols_la_LIBADD =						\

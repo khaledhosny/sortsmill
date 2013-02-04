@@ -153,7 +153,6 @@
           in-python-module
           pyimport
           pymodule?
-          pyinit-function-name
 
           py-incref ;; Should not be needed very often.
           py-decref ;; Should not be needed very often.
@@ -163,7 +162,8 @@
           disable-hash-guillemet-strings
           lines-begin-with)
 
-  (import (sortsmill i18n)
+  (import (sortsmill dynlink)
+          (sortsmill i18n)
           (sortsmill pkg-info)
           (only (sortsmill strings)
                 enable-hash-guillemet-strings
@@ -176,42 +176,26 @@
           (ice-9 match)
           (ice-9 format))
 
-  (define-syntax pyinit-prefix
-    (make-variable-transformer
-     (lambda (x)
-       (syntax-case x ()
-         [var (identifier? #'var)
-              (if (< pkg-info:py-major-version 3)
-                  #'"init"
-                  #'"PyInit_")] ))))
-
   (eval-when (compile load eval)
-    (define (pyinit-function-name python-module-name)
-      (string-append pyinit-prefix python-module-name)))
-
-  (eval-when (compile load eval)
-    (define python-dll (dynamic-link "libsortsmill_aux")))
-
-  (eval-when (compile load eval)
-    (dynamic-call "init_guile_sortsmill_python" python-dll))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_python"))
 
   (define py-initialized?
     (let ([proc (pointer->procedure
-                 int (dynamic-func "Py_IsInitialized" python-dll)
+                 int (sortsmill-dynlink-func "Py_IsInitialized" "")
                  '())])
       (lambda () (not (fxzero? (proc))))))
 
   (define py-initialize
     (pointer->procedure
-     void (dynamic-func "Py_Initialize" python-dll) `()))
+     void (sortsmill-dynlink-func "Py_Initialize" "") `()))
 
   (define py-finalize
     (pointer->procedure
-     void (dynamic-func "Py_Finalize" python-dll) `()))
+     void (sortsmill-dynlink-func "Py_Finalize" "") `()))
 
   (define py-incref
     (let ([proc (pointer->procedure
-                 void (dynamic-func "Py_IncRef" python-dll)
+                 void (sortsmill-dynlink-func "Py_IncRef" "")
                  '(*))])
       (lambda (obj)
         (assert (pyobject? obj))
@@ -219,7 +203,7 @@
 
   (define py-decref
     (let ([proc (pointer->procedure
-                 void (dynamic-func "Py_DecRef" python-dll)
+                 void (sortsmill-dynlink-func "Py_DecRef" "")
                  '(*))])
       (lambda (obj)
         (assert (pyobject? obj))
@@ -287,7 +271,7 @@
 
   (eval-when (compile eval load)
     (load-extension "libguile-sortsmill_cython"
-                    (pyinit-function-name "libguile_sortsmill_cython")))
+                    (pkg-info:pyinit-function-name "libguile_sortsmill_cython")))
 
   (define-syntax define-guile-support-procedure
     (lambda (x)
