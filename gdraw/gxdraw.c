@@ -27,10 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifdef __VMS
-#include <vms_x_fix.h>
-#endif
-
 #include "gxdrawP.h"
 #include "gxcdrawP.h"
 
@@ -205,17 +201,6 @@ static void _GXDraw_FindVisual(GXDisplay *gdisp) {
 	/* I want not only the number of meaningful bits in a pixel (which is the */
 	/*  depth) but also the number of bits in pixel when writing an image */
 	/* I wish I knew how to do this without diving into hidden X structures */
-#ifndef __VMS
-#ifndef XlibSpecificationRelease
-	/* X11R4 (which doesn't define XlibSpecificationRelease) doesn't */
-	/*  define _XPrivDisplay, either. The information just lives in the */
-	/*  display structure */
-# define _XPrivDisplay struct _XDisplay *
-#elif XlibSpecificationRelease==5
-	/* X11R5 doesn't define it either */ /* Not sure. Should it be struct Display * ? */
-# define _XPrivDisplay struct _XDisplay *
-#endif
-#endif
 	gdisp->bitmap_pad = gdisp->pixel_size = gdisp->depth;
 	for ( i=0; i<((_XPrivDisplay) display)->nformats; ++i ) {
 	    sf = &((_XPrivDisplay) display)->pixmap_format[i];
@@ -2459,9 +2444,7 @@ return;
 	    if ( gdisp->xthread.sync_sock>fd )
 		fd = gdisp->xthread.sync_sock;
 	}
-#ifndef __VMS
 	ret = select(fd+1,&read,&write,&except,timeout);
-#endif
     }
 }
 
@@ -3382,9 +3365,7 @@ return( false );
 	    if ( gdisp->xthread.sync_sock>fd )
 		fd = gdisp->xthread.sync_sock;
 	}
-#ifndef __VMS
 	ret = select(fd+1,&read,&write,&except,&offset);
-#endif
     }
 }
 

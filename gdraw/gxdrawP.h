@@ -28,34 +28,21 @@
 #ifndef _XDRAW_H
 #define _XDRAW_H
 
-#ifdef __VMS
-#include <vms_x_fix.h>
-#endif
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
-
 #ifndef X_DISPLAY_MISSING
 # include <X11/X.h>
 # include <X11/Xlib.h>
 # include <X11/Xutil.h>
 # ifndef _NO_XINPUT
-#  ifdef __VMS
-#   include <sys$common:[decw$include.extensions]XInput.h>
-#   include <sys$common:[decw$include.extensions]XI.h>
-#  else
-#   include <X11/extensions/XInput.h>
-#   include <X11/extensions/XI.h>
-#  endif
+#  include <X11/extensions/XInput.h>
+#  include <X11/extensions/XI.h>
 # endif
 # ifndef _NO_XKB
-#   include <X11/XKBlib.h>
-/*# include <X11/extensions/XKBgeom.h>*/
+#  include <X11/XKBlib.h>
 # endif
-#  include <cairo/cairo.h>
-#  include <cairo/cairo-xlib.h>
-#  include <pango/pango.h>
-#  include <pango/pangocairo.h>
+# include <cairo/cairo.h>
+# include <cairo/cairo-xlib.h>
+# include <pango/pango.h>
+# include <pango/pangocairo.h>
 #endif
 
 #include "gdrawP.h"
