@@ -31,7 +31,7 @@
 
   (define c:zalloc
     (pointer->procedure
-     '* (dynamic-func "scm_calloc" aux-dll) `(,size_t)))
+     '* (dynamic-func "x_zalloc" aux-dll) `(,size_t)))
 
   (define c:free
     (pointer->procedure
