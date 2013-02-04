@@ -56,12 +56,12 @@ nobase_nodist_guilemodule_DATA = $(CONFIGURE_GENERATED_SCM_FILES)	\
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 
-DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/gsl.scm	\
-	sortsmill/iconv.scm sortsmill/linalg.scm			\
-	sortsmill/polyspline.scm sortsmill/brentroot.scm	\
-	sortsmill/sfd-to-sxml.scm sortsmill/views.scm		\
-	sortsmill/api-syntax.scm sortsmill/notices.scm		\
-	sortsmill/strings.scm sortsmill/ffcompat.scm
+DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/gsl.scm					\
+	sortsmill/iconv.scm sortsmill/linalg.scm sortsmill/polyspline.scm	\
+	sortsmill/brentroot.scm sortsmill/sfd-to-sxml.scm					\
+	sortsmill/views.scm sortsmill/api-syntax.scm						\
+	sortsmill/notices.scm sortsmill/strings.scm							\
+	sortsmill/ffcompat.scm sortsmill/i18n.scm
 #sortsmill/precompute.scm
 GO_FILES += sortsmill/alloc.go sortsmill/gsl.go		\
 	sortsmill/iconv.go sortsmill/linalg.go			\
@@ -70,9 +70,8 @@ GO_FILES += sortsmill/alloc.go sortsmill/gsl.go		\
 	sortsmill/api-syntax.go sortsmill/notices.go	\
 	sortsmill/strings.go sortsmill/ffcompat.go
 
-DIST_SCM_IN_FILES += sortsmill/i18n.scm.in						\
-	sortsmill/machine.scm.in sortsmill/math-constants.scm.in	\
-	sortsmill/pkg-info.scm.in
+DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
+	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/i18n.scm		\
 	sortsmill/machine.scm sortsmill/math-constants.scm	\
 	sortsmill/pkg-info.scm
