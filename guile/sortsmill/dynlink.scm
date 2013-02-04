@@ -69,9 +69,8 @@
       [_ '()] ))
 
   (eval-when (compile load eval)
-    (define eval-in-context
-      (let ([context (resolve-interface '(sortsmill pkg-info))])
-        (lambda (expression) (eval expression context)))))
+        (define (eval-in-context expression)
+          (eval expression (interaction-environment))))
 
   (define* (extract-dynlink-symbols-from-input
             #:optional (port (current-input-port)))
