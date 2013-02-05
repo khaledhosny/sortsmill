@@ -37,20 +37,19 @@
 
   (define (module-for-evals) (resolve-module '(sortsmill pkg-info)))
 
-  (eval-when (compile load eval)
-    (define sortsmill-dynlink-dll
-      (dynamic-link "libguile-sortsmill_symbols")))
+  (define (sortsmill-dynlink-dll)
+    (dynamic-link "libguile-sortsmill_symbols"))
 
   (define (sortsmill-dynlink-pointer func-name declarations)
-    (dynamic-pointer func-name sortsmill-dynlink-dll))
+    (dynamic-pointer func-name (sortsmill-dynlink-dll)))
 
   (define (sortsmill-dynlink-func func-name declarations)
-    (dynamic-func func-name sortsmill-dynlink-dll))
+    (dynamic-func func-name (sortsmill-dynlink-dll)))
 
   (define (sortsmill-dynlink-load-extension init-func-name)
     (dynamic-call
-     (dynamic-func init-func-name sortsmill-dynlink-dll)
-     sortsmill-dynlink-dll))
+     (dynamic-func init-func-name (sortsmill-dynlink-dll))
+     (sortsmill-dynlink-dll)))
 
   (define (string-or-list? obj)
     (or (string? obj) (list? obj)))

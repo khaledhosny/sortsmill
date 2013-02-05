@@ -1,3 +1,5 @@
+# -*- tab-width: 4 -*-
+
 # Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
@@ -48,11 +50,12 @@ DIST_SCM_FILES =
 DIST_SCM_IN_FILES =
 CONFIGURE_GENERATED_SCM_FILES =
 MAKEFILE_GENERATED_SCM_FILES =
+NODIST_SCM_FILES = $(CONFIGURE_GENERATED_SCM_FILES)	\
+	$(MAKEFILE_GENERATED_SCM_FILES)
 GO_FILES =
 
 nobase_dist_guilemodule_DATA = $(DIST_SCM_FILES)
-nobase_nodist_guilemodule_DATA = $(CONFIGURE_GENERATED_SCM_FILES)	\
-	$(MAKEFILE_GENERATED_SCM_FILES)
+nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 
@@ -197,13 +200,11 @@ all-local: $(GO_FILES)
 # The following rules are unpleasant but avoid having to keep track of
 # dependencies. Consolation: it is no worse than if we used a
 # whole-program compiler.
-$(filter-out sortsmill/pkg-info.go sortsmill/dynlink.go, $(GO_FILES)):	\
-	$(DIST_SCM_FILES) $(CONFIGURE_GENERATED_SCM_FILES)					\
-	$(MAKEFILE_GENERATED_SCM_FILES) $(lib_LTLIBRARIES)
-$(filter sortsmill/pkg-info.go sortsmill/dynlink.go, $(GO_FILES)):	\
-	$(DIST_SCM_FILES) $(CONFIGURE_GENERATED_SCM_FILES)				\
-	$(MAKEFILE_GENERATED_SCM_FILES) $(filter-out					\
-	libguile_sortsmill_symbols.la, $(lib_LTLIBRARIES))
+$(filter-out sortsmill/pkg-info.go sortsmill/dynlink.go,	\
+	$(GO_FILES)): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)		\
+	$(MAKEFILE_GENERATED_SCM_FILES)
+sortsmill/pkg-info.go sortsmill/dynlink.go: $(DIST_SCM_FILES)	\
+	$(NODIST_SCM_FILES)
 
 # Try to ensure that the installed bitcode files are newer than the
 # installed source files, by installing the bitcode files with this
