@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
   
-(@ (sortsmill strings) enable-hash-guillemet-strings)
+(@ (sortsmill hash-guillemet) enable-hash-guillemet-strings)
 
 (library (sortsmill usermenu)
 

@@ -61,15 +61,16 @@ DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/gsl.scm					\
 	sortsmill/iconv.scm sortsmill/linalg.scm sortsmill/polyspline.scm	\
 	sortsmill/brentroot.scm sortsmill/sfd-to-sxml.scm					\
 	sortsmill/views.scm sortsmill/api-syntax.scm						\
-	sortsmill/notices.scm sortsmill/strings.scm							\
-	sortsmill/ffcompat.scm sortsmill/i18n.scm sortsmill/dynlink.scm
+	sortsmill/notices.scm sortsmill/hash-guillemet.scm					\
+	sortsmill/strings.scm sortsmill/ffcompat.scm sortsmill/i18n.scm		\
+	sortsmill/dynlink.scm
 #sortsmill/precompute.scm
 GO_FILES += sortsmill/alloc.go sortsmill/gsl.go sortsmill/iconv.go	\
 	sortsmill/linalg.go sortsmill/polyspline.go						\
 	sortsmill/brentroot.go sortsmill/sfd-to-sxml.go					\
 	sortsmill/views.go sortsmill/api-syntax.go sortsmill/notices.go	\
-	sortsmill/strings.go sortsmill/ffcompat.go sortsmill/i18n.go	\
-	sortsmill/dynlink.go
+	sortsmill/hash-guillemet.go sortsmill/strings.go				\
+	sortsmill/ffcompat.go sortsmill/i18n.go sortsmill/dynlink.go
 
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
 	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in
@@ -111,8 +112,18 @@ GO_FILES += sortsmill/gdraw-api.go
 
 endif HAVE_GUI
 
+sortsmill/alloc.go sortsmill/brentroot.go: sortsmill/dynlink.go
+sortsmill/ffcompat.go sortsmill/gsl.go sortsmill/i18n.go: sortsmill/dynlink.go
+sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
+sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go
+sortsmill/usermenu/python.go sortsmill/usermenu.go: sortsmill/dynlink.go
+sortsmill/api-syntax.go sortsmill/i18n.go sortsmill/python.go: sortsmill/pkg-info.go
 sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
 sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
+sortsmill/strings.go: sortsmill/hash-guillemet.go
+sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/strings.go
+sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
+sortsmill/usermenu.go sortsmill/views.go: sortsmill/i18n.go
 sortsmill/views.go: sortsmill/fontforge-api.go
 sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
 sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go

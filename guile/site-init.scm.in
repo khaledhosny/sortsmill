@@ -19,7 +19,7 @@
         (sortsmill pkg-info)
         (system foreign))
 
-(@ (sortsmill strings) enable-hash-guillemet-strings)
+(@ (sortsmill hash-guillemet) enable-hash-guillemet-strings)
 
 (if (not (getenv "HOME"))
     (let ([rnrs-error (@ (rnrs) error)]

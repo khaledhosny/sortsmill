@@ -17,31 +17,15 @@
 
 (library (sortsmill strings)
   
-  (export enable-hash-guillemet-strings
-          disable-hash-guillemet-strings
-          lines-begin-with)
+  (export lines-begin-with
 
-  (import (rnrs)
+          ;; Reëxported from (sortsmill hash-guillemet).
+          enable-hash-guillemet-strings
+          disable-hash-guillemet-strings)
+
+  (import (sortsmill hash-guillemet)
+          (rnrs)
           (except (guile) error))
-
-  ;;-------------------------------------------------------------------------
-
-  (define (read-chars-until s port)
-    (letrec ((read-more
-              (lambda (prior)
-                (let* ((c (read-char port))
-                       (new-string (string-append prior (string c))))
-                  (if (string-suffix? s new-string)
-                      (string-drop-right new-string (string-length s))
-                      (read-more new-string))))))
-      (read-more "")))
-
-  (define (enable-hash-guillemet-strings)
-    (read-hash-extend #\« (lambda (c port)
-                            (read-chars-until "»#" port))))
-
-  (define (disable-hash-guillemet-strings)
-    (read-hash-extend #\« #f))
 
   ;;-------------------------------------------------------------------------
   ;;
@@ -93,7 +77,5 @@
       (get-lines "" 0)))
 
   ;;-------------------------------------------------------------------------
-
-  (enable-hash-guillemet-strings)
 
   ) ;; end of library.
