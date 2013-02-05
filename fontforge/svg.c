@@ -2453,7 +2453,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
   rx = fabs (rx);
   ry = fabs (ry);
 
-  // See www.tinaja.com/glib/ellipse4.pdf
+  // See http://www.tinaja.com/glib/ellipse4.pdf
   const double magic_number = 0.55228475 - 0.00045;
 
   cur = XZALLOC (SplineSet);
@@ -3361,8 +3361,8 @@ EntityCreate (SplinePointList *head, struct svg_state *state)
   ent->u.splines.join = state->lj;
   ent->u.splines.stroke_width = state->linewidth;
   ent->u.splines.fill.col =
-    state->dofill ? state->
-    fillcol : state->dostroke ? 0xffffffff : COLOR_INHERITED;
+    state->dofill
+    ? state->fillcol : (state->dostroke ? 0xffffffff : COLOR_INHERITED);
   ent->u.splines.stroke.col = state->dostroke ? state->strokecol : 0xffffffff;
   ent->u.splines.fill.opacity = state->fillopacity;
   ent->u.splines.stroke.opacity = state->strokeopacity;
