@@ -31,12 +31,12 @@ MY_LTDL_LIBRARY_PATH = $(if $(ENV_LTDL_LIBRARY_PATH),:$(ENV_LTDL_LIBRARY_PATH))
 GUILE_ENV = GUILE_AUTO_COMPILE=0																\
 	GUILE_LOAD_PATH='$(abs_top_srcdir)/guile:$(abs_top_builddir)/guile$(MY_GUILE_LOAD_PATH)'	\
 	GUILE_LOAD_COMPILED_PATH='$(abs_top_builddir)/guile$(MY_GUILE_LOAD_COMPILED_PATH)'			\
-	LTDL_LIBRARY_PATH='$(abs_top_builddir)/auxiliary:$(abs_top_builddir)/fontforge:$(abs_top_builddir)/guile$(MY_LTDL_LIBRARY_PATH)'
+	LTDL_LIBRARY_PATH='$(abs_top_builddir)/guile$(MY_LTDL_LIBRARY_PATH)'
 
 GUILE_INSTALLED_ENV = GUILE_AUTO_COMPILE=0									\
 	GUILE_LOAD_PATH='$(guilemoduledir)$(MY_GUILE_LOAD_COMPILED_PATH)'		\
 	GUILE_LOAD_COMPILED_PATH='$(guileobjmoduledir)$(MY_LTDL_LIBRARY_PATH)'	\
-	LTDL_LIBRARY_PATH='$(guileextensiondir)$(MY_GUILE_LOAD_PATH)'
+	LTDL_LIBRARY_PATH='$(libdir)$(MY_GUILE_LOAD_PATH)'
 
 GUILE_FLAGS = -L $(top_builddir)/guile -L $(top_srcdir)/guile
 

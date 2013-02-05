@@ -1,4 +1,4 @@
-#! /bin/env guile \ -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+#! /usr/bin/env guile \ -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
 --no-auto-compile -s
 !#
 

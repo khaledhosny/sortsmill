@@ -17,9 +17,7 @@
 
 (library (sortsmill pure)
 
-  (export pure-dll
-
-          pure-op-infix
+  (export pure-op-infix
           pure-op-infixl
           pure-op-infixr
           pure-op-prefix
@@ -119,6 +117,7 @@
           lines-begin-with)
 
   (import (sortsmill i18n)
+          (sortsmill dynlink)
           (only (sortsmill strings)
                 enable-hash-guillemet-strings
                 disable-hash-guillemet-strings
@@ -131,11 +130,7 @@
           (system foreign))
 
   (eval-when (compile load eval)
-    (define pure-dll
-      (dynamic-link "libsortsmill_aux")))
-
-  (eval-when (compile load eval)
-    (dynamic-call "init_guile_sortsmill_pure" pure-dll))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_pure"))
 
   (define pure-op-infix 0)
   (define pure-op-infixl 1)
@@ -150,14 +145,16 @@
 
   (define string->symbol-pure-expr
     (let ((proc (pointer->procedure
-                 int32 (dynamic-func "pure_sym" pure-dll)
+                 int32
+                 (sortsmill-dynlink-func "pure_sym" "#include <pure/runtime.h>")
                  `(*))))
       (lambda (s)
         (pure-quoted-symbol (proc (string->pointer s "UTF-8"))))))
 
   (define string->symbol-pure-expr-or-f
     (let ((proc (pointer->procedure
-                 int32 (dynamic-func "pure_getsym" pure-dll)
+                 int32
+                 (sortsmill-dynlink-func "pure_getsym" "#include <pure/runtime.h>")
                  `(*))))
       (lambda (s)
         (let ((sym (proc (string->pointer s "UTF-8"))))
@@ -174,7 +171,8 @@
   
   (define symbol-pure-expr->string
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_sym_pname" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_sym_pname" "#include <pure/runtime.h>")
                  `(,int32))))
       (lambda (x)
         (let ((sym (symbol-pure-expr->small-integer
@@ -183,7 +181,8 @@
   
   (define pure-closing-symbol
     (let ((proc (pointer->procedure
-                 int32 (dynamic-func "pure_sym_other" pure-dll)
+                 int32
+                 (sortsmill-dynlink-func "pure_sym_other" "#include <pure/runtime.h>")
                  `(,int32))))
       (lambda (x)
         (let* ((sym (symbol-pure-expr->small-integer
@@ -193,7 +192,8 @@
 
   (define pure-fixity
     (let ((proc (pointer->procedure
-                 int32 (dynamic-func "pure_sym_nprec" pure-dll)
+                 int32
+                 (sortsmill-dynlink-func "pure_sym_nprec" "#include <pure/runtime.h>")
                  `(,int32))))
       (lambda (x)
         (let ((sym (symbol-pure-expr->small-integer 'pure-fixity x)))
@@ -275,7 +275,8 @@
 
   (define small-integer->pure-expr
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_int" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_int" "#include <pure/runtime.h>")
                  `(,int32))))
       (compose pointer->pure-expr proc)))
 
@@ -351,7 +352,8 @@
 
   (define inexact->pure-expr
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_double" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_double" "#include <pure/runtime.h>")
                  `(,double))))
       (compose pointer->pure-expr proc)))
 
@@ -402,7 +404,8 @@
 
   (define pointer->pointer-pure-expr
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_pointer" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_pointer" "#include <pure/runtime.h>")
                  `(*))))
       (compose pointer->pure-expr proc)))
 
@@ -424,7 +427,8 @@
 
   (define string->pure-expr
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_string_dup" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_string_dup" "#include <pure/runtime.h>")
                  `(*))))
       (lambda (s)
         (pointer->pure-expr (proc (string->pointer s "UTF-8"))))))
@@ -447,23 +451,30 @@
 
   (define pure-lasterr
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "lasterr" pure-dll) `())))
+                 '*
+                 (sortsmill-dynlink-func "lasterr" "#include <pure/runtime.h>") `())))
       (lambda () (pointer->string (proc) -1 "UTF-8"))))
 
   (define pure-clear-lasterr
     (pointer->procedure
-     void (dynamic-func "clear_lasterr" pure-dll) `()))
+     void
+     (sortsmill-dynlink-func "clear_lasterr" "#include <pure/runtime.h>")
+     `()))
 
   (define pure-lasterr-pos
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "lasterrpos" pure-dll) `())))
+                 '*
+                 (sortsmill-dynlink-func "lasterrpos" "#include <pure/runtime.h>")
+                 `())))
       (lambda () (pointer->pure-expr (proc)))))
 
   (define pure-val
     ;; Converts Pure syntax from string to pure-expr. Returns #f and
     ;; sets (pure-lasterr) if the string is not legal.
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_val" pure-dll) `(*))))
+                 '*
+                 (sortsmill-dynlink-func "pure_val" "#include <pure/runtime.h>")
+                 `(*))))
       (lambda (s)
         (let ((result (proc (string->pointer s "UTF-8"))))
           (if (null-pointer? result)
@@ -471,7 +482,9 @@
 
   (define pure-eval
     (let ((eval-proc (pointer->procedure
-                      '* (dynamic-func "pure_eval" pure-dll) `(*))))
+                      '*
+                      (sortsmill-dynlink-func "pure_eval" "#include <pure/runtime.h>")
+                      `(*))))
       (lambda (x)
         (let ((result-pair
                (cond
@@ -493,7 +506,9 @@
 
   (define pure-evalcmd
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_evalcmd" pure-dll) `(*))))
+                 '*
+                 (sortsmill-dynlink-func "pure_evalcmd" "#include <pure/runtime.h>")
+                 `(*))))
       (lambda (s)
         (let ((output (proc (string->pointer s "UTF-8"))))
           (if (null-pointer? output) #f
@@ -501,7 +516,8 @@
 
   (define pure-pointer-tag
     (let ((proc (pointer->procedure
-                 int (dynamic-func "pure_pointer_tag" pure-dll)
+                 int
+                 (sortsmill-dynlink-func "pure_pointer_tag" "#include <pure/runtime.h>")
                  `(*))))
       (lambda (s)
         (cond
@@ -515,7 +531,8 @@
 
   (define pure-pointer-cast
     (let* ((proc (pointer->procedure
-                  '* (dynamic-func "pure_pointer_cast" pure-dll)
+                  '*
+                  (sortsmill-dynlink-func "pure_pointer_cast" "#include <pure/runtime.h>")
                   `(,int *)))
            (cast (lambda (tag x)
                    (if (pure-pointer-type tag)
@@ -535,7 +552,8 @@
 
   (define pure-interp-compile
     (let ((proc (pointer->procedure
-                 void (dynamic-func "pure_interp_compile" pure-dll)
+                 void
+                 (sortsmill-dynlink-func "pure_interp_compile" "#include <pure/runtime.h>")
                  `(* ,int32))))
       (case-lambda
         [() (pure-interp-compile (pure-current-interp) #f)]
@@ -558,7 +576,9 @@
     ;; Application of a curried Pure function, as if it were an
     ;; uncurried (that is, multiple-argument) Scheme function.
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_app" pure-dll) `(* *))))
+                 '*
+                 (sortsmill-dynlink-func "pure_app" "#include <pure/runtime.h>")
+                 `(* *))))
       (case-lambda
         [(f arg)  ; Treat this as a special case for (perhaps) speed.
          (pointer->pure-expr (proc (pure-expr->pointer f)
@@ -579,7 +599,8 @@
 
   (define pure-create-interp
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_create_interp" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_create_interp" "#include <pure/runtime.h>")
                  `(,int *))))
       (lambda (args)
         (let ((argc (length args))
@@ -589,31 +610,37 @@
 
   (define pure-delete-interp
     (let ((proc (pointer->procedure
-                 void (dynamic-func "pure_delete_interp" pure-dll)
+                 void
+                 (sortsmill-dynlink-func "pure_delete_interp" "#include <pure/runtime.h>")
                  `(*))))
       (compose proc pure-interp->pointer)))
 
   (define pure-switch-interp
     (let ((proc (pointer->procedure
-                 void (dynamic-func "pure_switch_interp" pure-dll)
+                 void
+                 (sortsmill-dynlink-func "pure_switch_interp" "#include <pure/runtime.h>")
                  `(*))))
       (compose proc pure-interp->pointer)))
 
   (define pure-current-interp
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_current_interp" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_current_interp" "#include <pure/runtime.h>")
                  `())))
       (compose pointer->pure-interp proc)))
 
   (define pure-quoted-symbol
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_quoted_symbol" pure-dll)
+                 '*
+                 (sortsmill-dynlink-func "pure_quoted_symbol" "#include <pure/runtime.h>")
                  `(,int32))))
       (compose pointer->pure-expr proc)))
 
   (define pure-str-pure-expr
     (let ((proc (pointer->procedure
-                 '* (dynamic-func "pure_str" pure-dll) `(*))))
+                 '*
+                 (sortsmill-dynlink-func "pure_str" "#include <pure/runtime.h>")
+                 `(*))))
       (lambda (x)
         (let ((result (proc (pure-expr->pointer x))))
           (if (null-pointer? result) #f
@@ -621,7 +648,9 @@
 
   (define pure-finalize
     (pointer->procedure
-     void (dynamic-func "pure_finalize" pure-dll) `()))
+     void
+     (sortsmill-dynlink-func "pure_finalize" "#include <pure/runtime.h>")
+     `()))
 
   ;; FIXME: This could be useful more generally.
   (define (string-list->argv args)

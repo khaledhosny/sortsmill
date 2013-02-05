@@ -20,116 +20,24 @@
   (export sortsmill-dynlink-dll
           sortsmill-dynlink-pointer
           sortsmill-dynlink-func
-          sortsmill-dynlink-load-extension
-          extract-dynlink-symbols
-          extract-dynlink-symbols-from-input
-          extract-dynlink-symbols-from-files
-          write-dynlink-include-files
-          write-dynlink-symbol-imports
-          write-dynlink-symbol-use-statements
-          write-dynlink-symbol-use-c-code)
+          sortsmill-dynlink-load-extension)
 
-  (import (sortsmill pkg-info)
-          (rnrs)
-          (except (guile) error)
-          (ice-9 match)
-          (ice-9 format))
+  (import (rnrs)
+          (except (guile) error))
 
-  (define (module-for-evals) (resolve-module '(sortsmill pkg-info)))
-
-  (define (sortsmill-dynlink-dll)
-    (dynamic-link "libguile-sortsmill_symbols"))
+  (eval-when (compile load eval)
+    (define sortsmill-dynlink-dll
+      (dynamic-link "libguile-sortsmill_symbols")))
 
   (define (sortsmill-dynlink-pointer func-name declarations)
-    (dynamic-pointer func-name (sortsmill-dynlink-dll)))
+    (dynamic-pointer func-name sortsmill-dynlink-dll))
 
   (define (sortsmill-dynlink-func func-name declarations)
-    (dynamic-func func-name (sortsmill-dynlink-dll)))
+    (dynamic-func func-name sortsmill-dynlink-dll))
 
   (define (sortsmill-dynlink-load-extension init-func-name)
     (dynamic-call
-     (dynamic-func init-func-name (sortsmill-dynlink-dll))
-     (sortsmill-dynlink-dll)))
-
-  (define (string-or-list? obj)
-    (or (string? obj) (list? obj)))
-
-  (define (extract-dynlink-symbols expression)
-    (match expression
-      [[(or 'sortsmill-dynlink-pointer 'sortsmill-dynlink-func)
-        (? string-or-list? func-name)
-        (? string-or-list? declarations)]
-       (list (list (eval-in-context func-name)
-                   (eval-in-context declarations)))]
-
-      [['sortsmill-dynlink-load-extension
-        (? string-or-list? init-func-name)]
-       (list (list (eval-in-context init-func-name)
-                   (format #f "void ~a (void);" init-func-name)))]
-
-      [(h . t) (append (extract-dynlink-symbols h)
-                       (extract-dynlink-symbols t))]
-
-      [_ '()] ))
-
-  (eval-when (compile load eval)
-        (define (eval-in-context expression)
-          (eval expression (interaction-environment))))
-
-  (define* (extract-dynlink-symbols-from-input
-            #:optional (port (current-input-port)))
-    (let ([expression (read port)])
-      (cond [(eof-object? expression) '()]
-            [else (append
-                   (extract-dynlink-symbols expression)
-                   (extract-dynlink-symbols-from-input port))]) ))
-
-  (define (extract-dynlink-symbols-from-files file-name . more-names)
-    (apply append
-           (call-with-input-file file-name
-             extract-dynlink-symbols-from-input)
-           (map (lambda (f)
-                  (with-input-from-file f
-                    (lambda ()
-                      (set-port-encoding! (current-input-port) "utf-8")
-                      (extract-dynlink-symbols-from-input))))
-                more-names)))
-
-  (define* (write-dynlink-declarations
-            dynlink-data #:optional (port (current-output-port)))
-    (match dynlink-data
-      ['() *unspecified*]
-      [((symbol-name declarations) . tail)
-       (unless (string=? declarations "")
-         (format port "~a\n" declarations))
-       (write-dynlink-declarations tail port)] ))
-
-  (define* (write-dynlink-symbol-use-statements
-            dynlink-data #:optional (port (current-output-port)))
-    (match dynlink-data
-      ['() *unspecified*]
-      [((symbol-name declarations) . tail)
-       (format port "  printf (\"%p\", &~a);\n" symbol-name)
-       (write-dynlink-symbol-use-statements tail port)] ))
-
-  (define* (write-dynlink-symbol-use-c-code
-            dynlink-data #:optional (port (current-output-port)))
-    (format port "#include <config.h>\n")
-    (when pkg-info:have-python-api?
-      ;; In our experience, Python headers are badly behaved and
-      ;; prefer to appear early. So include them here, and leave them
-      ;; out of your dynlink calls.
-      (format port "#include <Python.h>\n"))
-    (format port "#include <stdio.h>\n")
-    (format port "\n")
-    (write-dynlink-declarations dynlink-data port)
-    (format port "\n")
-    (format port "void function_that_imports_symbols (void);\n")
-    (format port "\n")
-	(format port "void\n")
-	(format port "function_that_imports_symbols (void)\n")
-	(format port "{\n")
-    (write-dynlink-symbol-use-statements dynlink-data port)
-	(format port "}\n"))
+     (dynamic-func init-func-name sortsmill-dynlink-dll)
+     sortsmill-dynlink-dll))
 
   ) ;; end of library.

@@ -50,9 +50,6 @@ endif HAVE_GUI
 EXELIBADD = $(FFLIBADD)										\
 	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la
 
-FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
-	'-I$(top_srcdir)/fontforge'
-
 #--------------------------------------------------------------------------
 
 if HAVE_PYTHON_COMPATIBILITY

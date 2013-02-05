@@ -31,12 +31,10 @@ include $(top_srcdir)/mk/flags.am
 @includemk@ $(top_srcdir)/mk/tig.mk
 @includemk@ $(top_srcdir)/mk/cython.mk
 
-FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
-	'-I$(top_srcdir)/fontforge'
-
 AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
 	'-I$(top_builddir)/python' '-I$(top_srcdir)/python'
 
+lib_LTLIBRARIES =
 EXTRA_DIST =
 MOSTLYCLEANFILES =
 CLEANFILES =
@@ -120,18 +118,18 @@ sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
 sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
 sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/usermenu.go
 
-sortsmill/fontforge-api.scm:							\
-		$(top_builddir)/fontforge/fontforge.types.apii	\
-		$(srcdir)/generate-guile-api.scm				\
-		ff-internal/generate-types.scm
+sortsmill/fontforge-api.scm:											\
+		$(top_builddir)/fontforge/fontforge.types.apii					\
+		$(srcdir)/generate-guile-api.scm								\
+		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill fontforge-api)' $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
-		$(srcdir)/generate-guile-api.scm							\
-		ff-internal/generate-types.scm
+sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii			\
+		$(srcdir)/generate-guile-api.scm								\
+		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill gdraw-api)' $< > $@-tmp
@@ -148,17 +146,9 @@ MOSTLYCLEANFILES += site-init.scm site-final.scm
 
 #--------------------------------------------------------------------------
 
-libguile_sortsmill_symbols.c: $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
-	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET)										\
-		$(srcdir)/generate-libguile-sortsmill_symbols.scm $^ > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
-
-CLEANFILES += libguile_sortsmill_symbols.c
+EXTRA_DIST += $(srcdir)/generate-libguile-sortsmill_symbols.scm
 
 AM_LDFLAGS = -module -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)
-
-lib_LTLIBRARIES =
 
 lib_LTLIBRARIES += libguile-sortsmill_symbols.la
 libguile_sortsmill_symbols_la_SOURCES = libguile_sortsmill_symbols.c
@@ -169,6 +159,19 @@ libguile_sortsmill_symbols_la_LIBADD =						\
 	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
 	$(top_builddir)/auxiliary/libsortsmill_aux.la
+
+CLEANFILES += libguile_sortsmill_symbols.c
+
+SCM_SYMBOL_FILES = $(filter-out sortsmill/fontforge-api.scm			\
+	sortsmill/gdraw-api.scm, $(DIST_SCM_FILES) $(NODIST_SCM_FILES))
+
+libguile_sortsmill_symbols.c: $(srcdir)/generate-libguile-sortsmill_symbols.scm
+
+libguile_sortsmill_symbols.c: $(SCM_SYMBOL_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET)										\
+		$(srcdir)/generate-libguile-sortsmill_symbols.scm $^ > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
 if HAVE_PYTHON_API
 
@@ -197,14 +200,12 @@ endif HAVE_PYTHON_API
 
 all-local: $(GO_FILES)
 
-# The following rules are unpleasant but avoid having to keep track of
-# dependencies. Consolation: it is no worse than if we used a
+# The following rules are unpleasant but help us avoid having to keep
+# track of dependencies. Consolation: it is no worse than if we used a
 # whole-program compiler.
-$(filter-out sortsmill/pkg-info.go sortsmill/dynlink.go,	\
-	$(GO_FILES)): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)		\
-	$(MAKEFILE_GENERATED_SCM_FILES)
-sortsmill/pkg-info.go sortsmill/dynlink.go: $(DIST_SCM_FILES)	\
-	$(NODIST_SCM_FILES)
+$(filter-out sortsmill/pkg-info.go,$(GO_FILES)): $(DIST_SCM_FILES)	\
+	$(NODIST_SCM_FILES) $(lib_LTLIBRARIES)
+sortsmill/pkg-info.go: $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
 
 # Try to ensure that the installed bitcode files are newer than the
 # installed source files, by installing the bitcode files with this
