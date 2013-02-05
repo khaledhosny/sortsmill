@@ -30,7 +30,7 @@
 #include <config.h>
 
 #include <stdbool.h>
-#include "fontforgevw.h"
+#include <fontforgevw.h>
 #include <unistd.h>
 #include <math.h>
 #include <time.h>
@@ -41,7 +41,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "sd.h"
+#include <sd.h>
+#include <xalloc.h>
+#include <contour_interface.h>
 
 /* ************************************************************************** */
 /* ****************************    SVG Output    **************************** */
@@ -2394,11 +2396,11 @@ SVGParseLine (xmlNodePtr line)
 static SplineSet *
 SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
 {
-  /* cx,cy,rx,ry */
-  /* cx,cy,r */
-  double cx, cy, rx, ry;
+  double cx;
+  double cy;
+  double rx;
+  double ry;
   char *num;
-  SplinePoint *sp;
   SplineSet *cur;
 
   num = (char *) xmlGetProp (ellipse, (xmlChar *) "cx");
@@ -2422,7 +2424,8 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
       num = (char *) xmlGetProp (ellipse, (xmlChar *) "r");
       if (num != NULL)
         {
-          rx = ry = strtod ((char *) num, NULL);
+          rx = strtod ((char *) num, NULL);
+          ry = rx;
           xmlFree (num);
         }
       else
@@ -2447,39 +2450,65 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
       else
         return (NULL);
     }
-  if (rx < 0)
-    rx = -rx;
-  if (ry < 0)
-    ry = -ry;
+  rx = fabs (rx);
+  ry = fabs (ry);
 
-  cur = (SplineSet *) xzalloc (sizeof (SplineSet));
-  cur->first = SplinePointCreate (cx - rx, cy);
-  cur->last = SplinePointCreate (cx, cy + ry);
-  cur->first->nextcp.x = cx - rx;
-  cur->first->nextcp.y = cy + ry;
-  cur->last->prevcp = cur->first->nextcp;
-  cur->first->noprevcp = cur->first->nonextcp = false;
-  cur->last->noprevcp = cur->last->nonextcp = false;
-  SplineMake (cur->first, cur->last, true);
-  sp = SplinePointCreate (cx + rx, cy);
-  sp->prevcp.x = cx + rx;
-  sp->prevcp.y = cy + ry;
-  sp->nextcp.x = cx + rx;
-  sp->nextcp.y = cy - ry;
-  sp->nonextcp = sp->noprevcp = false;
-  cur->last->nextcp = sp->prevcp;
-  SplineMake (cur->last, sp, true);
-  cur->last = sp;
-  sp = SplinePointCreate (cx, cy - ry);
-  sp->prevcp = cur->last->nextcp;
-  sp->nextcp.x = cx - rx;
-  sp->nextcp.y = cy - ry;
-  sp->nonextcp = sp->noprevcp = false;
-  cur->first->prevcp = sp->nextcp;
-  SplineMake (cur->last, sp, true);
-  SplineMake (sp, cur->first, true);
-  cur->last = cur->first;
-  return (cur);
+  // See www.tinaja.com/glib/ellipse4.pdf
+  const double magic_number = 0.55228475 - 0.00045;
+
+  cur = XZALLOC (SplineSet);
+
+  double x_vals[12] = {
+    cx - rx,
+    cx - rx,
+    cx - magic_number * rx,
+    cx,
+    cx + magic_number * rx,
+    cx + rx,
+    cx + rx,
+    cx + rx,
+    cx + magic_number * rx,
+    cx,
+    cx - magic_number * rx,
+    cx - rx
+  };
+
+  double y_vals[12] = {
+    cy,
+    cy + magic_number * ry,
+    cy + ry,
+    cy + ry,
+    cy + ry,
+    cy + magic_number * ry,
+    cy,
+    cy - magic_number * ry,
+    cy - ry,
+    cy - ry,
+    cy - ry,
+    cy - magic_number * ry
+  };
+
+  int on_curve_vals[12] = {
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+  };
+
+  int selected_vals[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  int tt_start;
+
+  SSFromContourData (&cur, x_vals, y_vals, on_curve_vals, selected_vals,
+                     12, true, false, "", &tt_start);
+  return cur;
 }
 
 static SplineSet *
@@ -3669,33 +3698,19 @@ tail_recurse:
   /* basic shapes */
   head = NULL;
   if (xmlStrcmp (svg->name, (xmlChar *) "path") == 0)
-    {
-      head = SVGParseExtendedPath (svg, top);
-    }
+    head = SVGParseExtendedPath (svg, top);
   else if (xmlStrcmp (svg->name, (xmlChar *) "rect") == 0)
-    {
-      head = SVGParseRect (svg);        /* x,y,width,height,rx,ry */
-    }
+    head = SVGParseRect (svg);  /* x,y,width,height,rx,ry */
   else if (xmlStrcmp (svg->name, (xmlChar *) "circle") == 0)
-    {
-      head = SVGParseEllipse (svg, true);       /* cx,cy, r */
-    }
+    head = SVGParseEllipse (svg, true); /* cx,cy, r */
   else if (xmlStrcmp (svg->name, (xmlChar *) "ellipse") == 0)
-    {
-      head = SVGParseEllipse (svg, false);      /* cx,cy, rx,ry */
-    }
+    head = SVGParseEllipse (svg, false);        /* cx,cy, rx,ry */
   else if (xmlStrcmp (svg->name, (xmlChar *) "line") == 0)
-    {
-      head = SVGParseLine (svg);        /* x1,y1, x2,y2 */
-    }
+    head = SVGParseLine (svg);  /* x1,y1, x2,y2 */
   else if (xmlStrcmp (svg->name, (xmlChar *) "polyline") == 0)
-    {
-      head = SVGParsePoly (svg, 0);     /* points */
-    }
+    head = SVGParsePoly (svg, 0);       /* points */
   else if (xmlStrcmp (svg->name, (xmlChar *) "polygon") == 0)
-    {
-      head = SVGParsePoly (svg, 1);     /* points */
-    }
+    head = SVGParsePoly (svg, 1);       /* points */
   else if (xmlStrcmp (svg->name, (xmlChar *) "image") == 0)
     {
       eret = SVGParseImage (svg);
