@@ -21,6 +21,7 @@
         (sortsmill pkg-info)
         (rnrs)
         (except (guile) error)
+        (only (srfi :1) delete-duplicates)
         (ice-9 match)
         (ice-9 format))
 
@@ -74,20 +75,18 @@
 
 (define* (write-dynlink-declarations
           dynlink-data #:optional (port (current-output-port)))
-  (match dynlink-data
-    ['() *unspecified*]
-    [((symbol-name declarations) . tail)
-     (unless (string=? declarations "")
-       (format port "~a\n" declarations))
-     (write-dynlink-declarations tail port)] ))
+  (let ([decls (delete-duplicates (map cadr dynlink-data))])
+    (for-each (lambda (decl)
+                (unless (string=? decl "")
+                  (format port "~a\n" decl)))
+              decls)))
 
 (define* (write-dynlink-symbol-use-statements
           dynlink-data #:optional (port (current-output-port)))
-  (match dynlink-data
-    ['() *unspecified*]
-    [((symbol-name declarations) . tail)
-     (format port "  printf (\"%p\", &~a);\n" symbol-name)
-     (write-dynlink-symbol-use-statements tail port)] ))
+  (let ([symbol-names (delete-duplicates (map car dynlink-data))])
+    (for-each (lambda (sym)
+                (format port "  printf (\"%p\", &~a);\n" sym))
+              symbol-names)))
 
 (define* (write-dynlink-symbol-use-c-code
           dynlink-data #:optional (port (current-output-port)))
