@@ -157,15 +157,14 @@ MOSTLYCLEANFILES += site-init.scm site-final.scm
 
 #--------------------------------------------------------------------------
 
-EXTRA_DIST += $(srcdir)/generate-libguile-sortsmill_symbols.scm
+EXTRA_DIST += $(srcdir)/generate-libguile-sortsmill_symbols.scm	\
+	ff-internal/extract-dynlink.scm
 
 AM_LDFLAGS = -module -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)
 
 lib_LTLIBRARIES += libguile-sortsmill_symbols.la
 libguile_sortsmill_symbols_la_SOURCES = libguile_sortsmill_symbols.c
 libguile_sortsmill_symbols_la_CPPFLAGS = $(AM_CPPFLAGS) $(FFINCLDIRS)
-libguile_sortsmill_symbols_la_CFLAGS = $(AM_CFLAGS)	\
-	$(NO_OPTIMIZATION_EXTRA_CFLAGS)
 libguile_sortsmill_symbols_la_LIBADD =						\
 	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
@@ -176,7 +175,9 @@ CLEANFILES += libguile_sortsmill_symbols.c
 SCM_SYMBOL_FILES = $(filter-out sortsmill/fontforge-api.scm			\
 	sortsmill/gdraw-api.scm, $(DIST_SCM_FILES) $(NODIST_SCM_FILES))
 
-libguile_sortsmill_symbols.c: $(srcdir)/generate-libguile-sortsmill_symbols.scm
+libguile_sortsmill_symbols.c:							\
+	$(srcdir)/generate-libguile-sortsmill_symbols.scm	\
+	ff-internal/extract-dynlink.scm
 
 libguile_sortsmill_symbols.c: $(SCM_SYMBOL_FILES)
 	$(AM_V_GEN)
