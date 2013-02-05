@@ -75,18 +75,16 @@
 
 (define* (write-dynlink-declarations
           dynlink-data #:optional (port (current-output-port)))
-  (let ([decls (delete-duplicates (map cadr dynlink-data))])
-    (for-each (lambda (decl)
-                (unless (string=? decl "")
-                  (format port "~a\n" decl)))
-              decls)))
+  (for-each [lambda (decl)
+              (unless (string=? decl "")
+                (format port "~a\n" decl))]
+            [delete-duplicates (map cadr dynlink-data)] ))
 
 (define* (write-dynlink-symbol-use-statements
           dynlink-data #:optional (port (current-output-port)))
-  (let ([symbol-names (delete-duplicates (map car dynlink-data))])
-    (for-each (lambda (sym)
-                (format port "  printf (\"%p\", &~a);\n" sym))
-              symbol-names)))
+  (for-each [lambda (sym)
+              (format port "  printf (\"%p\", &~a);\n" sym)]
+            [delete-duplicates (map car dynlink-data)] ))
 
 (define* (write-dynlink-symbol-use-c-code
           dynlink-data #:optional (port (current-output-port)))
