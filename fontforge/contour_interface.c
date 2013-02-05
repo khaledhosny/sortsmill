@@ -54,7 +54,7 @@ SSFromContourData (SplineSet **result, double *x_vals, double *y_vals,
       next = start;
       i = 0;
 
-      ss = xzalloc (sizeof (SplineSet));
+      ss = XZALLOC (SplineSet);
       ss->contour_name = xstrdup (name);
 
       if (is_quadratic)

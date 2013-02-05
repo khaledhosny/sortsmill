@@ -2456,8 +2456,6 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
   // See http://www.tinaja.com/glib/ellipse4.pdf
   const double magic_number = 0.55228475 - 0.00045;
 
-  cur = XZALLOC (SplineSet);
-
   double x_vals[12] = {
     cx - rx,
     cx - rx,
