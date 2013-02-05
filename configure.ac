@@ -89,6 +89,8 @@ AC_SUBST([VERSION_EXTRA_SHORT])
 GUILE_API="2.0"
 AC_SUBST([GUILE_API])
 
+GUILE_VERSION_MIN=2.0.6
+
 #--------------------------------------------------------------------------
 #
 # URLs for dependencies.
@@ -144,15 +146,18 @@ FONTFORGE_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],
 FONTFORGE_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],
                     [`update-desktop-database' command])
 
-# Assorted programs.
-FONTFORGE_PATH_PROG([WGET],[wget],[GNU `wget' command])
-GUILE_PROGS
-
+# Guile 2.0.
+m4_ifdef([GUILE_PROGS],[GUILE_PROGS],
+         [AC_MSG_ERROR([I could not find a usable installation of Guile ${GUILE_API}.
+                  ${PACKAGE_NAME} requires Guile >= ${GUILE_VERSION_MIN} from http://www.gnu.org/software/guile/])])
 if test `${GUILE} -c "(import (system foreign)) (write (defined? 'procedure->pointer))"` != "#t"; then
    AC_MSG_ERROR([${PACKAGE_NAME} requires that Guile support `procedure->pointer'.
                  The Guile found by configure seems not to. See
                  http://www.gnu.org/software/guile/manual/guile.html@%:@Dynamic-FFI])
 fi
+
+# Assorted programs.
+FONTFORGE_PATH_PROG([WGET],[wget],[GNU `wget' command])
 
 #--------------------------------------------------------------------------
 
@@ -209,7 +214,7 @@ PKG_CHECK_MODULES([ZLIB],[zlib])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6 gio-2.0])
 PKG_CHECK_MODULES([LIBPNG],[libpng])
 PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
-PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API} >= 2.0.6])
+PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API} >= ${GUILE_VERSION_MIN}])
 PKG_CHECK_MODULES([GSL],[gsl])
 
 # FIXME: Do a more sophisticated GMP check.
