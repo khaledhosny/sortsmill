@@ -31,41 +31,33 @@
           (ice-9 match)
           (ice-9 format))
 
-  (define (string-or-list? obj)
-    (or (string? obj) (list? obj)))
-
   (define (extract-dynlink-symbols expression)
     (match expression
       [[(or 'sortsmill-dynlink-pointer 'sortsmill-dynlink-func)
-        (? string-or-list? func-name)
-        (? string-or-list? declarations)]
+        (? string? func-name)
+        (? string? declarations)]
        ;; Use of a symbol, with inline C declarations.
-       (list (list (eval-in-context func-name)
-                   (eval-in-context declarations)))]
+       (list (list func-name declarations))]
 
       [[(or 'sortsmill-dynlink-pointer 'sortsmill-dynlink-func)
-        (? string-or-list? func-name)]
+        (? string? func-name)]
        ;; Use of a symbol, without inline C declarations.
-       (list (list (eval-in-context func-name) ""))]
+       (list (list func-name ""))]
 
       [['sortsmill-dynlink-declarations
-        (? string-or-list? declarations)]
+        (? string? declarations)]
        ;; Standalone C declarations.
-       (list (list "" (eval-in-context declarations)))]
+       (list (list "" declarations))]
 
       [['sortsmill-dynlink-load-extension
-        (? string-or-list? init-func-name)]
-       (list (list (eval-in-context init-func-name)
+        (? string? init-func-name)]
+       (list (list init-func-name
                    (format #f "void ~a (void);" init-func-name)))]
 
       [(h . t) (append (extract-dynlink-symbols h)
                        (extract-dynlink-symbols t))]
 
       [_ '()] ))
-
-  (eval-when (compile load eval)
-    (define (eval-in-context expression)
-      (eval expression (interaction-environment))))
 
   (define* (extract-dynlink-symbols-from-input
             #:optional (port (current-input-port)))
