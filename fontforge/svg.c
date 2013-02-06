@@ -2483,6 +2483,8 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
                             contour);
   SCM malloced_SplinePointList = scm_c_value_ref (results, 0);
 
+  // Convert from a Guile ‘SplinePointList’ object to Guile’s generic
+  // pointer type, and then to a C pointer.
   return (SplineSet *)
     scm_to_pointer (scm_call_1 (scm_c_public_ref ("sortsmill fontforge-api",
                                                   "SplinePointList->pointer"),
