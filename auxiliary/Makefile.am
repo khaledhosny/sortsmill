@@ -63,7 +63,8 @@ dist_libsortsmill_aux_la_SOURCES += xunicase.c xuniconv.c xuninorm.c	\
 
 # Polynomial splines.
 dist_libsortsmill_aux_la_SOURCES += precomputed_gmp_polyspline_data.c	\
-	polyspline_data.c polyspline.c guile_polyspline.c
+	polyspline_data.c polyspline.c guile_polyspline.c					\
+	guile_contours.c
 nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
 
 # Brent’s root-finding algorithm.

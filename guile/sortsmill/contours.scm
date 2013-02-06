@@ -99,6 +99,10 @@ unimplemented’."
        (lambda* (x y #:key (on-curve? #t) (selected? #f) (name ""))
          (new x y on-curve? selected? name)))))
 
+  (define (procedure:contour-point? obj)
+    "A procedure version of @code{contour-point?}, for calls from C."
+    (contour-point? obj))
+
   (define-record-type contour
     (fields (mutable points)
             (mutable closed?)
@@ -109,7 +113,11 @@ unimplemented’."
        (lambda* (points #:key (closed? #t) (degree 3) (name ""))
          (new points closed? degree name)))))
 
-  (define* (contour->malloced-SplinePointList c)
+  (define (procedure:contour? obj)
+    "A procedure version of @code{contour?}, for calls from C."
+    (contour? obj))
+
+  (define (contour->malloced-SplinePointList c)
     ;; int SSFromContourData (SplineSet **result,
     ;;                        double *x_vals, double *y_vals,
     ;;                        int8_t *on_curve_vals, int8_t *selected_vals,
@@ -151,7 +159,7 @@ unimplemented’."
                            (bytevector->pointer splineset))]
                          [s32vector-ref tt-start 0])]
             [(1) (assertion-violation 'contour->malloced-SplinePointList
-                                      (_ "empty contour") c)]
+                                      (_ "empty contour") c)] ; Is this possible?
             [(2) (assertion-violation 'contour->malloced-SplinePointList
                                       (_ "bad cubic") c)]
             [else (error 'contour->malloced-SplinePointList

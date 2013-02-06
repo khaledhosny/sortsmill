@@ -43,7 +43,8 @@
 #include <sys/stat.h>
 #include <sd.h>
 #include <xalloc.h>
-#include <contour_interface.h>
+///////#include <contour_interface.h> //???????????????????????????????????????????????????????????????????????????????
+#include <sortsmill/guile/contours.h>
 
 /* ************************************************************************** */
 /* ****************************    SVG Output    **************************** */
@@ -2400,10 +2401,8 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
   double cy;
   double rx;
   double ry;
-  char *num;
-  SplineSet *cur;
 
-  num = (char *) xmlGetProp (ellipse, (xmlChar *) "cx");
+  char *num = (char *) xmlGetProp (ellipse, (xmlChar *) "cx");
   if (num != NULL)
     {
       cx = strtod ((char *) num, NULL);
@@ -2450,63 +2449,45 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
       else
         return (NULL);
     }
+
   rx = fabs (rx);
   ry = fabs (ry);
 
   // See http://www.tinaja.com/glib/ellipse4.pdf
   const double magic_number = 0.55228475 - 0.00045;
 
-  double x_vals[12] = {
-    cx - rx,
-    cx - rx,
-    cx - magic_number * rx,
-    cx,
-    cx + magic_number * rx,
-    cx + rx,
-    cx + rx,
-    cx + rx,
-    cx + magic_number * rx,
-    cx,
-    cx - magic_number * rx,
-    cx - rx
-  };
+  // Shorter names, for readability.
+  SCM (*const on_curve) (double, double) = scm_c_make_on_curve_point;
+  SCM (*const off_curve) (double, double) = scm_c_make_off_curve_point;
 
-  double y_vals[12] = {
-    cy,
-    cy + magic_number * ry,
-    cy + ry,
-    cy + ry,
-    cy + ry,
-    cy + magic_number * ry,
-    cy,
-    cy - magic_number * ry,
-    cy - ry,
-    cy - ry,
-    cy - ry,
-    cy - magic_number * ry
-  };
+  SCM points = scm_list_n (on_curve (cx - rx, cy),
+                           off_curve (cx - rx, cy + magic_number * ry),
+                           off_curve (cx - magic_number * rx, cy + ry),
+                           on_curve (cx, cy + ry),
+                           off_curve (cx + magic_number * rx, cy + ry),
+                           off_curve (cx + rx, cy + magic_number * ry),
+                           on_curve (cx + rx, cy),
+                           off_curve (cx + rx, cy - magic_number * ry),
+                           off_curve (cx + magic_number * rx, cy - ry),
+                           on_curve (cx, cy - ry),
+                           off_curve (cx - magic_number * rx, cy - ry),
+                           off_curve (cx - rx, cy - magic_number * ry),
+                           SCM_UNDEFINED);
 
-  int8_t on_curve_vals[12] = {
-    true,
-    false,
-    false,
-    true,
-    false,
-    false,
-    true,
-    false,
-    false,
-    true,
-    false,
-    false,
-  };
+  // A closed contour of degree 3, with no name.
+  SCM contour = scm_c_make_contour (points, true, 3, "");
 
-  int8_t selected_vals[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-  int32_t tt_start;
+  // @code{contour->malloced-SplinePointList} returns multiple
+  // values. We are interested in the first, only.
+  SCM results = scm_call_1 (scm_c_public_ref ("sortsmill contours",
+                                              "contour->malloced-SplinePointList"),
+                            contour);
+  SCM malloced_SplinePointList = scm_c_value_ref (results, 0);
 
-  SSFromContourData (&cur, x_vals, y_vals, on_curve_vals, selected_vals,
-                     12, true, false, "", &tt_start);
-  return cur;
+  return (SplineSet *)
+    scm_to_pointer (scm_call_1 (scm_c_public_ref ("sortsmill fontforge-api",
+                                                  "SplinePointList->pointer"),
+                                malloced_SplinePointList));
 }
 
 static SplineSet *
