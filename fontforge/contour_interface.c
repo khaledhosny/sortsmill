@@ -29,11 +29,37 @@
 
 #include <contour_interface.h>
 #include <xalloc.h>
+#include <stdbool.h>
+
+VISIBLE int
+SSFromQuadraticContourData (SplineSet **result, double *x_vals, double *y_vals,
+                            int8_t *on_curve_vals, int8_t *selected_vals,
+                            int pt_cnt, int is_closed, char *name,
+                            int32_t *tt_start)
+{
+  const bool is_quadratic = true;
+  return SSFromContourData (result, x_vals, y_vals, on_curve_vals,
+                            selected_vals, pt_cnt, is_closed, is_quadratic,
+                            name, tt_start);
+}
+
+VISIBLE int
+SSFromCubicContourData (SplineSet **result, double *x_vals, double *y_vals,
+                        int8_t *on_curve_vals, int8_t *selected_vals,
+                        int pt_cnt, int is_closed, char *name,
+                        int32_t *tt_start)
+{
+  const bool is_quadratic = false;
+  return SSFromContourData (result, x_vals, y_vals, on_curve_vals,
+                            selected_vals, pt_cnt, is_closed, is_quadratic,
+                            name, tt_start);
+}
 
 VISIBLE int
 SSFromContourData (SplineSet **result, double *x_vals, double *y_vals,
-                   int *on_curve_vals, int *selected_vals, int pt_cnt,
-                   int is_closed, int is_quadratic, char *name, int *tt_start)
+                   int8_t *on_curve_vals, int8_t *selected_vals, int pt_cnt,
+                   int is_closed, int is_quadratic, char *name,
+                   int32_t *tt_start)
 {
   int start;
   int next;
@@ -287,7 +313,7 @@ ContourDataSizeFromSS (SplineSet *ss)
 
 VISIBLE void
 ContourDataFromSS (SplineSet *ss, double *x_vals, double *y_vals,
-                   int *on_curve_vals, int *selected_vals)
+                   int8_t *on_curve_vals, int8_t *selected_vals)
 {
   int cnt;
   SplinePoint *sp;

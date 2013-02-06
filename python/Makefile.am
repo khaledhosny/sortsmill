@@ -1,3 +1,5 @@
+# -*- tab-width: 4 -*-
+
 # Copyright (C) 2000-2012 by George Williams
 # Copyright (C) 2012, 2013 by Barry Schwartz
 #
@@ -151,7 +153,6 @@ PXD_FILES = $(cythonsrcinc)/xgc.pxd $(cythonsrcinc)/guile.pxd	\
 	$(cythonsrcinc)/gsl.pxd $(cythonsrcinc)/linalg.pxd			\
 	$(cythonsrcinc)/brentroot.pxd $(cythonsrcinc)/gmpy.pxd		\
 	$(cythonsrcinc)/polyspline.pxd								\
-	$(cythonsrcinc)/contour_interface.pxd						\
 	$(cythonsrcinc)/splinefont.pxd
 
 PXI_FILES = $(cythonsrcinc)/gmpy.pxi

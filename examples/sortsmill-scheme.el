@@ -36,6 +36,7 @@
   ;;; someday.
   (put 'library 'scheme-indent-function 1)
   (put 'eval-when 'scheme-indent-function 1)
+  (put 'lambda* 'scheme-indent-function 1)
   )
 
 (provide 'sortsmill-scheme)

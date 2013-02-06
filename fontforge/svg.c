@@ -2486,7 +2486,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
     cy - magic_number * ry
   };
 
-  int on_curve_vals[12] = {
+  int8_t on_curve_vals[12] = {
     true,
     false,
     false,
@@ -2501,8 +2501,8 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
     false,
   };
 
-  int selected_vals[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-  int tt_start;
+  int8_t selected_vals[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  int32_t tt_start;
 
   SSFromContourData (&cur, x_vals, y_vals, on_curve_vals, selected_vals,
                      12, true, false, "", &tt_start);

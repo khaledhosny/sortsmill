@@ -32,6 +32,7 @@
 #include <config.h>
 
 #include <fontforge.h>
+#include <stdint.h>
 
 enum
 {
@@ -42,12 +43,23 @@ enum
                                            between on curve points. */
 };
 
+int SSFromQuadraticContourData (SplineSet **result, double *x_vals,
+                                double *y_vals, int8_t *on_curve_vals,
+                                int8_t *selected_vals, int pt_cnt,
+                                int is_closed, char *name, int32_t *tt_start);
+
+int SSFromCubicContourData (SplineSet **result, double *x_vals, double *y_vals,
+                            int8_t *on_curve_vals, int8_t *selected_vals,
+                            int pt_cnt, int is_closed,
+                            char *name, int32_t *tt_start);
+
 int SSFromContourData (SplineSet **result, double *x_vals, double *y_vals,
-                       int *on_curve_vals, int *selected_vals, int pt_cnt,
-                       int is_closed, int is_quadratic, char *name,
-                       int *tt_start);
+                       int8_t *on_curve_vals, int8_t *selected_vals,
+                       int pt_cnt, int is_closed, int is_quadratic,
+                       char *name, int32_t *tt_start);
+
 int ContourDataSizeFromSS (SplineSet *ss);
 void ContourDataFromSS (SplineSet *ss, double *x_vals, double *y_vals,
-                        int *on_curve_vals, int *selected_vals);
+                        int8_t *on_curve_vals, int8_t *selected_vals);
 
 #endif // _INTERNAL_CONTOUR_INTERFACE_H

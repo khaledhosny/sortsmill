@@ -1,3 +1,5 @@
+# -*- tab-width: 4 -*-
+
 # Copyright (C) 2000-2012 by George Williams
 # Copyright (C) 2012 by Barry Schwartz
 #

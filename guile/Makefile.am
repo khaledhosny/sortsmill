@@ -63,14 +63,15 @@ DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/gsl.scm					\
 	sortsmill/views.scm sortsmill/api-syntax.scm						\
 	sortsmill/notices.scm sortsmill/hash-guillemet.scm					\
 	sortsmill/strings.scm sortsmill/ffcompat.scm sortsmill/i18n.scm		\
-	sortsmill/dynlink.scm
+	sortsmill/dynlink.scm sortsmill/contours.scm
 #sortsmill/precompute.scm
 GO_FILES += sortsmill/alloc.go sortsmill/gsl.go sortsmill/iconv.go	\
 	sortsmill/linalg.go sortsmill/polyspline.go						\
 	sortsmill/brentroot.go sortsmill/sfd-to-sxml.go					\
 	sortsmill/views.go sortsmill/api-syntax.go sortsmill/notices.go	\
 	sortsmill/hash-guillemet.go sortsmill/strings.go				\
-	sortsmill/ffcompat.go sortsmill/i18n.go sortsmill/dynlink.go
+	sortsmill/ffcompat.go sortsmill/i18n.go sortsmill/dynlink.go	\
+	sortsmill/contours.go
 
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
 	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in
@@ -117,17 +118,27 @@ sortsmill/ffcompat.go sortsmill/gsl.go sortsmill/i18n.go: sortsmill/dynlink.go
 sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
 sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go
 sortsmill/usermenu/python.go sortsmill/usermenu.go: sortsmill/dynlink.go
-sortsmill/api-syntax.go sortsmill/i18n.go sortsmill/python.go: sortsmill/pkg-info.go
-sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
-sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
-sortsmill/strings.go: sortsmill/hash-guillemet.go
-sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/strings.go
+
 sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
 sortsmill/usermenu.go sortsmill/views.go: sortsmill/i18n.go
-sortsmill/views.go: sortsmill/fontforge-api.go
-sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/usermenu.go
+
+sortsmill/api-syntax.go sortsmill/i18n.go sortsmill/python.go: sortsmill/pkg-info.go
+
+sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
+
+sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
+
+sortsmill/usermenu.go sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/gdraw-api.go
+
+sortsmill/usermenu.go sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/fontforge-api.go
+sortsmill/views.go sortsmill/contours.go: sortsmill/fontforge-api.go
+
+sortsmill/strings.go sortsmill/pure.go sortsmill/python.go: sortsmill/hash-guillemet.go
+sortsmill/usermenu.go sortsmill/usermenu/pure.go: sortsmill/hash-guillemet.go
+
+sortsmill/usermenu/python.go: sortsmill/strings.go
+
+sortsmill/usermenu/python.go: sortsmill/usermenu.go
 
 sortsmill/fontforge-api.scm:											\
 		$(top_builddir)/fontforge/fontforge.types.apii					\

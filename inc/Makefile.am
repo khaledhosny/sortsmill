@@ -1,3 +1,5 @@
+# -*- tab-width: 4 -*-
+
 # Copyright (C) 2000-2012 by George Williams
 # Copyright (C) 2012 by Barry Schwartz
 #
@@ -61,8 +63,7 @@ endif HAVE_PURE_API
 if HAVE_PYTHON_API
 nobase_include_HEADERS += sortsmill/__init__.pxd						\
 	sortsmill/cython/__init__.pxd sortsmill/cython/const_pointers.pxd	\
-	sortsmill/cython/brentroot.pxd										\
-	sortsmill/cython/contour_interface.pxd sortsmill/cython/gmpy.pxi	\
+	sortsmill/cython/brentroot.pxd sortsmill/cython/gmpy.pxi			\
 	sortsmill/cython/guile.pxd sortsmill/cython/linalg.pxd				\
 	sortsmill/cython/splinefont.pxd sortsmill/cython/xgc.pxd			\
 	sortsmill/cython/config.pxi sortsmill/cython/gmpy.pxd				\
