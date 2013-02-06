@@ -20,6 +20,7 @@
   (export sortsmill-dynlink-dll
           sortsmill-dynlink-pointer
           sortsmill-dynlink-func
+          sortsmill-dynlink-declarations
           sortsmill-dynlink-load-extension)
 
   (import (rnrs)
@@ -29,13 +30,16 @@
     (define sortsmill-dynlink-dll
       (dynamic-link "libguile-sortsmill_symbols")))
 
-  (define (sortsmill-dynlink-pointer func-name declarations)
+  (define (sortsmill-dynlink-pointer func-name . ignored)
     (dynamic-pointer func-name sortsmill-dynlink-dll))
 
-  (define (sortsmill-dynlink-func func-name declarations)
+  (define (sortsmill-dynlink-func func-name . ignored)
     (dynamic-func func-name sortsmill-dynlink-dll))
 
-  (define (sortsmill-dynlink-load-extension init-func-name)
+  (define (sortsmill-dynlink-declarations . ignored)
+    *unspecified*)
+
+  (define (sortsmill-dynlink-load-extension init-func-name . ignored)
     (dynamic-call
      (dynamic-func init-func-name sortsmill-dynlink-dll)
      sortsmill-dynlink-dll))

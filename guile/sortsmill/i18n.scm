@@ -29,6 +29,8 @@
           (except (guile) error)
           (system foreign))
 
+  (sortsmill-dynlink-declarations "#include <glib.h>")
+
   (define _
     (lambda (msg) (dgettext pkg-info:textdomain msg)))
 
@@ -42,7 +44,7 @@
   (define dgettext
     (let ([proc (pointer->procedure
                  '*
-                 (sortsmill-dynlink-func "g_dgettext" "#include <glib.h>")
+                 (sortsmill-dynlink-func "g_dgettext")
                  `(* *))])
       (lambda (domain msgid)
         (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]
@@ -52,7 +54,7 @@
   (define dpgettext
     (let ([proc (pointer->procedure
                  '*
-                 (sortsmill-dynlink-func "g_dpgettext" "#include <glib.h>")
+                 (sortsmill-dynlink-func "g_dpgettext")
                  `(* * ,size_t))])
       (lambda (domain msgctxtid msgidoffset)
         (let ([domain^ (if domain (string->pointer domain "UTF-8") %null-pointer)]

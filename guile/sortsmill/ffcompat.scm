@@ -32,35 +32,33 @@
           (rnrs)
           (except (guile) error))
 
+  (sortsmill-dynlink-declarations "#include <fontforge.h>")
+
   (define no_windowing_ui-ref
     (let ([proc (pointer->procedure
                  _Bool
-                 (sortsmill-dynlink-func "get_no_windowing_ui"
-                                         "#include <fontforge.h>")
+                 (sortsmill-dynlink-func "get_no_windowing_ui")
                  '())])
       (lambda () (not (fxzero? (proc))))))
 
   (define no_windowing_ui-set!
     (let ([proc (pointer->procedure
                  void
-                 (sortsmill-dynlink-func "set_no_windowing_ui"
-                                         "#include <fontforge.h>")
+                 (sortsmill-dynlink-func "set_no_windowing_ui")
                  `(,_Bool))])
       (lambda (v) (proc (if v 1 0)))))
 
   (define running_script-ref
     (let ([proc (pointer->procedure
                  _Bool
-                 (sortsmill-dynlink-func "get_running_script"
-                                         "#include <fontforge.h>")
+                 (sortsmill-dynlink-func "get_running_script")
                  '())])
       (lambda () (not (fxzero? (proc))))))
 
   (define running_script-set!
     (let ([proc (pointer->procedure
                  void
-                 (sortsmill-dynlink-func "set_running_script"
-                                         "#include <fontforge.h>")
+                 (sortsmill-dynlink-func "set_running_script")
                  `(,_Bool))])
       (lambda (v) (proc (if v 1 0)))))
 

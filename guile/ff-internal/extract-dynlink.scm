@@ -39,8 +39,19 @@
       [[(or 'sortsmill-dynlink-pointer 'sortsmill-dynlink-func)
         (? string-or-list? func-name)
         (? string-or-list? declarations)]
+       ;; Use of a symbol, with inline C declarations.
        (list (list (eval-in-context func-name)
                    (eval-in-context declarations)))]
+
+      [[(or 'sortsmill-dynlink-pointer 'sortsmill-dynlink-func)
+        (? string-or-list? func-name)]
+       ;; Use of a symbol, without inline C declarations.
+       (list (list (eval-in-context func-name) ""))]
+
+      [['sortsmill-dynlink-declarations
+        (? string-or-list? declarations)]
+       ;; Standalone C declarations.
+       (list (list "" (eval-in-context declarations)))]
 
       [['sortsmill-dynlink-load-extension
         (? string-or-list? init-func-name)]
