@@ -80,7 +80,12 @@ endif EXAMPLES
 SUBDIRS += tests
 
 EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html	\
-	README-unix README-Unix.html m4/gnulib-cache.m4 INSTALL.git
+	README-unix README-Unix.html m4/gnulib-cache.m4 INSTALL.git	\
+	.dir-locals.el .indent.pro fontforge/.indent.pro			\
+	fonttools/.indent.pro fortran/.indent.pro gdraw/.indent.pro	\
+	guile/.indent.pro gutils/.indent.pro inc/.indent.pro		\
+	inc/sortsmill/guile/.indent.pro inc/sortsmill/.indent.pro	\
+	main/.indent.pro pure/.indent.pro tests/.indent.pro
 
 uninstall-local:
 	(cd data; $(MAKE) $(AM_MAKEFLAGS) uninstall)

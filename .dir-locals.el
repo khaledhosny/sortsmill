@@ -1,0 +1,7 @@
+((python-mode . ((python-indent . 2)))
+ (cython-mode . ((python-indent . 2)))
+ (makefile-mode . ((tab-width . 4)))
+ (makefile-automake-mode . ((tab-width . 4)))
+ (c-mode . ((c-file-style . "gnu")))
+ (scheme-mode . ((geiser-scheme-implementation . guile)))
+ )
