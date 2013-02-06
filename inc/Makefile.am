@@ -29,6 +29,8 @@
 
 include $(top_srcdir)/mk/layout.am
 
+EXTRA_DIST = sortsmill/.dir-locals.el
+
 noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	null_passthru.h xunistring.h chardata.h gdraw.h gfile.h ggadget.h	\
 	gimage.h gio.h gkeysym.h gprogress.h gresedit.h gresource.h			\
