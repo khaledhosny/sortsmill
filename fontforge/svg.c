@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include <fontforgevw.h>
 #include <unistd.h>
@@ -1382,16 +1380,6 @@ _ExportSVG (FILE *svg, SplineChar *sc, int layer)
 #undef extended                 /* used in xlink.h */
 #include <libxml/parser.h>
 
-#ifdef __CygWin
-/*
- * FIXME: Check whether this kludge is still (a) necessary, (b)
- * functional. At least (a) seems unlikely to have remained true over
- * time.
- */
-/* Nasty kludge, but xmlFree doesn't work on cygwin (or I can't get it to) */
-#define xmlFree free
-#endif
-
 /* Find a node with the given id */
 static xmlNodePtr
 XmlFindID (xmlNodePtr xml, char *name)
@@ -1468,7 +1456,14 @@ FindSVGFontNodes (xmlDocPtr doc)
   xmlNodePtr *fonts = NULL;
   int cnt;
 
-  fonts = xcalloc (100, sizeof (xmlNodePtr));   /* If the file has more than 100 fonts in it then it's foolish to expect the user to pick out one, so let's limit ourselves to 100 */
+  fonts = xcalloc (100, sizeof (xmlNodePtr));   // If the file has
+						// more than 100 fonts
+						// in it then it's
+						// foolish to expect
+						// the user to pick
+						// out one, so let's
+						// limit ourselves to
+						// 100
   cnt = _FindSVGFontNodes (xmlDocGetRootElement (doc), fonts, 0, 100, "svg");
   if (cnt == 0)
     {
@@ -1545,11 +1540,9 @@ SVGPickFont (xmlNodePtr * fonts, char *filename)
   return (NULL);
 }
 
-#define PI	3.1415926535897932
-
-/* I don't see where the spec says that the seperator between numbers is */
-/*  comma or whitespace (both is ok too) */
-/* But the style sheet spec says it, so I probably just missed it */
+// I don't see where the spec says that the separator between numbers
+// is comma or whitespace (both is ok, too). But the style sheet spec
+// says it, so I probably just missed it.
 static char *
 skipcomma (char *pt)
 {
@@ -1584,13 +1577,13 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
     ry = -ry;
   if (rx != 0 && ry != 0)
     {
-      /* Page 647 in the SVG 1.1 spec describes how to do this */
-      /* This is Appendix F (Implementation notes) section 6.5 */
+      // Page 647 in the SVG 1.1 spec describes how to do this. This
+      // is Appendix F (Implementation notes), section 6.5.
       cosr = cos (axisrot);
       sinr = sin (axisrot);
       x1p = cosr * (current->x - x) / 2 + sinr * (current->y - y) / 2;
       y1p = -sinr * (current->x - x) / 2 + cosr * (current->y - y) / 2;
-      /* Correct for bad radii */
+      // Correct for bad radii.
       lambda = x1p * x1p / (rx * rx) + y1p * y1p / (ry * ry);
       if (lambda > 1)
         {
@@ -1600,7 +1593,8 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
         }
       factor = rx * rx * ry * ry - rx * rx * y1p * y1p - ry * ry * x1p * x1p;
       if (RealNear (factor, 0))
-        factor = 0;             /* Avoid rounding errors that lead to small negative values */
+        factor = 0;             // Avoid rounding errors that lead to
+				// small negative values.
       else
         factor = sqrt (factor / (rx * rx * y1p * y1p + ry * ry * x1p * x1p));
       if (large_arc == sweep)
@@ -1619,7 +1613,7 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
       t2y = (-y1p - cyp) / ry;
       delta = (tmpx * t2x + tmpy * t2y) /
         sqrt ((tmpx * tmpx + tmpy * tmpy) * (t2x * t2x + t2y * t2y));
-      /* We occasionally got rounding errors near -1 */
+      // We occasionally got rounding errors near -1.
       if (delta <= -1)
         delta = 3.1415926535897932;
       else if (delta >= 1)
@@ -1629,17 +1623,17 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
       if (tmpx * t2y - tmpy * t2x < 0)
         delta = -delta;
       if (sweep == 0 && delta > 0)
-        delta -= 2 * PI;
+        delta -= 2 * M_PI;
       if (sweep && delta < 0)
-        delta += 2 * PI;
+        delta += 2 * M_PI;
 
       if (delta > 0)
         {
           i = 0;
-          ia = firstia = floor (startangle / (PI / 2)) + 1;
-          for (a = ia * (PI / 2), ia += 4;
+          ia = firstia = floor (startangle / M_PI_2) + 1;
+          for (a = ia * M_PI_2, ia += 4;
                a < startangle + delta && !RealNear (a, startangle + delta);
-               a += PI / 2, ++i, ++ia)
+               a += M_PI_2, ++i, ++ia)
             {
               t2x = rx * cosines[ia];
               t2y = ry * sines[ia];
@@ -1664,10 +1658,10 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
       else
         {
           i = 0;
-          ia = firstia = ceil (startangle / (PI / 2)) - 1;
-          for (a = ia * (PI / 2), ia += 8;
+          ia = firstia = ceil (startangle / M_PI_2) - 1;
+          for (a = ia * M_PI_2, ia += 8;
                a > startangle + delta && !RealNear (a, startangle + delta);
-               a -= PI / 2, ++i, --ia)
+               a -= M_PI_2, ++i, --ia)
             {
               t2x = rx * cosines[ia];
               t2y = ry * sines[ia];
@@ -1691,7 +1685,7 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
         }
       if (i != 0)
         {
-          double firsta = firstia * PI / 2;
+          double firsta = firstia * M_PI_2;
           double d = (firsta - startangle) / 2;
           double th = startangle + d;
           double hypot = 1 / cos (d);
@@ -1734,7 +1728,7 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
           }
         else
           {
-            double lasta = delta < 0 ? a + PI / 2 : a - PI / 2;
+            double lasta = delta < 0 ? a + M_PI_2 : a - M_PI_2;
             double d = (startangle + delta - lasta);
             double th = lasta + d / 2;
             hypot = 1.0 / cos (d / 2);
@@ -1877,9 +1871,7 @@ SVGParsePath (xmlChar * path)
               x = strtod ((char *) path, &end);
               y = current.y;
               if (type == 'h')
-                {
-                  x += current.x;
-                }
+		x += current.x;
               sp = SplinePointCreate (x, y);
               current = sp->me;
               SplineMake (cur->last, sp, order2);
@@ -1890,9 +1882,7 @@ SVGParsePath (xmlChar * path)
               x = current.x;
               y = strtod ((char *) path, &end);
               if (type == 'v')
-                {
-                  y += current.y;
-                }
+		y += current.y;
               sp = SplinePointCreate (x, y);
               current = sp->me;
               SplineMake (cur->last, sp, order2);
@@ -3485,10 +3475,13 @@ _SVGParseSVG (xmlNodePtr svg, xmlNodePtr top, struct svg_state *inherit)
   struct svg_state st;
   xmlChar *name;
   xmlNodePtr kid;
-  Entity *ehead, *elast, *eret;
+  Entity *ehead;
+  Entity *elast;
+  Entity *eret;
   SplineSet *head;
   int treat_symbol_as_g = false;
-  char *fill_colour_source = NULL, *stroke_colour_source = NULL;
+  char *fill_colour_source = NULL;
+  char *stroke_colour_source = NULL;
 
   if (svg == NULL)
     return (NULL);
@@ -3944,7 +3937,7 @@ SVGLigatureFixupCheck (SplineChar *sc, xmlNodePtr glyph)
                                            (u[1] >= 0xE0100
                                             && u[1] <= 0xE01EF)))
         {                       /* Second VS block */
-          /* Problably a variant glyph marked with a variation selector */
+          /* Probably a variant glyph marked with a variation selector */
           /* ... not a true ligature at all */
           /* http://babelstone.blogspot.com/2007/06/secret-life-of-variation-selectors.html */
           struct altuni *altuni =
