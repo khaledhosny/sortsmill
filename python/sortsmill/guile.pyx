@@ -93,6 +93,34 @@ def pyguile_to_string (pyg_obj):
   py_s = scm.scm_to_object (py_string)
   return py_s
 
+def string_to_guile_symbol (string not None):
+  cdef SCM scm_string = scm.scm_from_string_object (string)
+  cdef SCM scm_symbol = scm.scm_string_to_symbol (scm_string)
+  return pyguile (<uintptr_t> scm_symbol)
+
+def guile_symbol_to_string (pyg_obj):
+  assert isinstance (pyg_obj, pyguile)
+  cdef SCM scm_symbol = scm.scm_from_pyguile_object (pyg_obj)
+  cdef SCM scm_string = scm.scm_symbol_to_string (scm_symbol)
+  cdef SCM py_string = scm.scm_string_to_pystring (scm_string)
+  py_s = scm.scm_to_object (py_string)
+  return py_s
+
+def string_to_guile_keyword (string not None):
+  cdef SCM scm_string = scm.scm_from_string_object (string)
+  cdef SCM scm_symbol = scm.scm_string_to_symbol (scm_string)
+  cdef SCM scm_keyword = scm.scm_symbol_to_keyword (scm_symbol)
+  return pyguile (<uintptr_t> scm_keyword)
+
+def guile_keyword_to_string (pyg_obj):
+  assert isinstance (pyg_obj, pyguile)
+  cdef SCM scm_keyword = scm.scm_from_pyguile_object (pyg_obj)
+  cdef SCM scm_symbol = scm.scm_keyword_to_symbol (scm_keyword)
+  cdef SCM scm_string = scm.scm_symbol_to_string (scm_symbol)
+  cdef SCM py_string = scm.scm_string_to_pystring (scm_string)
+  py_s = scm.scm_to_object (py_string)
+  return py_s
+
 def bool_to_pyguile (v):
   assert isinstance (v, bool)
   cdef SCM b = scm.scm_pybool_to_boolean (scm.scm_from_object (v))
@@ -108,6 +136,9 @@ __acceptable_number_types = (type (1),
                              type (1.1),
                              type (gmpy.mpq (1,11)),
                              type (1+1j))
+
+def number_is_guile_compatible (n):
+  return (type (n) in __acceptable_number_types)
 
 def number_to_pyguile (v):
   assert type (v) in __acceptable_number_types

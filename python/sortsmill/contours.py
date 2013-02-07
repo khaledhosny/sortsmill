@@ -15,13 +15,68 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-from . import (pyguile, guile)
+from . import (pyguile, guile, conditions)
 
-class contour_point (pyguile):
+__on_curve_p_keyword = guile.string_to_guile_keyword ('on-curve?')
+__selected_p_keyword = guile.string_to_guile_keyword ('selected?')
+__name_keyword       = guile.string_to_guile_keyword ('name')
 
-  def __init__ (self, x, y, on_curve, selected, name):
-    point = guile.call (guile.public_ref ('sortsmill contours', 'make-contour-point'),
-                        guile.number_to_pyguile (x), guile.number_to_pyguile (y),
-                        guile.bool_to_pyguile (on_curve), guile.bool_to_pyguile (selected),
-                        guile.string_to_pyguile (name))
-    #super (Child, self).__init__ (xxxx)
+__make_contour_point    = guile.public_ref ('sortsmill contours', 'make-contour-point')
+__contour_point_x       = guile.public_ref ('sortsmill contours', 'contour-point-x')
+__contour_point_x_set_x = guile.public_ref ('sortsmill contours', 'contour-point-x-set!')
+__contour_point_y       = guile.public_ref ('sortsmill contours', 'contour-point-y')
+__contour_point_y_set_x = guile.public_ref ('sortsmill contours', 'contour-point-y-set!')
+
+##
+## PROPHYLACTIC FIXME: When converting to SplinePointList, first
+## convert numbers to double, to avoid Guile exceptions.
+##
+
+######def preconditions (*assertions):
+######  def check_preconditions (f):
+######    def new_f (*args, **kwargs):
+######      for a in assertions:
+######        assert a (*args, **kwargs)
+######      return f (*args, **kwargs)
+######    return new_f
+######  return check_preconditions
+
+class contour_point (pyguile.pyguile):
+
+  def __init__ (self, x, y, on_curve = True, selected = False, name = ''):
+    assert guile.number_is_guile_compatible (x)
+    assert guile.number_is_guile_compatible (y)
+    assert isinstance (name, unicode) or isinstance (name, bytes)
+    on_curve = not not on_curve
+    selected = not not selected
+    point = guile.call (__make_contour_point,
+                        guile.number_to_pyguile (x),
+                        guile.number_to_pyguile (y),
+                        __on_curve_p_keyword, guile.bool_to_pyguile (on_curve),
+                        __selected_p_keyword, guile.bool_to_pyguile (selected),
+                        __name_keyword, guile.string_to_pyguile (name))
+    super (contour_point, self).__init__ (point.address)
+
+  def __set_arg_is_number (self, x):
+    if guile.number_is_guile_compatible (x):
+      result = True
+    else:
+      result = 'argument is not a Guile-compatible number: {}'.format (x)
+    return result
+
+  def __get_x (self):
+    return guile.pyguile_to_number (guile.call (__contour_point_x, self))
+
+  @conditions.pre (__set_arg_is_number)
+  def __set_x (self, x):
+    guile.call (__contour_point_x_set_x, self, guile.number_to_pyguile (x))
+
+  def __get_y (self):
+    return guile.pyguile_to_number (guile.call (__contour_point_y, self))
+
+  @conditions.pre (__set_arg_is_number)
+  def __set_y (self, y):
+    guile.call (__contour_point_y_set_x, self, guile.number_to_pyguile (y))
+
+  x = property (__get_x, __set_x)
+  y = property (__get_y, __set_y)

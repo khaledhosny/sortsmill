@@ -114,6 +114,15 @@ cdef extern from 'libguile.h':
   size_t scm_c_symbol_length (SCM sym)
   SCM scm_gensym (SCM prefix)
 
+  SCM scm_keyword_p (SCM obj)
+  SCM scm_keyword_to_symbol (SCM keyword)
+  SCM scm_symbol_to_keyword (SCM symbol)
+  int scm_is_keyword (SCM obj)
+  SCM scm_from_locale_keyword (const_char_ptr name)
+  SCM scm_from_locale_keywordn (const_char_ptr name, size_t len)
+  SCM scm_from_latin1_keyword (const_char_ptr name)
+  SCM scm_from_utf8_keyword (const_char_ptr name)
+
   SCM scm_cons (SCM x, SCM y)
   SCM scm_pair_p (SCM x)
   int scm_is_pair (SCM x)
@@ -363,6 +372,7 @@ cdef extern from 'libguile.h':
 #--------------------------------------------------------------------------
 
 cdef extern from 'sortsmill/guile/python.h':
+
   SCM scm_pointer_from_pyref (PyObject *obj)
   SCM scm_pointer_from_borrowed_pyref (PyObject *obj)
   SCM scm_from_scm_pyref (SCM p)
@@ -463,6 +473,69 @@ cdef extern from 'sortsmill/guile/python.h':
   SCM scm_py_builtins ()
   SCM scm_py_locals ()
   SCM scm_py_globals ()
+
+#--------------------------------------------------------------------------
+
+cdef extern from 'sortsmill/guile/contours.h':
+
+  SCM scm_make_contour_point (SCM x, SCM y, SCM on_curve_p, SCM selected_p,
+                              SCM name)
+  SCM scm_make_on_curve_point (SCM x, SCM y)
+  SCM scm_make_off_curve_point (SCM x, SCM y)
+  SCM scm_c_make_on_curve_point (double x, double y)
+  SCM scm_c_make_off_curve_point (double x, double y)
+
+  SCM scm_contour_point_p (SCM obj)
+  bool scm_is_contour_point (SCM obj)
+
+  SCM scm_contour_point_x (SCM point)
+  SCM scm_contour_point_y (SCM point)
+  SCM scm_contour_point_on_curve_p (SCM point)
+  SCM scm_contour_point_selected_p (SCM point)
+  SCM scm_contour_point_name (SCM point)
+
+  double scm_c_contour_point_x (SCM point)
+  double scm_c_contour_point_y (SCM point)
+  bool scm_c_contour_point_on_curve_p (SCM point)
+  bool scm_c_contour_point_selected_p (SCM point)
+  char *scm_c_contour_point_name (SCM point)
+
+  SCM scm_contour_point_x_set_x (SCM point, SCM value)
+  SCM scm_contour_point_y_set_x (SCM point, SCM value)
+  SCM scm_contour_point_on_curve_p_set_x (SCM point, SCM value)
+  SCM scm_contour_point_selected_p_set_x (SCM point, SCM value)
+  SCM scm_contour_point_name_set_x (SCM point, SCM value)
+
+  void scm_c_contour_point_x_set_x (SCM point, double value)
+  void scm_c_contour_point_y_set_x (SCM point, double value)
+  void scm_c_contour_point_on_curve_p_set_x (SCM point, bool value)
+  void scm_c_contour_point_selected_p_set_x (SCM point, bool value)
+  void scm_c_contour_point_name_set_x (SCM point, const_char_ptr value)
+
+  SCM scm_make_contour (SCM points, SCM closed_p, SCM degree, SCM name)
+  SCM scm_c_make_contour (SCM points, bool closed_p, int degree,
+                          const_char_ptr name)
+
+  SCM scm_contour_p (SCM obj)
+  bool scm_is_contour (SCM obj)
+
+  SCM scm_contour_points (SCM contour)
+  SCM scm_contour_closed_p (SCM contour)
+  SCM scm_contour_degree (SCM contour)
+  SCM scm_contour_name (SCM contour)
+
+  bool scm_c_contour_closed_p (SCM contour)
+  int scm_c_contour_degree (SCM contour)
+  char *scm_c_contour_name (SCM contour)
+
+  SCM scm_contour_points_set_x (SCM contour, SCM value)
+  SCM scm_contour_closed_p_set_x (SCM contour, SCM value)
+  SCM scm_contour_degree_set_x (SCM contour, SCM value)
+  SCM scm_contour_name_set_x (SCM contour, SCM value)
+
+  void scm_c_contour_closed_p_set_x (SCM contour, bool value)
+  void scm_c_contour_degree_set_x (SCM contour, int value)
+  void scm_c_contour_name_set_x (SCM contour, const_char_ptr value)
 
 #--------------------------------------------------------------------------
 
