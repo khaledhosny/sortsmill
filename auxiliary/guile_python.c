@@ -193,6 +193,7 @@ _VISIBLE_SCM_TYPECHECK_P (scm_pybool_p, scm_is_pybool, PyBool_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pyint_p, scm_is_pyint, PyInt_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pylong_p, scm_is_pylong, PyLong_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pyfloat_p, scm_is_pyfloat, PyFloat_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pycomplex_p, scm_is_pycomplex, PyComplex_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pyunicode_p, scm_is_pyunicode, PyUnicode_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pybytes_p, scm_is_pybytes, PyBytes_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pystring_p, scm_is_pystring, _FF_PYSTRING_CHECK);
@@ -380,6 +381,32 @@ scm_pyfloat_to_inexact (SCM obj)
   if (r == -1.0 && PyErr_Occurred ())
     scm_c_py_failure ("scm_pyfloat_to_inexact", scm_list_1 (obj));
   return scm_from_double (r);
+}
+
+VISIBLE SCM
+scm_complex_to_pycomplex (SCM z)
+{
+  PyObject *py_obj = PyComplex_FromDoubles (scm_to_double (scm_real_part (z)),
+                                            scm_to_double (scm_imag_part (z)));
+  if (py_obj == NULL)
+    scm_c_py_failure ("scm_complex_to_pycomplex", scm_list_1 (z));
+  return scm_from_PyObject_ptr (py_obj);
+}
+
+VISIBLE SCM
+scm_pycomplex_to_complex (SCM obj)
+{
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
+  if (!PyComplex_Check (py_obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_pycomplex_to_complex"),
+        rnrs_c_make_message_condition (_("expected a Python complex object")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  return
+    scm_make_rectangular (scm_from_double (PyComplex_RealAsDouble (py_obj)),
+                          scm_from_double (PyComplex_ImagAsDouble (py_obj)));
 }
 
 VISIBLE SCM
@@ -673,6 +700,7 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pympz?", 1, 0, 0, scm_pympz_p);
   scm_c_define_gsubr ("pympq?", 1, 0, 0, scm_pympq_p);
   scm_c_define_gsubr ("pyfloat?", 1, 0, 0, scm_pyfloat_p);
+  scm_c_define_gsubr ("pycomplex?", 1, 0, 0, scm_pycomplex_p);
   scm_c_define_gsubr ("pyunicode?", 1, 0, 0, scm_pyunicode_p);
   scm_c_define_gsubr ("pybytes?", 1, 0, 0, scm_pybytes_p);
   scm_c_define_gsubr ("pystring?", 1, 0, 0, scm_pystring_p);
@@ -701,6 +729,9 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("flonum->pyfloat", 1, 0, 0, scm_inexact_to_pyfloat);
   scm_c_define_gsubr ("pyfloat->inexact", 1, 0, 0, scm_pyfloat_to_inexact);
   scm_c_define_gsubr ("pyfloat->flonum", 1, 0, 0, scm_pyfloat_to_inexact);
+
+  scm_c_define_gsubr ("complex->pycomplex", 1, 0, 0, scm_complex_to_pycomplex);
+  scm_c_define_gsubr ("pycomplex->complex", 1, 0, 0, scm_pycomplex_to_complex);
 
   scm_c_define_gsubr ("pointer->pylong", 1, 0, 0, scm_pointer_to_pylong);
   scm_c_define_gsubr ("pylong->pointer", 1, 0, 0, scm_pylong_to_pointer);

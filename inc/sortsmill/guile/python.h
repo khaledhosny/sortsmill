@@ -64,24 +64,25 @@ SCM scm_c_py_failure (const char *who, SCM irritants);
     return scm_is_true (P_NAME (obj));				\
   }
 
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pynone_p, scm_is_pynone);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pybool_p, scm_is_pybool);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyint_p, scm_is_pyint);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pylong_p, scm_is_pylong);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pympz_p, scm_is_pympz);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pympq_p, scm_is_pympq);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyfloat_p, scm_is_pyfloat);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyunicode_p, scm_is_pyunicode);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pybytes_p, scm_is_pybytes);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pystring_p, scm_is_pystring);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pytuple_p, scm_is_pytuple);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pylist_p, scm_is_pylist);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pydict_p, scm_is_pydict);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pycallable_p, scm_is_pycallable);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pymodule_p, scm_is_pymodule);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pysequence_p, scm_is_pysequence);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyiterable_p, scm_is_pyiterable);
-_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pygenerator_p, scm_is_pygenerator);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pynone_p, scm_is_pynone);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pybool_p, scm_is_pybool);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pyint_p, scm_is_pyint);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pylong_p, scm_is_pylong);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pympz_p, scm_is_pympz);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pympq_p, scm_is_pympq);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pyfloat_p, scm_is_pyfloat);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pycomplex_p, scm_is_pycomplex);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pyunicode_p, scm_is_pyunicode);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pybytes_p, scm_is_pybytes);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pystring_p, scm_is_pystring);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pytuple_p, scm_is_pytuple);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pylist_p, scm_is_pylist);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pydict_p, scm_is_pydict);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pycallable_p, scm_is_pycallable);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pymodule_p, scm_is_pymodule);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pysequence_p, scm_is_pysequence);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pyiterable_p, scm_is_pyiterable);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL (scm_pygenerator_p, scm_is_pygenerator);
 
 bool scm_is_pyobject (SCM obj);
 
@@ -105,6 +106,9 @@ SCM scm_pympq_to_rational (SCM obj);
 
 SCM scm_inexact_to_pyfloat (SCM obj);
 SCM scm_pyfloat_to_inexact (SCM obj);
+
+SCM scm_complex_to_pycomplex (SCM obj);
+SCM scm_pycomplex_to_complex (SCM obj);
 
 SCM scm_pointer_to_pylong (SCM obj);
 SCM scm_pylong_to_pointer (SCM obj);

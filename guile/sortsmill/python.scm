@@ -110,6 +110,10 @@
           pyfloat->flonum ;; The same as pyfloat->inexact.
           pyfloat?
 
+          complex->pycomplex
+          pycomplex->complex
+          pycomplex?
+
           pointer->pylong ;; Big integers to represent addresses.
           pylong->pointer
 
