@@ -192,6 +192,7 @@ _VISIBLE_SCM_TYPECHECK_P (scm_pynone_p, scm_is_pynone, _FF_PYNONE_CHECK);
 _VISIBLE_SCM_TYPECHECK_P (scm_pybool_p, scm_is_pybool, PyBool_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pyint_p, scm_is_pyint, PyInt_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pylong_p, scm_is_pylong, PyLong_Check);
+_VISIBLE_SCM_TYPECHECK_P (scm_pyfloat_p, scm_is_pyfloat, PyFloat_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pyunicode_p, scm_is_pyunicode, PyUnicode_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pybytes_p, scm_is_pybytes, PyBytes_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pystring_p, scm_is_pystring, _FF_PYSTRING_CHECK);
@@ -269,6 +270,8 @@ scm_integer_to_pympz (SCM obj)
 {
   initialize_gmpy_pymodule_if_necessary ();
   PympzObject *z = Pympz_new ();
+  if (z == NULL)
+    scm_c_py_failure ("scm_integer_to_pympz", scm_list_1 (obj));
   scm_to_mpz (obj, Pympz_AS_MPZ (z));
   return scm_from_PyObject_ptr ((PyObject *) z);
 }
@@ -286,6 +289,32 @@ scm_pympz_to_integer (SCM obj)
         rnrs_c_make_message_condition (_("expected a Python mpz object")),
         rnrs_make_irritants_condition (scm_list_1 (obj))));
   return scm_from_mpz (Pympz_AS_MPZ (py_obj));
+}
+
+VISIBLE SCM
+scm_inexact_to_pyfloat (SCM obj)
+{
+  PyObject *py_obj = PyFloat_FromDouble (scm_to_double (obj));
+  if (py_obj == NULL)
+    scm_c_py_failure ("scm_inexact_to_pyfloat", scm_list_1 (obj));
+  return scm_from_PyObject_ptr (py_obj);
+}
+
+VISIBLE SCM
+scm_pyfloat_to_inexact (SCM obj)
+{
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
+  if (!PyFloat_Check (py_obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_pyfloat_to_inexact"),
+        rnrs_c_make_message_condition (_("expected a Python float object")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  double r = PyFloat_AsDouble (py_obj);
+  if (r == -1.0 && PyErr_Occurred ())
+    scm_c_py_failure ("scm_pyfloat_to_inexact", scm_list_1 (obj));
+  return scm_from_double (r);
 }
 
 VISIBLE SCM
@@ -577,6 +606,7 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pyint?", 1, 0, 0, scm_pyint_p);
   scm_c_define_gsubr ("pylong?", 1, 0, 0, scm_pylong_p);
   scm_c_define_gsubr ("pympz?", 1, 0, 0, scm_pympz_p);
+  scm_c_define_gsubr ("pyfloat?", 1, 0, 0, scm_pyfloat_p);
   scm_c_define_gsubr ("pyunicode?", 1, 0, 0, scm_pyunicode_p);
   scm_c_define_gsubr ("pybytes?", 1, 0, 0, scm_pybytes_p);
   scm_c_define_gsubr ("pystring?", 1, 0, 0, scm_pystring_p);
@@ -597,6 +627,11 @@ init_guile_sortsmill_python (void)
 
   scm_c_define_gsubr ("integer->pympz", 1, 0, 0, scm_integer_to_pympz);
   scm_c_define_gsubr ("pympz->integer", 1, 0, 0, scm_pympz_to_integer);
+
+  scm_c_define_gsubr ("inexact->pyfloat", 1, 0, 0, scm_inexact_to_pyfloat);
+  scm_c_define_gsubr ("flonum->pyfloat", 1, 0, 0, scm_inexact_to_pyfloat);
+  scm_c_define_gsubr ("pyfloat->inexact", 1, 0, 0, scm_pyfloat_to_inexact);
+  scm_c_define_gsubr ("pyfloat->flonum", 1, 0, 0, scm_pyfloat_to_inexact);
 
   scm_c_define_gsubr ("pointer->pylong", 1, 0, 0, scm_pointer_to_pylong);
   scm_c_define_gsubr ("pylong->pointer", 1, 0, 0, scm_pylong_to_pointer);

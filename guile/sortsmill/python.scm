@@ -100,6 +100,12 @@
           pylong?
           pympz?
 
+          inexact->pyfloat
+          pyfloat->inexact
+          flonum->pyfloat ;; The same as inexact->pyfloat.
+          pyfloat->flonum ;; The same as pyfloat->inexact.
+          pyfloat?
+
           pointer->pylong ;; Big integers to represent addresses.
           pylong->pointer
 
