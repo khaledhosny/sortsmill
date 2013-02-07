@@ -23,6 +23,7 @@ from cpython.ref cimport PyObject
 from libc.stdint cimport uintptr_t
 
 from __sortsmill__.__pyguile__ import pyguile
+import gmpy
 
 # Start Guile mode if it is not already started.
 scm.scm_init_guile ()
@@ -118,6 +119,30 @@ def pyguile_to_bool (pyg_obj):
   assert isinstance (pyg_obj, pyguile)
   cdef bint b = scm.scm_is_true (scm.scm_from_pyguile_object (pyg_obj))
   return b
+
+__example_number_types = (type (1),
+                          type (1111111111111111111111111111111111111111111111111111111111111111111111111111111L),
+                          type (1.1),
+                          type (gmpy.mpq (1,11)),
+                          type (1+1j))
+
+def number_to_pyguile (v):
+  assert type (v) in __example_number_types
+  cdef SCM n = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                     "pyobject->number"),
+                               scm_pyobject_from_object (v))
+  return pyguile (<uintptr_t> n)
+
+def pyguile_to_number (pyg_obj):
+  assert isinstance (pyg_obj, pyguile)
+  cdef SCM py_n = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                        "number->pyobject"),
+                                  scm.scm_from_pyguile_object (pyg_obj))
+  cdef SCM p = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
+                                                     "pyobject->pointer"),
+                               py_n)
+  result = <object> scm.scm_to_pointer (p)
+  return result
 
 def public_ref (module_name not None, name not None):
   assert isinstance (module_name, unicode) or isinstance (module_name, bytes)

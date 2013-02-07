@@ -58,9 +58,9 @@ if HAVE_PYTHON_COMPATIBILITY
 nodist_python_PYTHON = fontforge.py psMat.py
 endif HAVE_PYTHON_COMPATIBILITY
 
-nobase_dist_python_PYTHON = ffContrib/__init__.py	\
-	ffContrib/excepthook.py ffContrib/allow_core.py	\
-	sortsmill/ffcompat.py sortsmill/pyguile.py
+nobase_dist_python_PYTHON = ffContrib/__init__.py						\
+	ffContrib/excepthook.py ffContrib/allow_core.py						\
+	sortsmill/ffcompat.py sortsmill/pyguile.py sortsmill/contours.py
 if HAVE_GUI
 nobase_dist_python_PYTHON += sortsmill/usermenu.py
 endif HAVE_GUI
@@ -139,6 +139,10 @@ nobase_pyexec_LTLIBRARIES += __sortsmill__/__pyguile__.la
 __sortsmill_____pyguile___la_SOURCES = __sortsmill__/__pyguile__.c
 __sortsmill_____pyguile___la_LIBADD = $(AUXLIBADD)
 
+nobase_pyexec_LTLIBRARIES += sortsmill/contours.la
+sortsmill_contours_la_SOURCES = sortsmill/contours.c
+sortsmill_contours_la_LIBADD = $(AUXLIBADD)
+
 PYX_FILES = __sortsmill__/__pyguile__.pyx sortsmill/views.pyx			\
 	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
 	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
@@ -181,7 +185,7 @@ MOSTLYCLEANFILES = __sortsmill__/__pyguile__.c						\
 	sortsmill/views.c sortsmill/ffcompat.c sortsmill/psMat.c		\
 	sortsmill/pkg_info.c sortsmill/notices.c sortsmill/guile.c		\
 	sortsmill/linalg.c sortsmill/polyspline.c sortsmill/brentroot.c	\
-	sortsmill/pyguile.c sortsmill/usermenu.c
+	sortsmill/pyguile.c sortsmill/contours.c sortsmill/usermenu.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -208,7 +212,7 @@ all-local: $(HAVE_GUI_SO) __sortsmill__/__pyguile__.so				\
 	sortsmill/pkg_info.so sortsmill/notices.so sortsmill/guile.so	\
 	sortsmill/linalg.so sortsmill/polyspline.so						\
 	sortsmill/brentroot.so sortsmill/legacy/fontforge.so			\
-	sortsmill/pyguile.so
+	sortsmill/pyguile.so sortsmill/contours.so
 HAVE_GUI_SO = sortsmill/usermenu.so
 
 check-local: all-local
