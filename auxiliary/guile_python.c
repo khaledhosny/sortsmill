@@ -303,6 +303,34 @@ scm_pympz_to_integer (SCM obj)
   return scm_from_mpz (Pympz_AS_MPZ (py_obj));
 }
 
+VISIBLE SCM
+scm_pympz_to_pylong (SCM obj)
+{
+  return
+    scm_call_1 (scm_c_public_ref ("sortsmill python", "pympz->pylong"), obj);
+}
+
+VISIBLE SCM
+scm_pylong_to_pympz (SCM obj)
+{
+  return
+    scm_call_1 (scm_c_public_ref ("sortsmill python", "pylong->pympz"), obj);
+}
+
+VISIBLE SCM
+scm_integer_to_pylong (SCM obj)
+{
+  return scm_call_1 (scm_c_public_ref ("sortsmill python", "integer->pylong"),
+                     obj);
+}
+
+VISIBLE SCM
+scm_pylong_to_integer (SCM obj)
+{
+  return scm_call_1 (scm_c_public_ref ("sortsmill python", "pylong->integer"),
+                     obj);
+}
+
 static void
 mpz_clear_void_ptr (void *z)
 {
@@ -407,6 +435,60 @@ scm_pycomplex_to_complex (SCM obj)
   return
     scm_make_rectangular (scm_from_double (PyComplex_RealAsDouble (py_obj)),
                           scm_from_double (PyComplex_ImagAsDouble (py_obj)));
+}
+
+VISIBLE SCM
+scm_number_to_pyobject (SCM obj)
+{
+  SCM result = SCM_UNDEFINED;
+  if (scm_is_inexact (obj))
+    {
+      if (scm_is_real (obj))
+	result = scm_inexact_to_pyfloat (obj);
+      else
+	result = scm_complex_to_pycomplex (obj);
+    }
+  else if (scm_is_integer (obj))
+    {
+      if (scm_is_signed_integer (obj, -2147483648, 2147483647))
+	result = scm_integer_to_pyint (obj);
+      else
+	result = scm_integer_to_pylong (obj);
+    }
+  else if (scm_is_rational (obj))
+    result = scm_rational_to_pympq (obj);
+  else
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_number_to_pyobject"),
+        rnrs_c_make_message_condition (_("expected a number")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  return result;
+}
+
+VISIBLE SCM
+scm_pyobject_to_number (SCM obj)
+{
+  SCM result = SCM_UNDEFINED;
+  if (scm_is_pyint (obj))
+    result = scm_pyint_to_integer (obj);
+  else if (scm_is_pyfloat (obj))
+    result = scm_pyfloat_to_inexact (obj);
+  else if (scm_is_pylong (obj))
+    result = scm_pylong_to_integer (obj);
+  else if (scm_is_pympq (obj))
+    result = scm_pympq_to_rational (obj);
+  else if (scm_is_pycomplex (obj))
+    result = scm_pycomplex_to_complex (obj);
+  else
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_pyobject_to_number"),
+        rnrs_c_make_message_condition (_("cannot convert the Python object to a Guile number")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  return result;
 }
 
 VISIBLE SCM
@@ -732,6 +814,9 @@ init_guile_sortsmill_python (void)
 
   scm_c_define_gsubr ("complex->pycomplex", 1, 0, 0, scm_complex_to_pycomplex);
   scm_c_define_gsubr ("pycomplex->complex", 1, 0, 0, scm_pycomplex_to_complex);
+
+  scm_c_define_gsubr ("number->pyobject", 1, 0, 0, scm_number_to_pyobject);
+  scm_c_define_gsubr ("pyobject->number", 1, 0, 0, scm_pyobject_to_number);
 
   scm_c_define_gsubr ("pointer->pylong", 1, 0, 0, scm_pointer_to_pylong);
   scm_c_define_gsubr ("pylong->pointer", 1, 0, 0, scm_pylong_to_pointer);

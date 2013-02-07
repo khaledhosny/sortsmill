@@ -114,6 +114,9 @@
           pycomplex->complex
           pycomplex?
 
+          number->pyobject
+          pyobject->number
+
           pointer->pylong ;; Big integers to represent addresses.
           pylong->pointer
 

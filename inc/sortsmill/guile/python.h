@@ -100,6 +100,10 @@ SCM scm_pyint_to_integer (SCM obj);
 
 SCM scm_integer_to_pympz (SCM obj);
 SCM scm_pympz_to_integer (SCM obj);
+SCM scm_pympz_to_pylong (SCM obj);
+SCM scm_pylong_to_pympz (SCM obj);
+SCM scm_integer_to_pylong (SCM obj);
+SCM scm_pylong_to_integer (SCM obj);
 
 SCM scm_rational_to_pympq (SCM obj);
 SCM scm_pympq_to_rational (SCM obj);
@@ -109,6 +113,9 @@ SCM scm_pyfloat_to_inexact (SCM obj);
 
 SCM scm_complex_to_pycomplex (SCM obj);
 SCM scm_pycomplex_to_complex (SCM obj);
+
+SCM scm_number_to_pyobject (SCM obj);
+SCM scm_pyobject_to_number (SCM obj);
 
 SCM scm_pointer_to_pylong (SCM obj);
 SCM scm_pylong_to_pointer (SCM obj);
