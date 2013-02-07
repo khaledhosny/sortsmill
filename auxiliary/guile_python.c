@@ -208,6 +208,7 @@ _VISIBLE_SCM_TYPECHECK_P (scm_pyiterable_p, scm_is_pyiterable, PyIter_Check);
 _VISIBLE_SCM_TYPECHECK_P (scm_pygenerator_p, scm_is_pygenerator, PyGen_Check);
 
 _STATIC_SCM_TYPECHECK_P (scm_pympz_p_core, Pympz_Check);
+_STATIC_SCM_TYPECHECK_P (scm_pympq_p_core, Pympq_Check);
 
 VISIBLE SCM
 scm_pympz_p (SCM obj)
@@ -218,6 +219,16 @@ scm_pympz_p (SCM obj)
 
 // Generate code from an inline definition that is elsewhere.
 VISIBLE bool scm_is_pympz (SCM obj);
+
+VISIBLE SCM
+scm_pympq_p (SCM obj)
+{
+  initialize_gmpy_pymodule_if_necessary ();
+  return scm_pympq_p_core (obj);
+}
+
+// Generate code from an inline definition that is elsewhere.
+VISIBLE bool scm_is_pympq (SCM obj);
 
 VISIBLE SCM
 scm_boolean_to_pybool (SCM obj)
@@ -289,6 +300,60 @@ scm_pympz_to_integer (SCM obj)
         rnrs_c_make_message_condition (_("expected a Python mpz object")),
         rnrs_make_irritants_condition (scm_list_1 (obj))));
   return scm_from_mpz (Pympz_AS_MPZ (py_obj));
+}
+
+static void
+mpz_clear_void_ptr (void *z)
+{
+  mpz_clear (*(mpz_t *) z);
+}
+
+VISIBLE SCM
+scm_rational_to_pympq (SCM obj)
+{
+  initialize_gmpy_pymodule_if_necessary ();
+
+  PympqObject *q = Pympq_new ();
+  if (q == NULL)
+    scm_c_py_failure ("scm_rational_to_pympq", scm_list_1 (obj));
+
+  scm_dynwind_begin (0);
+
+  mpz_t z;
+  mpz_init (z);
+  scm_dynwind_unwind_handler (mpz_clear_void_ptr, &z, SCM_F_WIND_EXPLICITLY);
+
+  scm_to_mpz (scm_numerator (obj), z);
+  mpz_set (mpq_numref (Pympq_AS_MPQ (q)), z);
+
+  scm_to_mpz (scm_denominator (obj), z);
+  mpz_set (mpq_denref (Pympq_AS_MPQ (q)), z);
+
+  mpq_canonicalize (Pympq_AS_MPQ (q));
+
+  scm_dynwind_end ();
+
+  return scm_from_PyObject_ptr ((PyObject *) q);
+}
+
+VISIBLE SCM
+scm_pympq_to_rational (SCM obj)
+{
+  initialize_gmpy_pymodule_if_necessary ();
+
+  PyObject *py_obj = scm_to_PyObject_ptr (obj);
+  if (!Pympq_Check (py_obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_pympq_to_rational"),
+        rnrs_c_make_message_condition (_("expected a Python mpq object")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+
+  SCM numer = scm_from_mpz (mpq_numref (Pympq_AS_MPQ ((PympqObject *) py_obj)));
+  SCM denom = scm_from_mpz (mpq_denref (Pympq_AS_MPQ ((PympqObject *) py_obj)));
+
+  return scm_divide (numer, denom);
 }
 
 VISIBLE SCM
@@ -606,6 +671,7 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pyint?", 1, 0, 0, scm_pyint_p);
   scm_c_define_gsubr ("pylong?", 1, 0, 0, scm_pylong_p);
   scm_c_define_gsubr ("pympz?", 1, 0, 0, scm_pympz_p);
+  scm_c_define_gsubr ("pympq?", 1, 0, 0, scm_pympq_p);
   scm_c_define_gsubr ("pyfloat?", 1, 0, 0, scm_pyfloat_p);
   scm_c_define_gsubr ("pyunicode?", 1, 0, 0, scm_pyunicode_p);
   scm_c_define_gsubr ("pybytes?", 1, 0, 0, scm_pybytes_p);
@@ -627,6 +693,9 @@ init_guile_sortsmill_python (void)
 
   scm_c_define_gsubr ("integer->pympz", 1, 0, 0, scm_integer_to_pympz);
   scm_c_define_gsubr ("pympz->integer", 1, 0, 0, scm_pympz_to_integer);
+
+  scm_c_define_gsubr ("rational->pympq", 1, 0, 0, scm_rational_to_pympq);
+  scm_c_define_gsubr ("pympq->rational", 1, 0, 0, scm_pympq_to_rational);
 
   scm_c_define_gsubr ("inexact->pyfloat", 1, 0, 0, scm_inexact_to_pyfloat);
   scm_c_define_gsubr ("flonum->pyfloat", 1, 0, 0, scm_inexact_to_pyfloat);

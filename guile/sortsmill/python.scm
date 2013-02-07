@@ -100,6 +100,10 @@
           pylong?
           pympz?
 
+          rational->pympq
+          pympq->rational
+          pympq?
+
           inexact->pyfloat
           pyfloat->inexact
           flonum->pyfloat ;; The same as inexact->pyfloat.

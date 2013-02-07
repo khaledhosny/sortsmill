@@ -69,6 +69,7 @@ _FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pybool_p, scm_is_pybool);
 _FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyint_p, scm_is_pyint);
 _FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pylong_p, scm_is_pylong);
 _FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pympz_p, scm_is_pympz);
+_FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pympq_p, scm_is_pympq);
 _FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyfloat_p, scm_is_pyfloat);
 _FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pyunicode_p, scm_is_pyunicode);
 _FF_VISIBLE_SCM_TYPECHECK_P_DECL(scm_pybytes_p, scm_is_pybytes);
@@ -98,6 +99,9 @@ SCM scm_pyint_to_integer (SCM obj);
 
 SCM scm_integer_to_pympz (SCM obj);
 SCM scm_pympz_to_integer (SCM obj);
+
+SCM scm_rational_to_pympq (SCM obj);
+SCM scm_pympq_to_rational (SCM obj);
 
 SCM scm_inexact_to_pyfloat (SCM obj);
 SCM scm_pyfloat_to_inexact (SCM obj);
