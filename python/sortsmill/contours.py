@@ -20,7 +20,8 @@ from . import (pyguile, guile)
 class contour_point (pyguile):
 
   def __init__ (self, x, y, on_curve, selected, name):
-    pass
-#########    point = guile.call (guile.public_ref ('sortsmill contours', 'make-contour-point'),
-                        
-########    super (Child, self).__init__ (xxx)
+    point = guile.call (guile.public_ref ('sortsmill contours', 'make-contour-point'),
+                        guile.number_to_pyguile (x), guile.number_to_pyguile (y),
+                        guile.bool_to_pyguile (on_curve), guile.bool_to_pyguile (selected),
+                        guile.string_to_pyguile (name))
+    #super (Child, self).__init__ (xxxx)

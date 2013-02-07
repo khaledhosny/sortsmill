@@ -109,19 +109,19 @@ scm_grab_borrowed_pyref (SCM p)
 VISIBLE SCM
 scm_py_none (void)
 {
-  return borrowed_scm_from_PyObject_ptr (Py_None);
+  return scm_from_borrowed_PyObject_ptr (Py_None);
 }
 
 VISIBLE SCM
 scm_py_false (void)
 {
-  return borrowed_scm_from_PyObject_ptr (Py_False);
+  return scm_from_borrowed_PyObject_ptr (Py_False);
 }
 
 VISIBLE SCM
 scm_py_true (void)
 {
-  return borrowed_scm_from_PyObject_ptr (Py_True);
+  return scm_from_borrowed_PyObject_ptr (Py_True);
 }
 
 VISIBLE SCM
@@ -649,7 +649,7 @@ scm_pytuple_to_list (SCM obj)
   for (ssize_t i = length - 1; 0 <= i; i--)
     {
       SCM element =
-        borrowed_scm_from_PyObject_ptr (PyTuple_GET_ITEM (py_obj, i));
+        scm_from_borrowed_PyObject_ptr (PyTuple_GET_ITEM (py_obj, i));
       p = scm_cons (element, p);
     }
   return p;
@@ -703,7 +703,7 @@ scm_pylist_to_list (SCM obj)
   for (ssize_t i = length - 1; 0 <= i; i--)
     {
       SCM element =
-        borrowed_scm_from_PyObject_ptr (PyList_GET_ITEM (py_obj, i));
+        scm_from_borrowed_PyObject_ptr (PyList_GET_ITEM (py_obj, i));
       p = scm_cons (element, p);
     }
   return p;
@@ -729,7 +729,7 @@ scm_pysequence_to_list (SCM obj)
   SCM p = SCM_EOL;
   for (ssize_t i = length - 1; 0 <= i; i--)
     {
-      SCM element = borrowed_scm_from_PyObject_ptr (PyTuple_GET_ITEM (tup, i));
+      SCM element = scm_from_borrowed_PyObject_ptr (PyTuple_GET_ITEM (tup, i));
       p = scm_cons (element, p);
     }
   Py_DECREF (tup);
@@ -739,21 +739,21 @@ scm_pysequence_to_list (SCM obj)
 VISIBLE SCM
 scm_py_builtins (void)
 {
-  return borrowed_scm_from_PyObject_ptr (PyEval_GetBuiltins ());
+  return scm_from_borrowed_PyObject_ptr (PyEval_GetBuiltins ());
 }
 
 VISIBLE SCM
 scm_py_locals (void)
 {
   PyObject *obj = PyEval_GetLocals ();
-  return (obj == NULL) ? scm_py_none () : borrowed_scm_from_PyObject_ptr (obj);
+  return (obj == NULL) ? scm_py_none () : scm_from_borrowed_PyObject_ptr (obj);
 }
 
 VISIBLE SCM
 scm_py_globals (void)
 {
   PyObject *obj = PyEval_GetGlobals ();
-  return (obj == NULL) ? scm_py_none () : borrowed_scm_from_PyObject_ptr (obj);
+  return (obj == NULL) ? scm_py_none () : scm_from_borrowed_PyObject_ptr (obj);
 }
 
 //-------------------------------------------------------------------------

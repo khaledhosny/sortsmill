@@ -52,11 +52,10 @@
          (pure-create-interp '("sortsmill-editor")))]
 
    [if pkg-info:have-python-api?
-       (let ([py-initialized?  (@ (sortsmill python) py-initialized?)]
-             [py-initialize    (@ (sortsmill python) py-initialize)]
-             [pyexec-in-main   (@ (sortsmill python) pyexec-in-main)]
-             [lines-begin-with (@ (sortsmill python) lines-begin-with)])
-         (unless (py-initialized?) (py-initialize))
+       (let ([force-py-initialized (@ (sortsmill python) force-py-initialized)]
+             [pyexec-in-main       (@ (sortsmill python) pyexec-in-main)]
+             [lines-begin-with     (@ (sortsmill python) lines-begin-with)])
+         (force-py-initialized)
          (pyexec-in-main
           (lines-begin-with
            ";; —"

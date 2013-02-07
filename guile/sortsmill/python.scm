@@ -21,6 +21,7 @@
 
           py-initialized?
           py-initialize
+          force-py-initialized
           py-finalize
 
           make-python-error
@@ -205,6 +206,9 @@
   (define py-initialize
     (pointer->procedure
      void (sortsmill-dynlink-func "Py_Initialize" "") `()))
+
+  (define (force-py-initialized)
+    (unless (py-initialized?) (py-initialize)))
 
   (define py-finalize
     (pointer->procedure
@@ -516,7 +520,7 @@
     (let ([pymod (fluid-ref %current-python-module-fluid)])
       (if pymod pymod
           (begin
-            (unless (py-initialized?) (py-initialize))
+            (force-py-initialized)
             (let ([main (python-module "__main__")])
               (fluid-set! %current-python-module-fluid main)
               main)))))
@@ -525,7 +529,7 @@
     (syntax-rules ()
       [(_ module body body* ...)
        (begin
-         (unless (py-initialized?) (py-initialize))
+         (force-py-initialized)
          (with-fluids ([%current-python-module-fluid
                         (force-pymodule 'in-python-module module)])
            body body* ...))]))

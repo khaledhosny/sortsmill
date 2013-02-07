@@ -19,7 +19,7 @@
 ## Some internals of the Guile-Python interface.
 ##
 
-include "sortsmill/cython/config.pxi"
+include 'sortsmill/cython/config.pxi'
 
 cdef extern from 'config.h':
   pass
@@ -46,16 +46,10 @@ from __sortsmill__.__pyguile__ import pyguile
 #--------------------------------------------------------------------------
 
 cdef object wrap_exception_and_throw_to_guile (object who, object exc_info):
-  if isinstance (who, unicode):
-    who_bytes = who.encode ("UTF-8")
-  else:
-    who_bytes = who
-  cdef char *c_who = who_bytes
-  cdef SCM scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                            "pointer->pyobject"),
-                                      scm.scm_from_pointer (<PyObject *> exc_info, NULL))
-  scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
-                 scm.scm_list_2 (scm.scm_from_utf8_symbol (c_who), scm_info))
+  cdef SCM who_symbol = scm.scm_string_to_symbol (scm.scm_from_string_object (who))
+  cdef SCM info = scm.scm_from_object (exc_info)
+  scm.scm_throw (scm.scm_from_latin1_symbol ('python-exception'),
+                 scm.scm_list_2 (who_symbol, info))
 
 cdef inline object exec_python (object who, object python_code, object glob, object locl):
   try:
@@ -76,18 +70,6 @@ cdef inline object eval_python (object who, object python_code, object glob, obj
     wrap_exception_and_throw_to_guile (who, sys.exc_info ())
     retval = None
   return retval
-
-#--------------------------------------------------------------------------
-
-# FIXME: Make this available to other modules. What is the best way to
-# do this in Cython?
-cdef SCM scm_from_string_object (object string):
-  assert isinstance (string, unicode) or isinstance (string, bytes)
-  if isinstance (string, unicode):
-    string = string.encode ('UTF-8')
-  cdef char *s = string
-  cdef SCM scm_string = scm.scm_from_utf8_string (s)
-  return scm_string
 
 #--------------------------------------------------------------------------
 
@@ -184,19 +166,12 @@ cdef public object __apply_python_callable (object func, object args, object key
 
 cdef public object __python_module (object module_name):
   cdef SCM scm_pymodule
-  cdef SCM scm_module_ptr
-  cdef PyObject *py_module
   try:
     module = sys.modules[module_name]
   except:
-    scm_pymodule = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                         "pyimport"),
-                                   scm_from_string_object (module_name))
-    scm_module_ptr = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                           "pyobject->pointer"),
-                                     scm_pymodule)
-    py_module = <PyObject *> scm.scm_to_pointer (scm_module_ptr)
-    module = <object> py_module
+    scm_pymodule = scm.scm_call_1 (scm.scm_c_public_ref ('sortsmill python', 'pyimport'),
+                                   scm.scm_from_string_object (module_name))
+    module = scm.scm_to_object (scm_pymodule)
   return module
 
 cdef public object __python_import (object args):
@@ -204,7 +179,7 @@ cdef public object __python_import (object args):
   try:
     result = __import__ (name, glob, locl, fromlist, level)
   except:
-    wrap_exception_and_throw_to_guile ("__python_import", sys.exc_info ())
+    wrap_exception_and_throw_to_guile ('__python_import', sys.exc_info ())
     result = None
   return result
 

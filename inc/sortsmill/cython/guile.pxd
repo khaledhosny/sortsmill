@@ -24,7 +24,11 @@ from libc.stdint cimport int8_t, int16_t, int32_t, int64_t, intmax_t, intptr_t
 from libc.stdint cimport uint8_t, uint16_t, uint32_t, uint64_t, uintmax_t, uintptr_t
 from sortsmill.cython.const_pointers cimport const_char_ptr
 
-cdef extern from "libguile.h":
+cdef extern from 'stdbool.h':
+  pass
+from libcpp cimport bool
+
+cdef extern from 'libguile.h':
 
   # FIXME: THIS ASSUMES SCM_DEBUG_TYPING_STRICTNESS == 1
   # FIXME: Either provide support for the other levels, or
@@ -358,22 +362,107 @@ cdef extern from "libguile.h":
 
 #--------------------------------------------------------------------------
 
-cdef extern from "sortsmill/guile/python.h":
+cdef extern from 'sortsmill/guile/python.h':
   SCM scm_pointer_from_pyref (PyObject *obj)
   SCM scm_pointer_from_borrowed_pyref (PyObject *obj)
-
   SCM scm_from_scm_pyref (SCM p)
   SCM scm_from_borrowed_scm_pyref (SCM p)
-
   SCM scm_from_PyObject_ptr (PyObject *p)
-  SCM borrowed_scm_from_PyObject_ptr (PyObject *p)
+  SCM scm_from_borrowed_PyObject_ptr (PyObject *p)
   PyObject *scm_to_PyObject_ptr (SCM obj)
 
+  SCM scm_py_failure (SCM who, SCM irritants)
+  SCM scm_c_py_failure (const_char_ptr who, SCM irritants)
+
+  SCM scm_pynone_p (SCM)
+  SCM scm_pybool_p (SCM)
+  SCM scm_pyint_p (SCM)
+  SCM scm_pylong_p (SCM)
+  SCM scm_pympz_p (SCM)
+  SCM scm_pympq_p (SCM)
+  SCM scm_pyfloat_p (SCM)
+  SCM scm_pycomplex_p (SCM)
+  SCM scm_pyunicode_p (SCM)
+  SCM scm_pybytes_p (SCM)
+  SCM scm_pystring_p (SCM)
+  SCM scm_pytuple_p (SCM)
+  SCM scm_pylist_p (SCM)
+  SCM scm_pydict_p (SCM)
+  SCM scm_pycallable_p (SCM)
+  SCM scm_pymodule_p (SCM)
+  SCM scm_pysequence_p (SCM)
+  SCM scm_pyiterable_p (SCM)
+  SCM scm_pygenerator_p (SCM)
+
+  bool scm_is_pynone (SCM)
+  bool scm_is_pybool (SCM)
+  bool scm_is_pyint (SCM)
+  bool scm_is_pylong (SCM)
+  bool scm_is_pympz (SCM)
+  bool scm_is_pympq (SCM)
+  bool scm_is_pyfloat (SCM)
+  bool scm_is_pycomplex (SCM)
+  bool scm_is_pyunicode (SCM)
+  bool scm_is_pybytes (SCM)
+  bool scm_is_pystring (SCM)
+  bool scm_is_pytuple (SCM)
+  bool scm_is_pylist (SCM)
+  bool scm_is_pydict (SCM)
+  bool scm_is_pycallable (SCM)
+  bool scm_is_pymodule (SCM)
+  bool scm_is_pysequence (SCM)
+  bool scm_is_pyiterable (SCM)
+  bool scm_is_pygenerator (SCM)
+
+  bool scm_is_pyobject (SCM obj)
+
+  SCM scm_py_none ()
+  SCM scm_py_false ()
+  SCM scm_py_true ()
+  SCM scm_py_not (SCM obj)
+  SCM scm_py_not_not (SCM obj)
+
+  SCM scm_boolean_to_pybool (SCM obj)
+  SCM scm_pybool_to_boolean (SCM obj)
+
+  SCM scm_integer_to_pyint (SCM obj)
+  SCM scm_pyint_to_integer (SCM obj)
+
+  SCM scm_integer_to_pympz (SCM obj)
+  SCM scm_pympz_to_integer (SCM obj)
+  SCM scm_pympz_to_pylong (SCM obj)
+  SCM scm_pylong_to_pympz (SCM obj)
+  SCM scm_integer_to_pylong (SCM obj)
+  SCM scm_pylong_to_integer (SCM obj)
+
+  SCM scm_rational_to_pympq (SCM obj)
+  SCM scm_pympq_to_rational (SCM obj)
+
+  SCM scm_inexact_to_pyfloat (SCM obj)
+  SCM scm_pyfloat_to_inexact (SCM obj)
+
+  SCM scm_complex_to_pycomplex (SCM obj)
+  SCM scm_pycomplex_to_complex (SCM obj)
+
+  SCM scm_number_to_pyobject (SCM obj)
+  SCM scm_pyobject_to_number (SCM obj)
+
+  SCM scm_pointer_to_pylong (SCM obj)
+  SCM scm_pylong_to_pointer (SCM obj)
+
+  SCM scm_string_to_pystring (SCM obj)
+  SCM scm_pystring_to_string (SCM obj)
+
   SCM scm_list_to_pytuple (SCM obj)
-  SCM scm_pytuple_to_list (SCM obj)
   SCM scm_list_to_pylist (SCM obj)
+
+  SCM scm_pytuple_to_list (SCM obj)
   SCM scm_pylist_to_list (SCM obj)
   SCM scm_pysequence_to_list (SCM obj)
+
+  SCM scm_py_builtins ()
+  SCM scm_py_locals ()
+  SCM scm_py_globals ()
 
 #--------------------------------------------------------------------------
 
@@ -391,6 +480,18 @@ cdef inline SCM scm_undefined ():
 
 cdef inline int scm_unbndp (SCM x):
   return (scm_is_eq (x, scm_undefined ()))
+
+cdef inline SCM scm_from_object (object obj):
+  return scm_from_PyObject_ptr (<PyObject *> obj)
+
+cdef inline SCM scm_from_borrowed_object (object obj):
+  return scm_from_borrowed_PyObject_ptr (<PyObject *> obj)
+
+cdef inline object scm_to_object (SCM scm_obj):
+  return <object> scm_to_PyObject_ptr (scm_obj)
+
+cdef inline SCM scm_from_string_object (object string):
+  return scm_pystring_to_string (scm_from_object (string))
 
 cdef inline SCM scm_from_pyguile_object (object obj):
   return <SCM> <uintptr_t> obj.address

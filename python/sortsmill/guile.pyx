@@ -30,28 +30,6 @@ scm.scm_init_guile ()
 
 #--------------------------------------------------------------------------
 
-# FIXME: Make this available to other modules. What is the best way to
-# do this in Cython?
-cdef SCM scm_from_string_object (object string):
-  assert isinstance (string, unicode) or isinstance (string, bytes)
-  if isinstance (string, unicode):
-    string = string.encode ('UTF-8')
-  cdef char *s = string
-  cdef SCM scm_string = scm.scm_from_utf8_string (s)
-  return scm_string
-
-cdef SCM scm_pyobject_from_object (object obj):
-  return scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                               "pointer->pyobject"),
-                         scm.scm_from_pointer (<PyObject *> obj, NULL))
-
-cdef SCM scm_pyobject_from_borrowed_object (object obj):
-  return scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                               "borrowed-pointer->pyobject"),
-                         scm.scm_from_pointer (<PyObject *> obj, NULL))
-
-#--------------------------------------------------------------------------
-
 def init_guile ():
   scm.scm_init_guile ()
 
@@ -91,7 +69,7 @@ def guile_eval (expression not None, module not None):
 def guile_eval_string (string not None, module = None):
   cdef SCM result
   cdef SCM module_pointer
-  cdef SCM scm_string = scm_from_string_object (string)
+  cdef SCM scm_string = scm.scm_from_string_object (string)
   if module is None:
     result = scm.scm_eval_string (scm_string)
   else:
@@ -100,19 +78,24 @@ def guile_eval_string (string not None, module = None):
     result = scm.scm_eval_string_in_module (scm_string, module_pointer)
   return pyguile (<uintptr_t> result)
 
-def guile_string (string not None):
-  cdef SCM scm_string = scm_from_string_object (string)
+def pyobject (obj):
+  cdef SCM pyobj = scm.scm_from_borrowed_object (obj)
+  return pyguile (<uintptr_t> pyobj)
+
+def string_to_pyguile (string not None):
+  cdef SCM scm_string = scm.scm_from_string_object (string)
   return pyguile (<uintptr_t> scm_string)
 
-def pyobject (obj):
-  cdef SCM pyobj = scm_pyobject_from_borrowed_object (obj)
-  return pyguile (<uintptr_t> pyobj)
+def pyguile_to_string (pyg_obj):
+  assert isinstance (pyg_obj, pyguile)
+  cdef SCM scm_string = scm.scm_from_pyguile_object (pyg_obj)
+  cdef SCM py_string = scm.scm_string_to_pystring (scm_string)
+  py_s = scm.scm_to_object (py_string)
+  return py_s
 
 def bool_to_pyguile (v):
   assert isinstance (v, bool)
-  cdef SCM b = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                     "pybool->boolean"),
-                               scm_pyobject_from_object (v))
+  cdef SCM b = scm.scm_pybool_to_boolean (scm.scm_from_object (v))
   return pyguile (<uintptr_t> b)
 
 def pyguile_to_bool (pyg_obj):
@@ -120,28 +103,21 @@ def pyguile_to_bool (pyg_obj):
   cdef bint b = scm.scm_is_true (scm.scm_from_pyguile_object (pyg_obj))
   return b
 
-__example_number_types = (type (1),
-                          type (1111111111111111111111111111111111111111111111111111111111111111111111111111111L),
-                          type (1.1),
-                          type (gmpy.mpq (1,11)),
-                          type (1+1j))
+__acceptable_number_types = (type (1),
+                             type (111111111111111111111111111111111111111111111111L),
+                             type (1.1),
+                             type (gmpy.mpq (1,11)),
+                             type (1+1j))
 
 def number_to_pyguile (v):
-  assert type (v) in __example_number_types
-  cdef SCM n = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                     "pyobject->number"),
-                               scm_pyobject_from_object (v))
+  assert type (v) in __acceptable_number_types
+  cdef SCM n = scm.scm_pyobject_to_number (scm.scm_from_object (v))
   return pyguile (<uintptr_t> n)
 
 def pyguile_to_number (pyg_obj):
   assert isinstance (pyg_obj, pyguile)
-  cdef SCM py_n = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                        "number->pyobject"),
-                                  scm.scm_from_pyguile_object (pyg_obj))
-  cdef SCM p = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmill python",
-                                                     "pyobject->pointer"),
-                               py_n)
-  result = <object> scm.scm_to_pointer (p)
+  cdef SCM py_n = scm.scm_number_to_pyobject (scm.scm_from_pyguile_object (pyg_obj))
+  result = scm.scm_to_object (py_n)
   return result
 
 def public_ref (module_name not None, name not None):

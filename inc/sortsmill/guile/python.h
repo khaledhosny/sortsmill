@@ -46,7 +46,7 @@ SCM scm_from_borrowed_scm_pyref (SCM p);
 SCM scm_from_PyObject_ptr (PyObject *p);
 
 /* borrowed reference -> pyobject */
-SCM borrowed_scm_from_PyObject_ptr (PyObject *p);
+SCM scm_from_borrowed_PyObject_ptr (PyObject *p);
 
 /* pyobject -> reference */
 PyObject *scm_to_PyObject_ptr (SCM obj);

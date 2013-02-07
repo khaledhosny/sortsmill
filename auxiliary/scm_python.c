@@ -57,7 +57,7 @@ scm_from_PyObject_ptr (PyObject *p)
 }
 
 VISIBLE SCM
-borrowed_scm_from_PyObject_ptr (PyObject *p)
+scm_from_borrowed_PyObject_ptr (PyObject *p)
 {
   return scm_from_borrowed_scm_pyref (scm_from_pointer (p, NULL));
 }
