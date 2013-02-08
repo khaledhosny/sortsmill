@@ -17,12 +17,12 @@
 
 from . import (guile, conditions)
 
-
 def __force_unicode (s):
   if isinstance (s, bytes):
     s = s.decode ('UTF-8')
   return s
 
+# FIXME: Centralize this information.
 __window_cases = ('font', 'glyph', 'char')
 
 def __acceptable_as_window (w):

@@ -48,8 +48,8 @@ from __sortsmill__.__pyguile__ import pyguile
 cdef object wrap_exception_and_throw_to_guile (object who, object exc_info):
   cdef SCM who_symbol = scm.scm_string_to_symbol (scm.scm_from_string_object (who))
   cdef SCM info = scm.scm_from_object (exc_info)
-  scm.scm_throw (scm.scm_from_latin1_symbol ('python-exception'),
-                 scm.scm_list_2 (who_symbol, info))
+  cdef char *e = 'python-exception'
+  scm.scm_throw (scm.scm_from_latin1_symbol (e), scm.scm_list_2 (who_symbol, info))
 
 cdef inline object exec_python (object who, object python_code, object glob, object locl):
   try:

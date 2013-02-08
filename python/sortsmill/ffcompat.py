@@ -46,7 +46,7 @@
 
 import warnings
 import traceback
-from . import (pkg_info, guile, notices)
+from . import (pkg_info, guile, notices, conditions)
 
 from sortsmill.legacy.fontforge import (
   layer,
@@ -190,9 +190,55 @@ def postError (win_title, msg):
 
 #--------------------------------------------------------------------------
 
+def __force_unicode (s):
+  if isinstance (s, bytes):
+    s = s.decode ('UTF-8')
+  return s
+
+# FIXME: Centralize this information.
+__window_cases = ('font', 'glyph', 'char')
+
+def __acceptable_as_window (w):
+  global __window_cases
+  if isinstance (w, unicode) or isinstance (w, bytes):
+    w = (w,)
+  try:
+    acceptable = all ([(isinstance (__force_unicode (s), unicode)
+                        and __force_unicode (s).lower () in __window_cases)
+                       for s in w])
+  except:
+    acceptable = False
+  return acceptable
+
+def __acceptable_as_menu_path (mp):
+  try:
+    acceptable = all ([isinstance (__force_unicode (s), unicode) for s in mp])
+  except:
+    acceptable = False
+  return acceptable
+
+def __registerMenuItem_preconditions (menu_function, enable_function, data,
+                                      which_window, shortcut_string,
+                                      *submenu_names):
+  result = True
+  if not callable (menu_function):
+    result = '‘menu_function’ is not callable: {}'.format (menu_function)
+  elif enable_function is not None and not callable (enable_function):
+    result = '‘enable_function’ is not callable: {}'.format (enable_function)
+  elif not __acceptable_as_window (which_window):
+    result = 'invalid ‘which_window’: {}'.format (which_window)
+  elif shortcut_string is not None and shortcut_string != 'None' \
+        and not isinstance (__force_unicode (shortcut_string), unicode):
+    result = '‘shortcut_string’ is not a string: {}'.format (shortcut_string)
+  elif len (submenu_names) == 0:
+    result = 'no menu entry name was specified'
+  elif not __acceptable_as_menu_path (submenu_names):
+    result = 'expected strings for the submenu and menu entry names, but got: {}'.format (submenu_names)
+  return result
+
+@conditions.pre (__registerMenuItem_preconditions)
 def registerMenuItem (menu_function, enable_function, data,
                       which_window, shortcut_string, *submenu_names):
-  assert menu_function is not None
   assert which_window is not None
   if pkg_info.have_gui and not __get_no_windowing_ui ():
     __registerMenuItem = guile.public_ref ('sortsmill usermenu python',
