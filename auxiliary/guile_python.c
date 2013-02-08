@@ -477,6 +477,8 @@ scm_pyobject_to_number (SCM obj)
     result = scm_pyfloat_to_inexact (obj);
   else if (scm_is_pylong (obj))
     result = scm_pylong_to_integer (obj);
+  else if (scm_is_pympz (obj))
+    result = scm_pympz_to_integer (obj);
   else if (scm_is_pympq (obj))
     result = scm_pympq_to_rational (obj);
   else if (scm_is_pycomplex (obj))

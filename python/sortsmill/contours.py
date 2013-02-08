@@ -32,15 +32,6 @@ __contour_point_y_set_x = guile.public_ref ('sortsmill contours', 'contour-point
 ## convert numbers to double, to avoid Guile exceptions.
 ##
 
-######def preconditions (*assertions):
-######  def check_preconditions (f):
-######    def new_f (*args, **kwargs):
-######      for a in assertions:
-######        assert a (*args, **kwargs)
-######      return f (*args, **kwargs)
-######    return new_f
-######  return check_preconditions
-
 class contour_point (pyguile.pyguile):
 
   def __init__ (self, x, y, on_curve = True, selected = False, name = ''):
@@ -58,18 +49,12 @@ class contour_point (pyguile.pyguile):
     super (contour_point, self).__init__ (point.address)
 
   def __get_value_is_number (value, *args):
-    if guile.number_is_guile_compatible (value):
-      result = True
-    else:
-      result = 'result is not a Guile-compatible number: {}'.format (value)
-    return result
+    return True if guile.number_is_guile_compatible (value) \
+        else 'result is not a Guile-compatible number: {}'.format (value)
 
   def __set_value_is_number (self, value):
-    if guile.number_is_guile_compatible (value):
-      result = True
-    else:
-      result = 'argument is not a Guile-compatible number: {}'.format (value)
-    return result
+    return True if guile.number_is_guile_compatible (value) \
+        else 'argument is not a Guile-compatible number: {}'.format (value)
 
   @conditions.post (__get_value_is_number)
   def __get_x (self):

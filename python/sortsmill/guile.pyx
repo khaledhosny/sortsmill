@@ -134,6 +134,7 @@ def pyguile_to_bool (pyg_obj):
 __acceptable_number_types = (type (1),
                              type (111111111111111111111111111111111111111111111111L),
                              type (1.1),
+                             type (gmpy.mpz (1)),
                              type (gmpy.mpq (1,11)),
                              type (1+1j))
 
