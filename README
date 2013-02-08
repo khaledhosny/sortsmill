@@ -1,27 +1,27 @@
-Sorts Mill Fontforge: a font editor derived from the original FontForge.
+Sorts Mill Tools: a font editing system derived from FontForge.
 
 ------------------------------------------------------------------------
 
-Mission statement: Sorts Mill FontForge will focus on quality,
+Mission statement: Sorts Mill Tools will focus on quality,
 reliability, and code reuse.
 
 ------------------------------------------------------------------------
 
-Sorts Mill FontForge is free software: you can redistribute it and/or
+Sorts Mill Tools is free software: you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public License
 as published by the Free Software Foundation, either version 3 of
 the License, or (at your option) any later version.
  
-Sorts Mill FontForge is distributed in the hope that it will be useful,
+Sorts Mill Tools is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public
-License along with Sorts Mill FontForge.  If not, see
+License along with Sorts Mill Tools.  If not, see
 http://www.gnu.org/licenses/>.
 
-Much of the source code within Sorts Mill FontForge is covered by a
+Much of the source code within Sorts Mill Tools is covered by a
 more permissive license. This will be indicated near the top of the
 source file. See also the file COPYING.permissive.
 
