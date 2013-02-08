@@ -40,10 +40,18 @@ __contour_point_name_set_x       = guile.public_ref ('sortsmill contours', 'cont
 
 class contour_point (pyguile.pyguile):
 
+  def __init_preconditions (self, x, y, on_curve = True, selected = False, name = ''):
+    result = True
+    if not guile.number_is_guile_compatible (x):
+      result = 'x is not a Guile-compatible number: {}'.format (x)
+    elif not guile.number_is_guile_compatible (y):
+      result = 'y is not a Guile-compatible number: {}'.format (y)
+    elif not isinstance (name, unicode) and not isinstance (name, bytes):
+      result = 'name is not a string: {}'.format (name)
+    return result
+
+  @conditions.pre (__init_preconditions)
   def __init__ (self, x, y, on_curve = True, selected = False, name = ''):
-    assert guile.number_is_guile_compatible (x)
-    assert guile.number_is_guile_compatible (y)
-    assert isinstance (name, unicode) or isinstance (name, bytes)
     on_curve = not not on_curve
     selected = not not selected
     point = guile.call (__make_contour_point,
