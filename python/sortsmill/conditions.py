@@ -46,10 +46,10 @@ def post (*assertions):
       def new_f (*args, **kwargs):
         result = f (*args, **kwargs)
         for a in assertions:
-          passed = a (result)
+          passed = a (result, *args, **kwargs)
           if passed is not True:
             if passed is False:
-              raise AssertionError ('{} postcondition failed: {}'.format (f, a, result))
+              raise AssertionError ('{} postcondition failed: {}'.format (f, a, result, args, kwargs))
             else:
               raise AssertionError ('{} postcondition failed: {}'.format (f, passed))
         return result

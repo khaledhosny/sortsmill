@@ -57,18 +57,18 @@ class contour_point (pyguile.pyguile):
                         __name_keyword, guile.string_to_pyguile (name))
     super (contour_point, self).__init__ (point.address)
 
-  def __get_value_is_number (x):
-    if guile.number_is_guile_compatible (x):
+  def __get_value_is_number (value, *args):
+    if guile.number_is_guile_compatible (value):
       result = True
     else:
-      result = 'result is not a Guile-compatible number: {}'.format (x)
+      result = 'result is not a Guile-compatible number: {}'.format (value)
     return result
 
-  def __set_value_is_number (self, x):
-    if guile.number_is_guile_compatible (x):
+  def __set_value_is_number (self, value):
+    if guile.number_is_guile_compatible (value):
       result = True
     else:
-      result = 'argument is not a Guile-compatible number: {}'.format (x)
+      result = 'argument is not a Guile-compatible number: {}'.format (value)
     return result
 
   @conditions.post (__get_value_is_number)
@@ -76,16 +76,16 @@ class contour_point (pyguile.pyguile):
     return guile.pyguile_to_number (guile.call (__contour_point_x, self))
 
   @conditions.pre (__set_value_is_number)
-  def __set_x (self, x):
-    guile.call (__contour_point_x_set_x, self, guile.number_to_pyguile (x))
+  def __set_x (self, value):
+    guile.call (__contour_point_x_set_x, self, guile.number_to_pyguile (value))
 
   @conditions.post (__get_value_is_number)
   def __get_y (self):
     return guile.pyguile_to_number (guile.call (__contour_point_y, self))
 
   @conditions.pre (__set_value_is_number)
-  def __set_y (self, y):
-    guile.call (__contour_point_y_set_x, self, guile.number_to_pyguile (y))
+  def __set_y (self, value):
+    guile.call (__contour_point_y_set_x, self, guile.number_to_pyguile (value))
 
   x = property (__get_x, __set_x)
   y = property (__get_y, __set_y)
