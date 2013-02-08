@@ -1,0 +1,23 @@
+#! /bin/bash
+
+now=`date +%Y.%m.%d.%H.%M.%S`
+
+if [[ -f core ]]; then
+   echo "Saving an earlier core file --> core.bkp.${now}"
+   mv core core.bkp.${now}
+fi
+
+if [[ -f backtrace ]]; then
+   echo "Saving an earlier backtrace file --> backtrace.bkp.${now}"
+   mv backtrace backtrace.bkp.${now}
+fi
+
+ulimit -c unlimited
+smed ${1+"$@"}
+
+if [[ -f core ]]; then
+   gdb -batch -c core -ex 'bt full' smed > backtrace
+fi
+
+exit 0
+
