@@ -21,11 +21,17 @@ __on_curve_p_keyword = guile.string_to_guile_keyword ('on-curve?')
 __selected_p_keyword = guile.string_to_guile_keyword ('selected?')
 __name_keyword       = guile.string_to_guile_keyword ('name')
 
-__make_contour_point    = guile.public_ref ('sortsmill contours', 'make-contour-point')
-__contour_point_x       = guile.public_ref ('sortsmill contours', 'contour-point-x')
-__contour_point_x_set_x = guile.public_ref ('sortsmill contours', 'contour-point-x-set!')
-__contour_point_y       = guile.public_ref ('sortsmill contours', 'contour-point-y')
-__contour_point_y_set_x = guile.public_ref ('sortsmill contours', 'contour-point-y-set!')
+__make_contour_point             = guile.public_ref ('sortsmill contours', 'make-contour-point')
+__contour_point_x                = guile.public_ref ('sortsmill contours', 'contour-point-x')
+__contour_point_x_set_x          = guile.public_ref ('sortsmill contours', 'contour-point-x-set!')
+__contour_point_y                = guile.public_ref ('sortsmill contours', 'contour-point-y')
+__contour_point_y_set_x          = guile.public_ref ('sortsmill contours', 'contour-point-y-set!')
+__contour_point_on_curve_p       = guile.public_ref ('sortsmill contours', 'contour-point-on-curve?')
+__contour_point_on_curve_p_set_x = guile.public_ref ('sortsmill contours', 'contour-point-on-curve?-set!')
+__contour_point_selected_p       = guile.public_ref ('sortsmill contours', 'contour-point-selected?')
+__contour_point_selected_p_set_x = guile.public_ref ('sortsmill contours', 'contour-point-selected?-set!')
+__contour_point_name             = guile.public_ref ('sortsmill contours', 'contour-point-name')
+__contour_point_name_set_x       = guile.public_ref ('sortsmill contours', 'contour-point-name-set!')
 
 ##
 ## PROPHYLACTIC FIXME: When converting to SplinePointList, first
@@ -56,6 +62,18 @@ class contour_point (pyguile.pyguile):
     return True if guile.number_is_guile_compatible (value) \
         else 'argument is not a Guile-compatible number: {}'.format (value)
 
+  def __get_value_is_bool (value, *args):
+    return True if isinstance (value, bool) \
+        else 'result is not a bool: {}'.format (value)
+
+  def __get_value_is_string (value, *args):
+    return True if isinstance (value, unicode) \
+        else 'result is not a Unicode string: {}'.format (value)
+
+  def __set_value_is_string (self, value):
+    return True if isinstance (value, unicode) or isinstance (value, bytes) \
+        else 'argument is not a string: {}'.format (value)
+
   @conditions.post (__get_value_is_number)
   def __get_x (self):
     return guile.pyguile_to_number (guile.call (__contour_point_x, self))
@@ -72,5 +90,32 @@ class contour_point (pyguile.pyguile):
   def __set_y (self, value):
     guile.call (__contour_point_y_set_x, self, guile.number_to_pyguile (value))
 
+  @conditions.post (__get_value_is_bool)
+  def __get_on_curve (self):
+    return guile.pyguile_to_bool (guile.call (__contour_point_on_curve_p, self))
+
+  def __set_on_curve (self, value):
+    value = not not value
+    guile.call (__contour_point_on_curve_p_set_x, self, guile.bool_to_pyguile (value))
+
+  @conditions.post (__get_value_is_bool)
+  def __get_selected (self):
+    return guile.pyguile_to_bool (guile.call (__contour_point_selected_p, self))
+
+  def __set_selected (self, value):
+    value = not not value
+    guile.call (__contour_point_selected_p_set_x, self, guile.bool_to_pyguile (value))
+
+  @conditions.post (__get_value_is_string)
+  def __get_name (self):
+    return guile.pyguile_to_string (guile.call (__contour_point_name, self))
+
+  @conditions.pre (__set_value_is_string)
+  def __set_name (self, value):
+    guile.call (__contour_point_name_set_x, self, guile.string_to_pyguile (value))
+
   x = property (__get_x, __set_x)
   y = property (__get_y, __set_y)
+  on_curve = property (__get_on_curve, __set_on_curve)
+  selected = property (__get_selected, __set_selected)
+  name = property (__get_name, __set_name)
