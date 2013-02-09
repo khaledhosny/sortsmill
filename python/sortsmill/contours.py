@@ -179,11 +179,11 @@ class contour (pyguile.pyguile):
     super (contour, self).__init__ (c.address)
 
   @conditions.post (lambda result, self: __points_acceptable (result))
-  def __get_points (self):
+  def get_points (self):
     return guile.pyguile_to_list (guile.call (__contour_points, self))
 
   @conditions.pre (lambda self, value: __points_acceptable (value))
-  def __set_points (self, value):
+  def set_points (self, value):
     guile.call (__contour_points_set_x, self, guile.sequence_to_pyguile (value))
 
   @conditions.post (__get_value_is_bool)
@@ -211,37 +211,36 @@ class contour (pyguile.pyguile):
   def __set_name (self, value):
     guile.call (__contour_name_set_x, self, guile.string_to_pyguile (value))
 
-  points = property (__get_points, __set_points)
   closed = property (__get_closed, __set_closed)
   degree = property (__get_degree, __set_degree)
   name = property (__get_name, __set_name)
 
   def __len__ (self):
-    lst = self.points
+    lst = self.get_points ()
     return len (lst)
 
   def __getitem__ (self, key):
-    lst = self.points[key]
+    lst = self.get_points ()[key]
     return lst
 
   def __setitem__ (self, key, value):
-    lst = self.points
+    lst = self.get_points ()
     lst[key] = value
-    self.points = lst
+    self.set_points (lst)
 
   def __delitem__ (self, key):
-    lst = self.points
+    lst = self.get_points ()
     del lst[key]
-    self.points = lst
+    self.set_points (lst)
 
   def __iter__ (self):
-    lst = self.points
+    lst = self.get_points ()
     return lst.__iter__ ()
 
   def __reversed__ (self):
-    lst = self.points
-    self.points = reversed (lst)
+    lst = self.get_points ()
+    self.set_points (reversed (lst))
 
   def __contains__ (self, item):
-    lst = self.points
+    lst = self.get_points ()
     return lst.__contains__ (item)
