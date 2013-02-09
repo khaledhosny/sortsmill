@@ -17,12 +17,9 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(use-modules
- ((srfi srfi-1) #:select (fold drop split-at list-tabulate iota))
- ((rnrs) :version (6) #:select (assert
-                                fold-left div-and-mod
-                                let*-values))
- (ice-9 format))
+(import (rnrs)
+        (only (srfi :1) fold drop split-at list-tabulate iota)
+        (ice-9 format))
 
 (define (binomial-coefficients n)
   (assert (integer? n))
