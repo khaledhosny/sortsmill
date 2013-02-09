@@ -42,15 +42,15 @@ def __register_fontforge_menu_entry_preconditions (window, menu_path, action,
                                                    shortcut = None):
   result = True
   if not __acceptable_as_window (window):
-    result = 'expected one of {} for ‘window’, but got: {}'.format (__window_cases, window)
+    result = 'expected one of {} for ‘window’, but got: {!r}'.format (__window_cases, window)
   elif not __acceptable_as_menu_path (menu_path):
-    result = 'expected a string sequence for ‘menu_path’, but got: {}'.format (menu_path)
+    result = 'expected a string sequence for ‘menu_path’, but got: {!r}'.format (menu_path)
   elif not callable (action):
-    result = '‘action’ is not callable: {}'.format (action)
+    result = '‘action’ is not callable: {!r}'.format (action)
   elif enabled is not None and not callable (enabled):
-    result = '‘enabled’ is not callable: {}'.format (enabled)
+    result = '‘enabled’ is not callable: {!r}'.format (enabled)
   elif shortcut is not None and not isinstance (__force_unicode (shortcut), unicode):
-    result = '‘shortcut’ is not a string: {}'.format (shortcut)
+    result = '‘shortcut’ is not a string: {!r}'.format (shortcut)
   return result
 
 @conditions.pre (__register_fontforge_menu_entry_preconditions)

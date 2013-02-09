@@ -110,7 +110,7 @@ unimplemented’."
             (mutable name))
     (protocol
      (lambda (new)
-       (lambda* (points #:key (closed? #t) (degree 3) (name ""))
+       (lambda* (points #:key (closed? #f) (degree 3) (name ""))
          (new points closed? degree name)))))
 
   (define (procedure:contour? obj)

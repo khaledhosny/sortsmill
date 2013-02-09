@@ -27,7 +27,7 @@ def pre (*assertions):
           passed = a (*args, **kwargs)
           if passed is not True:
             if passed is False:
-              raise AssertionError ('{} precondition failed: {}'.format (f, a, args, kwargs))
+              raise AssertionError ('{} precondition failed: {!r}'.format (f, (a, args, kwargs)))
             else:
               raise AssertionError ('{} precondition failed: {}'.format (f, passed))
         return f (*args, **kwargs)
@@ -49,7 +49,7 @@ def post (*assertions):
           passed = a (result, *args, **kwargs)
           if passed is not True:
             if passed is False:
-              raise AssertionError ('{} postcondition failed: {}'.format (f, a, result, args, kwargs))
+              raise AssertionError ('{} postcondition failed: {!r}'.format (f, (a, result, args, kwargs)))
             else:
               raise AssertionError ('{} postcondition failed: {}'.format (f, passed))
         return result
@@ -59,3 +59,16 @@ def post (*assertions):
     def ignore_postconditions (f):
       return f
     return ignore_postconditions
+
+# For use as follows: @code{@@conditions.post (conditions.result_type_is (Type1, Type2, Type3))}
+def result_type_is (*Type):
+  if len (Type) == 1:
+    Type = Type[0]
+    def assertion (result, *args, **kwargs):
+      return True if isinstance (result, Type) \
+          else 'expected result type was {}, but got: {!r}'.format (Type, result)
+  else:
+    def assertion (result, *args, **kwargs):
+      return True if any ((isinstance (result, T) for T in Type)) \
+          else 'expected result type was one of {}, but got: {!r}'.format (Type, result)
+  return assertion

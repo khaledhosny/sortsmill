@@ -603,7 +603,7 @@ scm_pystring_to_string (SCM obj)
   return result;
 }
 
-SCM
+VISIBLE SCM
 scm_list_to_pytuple (SCM obj)
 {
   const char *who = "scm_list_to_pytuple";
@@ -635,7 +635,7 @@ scm_list_to_pytuple (SCM obj)
   return scm_from_PyObject_ptr (tup);
 }
 
-SCM
+VISIBLE SCM
 scm_pytuple_to_list (SCM obj)
 {
   PyObject *py_obj = scm_to_PyObject_ptr (obj);
@@ -657,7 +657,7 @@ scm_pytuple_to_list (SCM obj)
   return p;
 }
 
-SCM
+VISIBLE SCM
 scm_list_to_pylist (SCM obj)
 {
   const char *who = "scm_list_to_pylist";
@@ -689,7 +689,7 @@ scm_list_to_pylist (SCM obj)
   return scm_from_PyObject_ptr (lst);
 }
 
-SCM
+VISIBLE SCM
 scm_pylist_to_list (SCM obj)
 {
   PyObject *py_obj = scm_to_PyObject_ptr (obj);
@@ -711,7 +711,7 @@ scm_pylist_to_list (SCM obj)
   return p;
 }
 
-SCM
+VISIBLE SCM
 scm_pysequence_to_list (SCM obj)
 {
   const char *who = "scm_pysequence_to_list";
