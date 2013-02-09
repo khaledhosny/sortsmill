@@ -242,6 +242,14 @@ void fl_mul_sbern (unsigned int deg1, const double *spline1,
 void fl_mul_bern (unsigned int deg1, const double *spline1,
                   unsigned int deg2, const double *spline2, double *result);
 
+/*
+ * vis--
+ * vis-- fl_mul_mono: FIXME
+ * vis--
+ */
+void fl_mul_mono (unsigned int deg1, const double *spline1,
+		  unsigned int deg2, const double *spline2, double *result);
+
 #if 0
 {
 #endif

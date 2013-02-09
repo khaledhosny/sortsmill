@@ -35,6 +35,7 @@
 
           f64vector-mul-sbern
           f64vector-mul-bern
+          f64vector-mul-mono
           )
 
   (import (sortsmill dynlink)

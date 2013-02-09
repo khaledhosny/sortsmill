@@ -236,13 +236,9 @@ fl_subdiv_bern (unsigned int deg, const double *spline, double t,
 
 //-------------------------------------------------------------------------
 
-// FIXME: Write a test for this.
-//
-// Multiplication of two splines in scaled Bernstein basis; this
-// operation is just convolution by another name.
-VISIBLE void
-fl_mul_sbern (unsigned int deg1, const double *spline1,
-              unsigned int deg2, const double *spline2, double *result)
+static void
+convolve (unsigned int deg1, const double *poly1,
+	  unsigned int deg2, const double *poly2, double *result)
 {
   // This is just the `naive' algorithm (no Karatsuba, FFT, etc.).
 
@@ -252,8 +248,19 @@ fl_mul_sbern (unsigned int deg1, const double *spline1,
     buffer[i] = 0.0;
   for (unsigned int j = 0; j <= deg2; j++)
     for (unsigned int i = 0; i <= deg1; i++)
-      buffer[j + i] += spline2[j] * spline1[i];
+      buffer[j + i] += poly2[j] * poly1[i];
   memcpy (result, buffer, (deg + 1) * sizeof (double));
+}
+
+// FIXME: Write a test for this.
+//
+// Multiplication of two splines in scaled Bernstein basis; this
+// operation is just convolution by another name.
+VISIBLE void
+fl_mul_sbern (unsigned int deg1, const double *spline1,
+              unsigned int deg2, const double *spline2, double *result)
+{
+  convolve (deg1, spline1, deg2, spline2, result);
 }
 
 VISIBLE void
@@ -267,6 +274,13 @@ fl_mul_bern (unsigned int deg1, const double *spline1,
   fl_bern_to_sbern (deg2, spline2, sbern2, 1);
   fl_mul_sbern (deg1, sbern1, deg2, sbern2, sbern3);
   fl_sbern_to_bern (deg1 + deg2, sbern3, result, 1);
+}
+
+VISIBLE void
+fl_mul_mono (unsigned int deg1, const double *spline1,
+             unsigned int deg2, const double *spline2, double *result)
+{
+  convolve (deg1, spline1, deg2, spline2, result);
 }
 
 //-------------------------------------------------------------------------

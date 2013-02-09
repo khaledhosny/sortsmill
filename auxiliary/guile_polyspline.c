@@ -202,6 +202,13 @@ scm_f64vector_mul_bern (SCM spline1, SCM spline2)
   return multiply_splines (spline1, spline2, fl_mul_bern);
 }
 
+// FIXME: Write a test for this.
+VISIBLE SCM
+scm_f64vector_mul_mono (SCM spline1, SCM spline2)
+{
+  return multiply_splines (spline1, spline2, fl_mul_mono);
+}
+
 VISIBLE void
 init_guile_sortsmill_polyspline (void)
 {
@@ -236,4 +243,5 @@ init_guile_sortsmill_polyspline (void)
 
   scm_c_define_gsubr ("f64vector-mul-sbern", 2, 0, 0, scm_f64vector_mul_sbern);
   scm_c_define_gsubr ("f64vector-mul-bern", 2, 0, 0, scm_f64vector_mul_bern);
+  scm_c_define_gsubr ("f64vector-mul-mono", 2, 0, 0, scm_f64vector_mul_mono);
 }
