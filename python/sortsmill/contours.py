@@ -89,11 +89,6 @@ def __is_pair_of_guile_compatible_numbers (obj):
     y = None
   return guile.number_is_guile_compatible (x) and guile.number_is_guile_compatible (y)
 
-##
-## PROPHYLACTIC FIXME: When converting to SplinePointList, first
-## convert numbers to double, to avoid Guile exceptions.
-##
-
 class contour_point (pyguile.pyguile):
 
   def __init_preconditions (self, x, y, on_curve = True, selected = False, name = ''):
@@ -171,7 +166,9 @@ class contour_point (pyguile.pyguile):
   def __eq__ (self, other):
     if isinstance (other, contour_point):
       # Taking account of whether the point is on-curve or not
-      # probably differs from legacy FontForge’s behavior.
+      # probably differs from legacy FontForge’s behavior. You can
+      # test ‘equality’ with a pair (the other clause of this if-else)
+      # if you want to ignore the on-curve settings.
       result = (self.x == other.x) and (self.y == other.y) and (self.on_curve == other.on_curve)
     else:
       result = (self.x == other[0]) and (self.y == other[1])
@@ -269,3 +266,81 @@ class contour (pyguile.pyguile):
   def __contains__ (self, item):
     lst = self.get_points ()
     return lst.__contains__ (item)
+
+  def __add__ (self, other):
+    if other.degree == self.degree:
+      lst = self.get_points () + other.get_points ()
+    else:
+      # FIXME: Implement coercion of the other contour to the same
+      # degree as this one.
+      assert False, 'Not yet implemented'
+    # The result is unnamed. This may differ from legacy FontForge
+    # behavior.
+    return contour (points = lst, on_curve = self.on_curve, degree = self.degree)
+
+  def __iadd__ (self, other):
+    lst = self.get_points ()
+    if other.degree == self.degree:
+      lst += other.get_points ()
+    else:
+      # FIXME: Implement coercion of the other contour to the same
+      # degree as this one.
+      assert False, 'Not yet implemented'
+    self.set_points (lst)
+
+  def __mul__ (self, other):
+    lst = self.get_points ()
+    lst = lst.__mul__ (other)
+    # The result is unnamed. This may differ from legacy FontForge
+    # behavior.
+    return contour (points = lst, on_curve = self.on_curve, degree = self.degree)
+
+  def __imul__ (self, other):
+    lst = self.get_points ()
+    lst = lst.__mul__ (other)
+    self.set_points (lst)
+
+  def copy (self):
+    return contour (points = self.get_points (),
+                    closed = self.closed,
+                    degree = self.degree,
+                    name = self.name)
+
+  def append (self, item):
+    lst = self.get_points ()
+    lst.append (item)
+    self.set_points (lst)
+
+  def count (self, item):
+    lst = self.get_points ()
+    return lst.count (item)
+
+  def extend (self, iterable):
+    lst = self.get_points ()
+    lst.extend (iterable)
+    self.set_points (lst)
+
+  def index (self, item):
+    lst = self.get_points ()
+    return lst.index (item)
+
+  def insert (self, i, item):
+    lst = self.get_points ()
+    lst.insert (i, item)
+    self.set_points (lst)
+
+  def pop (self, i = -1):
+    lst = self.get_points ()
+    item = lst.pop (i)
+    self.set_points (lst)
+    return item
+
+  def remove (self, item):
+    lst = self.get_points ()
+    lst.remove (item)
+    self.set_points (lst)
+
+  def reverse (self):
+    lst = self.get_points ()
+    lst.reverse ()
+    self.set_points (lst)
