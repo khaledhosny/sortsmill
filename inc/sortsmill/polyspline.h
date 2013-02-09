@@ -23,7 +23,8 @@
 #include <sortsmill/attributes.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if 0
 }
@@ -224,6 +225,14 @@ void fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
  */
 void fl_subdiv_bern (unsigned int deg, const double *spline, double t,
                      double *a, double *b);
+
+/*
+ * vis--
+ * vis-- fl_mul_sbern: FIXME
+ * vis--
+ */
+void fl_mul_sbern (unsigned int deg1, const double *spline1,
+                   unsigned int deg2, const double *spline2, double *result);
 
 #if 0
 {

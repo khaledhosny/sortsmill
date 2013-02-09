@@ -31,7 +31,10 @@
           f64vector-eval-mono
 
           f64vector-subdiv-sbern
-          f64vector-subdiv-bern)
+          f64vector-subdiv-bern
+
+          f64vector-mul-sbern
+          )
 
   (import (sortsmill dynlink)
           (only (guile) eval-when))

@@ -44,6 +44,8 @@ SCM scm_f64vector_eval_mono (SCM spline, SCM t);
 SCM scm_f64vector_subdiv_sbern (SCM spline, SCM t);
 SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
 
+SCM scm_f64vector_mul_sbern (SCM spline1, SCM spline2);
+
 #if 0
 {
 #endif

@@ -23,8 +23,7 @@ void init_guile_sortsmill_polyspline (void);
 
 static SCM
 change_basis (SCM spline,
-              void (*changer) (unsigned int, const double *, double *,
-                               size_t))
+              void (*changer) (unsigned int, const double *, double *, size_t))
 {
   scm_t_array_handle handle;
   size_t len;
@@ -159,6 +158,34 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
   return scm_c_values (new_splines, 2);
 }
 
+// FIXME: Write a test for this.
+VISIBLE SCM
+scm_f64vector_mul_sbern (SCM spline1, SCM spline2)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem;
+
+  elem = scm_f64vector_elements (spline1, &handle, &len, &inc);
+  const unsigned int deg1 = len - 1;
+  double a[deg1 + 1];
+  for (unsigned int i = 0; i <= deg1; i++)
+    a[i] = elem[inc * i];
+  scm_array_handle_release (&handle);
+
+  elem = scm_f64vector_elements (spline2, &handle, &len, &inc);
+  const unsigned int deg2 = len - 1;
+  double b[deg2 + 1];
+  for (unsigned int i = 0; i <= deg2; i++)
+    b[i] = elem[inc * i];
+  scm_array_handle_release (&handle);
+
+  double *result = xmalloc ((deg1 + deg2 + 1) * sizeof (double));
+  fl_mul_sbern (deg1, a, deg2, b, result);
+  return scm_take_f64vector (result, deg1 + deg2 + 1);
+}
+
 VISIBLE void
 init_guile_sortsmill_polyspline (void)
 {
@@ -177,19 +204,19 @@ init_guile_sortsmill_polyspline (void)
 
   scm_c_define_gsubr ("f64vector-eval-sbern", 2, 0, 0,
                       scm_f64vector_eval_sbern);
-  scm_c_define_gsubr ("f64vector-eval-bern", 2, 0, 0,
-                      scm_f64vector_eval_bern);
+  scm_c_define_gsubr ("f64vector-eval-bern", 2, 0, 0, scm_f64vector_eval_bern);
 
   scm_c_define_gsubr ("f64vector-evaldc-sbern", 2, 0, 0,
                       scm_f64vector_evaldc_sbern);
   scm_c_define_gsubr ("f64vector-evaldc-bern", 2, 0, 0,
                       scm_f64vector_evaldc_bern);
 
-  scm_c_define_gsubr ("f64vector-eval-mono", 2, 0, 0,
-                      scm_f64vector_eval_mono);
+  scm_c_define_gsubr ("f64vector-eval-mono", 2, 0, 0, scm_f64vector_eval_mono);
 
   scm_c_define_gsubr ("f64vector-subdiv-sbern", 2, 0, 0,
                       scm_f64vector_subdiv_sbern);
   scm_c_define_gsubr ("f64vector-subdiv-bern", 2, 0, 0,
                       scm_f64vector_subdiv_bern);
+
+  scm_c_define_gsubr ("f64vector-mul-sbern", 2, 0, 0, scm_f64vector_mul_sbern);
 }

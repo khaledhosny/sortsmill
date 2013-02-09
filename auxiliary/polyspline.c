@@ -235,3 +235,25 @@ fl_subdiv_bern (unsigned int deg, const double *spline, double t,
 }
 
 //-------------------------------------------------------------------------
+
+// FIXME: Write a test for this.
+//
+// Multiplication of two splines in scaled Bernstein basis; this
+// operation is just convolution by another name.
+VISIBLE void
+fl_mul_sbern (unsigned int deg1, const double *spline1,
+              unsigned int deg2, const double *spline2, double *result)
+{
+  // This is just the `naive' algorithm (no Karatsuba, FFT, etc.).
+
+  const int deg = deg1 + deg2;
+  double buffer[deg + 1];
+  for (unsigned int i = 0; i <= deg; i++)
+    buffer[i] = 0.0;
+  for (unsigned int j = 0; j <= deg2; j++)
+    for (unsigned int i = 0; i <= deg1; i++)
+      buffer[j + i] += spline2[j] * spline1[i];
+  memcpy (result, buffer, (deg + 1) * sizeof (double));
+}
+
+//-------------------------------------------------------------------------
