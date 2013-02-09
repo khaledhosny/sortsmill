@@ -256,4 +256,17 @@ fl_mul_sbern (unsigned int deg1, const double *spline1,
   memcpy (result, buffer, (deg + 1) * sizeof (double));
 }
 
+VISIBLE void
+fl_mul_bern (unsigned int deg1, const double *spline1,
+             unsigned int deg2, const double *spline2, double *result)
+{
+  double sbern1[deg1 + 1];
+  double sbern2[deg2 + 1];
+  double sbern3[deg1 + deg2 + 1];
+  fl_bern_to_sbern (deg1, spline1, sbern1, 1);
+  fl_bern_to_sbern (deg2, spline2, sbern2, 1);
+  fl_mul_sbern (deg1, sbern1, deg2, sbern2, sbern3);
+  fl_sbern_to_bern (deg1 + deg2, sbern3, result, 1);
+}
+
 //-------------------------------------------------------------------------

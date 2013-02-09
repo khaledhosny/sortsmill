@@ -158,9 +158,11 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
   return scm_c_values (new_splines, 2);
 }
 
-// FIXME: Write a test for this.
 VISIBLE SCM
-scm_f64vector_mul_sbern (SCM spline1, SCM spline2)
+multiply_splines (SCM spline1, SCM spline2,
+                  void (*fl_mul) (unsigned int deg1, const double *spline1,
+                                  unsigned int deg2, const double *spline2,
+                                  double *result))
 {
   scm_t_array_handle handle;
   size_t len;
@@ -182,8 +184,22 @@ scm_f64vector_mul_sbern (SCM spline1, SCM spline2)
   scm_array_handle_release (&handle);
 
   double *result = xmalloc ((deg1 + deg2 + 1) * sizeof (double));
-  fl_mul_sbern (deg1, a, deg2, b, result);
+  fl_mul (deg1, a, deg2, b, result);
   return scm_take_f64vector (result, deg1 + deg2 + 1);
+}
+
+// FIXME: Write a test for this.
+VISIBLE SCM
+scm_f64vector_mul_sbern (SCM spline1, SCM spline2)
+{
+  return multiply_splines (spline1, spline2, fl_mul_sbern);
+}
+
+// FIXME: Write a test for this.
+VISIBLE SCM
+scm_f64vector_mul_bern (SCM spline1, SCM spline2)
+{
+  return multiply_splines (spline1, spline2, fl_mul_bern);
 }
 
 VISIBLE void
@@ -219,4 +235,5 @@ init_guile_sortsmill_polyspline (void)
                       scm_f64vector_subdiv_bern);
 
   scm_c_define_gsubr ("f64vector-mul-sbern", 2, 0, 0, scm_f64vector_mul_sbern);
+  scm_c_define_gsubr ("f64vector-mul-bern", 2, 0, 0, scm_f64vector_mul_bern);
 }

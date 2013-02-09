@@ -234,6 +234,14 @@ void fl_subdiv_bern (unsigned int deg, const double *spline, double t,
 void fl_mul_sbern (unsigned int deg1, const double *spline1,
                    unsigned int deg2, const double *spline2, double *result);
 
+/*
+ * vis--
+ * vis-- fl_mul_bern: FIXME
+ * vis--
+ */
+void fl_mul_bern (unsigned int deg1, const double *spline1,
+                  unsigned int deg2, const double *spline2, double *result);
+
 #if 0
 {
 #endif

@@ -34,6 +34,7 @@
           f64vector-subdiv-bern
 
           f64vector-mul-sbern
+          f64vector-mul-bern
           )
 
   (import (sortsmill dynlink)
