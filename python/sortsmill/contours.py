@@ -80,6 +80,15 @@ def __points_acceptable (points):
     acceptable = False
   return acceptable
 
+def __is_pair_of_guile_compatible_numbers (obj):
+  try:
+    x = obj[0]
+    y = obj[1]
+  except:
+    x = None
+    y = None
+  return guile.number_is_guile_compatible (x) and guile.number_is_guile_compatible (y)
+
 ##
 ## PROPHYLACTIC FIXME: When converting to SplinePointList, first
 ## convert numbers to double, to avoid Guile exceptions.
@@ -154,6 +163,22 @@ class contour_point (pyguile.pyguile):
   on_curve = property (__get_on_curve, __set_on_curve)
   selected = property (__get_selected, __set_selected)
   name = property (__get_name, __set_name)
+
+  @conditions.pre (lambda self, other: True if (isinstance (other, contour_point)
+                                                or __is_pair_of_guile_compatible_numbers (other))
+                   else 'object of unexpected type: {!r}'.format (other))
+  @conditions.post (lambda result, self, other: result is NotImplemented or isinstance (result, bool))
+  def __eq__ (self, other):
+    if isinstance (other, contour_point):
+      # Taking account of whether the point is on-curve or not
+      # probably differs from legacy FontForge’s behavior.
+      result = (self.x == other.x) and (self.y == other.y) and (self.on_curve == other.on_curve)
+    else:
+      result = (self.x == other[0]) and (self.y == other[1])
+    return result
+
+  def __ne__ (self, other):
+    return not self.__eq__ (other)
 
 class contour (pyguile.pyguile):
 
