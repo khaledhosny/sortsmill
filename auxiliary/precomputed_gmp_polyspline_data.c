@@ -87,15 +87,15 @@ initialize__degree_max (void)
 			   sizeof (__##TYPE##_struct *));		\
 	    for (unsigned int deg = 0; deg <= _degree_max; deg++)	\
 	      {								\
-		const double *fldata = fl_##NAME (degree);		\
+		const double *fldata = fl_##NAME (deg);			\
 		assert (fldata != NULL);				\
 		_##TYPE##_##NAME##_data[deg] =				\
 		  (__##TYPE##_struct *)					\
 		  x_gc_malloc ((deg + 1) * sizeof (TYPE##_t));		\
 		for (unsigned int i = 0; i <= deg; i++)			\
 		  {							\
-		    TYPE##_gc_init (_##TYPE##_##NAME##_data[i]);	\
-		    TYPE##_set_d (_##TYPE##_##NAME##_data[i],		\
+		    TYPE##_gc_init (&_##TYPE##_##NAME##_data[deg][i]);	\
+		    TYPE##_set_d (&_##TYPE##_##NAME##_data[deg][i],	\
 				  fldata[i]);				\
 		  }							\
 	      }								\
