@@ -38,15 +38,14 @@ noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	precomputed_polyspline_data.h contour_interface.h moveto_funcs.h	\
 	invoke_funcs.h
 
-nobase_include_HEADERS = sortsmill/attributes.h							\
-	sortsmill/null_passthru.h sortsmill/xdie_on_null.h					\
-	sortsmill/xgc.h sortsmill/x_alloc.h sortsmill/gmp_gc.h				\
-	sortsmill/gmp_constants.h sortsmill/linalg.h sortsmill/xunicase.h	\
-	sortsmill/xuniconv.h sortsmill/xuninorm.h sortsmill/xunistr.h		\
-	sortsmill/xunistring.h sortsmill/ps_number.h						\
-	sortsmill/brentroot.h sortsmill/qbrentroot.h sortsmill/rexp.h		\
-	sortsmill/polyspline.h sortsmill/usermenu.h							\
-	sortsmill/fontforge_main.h
+nobase_include_HEADERS = sortsmill/attributes.h						\
+	sortsmill/null_passthru.h sortsmill/xdie_on_null.h				\
+	sortsmill/xgc.h sortsmill/x_alloc.h sortsmill/gmp_constants.h	\
+	sortsmill/linalg.h sortsmill/xunicase.h sortsmill/xuniconv.h	\
+	sortsmill/xuninorm.h sortsmill/xunistr.h sortsmill/xunistring.h	\
+	sortsmill/ps_number.h sortsmill/brentroot.h						\
+	sortsmill/qbrentroot.h sortsmill/rexp.h sortsmill/polyspline.h	\
+	sortsmill/usermenu.h sortsmill/fontforge_main.h
 
 # FIXME: These headers need to be examined for relevance and for
 # whether the functions they declare need to be moved into the

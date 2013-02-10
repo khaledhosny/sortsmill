@@ -18,7 +18,6 @@
 #include <sortsmill/polyspline.h>
 #include <precomputed_polyspline_data.h>
 #include <sortsmill/xgc.h>
-#include <sortsmill/gmp_gc.h>
 #include <sortsmill/gmp_constants.h>
 #include <xalloc.h>
 #include <stdio.h>
