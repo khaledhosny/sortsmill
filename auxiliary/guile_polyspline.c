@@ -21,6 +21,27 @@
 
 void init_guile_sortsmill_polyspline (void);
 
+VISIBLE SCM
+scm_f64vector_binomial_coefficients (SCM degree)
+{
+  const unsigned int deg = scm_to_uint (degree);
+  const double *coef = fl_binomial_coefficients (deg);
+  double *storage = xmalloc ((deg + 1) * sizeof (double));
+  memcpy (storage, coef, (deg + 1) * sizeof (double));
+  return scm_take_f64vector (storage, deg + 1);
+}
+
+VISIBLE SCM
+scm_vector_binomial_coefficients (SCM degree)
+{
+  const unsigned int deg = scm_to_uint (degree);
+  const __mpz_struct *coef = mpz_binomial_coefficients (deg);
+  SCM vec = scm_c_make_vector (deg + 1, SCM_UNDEFINED);
+  for (unsigned int i = 0; i <= deg; i++)
+    scm_c_vector_set_x (vec, i, scm_from_mpz ((__mpz_struct *) &coef[i]));
+  return vec;
+}
+
 static SCM
 change_basis (SCM spline,
               void (*changer) (unsigned int, const double *, double *, size_t))
@@ -212,6 +233,11 @@ scm_f64vector_mul_mono (SCM spline1, SCM spline2)
 VISIBLE void
 init_guile_sortsmill_polyspline (void)
 {
+  scm_c_define_gsubr ("f64vector-binomial-coefficients", 1, 0, 0,
+		      scm_f64vector_binomial_coefficients);
+  scm_c_define_gsubr ("vector-binomial-coefficients", 1, 0, 0,
+		      scm_vector_binomial_coefficients);
+
   scm_c_define_gsubr ("f64vector-sbern->bern", 1, 0, 0,
                       scm_f64vector_sbern_to_bern);
   scm_c_define_gsubr ("f64vector-bern->sbern", 1, 0, 0,

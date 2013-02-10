@@ -32,7 +32,7 @@ extern "C"
 
 /*-----------------------------------------------------------------------*/
 /*
- * FIXME: Document these.
+ * FIXME: Document these. Also implement them all. :)
  */
 
 const double *fl_binomial_coefficients (unsigned int degree);
@@ -226,27 +226,12 @@ void fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
 void fl_subdiv_bern (unsigned int deg, const double *spline, double t,
                      double *a, double *b);
 
-/*
- * vis--
- * vis-- fl_mul_sbern: FIXME
- * vis--
- */
+/* FIXME: The stuff below is entirely undocumented so far. */
+
 void fl_mul_sbern (unsigned int deg1, const double *spline1,
                    unsigned int deg2, const double *spline2, double *result);
-
-/*
- * vis--
- * vis-- fl_mul_bern: FIXME
- * vis--
- */
 void fl_mul_bern (unsigned int deg1, const double *spline1,
                   unsigned int deg2, const double *spline2, double *result);
-
-/*
- * vis--
- * vis-- fl_mul_mono: FIXME
- * vis--
- */
 void fl_mul_mono (unsigned int deg1, const double *spline1,
 		  unsigned int deg2, const double *spline2, double *result);
 

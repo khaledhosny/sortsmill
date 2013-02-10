@@ -16,6 +16,8 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/polyspline.h>
+#include <sortsmill/linalg.h>
+#include <sortsmill/gmp_constants.h>
 #include <string.h>
 #include <math.h>
 #include <gsl/gsl_matrix.h>
@@ -59,6 +61,69 @@
 	memcpy (to, result, result_size);				\
       }									\
   }
+
+#define CHANGE_BASIS_MPQ_C99(NAME, GET_MATRIX)				\
+  void									\
+  NAME (unsigned int num_splines, unsigned int deg,			\
+	mpq_t from[num_splines][deg + 1],				\
+	mpq_t to[num_splines][deg + 1])					\
+  {									\
+    if (0 < num_splines)						\
+      {									\
+	mpq_t buffer[num_splines][deg + 1];				\
+	mpq_matrix_init (num_splines, deg + 1, buffer);			\
+									\
+	const __mpq_struct *transformation = GET_MATRIX (deg);		\
+	mpq_matrix_gemm							\
+	  (CblasNoTrans, CblasNoTrans, num_splines, deg + 1, deg + 1,	\
+	   mpq_one (), from,						\
+	   (mpq_t (*)[(unsigned int) (deg + 1)]) transformation,	\
+	   mpq_zero (), buffer);					\
+	mpq_matrix_memcpy (num_splines, deg + 1, to, buffer);		\
+									\
+	mpq_matrix_clear (num_splines, deg + 1, buffer);		\
+      }									\
+  }
+
+#define CHANGE_BASIS_MPQ_C90(NAME, NAME_C99)				\
+  void									\
+  NAME (unsigned int deg, mpq_t *from, mpq_t *to,			\
+	unsigned int num_splines)					\
+  {									\
+    NAME_C99 (num_splines, deg,						\
+	      (mpq_t (*)[(unsigned int) (deg + 1)]) from,		\
+	      (mpq_t (*)[(unsigned int) (deg + 1)]) to);		\
+  }
+  
+#define CHANGE_BASIS_MPQ(NAME_C99, NAME_C90, GET_MATRIX)		\
+  CHANGE_BASIS_MPQ_C99(NAME_C99, GET_MATRIX)				\
+  CHANGE_BASIS_MPQ_C90(NAME_C90, NAME_C99)
+
+/*
+									\
+	gsl_matrix m1 =							\
+	  gsl_matrix_const_view_array (from, num_splines,		\
+				       deg + 1).matrix;			\
+	gsl_matrix m2 =							\
+	  gsl_matrix_const_view_array (GET_MATRIX (deg), deg + 1,	\
+				       deg + 1).matrix;			\
+	gsl_matrix_view v3 =						\
+	  gsl_matrix_view_array (result, num_splines, deg + 1);		\
+	gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, &m1, &m2, 0.0,	\
+			&v3.matrix);					\
+	memcpy (to, result, result_size);				\
+      }									\
+  }
+*/
+
+/*
+  void mpq_varlen_mono_to_sbern (unsigned int num_splines, unsigned int deg,
+			       mpq_t from[num_splines][deg + 1],
+			       mpq_t to[num_splines][deg + 1]);
+void mpq_mono_to_sbern (unsigned int deg, mpq_t *from, mpq_t *to,
+			unsigned int num_splines);
+CHANGE_BASIS_MPQ(mpq_varlen_mono_to_sbern, mpq_mono_to_sbern, mpq_mono_basis_in_sbern);
+*/
 
 // FIXME: For these, maybe use special matrix multiplication for
 // triangular matrices.
