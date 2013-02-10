@@ -18,7 +18,12 @@
 (library (sortsmill polyspline)
 
   (export f64vector-binomial-coefficients
+          f64vector-binomial-coefficients-altsigns
           vector-binomial-coefficients
+          vector-binomial-coefficients-altsigns
+
+          f64vector-sbern-basis-in-mono
+          vector-sbern-basis-in-mono
 
           f64vector-sbern->bern
           f64vector-bern->sbern

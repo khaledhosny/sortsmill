@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Barry Schwartz
+ * Copyright (C) 2012, 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,24 +37,31 @@ extern "C"
 
 const double *fl_binomial_coefficients (unsigned int degree);
 const double *fl_binomial_coefficients_altsigns (unsigned int degree);
+
+__mpz_struct *mpz_binomial_coefficients (unsigned int degree);
+__mpz_struct *mpz_binomial_coefficients_altsigns (unsigned int degree);
+void free_mpz_binomial_coefficients (unsigned int degree, __mpz_struct *);
+
+__mpq_struct *mpq_binomial_coefficients (unsigned int degree);
+__mpq_struct *mpq_binomial_coefficients_altsigns (unsigned int degree);
+void free_mpq_binomial_coefficients (unsigned int degree, __mpq_struct *);
+
 const double *fl_sbern_basis_in_mono (unsigned int degree);
 const double *fl_mono_basis_in_sbern (unsigned int degree);
 const double *fl_sbern_basis_in_spower (unsigned int degree);
 const double *fl_spower_basis_in_sbern (unsigned int degree);
 
-const __mpz_struct *mpz_binomial_coefficients (unsigned int degree);
-const __mpz_struct *mpz_binomial_coefficients_altsigns (unsigned int degree);
-const __mpz_struct *mpz_sbern_basis_in_mono (unsigned int degree);
-const __mpz_struct *mpz_mono_basis_in_sbern (unsigned int degree);
-const __mpz_struct *mpz_sbern_basis_in_spower (unsigned int degree);
-const __mpz_struct *mpz_spower_basis_in_sbern (unsigned int degree);
+__mpz_struct *mpz_sbern_basis_in_mono (unsigned int degree);
+__mpz_struct *mpz_mono_basis_in_sbern (unsigned int degree);
+__mpz_struct *mpz_sbern_basis_in_spower (unsigned int degree);
+__mpz_struct *mpz_spower_basis_in_sbern (unsigned int degree);
+void free_mpz_transformation_matrix (unsigned int degree, __mpz_struct *);
 
-const __mpq_struct *mpq_binomial_coefficients (unsigned int degree);
-const __mpq_struct *mpq_binomial_coefficients_altsigns (unsigned int degree);
-const __mpq_struct *mpq_sbern_basis_in_mono (unsigned int degree);
-const __mpq_struct *mpq_mono_basis_in_sbern (unsigned int degree);
-const __mpq_struct *mpq_sbern_basis_in_spower (unsigned int degree);
-const __mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
+__mpq_struct *mpq_sbern_basis_in_mono (unsigned int degree);
+__mpq_struct *mpq_mono_basis_in_sbern (unsigned int degree);
+__mpq_struct *mpq_sbern_basis_in_spower (unsigned int degree);
+__mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
+void free_mpq_transformation_matrix (unsigned int degree, __mpq_struct *);
 
 /*-----------------------------------------------------------------------*/
 
@@ -233,7 +240,7 @@ void fl_mul_sbern (unsigned int deg1, const double *spline1,
 void fl_mul_bern (unsigned int deg1, const double *spline1,
                   unsigned int deg2, const double *spline2, double *result);
 void fl_mul_mono (unsigned int deg1, const double *spline1,
-		  unsigned int deg2, const double *spline2, double *result);
+                  unsigned int deg2, const double *spline2, double *result);
 
 #if 0
 {

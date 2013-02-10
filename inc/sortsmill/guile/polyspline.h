@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Barry Schwartz
+ * Copyright (C) 2012, 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@ extern "C"
 
 SCM scm_f64vector_binomial_coefficients (SCM degree);
 SCM scm_vector_binomial_coefficients (SCM degree);
+SCM scm_f64vector_binomial_coefficients_altsigns (SCM degree);
+SCM scm_vector_binomial_coefficients_altsigns (SCM degree);
 
 SCM scm_f64vector_sbern_to_bern (SCM spline);
 SCM scm_f64vector_bern_to_sbern (SCM spline);

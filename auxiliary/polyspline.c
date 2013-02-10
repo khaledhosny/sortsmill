@@ -1,7 +1,7 @@
 #include <config.h>
 
-// Copyright (C) 2012 Barry Schwartz
-// 
+// Copyright (C) 2012, 2013 by Barry Schwartz
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 3 of the License, or
@@ -94,7 +94,7 @@
 	      (mpq_t (*)[(unsigned int) (deg + 1)]) from,		\
 	      (mpq_t (*)[(unsigned int) (deg + 1)]) to);		\
   }
-  
+
 #define CHANGE_BASIS_MPQ(NAME_C99, NAME_C90, GET_MATRIX)		\
   CHANGE_BASIS_MPQ_C99(NAME_C99, GET_MATRIX)				\
   CHANGE_BASIS_MPQ_C90(NAME_C90, NAME_C99)
@@ -303,7 +303,7 @@ fl_subdiv_bern (unsigned int deg, const double *spline, double t,
 
 static void
 convolve (unsigned int deg1, const double *poly1,
-	  unsigned int deg2, const double *poly2, double *result)
+          unsigned int deg2, const double *poly2, double *result)
 {
   // This is just the `naive' algorithm (no Karatsuba, FFT, etc.).
 

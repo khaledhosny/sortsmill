@@ -16,7 +16,6 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/gmp_constants.h>
-#include <sortsmill/gmp_gc.h>
 #include <sortsmill/xgc.h>    /* Includes gc.h and pthreads.h in the
                                    right order. */
 #include <stdbool.h>
@@ -40,7 +39,9 @@ mpz_canonicalize (mpz_t UNUSED (_))
     pthread_mutex_lock (&_##NAME##_mutex);				\
     if (!_##NAME##_is_initialized)					\
       {									\
-	TYPE##_gc_init (_##NAME);					\
+	/* There is no need to run TYPE##_clear, because the */		\
+	/* constant is `permanent', once initialized.        */		\
+	TYPE##_init (_##NAME);						\
 									\
 	TYPE##_set_str ((_##NAME), (VALUE), (RADIX));			\
 	TYPE##_canonicalize (_##NAME);					\

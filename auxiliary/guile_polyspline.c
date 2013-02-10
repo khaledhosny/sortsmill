@@ -32,13 +32,60 @@ scm_f64vector_binomial_coefficients (SCM degree)
 }
 
 VISIBLE SCM
+scm_f64vector_binomial_coefficients_altsigns (SCM degree)
+{
+  const unsigned int deg = scm_to_uint (degree);
+  const double *coef = fl_binomial_coefficients_altsigns (deg);
+  double *storage = xmalloc ((deg + 1) * sizeof (double));
+  memcpy (storage, coef, (deg + 1) * sizeof (double));
+  return scm_take_f64vector (storage, deg + 1);
+}
+
+VISIBLE SCM
 scm_vector_binomial_coefficients (SCM degree)
 {
   const unsigned int deg = scm_to_uint (degree);
-  const __mpz_struct *coef = mpz_binomial_coefficients (deg);
+  __mpz_struct *coef = mpz_binomial_coefficients (deg);
   SCM vec = scm_c_make_vector (deg + 1, SCM_UNDEFINED);
   for (unsigned int i = 0; i <= deg; i++)
     scm_c_vector_set_x (vec, i, scm_from_mpz ((__mpz_struct *) &coef[i]));
+  free_mpz_binomial_coefficients (deg, coef);
+  return vec;
+}
+
+VISIBLE SCM
+scm_vector_binomial_coefficients_altsigns (SCM degree)
+{
+  const unsigned int deg = scm_to_uint (degree);
+  __mpz_struct *coef = mpz_binomial_coefficients_altsigns (deg);
+  SCM vec = scm_c_make_vector (deg + 1, SCM_UNDEFINED);
+  for (unsigned int i = 0; i <= deg; i++)
+    scm_c_vector_set_x (vec, i, scm_from_mpz ((__mpz_struct *) &coef[i]));
+  free_mpz_binomial_coefficients (deg, coef);
+  return vec;
+}
+
+VISIBLE SCM
+scm_f64vector_sbern_basis_in_mono (SCM degree)
+{
+  const unsigned int deg = scm_to_uint (degree);
+  const unsigned int size = (deg + 1) * (deg + 1);
+  const double *A = fl_sbern_basis_in_mono (deg);
+  double *storage = xmalloc (size * sizeof (double));
+  memcpy (storage, A, size * sizeof (double));
+  return scm_take_f64vector (storage, size);
+}
+
+VISIBLE SCM
+scm_vector_sbern_basis_in_mono (SCM degree)
+{
+  const unsigned int deg = scm_to_uint (degree);
+  const unsigned int size = (deg + 1) * (deg + 1);
+  __mpz_struct *A = mpz_sbern_basis_in_mono (deg);
+  SCM vec = scm_c_make_vector (size, SCM_UNDEFINED);
+  for (unsigned int i = 0; i < size; i++)
+    scm_c_vector_set_x (vec, i, scm_from_mpz ((__mpz_struct *) &A[i]));
+  free_mpz_transformation_matrix (deg, A);
   return vec;
 }
 
@@ -234,9 +281,17 @@ VISIBLE void
 init_guile_sortsmill_polyspline (void)
 {
   scm_c_define_gsubr ("f64vector-binomial-coefficients", 1, 0, 0,
-		      scm_f64vector_binomial_coefficients);
+                      scm_f64vector_binomial_coefficients);
+  scm_c_define_gsubr ("f64vector-binomial-coefficients-altsigns", 1, 0, 0,
+                      scm_f64vector_binomial_coefficients_altsigns);
   scm_c_define_gsubr ("vector-binomial-coefficients", 1, 0, 0,
-		      scm_vector_binomial_coefficients);
+                      scm_vector_binomial_coefficients);
+  scm_c_define_gsubr ("vector-binomial-coefficients-altsigns", 1, 0, 0,
+                      scm_vector_binomial_coefficients_altsigns);
+  scm_c_define_gsubr ("f64vector-sbern-basis-in-mono", 1, 0, 0,
+                      scm_f64vector_sbern_basis_in_mono);
+  scm_c_define_gsubr ("vector-sbern-basis-in-mono", 1, 0, 0,
+                      scm_vector_sbern_basis_in_mono);
 
   scm_c_define_gsubr ("f64vector-sbern->bern", 1, 0, 0,
                       scm_f64vector_sbern_to_bern);

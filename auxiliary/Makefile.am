@@ -55,7 +55,8 @@ dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c x_alloc.c xgc.c	\
 dist_libsortsmill_aux_la_SOURCES += rexp.c
 
 # Extensions to GNU MP.
-dist_libsortsmill_aux_la_SOURCES += gmp_constants.c gmp_gc.c linalg.c
+dist_libsortsmill_aux_la_SOURCES += gmp_constants.c linalg.c
+##gmp_gc.c  <-- FIXME: Get rid of gmp_gc.[ch]
 
 # Extensions to libunistring.
 dist_libsortsmill_aux_la_SOURCES += xunicase.c xuniconv.c xuninorm.c	\
