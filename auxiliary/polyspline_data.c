@@ -31,8 +31,12 @@
 #include <sortsmill/polyspline.h>
 #include <precomputed_polyspline_data.h>
 #include <sortsmill/xgc.h>
+#include <sortsmill/gmp_gc.h>
+#include <sortsmill/gmp_constants.h>
 #include <stdio.h>
 #include <string.h>
+
+//-------------------------------------------------------------------------
 
 VISIBLE const double *
 fl_binomial_coefficients (unsigned int degree)
@@ -40,7 +44,7 @@ fl_binomial_coefficients (unsigned int degree)
   const double *data = fl_precomputed_binomial_coefficients (degree);
   if (data == NULL)
     {
-      unsigned int degmax = polyspline_precomputed_degree_max ();
+      const unsigned int degmax = polyspline_precomputed_degree_max ();
       double *data1 =
         (double *) x_gc_malloc_atomic ((degree + 1) * sizeof (double));
       memcpy (data1, fl_precomputed_binomial_coefficients (degmax),
@@ -111,3 +115,102 @@ fl_mono_basis_in_sbern (unsigned int degree)
     }
   return data;
 }
+
+//-------------------------------------------------------------------------
+
+#define _FF_GMP_BINOMIAL_COEFS(TYPE)					\
+  VISIBLE const __##TYPE##_struct *					\
+  TYPE##_binomial_coefficients (unsigned int degree)			\
+  {									\
+    const __##TYPE##_struct *data =					\
+      TYPE##_precomputed_binomial_coefficients (degree);		\
+    if (data == NULL)							\
+      {									\
+	const unsigned int degmax =					\
+	  polyspline_precomputed_degree_max ();				\
+									\
+	__##TYPE##_struct *data1 =					\
+	  (__##TYPE##_struct *)						\
+	  x_gc_malloc ((degree + 1) * sizeof (__##TYPE##_struct));	\
+	for (unsigned int i = 0; i <= degree; i++)			\
+	  TYPE##_gc_init (&data1[i]);					\
+									\
+	const __##TYPE##_struct *coef =					\
+	  TYPE##_precomputed_binomial_coefficients (degmax);		\
+	for (unsigned int i = 0; i <= degmax; i++)			\
+	  TYPE##_set (&data1[i], &coef[i]);				\
+									\
+	for (unsigned int i = degmax + 1; i <= degree; i++)		\
+	  {								\
+	    TYPE##_set (&data1[i], TYPE##_one ());			\
+	    for (unsigned int j = i - 1; 0 < j; j--)			\
+	      TYPE##_add (&data1[j], &data1[j], &data1[j - 1]);		\
+	  }								\
+									\
+	data = (const __##TYPE##_struct *) data1;			\
+      }									\
+    return data;							\
+  }
+
+_FF_GMP_BINOMIAL_COEFS(mpz);
+_FF_GMP_BINOMIAL_COEFS(mpq);
+
+/*
+static void
+_mpq_fill_sbern_basis_in_mono (unsigned int deg, double A[deg + 1][deg + 1])
+{
+  for (unsigned int i = 0; i <= deg; i++)
+    {
+      for (unsigned int j = 0; j < i; j++)
+        A[i][j] = 0.0;
+      memcpy (&A[i][i], mpq_binomial_coefficients (deg - i),
+              (deg - i + 1) * sizeof (double));
+    }
+}
+
+static void
+_mpq_fill_mono_basis_in_sbern (unsigned int deg, double A[deg + 1][deg + 1])
+{
+  for (unsigned int i = 0; i <= deg; i++)
+    {
+      for (unsigned int j = 0; j < i; j++)
+        A[i][j] = 0.0;
+      memcpy (&A[i][i], mpq_binomial_coefficients (deg - i),
+              (deg - i + 1) * sizeof (double));
+      for (unsigned int j = i + 1; j <= deg; j += 2)
+        A[i][j] = -A[i][j];
+    }
+}
+
+VISIBLE const double *
+mpq_sbern_basis_in_mono (unsigned int degree)
+{
+  const double *data = mpq_precomputed_sbern_basis_in_mono (degree);
+  if (data == NULL)
+    {
+      double *data1 =
+        (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
+                                       sizeof (double));
+      _mpq_fill_sbern_basis_in_mono (degree, (double (*)[degree + 1]) data1);
+      data = (const double *) data1;
+    }
+  return data;
+}
+
+VISIBLE const double *
+mpq_mono_basis_in_sbern (unsigned int degree)
+{
+  const double *data = mpq_precomputed_mono_basis_in_sbern (degree);
+  if (data == NULL)
+    {
+      double *data1 =
+        (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
+                                       sizeof (double));
+      _mpq_fill_mono_basis_in_sbern (degree, (double (*)[degree + 1]) data1);
+      data = (const double *) data1;
+    }
+  return data;
+}
+*/
+
+//-------------------------------------------------------------------------
