@@ -31,6 +31,11 @@
           vector-sbern-basis-in-spower
           vector-spower-basis-in-sbern
 
+          f64-n*n-sbern-basis-in-mono
+          f64-n*n-mono-basis-in-sbern
+          f64-n*n-sbern-basis-in-spower
+          f64-n*n-spower-basis-in-sbern
+
           f64vector-sbern->bern
           f64vector-bern->sbern
           f64vector-sbern->mono
@@ -53,9 +58,32 @@
           )
 
   (import (sortsmill dynlink)
-          (only (guile) eval-when))
+          (rnrs)
+          (only (guile) eval-when make-shared-array))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_polyspline"))
+
+  (define (reshape-n*n n)
+    (lambda (i j) (list (+ (* i n) j))))
+
+  (define-syntax define-n*n-transformation-matrix
+    (syntax-rules ()
+      [(_ n*n vec)
+       (define (n*n degree)
+         (let ([n (+ degree 1)])
+           (make-shared-array (vec degree) (reshape-n*n n) n n)))]))
+
+  (define-n*n-transformation-matrix
+    f64-n*n-sbern-basis-in-mono f64vector-sbern-basis-in-mono)
+
+  (define-n*n-transformation-matrix
+    f64-n*n-mono-basis-in-sbern f64vector-mono-basis-in-sbern)
+
+  (define-n*n-transformation-matrix
+    f64-n*n-sbern-basis-in-spower f64vector-sbern-basis-in-spower)
+
+  (define-n*n-transformation-matrix
+    f64-n*n-spower-basis-in-sbern f64vector-spower-basis-in-sbern)
 
   ) ;; end of library.
