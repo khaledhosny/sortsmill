@@ -3,5 +3,7 @@
 ;;; C-style comments.
 ;;;
 
-((c-mode . ((comment-start . "/*")
-            (comment-end   . "*/"))))
+((c-mode . ((c-file-style  . "gnu")
+            (comment-start . "/*")
+            (comment-end   . "*/")
+            (indent-tabs-mode . nil))))

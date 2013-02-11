@@ -4,7 +4,8 @@
  (makefile-automake-mode . ((tab-width . 4)))
  (c-mode . ((c-file-style  . "gnu")
             (comment-start . "//")
-            (comment-end   . "")))
+            (comment-end   . "")
+            (indent-tabs-mode . nil)))
  (scheme-mode . ((geiser-scheme-implementation . guile)))
  )
 
