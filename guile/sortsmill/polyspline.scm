@@ -31,10 +31,14 @@
           vector-sbern-basis-in-spower
           vector-spower-basis-in-sbern
 
-          f64-n*n-sbern-basis-in-mono
-          f64-n*n-mono-basis-in-sbern
-          f64-n*n-sbern-basis-in-spower
-          f64-n*n-spower-basis-in-sbern
+          f64matrix-sbern-basis-in-mono
+          f64matrix-mono-basis-in-sbern
+          f64matrix-sbern-basis-in-spower
+          f64matrix-spower-basis-in-sbern
+          matrix-sbern-basis-in-mono
+          matrix-mono-basis-in-sbern
+          matrix-sbern-basis-in-spower
+          matrix-spower-basis-in-sbern
 
           f64vector-sbern->bern
           f64vector-bern->sbern
@@ -75,15 +79,27 @@
            (make-shared-array (vec degree) (reshape-n*n n) n n)))]))
 
   (define-n*n-transformation-matrix
-    f64-n*n-sbern-basis-in-mono f64vector-sbern-basis-in-mono)
+    f64matrix-sbern-basis-in-mono f64vector-sbern-basis-in-mono)
 
   (define-n*n-transformation-matrix
-    f64-n*n-mono-basis-in-sbern f64vector-mono-basis-in-sbern)
+    f64matrix-mono-basis-in-sbern f64vector-mono-basis-in-sbern)
 
   (define-n*n-transformation-matrix
-    f64-n*n-sbern-basis-in-spower f64vector-sbern-basis-in-spower)
+    f64matrix-sbern-basis-in-spower f64vector-sbern-basis-in-spower)
 
   (define-n*n-transformation-matrix
-    f64-n*n-spower-basis-in-sbern f64vector-spower-basis-in-sbern)
+    f64matrix-spower-basis-in-sbern f64vector-spower-basis-in-sbern)
+
+  (define-n*n-transformation-matrix
+    matrix-sbern-basis-in-mono vector-sbern-basis-in-mono)
+
+  (define-n*n-transformation-matrix
+    matrix-mono-basis-in-sbern vector-mono-basis-in-sbern)
+
+  (define-n*n-transformation-matrix
+    matrix-sbern-basis-in-spower vector-sbern-basis-in-spower)
+
+  (define-n*n-transformation-matrix
+    matrix-spower-basis-in-sbern vector-spower-basis-in-sbern)
 
   ) ;; end of library.

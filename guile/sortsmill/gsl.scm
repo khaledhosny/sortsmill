@@ -17,9 +17,9 @@
 
 (library (sortsmill gsl)
 
-  (export matrix-f64*
-          matrix-f64+
-          matrix-f64-)
+  (export f64matrix*
+          f64matrix+
+          f64matrix-)
 
   (import (sortsmill dynlink)
           (only (guile) eval-when))

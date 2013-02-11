@@ -20,17 +20,19 @@
 #include <libguile.h>
 #include <gsl/gsl_blas.h>
 
+////////////////////////////////////
+// FIXME: Switch to R6RS exceptions.
+////////////////////////////////////
+
 void init_guile_sortsmill_gsl (void);
 
-/*
-  int  gsl_blas_dgemm (CBLAS_TRANSPOSE_t TransA,
-                     CBLAS_TRANSPOSE_t TransB,
-                     double alpha,
-                     const gsl_matrix * A,
-                     const gsl_matrix * B,
-                     double beta,
-                     gsl_matrix * C);
-*/
+// int gsl_blas_dgemm (CBLAS_TRANSPOSE_t TransA,
+//                     CBLAS_TRANSPOSE_t TransB,
+//                     double alpha,
+//                     const gsl_matrix * A,
+//                     const gsl_matrix * B,
+//                     double beta,
+//                     gsl_matrix * C);
 
 VISIBLE gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle (scm_t_array_handle * handlep)
@@ -114,16 +116,16 @@ scm_gsl_matrix_view_array_handle (scm_t_array_handle * handlep)
 }
 
 VISIBLE SCM
-scm_gsl_matrix_to_array_f64 (const gsl_matrix * m, int low_index)
+scm_gsl_matrix_to_f64array (const gsl_matrix * m, int low_index)
 {
   assert (0 < m->size1);
   assert (0 < m->size2);
 
   if (m->size1 < 1)
-    scm_misc_error ("scm_gsl_matrix_to_array_f64", "gsl_matrix size1 is zero",
+    scm_misc_error ("scm_gsl_matrix_to_f64array", "gsl_matrix size1 is zero",
                     SCM_BOOL_F);
   if (m->size2 < 1)
-    scm_misc_error ("scm_gsl_matrix_to_array_f64", "gsl_matrix size2 is zero",
+    scm_misc_error ("scm_gsl_matrix_to_f64array", "gsl_matrix size2 is zero",
                     SCM_BOOL_F);
 
   scm_t_array_handle handle;
@@ -146,7 +148,7 @@ scm_gsl_matrix_to_array_f64 (const gsl_matrix * m, int low_index)
 }
 
 VISIBLE SCM
-scm_array_f64_matrix_mult (SCM a, SCM b)
+scm_array_matrixf64_mult (SCM a, SCM b)
 {
   scm_t_array_handle handle_a;
   scm_t_array_handle handle_b;
@@ -160,7 +162,7 @@ scm_array_f64_matrix_mult (SCM a, SCM b)
   if (ma.size2 != mb.size1)
     {
       SCM ten = scm_from_int (10);
-      scm_misc_error ("matrix-f64*",
+      scm_misc_error ("f64matrix*",
                       "non-conformable matrices: ~Ax~A multiplied by ~Ax~A",
                       scm_list_4 (scm_number_to_string
                                   (scm_from_int (ma.size1), ten),
@@ -176,7 +178,7 @@ scm_array_f64_matrix_mult (SCM a, SCM b)
   gsl_matrix_view vc = gsl_matrix_view_array (buffer, ma.size1, mb.size2);
 
   gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, &ma, &mb, 0.0, &vc.matrix);
-  SCM result = scm_gsl_matrix_to_array_f64 (&vc.matrix, 1);
+  SCM result = scm_gsl_matrix_to_f64array (&vc.matrix, 1);
 
   scm_array_handle_release (&handle_b);
   scm_array_handle_release (&handle_a);
@@ -185,7 +187,7 @@ scm_array_f64_matrix_mult (SCM a, SCM b)
 }
 
 VISIBLE SCM
-scm_array_f64_matrix_add (SCM a, SCM b)
+scm_array_matrixf64_add (SCM a, SCM b)
 {
   scm_t_array_handle handle_a;
   scm_t_array_handle handle_b;
@@ -199,7 +201,7 @@ scm_array_f64_matrix_add (SCM a, SCM b)
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
       SCM ten = scm_from_int (10);
-      scm_misc_error ("matrix-f64+",
+      scm_misc_error ("f64matrix+",
                       "non-conformable matrices: ~Ax~A plus ~Ax~A",
                       scm_list_4 (scm_number_to_string
                                   (scm_from_int (ma.size1), ten),
@@ -216,7 +218,7 @@ scm_array_f64_matrix_add (SCM a, SCM b)
   gsl_matrix_memcpy (&vc.matrix, &ma);
 
   gsl_matrix_add (&vc.matrix, &mb);
-  SCM result = scm_gsl_matrix_to_array_f64 (&vc.matrix, 1);
+  SCM result = scm_gsl_matrix_to_f64array (&vc.matrix, 1);
 
   scm_array_handle_release (&handle_b);
   scm_array_handle_release (&handle_a);
@@ -225,7 +227,7 @@ scm_array_f64_matrix_add (SCM a, SCM b)
 }
 
 VISIBLE SCM
-scm_array_f64_matrix_sub (SCM a, SCM b)
+scm_array_matrixf64_sub (SCM a, SCM b)
 {
   scm_t_array_handle handle_a;
   scm_t_array_handle handle_b;
@@ -239,7 +241,7 @@ scm_array_f64_matrix_sub (SCM a, SCM b)
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
       SCM ten = scm_from_int (10);
-      scm_misc_error ("matrix-f64-",
+      scm_misc_error ("f64matrix-",
                       "non-conformable matrices: ~Ax~A minus ~Ax~A",
                       scm_list_4 (scm_number_to_string
                                   (scm_from_int (ma.size1), ten),
@@ -256,7 +258,7 @@ scm_array_f64_matrix_sub (SCM a, SCM b)
   gsl_matrix_memcpy (&vc.matrix, &ma);
 
   gsl_matrix_sub (&vc.matrix, &mb);
-  SCM result = scm_gsl_matrix_to_array_f64 (&vc.matrix, 1);
+  SCM result = scm_gsl_matrix_to_f64array (&vc.matrix, 1);
 
   scm_array_handle_release (&handle_b);
   scm_array_handle_release (&handle_a);
@@ -267,7 +269,7 @@ scm_array_f64_matrix_sub (SCM a, SCM b)
 VISIBLE void
 init_guile_sortsmill_gsl (void)
 {
-  scm_c_define_gsubr ("matrix-f64*", 2, 0, 0, scm_array_f64_matrix_mult);
-  scm_c_define_gsubr ("matrix-f64+", 2, 0, 0, scm_array_f64_matrix_add);
-  scm_c_define_gsubr ("matrix-f64-", 2, 0, 0, scm_array_f64_matrix_sub);
+  scm_c_define_gsubr ("f64matrix*", 2, 0, 0, scm_array_matrixf64_mult);
+  scm_c_define_gsubr ("f64matrix+", 2, 0, 0, scm_array_matrixf64_add);
+  scm_c_define_gsubr ("f64matrix-", 2, 0, 0, scm_array_matrixf64_sub);
 }
