@@ -90,6 +90,40 @@ _fill_mono_basis_in_sbern (unsigned int deg, double A[deg + 1][deg + 1])
     }
 }
 
+static void
+_fill_sbern_basis_in_spower (unsigned int deg, double A[deg + 1][deg + 1])
+{
+  const unsigned int n = deg;
+  const unsigned int q = n / 2 + n % 2;
+
+  for (unsigned int i = 0; i < q; i++)
+    {
+      // Fill in a top row.
+      for (unsigned int j = 0; j <= i; j++)
+        A[i][j] = 0.0;
+      const unsigned int d = n - (2 * i) - 1;
+      memcpy (&A[i][i], fl_binomial_coefficients (d),
+              (d + 1) * sizeof (double));
+      for (unsigned int j = i + d + 1; j <= n; j++)
+        A[i][j] = 0.0;
+      for (unsigned int j = 0; j <= n; j++)
+
+        // The corresponding bottom row is the reverse.
+        for (unsigned int j = 0; j <= n; j++)
+          A[n - i][n - j] = A[i][j];
+    }
+
+  // A middle row for the extra term in polynomials of even degree.
+  if (n % 2 == 0)
+    {
+      for (unsigned int j = 0; j <= q; j++)
+        A[q][j] = 0.0;
+      A[q][q] = 1.0;
+      for (unsigned int j = q + 1; j <= n; j++)
+        A[q][j] = 0.0;
+    }
+}
+
 VISIBLE const double *
 fl_sbern_basis_in_mono (unsigned int degree)
 {
@@ -117,6 +151,39 @@ fl_mono_basis_in_sbern (unsigned int degree)
       _fill_mono_basis_in_sbern (degree, (double (*)[degree + 1]) data1);
       data = (const double *) data1;
     }
+  return data;
+}
+
+VISIBLE const double *
+fl_sbern_basis_in_spower (unsigned int degree)
+{
+  const double *data = fl_precomputed_sbern_basis_in_spower (degree);
+  if (data == NULL)
+    {
+      double *data1 =
+        (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
+                                       sizeof (double));
+      _fill_sbern_basis_in_spower (degree, (double (*)[degree + 1]) data1);
+      data = (const double *) data1;
+    }
+  return data;
+}
+
+VISIBLE const double *
+fl_spower_basis_in_sbern (unsigned int degree)
+{
+  const double *data = fl_precomputed_spower_basis_in_sbern (degree);
+  if (data == NULL)
+    abort ();                   // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+  /*
+     {
+     double *data1 =
+     (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
+     sizeof (double));
+     _fill_sbern_basis_in_mono (degree, (double (*)[degree + 1]) data1);
+     data = (const double *) data1;
+     }
+   */
   return data;
 }
 

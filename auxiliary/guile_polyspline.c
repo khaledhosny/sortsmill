@@ -104,6 +104,18 @@ scm_f64vector_mono_basis_in_sbern (SCM degree)
 }
 
 VISIBLE SCM
+scm_f64vector_sbern_basis_in_spower (SCM degree)
+{
+  return _scm_f64vector_basis (degree, fl_sbern_basis_in_spower);
+}
+
+VISIBLE SCM
+scm_f64vector_spower_basis_in_sbern (SCM degree)
+{
+  return _scm_f64vector_basis (degree, fl_spower_basis_in_sbern);
+}
+
+VISIBLE SCM
 scm_vector_sbern_basis_in_mono (SCM degree)
 {
   return _scm_mpz_vector_basis (degree, mpz_sbern_basis_in_mono);
@@ -319,6 +331,10 @@ init_guile_sortsmill_polyspline (void)
                       scm_f64vector_sbern_basis_in_mono);
   scm_c_define_gsubr ("f64vector-mono-basis-in-sbern", 1, 0, 0,
                       scm_f64vector_mono_basis_in_sbern);
+  scm_c_define_gsubr ("f64vector-sbern-basis-in-spower", 1, 0, 0,
+                      scm_f64vector_sbern_basis_in_spower);
+  scm_c_define_gsubr ("f64vector-spower-basis-in-sbern", 1, 0, 0,
+                      scm_f64vector_spower_basis_in_sbern);
   scm_c_define_gsubr ("vector-sbern-basis-in-mono", 1, 0, 0,
                       scm_vector_sbern_basis_in_mono);
   scm_c_define_gsubr ("vector-mono-basis-in-sbern", 1, 0, 0,
