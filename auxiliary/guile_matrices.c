@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
-#include <sortsmill/guile/gsl.h>
+#include <sortsmill/guile/matrices.h>
 #include <libguile.h>
 #include <gsl/gsl_blas.h>
 
@@ -24,7 +24,7 @@
 // FIXME: Switch to R6RS exceptions.
 ////////////////////////////////////
 
-void init_guile_sortsmill_gsl (void);
+void init_guile_sortsmill_matrices (void);
 
 // int gsl_blas_dgemm (CBLAS_TRANSPOSE_t TransA,
 //                     CBLAS_TRANSPOSE_t TransB,
@@ -267,9 +267,9 @@ scm_array_matrixf64_sub (SCM a, SCM b)
 }
 
 VISIBLE void
-init_guile_sortsmill_gsl (void)
+init_guile_sortsmill_matrices (void)
 {
-  scm_c_define_gsubr ("f64matrix*", 2, 0, 0, scm_array_matrixf64_mult);
-  scm_c_define_gsubr ("f64matrix+", 2, 0, 0, scm_array_matrixf64_add);
-  scm_c_define_gsubr ("f64matrix-", 2, 0, 0, scm_array_matrixf64_sub);
+  scm_c_define_gsubr ("f64matrix-f64matrix*", 2, 0, 0, scm_array_matrixf64_mult);
+  scm_c_define_gsubr ("f64matrix-f64matrix+", 2, 0, 0, scm_array_matrixf64_add);
+  scm_c_define_gsubr ("f64matrix-f64matrix-", 2, 0, 0, scm_array_matrixf64_sub);
 }

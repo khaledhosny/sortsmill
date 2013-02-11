@@ -133,6 +133,12 @@ scm_vector_sbern_basis_in_spower (SCM degree)
   return _scm_mpz_vector_basis (degree, mpz_sbern_basis_in_spower);
 }
 
+VISIBLE SCM
+scm_vector_spower_basis_in_sbern (SCM degree)
+{
+  return _scm_mpz_vector_basis (degree, mpz_spower_basis_in_sbern);
+}
+
 static SCM
 change_basis (SCM spline,
               void (*changer) (unsigned int, const double *, double *, size_t))
@@ -347,6 +353,8 @@ init_guile_sortsmill_polyspline (void)
                       scm_vector_mono_basis_in_sbern);
   scm_c_define_gsubr ("vector-sbern-basis-in-spower", 1, 0, 0,
                       scm_vector_sbern_basis_in_spower);
+  scm_c_define_gsubr ("vector-spower-basis-in-sbern", 1, 0, 0,
+                      scm_vector_spower_basis_in_sbern);
 
   scm_c_define_gsubr ("f64vector-sbern->bern", 1, 0, 0,
                       scm_f64vector_sbern_to_bern);

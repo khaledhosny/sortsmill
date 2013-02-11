@@ -32,7 +32,8 @@ extern "C"
 
 /*-----------------------------------------------------------------------*/
 /*
- * FIXME: Document these. Also implement them all. :)
+ * FIXME: Document these. The transformation matrices have the basis
+ * vectors as their rows (or columns, if accessed from Fortran).
  */
 
 const double *fl_binomial_coefficients (unsigned int degree);
