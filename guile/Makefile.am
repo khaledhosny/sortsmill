@@ -120,7 +120,7 @@ sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go
 sortsmill/usermenu/python.go sortsmill/usermenu.go: sortsmill/dynlink.go
 
 sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
-sortsmill/usermenu.go sortsmill/views.go: sortsmill/i18n.go
+sortsmill/usermenu.go sortsmill/views.go sortsmill/gsl.go: sortsmill/i18n.go
 
 sortsmill/api-syntax.go sortsmill/i18n.go sortsmill/python.go: sortsmill/pkg-info.go
 

@@ -17,14 +17,49 @@
 
 (library (sortsmill gsl)
 
-  (export f64matrix*
+  (export zero-based
+          one-based
+          f64matrix*
           f64matrix+
           f64matrix-)
 
   (import (sortsmill dynlink)
-          (only (guile) eval-when))
+          (sortsmill i18n)
+          (rnrs)
+          (except (guile) error)
+          (ice-9 match))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_gsl"))
+
+  (define (zero-based mat)
+    (match (array-shape mat)
+      [[(0 _)] mat]
+      [[(0 _) (0 _)] mat]
+      [[(1 hi)]
+       (make-shared-array mat (lambda (i) `[,(+ i 1)]) `[0 ,(- hi 1)] )]
+      [[(1 hi1) (1 hi2)]
+       (make-shared-array mat
+                          (lambda (i j) `[,(+ i 1) ,(+ j 1)])
+                          `[0 ,(- hi1 1)] `[0 ,(- hi2 1)] )]
+      [else (assertion-violation
+             'zero-based
+             (_ "expected a uniformly zero-based or one-based vector or matrix")
+             mat)] ))
+
+  (define (one-based mat)
+    (match (array-shape mat)
+      [[(1 _)] mat]
+      [[(1 _) (1 _)] mat]
+      [[(0 hi)]
+       (make-shared-array mat (lambda (i) `[,(- i 1)]) `[1 ,(+ hi 1)] )]
+      [[(0 hi1) (0 hi2)]
+       (make-shared-array mat
+                          (lambda (i j) `[,(- i 1) ,(- j 1)])
+                          `[1 ,(+ hi1 1)] `[1 ,(+ hi2 1)] )]
+      [else (assertion-violation
+             'one-based
+             (_ "expected a uniformly zero-based or one-based vector or matrix")
+             mat)] ))
 
   ) ;; end of library.
