@@ -233,8 +233,38 @@ _FF_FREE_GMP_BINOMIAL_COEFS (mpq);
       }									\
   }
 
+#define _FF_GMP_FILL_MONO_BASIS_IN_SBERN(TYPE)				\
+  static void								\
+  _##TYPE##_fill_mono_basis_in_sbern (unsigned int deg,			\
+				      TYPE##_t A[deg + 1][deg + 1])	\
+  {									\
+    for (unsigned int i = 0; i <= deg; i++)				\
+      {									\
+	for (unsigned int j = 0; j < i; j++)				\
+	  {								\
+	    TYPE##_init (A[i][j]);					\
+	    TYPE##_set (A[i][j], TYPE##_zero ());			\
+	  }								\
+	__##TYPE##_struct *coef =					\
+	  TYPE##_binomial_coefficients (deg - i);			\
+	for (unsigned int j = i; j <= deg; j += 2)			\
+	  {								\
+	    TYPE##_init (A[i][j]);					\
+	    TYPE##_set (A[i][j], &coef[j - i]);				\
+	  }								\
+	for (unsigned int j = i + 1; j <= deg; j += 2)			\
+	  {								\
+	    TYPE##_init (A[i][j]);					\
+	    TYPE##_neg (A[i][j], &coef[j - i]);				\
+	  }								\
+      }									\
+  }
+
 _FF_GMP_FILL_SBERN_BASIS_IN_MONO (mpz);
+_FF_GMP_FILL_MONO_BASIS_IN_SBERN (mpz);
+
 _FF_GMP_FILL_SBERN_BASIS_IN_MONO (mpq);
+_FF_GMP_FILL_MONO_BASIS_IN_SBERN (mpq);
 
 #define _FF_GMP_SBERN_BASIS_IN_MONO(TYPE)			\
   VISIBLE __##TYPE##_struct *					\
@@ -257,8 +287,32 @@ _FF_GMP_FILL_SBERN_BASIS_IN_MONO (mpq);
     return data;						\
   }
 
+#define _FF_GMP_MONO_BASIS_IN_SBERN(TYPE)			\
+  VISIBLE __##TYPE##_struct *					\
+  TYPE##_mono_basis_in_sbern (unsigned int degree)		\
+  {								\
+    const unsigned int size = (degree + 1) * (degree + 1);	\
+    __##TYPE##_struct *data =					\
+      (__##TYPE##_struct *) xmalloc (size * sizeof (TYPE##_t));	\
+    const __##TYPE##_struct *precomp_data =			\
+      TYPE##_precomputed_mono_basis_in_sbern (degree);		\
+    if (precomp_data != NULL)					\
+      for (unsigned int i = 0; i < size; i++)			\
+	{							\
+	  TYPE##_init (&data[i]);				\
+	  TYPE##_set (&data[i], &precomp_data[i]);		\
+	}							\
+    else							\
+      _##TYPE##_fill_mono_basis_in_sbern			\
+	(degree, (__##TYPE##_struct (*)[degree + 1][1]) data);	\
+    return data;						\
+  }
+
 _FF_GMP_SBERN_BASIS_IN_MONO (mpz);
+_FF_GMP_MONO_BASIS_IN_SBERN (mpz);
+
 _FF_GMP_SBERN_BASIS_IN_MONO (mpq);
+_FF_GMP_MONO_BASIS_IN_SBERN (mpq);
 
 #define _FREE_FF_GMP_TRANSFORMATION_MATRIX(TYPE)			\
   VISIBLE void								\
@@ -272,51 +326,5 @@ _FF_GMP_SBERN_BASIS_IN_MONO (mpq);
 
 _FREE_FF_GMP_TRANSFORMATION_MATRIX (mpz);
 _FREE_FF_GMP_TRANSFORMATION_MATRIX (mpq);
-
-/*
-static void
-_mpq_fill_mono_basis_in_sbern (unsigned int deg, double A[deg + 1][deg + 1])
-{
-  for (unsigned int i = 0; i <= deg; i++)
-    {
-      for (unsigned int j = 0; j < i; j++)
-        A[i][j] = 0.0;
-      memcpy (&A[i][i], mpq_binomial_coefficients (deg - i),
-              (deg - i + 1) * sizeof (double));
-      for (unsigned int j = i + 1; j <= deg; j += 2)
-        A[i][j] = -A[i][j];
-    }
-}
-
-VISIBLE const double *
-mpq_sbern_basis_in_mono (unsigned int degree)
-{
-  const double *data = mpq_precomputed_sbern_basis_in_mono (degree);
-  if (data == NULL)
-    {
-      double *data1 =
-        (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
-                                       sizeof (double));
-      _mpq_fill_sbern_basis_in_mono (degree, (double (*)[degree + 1]) data1);
-      data = (const double *) data1;
-    }
-  return data;
-}
-
-VISIBLE const double *
-mpq_mono_basis_in_sbern (unsigned int degree)
-{
-  const double *data = mpq_precomputed_mono_basis_in_sbern (degree);
-  if (data == NULL)
-    {
-      double *data1 =
-        (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
-                                       sizeof (double));
-      _mpq_fill_mono_basis_in_sbern (degree, (double (*)[degree + 1]) data1);
-      data = (const double *) data1;
-    }
-  return data;
-}
-*/
 
 //-------------------------------------------------------------------------

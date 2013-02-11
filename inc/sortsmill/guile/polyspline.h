@@ -29,9 +29,14 @@ extern "C"
 #endif
 
 SCM scm_f64vector_binomial_coefficients (SCM degree);
-SCM scm_vector_binomial_coefficients (SCM degree);
 SCM scm_f64vector_binomial_coefficients_altsigns (SCM degree);
+SCM scm_vector_binomial_coefficients (SCM degree);
 SCM scm_vector_binomial_coefficients_altsigns (SCM degree);
+
+SCM scm_f64vector_sbern_basis_in_mono (SCM degree);
+SCM scm_f64vector_mono_basis_in_sbern (SCM degree);
+SCM scm_vector_sbern_basis_in_mono (SCM degree);
+SCM scm_vector_mono_basis_in_sbern (SCM degree);
 
 SCM scm_f64vector_sbern_to_bern (SCM spline);
 SCM scm_f64vector_bern_to_sbern (SCM spline);
