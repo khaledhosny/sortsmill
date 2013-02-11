@@ -106,11 +106,10 @@ _fill_sbern_basis_in_spower (unsigned int deg, double A[deg + 1][deg + 1])
               (d + 1) * sizeof (double));
       for (unsigned int j = i + d + 1; j <= n; j++)
         A[i][j] = 0.0;
-      for (unsigned int j = 0; j <= n; j++)
 
-        // The corresponding bottom row is the reverse.
-        for (unsigned int j = 0; j <= n; j++)
-          A[n - i][n - j] = A[i][j];
+      // The corresponding bottom row is the reverse.
+      for (unsigned int j = 0; j <= n; j++)
+	A[n - i][n - j] = A[i][j];
     }
 
   // A middle row for the extra term in polynomials of even degree.
@@ -176,14 +175,14 @@ fl_spower_basis_in_sbern (unsigned int degree)
   if (data == NULL)
     abort ();                   // FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
   /*
-     {
-     double *data1 =
-     (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
-     sizeof (double));
-     _fill_sbern_basis_in_mono (degree, (double (*)[degree + 1]) data1);
-     data = (const double *) data1;
-     }
-   */
+    {
+    double *data1 =
+    (double *) x_gc_malloc_atomic ((degree + 1) * (degree + 1) *
+    sizeof (double));
+    _fill_sbern_basis_in_mono (degree, (double (*)[degree + 1]) data1);
+    data = (const double *) data1;
+    }
+  */
   return data;
 }
 
@@ -297,6 +296,7 @@ _FF_FREE_GMP_BINOMIAL_COEFS (mpq);
 	    TYPE##_init (A[i][j]);					\
 	    TYPE##_set (A[i][j], &coef[j - i]);				\
 	  }								\
+        free_##TYPE##_binomial_coefficients (deg - i, coef);            \
       }									\
   }
 
@@ -324,14 +324,74 @@ _FF_FREE_GMP_BINOMIAL_COEFS (mpq);
 	    TYPE##_init (A[i][j]);					\
 	    TYPE##_neg (A[i][j], &coef[j - i]);				\
 	  }								\
+        free_##TYPE##_binomial_coefficients (deg - i, coef);            \
+      }									\
+  }
+
+#define _FF_GMP_FILL_SBERN_BASIS_IN_SPOWER(TYPE)			\
+  static void								\
+  _##TYPE##_fill_sbern_basis_in_spower (unsigned int deg,		\
+					TYPE##_t A[deg + 1][deg + 1])	\
+  {									\
+    const unsigned int n = deg;						\
+    const unsigned int q = n / 2 + n % 2;				\
+									\
+    for (unsigned int i = 0; i < q; i++)				\
+      {									\
+	/* Fill in a top row. */					\
+	for (unsigned int j = 0; j <= i; j++)				\
+	  {								\
+	    TYPE##_init (A[i][j]);					\
+	    TYPE##_set (A[i][j], TYPE##_zero ());			\
+	  }								\
+	const unsigned int d = n - (2 * i) - 1;				\
+	__##TYPE##_struct *coef = TYPE##_binomial_coefficients (d);	\
+	for (unsigned int j = 0; j <= d; j++)				\
+	  {								\
+	    TYPE##_init (A[i][i + j]);					\
+	    TYPE##_set (A[i][i + j], &coef[j]);				\
+	  }								\
+	free_##TYPE##_binomial_coefficients (d, coef);			\
+	for (unsigned int j = i + d + 1; j <= n; j++)			\
+	  {								\
+	    TYPE##_init (A[i][j]);					\
+	    TYPE##_set (A[i][j], TYPE##_zero ());			\
+	  }								\
+									\
+	/* The corresponding bottom row is the reverse. */		\
+	for (unsigned int j = 0; j <= n; j++)				\
+          {                                                             \
+            TYPE##_init (A[n - i][n - j]);                              \
+            TYPE ##_set (A[n - i][n - j], A[i][j]);                     \
+          }                                                             \
+      }									\
+									\
+    /* A middle row for the extra term in polynomials of */		\
+    /* even degree.                                      */		\
+    if (n % 2 == 0)							\
+      {									\
+	for (unsigned int j = 0; j <= q; j++)				\
+	  {								\
+	    TYPE##_init (A[q][j]);					\
+	    TYPE##_set (A[q][j], TYPE##_zero ());			\
+	  }								\
+        TYPE##_init (A[q][q]);                                          \
+        TYPE##_set (A[q][q], TYPE##_one ());                            \
+	for (unsigned int j = q + 1; j <= n; j++)			\
+	  {								\
+	    TYPE##_init (A[q][j]);					\
+	    TYPE##_set (A[q][j], TYPE##_zero ());			\
+	  }								\
       }									\
   }
 
 _FF_GMP_FILL_SBERN_BASIS_IN_MONO (mpz);
 _FF_GMP_FILL_MONO_BASIS_IN_SBERN (mpz);
+_FF_GMP_FILL_SBERN_BASIS_IN_SPOWER (mpz);
 
 _FF_GMP_FILL_SBERN_BASIS_IN_MONO (mpq);
 _FF_GMP_FILL_MONO_BASIS_IN_SBERN (mpq);
+_FF_GMP_FILL_SBERN_BASIS_IN_SPOWER (mpq);
 
 #define _FF_GMP_SBERN_BASIS_IN_MONO(TYPE)			\
   VISIBLE __##TYPE##_struct *					\
@@ -375,11 +435,34 @@ _FF_GMP_FILL_MONO_BASIS_IN_SBERN (mpq);
     return data;						\
   }
 
+#define _FF_GMP_SBERN_BASIS_IN_SPOWER(TYPE)			\
+  VISIBLE __##TYPE##_struct *					\
+  TYPE##_sbern_basis_in_spower (unsigned int degree)		\
+  {								\
+    const unsigned int size = (degree + 1) * (degree + 1);	\
+    __##TYPE##_struct *data =					\
+      (__##TYPE##_struct *) xmalloc (size * sizeof (TYPE##_t));	\
+    const __##TYPE##_struct *precomp_data =			\
+      TYPE##_precomputed_sbern_basis_in_spower (degree);        \
+    if (precomp_data != NULL)					\
+      for (unsigned int i = 0; i < size; i++)			\
+	{							\
+	  TYPE##_init (&data[i]);				\
+	  TYPE##_set (&data[i], &precomp_data[i]);		\
+	}							\
+    else							\
+      _##TYPE##_fill_sbern_basis_in_spower			\
+	(degree, (__##TYPE##_struct (*)[degree + 1][1]) data);	\
+    return data;						\
+  }
+
 _FF_GMP_SBERN_BASIS_IN_MONO (mpz);
 _FF_GMP_MONO_BASIS_IN_SBERN (mpz);
+_FF_GMP_SBERN_BASIS_IN_SPOWER (mpz);
 
 _FF_GMP_SBERN_BASIS_IN_MONO (mpq);
 _FF_GMP_MONO_BASIS_IN_SBERN (mpq);
+_FF_GMP_SBERN_BASIS_IN_SPOWER (mpq);
 
 #define _FREE_FF_GMP_TRANSFORMATION_MATRIX(TYPE)			\
   VISIBLE void								\
