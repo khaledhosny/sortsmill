@@ -47,6 +47,7 @@
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
+          (only (srfi :1) iota)
           (srfi :4)
           (ice-9 match))
 
@@ -137,15 +138,18 @@ a Guile vector)."
         [((lo hi) _) (make-shared-array A (lambda (i) `[,i ,j]) `[,lo ,hi])]
         [_ (not-a-matrix 'matrix-column-transpose A)] )))
 
-  #|
+  (define (row*col row column-transposed)
+    (apply + (map * (generalized-vector->list row)
+                  (generalized-vector->list column-transposed))))
+
   (define (matrix* A B)
     (match (cons (array-type A) (array-type B))
-      [('f64 . 'f64) (f64matrix* A B)]
-      [_
-       (let ([A (one-based A)]
-             [B (one-based B)])
-         (let ([nk (matrix-shape A)]
-               [km (matrix-shape B)])
+        [('f64 . 'f64) (f64matrix* A B)]
+        [_
+         (let ([A (one-based A)]
+               [B (one-based B)]
+               [nk (matrix-dimensions A)]
+               [km (matrix-dimensions B)])
            (unless (= (cadr nk) (car km))
              (assertion-violation
               'matrix*
@@ -154,10 +158,23 @@ a Guile vector)."
            (let* ([n (car nk)]
                   [k (car km)]
                   [m (cadr km)]
-                  [C (make-array *unspecified* `[1 ,n] `[1 ,m])])
-             (do [(i 1 (+ i 1))] [(<= i n)]
-;;;               (let ([A-row (list-tabulate )])
-                 (do [(j 1 (+ j 1))] [(<= j m)]
-  |#
+                  [C (make-array *unspecified* `[1 ,n] `[1 ,m])]
+                  [row-indices (iota n 1)]
+                  [rows (vector-map (lambda (i) (matrix-row A i))
+                                    (list->vector row-indices))]
+                  [col-indices (iota m 1)]
+                  [cols (vector-map
+                         (lambda (j) (matrix-column-transpose B j))
+                         (list->vector col-indices))])
+             (for-each
+              (lambda (i)
+                (for-each
+                 (lambda (j)
+                   (array-set! C (row*col (vector-ref rows (1- i))
+                                          (vector-ref cols (1- j)))
+                               i j))
+                 col-indices))
+              row-indices)
+             C))] ))
 
   ) ;; end of library.
