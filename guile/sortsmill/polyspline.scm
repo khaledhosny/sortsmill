@@ -69,14 +69,15 @@
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_polyspline"))
 
   (define (reshape-n*n n)
-    (lambda (i j) (list (+ (* i n) j))))
+    (lambda (i j) (list (+ (* (- i 1) n) (- j 1)))))
 
   (define-syntax define-n*n-transformation-matrix
     (syntax-rules ()
       [(_ n*n vec)
        (define (n*n degree)
          (let ([n (+ degree 1)])
-           (make-shared-array (vec degree) (reshape-n*n n) n n)))]))
+           (make-shared-array (vec degree) (reshape-n*n n)
+                              `[1 ,n] `[1 ,n] )))] ))
 
   (define-n*n-transformation-matrix
     f64matrix-sbern-basis-in-mono f64vector-sbern-basis-in-mono)
