@@ -27,12 +27,21 @@
           conformable-for*?
           conformable-for+?
 
+          vector->matrix
+
           matrix-row
           matrix-column-transpose
-
           matrix-transpose
 
-          vector->matrix
+          matrix-exact->inexact
+          matrix-inexact->exact
+
+          ;; matrix->f64matrix is the same as matrix-exact->inexact.
+          matrix->f64matrix
+
+          ;; f64matrix->matrix just changes the type tag, without
+          ;; converting from inexact to exact numbers.
+          f64matrix->matrix
 
           f64matrix-f64matrix*
           f64matrix-f64matrix+
@@ -143,6 +152,23 @@ a Guile vector)."
 
   (define (matrix-transpose A)
     (transpose-array (vector->matrix A) 1 0))
+
+  (define (matrix-exact->inexact A)
+    (let ([B (apply make-typed-array 'f64 *unspecified* (array-shape A))])
+      (array-map! B exact->inexact A)
+      B))
+
+  (define (matrix-inexact->exact A)
+    (let ([B (apply make-array *unspecified* (array-shape A))])
+      (array-map! B inexact->exact A)
+      B))
+
+  (define matrix->f64matrix matrix-exact->inexact)
+
+  (define (f64matrix->matrix A)
+    (let ([B (apply make-array *unspecified* (array-shape A))])
+      (array-map! B identity A)
+      B))
 
   (define (row*col row column-transposed)
     (apply + (map * (generalized-vector->list row)
