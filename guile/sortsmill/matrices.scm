@@ -30,6 +30,8 @@
           matrix-row
           matrix-column-transpose
 
+          matrix-transpose
+
           vector->matrix
 
           f64matrix-f64matrix*
@@ -138,6 +140,9 @@ a Guile vector)."
       (match shape
         [((lo hi) _) (make-shared-array A (lambda (i) `[,i ,j]) `[,lo ,hi])]
         [_ (not-a-matrix 'matrix-column-transpose A)] )))
+
+  (define (matrix-transpose A)
+    (transpose-array (vector->matrix A) 1 0))
 
   (define (row*col row column-transposed)
     (apply + (map * (generalized-vector->list row)
