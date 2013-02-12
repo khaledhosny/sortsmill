@@ -153,6 +153,7 @@ gdraw/gtextfield.c
 gdraw/gtextinfo.c
 guile/site-init.scm.in
 guile/sortsmill/contours.scm
+guile/sortsmill/matrices.scm
 guile/sortsmill/sfd-to-sxml.scm
 guile/sortsmill/usermenu.scm
 guile/sortsmill/views.scm
