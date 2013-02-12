@@ -144,44 +144,57 @@ a Guile vector)."
                   (generalized-vector->list column-transposed))))
 
   (define (scale-matrix a B)
-    (let ([C (apply make-array *unspecified* (array-shape B))])
-      (array-map! C (lambda (x) (* a x)) B)
-      C))
+    (if (and (real? a) (eq? (array-type B) 'f64))
+        [let ([C (apply make-typed-array 'f64 *unspecified* (array-shape B))])
+          (array-map! C (lambda (x) (* a x)) B)
+          C]
+        [let ([C (apply make-array *unspecified* (array-shape B))])
+          (array-map! C (lambda (x) (* a x)) B)
+          C] ))
+
+  (define (result-type type-A type-B)
+    (match (cons type-A type-B)
+      [('f64 . _) 'f64]
+      [(_ . 'f64) 'f64]
+      [_            #t] ))
 
   (define (multiply-matrices A B)
-    (match (cons (array-type A) (array-type B))
-      [('f64 . 'f64) (f64matrix* A B)]
-      [_
-       (let ([A (one-based A)]
-             [B (one-based B)]
-             [nk (matrix-dimensions A)]
-             [km (matrix-dimensions B)])
-         (unless (= (cadr nk) (car km))
-           (assertion-violation
-            'matrix*
-            (_ "the matrices are not conformable for multiplication")
-            A B))
-         (let* ([n (car nk)]
-                [k (car km)]
-                [m (cadr km)]
-                [C (make-array *unspecified* `[1 ,n] `[1 ,m])]
-                [row-indices (iota n 1)]
-                [rows (vector-map (lambda (i) (matrix-row A i))
-                                  (list->vector row-indices))]
-                [col-indices (iota m 1)]
-                [cols (vector-map
-                       (lambda (j) (matrix-column-transpose B j))
-                       (list->vector col-indices))])
-           (for-each
-            (lambda (i)
-              (for-each
-               (lambda (j)
-                 (array-set! C (row*col (vector-ref rows (1- i))
-                                        (vector-ref cols (1- j)))
-                             i j))
-               col-indices))
-            row-indices)
-           C))] ))
+    (let ([type-A (array-type A)]
+          [type-B (array-type B)])
+      (match (cons type-A type-B)
+        [('f64 . 'f64) (f64matrix* A B)]
+        [_
+         (let ([A (one-based A)]
+               [B (one-based B)]
+               [nk (matrix-dimensions A)]
+               [km (matrix-dimensions B)])
+           (unless (= (cadr nk) (car km))
+             (assertion-violation
+              'matrix*
+              (_ "the matrices are not conformable for multiplication")
+              A B))
+           (let* ([n (car nk)]
+                  [k (car km)]
+                  [m (cadr km)]
+                  [type-C (result-type type-A type-B)]
+                  [C (make-typed-array type-C *unspecified* `[1 ,n] `[1 ,m])]
+                  [row-indices (iota n 1)]
+                  [rows (vector-map (lambda (i) (matrix-row A i))
+                                    (list->vector row-indices))]
+                  [col-indices (iota m 1)]
+                  [cols (vector-map
+                         (lambda (j) (matrix-column-transpose B j))
+                         (list->vector col-indices))])
+             (for-each
+              (lambda (i)
+                (for-each
+                 (lambda (j)
+                   (array-set! C (row*col (vector-ref rows (1- i))
+                                          (vector-ref cols (1- j)))
+                               i j))
+                 col-indices))
+              row-indices)
+             C))] )))
 
   (define matrix*
     (case-lambda
