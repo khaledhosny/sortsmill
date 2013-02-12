@@ -101,7 +101,7 @@
     (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
 
   (define (f64matrix- A B)
-    (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
+    (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
 
   (define (matrix-shape A)
     (array-shape (vector->matrix A)))
@@ -172,6 +172,66 @@ a Guile vector)."
                  (lambda (j)
                    (array-set! C (row*col (vector-ref rows (1- i))
                                           (vector-ref cols (1- j)))
+                               i j))
+                 col-indices))
+              row-indices)
+             C))] ))
+
+    (define (matrix+ A B)
+    (match (cons (array-type A) (array-type B))
+        [('f64 . 'f64) (f64matrix+ A B)]
+        [_
+         (let ([A (vector->matrix (one-based A))]
+               [B (vector->matrix (one-based B))]
+               [nm (matrix-dimensions A)]
+               [n^m^ (matrix-dimensions B)])
+           (unless (and (= (car nm) (car n^m^))
+                        (= (cadr nm) (cadr n^m^)))
+             (assertion-violation
+              'matrix+
+              (_ "the matrices are not conformable for addition")
+              A B))
+           (let* ([n (car nm)]
+                  [m (cadr nm)]
+                  [C (make-array *unspecified* `[1 ,n] `[1 ,m])]
+                  [row-indices (iota n 1)]
+                  [col-indices (iota m 1)])
+             (for-each
+              (lambda (i)
+                (for-each
+                 (lambda (j)
+                   (array-set! C (+ (array-ref A i j)
+                                    (array-ref B i j))
+                               i j))
+                 col-indices))
+              row-indices)
+             C))] ))
+
+    (define (matrix- A B)
+    (match (cons (array-type A) (array-type B))
+        [('f64 . 'f64) (f64matrix- A B)]
+        [_
+         (let ([A (vector->matrix (one-based A))]
+               [B (vector->matrix (one-based B))]
+               [nm (matrix-dimensions A)]
+               [n^m^ (matrix-dimensions B)])
+           (unless (and (= (car nm) (car n^m^))
+                        (= (cadr nm) (cadr n^m^)))
+             (assertion-violation
+              'matrix+
+              (_ "the matrices are not conformable for subtraction")
+              A B))
+           (let* ([n (car nm)]
+                  [m (cadr nm)]
+                  [C (make-array *unspecified* `[1 ,n] `[1 ,m])]
+                  [row-indices (iota n 1)]
+                  [col-indices (iota m 1)])
+             (for-each
+              (lambda (i)
+                (for-each
+                 (lambda (j)
+                   (array-set! C (- (array-ref A i j)
+                                    (array-ref B i j))
                                i j))
                  col-indices))
               row-indices)
