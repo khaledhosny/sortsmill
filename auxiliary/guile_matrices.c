@@ -44,11 +44,48 @@ scm_c_gsl_error (int errval, const char *who, SCM irritants)
                            rnrs_make_irritants_condition (irritants)));
 }
 
+VISIBLE gsl_vector_const_view
+scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
+{
+  const char *who = "scm_gsl_vector_const_view_array_handle";
+
+  const double *my_elems;
+  size_t stride;
+
+  assert (handlep != NULL);
+
+  size_t rank = scm_array_handle_rank (handlep);
+  if (rank != 1)
+    scm_misc_error (who, "array has rank ~A, but should have rank 1",
+                    scm_list_1 (scm_number_to_string (scm_from_int (rank),
+                                                      scm_from_int (10))));
+
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  const double *elems = scm_array_handle_f64_elements (handlep);
+  ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
+  if (n < 1)
+    scm_misc_error (who, "array has no elements", SCM_BOOL_F);
+  if (0 < dims[0].inc)
+    {
+      my_elems = elems;
+      stride = dims[0].inc;
+    }
+  else
+    {
+      double *buffer = scm_gc_malloc_pointerless (n * sizeof (double), who);
+      for (size_t i = 0; i < n; i++)
+        buffer[i] = elems[i * dims[0].inc];
+      my_elems = buffer;
+      stride = 1;
+    }
+  return gsl_vector_const_view_array_with_stride (my_elems, stride, n);
+}
+
 VISIBLE gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
 {
   const double *my_elems;
-  ssize_t tda;
+  ssize_t tda;                  // FIXME: Should not this be size_t?
 
   assert (handlep != NULL);
 
@@ -89,7 +126,7 @@ VISIBLE gsl_matrix_view
 scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
 {
   double *my_elems;
-  ssize_t tda;
+  ssize_t tda;                  // FIXME: Should not this be size_t?
 
   assert (handlep != NULL);
 
@@ -372,7 +409,8 @@ scm_f64matrix_svd_modified_golub_reinsch (SCM a)
   scm_array_handle_release (&handle_a);
 
   int errval =
-    gsl_linalg_SV_decomp_mod (&u.matrix, &x.matrix, &v.matrix, &s.vector, &work.vector);
+    gsl_linalg_SV_decomp_mod (&u.matrix, &x.matrix, &v.matrix, &s.vector,
+                              &work.vector);
   if (errval != GSL_SUCCESS)
     scm_c_gsl_error (errval, who, scm_list_1 (a));
 
@@ -404,8 +442,7 @@ scm_f64matrix_svd_jacobi (SCM a)
   gsl_matrix_memcpy (&u.matrix, &ma);
   scm_array_handle_release (&handle_a);
 
-  int errval =
-    gsl_linalg_SV_decomp_jacobi (&u.matrix, &v.matrix, &s.vector);
+  int errval = gsl_linalg_SV_decomp_jacobi (&u.matrix, &v.matrix, &s.vector);
   if (errval != GSL_SUCCESS)
     scm_c_gsl_error (errval, who, scm_list_1 (a));
 
@@ -415,6 +452,48 @@ scm_f64matrix_svd_jacobi (SCM a)
     scm_gsl_matrix_to_f64matrix (&v.matrix, 1)
   };
   return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
+scm_f64matrix_svd_solve_transposed (SCM U, SCM S, SCM V, SCM b_transpose)
+{
+  const char *who = "scm_f64matrix_svd_solve_transposed";
+
+  SCM b_transpose__ =
+    scm_call_1 (scm_c_public_ref ("sortsmill matrices", "row-matrix->vector"),
+                b_transpose);
+
+  scm_t_array_handle handle_U;
+  scm_t_array_handle handle_V;
+  scm_t_array_handle handle_S;
+  scm_t_array_handle handle_b;
+
+  scm_array_get_handle (U, &handle_U);
+  gsl_matrix mU = scm_gsl_matrix_const_view_array_handle (&handle_U).matrix;
+
+  scm_array_get_handle (V, &handle_V);
+  gsl_matrix mV = scm_gsl_matrix_const_view_array_handle (&handle_V).matrix;
+
+  scm_array_get_handle (S, &handle_S);
+  gsl_vector vS = scm_gsl_vector_const_view_array_handle (&handle_S).vector;
+
+  scm_array_get_handle (b_transpose__, &handle_b);
+  gsl_vector vb = scm_gsl_vector_const_view_array_handle (&handle_b).vector;
+
+  double x_transpose_buf[vb.size];
+  gsl_vector_view x_transpose = gsl_vector_view_array (x_transpose_buf, vb.size);
+
+  int errval =
+    gsl_linalg_SV_solve (&mU, &mV, &vS, &vb, &x_transpose.vector);
+  if (errval != GSL_SUCCESS)
+    scm_c_gsl_error (errval, who, scm_list_4 (U, S, V, b_transpose));
+
+  scm_array_handle_release (&handle_U);
+  scm_array_handle_release (&handle_V);
+  scm_array_handle_release (&handle_S);
+  scm_array_handle_release (&handle_b);
+
+  return scm_gsl_vector_to_f64vector (&x_transpose.vector, 1);
 }
 
 VISIBLE void
@@ -432,4 +511,6 @@ init_guile_sortsmill_matrices (void)
                       scm_f64matrix_svd_modified_golub_reinsch);
   scm_c_define_gsubr ("f64matrix-svd-jacobi", 1, 0, 0,
                       scm_f64matrix_svd_jacobi);
+  scm_c_define_gsubr ("f64matrix-svd-solve-transposed", 4, 0, 0,
+                      scm_f64matrix_svd_solve_transposed);
 }

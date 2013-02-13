@@ -100,6 +100,28 @@
           ;; (f64matrix-svd A) is equivalent to
           ;;   (f64matrix-svd A 'golub-reinsch)
           f64matrix-svd
+
+          ;; (f64matrix-svd-solve-transposed U S V b-transpose)
+          ;; returns the transpose of the (least squares) solution
+          ;; vector of Ax=b, where b-transpose is a row vector.
+          f64matrix-svd-solve-transposed
+
+          ;; (f64matrix-svd-solve U S V b) returns the (least squares)
+          ;; solution vector of Ax=b, where b is a column vector.
+          f64matrix-svd-solve
+
+          ;; (f64matrix-solve-transposed A b-transpose) returns the
+          ;; transpose of the (least squares) solution vector of Ax=b,
+          ;; where b-transpose is a row vector/matrix. In the current
+          ;; implementation, the solution is computed using the
+          ;; current SVG algorithm.
+          f64matrix-solve-transposed
+
+          ;; (f64matrix-svd-solve A b) returns the (least squares)
+          ;; solution vector of Ax=b, where b is a column matrix. In
+          ;; the current implementation, the solution is computed
+          ;; using the current SVG algorithm.
+          f64matrix-solve
           )
 
   (import (sortsmill dynlink)
@@ -535,7 +557,7 @@ array)."
              (assert (symbol? algorithm))
              (assert (enum-set-member? algorithm matrix-svd-algorithms))
              (with-fluid* current-matrix-svd-algorithm-fluid algorithm
-               (lambda () body body* ...)))] )))
+                          (lambda () body body* ...)))] )))
 
   (define f64matrix-svd
     (case-lambda
@@ -547,6 +569,18 @@ array)."
          ['golub-reinsch (f64matrix-svd-golub-reinsch A)]
          ['modified-golub-reinsch (f64matrix-svd-modified-golub-reinsch A)]
          ['jacobi (f64matrix-svd-jacobi A)] )] ))
+
+  (define (f64matrix-svd-solve U S V b)
+    (matrix-transpose
+     (f64matrix-svd-solve-transposed U S V (matrix-transpose b))))
+
+  (define (f64matrix-solve-transposed A b)
+    (call-with-values (lambda () (f64matrix-svd A))
+      (lambda (U S V) (f64matrix-svd-solve-transposed U S V b))))
+
+  (define (f64matrix-solve A b)
+    (call-with-values (lambda () (f64matrix-svd A))
+      (lambda (U S V) (f64matrix-svd-solve U S V b))))
 
   ;;-----------------------------------------------------------------------
 
