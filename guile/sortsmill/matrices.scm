@@ -28,9 +28,11 @@
           conformable-for+?
 
           vector->matrix
+          row-matrix->vector
 
           matrix-row
           matrix-column-transpose
+          matrix-column
           matrix-transpose
 
           matrix-exact->inexact
@@ -100,11 +102,23 @@
       [_ (not-a-matrix 'one-based A)]))
 
   (define (vector->matrix v)
-    (if (= (array-rank v) 1)
-        (match (array-shape v)
-          [((lo hi))
-           (make-shared-array v (lambda (i j) `[,j]) `[,lo ,lo] `[,lo ,hi])])
-        v))
+    (match (array-rank v)
+      [1
+       (match (array-shape v)
+         [((lo hi))
+          (make-shared-array v (lambda (i j) `[,j]) `[,lo ,lo] `[,lo ,hi])])]
+      [2 v]
+      [_ (not-a-matrix 'vector->matrix v)] ))
+
+  (define (row-matrix->vector V)
+    (match (array-shape V)
+      [[(lo1 hi1) (lo2 hi2)]
+       (if (= lo1 hi1)
+           (make-shared-array V (lambda (j) `[,lo1 ,j]) `[,lo2 ,hi2])
+           (assertion-violation
+            'row-matrix->vector (_ "not a row matrix") V))]
+      [[(_ _)] V]
+      [_ (not-a-matrix 'row-matrix->vector V)] ))
 
   (define (f64matrix* A B)
     (f64matrix-f64matrix* (vector->matrix A) (vector->matrix B)))
@@ -149,6 +163,11 @@ a Guile vector)."
       (match shape
         [((lo hi) _) (make-shared-array A (lambda (i) `[,i ,j]) `[,lo ,hi])]
         [_ (not-a-matrix 'matrix-column-transpose A)] )))
+
+  (define (matrix-column A j)
+    "Return a view of a matrix column as a matrix (that is, a rank-2
+array)."
+    (matrix-transpose (matrix-column-transpose A j)))
 
   (define (matrix-transpose A)
     (transpose-array (vector->matrix A) 1 0))
