@@ -101,6 +101,27 @@
           ;;   (f64matrix-svd A 'golub-reinsch)
           f64matrix-svd
 
+          ;;;;;;;;;;;; FIXME FIXME FIXME FIXME
+          ;;;;;;;;;;;;
+          ;;;;;;;;;;;; Document that the linear systems solvers below
+          ;;;;;;;;;;;; can handle multiple vectors at once, or in
+          ;;;;;;;;;;;; other words that they can take a matrix B (not
+          ;;;;;;;;;;;; necessarily a vector) and return a matrix X of
+          ;;;;;;;;;;;; the same shape.
+          ;;;;;;;;;;;;
+          ;;;;;;;;;;;; Also change their names so it is clearer what
+          ;;;;;;;;;;;; systems they solve, and devise similar
+          ;;;;;;;;;;;; procedures for solving the system with all
+          ;;;;;;;;;;;; matrices transposed and the order of
+          ;;;;;;;;;;;; multiplication reversed. (That is, the same
+          ;;;;;;;;;;;; problem formulated with row vectors instead of
+          ;;;;;;;;;;;; column vectors for b and x.)
+          ;;;;;;;;;;;;
+          ;;;;;;;;;;;; Also test these procedures. They really could
+          ;;;;;;;;;;;; use regression tests.
+          ;;;;;;;;;;;;
+          ;;;;;;;;;;;; FIXME FIXME FIXME FIXME
+
           ;; (f64matrix-svd-solve-transposed U S V b-transpose)
           ;; returns the transpose of the (least squares) solution
           ;; vector of Ax=b, where b-transpose is a row vector.
@@ -570,17 +591,33 @@ array)."
          ['modified-golub-reinsch (f64matrix-svd-modified-golub-reinsch A)]
          ['jacobi (f64matrix-svd-jacobi A)] )] ))
 
-  (define (f64matrix-svd-solve U S V b)
+  (define (f64matrix-svd-solve-transposed U S V B)
+    (let* ([shape (array-shape B)]
+           [X (apply make-typed-array 'f64 *unspecified* shape)])
+      (match shape
+        [((_ _))
+         (private:f64matrix-svd-solve-vector U S V X B)
+         X]
+        [((lo hi) _)
+         (for-each
+          (lambda (i)
+            (let ([xi (row-matrix->vector (matrix-row X i))]
+                  [bi (row-matrix->vector (matrix-row B i))])
+              (private:f64matrix-svd-solve-vector U S V xi bi)))
+          (iota (- hi lo -1) lo))
+         X] )))
+
+  (define (f64matrix-svd-solve U S V B)
     (matrix-transpose
-     (f64matrix-svd-solve-transposed U S V (matrix-transpose b))))
+     (f64matrix-svd-solve-transposed U S V (matrix-transpose B))))
 
-  (define (f64matrix-solve-transposed A b)
+  (define (f64matrix-solve-transposed A B)
     (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V) (f64matrix-svd-solve-transposed U S V b))))
+      (lambda (U S V) (f64matrix-svd-solve-transposed U S V B))))
 
-  (define (f64matrix-solve A b)
+  (define (f64matrix-solve A B)
     (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V) (f64matrix-svd-solve U S V b))))
+      (lambda (U S V) (f64matrix-svd-solve U S V B))))
 
   ;;-----------------------------------------------------------------------
 

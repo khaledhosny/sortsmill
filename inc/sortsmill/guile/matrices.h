@@ -34,10 +34,10 @@ SCM scm_c_gsl_error (int errval, const char *who, SCM irritants);
 
 gsl_vector_const_view
 scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep);
+gsl_vector_view scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep);
+
 gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep);
-
-/* FIXME: Do we need this? */
 gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep);
 
 SCM scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index);
@@ -50,7 +50,7 @@ SCM scm_f64matrix_f64matrix_sub (SCM m1, SCM m2);
 SCM scm_f64matrix_svd_golub_reinsch (SCM m);
 SCM scm_f64matrix_svd_modified_golub_reinsch (SCM m);
 SCM scm_f64matrix_svd_jacobi (SCM m);
-SCM scm_f64matrix_svd_solve_transposed (SCM u, SCM s, SCM v, SCM b);
+SCM scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose, SCM b_transpose);
 
 #if 0
 {
