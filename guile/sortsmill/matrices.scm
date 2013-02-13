@@ -301,7 +301,7 @@ array)."
                       (_ "the first operand has illegal type") A)])])]
       [(. rest) (reduce (lambda (B A) (matrix* A B)) 1 rest)] ))
 
-  (define (matrix+ A B)
+  (define (add-matrices A B)
     (match (cons (array-type A) (array-type B))
       [('f64 . 'f64) (f64matrix+ A B)]
       [_
@@ -330,6 +330,34 @@ array)."
                col-indices))
             row-indices)
            C))] ))
+
+  (define matrix+
+    (case-lambda
+      [(A B)
+       (cond
+        [(array? A)
+         (cond
+          [(array? B) (add-matrices A B)]
+          [(number? B)
+           (if (zero? B) A
+               (assertion-violation
+                'matrix+
+                (_ "numbers other than zero cannot be added to matrices")
+                B))] )]
+        [(number? A)
+         (cond
+          [(array? B)
+           (if (zero? A) B
+               (assertion-violation
+                'matrix+
+                (_ "numbers other than zero cannot be added to matrices")
+                A))]
+          [(number? B) (+ A B)]
+          [else
+           (assertion-violation
+            'matrix+
+            (_ "the second operand has illegal type") B)] )] )]
+      [(. rest) (reduce (lambda (B A) (matrix+ A B)) 0 rest)] ))
 
   (define (matrix- A B)
     (match (cons (array-type A) (array-type B))
