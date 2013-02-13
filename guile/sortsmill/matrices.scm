@@ -101,6 +101,18 @@
           ;;   (f64matrix-svd A 'golub-reinsch)
           f64matrix-svd
 
+          ;; RCOND value for determining the effective rank in some
+          ;; SVD-based calculations. If you have LAPACK installed then
+          ;; see, for example, ‘man dgelss’, for a description of
+          ;; RCOND.
+          current-matrix-svd-rcond-fluid
+          current-matrix-svd-rcond
+          set-current-matrix-svd-rcond!
+          with-matrix-svd-rcond
+
+          matrix-svd-effective-rank
+          matrix-svd-limit-rank
+
           ;;;;;;;;;;;; FIXME FIXME FIXME FIXME
           ;;;;;;;;;;;;
           ;;;;;;;;;;;; Document that the linear systems solvers below
@@ -147,9 +159,10 @@
 
   (import (sortsmill dynlink)
           (sortsmill i18n)
+          (sortsmill math-constants)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) iota reduce)
+          (only (srfi :1) iota reduce take)
           (srfi :4)
           (ice-9 match))
 
@@ -580,6 +593,29 @@ array)."
              (with-fluid* current-matrix-svd-algorithm-fluid algorithm
                           (lambda () body body* ...)))] )))
 
+  (define (svd-rcond-value rcond)
+    (cond [(not rcond)       (* 100 c-dbl-epsilon-exact)]
+          [(negative? rcond) (* 100 c-dbl-epsilon-exact)]
+          [else              (inexact->exact rcond)] ))
+
+  (define current-matrix-svd-rcond-fluid
+    (make-fluid (svd-rcond-value #f)))
+
+  (define (current-matrix-svd-rcond)
+    (fluid-ref current-matrix-svd-rcond-fluid))
+
+  (define (set-current-matrix-svd-rcond! rcond)    
+    (fluid-set! current-matrix-svd-rcond-fluid
+                (svd-rcond-value rcond)))
+
+  (define-syntax with-matrix-svd-rcond
+    (lambda (x)
+      (syntax-case x ()
+        [(_ rcond body body* ...)
+         #'(with-fluid*
+               current-matrix-svd-rcond-fluid (svd-rcond-value rcond)
+               (lambda () body body* ...))] )))
+
   (define f64matrix-svd
     (case-lambda
       [(A) (f64matrix-svd A (current-matrix-svd-algorithm))]
@@ -590,6 +626,28 @@ array)."
          ['golub-reinsch (f64matrix-svd-golub-reinsch A)]
          ['modified-golub-reinsch (f64matrix-svd-modified-golub-reinsch A)]
          ['jacobi (f64matrix-svd-jacobi A)] )] ))
+
+  (define matrix-svd-effective-rank
+    (case-lambda
+      [(S) (matrix-svd-effective-rank S (current-matrix-svd-rcond))]
+      [(S rcond)
+       (let* ([S (zero-based (row-matrix->vector  S))]
+              [rcond^ (* rcond (vector-ref S 0))])
+         (if (zero? rcond^) 0
+             (let ([n (generalized-vector-length S)])
+               (letrec ([count
+                         (lambda (i)
+                           (cond [(= i n) n]
+                                 [(<= (vector-ref S i) rcond^) i]
+                                 [else (count (+ i 1))] ))])
+                 (count 1)))))] ))
+
+  (define (matrix-svd-limit-rank S rank)
+    (let* ([S^ (row-matrix->vector S)]
+           [n (generalized-vector-length S^)]
+           [lst (generalized-vector->list S^)]
+           [lst^ (append (take lst rank) (make-list (- n rank) 0))])
+      (list->typed-array (array-type S) (array-shape S^) lst^)))
 
   (define (f64matrix-svd-solve-transposed U S V B)
     (let* ([shape (array-shape B)]
