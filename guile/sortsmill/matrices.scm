@@ -129,6 +129,9 @@
           ;;;;;;;;;;;; problem formulated with row vectors instead of
           ;;;;;;;;;;;; column vectors for b and x.)
           ;;;;;;;;;;;;
+          ;;;;;;;;;;;; Also try to move documentation into doc
+          ;;;;;;;;;;;; strings.
+          ;;;;;;;;;;;;
           ;;;;;;;;;;;; Also test these procedures. They really could
           ;;;;;;;;;;;; use regression tests.
           ;;;;;;;;;;;;
@@ -137,24 +140,24 @@
           ;; (f64matrix-svd-solve-transposed U S V b-transpose)
           ;; returns the transpose of the (least squares) solution
           ;; vector of Ax=b, where b-transpose is a row vector.
-          f64matrix-svd-solve-transposed
+          f64matrix-svd-solve:USV^X^=B^
 
           ;; (f64matrix-svd-solve U S V b) returns the (least squares)
           ;; solution vector of Ax=b, where b is a column vector.
-          f64matrix-svd-solve
+          f64matrix-svd-solve:USV^X=B
 
           ;; (f64matrix-solve-transposed A b-transpose) returns the
           ;; transpose of the (least squares) solution vector of Ax=b,
           ;; where b-transpose is a row vector/matrix. In the current
           ;; implementation, the solution is computed using the
           ;; current SVG algorithm.
-          f64matrix-solve-transposed
+          f64matrix-solve:AX^=B^
 
           ;; (f64matrix-svd-solve A b) returns the (least squares)
           ;; solution vector of Ax=b, where b is a column matrix. In
           ;; the current implementation, the solution is computed
           ;; using the current SVG algorithm.
-          f64matrix-solve
+          f64matrix-solve:AX=B
           )
 
   (import (sortsmill dynlink)
@@ -631,15 +634,16 @@ array)."
     (case-lambda
       [(S) (matrix-svd-effective-rank S (current-matrix-svd-rcond))]
       [(S rcond)
-       (let* ([S (zero-based (row-matrix->vector  S))]
-              [rcond^ (* rcond (vector-ref S 0))])
+       (let* ([S (zero-based (row-matrix->vector S))]
+              [rcond^ (* rcond (generalized-vector-ref S 0))])
          (if (zero? rcond^) 0
              (let ([n (generalized-vector-length S)])
-               (letrec ([count
-                         (lambda (i)
-                           (cond [(= i n) n]
-                                 [(<= (vector-ref S i) rcond^) i]
-                                 [else (count (+ i 1))] ))])
+               (letrec
+                   ([count
+                     (lambda (i)
+                       (cond [(= i n) n]
+                             [(<= (generalized-vector-ref S i) rcond^) i]
+                             [else (count (+ i 1))] ))])
                  (count 1)))))] ))
 
   (define (matrix-svd-limit-rank S rank)
@@ -649,7 +653,7 @@ array)."
            [lst^ (append (take lst rank) (make-list (- n rank) 0))])
       (list->typed-array (array-type S) (array-shape S^) lst^)))
 
-  (define (f64matrix-svd-solve-transposed U S V B)
+  (define (f64matrix-svd-solve:USV^X^=B^ U S V B)
     (let* ([shape (array-shape B)]
            [X (apply make-typed-array 'f64 *unspecified* shape)])
       (match shape
@@ -665,17 +669,25 @@ array)."
           (iota (- hi lo -1) lo))
          X] )))
 
-  (define (f64matrix-svd-solve U S V B)
+  (define (f64matrix-svd-solve:USV^X=B U S V B)
     (matrix-transpose
-     (f64matrix-svd-solve-transposed U S V (matrix-transpose B))))
+     (f64matrix-svd-solve:USV^X^=B^ U S V (matrix-transpose B))))
 
-  (define (f64matrix-solve-transposed A B)
+  (define (f64matrix-solve:AX^=B^ A B)
     (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V) (f64matrix-svd-solve-transposed U S V B))))
+      (lambda (U S V)
+        (let* ([effective-rank (matrix-svd-effective-rank S)]
+               [revised-S (matrix-svd-limit-rank S effective-rank)]
+               [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
+          (values X effective-rank)))))
 
-  (define (f64matrix-solve A B)
+  (define (f64matrix-solve:AX=B A B)
     (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V) (f64matrix-svd-solve U S V B))))
+      (lambda (U S V)
+        (let* ([effective-rank (matrix-svd-effective-rank S)]
+               [revised-S (matrix-svd-limit-rank S effective-rank)]
+               [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
+          (values X effective-rank)))))
 
   ;;-----------------------------------------------------------------------
 
