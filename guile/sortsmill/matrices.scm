@@ -59,6 +59,7 @@
           f64matrix-
 
           matrix-scaled
+          matrix-negate
           matrix*
           matrix+
           matrix-)          
@@ -229,7 +230,7 @@ array)."
     (apply + (map * (generalized-vector->list row)
                   (generalized-vector->list column-transposed))))
 
-  (define (scale-matrix a B)
+  (define (matrix-scaled a B)
     (if (and (real? a) (eq? (array-type B) 'f64))
         [let ([C (apply make-typed-array 'f64 *unspecified* (array-shape B))])
           (array-map! C (lambda (x) (* a x)) B)
@@ -237,6 +238,11 @@ array)."
         [let ([C (apply make-array *unspecified* (array-shape B))])
           (array-map! C (lambda (x) (* a x)) B)
           C] ))
+
+  (define (matrix-negate A)
+    (if (eq? (array-type A) 'f64)
+        (matrix-scaled -1.0 A)
+        (matrix-scaled -1 A)))
 
   (define (result-type type-A type-B)
     (match (cons type-A type-B)
@@ -286,14 +292,14 @@ array)."
     (case-lambda
       [(A B)
        (cond [(array? A)
-              (cond [(number? B) (scale-matrix B A)]
+              (cond [(number? B) (matrix-scaled B A)]
                     [(array? B) (multiply-matrices A B)]
                     [else
                      (assertion-violation
                       'matrix*
                       (_ "the second operand has illegal type") B)])]
              [(number? A)
-              (cond [(array? B) (scale-matrix A B)]
+              (cond [(array? B) (matrix-scaled A B)]
                     [(number? B) (* A B)]
                     [else
                      (assertion-violation
@@ -359,7 +365,7 @@ array)."
             (_ "the second operand has illegal type") B)] )] )]
       [(. rest) (reduce (lambda (B A) (matrix+ A B)) 0 rest)] ))
 
-  (define (matrix- A B)
+  (define (subtract-matrices A B)
     (match (cons (array-type A) (array-type B))
       [('f64 . 'f64) (f64matrix- A B)]
       [_
@@ -388,5 +394,34 @@ array)."
                col-indices))
             row-indices)
            C))] ))
+
+  (define matrix-
+    (case-lambda
+      [(A B)
+       (cond
+        [(array? A)
+         (cond
+          [(array? B) (subtract-matrices A B)]
+          [(number? B)
+           (if (zero? B) A
+               (assertion-violation
+                'matrix-
+                (_ "numbers other than zero cannot be subtracted from matrices")
+                B))] )]
+        [(number? A)
+         (cond
+          [(array? B)
+           (if (zero? A) (matrix-negate B)
+               (assertion-violation
+                'matrix-
+                (_ "matrices cannot be subtracted from numbers other than zero")
+                A))]
+          [(number? B) (- A B)]
+          [else
+           (assertion-violation
+            'matrix-
+            (_ "the second operand has illegal type") B)] )] )]
+      [(A) (if (number? A) (- A) (matrix-negate A))]
+      [(A . rest) (fold-left matrix- A rest)] ))
 
   ) ;; end of library.
