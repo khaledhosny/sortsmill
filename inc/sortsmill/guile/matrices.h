@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_GSL_H
-#define _SORTSMILL_GUILE_GSL_H
+#ifndef _SORTSMILL_GUILE_MATRICES_H
+#define _SORTSMILL_GUILE_MATRICES_H
 
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
@@ -29,15 +29,23 @@ extern "C"
 }
 #endif
 
-gsl_matrix_const_view
-scm_gsl_matrix_const_view_array_handle (scm_t_array_handle * handlep);
-gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *
-                                                  handlep);
-SCM scm_gsl_matrix_to_f64array (const gsl_matrix * m, int low_index);
+/* FIXME: Put scm_c_gsl_error in a more general GSL module. */
+SCM scm_c_gsl_error (int errval, const char *who, SCM irritants);
 
-SCM scm_array_matrixf64_mult (SCM m1, SCM m2);
-SCM scm_array_matrixf64_add (SCM m1, SCM m2);
-SCM scm_array_matrixf64_sub (SCM m1, SCM m2);
+gsl_matrix_const_view
+scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep);
+gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep);
+
+SCM scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index);
+SCM scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index);
+
+SCM scm_f64matrix_f64matrix_mult (SCM m1, SCM m2);
+SCM scm_f64matrix_f64matrix_add (SCM m1, SCM m2);
+SCM scm_f64matrix_f64matrix_sub (SCM m1, SCM m2);
+
+SCM scm_f64matrix_svd_golub_reinsch (SCM m);
+SCM scm_f64matrix_svd_modified_golub_reinsch (SCM m);
+SCM scm_f64matrix_svd_jacobi (SCM m);
 
 #if 0
 {
@@ -46,4 +54,4 @@ SCM scm_array_matrixf64_sub (SCM m1, SCM m2);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_GSL_H */
+#endif /* _SORTSMILL_GUILE_MATRICES_H */

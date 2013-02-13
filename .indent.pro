@@ -27,6 +27,7 @@
 -T size_t
 
 -T SCM
+-T scm_t_array_handle
 -T pthread_mutex_t
 -T cairo_t
 -T regoff_t
@@ -39,6 +40,8 @@
 -T __mpz_struct
 -T __mpq_struct
 -T __mpf_struct
+-T gsl_vector
+-T gsl_matrix
 
 -T rexp_buffer_t
 -T rexp_t

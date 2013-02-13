@@ -64,7 +64,43 @@
           matrix*
           matrix/
           matrix+
-          matrix-)          
+          matrix-
+
+          ;; ‘Thin’ singular value decomposition algorithms from
+          ;; GSL. These procedures return U, S, V, respectively, as
+          ;; multiple return values.
+          ;;
+          ;; Golub-Reinsch requires linear workspace.
+          ;;
+          ;; Modified Golub-Reinsch is faster than Golub-Reinsch if
+          ;; there are many more rows than columns in the input
+          ;; matrix, but requires quadratic workspace.
+          ;;
+          ;; The Jacobi method can compute singular values to higher
+          ;; relative accuracy than Golub-Reinsch, but is slower. It
+          ;; uses one-sided Jacobi orthogonalization.
+          f64matrix-svd-golub-reinsch
+          f64matrix-svd-modified-golub-reinsch
+          f64matrix-svd-jacobi
+
+          ;; SVD algorithms enum:
+          ;;   'golub-reinsch
+          ;;   'modified-golub-reinsch
+          ;;   'jacobi
+          matrix-svd-algorithms
+
+          ;; Initially set to 'golub-reinsch
+          current-matrix-svd-algorithm-fluid
+          current-matrix-svd-algorithm
+          set-current-matrix-svd-algorithm!
+          with-matrix-svd-algorithm
+
+          ;; (f64matrix-svd A algorithm)
+          ;;
+          ;; (f64matrix-svd A) is equivalent to
+          ;;   (f64matrix-svd A 'golub-reinsch)
+          f64matrix-svd
+          )
 
   (import (sortsmill dynlink)
           (sortsmill i18n)
@@ -474,6 +510,43 @@ array)."
             (_ "the second operand has illegal type") B)] )] )]
       [(A) (if (number? A) (- A) (matrix-negate A))]
       [(A . rest) (fold-left matrix- A rest)] ))
+
+  ;;-----------------------------------------------------------------------
+
+  (define matrix-svd-algorithms
+    (make-enumeration '(golub-reinsch modified-golub-reinsch jacobi)))
+
+  (define current-matrix-svd-algorithm-fluid
+    (make-fluid 'golub-reinsch))
+
+  (define (current-matrix-svd-algorithm)
+    (fluid-ref current-matrix-svd-algorithm-fluid))
+
+  (define (set-current-matrix-svd-algorithm! algorithm)
+    (assert (symbol? algorithm))
+    (assert (enum-set-member? algorithm matrix-svd-algorithms))
+    (fluid-set! current-matrix-svd-algorithm-fluid algorithm))
+
+  (define-syntax with-matrix-svd-algorithm
+    (lambda (x)
+      (syntax-case x ()
+        [(_ algorithm body body* ...)
+         #'(begin
+             (assert (symbol? algorithm))
+             (assert (enum-set-member? algorithm matrix-svd-algorithms))
+             (with-fluid* current-matrix-svd-algorithm-fluid algorithm
+               (lambda () body body* ...)))] )))
+
+  (define f64matrix-svd
+    (case-lambda
+      [(A) (f64matrix-svd A (current-matrix-svd-algorithm))]
+      [(A algorithm)
+       (assert (symbol? algorithm))
+       (assert (enum-set-member? algorithm matrix-svd-algorithms))
+       (match algorithm
+         ['golub-reinsch (f64matrix-svd-golub-reinsch A)]
+         ['modified-golub-reinsch (f64matrix-svd-modified-golub-reinsch A)]
+         ['jacobi (f64matrix-svd-jacobi A)] )] ))
 
   ;;-----------------------------------------------------------------------
 
