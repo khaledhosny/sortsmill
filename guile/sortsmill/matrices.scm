@@ -27,12 +27,18 @@
           conformable-for*?
           conformable-for+?
 
+          zero-matrix
+          zero-f64matrix
+          I-matrix
+          I-f64matrix
+
           vector->matrix
           row-matrix->vector
 
           matrix-row
           matrix-column-transpose
           matrix-column
+          matrix-diagonal
           matrix-transpose
 
           matrix-exact->inexact
@@ -120,6 +126,32 @@
       [[(_ _)] V]
       [_ (not-a-matrix 'row-matrix->vector V)] ))
 
+  (define zero-matrix
+    (case-lambda
+      [(n)   (make-array 0 `(1 ,n) `(1 ,n))]
+      [(n m) (make-array 0 `(1 ,n) `(1 ,m))] ))
+
+  (define zero-f64matrix
+    (case-lambda
+      [(n)   (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,n))]
+      [(n m) (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,m))] ))
+
+  (define I-matrix
+    (case-lambda
+      [(n)   (I-matrix n n)]
+      [(n m) (let* ([I (zero-matrix n m)]
+                    [diag (matrix-diagonal I)])
+               (array-fill! diag 1)
+               I)] ))
+
+  (define I-f64matrix
+    (case-lambda
+      [(n)   (I-f64matrix n n)]
+      [(n m) (let* ([I (zero-f64matrix n m)]
+                    [diag (matrix-diagonal I)])
+               (array-fill! diag 1.0)
+               I)] ))
+
   (define (f64matrix* A B)
     (f64matrix-f64matrix* (vector->matrix A) (vector->matrix B)))
 
@@ -168,6 +200,10 @@ a Guile vector)."
     "Return a view of a matrix column as a matrix (that is, a rank-2
 array)."
     (matrix-transpose (matrix-column-transpose A j)))
+
+  (define (matrix-diagonal A)
+    (let ([n (apply min (matrix-dimensions A))])
+      (make-shared-array A (lambda (i) `[,i ,i]) `[1 ,n])))
 
   (define (matrix-transpose A)
     (transpose-array (vector->matrix A) 1 0))
