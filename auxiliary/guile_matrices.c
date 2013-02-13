@@ -122,7 +122,7 @@ VISIBLE gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
 {
   const double *my_elems;
-  ssize_t tda;                  // FIXME: Should not this be size_t?
+  size_t tda;
 
   assert (handlep != NULL);
 
@@ -153,7 +153,7 @@ scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
         for (size_t j = 0; j < n1; j++)
           buffer[i * n1 + j] = elems[i * dims[0].inc + j * dims[1].inc];
       my_elems = buffer;
-      tda = 1;
+      tda = n1;
     }
   return gsl_matrix_const_view_array_with_tda (my_elems, n0, n1, tda);
 }
@@ -162,7 +162,7 @@ VISIBLE gsl_matrix_view
 scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
 {
   double *my_elems;
-  ssize_t tda;                  // FIXME: Should not this be size_t?
+  size_t tda;
 
   assert (handlep != NULL);
 
@@ -193,7 +193,7 @@ scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
         for (size_t j = 0; j < n1; j++)
           buffer[i * n1 + j] = elems[i * dims[0].inc + j * dims[1].inc];
       my_elems = buffer;
-      tda = 1;
+      tda = n1;
     }
   return gsl_matrix_view_array_with_tda (my_elems, n0, n1, tda);
 }
