@@ -59,8 +59,10 @@
           f64matrix-
 
           matrix-scaled
+          matrix-scaled-by-division
           matrix-negate
           matrix*
+          matrix/
           matrix+
           matrix-)          
 
@@ -83,6 +85,36 @@
         (apply assertion-violation caller
                (_ "expected vectors or matrices")
                irritant more-irritants)))
+
+  ;;-----------------------------------------------------------------------
+
+  (define zero-matrix
+    (case-lambda
+      [(n)   (make-array 0 `(1 ,n) `(1 ,n))]
+      [(n m) (make-array 0 `(1 ,n) `(1 ,m))] ))
+
+  (define zero-f64matrix
+    (case-lambda
+      [(n)   (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,n))]
+      [(n m) (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,m))] ))
+
+  (define I-matrix
+    (case-lambda
+      [(n)   (I-matrix n n)]
+      [(n m) (let* ([I (zero-matrix n m)]
+                    [diag (matrix-diagonal I)])
+               (array-fill! diag 1)
+               I)] ))
+
+  (define I-f64matrix
+    (case-lambda
+      [(n)   (I-f64matrix n n)]
+      [(n m) (let* ([I (zero-f64matrix n m)]
+                    [diag (matrix-diagonal I)])
+               (array-fill! diag 1.0)
+               I)] ))
+
+  ;;-----------------------------------------------------------------------
 
   (define (zero-based A)
     (match (array-shape A)
@@ -127,41 +159,6 @@
       [[(_ _)] V]
       [_ (not-a-matrix 'row-matrix->vector V)] ))
 
-  (define zero-matrix
-    (case-lambda
-      [(n)   (make-array 0 `(1 ,n) `(1 ,n))]
-      [(n m) (make-array 0 `(1 ,n) `(1 ,m))] ))
-
-  (define zero-f64matrix
-    (case-lambda
-      [(n)   (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,n))]
-      [(n m) (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,m))] ))
-
-  (define I-matrix
-    (case-lambda
-      [(n)   (I-matrix n n)]
-      [(n m) (let* ([I (zero-matrix n m)]
-                    [diag (matrix-diagonal I)])
-               (array-fill! diag 1)
-               I)] ))
-
-  (define I-f64matrix
-    (case-lambda
-      [(n)   (I-f64matrix n n)]
-      [(n m) (let* ([I (zero-f64matrix n m)]
-                    [diag (matrix-diagonal I)])
-               (array-fill! diag 1.0)
-               I)] ))
-
-  (define (f64matrix* A B)
-    (f64matrix-f64matrix* (vector->matrix A) (vector->matrix B)))
-
-  (define (f64matrix+ A B)
-    (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
-
-  (define (f64matrix- A B)
-    (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
-
   (define (matrix-shape A)
     (array-shape (vector->matrix A)))
 
@@ -178,6 +175,8 @@
           [n^m^ (matrix-dimensions B)])
       (and (= (car nm) (car n^m^))
            (= (cadr nm) (cadr n^m^)))))
+
+  ;;-----------------------------------------------------------------------
 
   (define (matrix-row A i)
     "Return a view of a matrix row as a row vector (in the form of
@@ -209,6 +208,8 @@ array)."
   (define (matrix-transpose A)
     (transpose-array (vector->matrix A) 1 0))
 
+  ;;-----------------------------------------------------------------------
+
   (define (matrix-exact->inexact A)
     (let ([B (apply make-typed-array 'f64 *unspecified* (array-shape A))])
       (array-map! B exact->inexact A)
@@ -226,9 +227,7 @@ array)."
       (array-map! B identity A)
       B))
 
-  (define (row*col row column-transposed)
-    (apply + (map * (generalized-vector->list row)
-                  (generalized-vector->list column-transposed))))
+  ;;-----------------------------------------------------------------------
 
   (define (matrix-scaled a B)
     (if (and (real? a) (eq? (array-type B) 'f64))
@@ -239,12 +238,36 @@ array)."
           (array-map! C (lambda (x) (* a x)) B)
           C] ))
 
+  (define (matrix-scaled-by-division A b)
+    (if (and (real? b) (eq? (array-type A) 'f64))
+        [let ([C (apply make-typed-array 'f64 *unspecified* (array-shape A))])
+          (array-map! C (lambda (x) (/ x b)) A)
+          C]
+        [let ([C (apply make-array *unspecified* (array-shape A))])
+          (array-map! C (lambda (x) (/ x b)) A)
+          C] ))
+
   (define (matrix-negate A)
     (if (eq? (array-type A) 'f64)
         (matrix-scaled -1.0 A)
         (matrix-scaled -1 A)))
 
-  (define (result-type type-A type-B)
+  (define (f64matrix* A B)
+    (f64matrix-f64matrix* (vector->matrix A) (vector->matrix B)))
+
+  (define (f64matrix+ A B)
+    (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
+
+  (define (f64matrix- A B)
+    (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
+
+  ;;-----------------------------------------------------------------------
+
+  (define (row*col row column-transposed)
+    (apply + (map * (generalized-vector->list row)
+                  (generalized-vector->list column-transposed))))
+
+  (define (multiplication-result-type type-A type-B)
     (match (cons type-A type-B)
       [('f64 . _) 'f64]
       [(_ . 'f64) 'f64]
@@ -268,7 +291,7 @@ array)."
            (let* ([n (car nk)]
                   [k (car km)]
                   [m (cadr km)]
-                  [type-C (result-type type-A type-B)]
+                  [type-C (multiplication-result-type type-A type-B)]
                   [C (make-typed-array type-C *unspecified* `[1 ,n] `[1 ,m])]
                   [row-indices (iota n 1)]
                   [rows (vector-map (lambda (i) (matrix-row A i))
@@ -306,6 +329,32 @@ array)."
                       'matrix*
                       (_ "the first operand has illegal type") A)])])]
       [(. rest) (reduce (lambda (B A) (matrix* A B)) 1 rest)] ))
+
+  ;;-----------------------------------------------------------------------
+
+  (define matrix/
+    (case-lambda
+      [(A B) (cond
+              [(not (number? B))
+               (assertion-violation
+                'matrix/
+                (if (array? B)
+                    (_ "division by a matrix")
+                    (_ "the second operand has illegal type"))
+                B)]
+              [(array? A) (matrix-scaled-by-division A B)]
+              [(number? A) (/ A B)]
+              [_ (assertion-violation
+                  'matrix/ (_ "the first operand has illegal type") A)] )]
+      [(A) (cond
+            [(number? A) (/ A)]
+            [(array? A) (assertion-violation
+                         'matrix/ (_ "division by a matrix") A)]
+            [_ (assertion-violation
+                'matrix/ (_ "the operand has illegal type") A)] )]
+      [(A . rest) (fold-left matrix/ A rest)] ))
+
+  ;;-----------------------------------------------------------------------
 
   (define (add-matrices A B)
     (match (cons (array-type A) (array-type B))
@@ -365,6 +414,8 @@ array)."
             (_ "the second operand has illegal type") B)] )] )]
       [(. rest) (reduce (lambda (B A) (matrix+ A B)) 0 rest)] ))
 
+  ;;-----------------------------------------------------------------------
+
   (define (subtract-matrices A B)
     (match (cons (array-type A) (array-type B))
       [('f64 . 'f64) (f64matrix- A B)]
@@ -423,5 +474,7 @@ array)."
             (_ "the second operand has illegal type") B)] )] )]
       [(A) (if (number? A) (- A) (matrix-negate A))]
       [(A . rest) (fold-left matrix- A rest)] ))
+
+  ;;-----------------------------------------------------------------------
 
   ) ;; end of library.
