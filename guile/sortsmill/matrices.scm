@@ -18,6 +18,7 @@
 (library (sortsmill matrices)
 
   (export not-a-matrix
+          rank-deficiency-exception
 
           zero-based
           one-based
@@ -31,6 +32,12 @@
           zero-f64matrix
           I-matrix
           I-f64matrix
+
+          matrix-map
+          matrix-copy
+
+          f64vector->diagonal-f64matrix
+          vector->diagonal-matrix
 
           vector->matrix
           row-matrix->vector
@@ -124,6 +131,9 @@
           f64matrix-solve:AX^=B^
           f64matrix-solve:AX=B
           f64matrix-solve:XA=B
+
+          ;; Inverse or pseudoinverse.
+          f64matrix-pinv
           )
 
   (import (sortsmill dynlink)
@@ -132,7 +142,7 @@
           (sortsmill kwargs)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) iota reduce take)
+          (only (srfi :1) every iota reduce take)
           (srfi :4)
           (ice-9 match))
 
@@ -147,6 +157,9 @@
         (apply assertion-violation caller
                (_ "expected vectors or matrices")
                irritant more-irritants)))
+
+  (define (rank-deficiency-exception caller . irritants)
+    (apply error caller (_ "rank-deficient matrix") irritants))
 
   ;;-----------------------------------------------------------------------
 
@@ -237,6 +250,32 @@
           [n^m^ (matrix-dimensions B)])
       (and (= (car nm) (car n^m^))
            (= (cadr nm) (cadr n^m^)))))
+
+  (define (matrix-map proc A)
+    (let* ([type (array-type A)]
+           [shape (array-shape A)]
+           [B (apply make-typed-array type *unspecified* shape)])
+      (array-map! B proc A)
+      B))
+
+  (define (matrix-copy A)
+    (matrix-map identity A))
+
+  (define (f64vector->diagonal-f64matrix v)
+    (let* ([v (row-matrix->vector v)]
+           [n (f64vector-length v)]
+           [A (zero-f64matrix n)])
+      (array-map! (matrix-diagonal A) identity v)
+      A))
+
+  (define (vector->diagonal-matrix v)
+    (if (f64vector? v)
+        [f64vector->diagonal-f64matrix v]
+        [let* ([v (row-matrix->vector v)]
+               [n (generalized-vector-length v)]
+               [A (zero-matrix n)])
+          (array-map! (matrix-diagonal A) identity v)
+          A] ))
 
   ;;-----------------------------------------------------------------------
 
@@ -647,34 +686,48 @@ array)."
       (lambda (U S V)
         (let ([effective-rank (matrix-svd-effective-rank S rcond)])
           (when full-rank?
-            (unless (= effective-rank (generalized-vector-length S))
-            (error 'f64matrix-solve:AX^=B^
-                   (_ "the A matrix is effectively rank-deficient")
-                   A)))
-        (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
-               [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
-          (values X effective-rank))))))
+            (unless (= effective-rank (f64vector-length S))
+              (rank-deficiency-exception 'f64matrix-solve:AX^=B^ A)))
+          (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
+                 [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
+            (values X effective-rank))))))
 
-(define/kwargs (f64matrix-solve:AX=B A B
-                                     [full-rank? #t]
-                                     [rcond (current-matrix-svd-rcond)])
-  (call-with-values (lambda () (f64matrix-svd A))
-    (lambda (U S V)
-      (let ([effective-rank (matrix-svd-effective-rank S rcond)])
-        (when full-rank?
-          (unless (= effective-rank (generalized-vector-length S))
-          (error 'f64matrix-solve:AX=B
-                 (_ "the A matrix is effectively rank-deficient")
-                 A)))
-      (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
-             [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
-        (values X effective-rank))))))
+  (define/kwargs (f64matrix-solve:AX=B A B
+                                       [full-rank? #t]
+                                       [rcond (current-matrix-svd-rcond)])
+    (call-with-values (lambda () (f64matrix-svd A))
+      (lambda (U S V)
+        (let ([effective-rank (matrix-svd-effective-rank S rcond)])
+          (when full-rank?
+            (unless (= effective-rank (f64vector-length S))
+              (rank-deficiency-exception 'f64matrix-solve:AX=B A)))
+          (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
+                 [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
+            (values X effective-rank))))))
 
-(define/kwargs (f64matrix-solve:XA=B A B
-                                     [full-rank? #t]
-                                     [rcond (current-matrix-svd-rcond)])
-  (f64matrix-solve:AX^=B^ (matrix-transpose A) B full-rank? rcond))
+  (define/kwargs (f64matrix-solve:XA=B A B
+                                       [full-rank? #t]
+                                       [rcond (current-matrix-svd-rcond)])
+    (f64matrix-solve:AX^=B^ (matrix-transpose A) B full-rank? rcond))
 
-;;-----------------------------------------------------------------------
+  (define/kwargs (f64matrix-pinv A
+                                 [full-rank? #t]
+                                 [rcond (current-matrix-svd-rcond)])
+    "Return the inverse or Moore-Penrose pseudoinverse of A, and the
+effective rank of A."
+    (call-with-values (lambda () (f64matrix-svd A))
+      (lambda (U S V)
+        (let ([effective-rank (matrix-svd-effective-rank S rcond)])
+          (when full-rank?
+            (unless (= effective-rank (f64vector-length S))
+              (rank-deficiency-exception 'f64matrix-pinv A)))
+          (let* ([S-pinv (matrix-map (lambda (x) (if (flzero? x) x (/ x)))
+                                    (matrix-svd-limit-rank S effective-rank))]
+                 [A-pinv (f64matrix*
+                          (f64matrix* V (f64vector->diagonal-f64matrix S-pinv))
+                          (matrix-transpose U))])
+            (values A-pinv effective-rank))))))
+
+  ;;-----------------------------------------------------------------------
 
 ) ;; end of library.
