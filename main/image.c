@@ -153,7 +153,7 @@ my_main (int argc, char **argv)
 
   if (!g_option_context_parse (context, &argc, &argv, &error))
     {
-      printf (_("%s: %s\n"), program_name, error->message);
+      printf ("%s: %s\n", program_name, error->message);
       exit (1);
     }
 
