@@ -113,51 +113,17 @@
           matrix-svd-effective-rank
           matrix-svd-limit-rank
 
-          ;;;;;;;;;;;; FIXME FIXME FIXME FIXME
-          ;;;;;;;;;;;;
-          ;;;;;;;;;;;; Document that the linear systems solvers below
-          ;;;;;;;;;;;; can handle multiple vectors at once, or in
-          ;;;;;;;;;;;; other words that they can take a matrix B (not
-          ;;;;;;;;;;;; necessarily a vector) and return a matrix X of
-          ;;;;;;;;;;;; the same shape.
-          ;;;;;;;;;;;;
-          ;;;;;;;;;;;; Also change their names so it is clearer what
-          ;;;;;;;;;;;; systems they solve, and devise similar
-          ;;;;;;;;;;;; procedures for solving the system with all
-          ;;;;;;;;;;;; matrices transposed and the order of
-          ;;;;;;;;;;;; multiplication reversed. (That is, the same
-          ;;;;;;;;;;;; problem formulated with row vectors instead of
-          ;;;;;;;;;;;; column vectors for b and x.)
-          ;;;;;;;;;;;;
-          ;;;;;;;;;;;; Also try to move documentation into doc
-          ;;;;;;;;;;;; strings.
-          ;;;;;;;;;;;;
-          ;;;;;;;;;;;; Also test these procedures. They really could
-          ;;;;;;;;;;;; use regression tests.
-          ;;;;;;;;;;;;
-          ;;;;;;;;;;;; FIXME FIXME FIXME FIXME
-
-          ;; (f64matrix-svd-solve-transposed U S V b-transpose)
-          ;; returns the transpose of the (least squares) solution
-          ;; vector of Ax=b, where b-transpose is a row vector.
+          ;;; FIXME: These need documentation and regression tests.
           f64matrix-svd-solve:USV^X^=B^
-
-          ;; (f64matrix-svd-solve U S V b) returns the (least squares)
-          ;; solution vector of Ax=b, where b is a column vector.
           f64matrix-svd-solve:USV^X=B
 
-          ;; (f64matrix-solve-transposed A b-transpose) returns the
-          ;; transpose of the (least squares) solution vector of Ax=b,
-          ;; where b-transpose is a row vector/matrix. In the current
-          ;; implementation, the solution is computed using the
-          ;; current SVG algorithm.
+          ;;; FIXME: These need documentation and regression tests.
+          ;;
+          ;; In the current implementation, the following linear
+          ;; system solvers use the current SVD algorithm.
           f64matrix-solve:AX^=B^
-
-          ;; (f64matrix-svd-solve A b) returns the (least squares)
-          ;; solution vector of Ax=b, where b is a column matrix. In
-          ;; the current implementation, the solution is computed
-          ;; using the current SVG algorithm.
           f64matrix-solve:AX=B
+          f64matrix-solve:XA=B
           )
 
   (import (sortsmill dynlink)
@@ -703,6 +669,11 @@ array)."
       (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
              [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
         (values X effective-rank))))))
+
+(define/kwargs (f64matrix-solve:XA=B A B
+                                     [full-rank? #t]
+                                     [rcond (current-matrix-svd-rcond)])
+  (f64matrix-solve:AX^=B^ (matrix-transpose A) B full-rank? rcond))
 
 ;;-----------------------------------------------------------------------
 
