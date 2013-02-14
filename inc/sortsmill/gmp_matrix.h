@@ -23,8 +23,8 @@
 #warning This interface uses C99 variable arrays.
 #endif
 
-#ifndef _SORTSMILL_LINALG_H
-#define _SORTSMILL_LINALG_H
+#ifndef _SORTSMILL_GMP_MATRIX_H
+#define _SORTSMILL_GMP_MATRIX_H
 
 #include <gmp.h>
 #include <gsl/gsl_blas.h>
@@ -123,4 +123,4 @@ void mpq_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
 
 /*-----------------------------------------------------------------------*/
 
-#endif /* _SORTSMILL_LINALG_H */
+#endif /* _SORTSMILL_GMP_MATRIX_H */

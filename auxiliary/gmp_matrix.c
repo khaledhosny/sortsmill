@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/linalg.h>
+#include <sortsmill/gmp_matrix.h>
 #include <stdbool.h>
 
 _GL_ATTRIBUTE_PURE static inline bool
@@ -40,18 +40,18 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 #undef _GMP_TYPE2
 #define _GMP_TYPE(y) mpz##y
 #define _GMP_TYPE2(x,y) x##mpz##y
-#include <linalg_matrix_init.c>
-#include <linalg_matrix_set.c>
-#include <linalg_matrix_copy.c>
-#include <linalg_matrix_swap.c>
-#include <linalg_matrix_mult.c>
+#include <gmp_matrix_init.c>
+#include <gmp_matrix_set.c>
+#include <gmp_matrix_copy.c>
+#include <gmp_matrix_swap.c>
+#include <gmp_matrix_mult.c>
 
 #undef _GMP_TYPE
 #undef _GMP_TYPE2
 #define _GMP_TYPE(y) mpq##y
 #define _GMP_TYPE2(x,y) x##mpq##y
-#include <linalg_matrix_init.c>
-#include <linalg_matrix_set.c>
-#include <linalg_matrix_copy.c>
-#include <linalg_matrix_swap.c>
-#include <linalg_matrix_mult.c>
+#include <gmp_matrix_init.c>
+#include <gmp_matrix_set.c>
+#include <gmp_matrix_copy.c>
+#include <gmp_matrix_swap.c>
+#include <gmp_matrix_mult.c>

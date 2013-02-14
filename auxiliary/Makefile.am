@@ -55,7 +55,7 @@ dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c x_alloc.c xgc.c	\
 dist_libsortsmill_aux_la_SOURCES += rexp.c
 
 # Extensions to GNU MP.
-dist_libsortsmill_aux_la_SOURCES += gmp_constants.c linalg.c
+dist_libsortsmill_aux_la_SOURCES += gmp_constants.c gmp_matrix.c
 
 # Extensions to libunistring.
 dist_libsortsmill_aux_la_SOURCES += xunicase.c xuniconv.c xuninorm.c	\
@@ -93,17 +93,19 @@ libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmill_aux_la_LDFLAGS = $(call ldflags) -export-dynamic
 libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 
-LINALG_EXTRAS = linalg_matrix_init.c linalg_matrix_set.c			\
-	linalg_matrix_copy.c linalg_matrix_swap.c linalg_matrix_mult.c
+# The GMP_MATRIX_EXTRAS files are included by gmp_matrix.c rather than
+# compiled directly.
+GMP_MATRIX_EXTRAS = gmp_matrix_init.c gmp_matrix_set.c		\
+	gmp_matrix_copy.c gmp_matrix_swap.c gmp_matrix_mult.c
 
-linalg.lo: $(LINALG_EXTRAS)
+gmp_matrix.lo: $(GMP_MATRIX_EXTRAS)
 
 precomputed_polyspline_data.c: precompute-polyspline-data.scm Makefile
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $< $(POLYSPLINE_PRECOMPUTED_DEGREE_MAX) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-EXTRA_DIST = $(LINALG_EXTRAS) precompute-polyspline-data.scm
+EXTRA_DIST = $(GMP_MATRIX_EXTRAS) precompute-polyspline-data.scm
 
 MOSTLYCLEANFILES = precomputed_polyspline_data.c
 

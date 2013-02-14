@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/linalg.h>
+#include <sortsmill/gmp_matrix.h>
 
 VISIBLE void
 _GMP_TYPE (_matrix_swap_rows) (unsigned int m, unsigned int n,
