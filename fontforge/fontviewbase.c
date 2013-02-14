@@ -1602,7 +1602,7 @@ void FVMetricsCenter(FontViewBase *fv,int docenter) {
 		}
 	    }
 	}
-    } else {
+    } else if (fv->active_bitmap != NULL) {
 	double scale = (fv->sf->ascent+fv->sf->descent)/(double) (fv->active_bitmap->pixelsize);
 	for ( i=0; i<fv->map->enccount; ++i ) {
 	    if ( fv->selected[i] && (gid=fv->map->map[i])!=-1 &&
