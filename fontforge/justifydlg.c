@@ -161,7 +161,7 @@ static int JSTF_Glyph_OK(GGadget *g, GEvent *e) {
 	if ( rows==0 )
 	    gld->ret = NULL;
 	else {
-	    char **names = xmalloc (rows);
+	    char **names = g_new0 (char *, rows);
 	    char *ret;
 	    for (int i = 0; i < rows; ++i)
 		names[i] = g_strdup (strings[i].u.md_str);
