@@ -155,26 +155,21 @@ static int JSTF_Glyph_OK(GGadget *g, GEvent *e) {
 
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct glyph_list_dlg *gld = GDrawGetUserData(GGadgetGetWindow(g));
-	int rows, i, len;
+	int rows;
 	struct matrix_data *strings = GMatrixEditGet(GWidgetGetControl(gld->gw,CID_Glyphs), &rows);
-	char *ret;
 
 	if ( rows==0 )
 	    gld->ret = NULL;
 	else {
-	    len = 0;
-	    for ( i=0; i<rows; ++i )
-		len += strlen(strings[1*i+0].u.md_str) +1;
-	    ret = xmalloc(len+1);
-	    for ( i=0; i<rows; ++i ) {
-		strcpy(ret,strings[1*i+0].u.md_str);
-		strcat(ret," ");
-		ret += strlen(ret);
-	    }
-	    if ( ret>gld->ret && ret[-1] == ' ' )
-		ret[-1] = '\0';
+	    char **names = xmalloc (rows);
+	    char *ret;
+	    for (int i = 0; i < rows; ++i)
+		names[i] = g_strdup (strings[i].u.md_str);
+	    names[rows] = NULL;
+	    ret = g_strjoinv (" ", names);
 	    gld->ret = GlyphNameListDeUnicode(ret);
-	    free(ret);
+	    g_free (ret);
+	    g_strfreev (names);
 	}
 	gld->done = true;
     }
