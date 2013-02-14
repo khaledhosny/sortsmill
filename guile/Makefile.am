@@ -57,18 +57,20 @@ nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 
-DIST_SCM_FILES += sortsmill/alloc.scm sortsmill/matrices.scm			\
-	sortsmill/iconv.scm sortsmill/linalg.scm sortsmill/polyspline.scm	\
-	sortsmill/brentroot.scm sortsmill/sfd-to-sxml.scm					\
-	sortsmill/views.scm sortsmill/api-syntax.scm						\
-	sortsmill/notices.scm sortsmill/hash-guillemet.scm					\
-	sortsmill/strings.scm sortsmill/ffcompat.scm sortsmill/i18n.scm		\
-	sortsmill/dynlink.scm sortsmill/contours.scm
+DIST_SCM_FILES += sortsmill/kwargs.scm sortsmill/alloc.scm			\
+	sortsmill/matrices.scm sortsmill/iconv.scm sortsmill/linalg.scm	\
+	sortsmill/polyspline.scm sortsmill/brentroot.scm				\
+	sortsmill/sfd-to-sxml.scm sortsmill/views.scm					\
+	sortsmill/api-syntax.scm sortsmill/notices.scm					\
+	sortsmill/hash-guillemet.scm sortsmill/strings.scm				\
+	sortsmill/ffcompat.scm sortsmill/i18n.scm sortsmill/dynlink.scm	\
+	sortsmill/contours.scm
 #sortsmill/precompute.scm
-GO_FILES += sortsmill/alloc.go sortsmill/matrices.go				\
-	sortsmill/iconv.go sortsmill/linalg.go sortsmill/polyspline.go	\
-	sortsmill/brentroot.go sortsmill/sfd-to-sxml.go					\
-	sortsmill/views.go sortsmill/api-syntax.go sortsmill/notices.go	\
+GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
+	sortsmill/matrices.go sortsmill/iconv.go sortsmill/linalg.go	\
+	sortsmill/polyspline.go sortsmill/brentroot.go					\
+	sortsmill/sfd-to-sxml.go sortsmill/views.go						\
+	sortsmill/api-syntax.go sortsmill/notices.go					\
 	sortsmill/hash-guillemet.go sortsmill/strings.go				\
 	sortsmill/ffcompat.go sortsmill/i18n.go sortsmill/dynlink.go	\
 	sortsmill/contours.go
@@ -113,12 +115,15 @@ GO_FILES += sortsmill/gdraw-api.go
 
 endif HAVE_GUI
 
+sortsmill/matrices.go: sortsmill/kwargs.go
+
 sortsmill/alloc.go sortsmill/brentroot.go: sortsmill/dynlink.go
 sortsmill/ffcompat.go sortsmill/matrices.go sortsmill/i18n.go: sortsmill/dynlink.go
 sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
 sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go
 sortsmill/usermenu/python.go sortsmill/usermenu.go: sortsmill/dynlink.go
 
+sortsmill/kwargs.go: sortsmill/i18n.go
 sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
 sortsmill/usermenu.go sortsmill/views.go sortsmill/matrices.go: sortsmill/i18n.go
 

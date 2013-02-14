@@ -163,6 +163,7 @@
   (import (sortsmill dynlink)
           (sortsmill i18n)
           (sortsmill math-constants)
+          (sortsmill kwargs)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) iota reduce take)
@@ -673,21 +674,21 @@ array)."
     (matrix-transpose
      (f64matrix-svd-solve:USV^X^=B^ U S V (matrix-transpose B))))
 
-  (define (f64matrix-solve:AX^=B^ A B)
-    (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V)
-        (let* ([effective-rank (matrix-svd-effective-rank S)]
-               [revised-S (matrix-svd-limit-rank S effective-rank)]
-               [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
-          (values X effective-rank)))))
+  (define/kwargs (f64matrix-solve:AX^=B^ A B)
+     (call-with-values (lambda () (f64matrix-svd A))
+       (lambda (U S V)
+         (let* ([effective-rank (matrix-svd-effective-rank S)]
+                [revised-S (matrix-svd-limit-rank S effective-rank)]
+                [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
+           (values X effective-rank)))))
 
-  (define (f64matrix-solve:AX=B A B)
-    (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V)
-        (let* ([effective-rank (matrix-svd-effective-rank S)]
-               [revised-S (matrix-svd-limit-rank S effective-rank)]
-               [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
-          (values X effective-rank)))))
+  (define/kwargs (f64matrix-solve:AX=B A B)
+     (call-with-values (lambda () (f64matrix-svd A))
+       (lambda (U S V)
+         (let* ([effective-rank (matrix-svd-effective-rank S)]
+                [revised-S (matrix-svd-limit-rank S effective-rank)]
+                [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
+           (values X effective-rank)))))
 
   ;;-----------------------------------------------------------------------
 
