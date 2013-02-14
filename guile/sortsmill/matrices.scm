@@ -674,22 +674,36 @@ array)."
     (matrix-transpose
      (f64matrix-svd-solve:USV^X^=B^ U S V (matrix-transpose B))))
 
-  (define/kwargs (f64matrix-solve:AX^=B^ A B)
+  (define/kwargs (f64matrix-solve:AX^=B^ A B
+                                         [full-rank? #t]
+                                         [rcond (current-matrix-svd-rcond)])
     (call-with-values (lambda () (f64matrix-svd A))
       (lambda (U S V)
-        (let* ([effective-rank (matrix-svd-effective-rank S)]
-               [revised-S (matrix-svd-limit-rank S effective-rank)]
+        (let ([effective-rank (matrix-svd-effective-rank S rcond)])
+          (when full-rank?
+            (unless (= effective-rank (generalized-vector-length S))
+            (error 'f64matrix-solve:AX^=B^
+                   (_ "the A matrix is effectively rank-deficient")
+                   A)))
+        (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
                [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
-          (values X effective-rank)))))
+          (values X effective-rank))))))
 
-  (define/kwargs (f64matrix-solve:AX=B A B)
-    (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V)
-        (let* ([effective-rank (matrix-svd-effective-rank S)]
-               [revised-S (matrix-svd-limit-rank S effective-rank)]
-               [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
-          (values X effective-rank)))))
+(define/kwargs (f64matrix-solve:AX=B A B
+                                     [full-rank? #t]
+                                     [rcond (current-matrix-svd-rcond)])
+  (call-with-values (lambda () (f64matrix-svd A))
+    (lambda (U S V)
+      (let ([effective-rank (matrix-svd-effective-rank S rcond)])
+        (when full-rank?
+          (unless (= effective-rank (generalized-vector-length S))
+          (error 'f64matrix-solve:AX=B
+                 (_ "the A matrix is effectively rank-deficient")
+                 A)))
+      (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
+             [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
+        (values X effective-rank))))))
 
-  ;;-----------------------------------------------------------------------
+;;-----------------------------------------------------------------------
 
-  ) ;; end of library.
+) ;; end of library.
