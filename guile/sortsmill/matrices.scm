@@ -722,7 +722,7 @@ effective rank of A."
             (unless (= effective-rank (f64vector-length S))
               (rank-deficiency-exception 'f64matrix-pinv A)))
           (let* ([S-pinv (matrix-map (lambda (x) (if (flzero? x) x (/ x)))
-                                    (matrix-svd-limit-rank S effective-rank))]
+                                     (matrix-svd-limit-rank S effective-rank))]
                  [A-pinv (f64matrix*
                           (f64matrix* V (f64vector->diagonal-f64matrix S-pinv))
                           (matrix-transpose U))])
@@ -730,4 +730,4 @@ effective rank of A."
 
   ;;-----------------------------------------------------------------------
 
-) ;; end of library.
+  ) ;; end of library.
