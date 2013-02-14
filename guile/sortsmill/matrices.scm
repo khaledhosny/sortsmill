@@ -654,7 +654,7 @@ array)."
            [lst^ (append (take lst rank) (make-list (- n rank) 0))])
       (list->typed-array (array-type S) (array-shape S^) lst^)))
 
-  (define (f64matrix-svd-solve:USV^X^=B^ U S V B)
+  (define/kwargs (f64matrix-svd-solve:USV^X^=B^ U S V B)
     (let* ([shape (array-shape B)]
            [X (apply make-typed-array 'f64 *unspecified* shape)])
       (match shape
@@ -670,25 +670,25 @@ array)."
           (iota (- hi lo -1) lo))
          X] )))
 
-  (define (f64matrix-svd-solve:USV^X=B U S V B)
+  (define/kwargs (f64matrix-svd-solve:USV^X=B U S V B)
     (matrix-transpose
      (f64matrix-svd-solve:USV^X^=B^ U S V (matrix-transpose B))))
 
   (define/kwargs (f64matrix-solve:AX^=B^ A B)
-     (call-with-values (lambda () (f64matrix-svd A))
-       (lambda (U S V)
-         (let* ([effective-rank (matrix-svd-effective-rank S)]
-                [revised-S (matrix-svd-limit-rank S effective-rank)]
-                [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
-           (values X effective-rank)))))
+    (call-with-values (lambda () (f64matrix-svd A))
+      (lambda (U S V)
+        (let* ([effective-rank (matrix-svd-effective-rank S)]
+               [revised-S (matrix-svd-limit-rank S effective-rank)]
+               [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
+          (values X effective-rank)))))
 
   (define/kwargs (f64matrix-solve:AX=B A B)
-     (call-with-values (lambda () (f64matrix-svd A))
-       (lambda (U S V)
-         (let* ([effective-rank (matrix-svd-effective-rank S)]
-                [revised-S (matrix-svd-limit-rank S effective-rank)]
-                [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
-           (values X effective-rank)))))
+    (call-with-values (lambda () (f64matrix-svd A))
+      (lambda (U S V)
+        (let* ([effective-rank (matrix-svd-effective-rank S)]
+               [revised-S (matrix-svd-limit-rank S effective-rank)]
+               [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
+          (values X effective-rank)))))
 
   ;;-----------------------------------------------------------------------
 

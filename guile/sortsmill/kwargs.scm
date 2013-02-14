@@ -2,7 +2,7 @@
 ;;
 ;; Adapted from (scheme kwargs), which is part of guile-lib.
 ;;
-;; Copyright (C) 2003,2004,2007  Andy Wingo <wingo at pobox dot com>
+;; Copyright (C) 2003, 2004, 2007 Andy Wingo <wingo at pobox dot com>
 ;; Copyright (C) 2013 Barry Schwartz
 
 ;; This program is free software: you can redistribute it and/or modify
