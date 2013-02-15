@@ -79,10 +79,6 @@ MY_LOCALEDIR = ${localedir}
 #
 # Locales.
 
-FF_TEXTDOMAIN = $(PACKAGE)
-FF_SHORTCUTSDOMAIN = $(PACKAGE)-shortcuts
-FF_MACSHORTCUTSDOMAIN = $(PACKAGE)-macshortcuts
-
 TESTS_ENVIRONMENT = @LOCALCHARSET_TESTS_ENVIRONMENT@
 
 #--------------------------------------------------------------------------

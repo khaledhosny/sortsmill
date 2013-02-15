@@ -41,3 +41,14 @@ scm_raise_gsl_error (SCM arguments)
   return scm_apply_0 (scm_c_public_ref ("sortsmill gsl", "raise-gsl-error"),
                       arguments);
 }
+
+VISIBLE void
+scm_gsl_error_handler_for_raising_a_gsl_error (const char *reason,
+                                               const char *file,
+                                               int line, int gsl_errno)
+{
+  scm_raise_gsl_error (scm_list_4 (scm_from_locale_string (reason),
+                                   scm_from_locale_string (file),
+                                   scm_from_int (line),
+                                   scm_from_int (gsl_errno)));
+}

@@ -19,6 +19,10 @@
 #include <sortsmill/polyspline.h>
 #include <xalloc.h>
 
+/////////////////////////////////////////////////////////////////////
+// FIXME: It seems a good idea to use dynwinds to release handles. //
+/////////////////////////////////////////////////////////////////////
+
 void init_guile_sortsmill_polyspline (void);
 
 static SCM

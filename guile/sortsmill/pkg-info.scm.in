@@ -58,6 +58,7 @@
   (define-syntax expansion-or-f
     (lambda (x)
       (syntax-case x ()
+        [(_) #'#f]                      ; The expansion is empty.
         [(_ possible-expansion)
          (let ([maybe-symbol (syntax->datum #'possible-expansion)])
            (if (symbol? maybe-symbol)

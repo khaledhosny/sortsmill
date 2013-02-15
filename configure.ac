@@ -91,6 +91,13 @@ AC_SUBST([GUILE_API])
 
 GUILE_VERSION_MIN=2.0.6
 
+test x"${FF_TEXTDOMAIN}" = x && FF_TEXTDOMAIN="${PACKAGE}"
+test x"${FF_SHORTCUTSDOMAIN}" = x && FF_SHORTCUTSDOMAIN="${PACKAGE}-shortcuts"
+test x"${FF_MACSHORTCUTSDOMAIN}" = x && FF_MACSHORTCUTSDOMAIN="${PACKAGE}-macshortcuts"
+AC_SUBST([FF_TEXTDOMAIN])
+AC_SUBST([FF_SHORTCUTSDOMAIN])
+AC_SUBST([FF_MACSHORTCUTSDOMAIN])
+
 #--------------------------------------------------------------------------
 #
 # URLs for dependencies.

@@ -1,6 +1,7 @@
 #include <config.h>
 
 /* Copyright (C) 2000-2012 by George Williams */
+/* Copyright (C) 2013 by Barry Schwartz       */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,6 +48,8 @@
 #include <stdbool.h>
 #include <canonicalize.h>
 #include <libguile.h>
+#include <gsl/gsl_errno.h>
+#include <sortsmill/guile/gsl.h>
 #include <glib.h>
 #define GMenuItem GMenuItem_GTK // FIXME
 #include <gio/gio.h>
@@ -87,7 +90,8 @@ static void
 DoDelayedEvents (GEvent *event)
 {
   GDTimer *t = event->u.timer.timer;
-  struct delayed_event *info = (struct delayed_event *) (event->u.timer.userdata);
+  struct delayed_event *info =
+    (struct delayed_event *) (event->u.timer.userdata);
 
   if (info != NULL)
     {
@@ -151,8 +155,7 @@ static const char site_final_file[] = "site-final.scm";
 static void
 site_init (void)
 {
-  char *init_script =
-    x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
+  char *init_script = x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
   FILE *f = fopen (init_script, "r");
   if (f != NULL)
     {
@@ -260,7 +263,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   const char *description =
     x_gc_strjoin (_("For more information see: "), PACKAGE_URL, "\n",
-		  _("Submit bug reports at: "), PACKAGE_BUGREPORT, NULL);
+                  _("Submit bug reports at: "), PACKAGE_BUGREPORT, NULL);
 
   context = g_option_context_new ("- Create and edit font files");
   g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
@@ -291,7 +294,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         recovery_mode = 2;
       else
         {
-          fprintf (stderr, "Invalid argument to --recover, must be none, auto, inquire or clean\n");
+          fprintf (stderr,
+                   "Invalid argument to --recover, must be none, auto, inquire or clean\n");
           dousage (context);
         }
     }
@@ -341,7 +345,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   if (open_last)
     {
-      if (RecentFiles[0] != NULL && ViewPostScriptFont (RecentFiles[0], openflags))
+      if (RecentFiles[0] != NULL
+          && ViewPostScriptFont (RecentFiles[0], openflags))
         no_font_loaded = false;
     }
 
@@ -362,7 +367,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
               GFile *sfdir, *ufo;
               sfdir = g_file_get_child (file, "font.props");
               ufo = g_file_get_child (file, "fontinfo.plist");
-              if (g_file_query_exists (sfdir, NULL) || g_file_query_exists (ufo, NULL))
+              if (g_file_query_exists (sfdir, NULL)
+                  || g_file_query_exists (ufo, NULL))
                 {
                   /* It's probably a Unified Font Object directory or sf dir collection */
                   if (ViewPostScriptFont (path, openflags))
@@ -422,11 +428,28 @@ struct _my_args
   int exit_status;
 };
 
+static void
+restore_gsl_error_handler (void *handler)
+{
+  gsl_set_error_handler ((gsl_error_handler_t *) handler);
+}
+
 static void *
 call_fontforge (void *args)
 {
+  scm_dynwind_begin (0);
+
+  // Install the do-nothing GSL error handler, and use a dynwind to
+  // restore the original handler when we leave this function.
+  gsl_error_handler_t *old_handler = gsl_set_error_handler_off ();
+  scm_dynwind_unwind_handler (restore_gsl_error_handler, old_handler,
+                              SCM_F_WIND_EXPLICITLY);
+
   struct _my_args *a = (struct _my_args *) args;
   a->exit_status = fontforge_main_in_guile_mode (a->argc, a->argv);
+
+  scm_dynwind_end ();
+
   return NULL;
 }
 
