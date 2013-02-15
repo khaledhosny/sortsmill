@@ -150,7 +150,6 @@ event_e_h (GWindow gw, GEvent *event)
 //-------------------------------------------------------------------------
 
 static const char site_init_file[] = "site-init.scm";
-static const char site_final_file[] = "site-final.scm";
 
 static void
 site_init (void)
@@ -162,20 +161,6 @@ site_init (void)
       // There is a readable init script.
       fclose (f);
       scm_c_primitive_load (init_script);
-    }
-}
-
-static void
-site_final (void)
-{
-  char *final_script =
-    x_gc_strjoin (SHAREDIR, "/guile/", site_final_file, NULL);
-  FILE *f = fopen (final_script, "r");
-  if (f != NULL)
-    {
-      // There is a readable final script.
-      fclose (f);
-      scm_c_primitive_load (final_script);
     }
 }
 
@@ -203,9 +188,10 @@ uninm_names_db_close_unwind_handler (void *UNUSED (_p))
 }
 
 static void
-site_final_unwind_handler (void *UNUSED (_p))
+editor_finalization_unwind_handler (void *UNUSED (_p))
 {
-  site_final ();
+  scm_call_0 (scm_c_public_ref ("sortsmill editor finalization",
+                                "run-and-clear-all-finalizers"));
 }
 
 static int
@@ -361,14 +347,10 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   InitCursors ();
 
   scm_dynwind_begin (0);        // Dynwind 2.
-  
-  site_init ();
-  // FIXME FIXME FIXME FIXME FIXME FIXME: This is not really a good
-  // solution. We should in fact try to eliminate site-final.scm
-  // completely, but instead register finalization functions during
-  // site-init.scm.
-  scm_dynwind_unwind_handler (site_final_unwind_handler,
+  scm_dynwind_unwind_handler (editor_finalization_unwind_handler,
                               NULL, SCM_F_WIND_EXPLICITLY);
+
+  site_init ();
 
   /* This is an invisible window to catch some global events */
   wattrs.mask = wam_events | wam_isdlg;

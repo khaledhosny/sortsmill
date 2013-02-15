@@ -17,6 +17,7 @@
 
 (import (sortsmill notices)
         (sortsmill pkg-info)
+        (sortsmill editor finalization)
         (system foreign))
 
 ((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
@@ -48,13 +49,17 @@
  (lambda () ;; start of thunk.
 
    [if pkg-info:have-pure-api?
-       (let ([pure-create-interp (@ (sortsmill pure) pure-create-interp)])
-         (pure-create-interp '("sortsmill-editor")))]
+       (let ([pure-create-interp (@ (sortsmill pure) pure-create-interp)]
+             [pure-finalize      (@ (sortsmill pure) pure-finalize)])
+         (pure-create-interp '("sortsmill-editor"))
+         (register-finalizer "Pure interpreter" pure-finalize))]
 
    [if pkg-info:have-python-api?
-       (let ([force-py-initialized (@ (sortsmill python) force-py-initialized)]
+       (let ([force-py-finalized   (@ (sortsmill python) force-py-finalized)]
+             [force-py-initialized (@ (sortsmill python) force-py-initialized)]
              [pyexec-in-main       (@ (sortsmill python) pyexec-in-main)]
              [lines-begin-with     (@ (sortsmill python) lines-begin-with)])
+         (register-finalizer "Python interpreter" force-py-finalized)
          (force-py-initialized)
          (pyexec-in-main
           (lines-begin-with

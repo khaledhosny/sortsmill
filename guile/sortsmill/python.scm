@@ -23,6 +23,7 @@
           py-initialize
           force-py-initialized
           py-finalize
+          force-py-finalized
 
 ;;;;;; I think we are not using these.
 ;;;          make-python-error
@@ -214,6 +215,9 @@
   (define py-finalize
     (pointer->procedure
      void (sortsmill-dynlink-func "Py_Finalize" "") `()))
+
+  (define (force-py-finalized)
+    (when (py-initialized?) (py-finalize)))
 
   (define py-incref
     (let ([proc (pointer->procedure
