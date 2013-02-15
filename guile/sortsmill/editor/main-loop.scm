@@ -28,9 +28,11 @@
 
   (define %main-loop-exit-prompt (make-prompt-tag))
 
-  (define/kwargs (exit-main-loop (exit-status 0))
+  (define/kwargs (exit-main-loop (exit-status 0)
+                                 (alist '()))
     (abort-to-prompt %main-loop-exit-prompt
-                     `[(exit-status . ,exit-status)] ))
+                     `[(exit-status . ,exit-status)
+                       ,@alist] ))
 
   (define main-loop-thunk
     (let ([GDrawEventLoop

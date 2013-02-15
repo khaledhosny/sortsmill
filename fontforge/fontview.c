@@ -46,7 +46,7 @@
 #include <xunistring.h>
 #include <stdlib.h>
 #include <xalloc.h>
-#include <libguile.h>
+#include <sortsmill/guile/main_loop.h>
 #include <sortsmill/xdie_on_null.h>
 #include <canonicalize.h>
 #include <xunistring.h>
@@ -1171,9 +1171,7 @@ _MenuExit (void *UNUSED (junk))
         }
     }
 
-  // FIXME: Come up with C library routines to make this call easier.
-  scm_call_2 (scm_c_public_ref ("sortsmill editor main-loop", "exit-main-loop"),
-              scm_from_utf8_keyword ("exit-status"), scm_from_int (0));
+  scm_c_exit_editor_main_loop (0);
 }
 
 VISIBLE void

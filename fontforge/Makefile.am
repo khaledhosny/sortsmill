@@ -182,7 +182,7 @@ libsortsmill_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c	\
 	generatefontdlg.c scriptingdlg.c scstylesui.c searchview.c		\
 	sftextfield.c showatt.c simplifydlg.c startui.c tilepath.c		\
 	transform.c ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c	\
-	deltaui.c usermenu.c
+	deltaui.c usermenu.c guile_main_loop.c
 
 else !HAVE_GUI
 
