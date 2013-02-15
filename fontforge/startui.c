@@ -446,9 +446,11 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (no_font_loaded)
     FontNew ();
 
-  int longjmp_val = setjmp (exit_jmp_buf);
-  if (longjmp_val == 0)
-    GDrawEventLoop (NULL);
+  SCM alist = scm_call_0 (scm_c_public_ref ("sortsmill editor main-loop",
+                                            "main-loop"));
+  SCM exit_stat = scm_assoc_ref (alist, scm_from_utf8_symbol ("exit-status"));
+  if (scm_is_true (exit_stat))
+    exit_status = scm_to_int (exit_stat);
 
   scm_dynwind_end ();           // Dynwind 2.
 

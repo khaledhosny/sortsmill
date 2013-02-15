@@ -64,7 +64,8 @@ DIST_SCM_FILES += sortsmill/kwargs.scm sortsmill/alloc.scm			\
 	sortsmill/api-syntax.scm sortsmill/notices.scm					\
 	sortsmill/hash-guillemet.scm sortsmill/strings.scm				\
 	sortsmill/ffcompat.scm sortsmill/i18n.scm sortsmill/dynlink.scm	\
-	sortsmill/contours.scm sortsmill/editor/finalization.scm
+	sortsmill/contours.scm sortsmill/editor/finalization.scm		\
+	sortsmill/editor/main-loop.scm
 #sortsmill/precompute.scm
 GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
 	sortsmill/matrices.go sortsmill/iconv.go sortsmill/linalg.go	\
@@ -73,7 +74,8 @@ GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
 	sortsmill/api-syntax.go sortsmill/notices.go					\
 	sortsmill/hash-guillemet.go sortsmill/strings.go				\
 	sortsmill/ffcompat.go sortsmill/i18n.go sortsmill/dynlink.go	\
-	sortsmill/contours.go sortsmill/editor/finalization.go
+	sortsmill/contours.go sortsmill/editor/finalization.go			\
+	sortsmill/editor/main-loop.go
 
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
 	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in	\
@@ -117,8 +119,10 @@ GO_FILES += sortsmill/gdraw-api.go
 
 endif HAVE_GUI
 
+sortsmill/editor/main-loop.go: sortsmill/kwargs.go
 sortsmill/gsl.go sortsmill/matrices.go: sortsmill/kwargs.go
 
+sortsmill/editor/main-loop.go: sortsmill/dynlink.go
 sortsmill/alloc.go sortsmill/brentroot.go sortsmill/gsl.go: sortsmill/dynlink.go
 sortsmill/ffcompat.go sortsmill/matrices.go sortsmill/i18n.go: sortsmill/dynlink.go
 sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
