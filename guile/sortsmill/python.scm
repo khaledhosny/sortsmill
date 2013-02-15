@@ -24,14 +24,15 @@
           force-py-initialized
           py-finalize
 
-          make-python-error
-          python-error?
-          pyerr-type
-          condition-pyerr-type
-          pyerr-value
-          condition-pyerr-value
-          pyerr-traceback
-          condition-pyerr-traceback
+;;;;;; I think we are not using these.
+;;;          make-python-error
+;;;          python-error?
+;;;          pyerr-type
+;;;          condition-pyerr-type
+;;;          pyerr-value
+;;;          condition-pyerr-value
+;;;          pyerr-traceback
+;;;          condition-pyerr-traceback
 
           pyobject?
           pointer->pyobject
@@ -230,11 +231,12 @@
         (assert (pyobject? obj))
         (proc (pyobject->pointer obj)))))
 
-  (define-condition-type &python-error &error
-    make-python-error python-error?
-    (pyerr-type condition-pyerr-type)
-    (pyerr-value condition-pyerr-value)
-    (pyerr-traceback condition-pyerr-traceback))
+;;;;;; FIXME: I think we are not using this.
+;;;  (define-condition-type &python-error &error
+;;;    make-python-error python-error?
+;;;    (pyerr-type condition-pyerr-type)
+;;;    (pyerr-value condition-pyerr-value)
+;;;    (pyerr-traceback condition-pyerr-traceback))
 
   (define-wrapped-pointer-type pyobject
     pyobject?

@@ -76,11 +76,13 @@ GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
 	sortsmill/contours.go
 
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
-	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in
+	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in	\
+	sortsmill/gsl.scm.in
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm	\
-	sortsmill/math-constants.scm sortsmill/pkg-info.scm
+	sortsmill/math-constants.scm sortsmill/pkg-info.scm	\
+	sortsmill/gsl.scm
 GO_FILES += sortsmill/machine.go sortsmill/math-constants.go	\
-	sortsmill/pkg-info.go
+	sortsmill/pkg-info.go sortsmill/gsl.go
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
 GO_FILES += sortsmill/fontforge-api.go
@@ -115,9 +117,9 @@ GO_FILES += sortsmill/gdraw-api.go
 
 endif HAVE_GUI
 
-sortsmill/matrices.go: sortsmill/kwargs.go
+sortsmill/gsl.go sortsmill/matrices.go: sortsmill/kwargs.go
 
-sortsmill/alloc.go sortsmill/brentroot.go: sortsmill/dynlink.go
+sortsmill/alloc.go sortsmill/brentroot.go sortsmill/gsl.go: sortsmill/dynlink.go
 sortsmill/ffcompat.go sortsmill/matrices.go sortsmill/i18n.go: sortsmill/dynlink.go
 sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
 sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go

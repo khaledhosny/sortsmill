@@ -1,6 +1,6 @@
 #include <config.h>
 
-// Copyright (C) 2012 Barry Schwartz
+// Copyright (C) 2012, 2013 Barry Schwartz
 // 
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include <sortsmill/guile/matrices.h>
+#include <sortsmill/guile/gsl.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <libguile.h>
 #include <gsl/gsl_blas.h>
@@ -28,21 +29,6 @@
 //////////////////////////////////////////////////
 
 void init_guile_sortsmill_matrices (void);
-
-// FIXME: Put scm_c_gsl_error in a more general GSL module.
-VISIBLE SCM
-scm_c_gsl_error (int errval, const char *who, SCM irritants)
-{
-  SCM errstr =
-    scm_string_append (scm_list_2 (scm_from_utf8_string (_("GSL error: ")),
-                                   scm_from_utf8_string (gsl_strerror
-                                                         (errval))));
-  return
-    rnrs_raise_condition (scm_list_4
-                          (rnrs_make_error (), rnrs_c_make_who_condition (who),
-                           rnrs_make_message_condition (errstr),
-                           rnrs_make_irritants_condition (irritants)));
-}
 
 VISIBLE gsl_vector_const_view
 scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
@@ -377,7 +363,13 @@ scm_f64matrix_svd_golub_reinsch (SCM a)
   int errval = gsl_linalg_SV_decomp (&u.matrix, &v.matrix, &s.vector,
                                      &work.vector);
   if (errval != GSL_SUCCESS)
-    scm_c_gsl_error (errval, who, scm_list_1 (a));
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_1 (a), SCM_UNDEFINED));
   SCM values[3] = {
     scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
     scm_gsl_vector_to_f64vector (&s.vector, 1),
@@ -408,7 +400,13 @@ scm_f64matrix_svd_modified_golub_reinsch (SCM a)
   int errval = gsl_linalg_SV_decomp_mod (&u.matrix, &x.matrix, &v.matrix,
                                          &s.vector, &work.vector);
   if (errval != GSL_SUCCESS)
-    scm_c_gsl_error (errval, who, scm_list_1 (a));
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_1 (a), SCM_UNDEFINED));
   SCM values[3] = {
     scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
     scm_gsl_vector_to_f64vector (&s.vector, 1),
@@ -434,7 +432,13 @@ scm_f64matrix_svd_jacobi (SCM a)
   scm_array_handle_release (&handle_a);
   int errval = gsl_linalg_SV_decomp_jacobi (&u.matrix, &v.matrix, &s.vector);
   if (errval != GSL_SUCCESS)
-    scm_c_gsl_error (errval, who, scm_list_1 (a));
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_1 (a), SCM_UNDEFINED));
   SCM values[3] = {
     scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
     scm_gsl_vector_to_f64vector (&s.vector, 1),
@@ -465,7 +469,13 @@ scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V,
   gsl_vector vb = scm_gsl_vector_const_view_array_handle (&handle_b).vector;
   int errval = gsl_linalg_SV_solve (&mU, &mV, &vS, &vb, &vx.vector);
   if (errval != GSL_SUCCESS)
-    scm_c_gsl_error (errval, who, scm_list_4 (U, S, V, b_transpose));
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_4 (U, S, V, b_transpose), SCM_UNDEFINED));
   scm_array_handle_release (&handle_U);
   scm_array_handle_release (&handle_V);
   scm_array_handle_release (&handle_S);

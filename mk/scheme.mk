@@ -1,3 +1,5 @@
+# -*- tab-width: 4 -*-
+
 # Copyright (C) 2012 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
@@ -24,8 +26,6 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Do this here rather than in configure.ac so some of these settings
-# can be overridden when Make is run.
 CONFIGURE_SCHEME =														\
 	$(SED) 																\
 		-e 's|@''GUILE''@|$(GUILE)|g' 									\
@@ -69,4 +69,39 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''PY_RELEASE_SERIAL''@|$(PY_RELEASE_SERIAL)|g'			\
 		-e 's|@''PY_VERSION''@|$(PY_VERSION)|g'							\
 		-e 's|@''PY_VERSION_QUOTED''@|$(PY_VERSION_QUOTED)|g'			\
-		-e 's|@''PY_VERSION_HEX''@|$(PY_VERSION_HEX)|g'
+		-e 's|@''PY_VERSION_HEX''@|$(PY_VERSION_HEX)|g'					\
+		-e 's|@''GSL_SUCCESS''@|$(GSL_SUCCESS)|g'						\
+		-e 's|@''GSL_FAILURE''@|$(GSL_FAILURE)|g'						\
+		-e 's|@''GSL_CONTINUE''@|$(GSL_CONTINUE)|g'						\
+		-e 's|@''GSL_EDOM''@|$(GSL_EDOM)|g'								\
+		-e 's|@''GSL_ERANGE''@|$(GSL_ERANGE)|g'							\
+		-e 's|@''GSL_EFAULT''@|$(GSL_EFAULT)|g'							\
+		-e 's|@''GSL_EINVAL''@|$(GSL_EINVAL)|g'							\
+		-e 's|@''GSL_EFAILED''@|$(GSL_EFAILED)|g'						\
+		-e 's|@''GSL_EFACTOR''@|$(GSL_EFACTOR)|g'						\
+		-e 's|@''GSL_ESANITY''@|$(GSL_ESANITY)|g'						\
+		-e 's|@''GSL_ENOMEM''@|$(GSL_ENOMEM)|g'							\
+		-e 's|@''GSL_EBADFUNC''@|$(GSL_EBADFUNC)|g'						\
+		-e 's|@''GSL_ERUNAWAY''@|$(GSL_ERUNAWAY)|g'						\
+		-e 's|@''GSL_EMAXITER''@|$(GSL_EMAXITER)|g'						\
+		-e 's|@''GSL_EZERODIV''@|$(GSL_EZERODIV)|g'						\
+		-e 's|@''GSL_EBADTOL''@|$(GSL_EBADTOL)|g'						\
+		-e 's|@''GSL_ETOL''@|$(GSL_ETOL)|g'								\
+		-e 's|@''GSL_EUNDRFLW''@|$(GSL_EUNDRFLW)|g'						\
+		-e 's|@''GSL_EOVRFLW''@|$(GSL_EOVRFLW)|g'						\
+		-e 's|@''GSL_ELOSS''@|$(GSL_ELOSS)|g'							\
+		-e 's|@''GSL_EROUND''@|$(GSL_EROUND)|g'							\
+		-e 's|@''GSL_EBADLEN''@|$(GSL_EBADLEN)|g'						\
+		-e 's|@''GSL_ENOTSQR''@|$(GSL_ENOTSQR)|g'						\
+		-e 's|@''GSL_ESING''@|$(GSL_ESING)|g'							\
+		-e 's|@''GSL_EDIVERGE''@|$(GSL_EDIVERGE)|g'						\
+		-e 's|@''GSL_EUNSUP''@|$(GSL_EUNSUP)|g'							\
+		-e 's|@''GSL_EUNIMPL''@|$(GSL_EUNIMPL)|g'						\
+		-e 's|@''GSL_ECACHE''@|$(GSL_ECACHE)|g'							\
+		-e 's|@''GSL_ETABLE''@|$(GSL_ETABLE)|g'							\
+		-e 's|@''GSL_ENOPROG''@|$(GSL_ENOPROG)|g'						\
+		-e 's|@''GSL_ENOPROGJ''@|$(GSL_ENOPROGJ)|g'						\
+		-e 's|@''GSL_ETOLF''@|$(GSL_ETOLF)|g'							\
+		-e 's|@''GSL_ETOLX''@|$(GSL_ETOLX)|g'							\
+		-e 's|@''GSL_ETOLG''@|$(GSL_ETOLG)|g'							\
+		-e 's|@''GSL_EOF''@|$(GSL_EOF)|g'

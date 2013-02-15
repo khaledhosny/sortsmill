@@ -1,0 +1,247 @@
+;; -*- mode: scheme; coding: utf-8 -*-
+
+;; Copyright (C) 2013 Barry Schwartz
+;; 
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3 of the License, or
+;; (at your option) any later version.
+;; 
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+(library (sortsmill gsl)
+
+  (export gsl-set-error-handler
+          gsl-set-error-handler-default
+          gsl-set-error-handler-off
+
+          raise-gsl-error
+          gsl-set-error-handler:raise-gsl-error
+
+          make-gsl-error-condition
+          gsl-error-condition?
+          
+          make-gsl-errno-condition
+          gsl-errno-condition?
+          condition-gsl-errno
+
+          make-gsl-errno-symbol-condition
+          gsl-errno-symbol-condition?
+          condition-gsl-errno-symbol
+
+          make-gsl-strerror-condition
+          gsl-strerror-condition?
+          condition-gsl-strerror
+
+          GSL_SUCCESS
+          GSL_FAILURE
+          GSL_CONTINUE
+          GSL_EDOM
+          GSL_ERANGE
+          GSL_EFAULT
+          GSL_EINVAL
+          GSL_EFAILED
+          GSL_EFACTOR
+          GSL_ESANITY
+          GSL_ENOMEM
+          GSL_EBADFUNC
+          GSL_ERUNAWAY
+          GSL_EMAXITER
+          GSL_EZERODIV
+          GSL_EBADTOL
+          GSL_ETOL
+          GSL_EUNDRFLW
+          GSL_EOVRFLW
+          GSL_ELOSS
+          GSL_EROUND
+          GSL_EBADLEN
+          GSL_ENOTSQR
+          GSL_ESING
+          GSL_EDIVERGE
+          GSL_EUNSUP
+          GSL_EUNIMPL
+          GSL_ECACHE
+          GSL_ETABLE
+          GSL_ENOPROG
+          GSL_ENOPROGJ
+          GSL_ETOLF
+          GSL_ETOLX
+          GSL_ETOLG
+          GSL_EOF
+
+          gsl-errno->symbol
+          gsl-errno-symbols
+          gsl-errno->strerror
+          )
+
+  (import (sortsmill dynlink)
+          (sortsmill kwargs)
+          (rnrs)
+          (except (guile) error)
+          (system foreign)
+          (ice-9 match)
+          (ice-9 format))
+
+  (define (gsl-set-error-handler handler)
+    (assert (or (procedure? handler) (pointer? handler)))
+    (let ([c-proc
+           (pointer->procedure
+            '* (sortsmill-dynlink-func "gsl_set_error_handler"
+                                       "#include <gsl/gsl_errno.h>")
+            '(*))])
+      (cond [(procedure? handler)
+             (let* ([wrapped-handler
+                     (lambda (reason file-name line-no gsl-errno)
+                       (handler (pointer->string reason)
+                                (pointer->string file-name)
+                                line-no gsl-errno))]
+                    [c-handler (procedure->pointer
+                                void wrapped-handler `(* * ,int ,int))])
+               (c-proc c-handler))]
+            [(pointer? handler) (c-proc handler)] )))
+
+  (define (gsl-set-error-handler-default)
+    (gsl-set-error-handler %null-pointer))
+
+  (define gsl-set-error-handler-off
+    (pointer->procedure
+     '* (sortsmill-dynlink-func "gsl_set_error_handler_off"
+                                "#include <gsl/gsl_errno.h>")
+     '()))
+
+  (define-condition-type &gsl-error &serious
+    make-gsl-error-condition gsl-error-condition?)
+
+  (define-condition-type &gsl-errno &condition
+    make-gsl-errno-condition gsl-errno-condition?
+    (gsl-errno condition-gsl-errno))
+
+  (define-condition-type &gsl-errno-symbol &condition
+    make-gsl-errno-symbol-condition gsl-errno-symbol-condition?
+    (gsl-errno-symbol condition-gsl-errno-symbol))
+
+  (define-condition-type &gsl-strerror &condition
+    make-gsl-strerror-condition gsl-strerror-condition?
+    (gsl-strerror condition-gsl-strerror))
+
+  (define/kwargs (raise-gsl-error [reason #f]
+                                  [file-name #f]
+                                  [line-no #f]
+                                  gsl-errno
+                                  [who #f]
+                                  [irritants '()])
+    (raise
+     (apply condition
+            `(,[make-gsl-error-condition]
+              ,@[cond [who `(,(make-who-condition who))]
+                      [(and file-name line-no)
+                       `(,(make-who-condition
+                           (format #f "~a:~a" file-name line-no)))]
+                      [else '()]]
+              ,@[if reason `[,(make-message-condition reason)] '()]
+              ,@[let ([symb (gsl-errno->symbol gsl-errno)])
+                  (if (symbol? symb)
+                      `[,(make-gsl-errno-symbol-condition symb)]
+                      '[] )]
+              ,[make-gsl-errno-condition gsl-errno]
+              ,[make-gsl-strerror-condition
+                (gsl-errno->strerror gsl-errno)]
+              ,[make-irritants-condition irritants] ))))
+
+  (define (gsl-set-error-handler:raise-gsl-error)
+    (gsl-set-error-handler raise-gsl-error))
+
+  (define GSL_SUCCESS @GSL_SUCCESS@)
+  (define GSL_FAILURE @GSL_FAILURE@)
+  (define GSL_CONTINUE @GSL_CONTINUE@)
+  (define GSL_EDOM @GSL_EDOM@)
+  (define GSL_ERANGE @GSL_ERANGE@)
+  (define GSL_EFAULT @GSL_EFAULT@)
+  (define GSL_EINVAL @GSL_EINVAL@)
+  (define GSL_EFAILED @GSL_EFAILED@)
+  (define GSL_EFACTOR @GSL_EFACTOR@)
+  (define GSL_ESANITY @GSL_ESANITY@)
+  (define GSL_ENOMEM @GSL_ENOMEM@)
+  (define GSL_EBADFUNC @GSL_EBADFUNC@)
+  (define GSL_ERUNAWAY @GSL_ERUNAWAY@)
+  (define GSL_EMAXITER @GSL_EMAXITER@)
+  (define GSL_EZERODIV @GSL_EZERODIV@)
+  (define GSL_EBADTOL @GSL_EBADTOL@)
+  (define GSL_ETOL @GSL_ETOL@)
+  (define GSL_EUNDRFLW @GSL_EUNDRFLW@)
+  (define GSL_EOVRFLW @GSL_EOVRFLW@)
+  (define GSL_ELOSS @GSL_ELOSS@)
+  (define GSL_EROUND @GSL_EROUND@)
+  (define GSL_EBADLEN @GSL_EBADLEN@)
+  (define GSL_ENOTSQR @GSL_ENOTSQR@)
+  (define GSL_ESING @GSL_ESING@)
+  (define GSL_EDIVERGE @GSL_EDIVERGE@)
+  (define GSL_EUNSUP @GSL_EUNSUP@)
+  (define GSL_EUNIMPL @GSL_EUNIMPL@)
+  (define GSL_ECACHE @GSL_ECACHE@)
+  (define GSL_ETABLE @GSL_ETABLE@)
+  (define GSL_ENOPROG @GSL_ENOPROG@)
+  (define GSL_ENOPROGJ @GSL_ENOPROGJ@)
+  (define GSL_ETOLF @GSL_ETOLF@)
+  (define GSL_ETOLX @GSL_ETOLX@)
+  (define GSL_ETOLG @GSL_ETOLG@)
+  (define GSL_EOF @GSL_EOF@)
+
+  (define (gsl-errno->symbol errno)
+    (match (assv errno gsl-errno-symbols)
+      [(_ . symb) symb]
+      [_          errno] ))
+
+  (define gsl-errno->strerror
+    (let ([c-proc
+           (pointer->procedure
+            '* (sortsmill-dynlink-func "gsl_strerror"
+                                       "#include <gsl/gsl_errno.h>")
+            `(,int))])
+      (lambda (errno)
+        (pointer->string (c-proc errno)))))
+
+  (define gsl-errno-symbols
+    '[(@GSL_SUCCESS@ . GSL_SUCCESS)
+      (@GSL_FAILURE@ . GSL_FAILURE)
+      (@GSL_CONTINUE@ . GSL_CONTINUE)
+      (@GSL_EDOM@ . GSL_EDOM)
+      (@GSL_ERANGE@ . GSL_ERANGE)
+      (@GSL_EFAULT@ . GSL_EFAULT)
+      (@GSL_EINVAL@ . GSL_EINVAL)
+      (@GSL_EFAILED@ . GSL_EFAILED)
+      (@GSL_EFACTOR@ . GSL_EFACTOR)
+      (@GSL_ESANITY@ . GSL_ESANITY)
+      (@GSL_ENOMEM@ . GSL_ENOMEM)
+      (@GSL_EBADFUNC@ . GSL_EBADFUNC)
+      (@GSL_ERUNAWAY@ . GSL_ERUNAWAY)
+      (@GSL_EMAXITER@ . GSL_EMAXITER)
+      (@GSL_EZERODIV@ . GSL_EZERODIV)
+      (@GSL_EBADTOL@ . GSL_EBADTOL)
+      (@GSL_ETOL@ . GSL_ETOL)
+      (@GSL_EUNDRFLW@ . GSL_EUNDRFLW)
+      (@GSL_EOVRFLW@ . GSL_EOVRFLW)
+      (@GSL_ELOSS@ . GSL_ELOSS)
+      (@GSL_EROUND@ . GSL_EROUND)
+      (@GSL_EBADLEN@ . GSL_EBADLEN)
+      (@GSL_ENOTSQR@ . GSL_ENOTSQR)
+      (@GSL_ESING@ . GSL_ESING)
+      (@GSL_EDIVERGE@ . GSL_EDIVERGE)
+      (@GSL_EUNSUP@ . GSL_EUNSUP)
+      (@GSL_EUNIMPL@ . GSL_EUNIMPL)
+      (@GSL_ECACHE@ . GSL_ECACHE)
+      (@GSL_ETABLE@ . GSL_ETABLE)
+      (@GSL_ENOPROG@ . GSL_ENOPROG)
+      (@GSL_ENOPROGJ@ . GSL_ENOPROGJ)
+      (@GSL_ETOLF@ . GSL_ETOLF)
+      (@GSL_ETOLX@ . GSL_ETOLX)
+      (@GSL_ETOLG@ . GSL_ETOLG)
+      (@GSL_EOF@ . GSL_EOF)] )
+
+  ) ;; end of library.
