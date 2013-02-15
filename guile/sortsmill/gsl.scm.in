@@ -17,11 +17,19 @@
 
 (library (sortsmill gsl)
 
+  ;;
+  ;; FIXME: Add support for calling GSL functions with an ‘irritants’
+  ;; parameter, so we can throw an exception with irritants when not
+  ;; using the do-nothing error handler.
+  ;;
+
   (export gsl-set-error-handler
           gsl-set-error-handler-default
           gsl-set-error-handler-off
 
           raise-gsl-error
+          procedure->gsl-error-handler
+          gsl-error-handler:raise-gsl-error
           gsl-set-error-handler:raise-gsl-error
 
           make-gsl-error-condition
@@ -88,23 +96,11 @@
           (ice-9 match)
           (ice-9 format))
 
-  (define (gsl-set-error-handler handler)
-    (assert (or (procedure? handler) (pointer? handler)))
-    (let ([c-proc
-           (pointer->procedure
-            '* (sortsmill-dynlink-func "gsl_set_error_handler"
-                                       "#include <gsl/gsl_errno.h>")
-            '(*))])
-      (cond [(procedure? handler)
-             (let* ([wrapped-handler
-                     (lambda (reason file-name line-no gsl-errno)
-                       (handler (pointer->string reason)
-                                (pointer->string file-name)
-                                line-no gsl-errno))]
-                    [c-handler (procedure->pointer
-                                void wrapped-handler `(* * ,int ,int))])
-               (c-proc c-handler))]
-            [(pointer? handler) (c-proc handler)] )))
+  (define gsl-set-error-handler
+    (pointer->procedure
+     '* (sortsmill-dynlink-func "gsl_set_error_handler"
+                                "#include <gsl/gsl_errno.h>")
+     '(*)))
 
   (define (gsl-set-error-handler-default)
     (gsl-set-error-handler %null-pointer))
@@ -154,8 +150,19 @@
                 (gsl-errno->strerror gsl-errno)]
               ,[make-irritants-condition irritants] ))))
 
+  (define (procedure->gsl-error-handler proc)
+    (procedure->pointer void
+                        (lambda (reason file-name line-no gsl-errno)
+                          (proc (pointer->string reason)
+                                (pointer->string file-name)
+                                line-no gsl-errno))
+                        `(* * ,int ,int)))
+
+  (define gsl-error-handler:raise-gsl-error
+    (procedure->gsl-error-handler raise-gsl-error))
+
   (define (gsl-set-error-handler:raise-gsl-error)
-    (gsl-set-error-handler raise-gsl-error))
+    (gsl-set-error-handler gsl-error-handler:raise-gsl-error))
 
   (define GSL_SUCCESS @GSL_SUCCESS@)
   (define GSL_FAILURE @GSL_FAILURE@)

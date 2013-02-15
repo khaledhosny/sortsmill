@@ -184,13 +184,19 @@ site_final (void)
 jmp_buf exit_jmp_buf;
 
 static void
+restore_gsl_error_handler (void *handler)
+{
+  gsl_set_error_handler ((gsl_error_handler_t *) handler);
+}
+
+static void
 g_option_context_free_unwind_handler (void *context)
 {
   g_option_context_free ((GOptionContext *) context);
 }
 
 static void
-uninm_names_db_close_unwind_handler (void *UNUSED(_p))
+uninm_names_db_close_unwind_handler (void *UNUSED (_p))
 {
   if (names_db != NULL)
     uninm_names_db_close (names_db);
@@ -200,6 +206,12 @@ static int
 fontforge_main_in_guile_mode (int argc, char **argv)
 {
   scm_dynwind_begin (0);
+
+  // Install the do-nothing GSL error handler, and use a dynwind to
+  // restore the original handler when we leave this function.
+  gsl_error_handler_t *old_gsl_error_handler = gsl_set_error_handler_off ();
+  scm_dynwind_unwind_handler (restore_gsl_error_handler, old_gsl_error_handler,
+                              SCM_F_WIND_EXPLICITLY);
 
   const char *load_prefs = getenv ("FONTFORGE_LOADPREFS");
   int recovery_mode = 2;
@@ -445,27 +457,11 @@ struct _my_args
   int exit_status;
 };
 
-static void
-restore_gsl_error_handler (void *handler)
-{
-  gsl_set_error_handler ((gsl_error_handler_t *) handler);
-}
-
 static void *
 call_fontforge (void *args)
 {
-  scm_dynwind_begin (0);
-
-  // Install the do-nothing GSL error handler, and use a dynwind to
-  // restore the original handler when we leave this function.
-  gsl_error_handler_t *old_handler = gsl_set_error_handler_off ();
-  scm_dynwind_unwind_handler (restore_gsl_error_handler, old_handler,
-                              SCM_F_WIND_EXPLICITLY);
-
   struct _my_args *a = (struct _my_args *) args;
   a->exit_status = fontforge_main_in_guile_mode (a->argc, a->argv);
-
-  scm_dynwind_end ();
 
   return NULL;
 }

@@ -47,8 +47,6 @@
  "site-init.scm"
  (lambda () ;; start of thunk.
 
-   ((@ (sortsmill gsl) gsl-set-error-handler:raise-gsl-error))
-
    [if pkg-info:have-pure-api?
        (let ([pure-create-interp (@ (sortsmill pure) pure-create-interp)])
          (pure-create-interp '("sortsmill-editor")))]
@@ -75,6 +73,9 @@
            ;; —import ffContrib.excepthook
            »#))
          )]
+
+   ;; Install a more pleasant (one hopes) GSL error handler.
+   ((@ (sortsmill gsl) gsl-set-error-handler:raise-gsl-error))
 
    ;;
    ;; Load local-init.scm, which typically is in /etc/sortsmill-tools/
