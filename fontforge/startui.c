@@ -183,9 +183,24 @@ site_final (void)
 
 jmp_buf exit_jmp_buf;
 
+static void
+g_option_context_free_unwind_handler (void *context)
+{
+  g_option_context_free ((GOptionContext *) context);
+}
+
+static void
+uninm_names_db_close_unwind_handler (void *UNUSED(_p))
+{
+  if (names_db != NULL)
+    uninm_names_db_close (names_db);
+}
+
 static int
 fontforge_main_in_guile_mode (int argc, char **argv)
 {
+  scm_dynwind_begin (0);
+
   const char *load_prefs = getenv ("FONTFORGE_LOADPREFS");
   int recovery_mode = 2;
   int openflags = 0;
@@ -216,6 +231,9 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   FF_SetClipInterface (&gdraw_clip_interface);
 
   InitSimpleStuff ();
+
+  scm_dynwind_unwind_handler (uninm_names_db_close_unwind_handler,
+                              NULL, SCM_F_WIND_EXPLICITLY);
 
   GMenuSetShortcutDomain (FF_SHORTCUTSDOMAIN);
   bind_textdomain_codeset (FF_SHORTCUTSDOMAIN, "UTF-8");
@@ -266,6 +284,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
                   _("Submit bug reports at: "), PACKAGE_BUGREPORT, NULL);
 
   context = g_option_context_new ("- Create and edit font files");
+  scm_dynwind_unwind_handler (g_option_context_free_unwind_handler,
+                              context, SCM_F_WIND_EXPLICITLY);
   g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
   g_option_context_set_summary (context, summary);
   g_option_context_set_description (context, description);
@@ -412,10 +432,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   site_final ();
 
-  uninm_names_db_close (names_db);
-
-  g_option_context_free (context);
-
+  scm_dynwind_end ();
   return 0;
 }
 
