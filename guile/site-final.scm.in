@@ -16,7 +16,8 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 ;;;;;
-;;;;; FIXME: Add local-final.scm and user-final.scm support.
+;;;;; FIXME FIXME FIXME FIXME: Get rid of this file and instead set up
+;;;;; finalizer registration for {site,local,user}-init.scm.
 ;;;;;
 
 (if pkg-info:have-pure-api?

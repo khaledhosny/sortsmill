@@ -202,10 +202,16 @@ uninm_names_db_close_unwind_handler (void *UNUSED (_p))
     uninm_names_db_close (names_db);
 }
 
+static void
+site_final_unwind_handler (void *UNUSED (_p))
+{
+  site_final ();
+}
+
 static int
 fontforge_main_in_guile_mode (int argc, char **argv)
 {
-  scm_dynwind_begin (0);
+  scm_dynwind_begin (0);        // Dynwind 1.
 
   // Install the do-nothing GSL error handler, and use a dynwind to
   // restore the original handler when we leave this function.
@@ -354,7 +360,15 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   default_background = GDrawGetDefaultBackground (screen_display);
   InitCursors ();
 
+  scm_dynwind_begin (0);        // Dynwind 2.
+  
   site_init ();
+  // FIXME FIXME FIXME FIXME FIXME FIXME: This is not really a good
+  // solution. We should in fact try to eliminate site-final.scm
+  // completely, but instead register finalization functions during
+  // site-init.scm.
+  scm_dynwind_unwind_handler (site_final_unwind_handler,
+                              NULL, SCM_F_WIND_EXPLICITLY);
 
   /* This is an invisible window to catch some global events */
   wattrs.mask = wam_events | wam_isdlg;
@@ -442,9 +456,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (longjmp_val == 0)
     GDrawEventLoop (NULL);
 
-  site_final ();
-
-  scm_dynwind_end ();
+  scm_dynwind_end ();           // Dynwind 2.
+  scm_dynwind_end ();           // Dynwind 1.
   return 0;
 }
 
