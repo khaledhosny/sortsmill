@@ -23,4 +23,5 @@
     ((@ (sortsmill pure) pure-finalize)))
 
 (if pkg-info:have-python-api?
-    ((@ (sortsmill python) py-finalize)))
+    (if ((@ (sortsmill python) py-initialized?))
+        ((@ (sortsmill python) py-finalize))))
