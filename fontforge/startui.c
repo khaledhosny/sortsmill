@@ -199,6 +199,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 {
   scm_dynwind_begin (0);        // Dynwind 1.
 
+  int exit_status = 0;
+
   // Install the do-nothing GSL error handler, and use a dynwind to
   // restore the original handler when we leave this function.
   gsl_error_handler_t *old_gsl_error_handler = gsl_set_error_handler_off ();
@@ -297,13 +299,23 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (!g_option_context_parse (context, &argc, &argv, &error))
     {
       fprintf (stderr, "Option parsing failed: %s\n", error->message);
-      exit (1);
+      exit_status = 1;
+
+      // FIXME: Get rid of this goto through serious rewriting,
+      // preferably also rewriting so there is just one dynwind per
+      // function.
+      goto exit_dynwind_1;      // You did not see this.
     }
 
   if (show_version)
     {
       printf ("%s\n", PACKAGE_STRING);
-      exit (0);
+      exit_status = 0;
+
+      // FIXME: Get rid of this goto through serious rewriting,
+      // preferably also rewriting so there is just one dynwind per
+      // function.
+      goto exit_dynwind_1;      // You did not see this.
     }
 
   if (recover != NULL)
@@ -439,8 +451,11 @@ fontforge_main_in_guile_mode (int argc, char **argv)
     GDrawEventLoop (NULL);
 
   scm_dynwind_end ();           // Dynwind 2.
+
+ exit_dynwind_1:
   scm_dynwind_end ();           // Dynwind 1.
-  return 0;
+
+  return exit_status;
 }
 
 //-------------------------------------------------------------------------
