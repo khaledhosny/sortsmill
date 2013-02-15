@@ -152,9 +152,11 @@ event_e_h (GWindow gw, GEvent *event)
 static const char site_init_file[] = "site-init.scm";
 
 static void
-site_init (void)
+site_init (const char *init_scm)
 {
-  char *init_script = x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
+  const char *init_script =
+    (init_scm != NULL) ? init_scm
+    : (const char *) x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
   FILE *f = fopen (init_script, "r");
   if (f != NULL)
     {
@@ -217,6 +219,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   bool sync = false;
   bool show_version = false;
   char *recover = NULL;
+  char *init_scm = NULL;
   char *display = NULL;
   char **remaining_args = NULL;
   GError *error = NULL;
@@ -273,6 +276,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
     { "all-glyphs", 'a', 0, G_OPTION_ARG_NONE, &all_glyphs, N_("Load all glyphs in the 'glyf' table of a truetype collection"), NULL },
     { "last", 'l', 0, G_OPTION_ARG_NONE, &open_last, N_("Load the last font closed"), NULL },
     { "recover", 'r', 0, G_OPTION_ARG_STRING, &recover, N_("Control error recovery"), "none|auto|inquire|clean" },
+    { "init-scm", '\0', 0, G_OPTION_ARG_STRING, &init_scm, N_("Initialize with this file instead of the default site-init.scm"), N_("FILE") },
     { "display", '\0', 0, G_OPTION_ARG_STRING, &display, N_("X display to use"), N_("DISPLAY") },
     { "sync", '\0', 0, G_OPTION_ARG_NONE, &sync, N_("Make X calls synchronous"), NULL },
     { G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &remaining_args, NULL, N_("[FILE...]") },
@@ -362,7 +366,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   scm_dynwind_unwind_handler (editor_finalization_unwind_handler,
                               NULL, SCM_F_WIND_EXPLICITLY);
 
-  site_init ();
+  site_init (init_scm);
 
   /* This is an invisible window to catch some global events */
   wattrs.mask = wam_events | wam_isdlg;
@@ -454,7 +458,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   scm_dynwind_end ();           // Dynwind 2.
 
- exit_dynwind_1:
+exit_dynwind_1:
   scm_dynwind_end ();           // Dynwind 1.
 
   return exit_status;
