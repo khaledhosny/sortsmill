@@ -24,7 +24,7 @@ Optional features:
 
   real (floating pt) ${my_real_type}
   programs           ${i_do_have_programs}
-  python scripting   ${i_do_have_python_scripting}
+  python API         ${i_do_have_python_api}  	${python_url}
   python compat.     ${i_do_have_python_compatibility}
   fortran API        ${i_do_have_fortran_api}
   pure API           ${i_do_have_pure_api}  	${pure_url}

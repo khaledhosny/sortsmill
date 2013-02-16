@@ -106,6 +106,7 @@ giflib_url="http://giflib.sourceforge.net/"
 libpng_url="http://www.libpng.org/"
 libunicodenames_url="http://bitbucket.org/sortsmill/libunicodenames"
 pure_url="http://pure-lang.googlecode.com/"
+python_url="http://en.wikipedia.org/wiki/Pythonidae#Feeding"
 
 # Point to the Wikipedia page, primarily because one may want
 # libjpeg-turbo rather than the reference implementation.
@@ -178,7 +179,7 @@ AC_ARG_ENABLE([programs],
 AM_CONDITIONAL([THE_PROGRAMS],[test x"${i_do_have_programs}" = xyes])
 AC_SUBST([THE_PROGRAMS],["${i_do_have_programs}"])
 
-FONTFORGE_ARG_DISABLE_PYTHON_SCRIPTING
+FONTFORGE_ARG_DISABLE_PYTHON_API
 FONTFORGE_ARG_DISABLE_PYTHON_COMPATIBILITY
 FONTFORGE_ARG_ENABLE_FORTRAN_API
 FONTFORGE_ARG_ENABLE_PURE_API
@@ -260,133 +261,18 @@ FONTFORGE_ARG_WITH_LIBUNICODENAMES
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER
 
-if test x"${i_do_have_python_scripting}" = xyes; then
+if test x"${i_do_have_python_api}" = xyes; then
    if test x"${PYTHON_VERSION}" != x"2.7"; then
       AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires Python 2.7.x. You are using Python ${PYTHON_VERSION}.])
    fi
 
    FONTFORGE_REQUIRE_PYTHON_MODULE([gmpy])
    FONTFORGE_PROG_CYTHON_WORKS
+   FONTFORGE_PYTHON_CONSTANTS
 fi
 
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
-__cflags="${CFLAGS}"
-__libs="${LIBS}"
-CFLAGS="${CFLAGS} ${GUILE_CFLAGS}"
-LIBS="${LIBS} ${GUILE_LIBS}"
-
-FONTFORGE_C_CONST([SCM_EOL],[fontforge_cv_c_const_SCM_EOL],["%p"],[#include <libguile.h>])
-AC_SUBST([SCM_EOL],["${fontforge_cv_c_const_SCM_EOL}"])
-
-FONTFORGE_C_CONST([SCM_EOF_VAL],[fontforge_cv_c_const_SCM_EOF_VAL],["%p"],[#include <libguile.h>])
-AC_SUBST([SCM_EOF_VAL],["${fontforge_cv_c_const_SCM_EOF_VAL}"])
-
-FONTFORGE_C_CONST([SCM_UNSPECIFIED],[fontforge_cv_c_const_SCM_UNSPECIFIED],["%p"],[#include <libguile.h>])
-AC_SUBST([SCM_UNSPECIFIED],["${fontforge_cv_c_const_SCM_UNSPECIFIED}"])
-
-FONTFORGE_C_CONST([SCM_UNDEFINED],[fontforge_cv_c_const_SCM_UNDEFINED],["%p"],[#include <libguile.h>])
-AC_SUBST([SCM_UNDEFINED],["${fontforge_cv_c_const_SCM_UNDEFINED}"])
-
-FONTFORGE_C_CONST([SCM_F_DYNWIND_REWINDABLE],
-                  [fontforge_cv_c_const_SCM_F_DYNWIND_REWINDABLE],["%d"],[#include <libguile.h>])
-AC_SUBST([SCM_F_DYNWIND_REWINDABLE],["${fontforge_cv_c_const_SCM_F_DYNWIND_REWINDABLE}"])
-
-FONTFORGE_C_CONST([SCM_F_WIND_EXPLICITLY],
-                  [fontforge_cv_c_const_SCM_F_WIND_EXPLICITLY],["%d"],[#include <libguile.h>])
-AC_SUBST([SCM_F_WIND_EXPLICITLY],["${fontforge_cv_c_const_SCM_F_WIND_EXPLICITLY}"])
-
-CFLAGS="${__cflags}"
-LIBS="${__libs}"
-
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
-__cflags="${CFLAGS}"
-__libs="${LIBS}"
-CFLAGS="${CFLAGS} ${GUILE_CFLAGS}"
-LIBS="${LIBS} ${GUILE_LIBS}"
-
-m4_foreach_w([constant],[
-   GSL_SUCCESS
-   GSL_FAILURE
-   GSL_CONTINUE
-   GSL_EDOM
-   GSL_ERANGE
-   GSL_EFAULT
-   GSL_EINVAL
-   GSL_EFAILED
-   GSL_EFACTOR
-   GSL_ESANITY
-   GSL_ENOMEM
-   GSL_EBADFUNC
-   GSL_ERUNAWAY
-   GSL_EMAXITER
-   GSL_EZERODIV
-   GSL_EBADTOL
-   GSL_ETOL
-   GSL_EUNDRFLW
-   GSL_EOVRFLW
-   GSL_ELOSS
-   GSL_EROUND
-   GSL_EBADLEN
-   GSL_ENOTSQR
-   GSL_ESING
-   GSL_EDIVERGE
-   GSL_EUNSUP
-   GSL_EUNIMPL
-   GSL_ECACHE
-   GSL_ETABLE
-   GSL_ENOPROG
-   GSL_ENOPROGJ
-   GSL_ETOLF
-   GSL_ETOLX
-   GSL_ETOLG
-   GSL_EOF],
-   [
-      m4_define([__cache_name],[[fontforge_cv_c_const_]constant])
-      FONTFORGE_C_CONST([constant],
-                        [__cache_name],
-                        ["%d"],
-                        [#include <gsl/gsl_errno.h>])
-      AC_SUBST(constant,"${__cache_name}")
-   ])
-
-CFLAGS="${__cflags}"
-LIBS="${__libs}"
-
-# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
-if test x"${i_do_have_python_scripting}" = xyes; then
-   __cflags="${CFLAGS}"
-   __libs="${LIBS}"
-   CFLAGS="${CFLAGS} ${PYTHON_CFLAGS}"
-   LIBS="${LIBS} ${GUILE_LIBS}"
-
-   FONTFORGE_C_CONST([PY_MAJOR_VERSION],[fontforge_cv_c_const_PY_MAJOR_VERSION],["%d"],[#include <Python.h>])
-   AC_SUBST([PY_MAJOR_VERSION],["${fontforge_cv_c_const_PY_MAJOR_VERSION}"])
-
-   FONTFORGE_C_CONST([PY_MINOR_VERSION],[fontforge_cv_c_const_PY_MINOR_VERSION],["%d"],[#include <Python.h>])
-   AC_SUBST([PY_MINOR_VERSION],["${fontforge_cv_c_const_PY_MINOR_VERSION}"])
-
-   FONTFORGE_C_CONST([PY_MICRO_VERSION],[fontforge_cv_c_const_PY_MICRO_VERSION],["%d"],[#include <Python.h>])
-   AC_SUBST([PY_MICRO_VERSION],["${fontforge_cv_c_const_PY_MICRO_VERSION}"])
-
-   FONTFORGE_C_CONST([PY_RELEASE_LEVEL],[fontforge_cv_c_const_PY_RELEASE_LEVEL],["%d"],[#include <Python.h>])
-   AC_SUBST([PY_RELEASE_LEVEL],["${fontforge_cv_c_const_PY_RELEASE_LEVEL}"])
-
-   FONTFORGE_C_CONST([PY_RELEASE_SERIAL],[fontforge_cv_c_const_PY_RELEASE_SERIAL],["%d"],[#include <Python.h>])
-   AC_SUBST([PY_RELEASE_SERIAL],["${fontforge_cv_c_const_PY_RELEASE_SERIAL}"])
-
-   FONTFORGE_C_CONST([PY_VERSION],[fontforge_cv_c_const_PY_VERSION],["%s"],[#include <Python.h>])
-   AC_SUBST([PY_VERSION],["${fontforge_cv_c_const_PY_VERSION}"])
-   AC_SUBST([PY_VERSION_QUOTED],["\"${fontforge_cv_c_const_PY_VERSION}\""])
-
-   FONTFORGE_C_CONST([PY_VERSION_HEX],[fontforge_cv_c_const_PY_VERSION_HEX],["%d"],[#include <Python.h>])
-   AC_SUBST([PY_VERSION_HEX],["${fontforge_cv_c_const_PY_VERSION_HEX}"])
-
-   CFLAGS="${__cflags}"
-   LIBS="${__libs}"
-fi
+FONTFORGE_GUILE_CONSTANTS
+FONTFORGE_GSL_CONSTANTS
 
 #--------------------------------------------------------------------------
 #
@@ -531,7 +417,7 @@ __libs="${LIBS}"
 CFLAGS="${CFLAGS} ${GUILE_CFLAGS}"
 LIBS="${LIBS} ${GUILE_LIBS}"
 AC_CHECK_FUNCS([scm_init_guile])
-if test x"${i_do_have_python_scripting}" = xyes -a x"${ac_cv_func_scm_init_guile}" != xyes; then
+if test x"${i_do_have_python_api}" = xyes -a x"${ac_cv_func_scm_init_guile}" != xyes; then
    AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires that Guile support the scm_init_guile() function,
                   which was not found.])
 fi
@@ -559,11 +445,6 @@ AH_BOTTOM([#include <config-extra.h>])
 # Automake’s. (FIXME: Is there a different and canonical way to do
 # this? Although, in any case, this method works fine.)
 AC_SUBST([includemk],[include])
-
-# FIXME: Replace `i_do_have_python_scripting' with
-# `i_do_have_python_api' throughout.
-i_do_have_python_api="${i_do_have_python_scripting}"
-AC_SUBST([i_do_have_python_api])
 
 AM_CONDITIONAL([HAVE_PYTHON_API],[test x"${i_do_have_python_api}" = xyes])
 AM_CONDITIONAL([HAVE_PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}" = xyes])

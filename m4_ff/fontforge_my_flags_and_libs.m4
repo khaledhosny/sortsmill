@@ -38,7 +38,7 @@ dnl FONTFORGE_SET_MY_LIBS
 dnl ---------------------
 AC_DEFUN([FONTFORGE_SET_MY_LIBS],
 [
-test x"${i_do_have_python_scripting}" = xyes && my_libs="${my_libs} ${PYTHON_LIBS}"
+test x"${i_do_have_python_api}" = xyes && my_libs="${my_libs} ${PYTHON_LIBS}"
 test x"${i_do_have_pure_api}" = xyes && my_libs="${my_libs} ${PURE_LIBS}"
 test x"${i_do_have_giflib}" = xyes && my_libs="${my_libs} ${GIFLIB_LIBS}"
 test x"${i_do_have_libjpeg}" = xyes && my_libs="${my_libs} ${LIBJPEG_LIBS}"
