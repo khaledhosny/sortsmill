@@ -78,6 +78,24 @@ _FF_ATTRIBUTE_MALLOC uint8_t *x_gc_u8_grabstr (uint8_t *s);
 _FF_ATTRIBUTE_MALLOC uint16_t *x_gc_u16_grabstr (uint16_t *s);
 _FF_ATTRIBUTE_MALLOC uint32_t *x_gc_u32_grabstr (uint32_t *s);
 
+/*
+ * For example:
+ *
+ *    char *s;
+ *    X_GC_STRJOIN_ITER (s, (int i = 0; i < n; i++),
+ *                       (i = 0 ? a[i] :
+ *                        x_gc_strjoin (", ", a[i], NULL)));
+ *
+ */
+#define X_GC_STRJOIN_ITER(VAR, ITERATOR, STRING_FORMULA)        \
+  do                                                            \
+    {                                                           \
+      VAR = "";                                                 \
+      for ITERATOR                                              \
+        VAR = x_gc_strjoin ((VAR), (STRING_FORMULA), NULL);     \
+    }                                                           \
+  while (0)
+
 inline void *
 x_gc_malloc (size_t sz)
 {
