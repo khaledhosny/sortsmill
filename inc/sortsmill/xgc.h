@@ -83,7 +83,7 @@ _FF_ATTRIBUTE_MALLOC uint32_t *x_gc_u32_grabstr (uint32_t *s);
  *
  *    char *s;
  *    X_GC_STRJOIN_ITER (s, (int i = 0; i < n; i++),
- *                       (i = 0 ? a[i] :
+ *                       (i == 0 ? a[i] :
  *                        x_gc_strjoin (", ", a[i], NULL)));
  *
  */
