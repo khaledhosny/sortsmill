@@ -4805,7 +4805,7 @@ readttfbase (FILE *ttf, struct ttfinfo *info)
                           cur =
                             readttfbaseminmax (ttf, bs[i].offset + ls[j].offset,
                                                info, bs[i].tag, ls[j].tag);
-                          if (last == NULL)
+                          if (lastLang == NULL)
                             curScript->langs = cur;
                           else
                             lastLang->next = cur;
