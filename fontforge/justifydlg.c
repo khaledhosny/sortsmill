@@ -182,15 +182,14 @@ JSTF_Glyph_OK (GGadget *g, GEvent *e)
         gld->ret = NULL;
       else
         {
-          char **names = g_new0 (char *, rows);
-          char *ret;
+          char *separator = "";
+          char *ret = "";
           for (int i = 0; i < rows; ++i)
-            names[i] = g_strdup (strings[i].u.md_str);
-          names[rows] = NULL;
-          ret = g_strjoinv (" ", names);
+            {
+              ret = x_gc_strjoin (ret, separator, strings[i].u.md_str, NULL);
+              separator = " ";
+            }
           gld->ret = GlyphNameListDeUnicode (ret);
-          g_free (ret);
-          g_strfreev (names);
         }
       gld->done = true;
     }
