@@ -93,9 +93,9 @@ def guile_eval (expression, module):
   cdef SCM result = scm.scm_eval (expression_pointer, module_pointer)
   return pyguile (<uintptr_t> result)
 
-@conditions.pre (lambda string, module: True if isinstance (string, unicode) or isinstance (string, bytes) \
+@conditions.pre (lambda string, module = None: True if isinstance (string, unicode) or isinstance (string, bytes) \
                    else "expected a string for ‘string’: {!r}".format (string),
-                 lambda string, module: True if module is None or isinstance (module, pyguile) \
+                 lambda string, module = None: True if module is None or isinstance (module, pyguile) \
                    else "expected a pyguile for ‘module’: {!r}".format (module))
 @conditions.post (result_type_is (pyguile))
 def guile_eval_string (string not None, module = None):
