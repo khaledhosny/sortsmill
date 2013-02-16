@@ -133,7 +133,8 @@ sortsmill/kwargs.go: sortsmill/i18n.go
 sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
 sortsmill/usermenu.go sortsmill/views.go sortsmill/matrices.go: sortsmill/i18n.go
 
-sortsmill/api-syntax.go sortsmill/i18n.go sortsmill/python.go: sortsmill/pkg-info.go
+sortsmill/api-syntax.go sortsmill/i18n.go: sortsmill/pkg-info.go
+sortsmill/python.go sortsmill/usermenu/python.go: sortsmill/pkg-info.go
 
 sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
 

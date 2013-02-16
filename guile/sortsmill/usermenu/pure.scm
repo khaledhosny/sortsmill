@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(@ (sortsmill hash-guillemet) enable-hash-guillemet-strings)
+((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
 
 (library (sortsmill usermenu pure)
 
@@ -25,41 +25,46 @@
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
           (sortsmill views)
+          (sortsmill editor finalization)
           (rnrs))
 
   (define glyph-view-pointer-type "CharViewBase*")
-  (define glyph-view-pointer-tag (pure-pointer-tag glyph-view-pointer-type))
+  (define (glyph-view-pointer-tag) (pure-pointer-tag glyph-view-pointer-type))
 
   (define font-view-pointer-type "FontViewBase*")
-  (define font-view-pointer-tag (pure-pointer-tag font-view-pointer-type))
+  (define (font-view-pointer-tag) (pure-pointer-tag font-view-pointer-type))
 
   (define view->pure-view
     (lambda (v)
       (assert (view? v))
       (let ([p (pointer->pointer-pure-expr (view->pointer v))])
-        (cond [(glyph-view? v) (pure-pointer-cast glyph-view-pointer-tag p)]
-              [(font-view? v)  (pure-pointer-cast font-view-pointer-tag p)]
+        (cond [(glyph-view? v) (pure-pointer-cast (glyph-view-pointer-tag) p)]
+              [(font-view? v)  (pure-pointer-cast (font-view-pointer-tag) p)]
               [else (assert #f)]))))
 
   ;;
   ;; FIXME: Write a better exception handler.
   ;;
-  (define pure-menu-entry-exc-handler
-    (pure-eval
-     (lines-begin-with
-      ";;"
-      #«
-      ;; using system;
-      ;;
-      ;; (\menu_entry_func ->
-      ;;   (\view ->
-      ;;     catch handler (menu_entry_func view)
-      ;;       with
-      ;;          handler exc = fprintf stderr "Pure exception: %s\n" (str exc)
-      ;;          $$ false;
-      ;;       end))
-      »#
-      )))
+  (define (pure-menu-entry-exc-handler)
+    (let ([handler
+           (pure-eval
+            (lines-begin-with
+             ";;"
+             #«
+             ;; using system;
+             ;;
+             ;; (\menu_entry_func ->
+             ;;   (\view ->
+             ;;     catch handler (menu_entry_func view)
+             ;;       with
+             ;;          handler exc = fprintf stderr "Pure exception: %s\n" (str exc)
+             ;;          $$ false;
+             ;;       end))
+             »#
+             ))])
+      (register-finalizer "Pure menu entry exception handler"
+                          (lambda () "Prevent garbage collection of" handler))
+      handler))      
 
   (define pure-menu-entry-function->procedure
     (lambda (f)
@@ -70,7 +75,7 @@ function is always a boolean."
       (cond
        [(string? f) (pure-menu-entry-function->procedure (pure-eval f))]
        [else
-        (let ([f-wrapped (pure-apply pure-menu-entry-exc-handler f)])
+        (let ([f-wrapped (pure-apply (pure-menu-entry-exc-handler) f)])
           (lambda (view)
             (let ([result (pure-apply f-wrapped (view->pure-view view))])
               (cond

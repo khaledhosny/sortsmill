@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
   
-(@ (sortsmill hash-guillemet) enable-hash-guillemet-strings)
+((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
 
 (library (sortsmill usermenu)
 
@@ -301,9 +301,9 @@
       (GTextInfo:image-precedes-set! ti #t)))
 
   (define (set-menu-item-value! window-name menu-item key value)
-    (let ((mi menu-item)
-          (ti (GMenuItem:ti-ref menu-item))
-          (v (car value)))
+    (let ([mi menu-item]
+          [ti (GMenuItem:ti-ref menu-item)]
+          [v (car value)])
       (match key
         ('id *unspecified*)
         ('text (GTextInfo:text-set! ti (string->pointer v "UTF-8")))
@@ -450,7 +450,7 @@
         (tools-set! window-name
                     (insert-menu-entry (if tools tools '())
                                        new-entry submenus))
-        (activate-gui-tools))))
+        )))
 
   (define (insert-menu-entry tools new-entry submenus)
     (match submenus

@@ -15,9 +15,23 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+;;;
+;;; To use the Pure API in sortsmill-editor, put stuff like
+;;;
+;;;     (use-modules (sortsmill pure)
+;;;                  (sortsmill usermenu pure))
+;;;     (use-pure-api)
+;;;
+;;; in your local-init.scm and/or user-init.scm.
+;;;
+
+((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
+
 (library (sortsmill pure)
 
-  (export pure-op-infix
+  (export use-pure-api
+
+          pure-op-infix
           pure-op-infixl
           pure-op-infixr
           pure-op-prefix
@@ -118,6 +132,7 @@
 
   (import (sortsmill i18n)
           (sortsmill dynlink)
+          (sortsmill editor finalization)
           (only (sortsmill strings)
                 enable-hash-guillemet-strings
                 disable-hash-guillemet-strings
@@ -653,6 +668,10 @@
      void
      (sortsmill-dynlink-func "pure_finalize")
      `()))
+
+  (define (use-pure-api)
+    (pure-create-interp '("sortsmill-editor"))
+    (register-finalizer "Pure interpreter" pure-finalize))
 
   ;; FIXME: This could be useful more generally.
   (define (string-list->argv args)

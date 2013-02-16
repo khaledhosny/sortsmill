@@ -69,10 +69,17 @@ __version__ = FF_MODULE_VERSION
 #
 # This is ugly but something like it seems necessary.
 
+# FIXME:
+# FIXME: Now it is actually causing us trouble, so find a better
+# FIXME: way, such as requiring the user to set the error handler.
+# FIXME:
+
+'''
 def set_error_handler_off ():
   gsl.gsl_set_error_handler_off ()
 
 set_error_handler_off ()
+'''
 
 #--------------------------------------------------------------------------
 

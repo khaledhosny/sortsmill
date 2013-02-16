@@ -17,7 +17,9 @@
 
 (library (sortsmill usermenu python)
 
-  (export python-menu-entry-callable->procedure
+  (export load-user_init.py
+
+          python-menu-entry-callable->procedure
 
           ;; FIXME: Get rid of this, make it private, or revise
           ;; it for the menu design we end up with.
@@ -33,6 +35,8 @@
           (sortsmill machine)
           (sortsmill views)
           (sortsmill dynlink)
+          (sortsmill pkg-info)
+          (sortsmill notices)
           (rnrs)
           (except (guile) error)
           (system foreign))
@@ -225,5 +229,24 @@ always a boolean."
            (registerMenuItem action enabled data
                              (borrowed-pointer->pyobject windows)
                              shortcut menu-path)]))
+  
+  (define (load-user_init.py)
+    ;;
+    ;; Load user_init.py, which typically is in
+    ;; ${HOME}/.config/sortsmill-tools/
+    ;;
+    (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
+           [home (getenv "HOME")]
+           [user-config-dir
+            (cond [xdg-config-home]
+                  [home (string-append (getenv "HOME") "/.config")]
+                  [else #f] )])
+      (if user-config-dir
+          (let ([user-init (format #f "~a/~a/user_init.py"
+                                   user-config-dir pkg-info:package)])
+            (if (file-exists? user-init)
+                (fontforge-call-with-error-handling
+                 "user_init.py"
+                 (lambda () (pyexec-file-name-in-main user-init))))))))
 
   ) ;; end of library.

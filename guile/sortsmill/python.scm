@@ -15,9 +15,25 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+
+;;;
+;;; To use the Python API in sortsmill-editor, put
+;;;
+;;;     (use-modules (sortsmill python)
+;;;                  (sortsmill usermenu python))
+;;;     (use-python-api)
+;;;     (load-user_init.py)
+;;;
+;;; in your user-init.scm.
+;;;
+
+((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
+
 (library (sortsmill python)
 
   (export python-dll
+
+          use-python-api
 
           py-initialized?
           py-initialize
@@ -185,6 +201,8 @@
   (import (sortsmill dynlink)
           (sortsmill i18n)
           (sortsmill pkg-info)
+          (sortsmill ffcompat)
+          (sortsmill editor finalization)
           (only (sortsmill strings)
                 enable-hash-guillemet-strings
                 disable-hash-guillemet-strings
@@ -635,5 +653,18 @@
        (match obj
          [(? pymodule? m) m]
          [s (python-module (force-pystring caller obj message))] )] ))
+
+  (define (use-python-api)
+    (force-py-initialized)
+    (register-finalizer "Python interpreter" force-py-finalized)
+    (pyimport "sortsmill.ffcompat")
+    (when pkg-info:python-compatibility?
+      (pyimport "fontforge"))
+    (no_windowing_ui-set! #f)
+    (running_script-set! #f)
+    (pyimport "sortsmill.psMat")
+    (when pkg-info:python-compatibility?
+      (pyimport "psMat"))
+    (pyimport "ffContrib.excepthook"))
 
   ) ;; end of library.

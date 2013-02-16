@@ -1,4 +1,4 @@
-;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 
@@ -15,12 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(import (sortsmill notices)
-        (sortsmill pkg-info)
-        (sortsmill editor finalization)
-        (system foreign))
-
-((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
+(import (sortsmill notices))
 
 (if (not (getenv "HOME"))
     (let ([rnrs-error (@ (rnrs) error)]
@@ -35,51 +30,22 @@
 ;; FIXME: Try to ensure access to LTDL modules, too.
 ;;
 (eval-when (compile load eval)
-           (let ((guilemoduledir "@guilemoduledir@"))
-             (unless (member guilemoduledir %load-path)
-               (add-to-load-path guilemoduledir))))
+  (let ((guilemoduledir "@guilemoduledir@"))
+    (unless (member guilemoduledir %load-path)
+      (add-to-load-path guilemoduledir))))
 (eval-when (compile load eval)
-           (let ((guileobjmoduledir "@guileobjmoduledir@"))
-             (unless (member guileobjmoduledir %load-compiled-path)
-               (set! %load-compiled-path
-                     (cons guileobjmoduledir %load-compiled-path)))))
+  (let ((guileobjmoduledir "@guileobjmoduledir@"))
+    (unless (member guileobjmoduledir %load-compiled-path)
+      (set! %load-compiled-path
+            (cons guileobjmoduledir %load-compiled-path)))))
 
 (fontforge-call-with-error-handling
  "site-init.scm"
  (lambda () ;; start of thunk.
 
-   [if pkg-info:have-pure-api?
-       (let ([pure-create-interp (@ (sortsmill pure) pure-create-interp)]
-             [pure-finalize      (@ (sortsmill pure) pure-finalize)])
-         (pure-create-interp '("sortsmill-editor"))
-         (register-finalizer "Pure interpreter" pure-finalize))]
-
-   [if pkg-info:have-python-api?
-       (let ([force-py-finalized   (@ (sortsmill python) force-py-finalized)]
-             [force-py-initialized (@ (sortsmill python) force-py-initialized)]
-             [pyexec-in-main       (@ (sortsmill python) pyexec-in-main)]
-             [lines-begin-with     (@ (sortsmill python) lines-begin-with)])
-         (register-finalizer "Python interpreter" force-py-finalized)
-         (force-py-initialized)
-         (pyexec-in-main
-          (lines-begin-with
-           ";; —"
-           #«
-           ;; —# FIXME: Get rid of this dependency.
-           ;; —import sortsmill.ffcompat
-           ;; —
-           ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
-           ;; —  import fontforge
-           ;; —sortsmill.ffcompat.__windowing_ui (True)
-           ;; —sortsmill.ffcompat.__running_script (False)
-           ;; —import sortsmill.psMat
-           ;; —if "@PYTHON_COMPATIBILITY@" == "yes":
-           ;; —  import psMat
-           ;; —import ffContrib.excepthook
-           »#))
-         )]
-
+   ;;
    ;; Install a more pleasant (one hopes) GSL error handler.
+   ;;
    ((@ (sortsmill gsl) gsl-set-error-handler:raise-gsl-error))
 
    ;;
@@ -90,18 +56,6 @@
          (fontforge-call-with-error-handling
           "local-init.scm"
           (lambda () (primitive-load local-init)))))
-
-   [if pkg-info:have-python-api?
-       ;;
-       ;; Load local_init.py, which typically is in /etc/sortsmill-tools/
-       ;;
-       (let ([local-init "@sysconfdir@/@PACKAGE@/local_init.py"]
-             [pyexec-file-name-in-main (@ (sortsmill python)
-                                          pyexec-file-name-in-main)])
-         (if (file-exists? local-init)
-             (fontforge-call-with-error-handling
-              "local_init.py"
-              (lambda () (pyexec-file-name-in-main local-init)))))]
 
    ;;
    ;; Load user-init.scm, which typically is in
@@ -121,26 +75,10 @@
                 "user-init.scm"
                 (lambda () (primitive-load user-init)))))))
 
-   [if pkg-info:have-python-api?
-       ;;
-       ;; Load user_init.py, which typically is in
-       ;; ${HOME}/.config/sortsmill-tools/
-       ;;
-       (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
-              [home (getenv "HOME")]
-              [user-config-dir
-               (cond [xdg-config-home]
-                     [home (string-append (getenv "HOME") "/.config")]
-                     [else #f] )]
-              [pyexec-file-name-in-main (@ (sortsmill python)
-                                           pyexec-file-name-in-main)])
-         (if user-config-dir
-             (let ([user-init (string-append user-config-dir
-                                             "/@PACKAGE@/user_init.py")])
-               (if (file-exists? user-init)
-                   (fontforge-call-with-error-handling
-                    "user_init.py"
-                    (lambda () (pyexec-file-name-in-main user-init)))))))]
+   ;; Load the ‘Tools’ menus. FIXME: One _should_ be able to change
+   ;; menu items after this, but for now we require the menus be
+   ;; loaded from a ‘template tree’ this one time.
+   (activate-gui-tools)
 
    ) ;; end of thunk.
  )   ;; end of fontforge-call-with-error-handling.

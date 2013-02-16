@@ -34,6 +34,7 @@
           pkg-info:have-pure-api?
 
           pkg-info:have-python-api?
+          pkg-info:python-compatibility?
           pkg-info:py-major-version
           pkg-info:py-minor-version
           pkg-info:py-micro-version
@@ -89,6 +90,7 @@
   (define pkg-info:have-pure-api? (yes? "@i_do_have_pure_api@"))
 
   (define pkg-info:have-python-api? (yes? "@i_do_have_python_api@"))
+  (define pkg-info:python-compatibility? (yes? "@PYTHON_COMPATIBILITY@"))
   (define pkg-info:py-major-version (expansion-or-f @PY_MAJOR_VERSION@))
   (define pkg-info:py-minor-version (expansion-or-f @PY_MINOR_VERSION@))
   (define pkg-info:py-micro-version (expansion-or-f @PY_MICRO_VERSION@))

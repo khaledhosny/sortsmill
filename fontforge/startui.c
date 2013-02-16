@@ -149,27 +149,6 @@ event_e_h (GWindow gw, GEvent *event)
 
 //-------------------------------------------------------------------------
 
-static const char site_init_file[] = "site-init.scm";
-
-static void
-site_init (const char *init_scm)
-{
-  const char *init_script =
-    (init_scm != NULL) ? init_scm
-    : (const char *) x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
-  FILE *f = fopen (init_script, "r");
-  if (f != NULL)
-    {
-      // There is a readable init script.
-      fclose (f);
-      scm_c_primitive_load (init_script);
-    }
-}
-
-//-------------------------------------------------------------------------
-
-jmp_buf exit_jmp_buf;
-
 static void
 restore_gsl_error_handler (void *handler)
 {
@@ -189,17 +168,10 @@ uninm_names_db_close_unwind_handler (void *UNUSED (_p))
     uninm_names_db_close (names_db);
 }
 
-static void
-editor_finalization_unwind_handler (void *UNUSED (_p))
-{
-  scm_call_0 (scm_c_public_ref ("sortsmill editor finalization",
-                                "run-and-clear-all-finalizers"));
-}
-
 static int
 fontforge_main_in_guile_mode (int argc, char **argv)
 {
-  scm_dynwind_begin (0);        // Dynwind 1.
+  scm_dynwind_begin (0);
 
   int exit_status = 0;
 
@@ -305,10 +277,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
       fprintf (stderr, "Option parsing failed: %s\n", error->message);
       exit_status = 1;
 
-      // FIXME: Get rid of this goto through serious rewriting,
-      // preferably also rewriting so there is just one dynwind per
-      // function.
-      goto exit_dynwind_1;      // You did not see this.
+      // FIXME: Get rid of this goto through serious rewriting.
+      goto exit;                // You did not see this.
     }
 
   if (show_version)
@@ -316,10 +286,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
       printf ("%s\n", PACKAGE_STRING);
       exit_status = 0;
 
-      // FIXME: Get rid of this goto through serious rewriting,
-      // preferably also rewriting so there is just one dynwind per
-      // function.
-      goto exit_dynwind_1;      // You did not see this.
+      // FIXME: Get rid of this goto through serious rewriting.
+      goto exit;                // You did not see this.
     }
 
   if (recover != NULL)
@@ -362,11 +330,11 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   default_background = GDrawGetDefaultBackground (screen_display);
   InitCursors ();
 
-  scm_dynwind_begin (0);        // Dynwind 2.
-  scm_dynwind_unwind_handler (editor_finalization_unwind_handler,
-                              NULL, SCM_F_WIND_EXPLICITLY);
+  if (init_scm == NULL)
+    init_scm = x_gc_strjoin (SHAREDIR, "/guile/site-init.scm", NULL);
 
-  site_init (init_scm);
+  scm_call_1 (scm_c_public_ref ("sortsmill editor main-loop", "load-site-init"),
+              scm_from_locale_string (init_scm));
 
   /* This is an invisible window to catch some global events */
   wattrs.mask = wam_events | wam_isdlg;
@@ -450,16 +418,15 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (no_font_loaded)
     FontNew ();
 
-  SCM alist = scm_call_0 (scm_c_public_ref ("sortsmill editor main-loop",
-                                            "main-loop"));
+  SCM alist =
+    scm_call_0 (scm_c_public_ref ("sortsmill editor main-loop", "main-loop"));
+
   SCM exit_stat = scm_assoc_ref (alist, scm_from_utf8_symbol ("exit-status"));
   if (scm_is_true (exit_stat))
     exit_status = scm_to_int (exit_stat);
 
-  scm_dynwind_end ();           // Dynwind 2.
-
-exit_dynwind_1:
-  scm_dynwind_end ();           // Dynwind 1.
+exit:
+  scm_dynwind_end ();
 
   return exit_status;
 }

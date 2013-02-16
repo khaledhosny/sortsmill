@@ -18,9 +18,11 @@
 (library (sortsmill editor main-loop)
 
   (export exit-main-loop
-          main-loop)
+          main-loop
+          load-site-init)
 
-  (import (sortsmill dynlink)
+  (import (sortsmill editor finalization)
+          (sortsmill dynlink)
           (sortsmill kwargs)
           (rnrs)
           (except (guile) error)
@@ -48,9 +50,15 @@
   (define (main-loop-exit-handler continuation alist)
     alist)
 
+  (define (load-site-init site-init)
+    (if (file-exists? site-init)
+        (primitive-load site-init)))
+
   (define (main-loop)
-    (call-with-prompt %main-loop-exit-prompt
-                      main-loop-thunk
-                      main-loop-exit-handler))
+    (let ([retval (call-with-prompt %main-loop-exit-prompt
+                                    main-loop-thunk
+                                    main-loop-exit-handler)])
+      (run-and-clear-all-finalizers)
+      retval))
 
   ) ;; end of library.

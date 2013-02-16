@@ -18,7 +18,8 @@
 (library (sortsmill editor finalization)
 
   (export register-finalizer
-          run-and-clear-all-finalizers)
+          run-and-clear-all-finalizers
+          find-finalizer)
 
   (import (rnrs)
           (only (srfi :18) make-mutex mutex-lock! mutex-unlock!))
@@ -32,6 +33,9 @@
     (set! finalization-registry (cons (cons key finalizer)
                                       finalization-registry))
     (mutex-unlock! finalization-mutex))
+
+  (define (find-finalizer key)
+    (assoc key finalization-registry))
 
   (define (run-and-clear-finalizer)
     ;; Currently only the head finalizer can be run, though that may
