@@ -15,7 +15,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(import (sortsmill notices))
+(import (sortsmill notices)
+        (sortsmill pkg-info))
 
 (if (not (getenv "HOME"))
     (let ([rnrs-error (@ (rnrs) error)]
@@ -30,14 +31,12 @@
 ;; FIXME: Try to ensure access to LTDL modules, too.
 ;;
 (eval-when (compile load eval)
-  (let ((guilemoduledir "@guilemoduledir@"))
-    (unless (member guilemoduledir %load-path)
-      (add-to-load-path guilemoduledir))))
+  (unless (member pkg-info:guilemoduledir %load-path)
+    (add-to-load-path pkg-info:guilemoduledir)))
 (eval-when (compile load eval)
-  (let ((guileobjmoduledir "@guileobjmoduledir@"))
-    (unless (member guileobjmoduledir %load-compiled-path)
-      (set! %load-compiled-path
-            (cons guileobjmoduledir %load-compiled-path)))))
+  (unless (member pkg-info:guileobjmoduledir %load-compiled-path)
+    (set! %load-compiled-path
+          (cons pkg-info:guileobjmoduledir %load-compiled-path))))
 
 (fontforge-call-with-error-handling
  "site-init.scm"
@@ -51,7 +50,8 @@
    ;;
    ;; Load local-init.scm, which typically is in /etc/sortsmill-tools/
    ;;
-   (let ([local-init "@sysconfdir@/@PACKAGE@/local-init.scm"])
+   (let ([local-init (format #f "~a/~a/local-init.scm"
+                             pkg-info:sysconfdir pkg-info:package)])
      (if (file-exists? local-init)
          (fontforge-call-with-error-handling
           "local-init.scm"
@@ -65,11 +65,11 @@
           [home (getenv "HOME")]
           [user-config-dir
            (cond [xdg-config-home]
-                 [home (string-append (getenv "HOME") "/.config")]
+                 [home (format #f "~a/.config" (getenv "HOME"))]
                  [else #f] )] )
      (if user-config-dir
-         (let ([user-init (string-append user-config-dir
-                                         "/@PACKAGE@/user-init.scm")])
+         (let ([user-init (format #f "~a/~a/user-init.scm"
+                                  user-config-dir pkg-info:package)])
            (if (file-exists? user-init)
                (fontforge-call-with-error-handling
                 "user-init.scm"

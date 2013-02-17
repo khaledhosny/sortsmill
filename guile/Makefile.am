@@ -44,6 +44,10 @@ EXTRA_DIST += tig.scm
 
 #--------------------------------------------------------------------------
 
+dist_pkgguiledata_DATA = site-init.scm
+
+#--------------------------------------------------------------------------
+
 DIST_SCM_FILES =
 DIST_SCM_IN_FILES =
 CONFIGURE_GENERATED_SCM_FILES =
@@ -130,6 +134,7 @@ sortsmill/ffcompat.go sortsmill/matrices.go sortsmill/i18n.go: sortsmill/dynlink
 sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
 sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go
 sortsmill/usermenu/python.go sortsmill/usermenu.go: sortsmill/dynlink.go
+sortsmill/pkg-info.go: sortsmill/dynlink.go
 
 sortsmill/kwargs.go: sortsmill/i18n.go
 sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
@@ -175,13 +180,6 @@ sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii			\
 	$(AM_V_at)mv $@-tmp $@
 
 EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
-
-#--------------------------------------------------------------------------
-
-nodist_pkgguiledata_DATA = site-init.scm
-
-EXTRA_DIST += site-init.scm.in
-MOSTLYCLEANFILES += site-init.scm
 
 #--------------------------------------------------------------------------
 

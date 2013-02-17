@@ -1,3 +1,5 @@
+# -*- tab-width: 4 -*-
+
 # Copyright (C) 2000-2012 by George Williams
 # Copyright (C) 2012 by Barry Schwartz
 #
@@ -35,11 +37,23 @@ AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib	\
 	-DFF_TEXTDOMAIN=\"${FF_TEXTDOMAIN}\"				\
 	-DFF_SHORTCUTSDOMAIN=\"${FF_SHORTCUTSDOMAIN}\"		\
 	-DFF_MACSHORTCUTSDOMAIN=\"${FF_MACSHORTCUTSDOMAIN}\"\
-	-DVERSION_MAJOR=\"${VERSION_MAJOR}\"	\
-	-DVERSION_MINOR=\"${VERSION_MINOR}\"	\
-	-DVERSION_PATCH=\"${VERSION_PATCH}\"	\
-	-DVERSION_EXTRA=\"${VERSION_EXTRA}\"	\
+	-DVERSION_MAJOR=\"${VERSION_MAJOR}\"				\
+	-DVERSION_MINOR=\"${VERSION_MINOR}\"				\
+	-DVERSION_PATCH=\"${VERSION_PATCH}\"				\
+	-DVERSION_EXTRA=\"${VERSION_EXTRA}\"				\
 	-DVERSION_EXTRA_SHORT=\"${VERSION_EXTRA_SHORT}\"	\
+	-DD_pixmapsdir=\"${pixmapsdir}\"					\
+	-DD_cursorsdir=\"${cursorsdir}\"					\
+	-DD_htdocsdir=\"${htdocsdir}\"						\
+	-DD_pkgconfigdir=\"${pkgconfigdir}\"				\
+	-DD_pkgguiledatadir=\"${pkgguiledatadir}\"			\
+	-DD_guilemoduledir=\"${guilemoduledir}\"			\
+	-DD_guileobjmoduledir=\"${guileobjmoduledir}\"		\
+	-DD_cythonincludedir=\"${cythonincludedir}\"		\
+	-DD_fcmoduleincludedir=\"${fcmoduleincludedir}\"	\
+	-DD_pkgdatadir=\"${pkgdatadir}\"					\
+	-DD_localedir=\"${localedir}\"						\
+	-DD_sysconfdir=\"${sysconfdir}\"					\
 	$(MY_CFLAGS)
 
 FFINCLDIRS = -I$(top_builddir)/fontforge -I$(top_srcdir)/fontforge

@@ -30,6 +30,7 @@ include $(top_srcdir)/mk/flags.am
 
 POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
 
+EXTRA_DIST =
 lib_LTLIBRARIES =
 
 #--------------------------------------------------------------------------
@@ -85,7 +86,7 @@ endif HAVE_PYTHON_API
 
 # Miscellaneous C interface to Guile and Guile extensions.
 dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c guile_gsl.c	\
-	guile_matrices.c guile_iconv.c
+	guile_matrices.c guile_iconv.c guile_directory_layout.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
@@ -105,7 +106,7 @@ precomputed_polyspline_data.c: precompute-polyspline-data.scm Makefile
 	$(AM_V_at)$(GUILE_INTERPRET) $< $(POLYSPLINE_PRECOMPUTED_DEGREE_MAX) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-EXTRA_DIST = $(GMP_MATRIX_EXTRAS) precompute-polyspline-data.scm
+EXTRA_DIST += $(GMP_MATRIX_EXTRAS) precompute-polyspline-data.scm
 
 MOSTLYCLEANFILES = precomputed_polyspline_data.c
 

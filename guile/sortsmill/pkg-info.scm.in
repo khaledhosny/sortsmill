@@ -44,10 +44,27 @@
           pkg-info:py-version-hex
           pkg-info:pyinit-function-name
 
-          pkg-info:textdomain)
+          pkg-info:textdomain
 
-  (import (rnrs)
-          (only (guile) string-prefix? string-suffix?))
+          pkg-info:pixmapsdir
+          pkg-info:cursorsdir
+          pkg-info:htdocsdir
+          pkg-info:pkgconfigdir
+          pkg-info:pkgguiledatadir
+          pkg-info:guilemoduledir
+          pkg-info:guileobjmoduledir
+          pkg-info:cythonincludedir
+          pkg-info:fcmoduleincludedir
+          pkg-info:pkgdatadir
+          pkg-info:localedir
+          pkg-info:sysconfdir)
+
+  (import (sortsmill dynlink)
+          (rnrs)
+          (only (guile) string-prefix? string-suffix? eval-when))
+
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_directory_layout"))
 
   (define-syntax yes?
     (lambda (x)
