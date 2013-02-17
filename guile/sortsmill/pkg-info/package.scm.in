@@ -1,0 +1,38 @@
+;; -*- mode: scheme; coding: utf-8 -*-
+
+;; Copyright (C) 2012, 2013 Barry Schwartz
+;; 
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3 of the License, or
+;; (at your option) any later version.
+;; 
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+(library (sortsmill pkg-info package)
+
+  (export pkg-info:package
+          pkg-info:package-bugreport
+          pkg-info:package-name
+          pkg-info:package-string
+          pkg-info:package-tarname
+          pkg-info:package-url
+          pkg-info:package-version)
+
+  (import (rnrs base))
+
+  (define pkg-info:package "@PACKAGE@")
+  (define pkg-info:package-bugreport "@PACKAGE_BUGREPORT@")
+  (define pkg-info:package-name "@PACKAGE_NAME@")
+  (define pkg-info:package-string "@PACKAGE_STRING@")
+  (define pkg-info:package-tarname "@PACKAGE_TARNAME@")
+  (define pkg-info:package-url "@PACKAGE_URL@")
+  (define pkg-info:package-version "@PACKAGE_VERSION@")
+
+  ) ;; end of library.

@@ -24,7 +24,7 @@
           write-statements-using-dynlink-symbols
           write-c-code-using-dynlink-symbols)
 
-  (import (sortsmill pkg-info)
+  (import (sortsmill pkg-info python)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) delete-duplicates)

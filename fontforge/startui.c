@@ -257,9 +257,10 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   // *INDENT-ON*
 
   const char *summary =
-    _("FontForge will read PostScript (PFA, PFB, PS, CID), OpenType (OTF),\n"
-      "TrueType (TTF, TTC), Macintosh resource fonts (dfont, bin, hqx), and\n"
-      "BDF and PCF fonts. It will also read its own format -- SFD files.");
+    _("Sorts Mill Editor will read PostScript (PFA, PFB, PS, CID),\n"
+      "OpenType (OTF), TrueType (TTF, TTC), Macintosh resource fonts\n"
+      "(dfont, bin, hqx), and BDF and PCF fonts. It will also read\n"
+      "FontForge SFD files.");
 
   const char *description =
     x_gc_strjoin (_("For more information see: "), PACKAGE_URL, "\n",

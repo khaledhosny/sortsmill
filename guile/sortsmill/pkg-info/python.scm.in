@@ -1,4 +1,4 @@
-;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 
@@ -15,25 +15,9 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill pkg-info)
+(library (sortsmill pkg-info python)
 
-  (export pkg-info:package
-          pkg-info:package-bugreport
-          pkg-info:package-name
-          pkg-info:package-string
-          pkg-info:package-tarname
-          pkg-info:package-url
-          pkg-info:package-version
-
-          pkg-info:version-major
-          pkg-info:version-minor
-          pkg-info:version-patch
-          pkg-info:version-extra
-          pkg-info:version-extra-short
-
-          pkg-info:have-pure-api?
-
-          pkg-info:have-python-api?
+  (export pkg-info:have-python-api?
           pkg-info:python-compatibility?
           pkg-info:py-major-version
           pkg-info:py-minor-version
@@ -42,36 +26,10 @@
           pkg-info:py-release-serial
           pkg-info:py-version
           pkg-info:py-version-hex
-          pkg-info:pyinit-function-name
+          pkg-info:pyinit-function-name)
 
-          pkg-info:textdomain
-
-          pkg-info:pixmapsdir
-          pkg-info:cursorsdir
-          pkg-info:htdocsdir
-          pkg-info:pkgconfigdir
-          pkg-info:pkgguiledatadir
-          pkg-info:guilemoduledir
-          pkg-info:guileobjmoduledir
-          pkg-info:cythonincludedir
-          pkg-info:fcmoduleincludedir
-          pkg-info:pkgdatadir
-          pkg-info:localedir
-          pkg-info:sysconfdir)
-
-  (import (sortsmill dynlink)
-          (rnrs)
-          (only (guile) string-prefix? string-suffix? eval-when))
-
-  (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_sortsmill_directory_layout"))
-
-  (define-syntax yes?
-    (lambda (x)
-      (syntax-case x ()
-        [(_ yes-or-no)
-         (if (string=? (syntax->datum #'yes-or-no) "yes")
-             #'#t #'#f)] )))
+  (import (rnrs)
+          (only (guile) string-prefix? string-suffix?))
 
   (define-syntax expansion-or-f
     (lambda (x)
@@ -90,24 +48,8 @@
                #'possible-expansion ; Expansion did happen.
                ))] )))
 
-  (define pkg-info:package "@PACKAGE@")
-  (define pkg-info:package-bugreport "@PACKAGE_BUGREPORT@")
-  (define pkg-info:package-name "@PACKAGE_NAME@")
-  (define pkg-info:package-string "@PACKAGE_STRING@")
-  (define pkg-info:package-tarname "@PACKAGE_TARNAME@")
-  (define pkg-info:package-url "@PACKAGE_URL@")
-  (define pkg-info:package-version "@PACKAGE_VERSION@")
-
-  (define pkg-info:version-major "@VERSION_MAJOR@")
-  (define pkg-info:version-minor "@VERSION_MINOR@")
-  (define pkg-info:version-patch "@VERSION_PATCH@")
-  (define pkg-info:version-extra "@VERSION_EXTRA@")
-  (define pkg-info:version-extra_short "@VERSION_EXTRA_SHORT@")
-
-  (define pkg-info:have-pure-api? (yes? "@i_do_have_pure_api@"))
-
-  (define pkg-info:have-python-api? (yes? "@i_do_have_python_api@"))
-  (define pkg-info:python-compatibility? (yes? "@PYTHON_COMPATIBILITY@"))
+  (define pkg-info:have-python-api? (string=? "yes" "@i_do_have_python_api@"))
+  (define pkg-info:python-compatibility? (string=? "yes" "@PYTHON_COMPATIBILITY@"))
   (define pkg-info:py-major-version (expansion-or-f @PY_MAJOR_VERSION@))
   (define pkg-info:py-minor-version (expansion-or-f @PY_MINOR_VERSION@))
   (define pkg-info:py-micro-version (expansion-or-f @PY_MICRO_VERSION@))
@@ -123,7 +65,5 @@
           (lambda (python-module-name)
             (string-append prefix python-module-name))]
         [lambda (python-module-name) #f] ))
-
-  (define pkg-info:textdomain "@FF_TEXTDOMAIN@")
 
   ) ;; end of library.

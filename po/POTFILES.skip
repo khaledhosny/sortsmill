@@ -1,7 +1,2 @@
 lib/
 build/
-
-# FIXME: Is there a bug in intltool that causes us to have to list
-# this files that does not exist? Is intltool confused by VPATH
-# builds?
-guile/site-init.scm

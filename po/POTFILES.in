@@ -152,7 +152,7 @@ gdraw/gscrollbar.c
 gdraw/gtabset.c
 gdraw/gtextfield.c
 gdraw/gtextinfo.c
-guile/site-init.scm.in
+guile/site-init.scm
 guile/sortsmill/contours.scm
 guile/sortsmill/kwargs.scm
 guile/sortsmill/matrices.scm
