@@ -26,6 +26,8 @@
           c-int-type
           c-uint-type
           _Bool
+          bytevector-address-native-set!
+          bytevector-pointer-native-set!
           set-pointer!
 
           ;; Re-exported from (sortsmill math-constants).

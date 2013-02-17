@@ -508,6 +508,8 @@ AC_CONFIG_FILES([guile/sortsmill/machine.scm])
 AC_CONFIG_FILES([guile/sortsmill/math-constants.scm])
 AC_CONFIG_FILES([guile/sortsmill/pkg-info.scm])
 AC_CONFIG_FILES([guile/sortsmill/gsl.scm])
+AC_CONFIG_FILES([main/sortsmill-editor],[chmod +x main/sortsmill-editor])
+AC_CONFIG_FILES([main/smed:main/sortsmill-editor.in],[chmod +x main/smed])
 
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_INDENT_PRO        

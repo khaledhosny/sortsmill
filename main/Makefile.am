@@ -28,6 +28,7 @@
 include $(top_srcdir)/mk/flags.am
 
 bin_PROGRAMS =
+bin_SCRIPTS =
 
 EXTRA_DIST =
 
@@ -47,17 +48,19 @@ LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la \
 if THE_PROGRAMS
 if HAVE_GUI
 
-bin_PROGRAMS += sortsmill-editor smed
+bin_SCRIPTS += sortsmill-editor smed
 
-dist_sortsmill_editor_SOURCES = editor.c
-sortsmill_editor_LDADD =									\
-	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
-	$(top_builddir)/lib/libgnu.la
-sortsmill_editor_LDFLAGS = $(AM_LDFLAGS) -export-dynamic
-
-dist_smed_SOURCES = $(dist_sortsmill_editor_SOURCES)
-smed_LDADD = $(sortsmill_editor_LDADD)
-smed = $(sortsmill_editor_LDFLAGS)
+#bin_PROGRAMS += sortsmill-editor smed
+#
+#dist_sortsmill_editor_SOURCES = editor.c
+#sortsmill_editor_LDADD =									\
+#	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
+#	$(top_builddir)/lib/libgnu.la
+#sortsmill_editor_LDFLAGS = $(AM_LDFLAGS) -export-dynamic
+#
+#dist_smed_SOURCES = $(dist_sortsmill_editor_SOURCES)
+#smed_LDADD = $(sortsmill_editor_LDADD)
+#smed = $(sortsmill_editor_LDFLAGS)
 
 endif HAVE_GUI
 endif THE_PROGRAMS

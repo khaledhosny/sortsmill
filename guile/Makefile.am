@@ -57,15 +57,16 @@ nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 
-DIST_SCM_FILES += sortsmill/kwargs.scm sortsmill/alloc.scm			\
-	sortsmill/matrices.scm sortsmill/iconv.scm sortsmill/linalg.scm	\
-	sortsmill/polyspline.scm sortsmill/brentroot.scm				\
-	sortsmill/sfd-to-sxml.scm sortsmill/views.scm					\
-	sortsmill/api-syntax.scm sortsmill/notices.scm					\
-	sortsmill/hash-guillemet.scm sortsmill/strings.scm				\
-	sortsmill/ffcompat.scm sortsmill/i18n.scm sortsmill/dynlink.scm	\
-	sortsmill/contours.scm sortsmill/editor/finalization.scm		\
-	sortsmill/editor/main-loop.scm
+DIST_SCM_FILES += sortsmill/kwargs.scm sortsmill/alloc.scm				\
+	sortsmill/matrices.scm sortsmill/iconv.scm sortsmill/linalg.scm		\
+	sortsmill/polyspline.scm sortsmill/brentroot.scm					\
+	sortsmill/sfd-to-sxml.scm sortsmill/views.scm						\
+	sortsmill/api-syntax.scm sortsmill/notices.scm						\
+	sortsmill/hash-guillemet.scm sortsmill/strings.scm					\
+	sortsmill/ffcompat.scm sortsmill/i18n.scm sortsmill/dynlink.scm		\
+	sortsmill/contours.scm sortsmill/argv.scm							\
+	sortsmill/editor/finalization.scm sortsmill/editor/main-loop.scm	\
+	sortsmill/editor/main.scm
 #sortsmill/precompute.scm
 GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
 	sortsmill/matrices.go sortsmill/iconv.go sortsmill/linalg.go	\
@@ -74,8 +75,9 @@ GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
 	sortsmill/api-syntax.go sortsmill/notices.go					\
 	sortsmill/hash-guillemet.go sortsmill/strings.go				\
 	sortsmill/ffcompat.go sortsmill/i18n.go sortsmill/dynlink.go	\
-	sortsmill/contours.go sortsmill/editor/finalization.go			\
-	sortsmill/editor/main-loop.go
+	sortsmill/contours.go sortsmill/argv.go							\
+	sortsmill/editor/finalization.go sortsmill/editor/main-loop.go	\
+	sortsmill/editor/main.go
 
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
 	sortsmill/math-constants.scm.in sortsmill/pkg-info.scm.in	\
@@ -122,7 +124,7 @@ endif HAVE_GUI
 sortsmill/editor/main-loop.go: sortsmill/kwargs.go
 sortsmill/gsl.go sortsmill/matrices.go: sortsmill/kwargs.go
 
-sortsmill/editor/main-loop.go: sortsmill/dynlink.go
+sortsmill/editor/main-loop.go sortsmill/editor/main.go: sortsmill/dynlink.go
 sortsmill/alloc.go sortsmill/brentroot.go sortsmill/gsl.go: sortsmill/dynlink.go
 sortsmill/ffcompat.go sortsmill/matrices.go sortsmill/i18n.go: sortsmill/dynlink.go
 sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
@@ -133,12 +135,15 @@ sortsmill/kwargs.go: sortsmill/i18n.go
 sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
 sortsmill/usermenu.go sortsmill/views.go sortsmill/matrices.go: sortsmill/i18n.go
 
+sortsmill/pure.go sortsmill/editor/main.go: sortsmill/argv.go
+
 sortsmill/api-syntax.go sortsmill/i18n.go: sortsmill/pkg-info.go
 sortsmill/python.go sortsmill/usermenu/python.go: sortsmill/pkg-info.go
 
 sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
 
 sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
+sortsmill/argv.go: sortsmill/machine.go
 
 sortsmill/usermenu.go sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/gdraw-api.go
 

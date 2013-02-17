@@ -137,6 +137,7 @@
                 enable-hash-guillemet-strings
                 disable-hash-guillemet-strings
                 lines-begin-with)
+          (sortsmill argv)
           (rnrs)
           (except (guile) error)
           (except (srfi :1) map)
@@ -620,8 +621,7 @@
                  (sortsmill-dynlink-func "pure_create_interp")
                  `(,int *))))
       (lambda (args)
-        (let ((argc (length args))
-              (argv (string-list->argv args)))
+        (let-values ([(argv argc) (string-list->argv-and-argc args)])
           (pointer->pure-interp
            (proc argc (bytevector->pointer argv)))))))
 
@@ -672,33 +672,5 @@
   (define (use-pure-api)
     (pure-create-interp '("sortsmill-editor"))
     (register-finalizer "Pure interpreter" pure-finalize))
-
-  ;; FIXME: This could be useful more generally.
-  (define (string-list->argv args)
-    (let* ((n (length args))
-           (pointer-size (sizeof '*))
-           (num-bytes (* pointer-size (+ 1 n)))
-           (argv (make-bytevector num-bytes 0)))
-      (for-each
-       (match-lambda
-        ((i s) (bytevector-pointer-set! argv (* i pointer-size)
-                                        (string->pointer s))))
-       (zip (iota n) args))
-      argv
-      ))
-
-  ;; FIXME: Put this somewhere reusable.
-  (define-syntax bytevector-pointer-set!
-    (lambda (x)
-      (unless (or (= 4 (sizeof '*)) (= 8 (sizeof '*)))
-        (error 'bytevector-pointer-set!
-               "cannot handle pointer sizes other than 4 or 8"
-               (sizeof '*)))
-      (syntax-case x ()
-        ((_ bv offset p)
-         (case (sizeof '*)
-           ((4) #'(bytevector-u32-native-set! bv offset (pointer-address p)))
-           ((8) #'(bytevector-u64-native-set! bv offset (pointer-address p)))
-           )))))
 
   ) ;; end of library.
