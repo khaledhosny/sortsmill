@@ -28,6 +28,8 @@
 ;;
 ;; Try to ensure access to Sorts Mill Tools’s Guile modules.
 ;;
+;; FIXME: Try to ensure access to LTDL modules, too.
+;;
 (eval-when (compile load eval)
   (unless (member pkg-info:guilemoduledir %load-path)
     (add-to-load-path pkg-info:guilemoduledir)))
