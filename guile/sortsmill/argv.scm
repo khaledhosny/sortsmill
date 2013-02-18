@@ -17,25 +17,53 @@
 
 (library (sortsmill argv)
 
-  (export string-list->argv-and-argc)
+  (export string-list->argv-and-argc
+          argv/argc->string-list)
 
   (import (sortsmill machine)
+          (sortsmill kwargs)
           (rnrs)
           (only (srfi :1) iota)
+          (only (srfi :26) cut)
           (system foreign))
 
   ;; The argv is returned first because it is the more likely value to
   ;; be needed.
-  (define (string-list->argv-and-argc args)
+  (define/kwargs (string-list->argv-and-argc args [encoding #f])
+    (if encoding (string? encoding) #t)
     (let* ([n (length args)]
            [pointer-size (sizeof '*)]
            [num-bytes (* pointer-size (+ 1 n))]
-           [argv (make-bytevector num-bytes 0)])
+           [argv (make-bytevector num-bytes 0)]
+           [s->p (if encoding
+                     (cut string->pointer <> encoding)
+                     string->pointer)])
       (for-each
        (lambda (i s)
-         (bytevector-pointer-native-set! argv (* i pointer-size)
-                                         (string->pointer s)))
+         (bytevector-pointer-native-set! argv (* i pointer-size) (s->p s)))
        (iota n) args)
       (values argv n)))
+
+  (define/kwargs (argv/argc->string-list argv
+                                         [argc (greatest-fixnum)]
+                                         [encoding #f])
+    (if encoding (string? encoding) #t)
+    (assert (pointer? argv))
+    (assert (fixnum? argc))
+    (let ([p->s (if encoding
+                    (cut pointer->string <> encoding)
+                    pointer->string)])
+      (map p->s (get-n-or-fewer-string-pointers argv argc))))
+
+  (define (get-n-or-fewer-string-pointers p n)
+    (let ([string-ptr (dereference-pointer p)])
+      (if (= n 0)
+          '()
+          (if (null-pointer? string-ptr)
+              '()
+              (cons string-ptr
+                    (get-n-or-fewer-string-pointers
+                     (make-pointer (+ (pointer-address p) (sizeof '*)))
+                     (- n 1)))))))
 
   ) ;; end of library.

@@ -134,7 +134,7 @@ GO_FILES += sortsmill/gdraw-api.go
 endif HAVE_GUI
 
 sortsmill/editor/main-loop.go: sortsmill/kwargs.go
-sortsmill/gsl.go sortsmill/matrices.go: sortsmill/kwargs.go
+sortsmill/gsl.go sortsmill/matrices.go sortsmill/argv.go: sortsmill/kwargs.go
 
 sortsmill/editor/main-loop.go sortsmill/editor/main.go: sortsmill/dynlink.go
 sortsmill/alloc.go sortsmill/brentroot.go sortsmill/gsl.go: sortsmill/dynlink.go
@@ -148,7 +148,7 @@ sortsmill/kwargs.go: sortsmill/i18n.go
 sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
 sortsmill/usermenu.go sortsmill/views.go sortsmill/matrices.go: sortsmill/i18n.go
 
-sortsmill/pure.go sortsmill/editor/main.go: sortsmill/argv.go
+sortsmill/options.go sortsmill/pure.go sortsmill/editor/main.go: sortsmill/argv.go
 
 sortsmill/api-syntax.go sortsmill/i18n.go: sortsmill/pkg-info.go
 sortsmill/python.go sortsmill/usermenu/python.go: sortsmill/pkg-info.go
@@ -157,7 +157,9 @@ sortsmill/options.go: sortsmill/pkg-info.go
 sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
 
 sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
-sortsmill/argv.go sortsmill/options.go: sortsmill/machine.go
+sortsmill/argv.go sortsmill/options.go sortsmill/strings sortsmill/options.go: sortsmill/machine.go
+
+sortsmill/strings.go sortsmill/options.go: sortsmill/alloc.go
 
 sortsmill/usermenu.go sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/gdraw-api.go
 
@@ -167,7 +169,7 @@ sortsmill/views.go sortsmill/contours.go: sortsmill/fontforge-api.go
 sortsmill/strings.go sortsmill/pure.go sortsmill/python.go: sortsmill/hash-guillemet.go
 sortsmill/usermenu.go sortsmill/usermenu/pure.go: sortsmill/hash-guillemet.go
 
-sortsmill/usermenu/python.go: sortsmill/strings.go
+sortsmill/usermenu/python.go sortsmill/options.go: sortsmill/strings.go
 
 sortsmill/usermenu/python.go: sortsmill/usermenu.go
 

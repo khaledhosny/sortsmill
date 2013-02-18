@@ -17,18 +17,24 @@
 
 (library (sortsmill machine)
 
-  (export Bool-size                     ; sizeof(_Bool)
-          intptr_t-size                 ; sizeof(intptr_t)
-          uintptr_t-size                ; sizeof(uintptr_t)
-          float-size                    ; sizeof(float)
-          double-size                   ; sizeof(double)
+  (export _Bool-size                    ; sizeof (_Bool)
+          intptr_t-size                 ; sizeof (intptr_t)
+          uintptr_t-size                ; sizeof (uintptr_t)
+          float-size                    ; sizeof (float)
+          double-size                   ; sizeof (double)
+
           c-float-type
           c-int-type
           c-uint-type
+
           _Bool
+
           bytevector-address-native-set!
           bytevector-pointer-native-set!
+          bytevector-address-native-ref
+          bytevector-pointer-native-ref
           set-pointer!
+          get-pointer
 
           ;; Re-exported from (sortsmill math-constants).
           c-flt-epsilon
@@ -43,7 +49,7 @@
           (ice-9 match)
           (system foreign))
 
-  (define-syntax Bool-size
+  (define-syntax _Bool-size
     (identifier-syntax @SIZEOF__BOOL@))
 
   (define-syntax intptr_t-size
@@ -90,7 +96,7 @@
      (lambda (x)
        (syntax-case x ()
          (var (identifier? #'var)
-              (case Bool-size
+              (case _Bool-size
                 [(1) #'uint8]             ; Probably.
                 [(2) #'uint16]            ; Very unlikely.
                 [(4) #'uint32]            ; Very, very unlikely.
@@ -98,7 +104,7 @@
                        '_Bool
                        ;; Do not bother putting this in translation files.
                        "we do not know how to handle _Bool of this size"
-                       Bool-size)] ))))))
+                       _Bool-size)] ))))))
 
   (define-syntax bytevector-address-native-set!
     (lambda (x)
@@ -117,7 +123,27 @@
   (define (bytevector-pointer-native-set! bv index p)
     (bytevector-address-native-set! bv index (pointer-address p)))
 
+  (define-syntax bytevector-address-native-ref
+    (lambda (x)
+      (syntax-case x ()
+        ((_ bv index)
+         (match (sizeof '*)
+           (4 #'(bytevector-u32-native-ref bv index))
+           (8 #'(bytevector-u64-native-ref bv index))
+           (else (error
+                  'bytevector-address-native-ref
+                  ;; Do not bother putting this in translation files.
+                  "we do not know how to handle addresses of this size"
+                  (sizeof '*))
+                 #'#f))))))
+
+  (define (bytevector-pointer-native-ref bv index)
+    (make-pointer (bytevector-address-native-ref bv index)))
+
   (define (set-pointer! bv p)
     (bytevector-pointer-native-set! bv 0 p))
+
+  (define (get-pointer bv)
+    (bytevector-pointer-native-ref bv 0))
 
   ) ;; end of library.

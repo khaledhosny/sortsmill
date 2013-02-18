@@ -158,7 +158,15 @@ restore_gsl_error_handler (void *handler)
 static void
 g_option_context_free_unwind_handler (void *context)
 {
-  g_option_context_free ((GOptionContext *) context);
+  if (context != NULL)
+    g_option_context_free ((GOptionContext *) context);
+}
+
+static void
+g_error_free_unwind_handler (void *error)
+{
+  if (error != NULL)
+    g_error_free ((GError *) error);
 }
 
 static void
@@ -242,13 +250,20 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   navigation_mask = GMenuItemParseMask (H_ ("NavigationMask|None"));
 
+  ///////////////////////////////////////////////////////////////////////
+  // FIXME: If we have automatic help processing, we do _not_ want     //
+  // it. The automatic help processing in glib calls exit(0), which we //
+  // _do not_ want. Sorts Mill Editor should be usable as a plug-in or //
+  // library.                                                          //
+  ///////////////////////////////////////////////////////////////////////
+  
   // *INDENT-OFF*
   GOptionEntry entries[] = {
     { "version", 'V', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
     { "all-glyphs", 'a', 0, G_OPTION_ARG_NONE, &all_glyphs, N_("Load all glyphs in the 'glyf' table of a truetype collection"), NULL },
     { "last", 'l', 0, G_OPTION_ARG_NONE, &open_last, N_("Load the last font closed"), NULL },
     { "recover", 'r', 0, G_OPTION_ARG_STRING, &recover, N_("Control error recovery"), "none|auto|inquire|clean" },
-    { "init-scm", '\0', 0, G_OPTION_ARG_STRING, &init_scm, N_("Initialize with this file instead of the default site-init.scm"), N_("FILE") },
+    { "init-scm", '\0', 0, G_OPTION_ARG_FILENAME, &init_scm, N_("Initialize with this file instead of the default site-init.scm"), N_("FILE") },
     { "display", '\0', 0, G_OPTION_ARG_STRING, &display, N_("X display to use"), N_("DISPLAY") },
     { "sync", '\0', 0, G_OPTION_ARG_NONE, &sync, N_("Make X calls synchronous"), NULL },
     { G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &remaining_args, NULL, N_("[FILE...]") },
@@ -273,7 +288,11 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   g_option_context_set_summary (context, summary);
   g_option_context_set_description (context, description);
 
-  if (!g_option_context_parse (context, &argc, &argv, &error))
+  const bool parsed_successfully =
+    g_option_context_parse (context, &argc, &argv, &error);
+  scm_dynwind_unwind_handler (g_error_free_unwind_handler, error,
+                              SCM_F_WIND_EXPLICITLY);
+  if (!parsed_successfully)
     {
       fprintf (stderr, "Option parsing failed: %s\n", error->message);
       exit_status = 1;
