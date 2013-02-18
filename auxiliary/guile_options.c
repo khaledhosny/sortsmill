@@ -43,7 +43,7 @@ make_GOptionEntry (SCM long_name, SCM short_name, SCM flags, SCM arg,
 static GOptionEntry null_option = { NULL };
 
 static SCM
-scm_list_to_GOptionEntry_array (SCM lst)
+scm_c_data_to_GOptionEntry_array (SCM lst)
 {
   size_t n = scm_to_size_t (scm_length (lst));
   SCM bv = scm_c_make_bytevector ((n + 1) * sizeof (GOptionEntry));
@@ -94,6 +94,6 @@ init_guile_sortsmill_options (void)
   scm_c_define ("option-error-bad-value", scm_from_int (G_OPTION_ERROR_BAD_VALUE));
   scm_c_define ("option-error-failed", scm_from_int (G_OPTION_ERROR_FAILED));
 
-  scm_c_define_gsubr ("list->GOptionEntry-array", 1, 0, 0,
-                      scm_list_to_GOptionEntry_array);
+  scm_c_define_gsubr ("c-data->GOptionEntry-array", 1, 0, 0,
+                      scm_c_data_to_GOptionEntry_array);
 }

@@ -17,10 +17,10 @@
 
 (library (sortsmill options)
 
-  (export option-remaining
+  (export parse-command-line-options
 
-          ;; FIXME: Maybe come up with Schemey synonyms for some of
-          ;; these.
+          option-remaining
+
           option-arg-none
           option-arg-string
           option-arg-int
@@ -41,8 +41,7 @@
 
           option-error-unknown-option
           option-error-bad-value
-          option-error-failed
-          )
+          option-error-failed)
 
   (import (sortsmill dynlink)
           (sortsmill kwargs)
@@ -120,6 +119,23 @@ object!"
                              (pointer->string message)))] ))
 
   ;;-----------------------------------------------------------------------
+
+;;;;
+;;;; FIXME: This code is kind of messy. Try to improve it, if we
+;;;; continue to use it. (For instance, what the heck does ‘c-data’
+;;;; mean? I couldn’t think of a meaningful name, which implies room
+;;;; for improvement.)
+;;;;
+;;;; Also, a callback mechanism that exposes side effects to the user
+;;;; is entirely unsatisfactory and should not be used.
+;;;;
+;;;; IMO the underlying library design is wanting. I would prefer if
+;;;; program name were not set as a side effect (because it is a side
+;;;; effect, and one exposed to the user), but that is part of what
+;;;; glib does. What if I wanted to use this for some task other than
+;;;; to parse the main program arguments one time? And the automatic
+;;;; help processing is useless, because it calls exit(0).
+;;;;
 
   (define option-remaining "")
 
@@ -209,10 +225,14 @@ object!"
     arg-data-union:float-ref)
 
   (define-option-arg-<type>-value option-arg-string-value
-    (compose pointer->grabbed-string arg-data-union:string-ref))
+    (lambda (union)
+      (let ([p (arg-data-union:string-ref union)])
+        (if (null-pointer? p) #f (pointer->grabbed-string p)))))
 
   (define-option-arg-<type>-value option-arg-filename-value
-    (compose pointer->grabbed-string arg-data-union:filename-ref))
+    (lambda (union)
+      (let ([p (arg-data-union:filename-ref union)])
+        (if (null-pointer? p) #f (pointer->grabbed-string p)))))
 
   (define-option-arg-<type>-value option-arg-string-array-value
     (compose pointer->grabbed-string-list arg-data-union:string-ref))
@@ -273,23 +293,33 @@ object!"
   (define (option-entries entries)
     (map (cut apply option-entry <>) entries))
 
-  (define (list-with-keywords->GOptionEntry-array lst)
-    (list->GOptionEntry-array
-     (map (cut apply option-entry-fields->c-data <>)
-          (option-entries lst))))
-
   (define (option-entry-fields->c-data long-name short-name flags arg arg-data
                                        description arg-description)
     (list long-name short-name flags arg
           (arg-data-union->pointer (option-arg-value-record-storage arg-data))
           description arg-description))
 
+;;;;  (define (list-with-keywords->c-data lst)
+;;;;    (map (cut apply option-entry-fields->c-data <>) (option-entries lst)))
+  (define (option-entries-list->c-data entries-list)
+    (map (cut apply option-entry-fields->c-data <>) entries-list))
+
+  (define (option-entries-list->option-values-alist entries-list)
+    (if (null? entries-list)
+        '()
+        (match entries-list
+          [((long-name short-name flags arg arg-data description arg-description) . tail)
+           (if (= arg option-arg-callback)
+               [option-entries-list->option-values-alist tail]
+               [cons (cons long-name arg-data)
+                     (option-entries-list->option-values-alist tail)])] )))
+
   (define option-context-new
     (let ([proc (pointer->procedure
                  '*
                  (sortsmill-dynlink-func "g_option_context_new")
                  '(*))])
-      (compose pointer->option-context proc string->pointer)))
+      (compose pointer->option-context c:alloc-die-on-null proc string->pointer)))
 
   (define option-context-free
     (let ([proc (pointer->procedure
@@ -303,12 +333,14 @@ object!"
                  void
                  (sortsmill-dynlink-func "g_option_context_add_main_entries")
                  '(* * *))])
-      (lambda* (context entries #:optional
-                        [translation-domain pkg-info:textdomain])
-        (proc (option-context->pointer context)
-              (bytevector->pointer
-               (list-with-keywords->GOptionEntry-array entries))
-              (string->pointer translation-domain)))))
+      (lambda (context entries translation-domain)
+        (let* ([entries-list (option-entries entries)]
+               [c-data (option-entries-list->c-data entries-list)]
+               [option-values (option-entries-list->option-values-alist entries-list)])
+          (proc (option-context->pointer context)
+                (bytevector->pointer (c-data->GOptionEntry-array c-data))
+                (string->pointer translation-domain))
+          option-values))))
 
   (define option-context-set-summary
     (let ([proc (pointer->procedure
@@ -390,22 +422,45 @@ the kind of option it handles."
                    (gerror->list
                     (pointer->grabbed-gerror (get-pointer error-bv)))] )))))))
 
+  ;;;; FIXME FIXME FIXME FIXME: This has no way to set default values
+  ;;;; for flags or to tell us it was not set at all.
+  (define/kwargs (parse-command-line-options arguments main-entries
+                                             [parameter-string ""]
+                                             [summary #f]
+                                             [description #f]
+                                             [translation-domain pkg-info:textdomain])
+    (let ([context (option-context-new parameter-string)])
+      (when summary
+        (option-context-set-summary context summary))
+      (when description
+        (option-context-set-description context description))
+      (let ([option-values
+             (option-context-add-main-entries context main-entries translation-domain)])
+        (let-values ([(rest-args error-info)
+                      (option-context-parse context arguments)])
+          (option-context-free context)
+          (values (map (match-lambda
+                        [(key . value-object)
+                         (cons key ((option-arg-value value-object) value-object))])
+                       option-values)
+                  rest-args
+                  error-info)))))
 
-  (define ctx  (option-context-new "sksksksskks"))
-  (write  ctx)
-  (write  (option-context-set-summary ctx "summary"))
-  (write  (option-context-set-description ctx "description"))
-  (write  (option-context-add-main-entries
-           ctx
-           (list [list #:long-name "foo"
-                       #:arg option-arg-none]
-                 [list #:long-name "bar"
-                       #:arg option-arg-double]
-;;;                                                  [list #:long-name "cb"
-;;;                                                        #:arg option-arg-callback
-;;;                                                        #:callback (lambda () 1)]
-                 )))
-  (format #t "\n\n>>>>>>>>>>>>>>>>>>>>>>>>> ~s\n\n\n"  (option-context-parse ctx (list "cmd" "--foox" "a" "b" "c")))
-  (write (option-context-free ctx))
+
+#|  
+  (call-with-values
+      (lambda ()
+        (parse-command-line-options
+         (list "cmd" "--foo" "a" "b" "c")
+         (list [list #:long-name "foo"
+                     #:arg option-arg-none]
+               [list #:long-name "bar"
+                     #:arg option-arg-double])
+         #:parameter-string "-- what the?"
+         #:summary "summary"
+         #:description "description"))
+    (lambda args
+      ((@ (ice-9 pretty-print) pretty-print) args)))
+  |#
 
   ) ;; end of library.

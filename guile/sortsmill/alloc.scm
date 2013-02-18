@@ -20,7 +20,9 @@
   (export c:zalloc ;; Allocate and fill with zeroes.
           c:free
           c:gc-zalloc ;; Garbage-collected.
-          c:gc-free)
+          c:gc-free
+          c:alloc-die
+          c:alloc-die-on-null)
 
   (import (sortsmill dynlink)
           (rnrs)
@@ -50,5 +52,15 @@
      void
      (sortsmill-dynlink-func "GC_free" "#include <sortsmill/xgc.h>")
      '(*)))
+
+  (define c:alloc-die
+    (pointer->procedure
+     void
+     (sortsmill-dynlink-func "x_alloc_die" "#include <sortsmill/x_alloc.h>")
+     '()))
+    
+  (define (c:alloc-die-on-null p)
+    (when (null-pointer? p) (c:alloc-die))
+    p)
 
   ) ;; end of library.
