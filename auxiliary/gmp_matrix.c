@@ -36,8 +36,8 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
   return (trans == CblasNoTrans) ? j : i;
 }
 
-#undef _GMP_ARRAY
-#define _GMP_ARRAY(_m_ignored, n) _GMP_TYPE (_t) (*)[(unsigned int) (n)]
+#undef _GMP_MATRIX
+#define _GMP_MATRIX(_m_ignored, n) _GMP_TYPE (_t) (*)[(unsigned int) (n)]
 
 #undef _GMP_TYPE
 #undef _GMP_TYPE2

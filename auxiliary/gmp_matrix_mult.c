@@ -115,7 +115,7 @@ VISIBLE void
 _GMP_TYPE (_matrix_scale_c90) (unsigned int m, unsigned int n,
                                _GMP_TYPE (_t) A[], const _GMP_TYPE (_t) x)
 {
-  _GMP_TYPE (_matrix_scale) (m, n, (_GMP_ARRAY (m, n)) A, x);
+  _GMP_TYPE (_matrix_scale) (m, n, (_GMP_MATRIX (m, n)) A, x);
 }
 
 VISIBLE void
@@ -131,5 +131,5 @@ _GMP_TYPE (_matrix_gemm_c90) (CBLAS_TRANSPOSE_t TransA,
     (TransA, TransB, m, n, k, alpha,
      _FF_TRANSMATRIX_CAST (_GMP_TYPE (_t), TransA, m, k) A,
      _FF_TRANSMATRIX_CAST (_GMP_TYPE (_t), TransB, k, n) B, beta,
-     (_GMP_ARRAY (m, n)) C);
+     (_GMP_MATRIX (m, n)) C);
 }
