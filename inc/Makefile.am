@@ -1,7 +1,7 @@
 # -*- tab-width: 4 -*-
 
 # Copyright (C) 2000-2012 by George Williams
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -38,7 +38,7 @@ noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	precomputed_polyspline_data.h contour_interface.h moveto_funcs.h	\
 	invoke_funcs.h
 
-nobase_include_HEADERS = sortsmill/attributes.h							\
+nobase_include_HEADERS = sortsmill/attributes.h sortsmill/c_version.h	\
 	sortsmill/null_passthru.h sortsmill/xdie_on_null.h					\
 	sortsmill/xgc.h sortsmill/x_alloc.h sortsmill/gmp_constants.h		\
 	sortsmill/gmp_matrix.h sortsmill/xunicase.h sortsmill/xuniconv.h	\

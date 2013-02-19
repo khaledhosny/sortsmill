@@ -34,3 +34,17 @@ _GMP_TYPE (_matrix_clear) (unsigned int m, unsigned int n,
     for (unsigned int j = 0; j < n; j++)
       _GMP_TYPE (_clear) (A[i][j]);
 }
+
+VISIBLE void
+_GMP_TYPE (_matrix_init_c90) (unsigned int m, unsigned int n,
+                              _GMP_TYPE (_t) A[])
+{
+  _GMP_TYPE (_matrix_init) (m, n, (_GMP_TYPE (_t) (*)[n]) A);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_clear_c90) (unsigned int m, unsigned int n,
+                               _GMP_TYPE (_t) A[])
+{
+  _GMP_TYPE (_matrix_clear) (m, n, (_GMP_TYPE (_t) (*)[n]) A);
+}

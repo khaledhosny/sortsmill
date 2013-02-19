@@ -30,6 +30,13 @@ _GMP_TYPE (_matrix_scale) (unsigned int m, unsigned int n,
         _GMP_TYPE (_mul) (A[i][j], A[i][j], x);
 }
 
+VISIBLE void
+_GMP_TYPE (_matrix_scale_c90) (unsigned int m, unsigned int n,
+                               _GMP_TYPE (_t) A[], const _GMP_TYPE (_t) x)
+{
+  _GMP_TYPE (_matrix_scale) (m, n, (_GMP_TYPE (_t) (*)[n]) A, x);
+}
+
 static inline void
 _GMP_TYPE (_matmul_alpha1_beta1) (CBLAS_TRANSPOSE_t TransA,
                                   CBLAS_TRANSPOSE_t TransB, unsigned int m,
@@ -109,4 +116,20 @@ _GMP_TYPE (_matrix_gemm) (CBLAS_TRANSPOSE_t TransA,
       else
         _GMP_TYPE (_matmul_beta1) (TransA, TransB, m, n, k, alpha, A, B, C);
     }
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_gemm_c90) (CBLAS_TRANSPOSE_t TransA,
+                              CBLAS_TRANSPOSE_t TransB, unsigned int m,
+                              unsigned int n, unsigned int k,
+                              const _GMP_TYPE (_t) alpha,
+                              _GMP_TYPE (_t) A[],
+                              _GMP_TYPE (_t) B[],
+                              const _GMP_TYPE (_t) beta, _GMP_TYPE (_t) C[])
+{
+  _GMP_TYPE (_matrix_gemm)
+    (TransA, TransB, m, n, k, alpha,
+     _FF_TRANSMATRIX_CAST (_GMP_TYPE (_t), TransA, m, k) A,
+     _FF_TRANSMATRIX_CAST (_GMP_TYPE (_t), TransB, k, n) B, beta,
+     (_GMP_TYPE (_t) (*)[n]) C);
 }

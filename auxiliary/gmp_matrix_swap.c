@@ -55,3 +55,37 @@ _GMP_TYPE (_matrix_transpose_memcpy) (unsigned int m, unsigned int n,
     for (unsigned int j = 0; j < n; j++)
       _GMP_TYPE (_set) (result[j][i], A[i][j]);
 }
+
+VISIBLE void
+_GMP_TYPE (_matrix_swap_rows_c90) (unsigned int m, unsigned int n,
+                                   _GMP_TYPE (_t) A[],
+                                   unsigned int i, unsigned int j)
+{
+  _GMP_TYPE (_matrix_swap_rows) (m, n, (_GMP_TYPE (_t) (*)[n]) A, i, j);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_swap_columns_c90) (unsigned int m, unsigned int n,
+                                      _GMP_TYPE (_t) A[],
+                                      unsigned int i, unsigned int j)
+{
+  _GMP_TYPE (_matrix_swap_columns) (m, n, (_GMP_TYPE (_t) (*)[n]) A, i, j);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_swap_rowcol_c90) (unsigned int m,
+                                     _GMP_TYPE (_t) A[],
+                                     unsigned int i, unsigned int j)
+{
+  _GMP_TYPE (_matrix_swap_rowcol) (m, (_GMP_TYPE (_t) (*)[m]) A, i, j);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_transpose_memcpy_c90) (unsigned int m, unsigned int n,
+                                          _GMP_TYPE (_t) result[],
+                                          _GMP_TYPE (_t) A[])
+{
+  _GMP_TYPE (_matrix_transpose_memcpy) (m, n,
+                                        (_GMP_TYPE (_t) (*)[m]) result,
+                                        (_GMP_TYPE (_t) (*)[n]) A);
+}
