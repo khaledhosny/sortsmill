@@ -50,19 +50,19 @@ VISIBLE void
 _GMP_TYPE (_matrix_set_all_c90) (unsigned int m, unsigned int n,
                                  _GMP_TYPE (_t) A[], const _GMP_TYPE (_t) x)
 {
-  _GMP_TYPE (_matrix_set_all) (m, n, (_GMP_TYPE (_t) (*)[n]) A, x);
+  _GMP_TYPE (_matrix_set_all) (m, n, (_GMP_ARRAY (m, n)) A, x);
 }
 
 VISIBLE void
 _GMP_TYPE (_matrix_set_zero_c90) (unsigned int m, unsigned int n,
                                   _GMP_TYPE (_t) A[])
 {
-  _GMP_TYPE (_matrix_set_zero) (m, n, (_GMP_TYPE (_t) (*)[n]) A);
+  _GMP_TYPE (_matrix_set_zero) (m, n, (_GMP_ARRAY (m, n)) A);
 }
 
 VISIBLE void
 _GMP_TYPE (_matrix_set_identity_c90) (unsigned int m, unsigned int n,
                                       _GMP_TYPE (_t) A[])
 {
-  _GMP_TYPE (_matrix_set_identity) (m, n, (_GMP_TYPE (_t) (*)[n]) A);
+  _GMP_TYPE (_matrix_set_identity) (m, n, (_GMP_ARRAY (m, n)) A);
 }

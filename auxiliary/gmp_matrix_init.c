@@ -39,12 +39,12 @@ VISIBLE void
 _GMP_TYPE (_matrix_init_c90) (unsigned int m, unsigned int n,
                               _GMP_TYPE (_t) A[])
 {
-  _GMP_TYPE (_matrix_init) (m, n, (_GMP_TYPE (_t) (*)[n]) A);
+  _GMP_TYPE (_matrix_init) (m, n, (_GMP_ARRAY (m, n)) A);
 }
 
 VISIBLE void
 _GMP_TYPE (_matrix_clear_c90) (unsigned int m, unsigned int n,
                                _GMP_TYPE (_t) A[])
 {
-  _GMP_TYPE (_matrix_clear) (m, n, (_GMP_TYPE (_t) (*)[n]) A);
+  _GMP_TYPE (_matrix_clear) (m, n, (_GMP_ARRAY (m, n)) A);
 }

@@ -36,10 +36,13 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
   return (trans == CblasNoTrans) ? j : i;
 }
 
+#undef _GMP_ARRAY
+#define _GMP_ARRAY(_m_ignored, n) _GMP_TYPE (_t) (*)[(unsigned int) (n)]
+
 #undef _GMP_TYPE
 #undef _GMP_TYPE2
 #define _GMP_TYPE(y) mpz##y
-#define _GMP_TYPE2(x,y) x##mpz##y
+#define _GMP_TYPE2(x, y) x##mpz##y
 #include <gmp_matrix_init.c>
 #include <gmp_matrix_set.c>
 #include <gmp_matrix_copy.c>
@@ -49,7 +52,7 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 #undef _GMP_TYPE
 #undef _GMP_TYPE2
 #define _GMP_TYPE(y) mpq##y
-#define _GMP_TYPE2(x,y) x##mpq##y
+#define _GMP_TYPE2(x, y) x##mpq##y
 #include <gmp_matrix_init.c>
 #include <gmp_matrix_set.c>
 #include <gmp_matrix_copy.c>

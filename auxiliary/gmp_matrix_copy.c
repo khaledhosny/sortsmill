@@ -40,15 +40,13 @@ _GMP_TYPE (_matrix_memcpy_c90) (unsigned int m, unsigned int n,
                                 _GMP_TYPE (_t) result[], _GMP_TYPE (_t) A[])
 {
   _GMP_TYPE (_matrix_memcpy) (m, n,
-                              (_GMP_TYPE (_t) (*)[n]) result,
-                              (_GMP_TYPE (_t) (*)[n]) A);
+                              (_GMP_ARRAY (m, n)) result,
+                              (_GMP_ARRAY (m, n)) A);
 }
 
 VISIBLE void
 _GMP_TYPE (_matrix_swap_c90) (unsigned int m, unsigned int n,
                               _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
 {
-  _GMP_TYPE (_matrix_swap) (m, n,
-                            (_GMP_TYPE (_t) (*)[n]) A,
-                            (_GMP_TYPE (_t) (*)[n]) B);
+  _GMP_TYPE (_matrix_swap) (m, n, (_GMP_ARRAY (m, n)) A, (_GMP_ARRAY (m, n)) B);
 }
