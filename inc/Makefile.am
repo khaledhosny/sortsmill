@@ -53,11 +53,12 @@ nobase_include_HEADERS = sortsmill/attributes.h							\
 # be moved, rather than left in DLLs.
 nobase_include_HEADERS += sortsmill/guile/notices.h
 
-nobase_include_HEADERS += sortsmill/guile/main_loop.h		\
-	sortsmill/guile/iconv.h sortsmill/guile/polyspline.h	\
-	sortsmill/guile/contours.h sortsmill/guile/brentroot.h	\
-	sortsmill/guile/gsl.h sortsmill/guile/matrices.h		\
-	sortsmill/guile/rnrs_conditions.h
+nobase_include_HEADERS += sortsmill/guile/main_loop.h			\
+	sortsmill/guile/iconv.h sortsmill/guile/polyspline.h		\
+	sortsmill/guile/contours.h sortsmill/guile/brentroot.h		\
+	sortsmill/guile/gsl.h sortsmill/guile/matrices.h			\
+	sortsmill/guile/arrays.h sortsmill/guile/rnrs_conditions.h	\
+	sortsmill/guile/format.h
 
 if HAVE_PURE_API
 nobase_include_HEADERS += sortsmill/guile/pure.h

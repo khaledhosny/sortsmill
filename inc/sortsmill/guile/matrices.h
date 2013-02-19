@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Barry Schwartz
+ * Copyright (C) 2012, 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
+#include <sortsmill/guile/gsl.h>
+#include <sortsmill/guile/arrays.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -29,8 +31,10 @@ extern "C"
 }
 #endif
 
-/* FIXME: Put scm_c_gsl_error in a more general GSL module. */
-SCM scm_c_gsl_error (int errval, const char *who, SCM irritants);
+/* FIXME: Put these in a more Guile-array specific module, and include
+   it here. */
+void scm_array_handle_unwind_handler (void *handlep);
+void scm_dynwind_array_handle_release (scm_t_array_handle *handlep);
 
 gsl_vector_const_view
 scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep);

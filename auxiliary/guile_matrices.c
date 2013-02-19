@@ -17,22 +17,58 @@
 
 #include <assert.h>
 #include <sortsmill/guile/matrices.h>
-#include <sortsmill/guile/gsl.h>
 #include <sortsmill/guile/rnrs_conditions.h>
-#include <libguile.h>
+#include <sortsmill/guile/format.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_linalg.h>
 #include <intl.h>
 
-//////////////////////////////////////////////////
-// FIXME: Switch to R6RS exceptions throughout. //
-//////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////
-// FIXME: It seems a good idea to use dynwinds to release handles. //
-/////////////////////////////////////////////////////////////////////
-
 void init_guile_sortsmill_matrices (void);
+
+static void
+exception__array_has_no_elements (const char *who)
+{
+  const char *message = _("array has no elements");
+  rnrs_raise_condition
+    (scm_list_3
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message))));
+}
+
+static void
+exception__expected_array_of_rank_1 (const char *who)
+{
+  const char *message = _("expected array of rank 1");
+  rnrs_raise_condition
+    (scm_list_3
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message))));
+}  
+
+static void
+exception__expected_array_of_rank_2 (const char *who)
+{
+  const char *message = _("expected array of rank 2");
+  rnrs_raise_condition
+    (scm_list_3
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message))));
+}  
+
+static void
+exception__layout_incompatible_with_gsl (const char *who)
+{
+  const char *message =
+    _("an f64matrix was encountered whose layout is incompatible with GSL");
+  rnrs_raise_condition
+    (scm_list_3
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message))));
+}
 
 VISIBLE gsl_vector_const_view
 scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
@@ -46,15 +82,13 @@ scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 1)
-    scm_misc_error (who, "array has rank ~A, but should have rank 1",
-                    scm_list_1 (scm_number_to_string (scm_from_int (rank),
-                                                      scm_from_int (10))));
+    exception__expected_array_of_rank_1 (who);
 
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   const double *elems = scm_array_handle_f64_elements (handlep);
   ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
   if (n < 1)
-    scm_misc_error (who, "array has no elements", SCM_BOOL_F);
+    exception__array_has_no_elements (who);
   if (0 < dims[0].inc)
     {
       my_elems = elems;
@@ -83,34 +117,28 @@ scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep)
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 1)
-    scm_misc_error (who, "array has rank ~A, but should have rank 1",
-                    scm_list_1 (scm_number_to_string (scm_from_int (rank),
-                                                      scm_from_int (10))));
+    exception__expected_array_of_rank_1 (who);
 
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   double *elems = scm_array_handle_f64_writable_elements (handlep);
   ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
   if (n < 1)
-    scm_misc_error (who, "array has no elements", SCM_BOOL_F);
+    exception__array_has_no_elements (who);
   if (0 < dims[0].inc)
     {
       my_elems = elems;
       stride = dims[0].inc;
     }
   else
-    rnrs_raise_condition
-      (scm_list_3
-       (rnrs_make_error (),
-        rnrs_c_make_who_condition (who),
-        rnrs_c_make_message_condition
-        (_
-         ("an f64vector was encountered whose layout is incompatible with GSL"))));
+    exception__layout_incompatible_with_gsl (who);
   return gsl_vector_view_array_with_stride (my_elems, stride, n);
 }
 
 VISIBLE gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
 {
+  const char *who = "scm_gsl_matrix_const_view_array_handle";
+  
   const double *my_elems;
   size_t tda;
 
@@ -118,18 +146,13 @@ scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 2)
-    scm_misc_error ("scm_gsl_matrix_const_view_array_handle",
-                    "array has rank ~A, but should have rank 2",
-                    scm_list_1 (scm_number_to_string (scm_from_int (rank),
-                                                      scm_from_int (10))));
-
+    exception__expected_array_of_rank_2 (who);
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   const double *elems = scm_array_handle_f64_elements (handlep);
   ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
   ssize_t n1 = dims[1].ubnd - dims[1].lbnd + 1;
   if (n0 < 1 || n1 < 1)
-    scm_misc_error ("scm_gsl_matrix_const_view_array_handle",
-                    "array has no elements", SCM_BOOL_F);
+    exception__array_has_no_elements (who);
   if (dims[1].inc == 1 && 0 < dims[0].inc)
     {
       my_elems = elems;
@@ -137,8 +160,8 @@ scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
     }
   else
     {
-      double *buffer = scm_gc_malloc_pointerless (n0 * n1 * sizeof (double),
-                                                  "scm_gsl_matrix_const_view_array_handle");
+      double *buffer =
+        scm_gc_malloc_pointerless (n0 * n1 * sizeof (double), who);
       for (size_t i = 0; i < n0; i++)
         for (size_t j = 0; j < n1; j++)
           buffer[i * n1 + j] = elems[i * dims[0].inc + j * dims[1].inc];
@@ -160,68 +183,75 @@ scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 2)
-    scm_misc_error (who, "array has rank ~A, but should have rank 2",
-                    scm_list_1 (scm_number_to_string (scm_from_int (rank),
-                                                      scm_from_int (10))));
-
+    exception__expected_array_of_rank_2 (who);
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   double *elems = scm_array_handle_f64_writable_elements (handlep);
   ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
   ssize_t n1 = dims[1].ubnd - dims[1].lbnd + 1;
   if (n0 < 1 || n1 < 1)
-    scm_misc_error (who, "array has no elements", SCM_BOOL_F);
+    exception__array_has_no_elements (who);
   if (dims[1].inc == 1 && 0 < dims[0].inc)
     {
       my_elems = elems;
       tda = dims[0].inc;
     }
   else
-    rnrs_raise_condition
-      (scm_list_3
-       (rnrs_make_error (),
-        rnrs_c_make_who_condition (who),
-        rnrs_c_make_message_condition
-        (_
-         ("an f64matrix was encountered whose layout is incompatible with GSL"))));
+    exception__layout_incompatible_with_gsl (who);
   return gsl_matrix_view_array_with_tda (my_elems, n0, n1, tda);
 }
 
 VISIBLE SCM
 scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index)
 {
-  assert (0 < v->size);
+  scm_t_array_handle handle;
+
   const char *who = "scm_gsl_vector_to_f64vector";
+
   if (v->size < 1)
     rnrs_raise_condition
       (scm_list_3
-       (rnrs_make_error (), rnrs_c_make_who_condition (who),
+       (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
         rnrs_c_make_message_condition (_("gsl_vector size is zero"))));
-  scm_t_array_handle handle;
+
   SCM bounds = scm_list_2 (scm_from_int (low_index),
                            scm_from_int (low_index + v->size - 1));
   SCM result = scm_make_typed_array (scm_from_latin1_symbol ("f64"),
                                      SCM_UNSPECIFIED, scm_list_1 (bounds));
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (result, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
   const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
   double *elems = scm_array_handle_f64_writable_elements (&handle);
   for (size_t i = 0; i < v->size; i++)
     elems[i * dims[0].inc] = v->data[i * v->stride];
-  scm_array_handle_release (&handle);
+
+  scm_dynwind_end ();
+
   return result;
 }
 
 VISIBLE SCM
 scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
 {
-  assert (0 < m->size1);
-  assert (0 < m->size2);
-  if (m->size1 < 1)
-    scm_misc_error ("scm_gsl_matrix_to_f64matrix",
-                    "gsl_matrix size1 is zero", SCM_BOOL_F);
-  if (m->size2 < 1)
-    scm_misc_error ("scm_gsl_matrix_to_f64matrix",
-                    "gsl_matrix size2 is zero", SCM_BOOL_F);
   scm_t_array_handle handle;
+
+  const char *who = "scm_gsl_matrix_to_f64matrix";
+
+  if (m->size1 < 1)
+    rnrs_raise_condition
+      (scm_list_3
+       (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("gsl_matrix size1 is zero"))));
+
+  if (m->size2 < 1)
+    rnrs_raise_condition
+      (scm_list_3
+       (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("gsl_matrix size2 is zero"))));
+
   SCM row_bounds = scm_list_2 (scm_from_int (low_index),
                                scm_from_int (low_index + m->size1 - 1));
   SCM column_bounds = scm_list_2 (scm_from_int (low_index),
@@ -229,13 +259,19 @@ scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
   SCM result = scm_make_typed_array (scm_from_latin1_symbol ("f64"),
                                      SCM_UNSPECIFIED, scm_list_2 (row_bounds,
                                                                   column_bounds));
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (result, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
   const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
   double *elems = scm_array_handle_f64_writable_elements (&handle);
   for (size_t i = 0; i < m->size1; i++)
     for (size_t j = 0; j < m->size2; j++)
       elems[i * dims[0].inc + j * dims[1].inc] = m->data[i * m->tda + j];
-  scm_array_handle_release (&handle);
+
+  scm_dynwind_end ();
+
   return result;
 }
 
@@ -244,27 +280,41 @@ scm_f64matrix_f64matrix_mult (SCM a, SCM b)
 {
   scm_t_array_handle handle_a;
   scm_t_array_handle handle_b;
+
+  const char *who = "f64matrix-f64matrix*";
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
   gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+
   scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+
   gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (&handle_b).matrix;
+
   if (ma.size2 != mb.size1)
     {
-      SCM ten = scm_from_int (10);
-      scm_misc_error ("f64matrix*",
-                      "non-conformable matrices: ~Ax~A multiplied by ~Ax~A",
-                      scm_list_4 (scm_number_to_string
-                                  (scm_from_int (ma.size1), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (ma.size2), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (mb.size1), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (mb.size2), ten)));
+      const char *localized_message =
+        _("non-conformable matrices: ~ax~a multiplied by ~ax~a");
+      SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                                 scm_list_4 (scm_from_int (ma.size1),
+                                             scm_from_int (ma.size2),
+                                             scm_from_int (mb.size1),
+                                             scm_from_int (mb.size2)));
+      rnrs_raise_condition
+        (scm_list_4
+         (rnrs_make_assertion_violation (),
+          rnrs_c_make_who_condition (who),
+          rnrs_make_message_condition (message),
+          rnrs_make_irritants_condition (scm_list_2 (a, b))));
     }
 
   double buffer[ma.size1 * mb.size2];
   gsl_matrix_view vc = gsl_matrix_view_array (buffer, ma.size1, mb.size2);
+
   // int gsl_blas_dgemm (CBLAS_TRANSPOSE_t TransA,
   //                     CBLAS_TRANSPOSE_t TransB,
   //                     double alpha,
@@ -273,9 +323,11 @@ scm_f64matrix_f64matrix_mult (SCM a, SCM b)
   //                     double beta,
   //                     gsl_matrix * C);
   gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, &ma, &mb, 0.0, &vc.matrix);
+
   SCM result = scm_gsl_matrix_to_f64matrix (&vc.matrix, 1);
-  scm_array_handle_release (&handle_b);
-  scm_array_handle_release (&handle_a);
+
+  scm_dynwind_end ();
+
   return result;
 }
 
@@ -284,32 +336,48 @@ scm_f64matrix_f64matrix_add (SCM a, SCM b)
 {
   scm_t_array_handle handle_a;
   scm_t_array_handle handle_b;
+
+  const char *who = "f64matrix-f64matrix+";
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
   gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+
   scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+
   gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (&handle_b).matrix;
+
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
-      SCM ten = scm_from_int (10);
-      scm_misc_error ("f64matrix+",
-                      "non-conformable matrices: ~Ax~A plus ~Ax~A",
-                      scm_list_4 (scm_number_to_string
-                                  (scm_from_int (ma.size1), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (ma.size2), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (mb.size1), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (mb.size2), ten)));
+      const char *localized_message =
+        _("non-conformable matrices: ~ax~a plus ~ax~a");
+      SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                                 scm_list_4 (scm_from_int (ma.size1),
+                                             scm_from_int (ma.size2),
+                                             scm_from_int (mb.size1),
+                                             scm_from_int (mb.size2)));
+      rnrs_raise_condition
+        (scm_list_4
+         (rnrs_make_assertion_violation (),
+          rnrs_c_make_who_condition (who),
+          rnrs_make_message_condition (message),
+          rnrs_make_irritants_condition (scm_list_2 (a, b))));
     }
 
   double buffer[ma.size1 * ma.size2];
   gsl_matrix_view vc = gsl_matrix_view_array (buffer, ma.size1, mb.size2);
   gsl_matrix_memcpy (&vc.matrix, &ma);
+
   gsl_matrix_add (&vc.matrix, &mb);
+
   SCM result = scm_gsl_matrix_to_f64matrix (&vc.matrix, 1);
-  scm_array_handle_release (&handle_b);
-  scm_array_handle_release (&handle_a);
+
+  scm_dynwind_end ();
+
   return result;
 }
 
@@ -318,42 +386,65 @@ scm_f64matrix_f64matrix_sub (SCM a, SCM b)
 {
   scm_t_array_handle handle_a;
   scm_t_array_handle handle_b;
+
+  const char *who = "f64matrix-f64matrix-";
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
   gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+
   scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+
   gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (&handle_b).matrix;
+
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
-      SCM ten = scm_from_int (10);
-      scm_misc_error ("f64matrix-",
-                      "non-conformable matrices: ~Ax~A minus ~Ax~A",
-                      scm_list_4 (scm_number_to_string
-                                  (scm_from_int (ma.size1), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (ma.size2), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (mb.size1), ten),
-                                  scm_number_to_string (scm_from_int
-                                                        (mb.size2), ten)));
+      const char *localized_message =
+        _("non-conformable matrices: ~ax~a minus ~ax~a");
+      SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                                 scm_list_4 (scm_from_int (ma.size1),
+                                             scm_from_int (ma.size2),
+                                             scm_from_int (mb.size1),
+                                             scm_from_int (mb.size2)));
+      rnrs_raise_condition
+        (scm_list_4
+         (rnrs_make_assertion_violation (),
+          rnrs_c_make_who_condition (who),
+          rnrs_make_message_condition (message),
+          rnrs_make_irritants_condition (scm_list_2 (a, b))));
     }
 
   double buffer[ma.size1 * ma.size2];
   gsl_matrix_view vc = gsl_matrix_view_array (buffer, ma.size1, mb.size2);
   gsl_matrix_memcpy (&vc.matrix, &ma);
+
   gsl_matrix_sub (&vc.matrix, &mb);
+
   SCM result = scm_gsl_matrix_to_f64matrix (&vc.matrix, 1);
-  scm_array_handle_release (&handle_b);
-  scm_array_handle_release (&handle_a);
+
+  scm_dynwind_end ();
+
   return result;
 }
 
 VISIBLE SCM
 scm_f64matrix_svd_golub_reinsch (SCM a)
 {
-  const char *who = "scm_f64matrix_svd_golub_reinsch";
   scm_t_array_handle handle_a;
+
+  const char *who = "f64matrix-svd-golub-reinsch";
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
   gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+
   double u_buf[ma.size1 * ma.size2];
   double v_buf[ma.size2 * ma.size2];
   double s_buf[ma.size2];
@@ -363,7 +454,9 @@ scm_f64matrix_svd_golub_reinsch (SCM a)
   gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
   gsl_vector_view work = gsl_vector_view_array (work_buf, ma.size2);
   gsl_matrix_memcpy (&u.matrix, &ma);
-  scm_array_handle_release (&handle_a);
+
+  scm_dynwind_end ();
+
   int errval = gsl_linalg_SV_decomp (&u.matrix, &v.matrix, &s.vector,
                                      &work.vector);
   if (errval != GSL_SUCCESS)
@@ -385,10 +478,17 @@ scm_f64matrix_svd_golub_reinsch (SCM a)
 VISIBLE SCM
 scm_f64matrix_svd_modified_golub_reinsch (SCM a)
 {
-  const char *who = "scm_f64matrix_svd_modified_golub_reinsch";
   scm_t_array_handle handle_a;
+
+  const char *who = "f64matrix-svd-modified-golub-reinsch";
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
   gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+
   double u_buf[ma.size1 * ma.size2];
   double x_buf[ma.size2 * ma.size2];
   double v_buf[ma.size2 * ma.size2];
@@ -400,7 +500,9 @@ scm_f64matrix_svd_modified_golub_reinsch (SCM a)
   gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
   gsl_vector_view work = gsl_vector_view_array (work_buf, ma.size2);
   gsl_matrix_memcpy (&u.matrix, &ma);
-  scm_array_handle_release (&handle_a);
+
+  scm_dynwind_end ();
+
   int errval = gsl_linalg_SV_decomp_mod (&u.matrix, &x.matrix, &v.matrix,
                                          &s.vector, &work.vector);
   if (errval != GSL_SUCCESS)
@@ -422,10 +524,16 @@ scm_f64matrix_svd_modified_golub_reinsch (SCM a)
 VISIBLE SCM
 scm_f64matrix_svd_jacobi (SCM a)
 {
-  const char *who = "scm_f64matrix_svd_jacobi";
   scm_t_array_handle handle_a;
+  const char *who = "f64matrix-svd-jacobi";
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
   gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+
   double u_buf[ma.size1 * ma.size2];
   double v_buf[ma.size2 * ma.size2];
   double s_buf[ma.size2];
@@ -433,7 +541,9 @@ scm_f64matrix_svd_jacobi (SCM a)
   gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.size2, ma.size2);
   gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
   gsl_matrix_memcpy (&u.matrix, &ma);
-  scm_array_handle_release (&handle_a);
+
+  scm_dynwind_end ();
+
   int errval = gsl_linalg_SV_decomp_jacobi (&u.matrix, &v.matrix, &s.vector);
   if (errval != GSL_SUCCESS)
     scm_raise_gsl_error
@@ -455,22 +565,36 @@ VISIBLE SCM
 scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V,
                                 SCM x_transpose, SCM b_transpose)
 {
-  const char *who = "scm_f64matrix_svd_solve_transposed_internal";
   scm_t_array_handle handle_U;
   scm_t_array_handle handle_V;
   scm_t_array_handle handle_S;
   scm_t_array_handle handle_x;
   scm_t_array_handle handle_b;
+
+  const char *who = "scm_f64matrix_svd_solve_transposed_internal";
+
+  scm_dynwind_begin (0);
+
   scm_array_get_handle (U, &handle_U);
+  scm_dynwind_array_handle_release (&handle_U);
   gsl_matrix mU = scm_gsl_matrix_const_view_array_handle (&handle_U).matrix;
+
   scm_array_get_handle (V, &handle_V);
+  scm_dynwind_array_handle_release (&handle_V);
   gsl_matrix mV = scm_gsl_matrix_const_view_array_handle (&handle_V).matrix;
+
   scm_array_get_handle (S, &handle_S);
+  scm_dynwind_array_handle_release (&handle_S);
   gsl_vector vS = scm_gsl_vector_const_view_array_handle (&handle_S).vector;
+
   scm_array_get_handle (x_transpose, &handle_x);
+  scm_dynwind_array_handle_release (&handle_x);
   gsl_vector_view vx = scm_gsl_vector_view_array_handle (&handle_x);
+
   scm_array_get_handle (b_transpose, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
   gsl_vector vb = scm_gsl_vector_const_view_array_handle (&handle_b).vector;
+
   int errval = gsl_linalg_SV_solve (&mU, &mV, &vS, &vb, &vx.vector);
   if (errval != GSL_SUCCESS)
     scm_raise_gsl_error
@@ -480,11 +604,9 @@ scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V,
                    scm_from_latin1_string (who),
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_4 (U, S, V, b_transpose), SCM_UNDEFINED));
-  scm_array_handle_release (&handle_U);
-  scm_array_handle_release (&handle_V);
-  scm_array_handle_release (&handle_S);
-  scm_array_handle_release (&handle_x);
-  scm_array_handle_release (&handle_b);
+
+  scm_dynwind_end ();
+
   return SCM_UNSPECIFIED;
 }
 
