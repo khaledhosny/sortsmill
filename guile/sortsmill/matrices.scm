@@ -69,6 +69,8 @@
           exact-matrix-matrix*
           exact-matrix*
 
+          matrix-matrix*
+
           matrix-scaled
           matrix-scaled-by-division
           matrix-negate
@@ -394,8 +396,10 @@ array)."
       (cond
         [(and (eq? type-A 'f64) (eq? type-B 'f64))       (f64matrix* A B)]
         [(and (matrix-is-exact? A) (matrix-is-exact? B)) (exact-matrix* A B)]
-        [else
-         (let ([A (one-based A)]
+        [else (matrix-matrix* (vector->matrix A)
+                              (vector->matrix B))] )))
+#|
+        (let ([A (one-based A)]
                [B (one-based B)]
                [nk (matrix-dimensions A)]
                [km (matrix-dimensions B)])
@@ -426,6 +430,7 @@ array)."
                  col-indices))
               row-indices)
              C))] )))
+        |#
 
   (define matrix*
     (case-lambda

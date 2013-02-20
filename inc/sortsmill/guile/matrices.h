@@ -66,7 +66,7 @@ void scm_dynwind_mpq_matrix_unwind_handler (void *);
 void scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n,
                                    mpq_t A[m][n]);
 
-void scm_array_handle_to_mpq_matrix (scm_t_array_handle *handlep,
+void scm_array_handle_to_mpq_matrix (SCM A_scm, scm_t_array_handle *handlep,
                                      unsigned int m, unsigned int n,
                                      mpq_t A[m][n]);
 SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
@@ -76,6 +76,23 @@ SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
 SCM scm_nonuniform_matrix_is_exact_p (SCM A);
 bool scm_nonuniform_matrix_is_exact (SCM a);
 SCM scm_exact_matrix_matrix_mult (SCM a, SCM b);
+
+/*----------------------------------------------------------------------------*/
+
+#if _FF_C99_OR_GREATER
+
+void scm_array_handle_to_scm_matrix (SCM A_scm, scm_t_array_handle *handlep,
+                                     size_t m, size_t n, SCM A[m][n]);
+SCM scm_from_scm_matrix (size_t m, size_t n, SCM A[m][n]);
+
+void scm_scm_matrix_scm_matrix_mult (size_t m, size_t n, size_t k,
+                                     SCM A[m][k], SCM B[k][n], SCM C[m][n]);
+
+#endif /* _FF_C99_OR_GREATER */
+
+SCM scm_scm_vector_scm_vector_dot (size_t k, SCM *A, SCM *B);
+
+SCM scm_matrix_matrix_mult (SCM a, SCM b);
 
 /*----------------------------------------------------------------------------*/
 
