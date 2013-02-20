@@ -48,6 +48,7 @@
           matrix-diagonal
           matrix-transpose
 
+          matrix-is-exact?
           matrix-exact->inexact
           matrix-inexact->exact
 
@@ -65,8 +66,8 @@
           f64matrix+
           f64matrix-
 
-          matrix-is-exact?
           exact-matrix-matrix*
+          exact-matrix*
 
           matrix-scaled
           matrix-scaled-by-division
@@ -372,6 +373,9 @@ array)."
   (define (f64matrix- A B)
     (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
 
+  (define (exact-matrix* A B)
+    (exact-matrix-matrix* (vector->matrix A) (vector->matrix B)))
+
   ;;-----------------------------------------------------------------------
 
   (define (row*col row column-transposed)
@@ -387,9 +391,10 @@ array)."
   (define (multiply-matrices A B)
     (let ([type-A (array-type A)]
           [type-B (array-type B)])
-      (match (cons type-A type-B)
-        [('f64 . 'f64) (f64matrix* A B)]
-        [_
+      (cond
+        [(and (eq? type-A 'f64) (eq? type-B 'f64))       (f64matrix* A B)]
+        [(and (matrix-is-exact? A) (matrix-is-exact? B)) (exact-matrix* A B)]
+        [else
          (let ([A (one-based A)]
                [B (one-based B)]
                [nk (matrix-dimensions A)]
