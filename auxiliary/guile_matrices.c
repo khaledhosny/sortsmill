@@ -26,6 +26,18 @@
 #include <gsl/gsl_linalg.h>
 #include <intl.h>
 
+//
+// FIXME FIXME FIXME: All this complexity needs testing now and
+// regression testing later. Testing, testing, testing.
+//
+// That is a price I pay for doing the `wrong' thing and writing all
+// this C code. However I get obsessive about matrix operation speeds;
+// moreover the process is educational.
+//
+// Be thankful I have not (yet) implemented special matrix operations
+// for big integers, or for uniform types other than double.
+//
+
 void init_guile_sortsmill_matrices (void);
 
 static void
