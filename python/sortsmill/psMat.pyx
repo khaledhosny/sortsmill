@@ -83,9 +83,7 @@ def psMat_invert (a):
   # Invert a PostScript matrix. For simplicity, use Cramer’s rule in
   # exact arithmetic.
 
-  print a
   a = map (gmpy.mpq, a)
-  print a
 
   # Here the letter ‘A’ represents the matrix
   #
@@ -95,12 +93,9 @@ def psMat_invert (a):
   determinant_of_A = a[0] * a[3] - a[1] * a[2]
   adjugate_of_A = [a[3], -a[1], -a[2], a[0]]
   inverse_of_A = [x / determinant_of_A for x in adjugate_of_A]
-  print inverse_of_A
 
   b1 = - (a[4] * inverse_of_A[0] + a[5] * inverse_of_A[2])
   b2 = - (a[4] * inverse_of_A[1] + a[5] * inverse_of_A[3])
-
-  print [inverse_of_A] + [b1, b2]
 
   result = map (float, inverse_of_A + [b1, b2])
 
