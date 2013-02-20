@@ -74,7 +74,7 @@ class psMatException (Exception):
   def __init__ (self, irritants):
     self.irritants = irritants
   def __str__ (self):
-    return str (irritants)
+    return str (self.irritants)
 
 def psMat_invert (a):
   # Invert a PostScript matrix. For simplicity, use Cramer’s rule in
@@ -96,7 +96,7 @@ def psMat_invert (a):
 
   result = map (float, inverse_of_A + [b1, b2])
 
-  if any ([isinf (x) or isnan (x) for x in result]):
+  if any ([math.isinf (x) or math.isnan (x) for x in result]):
     raise psMatException ([a, result])
 
   return tuple (result)
