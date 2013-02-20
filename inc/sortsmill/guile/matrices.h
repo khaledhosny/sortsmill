@@ -73,6 +73,8 @@ SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 
+SCM scm_nonuniform_matrix_is_exact_p (SCM A);
+bool scm_nonuniform_matrix_is_exact (SCM a);
 SCM scm_exact_matrix_matrix_mult (SCM a, SCM b);
 
 /*----------------------------------------------------------------------------*/

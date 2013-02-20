@@ -65,6 +65,7 @@
           f64matrix+
           f64matrix-
 
+          matrix-is-exact?
           exact-matrix-matrix*
 
           matrix-scaled
@@ -139,6 +140,7 @@
           )
 
   (import (sortsmill dynlink)
+          (sortsmill machine)
           (sortsmill i18n)
           (sortsmill math-constants)
           (sortsmill kwargs)
@@ -312,6 +314,12 @@ array)."
     (transpose-array (vector->matrix A) 1 0))
 
   ;;-----------------------------------------------------------------------
+
+  (define (matrix-is-exact? A)
+    (match (array-type A)
+      [#t (nonuniform-matrix-is-exact? A)]
+      [(or 'u8 's8 'u16 's16 'u32 's32 'u64 's64) #t]
+      [_ #f] ))
 
   (define (matrix-exact->inexact A)
     (let ([B (apply make-typed-array 'f64 *unspecified* (array-shape A))])

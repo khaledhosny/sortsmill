@@ -87,6 +87,19 @@ exception__expected_array_of_rank_2_with_irritants (const char *who,
 }
 
 static void
+exception__expected_array_of_rank_1_or_2_with_irritants (const char *who,
+                                                         SCM irritants)
+{
+  const char *message = _("expected array of rank 1 or 2");
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
+}
+
+static void
 exception__layout_incompatible_with_gsl (const char *who)
 {
   const char *message =
@@ -708,6 +721,90 @@ scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V,
 }
 
 VISIBLE SCM
+scm_nonuniform_matrix_is_exact_p (SCM a)
+{
+  return scm_from_bool (scm_nonuniform_matrix_is_exact (a));
+}
+
+static bool
+scm_matrix_rank_1_is_exact (const char *who, SCM a, scm_t_array_handle *handlep)
+{
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  const SCM *elems = scm_array_handle_elements (handlep);
+
+  ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
+  if (n < 1)
+    exception__array_has_no_elements_with_irritants (who, scm_list_1 (a));
+
+  bool is_exact = true;
+  for (size_t i = 0; i < n; i++)
+    if (!scm_is_exact (elems[i * dims[0].inc]))
+      {
+        is_exact = false;
+        i = n - 1;
+      }
+  return is_exact;
+}
+
+static bool
+scm_matrix_rank_2_is_exact (const char *who, SCM a, scm_t_array_handle *handlep)
+{
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  const SCM *elems = scm_array_handle_elements (handlep);
+
+  ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
+  ssize_t m = dims[1].ubnd - dims[1].lbnd + 1;
+  if (n < 1 || m < 1)
+    exception__array_has_no_elements_with_irritants (who, scm_list_1 (a));
+
+  bool is_exact = true;
+  for (size_t i = 0; i < n; i++)
+    for (size_t j = 0; j < m; j++)
+      if (!scm_is_exact (elems[i * dims[0].inc + j * dims[1].inc]))
+        {
+          is_exact = false;
+          i = n - 1;
+          j = m - 1;
+        }
+  return is_exact;
+}
+
+VISIBLE bool
+scm_nonuniform_matrix_is_exact (SCM a)
+{
+  scm_t_array_handle handle_a;
+
+  const char *who = "scm_matrix_is_exact";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
+  size_t rank = scm_array_handle_rank (&handle_a);
+
+  bool is_exact = false;
+  switch (rank)
+    {
+    case 1:
+      is_exact = scm_matrix_rank_1_is_exact (who, a, &handle_a);
+      break;
+
+    case 2:
+      is_exact = scm_matrix_rank_2_is_exact (who, a, &handle_a);
+      break;
+
+    default:
+      exception__expected_array_of_rank_1_or_2_with_irritants
+        (who, scm_list_1 (a));
+    }
+
+  scm_dynwind_end ();
+
+  return is_exact;
+}
+
+VISIBLE SCM
 scm_exact_matrix_matrix_mult (SCM a, SCM b)
 {
   scm_t_array_handle handle_a;
@@ -804,6 +901,8 @@ init_guile_sortsmill_matrices (void)
   scm_c_define_gsubr ("private:f64matrix-svd-solve-vector", 5, 0, 0,
                       scm_f64matrix_svd_solve_vector);
 
+  scm_c_define_gsubr ("nonuniform-matrix-is-exact?", 1, 0, 0,
+                      scm_nonuniform_matrix_is_exact_p);
   scm_c_define_gsubr ("exact-matrix-matrix*", 2, 0, 0,
                       scm_exact_matrix_matrix_mult);
 }
