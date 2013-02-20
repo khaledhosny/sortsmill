@@ -65,6 +65,8 @@
           f64matrix+
           f64matrix-
 
+          exact-matrix-matrix*
+
           matrix-scaled
           matrix-scaled-by-division
           matrix-negate

@@ -18,10 +18,13 @@
 #ifndef _SORTSMILL_GUILE_MATRICES_H
 #define _SORTSMILL_GUILE_MATRICES_H
 
+#include <stdbool.h>
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
 #include <sortsmill/guile/gsl.h>
 #include <sortsmill/guile/arrays.h>
+#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/c_version.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -31,10 +34,7 @@ extern "C"
 }
 #endif
 
-/* FIXME: Put these in a more Guile-array specific module, and include
-   it here. */
-void scm_array_handle_unwind_handler (void *handlep);
-void scm_dynwind_array_handle_release (scm_t_array_handle *handlep);
+/*----------------------------------------------------------------------------*/
 
 gsl_vector_const_view
 scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep);
@@ -56,6 +56,26 @@ SCM scm_f64matrix_svd_modified_golub_reinsch (SCM m);
 SCM scm_f64matrix_svd_jacobi (SCM m);
 SCM scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose,
                                     SCM b_transpose);
+
+/*----------------------------------------------------------------------------*/
+
+void scm_dynwind_mpq_matrix_unwind_handler (void *);
+
+#if _FF_C99_OR_GREATER
+
+void scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n,
+                                   mpq_t A[m][n]);
+
+void scm_array_handle_to_mpq_matrix (scm_t_array_handle *handlep,
+                                     unsigned int m, unsigned int n,
+                                     mpq_t A[m][n]);
+SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
+
+#endif /* _FF_C99_OR_GREATER */
+
+SCM scm_exact_matrix_matrix_mult (SCM a, SCM b);
+
+/*----------------------------------------------------------------------------*/
 
 #if 0
 {

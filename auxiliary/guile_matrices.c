@@ -16,9 +16,12 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
+#include <xalloc.h>
 #include <sortsmill/guile/matrices.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/format.h>
+#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/gmp_constants.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_linalg.h>
 #include <intl.h>
@@ -37,6 +40,18 @@ exception__array_has_no_elements (const char *who)
 }
 
 static void
+exception__array_has_no_elements_with_irritants (const char *who, SCM irritants)
+{
+  const char *message = _("array has no elements");
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
+}
+
+static void
 exception__expected_array_of_rank_1 (const char *who)
 {
   const char *message = _("expected array of rank 1");
@@ -45,7 +60,7 @@ exception__expected_array_of_rank_1 (const char *who)
      (rnrs_make_assertion_violation (),
       rnrs_c_make_who_condition (who),
       rnrs_make_message_condition (scm_from_locale_string (message))));
-}  
+}
 
 static void
 exception__expected_array_of_rank_2 (const char *who)
@@ -56,7 +71,20 @@ exception__expected_array_of_rank_2 (const char *who)
      (rnrs_make_assertion_violation (),
       rnrs_c_make_who_condition (who),
       rnrs_make_message_condition (scm_from_locale_string (message))));
-}  
+}
+
+static void
+exception__expected_array_of_rank_2_with_irritants (const char *who,
+                                                    SCM irritants)
+{
+  const char *message = _("expected array of rank 2");
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
+}
 
 static void
 exception__layout_incompatible_with_gsl (const char *who)
@@ -138,7 +166,7 @@ VISIBLE gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
 {
   const char *who = "scm_gsl_matrix_const_view_array_handle";
-  
+
   const double *my_elems;
   size_t tda;
 
@@ -198,6 +226,75 @@ scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
   else
     exception__layout_incompatible_with_gsl (who);
   return gsl_matrix_view_array_with_tda (my_elems, n0, n1, tda);
+}
+
+typedef struct _mpq_t_matrix_view
+{
+  unsigned int m;
+  unsigned int n;
+  void *elems;
+} _mpq_t_matrix_view;
+
+VISIBLE void
+scm_dynwind_mpq_matrix_unwind_handler (void *p)
+{
+  _mpq_t_matrix_view *q = (_mpq_t_matrix_view *) p;
+  mpq_matrix_clear (q->m, q->n, (mpq_t (*)[(unsigned int)q->n]) q->elems);
+  free (q);
+}
+
+VISIBLE void
+scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n])
+{
+  _mpq_t_matrix_view *q = XMALLOC (_mpq_t_matrix_view);
+  q->m = m;
+  q->n = n;
+  q->elems = &A[0][0];
+  scm_dynwind_unwind_handler (scm_dynwind_mpq_matrix_unwind_handler,
+                              q, SCM_F_WIND_EXPLICITLY);
+}
+
+VISIBLE void
+scm_array_handle_to_mpq_matrix (scm_t_array_handle *handlep,
+                                unsigned int m, unsigned int n, mpq_t A[m][n])
+{
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  const SCM *elems = scm_array_handle_elements (handlep);
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        SCM x = elems[i * dims[0].inc + j * dims[1].inc];
+        scm_to_mpz (scm_numerator (x), mpq_numref (A[i][j]));
+        scm_to_mpz (scm_denominator (x), mpq_denref (A[i][j]));
+        mpq_canonicalize (A[i][j]);
+      }
+}
+
+VISIBLE SCM
+scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n])
+{
+  scm_t_array_handle handle;
+
+  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
+                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
+  SCM A_scm = scm_make_array (SCM_UNSPECIFIED, bounds);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A_scm, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
+  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+  SCM *elems = scm_array_handle_writable_elements (&handle);
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      elems[i * dims[0].inc + j * dims[1].inc] =
+        scm_divide (scm_from_mpz (mpq_numref (A[i][j])),
+                    scm_from_mpz (mpq_denref (A[i][j])));
+
+  scm_dynwind_end ();
+
+  return A_scm;
 }
 
 VISIBLE SCM
@@ -610,6 +707,85 @@ scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V,
   return SCM_UNSPECIFIED;
 }
 
+VISIBLE SCM
+scm_exact_matrix_matrix_mult (SCM a, SCM b)
+{
+  scm_t_array_handle handle_a;
+  scm_t_array_handle handle_b;
+
+  const char *who = "exact-matrix-matrix*";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
+  scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+
+  size_t rank_a = scm_array_handle_rank (&handle_a);
+  if (rank_a != 2)
+    exception__expected_array_of_rank_2_with_irritants (who, scm_list_1 (a));
+
+  size_t rank_b = scm_array_handle_rank (&handle_b);
+  if (rank_b != 2)
+    exception__expected_array_of_rank_2_with_irritants (who, scm_list_1 (b));
+
+  const scm_t_array_dim *dims_a = scm_array_handle_dims (&handle_a);
+  ssize_t n0_a = dims_a[0].ubnd - dims_a[0].lbnd + 1;
+  ssize_t n1_a = dims_a[1].ubnd - dims_a[1].lbnd + 1;
+  if (n0_a < 1 || n1_a < 1)
+    exception__array_has_no_elements_with_irritants (who, scm_list_1 (a));
+
+  const scm_t_array_dim *dims_b = scm_array_handle_dims (&handle_b);
+  ssize_t n0_b = dims_b[0].ubnd - dims_b[0].lbnd + 1;
+  ssize_t n1_b = dims_b[1].ubnd - dims_b[1].lbnd + 1;
+  if (n0_b < 1 || n1_b < 1)
+    exception__array_has_no_elements_with_irritants (who, scm_list_1 (b));
+
+  if (n1_a != n0_b)
+    {
+      const char *localized_message =
+        _("non-conformable matrices: ~ax~a multiplied by ~ax~a");
+      SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                                 scm_list_4 (scm_from_uint (n0_a),
+                                             scm_from_uint (n1_a),
+                                             scm_from_uint (n0_b),
+                                             scm_from_uint (n1_b)));
+      rnrs_raise_condition
+        (scm_list_4
+         (rnrs_make_assertion_violation (),
+          rnrs_c_make_who_condition (who),
+          rnrs_make_message_condition (message),
+          rnrs_make_irritants_condition (scm_list_2 (a, b))));
+    }
+
+  mpq_t ma[n0_a][n1_a];
+  mpq_t mb[n0_b][n1_b];
+  mpq_t mc[n0_a][n1_b];
+
+  mpq_matrix_init (n0_a, n1_a, ma);
+  scm_dynwind_mpq_matrix_clear (n0_a, n1_a, ma);
+
+  mpq_matrix_init (n0_b, n1_b, mb);
+  scm_dynwind_mpq_matrix_clear (n0_b, n1_b, mb);
+
+  mpq_matrix_init (n0_a, n1_b, mc);
+  scm_dynwind_mpq_matrix_clear (n0_a, n1_b, mc);
+
+  scm_array_handle_to_mpq_matrix (&handle_a, n0_a, n1_a, ma);
+  scm_array_handle_to_mpq_matrix (&handle_b, n0_b, n1_b, mb);
+
+  mpq_matrix_gemm (CblasNoTrans, CblasNoTrans, n0_a, n1_b, n1_a,
+                   mpq_one (), ma, mb, mpq_zero (), mc);
+
+  SCM C = scm_from_mpq_matrix (n0_a, n1_b, mc);
+
+  scm_dynwind_end ();
+
+  return C;
+}
+
 VISIBLE void
 init_guile_sortsmill_matrices (void)
 {
@@ -627,4 +803,7 @@ init_guile_sortsmill_matrices (void)
                       scm_f64matrix_svd_jacobi);
   scm_c_define_gsubr ("private:f64matrix-svd-solve-vector", 5, 0, 0,
                       scm_f64matrix_svd_solve_vector);
+
+  scm_c_define_gsubr ("exact-matrix-matrix*", 2, 0, 0,
+                      scm_exact_matrix_matrix_mult);
 }
