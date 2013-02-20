@@ -1,6 +1,6 @@
 # -*- coding: utf-8; python-indent: 2; -*-
 
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,15 +50,12 @@ The matrices are expressed as six-element tuples of floats.
 
 """
 
-include 'sortsmill/cython/config.pxi'
-
-cimport sortsmill.cython.gsl as gsl
-from libc.math cimport sin, cos, tan
-
 import gmpy
+import math
 import sys
+from . import (pkg_info)
 
-__version__ = FF_MODULE_VERSION
+__version__ = pkg_info.version
 
 # i--
 # i-- @strong{FIXME:} This chapter needs an introductory section,
@@ -167,9 +164,9 @@ def rotate (theta):
   in radians.
 
   """
-  cdef double t = float (theta)
-  cdef double cosine = cos (t)
-  cdef double sine = sin (t)
+  t = float (theta)
+  cosine = math.cos (t)
+  sine = math.sin (t)
   return (cosine, sine, -sine, cosine, 0.0, 0.0)
 
 # i--
@@ -199,8 +196,8 @@ def scale (x, y = None):
 # i--
 def skew (theta):
   """Return a matrix that will skew."""
-  cdef double t = float (theta)
-  cdef double tangent = tan (t)
+  t = float (theta)
+  tangent = math.tan (t)
   return (1.0, 0.0, tangent, 1.0, 0.0, 0.0)
 
 # i--

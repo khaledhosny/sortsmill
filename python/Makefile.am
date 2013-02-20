@@ -58,10 +58,10 @@ if HAVE_PYTHON_COMPATIBILITY
 nodist_python_PYTHON = fontforge.py psMat.py
 endif HAVE_PYTHON_COMPATIBILITY
 
-nobase_dist_python_PYTHON = ffContrib/__init__.py						\
-	ffContrib/excepthook.py ffContrib/allow_core.py						\
-	sortsmill/ffcompat.py sortsmill/pyguile.py sortsmill/contours.py	\
-	sortsmill/conditions.py
+nobase_dist_python_PYTHON = ffContrib/__init__.py					\
+	ffContrib/excepthook.py ffContrib/allow_core.py					\
+	sortsmill/psMat.py sortsmill/ffcompat.py sortsmill/pyguile.py	\
+	sortsmill/contours.py sortsmill/conditions.py
 if HAVE_GUI
 nobase_dist_python_PYTHON += sortsmill/usermenu.py
 endif HAVE_GUI
@@ -149,8 +149,8 @@ sortsmill_contours_la_SOURCES = sortsmill/contours.c
 sortsmill_contours_la_LIBADD = $(AUXLIBADD)
 
 PYX_FILES = __sortsmill__/__pyguile__.pyx sortsmill/views.pyx			\
-	sortsmill/psMat.pyx sortsmill/pkg_info.pyx sortsmill/notices.pyx	\
-	sortsmill/guile.pyx sortsmill/linalg.pyx sortsmill/polyspline.pyx	\
+	sortsmill/pkg_info.pyx sortsmill/notices.pyx sortsmill/guile.pyx	\
+	sortsmill/linalg.pyx sortsmill/polyspline.pyx						\
 	sortsmill/brentroot.pyx
 
 NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
