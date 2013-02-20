@@ -55,6 +55,7 @@ include 'sortsmill/cython/config.pxi'
 cimport sortsmill.cython.gsl as gsl
 from libc.math cimport sin, cos, tan
 
+import gmpy
 import sys
 
 __version__ = FF_MODULE_VERSION
@@ -66,83 +67,47 @@ __version__ = FF_MODULE_VERSION
 # i--
 
 #--------------------------------------------------------------------------
-#
-# This is ugly but something like it seems necessary.
-
-# FIXME:
-# FIXME: Now it is actually causing us trouble, so find a better
-# FIXME: way, such as requiring the user to set the error handler.
-# FIXME:
-
-'''
-def set_error_handler_off ():
-  gsl.gsl_set_error_handler_off ()
-
-set_error_handler_off ()
-'''
-
-#--------------------------------------------------------------------------
 
 #
-# FIXME: Write Texinfo documentation for these exceptions.
+# FIXME: Write Texinfo documentation for psMatException and the
+# possible gmpy exceptions.
 #
 
 class psMatException (Exception):
-  """Base class for exceptions raised by psMat."""
-  pass
-
-class psMatGSLError (psMatException):
-  """Raised when a GSL error occurs during a psMat operation."""
-  def __init__ (self, errno):
-    self.errno = errno
+  def __init__ (self, irritants):
+    self.irritants = irritants
   def __str__ (self):
-    return gsl.gsl_strerror (self.errno)
+    return str (irritants)
 
 def psMat_invert (a):
-  # Invert a PostScript matrix, by singular value decomposition.
+  # Invert a PostScript matrix. For simplicity, use Cramer’s rule in
+  # exact arithmetic.
 
-  a = map (float, a)
+  print a
+  a = map (gmpy.mpq, a)
+  print a
 
-  cdef double a0 = a[0]
-  cdef double a1 = a[1]
-  cdef double a2 = a[2]
-  cdef double a3 = a[3]
-  cdef double a4 = a[4]
-  cdef double a5 = a[5]
+  # Here the letter ‘A’ represents the matrix
+  #
+  #    a[0] a[1]
+  #    a[2] a[3]
+  #
+  determinant_of_A = a[0] * a[3] - a[1] * a[2]
+  adjugate_of_A = [a[3], -a[1], -a[2], a[0]]
+  inverse_of_A = [x / determinant_of_A for x in adjugate_of_A]
+  print inverse_of_A
 
-  cdef int errval
+  b1 = - (a[4] * inverse_of_A[0] + a[5] * inverse_of_A[2])
+  b2 = - (a[4] * inverse_of_A[1] + a[5] * inverse_of_A[3])
 
-  cdef double u_mat[4]
-  cdef gsl.gsl_matrix_view u = gsl.gsl_matrix_view_array (u_mat, 2, 2)
-  cdef double v_mat[4]
-  cdef gsl.gsl_matrix_view v = gsl.gsl_matrix_view_array (v_mat, 2, 2)
-  cdef double s_vec[2]
-  cdef gsl.gsl_vector_view s = gsl.gsl_vector_view_array (s_vec, 2)
-  cdef double work_vec[2]
-  cdef gsl.gsl_vector_view work = gsl.gsl_vector_view_array (work_vec, 2)
+  print [inverse_of_A] + [b1, b2]
 
-  u_mat[0] = a0
-  u_mat[1] = a1
-  u_mat[2] = a2
-  u_mat[3] = a3
+  result = map (float, inverse_of_A + [b1, b2])
 
-  errval = gsl.gsl_linalg_SV_decomp (&u.matrix, &v.matrix, &s.vector, &work.vector)
-  if errval != gsl.GSL_SUCCESS:
-    raise psMatGSLError (errval)
+  if any ([isinf (x) or isnan (x) for x in result]):
+    raise psMatException ([a, result])
 
-  # Test for singularity.
-  if s_vec[1] <= s_vec[0] * 100.0 * <double> sys.float_info.epsilon:
-    raise psMatGSLError (gsl.GSL_ESING)
-
-  cdef double b11 = v_mat[0] * u_mat[0] / s_vec[0] + v_mat[1] * u_mat[1] / s_vec[1]
-  cdef double b12 = v_mat[0] * u_mat[2] / s_vec[0] + v_mat[1] * u_mat[3] / s_vec[1]
-  cdef double b21 = v_mat[2] * u_mat[0] / s_vec[0] + v_mat[3] * u_mat[1] / s_vec[1]
-  cdef double b22 = v_mat[2] * u_mat[2] / s_vec[0] + v_mat[3] * u_mat[3] / s_vec[1]
-
-  cdef double c1 = - (a4 * b11 + a5 * b21)
-  cdef double c2 = - (a4 * b12 + a5 * b22)
-
-  return (b11, b12, b21, b22, c1, c2)  
+  return tuple (result)
 
 # i--
 # i-- @defun identity ()
