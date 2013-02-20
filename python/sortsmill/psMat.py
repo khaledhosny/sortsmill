@@ -82,15 +82,27 @@ def psMat_invert (a):
 
   a = map (gmpy.mpq, a)
 
-  # Here the letter ‘A’ represents the matrix
+  # Below, the letter ‘A’ represents the matrix:
   #
-  #    a[0] a[1]
-  #    a[2] a[3]
-  #
+  #   A = a[0] a[1]
+  #       a[2] a[3]
+
+  # det A
   determinant_of_A = a[0] * a[3] - a[1] * a[2]
+
+  # adj A =  a[3] -a[1]
+  #         -a[2]  a[0]
+  #
   adjugate_of_A = [a[3], -a[1], -a[2], a[0]]
+
+  # A⁻¹ = adj A / det A
+  #
   inverse_of_A = [x / determinant_of_A for x in adjugate_of_A]
 
+  # The offset in the plane. (One day we should use conformal
+  # geometric algebra instead of this old-fashioned stuff, so offsets
+  # require no special handling ... Though, of course, we still need
+  # to handle these PostScript notations, anyway.)
   b1 = - (a[4] * inverse_of_A[0] + a[5] * inverse_of_A[2])
   b2 = - (a[4] * inverse_of_A[1] + a[5] * inverse_of_A[3])
 
