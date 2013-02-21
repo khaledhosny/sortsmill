@@ -476,10 +476,15 @@ assert_conformable_for_gemm (const char *who,
     non_conformable_for_gemm_C_trailing (who, B, C, k_B, n_B, m_C, n_C);
 }
 
+gsl_matrix_const_view null_gsl_matrix_const_view = { 0 };
+
 VISIBLE SCM
 scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                     SCM beta, SCM C)
 {
+  // Note: if beta = 0 exactly, then C is ignored. You can set it to
+  // anything.
+
   const char *who = "scm_gsl_blas_dgemm";
 
   scm_t_array_handle handle_A;
@@ -515,9 +520,20 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
   const size_t n_B =
     transposed_size (_TransB, _B.matrix.size2, _B.matrix.size1);
 
+  if (_beta != 0)
+    {
+      scm_array_get_handle (C, &handle_C);
+      scm_dynwind_array_handle_release (&handle_C);
+      assert_c_f64_rank2_array (who, C, &handle_C);
+    }
+
+  gsl_matrix_const_view _C =
+    (_beta != 0) ?
+    scm_gsl_matrix_const_view_array_handle (&handle_C) :
+    null_gsl_matrix_const_view;
+
   size_t m_C;
   size_t n_C;
-  gsl_matrix_view _C;
 
   if (_beta == 0)
     {
@@ -526,12 +542,6 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
     }
   else
     {
-      scm_array_get_handle (C, &handle_C);
-      scm_dynwind_array_handle_release (&handle_C);
-      assert_c_f64_rank2_array (who, C, &handle_C);
-
-      _C = scm_gsl_matrix_view_array_handle (&handle_C);
-
       m_C = _C.matrix.size1;
       n_C = _C.matrix.size2;
     }
