@@ -40,9 +40,9 @@ GUILE_INSTALLED_ENV = GUILE_AUTO_COMPILE=0									\
 
 GUILE_FLAGS = -L $(top_builddir)/guile -L $(top_srcdir)/guile
 
-GUILE_INTERPRET = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) --no-auto-compile -s
+GUILE_INTERPRET = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) -s
 
-GUILE_COMMAND = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) --no-auto-compile -c
+GUILE_COMMAND = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) -c
 
 GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch	\
 -Wduplicate-case-datum -Wbad-case-datum -Wformat

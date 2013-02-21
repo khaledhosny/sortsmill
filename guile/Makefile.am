@@ -40,7 +40,6 @@ MOSTLYCLEANFILES =
 CLEANFILES =
 DISTCLEANFILES =
 
-
 #--------------------------------------------------------------------------
 #
 # The Type Inspector Generator.
@@ -81,13 +80,20 @@ MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 #
 
 #--------------------------------------------------------------------------
+
+# The following rule is unpleasant but helps us avoid having to keep
+# track of dependencies. Consolation: it is no worse than if we used a
+# whole-program compiler.
+$(GO_FILES): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
+
+#--------------------------------------------------------------------------
 #
 # (sortsmill alloc)
 
 DIST_SCM_FILES += sortsmill/alloc.scm
 GO_FILES += sortsmill/alloc.go
 
-sortsmill/alloc.go: sortsmill/dynlink.go
+sortsmill/alloc.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -116,7 +122,7 @@ sortsmill/argv.go: sortsmill/machine.go
 DIST_SCM_FILES += sortsmill/brentroot.scm
 GO_FILES += sortsmill/brentroot.go
 
-sortsmill/brentroot.go: sortsmill/dynlink.go
+sortsmill/brentroot.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/brentroot.go: sortsmill/math-constants.go
 
 #--------------------------------------------------------------------------
@@ -145,13 +151,13 @@ GO_FILES += sortsmill/editor/finalization.go
 DIST_SCM_FILES += sortsmill/editor/main.scm
 GO_FILES += sortsmill/editor/main.go
 
-sortsmill/editor/main.go: sortsmill/dynlink.go
+sortsmill/editor/main.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/editor/main.go: sortsmill/argv.go
 
 DIST_SCM_FILES += sortsmill/editor/main-loop.scm
 GO_FILES += sortsmill/editor/main-loop.go
 
-sortsmill/editor/main-loop.go: sortsmill/dynlink.go
+sortsmill/editor/main-loop.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/editor/main-loop.go: sortsmill/kwargs.go
 
 #--------------------------------------------------------------------------
@@ -161,7 +167,7 @@ sortsmill/editor/main-loop.go: sortsmill/kwargs.go
 DIST_SCM_FILES += sortsmill/ffcompat.scm
 GO_FILES += sortsmill/ffcompat.go
 
-sortsmill/ffcompat.go: sortsmill/dynlink.go
+sortsmill/ffcompat.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -192,8 +198,13 @@ DIST_SCM_IN_FILES += sortsmill/gsl/error.scm.in
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/gsl/error.scm
 GO_FILES += sortsmill/gsl/error.go
 
-sortsmill/gsl/error.go: sortsmill/dynlink.go
+sortsmill/gsl/error.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/gsl/error.go: sortsmill/kwargs.go
+
+DIST_SCM_FILES += sortsmill/gsl/matrices.scm
+GO_FILES += sortsmill/gsl/matrices.go
+
+sortsmill/gsl/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -209,7 +220,7 @@ GO_FILES += sortsmill/hash-guillemet.go
 DIST_SCM_FILES += sortsmill/i18n.scm
 GO_FILES += sortsmill/i18n.go
 
-sortsmill/i18n.go: sortsmill/dynlink.go
+sortsmill/i18n.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/i18n.go: sortsmill/pkg-info.go
 
 #--------------------------------------------------------------------------
@@ -219,7 +230,7 @@ sortsmill/i18n.go: sortsmill/pkg-info.go
 DIST_SCM_FILES += sortsmill/iconv.scm
 GO_FILES += sortsmill/iconv.go
 
-sortsmill/iconv.go: sortsmill/dynlink.go
+sortsmill/iconv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -262,7 +273,7 @@ GO_FILES += sortsmill/math-constants.go
 DIST_SCM_FILES += sortsmill/matrices.scm
 GO_FILES += sortsmill/matrices.go
 
-sortsmill/matrices.go: sortsmill/dynlink.go
+sortsmill/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/matrices.go: sortsmill/i18n.go
 sortsmill/matrices.go: sortsmill/kwargs.go
 
@@ -273,7 +284,7 @@ sortsmill/matrices.go: sortsmill/kwargs.go
 DIST_SCM_FILES += sortsmill/notices.scm
 GO_FILES += sortsmill/notices.go
 
-sortsmill/notices.go: sortsmill/dynlink.go
+sortsmill/notices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -295,10 +306,18 @@ sortsmill/options.go: sortsmill/strings.go
 DIST_SCM_FILES += sortsmill/pkg-info.scm
 GO_FILES += sortsmill/pkg-info.go
 
+sortsmill/pkg-info.go: sortsmill/hash-guillemet.go
+sortsmill/pkg-info.go: sortsmill/pkg-info/directory-layout.go
+sortsmill/pkg-info.go: sortsmill/pkg-info/i18n.go
+sortsmill/pkg-info.go: sortsmill/pkg-info/package.go
+sortsmill/pkg-info.go: sortsmill/pkg-info/pure.go
+sortsmill/pkg-info.go: sortsmill/pkg-info/python.go
+sortsmill/pkg-info.go: sortsmill/pkg-info/version.go
+
 DIST_SCM_FILES += sortsmill/pkg-info/directory-layout.scm
 GO_FILES += sortsmill/pkg-info/directory-layout.go
 
-sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go
+sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/i18n.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/i18n.scm
@@ -327,7 +346,7 @@ GO_FILES += sortsmill/pkg-info/version.go
 DIST_SCM_FILES += sortsmill/polyspline.scm
 GO_FILES += sortsmill/polyspline.go
 
-sortsmill/polyspline.go: sortsmill/dynlink.go
+sortsmill/polyspline.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -346,7 +365,7 @@ DIST_SCM_FILES += sortsmill/pure.scm
 GO_FILES += sortsmill/pure.go
 
 sortsmill/pure.go: sortsmill/argv.go
-sortsmill/pure.go: sortsmill/dynlink.go
+sortsmill/pure.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/pure.go: sortsmill/hash-guillemet.go
 sortsmill/pure.go: sortsmill/i18n.go
 
@@ -361,7 +380,7 @@ if HAVE_PYTHON_API
 DIST_SCM_FILES += sortsmill/python.scm
 GO_FILES += sortsmill/python.go
 
-sortsmill/python.go: sortsmill/dynlink.go
+sortsmill/python.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/python.go: sortsmill/hash-guillemet.go
 sortsmill/python.go: sortsmill/i18n.go
 sortsmill/python.go: sortsmill/pkg-info.go
@@ -398,7 +417,7 @@ if HAVE_GUI
 DIST_SCM_FILES += sortsmill/usermenu.scm
 GO_FILES += sortsmill/usermenu.go
 
-sortsmill/usermenu.go: sortsmill/dynlink.go
+sortsmill/usermenu.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
 sortsmill/usermenu.go: sortsmill/hash-guillemet.go
 sortsmill/usermenu.go: sortsmill/i18n.go
@@ -419,7 +438,7 @@ if HAVE_PYTHON_API
 DIST_SCM_FILES += sortsmill/usermenu/python.scm
 GO_FILES += sortsmill/usermenu/python.go
 
-sortsmill/usermenu/python.go: sortsmill/dynlink.go
+sortsmill/usermenu/python.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
 sortsmill/usermenu/python.go: sortsmill/machine.go
 sortsmill/usermenu/python.go: sortsmill/pkg-info.go
@@ -523,25 +542,6 @@ MOSTLYCLEANFILES += libguile_sortsmill_cython.c	\
 	libguile_sortsmill_cython.h
 
 endif HAVE_PYTHON_API
-
-#--------------------------------------------------------------------------
-
-# The following rules are unpleasant but help us avoid having to keep
-# track of dependencies. Consolation: it is no worse than if we used a
-# whole-program compiler.
-
-$(GO_FILES): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
-
-# This rule avoids some deadlocks.
-$(filter-out $(GO_FILES_NOT_DEPENDENT_ON_LIBS), $(GO_FILES)): $(lib_LTLIBRARIES)
-
-sortsmill/pkg-info.go: $(GO_FILES_NOT_DEPENDENT_ON_LIBS)	\
-	sortsmill/pkg-info/directory-layout.go
-
-GO_FILES_NOT_DEPENDENT_ON_LIBS = sortsmill/hash-guillemet.go	\
-	sortsmill/pkg-info/package.go sortsmill/pkg-info/version.go	\
-	sortsmill/pkg-info/pure.go sortsmill/pkg-info/python.go		\
-	sortsmill/pkg-info/i18n.go
 
 #--------------------------------------------------------------------------
 

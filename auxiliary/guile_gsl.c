@@ -20,7 +20,10 @@
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <libguile.h>
 #include <gsl/gsl_errno.h>
+#include <gsl/gsl_cblas.h>
 #include <intl.h>
+
+void init_guile_sortsmill_gsl (void);
 
 VISIBLE SCM
 scm_gsl_errno_to_symbol (SCM errval)
@@ -52,3 +55,20 @@ scm_gsl_error_handler_for_raising_a_gsl_error (const char *reason,
                                    scm_from_int (line),
                                    scm_from_int (gsl_errno)));
 }
+
+VISIBLE void
+init_guile_sortsmill_gsl (void)
+{
+  scm_c_define ("gsl:CblasRowMajor", scm_from_int (CblasRowMajor));
+  scm_c_define ("gsl:CblasColMajor", scm_from_int (CblasColMajor));
+  scm_c_define ("gsl:CblasNoTrans", scm_from_int (CblasNoTrans));
+  scm_c_define ("gsl:CblasTrans", scm_from_int (CblasTrans));
+  scm_c_define ("gsl:CblasConjTrans", scm_from_int (CblasConjTrans));
+  scm_c_define ("gsl:CblasUpper", scm_from_int (CblasUpper));
+  scm_c_define ("gsl:CblasLower", scm_from_int (CblasLower));
+  scm_c_define ("gsl:CblasNonUnit", scm_from_int (CblasNonUnit));
+  scm_c_define ("gsl:CblasUnit", scm_from_int (CblasUnit));
+  scm_c_define ("gsl:CblasLeft", scm_from_int (CblasLeft));
+  scm_c_define ("gsl:CblasRight", scm_from_int (CblasRight));
+}
+
