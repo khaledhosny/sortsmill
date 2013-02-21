@@ -61,117 +61,379 @@ nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 
-DIST_SCM_FILES += sortsmill/kwargs.scm sortsmill/alloc.scm				\
-	sortsmill/matrices.scm sortsmill/iconv.scm sortsmill/linalg.scm		\
-	sortsmill/polyspline.scm sortsmill/brentroot.scm					\
-	sortsmill/sfd-to-sxml.scm sortsmill/views.scm						\
-	sortsmill/api-syntax.scm sortsmill/notices.scm						\
-	sortsmill/hash-guillemet.scm sortsmill/strings.scm					\
-	sortsmill/ffcompat.scm sortsmill/i18n.scm sortsmill/dynlink.scm		\
-	sortsmill/contours.scm sortsmill/argv.scm sortsmill/options.scm		\
-	sortsmill/editor/finalization.scm sortsmill/editor/main-loop.scm	\
-	sortsmill/editor/main.scm sortsmill/pkg-info/directory-layout.scm	\
-	sortsmill/pkg-info.scm sortsmill/gsl.scm
-#sortsmill/precompute.scm
-GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
-	sortsmill/matrices.go sortsmill/iconv.go sortsmill/linalg.go	\
-	sortsmill/polyspline.go sortsmill/brentroot.go					\
-	sortsmill/sfd-to-sxml.go sortsmill/views.go						\
-	sortsmill/api-syntax.go sortsmill/notices.go					\
-	sortsmill/hash-guillemet.go sortsmill/strings.go				\
-	sortsmill/ffcompat.go sortsmill/i18n.go sortsmill/dynlink.go	\
-	sortsmill/contours.go sortsmill/argv.go sortsmill/options.go	\
-	sortsmill/editor/finalization.go sortsmill/editor/main-loop.go	\
-	sortsmill/editor/main.go sortsmill/pkg-info/directory-layout.go	\
-	sortsmill/pkg-info.go sortsmill/gsl.go
+#--------------------------------------------------------------------------
+#
+#
+# Note: Most of the rules below that have a .go file on the left side
+# are simply to speed up the make process. A few may ensure that
+# generated files are created before they are needed.
+#
+#
 
-DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
-	sortsmill/math-constants.scm.in sortsmill/gsl/error.scm.in
-CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm		\
-	sortsmill/math-constants.scm sortsmill/gsl/error.scm
-GO_FILES += sortsmill/machine.go sortsmill/math-constants.go	\
-	sortsmill/gsl/error.go
+#--------------------------------------------------------------------------
+#
+# (sortsmill alloc)
 
-DIST_SCM_IN_FILES += sortsmill/pkg-info/package.scm.in					\
-	sortsmill/pkg-info/version.scm.in sortsmill/pkg-info/pure.scm.in	\
-	sortsmill/pkg-info/python.scm.in sortsmill/pkg-info/i18n.scm.in
-MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm			\
-	sortsmill/pkg-info/package.scm sortsmill/pkg-info/version.scm	\
-	sortsmill/pkg-info/pure.scm sortsmill/pkg-info/python.scm		\
-	sortsmill/pkg-info/i18n.scm
-GO_FILES += sortsmill/fontforge-api.go sortsmill/pkg-info/package.go	\
-	sortsmill/pkg-info/version.go sortsmill/pkg-info/pure.go			\
-	sortsmill/pkg-info/python.go sortsmill/pkg-info/i18n.go
+DIST_SCM_FILES += sortsmill/alloc.scm
+GO_FILES += sortsmill/alloc.go
 
-if HAVE_PURE_API
-DIST_SCM_FILES += sortsmill/pure.scm
-GO_FILES += sortsmill/pure.go
-endif HAVE_PURE_API
+sortsmill/alloc.go: sortsmill/dynlink.go
 
-if HAVE_PYTHON_API
-DIST_SCM_FILES += sortsmill/python.scm
-GO_FILES += sortsmill/python.go
-endif HAVE_PYTHON_API
+#--------------------------------------------------------------------------
+#
+# (sortsmill api-syntax)
+
+DIST_SCM_FILES += sortsmill/api-syntax.scm
+GO_FILES += sortsmill/api-syntax.go
+
+sortsmill/api-syntax.go: sortsmill/pkg-info.go
+sortsmill/api-syntax.go: sortsmill/machine.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill argv)
+
+DIST_SCM_FILES += sortsmill/argv.scm
+GO_FILES += sortsmill/argv.go
+
+sortsmill/argv.go: sortsmill/kwargs.go
+sortsmill/argv.go: sortsmill/machine.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill brentroot)
+
+DIST_SCM_FILES += sortsmill/brentroot.scm
+GO_FILES += sortsmill/brentroot.go
+
+sortsmill/brentroot.go: sortsmill/dynlink.go
+sortsmill/brentroot.go: sortsmill/math-constants.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill contours)
+
+DIST_SCM_FILES += sortsmill/contours.scm
+GO_FILES += sortsmill/contours.go
+
+sortsmill/contours.go: sortsmill/fontforge-api.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill dynlink)
+
+DIST_SCM_FILES += sortsmill/dynlink.scm
+GO_FILES += sortsmill/dynlink.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill editor ...)
+
+DIST_SCM_FILES += sortsmill/editor/finalization.scm
+GO_FILES += sortsmill/editor/finalization.go
+
+DIST_SCM_FILES += sortsmill/editor/main.scm
+GO_FILES += sortsmill/editor/main.go
+
+sortsmill/editor/main.go: sortsmill/dynlink.go
+sortsmill/editor/main.go: sortsmill/argv.go
+
+DIST_SCM_FILES += sortsmill/editor/main-loop.scm
+GO_FILES += sortsmill/editor/main-loop.go
+
+sortsmill/editor/main-loop.go: sortsmill/dynlink.go
+sortsmill/editor/main-loop.go: sortsmill/kwargs.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill ffcompat)
+
+DIST_SCM_FILES += sortsmill/ffcompat.scm
+GO_FILES += sortsmill/ffcompat.go
+
+sortsmill/ffcompat.go: sortsmill/dynlink.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill fontforge-api)
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
+GO_FILES += sortsmill/fontforge-api.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill gdraw-api)
 
 if HAVE_GUI
-
-DIST_SCM_FILES += sortsmill/usermenu.scm
-GO_FILES += sortsmill/usermenu.go
-
-if HAVE_PURE_API
-DIST_SCM_FILES += sortsmill/usermenu/pure.scm
-GO_FILES += sortsmill/usermenu/pure.go
-endif HAVE_PURE_API
-
-if HAVE_PYTHON_API
-DIST_SCM_FILES += sortsmill/usermenu/python.scm
-GO_FILES += sortsmill/usermenu/python.go
-endif HAVE_PYTHON_API
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/gdraw-api.scm
 GO_FILES += sortsmill/gdraw-api.go
 
 endif HAVE_GUI
 
-sortsmill/editor/main-loop.go: sortsmill/kwargs.go
-sortsmill/gsl/error.go sortsmill/matrices.go sortsmill/argv.go: sortsmill/kwargs.go
+#--------------------------------------------------------------------------
+#
+# (sortsmill gsl ...)
 
-sortsmill/editor/main-loop.go sortsmill/editor/main.go: sortsmill/dynlink.go
-sortsmill/alloc.go sortsmill/brentroot.go sortsmill/gsl/error.go: sortsmill/dynlink.go
-sortsmill/ffcompat.go sortsmill/matrices.go sortsmill/i18n.go: sortsmill/dynlink.go
-sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
-sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go
-sortsmill/usermenu/python.go sortsmill/usermenu.go: sortsmill/dynlink.go
-sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go
+DIST_SCM_FILES += sortsmill/gsl.scm
+GO_FILES += sortsmill/gsl.go
+
+DIST_SCM_IN_FILES += sortsmill/gsl/error.scm.in
+CONFIGURE_GENERATED_SCM_FILES += sortsmill/gsl/error.scm
+GO_FILES += sortsmill/gsl/error.go
+
+sortsmill/gsl/error.go: sortsmill/dynlink.go
+sortsmill/gsl/error.go: sortsmill/kwargs.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill hash-guillemet)
+
+DIST_SCM_FILES += sortsmill/hash-guillemet.scm
+GO_FILES += sortsmill/hash-guillemet.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill i18n)
+
+DIST_SCM_FILES += sortsmill/i18n.scm
+GO_FILES += sortsmill/i18n.go
+
+sortsmill/i18n.go: sortsmill/dynlink.go
+sortsmill/i18n.go: sortsmill/pkg-info.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill iconv)
+
+DIST_SCM_FILES += sortsmill/iconv.scm
+GO_FILES += sortsmill/iconv.go
+
+sortsmill/iconv.go: sortsmill/dynlink.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill kwargs)
+
+DIST_SCM_FILES += sortsmill/kwargs.scm
+GO_FILES += sortsmill/kwargs.go
 
 sortsmill/kwargs.go: sortsmill/i18n.go
-sortsmill/pure.go sortsmill/python.go sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
-sortsmill/usermenu.go sortsmill/views.go sortsmill/matrices.go: sortsmill/i18n.go
 
-sortsmill/options.go sortsmill/pure.go sortsmill/editor/main.go: sortsmill/argv.go
+#--------------------------------------------------------------------------
+#
+# (sortsmill linalg)   FIXME: Get rid of this.
 
-sortsmill/api-syntax.go sortsmill/i18n.go: sortsmill/pkg-info.go
-sortsmill/python.go sortsmill/usermenu/python.go: sortsmill/pkg-info.go
+DIST_SCM_FILES += sortsmill/linalg.scm
+GO_FILES += sortsmill/linalg.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill machine)
+
+DIST_SCM_IN_FILES += sortsmill/machine.scm.in
+CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm
+GO_FILES += sortsmill/machine.go
+
+sortsmill/machine.go: sortsmill/math-constants.go
+
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill math-constants)
+
+DIST_SCM_IN_FILES += sortsmill/math-constants.scm.in
+CONFIGURE_GENERATED_SCM_FILES += sortsmill/math-constants.scm
+GO_FILES += sortsmill/math-constants.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill matrices)
+
+DIST_SCM_FILES += sortsmill/matrices.scm
+GO_FILES += sortsmill/matrices.go
+
+sortsmill/matrices.go: sortsmill/dynlink.go
+sortsmill/matrices.go: sortsmill/i18n.go
+sortsmill/matrices.go: sortsmill/kwargs.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill notices)
+
+DIST_SCM_FILES += sortsmill/notices.scm
+GO_FILES += sortsmill/notices.go
+
+sortsmill/notices.go: sortsmill/dynlink.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill options)   FIXME: Reimplement this differently.
+
+DIST_SCM_FILES += sortsmill/options.scm
+GO_FILES += sortsmill/options.go
+
+sortsmill/options.go: sortsmill/alloc.go
+sortsmill/options.go: sortsmill/argv.go
+sortsmill/options.go: sortsmill/machine.go
 sortsmill/options.go: sortsmill/pkg-info.go
+sortsmill/options.go: sortsmill/strings.go
 
-sortsmill/machine.go sortsmill/brentroot.go sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
+#--------------------------------------------------------------------------
+#
+# (sortsmill pkg-info ...)
 
-sortsmill/api-syntax.go sortsmill/usermenu.go sortsmill/usermenu/python.go: sortsmill/machine.go
-sortsmill/argv.go sortsmill/options.go sortsmill/strings sortsmill/options.go: sortsmill/machine.go
+DIST_SCM_FILES += sortsmill/pkg-info.scm
+GO_FILES += sortsmill/pkg-info.go
 
-sortsmill/strings.go sortsmill/options.go: sortsmill/alloc.go
+DIST_SCM_FILES += sortsmill/pkg-info/directory-layout.scm
+GO_FILES += sortsmill/pkg-info/directory-layout.go
 
-sortsmill/usermenu.go sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/gdraw-api.go
+sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go
 
-sortsmill/usermenu.go sortsmill/usermenu/pure.go sortsmill/usermenu/python.go: sortsmill/fontforge-api.go
-sortsmill/views.go sortsmill/contours.go: sortsmill/fontforge-api.go
+DIST_SCM_IN_FILES += sortsmill/pkg-info/i18n.scm.in
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/i18n.scm
+GO_FILES += sortsmill/pkg-info/i18n.go
 
-sortsmill/strings.go sortsmill/pure.go sortsmill/python.go: sortsmill/hash-guillemet.go
-sortsmill/usermenu.go sortsmill/usermenu/pure.go: sortsmill/hash-guillemet.go
+DIST_SCM_IN_FILES += sortsmill/pkg-info/package.scm.in
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/package.scm
+GO_FILES += sortsmill/pkg-info/package.go
 
-sortsmill/usermenu/python.go sortsmill/options.go: sortsmill/strings.go
+DIST_SCM_IN_FILES += sortsmill/pkg-info/pure.scm.in
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/pure.scm
+GO_FILES += sortsmill/pkg-info/pure.go
 
+DIST_SCM_IN_FILES += sortsmill/pkg-info/python.scm.in
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/python.scm
+GO_FILES += sortsmill/pkg-info/python.go
+
+DIST_SCM_IN_FILES += sortsmill/pkg-info/version.scm.in
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/version.scm
+GO_FILES += sortsmill/pkg-info/version.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill polyspline)
+
+DIST_SCM_FILES += sortsmill/polyspline.scm
+GO_FILES += sortsmill/polyspline.go
+
+sortsmill/polyspline.go: sortsmill/dynlink.go
+
+#--------------------------------------------------------------------------
+#
+# FIXME: Get rid of this.
+
+#DIST_SCM_FILES += sortsmill/precompute.scm
+#GO_FILES += sortsmill/precompute.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill pure)
+
+if HAVE_PURE_API
+
+DIST_SCM_FILES += sortsmill/pure.scm
+GO_FILES += sortsmill/pure.go
+
+sortsmill/pure.go: sortsmill/argv.go
+sortsmill/pure.go: sortsmill/dynlink.go
+sortsmill/pure.go: sortsmill/hash-guillemet.go
+sortsmill/pure.go: sortsmill/i18n.go
+
+endif HAVE_PURE_API
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill python)
+
+if HAVE_PYTHON_API
+
+DIST_SCM_FILES += sortsmill/python.scm
+GO_FILES += sortsmill/python.go
+
+sortsmill/python.go: sortsmill/dynlink.go
+sortsmill/python.go: sortsmill/hash-guillemet.go
+sortsmill/python.go: sortsmill/i18n.go
+sortsmill/python.go: sortsmill/pkg-info.go
+
+endif HAVE_PYTHON_API
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill sfd-to-sxml)    FIXME: Implement this for real, eventually.
+
+DIST_SCM_FILES += sortsmill/sfd-to-sxml.scm
+GO_FILES += sortsmill/sfd-to-sxml.go
+
+sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
+sortsmill/sfd-to-sxml.go: sortsmill/math-constants.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill strings)
+
+DIST_SCM_FILES += sortsmill/strings.scm
+GO_FILES += sortsmill/strings.go
+
+sortsmill/strings.go: sortsmill/alloc.go
+sortsmill/strings.go: sortsmill/hash-guillemet.go
+sortsmill/strings: sortsmill/machine.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill usermenu ...)
+
+if HAVE_GUI
+
+DIST_SCM_FILES += sortsmill/usermenu.scm
+GO_FILES += sortsmill/usermenu.go
+
+sortsmill/usermenu.go: sortsmill/dynlink.go
+sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu.go: sortsmill/hash-guillemet.go
+sortsmill/usermenu.go: sortsmill/i18n.go
+sortsmill/usermenu.go: sortsmill/machine.go
+
+if HAVE_PURE_API
+
+DIST_SCM_FILES += sortsmill/usermenu/pure.scm
+GO_FILES += sortsmill/usermenu/pure.go
+
+sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu/pure.go: sortsmill/hash-guillemet.go
+
+endif HAVE_PURE_API
+
+if HAVE_PYTHON_API
+
+DIST_SCM_FILES += sortsmill/usermenu/python.scm
+GO_FILES += sortsmill/usermenu/python.go
+
+sortsmill/usermenu/python.go: sortsmill/dynlink.go
+sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+sortsmill/usermenu/python.go: sortsmill/machine.go
+sortsmill/usermenu/python.go: sortsmill/pkg-info.go
+sortsmill/usermenu/python.go: sortsmill/strings.go
 sortsmill/usermenu/python.go: sortsmill/usermenu.go
+
+endif HAVE_PYTHON_API
+
+endif HAVE_GUI
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill views)
+
+DIST_SCM_FILES += sortsmill/views.scm
+GO_FILES += sortsmill/views.go
+
+sortsmill/views.go: sortsmill/fontforge-api.go
+sortsmill/views.go: sortsmill/i18n.go
+
+#--------------------------------------------------------------------------
+#
+# Guile sources generated from ‘API instructions’ (.apii files).
 
 sortsmill/fontforge-api.scm:											\
 		$(top_builddir)/fontforge/fontforge.types.apii					\
@@ -193,6 +455,9 @@ sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii			\
 EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
 
 #--------------------------------------------------------------------------
+#
+# Automatic generation of an extension module for foreign symbols used
+# by Guile.
 
 EXTRA_DIST += $(srcdir)/generate-libguile-sortsmill_symbols.scm	\
 	ff-internal/extract-dynlink.scm
@@ -223,6 +488,10 @@ libguile_sortsmill_symbols.c: $(SCM_SYMBOL_FILES)
 		$(srcdir)/generate-libguile-sortsmill_symbols.scm $^ > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
+#--------------------------------------------------------------------------
+#
+# A Guile extension module written in Cython, for Python support.
+
 if HAVE_PYTHON_API
 
 lib_LTLIBRARIES += libguile-sortsmill_cython.la
@@ -248,23 +517,26 @@ endif HAVE_PYTHON_API
 
 #--------------------------------------------------------------------------
 
-all-local: $(GO_FILES)
-
 # The following rules are unpleasant but help us avoid having to keep
 # track of dependencies. Consolation: it is no worse than if we used a
 # whole-program compiler.
+
 $(GO_FILES): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
-$(filter-out $(EXCLUDED_PKG_INFO_FILES), $(GO_FILES)): $(lib_LTLIBRARIES)
-EXCLUDED_PKG_INFO_FILES = sortsmill/hash-guillemet.go			\
+
+# This rule avoids some deadlocks.
+$(filter-out $(GO_FILES_NOT_DEPENDENT_ON_LIBS), $(GO_FILES)): $(lib_LTLIBRARIES)
+
+sortsmill/pkg-info.go: $(GO_FILES_NOT_DEPENDENT_ON_LIBS)	\
+	sortsmill/pkg-info/directory-layout.go
+
+GO_FILES_NOT_DEPENDENT_ON_LIBS = sortsmill/hash-guillemet.go	\
 	sortsmill/pkg-info/package.go sortsmill/pkg-info/version.go	\
 	sortsmill/pkg-info/pure.go sortsmill/pkg-info/python.go		\
 	sortsmill/pkg-info/i18n.go
-sortsmill/pkg-info.go: $(EXCLUDED_PKG_INFO_FILES)	\
-	sortsmill/pkg-info/directory-layout.go
 
-###$(filter-out sortsmill/pkg-info.go,$(GO_FILES)): $(DIST_SCM_FILES)	\
-###	$(NODIST_SCM_FILES) $(lib_LTLIBRARIES)
-###sortsmill/pkg-info.go: $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
+#--------------------------------------------------------------------------
+
+all-local: $(GO_FILES)
 
 # Try to ensure that the installed bitcode files are newer than the
 # installed source files, by installing the bitcode files with this
