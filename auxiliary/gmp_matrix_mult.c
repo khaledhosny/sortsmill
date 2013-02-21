@@ -112,6 +112,125 @@ _GMP_TYPE (_matrix_gemm) (CBLAS_TRANSPOSE_t TransA,
 }
 
 VISIBLE void
+_GMP_TYPE (_matrix_mul_elements) (unsigned int m, unsigned int n,
+                                  _GMP_TYPE (_t) A[m][n],
+                                  _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_mul) (A[i][j], A[i][j], B[i][j]);
+}
+
+#if _GMP_TYPE_MPZ
+
+VISIBLE void
+_GMP_TYPE (_matrix_cdiv_q_elements) (unsigned int m, unsigned int n,
+                                     _GMP_TYPE (_t) A[m][n],
+                                     _GMP_TYPE (_t) B[m][n])
+{
+  // mpz_cdiv_q rounds towards +∞
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_cdiv_q) (A[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_fdiv_q_elements) (unsigned int m, unsigned int n,
+                                     _GMP_TYPE (_t) A[m][n],
+                                     _GMP_TYPE (_t) B[m][n])
+{
+  // mpz_fdiv_q rounds towards −∞
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_fdiv_q) (A[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_tdiv_q_elements) (unsigned int m, unsigned int n,
+                                     _GMP_TYPE (_t) A[m][n],
+                                     _GMP_TYPE (_t) B[m][n])
+{
+  // mpz_tdiv_q rounds towards zero (‘truncation’).
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_tdiv_q) (A[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_cdiv_r_elements) (unsigned int m, unsigned int n,
+                                     _GMP_TYPE (_t) A[m][n],
+                                     _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_cdiv_r) (A[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_fdiv_r_elements) (unsigned int m, unsigned int n,
+                                     _GMP_TYPE (_t) A[m][n],
+                                     _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_fdiv_r) (A[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_tdiv_r_elements) (unsigned int m, unsigned int n,
+                                     _GMP_TYPE (_t) A[m][n],
+                                     _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_tdiv_r) (A[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_cdiv_qr_elements) (unsigned int m, unsigned int n,
+                                      _GMP_TYPE (_t) A[m][n],
+                                      _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_cdiv_qr) (A[i][j], B[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_fdiv_qr_elements) (unsigned int m, unsigned int n,
+                                      _GMP_TYPE (_t) A[m][n],
+                                      _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_fdiv_qr) (A[i][j], B[i][j], A[i][j], B[i][j]);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_tdiv_qr_elements) (unsigned int m, unsigned int n,
+                                      _GMP_TYPE (_t) A[m][n],
+                                      _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_tdiv_qr) (A[i][j], B[i][j], A[i][j], B[i][j]);
+}
+
+#else // !_GMP_TYPE_MPZ
+
+VISIBLE void
+_GMP_TYPE (_matrix_div_elements) (unsigned int m, unsigned int n,
+                                  _GMP_TYPE (_t) A[m][n],
+                                  _GMP_TYPE (_t) B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      _GMP_TYPE (_div) (A[i][j], A[i][j], B[i][j]);
+}
+
+#endif // !_GMP_TYPE_MPZ
+
+VISIBLE void
 _GMP_TYPE (_matrix_scale_c90) (unsigned int m, unsigned int n,
                                _GMP_TYPE (_t) A[], const _GMP_TYPE (_t) x)
 {
@@ -133,3 +252,100 @@ _GMP_TYPE (_matrix_gemm_c90) (CBLAS_TRANSPOSE_t TransA,
      _FF_TRANSMATRIX_CAST (_GMP_TYPE (_t), TransB, k, n) B, beta,
      (_GMP_MATRIX (m, n)) C);
 }
+
+VISIBLE void
+_GMP_TYPE (_matrix_mul_elements_c90) (unsigned int m, unsigned int n,
+                                      _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_mul_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                    (_GMP_MATRIX (m, n)) B);
+}
+
+#if _GMP_TYPE_MPZ
+
+VISIBLE void
+_GMP_TYPE (_matrix_cdiv_q_elements_c90) (unsigned int m, unsigned int n,
+                                         _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_cdiv_q_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                       (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_fdiv_q_elements_c90) (unsigned int m, unsigned int n,
+                                         _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_fdiv_q_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                       (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_tdiv_q_elements_c90) (unsigned int m, unsigned int n,
+                                         _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_tdiv_q_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                       (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_cdiv_r_elements_c90) (unsigned int m, unsigned int n,
+                                         _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_cdiv_r_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                       (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_fdiv_r_elements_c90) (unsigned int m, unsigned int n,
+                                         _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_fdiv_r_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                       (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_tdiv_r_elements_c90) (unsigned int m, unsigned int n,
+                                         _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_tdiv_r_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                       (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_cdiv_qr_elements_c90) (unsigned int m, unsigned int n,
+                                          _GMP_TYPE (_t) A[],
+                                          _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_cdiv_qr_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                        (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_fdiv_qr_elements_c90) (unsigned int m, unsigned int n,
+                                          _GMP_TYPE (_t) A[],
+                                          _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_fdiv_qr_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                        (_GMP_MATRIX (m, n)) B);
+}
+
+VISIBLE void
+_GMP_TYPE (_matrix_tdiv_qr_elements_c90) (unsigned int m, unsigned int n,
+                                          _GMP_TYPE (_t) A[],
+                                          _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_tdiv_qr_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                        (_GMP_MATRIX (m, n)) B);
+}
+
+#else // !_GMP_TYPE_MPZ
+
+VISIBLE void
+_GMP_TYPE (_matrix_div_elements_c90) (unsigned int m, unsigned int n,
+                                      _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
+{
+  _GMP_TYPE (_matrix_div_elements) (m, n, (_GMP_MATRIX (m, n)) A,
+                                    (_GMP_MATRIX (m, n)) B);
+}
+
+#endif // !_GMP_TYPE_MPZ

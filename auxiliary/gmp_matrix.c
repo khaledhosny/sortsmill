@@ -39,8 +39,14 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 #undef _GMP_MATRIX
 #define _GMP_MATRIX(_m_ignored, n) _GMP_TYPE (_t) (*)[(unsigned int) (n)]
 
+#undef _GMP_TYPE_MPZ
+#undef _GMP_TYPE_MPQ
+#undef _GMP_TYPE_MPF
 #undef _GMP_TYPE
 #undef _GMP_TYPE2
+#define _GMP_TYPE_MPZ 1
+#define _GMP_TYPE_MPQ 0
+#define _GMP_TYPE_MPF 0
 #define _GMP_TYPE(y) mpz##y
 #define _GMP_TYPE2(x, y) x##mpz##y
 #include <gmp_matrix_init.c>
@@ -48,9 +54,16 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 #include <gmp_matrix_copy.c>
 #include <gmp_matrix_swap.c>
 #include <gmp_matrix_mult.c>
+#include <gmp_matrix_add.c>
 
+#undef _GMP_TYPE_MPZ
+#undef _GMP_TYPE_MPQ
+#undef _GMP_TYPE_MPF
 #undef _GMP_TYPE
 #undef _GMP_TYPE2
+#define _GMP_TYPE_MPZ 0
+#define _GMP_TYPE_MPQ 1
+#define _GMP_TYPE_MPF 0
 #define _GMP_TYPE(y) mpq##y
 #define _GMP_TYPE2(x, y) x##mpq##y
 #include <gmp_matrix_init.c>
@@ -58,3 +71,4 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 #include <gmp_matrix_copy.c>
 #include <gmp_matrix_swap.c>
 #include <gmp_matrix_mult.c>
+#include <gmp_matrix_add.c>

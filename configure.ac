@@ -507,7 +507,7 @@ AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
 AC_CONFIG_COMMANDS([guile/sortsmill/pkg-info],[AS_MKDIR_P([guile/sortsmill/pkg-info])])
 AC_CONFIG_FILES([guile/sortsmill/machine.scm])
 AC_CONFIG_FILES([guile/sortsmill/math-constants.scm])
-AC_CONFIG_FILES([guile/sortsmill/gsl.scm])
+AC_CONFIG_FILES([guile/sortsmill/gsl/error.scm])
 AC_CONFIG_FILES([main/sortsmill-editor],[chmod +x main/sortsmill-editor])
 AC_CONFIG_FILES([main/smed:main/sortsmill-editor.in],[chmod +x main/smed])
 

@@ -71,7 +71,7 @@ DIST_SCM_FILES += sortsmill/kwargs.scm sortsmill/alloc.scm				\
 	sortsmill/contours.scm sortsmill/argv.scm sortsmill/options.scm		\
 	sortsmill/editor/finalization.scm sortsmill/editor/main-loop.scm	\
 	sortsmill/editor/main.scm sortsmill/pkg-info/directory-layout.scm	\
-	sortsmill/pkg-info.scm
+	sortsmill/pkg-info.scm sortsmill/gsl.scm
 #sortsmill/precompute.scm
 GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
 	sortsmill/matrices.go sortsmill/iconv.go sortsmill/linalg.go	\
@@ -83,14 +83,14 @@ GO_FILES += sortsmill/kwargs.go sortsmill/alloc.go					\
 	sortsmill/contours.go sortsmill/argv.go sortsmill/options.go	\
 	sortsmill/editor/finalization.go sortsmill/editor/main-loop.go	\
 	sortsmill/editor/main.go sortsmill/pkg-info/directory-layout.go	\
-	sortsmill/pkg-info.go
+	sortsmill/pkg-info.go sortsmill/gsl.go
 
-DIST_SCM_IN_FILES += sortsmill/machine.scm.in				\
-	sortsmill/math-constants.scm.in sortsmill/gsl.scm.in
-CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm	\
-	sortsmill/math-constants.scm sortsmill/gsl.scm
+DIST_SCM_IN_FILES += sortsmill/machine.scm.in					\
+	sortsmill/math-constants.scm.in sortsmill/gsl/error.scm.in
+CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm		\
+	sortsmill/math-constants.scm sortsmill/gsl/error.scm
 GO_FILES += sortsmill/machine.go sortsmill/math-constants.go	\
-	sortsmill/gsl.go
+	sortsmill/gsl/error.go
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/package.scm.in					\
 	sortsmill/pkg-info/version.scm.in sortsmill/pkg-info/pure.scm.in	\
@@ -134,10 +134,10 @@ GO_FILES += sortsmill/gdraw-api.go
 endif HAVE_GUI
 
 sortsmill/editor/main-loop.go: sortsmill/kwargs.go
-sortsmill/gsl.go sortsmill/matrices.go sortsmill/argv.go: sortsmill/kwargs.go
+sortsmill/gsl/error.go sortsmill/matrices.go sortsmill/argv.go: sortsmill/kwargs.go
 
 sortsmill/editor/main-loop.go sortsmill/editor/main.go: sortsmill/dynlink.go
-sortsmill/alloc.go sortsmill/brentroot.go sortsmill/gsl.go: sortsmill/dynlink.go
+sortsmill/alloc.go sortsmill/brentroot.go sortsmill/gsl/error.go: sortsmill/dynlink.go
 sortsmill/ffcompat.go sortsmill/matrices.go sortsmill/i18n.go: sortsmill/dynlink.go
 sortsmill/iconv.go sortsmill/notices.go sortsmill/polyspline.go: sortsmill/dynlink.go
 sortsmill/pure.go sortsmill/python.go: sortsmill/dynlink.go

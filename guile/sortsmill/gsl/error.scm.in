@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill gsl)
+(library (sortsmill gsl error)
 
   ;;
   ;; FIXME: Add support for calling GSL functions with an ‘irritants’
@@ -85,8 +85,7 @@
 
           gsl-errno->symbol
           gsl-errno-symbols
-          gsl-errno->strerror
-          )
+          gsl-errno->strerror)
 
   (import (sortsmill dynlink)
           (sortsmill kwargs)

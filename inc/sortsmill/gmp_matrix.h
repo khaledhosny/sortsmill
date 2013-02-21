@@ -1,3 +1,4 @@
+/* -*- coding: utf-8 -*- Some of the comments below are in UTF-8. */
 /*
  * Copyright (C) 2012, 2013 Barry Schwartz
  * 
@@ -212,6 +213,98 @@ mpq_matrix_gemm_c90 (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                      unsigned int m, unsigned int n, unsigned int k,
                      const mpq_t alpha, mpq_t A[], mpq_t B[], const mpq_t beta,
                      mpq_t C[]);
+
+/*-----------------------------------------------------------------------*/
+
+#if _FF_C99_OR_GREATER
+
+/* In the following operations, the result replaces A. */
+void mpz_matrix_mul_elements (unsigned int m, unsigned int n,
+                              mpz_t A[m][n], mpz_t B[m][n]);
+/* ‘cdiv’ rounds towards +∞ (‘ceiling’). */
+void mpz_matrix_cdiv_q_elements (unsigned int m, unsigned int n,
+                                 mpz_t A[m][n], mpz_t B[m][n]);
+/* ‘fdiv’ rounds towards −∞ (‘floor’). */
+void mpz_matrix_fdiv_q_elements (unsigned int m, unsigned int n,
+                                 mpz_t A[m][n], mpz_t B[m][n]);
+/* ‘tdiv’ rounds towards zero (‘truncate’). */
+void mpz_matrix_tdiv_q_elements (unsigned int m, unsigned int n,
+                                 mpz_t A[m][n], mpz_t B[m][n]);
+void mpz_matrix_cdiv_r_elements (unsigned int m, unsigned int n,
+                                 mpz_t A[m][n], mpz_t B[m][n]);
+void mpz_matrix_fdiv_r_elements (unsigned int m, unsigned int n,
+                                 mpz_t A[m][n], mpz_t B[m][n]);
+void mpz_matrix_tdiv_r_elements (unsigned int m, unsigned int n,
+                                 mpz_t A[m][n], mpz_t B[m][n]);
+void mpq_matrix_mul_elements (unsigned int m, unsigned int n,
+                              mpq_t A[m][n], mpq_t B[m][n]);
+void mpq_matrix_div_elements (unsigned int m, unsigned int n,
+                              mpq_t A[m][n], mpq_t B[m][n]);
+
+/* In the following operations, the quotient replaces A and the
+   remainder replaces B. */
+void mpz_matrix_cdiv_qr_elements (unsigned int m, unsigned int n,
+                                  mpz_t A[m][n], mpz_t B[m][n]);
+void mpz_matrix_fdiv_qr_elements (unsigned int m, unsigned int n,
+                                  mpz_t A[m][n], mpz_t B[m][n]);
+void mpz_matrix_tdiv_qr_elements (unsigned int m, unsigned int n,
+                                  mpz_t A[m][n], mpz_t B[m][n]);
+
+#endif /* _FF_C99_OR_GREATER */
+
+void mpz_matrix_mul_elements_c90 (unsigned int m, unsigned int n,
+                                  mpz_t A[], mpz_t B[]);
+void mpz_matrix_cdiv_q_elements_c90 (unsigned int m, unsigned int n,
+                                     mpz_t A[], mpz_t B[]);
+void mpz_matrix_fdiv_q_elements_c90 (unsigned int m, unsigned int n,
+                                     mpz_t A[], mpz_t B[]);
+void mpz_matrix_tdiv_q_elements_c90 (unsigned int m, unsigned int n,
+                                     mpz_t A[], mpz_t B[]);
+void mpz_matrix_cdiv_r_elements_c90 (unsigned int m, unsigned int n,
+                                     mpz_t A[], mpz_t B[]);
+void mpz_matrix_fdiv_r_elements_c90 (unsigned int m, unsigned int n,
+                                     mpz_t A[], mpz_t B[]);
+void mpz_matrix_tdiv_r_elements_c90 (unsigned int m, unsigned int n,
+                                     mpz_t A[], mpz_t B[]);
+void mpz_matrix_cdiv_qr_elements_c90 (unsigned int m, unsigned int n,
+                                      mpz_t A[], mpz_t B[]);
+void mpz_matrix_fdiv_qr_elements_c90 (unsigned int m, unsigned int n,
+                                      mpz_t A[], mpz_t B[]);
+void mpz_matrix_tdiv_qr_elements_c90 (unsigned int m, unsigned int n,
+                                      mpz_t A[], mpz_t B[]);
+void mpq_matrix_mul_elements_c90 (unsigned int m, unsigned int n,
+                                  mpq_t A[], mpq_t B[]);
+void mpq_matrix_div_elements_c90 (unsigned int m, unsigned int n,
+                                  mpq_t A[], mpq_t B[]);
+
+/*-----------------------------------------------------------------------*/
+
+#if _FF_C99_OR_GREATER
+
+/* Addition/subtraction in-place. The result replaces A. */
+void mpz_matrix_add (unsigned int m, unsigned int n,
+                     mpz_t A[m][n], mpz_t B[m][n]);
+void mpz_matrix_sub (unsigned int m, unsigned int n,
+                     mpz_t A[m][n], mpz_t B[m][n]);
+void mpz_matrix_add_constant (unsigned int m, unsigned int n,
+                              mpz_t A[m][n], const mpz_t x);
+void mpq_matrix_add (unsigned int m, unsigned int n,
+                     mpq_t A[m][n], mpq_t B[m][n]);
+void mpq_matrix_sub (unsigned int m, unsigned int n,
+                     mpq_t A[m][n], mpq_t B[m][n]);
+void mpq_matrix_add_constant (unsigned int m, unsigned int n,
+                              mpq_t A[m][n], const mpq_t x);
+
+#endif /* _FF_C99_OR_GREATER */
+
+void mpz_matrix_add_c90 (unsigned int m, unsigned int n, mpz_t A[], mpz_t B[]);
+void mpz_matrix_sub_c90 (unsigned int m, unsigned int n, mpz_t A[], mpz_t B[]);
+void mpz_matrix_add_constant_c90 (unsigned int m, unsigned int n, mpz_t A[],
+                                  const mpz_t x);
+void mpq_matrix_add_c90 (unsigned int m, unsigned int n, mpq_t A[], mpq_t B[]);
+void mpq_matrix_sub_c90 (unsigned int m, unsigned int n, mpq_t A[], mpq_t B[]);
+void mpq_matrix_add_constant_c90 (unsigned int m, unsigned int n, mpq_t A[],
+                                  const mpq_t x);
 
 /*-----------------------------------------------------------------------*/
 
