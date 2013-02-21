@@ -102,3 +102,18 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''GSL_ETOLX''@|$(GSL_ETOLX)|g'							\
 		-e 's|@''GSL_ETOLG''@|$(GSL_ETOLG)|g'							\
 		-e 's|@''GSL_EOF''@|$(GSL_EOF)|g'
+
+#--------------------------------------------------------------------------
+#
+# Automatic generation of reëxporters for heirarchical R⁶RS-style
+# libraries.
+
+EXTRA_DIST += ff-internal/find-exports.scm		\
+	ff-internal/reexporters.scm
+
+generate_reexporter = $(GUILE_COMMAND) "		\
+	(import (ff-internal reexporters))			\
+	(pretty-print-reexporter					\
+	 (quote $1) (quote ($2)) (quote ($3)))"		\
+
+#--------------------------------------------------------------------------

@@ -191,18 +191,25 @@ endif HAVE_GUI
 #
 # (sortsmill gsl ...)
 
-DIST_SCM_FILES += sortsmill/gsl.scm
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/gsl.scm
 GO_FILES += sortsmill/gsl.go
+GSL_REEXPORTED_SCM_FILES =
 
-DIST_SCM_IN_FILES += sortsmill/gsl/error.scm.in
+sortsmill/gsl.scm: $(GSL_REEXPORTED_SCM_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill gsl), #t, $(<:%=\"%\")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/gsl/error.scm
 GO_FILES += sortsmill/gsl/error.go
+GSL_REEXPORTED_SCM_FILES += sortsmill/gsl/error.scm
 
 sortsmill/gsl/error.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/gsl/error.go: sortsmill/kwargs.go
 
 DIST_SCM_FILES += sortsmill/gsl/matrices.scm
 GO_FILES += sortsmill/gsl/matrices.go
+GSL_REEXPORTED_SCM_FILES += sortsmill/gsl/matrices.scm
 
 sortsmill/gsl/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 

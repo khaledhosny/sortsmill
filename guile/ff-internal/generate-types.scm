@@ -18,15 +18,13 @@
 (define-module (ff-internal generate-types))
 
 (import (ice-9 popen)
-        (ice-9 match)
-        )
+        (ice-9 match))
 
 (export read-instructions-from-program-input
         read-instruction-sources
         read-instructions
         underscores->hyphens
-        underscore->hyphen
-        )
+        underscore->hyphen)
 
 (define (read-instructions-from-program-input)
   (let* ((sources (cdr (command-line)))
