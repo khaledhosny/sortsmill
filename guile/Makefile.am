@@ -197,7 +197,7 @@ GSL_REEXPORTED_SCM_FILES =
 
 sortsmill/gsl.scm: $(GSL_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
-	$(AM_V_at)$(call generate_reexporter, (sortsmill gsl), #t, $(<:%=\"%\")) > $@-tmp
+	$(AM_V_at)$(call generate_reexporter, (sortsmill gsl), #t, $(^:%=\"%\")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/gsl/error.scm

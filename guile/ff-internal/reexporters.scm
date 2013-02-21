@@ -22,6 +22,7 @@
 
   (import (ff-internal find-exports)
           (rnrs)
+          (only (srfi :1) delete-duplicates)
           (ice-9 pretty-print))
 
   (define (generate-reexporter reexporter-name library-names file-names)
@@ -32,8 +33,9 @@
                prior (apply find-exports-in-files lib-name file-names)))
             '() library-names)])
       `(library ,reexporter-name
-         (export ,@(fold-left append '() (map cdr reexports)))
-         (import ,@(map car reexports)))))
+         (export ,@(delete-duplicates
+                    (fold-left append '() (map cdr reexports))))
+         (import ,@(delete-duplicates (map car reexports))))))
 
   (define (pretty-print-reexporter reexporter-name library-names
                                    file-names)
