@@ -47,13 +47,17 @@ void exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants);
 void exception__layout_incompatible_with_gsl (const char *who, SCM irritants);
 void exception__unexpected_array_type (const char *who, SCM a);
 
-gsl_vector_const_view
-scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep);
-gsl_vector_view scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep);
+gsl_vector_const_view scm_gsl_vector_const_view_array_handle (SCM array,
+                                                              scm_t_array_handle
+                                                              *handlep);
+gsl_vector_view scm_gsl_vector_view_array_handle (SCM array,
+                                                  scm_t_array_handle *handlep);
 
-gsl_matrix_const_view
-scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep);
-gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep);
+gsl_matrix_const_view scm_gsl_matrix_const_view_array_handle (SCM array,
+                                                              scm_t_array_handle
+                                                              *handlep);
+gsl_matrix_view scm_gsl_matrix_view_array_handle (SCM array,
+                                                  scm_t_array_handle *handlep);
 
 SCM scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index);
 SCM scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index);

@@ -378,12 +378,12 @@ scm_f64matrix_f64matrix_mult (SCM a, SCM b)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
 
   scm_array_get_handle (b, &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
 
-  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (&handle_b).matrix;
+  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (b, &handle_b).matrix;
 
   if (ma.size2 != mb.size1)
     {
@@ -443,12 +443,12 @@ scm_f64matrix_f64matrix_add (SCM a, SCM b)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
 
   scm_array_get_handle (b, &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
 
-  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (&handle_b).matrix;
+  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (b, &handle_b).matrix;
 
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
@@ -493,12 +493,12 @@ scm_f64matrix_f64matrix_sub (SCM a, SCM b)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
 
   scm_array_get_handle (b, &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
 
-  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (&handle_b).matrix;
+  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (b, &handle_b).matrix;
 
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
@@ -542,7 +542,7 @@ scm_f64matrix_svd_golub_reinsch (SCM a)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
 
   double u_buf[ma.size1 * ma.size2];
   double v_buf[ma.size2 * ma.size2];
@@ -586,7 +586,7 @@ scm_f64matrix_svd_modified_golub_reinsch (SCM a)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
 
   double u_buf[ma.size1 * ma.size2];
   double x_buf[ma.size2 * ma.size2];
@@ -631,7 +631,7 @@ scm_f64matrix_svd_jacobi (SCM a)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (&handle_a).matrix;
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
 
   double u_buf[ma.size1 * ma.size2];
   double v_buf[ma.size2 * ma.size2];
@@ -676,23 +676,25 @@ scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V,
 
   scm_array_get_handle (U, &handle_U);
   scm_dynwind_array_handle_release (&handle_U);
-  gsl_matrix mU = scm_gsl_matrix_const_view_array_handle (&handle_U).matrix;
+  gsl_matrix mU = scm_gsl_matrix_const_view_array_handle (U, &handle_U).matrix;
 
   scm_array_get_handle (V, &handle_V);
   scm_dynwind_array_handle_release (&handle_V);
-  gsl_matrix mV = scm_gsl_matrix_const_view_array_handle (&handle_V).matrix;
+  gsl_matrix mV = scm_gsl_matrix_const_view_array_handle (V, &handle_V).matrix;
 
   scm_array_get_handle (S, &handle_S);
   scm_dynwind_array_handle_release (&handle_S);
-  gsl_vector vS = scm_gsl_vector_const_view_array_handle (&handle_S).vector;
+  gsl_vector vS = scm_gsl_vector_const_view_array_handle (S, &handle_S).vector;
 
   scm_array_get_handle (x_transpose, &handle_x);
   scm_dynwind_array_handle_release (&handle_x);
-  gsl_vector_view vx = scm_gsl_vector_view_array_handle (&handle_x);
+  gsl_vector_view vx =
+    scm_gsl_vector_view_array_handle (x_transpose, &handle_x);
 
   scm_array_get_handle (b_transpose, &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
-  gsl_vector vb = scm_gsl_vector_const_view_array_handle (&handle_b).vector;
+  gsl_vector vb =
+    scm_gsl_vector_const_view_array_handle (b_transpose, &handle_b).vector;
 
   int errval = gsl_linalg_SV_solve (&mU, &mV, &vS, &vb, &vx.vector);
   if (errval != GSL_SUCCESS)

@@ -58,76 +58,48 @@ VISIBLE void
 exception__array_has_no_elements (const char *who, SCM irritants)
 {
   const char *message = _("array has no elements");
-  if (SCM_UNBNDP (irritants))
-    rnrs_raise_condition
-      (scm_list_3
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message))));
-  else
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message)),
-        rnrs_make_irritants_condition (irritants)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
 }
 
 VISIBLE void
 exception__expected_array_of_rank_1 (const char *who, SCM irritants)
 {
   const char *message = _("expected array of rank 1");
-  if (SCM_UNBNDP (irritants))
-    rnrs_raise_condition
-      (scm_list_3
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message))));
-  else
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message)),
-        rnrs_make_irritants_condition (irritants)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
 }
 
 VISIBLE void
 exception__expected_array_of_rank_2 (const char *who, SCM irritants)
 {
   const char *message = _("expected array of rank 2");
-  if (SCM_UNBNDP (irritants))
-    rnrs_raise_condition
-      (scm_list_3
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message))));
-  else
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message)),
-        rnrs_make_irritants_condition (irritants)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
 }
 
 VISIBLE void
 exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants)
 {
   const char *message = _("expected array of rank 1 or 2");
-  if (SCM_UNBNDP (irritants))
-    rnrs_raise_condition
-      (scm_list_3
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message))));
-  else
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message)),
-        rnrs_make_irritants_condition (irritants)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
 }
 
 VISIBLE void
@@ -135,19 +107,12 @@ exception__layout_incompatible_with_gsl (const char *who, SCM irritants)
 {
   const char *message =
     _("an f64matrix was encountered whose layout is incompatible with GSL");
-  if (SCM_UNBNDP (irritants))
-    rnrs_raise_condition
-      (scm_list_3
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message))));
-  else
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_make_message_condition (scm_from_locale_string (message)),
-        rnrs_make_irritants_condition (irritants)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
 }
 
 VISIBLE void
@@ -163,7 +128,7 @@ exception__unexpected_array_type (const char *who, SCM a)
 }
 
 VISIBLE gsl_vector_const_view
-scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
+scm_gsl_vector_const_view_array_handle (SCM array, scm_t_array_handle *handlep)
 {
   const char *who = "scm_gsl_vector_const_view_array_handle";
 
@@ -174,15 +139,13 @@ scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 1)
-    // FIXME: Find irritants to list.
-    exception__expected_array_of_rank_1 (who, SCM_UNDEFINED);
+    exception__expected_array_of_rank_1 (who, scm_list_1 (array));
 
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   const double *elems = scm_array_handle_f64_elements (handlep);
   ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
   if (n < 1)
-    // FIXME: Find irritants to list.
-    exception__array_has_no_elements (who, SCM_UNDEFINED);
+    exception__array_has_no_elements (who, scm_list_1 (array));
   if (0 < dims[0].inc)
     {
       my_elems = elems;
@@ -200,7 +163,7 @@ scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
 }
 
 VISIBLE gsl_vector_view
-scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep)
+scm_gsl_vector_view_array_handle (SCM array, scm_t_array_handle *handlep)
 {
   const char *who = "scm_gsl_vector_view_array_handle";
 
@@ -211,28 +174,26 @@ scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep)
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 1)
-    // FIXME: Find irritants to list.
-    exception__expected_array_of_rank_1 (who, SCM_UNDEFINED);
+    exception__expected_array_of_rank_1 (who, scm_list_1 (array));
 
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   double *elems = scm_array_handle_f64_writable_elements (handlep);
   ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
   if (n < 1)
-    // FIXME: Find irritants to list.
-    exception__array_has_no_elements (who, SCM_UNDEFINED);
+    exception__array_has_no_elements (who, scm_list_1 (array));
   if (0 < dims[0].inc)
     {
       my_elems = elems;
       stride = dims[0].inc;
     }
   else
-    // FIXME: Find irritants to list.
-    exception__layout_incompatible_with_gsl (who, SCM_UNDEFINED);
+    exception__layout_incompatible_with_gsl (who, scm_list_1 (array));
   return gsl_vector_view_array_with_stride (my_elems, stride, n);
 }
 
 static gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle_rank1 (const char *who,
+                                              SCM array,
                                               scm_t_array_handle *handlep)
 {
   const double *my_elems;
@@ -241,18 +202,14 @@ scm_gsl_matrix_const_view_array_handle_rank1 (const char *who,
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 1)
-    // FIXME: Find irritants to list.
-    exception__expected_array_of_rank_1 (who, SCM_UNDEFINED);
+    exception__expected_array_of_rank_1 (who, scm_list_1 (array));
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   const double *elems = scm_array_handle_f64_elements (handlep);
   ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
   if (n0 < 1)
-    // FIXME: Find irritants to list.
-    exception__array_has_no_elements (who, SCM_UNDEFINED);
+    exception__array_has_no_elements (who, scm_list_1 (array));
   if (dims[0].inc == 1)
-    {
-      my_elems = elems;
-    }
+    my_elems = elems;
   else
     {
       double *buffer = scm_gc_malloc_pointerless (n0 * sizeof (double), who);
@@ -265,6 +222,7 @@ scm_gsl_matrix_const_view_array_handle_rank1 (const char *who,
 
 static gsl_matrix_const_view
 scm_gsl_matrix_const_view_array_handle_rank2 (const char *who,
+                                              SCM array,
                                               scm_t_array_handle *handlep)
 {
   const double *my_elems;
@@ -274,13 +232,13 @@ scm_gsl_matrix_const_view_array_handle_rank2 (const char *who,
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 2)
-    exception__expected_array_of_rank_2 (who, SCM_UNDEFINED);
+    exception__expected_array_of_rank_2 (who, scm_list_1 (array));
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   const double *elems = scm_array_handle_f64_elements (handlep);
   ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
   ssize_t n1 = dims[1].ubnd - dims[1].lbnd + 1;
   if (n0 < 1 || n1 < 1)
-    exception__array_has_no_elements (who, SCM_UNDEFINED);
+    exception__array_has_no_elements (who, scm_list_1 (array));
   if (dims[1].inc == 1 && 0 < dims[0].inc)
     {
       my_elems = elems;
@@ -300,11 +258,12 @@ scm_gsl_matrix_const_view_array_handle_rank2 (const char *who,
 }
 
 VISIBLE gsl_matrix_const_view
-scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
+scm_gsl_matrix_const_view_array_handle (SCM array, scm_t_array_handle *handlep)
 {
   const char *who = "scm_gsl_matrix_const_view_array_handle";
 
-  typedef gsl_matrix_const_view (*func_t) (const char *, scm_t_array_handle *);
+  typedef gsl_matrix_const_view (*func_t) (const char *, SCM array,
+                                           scm_t_array_handle *);
   static const func_t func[] = {
     NULL,
     scm_gsl_matrix_const_view_array_handle_rank1,
@@ -313,16 +272,37 @@ scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
 
   const size_t rank = scm_array_handle_rank (handlep);
   if (rank != 1 && rank != 2)
-    // FIXME: Get irritants to return.
-    exception__expected_array_of_rank_1_or_2 (who, SCM_UNDEFINED);
-  return func[rank] (who, handlep);
+    exception__expected_array_of_rank_1_or_2 (who, scm_list_1 (array));
+  return func[rank] (who, array, handlep);
 }
 
-VISIBLE gsl_matrix_view
-scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
+static gsl_matrix_view
+scm_gsl_matrix_view_array_handle_rank1 (const char *who,
+                                        SCM array, scm_t_array_handle *handlep)
 {
-  const char *who = "scm_gsl_matrix_view_array_handle";
+  double *my_elems;
 
+  assert (handlep != NULL);
+
+  size_t rank = scm_array_handle_rank (handlep);
+  if (rank != 1)
+    exception__expected_array_of_rank_1 (who, scm_list_1 (array));
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  double *elems = scm_array_handle_f64_writable_elements (handlep);
+  ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
+  if (n0 < 1)
+    exception__array_has_no_elements (who, scm_list_1 (array));
+  if (dims[0].inc == 1)
+    my_elems = elems;
+  else
+    exception__layout_incompatible_with_gsl (who, scm_list_1 (array));
+  return gsl_matrix_view_array_with_tda (my_elems, 1, n0, n0);
+}
+
+static gsl_matrix_view
+scm_gsl_matrix_view_array_handle_rank2 (const char *who,
+                                        SCM array, scm_t_array_handle *handlep)
+{
   double *my_elems;
   size_t tda;
 
@@ -330,24 +310,41 @@ scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
 
   size_t rank = scm_array_handle_rank (handlep);
   if (rank != 2)
-    // FIXME: Find irritants to list.
-    exception__expected_array_of_rank_2 (who, SCM_UNDEFINED);
+    exception__expected_array_of_rank_2 (who, scm_list_1 (array));
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   double *elems = scm_array_handle_f64_writable_elements (handlep);
   ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
   ssize_t n1 = dims[1].ubnd - dims[1].lbnd + 1;
   if (n0 < 1 || n1 < 1)
-    // FIXME: Find irritants to list.
-    exception__array_has_no_elements (who, SCM_UNDEFINED);
+    exception__array_has_no_elements (who, scm_list_1 (array));
   if (dims[1].inc == 1 && 0 < dims[0].inc)
     {
       my_elems = elems;
       tda = dims[0].inc;
     }
   else
-    // FIXME: Find irritants to list.
-    exception__layout_incompatible_with_gsl (who, SCM_UNDEFINED);
+    exception__layout_incompatible_with_gsl (who, scm_list_1 (array));
   return gsl_matrix_view_array_with_tda (my_elems, n0, n1, tda);
+}
+
+// FIXME: This has not been tested.
+VISIBLE gsl_matrix_view
+scm_gsl_matrix_view_array_handle (SCM array, scm_t_array_handle *handlep)
+{
+  const char *who = "scm_gsl_matrix_view_array_handle";
+
+  typedef gsl_matrix_view (*func_t) (const char *, SCM array,
+                                     scm_t_array_handle *);
+  static const func_t func[] = {
+    NULL,
+    scm_gsl_matrix_view_array_handle_rank1,
+    scm_gsl_matrix_view_array_handle_rank2
+  };
+
+  const size_t rank = scm_array_handle_rank (handlep);
+  if (rank != 1 && rank != 2)
+    exception__expected_array_of_rank_1_or_2 (who, scm_list_1 (array));
+  return func[rank] (who, array, handlep);
 }
 
 VISIBLE SCM
@@ -578,8 +575,10 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
   scm_dynwind_array_handle_release (&handle_B);
   assert_c_f64_rank_1_or_2_array (who, B, &handle_B);
 
-  gsl_matrix_const_view _A = scm_gsl_matrix_const_view_array_handle (&handle_A);
-  gsl_matrix_const_view _B = scm_gsl_matrix_const_view_array_handle (&handle_B);
+  gsl_matrix_const_view _A =
+    scm_gsl_matrix_const_view_array_handle (A, &handle_A);
+  gsl_matrix_const_view _B =
+    scm_gsl_matrix_const_view_array_handle (B, &handle_B);
 
   const size_t m_A =
     transposed_size (_TransA, _A.matrix.size1, _A.matrix.size2);
@@ -600,7 +599,7 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 
   gsl_matrix_const_view _C =
     (_beta != 0) ?
-    scm_gsl_matrix_const_view_array_handle (&handle_C) :
+    scm_gsl_matrix_const_view_array_handle (C, &handle_C) :
     null_gsl_matrix_const_view;
 
   size_t m_C;
