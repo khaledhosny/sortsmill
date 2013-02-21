@@ -45,14 +45,14 @@
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_gsl"))
 ;;;;    (sortsmill-dynlink-load-extension "init_guile_sortsmill_matrices"))
 
-  (define (assert-rank2-array who A)
-    (unless (= 2 (array-rank A))
-      (assertion-violation who (_ "expected an array of rank 2") A)))
+  (define (assert-rank-1-or-2-array who A)
+    (unless (let ([r (array-rank A)]) (or (= r 1) (= r 2)))
+      (assertion-violation who (_ "expected an array of rank 1 or 2") A)))
 
-  (define (assert-f64-rank2-array who A)
+  (define (assert-f64-rank-1-or-2-array who A)
     (unless (typed-array? A 'f64)
       (assertion-violation who (_ "expected an array of type f64") A))
-    (assert-rank2-array who A))
+    (assert-rank-1-or-2-array who A))
 
   (define (assert-CblasTrans-flag who trans)
     (unless (or (eqv? trans gsl:CblasNoTrans)

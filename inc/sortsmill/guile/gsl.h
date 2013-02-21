@@ -38,16 +38,13 @@ void scm_gsl_error_handler_for_raising_a_gsl_error (const char *reason,
                                                     const char *file,
                                                     int line, int gsl_errno);
 
-void exception__array_has_no_elements (const char *who);
-void exception__array_has_no_elements_with_irritants (const char *who,
-                                                      SCM irritants);
-void exception__expected_array_of_rank_1 (const char *who);
-void exception__expected_array_of_rank_2 (const char *who);
-void exception__expected_array_of_rank_2_with_irritants (const char *who,
-                                                         SCM irritants);
-void exception__expected_array_of_rank_1_or_2_with_irritants (const char *who,
-                                                              SCM irritants);
-void exception__layout_incompatible_with_gsl (const char *who);
+/* FIXME: Review these ‘exception’ functions for relevance and, in any
+   case, try not to include them here or make them VISIBLE. */
+void exception__array_has_no_elements (const char *who, SCM irritants);
+void exception__expected_array_of_rank_1 (const char *who, SCM irritants);
+void exception__expected_array_of_rank_2 (const char *who, SCM irritants);
+void exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants);
+void exception__layout_incompatible_with_gsl (const char *who, SCM irritants);
 void exception__unexpected_array_type (const char *who, SCM a);
 
 gsl_vector_const_view

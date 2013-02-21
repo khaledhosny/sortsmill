@@ -723,7 +723,7 @@ scm_matrix_rank_1_is_exact (const char *who, SCM a, scm_t_array_handle *handlep)
 
   ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
   if (n < 1)
-    exception__array_has_no_elements_with_irritants (who, scm_list_1 (a));
+    exception__array_has_no_elements (who, scm_list_1 (a));
 
   bool is_exact = true;
   for (size_t i = 0; i < n; i++)
@@ -744,7 +744,7 @@ scm_matrix_rank_2_is_exact (const char *who, SCM a, scm_t_array_handle *handlep)
   ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
   ssize_t m = dims[1].ubnd - dims[1].lbnd + 1;
   if (n < 1 || m < 1)
-    exception__array_has_no_elements_with_irritants (who, scm_list_1 (a));
+    exception__array_has_no_elements (who, scm_list_1 (a));
 
   bool is_exact = true;
   for (size_t i = 0; i < n; i++)
@@ -784,8 +784,7 @@ scm_nonuniform_matrix_is_exact (SCM a)
       break;
 
     default:
-      exception__expected_array_of_rank_1_or_2_with_irritants
-        (who, scm_list_1 (a));
+      exception__expected_array_of_rank_1_or_2 (who, scm_list_1 (a));
     }
 
   scm_dynwind_end ();
@@ -811,23 +810,23 @@ scm_exact_matrix_matrix_mult (SCM a, SCM b)
 
   size_t rank_a = scm_array_handle_rank (&handle_a);
   if (rank_a != 2)
-    exception__expected_array_of_rank_2_with_irritants (who, scm_list_1 (a));
+    exception__expected_array_of_rank_2 (who, scm_list_1 (a));
 
   size_t rank_b = scm_array_handle_rank (&handle_b);
   if (rank_b != 2)
-    exception__expected_array_of_rank_2_with_irritants (who, scm_list_1 (b));
+    exception__expected_array_of_rank_2 (who, scm_list_1 (b));
 
   const scm_t_array_dim *dims_a = scm_array_handle_dims (&handle_a);
   ssize_t n0_a = dims_a[0].ubnd - dims_a[0].lbnd + 1;
   ssize_t n1_a = dims_a[1].ubnd - dims_a[1].lbnd + 1;
   if (n0_a < 1 || n1_a < 1)
-    exception__array_has_no_elements_with_irritants (who, scm_list_1 (a));
+    exception__array_has_no_elements (who, scm_list_1 (a));
 
   const scm_t_array_dim *dims_b = scm_array_handle_dims (&handle_b);
   ssize_t n0_b = dims_b[0].ubnd - dims_b[0].lbnd + 1;
   ssize_t n1_b = dims_b[1].ubnd - dims_b[1].lbnd + 1;
   if (n0_b < 1 || n1_b < 1)
-    exception__array_has_no_elements_with_irritants (who, scm_list_1 (b));
+    exception__array_has_no_elements (who, scm_list_1 (b));
 
   if (n1_a != n0_b)
     {
@@ -919,23 +918,23 @@ scm_matrix_matrix_mult (SCM a, SCM b)
 
   size_t rank_a = scm_array_handle_rank (&handle_a);
   if (rank_a != 2)
-    exception__expected_array_of_rank_2_with_irritants (who, scm_list_1 (a));
+    exception__expected_array_of_rank_2 (who, scm_list_1 (a));
 
   size_t rank_b = scm_array_handle_rank (&handle_b);
   if (rank_b != 2)
-    exception__expected_array_of_rank_2_with_irritants (who, scm_list_1 (b));
+    exception__expected_array_of_rank_2 (who, scm_list_1 (b));
 
   const scm_t_array_dim *dims_a = scm_array_handle_dims (&handle_a);
   ssize_t n0_a = dims_a[0].ubnd - dims_a[0].lbnd + 1;
   ssize_t n1_a = dims_a[1].ubnd - dims_a[1].lbnd + 1;
   if (n0_a < 1 || n1_a < 1)
-    exception__array_has_no_elements_with_irritants (who, scm_list_1 (a));
+    exception__array_has_no_elements (who, scm_list_1 (a));
 
   const scm_t_array_dim *dims_b = scm_array_handle_dims (&handle_b);
   ssize_t n0_b = dims_b[0].ubnd - dims_b[0].lbnd + 1;
   ssize_t n1_b = dims_b[1].ubnd - dims_b[1].lbnd + 1;
   if (n0_b < 1 || n1_b < 1)
-    exception__array_has_no_elements_with_irritants (who, scm_list_1 (b));
+    exception__array_has_no_elements (who, scm_list_1 (b));
 
   if (n1_a != n0_b)
     {
