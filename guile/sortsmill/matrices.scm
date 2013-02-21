@@ -59,7 +59,7 @@
           ;; converting from inexact to exact numbers.
           f64matrix->matrix
 
-          f64matrix-f64matrix*
+;;;;          f64matrix-f64matrix*
           f64matrix-f64matrix+
           f64matrix-f64matrix-
           f64matrix*
@@ -142,7 +142,8 @@
           f64matrix-pinv
           )
 
-  (import (sortsmill dynlink)
+  (import (sortsmill gsl matrices)
+          (sortsmill dynlink)
           (sortsmill machine)
           (sortsmill i18n)
           (sortsmill math-constants)
@@ -367,7 +368,7 @@ array)."
         (matrix-scaled -1 A)))
 
   (define (f64matrix* A B)
-    (f64matrix-f64matrix* (vector->matrix A) (vector->matrix B)))
+    (gsl:gemm-f64 gsl:CblasNoTrans gsl:CblasNoTrans 1.0 A B 0.0 #f))
 
   (define (f64matrix+ A B)
     (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
