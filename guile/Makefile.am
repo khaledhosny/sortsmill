@@ -40,9 +40,19 @@ MOSTLYCLEANFILES =
 CLEANFILES =
 DISTCLEANFILES =
 
+
+#--------------------------------------------------------------------------
+#
+# The Type Inspector Generator.
+#
+# This program generates C programs that generate ‘API instructions’
+# (.apii files).
+
 EXTRA_DIST += tig.scm
 
 #--------------------------------------------------------------------------
+#
+# The ‘site initialization’ script for sortsmill-editor.
 
 dist_pkgguiledata_DATA = site-init.scm
 
@@ -236,7 +246,6 @@ CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm
 GO_FILES += sortsmill/machine.go
 
 sortsmill/machine.go: sortsmill/math-constants.go
-
 
 #--------------------------------------------------------------------------
 #
