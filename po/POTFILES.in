@@ -3,6 +3,7 @@ data/sortsmill-editor.desktop.in
 data/fontforge.xml.in
 auxiliary/rexp.c
 auxiliary/rnrs_conditions.c
+auxiliary/guile_gsl.c
 auxiliary/guile_matrices.c
 auxiliary/guile_python.c
 fontforge/alignment.c
@@ -154,6 +155,7 @@ gdraw/gtextfield.c
 gdraw/gtextinfo.c
 guile/site-init.scm
 guile/sortsmill/contours.scm
+guile/sortsmill/gsl/matrices.scm
 guile/sortsmill/kwargs.scm
 guile/sortsmill/matrices.scm
 guile/sortsmill/sfd-to-sxml.scm

@@ -17,13 +17,12 @@
 
 #include <assert.h>
 #include <xalloc.h>
+#include <sortsmill/guile/gsl.h>
 #include <sortsmill/guile/matrices.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/format.h>
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/gmp_constants.h>
-#include <gsl/gsl_blas.h>
-#include <gsl/gsl_linalg.h>
 #include <intl.h>
 
 //
@@ -39,231 +38,6 @@
 //
 
 void init_guile_sortsmill_matrices (void);
-
-static void
-exception__array_has_no_elements (const char *who)
-{
-  const char *message = _("array has no elements");
-  rnrs_raise_condition
-    (scm_list_3
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message))));
-}
-
-static void
-exception__array_has_no_elements_with_irritants (const char *who, SCM irritants)
-{
-  const char *message = _("array has no elements");
-  rnrs_raise_condition
-    (scm_list_4
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message)),
-      rnrs_make_irritants_condition (irritants)));
-}
-
-static void
-exception__expected_array_of_rank_1 (const char *who)
-{
-  const char *message = _("expected array of rank 1");
-  rnrs_raise_condition
-    (scm_list_3
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message))));
-}
-
-static void
-exception__expected_array_of_rank_2 (const char *who)
-{
-  const char *message = _("expected array of rank 2");
-  rnrs_raise_condition
-    (scm_list_3
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message))));
-}
-
-static void
-exception__expected_array_of_rank_2_with_irritants (const char *who,
-                                                    SCM irritants)
-{
-  const char *message = _("expected array of rank 2");
-  rnrs_raise_condition
-    (scm_list_4
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message)),
-      rnrs_make_irritants_condition (irritants)));
-}
-
-static void
-exception__expected_array_of_rank_1_or_2_with_irritants (const char *who,
-                                                         SCM irritants)
-{
-  const char *message = _("expected array of rank 1 or 2");
-  rnrs_raise_condition
-    (scm_list_4
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message)),
-      rnrs_make_irritants_condition (irritants)));
-}
-
-static void
-exception__layout_incompatible_with_gsl (const char *who)
-{
-  const char *message =
-    _("an f64matrix was encountered whose layout is incompatible with GSL");
-  rnrs_raise_condition
-    (scm_list_3
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message))));
-}
-
-static void
-exception__unexpected_array_type (const char *who, SCM a)
-{
-  const char *message = _("unexpected array type");
-  rnrs_raise_condition
-    (scm_list_4
-     (rnrs_make_assertion_violation (),
-      rnrs_c_make_who_condition (who),
-      rnrs_make_message_condition (scm_from_locale_string (message)),
-      rnrs_make_irritants_condition (scm_list_1 (a))));
-}
-
-VISIBLE gsl_vector_const_view
-scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep)
-{
-  const char *who = "scm_gsl_vector_const_view_array_handle";
-
-  const double *my_elems;
-  size_t stride;
-
-  assert (handlep != NULL);
-
-  size_t rank = scm_array_handle_rank (handlep);
-  if (rank != 1)
-    exception__expected_array_of_rank_1 (who);
-
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  const double *elems = scm_array_handle_f64_elements (handlep);
-  ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
-  if (n < 1)
-    exception__array_has_no_elements (who);
-  if (0 < dims[0].inc)
-    {
-      my_elems = elems;
-      stride = dims[0].inc;
-    }
-  else
-    {
-      double *buffer = scm_gc_malloc_pointerless (n * sizeof (double), who);
-      for (size_t i = 0; i < n; i++)
-        buffer[i] = elems[i * dims[0].inc];
-      my_elems = buffer;
-      stride = 1;
-    }
-  return gsl_vector_const_view_array_with_stride (my_elems, stride, n);
-}
-
-VISIBLE gsl_vector_view
-scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep)
-{
-  const char *who = "scm_gsl_vector_view_array_handle";
-
-  double *my_elems;
-  size_t stride;
-
-  assert (handlep != NULL);
-
-  size_t rank = scm_array_handle_rank (handlep);
-  if (rank != 1)
-    exception__expected_array_of_rank_1 (who);
-
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  double *elems = scm_array_handle_f64_writable_elements (handlep);
-  ssize_t n = dims[0].ubnd - dims[0].lbnd + 1;
-  if (n < 1)
-    exception__array_has_no_elements (who);
-  if (0 < dims[0].inc)
-    {
-      my_elems = elems;
-      stride = dims[0].inc;
-    }
-  else
-    exception__layout_incompatible_with_gsl (who);
-  return gsl_vector_view_array_with_stride (my_elems, stride, n);
-}
-
-VISIBLE gsl_matrix_const_view
-scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep)
-{
-  const char *who = "scm_gsl_matrix_const_view_array_handle";
-
-  const double *my_elems;
-  size_t tda;
-
-  assert (handlep != NULL);
-
-  size_t rank = scm_array_handle_rank (handlep);
-  if (rank != 2)
-    exception__expected_array_of_rank_2 (who);
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  const double *elems = scm_array_handle_f64_elements (handlep);
-  ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
-  ssize_t n1 = dims[1].ubnd - dims[1].lbnd + 1;
-  if (n0 < 1 || n1 < 1)
-    exception__array_has_no_elements (who);
-  if (dims[1].inc == 1 && 0 < dims[0].inc)
-    {
-      my_elems = elems;
-      tda = dims[0].inc;
-    }
-  else
-    {
-      double *buffer =
-        scm_gc_malloc_pointerless (n0 * n1 * sizeof (double), who);
-      for (size_t i = 0; i < n0; i++)
-        for (size_t j = 0; j < n1; j++)
-          buffer[i * n1 + j] = elems[i * dims[0].inc + j * dims[1].inc];
-      my_elems = buffer;
-      tda = n1;
-    }
-  return gsl_matrix_const_view_array_with_tda (my_elems, n0, n1, tda);
-}
-
-VISIBLE gsl_matrix_view
-scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep)
-{
-  const char *who = "scm_gsl_matrix_view_array_handle";
-
-  double *my_elems;
-  size_t tda;
-
-  assert (handlep != NULL);
-
-  size_t rank = scm_array_handle_rank (handlep);
-  if (rank != 2)
-    exception__expected_array_of_rank_2 (who);
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  double *elems = scm_array_handle_f64_writable_elements (handlep);
-  ssize_t n0 = dims[0].ubnd - dims[0].lbnd + 1;
-  ssize_t n1 = dims[1].ubnd - dims[1].lbnd + 1;
-  if (n0 < 1 || n1 < 1)
-    exception__array_has_no_elements (who);
-  if (dims[1].inc == 1 && 0 < dims[0].inc)
-    {
-      my_elems = elems;
-      tda = dims[0].inc;
-    }
-  else
-    exception__layout_incompatible_with_gsl (who);
-  return gsl_matrix_view_array_with_tda (my_elems, n0, n1, tda);
-}
 
 typedef struct _mpq_t_matrix_view
 {
@@ -514,6 +288,7 @@ scm_from_scm_matrix (size_t m, size_t n, SCM A[m][n])
   return result;
 }
 
+/*
 VISIBLE SCM
 scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index)
 {
@@ -588,6 +363,7 @@ scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
 
   return result;
 }
+*/
 
 VISIBLE SCM
 scm_f64matrix_f64matrix_mult (SCM a, SCM b)
@@ -636,7 +412,16 @@ scm_f64matrix_f64matrix_mult (SCM a, SCM b)
   //                     const gsl_matrix * B,
   //                     double beta,
   //                     gsl_matrix * C);
-  gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, &ma, &mb, 0.0, &vc.matrix);
+  int errval = gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, &ma, &mb,
+                               0.0, &vc.matrix);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_2 (a, b), SCM_UNDEFINED));
 
   SCM result = scm_gsl_matrix_to_f64matrix (&vc.matrix, 1);
 
@@ -1074,9 +859,6 @@ scm_exact_matrix_matrix_mult (SCM a, SCM b)
   mpq_matrix_init (n0_a, n1_b, mc);
   scm_dynwind_mpq_matrix_clear (n0_a, n1_b, mc);
 
-  ////bool a_is_uniform = !scm_is_typed_array (a, SCM_BOOL_T);
-  ////bool b_is_uniform = !scm_is_typed_array (b, SCM_BOOL_T);
-
   scm_array_handle_to_mpq_matrix (a, &handle_a, n0_a, n1_a, ma);
   scm_array_handle_to_mpq_matrix (b, &handle_b, n0_b, n1_b, mb);
 
@@ -1175,9 +957,6 @@ scm_matrix_matrix_mult (SCM a, SCM b)
   SCM ma[n0_a][n1_a];
   SCM mb[n0_b][n1_b];
   SCM mc[n0_a][n1_b];
-
-  ////bool a_is_uniform = !scm_is_typed_array (a, SCM_BOOL_T);
-  ////bool b_is_uniform = !scm_is_typed_array (b, SCM_BOOL_T);
 
   scm_array_handle_to_scm_matrix (a, &handle_a, n0_a, n1_a, ma);
   scm_array_handle_to_scm_matrix (b, &handle_b, n0_b, n1_b, mb);

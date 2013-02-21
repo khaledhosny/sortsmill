@@ -334,7 +334,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (sync)
     GResourceAddResourceString ("Gdraw.Synchronize: true");
 
-  fprintf (stderr, "Copyright (c) 2000-2012 by George Williams and others.\n%s"
+  fprintf (stderr, "Copyright (c) 2000-2013 by George Williams and others.\n%s"
 #ifdef FREETYPE_HAS_DEBUGGER
            "-TtfDb"
 #endif

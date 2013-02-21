@@ -28,18 +28,39 @@
           gsl:CblasUnit
           gsl:CblasLeft
           gsl:CblasRight
+
+          gsl:gemm-f64 ; (gsl:gemm-f64 TransA TransB alpha A B beta C) → αAB + βC
           )
 
   (import (sortsmill dynlink)
+          (sortsmill i18n)
           (rnrs)
-          (except (guile) error))
+          (except (guile) error)
+          (only (srfi :26) cut))
 
   (sortsmill-dynlink-declarations "#include <gsl/gsl_blas.h>")
   (sortsmill-dynlink-declarations "#include <gsl/gsl_linalg.h>")
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_gsl"))
+;;;;    (sortsmill-dynlink-load-extension "init_guile_sortsmill_matrices"))
 
-;;  (define gsl:blas-dgemm
+  (define (assert-rank2-array who A)
+    (unless (= 2 (array-rank A))
+      (assertion-violation who (_ "expected an array of rank 2") A)))
+
+  (define (assert-f64-rank2-array who A)
+    (unless (typed-array? A 'f64)
+      (assertion-violation who (_ "expected an array of type f64") A))
+    (assert-rank2-array who A))
+
+  (define (assert-CblasTrans-flag who trans)
+    (unless (or (eqv? trans gsl:CblasNoTrans)
+                (eqv? trans gsl:CblasTrans)
+                (eqv? trans gsl:CblasConjTrans))
+      (assertion-violation
+       who
+       (_ "expected gsl:CblasNoTrans, gsl:CblasTrans, or gsl:CblasConjTrans")
+       trans)))
 
   ) ;; end of library.

@@ -19,6 +19,8 @@
 
   (export
 
+;;;; FIXME: Rename these with ‘gsl:blablabla’ names.
+;;;;
    ;; Reëxported from (sortsmill gsl error).
    gsl-set-error-handler
    gsl-set-error-handler-default
@@ -75,8 +77,24 @@
    GSL_EOF
    gsl-errno->symbol
    gsl-errno-symbols
-   gsl-errno->strerror)
+   gsl-errno->strerror
 
-  (import (sortsmill gsl error))
+   ;; Reëxported from (sortsmill gsl matrices).
+   gsl:CblasRowMajor
+   gsl:CblasColMajor
+   gsl:CblasNoTrans
+   gsl:CblasTrans
+   gsl:CblasConjTrans
+   gsl:CblasUpper
+   gsl:CblasLower
+   gsl:CblasNonUnit
+   gsl:CblasUnit
+   gsl:CblasLeft
+   gsl:CblasRight
+   gsl:gemm-f64 ; (gsl:gemm-f64 TransA TransB alpha A B beta C) → αAB + βC
+   )
+
+  (import (sortsmill gsl error)
+          (sortsmill gsl matrices))
 
   ) ;; end of library.

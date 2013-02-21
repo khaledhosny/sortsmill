@@ -19,6 +19,9 @@
 #define _SORTSMILL_GUILE_GSL_H
 
 #include <libguile.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_linalg.h>
+#include <sortsmill/guile/arrays.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -34,6 +37,32 @@ SCM scm_raise_gsl_error (SCM arguments);
 void scm_gsl_error_handler_for_raising_a_gsl_error (const char *reason,
                                                     const char *file,
                                                     int line, int gsl_errno);
+
+void exception__array_has_no_elements (const char *who);
+void exception__array_has_no_elements_with_irritants (const char *who,
+                                                      SCM irritants);
+void exception__expected_array_of_rank_1 (const char *who);
+void exception__expected_array_of_rank_2 (const char *who);
+void exception__expected_array_of_rank_2_with_irritants (const char *who,
+                                                         SCM irritants);
+void exception__expected_array_of_rank_1_or_2_with_irritants (const char *who,
+                                                              SCM irritants);
+void exception__layout_incompatible_with_gsl (const char *who);
+void exception__unexpected_array_type (const char *who, SCM a);
+
+gsl_vector_const_view
+scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep);
+gsl_vector_view scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep);
+
+gsl_matrix_const_view
+scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep);
+gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep);
+
+SCM scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index);
+SCM scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index);
+
+SCM scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
+                        SCM beta, SCM C);
 
 #if 0
 {

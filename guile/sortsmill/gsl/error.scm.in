@@ -23,6 +23,8 @@
   ;; using the do-nothing error handler.
   ;;
 
+;;;; FIXME: Rename these exported symbols with ‘gsl:blablabla’ names.
+;;;;
   (export gsl-set-error-handler
           gsl-set-error-handler-default
           gsl-set-error-handler-off

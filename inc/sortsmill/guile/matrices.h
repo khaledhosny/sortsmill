@@ -36,17 +36,6 @@ extern "C"
 
 /*----------------------------------------------------------------------------*/
 
-gsl_vector_const_view
-scm_gsl_vector_const_view_array_handle (scm_t_array_handle *handlep);
-gsl_vector_view scm_gsl_vector_view_array_handle (scm_t_array_handle *handlep);
-
-gsl_matrix_const_view
-scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep);
-gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep);
-
-SCM scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index);
-SCM scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index);
-
 SCM scm_f64matrix_f64matrix_mult (SCM m1, SCM m2);
 SCM scm_f64matrix_f64matrix_add (SCM m1, SCM m2);
 SCM scm_f64matrix_f64matrix_sub (SCM m1, SCM m2);
