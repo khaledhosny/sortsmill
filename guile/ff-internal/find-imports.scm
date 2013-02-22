@@ -22,12 +22,15 @@
           find-imports-in-files
           filter-imports
           peel-imports
-          peel-import)
+          peel-import
+          imports->dot)
 
   (import (rnrs)
+          (only (srfi :1) delete-duplicates)
           (only (srfi :26) cut)
           (only (guile) set-port-encoding!)
-          (ice-9 match))
+          (ice-9 match)
+          (ice-9 format))
 
   (define (find-imports library-name expression)
     (match expression
@@ -87,5 +90,28 @@
 
   (define (list-of-symbols? lst)
     (for-all symbol? lst))
+
+  (define (imports->dot imports)
+    `["digraph MyGraph {\n"
+      ,@(delete-duplicates (imports->dot-fragments (peel-imports imports)))
+      "}\n"] )
+
+  (define (imports->dot-fragments imports)
+    (fold-left
+     (lambda (prior imports-entry)
+       (append prior (imports-entry->dot-fragments imports-entry)))
+     '() imports))
+
+  (define (imports-entry->dot-fragments imports-entry)
+    (match imports-entry
+      [(lib-name . imports-list)
+       (map (lambda (imp)
+              (format #f "~a -> ~a;\n"
+                      (library-name->node-name lib-name)
+                      (library-name->node-name imp)))
+            imports-list)] ))
+
+  (define (library-name->node-name lib-name)
+    (format #f "\"~a\"" lib-name))
 
   ) ;; end of library.

@@ -446,6 +446,14 @@ AH_BOTTOM([#include <config-extra.h>])
 # this? Although, in any case, this method works fine.)
 AC_SUBST([includemk],[include])
 
+# Use @ifdefmk@, @ifndefmk@, @endifmk@ to invoke GNU Make’s
+# conditionals, bypassing Automake’s. (FIXME: Is there a different and
+# canonical way to do this? Although, in any case, this method works
+# fine.)
+AC_SUBST([ifdefmk],[ifdef])
+AC_SUBST([ifndefmk],[ifndef])
+AC_SUBST([endifmk],[endif])
+
 AM_CONDITIONAL([HAVE_PYTHON_API],[test x"${i_do_have_python_api}" = xyes])
 AM_CONDITIONAL([HAVE_PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}" = xyes])
 AM_CONDITIONAL([HAVE_PURE_API],[test x"${i_do_have_pure_api}" = xyes])
