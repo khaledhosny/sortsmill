@@ -1042,16 +1042,6 @@ NamesReadUFO (char *filename)
 #undef extended                 /* used in xlink.h */
 #include <libxml/parser.h>
 
-#ifdef __CygWin
-/*
- * FIXME: Check whether this kludge is still (a) necessary, (b)
- * functional. At least (a) seems unlikely to have remained true over
- * time.
- */
-/* Nasty kludge, but xmlFree doesn't work on cygwin (or I can't get it to) */
-#define xmlFree free
-#endif
-
 static xmlNodePtr
 FindNode (xmlNodePtr kids, char *name)
 {
