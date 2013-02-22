@@ -108,9 +108,6 @@ CONFIGURE_SCHEME =														\
 # Automatic generation of reëxporters for heirarchical R⁶RS-style
 # libraries.
 
-EXTRA_DIST += ff-internal/find-exports.scm		\
-	ff-internal/reexporters.scm
-
 generate_reexporter = $(GUILE_INTERPRET) $(top_srcdir)/guile/generate-reexporter.scm '$1' '$2' '$3'
 
 #--------------------------------------------------------------------------

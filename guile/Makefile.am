@@ -41,6 +41,8 @@ CLEANFILES =
 DISTCLEANFILES =
 
 EXTRA_DIST += generate-reexporter.scm
+EXTRA_DIST += ff-internal/find-exports.scm						\
+	ff-internal/reexporters.scm ff-internal/find-imports.scm
 
 #--------------------------------------------------------------------------
 #
