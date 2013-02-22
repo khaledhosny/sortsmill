@@ -111,9 +111,6 @@ CONFIGURE_SCHEME =														\
 EXTRA_DIST += ff-internal/find-exports.scm		\
 	ff-internal/reexporters.scm
 
-generate_reexporter = $(GUILE_COMMAND) "		\
-	(import (ff-internal reexporters))			\
-	(pretty-print-reexporter					\
-	 (quote $1) (quote ($2)) (quote ($3)))"		\
+generate_reexporter = $(GUILE_INTERPRET) $(top_srcdir)/guile/generate-reexporter.scm '$1' '$2' '$3'
 
 #--------------------------------------------------------------------------

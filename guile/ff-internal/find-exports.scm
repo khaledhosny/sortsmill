@@ -22,7 +22,7 @@
           find-exports-in-files)
 
   (import (rnrs)
-          (only (srfi :26) cut)
+          (only (guile) set-port-encoding!)
           (ice-9 match))
 
   (define (find-exports library-name expression)
@@ -54,8 +54,10 @@
   (define (find-exports-in-files library-name . file-names)
     (let ([find-in-one-file
            (lambda (f)
-             (call-with-input-file f
-               (cut find-exports-in-input library-name <>)))])
+             (with-input-from-file f
+               (lambda ()
+                 (set-port-encoding! (current-input-port) "utf-8")
+                 (find-exports-in-input library-name))))])
       (fold-left (lambda (prior file-name)
                    (let ([new-exports (find-in-one-file file-name)])
                      (if new-exports

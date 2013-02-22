@@ -40,6 +40,8 @@ MOSTLYCLEANFILES =
 CLEANFILES =
 DISTCLEANFILES =
 
+EXTRA_DIST += generate-reexporter.scm
+
 #--------------------------------------------------------------------------
 #
 # The Type Inspector Generator.
@@ -197,7 +199,7 @@ GSL_REEXPORTED_SCM_FILES =
 
 sortsmill/gsl.scm: $(GSL_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
-	$(AM_V_at)$(call generate_reexporter, (sortsmill gsl), #t, $(^:%=\"%\")) > $@-tmp
+	$(AM_V_at)$(call generate_reexporter, (sortsmill gsl), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/gsl/error.scm
@@ -310,8 +312,14 @@ sortsmill/options.go: sortsmill/strings.go
 #
 # (sortsmill pkg-info ...)
 
-DIST_SCM_FILES += sortsmill/pkg-info.scm
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info.scm
 GO_FILES += sortsmill/pkg-info.go
+PKG_INFO_REEXPORTED_SCM_FILES =
+
+sortsmill/pkg-info.scm: $(PKG_INFO_REEXPORTED_SCM_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill pkg-info), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
 sortsmill/pkg-info.go: sortsmill/hash-guillemet.go
 sortsmill/pkg-info.go: sortsmill/pkg-info/directory-layout.go
@@ -323,28 +331,34 @@ sortsmill/pkg-info.go: sortsmill/pkg-info/version.go
 
 DIST_SCM_FILES += sortsmill/pkg-info/directory-layout.scm
 GO_FILES += sortsmill/pkg-info/directory-layout.go
+PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/directory-layout.scm
 
 sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/i18n.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/i18n.scm
 GO_FILES += sortsmill/pkg-info/i18n.go
+PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/i18n.scm
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/package.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/package.scm
 GO_FILES += sortsmill/pkg-info/package.go
+PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/package.scm
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/pure.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/pure.scm
 GO_FILES += sortsmill/pkg-info/pure.go
+PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/pure.scm
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/python.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/python.scm
 GO_FILES += sortsmill/pkg-info/python.go
+PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/python.scm
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/version.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/version.scm
 GO_FILES += sortsmill/pkg-info/version.go
+PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/version.scm
 
 #--------------------------------------------------------------------------
 #
