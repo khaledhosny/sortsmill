@@ -48,19 +48,13 @@ LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la \
 if THE_PROGRAMS
 if HAVE_GUI
 
-bin_SCRIPTS += sortsmill-editor smed
-
-#bin_PROGRAMS += sortsmill-editor smed
-#
-#dist_sortsmill_editor_SOURCES = editor.c
-#sortsmill_editor_LDADD =									\
-#	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
-#	$(top_builddir)/lib/libgnu.la
-#sortsmill_editor_LDFLAGS = $(AM_LDFLAGS) -export-dynamic
-#
-#dist_smed_SOURCES = $(dist_sortsmill_editor_SOURCES)
-#smed_LDADD = $(sortsmill_editor_LDADD)
-#smed = $(sortsmill_editor_LDFLAGS)
+bin_PROGRAMS += sortsmill-editor smed
+sortsmill_editor_SOURCES = sortsmill-editor.c
+sortsmill_editor_LDFLAGS = $(GUILE_LIBS) $(GLIB_LIBS)
+sortsmill_editor_LDADD = $(top_builddir)/lib/libgnu.la
+smed_SOURCES = $(sortsmill_editor_SOURCES)
+smed_LDFLAGS = $(sortsmill_editor_LDFLAGS)
+smed_LDADD = $(sortsmill_editor_LDADD)
 
 endif HAVE_GUI
 endif THE_PROGRAMS
