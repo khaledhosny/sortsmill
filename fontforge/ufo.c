@@ -2153,10 +2153,11 @@ SFReadUFO (char *basedir, int flags)
                 sf->pfminfo.weight = strtol ((char *) valname, &end, 10);
               else if (xmlStrcmp (keyname + 11, (xmlChar *) "VendorID") == 0)
                 {
-                  char *temp = sf->pfminfo.os2_vendor + 3;
-                  strncpy (sf->pfminfo.os2_vendor, (const char *) valname, 4);
-                  while (*temp == 0 && temp >= sf->pfminfo.os2_vendor)
-                    *temp-- = ' ';
+                  if (valname != NULL)
+                    strncpy (sf->pfminfo.os2_vendor, (const char *) valname, 4);
+                  else
+                    /* set to a space padded with nulls, otherwise PfEd will be used */
+                    strncpy (sf->pfminfo.os2_vendor, " ", 4);
                 }
               else if (xmlStrcmp (keyname + 11, (xmlChar *) "TypoAscender") ==
                        0)
