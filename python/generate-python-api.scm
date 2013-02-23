@@ -168,7 +168,7 @@
     [('uint . 4) "uint32_t"]
     [('uint . 8) "uint64_t"]
     [('bool . _) "bint"]
-    [('float . n) (symbol->string (c-float-type n))]
+    [('float . n) (symbol->string (c:float-type n))]
     [('* . _) "uintptr_t"]
     [('struct . _) (error "NOT YET IMPLEMENTED")]
     [('array . _) (error "NOT YET IMPLEMENTED")] ))

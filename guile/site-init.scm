@@ -45,7 +45,7 @@
    ;;
    ;; Install a more pleasant (one hopes) GSL error handler.
    ;;
-   ((@ (sortsmill gsl) gsl-set-error-handler:raise-gsl-error))
+   ((@ (sortsmill math gsl) gsl:set-error-handler-raise-error))
 
    ;;
    ;; Load local-init.scm, which typically is in /etc/sortsmill-tools/

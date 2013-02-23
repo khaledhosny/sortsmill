@@ -26,13 +26,14 @@
 #include <sortsmill/xgc.h>
 #include <intl.h>
 
-void init_guile_sortsmill_gsl_matrices (void);
+void init_guile_sortsmill_math_gsl_matrices (void);
 
 VISIBLE SCM
 scm_gsl_errno_to_symbol (SCM errval)
 {
-  return scm_call_1 (scm_c_public_ref ("sortsmill gsl", "gsl-errno->symbol"),
-                     errval);
+  return
+    scm_call_1 (scm_c_public_ref ("sortsmill math gsl", "gsl-errno->symbol"),
+                errval);
 }
 
 VISIBLE SCM
@@ -44,8 +45,9 @@ scm_c_gsl_errno_to_symbol (int errval)
 VISIBLE SCM
 scm_raise_gsl_error (SCM arguments)
 {
-  return scm_apply_0 (scm_c_public_ref ("sortsmill gsl", "raise-gsl-error"),
-                      arguments);
+  return
+    scm_apply_0 (scm_c_public_ref ("sortsmill math gsl", "raise-gsl-error"),
+                 arguments);
 }
 
 VISIBLE void
@@ -445,7 +447,7 @@ scm_array_handle_illegal_to_mpq_matrix (scm_t_array_handle *handlep,
 static void
 assert_rank_1_or_2_array (SCM who, SCM array)
 {
-  scm_call_2 (scm_c_private_ref ("sortsmill gsl matrices",
+  scm_call_2 (scm_c_private_ref ("sortsmill math gsl matrices",
                                  "assert-rank-1-or-2-array"), who, array);
 }
 
@@ -715,7 +717,7 @@ scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n])
 static void
 assert_f64_rank_1_or_2_array (SCM who, SCM array)
 {
-  scm_call_2 (scm_c_private_ref ("sortsmill gsl matrices",
+  scm_call_2 (scm_c_private_ref ("sortsmill math gsl matrices",
                                  "assert-f64-rank-1-or-2-array"), who, array);
 }
 
@@ -732,7 +734,7 @@ assert_c_f64_rank_1_or_2_array (const char *who, SCM array,
 static void
 assert_exact_rank_1_or_2_array (SCM who, SCM array)
 {
-  scm_call_2 (scm_c_private_ref ("sortsmill gsl matrices",
+  scm_call_2 (scm_c_private_ref ("sortsmill math gsl matrices",
                                  "assert-exact-rank-1-or-2-array"), who, array);
 }
 
@@ -749,8 +751,8 @@ static void
 assert_CblasTrans_flag (SCM who, SCM trans)
 {
   scm_call_2
-    (scm_c_private_ref ("sortsmill gsl matrices", "assert-CblasTrans-flag"),
-     who, trans);
+    (scm_c_private_ref
+     ("sortsmill math gsl matrices", "assert-CblasTrans-flag"), who, trans);
 }
 
 static void
@@ -1075,7 +1077,7 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
 }
 
 VISIBLE void
-init_guile_sortsmill_gsl_matrices (void)
+init_guile_sortsmill_math_gsl_matrices (void)
 {
   scm_c_define ("gsl:CblasRowMajor", scm_from_int (CblasRowMajor));
   scm_c_define ("gsl:CblasColMajor", scm_from_int (CblasColMajor));

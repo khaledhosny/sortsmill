@@ -505,17 +505,22 @@ AC_CONFIG_FILES([pure/Makefile])
 AC_CONFIG_FILES([examples/Makefile])
 
 AC_CONFIG_FILES([inc/config-extra.h])
-AC_CONFIG_COMMANDS([fontforge/sortsmill],[AS_MKDIR_P([fontforge/sortsmill])])
 AC_CONFIG_FILES([inc/sortsmill/cython/config.pxi])
+
+AC_CONFIG_COMMANDS([fontforge/sortsmill],[AS_MKDIR_P([fontforge/sortsmill])])
+
 AC_CONFIG_FILES([python/fontforge.py])
 AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmill/__init__.py])
 AC_CONFIG_FILES([python/__sortsmill__/__init__.py])
 AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
+
+AC_CONFIG_COMMANDS([guile/sortsmill/math],[AS_MKDIR_P([guile/sortsmill/math])])
+AC_CONFIG_COMMANDS([guile/sortsmill/math/gsl],[AS_MKDIR_P([guile/sortsmill/math/gsl])])
 AC_CONFIG_COMMANDS([guile/sortsmill/pkg-info],[AS_MKDIR_P([guile/sortsmill/pkg-info])])
 AC_CONFIG_FILES([guile/sortsmill/machine.scm])
-AC_CONFIG_FILES([guile/sortsmill/math-constants.scm])
-AC_CONFIG_FILES([guile/sortsmill/gsl/error.scm])
+AC_CONFIG_FILES([guile/sortsmill/math/math-constants.scm])
+AC_CONFIG_FILES([guile/sortsmill/math/gsl/error.scm])
 
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_INDENT_PRO        

@@ -18,13 +18,13 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmill polyspline)
- ((sortsmill math-constants) #:select (c-dbl-epsilon))
+ (sortsmill math polyspline)
+ ((sortsmill math math-constants) #:select (c:dbl-epsilon))
  (srfi srfi-1)                          ; List operations.
  (srfi srfi-8)                          ; (receive ...)
  (ice-9 format))
 
-(define epsilon c-dbl-epsilon)
+(define epsilon c:dbl-epsilon)
 
 (define mono (list->f64vector
               (map string->number (cdr (command-line)))))

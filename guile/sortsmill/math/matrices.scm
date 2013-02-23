@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill matrices)
+(library (sortsmill math matrices)
 
   (export not-a-matrix
           rank-deficiency-exception
@@ -142,11 +142,11 @@
           f64matrix-pinv
           )
 
-  (import (sortsmill gsl matrices)
+  (import (sortsmill math gsl matrices)
           (sortsmill dynlink)
           (sortsmill machine)
           (sortsmill i18n)
-          (sortsmill math-constants)
+          (sortsmill math math-constants)
           (sortsmill kwargs)
           (rnrs)
           (except (guile) error)
@@ -624,8 +624,8 @@ array)."
                           (lambda () body body* ...)))] )))
 
   (define (svd-rcond-value rcond)
-    (cond [(not rcond)       (* 100 c-dbl-epsilon-exact)]
-          [(negative? rcond) (* 100 c-dbl-epsilon-exact)]
+    (cond [(not rcond)       (* 100 c:dbl-epsilon-exact)]
+          [(negative? rcond) (* 100 c:dbl-epsilon-exact)]
           [else              (inexact->exact rcond)] ))
 
   (define current-matrix-svd-rcond-fluid

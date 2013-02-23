@@ -19,11 +19,11 @@
 #include <sortsmill/polyspline.h>
 #include <xalloc.h>
 
-/////////////////////////////////////////////////////////////////////
-// FIXME: It seems a good idea to use dynwinds to release handles. //
-/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+// FIXME FIXME FIXME: It seems a good idea to use dynwinds to release handles. //
+/////////////////////////////////////////////////////////////////////////////////
 
-void init_guile_sortsmill_polyspline (void);
+void init_guile_sortsmill_math_polyspline (void);
 
 static SCM
 _scm_f64vector_coef (SCM degree, const double *(*fl_coef) (unsigned int))
@@ -332,7 +332,7 @@ scm_f64vector_mul_mono (SCM spline1, SCM spline2)
 }
 
 VISIBLE void
-init_guile_sortsmill_polyspline (void)
+init_guile_sortsmill_math_polyspline (void)
 {
   scm_c_define_gsubr ("f64vector-binomial-coefficients", 1, 0, 0,
                       scm_f64vector_binomial_coefficients);

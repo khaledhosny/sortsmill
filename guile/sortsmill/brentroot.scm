@@ -28,7 +28,7 @@
           qbrentroot
           qbrentroot-values)
 
-  (import (sortsmill math-constants)
+  (import (sortsmill math math-constants)
           (sortsmill dynlink)
           (rnrs)
           (except (guile) error))

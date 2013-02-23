@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill gsl matrices)
+(library (sortsmill math gsl matrices)
 
   (export gsl:CblasRowMajor
           gsl:CblasColMajor
@@ -40,12 +40,11 @@
           (except (guile) error)
           (only (srfi :26) cut))
 
-  (sortsmill-dynlink-declarations "#include <gsl/gsl_blas.h>")
-  (sortsmill-dynlink-declarations "#include <gsl/gsl_linalg.h>")
+;;;  (sortsmill-dynlink-declarations "#include <gsl/gsl_blas.h>")
+;;;  (sortsmill-dynlink-declarations "#include <gsl/gsl_linalg.h>")
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_sortsmill_gsl_matrices"))
-;;;;    (sortsmill-dynlink-load-extension "init_guile_sortsmill_matrices"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_math_gsl_matrices"))
 
   (define (assert-rank-1-or-2-array who A)
     (unless (let ([r (array-rank A)]) (or (= r 1) (= r 2)))

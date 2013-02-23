@@ -46,7 +46,7 @@
           (rnrs)
           (only (guile) eval-when *unspecified* define*
                 dynamic-func dynamic-link dynamic-pointer
-                negate compose use-modules)
+                negate compose)
           (except (srfi :1) map)
           (only (srfi :26) cut)
           (only (srfi :27) random-integer)

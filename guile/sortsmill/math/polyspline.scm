@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill polyspline)
+(library (sortsmill math polyspline)
 
   (export f64vector-binomial-coefficients
           f64vector-binomial-coefficients-altsigns
@@ -66,7 +66,7 @@
           (only (guile) eval-when make-shared-array))
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_sortsmill_polyspline"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_math_polyspline"))
 
   (define (reshape-n*n n)
     (lambda (i j) (list (+ (* (- i 1) n) (- j 1)))))

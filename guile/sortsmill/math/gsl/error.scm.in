@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill gsl error)
+(library (sortsmill math gsl error)
 
   ;;
   ;; FIXME: Add support for calling GSL functions with an ‘irritants’
@@ -25,29 +25,29 @@
 
 ;;;; FIXME: Rename these exported symbols with ‘gsl:blablabla’ names.
 ;;;;
-  (export gsl-set-error-handler
-          gsl-set-error-handler-default
-          gsl-set-error-handler-off
+  (export gsl:set-error-handler
+          gsl:set-error-handler-default
+          gsl:set-error-handler-off
 
-          raise-gsl-error
-          procedure->gsl-error-handler
-          gsl-error-handler:raise-gsl-error
-          gsl-set-error-handler:raise-gsl-error
+          gsl:raise-error
+          gsl:procedure->error-handler
+          gsl:error-handler-raise-error
+          gsl:set-error-handler-raise-error
 
-          make-gsl-error-condition
-          gsl-error-condition?
+          make-gsl:error-condition
+          gsl:error-condition?
           
-          make-gsl-errno-condition
-          gsl-errno-condition?
-          condition-gsl-errno
+          make-gsl:errno-condition
+          gsl:errno-condition?
+          condition-gsl:errno
 
-          make-gsl-errno-symbol-condition
-          gsl-errno-symbol-condition?
-          condition-gsl-errno-symbol
+          make-gsl:errno-symbol-condition
+          gsl:errno-symbol-condition?
+          condition-gsl:errno-symbol
 
-          make-gsl-strerror-condition
-          gsl-strerror-condition?
-          condition-gsl-strerror
+          make-gsl:strerror-condition
+          gsl:strerror-condition?
+          condition-gsl:strerror
 
           GSL_SUCCESS
           GSL_FAILURE
@@ -85,9 +85,9 @@
           GSL_ETOLG
           GSL_EOF
 
-          gsl-errno->symbol
-          gsl-errno-symbols
-          gsl-errno->strerror)
+          gsl:errno->symbol
+          gsl:errno-symbols
+          gsl:errno->strerror)
 
   (import (sortsmill dynlink)
           (sortsmill kwargs)
@@ -97,73 +97,73 @@
           (ice-9 match)
           (ice-9 format))
 
-  (define gsl-set-error-handler
+  (define gsl:set-error-handler
     (pointer->procedure
      '* (sortsmill-dynlink-func "gsl_set_error_handler"
                                 "#include <gsl/gsl_errno.h>")
      '(*)))
 
-  (define (gsl-set-error-handler-default)
-    (gsl-set-error-handler %null-pointer))
+  (define (gsl:set-error-handler-default)
+    (gsl:set-error-handler %null-pointer))
 
-  (define gsl-set-error-handler-off
+  (define gsl:set-error-handler-off
     (pointer->procedure
      '* (sortsmill-dynlink-func "gsl_set_error_handler_off"
                                 "#include <gsl/gsl_errno.h>")
      '()))
 
-  (define-condition-type &gsl-error &serious
-    make-gsl-error-condition gsl-error-condition?)
+  (define-condition-type &gsl:error &serious
+    make-gsl:error-condition gsl:error-condition?)
 
-  (define-condition-type &gsl-errno &condition
-    make-gsl-errno-condition gsl-errno-condition?
-    (gsl-errno condition-gsl-errno))
+  (define-condition-type &gsl:errno &condition
+    make-gsl:errno-condition gsl:errno-condition?
+    (gsl:errno condition-gsl:errno))
 
-  (define-condition-type &gsl-errno-symbol &condition
-    make-gsl-errno-symbol-condition gsl-errno-symbol-condition?
-    (gsl-errno-symbol condition-gsl-errno-symbol))
+  (define-condition-type &gsl:errno-symbol &condition
+    make-gsl:errno-symbol-condition gsl:errno-symbol-condition?
+    (gsl:errno-symbol condition-gsl:errno-symbol))
 
-  (define-condition-type &gsl-strerror &condition
-    make-gsl-strerror-condition gsl-strerror-condition?
-    (gsl-strerror condition-gsl-strerror))
+  (define-condition-type &gsl:strerror &condition
+    make-gsl:strerror-condition gsl:strerror-condition?
+    (gsl:strerror condition-gsl:strerror))
 
-  (define/kwargs (raise-gsl-error [reason #f]
+  (define/kwargs (gsl:raise-error [reason #f]
                                   [file-name #f]
                                   [line-no #f]
-                                  gsl-errno
+                                  gsl:errno
                                   [who #f]
                                   [irritants '()])
     (raise
      (apply condition
-            `(,[make-gsl-error-condition]
+            `(,[make-gsl:error-condition]
               ,@[cond [who `(,(make-who-condition who))]
                       [(and file-name line-no)
                        `(,(make-who-condition
                            (format #f "~a:~a" file-name line-no)))]
                       [else '()]]
               ,@[if reason `[,(make-message-condition reason)] '()]
-              ,@[let ([symb (gsl-errno->symbol gsl-errno)])
+              ,@[let ([symb (gsl:errno->symbol gsl:errno)])
                   (if (symbol? symb)
-                      `[,(make-gsl-errno-symbol-condition symb)]
+                      `[,(make-gsl:errno-symbol-condition symb)]
                       '[] )]
-              ,[make-gsl-errno-condition gsl-errno]
-              ,[make-gsl-strerror-condition
-                (gsl-errno->strerror gsl-errno)]
+              ,[make-gsl:errno-condition gsl:errno]
+              ,[make-gsl:strerror-condition
+                (gsl:errno->strerror gsl:errno)]
               ,[make-irritants-condition irritants] ))))
 
-  (define (procedure->gsl-error-handler proc)
+  (define (gsl:procedure->error-handler proc)
     (procedure->pointer void
-                        (lambda (reason file-name line-no gsl-errno)
+                        (lambda (reason file-name line-no gsl:errno)
                           (proc (pointer->string reason)
                                 (pointer->string file-name)
-                                line-no gsl-errno))
+                                line-no gsl:errno))
                         `(* * ,int ,int)))
 
-  (define gsl-error-handler:raise-gsl-error
-    (procedure->gsl-error-handler raise-gsl-error))
+  (define gsl:error-handler-raise-error
+    (gsl:procedure->error-handler gsl:raise-error))
 
-  (define (gsl-set-error-handler:raise-gsl-error)
-    (gsl-set-error-handler gsl-error-handler:raise-gsl-error))
+  (define (gsl:set-error-handler-raise-error)
+    (gsl:set-error-handler gsl:error-handler-raise-error))
 
   (define GSL_SUCCESS @GSL_SUCCESS@)
   (define GSL_FAILURE @GSL_FAILURE@)
@@ -201,12 +201,12 @@
   (define GSL_ETOLG @GSL_ETOLG@)
   (define GSL_EOF @GSL_EOF@)
 
-  (define (gsl-errno->symbol errno)
-    (match (assv errno gsl-errno-symbols)
+  (define (gsl:errno->symbol errno)
+    (match (assv errno gsl:errno-symbols)
       [(_ . symb) symb]
       [_          errno] ))
 
-  (define gsl-errno->strerror
+  (define gsl:errno->strerror
     (let ([c-proc
            (pointer->procedure
             '* (sortsmill-dynlink-func "gsl_strerror"
@@ -215,7 +215,7 @@
       (lambda (errno)
         (pointer->string (c-proc errno)))))
 
-  (define gsl-errno-symbols
+  (define gsl:errno-symbols
     '[(@GSL_SUCCESS@ . GSL_SUCCESS)
       (@GSL_FAILURE@ . GSL_FAILURE)
       (@GSL_CONTINUE@ . GSL_CONTINUE)

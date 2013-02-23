@@ -18,13 +18,13 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmill polyspline)
- ((sortsmill math-constants) #:select (c-dbl-epsilon))
+ (sortsmill math polyspline)
+ ((sortsmill math math-constants) #:select (c:dbl-epsilon))
  (srfi srfi-1)                          ; List operations.
  (srfi srfi-8)                          ; (receive ...)
  (ice-9 format))
 
-(define epsilon c-dbl-epsilon)
+(define epsilon c:dbl-epsilon)
 (define spline1 '(5 4 -3 2 1 0 1 -2 3 4 5))
 (define times '(0 0.25 0.5 0.75 1))
 

@@ -107,11 +107,11 @@
   (let ((address (format #f "((void *) &((char *) (~a))[~d])"
                          pointer-expression offset)))
     (match (cons field-type size)
-      [('int . n) (format #f "(*(~a *) ~a)" (c-int-type n) address)]
-      [('uint . n) (format #f "(*(~a *) ~a)" (c-uint-type n) address)]
-      [('bool . n) (format #f "((bool) (*(~a *) ~a != 0))" (c-uint-type n) address)]
-      [('float . n) (format #f "(*(~a *) ~a)" (c-float-type n) address)]
-      [('* . n) (format #f "((void *) *(~a *) ~a)" (c-uint-type n) address)]
+      [('int . n) (format #f "(*(~a *) ~a)" (c:int-type n) address)]
+      [('uint . n) (format #f "(*(~a *) ~a)" (c:uint-type n) address)]
+      [('bool . n) (format #f "((bool) (*(~a *) ~a != 0))" (c:uint-type n) address)]
+      [('float . n) (format #f "(*(~a *) ~a)" (c:float-type n) address)]
+      [('* . n) (format #f "((void *) *(~a *) ~a)" (c:uint-type n) address)]
       [('struct . _) (error "NOT YET IMPLEMENTED")]
       [('array . _) (error "NOT YET IMPLEMENTED")] )))
 
@@ -121,15 +121,15 @@
                          pointer-expression offset)))
     (match (cons field-type size)
       [('int . n) (format #f "(*(~a *) ~a = (~a))"
-                          (c-int-type n) address value-expression)]
+                          (c:int-type n) address value-expression)]
       [('uint . n) (format #f "(*(~a *) ~a = (~a))"
-                           (c-uint-type n) address value-expression)]
+                           (c:uint-type n) address value-expression)]
       [('bool . n) (format #f "(*(~a *) ~a = ((~a) != 0))"
-                           (c-uint-type n) address value-expression)]
+                           (c:uint-type n) address value-expression)]
       [('float . n) (format #f "(*(~a *) ~a = (~a))"
-                            (c-float-type n)  address value-expression)]
+                            (c:float-type n)  address value-expression)]
       [('* . n) (format #f "(*(~a *) ~a = (uint8_t) (uintptr_t) (~a))"
-                        (c-uint-type n) address value-expression)]
+                        (c:uint-type n) address value-expression)]
       [('struct . _) (error "NOT YET IMPLEMENTED")]
       [('array . _) (error "NOT YET IMPLEMENTED")] )))
 
