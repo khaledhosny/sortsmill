@@ -48,19 +48,19 @@ SCM scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose,
 
 /*----------------------------------------------------------------------------*/
 
-void scm_dynwind_mpq_matrix_unwind_handler (void *);
+//void scm_dynwind_mpq_matrix_unwind_handler (void *);
 
-#if _FF_C99_OR_GREATER
+//#if _FF_C99_OR_GREATER
 
-void scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n,
-                                   mpq_t A[m][n]);
+//void scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n,
+//                                   mpq_t A[m][n]);
 
-void scm_array_handle_to_mpq_matrix (SCM A_scm, scm_t_array_handle *handlep,
-                                     unsigned int m, unsigned int n,
-                                     mpq_t A[m][n]);
-SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
+//void scm_array_handle_to_mpq_matrix (SCM A_scm, scm_t_array_handle *handlep,
+//                                     unsigned int m, unsigned int n,
+//                                     mpq_t A[m][n]);
+//SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
 
-#endif /* _FF_C99_OR_GREATER */
+//#endif /* _FF_C99_OR_GREATER */
 
 SCM scm_nonuniform_matrix_is_exact_p (SCM A);
 bool scm_nonuniform_matrix_is_exact (SCM a);

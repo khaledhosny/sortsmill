@@ -18,6 +18,32 @@
 #include <sortsmill/guile/gmp.h>
 
 VISIBLE void
+scm_dynwind_mpz_unwind_handler (void *p)
+{
+  mpz_clear ((__mpz_struct *) p);
+}
+
+VISIBLE void
+scm_dynwind_mpq_unwind_handler (void *p)
+{
+  mpq_clear ((__mpq_struct *) p);
+}
+
+VISIBLE void
+scm_dynwind_mpz_clear (mpz_t z)
+{
+  scm_dynwind_unwind_handler (scm_dynwind_mpz_unwind_handler, z,
+                              SCM_F_WIND_EXPLICITLY);
+}
+
+VISIBLE void
+scm_dynwind_mpq_clear (mpq_t q)
+{
+  scm_dynwind_unwind_handler (scm_dynwind_mpq_unwind_handler, q,
+                              SCM_F_WIND_EXPLICITLY);
+}
+
+VISIBLE void
 scm_to_mpq (SCM val, mpq_t rop)
 {
   scm_to_mpz (scm_numerator (val), mpq_numref (rop));

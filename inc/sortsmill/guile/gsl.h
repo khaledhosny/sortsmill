@@ -18,10 +18,16 @@
 #ifndef _SORTSMILL_GUILE_GSL_H
 #define _SORTSMILL_GUILE_GSL_H
 
+/*
+ * Support for GSL, and also for our own stuff that is made to
+ * resemble GSL, but uses GMP arithmetic.
+ */
+
 #include <libguile.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_linalg.h>
 #include <sortsmill/guile/arrays.h>
+#include <sortsmill/c_version.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -62,8 +68,24 @@ gsl_matrix_view scm_gsl_matrix_view_array_handle (SCM array,
 SCM scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index);
 SCM scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index);
 
+#if _FF_C99_OR_GREATER
+
+void scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
+                                     unsigned int m, unsigned int n,
+                                     mpz_t A[m][n]);
+void scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
+                                     unsigned int m, unsigned int n,
+                                     mpq_t A[m][n]);
+
+SCM scm_from_mpz_matrix (unsigned int m, unsigned int n, mpz_t A[m][n]);
+SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
+
+#endif /* _FF_C99_OR_GREATER */
+
 SCM scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                         SCM beta, SCM C);
+SCM scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
+                      SCM beta, SCM C);
 
 #if 0
 {

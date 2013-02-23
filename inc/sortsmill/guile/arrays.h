@@ -32,8 +32,38 @@ extern "C"
 }
 #endif
 
+/*-----------------------------------------------------------------------*/
+
 void scm_array_handle_unwind_handler (void *handlep);
 void scm_dynwind_array_handle_release (scm_t_array_handle *handlep);
+
+/*-----------------------------------------------------------------------*/
+
+/* Support for using Guile array types to index C arrays. */
+
+typedef enum
+{
+  _FF_INDEX_NOT_AN_ARRAY = 0,
+  _FF_INDEX_ARRAY_NONUNIFORM = 1,
+  _FF_INDEX_ARRAY_U8 = 2,
+  _FF_INDEX_ARRAY_S8 = 3,
+  _FF_INDEX_ARRAY_U16 = 4,
+  _FF_INDEX_ARRAY_S16 = 5,
+  _FF_INDEX_ARRAY_U32 = 6,
+  _FF_INDEX_ARRAY_S32 = 7,
+  _FF_INDEX_ARRAY_U64 = 8,
+  _FF_INDEX_ARRAY_S64 = 9,
+  _FF_INDEX_ARRAY_F32 = 10,
+  _FF_INDEX_ARRAY_F64 = 11,
+  _FF_INDEX_ARRAY_C32 = 12,
+  _FF_INDEX_ARRAY_C64 = 13
+} scm_t_array_type_index;
+
+scm_t_array_type_index scm_array_handle_to_array_type_index (scm_t_array_handle
+                                                             *handlep);
+scm_t_array_type_index scm_to_array_type_index (SCM obj);
+
+/*-----------------------------------------------------------------------*/
 
 #define _FF_GUILE_VECTAG_DECL(NAME)                             \
   static inline SCM                                             \
@@ -130,6 +160,8 @@ scm_number_array_p (SCM obj)
 {
   return scm_from_bool (scm_is_number_array (obj));
 }
+
+/*-----------------------------------------------------------------------*/
 
 #if 0
 {

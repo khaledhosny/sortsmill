@@ -69,24 +69,6 @@ _FF_GUILE_VECTAG_DEFN (scm_symbol_f64, f64);
 _FF_GUILE_VECTAG_DEFN (scm_symbol_c32, c32);
 _FF_GUILE_VECTAG_DEFN (scm_symbol_c64, c64);
 
-typedef enum
-{
-  _FF_INDEX_NOT_AN_ARRAY = 0,
-  _FF_INDEX_ARRAY_NONUNIFORM = 1,
-  _FF_INDEX_ARRAY_U8 = 2,
-  _FF_INDEX_ARRAY_S8 = 3,
-  _FF_INDEX_ARRAY_U16 = 4,
-  _FF_INDEX_ARRAY_S16 = 5,
-  _FF_INDEX_ARRAY_U32 = 6,
-  _FF_INDEX_ARRAY_S32 = 7,
-  _FF_INDEX_ARRAY_U64 = 8,
-  _FF_INDEX_ARRAY_S64 = 9,
-  _FF_INDEX_ARRAY_F32 = 10,
-  _FF_INDEX_ARRAY_F64 = 11,
-  _FF_INDEX_ARRAY_C32 = 12,
-  _FF_INDEX_ARRAY_C64 = 13
-} _array_type_index_t;
-
 static bool index_means_uniform_signed_integer[14] = {
   [_FF_INDEX_NOT_AN_ARRAY] = false,
   [_FF_INDEX_ARRAY_NONUNIFORM] = false,
@@ -206,10 +188,10 @@ static bool index_means_uniform_number[14] = {
   [_FF_INDEX_ARRAY_C64] = true
 };
 
-static _array_type_index_t
+static scm_t_array_type_index
 scm_array_type_to_array_type_index (SCM array_type)
 {
-  _array_type_index_t i = _FF_INDEX_NOT_AN_ARRAY;
+  scm_t_array_type_index i = _FF_INDEX_NOT_AN_ARRAY;
   if (scm_is_eq (array_type, SCM_BOOL_T))
     i = _FF_INDEX_ARRAY_NONUNIFORM;
   else if (scm_is_eq (array_type, scm_symbol_f64 ()))
@@ -239,7 +221,7 @@ scm_array_type_to_array_type_index (SCM array_type)
   return i;
 }
 
-static _array_type_index_t
+VISIBLE scm_t_array_type_index
 scm_array_handle_to_array_type_index (scm_t_array_handle *handlep)
 {
   // FIXME: Is scm_array_handle_element_type supposed to be
@@ -249,10 +231,10 @@ scm_array_handle_to_array_type_index (scm_t_array_handle *handlep)
   return scm_array_type_to_array_type_index (array_type);
 }
 
-static _array_type_index_t
+VISIBLE scm_t_array_type_index
 scm_to_array_type_index (SCM obj)
 {
-  _array_type_index_t i = _FF_INDEX_NOT_AN_ARRAY;
+  scm_t_array_type_index i = _FF_INDEX_NOT_AN_ARRAY;
   if (scm_is_array (obj))
     {
       scm_t_array_handle handle;
@@ -312,7 +294,7 @@ scm_array_elements_pred (SCM obj, bool (*nonuniform_pred) (SCM),
       scm_t_array_handle handle;
       scm_array_get_handle (obj, &handle);
       scm_dynwind_array_handle_release (&handle);
-      _array_type_index_t i = scm_array_handle_to_array_type_index (&handle);
+      scm_t_array_type_index i = scm_array_handle_to_array_type_index (&handle);
       if (i == _FF_INDEX_ARRAY_NONUNIFORM)
         {
           const size_t rank = scm_array_handle_rank (&handle);

@@ -16,6 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/gmp_matrix.h>
+#include <xalloc.h>
 
 VISIBLE void
 _GMP_TYPE (_matrix_init) (unsigned int m, unsigned int n,
@@ -35,6 +36,39 @@ _GMP_TYPE (_matrix_clear) (unsigned int m, unsigned int n,
       _GMP_TYPE (_clear) (A[i][j]);
 }
 
+typedef struct
+{
+  unsigned int m;
+  unsigned int n;
+  void *elems;
+} _GMP_TYPE2 (_, _t_matrix_view);
+
+//                                                          *INDENT-OFF*
+VISIBLE void
+_GMP_TYPE2 (scm_dynwind_, _matrix_unwind_handler) (void *p)
+//                                                           *INDENT-ON*
+{
+  _GMP_TYPE2 (_, _t_matrix_view) * q = (_GMP_TYPE2 (_, _t_matrix_view) *) p;
+  _GMP_TYPE (_matrix_clear)
+    (q->m, q->n, (_GMP_TYPE (_t) (*)[(unsigned int) q->n]) q->elems);
+  free (q);
+}
+
+//                                                          *INDENT-OFF*
+VISIBLE void
+_GMP_TYPE2 (scm_dynwind_, _matrix_clear) (unsigned int m, unsigned int n,
+                                          _GMP_TYPE (_t) A[m][n])
+//                                                           *INDENT-ON*
+
+{
+  _GMP_TYPE2 (_, _t_matrix_view) * q = XMALLOC (_GMP_TYPE2 (_, _t_matrix_view));
+  q->m = m;
+  q->n = n;
+  q->elems = &A[0][0];
+  scm_dynwind_unwind_handler (_GMP_TYPE2 (scm_dynwind_, _matrix_unwind_handler),
+                              q, SCM_F_WIND_EXPLICITLY);
+}
+
 VISIBLE void
 _GMP_TYPE (_matrix_init_c90) (unsigned int m, unsigned int n,
                               _GMP_TYPE (_t) A[])
@@ -47,4 +81,14 @@ _GMP_TYPE (_matrix_clear_c90) (unsigned int m, unsigned int n,
                                _GMP_TYPE (_t) A[])
 {
   _GMP_TYPE (_matrix_clear) (m, n, (_GMP_MATRIX (m, n)) A);
+}
+
+//                                                          *INDENT-OFF*
+VISIBLE void
+_GMP_TYPE2 (scm_dynwind_, _matrix_clear_c90) (unsigned int m, unsigned int n,
+                                              _GMP_TYPE (_t) A[])
+//                                                           *INDENT-ON*
+
+{
+  _GMP_TYPE2 (scm_dynwind_, _matrix_clear) (m, n, (_GMP_MATRIX (m, n)) A);
 }

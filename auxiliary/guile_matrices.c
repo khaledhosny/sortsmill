@@ -39,132 +39,132 @@
 
 void init_guile_sortsmill_matrices (void);
 
-typedef struct _mpq_t_matrix_view
-{
-  unsigned int m;
-  unsigned int n;
-  void *elems;
-} _mpq_t_matrix_view;
+//typedef struct _mpq_t_matrix_view
+//{
+//  unsigned int m;
+//  unsigned int n;
+//  void *elems;
+//} _mpq_t_matrix_view;
+//
+//VISIBLE void
+//scm_dynwind_mpq_matrix_unwind_handler (void *p)
+//{
+//  _mpq_t_matrix_view *q = (_mpq_t_matrix_view *) p;
+//  mpq_matrix_clear (q->m, q->n, (mpq_t (*)[(unsigned int)q->n]) q->elems);
+//  free (q);
+//}
+//
+//VISIBLE void
+//scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n])
+//{
+//  _mpq_t_matrix_view *q = XMALLOC (_mpq_t_matrix_view);
+//  q->m = m;
+//  q->n = n;
+//  q->elems = &A[0][0];
+//  scm_dynwind_unwind_handler (scm_dynwind_mpq_matrix_unwind_handler,
+//                              q, SCM_F_WIND_EXPLICITLY);
+//}
 
-VISIBLE void
-scm_dynwind_mpq_matrix_unwind_handler (void *p)
-{
-  _mpq_t_matrix_view *q = (_mpq_t_matrix_view *) p;
-  mpq_matrix_clear (q->m, q->n, (mpq_t (*)[(unsigned int)q->n]) q->elems);
-  free (q);
-}
+//static void
+//scm_array_handle_nonuniform_to_mpq_matrix (scm_t_array_handle *handlep,
+//                                           unsigned int m, unsigned int n,
+//                                           mpq_t A[m][n])
+//{
+//  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+//  const SCM *elems = scm_array_handle_elements (handlep);
+//  for (unsigned int i = 0; i < m; i++)
+//    for (unsigned int j = 0; j < n; j++)
+//      {
+//        SCM x = elems[i * dims[0].inc + j * dims[1].inc];
+//        scm_to_mpz (scm_numerator (x), mpq_numref (A[i][j]));
+//        scm_to_mpz (scm_denominator (x), mpq_denref (A[i][j]));
+//        mpq_canonicalize (A[i][j]);
+//      }
+//}
+//
+//#define _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX(LONG_TYPE, MEDIUM_TYPE,     \
+//                                            SHORT_TYPE)                 \
+//  void                                                                  \
+//  scm_array_handle_##SHORT_TYPE##_to_mpq_matrix                         \
+//  (scm_t_array_handle *handlep, unsigned int m, unsigned int n,         \
+//   mpq_t A[m][n])                                                       \
+//  {                                                                     \
+//    const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
+//    const LONG_TYPE *elems =                                            \
+//      scm_array_handle_##SHORT_TYPE##_elements (handlep);               \
+//    for (unsigned int i = 0; i < m; i++)                                \
+//      for (unsigned int j = 0; j < n; j++)                              \
+//        {                                                               \
+//          LONG_TYPE x = elems[i * dims[0].inc + j * dims[1].inc];       \
+//          scm_to_mpz (scm_from_##MEDIUM_TYPE (x),                       \
+//                      mpq_numref (A[i][j]));                            \
+//          mpz_set (mpq_denref (A[i][j]), mpz_one ());                   \
+//        }                                                               \
+//  }
+//
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint8_t, uint8, u8);
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int8_t, int8, s8);
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint16_t, uint16, u16);
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int16_t, int16, s16);
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint32_t, uint32, u32);
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int32_t, int32, s32);
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint64_t, uint64, u64);
+//static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int64_t, int64, s64);
+//
+//VISIBLE void
+//scm_array_handle_to_mpq_matrix (SCM A_scm, scm_t_array_handle *handlep,
+//                                unsigned int m, unsigned int n, mpq_t A[m][n])
+//{
+//  const char *who = "scm_array_handle_to_mpq_matrix";
+//
+//  if (scm_is_typed_array (A_scm, SCM_BOOL_T))
+//    scm_array_handle_nonuniform_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u8")))
+//    scm_array_handle_u8_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s8")))
+//    scm_array_handle_s8_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u16")))
+//    scm_array_handle_u16_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s16")))
+//    scm_array_handle_s16_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u32")))
+//    scm_array_handle_u32_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s32")))
+//    scm_array_handle_s32_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u64")))
+//    scm_array_handle_u64_to_mpq_matrix (handlep, m, n, A);
+//  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s64")))
+//    scm_array_handle_s64_to_mpq_matrix (handlep, m, n, A);
+//  else
+//    exception__unexpected_array_type (who, A_scm);
+//}
 
-VISIBLE void
-scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n])
-{
-  _mpq_t_matrix_view *q = XMALLOC (_mpq_t_matrix_view);
-  q->m = m;
-  q->n = n;
-  q->elems = &A[0][0];
-  scm_dynwind_unwind_handler (scm_dynwind_mpq_matrix_unwind_handler,
-                              q, SCM_F_WIND_EXPLICITLY);
-}
-
-static void
-scm_array_handle_nonuniform_to_mpq_matrix (scm_t_array_handle *handlep,
-                                           unsigned int m, unsigned int n,
-                                           mpq_t A[m][n])
-{
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  const SCM *elems = scm_array_handle_elements (handlep);
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
-      {
-        SCM x = elems[i * dims[0].inc + j * dims[1].inc];
-        scm_to_mpz (scm_numerator (x), mpq_numref (A[i][j]));
-        scm_to_mpz (scm_denominator (x), mpq_denref (A[i][j]));
-        mpq_canonicalize (A[i][j]);
-      }
-}
-
-#define _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX(LONG_TYPE, MEDIUM_TYPE,     \
-                                            SHORT_TYPE)                 \
-  void                                                                  \
-  scm_array_handle_##SHORT_TYPE##_to_mpq_matrix                         \
-  (scm_t_array_handle *handlep, unsigned int m, unsigned int n,         \
-   mpq_t A[m][n])                                                       \
-  {                                                                     \
-    const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
-    const LONG_TYPE *elems =                                            \
-      scm_array_handle_##SHORT_TYPE##_elements (handlep);               \
-    for (unsigned int i = 0; i < m; i++)                                \
-      for (unsigned int j = 0; j < n; j++)                              \
-        {                                                               \
-          LONG_TYPE x = elems[i * dims[0].inc + j * dims[1].inc];       \
-          scm_to_mpz (scm_from_##MEDIUM_TYPE (x),                       \
-                      mpq_numref (A[i][j]));                            \
-          mpz_set (mpq_denref (A[i][j]), mpz_one ());                   \
-        }                                                               \
-  }
-
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint8_t, uint8, u8);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int8_t, int8, s8);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint16_t, uint16, u16);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int16_t, int16, s16);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint32_t, uint32, u32);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int32_t, int32, s32);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint64_t, uint64, u64);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int64_t, int64, s64);
-
-VISIBLE void
-scm_array_handle_to_mpq_matrix (SCM A_scm, scm_t_array_handle *handlep,
-                                unsigned int m, unsigned int n, mpq_t A[m][n])
-{
-  const char *who = "scm_array_handle_to_mpq_matrix";
-
-  if (scm_is_typed_array (A_scm, SCM_BOOL_T))
-    scm_array_handle_nonuniform_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u8")))
-    scm_array_handle_u8_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s8")))
-    scm_array_handle_s8_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u16")))
-    scm_array_handle_u16_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s16")))
-    scm_array_handle_s16_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u32")))
-    scm_array_handle_u32_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s32")))
-    scm_array_handle_s32_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("u64")))
-    scm_array_handle_u64_to_mpq_matrix (handlep, m, n, A);
-  else if (scm_is_typed_array (A_scm, scm_from_latin1_symbol ("s64")))
-    scm_array_handle_s64_to_mpq_matrix (handlep, m, n, A);
-  else
-    exception__unexpected_array_type (who, A_scm);
-}
-
-VISIBLE SCM
-scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n])
-{
-  scm_t_array_handle handle;
-
-  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
-                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
-  SCM A_scm = scm_make_array (SCM_UNSPECIFIED, bounds);
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A_scm, &handle);
-  scm_dynwind_array_handle_release (&handle);
-
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
-  SCM *elems = scm_array_handle_writable_elements (&handle);
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
-      elems[i * dims[0].inc + j * dims[1].inc] =
-        scm_divide (scm_from_mpz (mpq_numref (A[i][j])),
-                    scm_from_mpz (mpq_denref (A[i][j])));
-
-  scm_dynwind_end ();
-
-  return A_scm;
-}
+//VISIBLE SCM
+//scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n])
+//{
+//  scm_t_array_handle handle;
+//
+//  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
+//                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
+//  SCM A_scm = scm_make_array (SCM_UNSPECIFIED, bounds);
+//
+//  scm_dynwind_begin (0);
+//
+//  scm_array_get_handle (A_scm, &handle);
+//  scm_dynwind_array_handle_release (&handle);
+//
+//  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+//  SCM *elems = scm_array_handle_writable_elements (&handle);
+//  for (unsigned int i = 0; i < m; i++)
+//    for (unsigned int j = 0; j < n; j++)
+//      elems[i * dims[0].inc + j * dims[1].inc] =
+//        scm_divide (scm_from_mpz (mpq_numref (A[i][j])),
+//                    scm_from_mpz (mpq_denref (A[i][j])));
+//
+//  scm_dynwind_end ();
+//
+//  return A_scm;
+//}
 
 static void
 scm_array_handle_nonuniform_to_scm_matrix (scm_t_array_handle *handlep,

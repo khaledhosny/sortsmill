@@ -29,6 +29,12 @@ extern "C"
 }
 #endif
 
+void scm_dynwind_mpz_unwind_handler (void *);
+void scm_dynwind_mpq_unwind_handler (void *);
+
+void scm_dynwind_mpz_clear (mpz_t);
+void scm_dynwind_mpq_clear (mpq_t);
+  
 void scm_to_mpq (SCM val, mpq_t rop);
 SCM scm_from_mpq (mpq_t val);
 

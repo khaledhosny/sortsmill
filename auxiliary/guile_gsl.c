@@ -18,11 +18,15 @@
 #include <assert.h>
 #include <sortsmill/guile/gsl.h>
 #include <sortsmill/guile/gmp.h>
+#include <sortsmill/guile/arrays.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/format.h>
+#include <sortsmill/gmp_constants.h>
+#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/xgc.h>
 #include <intl.h>
 
-void init_guile_sortsmill_gsl (void);
+void init_guile_sortsmill_gsl_matrices (void);
 
 VISIBLE SCM
 scm_gsl_errno_to_symbol (SCM errval)
@@ -363,8 +367,8 @@ scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index)
 
   SCM bounds = scm_list_2 (scm_from_int (low_index),
                            scm_from_int (low_index + v->size - 1));
-  SCM result = scm_make_typed_array (scm_from_latin1_symbol ("f64"),
-                                     SCM_UNSPECIFIED, scm_list_1 (bounds));
+  SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
+                                     scm_list_1 (bounds));
 
   scm_dynwind_begin (0);
 
@@ -404,9 +408,8 @@ scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
                                scm_from_int (low_index + m->size1 - 1));
   SCM column_bounds = scm_list_2 (scm_from_int (low_index),
                                   scm_from_int (low_index + m->size2 - 1));
-  SCM result = scm_make_typed_array (scm_from_latin1_symbol ("f64"),
-                                     SCM_UNSPECIFIED, scm_list_2 (row_bounds,
-                                                                  column_bounds));
+  SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
+                                     scm_list_2 (row_bounds, column_bounds));
   scm_dynwind_begin (0);
 
   scm_array_get_handle (result, &handle);
@@ -424,6 +427,292 @@ scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
 }
 
 static void
+scm_array_handle_illegal_to_mpz_matrix (scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        mpz_t A[m][n])
+{
+  assert (false);
+}
+
+static void
+scm_array_handle_illegal_to_mpq_matrix (scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        mpq_t A[m][n])
+{
+  assert (false);
+}
+
+static void
+assert_rank_1_or_2_array (SCM who, SCM array)
+{
+  scm_call_2 (scm_c_private_ref ("sortsmill gsl matrices",
+                                 "assert-rank-1-or-2-array"), who, array);
+}
+
+static void
+assert_c_rank_1_or_2_array (const char *who, SCM array,
+                            scm_t_array_handle *handlep)
+{
+  const size_t rank = scm_array_handle_rank (handlep);
+  if (rank != 1 && rank != 2)
+    assert_rank_1_or_2_array (scm_from_utf8_string (who), array);
+}
+
+static void
+scm_array_handle_nonuniform_to_mpz_matrix (scm_t_array_handle *handlep,
+                                           unsigned int m, unsigned int n,
+                                           mpz_t A[m][n])
+{
+  const size_t rank = scm_array_handle_rank (handlep);
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  const SCM *elems = scm_array_handle_elements (handlep);
+  if (rank == 1)
+    {
+      assert (m == 1);
+      for (unsigned int j = 0; j < n; j++)
+        {
+          SCM x = elems[j * dims[0].inc];
+          scm_to_mpz (x, A[0][j]);
+        }
+    }
+  else
+    for (unsigned int i = 0; i < m; i++)
+      for (unsigned int j = 0; j < n; j++)
+        {
+          SCM x = elems[i * dims[0].inc + j * dims[1].inc];
+          scm_to_mpz (x, A[i][j]);
+        }
+}
+
+static void
+scm_array_handle_nonuniform_to_mpq_matrix (scm_t_array_handle *handlep,
+                                           unsigned int m, unsigned int n,
+                                           mpq_t A[m][n])
+{
+  const size_t rank = scm_array_handle_rank (handlep);
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  const SCM *elems = scm_array_handle_elements (handlep);
+  if (rank == 1)
+    {
+      assert (m == 1);
+      for (unsigned int j = 0; j < n; j++)
+        {
+          SCM x = elems[j * dims[0].inc];
+          scm_to_mpq (x, A[0][j]);
+        }
+    }
+  else
+    for (unsigned int i = 0; i < m; i++)
+      for (unsigned int j = 0; j < n; j++)
+        {
+          SCM x = elems[i * dims[0].inc + j * dims[1].inc];
+          scm_to_mpq (x, A[i][j]);
+        }
+}
+
+#define _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX(LONG_TYPE, MEDIUM_TYPE,     \
+                                            SHORT_TYPE)                 \
+  void                                                                  \
+  scm_array_handle_##SHORT_TYPE##_to_mpz_matrix                         \
+  (scm_t_array_handle *handlep, unsigned int m, unsigned int n,         \
+   mpz_t A[m][n])                                                       \
+  {                                                                     \
+    const size_t rank = scm_array_handle_rank (handlep);                \
+    const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
+    const LONG_TYPE *elems =                                            \
+      scm_array_handle_##SHORT_TYPE##_elements (handlep);               \
+    if (rank == 1)                                                      \
+      {                                                                 \
+        assert (m == 1);                                                \
+        for (unsigned int j = 0; j < n; j++)                            \
+          {                                                             \
+            LONG_TYPE x = elems[j * dims[0].inc];                       \
+            scm_to_mpz (scm_from_##MEDIUM_TYPE (x), A[0][j]);           \
+          }                                                             \
+      }                                                                 \
+    else                                                                \
+      for (unsigned int i = 0; i < m; i++)                              \
+        for (unsigned int j = 0; j < n; j++)                            \
+          {                                                             \
+            LONG_TYPE x = elems[i * dims[0].inc + j * dims[1].inc];     \
+            scm_to_mpz (scm_from_##MEDIUM_TYPE (x), A[i][j]);           \
+          }                                                             \
+  }
+
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint8_t, uint8, u8);
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int8_t, int8, s8);
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint16_t, uint16, u16);
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int16_t, int16, s16);
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint32_t, uint32, u32);
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int32_t, int32, s32);
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint64_t, uint64, u64);
+static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int64_t, int64, s64);
+
+typedef void _scm_to_mpz_matrix_func_t (scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        mpz_t A[m][n]);
+
+static _scm_to_mpz_matrix_func_t *scm_to_mpz_matrix_func[14] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_array_handle_nonuniform_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_array_handle_s16_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_array_handle_u32_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_array_handle_s32_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_array_handle_u64_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_array_handle_s64_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_array_handle_illegal_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_array_handle_illegal_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_array_handle_illegal_to_mpz_matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_array_handle_illegal_to_mpz_matrix
+};
+
+#define _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX(LONG_TYPE, MEDIUM_TYPE,     \
+                                            SHORT_TYPE)                 \
+  void                                                                  \
+  scm_array_handle_##SHORT_TYPE##_to_mpq_matrix                         \
+  (scm_t_array_handle *handlep, unsigned int m, unsigned int n,         \
+   mpq_t A[m][n])                                                       \
+  {                                                                     \
+    const size_t rank = scm_array_handle_rank (handlep);                \
+    const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
+    const LONG_TYPE *elems =                                            \
+      scm_array_handle_##SHORT_TYPE##_elements (handlep);               \
+    if (rank == 1)                                                      \
+      {                                                                 \
+        assert (m == 1);                                                \
+        for (unsigned int j = 0; j < n; j++)                            \
+          {                                                             \
+            LONG_TYPE x = elems[j * dims[0].inc];                       \
+            scm_to_mpz (scm_from_##MEDIUM_TYPE (x),                     \
+                        mpq_numref (A[0][j]));                          \
+            mpz_set (mpq_denref (A[0][j]), mpz_one ());                 \
+          }                                                             \
+      }                                                                 \
+    else                                                                \
+      for (unsigned int i = 0; i < m; i++)                              \
+        for (unsigned int j = 0; j < n; j++)                            \
+          {                                                             \
+            LONG_TYPE x = elems[i * dims[0].inc + j * dims[1].inc];     \
+            scm_to_mpz (scm_from_##MEDIUM_TYPE (x),                     \
+                        mpq_numref (A[i][j]));                          \
+            mpz_set (mpq_denref (A[i][j]), mpz_one ());                 \
+          }                                                             \
+  }
+
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint8_t, uint8, u8);
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int8_t, int8, s8);
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint16_t, uint16, u16);
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int16_t, int16, s16);
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint32_t, uint32, u32);
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int32_t, int32, s32);
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint64_t, uint64, u64);
+static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int64_t, int64, s64);
+
+typedef void _scm_to_mpq_matrix_func_t (scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        mpq_t A[m][n]);
+
+static _scm_to_mpq_matrix_func_t *scm_to_mpq_matrix_func[14] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_array_handle_nonuniform_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_array_handle_s16_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_array_handle_u32_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_array_handle_s32_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_array_handle_u64_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_array_handle_s64_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_array_handle_illegal_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_array_handle_illegal_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_array_handle_illegal_to_mpq_matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_array_handle_illegal_to_mpq_matrix
+};
+
+VISIBLE void
+scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
+                                unsigned int m, unsigned int n, mpz_t A[m][n])
+{
+  const char *who = "scm_array_handle_to_mpz_matrix";
+
+  assert_c_rank_1_or_2_array (who, array, handlep);
+
+  if (scm_is_integer_array (array))
+    scm_to_mpz_matrix_func[scm_array_handle_to_array_type_index (handlep)]
+      (handlep, m, n, A);
+  else
+    exception__unexpected_array_type (who, array);
+}
+
+VISIBLE void
+scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
+                                unsigned int m, unsigned int n, mpq_t A[m][n])
+{
+  const char *who = "scm_array_handle_to_mpq_matrix";
+
+  assert_c_rank_1_or_2_array (who, array, handlep);
+
+  if (scm_is_exact_array (array))
+    scm_to_mpq_matrix_func[scm_array_handle_to_array_type_index (handlep)]
+      (handlep, m, n, A);
+  else
+    exception__unexpected_array_type (who, array);
+}
+
+VISIBLE SCM
+scm_from_mpz_matrix (unsigned int m, unsigned int n, mpz_t A[m][n])
+{
+  scm_t_array_handle handle;
+
+  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
+                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
+  SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (array, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
+  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+  SCM *elems = scm_array_handle_writable_elements (&handle);
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      elems[i * dims[0].inc + j * dims[1].inc] = scm_from_mpz (A[i][j]);
+
+  scm_dynwind_end ();
+
+  return array;
+}
+
+VISIBLE SCM
+scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n])
+{
+  scm_t_array_handle handle;
+
+  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
+                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
+  SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (array, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
+  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+  SCM *elems = scm_array_handle_writable_elements (&handle);
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      elems[i * dims[0].inc + j * dims[1].inc] = scm_from_mpq (A[i][j]);
+
+  scm_dynwind_end ();
+
+  return array;
+}
+
+static void
 assert_f64_rank_1_or_2_array (SCM who, SCM array)
 {
   scm_call_2 (scm_c_private_ref ("sortsmill gsl matrices",
@@ -435,9 +724,25 @@ assert_c_f64_rank_1_or_2_array (const char *who, SCM array,
                                 scm_t_array_handle *handlep)
 {
   const size_t rank = scm_array_handle_rank (handlep);
-  if (!scm_is_typed_array (array, scm_from_latin1_symbol ("f64"))
+  if (!scm_is_typed_array (array, scm_symbol_f64 ())
       || (rank != 1 && rank != 2))
     assert_f64_rank_1_or_2_array (scm_from_utf8_string (who), array);
+}
+
+static void
+assert_exact_rank_1_or_2_array (SCM who, SCM array)
+{
+  scm_call_2 (scm_c_private_ref ("sortsmill gsl matrices",
+                                 "assert-exact-rank-1-or-2-array"), who, array);
+}
+
+static void
+assert_c_exact_rank_1_or_2_array (const char *who, SCM array,
+                                  scm_t_array_handle *handlep)
+{
+  const size_t rank = scm_array_handle_rank (handlep);
+  if (!scm_is_exact_array (array) || (rank != 1 && rank != 2))
+    assert_exact_rank_1_or_2_array (scm_from_utf8_string (who), array);
 }
 
 static void
@@ -468,6 +773,35 @@ static inline size_t
 transposed_size (CBLAS_TRANSPOSE_t trans, size_t size1, size_t size2)
 {
   return (trans == CblasNoTrans) ? size1 : size2;
+}
+
+static size_t
+matrix_dim1 (scm_t_array_handle *handlep)
+{
+  const size_t rank = scm_array_handle_rank (handlep);
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  return (rank == 1) ? 1 : dims[0].ubnd - dims[0].lbnd + 1;
+}
+
+static size_t
+matrix_dim2 (scm_t_array_handle *handlep)
+{
+  const size_t rank = scm_array_handle_rank (handlep);
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  return dims[rank - 1].ubnd - dims[rank - 1].lbnd + 1;
+}
+
+static void
+matrix_has_dimension_of_size_zero (const char *who, SCM A)
+{
+  const char *localized_message = _("matrix has dimension of size zero");
+  SCM message = scm_from_locale_string (localized_message);
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (message),
+      rnrs_make_irritants_condition (scm_list_1 (A))));
 }
 
 static void
@@ -537,6 +871,12 @@ assert_conformable_for_gemm (const char *who,
                              size_t m_A, size_t k_A,
                              size_t k_B, size_t n_B, size_t m_C, size_t n_C)
 {
+  if ((m_A | k_A) == 0)
+    matrix_has_dimension_of_size_zero (who, A);
+  if ((k_B | n_B) == 0)
+    matrix_has_dimension_of_size_zero (who, B);
+  if ((m_C | n_C) == 0)
+    matrix_has_dimension_of_size_zero (who, C);
   if (k_A != k_B)
     non_conformable_for_multiplication (who, A, B, m_A, k_A, k_B, n_B);
   if (m_A != m_C)
@@ -644,9 +984,9 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
   return result;
 }
 
-#if 0
-static VISIBLE SCM
-scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta, SCM C)
+VISIBLE SCM
+scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
+                  SCM C)
 {
   // Note: if beta = 0 exactly, then C is ignored. You can set it to
   // anything.
@@ -660,95 +1000,82 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta, SCM
   CBLAS_TRANSPOSE_t _TransA = scm_to_CBLAS_TRANSPOSE_t (who, TransA);
   CBLAS_TRANSPOSE_t _TransB = scm_to_CBLAS_TRANSPOSE_t (who, TransB);
 
-  mpq_t _alpha;
-  mpq_t _beta;
-  scm_to_mpq (alpha, _alpha);
-  scm_to_mpq (beta, _beta);
-
   scm_dynwind_begin (0);
+
+  mpq_t _alpha;
+  mpq_init (_alpha);
+  scm_dynwind_mpq_clear (_alpha);
+  scm_to_mpq (alpha, _alpha);
+
+  mpq_t _beta;
+  mpq_init (_beta);
+  scm_dynwind_mpq_clear (_beta);
+  scm_to_mpq (beta, _beta);
 
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
-  /////assert_c_f64_rank_1_or_2_array (who, A, &handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
 
   scm_array_get_handle (B, &handle_B);
   scm_dynwind_array_handle_release (&handle_B);
-  //////assert_c_f64_rank_1_or_2_array (who, B, &handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
 
-  ////mpq_matrix_const_view _A =
-  ////  scm_mpq_matrix_const_view_array_handle (A, &handle_A);
-  ////mpq_matrix_const_view _B =
-  ////  scm_mpq_matrix_const_view_array_handle (B, &handle_B);
+  const size_t dim1_A = matrix_dim1 (&handle_A);
+  const size_t dim2_A = matrix_dim2 (&handle_A);
+  const size_t m_A = transposed_size (_TransA, dim1_A, dim2_A);
+  const size_t k_A = transposed_size (_TransA, dim2_A, dim1_A);
 
-  /*
-  const size_t m_A =
-    transposed_size (_TransA, _A.matrix.size1, _A.matrix.size2);
-  const size_t k_A =
-    transposed_size (_TransA, _A.matrix.size2, _A.matrix.size1);
+  const size_t dim1_B = matrix_dim1 (&handle_B);
+  const size_t dim2_B = matrix_dim2 (&handle_B);
+  const size_t k_B = transposed_size (_TransB, dim1_B, dim2_B);
+  const size_t n_B = transposed_size (_TransB, dim2_B, dim1_B);
 
-  const size_t k_B =
-    transposed_size (_TransB, _B.matrix.size1, _B.matrix.size2);
-  const size_t n_B =
-    transposed_size (_TransB, _B.matrix.size2, _B.matrix.size1);
+  mpq_t _A[dim1_A][dim2_A];
+  mpq_matrix_init (dim1_A, dim2_A, _A);
+  scm_dynwind_mpq_matrix_clear (dim1_A, dim2_A, _A);
+  scm_array_handle_to_mpq_matrix (A, &handle_A, dim1_A, dim2_A, _A);
 
-  if (_beta != 0)
-    {
-      scm_array_get_handle (C, &handle_C);
-      scm_dynwind_array_handle_release (&handle_C);
-      assert_c_f64_rank_1_or_2_array (who, C, &handle_C);
-    }
-
-  mpq_matrix_const_view _C =
-    (_beta != 0) ?
-    scm_mpq_matrix_const_view_array_handle (C, &handle_C) :
-    null_mpq_matrix_const_view;
+  mpq_t _B[dim1_B][dim2_B];
+  mpq_matrix_init (dim1_B, dim2_B, _B);
+  scm_dynwind_mpq_matrix_clear (dim1_B, dim2_B, _B);
+  scm_array_handle_to_mpq_matrix (B, &handle_B, dim1_B, dim2_B, _B);
 
   size_t m_C;
   size_t n_C;
-
-  if (_beta == 0)
+  if (mpq_sgn (_beta) == 0)
     {
       m_C = m_A;
       n_C = n_B;
     }
   else
     {
-      m_C = _C.matrix.size1;
-      n_C = _C.matrix.size2;
+      scm_array_get_handle (C, &handle_C);
+      scm_dynwind_array_handle_release (&handle_C);
+      assert_c_exact_rank_1_or_2_array (who, C, &handle_C);
+
+      m_C = matrix_dim1 (&handle_C);
+      n_C = matrix_dim2 (&handle_C);
     }
+
+  mpq_t _C[m_C][n_C];
+  mpq_matrix_init (m_C, n_C, _C);
+  scm_dynwind_mpq_matrix_clear (m_C, n_C, _C);
+  if (mpq_sgn (_beta) != 0)
+    scm_array_handle_to_mpq_matrix (C, &handle_C, m_C, n_C, _C);
 
   assert_conformable_for_gemm (who, _TransA, _TransB, A, B, C,
                                m_A, k_A, k_B, n_B, m_C, n_C);
+  mpq_matrix_gemm (_TransA, _TransB, m_A, n_B, k_A, _alpha, _A, _B, _beta, _C);
 
-  double result_buffer[m_C][n_C];
-  mpq_matrix_view _result = mpq_matrix_view_array (&result_buffer[0][0],
-                                                   m_C, n_C);
-  if (_beta != 0)
-    mpq_matrix_memcpy (&_result.matrix, &_C.matrix);
-  const int errval =
-    mpq_blas_dgemm (_TransA, _TransB, _alpha, &_A.matrix, &_B.matrix,
-                    _beta, &_result.matrix);
-  if (errval != MPQ_SUCCESS)
-    scm_raise__error
-      (scm_list_n (scm_from_latin1_keyword ("mpq-errno"),
-                   scm_from_int (errval),
-                   scm_from_latin1_keyword ("who"),
-                   scm_from_latin1_string (who),
-                   scm_from_latin1_keyword ("irritants"),
-                   scm_list_n (TransA, TransB, alpha, A, B, beta, C,
-                               SCM_UNDEFINED), SCM_UNDEFINED));
-  SCM result = scm_mpq_matrix_to_f64matrix (&_result.matrix, 1);
-  */
+  SCM result = scm_from_mpq_matrix (m_C, n_C, _C);
 
   scm_dynwind_end ();
 
-  SCM result = SCM_UNSPECIFIED; // FIXME.
   return result;
 }
-#endif
 
 VISIBLE void
-init_guile_sortsmill_gsl (void)
+init_guile_sortsmill_gsl_matrices (void)
 {
   scm_c_define ("gsl:CblasRowMajor", scm_from_int (CblasRowMajor));
   scm_c_define ("gsl:CblasColMajor", scm_from_int (CblasColMajor));
@@ -763,5 +1090,5 @@ init_guile_sortsmill_gsl (void)
   scm_c_define ("gsl:CblasRight", scm_from_int (CblasRight));
 
   scm_c_define_gsubr ("gsl:gemm-f64", 7, 0, 0, scm_gsl_blas_dgemm);
-  //  scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
+  scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
 }

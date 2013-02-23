@@ -30,9 +30,11 @@
           gsl:CblasRight
 
           gsl:gemm-f64 ; (gsl:gemm-f64 TransA TransB alpha A B beta C) → αAB + βC
+          gsl:gemm-mpq ; (gsl:gemm-mpq TransA TransB alpha A B beta C) → αAB + βC
           )
 
-  (import (sortsmill dynlink)
+  (import (sortsmill arrays)
+          (sortsmill dynlink)
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
@@ -42,7 +44,7 @@
   (sortsmill-dynlink-declarations "#include <gsl/gsl_linalg.h>")
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_sortsmill_gsl"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_gsl_matrices"))
 ;;;;    (sortsmill-dynlink-load-extension "init_guile_sortsmill_matrices"))
 
   (define (assert-rank-1-or-2-array who A)
@@ -52,6 +54,11 @@
   (define (assert-f64-rank-1-or-2-array who A)
     (unless (typed-array? A 'f64)
       (assertion-violation who (_ "expected an array of type f64") A))
+    (assert-rank-1-or-2-array who A))
+
+  (define (assert-exact-rank-1-or-2-array who A)
+    (unless (exact-array? A)
+      (assertion-violation who (_ "expected an array of exact numbers") A))
     (assert-rank-1-or-2-array who A))
 
   (define (assert-CblasTrans-flag who trans)

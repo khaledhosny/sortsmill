@@ -25,6 +25,7 @@
 
 #include <gmp.h>
 #include <gsl/gsl_blas.h>
+#include <libguile.h>
 #include <sortsmill/c_version.h>
 
 #define _FF_TRANSMATRIX(A,T,I,J) A[((T) == CblasNoTrans ? (I) : (J))][((T) == CblasNoTrans ? (J) : (I))]
@@ -35,22 +36,32 @@
  * GMP init and clear of the matrix entries.
  */
 
+void scm_dynwind_mpz_matrix_unwind_handler (void *);
+void scm_dynwind_mpq_matrix_unwind_handler (void *);
+
 #if _FF_C99_OR_GREATER
 
 void mpz_matrix_init (unsigned int m, unsigned int n, mpz_t A[m][n]);
 void mpz_matrix_clear (unsigned int m, unsigned int n, mpz_t A[m][n]);
+void scm_dynwind_mpz_matrix_clear (unsigned int m, unsigned int n,
+                                   mpz_t A[m][n]);
 
 void mpq_matrix_init (unsigned int m, unsigned int n, mpq_t A[m][n]);
 void mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n]);
+void scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n,
+                                   mpq_t A[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 
 void mpz_matrix_init_c90 (unsigned int m, unsigned int n, mpz_t A[]);
 void mpz_matrix_clear_c90 (unsigned int m, unsigned int n, mpz_t A[]);
+void scm_dynwind_mpz_matrix_clear_c90 (unsigned int m, unsigned int n,
+                                       mpz_t A[]);
 
 void mpq_matrix_init_c90 (unsigned int m, unsigned int n, mpq_t A[]);
 void mpq_matrix_clear_c90 (unsigned int m, unsigned int n, mpq_t A[]);
-
+void scm_dynwind_mpq_matrix_clear_c90 (unsigned int m, unsigned int n,
+                                       mpq_t A[]);
 
 /*-----------------------------------------------------------------------*/
 
