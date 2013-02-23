@@ -54,6 +54,9 @@ run_main (void *my_args_ptr)
 int
 main (int argc, char **argv)
 {
+  // g_set_prgname should be set here, in the _application_, rather
+  // than when options are parsed, in the _library_. The editor is not
+  // tied to a specific application.
   g_set_prgname (argv[0]);
 
   _my_args_t args = { argc, argv, -99 };
