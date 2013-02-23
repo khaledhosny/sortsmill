@@ -28,6 +28,7 @@
 
 -T SCM
 -T scm_t_array_handle
+-T scm_t_array_dim
 -T pthread_mutex_t
 -T cairo_t
 -T regoff_t

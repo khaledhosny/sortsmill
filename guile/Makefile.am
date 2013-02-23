@@ -183,6 +183,15 @@ sortsmill/argv.go: sortsmill/machine.go
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill arrays)
+
+DIST_SCM_FILES += sortsmill/arrays.scm
+GO_FILES += sortsmill/arrays.go
+
+sortsmill/arrays.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill brentroot)
 
 DIST_SCM_FILES += sortsmill/brentroot.scm

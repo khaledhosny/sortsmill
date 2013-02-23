@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include <sortsmill/guile/gsl.h>
+#include <sortsmill/guile/gmp.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/format.h>
 #include <intl.h>
@@ -644,7 +645,7 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 }
 
 #if 0
-VISIBLE SCM
+static VISIBLE SCM
 scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta, SCM C)
 {
   // Note: if beta = 0 exactly, then C is ignored. You can set it to
@@ -659,8 +660,10 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta, SCM
   CBLAS_TRANSPOSE_t _TransA = scm_to_CBLAS_TRANSPOSE_t (who, TransA);
   CBLAS_TRANSPOSE_t _TransB = scm_to_CBLAS_TRANSPOSE_t (who, TransB);
 
-  /////  const double _alpha = scm_to_double (alpha);
-  /////  const double _beta = scm_to_double (beta);
+  mpq_t _alpha;
+  mpq_t _beta;
+  scm_to_mpq (alpha, _alpha);
+  scm_to_mpq (beta, _beta);
 
   scm_dynwind_begin (0);
 
@@ -739,6 +742,7 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta, SCM
 
   scm_dynwind_end ();
 
+  SCM result = SCM_UNSPECIFIED; // FIXME.
   return result;
 }
 #endif
@@ -759,7 +763,5 @@ init_guile_sortsmill_gsl (void)
   scm_c_define ("gsl:CblasRight", scm_from_int (CblasRight));
 
   scm_c_define_gsubr ("gsl:gemm-f64", 7, 0, 0, scm_gsl_blas_dgemm);
-#if 0
-  scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
-#endif
+  //  scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
 }

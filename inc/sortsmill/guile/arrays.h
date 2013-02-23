@@ -21,6 +21,8 @@
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
 #include <sortsmill/guile/gsl.h>
+#include <atomic_ops.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -32,6 +34,102 @@ extern "C"
 
 void scm_array_handle_unwind_handler (void *handlep);
 void scm_dynwind_array_handle_release (scm_t_array_handle *handlep);
+
+#define _FF_GUILE_VECTAG_DECL(NAME)                             \
+  static inline SCM                                             \
+  NAME (void)                                                   \
+  {                                                             \
+    extern SCM _##NAME;                                         \
+    extern volatile AO_t _##NAME##_is_initialized;              \
+    extern void _initialize_##NAME (void);                      \
+    if (!AO_load_acquire_read (&_##NAME##_is_initialized))      \
+      _initialize_##NAME ();                                    \
+    return _##NAME;                                             \
+  }
+
+_FF_GUILE_VECTAG_DECL (scm_symbol_u8);
+_FF_GUILE_VECTAG_DECL (scm_symbol_s8);
+_FF_GUILE_VECTAG_DECL (scm_symbol_u16);
+_FF_GUILE_VECTAG_DECL (scm_symbol_s16);
+_FF_GUILE_VECTAG_DECL (scm_symbol_u32);
+_FF_GUILE_VECTAG_DECL (scm_symbol_s32);
+_FF_GUILE_VECTAG_DECL (scm_symbol_u64);
+_FF_GUILE_VECTAG_DECL (scm_symbol_s64);
+_FF_GUILE_VECTAG_DECL (scm_symbol_f32);
+_FF_GUILE_VECTAG_DECL (scm_symbol_f64);
+_FF_GUILE_VECTAG_DECL (scm_symbol_c32);
+_FF_GUILE_VECTAG_DECL (scm_symbol_c64);
+
+bool scm_is_uniform_array (SCM obj);
+bool scm_is_uniform_signed_integer_array (SCM obj);
+bool scm_is_uniform_unsigned_integer_array (SCM obj);
+bool scm_is_uniform_integer_array (SCM obj);
+bool scm_is_uniform_real_float_array (SCM obj);
+bool scm_is_uniform_complex_float_array (SCM obj);
+bool scm_is_integer_array (SCM obj);
+bool scm_is_real_array (SCM obj);
+bool scm_is_exact_array (SCM obj);
+bool scm_is_number_array (SCM obj);
+
+static inline SCM
+scm_uniform_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_uniform_array (obj));
+}
+
+static inline SCM
+scm_uniform_signed_integer_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_uniform_signed_integer_array (obj));
+}
+
+static inline SCM
+scm_uniform_unsigned_integer_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_uniform_unsigned_integer_array (obj));
+}
+
+static inline SCM
+scm_uniform_integer_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_uniform_integer_array (obj));
+}
+
+static inline SCM
+scm_uniform_real_float_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_uniform_real_float_array (obj));
+}
+
+static inline SCM
+scm_uniform_complex_float_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_uniform_complex_float_array (obj));
+}
+
+static inline SCM
+scm_integer_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_integer_array (obj));
+}
+
+static inline SCM
+scm_real_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_real_array (obj));
+}
+
+static inline SCM
+scm_exact_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_exact_array (obj));
+}
+
+static inline SCM
+scm_number_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_number_array (obj));
+}
 
 #if 0
 {
