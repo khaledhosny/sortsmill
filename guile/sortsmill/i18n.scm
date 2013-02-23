@@ -21,13 +21,20 @@
           dgettext
           dpgettext
           pkg-info:textdomain ;; Reëxported from (sortsmill pkg-info).
-          )
+
+          ;; Reëxport @var{format} from @code{(ice-9 format)}, to help
+          ;; ensure that localizers can use the full @var{format}
+          ;; functionality. We do _not_ want the version of
+          ;; @var{format} that is just @var{simple-format} by another
+          ;; name.
+          format)
 
   (import (sortsmill pkg-info)
           (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
-          (system foreign))
+          (system foreign)
+          (ice-9 format))
 
   (sortsmill-dynlink-declarations "#include <glib.h>")
 
