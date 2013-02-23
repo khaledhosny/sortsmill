@@ -643,6 +643,106 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
   return result;
 }
 
+#if 0
+VISIBLE SCM
+scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta, SCM C)
+{
+  // Note: if beta = 0 exactly, then C is ignored. You can set it to
+  // anything.
+
+  const char *who = "scm_gsl_mpq_dgemm";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+  scm_t_array_handle handle_C;
+
+  CBLAS_TRANSPOSE_t _TransA = scm_to_CBLAS_TRANSPOSE_t (who, TransA);
+  CBLAS_TRANSPOSE_t _TransB = scm_to_CBLAS_TRANSPOSE_t (who, TransB);
+
+  /////  const double _alpha = scm_to_double (alpha);
+  /////  const double _beta = scm_to_double (beta);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  /////assert_c_f64_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  //////assert_c_f64_rank_1_or_2_array (who, B, &handle_B);
+
+  ////mpq_matrix_const_view _A =
+  ////  scm_mpq_matrix_const_view_array_handle (A, &handle_A);
+  ////mpq_matrix_const_view _B =
+  ////  scm_mpq_matrix_const_view_array_handle (B, &handle_B);
+
+  /*
+  const size_t m_A =
+    transposed_size (_TransA, _A.matrix.size1, _A.matrix.size2);
+  const size_t k_A =
+    transposed_size (_TransA, _A.matrix.size2, _A.matrix.size1);
+
+  const size_t k_B =
+    transposed_size (_TransB, _B.matrix.size1, _B.matrix.size2);
+  const size_t n_B =
+    transposed_size (_TransB, _B.matrix.size2, _B.matrix.size1);
+
+  if (_beta != 0)
+    {
+      scm_array_get_handle (C, &handle_C);
+      scm_dynwind_array_handle_release (&handle_C);
+      assert_c_f64_rank_1_or_2_array (who, C, &handle_C);
+    }
+
+  mpq_matrix_const_view _C =
+    (_beta != 0) ?
+    scm_mpq_matrix_const_view_array_handle (C, &handle_C) :
+    null_mpq_matrix_const_view;
+
+  size_t m_C;
+  size_t n_C;
+
+  if (_beta == 0)
+    {
+      m_C = m_A;
+      n_C = n_B;
+    }
+  else
+    {
+      m_C = _C.matrix.size1;
+      n_C = _C.matrix.size2;
+    }
+
+  assert_conformable_for_gemm (who, _TransA, _TransB, A, B, C,
+                               m_A, k_A, k_B, n_B, m_C, n_C);
+
+  double result_buffer[m_C][n_C];
+  mpq_matrix_view _result = mpq_matrix_view_array (&result_buffer[0][0],
+                                                   m_C, n_C);
+  if (_beta != 0)
+    mpq_matrix_memcpy (&_result.matrix, &_C.matrix);
+  const int errval =
+    mpq_blas_dgemm (_TransA, _TransB, _alpha, &_A.matrix, &_B.matrix,
+                    _beta, &_result.matrix);
+  if (errval != MPQ_SUCCESS)
+    scm_raise__error
+      (scm_list_n (scm_from_latin1_keyword ("mpq-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_n (TransA, TransB, alpha, A, B, beta, C,
+                               SCM_UNDEFINED), SCM_UNDEFINED));
+  SCM result = scm_mpq_matrix_to_f64matrix (&_result.matrix, 1);
+  */
+
+  scm_dynwind_end ();
+
+  return result;
+}
+#endif
+
 VISIBLE void
 init_guile_sortsmill_gsl (void)
 {
@@ -659,4 +759,7 @@ init_guile_sortsmill_gsl (void)
   scm_c_define ("gsl:CblasRight", scm_from_int (CblasRight));
 
   scm_c_define_gsubr ("gsl:gemm-f64", 7, 0, 0, scm_gsl_blas_dgemm);
+#if 0
+  scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
+#endif
 }
