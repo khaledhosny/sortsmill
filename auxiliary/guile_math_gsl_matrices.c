@@ -16,50 +16,13 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
-#include <sortsmill/guile/math/gsl.h>
-#include <sortsmill/guile/math/gmp.h>
-#include <sortsmill/guile/arrays.h>
-#include <sortsmill/guile/rnrs_conditions.h>
-#include <sortsmill/guile/format.h>
+#include <sortsmill/guile.h>
 #include <sortsmill/gmp_constants.h>
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/xgc.h>
 #include <intl.h>
 
 void init_guile_sortsmill_math_gsl_matrices (void);
-
-VISIBLE SCM
-scm_gsl_errno_to_symbol (SCM errval)
-{
-  return
-    scm_call_1 (scm_c_public_ref ("sortsmill math gsl", "gsl-errno->symbol"),
-                errval);
-}
-
-VISIBLE SCM
-scm_c_gsl_errno_to_symbol (int errval)
-{
-  return scm_gsl_errno_to_symbol (scm_from_int (errval));
-}
-
-VISIBLE SCM
-scm_raise_gsl_error (SCM arguments)
-{
-  return
-    scm_apply_0 (scm_c_public_ref ("sortsmill math gsl", "raise-gsl-error"),
-                 arguments);
-}
-
-VISIBLE void
-scm_gsl_error_handler_for_raising_a_gsl_error (const char *reason,
-                                               const char *file,
-                                               int line, int gsl_errno)
-{
-  scm_raise_gsl_error (scm_list_4 (scm_from_locale_string (reason),
-                                   scm_from_locale_string (file),
-                                   scm_from_int (line),
-                                   scm_from_int (gsl_errno)));
-}
 
 VISIBLE void
 exception__array_has_no_elements (const char *who, SCM irritants)

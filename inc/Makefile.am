@@ -62,10 +62,11 @@ nobase_include_HEADERS += sortsmill/guile/iconv.h				\
 nobase_include_HEADERS += sortsmill/guile/editor.h	\
 	sortsmill/guile/editor/main_loop.h
 
-nobase_include_HEADERS += sortsmill/guile/math.h				\
-	sortsmill/guile/math/brentroot.h sortsmill/guile/math/gsl.h	\
-	sortsmill/guile/math/gmp.h sortsmill/guile/math/matrices.h	\
-	sortsmill/guile/math/polyspline.h
+nobase_include_HEADERS += sortsmill/guile/math.h						\
+	sortsmill/guile/math/brentroot.h sortsmill/guile/math/gmp.h			\
+	sortsmill/guile/math/matrices.h sortsmill/guile/math/polyspline.h	\
+	sortsmill/guile/math/gsl.h sortsmill/guile/math/gsl/error.h			\
+	sortsmill/guile/math/gsl/matrices.h
 
 if HAVE_PURE_API
 nobase_include_HEADERS += sortsmill/guile/pure.h

@@ -85,10 +85,10 @@ dist_libsortsmill_aux_la_SOURCES += scm_python.c guile_python.c
 endif HAVE_PYTHON_API
 
 # Miscellaneous C interface to Guile and Guile extensions.
-dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c				\
-	guile_math_gsl.c guile_math_gmp.c guile_arrays.c				\
-	guile_math_matrices.c guile_iconv.c guile_directory_layout.c	\
-	guile_options.c guile_format.c
+dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c					\
+	guile_math_gsl_error.c guile_math_gsl_matrices.c guile_math_gmp.c	\
+	guile_arrays.c guile_math_matrices.c guile_iconv.c					\
+	guile_directory_layout.c guile_options.c guile_format.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
