@@ -77,6 +77,10 @@ SCM scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 SCM scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                       SCM beta, SCM C);
 
+SCM scm_gsl_svd_golub_reinsch (SCM);
+SCM scm_gsl_svd_modified_golub_reinsch (SCM);
+SCM scm_gsl_svd_jacobi (SCM);
+
 #if 0
 {
 #endif

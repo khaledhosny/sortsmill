@@ -29,9 +29,33 @@
           gsl:CblasLeft
           gsl:CblasRight
 
-          gsl:gemm-f64 ; (gsl:gemm-f64 TransA TransB alpha A B beta C) → αAB + βC
-          gsl:gemm-mpz ; (gsl:gemm-mpz TransA TransB alpha A B beta C) → αAB + βC
-          gsl:gemm-mpq ; (gsl:gemm-mpq TransA TransB alpha A B beta C) → αAB + βC
+          ;; General matrix multiplication.
+          ;;
+          ;; (gsl:gemm-WHATEVER TransA TransB alpha A B beta C) → αAB + βC
+          ;;
+          gsl:gemm-f64
+          gsl:gemm-mpz
+          gsl:gemm-mpq
+
+          ;; ‘Thin’ singular value decomposition algorithms from
+          ;; GSL. These procedures return U, S, V, respectively, as
+          ;; multiple return values.
+          ;;
+          ;; Golub-Reinsch requires linear workspace.
+          ;;
+          ;; Modified Golub-Reinsch is faster than Golub-Reinsch if
+          ;; there are many more rows than columns in the input
+          ;; matrix, but requires quadratic workspace.
+          ;;
+          ;; The Jacobi method can compute singular values to higher
+          ;; relative accuracy than Golub-Reinsch, but is slower. It
+          ;; uses one-sided Jacobi orthogonalization.
+          ;;
+          ;;    (gsl:svd-WHATEVER A) → U, diag S, V′
+          ;;
+          gsl:svd-f64-golub-reinsch
+          gsl:svd-f64-modified-golub-reinsch
+          gsl:svd-f64-jacobi
           )
 
   (import (sortsmill arrays)

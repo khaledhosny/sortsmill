@@ -69,7 +69,6 @@
           f64matrix+
           f64matrix-
 
-;;;;          exact-matrix-matrix*
           exact-matrix*
           integer-matrix*
 
@@ -82,23 +81,6 @@
           matrix/
           matrix+
           matrix-
-
-          ;; ‘Thin’ singular value decomposition algorithms from
-          ;; GSL. These procedures return U, S, V, respectively, as
-          ;; multiple return values.
-          ;;
-          ;; Golub-Reinsch requires linear workspace.
-          ;;
-          ;; Modified Golub-Reinsch is faster than Golub-Reinsch if
-          ;; there are many more rows than columns in the input
-          ;; matrix, but requires quadratic workspace.
-          ;;
-          ;; The Jacobi method can compute singular values to higher
-          ;; relative accuracy than Golub-Reinsch, but is slower. It
-          ;; uses one-sided Jacobi orthogonalization.
-          f64matrix-svd-golub-reinsch
-          f64matrix-svd-modified-golub-reinsch
-          f64matrix-svd-jacobi
 
           ;; SVD algorithms enum:
           ;;   'golub-reinsch
@@ -660,9 +642,9 @@ array)."
        (assert (symbol? algorithm))
        (assert (enum-set-member? algorithm matrix-svd-algorithms))
        (match algorithm
-         ['golub-reinsch (f64matrix-svd-golub-reinsch A)]
-         ['modified-golub-reinsch (f64matrix-svd-modified-golub-reinsch A)]
-         ['jacobi (f64matrix-svd-jacobi A)] )] ))
+         ['golub-reinsch (gsl:svd-f64-golub-reinsch A)]
+         ['modified-golub-reinsch (gsl:svd-f64-modified-golub-reinsch A)]
+         ['jacobi (gsl:svd-f64-jacobi A)] )] ))
 
   (define matrix-svd-effective-rank
     (case-lambda

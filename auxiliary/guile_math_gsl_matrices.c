@@ -1129,6 +1129,136 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   return result;
 }
 
+VISIBLE SCM
+scm_gsl_svd_golub_reinsch (SCM a)
+{
+  scm_t_array_handle handle_a;
+
+  const char *who = "scm_gsl_svd_golub_reinsch";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
+
+  double u_buf[ma.size1 * ma.size2];
+  double v_buf[ma.size2 * ma.size2];
+  double s_buf[ma.size2];
+  double work_buf[ma.size2];
+  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.size1, ma.size2);
+  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.size2, ma.size2);
+  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
+  gsl_vector_view work = gsl_vector_view_array (work_buf, ma.size2);
+  gsl_matrix_memcpy (&u.matrix, &ma);
+
+  scm_dynwind_end ();
+
+  int errval = gsl_linalg_SV_decomp (&u.matrix, &v.matrix, &s.vector,
+                                     &work.vector);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_1 (a), SCM_UNDEFINED));
+  SCM values[3] = {
+    scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
+    scm_gsl_vector_to_f64vector (&s.vector, 1),
+    scm_gsl_matrix_to_f64matrix (&v.matrix, 1)
+  };
+  return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
+scm_gsl_svd_modified_golub_reinsch (SCM a)
+{
+  scm_t_array_handle handle_a;
+
+  const char *who = "scm_gsl_svd_modified_golub_reinsch";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
+
+  double u_buf[ma.size1 * ma.size2];
+  double x_buf[ma.size2 * ma.size2];
+  double v_buf[ma.size2 * ma.size2];
+  double s_buf[ma.size2];
+  double work_buf[ma.size2];
+  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.size1, ma.size2);
+  gsl_matrix_view x = gsl_matrix_view_array (x_buf, ma.size2, ma.size2);
+  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.size2, ma.size2);
+  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
+  gsl_vector_view work = gsl_vector_view_array (work_buf, ma.size2);
+  gsl_matrix_memcpy (&u.matrix, &ma);
+
+  scm_dynwind_end ();
+
+  int errval = gsl_linalg_SV_decomp_mod (&u.matrix, &x.matrix, &v.matrix,
+                                         &s.vector, &work.vector);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_1 (a), SCM_UNDEFINED));
+  SCM values[3] = {
+    scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
+    scm_gsl_vector_to_f64vector (&s.vector, 1),
+    scm_gsl_matrix_to_f64matrix (&v.matrix, 1)
+  };
+  return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
+scm_gsl_svd_jacobi (SCM a)
+{
+  scm_t_array_handle handle_a;
+  const char *who = "scm_gsl_svd_jacobi";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (a, &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+
+  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
+
+  double u_buf[ma.size1 * ma.size2];
+  double v_buf[ma.size2 * ma.size2];
+  double s_buf[ma.size2];
+  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.size1, ma.size2);
+  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.size2, ma.size2);
+  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
+  gsl_matrix_memcpy (&u.matrix, &ma);
+
+  scm_dynwind_end ();
+
+  int errval = gsl_linalg_SV_decomp_jacobi (&u.matrix, &v.matrix, &s.vector);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_1 (a), SCM_UNDEFINED));
+  SCM values[3] = {
+    scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
+    scm_gsl_vector_to_f64vector (&s.vector, 1),
+    scm_gsl_matrix_to_f64matrix (&v.matrix, 1)
+  };
+  return scm_c_values (values, 3);
+}
+
 VISIBLE void
 init_guile_sortsmill_math_gsl_matrices (void)
 {
@@ -1147,4 +1277,10 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:gemm-f64", 7, 0, 0, scm_gsl_blas_dgemm);
   scm_c_define_gsubr ("gsl:gemm-mpz", 7, 0, 0, scm_gsl_mpz_gemm);
   scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
+
+  scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
+                      scm_gsl_svd_golub_reinsch);
+  scm_c_define_gsubr ("gsl:svd-f64-modified-golub-reinsch", 1, 0, 0,
+                      scm_gsl_svd_modified_golub_reinsch);
+  scm_c_define_gsubr ("gsl:svd-f64-jacobi", 1, 0, 0, scm_gsl_svd_jacobi);
 }
