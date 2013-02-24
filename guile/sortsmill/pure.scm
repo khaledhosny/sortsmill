@@ -125,7 +125,7 @@
 
           pure-finalize
 
-          ;; Reëxported from (sortsmill strings ...).
+          ;; Reëxported from (sortsmill strings).
           enable-hash-guillemet-strings
           disable-hash-guillemet-strings
           lines-begin-with)
@@ -133,10 +133,10 @@
   (import (sortsmill i18n)
           (sortsmill dynlink)
           (sortsmill editor finalization)
-          (only (sortsmill strings hash-guillemet)
+          (only (sortsmill strings)
                 enable-hash-guillemet-strings
-                disable-hash-guillemet-strings)
-          (only (sortsmill strings) lines-begin-with)
+                disable-hash-guillemet-strings
+                lines-begin-with)
           (sortsmill argv)
           (rnrs)
           (except (guile) error)

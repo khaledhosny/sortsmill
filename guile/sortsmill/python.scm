@@ -41,16 +41,6 @@
           py-finalize
           force-py-finalized
 
-;;;;;; I think we are not using these.
-;;;          make-python-error
-;;;          python-error?
-;;;          pyerr-type
-;;;          condition-pyerr-type
-;;;          pyerr-value
-;;;          condition-pyerr-value
-;;;          pyerr-traceback
-;;;          condition-pyerr-traceback
-
           pyobject?
           pointer->pyobject
           borrowed-pointer->pyobject
@@ -193,7 +183,7 @@
           py-incref ;; Should not be needed very often.
           py-decref ;; Should not be needed very often.
 
-          ;; Reëxported from (sortsmill strings ...).
+          ;; Reëxported from (sortsmill strings).
           enable-hash-guillemet-strings
           disable-hash-guillemet-strings
           lines-begin-with)
@@ -203,10 +193,10 @@
           (sortsmill pkg-info)
           (sortsmill ffcompat)
           (sortsmill editor finalization)
-          (only (sortsmill strings hash-guillemet)
+          (only (sortsmill strings)
                 enable-hash-guillemet-strings
-                disable-hash-guillemet-strings)
-          (only (sortsmill strings) lines-begin-with)
+                disable-hash-guillemet-strings
+                lines-begin-with)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
@@ -252,13 +242,6 @@
       (lambda (obj)
         (assert (pyobject? obj))
         (proc (pyobject->pointer obj)))))
-
-;;;;;; FIXME: I think we are not using this.
-;;;  (define-condition-type &python-error &error
-;;;    make-python-error python-error?
-;;;    (pyerr-type condition-pyerr-type)
-;;;    (pyerr-value condition-pyerr-value)
-;;;    (pyerr-traceback condition-pyerr-traceback))
 
   (define-wrapped-pointer-type pyobject
     pyobject?

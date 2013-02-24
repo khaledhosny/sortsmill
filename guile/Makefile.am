@@ -325,6 +325,10 @@ sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
+@ifndefmk@ GENERATED_GO_DEPS
+sortsmill/math.go: $(MATH_REEXPORTED_SCM_FILES:%.scm=%.go)
+@endifmk@
+
 # (sortsmill math brentroot)
 
 DIST_SCM_FILES += sortsmill/math/brentroot.scm
@@ -349,6 +353,10 @@ sortsmill/math/gsl.scm: $(MATH_GSL_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math gsl), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+@ifndefmk@ GENERATED_GO_DEPS
+sortsmill/math/gsl.go: $(MATH_GSL_REEXPORTED_SCM_FILES:%.scm=%.go)
+@endifmk@
 
 # (sortsmill math gsl error)
 
@@ -436,13 +444,8 @@ sortsmill/pkg-info.scm: $(PKG_INFO_REEXPORTED_SCM_FILES)
 	$(AM_V_at)mv $@-tmp $@
 
 @ifndefmk@ GENERATED_GO_DEPS
+sortsmill/pkg-info.go: $(PKG_INFO_REEXPORTED_SCM_FILES:%.scm=%.go)
 sortsmill/pkg-info.go: sortsmill/strings/hash-guillemet.go
-sortsmill/pkg-info.go: sortsmill/pkg-info/directory-layout.go
-sortsmill/pkg-info.go: sortsmill/pkg-info/i18n.go
-sortsmill/pkg-info.go: sortsmill/pkg-info/package.go
-sortsmill/pkg-info.go: sortsmill/pkg-info/pure.go
-sortsmill/pkg-info.go: sortsmill/pkg-info/python.go
-sortsmill/pkg-info.go: sortsmill/pkg-info/version.go
 @endifmk@
 
 DIST_SCM_FILES += sortsmill/pkg-info/directory-layout.scm
@@ -537,19 +540,36 @@ sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go
 #
 # (sortsmill strings)
 
-DIST_SCM_FILES += sortsmill/strings.scm
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/strings.scm
 GO_FILES += sortsmill/strings.go
+STRINGS_REEXPORTED_SCM_FILES =
+
+sortsmill/strings.scm: $(STRINGS_REEXPORTED_SCM_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill strings), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
 @ifndefmk@ GENERATED_GO_DEPS
-sortsmill/strings.go: sortsmill/alloc.go
-sortsmill/strings.go: sortsmill/strings/hash-guillemet.go
-sortsmill/strings: sortsmill/machine.go
+sortsmill/strings.go: $(STRINGS_REEXPORTED_SCM_FILES:%.scm=%.go)
 @endifmk@
+
+# (sortsmill strings grabbed-strings)
+
+DIST_SCM_FILES += sortsmill/strings/grabbed-strings.scm
+GO_FILES += sortsmill/strings/grabbed-strings.go
+STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/grabbed-strings.scm
 
 # (sortsmill strings hash-guillemet)
 
 DIST_SCM_FILES += sortsmill/strings/hash-guillemet.scm
 GO_FILES += sortsmill/strings/hash-guillemet.go
+STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/hash-guillemet.scm
+
+# (sortsmill strings text-embedding)
+
+DIST_SCM_FILES += sortsmill/strings/text-embedding.scm
+GO_FILES += sortsmill/strings/text-embedding.go
+STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/text-embedding.scm
 
 #--------------------------------------------------------------------------
 #
