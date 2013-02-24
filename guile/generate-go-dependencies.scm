@@ -3,7 +3,7 @@
 !#
 
 (import (ff-internal find-imports)
-        (sortsmill hash-guillemet)
+        (sortsmill strings hash-guillemet)
         (rnrs)
         (except (guile) error)
         (ice-9 match))

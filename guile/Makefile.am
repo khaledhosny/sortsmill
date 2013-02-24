@@ -262,13 +262,6 @@ endif HAVE_GUI
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill hash-guillemet)
-
-DIST_SCM_FILES += sortsmill/hash-guillemet.scm
-GO_FILES += sortsmill/hash-guillemet.go
-
-#--------------------------------------------------------------------------
-#
 # (sortsmill i18n)
 
 DIST_SCM_FILES += sortsmill/i18n.scm
@@ -336,6 +329,7 @@ sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
 
 DIST_SCM_FILES += sortsmill/math/brentroot.scm
 GO_FILES += sortsmill/math/brentroot.go
+MATH_REEXPORTED_SCM_FILES += sortsmill/math/brentroot.scm
 
 sortsmill/math/brentroot.go: $(lib_LTLIBRARIES)
 
@@ -349,9 +343,9 @@ sortsmill/math/brentroot.go: sortsmill/math/math-constants.go
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/math/gsl.scm
 GO_FILES += sortsmill/math/gsl.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/gsl.scm
-GSL_REEXPORTED_SCM_FILES =
+MATH_GSL_REEXPORTED_SCM_FILES =
 
-sortsmill/math/gsl.scm: $(GSL_REEXPORTED_SCM_FILES)
+sortsmill/math/gsl.scm: $(MATH_GSL_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math gsl), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
@@ -360,7 +354,7 @@ sortsmill/math/gsl.scm: $(GSL_REEXPORTED_SCM_FILES)
 
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/gsl/error.scm
 GO_FILES += sortsmill/math/gsl/error.go
-GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/error.scm
+MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/error.scm
 
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -372,7 +366,7 @@ sortsmill/math/gsl/error.go: sortsmill/kwargs.go
 
 DIST_SCM_FILES += sortsmill/math/gsl/matrices.scm
 GO_FILES += sortsmill/math/gsl/matrices.go
-GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/matrices.scm
+MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/matrices.scm
 
 sortsmill/math/gsl/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -442,7 +436,7 @@ sortsmill/pkg-info.scm: $(PKG_INFO_REEXPORTED_SCM_FILES)
 	$(AM_V_at)mv $@-tmp $@
 
 @ifndefmk@ GENERATED_GO_DEPS
-sortsmill/pkg-info.go: sortsmill/hash-guillemet.go
+sortsmill/pkg-info.go: sortsmill/strings/hash-guillemet.go
 sortsmill/pkg-info.go: sortsmill/pkg-info/directory-layout.go
 sortsmill/pkg-info.go: sortsmill/pkg-info/i18n.go
 sortsmill/pkg-info.go: sortsmill/pkg-info/package.go
@@ -502,7 +496,7 @@ sortsmill/pure.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/pure.go: sortsmill/argv.go
-sortsmill/pure.go: sortsmill/hash-guillemet.go
+sortsmill/pure.go: sortsmill/strings/hash-guillemet.go
 sortsmill/pure.go: sortsmill/i18n.go
 @endifmk@
 
@@ -520,7 +514,7 @@ GO_FILES += sortsmill/python.go
 sortsmill/python.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 @ifndefmk@ GENERATED_GO_DEPS
-sortsmill/python.go: sortsmill/hash-guillemet.go
+sortsmill/python.go: sortsmill/strings/hash-guillemet.go
 sortsmill/python.go: sortsmill/i18n.go
 sortsmill/python.go: sortsmill/pkg-info.go
 @endifmk@
@@ -548,9 +542,14 @@ GO_FILES += sortsmill/strings.go
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/strings.go: sortsmill/alloc.go
-sortsmill/strings.go: sortsmill/hash-guillemet.go
+sortsmill/strings.go: sortsmill/strings/hash-guillemet.go
 sortsmill/strings: sortsmill/machine.go
 @endifmk@
+
+# (sortsmill strings hash-guillemet)
+
+DIST_SCM_FILES += sortsmill/strings/hash-guillemet.scm
+GO_FILES += sortsmill/strings/hash-guillemet.go
 
 #--------------------------------------------------------------------------
 #
@@ -565,7 +564,7 @@ sortsmill/usermenu.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu.go: sortsmill/hash-guillemet.go
+sortsmill/usermenu.go: sortsmill/strings/hash-guillemet.go
 sortsmill/usermenu.go: sortsmill/i18n.go
 sortsmill/usermenu.go: sortsmill/machine.go
 @endifmk@
@@ -577,7 +576,7 @@ GO_FILES += sortsmill/usermenu/pure.go
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/pure.go: sortsmill/hash-guillemet.go
+sortsmill/usermenu/pure.go: sortsmill/strings/hash-guillemet.go
 @endifmk@
 
 endif HAVE_PURE_API
@@ -662,7 +661,7 @@ SCM_SYMBOL_FILES = $(filter-out sortsmill/fontforge-api.scm			\
 libguile_sortsmill_symbols.c:										\
 	$(srcdir)/generate-libguile-sortsmill_symbols.scm				\
 	ff-internal/extract-dynlink.scm sortsmill/pkg-info/python.scm	\
-	sortsmill/hash-guillemet.scm
+	sortsmill/strings/hash-guillemet.scm
 
 libguile_sortsmill_symbols.c: $(SCM_SYMBOL_FILES)
 	$(AM_V_GEN)

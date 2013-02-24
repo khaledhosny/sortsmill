@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
+((@ (sortsmill strings hash-guillemet) enable-hash-guillemet-strings))
 
 (library (sortsmill usermenu pure)
 
@@ -26,6 +26,10 @@
           (sortsmill gdraw-api)
           (sortsmill views)
           (sortsmill editor finalization)
+
+          ;; Ensures hash-guillemet is treated as a dependency.
+          (sortsmill strings hash-guillemet)
+
           (rnrs))
 
   (define glyph-view-pointer-type "CharViewBase*")

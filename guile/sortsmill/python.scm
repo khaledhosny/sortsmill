@@ -27,7 +27,7 @@
 ;;; in your user-init.scm.
 ;;;
 
-((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
+((@ (sortsmill strings hash-guillemet) enable-hash-guillemet-strings))
 
 (library (sortsmill python)
 
@@ -193,7 +193,7 @@
           py-incref ;; Should not be needed very often.
           py-decref ;; Should not be needed very often.
 
-          ;; Reëxported from (sortsmill strings).
+          ;; Reëxported from (sortsmill strings ...).
           enable-hash-guillemet-strings
           disable-hash-guillemet-strings
           lines-begin-with)
@@ -203,10 +203,10 @@
           (sortsmill pkg-info)
           (sortsmill ffcompat)
           (sortsmill editor finalization)
-          (only (sortsmill strings)
+          (only (sortsmill strings hash-guillemet)
                 enable-hash-guillemet-strings
-                disable-hash-guillemet-strings
-                lines-begin-with)
+                disable-hash-guillemet-strings)
+          (only (sortsmill strings) lines-begin-with)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)

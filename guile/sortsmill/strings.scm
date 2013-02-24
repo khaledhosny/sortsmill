@@ -22,11 +22,11 @@
           pointer->grabbed-string
           pointer->grabbed-string-list
 
-          ;; Reëxported from (sortsmill hash-guillemet).
+          ;; Reëxported from (sortsmill strings hash-guillemet).
           enable-hash-guillemet-strings
           disable-hash-guillemet-strings)
 
-  (import (sortsmill hash-guillemet)
+  (import (sortsmill strings hash-guillemet)
           (sortsmill machine)
           (sortsmill dynlink)
           (sortsmill alloc)

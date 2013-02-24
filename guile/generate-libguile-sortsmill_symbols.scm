@@ -18,7 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (ff-internal extract-dynlink)
-        (sortsmill hash-guillemet)
+        (sortsmill strings hash-guillemet)
         (rnrs)
         (except (guile) error)
         (ice-9 format))

@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
   
-((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
+((@ (sortsmill strings hash-guillemet) enable-hash-guillemet-strings))
 
 (library (sortsmill usermenu)
 
@@ -43,6 +43,10 @@
           (sortsmill machine)
           (sortsmill notices)
           (sortsmill views)
+
+          ;; Ensures hash-guillemet is treated as a dependency.
+          (sortsmill strings hash-guillemet)
+
           (rnrs)
           (only (guile) eval-when *unspecified* define*
                 dynamic-func dynamic-link dynamic-pointer

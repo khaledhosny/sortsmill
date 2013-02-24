@@ -25,7 +25,7 @@
 ;;; in your local-init.scm and/or user-init.scm.
 ;;;
 
-((@ (sortsmill hash-guillemet) enable-hash-guillemet-strings))
+((@ (sortsmill strings hash-guillemet) enable-hash-guillemet-strings))
 
 (library (sortsmill pure)
 
@@ -125,7 +125,7 @@
 
           pure-finalize
 
-          ;; Reëxported from (sortsmill strings).
+          ;; Reëxported from (sortsmill strings ...).
           enable-hash-guillemet-strings
           disable-hash-guillemet-strings
           lines-begin-with)
@@ -133,10 +133,10 @@
   (import (sortsmill i18n)
           (sortsmill dynlink)
           (sortsmill editor finalization)
-          (only (sortsmill strings)
+          (only (sortsmill strings hash-guillemet)
                 enable-hash-guillemet-strings
-                disable-hash-guillemet-strings
-                lines-begin-with)
+                disable-hash-guillemet-strings)
+          (only (sortsmill strings) lines-begin-with)
           (sortsmill argv)
           (rnrs)
           (except (guile) error)

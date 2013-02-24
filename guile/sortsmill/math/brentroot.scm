@@ -1,4 +1,4 @@
-;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 

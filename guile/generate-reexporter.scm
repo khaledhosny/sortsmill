@@ -3,7 +3,7 @@
 !#
 
 (import (ff-internal reexporters)
-        (sortsmill hash-guillemet)
+        (sortsmill strings hash-guillemet)
         (rnrs)
         (ice-9 match))
 
