@@ -32,6 +32,8 @@
           zero-f64matrix
           I-matrix
           I-f64matrix
+          scalar-matrix
+          scalar-f64matrix
 
           matrix-map
           matrix-copy
@@ -42,13 +44,14 @@
           vector->matrix
           row-matrix->vector
 
+          matrix-1x1->scalar
+
           matrix-row
           matrix-column-transpose
           matrix-column
           matrix-diagonal
           matrix-transpose
 
-          matrix-is-exact?
           matrix-exact->inexact
           matrix-inexact->exact
 
@@ -66,8 +69,9 @@
           f64matrix+
           f64matrix-
 
-          exact-matrix-matrix*
+;;;;          exact-matrix-matrix*
           exact-matrix*
+          integer-matrix*
 
           matrix-matrix*
 
@@ -143,6 +147,7 @@
           )
 
   (import (sortsmill math gsl matrices)
+          (sortsmill arrays)
           (sortsmill dynlink)
           (sortsmill machine)
           (sortsmill i18n)
@@ -197,6 +202,22 @@
                (array-fill! diag 1.0)
                I)] ))
 
+  (define scalar-matrix
+    (case-lambda
+      [(v n)   (scalar-matrix v n n)]
+      [(v n m) (let* ([A (zero-matrix n m)]
+                      [diag (matrix-diagonal A)])
+                 (array-fill! diag v)
+                 A)] ))
+
+  (define scalar-f64matrix
+    (case-lambda
+      [(v n)   (scalar-f64matrix v n n)]
+      [(v n m) (let* ([A (zero-f64matrix n m)]
+                      [diag (matrix-diagonal A)])
+                 (array-fill! diag v)
+                 A)] ))
+
   ;;-----------------------------------------------------------------------
 
   (define (zero-based A)
@@ -222,6 +243,20 @@
                           (lambda (i j) `[,(+ i lo1 -1) ,(+ j lo2 -1)])
                           `[1 ,(- hi1 lo1 -1)] `[1 ,(- hi2 lo2 -1)] )]
       [_ (not-a-matrix 'one-based A)]))
+
+  (define (matrix-1x1->scalar A)
+    (if (array? A)
+        (match (array-shape A)
+          [((lo hi))
+           (if (eqv? lo hi)
+               (generalized-vector-ref A lo)
+               A)]
+          [((lo1 hi1) (lo2 hi2))
+           (if (and (eqv? lo1 hi1) (eqv? lo2 hi2))
+               (array-ref A lo1 lo2)
+               A)]
+          [_ A])
+        A))
 
   (define (vector->matrix v)
     (match (array-rank v)
@@ -319,12 +354,6 @@ array)."
 
   ;;-----------------------------------------------------------------------
 
-  (define (matrix-is-exact? A)
-    (match (array-type A)
-      [#t (nonuniform-matrix-is-exact? A)]
-      [(or 'u8 's8 'u16 's16 'u32 's32 'u64 's64) #t]
-      [_ #f] ))
-
   (define (matrix-exact->inexact A)
     (let ([B (apply make-typed-array 'f64 *unspecified* (array-shape A))])
       (array-map! B exact->inexact A)
@@ -377,7 +406,10 @@ array)."
     (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
 
   (define (exact-matrix* A B)
-    (exact-matrix-matrix* (vector->matrix A) (vector->matrix B)))
+    (gsl:gemm-mpq gsl:CblasNoTrans gsl:CblasNoTrans 1 A B 0 #f))
+
+  (define (integer-matrix* A B)
+    (gsl:gemm-mpz gsl:CblasNoTrans gsl:CblasNoTrans 1 A B 0 #f))
 
   ;;-----------------------------------------------------------------------
 
@@ -395,61 +427,36 @@ array)."
     (let ([type-A (array-type A)]
           [type-B (array-type B)])
       (cond
-        [(and (eq? type-A 'f64) (eq? type-B 'f64))       (f64matrix* A B)]
-        [(and (matrix-is-exact? A) (matrix-is-exact? B)) (exact-matrix* A B)]
-        [else (matrix-matrix* (vector->matrix A)
-                              (vector->matrix B))] )))
-#|
-        (let ([A (one-based A)]
-               [B (one-based B)]
-               [nk (matrix-dimensions A)]
-               [km (matrix-dimensions B)])
-           (unless (= (cadr nk) (car km))
-             (assertion-violation
-              'matrix*
-              (_ "the matrices are not conformable for multiplication")
-              A B))
-           (let* ([n (car nk)]
-                  [k (car km)]
-                  [m (cadr km)]
-                  [type-C (multiplication-result-type type-A type-B)]
-                  [C (make-typed-array type-C *unspecified* `[1 ,n] `[1 ,m])]
-                  [row-indices (iota n 1)]
-                  [rows (vector-map (lambda (i) (matrix-row A i))
-                                    (list->vector row-indices))]
-                  [col-indices (iota m 1)]
-                  [cols (vector-map
-                         (lambda (j) (matrix-column-transpose B j))
-                         (list->vector col-indices))])
-             (for-each
-              (lambda (i)
-                (for-each
-                 (lambda (j)
-                   (array-set! C (row*col (vector-ref rows (1- i))
-                                          (vector-ref cols (1- j)))
-                               i j))
-                 col-indices))
-              row-indices)
-             C))] )))
-        |#
+       [(and (eq? type-A 'f64) (eq? type-B 'f64))
+        (f64matrix* A B)]
+       [(and (exact-array? A) (exact-array? B))
+        ;; FIXME: Is it worth using integer-matrix* if A and B are
+        ;; non-uniform integer arrays? The results would be the same,
+        ;; so it is a question of which method is more efficient in
+        ;; practice.
+        (if (and (uniform-integer-array? A) (uniform-integer-array? B))
+            (integer-matrix* A B)
+            (exact-matrix* A B))]
+       [else (matrix-matrix* (vector->matrix A)
+                             (vector->matrix B))] )))
 
   (define matrix*
     (case-lambda
       [(A B)
        (cond [(array? A)
               (cond [(number? B) (matrix-scaled B A)]
-                    [(array? B) (multiply-matrices A B)]
+                    [(array? B)  (multiply-matrices A B)]
                     [else
                      (assertion-violation
                       'matrix*
-                      (_ "the second operand has illegal type") B)])]
+                      (_ "the second operand has illegal type") B)] )]
              [(number? A)
               (cond [(array? B) (matrix-scaled A B)]
                     [(number? B) (* A B)]
                     [else
                      (assertion-violation
                       'matrix*
-                      (_ "the first operand has illegal type") A)])])]
+                      (_ "the first operand has illegal type") A)] )] )]
       [(. rest) (reduce (lambda (B A) (matrix* A B)) 1 rest)] ))
 
   ;;-----------------------------------------------------------------------
