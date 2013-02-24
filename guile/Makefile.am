@@ -84,13 +84,21 @@ guile-modules.dot: $(SCM_FILES)
 	mv $@-tmp $@
 
 guile-modules.pdf: guile-modules.dot
-	dot -Tpdf $< > $@-tmp
+	dot -Lg -Tpdf $< > $@-tmp
 	mv $@-tmp $@
 
 view-guile-modules: guile-modules.pdf
 	xdg-open $<
 
-DISTCLEANFILES += guile-modules.dot guile-modules.pdf
+circo-guile-modules.pdf: guile-modules.dot
+	circo -Tpdf $< > $@-tmp
+	mv $@-tmp $@
+
+circo-guile-modules: circo-guile-modules.pdf
+	xdg-open $<
+
+DISTCLEANFILES += guile-modules.dot guile-modules.pdf	\
+	circo-guile-modules.pdf
 
 #--------------------------------------------------------------------------
 #
