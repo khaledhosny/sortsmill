@@ -84,7 +84,7 @@ guile-modules.dot: $(SCM_FILES)
 	mv $@-tmp $@
 
 guile-modules.pdf: guile-modules.dot
-	dot -Lg -Tpdf $< > $@-tmp
+	dot -Gratio=0.8 -Tpdf $< > $@-tmp
 	mv $@-tmp $@
 
 view-guile-modules: guile-modules.pdf
