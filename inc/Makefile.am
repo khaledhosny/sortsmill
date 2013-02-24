@@ -55,10 +55,12 @@ nobase_include_HEADERS += sortsmill/guile/notices.h
 
 nobase_include_HEADERS += sortsmill/guile.h
 
-nobase_include_HEADERS += sortsmill/guile/main_loop.h			\
-	sortsmill/guile/iconv.h sortsmill/guile/contours.h			\
-	sortsmill/guile/arrays.h sortsmill/guile/rnrs_conditions.h	\
-	sortsmill/guile/format.h
+nobase_include_HEADERS += sortsmill/guile/iconv.h				\
+	sortsmill/guile/contours.h sortsmill/guile/arrays.h			\
+	sortsmill/guile/rnrs_conditions.h sortsmill/guile/format.h
+
+nobase_include_HEADERS += sortsmill/guile/editor.h	\
+	sortsmill/guile/editor/main_loop.h
 
 nobase_include_HEADERS += sortsmill/guile/math.h				\
 	sortsmill/guile/math/brentroot.h sortsmill/guile/math/gsl.h	\

@@ -15,13 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/guile/main_loop.h>
+#include <sortsmill/guile/editor/main_loop.h>
 
 VISIBLE SCM
 scm_exit_editor_main_loop (SCM exit_status, SCM alist)
 {
   return scm_call_4 (scm_c_public_ref ("sortsmill editor main-loop",
-                                       "exit-main-loop"),
+                                       "exit-editor-main-loop"),
                      scm_from_utf8_keyword ("exit-status"), exit_status,
                      scm_from_utf8_keyword ("alist"), alist);
 }

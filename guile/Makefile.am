@@ -150,10 +150,28 @@ $(GO_FILES): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill)
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmill.scm
+GO_FILES += sortsmill.go
+SORTSMILL_REEXPORTED_SCM_FILES = 
+
+sortsmill.scm: $(SORTSMILL_REEXPORTED_SCM_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+@ifndefmk@ GENERATED_GO_DEPS
+sortsmill.go: $(SORTSMILL_REEXPORTED_SCM_FILES:%.scm=%.go)
+@endifmk@
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill alloc)
 
 DIST_SCM_FILES += sortsmill/alloc.scm
 GO_FILES += sortsmill/alloc.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/alloc.scm
 
 sortsmill/alloc.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -163,6 +181,7 @@ sortsmill/alloc.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 DIST_SCM_FILES += sortsmill/api-syntax.scm
 GO_FILES += sortsmill/api-syntax.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/api-syntax.scm
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/api-syntax.go: sortsmill/pkg-info.go
@@ -175,6 +194,7 @@ sortsmill/api-syntax.go: sortsmill/machine.go
 
 DIST_SCM_FILES += sortsmill/argv.scm
 GO_FILES += sortsmill/argv.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/argv.scm
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/argv.go: sortsmill/kwargs.go
@@ -187,6 +207,7 @@ sortsmill/argv.go: sortsmill/machine.go
 
 DIST_SCM_FILES += sortsmill/arrays.scm
 GO_FILES += sortsmill/arrays.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/arrays.scm
 
 sortsmill/arrays.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -194,8 +215,11 @@ sortsmill/arrays.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 #
 # (sortsmill contours)
 
+# FIXME: Put this under a category along with (sortsmill views), etc.
+
 DIST_SCM_FILES += sortsmill/contours.scm
 GO_FILES += sortsmill/contours.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/contours.scm
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/contours.go: sortsmill/fontforge-api.go
@@ -210,13 +234,33 @@ GO_FILES += sortsmill/dynlink.go
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill editor ...)
+# (sortsmill editor)
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/editor.scm
+GO_FILES += sortsmill/editor.go
+EDITOR_REEXPORTED_SCM_FILES = 
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/editor.scm
+
+sortsmill/editor.scm: $(EDITOR_REEXPORTED_SCM_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill editor), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+@ifndefmk@ GENERATED_GO_DEPS
+sortsmill.go: $(EDITOR_REEXPORTED_SCM_FILES:%.scm=%.go)
+@endifmk@
+
+# (sortsmill editor finalization)
 
 DIST_SCM_FILES += sortsmill/editor/finalization.scm
 GO_FILES += sortsmill/editor/finalization.go
+EDITOR_REEXPORTED_SCM_FILES += sortsmill/editor/finalization.scm
+
+# (sortsmill editor main)
 
 DIST_SCM_FILES += sortsmill/editor/main.scm
 GO_FILES += sortsmill/editor/main.go
+EDITOR_REEXPORTED_SCM_FILES += sortsmill/editor/main.scm
 
 sortsmill/editor/main.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -224,8 +268,11 @@ sortsmill/editor/main.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/editor/main.go: sortsmill/argv.go
 @endifmk@
 
+# (sortsmill editor main-loop)
+
 DIST_SCM_FILES += sortsmill/editor/main-loop.scm
 GO_FILES += sortsmill/editor/main-loop.go
+EDITOR_REEXPORTED_SCM_FILES += sortsmill/editor/main-loop.scm
 
 sortsmill/editor/main-loop.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -236,6 +283,8 @@ sortsmill/editor/main-loop.go: sortsmill/kwargs.go
 #--------------------------------------------------------------------------
 #
 # (sortsmill ffcompat)
+
+# FIXME: Put this under a (sortsmill python) category.
 
 DIST_SCM_FILES += sortsmill/ffcompat.scm
 GO_FILES += sortsmill/ffcompat.go
@@ -266,6 +315,7 @@ endif HAVE_GUI
 
 DIST_SCM_FILES += sortsmill/i18n.scm
 GO_FILES += sortsmill/i18n.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/i18n.scm
 
 sortsmill/i18n.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -279,6 +329,7 @@ sortsmill/i18n.go: sortsmill/pkg-info.go
 
 DIST_SCM_FILES += sortsmill/iconv.scm
 GO_FILES += sortsmill/iconv.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/iconv.scm
 
 sortsmill/iconv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -288,6 +339,7 @@ sortsmill/iconv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 DIST_SCM_FILES += sortsmill/kwargs.scm
 GO_FILES += sortsmill/kwargs.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/kwargs.scm
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/kwargs.go: sortsmill/i18n.go
@@ -307,6 +359,7 @@ GO_FILES += sortsmill/linalg.go
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm
 GO_FILES += sortsmill/machine.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/machine.scm
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/machine.go: sortsmill/math/math-constants.go
@@ -319,6 +372,7 @@ sortsmill/machine.go: sortsmill/math/math-constants.go
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/math.scm
 GO_FILES += sortsmill/math.go
 MATH_REEXPORTED_SCM_FILES =
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/math.scm
 
 sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
@@ -410,8 +464,12 @@ sortsmill/math/polyspline.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 #
 # (sortsmill notices)
 
+# FIXME: Maybe put this in the (sortsmill editor) category or some
+# such.
+
 DIST_SCM_FILES += sortsmill/notices.scm
 GO_FILES += sortsmill/notices.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/notices.scm
 
 sortsmill/notices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
@@ -437,6 +495,7 @@ sortsmill/options.go: sortsmill/strings.go
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info.scm
 GO_FILES += sortsmill/pkg-info.go
 PKG_INFO_REEXPORTED_SCM_FILES =
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/pkg-info.scm
 
 sortsmill/pkg-info.scm: $(PKG_INFO_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
@@ -543,6 +602,7 @@ sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/strings.scm
 GO_FILES += sortsmill/strings.go
 STRINGS_REEXPORTED_SCM_FILES =
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/strings.scm
 
 sortsmill/strings.scm: $(STRINGS_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
@@ -624,8 +684,11 @@ endif HAVE_GUI
 #
 # (sortsmill views)
 
+# FIXME: This probably belongs in a category with (sortsmill contours).
+
 DIST_SCM_FILES += sortsmill/views.scm
 GO_FILES += sortsmill/views.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/views.scm
 
 @ifndefmk@ GENERATED_GO_DEPS
 sortsmill/views.go: sortsmill/fontforge-api.go

@@ -15,27 +15,9 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_MAIN_LOOP_H
-#define _SORTSMILL_GUILE_MAIN_LOOP_H
+#ifndef _SORTSMILL_GUILE_EDITOR_H
+#define _SORTSMILL_GUILE_EDITOR_H
 
-#include <libguile.h>
+#include <sortsmill/guile/editor/main_loop.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-#if 0
-}
-#endif
-
-SCM scm_exit_editor_main_loop (SCM exit_status, SCM alist);
-SCM scm_c_exit_editor_main_loop (int exit_status);
-
-#if 0
-{
-#endif
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _SORTSMILL_GUILE_MAIN_LOOP_H */
+#endif /* _SORTSMILL_GUILE_EDITOR_H */

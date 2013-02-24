@@ -15,27 +15,27 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_H
-#define _SORTSMILL_GUILE_H
+#ifndef _SORTSMILL_GUILE_EDITOR_MAIN_LOOP_H
+#define _SORTSMILL_GUILE_EDITOR_MAIN_LOOP_H
 
-#include <sortsmill/guile/arrays.h>
+#include <libguile.h>
 
-// FIXME: Move this somewhere.
-#include <sortsmill/guile/contours.h>
-
-#include <sortsmill/guile/editor.h>
-#include <sortsmill/guile/format.h>
-#include <sortsmill/guile/iconv.h>
-#include <sortsmill/guile/math.h>
-#include <sortsmill/guile/notices.h>
-#include <sortsmill/guile/rnrs_conditions.h>
-
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 #if 0
-/* These have to be included explicitly by the user. One reason is not
-   to force the poor behavior of ‘#include <Python.h>’ on people. But,
-   also, they are not part of the core system. */
-#include <sortsmill/guile/pure.h>
-#include <sortsmill/guile/python.h>
+}
 #endif
 
-#endif /* _SORTSMILL_GUILE_H */
+SCM scm_exit_editor_main_loop (SCM exit_status, SCM alist);
+SCM scm_c_exit_editor_main_loop (int exit_status);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_EDITOR_MAIN_LOOP_H */

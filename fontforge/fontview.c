@@ -46,7 +46,7 @@
 #include <xunistring.h>
 #include <stdlib.h>
 #include <xalloc.h>
-#include <sortsmill/guile/main_loop.h>
+#include <sortsmill/guile.h>
 #include <sortsmill/xdie_on_null.h>
 #include <canonicalize.h>
 #include <xunistring.h>

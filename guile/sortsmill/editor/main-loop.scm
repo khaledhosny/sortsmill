@@ -17,8 +17,8 @@
 
 (library (sortsmill editor main-loop)
 
-  (export exit-main-loop
-          main-loop
+  (export exit-editor-main-loop
+          editor-main-loop
           load-site-init)
 
   (import (sortsmill editor finalization)
@@ -28,15 +28,15 @@
           (except (guile) error)
           (system foreign))
 
-  (define %main-loop-exit-prompt (make-prompt-tag))
+  (define %editor-main-loop-exit-prompt (make-prompt-tag))
 
-  (define/kwargs (exit-main-loop (exit-status 0)
-                                 (alist '()))
-    (abort-to-prompt %main-loop-exit-prompt
+  (define/kwargs (exit-editor-main-loop (exit-status 0)
+                                        (alist '()))
+    (abort-to-prompt %editor-main-loop-exit-prompt
                      `[(exit-status . ,exit-status)
                        ,@alist] ))
 
-  (define main-loop-thunk
+  (define editor-main-loop-thunk
     (let ([GDrawEventLoop
            (pointer->procedure
             void
@@ -45,19 +45,19 @@
             '(*))])
       [lambda ()
         (GDrawEventLoop %null-pointer)
-        (exit-main-loop)] ))
+        (exit-editor-main-loop)] ))
 
-  (define (main-loop-exit-handler continuation alist)
+  (define (editor-main-loop-exit-handler continuation alist)
     alist)
 
   (define (load-site-init site-init)
     (if (file-exists? site-init)
         (primitive-load site-init)))
 
-  (define (main-loop)
-    (let ([retval (call-with-prompt %main-loop-exit-prompt
-                                    main-loop-thunk
-                                    main-loop-exit-handler)])
+  (define (editor-main-loop)
+    (let ([retval (call-with-prompt %editor-main-loop-exit-prompt
+                                    editor-main-loop-thunk
+                                    editor-main-loop-exit-handler)])
       (run-and-clear-all-finalizers)
       retval))
 
