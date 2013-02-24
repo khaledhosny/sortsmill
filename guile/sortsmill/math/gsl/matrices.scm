@@ -30,6 +30,7 @@
           gsl:CblasRight
 
           gsl:gemm-f64 ; (gsl:gemm-f64 TransA TransB alpha A B beta C) → αAB + βC
+          gsl:gemm-mpz ; (gsl:gemm-mpz TransA TransB alpha A B beta C) → αAB + βC
           gsl:gemm-mpq ; (gsl:gemm-mpq TransA TransB alpha A B beta C) → αAB + βC
           )
 
@@ -39,9 +40,6 @@
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut))
-
-;;;  (sortsmill-dynlink-declarations "#include <gsl/gsl_blas.h>")
-;;;  (sortsmill-dynlink-declarations "#include <gsl/gsl_linalg.h>")
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_math_gsl_matrices"))

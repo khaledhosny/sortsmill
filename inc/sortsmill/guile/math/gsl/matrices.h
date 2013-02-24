@@ -72,6 +72,8 @@ SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
 
 SCM scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                         SCM beta, SCM C);
+SCM scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
+                      SCM beta, SCM C);
 SCM scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                       SCM beta, SCM C);
 

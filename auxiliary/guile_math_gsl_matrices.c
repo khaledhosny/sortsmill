@@ -950,6 +950,96 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 }
 
 VISIBLE SCM
+scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
+                  SCM C)
+{
+  // Note: if beta = 0 exactly, then C is ignored. You can set it to
+  // anything.
+
+  const char *who = "scm_gsl_mpz_dgemm";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+  scm_t_array_handle handle_C;
+
+  CBLAS_TRANSPOSE_t _TransA = scm_to_CBLAS_TRANSPOSE_t (who, TransA);
+  CBLAS_TRANSPOSE_t _TransB = scm_to_CBLAS_TRANSPOSE_t (who, TransB);
+
+  scm_dynwind_begin (0);
+
+  mpz_t _alpha;
+  mpz_init (_alpha);
+  scm_dynwind_mpz_clear (_alpha);
+  scm_to_mpz (alpha, _alpha);
+
+  mpz_t _beta;
+  mpz_init (_beta);
+  scm_dynwind_mpz_clear (_beta);
+  scm_to_mpz (beta, _beta);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t dim1_A = matrix_dim1 (&handle_A);
+  const size_t dim2_A = matrix_dim2 (&handle_A);
+  const size_t m_A = transposed_size (_TransA, dim1_A, dim2_A);
+  const size_t k_A = transposed_size (_TransA, dim2_A, dim1_A);
+
+  const size_t dim1_B = matrix_dim1 (&handle_B);
+  const size_t dim2_B = matrix_dim2 (&handle_B);
+  const size_t k_B = transposed_size (_TransB, dim1_B, dim2_B);
+  const size_t n_B = transposed_size (_TransB, dim2_B, dim1_B);
+
+  mpz_t _A[dim1_A][dim2_A];
+  mpz_matrix_init (dim1_A, dim2_A, _A);
+  scm_dynwind_mpz_matrix_clear (dim1_A, dim2_A, _A);
+  scm_array_handle_to_mpz_matrix (A, &handle_A, dim1_A, dim2_A, _A);
+
+  mpz_t _B[dim1_B][dim2_B];
+  mpz_matrix_init (dim1_B, dim2_B, _B);
+  scm_dynwind_mpz_matrix_clear (dim1_B, dim2_B, _B);
+  scm_array_handle_to_mpz_matrix (B, &handle_B, dim1_B, dim2_B, _B);
+
+  size_t m_C;
+  size_t n_C;
+  if (mpz_sgn (_beta) == 0)
+    {
+      m_C = m_A;
+      n_C = n_B;
+    }
+  else
+    {
+      scm_array_get_handle (C, &handle_C);
+      scm_dynwind_array_handle_release (&handle_C);
+      assert_c_exact_rank_1_or_2_array (who, C, &handle_C);
+
+      m_C = matrix_dim1 (&handle_C);
+      n_C = matrix_dim2 (&handle_C);
+    }
+
+  mpz_t _C[m_C][n_C];
+  mpz_matrix_init (m_C, n_C, _C);
+  scm_dynwind_mpz_matrix_clear (m_C, n_C, _C);
+  if (mpz_sgn (_beta) != 0)
+    scm_array_handle_to_mpz_matrix (C, &handle_C, m_C, n_C, _C);
+
+  assert_conformable_for_gemm (who, _TransA, _TransB, A, B, C,
+                               m_A, k_A, k_B, n_B, m_C, n_C);
+  mpz_matrix_gemm (_TransA, _TransB, m_A, n_B, k_A, _alpha, _A, _B, _beta, _C);
+
+  SCM result = scm_from_mpz_matrix (m_C, n_C, _C);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
 scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
                   SCM C)
 {
@@ -1055,5 +1145,6 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define ("gsl:CblasRight", scm_from_int (CblasRight));
 
   scm_c_define_gsubr ("gsl:gemm-f64", 7, 0, 0, scm_gsl_blas_dgemm);
+  scm_c_define_gsubr ("gsl:gemm-mpz", 7, 0, 0, scm_gsl_mpz_gemm);
   scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
 }
