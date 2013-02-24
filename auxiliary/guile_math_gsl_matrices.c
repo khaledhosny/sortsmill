@@ -1141,17 +1141,20 @@ scm_gsl_svd_golub_reinsch (SCM a)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
+  gsl_matrix_const_view ma =
+    scm_gsl_matrix_const_view_array_handle (a, &handle_a);
 
-  double u_buf[ma.size1 * ma.size2];
-  double v_buf[ma.size2 * ma.size2];
-  double s_buf[ma.size2];
-  double work_buf[ma.size2];
-  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.size1, ma.size2);
-  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.size2, ma.size2);
-  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
-  gsl_vector_view work = gsl_vector_view_array (work_buf, ma.size2);
-  gsl_matrix_memcpy (&u.matrix, &ma);
+  double u_buf[ma.matrix.size1 * ma.matrix.size2];
+  double v_buf[ma.matrix.size2 * ma.matrix.size2];
+  double s_buf[ma.matrix.size2];
+  double work_buf[ma.matrix.size2];
+  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.matrix.size1,
+                                             ma.matrix.size2);
+  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.matrix.size2,
+                                             ma.matrix.size2);
+  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.matrix.size2);
+  gsl_vector_view work = gsl_vector_view_array (work_buf, ma.matrix.size2);
+  gsl_matrix_memcpy (&u.matrix, &ma.matrix);
 
   scm_dynwind_end ();
 
@@ -1185,19 +1188,23 @@ scm_gsl_svd_modified_golub_reinsch (SCM a)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
+  gsl_matrix_const_view ma =
+    scm_gsl_matrix_const_view_array_handle (a, &handle_a);
 
-  double u_buf[ma.size1 * ma.size2];
-  double x_buf[ma.size2 * ma.size2];
-  double v_buf[ma.size2 * ma.size2];
-  double s_buf[ma.size2];
-  double work_buf[ma.size2];
-  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.size1, ma.size2);
-  gsl_matrix_view x = gsl_matrix_view_array (x_buf, ma.size2, ma.size2);
-  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.size2, ma.size2);
-  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
-  gsl_vector_view work = gsl_vector_view_array (work_buf, ma.size2);
-  gsl_matrix_memcpy (&u.matrix, &ma);
+  double u_buf[ma.matrix.size1 * ma.matrix.size2];
+  double x_buf[ma.matrix.size2 * ma.matrix.size2];
+  double v_buf[ma.matrix.size2 * ma.matrix.size2];
+  double s_buf[ma.matrix.size2];
+  double work_buf[ma.matrix.size2];
+  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.matrix.size1,
+                                             ma.matrix.size2);
+  gsl_matrix_view x = gsl_matrix_view_array (x_buf, ma.matrix.size2,
+                                             ma.matrix.size2);
+  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.matrix.size2,
+                                             ma.matrix.size2);
+  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.matrix.size2);
+  gsl_vector_view work = gsl_vector_view_array (work_buf, ma.matrix.size2);
+  gsl_matrix_memcpy (&u.matrix, &ma.matrix);
 
   scm_dynwind_end ();
 
@@ -1230,15 +1237,18 @@ scm_gsl_svd_jacobi (SCM a)
   scm_array_get_handle (a, &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
 
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
+  gsl_matrix_const_view ma =
+    scm_gsl_matrix_const_view_array_handle (a, &handle_a);
 
-  double u_buf[ma.size1 * ma.size2];
-  double v_buf[ma.size2 * ma.size2];
-  double s_buf[ma.size2];
-  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.size1, ma.size2);
-  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.size2, ma.size2);
-  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.size2);
-  gsl_matrix_memcpy (&u.matrix, &ma);
+  double u_buf[ma.matrix.size1 * ma.matrix.size2];
+  double v_buf[ma.matrix.size2 * ma.matrix.size2];
+  double s_buf[ma.matrix.size2];
+  gsl_matrix_view u = gsl_matrix_view_array (u_buf, ma.matrix.size1,
+                                             ma.matrix.size2);
+  gsl_matrix_view v = gsl_matrix_view_array (v_buf, ma.matrix.size2,
+                                             ma.matrix.size2);
+  gsl_vector_view s = gsl_vector_view_array (s_buf, ma.matrix.size2);
+  gsl_matrix_memcpy (&u.matrix, &ma.matrix);
 
   scm_dynwind_end ();
 
