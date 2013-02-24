@@ -15,13 +15,13 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_MATRICES_H
-#define _SORTSMILL_GUILE_MATRICES_H
+#ifndef _SORTSMILL_GUILE_MATH_MATRICES_H
+#define _SORTSMILL_GUILE_MATH_MATRICES_H
 
 #include <stdbool.h>
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
-#include <sortsmill/guile/gsl.h>
+#include <sortsmill/guile/math/gsl.h>
 #include <sortsmill/guile/arrays.h>
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/c_version.h>
@@ -92,4 +92,4 @@ SCM scm_matrix_matrix_mult (SCM a, SCM b);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_MATRICES_H */
+#endif /* _SORTSMILL_GUILE_MATH_MATRICES_H */

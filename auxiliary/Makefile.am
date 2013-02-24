@@ -1,5 +1,5 @@
 # Copyright (C) 2000-2012 by George Williams
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -64,13 +64,13 @@ dist_libsortsmill_aux_la_SOURCES += xunicase.c xuniconv.c xuninorm.c	\
 
 # Polynomial splines.
 dist_libsortsmill_aux_la_SOURCES += precomputed_gmp_polyspline_data.c	\
-	polyspline_data.c polyspline.c guile_polyspline.c					\
+	polyspline_data.c polyspline.c guile_math_polyspline.c				\
 	guile_contours.c
 nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
 
 # Brent’s root-finding algorithm.
 dist_libsortsmill_aux_la_SOURCES += brentroot.c qbrentroot.c	\
-	guile_brentroot.c
+	guile_math_brentroot.c
 
 # Guile-Pure interface
 if HAVE_PURE_API
@@ -86,9 +86,9 @@ endif HAVE_PYTHON_API
 
 # Miscellaneous C interface to Guile and Guile extensions.
 dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c				\
-	guile_math_gsl.c guile_gmp.c guile_arrays.c guile_matrices.c	\
-	guile_iconv.c guile_directory_layout.c guile_options.c			\
-	guile_format.c
+	guile_math_gsl.c guile_math_gmp.c guile_arrays.c				\
+	guile_math_matrices.c guile_iconv.c guile_directory_layout.c	\
+	guile_options.c guile_format.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'

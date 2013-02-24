@@ -155,7 +155,7 @@
           (ice-9 match))
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_sortsmill_matrices"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_math_matrices"))
 
   (define (not-a-matrix caller irritant . more-irritants)
     (if (null? more-irritants)

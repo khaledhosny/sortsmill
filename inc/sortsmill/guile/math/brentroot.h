@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Barry Schwartz
+ * Copyright (C) 2012 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,10 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_GMP_H
-#define _SORTSMILL_GUILE_GMP_H
+#ifndef _SORTSMILL_GUILE_MATH_BRENTROOT_H
+#define _SORTSMILL_GUILE_MATH_BRENTROOT_H
 
 #include <libguile.h>
-#include <gmp.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -29,14 +28,9 @@ extern "C"
 }
 #endif
 
-void scm_dynwind_mpz_unwind_handler (void *);
-void scm_dynwind_mpq_unwind_handler (void *);
-
-void scm_dynwind_mpz_clear (mpz_t);
-void scm_dynwind_mpq_clear (mpq_t);
-  
-void scm_to_mpq (SCM val, mpq_t rop);
-SCM scm_from_mpq (mpq_t val);
+SCM scm_f64_brentroot (SCM max_iters, SCM tol, SCM t1, SCM t2, SCM func);
+SCM scm_mpq_brentroot (SCM max_iters, SCM tol, SCM epsilon, SCM t1, SCM t2,
+                       SCM func);
 
 #if 0
 {
@@ -45,4 +39,4 @@ SCM scm_from_mpq (mpq_t val);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_GMP_H */
+#endif /* _SORTSMILL_GUILE_MATH_BRENTROOT_H */

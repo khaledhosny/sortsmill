@@ -16,8 +16,8 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
-#include <sortsmill/guile/gsl.h>
-#include <sortsmill/guile/gmp.h>
+#include <sortsmill/guile/math/gsl.h>
+#include <sortsmill/guile/math/gmp.h>
 #include <sortsmill/guile/arrays.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/format.h>

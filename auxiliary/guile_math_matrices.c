@@ -17,8 +17,8 @@
 
 #include <assert.h>
 #include <xalloc.h>
-#include <sortsmill/guile/gsl.h>
-#include <sortsmill/guile/matrices.h>
+#include <sortsmill/guile/math/gsl.h>
+#include <sortsmill/guile/math/matrices.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/format.h>
 #include <sortsmill/gmp_matrix.h>
@@ -37,7 +37,7 @@
 // for big integers, or for uniform types other than double.
 //
 
-void init_guile_sortsmill_matrices (void);
+void init_guile_sortsmill_math_matrices (void);
 
 //typedef struct _mpq_t_matrix_view
 //{
@@ -830,7 +830,7 @@ scm_matrix_matrix_mult (SCM a, SCM b)
 }
 
 VISIBLE void
-init_guile_sortsmill_matrices (void)
+init_guile_sortsmill_math_matrices (void)
 {
   scm_c_define_gsubr ("f64matrix-f64matrix+", 2, 0, 0,
                       scm_f64matrix_f64matrix_add);

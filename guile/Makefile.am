@@ -192,20 +192,6 @@ sortsmill/arrays.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill brentroot)
-
-DIST_SCM_FILES += sortsmill/brentroot.scm
-GO_FILES += sortsmill/brentroot.go
-
-sortsmill/brentroot.go: $(lib_LTLIBRARIES)
-
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/brentroot.go: sortsmill/dynlink.go
-sortsmill/brentroot.go: sortsmill/math/math-constants.go
-@endifmk@
-
-#--------------------------------------------------------------------------
-#
 # (sortsmill contours)
 
 DIST_SCM_FILES += sortsmill/contours.scm
@@ -345,6 +331,18 @@ sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
 	$(AM_V_GEN)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+# (sortsmill math brentroot)
+
+DIST_SCM_FILES += sortsmill/math/brentroot.scm
+GO_FILES += sortsmill/math/brentroot.go
+
+sortsmill/math/brentroot.go: $(lib_LTLIBRARIES)
+
+@ifndefmk@ GENERATED_GO_DEPS
+sortsmill/math/brentroot.go: sortsmill/dynlink.go
+sortsmill/math/brentroot.go: sortsmill/math/math-constants.go
+@endifmk@
 
 # (sortsmill math gsl)
 

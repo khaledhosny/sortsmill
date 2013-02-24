@@ -49,7 +49,7 @@
 #include <canonicalize.h>
 #include <libguile.h>
 #include <gsl/gsl_errno.h>
-#include <sortsmill/guile/gsl.h>
+#include <sortsmill/guile.h>
 #include <glib.h>
 #define GMenuItem GMenuItem_GTK // FIXME
 #include <gio/gio.h>

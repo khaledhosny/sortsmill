@@ -20,7 +20,7 @@
 
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
-#include <sortsmill/guile/gsl.h>
+#include <sortsmill/guile/math/gsl.h>
 #include <atomic_ops.h>
 #include <stdbool.h>
 

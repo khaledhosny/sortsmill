@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/guile/gmp.h>
+#include <sortsmill/guile/math/gmp.h>
 
 VISIBLE void
 scm_dynwind_mpz_unwind_handler (void *p)

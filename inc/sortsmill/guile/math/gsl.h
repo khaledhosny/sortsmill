@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_GSL_H
-#define _SORTSMILL_GUILE_GSL_H
+#ifndef _SORTSMILL_GUILE_MATH_GSL_H
+#define _SORTSMILL_GUILE_MATH_GSL_H
 
 /*
  * Support for GSL, and also for our own stuff that is made to
@@ -94,4 +94,4 @@ SCM scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_GSL_H */
+#endif /* _SORTSMILL_GUILE_MATH_GSL_H */

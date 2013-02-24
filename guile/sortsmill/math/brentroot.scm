@@ -21,7 +21,7 @@
 ;; that chooses the C implementation if t1 or t2 is ‘inexact’.
 ;;
 
-(library (sortsmill brentroot)
+(library (sortsmill math brentroot)
 
   (export flbrentroot
           flbrentroot-values
@@ -34,7 +34,7 @@
           (except (guile) error))
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_sortsmill_brentroot"))
+    (sortsmill-dynlink-load-extension "init_guile_sortsmill_math_brentroot"))
 
   ;;-------------------------------------------------------------------------
 

@@ -18,7 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmill brentroot)
+ (sortsmill math brentroot)
  (ice-9 receive)
  (ice-9 format))
 

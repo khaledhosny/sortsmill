@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_POLYSPLINE_H
-#define _SORTSMILL_GUILE_POLYSPLINE_H
+#ifndef _SORTSMILL_GUILE_MATH_POLYSPLINE_H
+#define _SORTSMILL_GUILE_MATH_POLYSPLINE_H
 
 #include <libguile.h>
 
@@ -69,4 +69,4 @@ SCM scm_f64vector_mul_mono (SCM spline1, SCM spline2);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_POLYSPLINE_H */
+#endif /* _SORTSMILL_GUILE_MATH_POLYSPLINE_H */

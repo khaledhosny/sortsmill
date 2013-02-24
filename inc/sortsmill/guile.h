@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Barry Schwartz
+ * Copyright (C) 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,28 +15,24 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_BRENTROOT_H
-#define _SORTSMILL_GUILE_BRENTROOT_H
+#ifndef _SORTSMILL_GUILE_H
+#define _SORTSMILL_GUILE_H
 
-#include <libguile.h>
+#include <sortsmill/guile/arrays.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-#if 0
-}
-#endif
+// FIXME: Move this somewhere.
+#include <sortsmill/guile/contours.h>
 
-SCM scm_f64_brentroot (SCM max_iters, SCM tol, SCM t1, SCM t2, SCM func);
-SCM scm_mpq_brentroot (SCM max_iters, SCM tol, SCM epsilon, SCM t1, SCM t2,
-                       SCM func);
+#include <sortsmill/guile/format.h>
+#include <sortsmill/guile/iconv.h>
 
-#if 0
-{
-#endif
-#ifdef __cplusplus
-}
-#endif
+// FIXME: Move this to sortsmill/guile/editor/main_loop.h>
+#include <sortsmill/guile/main_loop.h>
 
-#endif /* _SORTSMILL_GUILE_BRENTROOT_H */
+#include <sortsmill/guile/math.h>
+#include <sortsmill/guile/notices.h>
+#include <sortsmill/guile/pure.h>
+#include <sortsmill/guile/python.h>
+#include <sortsmill/guile/rnrs_conditions.h>
+  
+#endif /* _SORTSMILL_GUILE_H */
