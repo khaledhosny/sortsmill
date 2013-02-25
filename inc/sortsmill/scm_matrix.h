@@ -21,6 +21,7 @@
 #include <libguile.h>
 #include <sortsmill/c_version.h>
 #include <sortsmill/transmatrix.h>
+#include <stdbool.h>
 
 #if _FF_C99_OR_GREATER
 
@@ -70,6 +71,12 @@ void scm_matrix_sub (unsigned int m, unsigned int n,
                      SCM A[m][n], SCM B[m][n]);
 void scm_matrix_add_constant (unsigned int m, unsigned int n,
                               SCM A[m][n], SCM x);
+
+bool scm_matrix_isnull (unsigned int m, unsigned int n, SCM A[m][n]);
+bool scm_matrix_ispos (unsigned int m, unsigned int n, SCM A[m][n]);
+bool scm_matrix_isneg (unsigned int m, unsigned int n, SCM A[m][n]);
+bool scm_matrix_isnonneg (unsigned int m, unsigned int n, SCM A[m][n]);
+bool scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 

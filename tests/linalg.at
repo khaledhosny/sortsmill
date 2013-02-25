@@ -539,3 +539,65 @@ check_linalg([test_scm_matrix_add_constant 3 2 2 1 2 3 4 5 6],[0],[ 3 4 | 5 6 | 
 check_linalg([test_scm_matrix_add_constant 2 3 -3 1 2 3 4 5 6],[0],[ -2 -1 0 | 1 2 3 |],[])
 
 #--------------------------------------------------------------------------
+
+check_linalg([test_mpz_matrix_elementwise_predicate null 3 2 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_mpz_matrix_elementwise_predicate null 3 2 0 0 0 0 0 0],[0],[1],[])
+check_linalg([test_mpz_matrix_elementwise_predicate null 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_mpz_matrix_elementwise_predicate null 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_mpz_matrix_elementwise_predicate pos 3 2 3 4 5 6 7 8],[0],[1],[])
+check_linalg([test_mpz_matrix_elementwise_predicate pos 3 2 0 0 0 0 0 0],[0],[0],[])
+check_linalg([test_mpz_matrix_elementwise_predicate pos 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_mpz_matrix_elementwise_predicate pos 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_mpz_matrix_elementwise_predicate neg 3 2 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_mpz_matrix_elementwise_predicate neg 3 2 0 0 0 0 0 0],[0],[0],[])
+check_linalg([test_mpz_matrix_elementwise_predicate neg 3 2 -3 -4 -5 -6 -7 -8],[0],[1],[])
+check_linalg([test_mpz_matrix_elementwise_predicate neg 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_mpz_matrix_elementwise_predicate nonneg 3 2 3 4 5 6 7 8],[0],[1],[])
+check_linalg([test_mpz_matrix_elementwise_predicate nonneg 3 2 0 0 0 0 0 0],[0],[1],[])
+check_linalg([test_mpz_matrix_elementwise_predicate nonneg 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_mpz_matrix_elementwise_predicate nonneg 3 2 3 0 5 0 7 8],[0],[1],[])
+
+check_linalg([test_mpq_matrix_elementwise_predicate null 3 2 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_mpq_matrix_elementwise_predicate null 3 2 0 0 0 0 0 0],[0],[1],[])
+check_linalg([test_mpq_matrix_elementwise_predicate null 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_mpq_matrix_elementwise_predicate null 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_mpq_matrix_elementwise_predicate pos 3 2 3 4 5 6 7 8],[0],[1],[])
+check_linalg([test_mpq_matrix_elementwise_predicate pos 3 2 0 0 0 0 0 0],[0],[0],[])
+check_linalg([test_mpq_matrix_elementwise_predicate pos 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_mpq_matrix_elementwise_predicate pos 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_mpq_matrix_elementwise_predicate neg 3 2 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_mpq_matrix_elementwise_predicate neg 3 2 0 0 0 0 0 0],[0],[0],[])
+check_linalg([test_mpq_matrix_elementwise_predicate neg 3 2 -3 -4 -5 -6 -7 -8],[0],[1],[])
+check_linalg([test_mpq_matrix_elementwise_predicate neg 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_mpq_matrix_elementwise_predicate nonneg 3 2 3 4 5 6 7 8],[0],[1],[])
+check_linalg([test_mpq_matrix_elementwise_predicate nonneg 3 2 0 0 0 0 0 0],[0],[1],[])
+check_linalg([test_mpq_matrix_elementwise_predicate nonneg 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_mpq_matrix_elementwise_predicate nonneg 3 2 3 0 5 0 7 8],[0],[1],[])
+
+check_linalg([test_scm_matrix_elementwise_predicate null 3 2 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_scm_matrix_elementwise_predicate null 3 2 0 0 0 0 0 0],[0],[1],[])
+check_linalg([test_scm_matrix_elementwise_predicate null 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_scm_matrix_elementwise_predicate null 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_scm_matrix_elementwise_predicate pos 3 2 3 4 5 6 7 8],[0],[1],[])
+check_linalg([test_scm_matrix_elementwise_predicate pos 3 2 0 0 0 0 0 0],[0],[0],[])
+check_linalg([test_scm_matrix_elementwise_predicate pos 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_scm_matrix_elementwise_predicate pos 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_scm_matrix_elementwise_predicate neg 3 2 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_scm_matrix_elementwise_predicate neg 3 2 0 0 0 0 0 0],[0],[0],[])
+check_linalg([test_scm_matrix_elementwise_predicate neg 3 2 -3 -4 -5 -6 -7 -8],[0],[1],[])
+check_linalg([test_scm_matrix_elementwise_predicate neg 3 2 3 0 5 0 7 8],[0],[0],[])
+
+check_linalg([test_scm_matrix_elementwise_predicate nonneg 3 2 3 4 5 6 7 8],[0],[1],[])
+check_linalg([test_scm_matrix_elementwise_predicate nonneg 3 2 0 0 0 0 0 0],[0],[1],[])
+check_linalg([test_scm_matrix_elementwise_predicate nonneg 3 2 -3 -4 -5 -6 -7 -8],[0],[0],[])
+check_linalg([test_scm_matrix_elementwise_predicate nonneg 3 2 3 0 5 0 7 8],[0],[1],[])
+
+#--------------------------------------------------------------------------

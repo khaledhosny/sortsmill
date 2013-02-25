@@ -235,3 +235,32 @@ scm_matrix_add_constant (unsigned int m, unsigned int n, SCM A[m][n], SCM x)
     for (unsigned int j = 0; j < n; j++)
       A[i][j] = scm_sum (A[i][j], x);
 }
+
+#define _FF_SCM_ELEMENTWISE_PRED(NAME, TRUTH, ELEMENT_PRED)     \
+  bool                                                          \
+  NAME (unsigned int m, unsigned int n, SCM A[m][n])            \
+  {                                                             \
+    bool result = true;                                         \
+    for (unsigned int i = 0; i < m; i++)                        \
+      for (unsigned int j = 0; j < n; j++)                      \
+        {                                                       \
+          /* The following is coded purposely to make early  */ \
+          /* exit necessary for correct results. Thus we can */ \
+          /* more easily detect if the code gets broken.     */ \
+          result = TRUTH (ELEMENT_PRED (A[i][j]));              \
+          if (result == false)                                  \
+            {                                                   \
+              i = m - 1;                                        \
+              j = n - 1;                                        \
+            }                                                   \
+        }                                                       \
+    return result;                                              \
+  }
+
+VISIBLE _FF_SCM_ELEMENTWISE_PRED (scm_matrix_isnull, scm_is_true, scm_zero_p);
+VISIBLE _FF_SCM_ELEMENTWISE_PRED (scm_matrix_ispos, scm_is_true,
+                                  scm_positive_p);
+VISIBLE _FF_SCM_ELEMENTWISE_PRED (scm_matrix_isneg, scm_is_true,
+                                  scm_negative_p);
+VISIBLE _FF_SCM_ELEMENTWISE_PRED (scm_matrix_isnonneg, scm_is_false,
+                                  scm_negative_p);

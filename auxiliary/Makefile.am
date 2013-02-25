@@ -103,7 +103,7 @@ libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 # compiled directly.
 GMP_MATRIX_EXTRAS = gmp_matrix_init.c gmp_matrix_set.c		\
 	gmp_matrix_copy.c gmp_matrix_swap.c gmp_matrix_mult.c	\
-	gmp_matrix_add.c
+	gmp_matrix_add.c gmp_matrix_pred.c
 
 gmp_matrix.lo: $(GMP_MATRIX_EXTRAS)
 
