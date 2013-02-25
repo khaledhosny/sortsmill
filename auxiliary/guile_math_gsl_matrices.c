@@ -1320,6 +1320,59 @@ scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
 }
 
 VISIBLE SCM
+scm_gsl_matrix_add (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_matrix_add";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_f64_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_f64_rank_1_or_2_array (who, B, &handle_B);
+
+  gsl_matrix_const_view _A =
+    scm_gsl_matrix_const_view_array_handle (A, &handle_A);
+  gsl_matrix_const_view _B =
+    scm_gsl_matrix_const_view_array_handle (B, &handle_B);
+
+  const size_t m_A = _A.matrix.size1;
+  const size_t n_A = _A.matrix.size2;
+
+  const size_t m_B = _B.matrix.size1;
+  const size_t n_B = _B.matrix.size2;
+
+  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
+
+  double result_buffer[m_A][n_A];
+  gsl_matrix_view _result = gsl_matrix_view_array (&result_buffer[0][0],
+                                                   m_A, n_A);
+
+  gsl_matrix_memcpy (&_result.matrix, &_A.matrix);
+  const int errval = gsl_matrix_add (&_result.matrix, &_B.matrix);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_2 (A, B), SCM_UNDEFINED));
+
+  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
 scm_gsl_mpz_matrix_add (SCM A, SCM B)
 {
   const char *who = "scm_gsl_mpz_matrix_add";
@@ -1444,6 +1497,59 @@ scm_gsl_scm_matrix_add (SCM A, SCM B)
   scm_matrix_add (m_A, n_A, _A, _B);
 
   SCM result = scm_from_scm_matrix (m_A, n_A, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_matrix_sub (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_matrix_sub";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_f64_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_f64_rank_1_or_2_array (who, B, &handle_B);
+
+  gsl_matrix_const_view _A =
+    scm_gsl_matrix_const_view_array_handle (A, &handle_A);
+  gsl_matrix_const_view _B =
+    scm_gsl_matrix_const_view_array_handle (B, &handle_B);
+
+  const size_t m_A = _A.matrix.size1;
+  const size_t n_A = _A.matrix.size2;
+
+  const size_t m_B = _B.matrix.size1;
+  const size_t n_B = _B.matrix.size2;
+
+  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
+
+  double result_buffer[m_A][n_A];
+  gsl_matrix_view _result = gsl_matrix_view_array (&result_buffer[0][0],
+                                                   m_A, n_A);
+
+  gsl_matrix_memcpy (&_result.matrix, &_A.matrix);
+  const int errval = gsl_matrix_sub (&_result.matrix, &_B.matrix);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_2 (A, B), SCM_UNDEFINED));
+
+  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
 
   scm_dynwind_end ();
 
@@ -1741,10 +1847,12 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
   scm_c_define_gsubr ("gsl:gemm-scm", 7, 0, 0, scm_gsl_scm_gemm);
 
+  scm_c_define_gsubr ("gsl:matrix-add-f64", 2, 0, 0, scm_gsl_matrix_add);
   scm_c_define_gsubr ("gsl:matrix-add-mpz", 2, 0, 0, scm_gsl_mpz_matrix_add);
   scm_c_define_gsubr ("gsl:matrix-add-mpq", 2, 0, 0, scm_gsl_mpq_matrix_add);
   scm_c_define_gsubr ("gsl:matrix-add-scm", 2, 0, 0, scm_gsl_scm_matrix_add);
 
+  scm_c_define_gsubr ("gsl:matrix-sub-f64", 2, 0, 0, scm_gsl_matrix_sub);
   scm_c_define_gsubr ("gsl:matrix-sub-mpz", 2, 0, 0, scm_gsl_mpz_matrix_sub);
   scm_c_define_gsubr ("gsl:matrix-sub-mpq", 2, 0, 0, scm_gsl_mpq_matrix_sub);
   scm_c_define_gsubr ("gsl:matrix-sub-scm", 2, 0, 0, scm_gsl_scm_matrix_sub);
