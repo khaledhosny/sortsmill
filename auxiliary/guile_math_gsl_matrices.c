@@ -25,6 +25,8 @@
 
 void init_guile_sortsmill_math_gsl_matrices (void);
 
+gsl_matrix_const_view null_gsl_matrix_const_view = { 0 };
+
 VISIBLE void
 exception__array_has_no_elements (const char *who, SCM irritants)
 {
@@ -966,7 +968,144 @@ assert_conformable_for_addition (bool subtraction,
     non_conformable_for_addition (subtraction, who, A, B, m_A, n_A, m_B, n_B);
 }
 
-gsl_matrix_const_view null_gsl_matrix_const_view = { 0 };
+VISIBLE SCM
+scm_gsl_matrix_scale (SCM A, SCM x)
+{
+  const char *who = "scm_gsl_matrix_scale";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_f64_rank_1_or_2_array (who, A, &handle_A);
+
+  gsl_matrix_const_view _A =
+    scm_gsl_matrix_const_view_array_handle (A, &handle_A);
+
+  const size_t m = _A.matrix.size1;
+  const size_t n = _A.matrix.size2;
+
+  double result_buffer[m][n];
+  gsl_matrix_view _result = gsl_matrix_view_array (&result_buffer[0][0],
+                                                   m, n);
+
+  gsl_matrix_memcpy (&_result.matrix, &_A.matrix);
+  const int errval = gsl_matrix_scale (&_result.matrix, scm_to_double (x));
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_2 (A, x), SCM_UNDEFINED));
+
+  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_mpz_matrix_scale (SCM A, SCM x)
+{
+  const char *who = "scm_gsl_mpz_matrix_scale";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  const size_t m = matrix_dim1 (&handle_A);
+  const size_t n = matrix_dim2 (&handle_A);
+
+  mpz_t _A[m][n];
+  mpz_matrix_init (m, n, _A);
+  scm_dynwind_mpz_matrix_clear (m, n, _A);
+  scm_array_handle_to_mpz_matrix (A, &handle_A, m, n, _A);
+
+  mpz_t _x;
+  mpz_init (_x);
+  scm_dynwind_mpz_clear (_x);
+  scm_to_mpz (x, _x);
+
+  mpz_matrix_scale (m, n, _A, _x);
+
+  SCM result = scm_from_mpz_matrix (m, n, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_mpq_matrix_scale (SCM A, SCM x)
+{
+  const char *who = "scm_gsl_mpq_matrix_scale";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  const size_t m = matrix_dim1 (&handle_A);
+  const size_t n = matrix_dim2 (&handle_A);
+
+  mpq_t _A[m][n];
+  mpq_matrix_init (m, n, _A);
+  scm_dynwind_mpq_matrix_clear (m, n, _A);
+  scm_array_handle_to_mpq_matrix (A, &handle_A, m, n, _A);
+
+  mpq_t _x;
+  mpq_init (_x);
+  scm_dynwind_mpq_clear (_x);
+  scm_to_mpq (x, _x);
+
+  mpq_matrix_scale (m, n, _A, _x);
+
+  SCM result = scm_from_mpq_matrix (m, n, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_scm_matrix_scale (SCM A, SCM x)
+{
+  const char *who = "scm_gsl_scm_matrix_scale";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_rank_1_or_2_array (who, A, &handle_A);
+
+  const size_t m = matrix_dim1 (&handle_A);
+  const size_t n = matrix_dim2 (&handle_A);
+
+  SCM _A[m][n];
+  scm_array_handle_to_scm_matrix (A, &handle_A, m, n, _A);
+
+  scm_matrix_scale (m, n, _A, x);
+
+  SCM result = scm_from_scm_matrix (m, n, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
 
 VISIBLE SCM
 scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
@@ -1897,6 +2036,14 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define ("gsl:CblasUnit", scm_from_int (CblasUnit));
   scm_c_define ("gsl:CblasLeft", scm_from_int (CblasLeft));
   scm_c_define ("gsl:CblasRight", scm_from_int (CblasRight));
+
+  scm_c_define_gsubr ("gsl:matrix-scale-f64", 2, 0, 0, scm_gsl_matrix_scale);
+  scm_c_define_gsubr ("gsl:matrix-scale-mpz", 2, 0, 0,
+                      scm_gsl_mpz_matrix_scale);
+  scm_c_define_gsubr ("gsl:matrix-scale-mpq", 2, 0, 0,
+                      scm_gsl_mpq_matrix_scale);
+  scm_c_define_gsubr ("gsl:matrix-scale-scm", 2, 0, 0,
+                      scm_gsl_scm_matrix_scale);
 
   scm_c_define_gsubr ("gsl:gemm-f64", 7, 0, 0, scm_gsl_blas_dgemm);
   scm_c_define_gsubr ("gsl:gemm-mpz", 7, 0, 0, scm_gsl_mpz_gemm);

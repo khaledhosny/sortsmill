@@ -74,6 +74,11 @@ SCM scm_from_scm_matrix (unsigned int m, unsigned int n, SCM A[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 
+SCM scm_gsl_matrix_scale (SCM A, SCM x);
+SCM scm_gsl_mpz_matrix_scale (SCM A, SCM x);
+SCM scm_gsl_mpq_matrix_scale (SCM A, SCM x);
+SCM scm_gsl_scm_matrix_scale (SCM A, SCM x);
+
 SCM scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                         SCM beta, SCM C);
 SCM scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,

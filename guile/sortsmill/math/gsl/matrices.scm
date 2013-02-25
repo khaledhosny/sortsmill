@@ -29,6 +29,15 @@
           gsl:CblasLeft
           gsl:CblasRight
 
+          ;; Scaling a matrix by a scalar.
+          ;;
+          ;; (gsl:matrix-scale-WHATEVER A lambda) → λA
+          ;;
+          gsl:matrix-scale-f64
+          gsl:matrix-scale-mpz
+          gsl:matrix-scale-mpq
+          gsl:matrix-scale-scm
+
           ;; General matrix multiplication.
           ;;
           ;; (gsl:gemm-WHATEVER TransA TransB alpha A B beta C) → αAB + βC
