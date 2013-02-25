@@ -71,8 +71,9 @@
 
           exact-matrix*
           integer-matrix*
+          number-matrix*
 
-          matrix-matrix*
+;;;;          matrix-matrix*
 
           matrix-scaled
           matrix-scaled-by-division
@@ -393,6 +394,9 @@ array)."
   (define (integer-matrix* A B)
     (gsl:gemm-mpz gsl:CblasNoTrans gsl:CblasNoTrans 1 A B 0 #f))
 
+  (define (number-matrix* A B)
+    (gsl:gemm-scm gsl:CblasNoTrans gsl:CblasNoTrans 1 A B 0 #f))
+
   ;;-----------------------------------------------------------------------
 
   (define (row*col row column-transposed)
@@ -419,7 +423,7 @@ array)."
         (if (and (uniform-integer-array? A) (uniform-integer-array? B))
             (integer-matrix* A B)
             (exact-matrix* A B))]
-       [else (matrix-matrix* (vector->matrix A)
+       [else (number-matrix* (vector->matrix A)
                              (vector->matrix B))] )))
 
   (define matrix*

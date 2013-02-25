@@ -24,12 +24,9 @@
  */
 
 #include <gmp.h>
-#include <gsl/gsl_blas.h>
 #include <libguile.h>
 #include <sortsmill/c_version.h>
-
-#define _FF_TRANSMATRIX(A,T,I,J) A[((T) == CblasNoTrans ? (I) : (J))][((T) == CblasNoTrans ? (J) : (I))]
-#define _FF_TRANSMATRIX_CAST(TYPE,T,I,J) (TYPE (*)[(unsigned int) ((T) == CblasNoTrans ? (J) : (I))])
+#include <sortsmill/transmatrix.h>
 
 /*-------------------------------------------------------------------------
  *

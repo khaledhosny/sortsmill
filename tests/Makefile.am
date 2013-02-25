@@ -1,5 +1,5 @@
 # Copyright (C) 2000-2012 by George Williams
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -105,7 +105,8 @@ TESTS_GMP_CONSTANTS = test_gmp_constants
 
 TESTS_BRENTROOT = test_brentroot test_qbrentroot
 
-TESTS_LINALG = $(TESTS_LINALG_MPZ) $(TESTS_LINALG_MPQ)
+TESTS_LINALG = $(TESTS_LINALG_MPZ) $(TESTS_LINALG_MPQ)	\
+	$(TESTS_LINALG_SCM)
 
 TESTS_LINALG_MPZ = test_mpz_matrix_set_all test_mpz_matrix_set_zero	\
 	test_mpz_matrix_set_identity test_mpz_matrix_memcpy				\
@@ -120,6 +121,13 @@ TESTS_LINALG_MPQ = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
 	test_mpq_matrix_swap_columns test_mpq_matrix_swap_rowcol		\
 	test_mpq_matrix_transpose_memcpy test_mpq_matrix_scale			\
 	test_mpq_matrix_gemm
+
+TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
+	test_scm_matrix_set_identity test_scm_matrix_memcpy				\
+	test_scm_matrix_swap test_scm_matrix_swap_rows					\
+	test_scm_matrix_swap_columns test_scm_matrix_swap_rowcol		\
+	test_scm_matrix_transpose_memcpy test_scm_matrix_scale			\
+	test_scm_matrix_gemm
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\

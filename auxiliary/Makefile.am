@@ -58,6 +58,9 @@ dist_libsortsmill_aux_la_SOURCES += rexp.c
 # Extensions to GNU MP.
 dist_libsortsmill_aux_la_SOURCES += gmp_constants.c gmp_matrix.c
 
+# C matrices of SCM (Guile) numbers.
+dist_libsortsmill_aux_la_SOURCES += scm_matrix.c
+
 # Extensions to libunistring.
 dist_libsortsmill_aux_la_SOURCES += xunicase.c xuniconv.c xuninorm.c	\
 	xunistr.c xunistr_strjoin.c

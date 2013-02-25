@@ -198,8 +198,7 @@ figurefiletype (struct fontlist *item)
     }
   else
     {
-      fprintf (stderr, "Could not open %s for typing the file.\n",
-               item->name);
+      fprintf (stderr, "Could not open %s for typing the file.\n", item->name);
       item->isbinary = true;
     }
 }
@@ -228,8 +227,7 @@ FindFonts (char **fontdirs, char **extensions)
 
       while ((ent = readdir (examples)) != NULL)
         {
-          snprintf (buffer, sizeof (buffer), "%s/%s", fontdirs[i],
-                    ent->d_name);
+          snprintf (buffer, sizeof (buffer), "%s/%s", fontdirs[i], ent->d_name);
           if (stat (buffer, &statb) == -1 || S_ISDIR (statb.st_mode))
             continue;
           if (extensions == NULL || extmatch (buffer, extensions))
@@ -237,8 +235,7 @@ FindFonts (char **fontdirs, char **extensions)
               if (fcnt >= max)
                 {
                   max += 100;
-                  fontlist =
-                    realloc (fontlist, max * sizeof (struct fontlist));
+                  fontlist = realloc (fontlist, max * sizeof (struct fontlist));
                   if (fontlist == NULL)
                     {
                       fprintf (stderr, "Couldn't allocate memory\n");
@@ -296,8 +293,7 @@ copyfont (struct fontlist *item, char *newfont)
   new = fopen (newfont, "w+");
   if (new == NULL)
     {
-      fprintf (stderr, "Could not create temporary output file %s\n",
-               newfont);
+      fprintf (stderr, "Could not create temporary output file %s\n", newfont);
       exit (1);
     }
 

@@ -48,23 +48,6 @@ SCM scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose,
 
 /*----------------------------------------------------------------------------*/
 
-#if _FF_C99_OR_GREATER
-
-void scm_array_handle_to_scm_matrix (SCM A_scm, scm_t_array_handle *handlep,
-                                     size_t m, size_t n, SCM A[m][n]);
-SCM scm_from_scm_matrix (size_t m, size_t n, SCM A[m][n]);
-
-void scm_scm_matrix_scm_matrix_mult (size_t m, size_t n, size_t k,
-                                     SCM A[m][k], SCM B[k][n], SCM C[m][n]);
-
-#endif /* _FF_C99_OR_GREATER */
-
-SCM scm_scm_vector_scm_vector_dot (size_t k, SCM *A, SCM *B);
-
-SCM scm_matrix_matrix_mult (SCM a, SCM b);
-
-/*----------------------------------------------------------------------------*/
-
 #if 0
 {
 #endif

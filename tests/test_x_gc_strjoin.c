@@ -16,9 +16,9 @@ main (int argc, char **argv)
   switch (argc)
     {
     case 1:
-      s = x_gc_strjoin (NULL, NULL); /* The second NULL squelches a
-					'missing sentinel' warning
-					from GCC. */
+      s = x_gc_strjoin (NULL, NULL);    /* The second NULL squelches a
+                                           'missing sentinel' warning
+                                           from GCC. */
       break;
 
     case 2:

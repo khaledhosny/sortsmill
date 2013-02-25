@@ -64,9 +64,13 @@ void scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
 void scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
                                      unsigned int m, unsigned int n,
                                      mpq_t A[m][n]);
+void scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
+                                     unsigned int m, unsigned int n,
+                                     SCM A[m][n]);
 
 SCM scm_from_mpz_matrix (unsigned int m, unsigned int n, mpz_t A[m][n]);
 SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
+SCM scm_from_scm_matrix (unsigned int m, unsigned int n, SCM A[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 
@@ -75,6 +79,8 @@ SCM scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 SCM scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                       SCM beta, SCM C);
 SCM scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
+                      SCM beta, SCM C);
+SCM scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                       SCM beta, SCM C);
 
 SCM scm_gsl_svd_golub_reinsch (SCM);

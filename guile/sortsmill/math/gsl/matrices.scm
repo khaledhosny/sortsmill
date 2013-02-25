@@ -33,9 +33,10 @@
           ;;
           ;; (gsl:gemm-WHATEVER TransA TransB alpha A B beta C) → αAB + βC
           ;;
-          gsl:gemm-f64
-          gsl:gemm-mpz
-          gsl:gemm-mpq
+          gsl:gemm-f64                  ; Real floating point.
+          gsl:gemm-mpz                  ; Integers.
+          gsl:gemm-mpq                  ; Exact rationals.
+          gsl:gemm-scm                  ; General numbers.
 
           ;; ‘Thin’ singular value decomposition algorithms from
           ;; GSL. These procedures return U, S, V, respectively, as

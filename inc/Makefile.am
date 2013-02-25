@@ -38,14 +38,47 @@ noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	precomputed_polyspline_data.h contour_interface.h moveto_funcs.h	\
 	invoke_funcs.h
 
-nobase_include_HEADERS = sortsmill/attributes.h sortsmill/c_version.h	\
-	sortsmill/null_passthru.h sortsmill/xdie_on_null.h					\
-	sortsmill/xgc.h sortsmill/x_alloc.h sortsmill/gmp_constants.h		\
-	sortsmill/gmp_matrix.h sortsmill/xunicase.h sortsmill/xuniconv.h	\
-	sortsmill/xuninorm.h sortsmill/xunistr.h sortsmill/xunistring.h		\
-	sortsmill/ps_number.h sortsmill/brentroot.h							\
-	sortsmill/qbrentroot.h sortsmill/rexp.h sortsmill/polyspline.h		\
-	sortsmill/usermenu.h sortsmill/fontforge_main.h
+nobase_include_HEADERS = 
+
+# C entry point for Sorts Mill Editor.
+nobase_include_HEADERS += sortsmill/fontforge_main.h
+
+# FIXME: Make this obsolete and be rid of it.
+nobase_include_HEADERS += sortsmill/usermenu.h
+
+# What version of C is in use?
+nobase_include_HEADERS += sortsmill/c_version.h
+
+# Attribute tags to put in the code for the benefit of the compiler.
+nobase_include_HEADERS += sortsmill/attributes.h
+
+# Allocation.
+nobase_include_HEADERS += sortsmill/null_passthru.h					\
+	sortsmill/xdie_on_null.h sortsmill/xgc.h sortsmill/x_alloc.h
+
+# Extensions to GNU libunistring.
+nobase_include_HEADERS += sortsmill/xunicase.h sortsmill/xuniconv.h	\
+	sortsmill/xuninorm.h sortsmill/xunistr.h sortsmill/xunistring.h
+
+# Parsing of PostScript-style numerals.
+nobase_include_HEADERS += sortsmill/ps_number.h
+
+# `Easy' regular expression processing, based on PCRE.
+nobase_include_HEADERS += sortsmill/rexp.h
+
+# Pre-computed constants for GNU MP.
+nobase_include_HEADERS += sortsmill/gmp_constants.h
+
+# GSL-like matrix operations for GNU MP and Guile numbers.
+nobase_include_HEADERS += sortsmill/transmatrix.h	\
+	sortsmill/gmp_matrix.h sortsmill/scm_matrix.h
+
+# Brent’s method for root-finding.
+nobase_include_HEADERS += sortsmill/brentroot.h	\
+	sortsmill/qbrentroot.h
+
+# Polynomial splines.
+nobase_include_HEADERS += sortsmill/polyspline.h
 
 # FIXME: These headers need to be examined for relevance and for
 # whether the functions they declare need to be moved into the
