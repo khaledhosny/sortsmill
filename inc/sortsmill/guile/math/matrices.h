@@ -36,13 +36,9 @@ extern "C"
 
 /*----------------------------------------------------------------------------*/
 
-//SCM scm_f64matrix_f64matrix_mult (SCM m1, SCM m2);
-//SCM scm_f64matrix_f64matrix_add (SCM m1, SCM m2);
-//SCM scm_f64matrix_f64matrix_sub (SCM m1, SCM m2);
-
-//SCM scm_f64matrix_svd_golub_reinsch (SCM m);
-//SCM scm_f64matrix_svd_modified_golub_reinsch (SCM m);
-//SCM scm_f64matrix_svd_jacobi (SCM m);
+// FIXME: Move this to GSL module, and rename it. But do not delete
+// this .h file or its .c file, because I expect to use them for other things.
+//
 SCM scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose,
                                     SCM b_transpose);
 

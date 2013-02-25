@@ -63,17 +63,23 @@
           f64matrix->matrix
 
 ;;;;          f64matrix-f64matrix*
-          f64matrix-f64matrix+
-          f64matrix-f64matrix-
-          f64matrix*
-          f64matrix+
-          f64matrix-
+;;;;          f64matrix-f64matrix+
+;;;;          f64matrix-f64matrix-
 
+          f64matrix*
           exact-matrix*
           integer-matrix*
           number-matrix*
 
-;;;;          matrix-matrix*
+          f64matrix+
+          exact-matrix+
+          integer-matrix+
+          number-matrix+
+
+          f64matrix-
+          exact-matrix-
+          integer-matrix-
+          number-matrix-
 
           matrix-scaled
           matrix-scaled-by-division
@@ -391,40 +397,40 @@ array)."
   (define (number-matrix* A B)
     (gsl:gemm-scm gsl:CblasNoTrans gsl:CblasNoTrans 1 A B 0 #f))
 
-  (define (f64matrix+ A B)
-    (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
+  (define f64matrix+ gsl:matrix-add-f64)
+  (define exact-matrix+ gsl:matrix-add-mpq)
+  (define integer-matrix+ gsl:matrix-add-mpz)
+  (define number-matrix+ gsl:matrix-add-scm)
 
-  (define (f64matrix- A B)
-    (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
+  (define f64matrix- gsl:matrix-sub-f64)
+  (define exact-matrix- gsl:matrix-sub-mpq)
+  (define integer-matrix- gsl:matrix-sub-mpz)
+  (define number-matrix- gsl:matrix-sub-scm)
 
   ;;-----------------------------------------------------------------------
 
-  (define (row*col row column-transposed)
-    (apply + (map * (generalized-vector->list row)
-                  (generalized-vector->list column-transposed))))
-
-  (define (multiplication-result-type type-A type-B)
-    (match (cons type-A type-B)
-      [('f64 . _) 'f64]
-      [(_ . 'f64) 'f64]
-      [_            #t] ))
-
-  (define (multiply-matrices A B)
+  (define (binary-arithmetic-on-matrices f64-op exact-op integer-op
+                                         number-op A B)
     (let ([type-A (array-type A)]
           [type-B (array-type B)])
       (cond
        [(and (eq? type-A 'f64) (eq? type-B 'f64))
-        (f64matrix* A B)]
+        (f64-op A B)]
        [(and (exact-array? A) (exact-array? B))
-        ;; FIXME: Is it worth using integer-matrix* if A and B are
+        ;; FIXME: Is it worth using integer-op if A and B are
         ;; non-uniform integer arrays? The results would be the same,
         ;; so it is a question of which method is more efficient in
         ;; practice.
         (if (and (uniform-integer-array? A) (uniform-integer-array? B))
-            (integer-matrix* A B)
-            (exact-matrix* A B))]
-       [else (number-matrix* (vector->matrix A)
-                             (vector->matrix B))] )))
+            (integer-op A B)
+            (exact-op A B))]
+       [else (number-op A B)] )))
+
+  ;;-----------------------------------------------------------------------
+
+  (define (multiply-matrices A B)
+    (binary-arithmetic-on-matrices f64matrix* exact-matrix* integer-matrix*
+                                   number-matrix* A B))
 
   (define matrix*
     (case-lambda
@@ -472,34 +478,8 @@ array)."
   ;;-----------------------------------------------------------------------
 
   (define (add-matrices A B)
-    (match (cons (array-type A) (array-type B))
-      [('f64 . 'f64) (f64matrix+ A B)]
-      [_
-       (let ([A (vector->matrix (one-based A))]
-             [B (vector->matrix (one-based B))]
-             [nm (matrix-dimensions A)]
-             [n^m^ (matrix-dimensions B)])
-         (unless (and (= (car nm) (car n^m^))
-                      (= (cadr nm) (cadr n^m^)))
-           (assertion-violation
-            'matrix+
-            (_ "the matrices are not conformable for addition")
-            A B))
-         (let* ([n (car nm)]
-                [m (cadr nm)]
-                [C (make-array *unspecified* `[1 ,n] `[1 ,m])]
-                [row-indices (iota n 1)]
-                [col-indices (iota m 1)])
-           (for-each
-            (lambda (i)
-              (for-each
-               (lambda (j)
-                 (array-set! C (+ (array-ref A i j)
-                                  (array-ref B i j))
-                             i j))
-               col-indices))
-            row-indices)
-           C))] ))
+    (binary-arithmetic-on-matrices f64matrix+ exact-matrix+ integer-matrix+
+                                   number-matrix+ A B))
 
   (define matrix+
     (case-lambda
@@ -532,34 +512,8 @@ array)."
   ;;-----------------------------------------------------------------------
 
   (define (subtract-matrices A B)
-    (match (cons (array-type A) (array-type B))
-      [('f64 . 'f64) (f64matrix- A B)]
-      [_
-       (let ([A (vector->matrix (one-based A))]
-             [B (vector->matrix (one-based B))]
-             [nm (matrix-dimensions A)]
-             [n^m^ (matrix-dimensions B)])
-         (unless (and (= (car nm) (car n^m^))
-                      (= (cadr nm) (cadr n^m^)))
-           (assertion-violation
-            'matrix+
-            (_ "the matrices are not conformable for subtraction")
-            A B))
-         (let* ([n (car nm)]
-                [m (cadr nm)]
-                [C (make-array *unspecified* `[1 ,n] `[1 ,m])]
-                [row-indices (iota n 1)]
-                [col-indices (iota m 1)])
-           (for-each
-            (lambda (i)
-              (for-each
-               (lambda (j)
-                 (array-set! C (- (array-ref A i j)
-                                  (array-ref B i j))
-                             i j))
-               col-indices))
-            row-indices)
-           C))] ))
+    (binary-arithmetic-on-matrices f64matrix- exact-matrix- integer-matrix-
+                                   number-matrix- A B))
 
   (define matrix-
     (case-lambda
