@@ -108,17 +108,18 @@ TESTS_BRENTROOT = test_brentroot test_qbrentroot
 TESTS_LINALG = $(TESTS_LINALG_MPZ) $(TESTS_LINALG_MPQ)	\
 	$(TESTS_LINALG_SCM)
 
-TESTS_LINALG_MPZ = test_mpz_matrix_set_all test_mpz_matrix_set_zero	\
-	test_mpz_matrix_set_identity test_mpz_matrix_memcpy				\
-	test_mpz_matrix_swap test_mpz_matrix_swap_rows					\
-	test_mpz_matrix_swap_columns test_mpz_matrix_swap_rowcol		\
-	test_mpz_matrix_transpose_memcpy test_mpz_matrix_scale			\
-	test_mpz_matrix_gemm test_mpz_matrix_mul_elements				\
-	test_mpz_matrix_tdiv_q_elements test_mpz_matrix_fdiv_q_elements	\
-	test_mpz_matrix_cdiv_q_elements test_mpz_matrix_tdiv_r_elements	\
-	test_mpz_matrix_fdiv_r_elements test_mpz_matrix_cdiv_r_elements	\
-	test_mpz_matrix_add test_mpz_matrix_sub							\
-	test_mpz_matrix_add_constant
+TESTS_LINALG_MPZ = test_mpz_matrix_set_all test_mpz_matrix_set_zero		\
+	test_mpz_matrix_set_identity test_mpz_matrix_memcpy					\
+	test_mpz_matrix_swap test_mpz_matrix_swap_rows						\
+	test_mpz_matrix_swap_columns test_mpz_matrix_swap_rowcol			\
+	test_mpz_matrix_transpose_memcpy test_mpz_matrix_scale				\
+	test_mpz_matrix_gemm test_mpz_matrix_mul_elements					\
+	test_mpz_matrix_tdiv_q_elements test_mpz_matrix_fdiv_q_elements		\
+	test_mpz_matrix_cdiv_q_elements test_mpz_matrix_tdiv_r_elements		\
+	test_mpz_matrix_fdiv_r_elements test_mpz_matrix_cdiv_r_elements		\
+	test_mpz_matrix_tdiv_qr_elements test_mpz_matrix_fdiv_qr_elements	\
+	test_mpz_matrix_cdiv_qr_elements test_mpz_matrix_add				\
+	test_mpz_matrix_sub test_mpz_matrix_add_constant
 
 TESTS_LINALG_MPQ = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
 	test_mpq_matrix_set_identity test_mpq_matrix_memcpy				\
