@@ -45,24 +45,3 @@ _GMP_TYPE (_matrix_set_identity) (unsigned int m, unsigned int n,
     for (unsigned int j = 0; j < n; j++)
       _GMP_TYPE (_set) (A[i][j], ((i == j) ? one : zero));
 }
-
-VISIBLE void
-_GMP_TYPE (_matrix_set_all_c90) (unsigned int m, unsigned int n,
-                                 _GMP_TYPE (_t) A[], const _GMP_TYPE (_t) x)
-{
-  _GMP_TYPE (_matrix_set_all) (m, n, (_GMP_MATRIX (m, n)) A, x);
-}
-
-VISIBLE void
-_GMP_TYPE (_matrix_set_zero_c90) (unsigned int m, unsigned int n,
-                                  _GMP_TYPE (_t) A[])
-{
-  _GMP_TYPE (_matrix_set_zero) (m, n, (_GMP_MATRIX (m, n)) A);
-}
-
-VISIBLE void
-_GMP_TYPE (_matrix_set_identity_c90) (unsigned int m, unsigned int n,
-                                      _GMP_TYPE (_t) A[])
-{
-  _GMP_TYPE (_matrix_set_identity) (m, n, (_GMP_MATRIX (m, n)) A);
-}

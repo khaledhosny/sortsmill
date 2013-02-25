@@ -44,27 +44,3 @@ _GMP_TYPE (_matrix_add_constant) (unsigned int m, unsigned int n,
     for (unsigned int j = 0; j < n; j++)
       _GMP_TYPE (_add) (A[i][j], A[i][j], x);
 }
-
-VISIBLE void
-_GMP_TYPE (_matrix_add_c90) (unsigned int m, unsigned int n,
-                             _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
-{
-  _GMP_TYPE (_matrix_add) (m, n, (_GMP_MATRIX (m, n)) A,
-                           (_GMP_MATRIX (m, n)) B);
-}
-
-VISIBLE void
-_GMP_TYPE (_matrix_sub_c90) (unsigned int m, unsigned int n,
-                             _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
-{
-  _GMP_TYPE (_matrix_sub) (m, n, (_GMP_MATRIX (m, n)) A,
-                           (_GMP_MATRIX (m, n)) B);
-}
-
-VISIBLE void
-_GMP_TYPE (_matrix_add_constant_c90) (unsigned int m, unsigned int n,
-                                      _GMP_TYPE (_t) A[],
-                                      const _GMP_TYPE (_t) x)
-{
-  _GMP_TYPE (_matrix_add_constant) (m, n, (_GMP_MATRIX (m, n)) A, x);
-}

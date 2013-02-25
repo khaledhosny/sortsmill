@@ -68,27 +68,3 @@ _GMP_TYPE2 (scm_dynwind_, _matrix_clear) (unsigned int m, unsigned int n,
   scm_dynwind_unwind_handler (_GMP_TYPE2 (scm_dynwind_, _matrix_unwind_handler),
                               q, SCM_F_WIND_EXPLICITLY);
 }
-
-VISIBLE void
-_GMP_TYPE (_matrix_init_c90) (unsigned int m, unsigned int n,
-                              _GMP_TYPE (_t) A[])
-{
-  _GMP_TYPE (_matrix_init) (m, n, (_GMP_MATRIX (m, n)) A);
-}
-
-VISIBLE void
-_GMP_TYPE (_matrix_clear_c90) (unsigned int m, unsigned int n,
-                               _GMP_TYPE (_t) A[])
-{
-  _GMP_TYPE (_matrix_clear) (m, n, (_GMP_MATRIX (m, n)) A);
-}
-
-//                                                          *INDENT-OFF*
-VISIBLE void
-_GMP_TYPE2 (scm_dynwind_, _matrix_clear_c90) (unsigned int m, unsigned int n,
-                                              _GMP_TYPE (_t) A[])
-//                                                           *INDENT-ON*
-
-{
-  _GMP_TYPE2 (scm_dynwind_, _matrix_clear) (m, n, (_GMP_MATRIX (m, n)) A);
-}

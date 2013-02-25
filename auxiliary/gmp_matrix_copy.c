@@ -34,20 +34,3 @@ _GMP_TYPE (_matrix_swap) (unsigned int m, unsigned int n,
     for (unsigned int j = 0; j < n; j++)
       _GMP_TYPE (_swap) (A[i][j], B[i][j]);
 }
-
-VISIBLE void
-_GMP_TYPE (_matrix_memcpy_c90) (unsigned int m, unsigned int n,
-                                _GMP_TYPE (_t) result[], _GMP_TYPE (_t) A[])
-{
-  _GMP_TYPE (_matrix_memcpy) (m, n,
-                              (_GMP_MATRIX (m, n)) result,
-                              (_GMP_MATRIX (m, n)) A);
-}
-
-VISIBLE void
-_GMP_TYPE (_matrix_swap_c90) (unsigned int m, unsigned int n,
-                              _GMP_TYPE (_t) A[], _GMP_TYPE (_t) B[])
-{
-  _GMP_TYPE (_matrix_swap) (m, n, (_GMP_MATRIX (m, n)) A,
-                            (_GMP_MATRIX (m, n)) B);
-}

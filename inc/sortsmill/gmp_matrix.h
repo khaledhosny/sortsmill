@@ -19,10 +19,6 @@
 #ifndef _SORTSMILL_GMP_MATRIX_H
 #define _SORTSMILL_GMP_MATRIX_H
 
-/*
- * FIXME FIXME FIXME: We need tests for the C90 versions.
- */
-
 #include <gmp.h>
 #include <libguile.h>
 #include <sortsmill/c_version.h>
@@ -50,16 +46,6 @@ void scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n,
 
 #endif /* _FF_C99_OR_GREATER */
 
-void mpz_matrix_init_c90 (unsigned int m, unsigned int n, mpz_t A[]);
-void mpz_matrix_clear_c90 (unsigned int m, unsigned int n, mpz_t A[]);
-void scm_dynwind_mpz_matrix_clear_c90 (unsigned int m, unsigned int n,
-                                       mpz_t A[]);
-
-void mpq_matrix_init_c90 (unsigned int m, unsigned int n, mpq_t A[]);
-void mpq_matrix_clear_c90 (unsigned int m, unsigned int n, mpq_t A[]);
-void scm_dynwind_mpq_matrix_clear_c90 (unsigned int m, unsigned int n,
-                                       mpq_t A[]);
-
 /*-----------------------------------------------------------------------*/
 
 #if _FF_C99_OR_GREATER
@@ -76,16 +62,6 @@ void mpq_matrix_set_identity (unsigned int m, unsigned int n, mpq_t A[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 
-void mpz_matrix_set_all_c90 (unsigned int m, unsigned int n, mpz_t A[],
-                             const mpz_t x);
-void mpz_matrix_set_zero_c90 (unsigned int m, unsigned int n, mpz_t A[]);
-void mpz_matrix_set_identity_c90 (unsigned int m, unsigned int n, mpz_t A[]);
-
-void mpq_matrix_set_all_c90 (unsigned int m, unsigned int n, mpq_t A[],
-                             const mpq_t x);
-void mpq_matrix_set_zero_c90 (unsigned int m, unsigned int n, mpq_t A[]);
-void mpq_matrix_set_identity_c90 (unsigned int m, unsigned int n, mpq_t A[]);
-
 /*-----------------------------------------------------------------------*/
 
 #if _FF_C99_OR_GREATER
@@ -101,14 +77,6 @@ void mpq_matrix_swap (unsigned int m, unsigned int n,
                       mpq_t A[m][n], mpq_t B[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
-
-void mpz_matrix_memcpy_c90 (unsigned int m, unsigned int n,
-                            mpz_t result[], mpz_t A[]);
-void mpz_matrix_swap_c90 (unsigned int m, unsigned int n, mpz_t A[], mpz_t B[]);
-
-void mpq_matrix_memcpy_c90 (unsigned int m, unsigned int n,
-                            mpq_t result[], mpq_t A[]);
-void mpq_matrix_swap_c90 (unsigned int m, unsigned int n, mpq_t A[], mpq_t B[]);
 
 /*-----------------------------------------------------------------------*/
 
@@ -139,30 +107,6 @@ void mpq_matrix_transpose_memcpy (unsigned int m, unsigned int n,
                                   mpq_t result[n][m], mpq_t A[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
-
-/* Row and column swapping, in place. */
-void mpz_matrix_swap_rows_c90 (unsigned int m, unsigned int n, mpz_t A[],
-                               unsigned int i, unsigned int j);
-void mpz_matrix_swap_columns_c90 (unsigned int m, unsigned int n, mpz_t A[],
-                                  unsigned int i, unsigned int j);
-void mpz_matrix_swap_rowcol_c90 (unsigned int m, mpz_t A[],
-                                 unsigned int i, unsigned int j);
-
-/* Matrix transposition, not in place. */
-void mpz_matrix_transpose_memcpy_c90 (unsigned int m, unsigned int n,
-                                      mpz_t result[], mpz_t A[]);
-
-/* Row and column swapping, in place. */
-void mpq_matrix_swap_rows_c90 (unsigned int m, unsigned int n, mpq_t A[],
-                               unsigned int i, unsigned int j);
-void mpq_matrix_swap_columns_c90 (unsigned int m, unsigned int n, mpq_t A[],
-                                  unsigned int i, unsigned int j);
-void mpq_matrix_swap_rowcol_c90 (unsigned int m, mpq_t A[],
-                                 unsigned int i, unsigned int j);
-
-/* Matrix transposition, not in place. */
-void mpq_matrix_transpose_memcpy_c90 (unsigned int m, unsigned int n,
-                                      mpq_t result[], mpq_t A[]);
 
 /*-----------------------------------------------------------------------*/
 
@@ -197,30 +141,6 @@ mpq_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                  const mpq_t beta, mpq_t C[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
-
-/* Matrix scaling, in place. */
-void mpz_matrix_scale_c90 (unsigned int m, unsigned int n, mpz_t A[],
-                           const mpz_t x);
-
-/* General matrix multiplication.
-   See http://en.wikipedia.org/wiki/General_Matrix_Multiply */
-void
-mpz_matrix_gemm_c90 (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
-                     unsigned int m, unsigned int n, unsigned int k,
-                     const mpz_t alpha, mpz_t A[], mpz_t B[], const mpz_t beta,
-                     mpz_t C[]);
-
-/* Matrix scaling, in place. */
-void
-mpq_matrix_scale_c90 (unsigned int m, unsigned int n, mpq_t A[], const mpq_t x);
-
-/* General matrix multiplication.
-   See http://en.wikipedia.org/wiki/General_Matrix_Multiply */
-void
-mpq_matrix_gemm_c90 (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
-                     unsigned int m, unsigned int n, unsigned int k,
-                     const mpq_t alpha, mpq_t A[], mpq_t B[], const mpq_t beta,
-                     mpq_t C[]);
 
 /*-----------------------------------------------------------------------*/
 
@@ -260,31 +180,6 @@ void mpz_matrix_tdiv_qr_elements (unsigned int m, unsigned int n,
 
 #endif /* _FF_C99_OR_GREATER */
 
-void mpz_matrix_mul_elements_c90 (unsigned int m, unsigned int n,
-                                  mpz_t A[], mpz_t B[]);
-void mpz_matrix_cdiv_q_elements_c90 (unsigned int m, unsigned int n,
-                                     mpz_t A[], mpz_t B[]);
-void mpz_matrix_fdiv_q_elements_c90 (unsigned int m, unsigned int n,
-                                     mpz_t A[], mpz_t B[]);
-void mpz_matrix_tdiv_q_elements_c90 (unsigned int m, unsigned int n,
-                                     mpz_t A[], mpz_t B[]);
-void mpz_matrix_cdiv_r_elements_c90 (unsigned int m, unsigned int n,
-                                     mpz_t A[], mpz_t B[]);
-void mpz_matrix_fdiv_r_elements_c90 (unsigned int m, unsigned int n,
-                                     mpz_t A[], mpz_t B[]);
-void mpz_matrix_tdiv_r_elements_c90 (unsigned int m, unsigned int n,
-                                     mpz_t A[], mpz_t B[]);
-void mpz_matrix_cdiv_qr_elements_c90 (unsigned int m, unsigned int n,
-                                      mpz_t A[], mpz_t B[]);
-void mpz_matrix_fdiv_qr_elements_c90 (unsigned int m, unsigned int n,
-                                      mpz_t A[], mpz_t B[]);
-void mpz_matrix_tdiv_qr_elements_c90 (unsigned int m, unsigned int n,
-                                      mpz_t A[], mpz_t B[]);
-void mpq_matrix_mul_elements_c90 (unsigned int m, unsigned int n,
-                                  mpq_t A[], mpq_t B[]);
-void mpq_matrix_div_elements_c90 (unsigned int m, unsigned int n,
-                                  mpq_t A[], mpq_t B[]);
-
 /*-----------------------------------------------------------------------*/
 
 #if _FF_C99_OR_GREATER
@@ -304,15 +199,6 @@ void mpq_matrix_add_constant (unsigned int m, unsigned int n,
                               mpq_t A[m][n], const mpq_t x);
 
 #endif /* _FF_C99_OR_GREATER */
-
-void mpz_matrix_add_c90 (unsigned int m, unsigned int n, mpz_t A[], mpz_t B[]);
-void mpz_matrix_sub_c90 (unsigned int m, unsigned int n, mpz_t A[], mpz_t B[]);
-void mpz_matrix_add_constant_c90 (unsigned int m, unsigned int n, mpz_t A[],
-                                  const mpz_t x);
-void mpq_matrix_add_c90 (unsigned int m, unsigned int n, mpq_t A[], mpq_t B[]);
-void mpq_matrix_sub_c90 (unsigned int m, unsigned int n, mpq_t A[], mpq_t B[]);
-void mpq_matrix_add_constant_c90 (unsigned int m, unsigned int n, mpq_t A[],
-                                  const mpq_t x);
 
 /*-----------------------------------------------------------------------*/
 
