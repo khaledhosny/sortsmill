@@ -113,14 +113,18 @@ TESTS_LINALG_MPZ = test_mpz_matrix_set_all test_mpz_matrix_set_zero	\
 	test_mpz_matrix_swap test_mpz_matrix_swap_rows					\
 	test_mpz_matrix_swap_columns test_mpz_matrix_swap_rowcol		\
 	test_mpz_matrix_transpose_memcpy test_mpz_matrix_scale			\
-	test_mpz_matrix_gemm test_mpz_matrix_mul_elements
+	test_mpz_matrix_gemm test_mpz_matrix_mul_elements				\
+	test_mpz_matrix_add test_mpz_matrix_sub
+# test_mpz_matrix_add_constant
 
 TESTS_LINALG_MPQ = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
 	test_mpq_matrix_set_identity test_mpq_matrix_memcpy				\
 	test_mpq_matrix_swap test_mpq_matrix_swap_rows					\
 	test_mpq_matrix_swap_columns test_mpq_matrix_swap_rowcol		\
 	test_mpq_matrix_transpose_memcpy test_mpq_matrix_scale			\
-	test_mpq_matrix_gemm test_mpq_matrix_mul_elements
+	test_mpq_matrix_gemm test_mpq_matrix_mul_elements				\
+	test_mpq_matrix_add test_mpq_matrix_sub
+# test_mpq_matrix_add_constant
 
 TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_set_identity test_scm_matrix_memcpy				\
