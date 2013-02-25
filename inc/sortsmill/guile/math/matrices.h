@@ -36,9 +36,9 @@ extern "C"
 
 /*----------------------------------------------------------------------------*/
 
-SCM scm_f64matrix_f64matrix_mult (SCM m1, SCM m2);
-SCM scm_f64matrix_f64matrix_add (SCM m1, SCM m2);
-SCM scm_f64matrix_f64matrix_sub (SCM m1, SCM m2);
+//SCM scm_f64matrix_f64matrix_mult (SCM m1, SCM m2);
+//SCM scm_f64matrix_f64matrix_add (SCM m1, SCM m2);
+//SCM scm_f64matrix_f64matrix_sub (SCM m1, SCM m2);
 
 //SCM scm_f64matrix_svd_golub_reinsch (SCM m);
 //SCM scm_f64matrix_svd_modified_golub_reinsch (SCM m);

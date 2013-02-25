@@ -311,6 +311,13 @@ scm_array_elements_pred (SCM obj, bool (*nonuniform_pred) (SCM),
 }
 
 VISIBLE bool
+scm_array_handle_is_uniform_array (scm_t_array_handle *handlep)
+{
+  return
+    index_means_uniform_number[scm_array_handle_to_array_type_index (handlep)];
+}
+
+VISIBLE bool
 scm_is_uniform_array (SCM array)
 {
   return (!scm_is_typed_array (array, SCM_BOOL_T));

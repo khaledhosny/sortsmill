@@ -161,55 +161,55 @@ void init_guile_sortsmill_math_matrices (void);
 //  return result;
 //}
 
-VISIBLE SCM
-scm_f64matrix_f64matrix_add (SCM a, SCM b)
-{
-  scm_t_array_handle handle_a;
-  scm_t_array_handle handle_b;
-
-  const char *who = "f64matrix-f64matrix+";
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (a, &handle_a);
-  scm_dynwind_array_handle_release (&handle_a);
-
-  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
-
-  scm_array_get_handle (b, &handle_b);
-  scm_dynwind_array_handle_release (&handle_b);
-
-  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (b, &handle_b).matrix;
-
-  if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
-    {
-      const char *localized_message =
-        _("non-conformable matrices: ~ax~a plus ~ax~a");
-      SCM message = scm_sformat (scm_from_locale_string (localized_message),
-                                 scm_list_4 (scm_from_int (ma.size1),
-                                             scm_from_int (ma.size2),
-                                             scm_from_int (mb.size1),
-                                             scm_from_int (mb.size2)));
-      rnrs_raise_condition
-        (scm_list_4
-         (rnrs_make_assertion_violation (),
-          rnrs_c_make_who_condition (who),
-          rnrs_make_message_condition (message),
-          rnrs_make_irritants_condition (scm_list_2 (a, b))));
-    }
-
-  double buffer[ma.size1 * ma.size2];
-  gsl_matrix_view vc = gsl_matrix_view_array (buffer, ma.size1, mb.size2);
-  gsl_matrix_memcpy (&vc.matrix, &ma);
-
-  gsl_matrix_add (&vc.matrix, &mb);
-
-  SCM result = scm_gsl_matrix_to_f64matrix (&vc.matrix, 1);
-
-  scm_dynwind_end ();
-
-  return result;
-}
+//VISIBLE SCM
+//scm_f64matrix_f64matrix_add (SCM a, SCM b)
+//{
+//  scm_t_array_handle handle_a;
+//  scm_t_array_handle handle_b;
+//
+//  const char *who = "f64matrix-f64matrix+";
+//
+//  scm_dynwind_begin (0);
+//
+//  scm_array_get_handle (a, &handle_a);
+//  scm_dynwind_array_handle_release (&handle_a);
+//
+//  gsl_matrix ma = scm_gsl_matrix_const_view_array_handle (a, &handle_a).matrix;
+//
+//  scm_array_get_handle (b, &handle_b);
+//  scm_dynwind_array_handle_release (&handle_b);
+//
+//  gsl_matrix mb = scm_gsl_matrix_const_view_array_handle (b, &handle_b).matrix;
+//
+//  if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
+//    {
+//      const char *localized_message =
+//        _("non-conformable matrices: ~ax~a plus ~ax~a");
+//      SCM message = scm_sformat (scm_from_locale_string (localized_message),
+//                                 scm_list_4 (scm_from_int (ma.size1),
+//                                             scm_from_int (ma.size2),
+//                                             scm_from_int (mb.size1),
+//                                             scm_from_int (mb.size2)));
+//      rnrs_raise_condition
+//        (scm_list_4
+//         (rnrs_make_assertion_violation (),
+//          rnrs_c_make_who_condition (who),
+//          rnrs_make_message_condition (message),
+//          rnrs_make_irritants_condition (scm_list_2 (a, b))));
+//    }
+//
+//  double buffer[ma.size1 * ma.size2];
+//  gsl_matrix_view vc = gsl_matrix_view_array (buffer, ma.size1, mb.size2);
+//  gsl_matrix_memcpy (&vc.matrix, &ma);
+//
+//  gsl_matrix_add (&vc.matrix, &mb);
+//
+//  SCM result = scm_gsl_matrix_to_f64matrix (&vc.matrix, 1);
+//
+//  scm_dynwind_end ();
+//
+//  return result;
+//}
 
 VISIBLE SCM
 scm_f64matrix_f64matrix_sub (SCM a, SCM b)
@@ -315,8 +315,8 @@ scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V,
 VISIBLE void
 init_guile_sortsmill_math_matrices (void)
 {
-  scm_c_define_gsubr ("f64matrix-f64matrix+", 2, 0, 0,
-                      scm_f64matrix_f64matrix_add);
+  //  scm_c_define_gsubr ("f64matrix-f64matrix+", 2, 0, 0,
+  //                      scm_f64matrix_f64matrix_add);
   scm_c_define_gsubr ("f64matrix-f64matrix-", 2, 0, 0,
                       scm_f64matrix_f64matrix_sub);
   scm_c_define_gsubr ("private:f64matrix-svd-solve-vector", 5, 0, 0,

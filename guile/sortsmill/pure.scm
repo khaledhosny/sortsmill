@@ -285,6 +285,10 @@
        ((pure-expr-is-complex? x) #t)
        (else #f))))
 
+;;;; FIXME: Maybe have Guile integers be converted only to Pure big
+;;;; integers. Pure small integers are allowed to overflow, whereas
+;;;; Guile small integers are automatically converted to big ones. The
+;;;; mismatch could cause confusion.
   (define integer->pure-expr
     (lambda (n)
       (if (and (<= -2147483648 n) (<= n 2147483647))

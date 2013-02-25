@@ -628,14 +628,11 @@ scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
     exception__unexpected_array_type (who, array);
 }
 
-VISIBLE void
-scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
-                                unsigned int m, unsigned int n, SCM A[m][n])
+static void
+scm_array_handle_to_scm_matrix_nonuniform (scm_t_array_handle *handlep,
+                                           unsigned int m, unsigned int n,
+                                           SCM A[m][n])
 {
-  const char *who = "scm_array_handle_to_scm_matrix";
-
-  assert_c_rank_1_or_2_array (who, array, handlep);
-
   const size_t rank = scm_array_handle_rank (handlep);
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   const SCM *elems = scm_array_handle_elements (handlep);
@@ -649,6 +646,42 @@ scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
     for (unsigned int i = 0; i < m; i++)
       for (unsigned int j = 0; j < n; j++)
         A[i][j] = elems[i * dims[0].inc + j * dims[1].inc];
+}
+
+static void
+scm_array_handle_to_scm_matrix_general (SCM array, scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        SCM A[m][n])
+{
+  const size_t rank = scm_array_handle_rank (handlep);
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+  if (rank == 1)
+    {
+      assert (m == 1);
+      for (unsigned int j = 0; j < n; j++)
+        A[0][j] =
+          scm_array_ref (array, scm_list_1 (scm_from_uint (j + dims[0].lbnd)));
+    }
+  else
+    for (unsigned int i = 0; i < m; i++)
+      for (unsigned int j = 0; j < n; j++)
+        A[i][j] =
+          scm_array_ref (array, scm_list_2 (scm_from_uint (i + dims[0].lbnd),
+                                            scm_from_uint (j + dims[1].lbnd)));
+}
+
+VISIBLE void
+scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
+                                unsigned int m, unsigned int n, SCM A[m][n])
+{
+  const char *who = "scm_array_handle_to_scm_matrix";
+
+  assert_c_rank_1_or_2_array (who, array, handlep);
+
+  if (scm_array_handle_is_uniform_array (handlep))
+    scm_array_handle_to_scm_matrix_general (array, handlep, m, n, A);
+  else
+    scm_array_handle_to_scm_matrix_nonuniform (handlep, m, n, A);
 }
 
 VISIBLE SCM
@@ -878,6 +911,27 @@ non_conformable_for_gemm_C_trailing (const char *who, SCM B, SCM C,
 }
 
 static void
+non_conformable_for_addition (bool subtraction, const char *who, SCM A, SCM B,
+                              size_t m_A, size_t n_A, size_t m_B, size_t n_B)
+{
+  const char *localized_message =
+    subtraction ?
+    _("non-conformable matrices: ~ax~a minus ~ax~a") :
+    _("non-conformable matrices: ~ax~a plus ~ax~a");
+  SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                             scm_list_4 (scm_from_int (m_A),
+                                         scm_from_int (n_A),
+                                         scm_from_int (m_B),
+                                         scm_from_int (n_B)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (message),
+      rnrs_make_irritants_condition (scm_list_2 (A, B))));
+}
+
+static void
 assert_conformable_for_gemm (const char *who,
                              CBLAS_TRANSPOSE_t _TransA,
                              CBLAS_TRANSPOSE_t _TransB,
@@ -897,6 +951,19 @@ assert_conformable_for_gemm (const char *who,
     non_conformable_for_gemm_C_lead (who, A, C, m_A, k_A, m_C, n_C);
   if (n_B != n_C)
     non_conformable_for_gemm_C_trailing (who, B, C, k_B, n_B, m_C, n_C);
+}
+
+static void
+assert_conformable_for_addition (bool subtraction,
+                                 const char *who, SCM A, SCM B,
+                                 size_t m_A, size_t n_A, size_t m_B, size_t n_B)
+{
+  if ((m_A | n_A) == 0)
+    matrix_has_dimension_of_size_zero (who, A);
+  if ((m_B | n_B) == 0)
+    matrix_has_dimension_of_size_zero (who, B);
+  if (m_A != m_B || n_A != n_B)
+    non_conformable_for_addition (subtraction, who, A, B, m_A, n_A, m_B, n_B);
 }
 
 gsl_matrix_const_view null_gsl_matrix_const_view = { 0 };
@@ -1253,6 +1320,47 @@ scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
 }
 
 VISIBLE SCM
+scm_gsl_scm_matrix_add (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_scm_matrix_add";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t m_A = matrix_dim1 (&handle_A);
+  const size_t n_A = matrix_dim2 (&handle_A);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
+
+  SCM _A[m_A][n_A];
+  scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);
+
+  SCM _B[m_B][n_B];
+  scm_array_handle_to_scm_matrix (B, &handle_B, m_B, n_B, _B);
+
+  scm_matrix_add (m_A, n_A, _A, _B);
+
+  SCM result = scm_from_scm_matrix (m_A, n_A, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
 scm_gsl_svd_golub_reinsch (SCM a)
 {
   scm_t_array_handle handle_a;
@@ -1411,6 +1519,8 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:gemm-mpz", 7, 0, 0, scm_gsl_mpz_gemm);
   scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
   scm_c_define_gsubr ("gsl:gemm-scm", 7, 0, 0, scm_gsl_scm_gemm);
+
+  scm_c_define_gsubr ("gsl:matrix-add-scm", 2, 0, 0, scm_gsl_scm_matrix_add);
 
   scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);

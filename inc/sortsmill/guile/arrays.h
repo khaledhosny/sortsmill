@@ -90,6 +90,8 @@ _FF_GUILE_VECTAG_DECL (scm_symbol_f64);
 _FF_GUILE_VECTAG_DECL (scm_symbol_c32);
 _FF_GUILE_VECTAG_DECL (scm_symbol_c64);
 
+bool scm_array_handle_is_uniform_array (scm_t_array_handle *handlep);
+
 bool scm_is_uniform_array (SCM obj);
 bool scm_is_uniform_signed_integer_array (SCM obj);
 bool scm_is_uniform_unsigned_integer_array (SCM obj);

@@ -382,12 +382,6 @@ array)."
   (define (f64matrix* A B)
     (gsl:gemm-f64 gsl:CblasNoTrans gsl:CblasNoTrans 1.0 A B 0.0 #f))
 
-  (define (f64matrix+ A B)
-    (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
-
-  (define (f64matrix- A B)
-    (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
-
   (define (exact-matrix* A B)
     (gsl:gemm-mpq gsl:CblasNoTrans gsl:CblasNoTrans 1 A B 0 #f))
 
@@ -396,6 +390,12 @@ array)."
 
   (define (number-matrix* A B)
     (gsl:gemm-scm gsl:CblasNoTrans gsl:CblasNoTrans 1 A B 0 #f))
+
+  (define (f64matrix+ A B)
+    (f64matrix-f64matrix+ (vector->matrix A) (vector->matrix B)))
+
+  (define (f64matrix- A B)
+    (f64matrix-f64matrix- (vector->matrix A) (vector->matrix B)))
 
   ;;-----------------------------------------------------------------------
 

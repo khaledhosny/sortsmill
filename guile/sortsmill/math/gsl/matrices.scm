@@ -38,6 +38,12 @@
           gsl:gemm-mpq                  ; Exact rationals.
           gsl:gemm-scm                  ; General numbers.
 
+          ;; Matrix addition.
+          ;;
+          ;; (gsl:matrix-add-WHATEVER A B) → A + B
+          ;;
+          gsl:matrix-add-scm
+
           ;; ‘Thin’ singular value decomposition algorithms from
           ;; GSL. These procedures return U, S, V, respectively, as
           ;; multiple return values.
