@@ -62,10 +62,6 @@
           ;; converting from inexact to exact numbers.
           f64matrix->matrix
 
-;;;;          f64matrix-f64matrix*
-;;;;          f64matrix-f64matrix+
-;;;;          f64matrix-f64matrix-
-
           f64matrix*
           exact-matrix*
           integer-matrix*
@@ -632,14 +628,14 @@ array)."
            [X (apply make-typed-array 'f64 *unspecified* shape)])
       (match shape
         [((_ _))
-         (private:f64matrix-svd-solve-vector U S V X B)
+         (gsl:svd-f64-solve-vector U S V X B)
          X]
         [((lo hi) _)
          (for-each
           (lambda (i)
             (let ([xi (row-matrix->vector (matrix-row X i))]
                   [bi (row-matrix->vector (matrix-row B i))])
-              (private:f64matrix-svd-solve-vector U S V xi bi)))
+              (gsl:svd-f64-solve-vector U S V xi bi)))
           (iota (- hi lo -1) lo))
          X] )))
 

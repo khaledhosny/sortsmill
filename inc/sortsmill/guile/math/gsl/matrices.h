@@ -97,6 +97,9 @@ SCM scm_gsl_svd_golub_reinsch (SCM);
 SCM scm_gsl_svd_modified_golub_reinsch (SCM);
 SCM scm_gsl_svd_jacobi (SCM);
 
+SCM scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V,
+                              SCM x_transpose, SCM b_transpose);
+
 #if 0
 {
 #endif

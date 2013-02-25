@@ -18,14 +18,6 @@
 #ifndef _SORTSMILL_GUILE_MATH_MATRICES_H
 #define _SORTSMILL_GUILE_MATH_MATRICES_H
 
-#include <stdbool.h>
-#include <libguile.h>
-#include <gsl/gsl_matrix.h>
-#include <sortsmill/guile/math/gsl.h>
-#include <sortsmill/guile/arrays.h>
-#include <sortsmill/gmp_matrix.h>
-#include <sortsmill/c_version.h>
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -34,15 +26,7 @@ extern "C"
 }
 #endif
 
-/*----------------------------------------------------------------------------*/
-
-// FIXME: Move this to GSL module, and rename it. But do not delete
-// this .h file or its .c file, because I expect to use them for other things.
-//
-SCM scm_f64matrix_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose,
-                                    SCM b_transpose);
-
-/*----------------------------------------------------------------------------*/
+/* This source file is empty, but temporarily. */
 
 #if 0
 {

@@ -75,6 +75,8 @@
           gsl:svd-f64-golub-reinsch
           gsl:svd-f64-modified-golub-reinsch
           gsl:svd-f64-jacobi
+
+          gsl:svd-f64-solve-vector
           )
 
   (import (sortsmill arrays)

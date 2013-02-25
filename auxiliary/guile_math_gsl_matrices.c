@@ -1788,6 +1788,7 @@ VISIBLE SCM
 scm_gsl_svd_jacobi (SCM a)
 {
   scm_t_array_handle handle_a;
+
   const char *who = "scm_gsl_svd_jacobi";
 
   scm_dynwind_begin (0);
@@ -1827,6 +1828,61 @@ scm_gsl_svd_jacobi (SCM a)
   return scm_c_values (values, 3);
 }
 
+VISIBLE SCM
+scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose, SCM b_transpose)
+{
+  scm_t_array_handle handle_U;
+  scm_t_array_handle handle_V;
+  scm_t_array_handle handle_S;
+  scm_t_array_handle handle_x;
+  scm_t_array_handle handle_b;
+
+  const char *who = "scm_gsl_svd_solve_vector";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (U, &handle_U);
+  scm_dynwind_array_handle_release (&handle_U);
+  gsl_matrix_const_view mU =
+    scm_gsl_matrix_const_view_array_handle (U, &handle_U);
+
+  scm_array_get_handle (V, &handle_V);
+  scm_dynwind_array_handle_release (&handle_V);
+  gsl_matrix_const_view mV =
+    scm_gsl_matrix_const_view_array_handle (V, &handle_V);
+
+  scm_array_get_handle (S, &handle_S);
+  scm_dynwind_array_handle_release (&handle_S);
+  gsl_vector_const_view vS =
+    scm_gsl_vector_const_view_array_handle (S, &handle_S);
+
+  scm_array_get_handle (x_transpose, &handle_x);
+  scm_dynwind_array_handle_release (&handle_x);
+  gsl_vector_view vx =
+    scm_gsl_vector_view_array_handle (x_transpose, &handle_x);
+
+  scm_array_get_handle (b_transpose, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+  gsl_vector_const_view vb =
+    scm_gsl_vector_const_view_array_handle (b_transpose, &handle_b);
+
+  int errval =
+    gsl_linalg_SV_solve (&mU.matrix, &mV.matrix, &vS.vector, &vb.vector,
+                         &vx.vector);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_4 (U, S, V, b_transpose), SCM_UNDEFINED));
+
+  scm_dynwind_end ();
+
+  return SCM_UNSPECIFIED;
+}
+
 VISIBLE void
 init_guile_sortsmill_math_gsl_matrices (void)
 {
@@ -1862,4 +1918,7 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:svd-f64-modified-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_modified_golub_reinsch);
   scm_c_define_gsubr ("gsl:svd-f64-jacobi", 1, 0, 0, scm_gsl_svd_jacobi);
+
+  scm_c_define_gsubr ("gsl:svd-f64-solve-vector", 5, 0, 0,
+                      scm_gsl_svd_solve_vector);
 }
