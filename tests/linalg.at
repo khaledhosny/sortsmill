@@ -601,3 +601,23 @@ check_linalg([test_scm_matrix_elementwise_predicate nonneg 3 2 -3 -4 -5 -6 -7 -8
 check_linalg([test_scm_matrix_elementwise_predicate nonneg 3 2 3 0 5 0 7 8],[0],[1],[])
 
 #--------------------------------------------------------------------------
+
+check_linalg([test_mpz_matrix_equal 3 2 3 4 5 6 7 8 3 5 5 6 7 8],[0],[0],[])
+check_linalg([test_mpz_matrix_equal 3 2 3 4 4 6 7 8 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_mpz_matrix_equal 3 2 3 4 5 8 7 8 3 4 5 6 7 1],[0],[0],[])
+check_linalg([test_mpz_matrix_equal 3 2 0 0 0 0 0 0 1 1 1 1 1 1],[0],[0],[])
+check_linalg([test_mpz_matrix_equal 3 2 3 4 5 6 7 8 3 4 5 6 7 8],[0],[1],[])
+
+check_linalg([test_mpq_matrix_equal 3 2 3 4 5 6 7 8 3 5 5 6 7 8],[0],[0],[])
+check_linalg([test_mpq_matrix_equal 3 2 3 4 4 6 7 8 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_mpq_matrix_equal 3 2 3 4 5 8 7 8 3 4 5 6 7 1],[0],[0],[])
+check_linalg([test_mpq_matrix_equal 3 2 0 0 0 0 0 0 1 1 1 1 1 1],[0],[0],[])
+check_linalg([test_mpq_matrix_equal 3 2 3 4 5 6 7 8 3 4 5 6 7 8],[0],[1],[])
+
+check_linalg([test_scm_matrix_equal 3 2 3 4 5 6 7 8 3 5 5 6 7 8],[0],[0],[])
+check_linalg([test_scm_matrix_equal 3 2 3 4 4 6 7 8 3 4 5 6 7 8],[0],[0],[])
+check_linalg([test_scm_matrix_equal 3 2 3 4 5 8 7 8 3 4 5 6 7 1],[0],[0],[])
+check_linalg([test_scm_matrix_equal 3 2 0 0 0 0 0 0 1 1 1 1 1 1],[0],[0],[])
+check_linalg([test_scm_matrix_equal 3 2 3 4 5 6 7 8 3 4 5 6 7 8],[0],[1],[])
+
+#--------------------------------------------------------------------------

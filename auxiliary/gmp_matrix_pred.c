@@ -71,3 +71,24 @@ VISIBLE _FF_GMP_ELEMENTWISE_PRED (_GMP_TYPE (_matrix_isneg),
 
 VISIBLE _FF_GMP_ELEMENTWISE_PRED (_GMP_TYPE (_matrix_isnonneg),
                                   _GMP_TYPE (_isnonneg));
+
+VISIBLE bool
+_GMP_TYPE (_matrix_equal) (unsigned int m, unsigned int n,
+                           _GMP_TYPE (_t) A[m][n], _GMP_TYPE (_t) B[m][n])
+{
+  bool result = true;
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        // The following is coded purposely to make early exit
+        // necessary for correct results. Thus we can more easily
+        // detect if the code gets broken.
+        result = _GMP_TYPE (_equal) (A[i][j], B[i][j]);
+        if (result == false)
+          {
+            i = m - 1;
+            j = n - 1;
+          }
+      }
+  return result;
+}

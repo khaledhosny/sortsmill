@@ -264,3 +264,23 @@ VISIBLE _FF_SCM_ELEMENTWISE_PRED (scm_matrix_isneg, scm_is_true,
                                   scm_negative_p);
 VISIBLE _FF_SCM_ELEMENTWISE_PRED (scm_matrix_isnonneg, scm_is_false,
                                   scm_negative_p);
+
+VISIBLE bool
+scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
+{
+  bool result = true;
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        // The following is coded purposely to make early exit
+        // necessary for correct results. Thus we can more easily
+        // detect if the code gets broken.
+        result = scm_is_true (scm_num_eq_p (A[i][j], B[i][j]));
+        if (result == false)
+          {
+            i = m - 1;
+            j = n - 1;
+          }
+      }
+  return result;
+}

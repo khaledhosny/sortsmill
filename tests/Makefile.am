@@ -120,7 +120,7 @@ TESTS_LINALG_MPZ = test_mpz_matrix_set_all test_mpz_matrix_set_zero		\
 	test_mpz_matrix_tdiv_qr_elements test_mpz_matrix_fdiv_qr_elements	\
 	test_mpz_matrix_cdiv_qr_elements test_mpz_matrix_add				\
 	test_mpz_matrix_sub test_mpz_matrix_add_constant					\
-	test_mpz_matrix_elementwise_predicate
+	test_mpz_matrix_elementwise_predicate test_mpz_matrix_equal
 
 TESTS_LINALG_MPQ = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
 	test_mpq_matrix_set_identity test_mpq_matrix_memcpy				\
@@ -130,7 +130,7 @@ TESTS_LINALG_MPQ = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
 	test_mpq_matrix_gemm test_mpq_matrix_mul_elements				\
 	test_mpq_matrix_div_elements test_mpq_matrix_add				\
 	test_mpq_matrix_sub test_mpq_matrix_add_constant				\
-	test_mpq_matrix_elementwise_predicate
+	test_mpq_matrix_elementwise_predicate test_mpq_matrix_equal
 
 TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_set_identity test_scm_matrix_memcpy				\
@@ -140,7 +140,7 @@ TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_gemm test_scm_matrix_mul_elements				\
 	test_scm_matrix_div_elements test_scm_matrix_add				\
 	test_scm_matrix_sub test_scm_matrix_add_constant				\
-	test_scm_matrix_elementwise_predicate
+	test_scm_matrix_elementwise_predicate test_scm_matrix_equal
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
