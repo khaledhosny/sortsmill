@@ -443,6 +443,10 @@ check_linalg([test_scm_matrix_mul_elements 2 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[
 
 #--------------------------------------------------------------------------
 
+check_linalg([test_mpq_matrix_div_elements 1 1 123/246 642/321],[0],[ 1/4 | *** | 2 |],[])
+check_linalg([test_mpq_matrix_div_elements 3 2 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 1/7 1/4 | 1/3 2/5 | 5/11 1/2 | *** | 7 8 | 9 10 | 11 12 |],[])
+check_linalg([test_mpq_matrix_div_elements 2 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 1/7 1/4 1/3 | 2/5 5/11 1/2 | *** | 7 8 9 | 10 11 12 |],[])
+
 check_linalg([test_scm_matrix_div_elements 1 1 123/246 642/321],[0],[ 1/4 | *** | 2 |],[])
 check_linalg([test_scm_matrix_div_elements 3 2 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 1/7 1/4 | 1/3 2/5 | 5/11 1/2 | *** | 7 8 | 9 10 | 11 12 |],[])
 check_linalg([test_scm_matrix_div_elements 2 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 1/7 1/4 1/3 | 2/5 5/11 1/2 | *** | 7 8 9 | 10 11 12 |],[])
