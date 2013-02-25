@@ -1361,6 +1361,47 @@ scm_gsl_scm_matrix_add (SCM A, SCM B)
 }
 
 VISIBLE SCM
+scm_gsl_scm_matrix_sub (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_scm_matrix_sub";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t m_A = matrix_dim1 (&handle_A);
+  const size_t n_A = matrix_dim2 (&handle_A);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
+
+  SCM _A[m_A][n_A];
+  scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);
+
+  SCM _B[m_B][n_B];
+  scm_array_handle_to_scm_matrix (B, &handle_B, m_B, n_B, _B);
+
+  scm_matrix_sub (m_A, n_A, _A, _B);
+
+  SCM result = scm_from_scm_matrix (m_A, n_A, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
 scm_gsl_svd_golub_reinsch (SCM a)
 {
   scm_t_array_handle handle_a;
@@ -1521,6 +1562,8 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:gemm-scm", 7, 0, 0, scm_gsl_scm_gemm);
 
   scm_c_define_gsubr ("gsl:matrix-add-scm", 2, 0, 0, scm_gsl_scm_matrix_add);
+
+  scm_c_define_gsubr ("gsl:matrix-sub-scm", 2, 0, 0, scm_gsl_scm_matrix_sub);
 
   scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);

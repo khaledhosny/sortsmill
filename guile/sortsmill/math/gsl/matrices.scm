@@ -44,6 +44,12 @@
           ;;
           gsl:matrix-add-scm
 
+          ;; Matrix subtraction.
+          ;;
+          ;; (gsl:matrix-sub-WHATEVER A B) → A − B
+          ;;
+          gsl:matrix-sub-scm
+
           ;; ‘Thin’ singular value decomposition algorithms from
           ;; GSL. These procedures return U, S, V, respectively, as
           ;; multiple return values.

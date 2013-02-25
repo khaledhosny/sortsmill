@@ -85,6 +85,8 @@ SCM scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 
 SCM scm_gsl_scm_matrix_add (SCM A, SCM B);
 
+SCM scm_gsl_scm_matrix_sub (SCM A, SCM B);
+
 SCM scm_gsl_svd_golub_reinsch (SCM);
 SCM scm_gsl_svd_modified_golub_reinsch (SCM);
 SCM scm_gsl_svd_jacobi (SCM);
