@@ -83,8 +83,14 @@ SCM scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 SCM scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                       SCM beta, SCM C);
 
+SCM scm_gsl_matrix_add (SCM A, SCM B);
+SCM scm_gsl_mpz_matrix_add (SCM A, SCM B);
+SCM scm_gsl_mpq_matrix_add (SCM A, SCM B);
 SCM scm_gsl_scm_matrix_add (SCM A, SCM B);
 
+SCM scm_gsl_matrix_sub (SCM A, SCM B);
+SCM scm_gsl_mpz_matrix_sub (SCM A, SCM B);
+SCM scm_gsl_mpq_matrix_sub (SCM A, SCM B);
 SCM scm_gsl_scm_matrix_sub (SCM A, SCM B);
 
 SCM scm_gsl_svd_golub_reinsch (SCM);

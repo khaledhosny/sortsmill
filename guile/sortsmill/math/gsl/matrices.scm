@@ -42,12 +42,18 @@
           ;;
           ;; (gsl:matrix-add-WHATEVER A B) → A + B
           ;;
+          gsl:matrix-add-f64
+          gsl:matrix-add-mpz
+          gsl:matrix-add-mpq
           gsl:matrix-add-scm
 
           ;; Matrix subtraction.
           ;;
           ;; (gsl:matrix-sub-WHATEVER A B) → A − B
           ;;
+          gsl:matrix-sub-f64
+          gsl:matrix-sub-mpz
+          gsl:matrix-sub-mpq
           gsl:matrix-sub-scm
 
           ;; ‘Thin’ singular value decomposition algorithms from

@@ -1320,6 +1320,96 @@ scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
 }
 
 VISIBLE SCM
+scm_gsl_mpz_matrix_add (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_mpz_matrix_add";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t m_A = matrix_dim1 (&handle_A);
+  const size_t n_A = matrix_dim2 (&handle_A);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
+
+  mpz_t _A[m_A][n_A];
+  mpz_matrix_init (m_A, n_A, _A);
+  scm_dynwind_mpz_matrix_clear (m_A, n_A, _A);
+  scm_array_handle_to_mpz_matrix (A, &handle_A, m_A, n_A, _A);
+
+  mpz_t _B[m_B][n_B];
+  mpz_matrix_init (m_B, n_B, _B);
+  scm_dynwind_mpz_matrix_clear (m_B, n_B, _B);
+  scm_array_handle_to_mpz_matrix (B, &handle_B, m_B, n_B, _B);
+
+  mpz_matrix_add (m_A, n_A, _A, _B);
+
+  SCM result = scm_from_mpz_matrix (m_A, n_A, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_mpq_matrix_add (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_mpq_matrix_add";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t m_A = matrix_dim1 (&handle_A);
+  const size_t n_A = matrix_dim2 (&handle_A);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
+
+  mpq_t _A[m_A][n_A];
+  mpq_matrix_init (m_A, n_A, _A);
+  scm_dynwind_mpq_matrix_clear (m_A, n_A, _A);
+  scm_array_handle_to_mpq_matrix (A, &handle_A, m_A, n_A, _A);
+
+  mpq_t _B[m_B][n_B];
+  mpq_matrix_init (m_B, n_B, _B);
+  scm_dynwind_mpq_matrix_clear (m_B, n_B, _B);
+  scm_array_handle_to_mpq_matrix (B, &handle_B, m_B, n_B, _B);
+
+  mpq_matrix_add (m_A, n_A, _A, _B);
+
+  SCM result = scm_from_mpq_matrix (m_A, n_A, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
 scm_gsl_scm_matrix_add (SCM A, SCM B)
 {
   const char *who = "scm_gsl_scm_matrix_add";
@@ -1354,6 +1444,96 @@ scm_gsl_scm_matrix_add (SCM A, SCM B)
   scm_matrix_add (m_A, n_A, _A, _B);
 
   SCM result = scm_from_scm_matrix (m_A, n_A, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_mpz_matrix_sub (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_mpz_matrix_sub";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t m_A = matrix_dim1 (&handle_A);
+  const size_t n_A = matrix_dim2 (&handle_A);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
+
+  mpz_t _A[m_A][n_A];
+  mpz_matrix_init (m_A, n_A, _A);
+  scm_dynwind_mpz_matrix_clear (m_A, n_A, _A);
+  scm_array_handle_to_mpz_matrix (A, &handle_A, m_A, n_A, _A);
+
+  mpz_t _B[m_B][n_B];
+  mpz_matrix_init (m_B, n_B, _B);
+  scm_dynwind_mpz_matrix_clear (m_B, n_B, _B);
+  scm_array_handle_to_mpz_matrix (B, &handle_B, m_B, n_B, _B);
+
+  mpz_matrix_sub (m_A, n_A, _A, _B);
+
+  SCM result = scm_from_mpz_matrix (m_A, n_A, _A);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_mpq_matrix_sub (SCM A, SCM B)
+{
+  const char *who = "scm_gsl_mpq_matrix_sub";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t m_A = matrix_dim1 (&handle_A);
+  const size_t n_A = matrix_dim2 (&handle_A);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
+
+  mpq_t _A[m_A][n_A];
+  mpq_matrix_init (m_A, n_A, _A);
+  scm_dynwind_mpq_matrix_clear (m_A, n_A, _A);
+  scm_array_handle_to_mpq_matrix (A, &handle_A, m_A, n_A, _A);
+
+  mpq_t _B[m_B][n_B];
+  mpq_matrix_init (m_B, n_B, _B);
+  scm_dynwind_mpq_matrix_clear (m_B, n_B, _B);
+  scm_array_handle_to_mpq_matrix (B, &handle_B, m_B, n_B, _B);
+
+  mpq_matrix_sub (m_A, n_A, _A, _B);
+
+  SCM result = scm_from_mpq_matrix (m_A, n_A, _A);
 
   scm_dynwind_end ();
 
@@ -1561,8 +1741,12 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:gemm-mpq", 7, 0, 0, scm_gsl_mpq_gemm);
   scm_c_define_gsubr ("gsl:gemm-scm", 7, 0, 0, scm_gsl_scm_gemm);
 
+  scm_c_define_gsubr ("gsl:matrix-add-mpz", 2, 0, 0, scm_gsl_mpz_matrix_add);
+  scm_c_define_gsubr ("gsl:matrix-add-mpq", 2, 0, 0, scm_gsl_mpq_matrix_add);
   scm_c_define_gsubr ("gsl:matrix-add-scm", 2, 0, 0, scm_gsl_scm_matrix_add);
 
+  scm_c_define_gsubr ("gsl:matrix-sub-mpz", 2, 0, 0, scm_gsl_mpz_matrix_sub);
+  scm_c_define_gsubr ("gsl:matrix-sub-mpq", 2, 0, 0, scm_gsl_mpq_matrix_sub);
   scm_c_define_gsubr ("gsl:matrix-sub-scm", 2, 0, 0, scm_gsl_scm_matrix_sub);
 
   scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
