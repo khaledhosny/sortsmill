@@ -127,7 +127,9 @@ TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_swap test_scm_matrix_swap_rows					\
 	test_scm_matrix_swap_columns test_scm_matrix_swap_rowcol		\
 	test_scm_matrix_transpose_memcpy test_scm_matrix_scale			\
-	test_scm_matrix_gemm
+	test_scm_matrix_gemm test_scm_matrix_mul_elements				\
+	test_scm_matrix_div_elements test_scm_matrix_add				\
+	test_scm_matrix_sub test_scm_matrix_add_constant
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
