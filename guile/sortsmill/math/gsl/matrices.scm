@@ -86,24 +86,29 @@
           ;; Predicates.
           ;;
           gsl:matrix-isnull-f64?
-          gsl:matrix-isneg-f64?
-          gsl:matrix-ispos-f64?
-          gsl:matrix-isnonneg-f64?
-
           gsl:matrix-isnull-mpz?
-          gsl:matrix-isneg-mpz?
-          gsl:matrix-ispos-mpz?
-          gsl:matrix-isnonneg-mpz?
-
           gsl:matrix-isnull-mpq?
-          gsl:matrix-isneg-mpq?
-          gsl:matrix-ispos-mpq?
-          gsl:matrix-isnonneg-mpq?
-
           gsl:matrix-isnull-scm?
+
+          gsl:matrix-isneg-f64?
+          gsl:matrix-isneg-mpz?
+          gsl:matrix-isneg-mpq?
           gsl:matrix-isneg-scm?
+
+          gsl:matrix-ispos-f64?
+          gsl:matrix-ispos-mpz?
+          gsl:matrix-ispos-mpq?
           gsl:matrix-ispos-scm?
+
+          gsl:matrix-isnonneg-f64?
+          gsl:matrix-isnonneg-mpz?
+          gsl:matrix-isnonneg-mpq?
           gsl:matrix-isnonneg-scm?
+
+          gsl:matrix-equal-f64?
+          gsl:matrix-equal-mpz?
+          gsl:matrix-equal-mpq?
+          gsl:matrix-equal-scm?
 
           ;; ‘Thin’ singular value decomposition algorithms from
           ;; GSL. These procedures return U, S, V, respectively, as

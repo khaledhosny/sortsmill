@@ -110,39 +110,48 @@ SCM scm_gsl_scm_matrix_div_elements (SCM A, SCM B);
 
 bool scm_c_gsl_matrix_isnull (SCM);
 SCM scm_gsl_matrix_isnull_p (SCM);
-bool scm_c_gsl_matrix_isneg (SCM);
-SCM scm_gsl_matrix_isneg_p (SCM);
-bool scm_c_gsl_matrix_ispos (SCM);
-SCM scm_gsl_matrix_ispos_p (SCM);
-bool scm_c_gsl_matrix_isnonneg (SCM);
-SCM scm_gsl_matrix_isnonneg_p (SCM);
-
 bool scm_c_gsl_mpz_matrix_isnull (SCM);
 SCM scm_gsl_mpz_matrix_isnull_p (SCM);
-bool scm_c_gsl_mpz_matrix_isneg (SCM);
-SCM scm_gsl_mpz_matrix_isneg_p (SCM);
-bool scm_c_gsl_mpz_matrix_ispos (SCM);
-SCM scm_gsl_mpz_matrix_ispos_p (SCM);
-bool scm_c_gsl_mpz_matrix_isnonneg (SCM);
-SCM scm_gsl_mpz_matrix_isnonneg_p (SCM);
-
 bool scm_c_gsl_mpq_matrix_isnull (SCM);
 SCM scm_gsl_mpq_matrix_isnull_p (SCM);
-bool scm_c_gsl_mpq_matrix_isneg (SCM);
-SCM scm_gsl_mpq_matrix_isneg_p (SCM);
-bool scm_c_gsl_mpq_matrix_ispos (SCM);
-SCM scm_gsl_mpq_matrix_ispos_p (SCM);
-bool scm_c_gsl_mpq_matrix_isnonneg (SCM);
-SCM scm_gsl_mpq_matrix_isnonneg_p (SCM);
-
 bool scm_c_gsl_scm_matrix_isnull (SCM);
 SCM scm_gsl_scm_matrix_isnull_p (SCM);
+
+bool scm_c_gsl_matrix_isneg (SCM);
+SCM scm_gsl_matrix_isneg_p (SCM);
+bool scm_c_gsl_mpz_matrix_isneg (SCM);
+SCM scm_gsl_mpz_matrix_isneg_p (SCM);
+bool scm_c_gsl_mpq_matrix_isneg (SCM);
+SCM scm_gsl_mpq_matrix_isneg_p (SCM);
 bool scm_c_gsl_scm_matrix_isneg (SCM);
 SCM scm_gsl_scm_matrix_isneg_p (SCM);
+
+bool scm_c_gsl_matrix_ispos (SCM);
+SCM scm_gsl_matrix_ispos_p (SCM);
+bool scm_c_gsl_mpz_matrix_ispos (SCM);
+SCM scm_gsl_mpz_matrix_ispos_p (SCM);
+bool scm_c_gsl_mpq_matrix_ispos (SCM);
+SCM scm_gsl_mpq_matrix_ispos_p (SCM);
 bool scm_c_gsl_scm_matrix_ispos (SCM);
 SCM scm_gsl_scm_matrix_ispos_p (SCM);
+
+bool scm_c_gsl_matrix_isnonneg (SCM);
+SCM scm_gsl_matrix_isnonneg_p (SCM);
+bool scm_c_gsl_mpz_matrix_isnonneg (SCM);
+SCM scm_gsl_mpz_matrix_isnonneg_p (SCM);
+bool scm_c_gsl_mpq_matrix_isnonneg (SCM);
+SCM scm_gsl_mpq_matrix_isnonneg_p (SCM);
 bool scm_c_gsl_scm_matrix_isnonneg (SCM);
 SCM scm_gsl_scm_matrix_isnonneg_p (SCM);
+
+bool scm_c_gsl_matrix_equal (SCM, SCM);
+SCM scm_gsl_matrix_equal_p (SCM, SCM);
+bool scm_c_gsl_mpz_matrix_equal (SCM, SCM);
+SCM scm_gsl_mpz_matrix_equal_p (SCM, SCM);
+bool scm_c_gsl_mpq_matrix_equal (SCM, SCM);
+SCM scm_gsl_mpq_matrix_equal_p (SCM, SCM);
+bool scm_c_gsl_scm_matrix_equal (SCM, SCM);
+SCM scm_gsl_scm_matrix_equal_p (SCM, SCM);
 
 SCM scm_gsl_svd_golub_reinsch (SCM);
 SCM scm_gsl_svd_modified_golub_reinsch (SCM);

@@ -1480,6 +1480,12 @@ div_elements_non_conformable_message (void)
   return _("non-conformable matrices: elementwise quotient of ~ax~a and ~ax~a");
 }
 
+static const char *
+equal_non_conformable_message (void)
+{
+  return _("non-conformable matrices: ~ax~a `equal to' ~ax~a");
+}
+
 #define _FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP(OP, FUNC, NON_CONFORMABILITY_MESSAGE) \
   VISIBLE SCM                                                           \
   scm_gsl_matrix_##OP (SCM A, SCM B)                                    \
@@ -1791,6 +1797,159 @@ _FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (ispos, scm_matrix_ispos);
 _FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (isneg, scm_matrix_isneg);
 _FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (isnonneg, scm_matrix_isnonneg);
 
+#define _FF_SCM_GSL_SAMESHAPE_MATRICES_PREDICATE(OP, FUNC, NON_CONFORMABILITY_MESSAGE) \
+  VISIBLE bool                                                          \
+  scm_c_gsl_matrix_##OP (SCM A, SCM B)                                  \
+  {                                                                     \
+    const char *who = "scm_gsl_matrix_" #OP;                            \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+    scm_t_array_handle handle_B;                                        \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_c_f64_rank_1_or_2_array (who, A, &handle_A);                 \
+                                                                        \
+    scm_array_get_handle (B, &handle_B);                                \
+    scm_dynwind_array_handle_release (&handle_B);                       \
+    assert_c_f64_rank_1_or_2_array (who, B, &handle_B);                 \
+                                                                        \
+    gsl_matrix_const_view _A =                                          \
+      scm_gsl_matrix_const_view_array_handle (A, &handle_A);            \
+                                                                        \
+    gsl_matrix_const_view _B =                                          \
+      scm_gsl_matrix_const_view_array_handle (B, &handle_B);            \
+                                                                        \
+    const size_t m_A = _A.matrix.size1;                                 \
+    const size_t n_A = _A.matrix.size2;                                 \
+                                                                        \
+    const size_t m_B = _B.matrix.size1;                                 \
+    const size_t n_B = _B.matrix.size2;                                 \
+                                                                        \
+    assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
+                                     A, B, m_A, n_A, m_B, n_B);         \
+                                                                        \
+    const bool result = FUNC (&_A.matrix, &_B.matrix);                  \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return result;                                                      \
+  }                                                                     \
+                                                                        \
+  VISIBLE SCM                                                           \
+  scm_gsl_matrix_##OP##_p (SCM A, SCM B)                                \
+  {                                                                     \
+    return scm_from_bool (scm_c_gsl_matrix_##OP (A, B));                \
+  }
+
+_FF_SCM_GSL_SAMESHAPE_MATRICES_PREDICATE (equal, gsl_matrix_equal,
+                                          equal_non_conformable_message ());
+
+#define _FF_SCM_GMP_SAMESHAPE_MATRICES_PREDICATE(X, OP, FUNC, NON_CONFORMABILITY_MESSAGE) \
+  VISIBLE bool                                                          \
+  scm_c_gsl_mp##X##_matrix_##OP (SCM A, SCM B)                          \
+  {                                                                     \
+    const char *who = "scm_gsl_mp" #X "_matrix_" #OP;                   \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+    scm_t_array_handle handle_B;                                        \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_c_exact_rank_1_or_2_array (who, A, &handle_A);               \
+                                                                        \
+    scm_array_get_handle (B, &handle_B);                                \
+    scm_dynwind_array_handle_release (&handle_B);                       \
+    assert_c_exact_rank_1_or_2_array (who, B, &handle_B);               \
+                                                                        \
+    const size_t m_A = matrix_dim1 (&handle_A);                         \
+    const size_t n_A = matrix_dim2 (&handle_A);                         \
+                                                                        \
+    const size_t m_B = matrix_dim1 (&handle_B);                         \
+    const size_t n_B = matrix_dim2 (&handle_B);                         \
+                                                                        \
+    mp##X##_t _A[m_A][n_A];                                             \
+    mp##X##_matrix_init (m_A, n_A, _A);                                 \
+    scm_dynwind_mp##X##_matrix_clear (m_A, n_A, _A);                    \
+    scm_array_handle_to_mp##X##_matrix (A, &handle_A, m_A, n_A, _A);    \
+                                                                        \
+    mp##X##_t _B[m_B][n_B];                                             \
+    mp##X##_matrix_init (m_B, n_B, _B);                                 \
+    scm_dynwind_mp##X##_matrix_clear (m_B, n_B, _B);                    \
+    scm_array_handle_to_mp##X##_matrix (B, &handle_B, m_B, n_B, _B);    \
+                                                                        \
+    const bool result = FUNC (m_A, n_A, _A, _B);                        \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return result;                                                      \
+  }                                                                     \
+                                                                        \
+  VISIBLE SCM                                                           \
+  scm_gsl_mp##X##_matrix_##OP##_p (SCM A, SCM B)                        \
+  {                                                                     \
+    return scm_from_bool (scm_c_gsl_mp##X##_matrix_##OP (A, B));        \
+  }
+
+_FF_SCM_GMP_SAMESHAPE_MATRICES_PREDICATE (z, equal, mpz_matrix_equal,
+                                          equal_non_conformable_message ());
+_FF_SCM_GMP_SAMESHAPE_MATRICES_PREDICATE (q, equal, mpq_matrix_equal,
+                                          equal_non_conformable_message ());
+
+#define _FF_SCM_SCM_SAMESHAPE_MATRICES_PREDICATE(OP, FUNC, NON_CONFORMABILITY_MESSAGE) \
+  VISIBLE bool                                                          \
+  scm_c_gsl_scm_matrix_##OP (SCM A, SCM B)                              \
+  {                                                                     \
+    const char *who = "scm_gsl_scm_matrix_" #OP;                        \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+    scm_t_array_handle handle_B;                                        \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_c_exact_rank_1_or_2_array (who, A, &handle_A);               \
+                                                                        \
+    scm_array_get_handle (B, &handle_B);                                \
+    scm_dynwind_array_handle_release (&handle_B);                       \
+    assert_c_exact_rank_1_or_2_array (who, B, &handle_B);               \
+                                                                        \
+    const size_t m_A = matrix_dim1 (&handle_A);                         \
+    const size_t n_A = matrix_dim2 (&handle_A);                         \
+                                                                        \
+    const size_t m_B = matrix_dim1 (&handle_B);                         \
+    const size_t n_B = matrix_dim2 (&handle_B);                         \
+                                                                        \
+    assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
+                                     A, B, m_A, n_A, m_B, n_B);         \
+                                                                        \
+    SCM _A[m_A][n_A];                                                   \
+    scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);        \
+                                                                        \
+    SCM _B[m_B][n_B];                                                   \
+    scm_array_handle_to_scm_matrix (B, &handle_B, m_B, n_B, _B);        \
+                                                                        \
+    const bool result = FUNC (m_A, n_A, _A, _B);                        \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return result;                                                      \
+  }                                                                     \
+                                                                        \
+  VISIBLE SCM                                                           \
+  scm_gsl_scm_matrix_##OP##_p (SCM A, SCM B)                            \
+  {                                                                     \
+    return scm_from_bool (scm_c_gsl_scm_matrix_##OP (A, B));            \
+  }
+
+_FF_SCM_SCM_SAMESHAPE_MATRICES_PREDICATE (equal, scm_matrix_equal,
+                                          equal_non_conformable_message ());
+
 VISIBLE SCM
 scm_gsl_svd_golub_reinsch (SCM a)
 {
@@ -2074,6 +2233,14 @@ init_guile_sortsmill_math_gsl_matrices (void)
                       scm_gsl_scm_matrix_ispos_p);
   scm_c_define_gsubr ("gsl:matrix-isnonneg-scm?", 1, 0, 0,
                       scm_gsl_scm_matrix_isnonneg_p);
+
+  scm_c_define_gsubr ("gsl:matrix-equal-f64?", 2, 0, 0, scm_gsl_matrix_equal_p);
+  scm_c_define_gsubr ("gsl:matrix-equal-mpz?", 2, 0, 0,
+                      scm_gsl_mpz_matrix_equal_p);
+  scm_c_define_gsubr ("gsl:matrix-equal-mpq?", 2, 0, 0,
+                      scm_gsl_mpq_matrix_equal_p);
+  scm_c_define_gsubr ("gsl:matrix-equal-scm?", 2, 0, 0,
+                      scm_gsl_scm_matrix_equal_p);
 
   scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);
