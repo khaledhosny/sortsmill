@@ -1673,6 +1673,124 @@ _FF_SCM_SCM_MATRIX_ELEMENTWISE_BINARY_OP (div_elements, scm_matrix_div_elements,
                                           div_elements_non_conformable_message
                                           ());
 
+#define _FF_SCM_GSL_SINGLE_MATRIX_PREDICATE(OP, FUNC)           \
+  VISIBLE bool                                                  \
+  scm_c_gsl_matrix_##OP (SCM A)                                 \
+  {                                                             \
+    const char *who = "scm_gsl_matrix_" #OP;                    \
+                                                                \
+    scm_t_array_handle handle_A;                                \
+                                                                \
+    scm_dynwind_begin (0);                                      \
+                                                                \
+    scm_array_get_handle (A, &handle_A);                        \
+    scm_dynwind_array_handle_release (&handle_A);               \
+    assert_c_f64_rank_1_or_2_array (who, A, &handle_A);         \
+                                                                \
+    gsl_matrix_const_view _A =                                  \
+      scm_gsl_matrix_const_view_array_handle (A, &handle_A);    \
+                                                                \
+    const bool result = FUNC (&_A.matrix);                      \
+                                                                \
+    scm_dynwind_end ();                                         \
+                                                                \
+    return result;                                              \
+  }                                                             \
+                                                                \
+  VISIBLE SCM                                                   \
+  scm_gsl_matrix_##OP##_p (SCM A)                               \
+  {                                                             \
+    return scm_from_bool (scm_c_gsl_matrix_##OP (A));           \
+  }
+
+_FF_SCM_GSL_SINGLE_MATRIX_PREDICATE (isnull, gsl_matrix_isnull);
+_FF_SCM_GSL_SINGLE_MATRIX_PREDICATE (ispos, gsl_matrix_ispos);
+_FF_SCM_GSL_SINGLE_MATRIX_PREDICATE (isneg, gsl_matrix_isneg);
+_FF_SCM_GSL_SINGLE_MATRIX_PREDICATE (isnonneg, gsl_matrix_isnonneg);
+
+#define _FF_SCM_GMP_SINGLE_MATRIX_PREDICATE(X, OP, FUNC)                \
+  VISIBLE bool                                                          \
+  scm_c_gsl_mp##X##_matrix_##OP (SCM A)                                 \
+  {                                                                     \
+    const char *who = "scm_gsl_mp" #X "_matrix_" #OP;                   \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_c_exact_rank_1_or_2_array (who, A, &handle_A);               \
+                                                                        \
+    const size_t m = matrix_dim1 (&handle_A);                           \
+    const size_t n = matrix_dim2 (&handle_A);                           \
+                                                                        \
+    mp##X##_t _A[m][n];                                                 \
+    mp##X##_matrix_init (m, n, _A);                                     \
+    scm_dynwind_mp##X##_matrix_clear (m, n, _A);                        \
+    scm_array_handle_to_mp##X##_matrix (A, &handle_A, m, n, _A);        \
+                                                                        \
+    const bool result = FUNC (m, n, _A);                                \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return result;                                                      \
+  }                                                                     \
+                                                                        \
+  VISIBLE SCM                                                           \
+  scm_gsl_mp##X##_matrix_##OP##_p (SCM A)                               \
+  {                                                                     \
+    return scm_from_bool (scm_c_gsl_mp##X##_matrix_##OP (A));           \
+  }
+
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (z, isnull, mpz_matrix_isnull);
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (z, ispos, mpz_matrix_ispos);
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (z, isneg, mpz_matrix_isneg);
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (z, isnonneg, mpz_matrix_isnonneg);
+
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (q, isnull, mpq_matrix_isnull);
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (q, ispos, mpq_matrix_ispos);
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (q, isneg, mpq_matrix_isneg);
+_FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (q, isnonneg, mpq_matrix_isnonneg);
+
+#define _FF_SCM_SCM_SINGLE_MATRIX_PREDICATE(OP, FUNC)           \
+  VISIBLE bool                                                  \
+  scm_c_gsl_scm_matrix_##OP (SCM A)                             \
+  {                                                             \
+    const char *who = "scm_gsl_scm_matrix_" #OP;                \
+                                                                \
+    scm_t_array_handle handle_A;                                \
+                                                                \
+    scm_dynwind_begin (0);                                      \
+                                                                \
+    scm_array_get_handle (A, &handle_A);                        \
+    scm_dynwind_array_handle_release (&handle_A);               \
+    assert_c_exact_rank_1_or_2_array (who, A, &handle_A);       \
+                                                                \
+    const size_t m = matrix_dim1 (&handle_A);                   \
+    const size_t n = matrix_dim2 (&handle_A);                   \
+                                                                \
+    SCM _A[m][n];                                               \
+    scm_array_handle_to_scm_matrix (A, &handle_A, m, n, _A);    \
+                                                                \
+    const bool result = FUNC (m, n, _A);                        \
+                                                                \
+    scm_dynwind_end ();                                         \
+                                                                \
+    return result;                                              \
+  }                                                             \
+                                                                \
+  VISIBLE SCM                                                   \
+  scm_gsl_scm_matrix_##OP##_p (SCM A)                           \
+  {                                                             \
+    return scm_from_bool (scm_c_gsl_scm_matrix_##OP (A));       \
+  }
+
+_FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (isnull, scm_matrix_isnull);
+_FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (ispos, scm_matrix_ispos);
+_FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (isneg, scm_matrix_isneg);
+_FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (isnonneg, scm_matrix_isnonneg);
+
 VISIBLE SCM
 scm_gsl_svd_golub_reinsch (SCM a)
 {
@@ -1922,6 +2040,40 @@ init_guile_sortsmill_math_gsl_matrices (void)
                       scm_gsl_mpq_matrix_div_elements);
   scm_c_define_gsubr ("gsl:matrix-div-elements-scm", 2, 0, 0,
                       scm_gsl_scm_matrix_div_elements);
+
+  scm_c_define_gsubr ("gsl:matrix-isnull-f64?", 1, 0, 0,
+                      scm_gsl_matrix_isnull_p);
+  scm_c_define_gsubr ("gsl:matrix-isneg-f64?", 1, 0, 0, scm_gsl_matrix_isneg_p);
+  scm_c_define_gsubr ("gsl:matrix-ispos-f64?", 1, 0, 0, scm_gsl_matrix_ispos_p);
+  scm_c_define_gsubr ("gsl:matrix-isnonneg-f64?", 1, 0, 0,
+                      scm_gsl_matrix_isnonneg_p);
+
+  scm_c_define_gsubr ("gsl:matrix-isnull-mpz?", 1, 0, 0,
+                      scm_gsl_mpz_matrix_isnull_p);
+  scm_c_define_gsubr ("gsl:matrix-isneg-mpz?", 1, 0, 0,
+                      scm_gsl_mpz_matrix_isneg_p);
+  scm_c_define_gsubr ("gsl:matrix-ispos-mpz?", 1, 0, 0,
+                      scm_gsl_mpz_matrix_ispos_p);
+  scm_c_define_gsubr ("gsl:matrix-isnonneg-mpz?", 1, 0, 0,
+                      scm_gsl_mpz_matrix_isnonneg_p);
+
+  scm_c_define_gsubr ("gsl:matrix-isnull-mpq?", 1, 0, 0,
+                      scm_gsl_mpq_matrix_isnull_p);
+  scm_c_define_gsubr ("gsl:matrix-isneg-mpq?", 1, 0, 0,
+                      scm_gsl_mpq_matrix_isneg_p);
+  scm_c_define_gsubr ("gsl:matrix-ispos-mpq?", 1, 0, 0,
+                      scm_gsl_mpq_matrix_ispos_p);
+  scm_c_define_gsubr ("gsl:matrix-isnonneg-mpq?", 1, 0, 0,
+                      scm_gsl_mpq_matrix_isnonneg_p);
+
+  scm_c_define_gsubr ("gsl:matrix-isnull-scm?", 1, 0, 0,
+                      scm_gsl_scm_matrix_isnull_p);
+  scm_c_define_gsubr ("gsl:matrix-isneg-scm?", 1, 0, 0,
+                      scm_gsl_scm_matrix_isneg_p);
+  scm_c_define_gsubr ("gsl:matrix-ispos-scm?", 1, 0, 0,
+                      scm_gsl_scm_matrix_ispos_p);
+  scm_c_define_gsubr ("gsl:matrix-isnonneg-scm?", 1, 0, 0,
+                      scm_gsl_scm_matrix_isnonneg_p);
 
   scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);

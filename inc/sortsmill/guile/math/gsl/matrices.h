@@ -23,6 +23,7 @@
 #include <gsl/gsl_linalg.h>
 #include <sortsmill/guile/arrays.h>
 #include <sortsmill/c_version.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -106,6 +107,42 @@ SCM scm_gsl_scm_matrix_mul_elements (SCM A, SCM B);
 SCM scm_gsl_matrix_div_elements (SCM A, SCM B);
 SCM scm_gsl_mpq_matrix_div_elements (SCM A, SCM B);
 SCM scm_gsl_scm_matrix_div_elements (SCM A, SCM B);
+
+bool scm_c_gsl_matrix_isnull (SCM);
+SCM scm_gsl_matrix_isnull_p (SCM);
+bool scm_c_gsl_matrix_isneg (SCM);
+SCM scm_gsl_matrix_isneg_p (SCM);
+bool scm_c_gsl_matrix_ispos (SCM);
+SCM scm_gsl_matrix_ispos_p (SCM);
+bool scm_c_gsl_matrix_isnonneg (SCM);
+SCM scm_gsl_matrix_isnonneg_p (SCM);
+
+bool scm_c_gsl_mpz_matrix_isnull (SCM);
+SCM scm_gsl_mpz_matrix_isnull_p (SCM);
+bool scm_c_gsl_mpz_matrix_isneg (SCM);
+SCM scm_gsl_mpz_matrix_isneg_p (SCM);
+bool scm_c_gsl_mpz_matrix_ispos (SCM);
+SCM scm_gsl_mpz_matrix_ispos_p (SCM);
+bool scm_c_gsl_mpz_matrix_isnonneg (SCM);
+SCM scm_gsl_mpz_matrix_isnonneg_p (SCM);
+
+bool scm_c_gsl_mpq_matrix_isnull (SCM);
+SCM scm_gsl_mpq_matrix_isnull_p (SCM);
+bool scm_c_gsl_mpq_matrix_isneg (SCM);
+SCM scm_gsl_mpq_matrix_isneg_p (SCM);
+bool scm_c_gsl_mpq_matrix_ispos (SCM);
+SCM scm_gsl_mpq_matrix_ispos_p (SCM);
+bool scm_c_gsl_mpq_matrix_isnonneg (SCM);
+SCM scm_gsl_mpq_matrix_isnonneg_p (SCM);
+
+bool scm_c_gsl_scm_matrix_isnull (SCM);
+SCM scm_gsl_scm_matrix_isnull_p (SCM);
+bool scm_c_gsl_scm_matrix_isneg (SCM);
+SCM scm_gsl_scm_matrix_isneg_p (SCM);
+bool scm_c_gsl_scm_matrix_ispos (SCM);
+SCM scm_gsl_scm_matrix_ispos_p (SCM);
+bool scm_c_gsl_scm_matrix_isnonneg (SCM);
+SCM scm_gsl_scm_matrix_isnonneg_p (SCM);
 
 SCM scm_gsl_svd_golub_reinsch (SCM);
 SCM scm_gsl_svd_modified_golub_reinsch (SCM);
