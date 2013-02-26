@@ -47,7 +47,8 @@
 #include <sortsmill/xdie_on_null.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if 0
 }

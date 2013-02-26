@@ -41,7 +41,8 @@
 #include <sortsmill/xgc.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if 0
 }
@@ -94,8 +95,7 @@ uint32_t *x_gc_u32_vstrjoin (const uint32_t *s1, va_list ap);
 long int u8_strtol (const uint8_t *nptr, uint8_t **endptr, int base);
 long int u16_strtol (const uint16_t *nptr, uint16_t **endptr, int base);
 long int u32_strtol (const uint32_t *nptr, uint32_t **endptr, int base);
-unsigned long int u8_strtoul (const uint8_t *nptr, uint8_t **endptr,
-                              int base);
+unsigned long int u8_strtoul (const uint8_t *nptr, uint8_t **endptr, int base);
 unsigned long int u16_strtoul (const uint16_t *nptr,
                                uint16_t **endptr, int base);
 unsigned long int u32_strtoul (const uint32_t *nptr,

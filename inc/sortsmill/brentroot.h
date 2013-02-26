@@ -19,7 +19,8 @@
 #define _SORTSMILL_BRENTROOT_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if 0
 }

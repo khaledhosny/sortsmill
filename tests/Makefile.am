@@ -140,7 +140,8 @@ TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_gemm test_scm_matrix_mul_elements				\
 	test_scm_matrix_div_elements test_scm_matrix_add				\
 	test_scm_matrix_sub test_scm_matrix_add_constant				\
-	test_scm_matrix_elementwise_predicate test_scm_matrix_equal
+	test_scm_matrix_elementwise_predicate test_scm_matrix_equal		\
+	test_scm_matrix_trsv
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\

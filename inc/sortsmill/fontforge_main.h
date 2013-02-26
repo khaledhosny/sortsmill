@@ -30,7 +30,8 @@
 #define _SORTSMILL_FONTFORGE_MAIN_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if 0
 }

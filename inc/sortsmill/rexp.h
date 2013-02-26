@@ -34,7 +34,7 @@
  */
 
 #include <atomic_ops.h>
-#include <sortsmill/xgc.h>    /* Includes gc.h and pthreads.h in the
+#include <sortsmill/xgc.h>      /* Includes gc.h and pthreads.h in the
                                    right order. */
 
 #include <stdio.h>
@@ -43,7 +43,8 @@
 #include <sortsmill/xunistring.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if 0
 }
@@ -91,8 +92,7 @@ rexp_t rexp_compile_jit (const char *pattern);
 rexp_t rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr,
                               const char *pattern, int options);
 rexp_t rexp_compile_once (rexp_buffer_t *re_buf_ptr, const char *pattern);
-rexp_t rexp_compile_once_study (rexp_buffer_t *re_buf_ptr,
-                                const char *pattern);
+rexp_t rexp_compile_once_study (rexp_buffer_t *re_buf_ptr, const char *pattern);
 rexp_t rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr, const char *pattern);
 
 rexp_t u8_rexp_compile_opt (const uint8_t *pattern, int options);
@@ -102,8 +102,7 @@ rexp_t u8_rexp_compile_jit (const uint8_t *pattern);
 
 rexp_t u8_rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr,
                                  const uint8_t *pattern, int options);
-rexp_t u8_rexp_compile_once (rexp_buffer_t *re_buf_ptr,
-                             const uint8_t *pattern);
+rexp_t u8_rexp_compile_once (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern);
 rexp_t u8_rexp_compile_once_study (rexp_buffer_t *re_buf_ptr,
                                    const uint8_t *pattern);
 rexp_t u8_rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr,

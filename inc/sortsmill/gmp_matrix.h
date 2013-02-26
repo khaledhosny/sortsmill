@@ -25,8 +25,16 @@
 #include <sortsmill/transmatrix.h>
 #include <stdbool.h>
 
-/*-------------------------------------------------------------------------
- *
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+/*-----------------------------------------------------------------------*/
+/*
  * GMP init and clear of the matrix entries.
  */
 
@@ -209,16 +217,25 @@ bool mpz_matrix_isnull (unsigned int m, unsigned int n, mpz_t A[m][n]);
 bool mpz_matrix_ispos (unsigned int m, unsigned int n, mpz_t A[m][n]);
 bool mpz_matrix_isneg (unsigned int m, unsigned int n, mpz_t A[m][n]);
 bool mpz_matrix_isnonneg (unsigned int m, unsigned int n, mpz_t A[m][n]);
-bool mpz_matrix_equal (unsigned int m, unsigned int n, mpz_t A[m][n], mpz_t B[m][n]);
+bool mpz_matrix_equal (unsigned int m, unsigned int n, mpz_t A[m][n],
+                       mpz_t B[m][n]);
 
 bool mpq_matrix_isnull (unsigned int m, unsigned int n, mpq_t A[m][n]);
 bool mpq_matrix_ispos (unsigned int m, unsigned int n, mpq_t A[m][n]);
 bool mpq_matrix_isneg (unsigned int m, unsigned int n, mpq_t A[m][n]);
 bool mpq_matrix_isnonneg (unsigned int m, unsigned int n, mpq_t A[m][n]);
-bool mpq_matrix_equal (unsigned int m, unsigned int n, mpq_t A[m][n], mpq_t B[m][n]);
+bool mpq_matrix_equal (unsigned int m, unsigned int n, mpq_t A[m][n],
+                       mpq_t B[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 
 /*-----------------------------------------------------------------------*/
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _SORTSMILL_GMP_MATRIX_H */

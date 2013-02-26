@@ -23,17 +23,23 @@
 #include <sortsmill/transmatrix.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
 #if _FF_C99_OR_GREATER
 
-void scm_matrix_set_all (unsigned int m, unsigned int n, SCM A[m][n],
-                         SCM x);
+void scm_matrix_set_all (unsigned int m, unsigned int n, SCM A[m][n], SCM x);
 void scm_matrix_set_zero (unsigned int m, unsigned int n, SCM A[m][n]);
 void scm_matrix_set_identity (unsigned int m, unsigned int n, SCM A[m][n]);
 
 void scm_matrix_memcpy (unsigned int m, unsigned int n,
                         SCM result[m][n], SCM A[m][n]);
-void scm_matrix_swap (unsigned int m, unsigned int n,
-                      SCM A[m][n], SCM B[m][n]);
+void scm_matrix_swap (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
 
 /* Row and column swapping, in place. */
 void scm_matrix_swap_rows (unsigned int m, unsigned int n, SCM A[m][n],
@@ -57,18 +63,15 @@ scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                  unsigned int m, unsigned int n, unsigned int k,
                  SCM alpha,
                  SCM _FF_TRANSMATRIX (A, TransA, m, k),
-                 SCM _FF_TRANSMATRIX (B, TransB, k, n),
-                 SCM beta, SCM C[m][n]);
+                 SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM beta, SCM C[m][n]);
 
 void scm_matrix_mul_elements (unsigned int m, unsigned int n,
                               SCM A[m][n], SCM B[m][n]);
 void scm_matrix_div_elements (unsigned int m, unsigned int n,
                               SCM A[m][n], SCM B[m][n]);
 
-void scm_matrix_add (unsigned int m, unsigned int n,
-                     SCM A[m][n], SCM B[m][n]);
-void scm_matrix_sub (unsigned int m, unsigned int n,
-                     SCM A[m][n], SCM B[m][n]);
+void scm_matrix_add (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
+void scm_matrix_sub (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
 void scm_matrix_add_constant (unsigned int m, unsigned int n,
                               SCM A[m][n], SCM x);
 
@@ -76,8 +79,20 @@ bool scm_matrix_isnull (unsigned int m, unsigned int n, SCM A[m][n]);
 bool scm_matrix_ispos (unsigned int m, unsigned int n, SCM A[m][n]);
 bool scm_matrix_isneg (unsigned int m, unsigned int n, SCM A[m][n]);
 bool scm_matrix_isnonneg (unsigned int m, unsigned int n, SCM A[m][n]);
-bool scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
+bool scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n],
+                       SCM B[m][n]);
+
+/* Solve triangular systems. */
+void scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
+                      CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n]);
 
 #endif /* _FF_C99_OR_GREATER */
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _SORTSMILL_SCM_MATRIX_H */

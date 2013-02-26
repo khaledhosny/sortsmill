@@ -25,4 +25,3 @@
 #endif
 
 #endif /* _SORTSMILL_C_VERSION_H */
-

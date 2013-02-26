@@ -16,6 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/scm_matrix.h>
+#include <assert.h>
 
 VISIBLE void
 scm_matrix_set_all (unsigned int m, unsigned int n, SCM A[m][n], SCM x)
@@ -184,6 +185,10 @@ scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA,
                  SCM _FF_TRANSMATRIX (B, TransB, k, n),
                  const SCM beta, SCM C[m][n])
 {
+  // FIXME: We do not yet support conjugate transposes.
+  assert (TransA != CblasConjTrans);
+  assert (TransB != CblasConjTrans);
+
   scm_matrix_scale (m, n, C, beta);
   if (scm_is_false (scm_zero_p (alpha)))
     {
@@ -283,4 +288,94 @@ scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
           }
       }
   return result;
+}
+
+static void
+upper_triangle_no_trans (CBLAS_DIAG_t Diag,
+                         unsigned int n, SCM A[n][n], SCM x[n])
+{
+  if (Diag == CblasNonUnit)
+    x[0] = scm_divide (x[0], A[0][0]);
+  for (unsigned int i = 1; i < n; i++)
+    {
+      for (unsigned int j = 0; j < i; j++)
+        x[i] = scm_difference (x[i], scm_product (A[i][j], x[j]));
+      if (Diag == CblasNonUnit)
+        x[i] = scm_divide (x[i], A[i][i]);
+    }
+}
+
+static void
+upper_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
+{
+  const unsigned int n1 = n - 1;
+  if (Diag == CblasNonUnit)
+    x[n1] = scm_divide (x[n1], A[n1][n1]);
+  for (unsigned int ni = 1; ni < n; ni++)
+    {
+      const unsigned int i = n1 - ni;
+      for (unsigned int nj = 0; nj < ni; nj++)
+        {
+          const unsigned int j = n1 - nj;
+          x[i] = scm_difference (x[i], scm_product (A[j][i], x[j]));
+        }
+      if (Diag == CblasNonUnit)
+        x[i] = scm_divide (x[i], A[i][i]);
+    }
+}
+
+static void
+lower_triangle_no_trans (CBLAS_DIAG_t Diag,
+                         unsigned int n, SCM A[n][n], SCM x[n])
+{
+  const unsigned int n1 = n - 1;
+  if (Diag == CblasNonUnit)
+    x[n1] = scm_divide (x[n1], A[n1][n1]);
+  for (unsigned int ni = 1; ni < n; ni++)
+    {
+      const unsigned int i = n1 - ni;
+      for (unsigned int nj = 0; nj < ni; nj++)
+        {
+          const unsigned int j = n1 - nj;
+          x[i] = scm_difference (x[i], scm_product (A[i][j], x[j]));
+        }
+      if (Diag == CblasNonUnit)
+        x[i] = scm_divide (x[i], A[i][i]);
+    }
+}
+
+static void
+lower_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
+{
+  if (Diag == CblasNonUnit)
+    x[0] = scm_divide (x[0], A[0][0]);
+  for (unsigned int i = 1; i < n; i++)
+    {
+      for (unsigned int j = 0; j < i; j++)
+        x[i] = scm_difference (x[i], scm_product (A[j][i], x[j]));
+      if (Diag == CblasNonUnit)
+        x[i] = scm_divide (x[i], A[i][i]);
+    }
+}
+
+// Solve triangular systems.
+VISIBLE void
+scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
+                 CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
+{
+  assert (0 < n);
+  assert (Uplo == CblasLower || Uplo == CblasUpper);
+
+  // FIXME: We do not yet support conjugate transposes.
+  assert (TransA == CblasNoTrans || TransA == CblasTrans);
+
+  if (Uplo == CblasLower)
+    if (TransA == CblasNoTrans)
+      upper_triangle_no_trans (Diag, n, A, x);
+    else
+      upper_triangle_trans (Diag, n, A, x);
+  else if (TransA == CblasNoTrans)
+    lower_triangle_no_trans (Diag, n, A, x);
+  else
+    lower_triangle_trans (Diag, n, A, x);
 }

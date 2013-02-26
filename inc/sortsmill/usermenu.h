@@ -29,19 +29,19 @@ extern "C"
 }
 #endif
 
-enum {
+enum
+{
   /* Values chosen so they can be used in bitarrays. */
   FF_FONT_WINDOW = 0x01,
   FF_GLYPH_WINDOW = 0x02,
   FF_CHAR_WINDOW = FF_GLYPH_WINDOW,
-  FF_METRICS_WINDOW = 0x04	/* Reserved for future use. */
+  FF_METRICS_WINDOW = 0x04      /* Reserved for future use. */
 };
 
 void register_fontforge_menu_entry (int window,
-				    const char **menu_path,
-				    SCM action,
-				    SCM enabled,
-				    const char *shortcut);
+                                    const char **menu_path,
+                                    SCM action,
+                                    SCM enabled, const char *shortcut);
 
 #if 0
 {

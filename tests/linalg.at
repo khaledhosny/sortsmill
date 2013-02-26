@@ -621,3 +621,13 @@ check_linalg([test_scm_matrix_equal 3 2 0 0 0 0 0 0 1 1 1 1 1 1],[0],[0],[])
 check_linalg([test_scm_matrix_equal 3 2 3 4 5 6 7 8 3 4 5 6 7 8],[0],[1],[])
 
 #--------------------------------------------------------------------------
+
+m4_foreach_w([UL],[0 1],[
+  m4_foreach_w([TRANS],[0 1],[
+    m4_foreach_w([DIAG],[0 1],[
+      check_linalg([test_scm_matrix_trsv UL TRANS DIAG 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[],[])
+      check_linalg([test_scm_matrix_trsv UL TRANS DIAG 3 1 -2 3 -4 5 -6 7 -8 9 -10 11 -12],[0],[],[])
+      ]) ]) ])
+
+#--------------------------------------------------------------------------
+
