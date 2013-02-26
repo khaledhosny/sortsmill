@@ -30,6 +30,8 @@
 
           zero-matrix
           zero-f64matrix
+          filled-matrix
+          filled-f64matrix
           I-matrix
           I-f64matrix
           scalar-matrix
@@ -175,6 +177,18 @@
     (case-lambda
       [(n)   (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,n))]
       [(n m) (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,m))] ))
+
+  ;; FIXME: Is there a better name for this?
+  (define filled-matrix
+    (case-lambda
+      [(v n)   (make-array v `(1 ,n) `(1 ,n))]
+      [(v n m) (make-array v `(1 ,n) `(1 ,m))] ))
+
+  ;; FIXME: Is there a better name for this?
+  (define filled-f64matrix
+    (case-lambda
+      [(v n)   (make-typed-array 'f64 v `(1 ,n) `(1 ,n))]
+      [(v n m) (make-typed-array 'f64 v `(1 ,n) `(1 ,m))] ))
 
   (define I-matrix
     (case-lambda

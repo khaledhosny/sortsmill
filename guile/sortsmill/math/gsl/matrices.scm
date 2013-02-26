@@ -65,6 +65,24 @@
           gsl:matrix-sub-mpq
           gsl:matrix-sub-scm
 
+          ;; Elementwise (Hadamard) multiplication.
+          ;;
+          ;; (gsl:matrix-mul-elements-WHATEVER A B)
+          ;;
+          gsl:matrix-mul-elements-f64
+          gsl:matrix-mul-elements-mpz
+          gsl:matrix-mul-elements-mpq
+          gsl:matrix-mul-elements-scm
+
+          ;; Elementwise division. (Multiplication by the Hadamard
+          ;; inverse.)
+          ;;
+          ;; (gsl:matrix-div-elements-WHATEVER A B)
+          ;;
+          gsl:matrix-div-elements-f64
+          gsl:matrix-div-elements-mpq
+          gsl:matrix-div-elements-scm
+
           ;; ‘Thin’ singular value decomposition algorithms from
           ;; GSL. These procedures return U, S, V, respectively, as
           ;; multiple return values.

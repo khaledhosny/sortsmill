@@ -98,6 +98,15 @@ SCM scm_gsl_mpz_matrix_sub (SCM A, SCM B);
 SCM scm_gsl_mpq_matrix_sub (SCM A, SCM B);
 SCM scm_gsl_scm_matrix_sub (SCM A, SCM B);
 
+SCM scm_gsl_matrix_mul_elements (SCM A, SCM B);
+SCM scm_gsl_mpz_matrix_mul_elements (SCM A, SCM B);
+SCM scm_gsl_mpq_matrix_mul_elements (SCM A, SCM B);
+SCM scm_gsl_scm_matrix_mul_elements (SCM A, SCM B);
+
+SCM scm_gsl_matrix_div_elements (SCM A, SCM B);
+SCM scm_gsl_mpq_matrix_div_elements (SCM A, SCM B);
+SCM scm_gsl_scm_matrix_div_elements (SCM A, SCM B);
+
 SCM scm_gsl_svd_golub_reinsch (SCM);
 SCM scm_gsl_svd_modified_golub_reinsch (SCM);
 SCM scm_gsl_svd_jacobi (SCM);

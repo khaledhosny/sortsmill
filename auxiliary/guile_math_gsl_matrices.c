@@ -913,13 +913,10 @@ non_conformable_for_gemm_C_trailing (const char *who, SCM B, SCM C,
 }
 
 static void
-non_conformable_for_addition (bool subtraction, const char *who, SCM A, SCM B,
+non_conformable_for_addition (const char *localized_message, const char *who,
+                              SCM A, SCM B,
                               size_t m_A, size_t n_A, size_t m_B, size_t n_B)
 {
-  const char *localized_message =
-    subtraction ?
-    _("non-conformable matrices: ~ax~a minus ~ax~a") :
-    _("non-conformable matrices: ~ax~a plus ~ax~a");
   SCM message = scm_sformat (scm_from_locale_string (localized_message),
                              scm_list_4 (scm_from_int (m_A),
                                          scm_from_int (n_A),
@@ -956,7 +953,7 @@ assert_conformable_for_gemm (const char *who,
 }
 
 static void
-assert_conformable_for_addition (bool subtraction,
+assert_conformable_for_addition (const char *localized_message,
                                  const char *who, SCM A, SCM B,
                                  size_t m_A, size_t n_A, size_t m_B, size_t n_B)
 {
@@ -965,7 +962,8 @@ assert_conformable_for_addition (bool subtraction,
   if ((m_B | n_B) == 0)
     matrix_has_dimension_of_size_zero (who, B);
   if (m_A != m_B || n_A != n_B)
-    non_conformable_for_addition (subtraction, who, A, B, m_A, n_A, m_B, n_B);
+    non_conformable_for_addition (localized_message, who, A, B, m_A, n_A, m_B,
+                                  n_B);
 }
 
 VISIBLE SCM
@@ -1458,373 +1456,222 @@ scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   return result;
 }
 
-VISIBLE SCM
-scm_gsl_matrix_add (SCM A, SCM B)
+static const char *
+addition_non_conformable_message (void)
 {
-  const char *who = "scm_gsl_matrix_add";
-
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_f64_rank_1_or_2_array (who, A, &handle_A);
-
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_f64_rank_1_or_2_array (who, B, &handle_B);
-
-  gsl_matrix_const_view _A =
-    scm_gsl_matrix_const_view_array_handle (A, &handle_A);
-  gsl_matrix_const_view _B =
-    scm_gsl_matrix_const_view_array_handle (B, &handle_B);
-
-  const size_t m_A = _A.matrix.size1;
-  const size_t n_A = _A.matrix.size2;
-
-  const size_t m_B = _B.matrix.size1;
-  const size_t n_B = _B.matrix.size2;
-
-  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
-
-  double result_buffer[m_A][n_A];
-  gsl_matrix_view _result = gsl_matrix_view_array (&result_buffer[0][0],
-                                                   m_A, n_A);
-
-  gsl_matrix_memcpy (&_result.matrix, &_A.matrix);
-  const int errval = gsl_matrix_add (&_result.matrix, &_B.matrix);
-  if (errval != GSL_SUCCESS)
-    scm_raise_gsl_error
-      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
-                   scm_from_int (errval),
-                   scm_from_latin1_keyword ("who"),
-                   scm_from_latin1_string (who),
-                   scm_from_latin1_keyword ("irritants"),
-                   scm_list_2 (A, B), SCM_UNDEFINED));
-
-  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
-
-  scm_dynwind_end ();
-
-  return result;
+  return _("non-conformable matrices: ~ax~a plus ~ax~a");
 }
 
-VISIBLE SCM
-scm_gsl_mpz_matrix_add (SCM A, SCM B)
+static const char *
+subtraction_non_conformable_message (void)
 {
-  const char *who = "scm_gsl_mpz_matrix_add";
-
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
-
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
-
-  const size_t m_A = matrix_dim1 (&handle_A);
-  const size_t n_A = matrix_dim2 (&handle_A);
-
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
-
-  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
-
-  mpz_t _A[m_A][n_A];
-  mpz_matrix_init (m_A, n_A, _A);
-  scm_dynwind_mpz_matrix_clear (m_A, n_A, _A);
-  scm_array_handle_to_mpz_matrix (A, &handle_A, m_A, n_A, _A);
-
-  mpz_t _B[m_B][n_B];
-  mpz_matrix_init (m_B, n_B, _B);
-  scm_dynwind_mpz_matrix_clear (m_B, n_B, _B);
-  scm_array_handle_to_mpz_matrix (B, &handle_B, m_B, n_B, _B);
-
-  mpz_matrix_add (m_A, n_A, _A, _B);
-
-  SCM result = scm_from_mpz_matrix (m_A, n_A, _A);
-
-  scm_dynwind_end ();
-
-  return result;
+  return _("non-conformable matrices: ~ax~a minus ~ax~a");
 }
 
-VISIBLE SCM
-scm_gsl_mpq_matrix_add (SCM A, SCM B)
+static const char *
+mul_elements_non_conformable_message (void)
 {
-  const char *who = "scm_gsl_mpq_matrix_add";
-
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
-
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
-
-  const size_t m_A = matrix_dim1 (&handle_A);
-  const size_t n_A = matrix_dim2 (&handle_A);
-
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
-
-  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
-
-  mpq_t _A[m_A][n_A];
-  mpq_matrix_init (m_A, n_A, _A);
-  scm_dynwind_mpq_matrix_clear (m_A, n_A, _A);
-  scm_array_handle_to_mpq_matrix (A, &handle_A, m_A, n_A, _A);
-
-  mpq_t _B[m_B][n_B];
-  mpq_matrix_init (m_B, n_B, _B);
-  scm_dynwind_mpq_matrix_clear (m_B, n_B, _B);
-  scm_array_handle_to_mpq_matrix (B, &handle_B, m_B, n_B, _B);
-
-  mpq_matrix_add (m_A, n_A, _A, _B);
-
-  SCM result = scm_from_mpq_matrix (m_A, n_A, _A);
-
-  scm_dynwind_end ();
-
-  return result;
+  return _("non-conformable matrices: elementwise product of ~ax~a and ~ax~a");
 }
 
-VISIBLE SCM
-scm_gsl_scm_matrix_add (SCM A, SCM B)
+static const char *
+div_elements_non_conformable_message (void)
 {
-  const char *who = "scm_gsl_scm_matrix_add";
-
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
-
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_rank_1_or_2_array (who, B, &handle_B);
-
-  const size_t m_A = matrix_dim1 (&handle_A);
-  const size_t n_A = matrix_dim2 (&handle_A);
-
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
-
-  assert_conformable_for_addition (false, who, A, B, m_A, n_A, m_B, n_B);
-
-  SCM _A[m_A][n_A];
-  scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);
-
-  SCM _B[m_B][n_B];
-  scm_array_handle_to_scm_matrix (B, &handle_B, m_B, n_B, _B);
-
-  scm_matrix_add (m_A, n_A, _A, _B);
-
-  SCM result = scm_from_scm_matrix (m_A, n_A, _A);
-
-  scm_dynwind_end ();
-
-  return result;
+  return _("non-conformable matrices: elementwise quotient of ~ax~a and ~ax~a");
 }
 
-VISIBLE SCM
-scm_gsl_matrix_sub (SCM A, SCM B)
-{
-  const char *who = "scm_gsl_matrix_sub";
+#define _FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP(OP, FUNC, NON_CONFORMABILITY_MESSAGE) \
+  VISIBLE SCM                                                           \
+  scm_gsl_matrix_##OP (SCM A, SCM B)                                    \
+  {                                                                     \
+    const char *who = "scm_gsl_matrix_" #OP;                            \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+    scm_t_array_handle handle_B;                                        \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_c_f64_rank_1_or_2_array (who, A, &handle_A);                 \
+                                                                        \
+    scm_array_get_handle (B, &handle_B);                                \
+    scm_dynwind_array_handle_release (&handle_B);                       \
+    assert_c_f64_rank_1_or_2_array (who, B, &handle_B);                 \
+                                                                        \
+    gsl_matrix_const_view _A =                                          \
+      scm_gsl_matrix_const_view_array_handle (A, &handle_A);            \
+    gsl_matrix_const_view _B =                                          \
+      scm_gsl_matrix_const_view_array_handle (B, &handle_B);            \
+                                                                        \
+    const size_t m_A = _A.matrix.size1;                                 \
+    const size_t n_A = _A.matrix.size2;                                 \
+                                                                        \
+    const size_t m_B = _B.matrix.size1;                                 \
+    const size_t n_B = _B.matrix.size2;                                 \
+                                                                        \
+    assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
+                                     A, B, m_A, n_A, m_B, n_B);         \
+                                                                        \
+    double result_buffer[m_A][n_A];                                     \
+    gsl_matrix_view _result =                                           \
+      gsl_matrix_view_array (&result_buffer[0][0], m_A, n_A);           \
+                                                                        \
+    gsl_matrix_memcpy (&_result.matrix, &_A.matrix);                    \
+    const int errval = FUNC (&_result.matrix, &_B.matrix);              \
+    if (errval != GSL_SUCCESS)                                          \
+      scm_raise_gsl_error                                               \
+        (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),             \
+                     scm_from_int (errval),                             \
+                     scm_from_latin1_keyword ("who"),                   \
+                     scm_from_latin1_string (who),                      \
+                     scm_from_latin1_keyword ("irritants"),             \
+                     scm_list_2 (A, B), SCM_UNDEFINED));                \
+                                                                        \
+    SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);      \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return result;                                                      \
+  }
 
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
+_FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP (add, gsl_matrix_add,
+                                          addition_non_conformable_message ());
+_FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP (sub, gsl_matrix_sub,
+                                          subtraction_non_conformable_message
+                                          ());
+_FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP (mul_elements, gsl_matrix_mul_elements,
+                                          mul_elements_non_conformable_message
+                                          ());
+_FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP (div_elements, gsl_matrix_div_elements,
+                                          div_elements_non_conformable_message
+                                          ());
 
-  scm_dynwind_begin (0);
+#define _FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP(X, OP, FUNC, NON_CONFORMABILITY_MESSAGE) \
+  VISIBLE SCM                                                           \
+  scm_gsl_mp##X##_matrix_##OP (SCM A, SCM B)                            \
+  {                                                                     \
+    const char *who = "scm_gsl_mp" #X "_matrix_" #OP;                   \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+    scm_t_array_handle handle_B;                                        \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_c_exact_rank_1_or_2_array (who, A, &handle_A);               \
+                                                                        \
+    scm_array_get_handle (B, &handle_B);                                \
+    scm_dynwind_array_handle_release (&handle_B);                       \
+    assert_c_exact_rank_1_or_2_array (who, B, &handle_B);               \
+                                                                        \
+    const size_t m_A = matrix_dim1 (&handle_A);                         \
+    const size_t n_A = matrix_dim2 (&handle_A);                         \
+                                                                        \
+    const size_t m_B = matrix_dim1 (&handle_B);                         \
+    const size_t n_B = matrix_dim2 (&handle_B);                         \
+                                                                        \
+    assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
+                                     A, B, m_A, n_A, m_B, n_B);         \
+                                                                        \
+    mp##X##_t _A[m_A][n_A];                                             \
+    mp##X##_matrix_init (m_A, n_A, _A);                                 \
+    scm_dynwind_mp##X##_matrix_clear (m_A, n_A, _A);                    \
+    scm_array_handle_to_mp##X##_matrix (A, &handle_A, m_A, n_A, _A);    \
+                                                                        \
+    mp##X##_t _B[m_B][n_B];                                             \
+    mp##X##_matrix_init (m_B, n_B, _B);                                 \
+    scm_dynwind_mp##X##_matrix_clear (m_B, n_B, _B);                    \
+    scm_array_handle_to_mp##X##_matrix (B, &handle_B, m_B, n_B, _B);    \
+                                                                        \
+    FUNC (m_A, n_A, _A, _B);                                            \
+                                                                        \
+    SCM result = scm_from_mp##X##_matrix (m_A, n_A, _A);                \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return result;                                                      \
+  }
 
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_f64_rank_1_or_2_array (who, A, &handle_A);
+_FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (z, add, mpz_matrix_add,
+                                          addition_non_conformable_message ());
+_FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (z, sub, mpz_matrix_sub,
+                                          subtraction_non_conformable_message
+                                          ());
+_FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (z, mul_elements,
+                                          mpz_matrix_mul_elements,
+                                          mul_elements_non_conformable_message
+                                          ());
 
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_f64_rank_1_or_2_array (who, B, &handle_B);
+_FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (q, add, mpq_matrix_add,
+                                          addition_non_conformable_message ());
+_FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (q, sub, mpq_matrix_sub,
+                                          subtraction_non_conformable_message
+                                          ());
+_FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (q, mul_elements,
+                                          mpq_matrix_mul_elements,
+                                          mul_elements_non_conformable_message
+                                          ());
+_FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (q, div_elements,
+                                          mpq_matrix_div_elements,
+                                          div_elements_non_conformable_message
+                                          ());
 
-  gsl_matrix_const_view _A =
-    scm_gsl_matrix_const_view_array_handle (A, &handle_A);
-  gsl_matrix_const_view _B =
-    scm_gsl_matrix_const_view_array_handle (B, &handle_B);
-
-  const size_t m_A = _A.matrix.size1;
-  const size_t n_A = _A.matrix.size2;
-
-  const size_t m_B = _B.matrix.size1;
-  const size_t n_B = _B.matrix.size2;
-
-  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
-
-  double result_buffer[m_A][n_A];
-  gsl_matrix_view _result = gsl_matrix_view_array (&result_buffer[0][0],
-                                                   m_A, n_A);
-
-  gsl_matrix_memcpy (&_result.matrix, &_A.matrix);
-  const int errval = gsl_matrix_sub (&_result.matrix, &_B.matrix);
-  if (errval != GSL_SUCCESS)
-    scm_raise_gsl_error
-      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
-                   scm_from_int (errval),
-                   scm_from_latin1_keyword ("who"),
-                   scm_from_latin1_string (who),
-                   scm_from_latin1_keyword ("irritants"),
-                   scm_list_2 (A, B), SCM_UNDEFINED));
-
-  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
-
-  scm_dynwind_end ();
-
-  return result;
+#define _FF_SCM_SCM_MATRIX_ELEMENTWISE_BINARY_OP(OP, FUNC, NON_CONFORMABILITY_MESSAGE) \
+  VISIBLE SCM                                                           \
+  scm_gsl_scm_matrix_##OP (SCM A, SCM B)                                \
+  {                                                                     \
+    const char *who = "scm_gsl_scm_matrix_" #OP;                        \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+    scm_t_array_handle handle_B;                                        \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_c_rank_1_or_2_array (who, A, &handle_A);                     \
+                                                                        \
+    scm_array_get_handle (B, &handle_B);                                \
+    scm_dynwind_array_handle_release (&handle_B);                       \
+    assert_c_rank_1_or_2_array (who, B, &handle_B);                     \
+                                                                        \
+    const size_t m_A = matrix_dim1 (&handle_A);                         \
+    const size_t n_A = matrix_dim2 (&handle_A);                         \
+                                                                        \
+    const size_t m_B = matrix_dim1 (&handle_B);                         \
+    const size_t n_B = matrix_dim2 (&handle_B);                         \
+                                                                        \
+    assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
+                                     A, B, m_A, n_A, m_B, n_B);         \
+                                                                        \
+    SCM _A[m_A][n_A];                                                   \
+    scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);        \
+                                                                        \
+    SCM _B[m_B][n_B];                                                   \
+    scm_array_handle_to_scm_matrix (B, &handle_B, m_B, n_B, _B);        \
+                                                                        \
+    FUNC (m_A, n_A, _A, _B);                                            \
+                                                                        \
+    SCM result = scm_from_scm_matrix (m_A, n_A, _A);                    \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return result;                                                      \
 }
 
-VISIBLE SCM
-scm_gsl_mpz_matrix_sub (SCM A, SCM B)
-{
-  const char *who = "scm_gsl_mpz_matrix_sub";
-
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
-
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
-
-  const size_t m_A = matrix_dim1 (&handle_A);
-  const size_t n_A = matrix_dim2 (&handle_A);
-
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
-
-  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
-
-  mpz_t _A[m_A][n_A];
-  mpz_matrix_init (m_A, n_A, _A);
-  scm_dynwind_mpz_matrix_clear (m_A, n_A, _A);
-  scm_array_handle_to_mpz_matrix (A, &handle_A, m_A, n_A, _A);
-
-  mpz_t _B[m_B][n_B];
-  mpz_matrix_init (m_B, n_B, _B);
-  scm_dynwind_mpz_matrix_clear (m_B, n_B, _B);
-  scm_array_handle_to_mpz_matrix (B, &handle_B, m_B, n_B, _B);
-
-  mpz_matrix_sub (m_A, n_A, _A, _B);
-
-  SCM result = scm_from_mpz_matrix (m_A, n_A, _A);
-
-  scm_dynwind_end ();
-
-  return result;
-}
-
-VISIBLE SCM
-scm_gsl_mpq_matrix_sub (SCM A, SCM B)
-{
-  const char *who = "scm_gsl_mpq_matrix_sub";
-
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
-
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
-
-  const size_t m_A = matrix_dim1 (&handle_A);
-  const size_t n_A = matrix_dim2 (&handle_A);
-
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
-
-  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
-
-  mpq_t _A[m_A][n_A];
-  mpq_matrix_init (m_A, n_A, _A);
-  scm_dynwind_mpq_matrix_clear (m_A, n_A, _A);
-  scm_array_handle_to_mpq_matrix (A, &handle_A, m_A, n_A, _A);
-
-  mpq_t _B[m_B][n_B];
-  mpq_matrix_init (m_B, n_B, _B);
-  scm_dynwind_mpq_matrix_clear (m_B, n_B, _B);
-  scm_array_handle_to_mpq_matrix (B, &handle_B, m_B, n_B, _B);
-
-  mpq_matrix_sub (m_A, n_A, _A, _B);
-
-  SCM result = scm_from_mpq_matrix (m_A, n_A, _A);
-
-  scm_dynwind_end ();
-
-  return result;
-}
-
-VISIBLE SCM
-scm_gsl_scm_matrix_sub (SCM A, SCM B)
-{
-  const char *who = "scm_gsl_scm_matrix_sub";
-
-  scm_t_array_handle handle_A;
-  scm_t_array_handle handle_B;
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (A, &handle_A);
-  scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
-
-  scm_array_get_handle (B, &handle_B);
-  scm_dynwind_array_handle_release (&handle_B);
-  assert_c_rank_1_or_2_array (who, B, &handle_B);
-
-  const size_t m_A = matrix_dim1 (&handle_A);
-  const size_t n_A = matrix_dim2 (&handle_A);
-
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
-
-  assert_conformable_for_addition (true, who, A, B, m_A, n_A, m_B, n_B);
-
-  SCM _A[m_A][n_A];
-  scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);
-
-  SCM _B[m_B][n_B];
-  scm_array_handle_to_scm_matrix (B, &handle_B, m_B, n_B, _B);
-
-  scm_matrix_sub (m_A, n_A, _A, _B);
-
-  SCM result = scm_from_scm_matrix (m_A, n_A, _A);
-
-  scm_dynwind_end ();
-
-  return result;
-}
+_FF_SCM_SCM_MATRIX_ELEMENTWISE_BINARY_OP (add, scm_matrix_add,
+                                          addition_non_conformable_message ());
+_FF_SCM_SCM_MATRIX_ELEMENTWISE_BINARY_OP (sub, scm_matrix_sub,
+                                          subtraction_non_conformable_message
+                                          ());
+_FF_SCM_SCM_MATRIX_ELEMENTWISE_BINARY_OP (mul_elements, scm_matrix_mul_elements,
+                                          mul_elements_non_conformable_message
+                                          ());
+_FF_SCM_SCM_MATRIX_ELEMENTWISE_BINARY_OP (div_elements, scm_matrix_div_elements,
+                                          div_elements_non_conformable_message
+                                          ());
 
 VISIBLE SCM
 scm_gsl_svd_golub_reinsch (SCM a)
@@ -2059,6 +1906,22 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:matrix-sub-mpz", 2, 0, 0, scm_gsl_mpz_matrix_sub);
   scm_c_define_gsubr ("gsl:matrix-sub-mpq", 2, 0, 0, scm_gsl_mpq_matrix_sub);
   scm_c_define_gsubr ("gsl:matrix-sub-scm", 2, 0, 0, scm_gsl_scm_matrix_sub);
+
+  scm_c_define_gsubr ("gsl:matrix-mul-elements-f64", 2, 0, 0,
+                      scm_gsl_matrix_mul_elements);
+  scm_c_define_gsubr ("gsl:matrix-mul-elements-mpz", 2, 0, 0,
+                      scm_gsl_mpz_matrix_mul_elements);
+  scm_c_define_gsubr ("gsl:matrix-mul-elements-mpq", 2, 0, 0,
+                      scm_gsl_mpq_matrix_mul_elements);
+  scm_c_define_gsubr ("gsl:matrix-mul-elements-scm", 2, 0, 0,
+                      scm_gsl_scm_matrix_mul_elements);
+
+  scm_c_define_gsubr ("gsl:matrix-div-elements-f64", 2, 0, 0,
+                      scm_gsl_matrix_div_elements);
+  scm_c_define_gsubr ("gsl:matrix-div-elements-mpq", 2, 0, 0,
+                      scm_gsl_mpq_matrix_div_elements);
+  scm_c_define_gsubr ("gsl:matrix-div-elements-scm", 2, 0, 0,
+                      scm_gsl_scm_matrix_div_elements);
 
   scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);
