@@ -377,15 +377,6 @@ array)."
 
   ;;-----------------------------------------------------------------------
 
-  (define (matrix-scaled-by-division A b)
-    (if (and (real? b) (eq? (array-type A) 'f64))
-        [let ([C (apply make-typed-array 'f64 *unspecified* (array-shape A))])
-          (array-map! C (lambda (x) (/ x b)) A)
-          C]
-        [let ([C (apply make-array *unspecified* (array-shape A))])
-          (array-map! C (lambda (x) (/ x b)) A)
-          C] ))
-
   (define (matrix-negate A)
     (if (eq? (array-type A) 'f64)
         (matrix-scaled -1.0 A)
@@ -438,6 +429,19 @@ array)."
 
   ;;-----------------------------------------------------------------------
 
+  (define (noncommutative-matrix-scalar-operation who f64-op exact-op
+                                                  integer-op number-op)
+    (lambda (M x)
+      (let ([type-M (array-type M)])
+        (cond
+         [(and (eq? type-M 'f64) (real? x))
+          (f64-op M x)]
+         [(and (exact-array? M) (not (flonum? x)))
+          (if (and (uniform-integer-array? M) (integer? x))
+              (integer-op M x)
+              (exact-op M x))]
+         [else (number-op M x)] ))))
+
   (define (commutative-matrix-scalar-operation who f64-op exact-op
                                                integer-op number-op)
     (lambda (A B)
@@ -474,7 +478,7 @@ array)."
               (exact-op A B))]
          [else (number-op A B)] ))))
 
-;;-----------------------------------------------------------------------
+  ;;-----------------------------------------------------------------------
 
   (define matrix-scaled
     (commutative-matrix-scalar-operation 'matrix-scaled
@@ -483,7 +487,25 @@ array)."
                                          integer-matrix-scaled
                                          number-matrix-scaled))
 
-;;-----------------------------------------------------------------------
+  (define matrix-scaled-by-division
+    (let ([f64-op (lambda (A b)
+                    (let ([A (vector->matrix (one-based A))])
+                      (gsl:matrix-div-elements-f64
+                       A (apply filled-f64matrix b (matrix-dimensions A)))))]
+          [exact-op (lambda (A b)
+                      (let ([A (vector->matrix (one-based A))])
+                        (gsl:matrix-div-elements-mpq
+                         A (apply filled-matrix b (matrix-dimensions A)))))]
+          [number-op (lambda (A b)
+                       (let ([A (vector->matrix (one-based A))])
+                         (gsl:matrix-div-elements-scm
+                          A (apply filled-matrix b (matrix-dimensions A)))))])
+      (let ([integer-op exact-op])
+        (noncommutative-matrix-scalar-operation 'matrix-scaled-by-division
+                                                f64-op exact-op integer-op
+                                                number-op))))
+
+  ;;-----------------------------------------------------------------------
 
   (define multiply-matrices
     (matrix-matrix-operation f64matrix* exact-matrix* integer-matrix*
