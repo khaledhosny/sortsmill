@@ -492,10 +492,7 @@ array)."
                     (let ([A (vector->matrix (one-based A))])
                       (gsl:matrix-div-elements-f64
                        A (apply filled-f64matrix b (matrix-dimensions A)))))]
-          [exact-op (lambda (A b)
-                      (let ([A (vector->matrix (one-based A))])
-                        (gsl:matrix-div-elements-mpq
-                         A (apply filled-matrix b (matrix-dimensions A)))))]
+          [exact-op (lambda (A b) (matrix-scaled A (/ b)))]
           [number-op (lambda (A b)
                        (let ([A (vector->matrix (one-based A))])
                          (gsl:matrix-div-elements-scm
