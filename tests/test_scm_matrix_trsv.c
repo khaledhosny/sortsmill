@@ -34,6 +34,9 @@ my_main (int argc, char **argv)
   SCM b[rows];
   double b1[rows];
 
+  gsl_matrix_view mA1 = gsl_matrix_view_array (&A1[0][0], rows, cols);
+  gsl_vector_view vb1 = gsl_vector_view_array (b1, rows);
+
   unsigned int i_argv = 5;
 
   for (unsigned int i = 0; i < rows; i++)
@@ -52,9 +55,6 @@ my_main (int argc, char **argv)
       b1[i] = scm_to_double (b[i]);
       i_argv++;
     }
-
-  gsl_matrix_view mA1 = gsl_matrix_view_array (&A1[0][0], rows, rows);
-  gsl_vector_view vb1 = gsl_vector_view_array (b1, rows);
 
   scm_matrix_trsv (UL[uplo], Tr[trans], Dg[diag], rows, A, b);
   gsl_blas_dtrsv (UL[uplo], Tr[trans], Dg[diag], &mA1.matrix, &vb1.vector);

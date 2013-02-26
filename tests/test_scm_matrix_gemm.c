@@ -37,6 +37,14 @@ my_main (int argc, char **argv)
   SCM B[RowsB][ColsB];
   SCM C[m][n];
 
+  double A1[RowsA][ColsA];
+  double B1[RowsB][ColsB];
+  double C1[m][n];
+
+  gsl_matrix_view mA1 = gsl_matrix_view_array (&A1[0][0], RowsA, ColsA);
+  gsl_matrix_view mB1 = gsl_matrix_view_array (&B1[0][0], RowsB, ColsB);
+  gsl_matrix_view mC1 = gsl_matrix_view_array (&C1[0][0], m, n);
+
   unsigned int i_argv = 8;
 
   for (unsigned int i = 0; i < RowsA; i++)
@@ -44,6 +52,7 @@ my_main (int argc, char **argv)
       {
         A[i][j] = scm_c_locale_stringn_to_number (argv[i_argv],
                                                   strlen (argv[i_argv]), 10);
+        A1[i][j] = scm_to_double (A[i][j]);
         i_argv++;
       }
 
@@ -52,6 +61,7 @@ my_main (int argc, char **argv)
       {
         B[i][j] = scm_c_locale_stringn_to_number (argv[i_argv],
                                                   strlen (argv[i_argv]), 10);
+        B1[i][j] = scm_to_double (B[i][j]);
         i_argv++;
       }
 
@@ -60,10 +70,13 @@ my_main (int argc, char **argv)
       {
         C[i][j] = scm_c_locale_stringn_to_number (argv[i_argv],
                                                   strlen (argv[i_argv]), 10);
+        C1[i][j] = scm_to_double (C[i][j]);
         i_argv++;
       }
 
   scm_matrix_gemm (TransA, TransB, m, n, k, alpha, A, B, beta, C);
+  gsl_blas_dgemm (TransA, TransB, scm_to_double (alpha),
+                  &mA1.matrix, &mB1.matrix, scm_to_double (beta), &mC1.matrix);
 
   for (unsigned int i = 0; i < m; i++)
     {
@@ -73,5 +86,13 @@ my_main (int argc, char **argv)
       scm_simple_format (SCM_BOOL_T, scm_from_latin1_string (" |"), SCM_EOL);
     }
 
-  return 0;
+  int exit_status = 0;
+
+  // Check that we get the same results as gsl_blas_dgemm.
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      if (100 * DBL_EPSILON < fabs (scm_to_double (C[i][j]) - C1[i][j]))
+        exit_status = 1;
+
+  return exit_status;
 }
