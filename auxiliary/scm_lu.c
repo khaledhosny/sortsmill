@@ -157,8 +157,8 @@ scm_linalg_LU_refine (unsigned int n, SCM A[n][n], SCM LU[n][n],
                       SCM residual[n])
 {
   // Compute residual, residual = (A * x - b).
-  scm_matrix_memcpy (n, 1, (SCM (*)[1]) residual, (SCM (*)[1]) b);
-  scm_matrix_gemm (CblasNoTrans, CblasNoTrans, n, n, n, scm_from_int (1), A,
+  memcpy (residual, b, n * sizeof (SCM));
+  scm_matrix_gemm (CblasNoTrans, CblasNoTrans, n, 1, n, scm_from_int (1), A,
                    (SCM (*)[1]) x, scm_from_int (-1), (SCM (*)[1]) residual);
 
   // Find correction, delta = - (A^-1) * residual, and apply it.
