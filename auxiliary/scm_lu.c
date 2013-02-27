@@ -45,10 +45,18 @@
  * Elimination with Partial Pivoting).
  */
 
+static void
+initialize_permutation (unsigned int n, unsigned int permutation[n])
+{
+  for (unsigned int i = 0; i < n; i++)
+    permutation[i] = i;
+}
+
 VISIBLE void
 scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], unsigned int permutation[n],
                       int *signum)
 {
+  initialize_permutation (n, permutation);
   *signum = 1;
 
   for (unsigned int j = 0; j < n - 1; j++)
@@ -69,16 +77,17 @@ scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], unsigned int permutation[n],
             }
         }
 
-      // For permutation we currently just store a pivot
-      // history. There is no guarantee that implementation will not
-      // change. (For instance, without changing the argument types,
-      // we could use a permuted index vector and permute the RHS out
-      // of place instead of in-place.)
-      permutation[j] = i_pivot;
-
       if (i_pivot != j)
         {
           scm_matrix_swap_rows (n, n, A, j, i_pivot);
+
+          // For permutation we currently just store a pivot
+          // history. There is no guarantee that the implementation
+          // will not change. (For instance, without changing the
+          // argument types, we could use a permuted index vector and
+          // permute the RHS while copying it, instead of in-place.)
+          permutation[j] = i_pivot;
+
           *signum = -(*signum);
         }
 
