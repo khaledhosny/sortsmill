@@ -178,7 +178,7 @@ scm_linalg_LU_invert (unsigned int n, SCM LU[n][n], unsigned int permutation[n],
       // temp = j-th column of inverse.
 
       for (unsigned int i = 0; i < n; i++)
-        temp[j] = scm_from_int ((int) (i == j));
+        temp[i] = scm_from_int ((int) (i == j));
 
       scm_linalg_LU_svx (n, LU, permutation, temp);
 
