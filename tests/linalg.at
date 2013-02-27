@@ -627,7 +627,9 @@ m4_foreach_w([UL],[0 1],[
     check_linalg([test_mpq_matrix_trsv UL TRANS 0 3 0 -2 3 -4 5 -6 7 -8 9 -10 11 -12],[0],[singular],[])
     check_linalg([test_mpq_matrix_trsv UL TRANS 0 3 1 -2 3 -4 0 -6 7 -8 9 -10 11 -12],[0],[singular],[])
     check_linalg([test_mpq_matrix_trsv UL TRANS 0 3 1 -2 3 -4 5 -6 7 -8 0 -10 11 -12],[0],[singular],[])
+    check_linalg([test_scm_matrix_trsv UL TRANS DIAG 1 0 3],[0],[singular],[])
     m4_foreach_w([DIAG],[0 1],[
+      check_linalg([test_scm_matrix_trsv UL TRANS DIAG 1 2 3],[0],[],[]) 
       check_linalg([test_mpq_matrix_trsv UL TRANS DIAG 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[],[])
       check_linalg([test_mpq_matrix_trsv UL TRANS DIAG 3 1 -2 3 -4 5 -6 7 -8 9 -10 11 -12],[0],[],[])
       ]) ]) ])
@@ -635,9 +637,18 @@ m4_foreach_w([UL],[0 1],[
 m4_foreach_w([UL],[0 1],[
   m4_foreach_w([TRANS],[0 1],[
     m4_foreach_w([DIAG],[0 1],[
+      check_linalg([test_scm_matrix_trsv UL TRANS DIAG 1 2 3],[0],[],[])
       check_linalg([test_scm_matrix_trsv UL TRANS DIAG 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[],[])
       check_linalg([test_scm_matrix_trsv UL TRANS DIAG 3 1 -2 3 -4 5 -6 7 -8 9 -10 11 -12],[0],[],[])
       ]) ]) ])
 
 #--------------------------------------------------------------------------
 
+check_linalg([test_scm_lu 1 0 3],[0],[],[]) dnl singular
+check_linalg([test_scm_lu 1 2 3],[0],[],[])
+check_linalg([test_scm_lu 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[],[]) dnl singular
+check_linalg([test_scm_lu 3 1 2 3 5 5 6 7 8 9 10 11 12],[0],[],[])
+check_linalg([test_scm_lu 4 6 -32 5.2 9 0 1 0 11 1 2 3 5 5 6 7 8 9 10 11 12 -13],[0],[],[])
+check_linalg([test_scm_lu 4 6 -32 52/10 0 1 0 11 9 1 2 3 5 5 6 7 8 9 10 11 12 -13],[0],[],[])
+
+#--------------------------------------------------------------------------
