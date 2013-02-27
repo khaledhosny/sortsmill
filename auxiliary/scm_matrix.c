@@ -290,6 +290,10 @@ scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
   return result;
 }
 
+//-------------------------------------------------------------------------
+//
+// Solve triangular linear systems by forward/back substitution.
+
 static void
 upper_triangle_no_trans (CBLAS_DIAG_t Diag,
                          unsigned int n, SCM A[n][n], SCM x[n])
@@ -358,7 +362,6 @@ lower_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
     }
 }
 
-// Solve triangular systems.
 VISIBLE void
 scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
                  CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
@@ -379,3 +382,5 @@ scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
   else
     lower_triangle_trans (Diag, n, A, x);
 }
+
+//-------------------------------------------------------------------------

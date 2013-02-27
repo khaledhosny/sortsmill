@@ -8,6 +8,9 @@
 
 -T FILE
 
+-T _Bool
+-T bool
+
 -T int8_t
 -T int16_t
 -T int32_t

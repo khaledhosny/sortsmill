@@ -74,3 +74,4 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 #include <gmp_matrix_mult.c>
 #include <gmp_matrix_add.c>
 #include <gmp_matrix_pred.c>
+#include <gmp_matrix_trsv.c>

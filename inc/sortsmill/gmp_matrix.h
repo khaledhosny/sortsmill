@@ -53,6 +53,42 @@ void mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n]);
 void scm_dynwind_mpq_matrix_clear (unsigned int m, unsigned int n,
                                    mpq_t A[m][n]);
 
+static inline void
+mpz_vector_init (unsigned int n, mpz_t v[n])
+{
+  mpz_matrix_init (1, n, (mpz_t (*)[(unsigned int)n]) &v[0]);
+}
+
+static inline void
+mpz_vector_clear (unsigned int n, mpz_t v[n])
+{
+  mpz_matrix_clear (1, n, (mpz_t (*)[(unsigned int)n]) &v[0]);
+}
+
+static inline void
+scm_dynwind_mpz_vector_clear (unsigned int n, mpz_t v[n])
+{
+  scm_dynwind_mpz_matrix_clear (1, n, (mpz_t (*)[(unsigned int)n]) &v[0]);
+}
+
+static inline void
+mpq_vector_init (unsigned int n, mpq_t v[n])
+{
+  mpq_matrix_init (1, n, (mpq_t (*)[(unsigned int)n]) &v[0]);
+}
+
+static inline void
+mpq_vector_clear (unsigned int n, mpq_t v[n])
+{
+  mpq_matrix_clear (1, n, (mpq_t (*)[(unsigned int)n]) &v[0]);
+}
+
+static inline void
+scm_dynwind_mpq_vector_clear (unsigned int n, mpq_t v[n])
+{
+  scm_dynwind_mpq_matrix_clear (1, n, (mpq_t (*)[(unsigned int)n]) &v[0]);
+}
+
 #endif /* _FF_C99_OR_GREATER */
 
 /*-----------------------------------------------------------------------*/
@@ -226,6 +262,17 @@ bool mpq_matrix_isneg (unsigned int m, unsigned int n, mpq_t A[m][n]);
 bool mpq_matrix_isnonneg (unsigned int m, unsigned int n, mpq_t A[m][n]);
 bool mpq_matrix_equal (unsigned int m, unsigned int n, mpq_t A[m][n],
                        mpq_t B[m][n]);
+
+#endif /* _FF_C99_OR_GREATER */
+
+/*-----------------------------------------------------------------------*/
+
+#if _FF_C99_OR_GREATER
+
+void mpq_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
+                      CBLAS_DIAG_t Diag,
+                      unsigned int n, mpq_t A[n][n], mpq_t x[n],
+                      bool *singular);
 
 #endif /* _FF_C99_OR_GREATER */
 
