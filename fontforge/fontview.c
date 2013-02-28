@@ -1464,7 +1464,7 @@ ShowAboutScreen (void)
   wattrs.event_masks = ~(1 << et_charup);
   wattrs.positioned = 1;
   wattrs.cursor = ct_pointer;
-  wattrs.utf8_window_title = "FontForge";
+  wattrs.utf8_window_title = "Sorts Mill Editor";
   wattrs.border_width = 2;
   wattrs.background_color = 0xffffff;
   wattrs.is_dlg = true;
