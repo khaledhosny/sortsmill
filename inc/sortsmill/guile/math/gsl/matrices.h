@@ -158,8 +158,6 @@ SCM scm_gsl_mpq_matrix_equal_p (SCM, SCM);
 bool scm_c_gsl_scm_matrix_equal (SCM, SCM);
 SCM scm_gsl_scm_matrix_equal_p (SCM, SCM);
 
-/* FIXME: Change the names of the SVD C routines to make them closer
-   to GSL names. */
 SCM scm_gsl_svd_golub_reinsch (SCM);
 SCM scm_gsl_svd_modified_golub_reinsch (SCM);
 SCM scm_gsl_svd_jacobi (SCM);

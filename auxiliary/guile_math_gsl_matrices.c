@@ -2709,8 +2709,6 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:matrix-equal-scm?", 2, 0, 0,
                       scm_gsl_scm_matrix_equal_p);
 
-  // FIXME: Change the names of the SVD C routines to make them closer
-  // to GSL names.
   scm_c_define_gsubr ("gsl:svd-golub-reinsch-f64", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);
   scm_c_define_gsubr ("gsl:svd-modified-golub-reinsch-f64", 1, 0, 0,
