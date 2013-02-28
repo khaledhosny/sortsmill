@@ -77,6 +77,17 @@ exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants)
 }
 
 static void
+exception__expected_a_vector (const char *who, SCM irritants)
+{
+  const char *message = _("expected a vector, row matrix, or column matrix");
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (irritants)));
+}
+
+static void
 exception__layout_incompatible_with_gsl (const char *who, SCM irritants)
 {
   const char *message =
@@ -99,6 +110,19 @@ exception__unexpected_array_type (const char *who, SCM a)
       rnrs_c_make_who_condition (who),
       rnrs_make_message_condition (scm_from_locale_string (message)),
       rnrs_make_irritants_condition (scm_list_1 (a))));
+}
+
+
+static void
+exception__LU_matrix_is_singular (const char *who, SCM LU)
+{
+  const char *message = _("LU matrix is singular");
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (scm_from_locale_string (message)),
+      rnrs_make_irritants_condition (scm_list_1 (LU))));
 }
 
 VISIBLE gsl_vector_const_view
@@ -334,8 +358,8 @@ scm_gsl_vector_to_f64vector (const gsl_vector *v, int low_index)
        (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
         rnrs_c_make_message_condition (_("gsl_vector size is zero"))));
 
-  SCM bounds = scm_list_2 (scm_from_int (low_index),
-                           scm_from_int (low_index + v->size - 1));
+  SCM bounds = scm_list_2 (scm_from_intmax (low_index),
+                           scm_from_intmax (low_index + v->size - 1));
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                      scm_list_1 (bounds));
 
@@ -373,10 +397,10 @@ scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
        (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
         rnrs_c_make_message_condition (_("gsl_matrix size2 is zero"))));
 
-  SCM row_bounds = scm_list_2 (scm_from_int (low_index),
-                               scm_from_int (low_index + m->size1 - 1));
-  SCM column_bounds = scm_list_2 (scm_from_int (low_index),
-                                  scm_from_int (low_index + m->size2 - 1));
+  SCM row_bounds = scm_list_2 (scm_from_intmax (low_index),
+                               scm_from_intmax (low_index + m->size1 - 1));
+  SCM column_bounds = scm_list_2 (scm_from_intmax (low_index),
+                                  scm_from_intmax (low_index + m->size2 - 1));
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                      scm_list_2 (row_bounds, column_bounds));
   scm_dynwind_begin (0);
@@ -687,80 +711,100 @@ scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
     scm_array_handle_to_scm_matrix_nonuniform (handlep, m, n, A);
 }
 
-VISIBLE SCM
-scm_from_mpz_matrix (unsigned int m, unsigned int n, mpz_t A[m][n])
-{
-  scm_t_array_handle handle;
+#define _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR(NAME, TYPE, TO_MATRIX)        \
+  void                                                                  \
+  NAME (SCM array, scm_t_array_handle *handlep,                         \
+        unsigned int n, TYPE v[n])                                      \
+  {                                                                     \
+    assert_c_rank_1_or_2_array (#NAME, array, handlep);                 \
+                                                                        \
+    const size_t rank = scm_array_handle_rank (handlep);                \
+    if (rank == 1)                                                      \
+      TO_MATRIX (array, handlep, 1, n, (TYPE (*)[n]) v);                \
+    else                                                                \
+      {                                                                 \
+        const scm_t_array_dim *dims = scm_array_handle_dims (handlep);  \
+        size_t dim1 = (dims[0].ubnd - dims[0].lbnd) + 1;                \
+        size_t dim2 = (dims[1].ubnd - dims[1].lbnd) + 1;                \
+        if (dim1 == 1)                                                  \
+          TO_MATRIX (array, handlep, 1, n, (TYPE (*)[n]) v);            \
+        else if (dim2 == 1)                                             \
+          TO_MATRIX (array, handlep, n, 1, (TYPE (*)[1]) v);            \
+        else                                                            \
+          exception__expected_a_vector (#NAME, scm_list_1 (array));     \
+      }                                                                 \
+  }
 
-  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
-                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
-  SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);
+VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_mpz_vector,
+                                           mpz_t,
+                                           scm_array_handle_to_mpz_matrix);
+VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_mpq_vector,
+                                           mpq_t,
+                                           scm_array_handle_to_mpq_matrix);
+VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_scm_vector, SCM,
+                                           scm_array_handle_to_scm_matrix);
 
-  scm_dynwind_begin (0);
+#define _SCM_FROM_TYPED_MATRIX(NAME, TYPE, CONVERT_TO_SCM)              \
+  SCM                                                                   \
+  NAME (unsigned int m, unsigned int n, TYPE A[m][n])                   \
+  {                                                                     \
+    scm_t_array_handle handle;                                          \
+                                                                        \
+    SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1),             \
+                                         scm_from_uint (m)),            \
+                             scm_list_2 (scm_from_uint (1),             \
+                                         scm_from_uint (n)));           \
+    SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);               \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (array, &handle);                              \
+    scm_dynwind_array_handle_release (&handle);                         \
+                                                                        \
+    const scm_t_array_dim *dims = scm_array_handle_dims (&handle);      \
+    SCM *elems = scm_array_handle_writable_elements (&handle);          \
+    for (unsigned int i = 0; i < m; i++)                                \
+      for (unsigned int j = 0; j < n; j++)                              \
+        elems[i * dims[0].inc + j * dims[1].inc] =                      \
+          CONVERT_TO_SCM (A[i][j]);                                     \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return array;                                                       \
+  }
 
-  scm_array_get_handle (array, &handle);
-  scm_dynwind_array_handle_release (&handle);
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_mpz_matrix, mpz_t, scm_from_mpz);
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_mpq_matrix, mpq_t, scm_from_mpq);
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_scm_matrix, SCM, /* empty */ );
 
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
-  SCM *elems = scm_array_handle_writable_elements (&handle);
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
-      elems[i * dims[0].inc + j * dims[1].inc] = scm_from_mpz (A[i][j]);
+#define _SCM_FROM_TYPED_VECTOR(NAME, TYPE, CONVERT_TO_SCM)              \
+  SCM                                                                   \
+  NAME (unsigned int n, TYPE v[n])                                      \
+  {                                                                     \
+    scm_t_array_handle handle;                                          \
+                                                                        \
+    SCM bounds = scm_list_1 (scm_list_2 (scm_from_uint (1),             \
+                                         scm_from_uint (n)));           \
+    SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);               \
+                                                                        \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_array_get_handle (array, &handle);                              \
+    scm_dynwind_array_handle_release (&handle);                         \
+                                                                        \
+    const scm_t_array_dim *dims = scm_array_handle_dims (&handle);      \
+    SCM *elems = scm_array_handle_writable_elements (&handle);          \
+    for (unsigned int i = 0; i < n; i++)                                \
+      elems[i * dims[0].inc] = CONVERT_TO_SCM (v[i]);                   \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return array;                                                       \
+  }
 
-  scm_dynwind_end ();
-
-  return array;
-}
-
-VISIBLE SCM
-scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n])
-{
-  scm_t_array_handle handle;
-
-  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
-                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
-  SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (array, &handle);
-  scm_dynwind_array_handle_release (&handle);
-
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
-  SCM *elems = scm_array_handle_writable_elements (&handle);
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
-      elems[i * dims[0].inc + j * dims[1].inc] = scm_from_mpq (A[i][j]);
-
-  scm_dynwind_end ();
-
-  return array;
-}
-
-VISIBLE SCM
-scm_from_scm_matrix (unsigned int m, unsigned int n, SCM A[m][n])
-{
-  scm_t_array_handle handle;
-
-  SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1), scm_from_uint (m)),
-                           scm_list_2 (scm_from_uint (1), scm_from_uint (n)));
-  SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (array, &handle);
-  scm_dynwind_array_handle_release (&handle);
-
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
-  SCM *elems = scm_array_handle_writable_elements (&handle);
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
-      elems[i * dims[0].inc + j * dims[1].inc] = A[i][j];
-
-  scm_dynwind_end ();
-
-  return array;
-}
+VISIBLE _SCM_FROM_TYPED_VECTOR (scm_from_mpz_vector, mpz_t, scm_from_mpz);
+VISIBLE _SCM_FROM_TYPED_VECTOR (scm_from_mpq_vector, mpq_t, scm_from_mpq);
+VISIBLE _SCM_FROM_TYPED_VECTOR (scm_from_scm_vector, SCM, /* empty */ );
 
 static void
 assert_f64_rank_1_or_2_array (SCM who, SCM array)
@@ -841,6 +885,26 @@ matrix_dim2 (scm_t_array_handle *handlep)
   return dims[rank - 1].ubnd - dims[rank - 1].lbnd + 1;
 }
 
+static size_t
+vector_dim (SCM array, scm_t_array_handle *handlep)
+{
+  size_t dim1 = matrix_dim1 (handlep);
+  size_t dim2 = matrix_dim2 (handlep);
+
+  size_t dim;
+  if (dim1 == 1)
+    dim = dim2;
+  else if (dim2 == 1)
+    dim = dim1;
+  else
+    {
+      dim = 0;
+      exception__expected_a_vector ("vector_dim", scm_list_1 (array));
+    }
+
+  return dim;
+}
+
 static void
 matrix_has_dimension_of_size_zero (const char *who, SCM A)
 {
@@ -862,10 +926,29 @@ non_conformable_for_multiplication (const char *who, SCM A, SCM B,
   const char *localized_message =
     _("non-conformable matrices: ~ax~a multiplied by ~ax~a");
   SCM message = scm_sformat (scm_from_locale_string (localized_message),
-                             scm_list_4 (scm_from_int (m_A),
-                                         scm_from_int (k_A),
-                                         scm_from_int (k_B),
-                                         scm_from_int (n_B)));
+                             scm_list_4 (scm_from_size_t (m_A),
+                                         scm_from_size_t (k_A),
+                                         scm_from_size_t (k_B),
+                                         scm_from_size_t (n_B)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (message),
+      rnrs_make_irritants_condition (scm_list_2 (A, B))));
+}
+
+static void
+non_conformable_for_Ax_equals_B (const char *who, SCM A, SCM B,
+                                 size_t m_A, size_t n_A, size_t m_B, size_t n_B)
+{
+  const char *localized_message =
+    _("non-conformable matrices for solution of Ax = b: ~ax~a, ~ax~a");
+  SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                             scm_list_4 (scm_from_size_t (m_A),
+                                         scm_from_size_t (n_A),
+                                         scm_from_size_t (m_B),
+                                         scm_from_size_t (n_B)));
   rnrs_raise_condition
     (scm_list_4
      (rnrs_make_assertion_violation (),
@@ -881,10 +964,10 @@ non_conformable_for_gemm_C_lead (const char *who, SCM A, SCM C,
   const char *localized_message =
     _("lead dimensions mismatched: ~ax~a and ~ax~a");
   SCM message = scm_sformat (scm_from_locale_string (localized_message),
-                             scm_list_4 (scm_from_int (m_A),
-                                         scm_from_int (k_A),
-                                         scm_from_int (m_C),
-                                         scm_from_int (n_C)));
+                             scm_list_4 (scm_from_size_t (m_A),
+                                         scm_from_size_t (k_A),
+                                         scm_from_size_t (m_C),
+                                         scm_from_size_t (n_C)));
   rnrs_raise_condition
     (scm_list_4
      (rnrs_make_assertion_violation (),
@@ -901,10 +984,10 @@ non_conformable_for_gemm_C_trailing (const char *who, SCM B, SCM C,
   const char *localized_message =
     _("trailing dimensions mismatched: ~ax~a and ~ax~a");
   SCM message = scm_sformat (scm_from_locale_string (localized_message),
-                             scm_list_4 (scm_from_int (k_B),
-                                         scm_from_int (n_B),
-                                         scm_from_int (m_C),
-                                         scm_from_int (n_C)));
+                             scm_list_4 (scm_from_size_t (k_B),
+                                         scm_from_size_t (n_B),
+                                         scm_from_size_t (m_C),
+                                         scm_from_size_t (n_C)));
   rnrs_raise_condition
     (scm_list_4
      (rnrs_make_assertion_violation (),
@@ -919,10 +1002,10 @@ non_conformable_for_addition (const char *localized_message, const char *who,
                               size_t m_A, size_t n_A, size_t m_B, size_t n_B)
 {
   SCM message = scm_sformat (scm_from_locale_string (localized_message),
-                             scm_list_4 (scm_from_int (m_A),
-                                         scm_from_int (n_A),
-                                         scm_from_int (m_B),
-                                         scm_from_int (n_B)));
+                             scm_list_4 (scm_from_size_t (m_A),
+                                         scm_from_size_t (n_A),
+                                         scm_from_size_t (m_B),
+                                         scm_from_size_t (n_B)));
   rnrs_raise_condition
     (scm_list_4
      (rnrs_make_assertion_violation (),
@@ -936,14 +1019,36 @@ matrix_is_not_square (const char *who, SCM A, size_t m, size_t n)
 {
   const char *localized_message = _("not a square matrix: ~ax~a");
   SCM message = scm_sformat (scm_from_locale_string (localized_message),
-                             scm_list_2 (scm_from_int (m),
-                                         scm_from_int (n)));
+                             scm_list_2 (scm_from_size_t (m),
+                                         scm_from_size_t (n)));
   rnrs_raise_condition
     (scm_list_4
      (rnrs_make_assertion_violation (),
       rnrs_c_make_who_condition (who),
       rnrs_make_message_condition (message),
       rnrs_make_irritants_condition (scm_list_1 (A))));
+}
+
+static void
+permutation_does_not_conform_with_matrix (const char *who,
+                                          size_t permutation_size,
+                                          SCM permutation, SCM A)
+{
+  SCM dims = scm_call_1 (scm_c_private_ref ("sortsmill math gsl matrices",
+                                            "array-dimensions-simplified"),
+                         A);
+
+  const char *localized_message =
+    _("permutation of length ~a does not conform with ~ax~a matrix");
+  SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                             scm_list_3 (scm_from_size_t (permutation_size),
+                                         scm_car (dims), scm_cadr (dims)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (message),
+      rnrs_make_irritants_condition (scm_list_2 (permutation, A))));
 }
 
 static void
@@ -989,6 +1094,25 @@ assert_matrix_is_square (const char *who, SCM A, size_t m, size_t n)
     matrix_has_dimension_of_size_zero (who, A);
   if (m != n)
     matrix_is_not_square (who, A, m, n);
+}
+
+static void
+assert_permutation_conforms_with_matrix (const char *who, size_t n,
+                                         const gsl_permutation *p,
+                                         SCM permutation, SCM A)
+{
+  if (n != gsl_permutation_size (p))
+    permutation_does_not_conform_with_matrix (who, gsl_permutation_size (p),
+                                              permutation, A);
+}
+
+static void
+assert_conformable_for_Ax_equals_B (const char *who, SCM A, SCM B,
+                                    size_t m_A, size_t n_A,
+                                    size_t m_B, size_t n_B)
+{
+  if (m_A != m_B)
+    non_conformable_for_Ax_equals_B (who, A, B, m_A, n_A, m_B, n_B);
 }
 
 VISIBLE SCM
@@ -2335,6 +2459,160 @@ scm_gsl_scm_linalg_LU_decomp (SCM A)
   return scm_c_values (values, 3);
 }
 
+VISIBLE SCM
+scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
+{
+  scm_t_array_handle handle_LU;
+  scm_t_array_handle handle_b;
+
+  const char *who = "scm_gsl_linalg_LU_solve";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+  gsl_matrix_const_view mLU =
+    scm_gsl_matrix_const_view_array_handle (LU, &handle_LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+  gsl_vector_view vb = scm_gsl_vector_view_array_handle (b, &handle_b);
+
+  const size_t n_b = vector_dim (b, &handle_b);
+
+  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
+
+  int errval = gsl_linalg_LU_svx (&mLU.matrix, p, &vb.vector);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_2 (LU, b), SCM_UNDEFINED));
+
+  SCM solution = scm_gsl_vector_to_f64vector (&vb.vector, 1);
+
+  scm_dynwind_end ();
+
+  return solution;
+}
+
+VISIBLE SCM
+scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
+{
+  scm_t_array_handle handle_LU;
+  scm_t_array_handle handle_b;
+
+  const char *who = "scm_gsl_mpq_linalg_LU_solve";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  mpq_t _LU[n][n];
+  mpq_matrix_init (n, n, _LU);
+  scm_dynwind_mpq_matrix_clear (n, n, _LU);
+
+  scm_array_handle_to_mpq_matrix (LU, &handle_LU, n, n, _LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+
+  const size_t n_b = vector_dim (b, &handle_b);
+
+  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
+
+  mpq_t _b[n];
+  mpq_vector_init (n, _b);
+  scm_dynwind_mpq_vector_clear (n, _b);
+
+  scm_array_handle_to_mpq_vector (b, &handle_b, n, _b);
+
+  bool singular;
+  mpq_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _b, &singular);
+  if (singular)
+    exception__LU_matrix_is_singular (who, LU);
+
+  SCM solution = scm_from_mpq_vector (n, _b);
+
+  scm_dynwind_end ();
+
+  return solution;
+}
+
+VISIBLE SCM
+scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
+{
+  scm_t_array_handle handle_LU;
+  scm_t_array_handle handle_b;
+
+  const char *who = "scm_gsl_scm_linalg_LU_solve";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  SCM _LU[n][n];
+
+  scm_array_handle_to_scm_matrix (LU, &handle_LU, n, n, _LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+
+  const size_t n_b = vector_dim (b, &handle_b);
+
+  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
+
+  SCM _b[n];
+
+  scm_array_handle_to_scm_vector (b, &handle_b, n, _b);
+
+  scm_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _b);
+
+  SCM solution = scm_from_scm_vector (n, _b);
+
+  scm_dynwind_end ();
+
+  return solution;
+}
+
 VISIBLE void
 init_guile_sortsmill_math_gsl_matrices (void)
 {
@@ -2449,4 +2727,11 @@ init_guile_sortsmill_math_gsl_matrices (void)
                       scm_gsl_scm_linalg_LU_decomp);
   scm_c_define_gsubr ("gsl:lu-decomposition-mpq-fast-pivot", 1, 0, 0,
                       scm_gsl_mpq_linalg_LU_decomp_fast_pivot);
+
+  scm_c_define_gsubr ("gsl:lu-solve-vector-f64", 3, 0, 0,
+                      scm_gsl_linalg_LU_solve);
+  scm_c_define_gsubr ("gsl:lu-solve-vector-mpq", 3, 0, 0,
+                      scm_gsl_mpq_linalg_LU_solve);
+  scm_c_define_gsubr ("gsl:lu-solve-vector-scm", 3, 0, 0,
+                      scm_gsl_scm_linalg_LU_solve);
 }

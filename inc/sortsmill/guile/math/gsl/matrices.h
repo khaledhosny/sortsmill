@@ -66,6 +66,20 @@ SCM scm_from_scm_matrix (unsigned int m, unsigned int n, SCM A[m][n]);
 
 #endif /* _FF_C99_OR_GREATER */
 
+/* Unlike their f64 counterpart, the following three routines accept
+   row or column matrices as vectors. FIXME: Make the f64 counterpart
+   accept them, too. */
+void scm_array_handle_to_mpz_vector (SCM array, scm_t_array_handle *handlep,
+                                     unsigned int n, mpz_t A[n]);
+void scm_array_handle_to_mpq_vector (SCM array, scm_t_array_handle *handlep,
+                                     unsigned int n, mpq_t A[n]);
+void scm_array_handle_to_scm_vector (SCM array, scm_t_array_handle *handlep,
+                                     unsigned int n, SCM A[n]);
+
+SCM scm_from_mpz_vector (unsigned int n, mpz_t v[n]);
+SCM scm_from_mpq_vector (unsigned int n, mpq_t v[n]);
+SCM scm_from_scm_vector (unsigned int n, SCM v[n]);
+
 SCM scm_gsl_matrix_scale (SCM A, SCM x);
 SCM scm_gsl_mpz_matrix_scale (SCM A, SCM x);
 SCM scm_gsl_mpq_matrix_scale (SCM A, SCM x);
@@ -153,9 +167,14 @@ SCM scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V,
                               SCM x_transpose, SCM b_transpose);
 
 SCM scm_gsl_linalg_LU_decomp (SCM A);
+SCM scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM b);
+
 SCM scm_gsl_mpq_linalg_LU_decomp (SCM A);
-SCM scm_gsl_scm_linalg_LU_decomp (SCM A);
 SCM scm_gsl_mpq_linalg_LU_decomp_fast_pivot (SCM A);
+SCM scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM b);
+
+SCM scm_gsl_scm_linalg_LU_decomp (SCM A);
+SCM scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b);
 
 #if 0
 {

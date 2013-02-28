@@ -126,10 +126,13 @@
           ;;
           ;;    (gsl:svd-WHATEVER A) → U, diag S, V′
           ;;
+;;;;; FIXME: Change these names to put the ‘-f64’ last, for
+;;;;; consistency.
           gsl:svd-f64-golub-reinsch
           gsl:svd-f64-modified-golub-reinsch
           gsl:svd-f64-jacobi
 
+;;;;; FIXME: Change this name to put the ‘-f64’ last, for consistency.
           gsl:svd-f64-solve-vector
 
           ;; LU decomposition.
@@ -147,6 +150,10 @@
           ;; will give a different LU decomposition than the other
           ;; routines.
           gsl:lu-decomposition-mpq-fast-pivot
+
+          gsl:lu-solve-vector-f64
+          gsl:lu-solve-vector-mpq
+          gsl:lu-solve-vector-scm
           )
 
   (import (sortsmill arrays)
@@ -154,7 +161,7 @@
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
-          (only (srfi :26) cut))
+          (ice-9 match))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_math_gsl_matrices"))
@@ -181,5 +188,10 @@
        who
        (_ "expected gsl:CblasNoTrans, gsl:CblasTrans, or gsl:CblasConjTrans")
        trans)))
+
+  (define (array-dimensions-simplified A)
+    (map
+     (match-lambda [(lo hi) (- hi lo -1)])
+     (array-shape A)))
 
   ) ;; end of library.
