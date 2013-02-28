@@ -2386,15 +2386,14 @@ struct prefs_list pointer_dialog_list[] = {
 };
 
 static int
-PrefsSubSet_Ok (GGadget *g, GEvent *e)
+PointerDlg_Ok (GGadget *g, GEvent *e)
 {
   GWindow gw = GGadgetGetWindow (g);
   struct pref_data *p = GDrawGetUserData (GGadgetGetWindow (g));
   struct prefs_list *plist = p->plist;
   struct prefs_list *pl = plist;
   int i = 0, j = 0;
-  int err = 0, enc;
-  const uint32_t *ret;
+  int err = 0;
 
   p->done = true;
 
@@ -2402,86 +2401,15 @@ PrefsSubSet_Ok (GGadget *g, GEvent *e)
     {
       switch (pl->type)
         {
-        case pr_int:
-          *((int *) (pl->val)) =
-            GetInt8 (gw, j * CID_PrefsOffset + CID_PrefsBase + i, pl->name,
-                     &err);
-          break;
-        case pr_unicode:
-          *((int *) (pl->val)) =
-            GetUnicodeChar8 (gw, j * CID_PrefsOffset + CID_PrefsBase + i,
-                             pl->name, &err);
-          break;
         case pr_bool:
           *((int *) (pl->val)) =
-            GGadgetIsChecked (GWidgetGetControl
-                              (gw, j * CID_PrefsOffset + CID_PrefsBase + i));
+            GGadgetIsChecked (
+                    GWidgetGetControl (gw, j * CID_PrefsOffset + CID_PrefsBase + i));
           break;
         case pr_real:
           *((float *) (pl->val)) =
             GetReal8 (gw, j * CID_PrefsOffset + CID_PrefsBase + i, pl->name,
                       &err);
-          break;
-        case pr_encoding:
-          {
-            Encoding *e;
-            e =
-              ParseEncodingNameFromList (GWidgetGetControl
-                                         (gw,
-                                          j * CID_PrefsOffset +
-                                          CID_PrefsBase + i));
-            if (e != NULL)
-              *((Encoding **) (pl->val)) = e;
-            enc = 1;            /* So gcc doesn't complain about unused. It is unused, but why add the ifdef and make the code even messier? Sigh. icc complains anyway */
-          }
-          break;
-        case pr_namelist:
-          {
-            NameList *nl;
-            GTextInfo *ti = GGadgetGetListItemSelected (GWidgetGetControl (gw,
-                                                                           j *
-                                                                           CID_PrefsOffset
-                                                                           +
-                                                                           CID_PrefsBase
-                                                                           +
-                                                                           i));
-            if (ti != NULL)
-              {
-                char *name = NULL_PASSTHRU (ti->text, x_u32_to_u8 (ti->text));
-                nl = NameListByName (name);
-                free (name);
-                if (nl != NULL && nl->uses_unicode && !allow_utf8_glyphnames)
-                  ff_post_error (_("Namelist contains non-ASCII names"),
-                                 _
-                                 ("Glyph names should be limited to characters in the ASCII character set, but there are names in this namelist which use characters outside that range."));
-                else if (nl != NULL)
-                  *((NameList **) (pl->val)) = nl;
-              }
-          }
-          break;
-        case pr_string:
-        case pr_file:
-          ret =
-            _GGadgetGetTitle (GWidgetGetControl
-                              (gw, j * CID_PrefsOffset + CID_PrefsBase + i));
-          if (pl->val != NULL)
-            {
-              free (*((char **) (pl->val)));
-              *((char **) (pl->val)) = NULL;
-              if (ret != NULL && *ret != '\0')
-                *((char **) (pl->val)) = x_u32_to_u8 (u32_force_valid (ret));
-            }
-          else
-            {
-              char *cret = x_u32_to_u8 (u32_force_valid (ret));
-              (pl->set) (cret);
-              free (cret);
-            }
-          break;
-        case pr_angle:
-          *((float *) (pl->val)) =
-            GetReal8 (gw, j * CID_PrefsOffset + CID_PrefsBase + i, pl->name,
-                      &err) / RAD2DEG;
           break;
         }
     }
@@ -2489,9 +2417,10 @@ PrefsSubSet_Ok (GGadget *g, GEvent *e)
   return (true);
 }
 
-static void
-PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
+void
+PointerDlg (CharView * cv)
 {
+  struct prefs_list *plist = pointer_dialog_list;
   struct prefs_list *pl = plist;
   GRect pos;
   GWindow gw;
@@ -2504,18 +2433,15 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   GGadgetCreateData **hvarray, boxes[2 * TOPICS];
   struct pref_data p;
   int line, line_max = 3;
-  int i = 0, gc = 0, ii, y, si = 0, k = 0;
+  int i = 0, gc = 0, y, si = 0, k = 0;
   char buf[20];
-  char *tempstr;
 
   PrefsInit ();
   MfArgsInit ();
 
   line_max = 0;
   for (i = 0, pl = plist; pl->name; ++i, ++pl)
-    {
-      ++line_max;
-    }
+    ++line_max;
 
   int itemCount = 100;
   pgcd = xcalloc (itemCount, sizeof (GGadgetCreateData));
@@ -2540,17 +2466,14 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   wattrs.is_dlg = 1;
   wattrs.undercursor = 1;
   wattrs.cursor = ct_pointer;
-  wattrs.utf8_window_title = windowTitle;
+  wattrs.utf8_window_title = _("Arrow Options");
   pos.x = pos.y = 0;
   pos.width = GGadgetScale (GDrawPointsToPixels (NULL, 340));
   pos.height = GDrawPointsToPixels (NULL, line_max * 26 + 25);
   gw = GDrawCreateTopWindow (NULL, &pos, e_h, &p, &wattrs);
 
-
-
   for (i = 0, pl = plist; pl->name; ++i, ++pl)
     {
-
       plabel[gc].text = (uint32_t *) _(pl->name);
       plabel[gc].text_is_1byte = true;
       pgcd[gc].gd.label = &plabel[gc];
@@ -2593,149 +2516,12 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           ++gc;
           y += 22;
           break;
-        case pr_int:
-          sprintf (buf, "%d", *((int *) pl->val));
-          plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
-          pgcd[gc++].creator = GTextFieldCreate;
-          hvarray[si++] = &pgcd[gc - 1];
-          hvarray[si++] = GCD_Glue;
-          hvarray[si++] = GCD_Glue;
-          y += 26;
-          break;
-        case pr_unicode:
-          /*sprintf(buf,"U+%04x", *((int *) pl->val)); */
-          {
-            char *pt;
-            pt = buf;
-            pt = utf8_idpb (pt, *((int *) pl->val));
-            *pt = '\0';
-          }
-          plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
-          pgcd[gc++].creator = GTextFieldCreate;
-          hvarray[si++] = &pgcd[gc - 1];
-          hvarray[si++] = GCD_Glue;
-          hvarray[si++] = GCD_Glue;
-          y += 26;
-          break;
         case pr_real:
           sprintf (buf, "%g", *((float *) pl->val));
           plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
-          hvarray[si++] = GCD_Glue;
-          y += 26;
-          break;
-        case pr_encoding:
-          pgcd[gc].gd.u.list = GetEncodingTypes ();
-          pgcd[gc].gd.label =
-            EncodingTypesFindEnc (pgcd[gc].gd.u.list, *(Encoding **) pl->val);
-          for (ii = 0;
-               pgcd[gc].gd.u.list[ii].text != NULL
-               || pgcd[gc].gd.u.list[ii].line; ++ii)
-            if (pgcd[gc].gd.u.list[ii].userdata != NULL
-                && (strcmp (pgcd[gc].gd.u.list[ii].userdata, "Compacted") == 0
-                    || strcmp (pgcd[gc].gd.u.list[ii].userdata,
-                               "Original") == 0))
-              pgcd[gc].gd.u.list[ii].disabled = true;
-          pgcd[gc].creator = GListFieldCreate;
-          pgcd[gc].gd.pos.width = 160;
-          if (pgcd[gc].gd.label == NULL)
-            pgcd[gc].gd.label = &encodingtypes[0];
-          ++gc;
-          hvarray[si++] = &pgcd[gc - 1];
-          hvarray[si++] = GCD_ColSpan;
-          hvarray[si++] = GCD_ColSpan;
-          y += 28;
-          break;
-        case pr_namelist:
-          {
-            char **nlnames = AllNamelistNames ();
-            int cnt;
-            GTextInfo *namelistnames;
-            for (cnt = 0; nlnames[cnt] != NULL; ++cnt);
-            namelistnames = xcalloc (cnt + 1, sizeof (GTextInfo));
-            for (cnt = 0; nlnames[cnt] != NULL; ++cnt)
-              {
-                namelistnames[cnt].text = (uint32_t *) nlnames[cnt];
-                namelistnames[cnt].text_is_1byte = true;
-                if (strcmp
-                    (_((*(NameList **) (pl->val))->title), nlnames[cnt]) == 0)
-                  {
-                    namelistnames[cnt].selected = true;
-                    pgcd[gc].gd.label = &namelistnames[cnt];
-                  }
-              }
-            pgcd[gc].gd.u.list = namelistnames;
-            pgcd[gc].creator = GListButtonCreate;
-            pgcd[gc].gd.pos.width = 160;
-            ++gc;
-            hvarray[si++] = &pgcd[gc - 1];
-            hvarray[si++] = GCD_ColSpan;
-            hvarray[si++] = GCD_ColSpan;
-            y += 28;
-          }
-          break;
-        case pr_string:
-        case pr_file:
-          if (pl->set == SetAutoTraceArgs || ((char **) pl->val) == &mf_args)
-            pgcd[gc].gd.pos.width = 160;
-          if (pl->val != NULL)
-            tempstr = *((char **) (pl->val));
-          else
-            tempstr = (char *) ((pl->get) ());
-          if (tempstr != NULL && u8_valid (tempstr))
-            plabel[gc].text = x_u8_to_u32 (tempstr);
-          else if (((char **) pl->val) == &BDFFoundry)
-            plabel[gc].text = x_u8_to_u32 ("FontForge");
-          else
-            plabel[gc].text = x_u8_to_u32 ("");
-          plabel[gc].text_is_1byte = false;
-          pgcd[gc++].creator = GTextFieldCreate;
-          hvarray[si++] = &pgcd[gc - 1];
-          if (pl->type == pr_file)
-            {
-              pgcd[gc] = pgcd[gc - 1];
-              pgcd[gc - 1].gd.pos.width = 140;
-              hvarray[si++] = GCD_ColSpan;
-              pgcd[gc].gd.pos.x += 145;
-              pgcd[gc].gd.cid += CID_PrefsBrowseOffset;
-              pgcd[gc].gd.label = &plabel[gc];
-              plabel[gc].text = (uint32_t *) "...";
-              plabel[gc].text_is_1byte = true;
-              pgcd[gc].gd.handle_controlevent = Prefs_BrowseFile;
-              pgcd[gc++].creator = GButtonCreate;
-              hvarray[si++] = &pgcd[gc - 1];
-            }
-          else if (pl->set == SetAutoTraceArgs
-                   || ((char **) pl->val) == &mf_args)
-            {
-              hvarray[si++] = GCD_ColSpan;
-              hvarray[si++] = GCD_Glue;
-            }
-          else
-            {
-              hvarray[si++] = GCD_Glue;
-              hvarray[si++] = GCD_Glue;
-            }
-          y += 26;
-          if (pl->val == NULL)
-            free (tempstr);
-          break;
-        case pr_angle:
-          sprintf (buf, "%g", *((float *) pl->val) * RAD2DEG);
-          plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
-          pgcd[gc++].creator = GTextFieldCreate;
-          hvarray[si++] = &pgcd[gc - 1];
-          plabel[gc].text = (uint32_t *) _("°");
-          plabel[gc].text_is_1byte = true;
-          pgcd[gc].gd.label = &plabel[gc];
-          pgcd[gc].gd.pos.x =
-            pgcd[gc - 1].gd.pos.x + gcd[gc - 1].gd.pos.width + 2;
-          pgcd[gc].gd.pos.y = pgcd[gc - 1].gd.pos.y;
-          pgcd[gc].gd.flags = gg_enabled | gg_visible;
-          pgcd[gc++].creator = GLabelCreate;
-          hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
           y += 26;
           break;
@@ -2759,13 +2545,12 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   label[gc].text_is_1byte = true;
   label[gc].text_has_mnemonic = true;
   gcd[gc].gd.label = &label[gc];
-  gcd[gc].gd.handle_controlevent = PrefsSubSet_Ok;
+  gcd[gc].gd.handle_controlevent = PointerDlg_Ok;
   gcd[gc++].creator = GButtonCreate;
   harray[0] = GCD_Glue;
   harray[1] = &gcd[gc - 1];
   harray[2] = GCD_Glue;
   harray[3] = GCD_Glue;
-
 
   memset (mboxes, 0, sizeof (mboxes));
   memset (mboxes2, 0, sizeof (mboxes2));
@@ -2787,12 +2572,6 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   varray[3] = 0;
   varray[4] = 0;
 
-  /* varray[0] = &mboxes[2]; */
-  /* varray[1] = 0;//&mboxes[2]; */
-  /* varray[2] = 0; */
-  /* varray[3] = 0; */
-  /* varray[4] = 0; */
-
   mboxes2[0].gd.pos.x = 4;
   mboxes2[0].gd.pos.y = 4;
   mboxes2[0].gd.flags = gg_enabled | gg_visible;
@@ -2806,10 +2585,4 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   while (!p.done)
     GDrawProcessOneEvent (NULL);
   GDrawDestroyWindow (gw);
-}
-
-void
-PointerDlg (CharView * cv)
-{
-  PrefsSubSetDlg (cv, _("Arrow Options"), pointer_dialog_list);
 }
