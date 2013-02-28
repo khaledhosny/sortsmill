@@ -114,6 +114,68 @@ mpq_linalg_LU_decomp (unsigned int n, mpq_t A[n][n], size_t p[n], int *signum)
 }
 
 VISIBLE void
+mpq_linalg_LU_decomp_fast_pivot (unsigned int n, mpq_t A[n][n], size_t p[n],
+                                 int *signum)
+{
+  initialize_permutation (n, p);
+  *signum = 1;
+
+  mpq_t aij, aik, ajj, ajk, product;
+  mpq_inits (aij, aik, ajj, ajk, product, NULL);
+
+  for (unsigned int j = 0; j < n - 1; j++)
+    {
+      // Take the first non-zero pivot.
+
+      int sign = mpq_sgn (A[j][j]);
+      unsigned int i_pivot = j;
+
+      unsigned int i = j + 1;
+      while (sign == 0 && i < n)
+        {
+          sign = mpq_sgn (A[i][j]);
+
+          if (sign != 0)
+            i_pivot = i;
+
+          i++;
+        }
+
+      if (i_pivot != j)
+        {
+          mpq_matrix_swap_rows (n, n, A, j, i_pivot);
+
+          unsigned int temp = p[i_pivot];
+          p[i_pivot] = p[j];
+          p[j] = temp;
+
+          *signum = -(*signum);
+        }
+
+      mpq_set (ajj, A[j][j]);
+
+      if (mpq_sgn (ajj) != 0)
+        {
+          for (unsigned int i = j + 1; i < n; i++)
+            {
+              mpq_div (aij, A[i][j], ajj);
+              mpq_set (A[i][j], aij);
+
+              for (unsigned int k = j + 1; k < n; k++)
+                {
+                  mpq_set (aik, A[i][k]);
+                  mpq_set (ajk, A[j][k]);
+                  mpq_mul (product, aij, ajk);
+                  mpq_sub (A[i][k], aik, product);
+                }
+            }
+        }
+    }
+
+  mpq_clears (aij, aik, ajj, ajk, product, NULL);
+}
+
+VISIBLE void
 mpq_linalg_LU_solve (unsigned int n, mpq_t LU[n][n], size_t p[n],
                      mpq_t b[n], mpq_t x[n], bool *singular)
 {

@@ -245,8 +245,12 @@ void mpq_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
 /*-----------------------------------------------------------------------*/
 /* LU decomposition. */
 
+/* The permutation vectors here are size_t arrays for compatibility
+   with gsl_permutation. */
 void mpq_linalg_LU_decomp (unsigned int n, mpq_t A[n][n],
                            size_t p[n], int *signum);
+void mpq_linalg_LU_decomp_fast_pivot (unsigned int n, mpq_t A[n][n],
+                                      size_t p[n], int *signum);
 void mpq_linalg_LU_solve (unsigned int n, mpq_t LU[n][n], size_t p[n],
                           mpq_t b[n], mpq_t x[n], bool *singular);
 void mpq_linalg_LU_svx (unsigned int n, mpq_t LU[n][n], size_t p[n], mpq_t x[n],

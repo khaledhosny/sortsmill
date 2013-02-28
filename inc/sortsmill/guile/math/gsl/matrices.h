@@ -153,7 +153,9 @@ SCM scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V,
                               SCM x_transpose, SCM b_transpose);
 
 SCM scm_gsl_linalg_LU_decomp (SCM A);
+SCM scm_gsl_mpq_linalg_LU_decomp (SCM A);
 SCM scm_gsl_scm_linalg_LU_decomp (SCM A);
+SCM scm_gsl_mpq_linalg_LU_decomp_fast_pivot (SCM A);
 
 #if 0
 {

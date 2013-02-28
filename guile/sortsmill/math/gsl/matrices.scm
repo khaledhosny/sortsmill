@@ -139,7 +139,14 @@
           ;; L and U are stored in the same matrix, and L has an
           ;; implicit unit diagonal.
           gsl:lu-decomposition-f64
+          gsl:lu-decomposition-mpq
           gsl:lu-decomposition-scm
+
+          ;; Similar to gsl:lu-decomposition-mpq, but taking the first
+          ;; non-zero pivot rather than the maximum. In general this
+          ;; will give a different LU decomposition than the other
+          ;; routines.
+          gsl:lu-decomposition-mpq-fast-pivot
           )
 
   (import (sortsmill arrays)

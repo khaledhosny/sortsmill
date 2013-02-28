@@ -86,7 +86,8 @@ bool scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n],
 void scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
                       CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n]);
 
-/* LU decomposition. */
+/* LU decomposition. The permutation vectors here are size_t arrays
+   for compatibility with gsl_permutation. */
 void scm_linalg_LU_decomp (unsigned int n, SCM A[n][n],
                            size_t p[n], int *signum);
 void scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], size_t p[n],

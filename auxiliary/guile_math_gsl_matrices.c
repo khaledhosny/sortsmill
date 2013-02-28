@@ -2216,6 +2216,88 @@ scm_gsl_linalg_LU_decomp (SCM A)
 }
 
 VISIBLE SCM
+scm_gsl_mpq_linalg_LU_decomp (SCM A)
+{
+  scm_t_array_handle handle_A;
+
+  const char *who = "scm_gsl_mpq_linalg_LU_decomp";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+
+  const size_t m = matrix_dim1 (&handle_A);
+  const size_t n = matrix_dim2 (&handle_A);
+
+  assert_matrix_is_square (who, A, m, n);
+
+  mpq_t _A[n][n];
+  mpq_matrix_init (n, n, _A);
+  scm_dynwind_mpq_matrix_clear (n, n, _A);
+
+  scm_array_handle_to_mpq_matrix (A, &handle_A, n, n, _A);
+
+  gsl_permutation *p = xdie_on_null (gsl_permutation_alloc (n));
+  scm_dynwind_gsl_permutation_free (p);
+
+  int signum;
+
+  mpq_linalg_LU_decomp (n, _A, gsl_permutation_data (p), &signum);
+
+  SCM values[3] = {
+    scm_from_mpq_matrix (n, n, _A),
+    scm_from_gsl_permutation (p),
+    scm_from_int (signum)
+  };
+
+  scm_dynwind_end ();
+
+  return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
+scm_gsl_mpq_linalg_LU_decomp_fast_pivot (SCM A)
+{
+  scm_t_array_handle handle_A;
+
+  const char *who = "scm_gsl_mpq_linalg_LU_decomp_fast_pivot";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+
+  const size_t m = matrix_dim1 (&handle_A);
+  const size_t n = matrix_dim2 (&handle_A);
+
+  assert_matrix_is_square (who, A, m, n);
+
+  mpq_t _A[n][n];
+  mpq_matrix_init (n, n, _A);
+  scm_dynwind_mpq_matrix_clear (n, n, _A);
+
+  scm_array_handle_to_mpq_matrix (A, &handle_A, n, n, _A);
+
+  gsl_permutation *p = xdie_on_null (gsl_permutation_alloc (n));
+  scm_dynwind_gsl_permutation_free (p);
+
+  int signum;
+
+  mpq_linalg_LU_decomp_fast_pivot (n, _A, gsl_permutation_data (p), &signum);
+
+  SCM values[3] = {
+    scm_from_mpq_matrix (n, n, _A),
+    scm_from_gsl_permutation (p),
+    scm_from_int (signum)
+  };
+
+  scm_dynwind_end ();
+
+  return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
 scm_gsl_scm_linalg_LU_decomp (SCM A)
 {
   scm_t_array_handle handle_A;
@@ -2361,6 +2443,10 @@ init_guile_sortsmill_math_gsl_matrices (void)
 
   scm_c_define_gsubr ("gsl:lu-decomposition-f64", 1, 0, 0,
                       scm_gsl_linalg_LU_decomp);
+  scm_c_define_gsubr ("gsl:lu-decomposition-mpq", 1, 0, 0,
+                      scm_gsl_mpq_linalg_LU_decomp);
   scm_c_define_gsubr ("gsl:lu-decomposition-scm", 1, 0, 0,
                       scm_gsl_scm_linalg_LU_decomp);
+  scm_c_define_gsubr ("gsl:lu-decomposition-mpq-fast-pivot", 1, 0, 0,
+                      scm_gsl_mpq_linalg_LU_decomp_fast_pivot);
 }
