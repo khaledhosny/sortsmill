@@ -33,15 +33,6 @@ extern "C"
 }
 #endif
 
-/* FIXME: Review these ‘exception’ functions for relevance and, in any
-   case, try not to include them here or make them VISIBLE. */
-void exception__array_has_no_elements (const char *who, SCM irritants);
-void exception__expected_array_of_rank_1 (const char *who, SCM irritants);
-void exception__expected_array_of_rank_2 (const char *who, SCM irritants);
-void exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants);
-void exception__layout_incompatible_with_gsl (const char *who, SCM irritants);
-void exception__unexpected_array_type (const char *who, SCM a);
-
 gsl_vector_const_view scm_gsl_vector_const_view_array_handle (SCM array,
                                                               scm_t_array_handle
                                                               *handlep);

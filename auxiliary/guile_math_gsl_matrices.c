@@ -27,7 +27,7 @@ void init_guile_sortsmill_math_gsl_matrices (void);
 
 gsl_matrix_const_view null_gsl_matrix_const_view = { 0 };
 
-VISIBLE void
+static void
 exception__array_has_no_elements (const char *who, SCM irritants)
 {
   const char *message = _("array has no elements");
@@ -39,7 +39,7 @@ exception__array_has_no_elements (const char *who, SCM irritants)
       rnrs_make_irritants_condition (irritants)));
 }
 
-VISIBLE void
+static void
 exception__expected_array_of_rank_1 (const char *who, SCM irritants)
 {
   const char *message = _("expected array of rank 1");
@@ -51,7 +51,7 @@ exception__expected_array_of_rank_1 (const char *who, SCM irritants)
       rnrs_make_irritants_condition (irritants)));
 }
 
-VISIBLE void
+static void
 exception__expected_array_of_rank_2 (const char *who, SCM irritants)
 {
   const char *message = _("expected array of rank 2");
@@ -63,7 +63,7 @@ exception__expected_array_of_rank_2 (const char *who, SCM irritants)
       rnrs_make_irritants_condition (irritants)));
 }
 
-VISIBLE void
+static void
 exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants)
 {
   const char *message = _("expected array of rank 1 or 2");
@@ -75,7 +75,7 @@ exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants)
       rnrs_make_irritants_condition (irritants)));
 }
 
-VISIBLE void
+static void
 exception__layout_incompatible_with_gsl (const char *who, SCM irritants)
 {
   const char *message =
@@ -88,7 +88,7 @@ exception__layout_incompatible_with_gsl (const char *who, SCM irritants)
       rnrs_make_irritants_condition (irritants)));
 }
 
-VISIBLE void
+static void
 exception__unexpected_array_type (const char *who, SCM a)
 {
   const char *message = _("unexpected array type");
