@@ -124,15 +124,12 @@
           ;; relative accuracy than Golub-Reinsch, but is slower. It
           ;; uses one-sided Jacobi orthogonalization.
           ;;
-          ;;    (gsl:svd-WHATEVER A) → U, diag S, V′
+          ;;    (gsl:svd-WHATEVER-f64 A) → U, diag S, V′
           ;;
-;;;;; FIXME: Change these names to put the ‘-f64’ last, for
-;;;;; consistency.
           gsl:svd-golub-reinsch-f64
           gsl:svd-modified-golub-reinsch-f64
           gsl:svd-jacobi-f64
 
-;;;;; FIXME: Change this name to put the ‘-f64’ last, for consistency.
           gsl:svd-solve-vector-f64
 
           ;; LU decomposition.
