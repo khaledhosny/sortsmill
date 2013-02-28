@@ -2711,12 +2711,12 @@ init_guile_sortsmill_math_gsl_matrices (void)
 
   // FIXME: Change the names of the SVD C routines to make them closer
   // to GSL names.
-  scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
+  scm_c_define_gsubr ("gsl:svd-golub-reinsch-f64", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);
-  scm_c_define_gsubr ("gsl:svd-f64-modified-golub-reinsch", 1, 0, 0,
+  scm_c_define_gsubr ("gsl:svd-modified-golub-reinsch-f64", 1, 0, 0,
                       scm_gsl_svd_modified_golub_reinsch);
-  scm_c_define_gsubr ("gsl:svd-f64-jacobi", 1, 0, 0, scm_gsl_svd_jacobi);
-  scm_c_define_gsubr ("gsl:svd-f64-solve-vector", 5, 0, 0,
+  scm_c_define_gsubr ("gsl:svd-jacobi-f64", 1, 0, 0, scm_gsl_svd_jacobi);
+  scm_c_define_gsubr ("gsl:svd-solve-vector-f64", 5, 0, 0,
                       scm_gsl_svd_solve_vector);
 
   scm_c_define_gsubr ("gsl:lu-decomposition-f64", 1, 0, 0,

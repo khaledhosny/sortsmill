@@ -128,12 +128,12 @@
           ;;
 ;;;;; FIXME: Change these names to put the ‘-f64’ last, for
 ;;;;; consistency.
-          gsl:svd-f64-golub-reinsch
-          gsl:svd-f64-modified-golub-reinsch
-          gsl:svd-f64-jacobi
+          gsl:svd-golub-reinsch-f64
+          gsl:svd-modified-golub-reinsch-f64
+          gsl:svd-jacobi-f64
 
 ;;;;; FIXME: Change this name to put the ‘-f64’ last, for consistency.
-          gsl:svd-f64-solve-vector
+          gsl:svd-solve-vector-f64
 
           ;; LU decomposition.
           ;;

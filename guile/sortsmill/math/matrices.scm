@@ -676,9 +676,9 @@ array)."
        (assert (symbol? algorithm))
        (assert (enum-set-member? algorithm matrix-svd-algorithms))
        (match algorithm
-         ['golub-reinsch (gsl:svd-f64-golub-reinsch A)]
-         ['modified-golub-reinsch (gsl:svd-f64-modified-golub-reinsch A)]
-         ['jacobi (gsl:svd-f64-jacobi A)] )] ))
+         ['golub-reinsch (gsl:svd-golub-reinsch-f64 A)]
+         ['modified-golub-reinsch (gsl:svd-modified-golub-reinsch-f64 A)]
+         ['jacobi (gsl:svd-jacobi-f64 A)] )] ))
 
   (define matrix-svd-effective-rank
     (case-lambda
@@ -708,14 +708,14 @@ array)."
            [X (apply make-typed-array 'f64 *unspecified* shape)])
       (match shape
         [((_ _))
-         (gsl:svd-f64-solve-vector U S V X B)
+         (gsl:svd-solve-vector-f64 U S V X B)
          X]
         [((lo hi) _)
          (for-each
           (lambda (i)
             (let ([xi (row-matrix->vector (matrix-row X i))]
                   [bi (row-matrix->vector (matrix-row B i))])
-              (gsl:svd-f64-solve-vector U S V xi bi)))
+              (gsl:svd-solve-vector-f64 U S V xi bi)))
           (iota (- hi lo -1) lo))
          X] )))
 
