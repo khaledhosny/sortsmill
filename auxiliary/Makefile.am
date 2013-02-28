@@ -56,7 +56,8 @@ dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c x_alloc.c xgc.c	\
 dist_libsortsmill_aux_la_SOURCES += rexp.c
 
 # Extensions to GNU MP.
-dist_libsortsmill_aux_la_SOURCES += gmp_constants.c gmp_matrix.c
+dist_libsortsmill_aux_la_SOURCES += gmp_constants.c gmp_matrix.c	\
+	mpq_lu.c
 
 # C matrices of SCM (Guile) numbers.
 dist_libsortsmill_aux_la_SOURCES += scm_matrix.c scm_lu.c
