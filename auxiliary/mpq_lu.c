@@ -249,7 +249,7 @@ mpq_linalg_LU_invert (unsigned int n, mpq_t LU[n][n], size_t p[n],
   mpq_vector_clear (n, temp);
 }
 
-void
+VISIBLE void
 mpq_linalg_LU_det (unsigned int n, mpq_t LU[n][n], int signum, mpq_t det)
 {
   mpq_set_si (det, signum, 1);

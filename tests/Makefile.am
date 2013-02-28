@@ -131,7 +131,7 @@ TESTS_LINALG_MPQ = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
 	test_mpq_matrix_div_elements test_mpq_matrix_add				\
 	test_mpq_matrix_sub test_mpq_matrix_add_constant				\
 	test_mpq_matrix_elementwise_predicate test_mpq_matrix_equal		\
-	test_mpq_matrix_trsv
+	test_mpq_matrix_trsv test_mpq_lu
 
 TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_set_identity test_scm_matrix_memcpy				\
