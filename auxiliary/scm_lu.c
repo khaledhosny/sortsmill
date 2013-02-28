@@ -34,9 +34,8 @@
  * U is stored in the diagonal and upper triangular part of the
  * input matrix.  
  * 
- * P is stored in permutation, in whatever format we feel like using
- * at the moment. (FIXME: Add a way for the user of this library to
- * get a permutation matrix.)
+ * P is stored in the permutation p. Column j of P is column k of the
+ * identity matrix, where k = p[j].
  *
  * signum gives the sign of the permutation, (-1)^n, where n is the
  * number of interchanges in the permutation. 
@@ -46,17 +45,16 @@
  */
 
 static void
-initialize_permutation (unsigned int n, unsigned int permutation[n])
+initialize_permutation (unsigned int n, size_t p[n])
 {
   for (unsigned int i = 0; i < n; i++)
-    permutation[i] = i;
+    p[i] = i;
 }
 
 VISIBLE void
-scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], unsigned int permutation[n],
-                      int *signum)
+scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], size_t p[n], int *signum)
 {
-  initialize_permutation (n, permutation);
+  initialize_permutation (n, p);
   *signum = 1;
 
   for (unsigned int j = 0; j < n - 1; j++)
@@ -81,12 +79,9 @@ scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], unsigned int permutation[n],
         {
           scm_matrix_swap_rows (n, n, A, j, i_pivot);
 
-          // For permutation we currently just store a pivot
-          // history. There is no guarantee that the implementation
-          // will not change. (For instance, without changing the
-          // argument types, we could use a permuted index vector and
-          // permute the RHS while copying it, instead of in-place.)
-          permutation[j] = i_pivot;
+          unsigned int temp = p[i_pivot];
+          p[i_pivot] = p[j];
+          p[j] = temp;
 
           *signum = -(*signum);
         }
@@ -112,37 +107,34 @@ scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], unsigned int permutation[n],
 }
 
 VISIBLE void
-scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], unsigned int permutation[n],
+scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], size_t p[n],
                      SCM b[n], SCM x[n])
 {
   // Copy x <- b.
   memcpy (&x[0], &b[0], n * sizeof (SCM));
 
   // Solve for x.
-  scm_linalg_LU_svx (n, LU, permutation, x);
+  scm_linalg_LU_svx (n, LU, p, x);
 }
 
 static void
-permute_vector (unsigned int n, unsigned int permutation[n], SCM x[n])
+permute_vector (unsigned int n, size_t p[n], SCM x[n])
 {
+  // Do a simple permutation by copying. Note that there is an
+  // implementation of in-place permutation in the GSL sources, which
+  // could be adapted if desired.
+
+  SCM temp[n];
   for (unsigned int i = 0; i < n; i++)
-    {
-      const unsigned int j = permutation[i];
-      if (j != i)
-        {
-          SCM temp = x[i];
-          x[i] = x[j];
-          x[j] = temp;
-        }
-    }
+    temp[i] = x[p[i]];
+  memcpy (x, temp, n * sizeof (SCM));
 }
 
 VISIBLE void
-scm_linalg_LU_svx (unsigned int n, SCM LU[n][n], unsigned int permutation[n],
-                   SCM x[n])
+scm_linalg_LU_svx (unsigned int n, SCM LU[n][n], size_t p[n], SCM x[n])
 {
   // Apply permutation to RHS.
-  permute_vector (n, permutation, x);
+  permute_vector (n, p, x);
 
   // Solve for c using forward-substitution, L c = P b.
   scm_matrix_trsv (CblasLower, CblasNoTrans, CblasUnit, n, LU, x);
@@ -153,8 +145,7 @@ scm_linalg_LU_svx (unsigned int n, SCM LU[n][n], unsigned int permutation[n],
 
 VISIBLE void
 scm_linalg_LU_refine (unsigned int n, SCM A[n][n], SCM LU[n][n],
-                      unsigned int permutation[n], SCM b[n], SCM x[n],
-                      SCM residual[n])
+                      size_t p[n], SCM b[n], SCM x[n], SCM residual[n])
 {
   // Compute residual, residual = (A * x - b).
   memcpy (residual, b, n * sizeof (SCM));
@@ -162,13 +153,13 @@ scm_linalg_LU_refine (unsigned int n, SCM A[n][n], SCM LU[n][n],
                    (SCM (*)[1]) x, scm_from_int (-1), (SCM (*)[1]) residual);
 
   // Find correction, delta = - (A^-1) * residual, and apply it.
-  scm_linalg_LU_svx (n, LU, permutation, residual);
+  scm_linalg_LU_svx (n, LU, p, residual);
   for (unsigned int i = 0; i < n; i++)
     x[i] = scm_difference (x[i], residual[i]);
 }
 
 VISIBLE void
-scm_linalg_LU_invert (unsigned int n, SCM LU[n][n], unsigned int permutation[n],
+scm_linalg_LU_invert (unsigned int n, SCM LU[n][n], size_t p[n],
                       SCM inverse[n][n])
 {
   SCM temp[n];
@@ -180,7 +171,7 @@ scm_linalg_LU_invert (unsigned int n, SCM LU[n][n], unsigned int permutation[n],
       for (unsigned int i = 0; i < n; i++)
         temp[i] = scm_from_int ((int) (i == j));
 
-      scm_linalg_LU_svx (n, LU, permutation, temp);
+      scm_linalg_LU_svx (n, LU, p, temp);
 
       for (unsigned int i = 0; i < n; i++)
         inverse[i][j] = temp[i];

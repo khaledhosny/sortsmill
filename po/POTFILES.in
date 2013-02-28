@@ -4,6 +4,7 @@ data/fontforge.xml.in
 auxiliary/rexp.c
 auxiliary/rnrs_conditions.c
 auxiliary/guile_math_gsl_matrices.c
+auxiliary/guile_math_gsl_permutations.c
 auxiliary/guile_math_matrices.c
 auxiliary/guile_python.c
 fontforge/alignment.c

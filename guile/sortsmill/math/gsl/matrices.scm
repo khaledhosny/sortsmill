@@ -131,6 +131,15 @@
           gsl:svd-f64-jacobi
 
           gsl:svd-f64-solve-vector
+
+          ;; LU decomposition.
+          ;;
+          ;; (gsl:lu-decomposition-WHATEVER A) → LU, permutation, signum
+          ;;
+          ;; L and U are stored in the same matrix, and L has an
+          ;; implicit unit diagonal.
+          gsl:lu-decomposition-f64
+          gsl:lu-decomposition-scm
           )
 
   (import (sortsmill arrays)

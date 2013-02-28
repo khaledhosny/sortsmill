@@ -15,16 +15,31 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_MATH_GSL_H
-#define _SORTSMILL_GUILE_MATH_GSL_H
+#ifndef _SORTSMILL_GUILE_MATH_GSL_PERMUTATIONS_H
+#define _SORTSMILL_GUILE_MATH_GSL_PERMUTATIONS_H
 
-/*
- * Support for GSL, and also for our own stuff that is made to
- * resemble GSL, but uses GMP arithmetic.
- */
+#include <libguile.h>
+#include <gsl/gsl_permutation.h>
 
-#include <sortsmill/guile/math/gsl/error.h>
-#include <sortsmill/guile/math/gsl/matrices.h>
-#include <sortsmill/guile/math/gsl/permutations.h>
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
 
-#endif /* _SORTSMILL_GUILE_MATH_GSL_H */
+void scm_gsl_permutation_unwind_handler (void *p);
+void scm_dynwind_gsl_permutation_free (gsl_permutation *p);
+
+SCM scm_from_gsl_permutation (const gsl_permutation *p);
+gsl_permutation *scm_to_gsl_permutation (SCM vec);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_MATH_GSL_PERMUTATIONS_H */

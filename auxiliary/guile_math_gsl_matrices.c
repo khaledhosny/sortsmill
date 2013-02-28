@@ -21,6 +21,7 @@
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/scm_matrix.h>
 #include <sortsmill/xgc.h>
+#include <sortsmill/xdie_on_null.h>
 #include <intl.h>
 
 void init_guile_sortsmill_math_gsl_matrices (void);
@@ -931,6 +932,21 @@ non_conformable_for_addition (const char *localized_message, const char *who,
 }
 
 static void
+matrix_is_not_square (const char *who, SCM A, size_t m, size_t n)
+{
+  const char *localized_message = _("not a square matrix: ~ax~a");
+  SCM message = scm_sformat (scm_from_locale_string (localized_message),
+                             scm_list_2 (scm_from_int (m),
+                                         scm_from_int (n)));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (message),
+      rnrs_make_irritants_condition (scm_list_1 (A))));
+}
+
+static void
 assert_conformable_for_gemm (const char *who,
                              CBLAS_TRANSPOSE_t _TransA,
                              CBLAS_TRANSPOSE_t _TransB,
@@ -964,6 +980,15 @@ assert_conformable_for_addition (const char *localized_message,
   if (m_A != m_B || n_A != n_B)
     non_conformable_for_addition (localized_message, who, A, B, m_A, n_A, m_B,
                                   n_B);
+}
+
+static void
+assert_matrix_is_square (const char *who, SCM A, size_t m, size_t n)
+{
+  if ((m | n) == 0)
+    matrix_has_dimension_of_size_zero (who, A);
+  if (m != n)
+    matrix_is_not_square (who, A, m, n);
 }
 
 VISIBLE SCM
@@ -2146,6 +2171,88 @@ scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose, SCM b_transpose)
   return SCM_UNSPECIFIED;
 }
 
+VISIBLE SCM
+scm_gsl_linalg_LU_decomp (SCM A)
+{
+  scm_t_array_handle handle_A;
+
+  const char *who = "scm_gsl_linalg_LU_decomp";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  gsl_matrix_view mA = scm_gsl_matrix_view_array_handle (A, &handle_A);
+
+  const size_t m = matrix_dim1 (&handle_A);
+  const size_t n = matrix_dim2 (&handle_A);
+
+  assert_matrix_is_square (who, A, m, n);
+
+  gsl_permutation *p = xdie_on_null (gsl_permutation_alloc (n));
+  scm_dynwind_gsl_permutation_free (p);
+
+  int signum;
+
+  int errval = gsl_linalg_LU_decomp (&mA.matrix, p, &signum);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_1 (A), SCM_UNDEFINED));
+
+  SCM values[3] = {
+    scm_gsl_matrix_to_f64matrix (&mA.matrix, 1),
+    scm_from_gsl_permutation (p),
+    scm_from_int (signum)
+  };
+
+  scm_dynwind_end ();
+
+  return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
+scm_gsl_scm_linalg_LU_decomp (SCM A)
+{
+  scm_t_array_handle handle_A;
+
+  const char *who = "scm_gsl_scm_linalg_LU_decomp";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+
+  const size_t m = matrix_dim1 (&handle_A);
+  const size_t n = matrix_dim2 (&handle_A);
+
+  assert_matrix_is_square (who, A, m, n);
+
+  SCM _A[n][n];
+  scm_array_handle_to_scm_matrix (A, &handle_A, n, n, _A);
+
+  gsl_permutation *p = xdie_on_null (gsl_permutation_alloc (n));
+  scm_dynwind_gsl_permutation_free (p);
+
+  int signum;
+
+  scm_linalg_LU_decomp (n, _A, gsl_permutation_data (p), &signum);
+
+  SCM values[3] = {
+    scm_from_scm_matrix (n, n, _A),
+    scm_from_gsl_permutation (p),
+    scm_from_int (signum)
+  };
+
+  scm_dynwind_end ();
+
+  return scm_c_values (values, 3);
+}
+
 VISIBLE void
 init_guile_sortsmill_math_gsl_matrices (void)
 {
@@ -2242,12 +2349,18 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:matrix-equal-scm?", 2, 0, 0,
                       scm_gsl_scm_matrix_equal_p);
 
+  // FIXME: Change the names of the SVD C routines to make them closer
+  // to GSL names.
   scm_c_define_gsubr ("gsl:svd-f64-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_golub_reinsch);
   scm_c_define_gsubr ("gsl:svd-f64-modified-golub-reinsch", 1, 0, 0,
                       scm_gsl_svd_modified_golub_reinsch);
   scm_c_define_gsubr ("gsl:svd-f64-jacobi", 1, 0, 0, scm_gsl_svd_jacobi);
-
   scm_c_define_gsubr ("gsl:svd-f64-solve-vector", 5, 0, 0,
                       scm_gsl_svd_solve_vector);
+
+  scm_c_define_gsubr ("gsl:lu-decomposition-f64", 1, 0, 0,
+                      scm_gsl_linalg_LU_decomp);
+  scm_c_define_gsubr ("gsl:lu-decomposition-scm", 1, 0, 0,
+                      scm_gsl_scm_linalg_LU_decomp);
 }

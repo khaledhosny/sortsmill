@@ -46,6 +46,7 @@
 -T __mpf_struct
 -T gsl_vector
 -T gsl_matrix
+-T gsl_permutation
 
 -T rexp_buffer_t
 -T rexp_t

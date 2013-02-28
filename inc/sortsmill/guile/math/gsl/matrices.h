@@ -144,12 +144,16 @@ SCM scm_gsl_mpq_matrix_equal_p (SCM, SCM);
 bool scm_c_gsl_scm_matrix_equal (SCM, SCM);
 SCM scm_gsl_scm_matrix_equal_p (SCM, SCM);
 
+/* FIXME: Change the names of the SVD C routines to make them closer
+   to GSL names. */
 SCM scm_gsl_svd_golub_reinsch (SCM);
 SCM scm_gsl_svd_modified_golub_reinsch (SCM);
 SCM scm_gsl_svd_jacobi (SCM);
-
 SCM scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V,
                               SCM x_transpose, SCM b_transpose);
+
+SCM scm_gsl_linalg_LU_decomp (SCM A);
+SCM scm_gsl_scm_linalg_LU_decomp (SCM A);
 
 #if 0
 {

@@ -88,16 +88,14 @@ void scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
 
 /* LU decomposition. */
 void scm_linalg_LU_decomp (unsigned int n, SCM A[n][n],
-                           unsigned int permutation[n], int *signum);
-void scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], unsigned int p[n],
+                           size_t p[n], int *signum);
+void scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], size_t p[n],
                           SCM b[n], SCM x[n]);
-void scm_linalg_LU_svx (unsigned int n, SCM LU[n][n],
-                        unsigned int permutation[n], SCM x[n]);
+void scm_linalg_LU_svx (unsigned int n, SCM LU[n][n], size_t p[n], SCM x[n]);
 void scm_linalg_LU_refine (unsigned int n, SCM A[n][n], SCM LU[n][n],
-                           unsigned int permutation[n], SCM b[n], SCM x[n],
-                           SCM residual[n]);
-void scm_linalg_LU_invert (unsigned int n, SCM LU[n][n],
-                           unsigned int permutation[n], SCM inverse[n][n]);
+                           size_t p[n], SCM b[n], SCM x[n], SCM residual[n]);
+void scm_linalg_LU_invert (unsigned int n, SCM LU[n][n], size_t p[n],
+                           SCM inverse[n][n]);
 SCM scm_linalg_LU_det (unsigned int n, SCM LU[n][n], int signum);
 SCM scm_linalg_LU_lndet (unsigned int n, SCM LU[n][n]);
 int scm_linalg_LU_sgndet (unsigned int n, SCM LU[n][n], int signum);
