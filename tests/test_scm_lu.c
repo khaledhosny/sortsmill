@@ -23,7 +23,7 @@ my_main (int argc, char **argv)
   SCM LU[n][n];
   SCM b[n];
   SCM x[n];
-  unsigned int p[n];
+  size_t p[n];
   int signum;
   SCM determinant;
 
