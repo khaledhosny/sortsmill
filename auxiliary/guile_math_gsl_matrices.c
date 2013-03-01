@@ -2336,11 +2336,11 @@ _FF_SCM_SCM_SAMESHAPE_MATRICES_PREDICATE (equal, scm_matrix_equal,
                                           equal_non_conformable_message ());
 
 VISIBLE SCM
-scm_gsl_svd_golub_reinsch (SCM a)
+scm_gsl_linalg_SVD_golub_reinsch (SCM a)
 {
   scm_t_array_handle handle_a;
 
-  const char *who = "scm_gsl_svd_golub_reinsch";
+  const char *who = "scm_gsl_linalg_SVD_golub_reinsch";
 
   scm_dynwind_begin (0);
 
@@ -2383,11 +2383,11 @@ scm_gsl_svd_golub_reinsch (SCM a)
 }
 
 VISIBLE SCM
-scm_gsl_svd_modified_golub_reinsch (SCM a)
+scm_gsl_linalg_SVD_modified_golub_reinsch (SCM a)
 {
   scm_t_array_handle handle_a;
 
-  const char *who = "scm_gsl_svd_modified_golub_reinsch";
+  const char *who = "scm_gsl_linalg_SVD_modified_golub_reinsch";
 
   scm_dynwind_begin (0);
 
@@ -2433,11 +2433,11 @@ scm_gsl_svd_modified_golub_reinsch (SCM a)
 }
 
 VISIBLE SCM
-scm_gsl_svd_jacobi (SCM a)
+scm_gsl_linalg_SVD_jacobi (SCM a)
 {
   scm_t_array_handle handle_a;
 
-  const char *who = "scm_gsl_svd_jacobi";
+  const char *who = "scm_gsl_linalg_SVD_jacobi";
 
   scm_dynwind_begin (0);
 
@@ -2477,15 +2477,14 @@ scm_gsl_svd_jacobi (SCM a)
 }
 
 VISIBLE SCM
-scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose, SCM b_transpose)
+scm_gsl_linalg_SVD_solve (SCM U, SCM S, SCM V, SCM B)
 {
   scm_t_array_handle handle_U;
-  scm_t_array_handle handle_V;
   scm_t_array_handle handle_S;
-  scm_t_array_handle handle_x;
-  scm_t_array_handle handle_b;
+  scm_t_array_handle handle_V;
+  scm_t_array_handle handle_B;
 
-  const char *who = "scm_gsl_svd_solve_vector";
+  const char *who = "scm_gsl_linalg_SVD_solve";
 
   scm_dynwind_begin (0);
 
@@ -2494,41 +2493,50 @@ scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V, SCM x_transpose, SCM b_transpose)
   gsl_matrix_const_view mU =
     scm_gsl_matrix_const_view_array_handle (U, &handle_U);
 
-  scm_array_get_handle (V, &handle_V);
-  scm_dynwind_array_handle_release (&handle_V);
-  gsl_matrix_const_view mV =
-    scm_gsl_matrix_const_view_array_handle (V, &handle_V);
-
   scm_array_get_handle (S, &handle_S);
   scm_dynwind_array_handle_release (&handle_S);
   gsl_vector_const_view vS =
     scm_gsl_vector_const_view_array_handle (S, &handle_S);
 
-  scm_array_get_handle (x_transpose, &handle_x);
-  scm_dynwind_array_handle_release (&handle_x);
-  gsl_vector_view vx =
-    scm_gsl_vector_view_array_handle (x_transpose, &handle_x);
+  scm_array_get_handle (V, &handle_V);
+  scm_dynwind_array_handle_release (&handle_V);
+  gsl_matrix_const_view mV =
+    scm_gsl_matrix_const_view_array_handle (V, &handle_V);
 
-  scm_array_get_handle (b_transpose, &handle_b);
-  scm_dynwind_array_handle_release (&handle_b);
-  gsl_vector_const_view vb =
-    scm_gsl_vector_const_view_array_handle (b_transpose, &handle_b);
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  gsl_matrix_const_view mB =
+    scm_gsl_matrix_const_view_array_handle (B, &handle_B);
 
-  int errval =
-    gsl_linalg_SV_solve (&mU.matrix, &mV.matrix, &vS.vector, &vb.vector,
-                         &vx.vector);
-  if (errval != GSL_SUCCESS)
-    scm_raise_gsl_error
-      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
-                   scm_from_int (errval),
-                   scm_from_latin1_keyword ("who"),
-                   scm_from_latin1_string (who),
-                   scm_from_latin1_keyword ("irritants"),
-                   scm_list_4 (U, S, V, b_transpose), SCM_UNDEFINED));
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  double X[m_B][n_B];
+  gsl_matrix_view mX = gsl_matrix_view_array (&X[0][0], m_B, n_B);
+
+  for (size_t j = 0; j < n_B; j++)
+    {
+      gsl_vector_const_view vb = gsl_matrix_const_column (&mB.matrix, j);
+      gsl_vector_view vx = gsl_matrix_column (&mX.matrix, j);
+
+      int errval =
+        gsl_linalg_SV_solve (&mU.matrix, &mV.matrix, &vS.vector,
+                             &vb.vector, &vx.vector);
+      if (errval != GSL_SUCCESS)
+        scm_raise_gsl_error
+          (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                       scm_from_int (errval),
+                       scm_from_latin1_keyword ("who"),
+                       scm_from_latin1_string (who),
+                       scm_from_latin1_keyword ("irritants"),
+                       scm_list_4 (U, S, V, B), SCM_UNDEFINED));
+    }
+
+  SCM solution = scm_gsl_matrix_to_f64matrix (&mX.matrix, 1);
 
   scm_dynwind_end ();
 
-  return SCM_UNSPECIFIED;
+  return solution;
 }
 
 VISIBLE SCM
@@ -2961,12 +2969,11 @@ init_guile_sortsmill_math_gsl_matrices (void)
                       scm_gsl_scm_matrix_equal_p);
 
   scm_c_define_gsubr ("gsl:svd-golub-reinsch-f64", 1, 0, 0,
-                      scm_gsl_svd_golub_reinsch);
+                      scm_gsl_linalg_SVD_golub_reinsch);
   scm_c_define_gsubr ("gsl:svd-modified-golub-reinsch-f64", 1, 0, 0,
-                      scm_gsl_svd_modified_golub_reinsch);
-  scm_c_define_gsubr ("gsl:svd-jacobi-f64", 1, 0, 0, scm_gsl_svd_jacobi);
-  scm_c_define_gsubr ("gsl:svd-solve-vector-f64", 5, 0, 0,
-                      scm_gsl_svd_solve_vector);
+                      scm_gsl_linalg_SVD_modified_golub_reinsch);
+  scm_c_define_gsubr ("gsl:svd-jacobi-f64", 1, 0, 0, scm_gsl_linalg_SVD_jacobi);
+  scm_c_define_gsubr ("gsl:svd-solve-f64", 4, 0, 0, scm_gsl_linalg_SVD_solve);
 
   scm_c_define_gsubr ("gsl:lu-decomposition-f64", 1, 0, 0,
                       scm_gsl_linalg_LU_decomp);

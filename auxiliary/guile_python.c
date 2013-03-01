@@ -810,9 +810,7 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pympq->rational", 1, 0, 0, scm_pympq_to_rational);
 
   scm_c_define_gsubr ("inexact->pyfloat", 1, 0, 0, scm_inexact_to_pyfloat);
-  scm_c_define_gsubr ("flonum->pyfloat", 1, 0, 0, scm_inexact_to_pyfloat);
   scm_c_define_gsubr ("pyfloat->inexact", 1, 0, 0, scm_pyfloat_to_inexact);
-  scm_c_define_gsubr ("pyfloat->flonum", 1, 0, 0, scm_pyfloat_to_inexact);
 
   scm_c_define_gsubr ("complex->pycomplex", 1, 0, 0, scm_complex_to_pycomplex);
   scm_c_define_gsubr ("pycomplex->complex", 1, 0, 0, scm_pycomplex_to_complex);

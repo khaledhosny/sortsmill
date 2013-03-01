@@ -101,6 +101,7 @@ bool scm_is_uniform_complex_float_array (SCM obj);
 bool scm_is_integer_array (SCM obj);
 bool scm_is_real_array (SCM obj);
 bool scm_is_exact_array (SCM obj);
+bool scm_is_inexact_real_array (SCM obj);
 bool scm_is_number_array (SCM obj);
 
 static inline SCM
@@ -155,6 +156,12 @@ static inline SCM
 scm_exact_array_p (SCM obj)
 {
   return scm_from_bool (scm_is_exact_array (obj));
+}
+
+static inline SCM
+scm_inexact_real_array_p (SCM obj)
+{
+  return scm_from_bool (scm_is_inexact_real_array (obj));
 }
 
 static inline SCM

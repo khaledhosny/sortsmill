@@ -130,7 +130,7 @@
           gsl:svd-modified-golub-reinsch-f64
           gsl:svd-jacobi-f64
 
-          gsl:svd-solve-vector-f64
+          gsl:svd-solve-f64
 
           ;; LU decomposition.
           ;;

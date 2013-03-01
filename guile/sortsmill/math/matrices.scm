@@ -130,16 +130,21 @@
           ;;
           ;; In the current implementation, the following linear
           ;; system solvers use the current SVD algorithm.
-          f64matrix-solve:AX^=B^
           f64matrix-solve:AX=B
           f64matrix-solve:XA=B
 
           ;; Inverse or pseudoinverse.
           f64matrix-pinv
 
-          ;; This uses different algorithms depending on what kinds of
-          ;; matrix it sees.
+          ;; These use different algorithms depending on what kinds of
+          ;; matrix it sees. Currently it supports only matrices A of
+          ;; full rank.
+          ;;
+          ;; The present implementation uses the current SVD algorithm
+          ;; (and returns an f64matrix) if all the matrix entries are
+          ;; inexact and real; otherwise an LU decomposition is used.
           matrix-solve:AX=B
+          matrix-solve:XA=B
           )
 
   (import (sortsmill math gsl matrices)
@@ -440,7 +445,7 @@ array)."
         (cond
          [(and (eq? type-M 'f64) (real? x))
           (f64-op M x)]
-         [(and (exact-array? M) (not (flonum? x)))
+         [(and (exact-array? M) (exact? x))
           (if (and (uniform-integer-array? M) (integer? x))
               (integer-op M x)
               (exact-op M x))]
@@ -463,7 +468,7 @@ array)."
           (cond
            [(and (eq? type-M 'f64) (real? x))
             (f64-op M x)]
-           [(and (exact-array? M) (not (flonum? x)))
+           [(and (exact-array? M) (exact? x))
             (if (and (uniform-integer-array? M) (integer? x))
                 (integer-op M x)
                 (exact-op M x))]
@@ -707,39 +712,6 @@ array)."
            [lst^ (append (take lst rank) (make-list (- n rank) 0))])
       (list->typed-array (array-type S) (array-shape S^) lst^)))
 
-  (define/kwargs (f64matrix-svd-solve:USV^X^=B^ U S V B)
-    (let* ([shape (array-shape B)]
-           [X (apply make-typed-array 'f64 *unspecified* shape)])
-      (match shape
-        [((_ _))
-         (gsl:svd-solve-vector-f64 U S V X B)
-         X]
-        [((lo hi) _)
-         (for-each
-          (lambda (i)
-            (let ([xi (row-matrix->vector (matrix-row X i))]
-                  [bi (row-matrix->vector (matrix-row B i))])
-              (gsl:svd-solve-vector-f64 U S V xi bi)))
-          (iota (- hi lo -1) lo))
-         X] )))
-
-  (define/kwargs (f64matrix-svd-solve:USV^X=B U S V B)
-    (matrix-transpose
-     (f64matrix-svd-solve:USV^X^=B^ U S V (matrix-transpose B))))
-
-  (define/kwargs (f64matrix-solve:AX^=B^ A B
-                                         [full-rank? #t]
-                                         [rcond (current-matrix-svd-rcond)])
-    (call-with-values (lambda () (f64matrix-svd A))
-      (lambda (U S V)
-        (let ([effective-rank (matrix-svd-effective-rank S rcond)])
-          (when full-rank?
-            (unless (= effective-rank (f64vector-length S))
-              (rank-deficiency-exception 'f64matrix-solve:AX^=B^ A)))
-          (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
-                 [X (f64matrix-svd-solve:USV^X^=B^ U revised-S V B)])
-            (values X effective-rank))))))
-
   (define/kwargs (f64matrix-solve:AX=B A B
                                        [full-rank? #t]
                                        [rcond (current-matrix-svd-rcond)])
@@ -749,14 +721,14 @@ array)."
           (when full-rank?
             (unless (= effective-rank (f64vector-length S))
               (rank-deficiency-exception 'f64matrix-solve:AX=B A)))
-          (let* ([revised-S (matrix-svd-limit-rank S effective-rank)]
-                 [X (f64matrix-svd-solve:USV^X=B U revised-S V B)])
-            (values X effective-rank))))))
+          (values (gsl:svd-solve-f64 U S V B) effective-rank)))))
 
   (define/kwargs (f64matrix-solve:XA=B A B
                                        [full-rank? #t]
                                        [rcond (current-matrix-svd-rcond)])
-    (f64matrix-solve:AX^=B^ (matrix-transpose A) B full-rank? rcond))
+    (matrix-transpose (f64matrix-solve:AX=B (matrix-transpose A)
+                                            (matrix-transpose B)
+                                            full-rank? rcond)))
 
   (define/kwargs (f64matrix-pinv A
                                  [full-rank? #t]
@@ -778,25 +750,37 @@ effective rank of A."
 
   ;;-----------------------------------------------------------------------
 
-  #|
   (define/kwargs (exact-matrix-solve:AX=B A B)
     (call-with-values (lambda () (gsl:lu-decomposition-mpq-fast-pivot A))
       (lambda (LU permutation signum)
-        (let* ([B^ (matrix-transpose B)]
-               [X^ (make-array *unspecified* (array-shape B^))])
-          (gsl:lu-solve-vector-mpq
+        (gsl:lu-solve-mpq LU permutation B))))
+
+  (define/kwargs (number-matrix-solve:AX=B A B)
+    (call-with-values (lambda () (gsl:lu-decomposition-scm A))
+      (lambda (LU permutation signum)
+        (gsl:lu-solve-scm LU permutation B))))
 
   (define/kwargs (matrix-solve:AX=B A B)
-    (let ([A-type (array-type A)]
-          [B-type (array-type B)])
+    (let ([type-A (array-type A)]
+          [type-B (array-type B)])
       (cond
-       [(and (eq? A-type 'f64) (eq? B-type 'f64))
-        f64matrix-solve:AX=B A B #:full-rank #t]
+       [(and (eq? type-A 'f64) (eq? type-B 'f64))
+        (let-values ([(X effective-rank)
+                      (f64matrix-solve:AX=B A B #:full-rank? #t)])
+          X)]
        [(and (exact-array? A) (exact-array? B))
         (exact-matrix-solve:AX=B A B)]
-       [()]
-       [else (number-op A B)] ))))
-  |#
+       [(and (inexact-real-array? A) (inexact-real-array? B))
+        (let-values ([(X effective-rank)
+                      (f64matrix-solve:AX=B (matrix->f64matrix A)
+                                            (matrix->f64matrix B)
+                                            #:full-rank? #t)])
+          X)]
+       [else (number-matrix-solve:AX=B A B)] )))
+
+  (define/kwargs (matrix-solve:XA=B A B)
+    (matrix-transpose (matrix-solve:AX=B (matrix-transpose A)
+                                         (matrix-transpose B))))
 
   ;;-----------------------------------------------------------------------
 

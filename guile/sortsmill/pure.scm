@@ -25,6 +25,10 @@
 ;;; in your local-init.scm and/or user-init.scm.
 ;;;
 
+
+;;; FIXME: Make it clearer what is an inexact real (a flonum) and what
+;;; is a complex.
+
 ((@ (sortsmill strings hash-guillemet) enable-hash-guillemet-strings))
 
 (library (sortsmill pure)
@@ -75,13 +79,13 @@
           pure-expr-is-rational?
 
           inexact->pure-expr
-          flonum->pure-expr
+;;;          flonum->pure-expr
           pure-expr->inexact
-          pure-expr->flonum
+;;;          pure-expr->flonum
           pure-expr->inexact-or-f
-          pure-expr->flonum-or-f
+;;;          pure-expr->flonum-or-f
           pure-expr-is-inexact?
-          pure-expr-is-flonum?
+;;;          pure-expr-is-flonum?
 
           complex->pure-expr
           pure-expr->complex
@@ -379,8 +383,8 @@
                  `(,double))))
       (compose pointer->pure-expr proc)))
 
-  (define-syntax flonum->pure-expr
-    (identifier-syntax inexact->pure-expr))
+;;;  (define-syntax flonum->pure-expr
+;;;    (identifier-syntax inexact->pure-expr))
 
   (define pure-expr->inexact
     (lambda (x)
@@ -392,11 +396,11 @@
          (_ "the Pure expression is not a floating point number")
          x)))))
 
-  (define-syntax pure-expr->flonum
-    (identifier-syntax pure-expr->inexact))
+;;;  (define-syntax pure-expr->flonum
+;;;    (identifier-syntax pure-expr->inexact))
 
-  (define-syntax pure-expr->flonum-or-f
-    (identifier-syntax pure-expr->inexact-or-f))
+;;;  (define-syntax pure-expr->flonum-or-f
+;;;    (identifier-syntax pure-expr->inexact-or-f))
 
   (define pure-expr-is-inexact?
     (lambda (x)
@@ -405,8 +409,8 @@
        ((pure-expr->inexact-or-f x) #t)
        (else #f))))
 
-  (define-syntax pure-expr-is-flonum?
-    (identifier-syntax pure-expr-is-inexact?))
+;;;  (define-syntax pure-expr-is-flonum?
+;;;    (identifier-syntax pure-expr-is-inexact?))
 
   (define pure-expr->complex
     (lambda (x)

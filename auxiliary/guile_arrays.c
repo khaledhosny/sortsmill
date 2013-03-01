@@ -405,6 +405,19 @@ scm_is_exact_array (SCM obj)
                                   index_means_uniform_integer);
 }
 
+static bool
+scm_is_inexact_real_bool (SCM obj)
+{
+  return scm_is_inexact (obj) && scm_is_real (obj);
+}
+
+VISIBLE bool
+scm_is_inexact_real_array (SCM obj)
+{
+  return scm_array_elements_pred (obj, scm_is_inexact_real_bool,
+                                  index_means_uniform_real_float);
+}
+
 //-------------------------------------------------------------------------
 
 VISIBLE void
@@ -425,6 +438,7 @@ init_guile_sortsmill_arrays (void)
   scm_c_define_gsubr ("real-array?", 1, 0, 0, scm_real_array_p);
   scm_c_define_gsubr ("number-array?", 1, 0, 0, scm_number_array_p);
   scm_c_define_gsubr ("exact-array?", 1, 0, 0, scm_exact_array_p);
+  scm_c_define_gsubr ("inexact-real-array?", 1, 0, 0, scm_inexact_real_array_p);
 }
 
 //-------------------------------------------------------------------------

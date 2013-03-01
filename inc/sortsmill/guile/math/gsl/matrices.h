@@ -178,21 +178,20 @@ SCM scm_gsl_mpq_matrix_equal_p (SCM, SCM);
 bool scm_c_gsl_scm_matrix_equal (SCM, SCM);
 SCM scm_gsl_scm_matrix_equal_p (SCM, SCM);
 
-SCM scm_gsl_svd_golub_reinsch (SCM);
-SCM scm_gsl_svd_modified_golub_reinsch (SCM);
-SCM scm_gsl_svd_jacobi (SCM);
-SCM scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V,
-                              SCM x_transpose, SCM b_transpose);
+SCM scm_gsl_linalg_SVD_golub_reinsch (SCM);
+SCM scm_gsl_linalg_SVD_modified_golub_reinsch (SCM);
+SCM scm_gsl_linalg_SVD_jacobi (SCM);
+SCM scm_gsl_linalg_SVD_solve (SCM U, SCM S, SCM V, SCM B);
 
 SCM scm_gsl_linalg_LU_decomp (SCM A);
 SCM scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B);
 
 SCM scm_gsl_mpq_linalg_LU_decomp (SCM A);
 SCM scm_gsl_mpq_linalg_LU_decomp_fast_pivot (SCM A);
-SCM scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM b);
+SCM scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B);
 
 SCM scm_gsl_scm_linalg_LU_decomp (SCM A);
-SCM scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b);
+SCM scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B);
 
 #if 0
 {

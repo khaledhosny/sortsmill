@@ -207,6 +207,9 @@
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_python"))
 
+  (define flonum->pyfloat inexact->pyfloat)
+  (define pyfloat->flonum pyfloat->inexact)
+
   (define py-initialized?
     (let ([proc (pointer->procedure
                  int (sortsmill-dynlink-func "Py_IsInitialized" "")

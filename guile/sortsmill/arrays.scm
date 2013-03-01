@@ -26,7 +26,9 @@
           integer-array?
           real-array?
           number-array?
-          exact-array?)
+          exact-array?
+          inexact-real-array?
+          flonum-array?)
 
   (import (sortsmill dynlink)
           (rnrs)
@@ -34,5 +36,7 @@
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_arrays"))
+
+  (define flonum-array? inexact-real-array?)
 
   ) ;; end of library.
