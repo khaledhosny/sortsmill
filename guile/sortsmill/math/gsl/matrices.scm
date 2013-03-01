@@ -151,6 +151,10 @@
           gsl:lu-solve-f64
           gsl:lu-solve-mpq
           gsl:lu-solve-scm
+
+          gsl:lu-invert-f64
+          gsl:lu-invert-mpq
+          gsl:lu-invert-scm
           )
 
   (import (sortsmill arrays)

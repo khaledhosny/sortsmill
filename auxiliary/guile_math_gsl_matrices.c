@@ -2519,9 +2519,8 @@ scm_gsl_linalg_SVD_solve (SCM U, SCM S, SCM V, SCM B)
       gsl_vector_const_view vb = gsl_matrix_const_column (&mB.matrix, j);
       gsl_vector_view vx = gsl_matrix_column (&mX.matrix, j);
 
-      int errval =
-        gsl_linalg_SV_solve (&mU.matrix, &mV.matrix, &vS.vector,
-                             &vb.vector, &vx.vector);
+      int errval = gsl_linalg_SV_solve (&mU.matrix, &mV.matrix, &vS.vector,
+                                        &vb.vector, &vx.vector);
       if (errval != GSL_SUCCESS)
         scm_raise_gsl_error
           (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
@@ -2757,7 +2756,7 @@ scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
                        scm_from_latin1_keyword ("who"),
                        scm_from_latin1_string (who),
                        scm_from_latin1_keyword ("irritants"),
-                       scm_list_2 (LU, B), SCM_UNDEFINED));
+                       scm_list_3 (LU, permutation, B), SCM_UNDEFINED));
     }
 
   SCM solution = scm_gsl_matrix_to_f64matrix (&mX.matrix, 1);
@@ -2765,6 +2764,53 @@ scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   scm_dynwind_end ();
 
   return solution;
+}
+
+VISIBLE SCM
+scm_gsl_linalg_LU_invert (SCM LU, SCM permutation)
+{
+  scm_t_array_handle handle_LU;
+
+  const char *who = "scm_gsl_linalg_LU_invert";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+  gsl_matrix_const_view mLU =
+    scm_gsl_matrix_const_view_array_handle (LU, &handle_LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  double X[n][n];
+  gsl_matrix_view mX = gsl_matrix_view_array (&X[0][0], n, n);
+
+  int errval = gsl_linalg_LU_invert (&mLU.matrix, p, &mX.matrix);
+  if (errval != GSL_SUCCESS)
+    scm_raise_gsl_error
+      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                   scm_from_int (errval),
+                   scm_from_latin1_keyword ("who"),
+                   scm_from_latin1_string (who),
+                   scm_from_latin1_keyword ("irritants"),
+                   scm_list_2 (LU, permutation), SCM_UNDEFINED));
+
+  SCM inverse = scm_gsl_matrix_to_f64matrix (&mX.matrix, 1);
+
+  scm_dynwind_end ();
+
+  return inverse;
 }
 
 VISIBLE SCM
@@ -2826,6 +2872,50 @@ scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 }
 
 VISIBLE SCM
+scm_gsl_mpq_linalg_LU_invert (SCM LU, SCM permutation)
+{
+  scm_t_array_handle handle_LU;
+
+  const char *who = "scm_gsl_mpq_linalg_LU_invert";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  mpq_t _LU[n][n];
+  mpq_matrix_init (n, n, _LU);
+  scm_dynwind_mpq_matrix_clear (n, n, _LU);
+
+  scm_array_handle_to_mpq_matrix (LU, &handle_LU, n, n, _LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  mpq_t _X[n][n];
+  mpq_matrix_init (n, n, _X);
+  scm_dynwind_mpq_matrix_clear (n, n, _X);
+
+  bool singular;
+  mpq_linalg_LU_invert (n, _LU, gsl_permutation_data (p), _X, &singular);
+  if (singular)
+    exception__LU_matrix_is_singular (who, LU);
+
+  SCM inverse = scm_from_mpq_matrix (n, n, _X);
+
+  scm_dynwind_end ();
+
+  return inverse;
+}
+
+VISIBLE SCM
 scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 {
   scm_t_array_handle handle_LU;
@@ -2870,6 +2960,42 @@ scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   scm_dynwind_end ();
 
   return solution;
+}
+
+VISIBLE SCM
+scm_gsl_scm_linalg_LU_invert (SCM LU, SCM permutation)
+{
+  scm_t_array_handle handle_LU;
+
+  const char *who = "scm_gsl_scm_linalg_LU_invert";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  SCM _LU[n][n];
+  scm_array_handle_to_scm_matrix (LU, &handle_LU, n, n, _LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  SCM _X[n][n];
+
+  scm_linalg_LU_invert (n, _LU, gsl_permutation_data (p), _X);
+
+  SCM inverse = scm_from_scm_matrix (n, n, _X);
+
+  scm_dynwind_end ();
+
+  return inverse;
 }
 
 VISIBLE void
@@ -2987,4 +3113,10 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:lu-solve-f64", 3, 0, 0, scm_gsl_linalg_LU_solve);
   scm_c_define_gsubr ("gsl:lu-solve-mpq", 3, 0, 0, scm_gsl_mpq_linalg_LU_solve);
   scm_c_define_gsubr ("gsl:lu-solve-scm", 3, 0, 0, scm_gsl_scm_linalg_LU_solve);
+
+  scm_c_define_gsubr ("gsl:lu-invert-f64", 2, 0, 0, scm_gsl_linalg_LU_invert);
+  scm_c_define_gsubr ("gsl:lu-invert-mpq", 2, 0, 0,
+                      scm_gsl_mpq_linalg_LU_invert);
+  scm_c_define_gsubr ("gsl:lu-invert-scm", 2, 0, 0,
+                      scm_gsl_scm_linalg_LU_invert);
 }

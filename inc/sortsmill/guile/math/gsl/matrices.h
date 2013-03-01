@@ -185,13 +185,16 @@ SCM scm_gsl_linalg_SVD_solve (SCM U, SCM S, SCM V, SCM B);
 
 SCM scm_gsl_linalg_LU_decomp (SCM A);
 SCM scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B);
+SCM scm_gsl_linalg_LU_invert (SCM LU, SCM permutation);
 
 SCM scm_gsl_mpq_linalg_LU_decomp (SCM A);
 SCM scm_gsl_mpq_linalg_LU_decomp_fast_pivot (SCM A);
 SCM scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B);
+SCM scm_gsl_mpq_linalg_LU_invert (SCM LU, SCM permutation);
 
 SCM scm_gsl_scm_linalg_LU_decomp (SCM A);
 SCM scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B);
+SCM scm_gsl_scm_linalg_LU_invert (SCM LU, SCM permutation);
 
 #if 0
 {
