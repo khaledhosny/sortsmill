@@ -955,9 +955,12 @@ VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_mpq_vector,
 VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_scm_vector, SCM,
                                            scm_array_handle_to_scm_matrix);
 
-#define _SCM_FROM_TYPED_MATRIX(NAME, TYPE, CONVERT_TO_SCM)              \
+//-------------------------------------------------------------------------
+
+#define _SCM_FROM_TYPED_MATRIX(NAME, TYPE, SCM_FROM_TYPE, PICK)         \
   SCM                                                                   \
-  NAME (unsigned int m, unsigned int n, TYPE A[m][n])                   \
+  NAME (unsigned int m, unsigned int n,                                 \
+        TYPE A[PICK (m, n)][PICK (n, m)])                               \
   {                                                                     \
     scm_t_array_handle handle;                                          \
                                                                         \
@@ -977,18 +980,31 @@ VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_scm_vector, SCM,
     for (unsigned int i = 0; i < m; i++)                                \
       for (unsigned int j = 0; j < n; j++)                              \
         elems[i * dims[0].inc + j * dims[1].inc] =                      \
-          CONVERT_TO_SCM (A[i][j]);                                     \
+          SCM_FROM_TYPE (A[PICK (i, j)][PICK (j, i)]);                  \
                                                                         \
     scm_dynwind_end ();                                                 \
                                                                         \
     return array;                                                       \
   }
 
-VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_mpz_matrix, mpz_t, scm_from_mpz);
-VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_mpq_matrix, mpq_t, scm_from_mpq);
-VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_scm_matrix, SCM, /* empty */ );
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_mpz_matrix,
+                                mpz_t, scm_from_mpz, _PICK1);
 
-#define _SCM_FROM_TYPED_VECTOR(NAME, TYPE, CONVERT_TO_SCM)              \
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_mpq_matrix,
+                                mpq_t, scm_from_mpq, _PICK1);
+
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_scm_matrix, SCM, /* empty */ , _PICK1);
+
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_transposed_mpz_matrix,
+                                mpz_t, scm_from_mpz, _PICK2);
+
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_transposed_mpq_matrix,
+                                mpq_t, scm_from_mpq, _PICK2);
+
+VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_transposed_scm_matrix,
+                                SCM, /* empty */ , _PICK2);
+
+#define _SCM_FROM_TYPED_VECTOR(NAME, TYPE, SCM_FROM_TYPE)               \
   SCM                                                                   \
   NAME (unsigned int n, TYPE v[n])                                      \
   {                                                                     \
@@ -1006,7 +1022,7 @@ VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_scm_matrix, SCM, /* empty */ );
     const scm_t_array_dim *dims = scm_array_handle_dims (&handle);      \
     SCM *elems = scm_array_handle_writable_elements (&handle);          \
     for (unsigned int i = 0; i < n; i++)                                \
-      elems[i * dims[0].inc] = CONVERT_TO_SCM (v[i]);                   \
+      elems[i * dims[0].inc] = SCM_FROM_TYPE (v[i]);                    \
                                                                         \
     scm_dynwind_end ();                                                 \
                                                                         \
@@ -1016,6 +1032,8 @@ VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_scm_matrix, SCM, /* empty */ );
 VISIBLE _SCM_FROM_TYPED_VECTOR (scm_from_mpz_vector, mpz_t, scm_from_mpz);
 VISIBLE _SCM_FROM_TYPED_VECTOR (scm_from_mpq_vector, mpq_t, scm_from_mpq);
 VISIBLE _SCM_FROM_TYPED_VECTOR (scm_from_scm_vector, SCM, /* empty */ );
+
+//-------------------------------------------------------------------------
 
 static void
 assert_f64_rank_1_or_2_array (SCM who, SCM array)
@@ -1096,6 +1114,11 @@ matrix_dim2 (scm_t_array_handle *handlep)
   return dims[rank - 1].ubnd - dims[rank - 1].lbnd + 1;
 }
 
+#if 0                           // Disable vector_dim.
+
+// vector_dim currently is not used, but might be used in the future,
+// so keep it for now.
+
 static size_t
 vector_dim (SCM array, scm_t_array_handle *handlep)
 {
@@ -1115,6 +1138,8 @@ vector_dim (SCM array, scm_t_array_handle *handlep)
 
   return dim;
 }
+
+#endif // Disable vector_dim.
 
 static void
 matrix_has_dimension_of_size_zero (const char *who, SCM A)
@@ -2670,108 +2695,6 @@ scm_gsl_scm_linalg_LU_decomp (SCM A)
   return scm_c_values (values, 3);
 }
 
-/*static*/ VISIBLE SCM
-/*xxxxxxxxxxxxxxxxxxxx*/
-scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
-{
-  scm_t_array_handle handle_LU;
-  scm_t_array_handle handle_b;
-
-  const char *who = "scm_gsl_mpq_linalg_LU_solve";
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (LU, &handle_LU);
-  scm_dynwind_array_handle_release (&handle_LU);
-
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
-
-  assert_matrix_is_square (who, LU, m, n);
-
-  mpq_t _LU[n][n];
-  mpq_matrix_init (n, n, _LU);
-  scm_dynwind_mpq_matrix_clear (n, n, _LU);
-
-  scm_array_handle_to_mpq_matrix (LU, &handle_LU, n, n, _LU);
-
-  gsl_permutation *p = scm_to_gsl_permutation (permutation);
-  scm_dynwind_gsl_permutation_free (p);
-
-  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
-
-  scm_array_get_handle (b, &handle_b);
-  scm_dynwind_array_handle_release (&handle_b);
-
-  const size_t n_b = vector_dim (b, &handle_b);
-
-  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
-
-  mpq_t _b[n];
-  mpq_vector_init (n, _b);
-  scm_dynwind_mpq_vector_clear (n, _b);
-
-  scm_array_handle_to_mpq_vector (b, &handle_b, n, _b);
-
-  bool singular;
-  mpq_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _b, &singular);
-  if (singular)
-    exception__LU_matrix_is_singular (who, LU);
-
-  SCM solution = scm_from_mpq_vector (n, _b);
-
-  scm_dynwind_end ();
-
-  return solution;
-}
-
-VISIBLE SCM
-scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
-{
-  scm_t_array_handle handle_LU;
-  scm_t_array_handle handle_b;
-
-  const char *who = "scm_gsl_scm_linalg_LU_solve";
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (LU, &handle_LU);
-  scm_dynwind_array_handle_release (&handle_LU);
-
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
-
-  assert_matrix_is_square (who, LU, m, n);
-
-  SCM _LU[n][n];
-
-  scm_array_handle_to_scm_matrix (LU, &handle_LU, n, n, _LU);
-
-  gsl_permutation *p = scm_to_gsl_permutation (permutation);
-  scm_dynwind_gsl_permutation_free (p);
-
-  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
-
-  scm_array_get_handle (b, &handle_b);
-  scm_dynwind_array_handle_release (&handle_b);
-
-  const size_t n_b = vector_dim (b, &handle_b);
-
-  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
-
-  SCM _b[n];
-
-  scm_array_handle_to_scm_vector (b, &handle_b, n, _b);
-
-  scm_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _b);
-
-  SCM solution = scm_from_scm_vector (n, _b);
-
-  scm_dynwind_end ();
-
-  return solution;
-}
-
 VISIBLE SCM
 scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 {
@@ -2836,7 +2759,6 @@ scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   return solution;
 }
 
-/*
 VISIBLE SCM
 scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 {
@@ -2880,10 +2802,13 @@ scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 
   scm_array_handle_to_transposed_mpq_matrix (B, &handle_B, m_B, n_B, _Bt);
 
-  bool singular;
-  //?????????  mpq_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _B, &singular);
-  if (singular)
-    exception__LU_matrix_is_singular (who, LU);
+  for (unsigned int i = 0; i < n_B; i++)
+    {
+      bool singular;
+      mpq_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _Bt[i], &singular);
+      if (singular)
+        exception__LU_matrix_is_singular (who, LU);
+    }
 
   SCM solution = scm_from_transposed_mpq_matrix (m_B, n_B, _Bt);
 
@@ -2891,14 +2816,12 @@ scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 
   return solution;
 }
-*/
 
-/*
 VISIBLE SCM
-scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
+scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 {
   scm_t_array_handle handle_LU;
-  scm_t_array_handle handle_b;
+  scm_t_array_handle handle_B;
 
   const char *who = "scm_gsl_scm_linalg_LU_solve";
 
@@ -2913,7 +2836,6 @@ scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
   assert_matrix_is_square (who, LU, m, n);
 
   SCM _LU[n][n];
-
   scm_array_handle_to_scm_matrix (LU, &handle_LU, n, n, _LU);
 
   gsl_permutation *p = scm_to_gsl_permutation (permutation);
@@ -2921,26 +2843,26 @@ scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
 
   assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
 
-  scm_array_get_handle (b, &handle_b);
-  scm_dynwind_array_handle_release (&handle_b);
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
 
-  const size_t n_b = vector_dim (b, &handle_b);
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
 
-  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
+  assert_conformable_for_Ax_equals_B (who, LU, B, m, n, m_B, n_B);
 
-  SCM _b[n];
+  SCM _Bt[n_B][m_B];
+  scm_array_handle_to_transposed_scm_matrix (B, &handle_B, m_B, n_B, _Bt);
 
-  scm_array_handle_to_scm_vector (b, &handle_b, n, _b);
+  for (unsigned int i = 0; i < n_B; i++)
+    scm_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _Bt[i]);
 
-  scm_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _b);
-
-  SCM solution = scm_from_scm_vector (n, _b);
+  SCM solution = scm_from_transposed_scm_matrix (m_B, n_B, _Bt);
 
   scm_dynwind_end ();
 
   return solution;
 }
-*/
 
 VISIBLE void
 init_guile_sortsmill_math_gsl_matrices (void)
@@ -3056,8 +2978,6 @@ init_guile_sortsmill_math_gsl_matrices (void)
                       scm_gsl_mpq_linalg_LU_decomp_fast_pivot);
 
   scm_c_define_gsubr ("gsl:lu-solve-f64", 3, 0, 0, scm_gsl_linalg_LU_solve);
-  scm_c_define_gsubr ("gsl:lu-solve-vector-mpq", 3, 0, 0,
-                      scm_gsl_mpq_linalg_LU_solve);
-  scm_c_define_gsubr ("gsl:lu-solve-vector-scm", 3, 0, 0,
-                      scm_gsl_scm_linalg_LU_solve);
+  scm_c_define_gsubr ("gsl:lu-solve-mpq", 3, 0, 0, scm_gsl_mpq_linalg_LU_solve);
+  scm_c_define_gsubr ("gsl:lu-solve-scm", 3, 0, 0, scm_gsl_scm_linalg_LU_solve);
 }

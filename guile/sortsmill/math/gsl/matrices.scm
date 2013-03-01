@@ -149,8 +149,8 @@
           gsl:lu-decomposition-mpq-fast-pivot
 
           gsl:lu-solve-f64
-          gsl:lu-solve-vector-mpq
-          gsl:lu-solve-vector-scm
+          gsl:lu-solve-mpq
+          gsl:lu-solve-scm
           )
 
   (import (sortsmill arrays)
