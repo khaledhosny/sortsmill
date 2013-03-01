@@ -492,6 +492,7 @@ scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
   assert (false);
 }
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #define _PICK1(i, j) (i)
 #define _PICK2(i, j) (j)
@@ -505,8 +506,9 @@ scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
   (scm_make_rectangular (scm_from_double ((&(x))[0]),   \
                          scm_from_double ((&(x))[1])))
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#define SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX(NAME, TYPE, SCM_TO_TYPE,  \
+#define _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX(NAME, TYPE, SCM_TO_TYPE, \
                                               PICK)                     \
   void                                                                  \
   NAME (scm_t_array_handle *handlep,                                    \
@@ -534,26 +536,27 @@ scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
           }                                                             \
   }
 
-static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
   (scm_array_handle_nonuniform_to_mpz_matrix, mpz_t, scm_to_mpz, _PICK1);
 
-static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
   (scm_array_handle_nonuniform_to_mpq_matrix, mpq_t, scm_to_mpq, _PICK1);
 
-static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
   (scm_array_handle_nonuniform_to_scm_matrix, SCM, _ASSIGN, _PICK1);
 
-static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
   (scm_array_handle_nonuniform_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
    _PICK2);
 
-static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
   (scm_array_handle_nonuniform_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
    _PICK2);
 
-static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
   (scm_array_handle_nonuniform_to_transposed_scm_matrix, SCM, _ASSIGN, _PICK2);
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #define _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX(NAME, TYPE, SCM_TO_TYPE,    \
                                             ELEMENTS, ELEM_TYPE,        \
@@ -582,287 +585,122 @@ static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
              A[PICK (i, j)][PICK (j, i)]);                              \
   }
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u8_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_u8_elements,
-                                            uint8_t, scm_from_uint8, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_MPX_INT(X, SIGN1, SIGN2, SIZE)          \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX            \
+  (scm_array_handle_##SIGN1##SIZE##_to_mp##X##_matrix,  \
+   mp##X##_t, scm_to_mp##X,                             \
+   scm_array_handle_##SIGN1##SIZE##_elements,           \
+   SIGN2##int##SIZE##_t, scm_from_##SIGN2##int##SIZE,   \
+   _PICK1, _MULT1);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s8_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_s8_elements,
-                                            int8_t, scm_from_int8, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_SCM_INT(SIGN1, SIGN2, SIZE)             \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX            \
+  (scm_array_handle_##SIGN1##SIZE##_to_scm_matrix,      \
+   SCM, _ASSIGN,                                        \
+   scm_array_handle_##SIGN1##SIZE##_elements,           \
+   SIGN2##int##SIZE##_t, scm_from_##SIGN2##int##SIZE,   \
+   _PICK1, _MULT1);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u16_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_u16_elements,
-                                            uint16_t, scm_from_uint16, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s16_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_s16_elements,
-                                            int16_t, scm_from_int8, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u32_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_u32_elements,
-                                            uint32_t, scm_from_uint32, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s32_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_s32_elements,
-                                            int32_t, scm_from_int32, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u64_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_u64_elements,
-                                            uint64_t, scm_from_uint64, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s64_to_mpz_matrix,
-                                            mpz_t, scm_to_mpz,
-                                            scm_array_handle_s64_elements,
-                                            int64_t, scm_from_int64, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u8_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_u8_elements, uint8_t, scm_from_uint8, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s8_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_s8_elements, int8_t, scm_from_int8, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u16_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_u16_elements, uint16_t, scm_from_uint16, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s16_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_s16_elements, int16_t, scm_from_int8, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u32_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_u32_elements, uint32_t, scm_from_uint32, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s32_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_s32_elements, int32_t, scm_from_int32, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u64_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_u64_elements, uint64_t, scm_from_uint64, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s64_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   scm_array_handle_s64_elements, int64_t, scm_from_int64, _PICK2, _MULT1);
+#define _SAHUTM_INT(SIGN1, SIGN2, SIZE)         \
+  _SAHUTM_MPX_INT (z, SIGN1, SIGN2, SIZE);      \
+  _SAHUTM_MPX_INT (q, SIGN1, SIGN2, SIZE);      \
+  _SAHUTM_SCM_INT (SIGN1, SIGN2, SIZE)
 
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u8_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_u8_elements,
-                                            uint8_t, scm_from_uint8, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_TRANSPOSED_MPX_INT(X, SIGN1, SIGN2, SIZE)               \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX                            \
+  (scm_array_handle_##SIGN1##SIZE##_to_transposed_mp##X##_matrix,       \
+   mp##X##_t, scm_to_mp##X,                                             \
+   scm_array_handle_##SIGN1##SIZE##_elements,                           \
+   SIGN2##int##SIZE##_t, scm_from_##SIGN2##int##SIZE,                   \
+   _PICK2, _MULT1);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s8_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_s8_elements,
-                                            int8_t, scm_from_int8, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_TRANSPOSED_SCM_INT(SIGN1, SIGN2, SIZE)          \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX                    \
+  (scm_array_handle_##SIGN1##SIZE##_to_transposed_scm_matrix,   \
+   SCM, _ASSIGN,                                                \
+   scm_array_handle_##SIGN1##SIZE##_elements,                   \
+   SIGN2##int##SIZE##_t, scm_from_##SIGN2##int##SIZE,           \
+   _PICK2, _MULT1);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u16_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_u16_elements,
-                                            uint16_t, scm_from_uint16, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s16_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_s16_elements,
-                                            int16_t, scm_from_int8, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u32_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_u32_elements,
-                                            uint32_t, scm_from_uint32, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s32_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_s32_elements,
-                                            int32_t, scm_from_int32, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u64_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_u64_elements,
-                                            uint64_t, scm_from_uint64, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s64_to_mpq_matrix,
-                                            mpq_t, scm_to_mpq,
-                                            scm_array_handle_s64_elements,
-                                            int64_t, scm_from_int64, _PICK1,
-                                            _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u8_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_u8_elements, uint8_t, scm_from_uint8, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s8_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_s8_elements, int8_t, scm_from_int8, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u16_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_u16_elements, uint16_t, scm_from_uint16, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s16_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_s16_elements, int16_t, scm_from_int8, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u32_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_u32_elements, uint32_t, scm_from_uint32, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s32_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_s32_elements, int32_t, scm_from_int32, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u64_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_u64_elements, uint64_t, scm_from_uint64, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s64_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   scm_array_handle_s64_elements, int64_t, scm_from_int64, _PICK2, _MULT1);
+#define _SAHUTM_TRANSPOSED_INT(SIGN1, SIGN2, SIZE)      \
+  _SAHUTM_TRANSPOSED_MPX_INT (z, SIGN1, SIGN2, SIZE);   \
+  _SAHUTM_TRANSPOSED_MPX_INT (q, SIGN1, SIGN2, SIZE);   \
+  _SAHUTM_TRANSPOSED_SCM_INT (SIGN1, SIGN2, SIZE)
 
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u8_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_u8_elements,
-                                            uint8_t, scm_from_uint8, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_SCM_FLOAT(TYPE, SIZE)           \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX    \
+  (scm_array_handle_f##SIZE##_to_scm_matrix,    \
+   SCM, _ASSIGN,                                \
+   scm_array_handle_f##SIZE##_elements,         \
+   TYPE, scm_from_double, _PICK1,               \
+   _MULT1);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s8_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_s8_elements,
-                                            int8_t, scm_from_int8, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_TRANSPOSED_SCM_FLOAT(TYPE, SIZE)        \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX            \
+  (scm_array_handle_f##SIZE##_to_transposed_scm_matrix, \
+   SCM, _ASSIGN,                                        \
+   scm_array_handle_f##SIZE##_elements,                 \
+   TYPE, scm_from_double, _PICK2,                       \
+   _MULT1);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u16_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_u16_elements,
-                                            uint16_t, scm_from_uint16, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_SCM_COMPLEX(TYPE, SIZE)         \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX    \
+  (scm_array_handle_c##SIZE##_to_scm_matrix,    \
+   SCM, _ASSIGN,                                \
+   scm_array_handle_c##SIZE##_elements,         \
+   TYPE, _SCM_FROM_COMPLEX, _PICK1,             \
+   _MULT2);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s16_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_s16_elements,
-                                            int16_t, scm_from_int8, _PICK1,
-                                            _MULT1);
+#define _SAHUTM_TRANSPOSED_SCM_COMPLEX(TYPE, SIZE)      \
+  static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX            \
+  (scm_array_handle_c##SIZE##_to_transposed_scm_matrix, \
+   SCM, _ASSIGN,                                        \
+   scm_array_handle_c##SIZE##_elements,                 \
+   TYPE, _SCM_FROM_COMPLEX, _PICK2,                     \
+   _MULT2);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u32_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_u32_elements,
-                                            uint32_t, scm_from_uint32, _PICK1,
-                                            _MULT1);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s32_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_s32_elements,
-                                            int32_t, scm_from_int32, _PICK1,
-                                            _MULT1);
+// Unsigned ints.
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u64_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_u64_elements,
-                                            uint64_t, scm_from_uint64, _PICK1,
-                                            _MULT1);
+_SAHUTM_INT (u, u, 8);
+_SAHUTM_INT (u, u, 16);
+_SAHUTM_INT (u, u, 32);
+_SAHUTM_INT (u, u, 64);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s64_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_s64_elements,
-                                            int64_t, scm_from_int64, _PICK1,
-                                            _MULT1);
+_SAHUTM_TRANSPOSED_INT (u, u, 8);
+_SAHUTM_TRANSPOSED_INT (u, u, 16);
+_SAHUTM_TRANSPOSED_INT (u, u, 32);
+_SAHUTM_TRANSPOSED_INT (u, u, 64);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_f32_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_f32_elements,
-                                            float, scm_from_double, _PICK1,
-                                            _MULT1);
+// Signed ints.
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_f64_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_f64_elements,
-                                            double, scm_from_double, _PICK1,
-                                            _MULT1);
+_SAHUTM_INT (s,, 8);
+_SAHUTM_INT (s,, 16);
+_SAHUTM_INT (s,, 32);
+_SAHUTM_INT (s,, 64);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_c32_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_c32_elements,
-                                            float, _SCM_FROM_COMPLEX, _PICK1,
-                                            _MULT2);
+_SAHUTM_TRANSPOSED_INT (s,, 8);
+_SAHUTM_TRANSPOSED_INT (s,, 16);
+_SAHUTM_TRANSPOSED_INT (s,, 32);
+_SAHUTM_TRANSPOSED_INT (s,, 64);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_c64_to_scm_matrix,
-                                            SCM, _ASSIGN,
-                                            scm_array_handle_c64_elements,
-                                            double, _SCM_FROM_COMPLEX, _PICK1,
-                                            _MULT2);
+// Floating point reals.
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u8_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_u8_elements, uint8_t, scm_from_uint8, _PICK2, _MULT1);
+_SAHUTM_SCM_FLOAT (float, 32);
+_SAHUTM_SCM_FLOAT (double, 64);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s8_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_s8_elements, int8_t, scm_from_int8, _PICK2, _MULT1);
+_SAHUTM_TRANSPOSED_SCM_FLOAT (float, 32);
+_SAHUTM_TRANSPOSED_SCM_FLOAT (double, 64);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u16_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_u16_elements, uint16_t, scm_from_uint16, _PICK2, _MULT1);
+// Floating point complex.
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s16_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_s16_elements, int16_t, scm_from_int8, _PICK2, _MULT1);
+_SAHUTM_SCM_COMPLEX (float, 32);
+_SAHUTM_SCM_COMPLEX (double, 64);
 
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u32_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_u32_elements, uint32_t, scm_from_uint32, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s32_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_s32_elements, int32_t, scm_from_int32, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_u64_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_u64_elements, uint64_t, scm_from_uint64, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_s64_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_s64_elements, int64_t, scm_from_int64, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_f32_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_f32_elements, float, scm_from_double, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_f64_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_f64_elements, double, scm_from_double, _PICK2, _MULT1);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_c32_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_c32_elements, float, _SCM_FROM_COMPLEX, _PICK2, _MULT2);
-
-static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
-  (scm_array_handle_c64_to_transposed_scm_matrix, SCM, _ASSIGN,
-   scm_array_handle_c64_elements, double, _SCM_FROM_COMPLEX, _PICK2, _MULT2);
+_SAHUTM_TRANSPOSED_SCM_COMPLEX (float, 32);
+_SAHUTM_TRANSPOSED_SCM_COMPLEX (double, 64);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
