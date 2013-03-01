@@ -420,22 +420,6 @@ scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
 }
 
 static void
-scm_array_handle_illegal_to_mpz_matrix (scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        mpz_t A[m][n])
-{
-  assert (false);
-}
-
-static void
-scm_array_handle_illegal_to_mpq_matrix (scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        mpq_t A[m][n])
-{
-  assert (false);
-}
-
-static void
 assert_rank_1_or_2_array (SCM who, SCM array)
 {
   scm_call_2 (scm_c_private_ref ("sortsmill math gsl matrices",
@@ -451,99 +435,452 @@ assert_c_rank_1_or_2_array (const char *who, SCM array,
     assert_rank_1_or_2_array (scm_from_utf8_string (who), array);
 }
 
+//-------------------------------------------------------------------------
+//
+// What follows is a bunch of code to avoid using the general array
+// API, for no particular reason other than for the fun of
+// it. Probably this code is faster at doing something that we will
+// never need to be fast.
+
 static void
-scm_array_handle_nonuniform_to_mpz_matrix (scm_t_array_handle *handlep,
-                                           unsigned int m, unsigned int n,
-                                           mpz_t A[m][n])
+scm_array_handle_illegal_to_mpz_matrix (scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        mpz_t A[m][n])
 {
-  const size_t rank = scm_array_handle_rank (handlep);
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  const SCM *elems = scm_array_handle_elements (handlep);
-  if (rank == 1)
-    {
-      assert (m == 1);
-      for (unsigned int j = 0; j < n; j++)
-        {
-          SCM x = elems[j * dims[0].inc];
-          scm_to_mpz (x, A[0][j]);
-        }
-    }
-  else
-    for (unsigned int i = 0; i < m; i++)
-      for (unsigned int j = 0; j < n; j++)
-        {
-          SCM x = elems[i * dims[0].inc + j * dims[1].inc];
-          scm_to_mpz (x, A[i][j]);
-        }
+  assert (false);
 }
 
 static void
-scm_array_handle_nonuniform_to_mpq_matrix (scm_t_array_handle *handlep,
-                                           unsigned int m, unsigned int n,
-                                           mpq_t A[m][n])
+scm_array_handle_illegal_to_transposed_mpz_matrix (scm_t_array_handle *handlep,
+                                                   unsigned int m,
+                                                   unsigned int n,
+                                                   mpz_t A[n][m])
 {
-  const size_t rank = scm_array_handle_rank (handlep);
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  const SCM *elems = scm_array_handle_elements (handlep);
-  if (rank == 1)
-    {
-      assert (m == 1);
-      for (unsigned int j = 0; j < n; j++)
-        {
-          SCM x = elems[j * dims[0].inc];
-          scm_to_mpq (x, A[0][j]);
-        }
-    }
-  else
-    for (unsigned int i = 0; i < m; i++)
-      for (unsigned int j = 0; j < n; j++)
-        {
-          SCM x = elems[i * dims[0].inc + j * dims[1].inc];
-          scm_to_mpq (x, A[i][j]);
-        }
+  assert (false);
 }
 
-#define _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX(LONG_TYPE, MEDIUM_TYPE,     \
-                                            SHORT_TYPE)                 \
+static void
+scm_array_handle_illegal_to_mpq_matrix (scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        mpq_t A[m][n])
+{
+  assert (false);
+}
+
+static void
+scm_array_handle_illegal_to_transposed_mpq_matrix (scm_t_array_handle *handlep,
+                                                   unsigned int m,
+                                                   unsigned int n,
+                                                   mpq_t A[n][m])
+{
+  assert (false);
+}
+
+static void
+scm_array_handle_illegal_to_scm_matrix (scm_t_array_handle *handlep,
+                                        unsigned int m, unsigned int n,
+                                        SCM A[m][n])
+{
+  assert (false);
+}
+
+static void
+scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
+                                                   unsigned int m,
+                                                   unsigned int n, SCM A[n][m])
+{
+  assert (false);
+}
+
+
+#define _PICK1(i, j) (i)
+#define _PICK2(i, j) (j)
+
+#define _MULT1(i) (i)
+#define _MULT2(i) (2 * (i))
+
+#define _ASSIGN(x, dest) (dest = (x))
+
+#define _SCM_FROM_COMPLEX(x)                            \
+  (scm_make_rectangular (scm_from_double ((&(x))[0]),   \
+                         scm_from_double ((&(x))[1])))
+
+
+#define SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX(NAME, TYPE, SCM_TO_TYPE,  \
+                                              PICK)                     \
   void                                                                  \
-  scm_array_handle_##SHORT_TYPE##_to_mpz_matrix                         \
-  (scm_t_array_handle *handlep, unsigned int m, unsigned int n,         \
-   mpz_t A[m][n])                                                       \
+  NAME (scm_t_array_handle *handlep,                                    \
+        unsigned int m, unsigned int n,                                 \
+        TYPE A[PICK (m, n)][PICK (n, m)])                               \
   {                                                                     \
     const size_t rank = scm_array_handle_rank (handlep);                \
     const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
-    const LONG_TYPE *elems =                                            \
-      scm_array_handle_##SHORT_TYPE##_elements (handlep);               \
+    const SCM *elems = scm_array_handle_elements (handlep);             \
     if (rank == 1)                                                      \
       {                                                                 \
         assert (m == 1);                                                \
         for (unsigned int j = 0; j < n; j++)                            \
           {                                                             \
-            LONG_TYPE x = elems[j * dims[0].inc];                       \
-            scm_to_mpz (scm_from_##MEDIUM_TYPE (x), A[0][j]);           \
+            SCM x = elems[j * dims[0].inc];                             \
+            SCM_TO_TYPE (x, A[PICK (0, j)][PICK (j, 0)]);               \
           }                                                             \
       }                                                                 \
     else                                                                \
       for (unsigned int i = 0; i < m; i++)                              \
         for (unsigned int j = 0; j < n; j++)                            \
           {                                                             \
-            LONG_TYPE x = elems[i * dims[0].inc + j * dims[1].inc];     \
-            scm_to_mpz (scm_from_##MEDIUM_TYPE (x), A[i][j]);           \
+            SCM x = elems[i * dims[0].inc + j * dims[1].inc];           \
+            SCM_TO_TYPE (x, A[PICK (i, j)][PICK (j, i)]);               \
           }                                                             \
   }
 
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint8_t, uint8, u8);
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int8_t, int8, s8);
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint16_t, uint16, u16);
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int16_t, int16, s16);
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint32_t, uint32, u32);
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int32_t, int32, s32);
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (uint64_t, uint64, u64);
-static _SCM_ARRAY_HANDLE_INT_TO_MPZ_MATRIX (int64_t, int64, s64);
+static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+  (scm_array_handle_nonuniform_to_mpz_matrix, mpz_t, scm_to_mpz, _PICK1);
 
-typedef void _scm_to_mpz_matrix_func_t (scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        mpz_t A[m][n]);
+static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+  (scm_array_handle_nonuniform_to_mpq_matrix, mpq_t, scm_to_mpq, _PICK1);
+
+static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+  (scm_array_handle_nonuniform_to_scm_matrix, SCM, _ASSIGN, _PICK1);
+
+static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+  (scm_array_handle_nonuniform_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   _PICK2);
+
+static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+  (scm_array_handle_nonuniform_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   _PICK2);
+
+static SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
+  (scm_array_handle_nonuniform_to_transposed_scm_matrix, SCM, _ASSIGN, _PICK2);
+
+
+#define _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX(NAME, TYPE, SCM_TO_TYPE,    \
+                                            ELEMENTS, ELEM_TYPE,        \
+                                            SCM_FROM_ELEM, PICK, MULT)  \
+  void                                                                  \
+  NAME (scm_t_array_handle *handlep, unsigned int m, unsigned int n,    \
+        TYPE A[PICK (m, n)][PICK (n, m)])                               \
+  {                                                                     \
+    const size_t rank = scm_array_handle_rank (handlep);                \
+                                                                        \
+    /* Rank 1 arrays are treated as row matrices. */                    \
+    assert (rank == 2 || m == 1);                                       \
+                                                                        \
+    const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
+    const ELEM_TYPE *elems = ELEMENTS (handlep);                        \
+    if (rank == 1)                                                      \
+      for (unsigned int j = 0; j < n; j++)                              \
+        SCM_TO_TYPE (SCM_FROM_ELEM (elems[MULT (j) * dims[0].inc]),     \
+                     A[PICK (0, j)][PICK (j, 0)]);                      \
+    else                                                                \
+      for (unsigned int i = 0; i < m; i++)                              \
+        for (unsigned int j = 0; j < n; j++)                            \
+          SCM_TO_TYPE                                                   \
+            (SCM_FROM_ELEM (elems[MULT (i) * dims[0].inc                \
+                                  + MULT (j) * dims[1].inc]),           \
+             A[PICK (i, j)][PICK (j, i)]);                              \
+  }
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u8_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_u8_elements,
+                                            uint8_t, scm_from_uint8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s8_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_s8_elements,
+                                            int8_t, scm_from_int8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u16_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_u16_elements,
+                                            uint16_t, scm_from_uint16, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s16_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_s16_elements,
+                                            int16_t, scm_from_int8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u32_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_u32_elements,
+                                            uint32_t, scm_from_uint32, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s32_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_s32_elements,
+                                            int32_t, scm_from_int32, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u64_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_u64_elements,
+                                            uint64_t, scm_from_uint64, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s64_to_mpz_matrix,
+                                            mpz_t, scm_to_mpz,
+                                            scm_array_handle_s64_elements,
+                                            int64_t, scm_from_int64, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u8_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_u8_elements, uint8_t, scm_from_uint8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s8_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_s8_elements, int8_t, scm_from_int8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u16_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_u16_elements, uint16_t, scm_from_uint16, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s16_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_s16_elements, int16_t, scm_from_int8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u32_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_u32_elements, uint32_t, scm_from_uint32, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s32_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_s32_elements, int32_t, scm_from_int32, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u64_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_u64_elements, uint64_t, scm_from_uint64, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s64_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+   scm_array_handle_s64_elements, int64_t, scm_from_int64, _PICK2, _MULT1);
+
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u8_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_u8_elements,
+                                            uint8_t, scm_from_uint8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s8_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_s8_elements,
+                                            int8_t, scm_from_int8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u16_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_u16_elements,
+                                            uint16_t, scm_from_uint16, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s16_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_s16_elements,
+                                            int16_t, scm_from_int8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u32_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_u32_elements,
+                                            uint32_t, scm_from_uint32, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s32_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_s32_elements,
+                                            int32_t, scm_from_int32, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u64_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_u64_elements,
+                                            uint64_t, scm_from_uint64, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s64_to_mpq_matrix,
+                                            mpq_t, scm_to_mpq,
+                                            scm_array_handle_s64_elements,
+                                            int64_t, scm_from_int64, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u8_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_u8_elements, uint8_t, scm_from_uint8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s8_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_s8_elements, int8_t, scm_from_int8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u16_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_u16_elements, uint16_t, scm_from_uint16, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s16_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_s16_elements, int16_t, scm_from_int8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u32_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_u32_elements, uint32_t, scm_from_uint32, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s32_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_s32_elements, int32_t, scm_from_int32, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u64_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_u64_elements, uint64_t, scm_from_uint64, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s64_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+   scm_array_handle_s64_elements, int64_t, scm_from_int64, _PICK2, _MULT1);
+
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u8_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_u8_elements,
+                                            uint8_t, scm_from_uint8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s8_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_s8_elements,
+                                            int8_t, scm_from_int8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u16_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_u16_elements,
+                                            uint16_t, scm_from_uint16, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s16_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_s16_elements,
+                                            int16_t, scm_from_int8, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u32_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_u32_elements,
+                                            uint32_t, scm_from_uint32, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s32_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_s32_elements,
+                                            int32_t, scm_from_int32, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_u64_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_u64_elements,
+                                            uint64_t, scm_from_uint64, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_s64_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_s64_elements,
+                                            int64_t, scm_from_int64, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_f32_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_f32_elements,
+                                            float, scm_from_double, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_f64_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_f64_elements,
+                                            double, scm_from_double, _PICK1,
+                                            _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_c32_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_c32_elements,
+                                            float, _SCM_FROM_COMPLEX, _PICK1,
+                                            _MULT2);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX (scm_array_handle_c64_to_scm_matrix,
+                                            SCM, _ASSIGN,
+                                            scm_array_handle_c64_elements,
+                                            double, _SCM_FROM_COMPLEX, _PICK1,
+                                            _MULT2);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u8_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_u8_elements, uint8_t, scm_from_uint8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s8_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_s8_elements, int8_t, scm_from_int8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u16_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_u16_elements, uint16_t, scm_from_uint16, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s16_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_s16_elements, int16_t, scm_from_int8, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u32_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_u32_elements, uint32_t, scm_from_uint32, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s32_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_s32_elements, int32_t, scm_from_int32, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_u64_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_u64_elements, uint64_t, scm_from_uint64, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_s64_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_s64_elements, int64_t, scm_from_int64, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_f32_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_f32_elements, float, scm_from_double, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_f64_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_f64_elements, double, scm_from_double, _PICK2, _MULT1);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_c32_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_c32_elements, float, _SCM_FROM_COMPLEX, _PICK2, _MULT2);
+
+static _SCM_ARRAY_HANDLE_UNIFORM_TO_MATRIX
+  (scm_array_handle_c64_to_transposed_scm_matrix, SCM, _ASSIGN,
+   scm_array_handle_c64_elements, double, _SCM_FROM_COMPLEX, _PICK2, _MULT2);
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#define _SCM_TO_MATRIX_FUNC_T(NAME, TYPE, PICK)         \
+  typedef void NAME (scm_t_array_handle *handlep,       \
+                     unsigned int m, unsigned int n,    \
+                     TYPE A[PICK (m, n)][PICK (n, m)]);
+
+_SCM_TO_MATRIX_FUNC_T (_scm_to_mpz_matrix_func_t, mpz_t, _PICK1);
+_SCM_TO_MATRIX_FUNC_T (_scm_to_transposed_mpz_matrix_func_t, mpz_t, _PICK2);
+
+_SCM_TO_MATRIX_FUNC_T (_scm_to_mpq_matrix_func_t, mpq_t, _PICK1);
+_SCM_TO_MATRIX_FUNC_T (_scm_to_transposed_mpq_matrix_func_t, mpq_t, _PICK2);
+
+_SCM_TO_MATRIX_FUNC_T (_scm_to_scm_matrix_func_t, SCM, _PICK1);
+_SCM_TO_MATRIX_FUNC_T (_scm_to_transposed_scm_matrix_func_t, SCM, _PICK2);
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static _scm_to_mpz_matrix_func_t *scm_to_mpz_matrix_func[14] = {
   [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_mpz_matrix,
@@ -562,51 +899,24 @@ static _scm_to_mpz_matrix_func_t *scm_to_mpz_matrix_func[14] = {
   [_FF_INDEX_ARRAY_C64] = scm_array_handle_illegal_to_mpz_matrix
 };
 
-#define _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX(LONG_TYPE, MEDIUM_TYPE,     \
-                                            SHORT_TYPE)                 \
-  void                                                                  \
-  scm_array_handle_##SHORT_TYPE##_to_mpq_matrix                         \
-  (scm_t_array_handle *handlep, unsigned int m, unsigned int n,         \
-   mpq_t A[m][n])                                                       \
-  {                                                                     \
-    const size_t rank = scm_array_handle_rank (handlep);                \
-    const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
-    const LONG_TYPE *elems =                                            \
-      scm_array_handle_##SHORT_TYPE##_elements (handlep);               \
-    if (rank == 1)                                                      \
-      {                                                                 \
-        assert (m == 1);                                                \
-        for (unsigned int j = 0; j < n; j++)                            \
-          {                                                             \
-            LONG_TYPE x = elems[j * dims[0].inc];                       \
-            scm_to_mpz (scm_from_##MEDIUM_TYPE (x),                     \
-                        mpq_numref (A[0][j]));                          \
-            mpz_set (mpq_denref (A[0][j]), mpz_one ());                 \
-          }                                                             \
-      }                                                                 \
-    else                                                                \
-      for (unsigned int i = 0; i < m; i++)                              \
-        for (unsigned int j = 0; j < n; j++)                            \
-          {                                                             \
-            LONG_TYPE x = elems[i * dims[0].inc + j * dims[1].inc];     \
-            scm_to_mpz (scm_from_##MEDIUM_TYPE (x),                     \
-                        mpq_numref (A[i][j]));                          \
-            mpz_set (mpq_denref (A[i][j]), mpz_one ());                 \
-          }                                                             \
-  }
-
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint8_t, uint8, u8);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int8_t, int8, s8);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint16_t, uint16, u16);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int16_t, int16, s16);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint32_t, uint32, u32);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int32_t, int32, s32);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (uint64_t, uint64, u64);
-static _SCM_ARRAY_HANDLE_INT_TO_MPQ_MATRIX (int64_t, int64, s64);
-
-typedef void _scm_to_mpq_matrix_func_t (scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        mpq_t A[m][n]);
+static _scm_to_transposed_mpz_matrix_func_t
+  * scm_to_transposed_mpz_matrix_func[14] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_NONUNIFORM] =
+    scm_array_handle_nonuniform_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_array_handle_s16_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_array_handle_u32_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_array_handle_s32_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_array_handle_u64_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_array_handle_s64_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_array_handle_illegal_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_array_handle_illegal_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_array_handle_illegal_to_transposed_mpz_matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_array_handle_illegal_to_transposed_mpz_matrix
+};
 
 static _scm_to_mpq_matrix_func_t *scm_to_mpq_matrix_func[14] = {
   [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_mpq_matrix,
@@ -625,6 +935,63 @@ static _scm_to_mpq_matrix_func_t *scm_to_mpq_matrix_func[14] = {
   [_FF_INDEX_ARRAY_C64] = scm_array_handle_illegal_to_mpq_matrix
 };
 
+static _scm_to_transposed_mpq_matrix_func_t
+  * scm_to_transposed_mpq_matrix_func[14] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_NONUNIFORM] =
+    scm_array_handle_nonuniform_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_array_handle_s16_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_array_handle_u32_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_array_handle_s32_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_array_handle_u64_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_array_handle_s64_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_array_handle_illegal_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_array_handle_illegal_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_array_handle_illegal_to_transposed_mpq_matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_array_handle_illegal_to_transposed_mpq_matrix
+};
+
+static _scm_to_scm_matrix_func_t *scm_to_scm_matrix_func[14] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_scm_matrix,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_array_handle_nonuniform_to_scm_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_scm_matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_scm_matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_scm_matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_array_handle_s16_to_scm_matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_array_handle_u32_to_scm_matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_array_handle_s32_to_scm_matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_array_handle_u64_to_scm_matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_array_handle_s64_to_scm_matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_array_handle_f32_to_scm_matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_array_handle_f64_to_scm_matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_array_handle_c32_to_scm_matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_array_handle_c64_to_scm_matrix
+};
+
+static _scm_to_transposed_scm_matrix_func_t
+  * scm_to_transposed_scm_matrix_func[14] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_NONUNIFORM] =
+    scm_array_handle_nonuniform_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_array_handle_s16_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_array_handle_u32_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_array_handle_s32_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_array_handle_u64_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_array_handle_s64_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_array_handle_f32_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_array_handle_f64_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_array_handle_c32_to_transposed_scm_matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_array_handle_c64_to_transposed_scm_matrix
+};
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 VISIBLE void
 scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
                                 unsigned int m, unsigned int n, mpz_t A[m][n])
@@ -634,8 +1001,25 @@ scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
   assert_c_rank_1_or_2_array (who, array, handlep);
 
   if (scm_is_integer_array (array))
-    scm_to_mpz_matrix_func[scm_array_handle_to_array_type_index (handlep)]
-      (handlep, m, n, A);
+    scm_to_mpz_matrix_func
+      [scm_array_handle_to_array_type_index (handlep)] (handlep, m, n, A);
+  else
+    exception__unexpected_array_type (who, array);
+}
+
+VISIBLE void
+scm_array_handle_to_transposed_mpz_matrix (SCM array,
+                                           scm_t_array_handle *handlep,
+                                           unsigned int m, unsigned int n,
+                                           mpz_t A[n][m])
+{
+  const char *who = "scm_array_handle_to_transposed_mpz_matrix";
+
+  assert_c_rank_1_or_2_array (who, array, handlep);
+
+  if (scm_is_integer_array (array))
+    scm_to_transposed_mpz_matrix_func
+      [scm_array_handle_to_array_type_index (handlep)] (handlep, m, n, A);
   else
     exception__unexpected_array_type (who, array);
 }
@@ -649,52 +1033,27 @@ scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
   assert_c_rank_1_or_2_array (who, array, handlep);
 
   if (scm_is_exact_array (array))
-    scm_to_mpq_matrix_func[scm_array_handle_to_array_type_index (handlep)]
-      (handlep, m, n, A);
+    scm_to_mpq_matrix_func
+      [scm_array_handle_to_array_type_index (handlep)] (handlep, m, n, A);
   else
     exception__unexpected_array_type (who, array);
 }
 
-static void
-scm_array_handle_to_scm_matrix_nonuniform (scm_t_array_handle *handlep,
+VISIBLE void
+scm_array_handle_to_transposed_mpq_matrix (SCM array,
+                                           scm_t_array_handle *handlep,
                                            unsigned int m, unsigned int n,
-                                           SCM A[m][n])
+                                           mpq_t A[n][m])
 {
-  const size_t rank = scm_array_handle_rank (handlep);
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  const SCM *elems = scm_array_handle_elements (handlep);
-  if (rank == 1)
-    {
-      assert (m == 1);
-      for (unsigned int j = 0; j < n; j++)
-        A[0][j] = elems[j * dims[0].inc];
-    }
-  else
-    for (unsigned int i = 0; i < m; i++)
-      for (unsigned int j = 0; j < n; j++)
-        A[i][j] = elems[i * dims[0].inc + j * dims[1].inc];
-}
+  const char *who = "scm_array_handle_to_transposed_mpq_matrix";
 
-static void
-scm_array_handle_to_scm_matrix_general (SCM array, scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        SCM A[m][n])
-{
-  const size_t rank = scm_array_handle_rank (handlep);
-  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
-  if (rank == 1)
-    {
-      assert (m == 1);
-      for (unsigned int j = 0; j < n; j++)
-        A[0][j] =
-          scm_array_ref (array, scm_list_1 (scm_from_uint (j + dims[0].lbnd)));
-    }
+  assert_c_rank_1_or_2_array (who, array, handlep);
+
+  if (scm_is_exact_array (array))
+    scm_to_transposed_mpq_matrix_func
+      [scm_array_handle_to_array_type_index (handlep)] (handlep, m, n, A);
   else
-    for (unsigned int i = 0; i < m; i++)
-      for (unsigned int j = 0; j < n; j++)
-        A[i][j] =
-          scm_array_ref (array, scm_list_2 (scm_from_uint (i + dims[0].lbnd),
-                                            scm_from_uint (j + dims[1].lbnd)));
+    exception__unexpected_array_type (who, array);
 }
 
 VISIBLE void
@@ -705,11 +1064,25 @@ scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
 
   assert_c_rank_1_or_2_array (who, array, handlep);
 
-  if (scm_array_handle_is_uniform_array (handlep))
-    scm_array_handle_to_scm_matrix_general (array, handlep, m, n, A);
-  else
-    scm_array_handle_to_scm_matrix_nonuniform (handlep, m, n, A);
+  scm_to_scm_matrix_func
+    [scm_array_handle_to_array_type_index (handlep)] (handlep, m, n, A);
 }
+
+VISIBLE void
+scm_array_handle_to_transposed_scm_matrix (SCM array,
+                                           scm_t_array_handle *handlep,
+                                           unsigned int m, unsigned int n,
+                                           SCM A[n][m])
+{
+  const char *who = "scm_array_handle_to_transposed_scm_matrix";
+
+  assert_c_rank_1_or_2_array (who, array, handlep);
+
+  scm_to_transposed_scm_matrix_func
+    [scm_array_handle_to_array_type_index (handlep)] (handlep, m, n, A);
+}
+
+//-------------------------------------------------------------------------
 
 #define _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR(NAME, TYPE, TO_MATRIX)        \
   void                                                                  \
@@ -2459,60 +2832,8 @@ scm_gsl_scm_linalg_LU_decomp (SCM A)
   return scm_c_values (values, 3);
 }
 
-VISIBLE SCM
-scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
-{
-  scm_t_array_handle handle_LU;
-  scm_t_array_handle handle_b;
-
-  const char *who = "scm_gsl_linalg_LU_solve";
-
-  scm_dynwind_begin (0);
-
-  scm_array_get_handle (LU, &handle_LU);
-  scm_dynwind_array_handle_release (&handle_LU);
-
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
-
-  assert_matrix_is_square (who, LU, m, n);
-
-  scm_array_get_handle (LU, &handle_LU);
-  scm_dynwind_array_handle_release (&handle_LU);
-  gsl_matrix_const_view mLU =
-    scm_gsl_matrix_const_view_array_handle (LU, &handle_LU);
-
-  gsl_permutation *p = scm_to_gsl_permutation (permutation);
-  scm_dynwind_gsl_permutation_free (p);
-
-  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
-
-  scm_array_get_handle (b, &handle_b);
-  scm_dynwind_array_handle_release (&handle_b);
-  gsl_vector_view vb = scm_gsl_vector_view_array_handle (b, &handle_b);
-
-  const size_t n_b = vector_dim (b, &handle_b);
-
-  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
-
-  int errval = gsl_linalg_LU_svx (&mLU.matrix, p, &vb.vector);
-  if (errval != GSL_SUCCESS)
-    scm_raise_gsl_error
-      (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
-                   scm_from_int (errval),
-                   scm_from_latin1_keyword ("who"),
-                   scm_from_latin1_string (who),
-                   scm_from_latin1_keyword ("irritants"),
-                   scm_list_2 (LU, b), SCM_UNDEFINED));
-
-  SCM solution = scm_gsl_vector_to_f64vector (&vb.vector, 1);
-
-  scm_dynwind_end ();
-
-  return solution;
-}
-
-VISIBLE SCM
+/*static*/ VISIBLE SCM
+/*xxxxxxxxxxxxxxxxxxxx*/
 scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
 {
   scm_t_array_handle handle_LU;
@@ -2612,6 +2933,176 @@ scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
 
   return solution;
 }
+
+VISIBLE SCM
+scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
+{
+  scm_t_array_handle handle_LU;
+  scm_t_array_handle handle_B;
+
+  const char *who = "scm_gsl_linalg_LU_solve";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+  gsl_matrix_const_view mLU =
+    scm_gsl_matrix_const_view_array_handle (LU, &handle_LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  gsl_matrix_const_view mB =
+    scm_gsl_matrix_const_view_array_handle (B, &handle_B);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_Ax_equals_B (who, LU, B, m, n, m_B, n_B);
+
+  double X[m_B][n_B];
+  gsl_matrix_view mX = gsl_matrix_view_array (&X[0][0], m_B, n_B);
+
+  for (size_t j = 0; j < n_B; j++)
+    {
+      gsl_vector_const_view vb = gsl_matrix_const_column (&mB.matrix, j);
+      gsl_vector_view vx = gsl_matrix_column (&mX.matrix, j);
+
+      int errval = gsl_linalg_LU_solve (&mLU.matrix, p, &vb.vector, &vx.vector);
+      if (errval != GSL_SUCCESS)
+        scm_raise_gsl_error
+          (scm_list_n (scm_from_latin1_keyword ("gsl-errno"),
+                       scm_from_int (errval),
+                       scm_from_latin1_keyword ("who"),
+                       scm_from_latin1_string (who),
+                       scm_from_latin1_keyword ("irritants"),
+                       scm_list_2 (LU, B), SCM_UNDEFINED));
+    }
+
+  SCM solution = scm_gsl_matrix_to_f64matrix (&mX.matrix, 1);
+
+  scm_dynwind_end ();
+
+  return solution;
+}
+
+/*
+VISIBLE SCM
+scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
+{
+  scm_t_array_handle handle_LU;
+  scm_t_array_handle handle_B;
+
+  const char *who = "scm_gsl_mpq_linalg_LU_solve";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  mpq_t _LU[n][n];
+  mpq_matrix_init (n, n, _LU);
+  scm_dynwind_mpq_matrix_clear (n, n, _LU);
+
+  scm_array_handle_to_mpq_matrix (LU, &handle_LU, n, n, _LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+
+  const size_t m_B = matrix_dim1 (&handle_B);
+  const size_t n_B = matrix_dim2 (&handle_B);
+
+  assert_conformable_for_Ax_equals_B (who, LU, B, m, n, m_B, n_B);
+
+  mpq_t _Bt[n_B][m_B];
+  mpq_matrix_init (n_B, m_B, _Bt);
+  scm_dynwind_mpq_matrix_clear (n_B, m_B, _Bt);
+
+  scm_array_handle_to_transposed_mpq_matrix (B, &handle_B, m_B, n_B, _Bt);
+
+  bool singular;
+  //?????????  mpq_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _B, &singular);
+  if (singular)
+    exception__LU_matrix_is_singular (who, LU);
+
+  SCM solution = scm_from_transposed_mpq_matrix (m_B, n_B, _Bt);
+
+  scm_dynwind_end ();
+
+  return solution;
+}
+*/
+
+/*
+VISIBLE SCM
+scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM b)
+{
+  scm_t_array_handle handle_LU;
+  scm_t_array_handle handle_b;
+
+  const char *who = "scm_gsl_scm_linalg_LU_solve";
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (LU, &handle_LU);
+  scm_dynwind_array_handle_release (&handle_LU);
+
+  const size_t m = matrix_dim1 (&handle_LU);
+  const size_t n = matrix_dim2 (&handle_LU);
+
+  assert_matrix_is_square (who, LU, m, n);
+
+  SCM _LU[n][n];
+
+  scm_array_handle_to_scm_matrix (LU, &handle_LU, n, n, _LU);
+
+  gsl_permutation *p = scm_to_gsl_permutation (permutation);
+  scm_dynwind_gsl_permutation_free (p);
+
+  assert_permutation_conforms_with_matrix (who, n, p, permutation, LU);
+
+  scm_array_get_handle (b, &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+
+  const size_t n_b = vector_dim (b, &handle_b);
+
+  assert_conformable_for_Ax_equals_B (who, LU, b, m, n, n_b, 1);
+
+  SCM _b[n];
+
+  scm_array_handle_to_scm_vector (b, &handle_b, n, _b);
+
+  scm_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _b);
+
+  SCM solution = scm_from_scm_vector (n, _b);
+
+  scm_dynwind_end ();
+
+  return solution;
+}
+*/
 
 VISIBLE void
 init_guile_sortsmill_math_gsl_matrices (void)
@@ -2726,8 +3217,7 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:lu-decomposition-mpq-fast-pivot", 1, 0, 0,
                       scm_gsl_mpq_linalg_LU_decomp_fast_pivot);
 
-  scm_c_define_gsubr ("gsl:lu-solve-vector-f64", 3, 0, 0,
-                      scm_gsl_linalg_LU_solve);
+  scm_c_define_gsubr ("gsl:lu-solve-f64", 3, 0, 0, scm_gsl_linalg_LU_solve);
   scm_c_define_gsubr ("gsl:lu-solve-vector-mpq", 3, 0, 0,
                       scm_gsl_mpq_linalg_LU_solve);
   scm_c_define_gsubr ("gsl:lu-solve-vector-scm", 3, 0, 0,

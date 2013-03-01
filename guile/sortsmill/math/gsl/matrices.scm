@@ -148,7 +148,7 @@
           ;; routines.
           gsl:lu-decomposition-mpq-fast-pivot
 
-          gsl:lu-solve-vector-f64
+          gsl:lu-solve-f64
           gsl:lu-solve-vector-mpq
           gsl:lu-solve-vector-scm
           )

@@ -136,6 +136,10 @@
 
           ;; Inverse or pseudoinverse.
           f64matrix-pinv
+
+          ;; This uses different algorithms depending on what kinds of
+          ;; matrix it sees.
+          matrix-solve:AX=B
           )
 
   (import (sortsmill math gsl matrices)
@@ -771,6 +775,28 @@ effective rank of A."
                           (f64matrix* V (f64vector->diagonal-f64matrix S-pinv))
                           (matrix-transpose U))])
             (values A-pinv effective-rank))))))
+
+  ;;-----------------------------------------------------------------------
+
+  #|
+  (define/kwargs (exact-matrix-solve:AX=B A B)
+    (call-with-values (lambda () (gsl:lu-decomposition-mpq-fast-pivot A))
+      (lambda (LU permutation signum)
+        (let* ([B^ (matrix-transpose B)]
+               [X^ (make-array *unspecified* (array-shape B^))])
+          (gsl:lu-solve-vector-mpq
+
+  (define/kwargs (matrix-solve:AX=B A B)
+    (let ([A-type (array-type A)]
+          [B-type (array-type B)])
+      (cond
+       [(and (eq? A-type 'f64) (eq? B-type 'f64))
+        f64matrix-solve:AX=B A B #:full-rank #t]
+       [(and (exact-array? A) (exact-array? B))
+        (exact-matrix-solve:AX=B A B)]
+       [()]
+       [else (number-op A B)] ))))
+  |#
 
   ;;-----------------------------------------------------------------------
 

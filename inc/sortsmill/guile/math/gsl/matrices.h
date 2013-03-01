@@ -60,9 +60,29 @@ void scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
                                      unsigned int m, unsigned int n,
                                      SCM A[m][n]);
 
+void scm_array_handle_to_transposed_mpz_matrix (SCM array,
+                                                scm_t_array_handle *handlep,
+                                                unsigned int m, unsigned int n,
+                                                mpz_t A[n][m]);
+void scm_array_handle_to_transposed_mpq_matrix (SCM array,
+                                                scm_t_array_handle *handlep,
+                                                unsigned int m, unsigned int n,
+                                                mpq_t A[n][m]);
+void scm_array_handle_to_transposed_scm_matrix (SCM array,
+                                                scm_t_array_handle *handlep,
+                                                unsigned int m, unsigned int n,
+                                                SCM A[n][m]);
+
 SCM scm_from_mpz_matrix (unsigned int m, unsigned int n, mpz_t A[m][n]);
 SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
 SCM scm_from_scm_matrix (unsigned int m, unsigned int n, SCM A[m][n]);
+
+SCM scm_from_transposed_mpz_matrix (unsigned int m, unsigned int n,
+                                    mpz_t A[n][m]);
+SCM scm_from_transposed_mpq_matrix (unsigned int m, unsigned int n,
+                                    mpq_t A[n][m]);
+SCM scm_from_transposed_scm_matrix (unsigned int m, unsigned int n,
+                                    SCM A[n][m]);
 
 #endif /* _FF_C99_OR_GREATER */
 
@@ -165,7 +185,7 @@ SCM scm_gsl_svd_solve_vector (SCM U, SCM S, SCM V,
                               SCM x_transpose, SCM b_transpose);
 
 SCM scm_gsl_linalg_LU_decomp (SCM A);
-SCM scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM b);
+SCM scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B);
 
 SCM scm_gsl_mpq_linalg_LU_decomp (SCM A);
 SCM scm_gsl_mpq_linalg_LU_decomp_fast_pivot (SCM A);
