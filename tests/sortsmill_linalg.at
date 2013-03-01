@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+####
+#### FIXME: Adapt this for the newer (sortsmill math matrices) module.
+####
+
 m4_defun([check_linalg],
 [
 AT_SETUP([$1])

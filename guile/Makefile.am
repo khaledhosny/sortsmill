@@ -355,13 +355,6 @@ sortsmill/kwargs.go: sortsmill/i18n.go
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill linalg)   FIXME: Get rid of this.
-
-DIST_SCM_FILES += sortsmill/linalg.scm
-GO_FILES += sortsmill/linalg.go
-
-#--------------------------------------------------------------------------
-#
 # (sortsmill machine)
 
 DIST_SCM_IN_FILES += sortsmill/machine.scm.in

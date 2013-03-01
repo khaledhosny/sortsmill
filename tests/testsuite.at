@@ -23,7 +23,7 @@ m4_include([gfile_c.at])
 
 AT_BANNER([scheme])
 m4_include([sortsmill_iconv.at])
-m4_include([sortsmill_linalg.at])
+#m4_include([sortsmill_linalg.at])
 #m4_include([sortsmill_precompute.at])
 
 AT_BANNER([python])
