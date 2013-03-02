@@ -108,6 +108,7 @@
 -T SplineSet
 -T SplinePointList
 -T SplinePoint
+-T Spline
 -T Spline1
 -T Spline1D
 -T KernPair
