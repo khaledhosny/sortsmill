@@ -425,6 +425,7 @@ sortsmill/math/gsl/error.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 sortsmill/math/gsl/error.go: sortsmill/kwargs.go
 @endifmk@
 
+
 # (sortsmill math gsl matrices)
 
 DIST_SCM_FILES += sortsmill/math/gsl/matrices.scm
@@ -433,6 +434,7 @@ MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/matrices.scm
 
 sortsmill/math/gsl/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
+
 # (sortsmill math math-constants)
 
 DIST_SCM_IN_FILES += sortsmill/math/math-constants.scm.in
@@ -440,18 +442,51 @@ CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/math-constants.scm
 GO_FILES += sortsmill/math/math-constants.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/math-constants.scm
 
+#--------------------------------------------------------------------------
+#
 # (sortsmill math matrices)
 
-DIST_SCM_FILES += sortsmill/math/matrices.scm
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/math/matrices.scm
 GO_FILES += sortsmill/math/matrices.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/matrices.scm
+MATH_MATRICES_REEXPORTED_SCM_FILES =
 
-sortsmill/math/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+sortsmill/math/matrices.scm: $(MATH_MATRICES_REEXPORTED_SCM_FILES)
+	$(AM_V_GEN)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill math matrices), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/math/matrices.go: sortsmill/i18n.go
-sortsmill/math/matrices.go: sortsmill/kwargs.go
-@endifmk@
+
+# (sortsmill math matrices arithmetic)
+
+DIST_SCM_FILES += sortsmill/math/matrices/arithmetic.scm
+GO_FILES += sortsmill/math/matrices/arithmetic.go
+MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/arithmetic.scm
+
+
+# (sortsmill math matrices base)
+
+DIST_SCM_FILES += sortsmill/math/matrices/base.scm
+GO_FILES += sortsmill/math/matrices/base.go
+MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/base.scm
+
+
+# (sortsmill math matrices linalg)
+
+DIST_SCM_FILES += sortsmill/math/matrices/linalg.scm
+GO_FILES += sortsmill/math/matrices/linalg.go
+MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/linalg.scm
+
+
+# (sortsmill math matrices mpqmat)
+
+DIST_SCM_FILES += sortsmill/math/matrices/mpqmat.scm
+GO_FILES += sortsmill/math/matrices/mpqmat.go
+MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/mpqmat.scm
+
+sortsmill/math/matrices/mpqmat.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
+#--------------------------------------------------------------------------
 
 # (sortsmill math polyspline)
 

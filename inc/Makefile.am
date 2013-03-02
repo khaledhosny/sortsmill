@@ -31,14 +31,35 @@ include $(top_srcdir)/mk/layout.am
 
 EXTRA_DIST = sortsmill/.dir-locals.el
 
-noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
-	null_passthru.h xunistring.h chardata.h gdraw.h gfile.h ggadget.h	\
-	gimage.h gio.h gkeysym.h gprogress.h gresedit.h gresource.h			\
-	gwidget.h ustring.h utype.h annotations_base.h ffthread.h			\
-	precomputed_polyspline_data.h contour_interface.h moveto_funcs.h	\
-	invoke_funcs.h
-
+noinst_HEADERS = 
 nobase_include_HEADERS = 
+
+noinst_HEADERS += config.h
+noinst_HEADERS += config-extra.h
+noinst_HEADERS += intl.h
+noinst_HEADERS += basics.h
+noinst_HEADERS += gmpy.h
+noinst_HEADERS += null_passthru.h
+noinst_HEADERS += xunistring.h
+noinst_HEADERS += chardata.h
+noinst_HEADERS += gdraw.h
+noinst_HEADERS += gfile.h
+noinst_HEADERS += ggadget.h
+noinst_HEADERS += gimage.h
+noinst_HEADERS += gio.h
+noinst_HEADERS += gkeysym.h
+noinst_HEADERS += gprogress.h
+noinst_HEADERS += gresedit.h
+noinst_HEADERS += gresource.h
+noinst_HEADERS += gwidget.h
+noinst_HEADERS += ustring.h
+noinst_HEADERS += utype.h
+noinst_HEADERS += annotations_base.h
+noinst_HEADERS += ffthread.h
+noinst_HEADERS += precomputed_polyspline_data.h
+noinst_HEADERS += contour_interface.h
+noinst_HEADERS += moveto_funcs.h
+noinst_HEADERS += invoke_funcs.h
 
 # C entry point for Sorts Mill Editor.
 nobase_include_HEADERS += sortsmill/fontforge_main.h
@@ -53,12 +74,17 @@ nobase_include_HEADERS += sortsmill/c_version.h
 nobase_include_HEADERS += sortsmill/attributes.h
 
 # Allocation.
-nobase_include_HEADERS += sortsmill/null_passthru.h					\
-	sortsmill/xdie_on_null.h sortsmill/xgc.h sortsmill/x_alloc.h
+nobase_include_HEADERS += sortsmill/null_passthru.h
+nobase_include_HEADERS += sortsmill/xdie_on_null.h
+nobase_include_HEADERS += sortsmill/xgc.h
+nobase_include_HEADERS += sortsmill/x_alloc.h
 
 # Extensions to GNU libunistring.
-nobase_include_HEADERS += sortsmill/xunicase.h sortsmill/xuniconv.h	\
-	sortsmill/xuninorm.h sortsmill/xunistr.h sortsmill/xunistring.h
+nobase_include_HEADERS += sortsmill/xunicase.h
+nobase_include_HEADERS += sortsmill/xuniconv.h
+nobase_include_HEADERS += sortsmill/xuninorm.h
+nobase_include_HEADERS += sortsmill/xunistr.h
+nobase_include_HEADERS += sortsmill/xunistring.h
 
 # Parsing of PostScript-style numerals.
 nobase_include_HEADERS += sortsmill/ps_number.h
@@ -70,12 +96,13 @@ nobase_include_HEADERS += sortsmill/rexp.h
 nobase_include_HEADERS += sortsmill/gmp_constants.h
 
 # GSL-like matrix operations for GNU MP and Guile numbers.
-nobase_include_HEADERS += sortsmill/transmatrix.h	\
-	sortsmill/gmp_matrix.h sortsmill/scm_matrix.h
+nobase_include_HEADERS += sortsmill/transmatrix.h
+nobase_include_HEADERS += sortsmill/gmp_matrix.h
+nobase_include_HEADERS += sortsmill/scm_matrix.h
 
 # Brent’s method for root-finding.
-nobase_include_HEADERS += sortsmill/brentroot.h	\
-	sortsmill/qbrentroot.h
+nobase_include_HEADERS += sortsmill/brentroot.h
+nobase_include_HEADERS += sortsmill/qbrentroot.h
 
 # Polynomial splines.
 nobase_include_HEADERS += sortsmill/polyspline.h
@@ -88,32 +115,44 @@ nobase_include_HEADERS += sortsmill/guile/notices.h
 
 nobase_include_HEADERS += sortsmill/guile.h
 
-nobase_include_HEADERS += sortsmill/guile/iconv.h				\
-	sortsmill/guile/contours.h sortsmill/guile/arrays.h			\
-	sortsmill/guile/rnrs_conditions.h sortsmill/guile/format.h
+nobase_include_HEADERS += sortsmill/guile/iconv.h
+nobase_include_HEADERS += sortsmill/guile/contours.h
+nobase_include_HEADERS += sortsmill/guile/arrays.h
+nobase_include_HEADERS += sortsmill/guile/rnrs_conditions.h
+nobase_include_HEADERS += sortsmill/guile/format.h
 
-nobase_include_HEADERS += sortsmill/guile/editor.h	\
-	sortsmill/guile/editor/main_loop.h
+nobase_include_HEADERS += sortsmill/guile/editor.h
+nobase_include_HEADERS += sortsmill/guile/editor/main_loop.h
 
-nobase_include_HEADERS += sortsmill/guile/math.h						\
-	sortsmill/guile/math/brentroot.h sortsmill/guile/math/gmp.h			\
-	sortsmill/guile/math/matrices.h sortsmill/guile/math/polyspline.h	\
-	sortsmill/guile/math/gsl.h sortsmill/guile/math/gsl/error.h			\
-	sortsmill/guile/math/gsl/matrices.h									\
-	sortsmill/guile/math/gsl/permutations.h
+nobase_include_HEADERS += sortsmill/guile/math.h
+nobase_include_HEADERS += sortsmill/guile/math/brentroot.h
+nobase_include_HEADERS += sortsmill/guile/math/gmp.h
+nobase_include_HEADERS += sortsmill/guile/math/matrices.h
+nobase_include_HEADERS += sortsmill/guile/math/matrices/mpqmat.h
+nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
+nobase_include_HEADERS += sortsmill/guile/math/gsl.h
+nobase_include_HEADERS += sortsmill/guile/math/gsl/error.h
+nobase_include_HEADERS += sortsmill/guile/math/gsl/matrices.h
+nobase_include_HEADERS += sortsmill/guile/math/gsl/permutations.h
 
 if HAVE_PURE_API
 nobase_include_HEADERS += sortsmill/guile/pure.h
 endif HAVE_PURE_API
 
 if HAVE_PYTHON_API
-nobase_include_HEADERS += sortsmill/__init__.pxd						\
-	sortsmill/cython/__init__.pxd sortsmill/cython/const_pointers.pxd	\
-	sortsmill/cython/brentroot.pxd sortsmill/cython/gmpy.pxi			\
-	sortsmill/cython/guile.pxd sortsmill/cython/linalg.pxd				\
-	sortsmill/cython/splinefont.pxd sortsmill/cython/xgc.pxd			\
-	sortsmill/cython/config.pxi sortsmill/cython/gmpy.pxd				\
-	sortsmill/cython/gsl.pxd sortsmill/cython/polyspline.pxd
+nobase_include_HEADERS += sortsmill/__init__.pxd
+nobase_include_HEADERS += sortsmill/cython/__init__.pxd
+nobase_include_HEADERS += sortsmill/cython/const_pointers.pxd
+nobase_include_HEADERS += sortsmill/cython/brentroot.pxd
+nobase_include_HEADERS += sortsmill/cython/gmpy.pxi
+nobase_include_HEADERS += sortsmill/cython/guile.pxd
+nobase_include_HEADERS += sortsmill/cython/linalg.pxd
+nobase_include_HEADERS += sortsmill/cython/splinefont.pxd
+nobase_include_HEADERS += sortsmill/cython/xgc.pxd
+nobase_include_HEADERS += sortsmill/cython/config.pxi
+nobase_include_HEADERS += sortsmill/cython/gmpy.pxd
+nobase_include_HEADERS += sortsmill/cython/gsl.pxd
+nobase_include_HEADERS += sortsmill/cython/polyspline.pxd
 nobase_include_HEADERS += sortsmill/guile/python.h
 endif HAVE_PYTHON_API
 

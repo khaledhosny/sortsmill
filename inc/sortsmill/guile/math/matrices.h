@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2013 Barry Schwartz
+ * Copyright (C) 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,36 +18,6 @@
 #ifndef _SORTSMILL_GUILE_MATH_MATRICES_H
 #define _SORTSMILL_GUILE_MATH_MATRICES_H
 
-#include <libguile.h>
-#include <stdbool.h>
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-#if 0
-}
-#endif
-
-typedef struct
-{
-  unsigned int size1;
-  unsigned int size2;
-  mpq_t *data;
-} mpqmat_t;
-
-SCM scm_mpqmat_p (SCM obj);
-bool scm_is_mpqmat (SCM obj);
-SCM scm_pointer_to_mpqmat (SCM pointer);
-SCM scm_mpqmat_to_pointer (SCM mpqmat);
-SCM scm_matrix_to_mpqmat (SCM A);
-SCM scm_mpqmat_to_matrix (SCM mpqmat);
-  
-#if 0
-{
-#endif
-#ifdef __cplusplus
-}
-#endif
+#include <sortsmill/guile/math/matrices/mpqmat.h>
 
 #endif /* _SORTSMILL_GUILE_MATH_MATRICES_H */

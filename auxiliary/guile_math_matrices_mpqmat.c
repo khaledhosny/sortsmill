@@ -1,6 +1,6 @@
 #include <config.h>
 
-// Copyright (C) 2012, 2013 Barry Schwartz
+// Copyright (C) 2013 Barry Schwartz
 // 
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #include <sortsmill/guile.h>
 #include <sortsmill/gmp_matrix.h>
 
-void init_guile_sortsmill_math_matrices (void);
+void init_guile_sortsmill_math_matrices_mpqmat (void);
 
 static void
 mpqmat_finalizer (void *p)
@@ -34,7 +34,7 @@ mpqmat_finalizer (void *p)
 VISIBLE SCM
 scm_mpqmat_p (SCM obj)
 {
-  return scm_call_1 (scm_c_private_ref ("sortsmill math matrices",
+  return scm_call_1 (scm_c_private_ref ("sortsmill math matrices mpqmat",
                                         "private:mpqmat?"),
                      obj);
 }
@@ -48,7 +48,7 @@ scm_is_mpqmat (SCM obj)
 VISIBLE SCM
 scm_pointer_to_mpqmat (SCM pointer)
 {
-  return scm_call_1 (scm_c_private_ref ("sortsmill math matrices",
+  return scm_call_1 (scm_c_private_ref ("sortsmill math matrices mpqmat",
                                         "private:pointer->mpqmat"),
                      pointer);
 }
@@ -56,7 +56,7 @@ scm_pointer_to_mpqmat (SCM pointer)
 VISIBLE SCM
 scm_mpqmat_to_pointer (SCM mpqmat)
 {
-  return scm_call_1 (scm_c_private_ref ("sortsmill math matrices",
+  return scm_call_1 (scm_c_private_ref ("sortsmill math matrices mpqmat",
                                         "private:mpqmat->pointer"),
                      mpqmat);
 }
@@ -103,7 +103,7 @@ scm_mpqmat_to_matrix (SCM mpqmat)
 }
 
 VISIBLE void
-init_guile_sortsmill_math_matrices (void)
+init_guile_sortsmill_math_matrices_mpqmat (void)
 {
   scm_c_define_gsubr ("matrix->mpqmat", 1, 0, 0, scm_matrix_to_mpqmat);
   scm_c_define_gsubr ("mpqmat->matrix", 1, 0, 0, scm_mpqmat_to_matrix);

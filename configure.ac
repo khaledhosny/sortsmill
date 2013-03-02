@@ -517,6 +517,7 @@ AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
 
 AC_CONFIG_COMMANDS([guile/sortsmill/math],[AS_MKDIR_P([guile/sortsmill/math])])
 AC_CONFIG_COMMANDS([guile/sortsmill/math/gsl],[AS_MKDIR_P([guile/sortsmill/math/gsl])])
+AC_CONFIG_COMMANDS([guile/sortsmill/math/matrices],[AS_MKDIR_P([guile/sortsmill/math/matrices])])
 AC_CONFIG_COMMANDS([guile/sortsmill/pkg-info],[AS_MKDIR_P([guile/sortsmill/pkg-info])])
 AC_CONFIG_COMMANDS([guile/sortsmill/strings],[AS_MKDIR_P([guile/sortsmill/strings])])
 AC_CONFIG_FILES([guile/sortsmill/machine.scm])
