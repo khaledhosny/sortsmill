@@ -1,4 +1,4 @@
-#include <config.h> // -*- coding: utf-8 -*- (contains mathematical comments)
+#include <config.h>             // -*- coding: utf-8 -*- (contains mathematical comments)
 
 // Copyright (C) 2000-2012 by George Williams */
 //
@@ -40,11 +40,12 @@
 // is that we are using the monomial basis at all in floating point.
 
 void
-SplineRefigure3 (Spline * spline)
+SplineRefigure3 (Spline *spline)
 {
   SplinePoint *from = spline->from;
   SplinePoint *to = spline->to;
-  Spline1D *xsp = &spline->splines[0], *ysp = &spline->splines[1];
+  Spline1D *xsp = &spline->splines[0];
+  Spline1D *ysp = &spline->splines[1];
   Spline old;
 
   spline->isquadratic = false;
@@ -109,6 +110,9 @@ SplineRefigure3 (Spline * spline)
       // the t = 1 endpoint can be way off, even if a, b, and c are
       // only slightly perturbed.
       //
+      // The transformation between the two bases also is ill
+      // conditioned.
+      //
       // See also http://en.wikipedia.org/wiki/Bernstein_polynomial
       //
       xsp->c = 3 * (from->nextcp.x - from->me.x);
@@ -145,7 +149,7 @@ SplineRefigure3 (Spline * spline)
             spline->islinear = true;    // This seems extremely unlikely...
           else
             spline->isquadratic = true; // Only likely if we read in a
-                                        // TTF.
+          // TTF.
         }
     }
   if (!finite (ysp->a) || !finite (xsp->a) || !finite (ysp->c)
