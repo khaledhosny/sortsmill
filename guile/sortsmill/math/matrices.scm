@@ -25,6 +25,7 @@
 
           matrix-shape
           matrix-dimensions
+          square-matrix?
           conformable-for*?
           conformable-for+?
 
@@ -137,14 +138,23 @@
           f64matrix-pinv
 
           ;; These use different algorithms depending on what kinds of
-          ;; matrix it sees. Currently it supports only matrices A of
-          ;; full rank.
+          ;; matrix it sees. Currently it fully supports only matrices
+          ;; A that are square and have fully rank. (In floating point
+          ;; you might get infinities and NaNs rather than exceptions,
+          ;; if the effective rank is less than full. At the moment,
+          ;; this is considered a feature.)
           ;;
           ;; The present implementation uses the current SVD algorithm
           ;; (and returns an f64matrix) if all the matrix entries are
           ;; inexact and real; otherwise an LU decomposition is used.
           matrix-solve:AX=B
           matrix-solve:XA=B
+
+          ;; Inverse of a full rank square matrix. (In floating point
+          ;; you might get infinities and NaNs rather than exceptions,
+          ;; if the effective rank is less than full. At the moment,
+          ;; this is considered a feature.)
+          inv
           )
 
   (import (sortsmill math gsl matrices)
@@ -295,6 +305,9 @@
 
   (define (matrix-dimensions A)
     (map cadr (matrix-shape (one-based A))))
+
+  (define (square-matrix? A)
+    (apply eqv? (matrix-dimensions A)))
 
   (define (conformable-for*? A B)
     (let ([nk (matrix-dimensions A)]
@@ -750,17 +763,18 @@ effective rank of A."
 
   ;;-----------------------------------------------------------------------
 
-  (define/kwargs (exact-matrix-solve:AX=B A B)
+  (define (exact-matrix-solve:AX=B A B)
     (call-with-values (lambda () (gsl:lu-decomposition-mpq-fast-pivot A))
       (lambda (LU permutation signum)
         (gsl:lu-solve-mpq LU permutation B))))
 
-  (define/kwargs (number-matrix-solve:AX=B A B)
+  (define (number-matrix-solve:AX=B A B)
     (call-with-values (lambda () (gsl:lu-decomposition-scm A))
       (lambda (LU permutation signum)
         (gsl:lu-solve-scm LU permutation B))))
 
   (define/kwargs (matrix-solve:AX=B A B)
+    (assert (square-matrix? A))
     (let ([type-A (array-type A)]
           [type-B (array-type B)])
       (cond
@@ -781,6 +795,34 @@ effective rank of A."
   (define/kwargs (matrix-solve:XA=B A B)
     (matrix-transpose (matrix-solve:AX=B (matrix-transpose A)
                                          (matrix-transpose B))))
+
+  ;;-----------------------------------------------------------------------
+
+  (define (exact-matrix-invert A)
+    (call-with-values (lambda () (gsl:lu-decomposition-mpq-fast-pivot A))
+      (lambda (LU permutation signum)
+        (gsl:lu-invert-mpq LU permutation))))
+
+  (define (number-matrix-invert A)
+    (call-with-values (lambda () (gsl:lu-decomposition-scm A))
+      (lambda (LU permutation signum)
+        (gsl:lu-invert-scm LU permutation))))
+
+  (define/kwargs (inv A)
+    (assert (square-matrix? A))
+    (let ([type-A (array-type A)])
+      (cond
+       [(eq? type-A 'f64)
+        (let-values ([(X effective-rank)
+                      (f64matrix-pinv A #:full-rank? #t)])
+          X)]
+       [(exact-array? A) (exact-matrix-invert A)]
+       [(inexact-real-array? A)
+        (let-values ([(X effective-rank)
+                      (f64matrix-pinv (matrix->f64matrix A)
+                                      #:full-rank? #t)])
+          X)]
+       [else (number-matrix-invert A)] )))
 
   ;;-----------------------------------------------------------------------
 
