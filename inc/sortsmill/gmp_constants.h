@@ -61,6 +61,12 @@ _FF_GMP_CONSTANT_DECL (mpq, mpq_two);
 _FF_GMP_CONSTANT_DECL (mpq, mpq_neg_two);
 _FF_GMP_CONSTANT_DECL (mpq, mpq_three);
 _FF_GMP_CONSTANT_DECL (mpq, mpq_neg_three);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_four);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_neg_four);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_five);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_neg_five);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_six);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_neg_six);
 
 #if 0
 {

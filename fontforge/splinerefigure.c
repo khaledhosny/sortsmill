@@ -30,6 +30,69 @@
 #include <stdio.h>
 #include <math.h>
 #include "splinefont.h"
+#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/gmp_constants.h>
+#include <sortsmill/polyspline.h>
+
+static void
+bernstein_to_monomial (const double b[4], double m[4])
+{
+  mpq_t q[4];
+  mpq_vector_init (4, q);
+
+  mpq_t x[4];
+  mpq_vector_init (4, x);
+
+  mpq_t y[4];
+  mpq_vector_init (4, y);
+
+  for (int i = 0; i < 4; i++)
+    mpq_set_d (q[i], b[i]);
+
+  // Multiply
+  //
+  //                  (1 -3  3 -1)
+  //   (q0 q1 q2 q3)  (0  3 -6  3) = (d c b a)
+  //                  (0  0  3 -3)
+  //                  (0  0  0  1)
+  //
+  // The rows of the square matrix are the coefficients of 1, t, t²,
+  // t³ in terms of the bernstein polynomials of degree 3.
+
+  mpq_set (x[0], mpq_one ());
+  mpq_set (x[1], mpq_neg_three ());
+  mpq_set (x[2], mpq_three ());
+  mpq_set (x[3], mpq_neg_one ());
+  for (int i = 0; i < 4; i++)
+    mpq_mul (x[i], x[i], q[0]);
+
+  mpq_set (y[1], mpq_three ());
+  mpq_set (y[2], mpq_neg_six ());
+  mpq_set (y[3], mpq_three ());
+  for (int i = 1; i < 4; i++)
+    {
+      mpq_mul (y[i], y[i], q[1]);
+      mpq_add (x[i], x[i], y[i]);
+    }
+
+  mpq_set (y[2], mpq_three ());
+  mpq_set (y[3], mpq_neg_three ());
+  for (int i = 2; i < 4; i++)
+    {
+      mpq_mul (y[i], y[i], q[2]);
+      mpq_add (x[i], x[i], y[i]);
+    }
+
+  mpq_add (x[3], x[3], q[3]);
+
+  for (int i = 0; i < 4; i++)
+    m[i] = mpq_get_d (x[i]);
+
+  mpq_vector_clear (4, y);
+  mpq_vector_clear (4, x);
+  mpq_vector_clear (4, q);
+}
+
 
 // The slight errors introduced by the optimizer turn out to have
 // nasty side effects. An error on the order of 7e-8 in splines[1].b
@@ -116,12 +179,36 @@ SplineRefigure3 (Spline *spline)
       //
       // See also http://en.wikipedia.org/wiki/Bernstein_polynomial
       //
+
+#if 0 // The old code.
+
       xsp->c = 3 * (from->nextcp.x - from->me.x);
       ysp->c = 3 * (from->nextcp.y - from->me.y);
       xsp->b = 3 * (to->prevcp.x - from->nextcp.x) - xsp->c;
       ysp->b = 3 * (to->prevcp.y - from->nextcp.y) - ysp->c;
       xsp->a = to->me.x - from->me.x - xsp->c - xsp->b;
       ysp->a = to->me.y - from->me.y - ysp->c - ysp->b;
+
+#else // The new code. Please report if there are problems. (FIXME)
+
+      double bx[4] = { from->me.x, from->nextcp.x, to->prevcp.x, to->me.x };
+      double mx[4];
+      bernstein_to_monomial (bx, mx);
+
+      xsp->c = mx[1];
+      xsp->b = mx[2];
+      xsp->a = mx[3];
+
+      double by[4] = { from->me.y, from->nextcp.y, to->prevcp.y, to->me.y };
+      double my[4];
+      bernstein_to_monomial (by, my);
+
+      ysp->c = my[1];
+      ysp->b = my[2];
+      ysp->a = my[3];
+
+#endif
+
       if (RealNear (xsp->c, 0))
         xsp->c = 0;
       if (RealNear (ysp->c, 0))
