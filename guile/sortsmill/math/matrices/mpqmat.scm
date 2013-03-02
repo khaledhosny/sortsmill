@@ -23,7 +23,8 @@
           matrix->mpqmat
           mpqmat->matrix)
 
-  (import (sortsmill dynlink)
+  (import (sortsmill math matrices base)
+          (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
           (system foreign)
@@ -36,7 +37,7 @@
     mpqmat? pointer->mpqmat mpqmat->pointer
     (lambda (matrix port)
       (format port "#<mpqmat ~s 0x~x>"
-              (mpqmat->matrix matrix)
+              (zero-based (mpqmat->matrix matrix))
               (pointer-address (mpqmat->pointer matrix)))))
 
   (define (private:mpqmat? mpqmat)
