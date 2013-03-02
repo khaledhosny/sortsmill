@@ -86,6 +86,7 @@
           (rnrs)
           (except (guile) error)
           (only (srfi :1) take)
+          (only (srfi :4) f64vector-length)
           (ice-9 match))
 
 

@@ -46,11 +46,13 @@
           matrix-
           )
 
-  (import (sortsmill math gsl matrices)
+  (import (sortsmill math matrices base)
+          (sortsmill math gsl matrices)
           (sortsmill arrays)
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
+          (only (srfi :1) reduce)
           (ice-9 match))
 
   ;;-----------------------------------------------------------------------

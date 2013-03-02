@@ -16,11 +16,6 @@
 
 #--------------------------------------------------------------------------
 
-# Borrowed from am/guilec of the Guile sources.
-AM_V_GUILEC = $(AM_V_GUILEC_$(V))
-AM_V_GUILEC_ = $(AM_V_GUILEC_$(AM_DEFAULT_VERBOSITY))
-AM_V_GUILEC_0 = @echo "  GUILEC" $@;
-
 ENV_GUILE_LOAD_PATH := $(shell echo $(ECHO_N) "$${GUILE_LOAD_PATH}$(ECHO_C)")
 ENV_GUILE_LOAD_COMPILED_PATH := $(shell echo $(ECHO_N) "$${GUILE_LOAD_COMPILED_PATH}$(ECHO_C)")
 ENV_LTDL_LIBRARY_PATH := $(shell echo $(ECHO_N) "$${LTDL_LIBRARY_PATH}$(ECHO_C)")
@@ -50,12 +45,17 @@ GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch	\
 GUILE_COMPILE = $(GUILE_ENV) $(GUILE_TOOLS) compile $(GUILE_WARNINGS)	\
 	$(GUILE_FLAGS)
 
+# Borrowed from am/guilec of the Guile sources.
+AM_V_GUILEC = $(AM_V_GUILEC_$(V))
+AM_V_GUILEC_ = $(AM_V_GUILEC_$(AM_DEFAULT_VERBOSITY))
+AM_V_GUILEC_0 = @echo "  GUILEC" $@;
+
 %.go: %.scm
 	$(AM_V_GUILEC)$(GUILE_COMPILE) $< -o $@
 
-%.scm: %.scm.in
-	$(AM_V_GEN)
-	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
+#%.scm: %.scm.in
+#	$(AM_V_GEN)
+#	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@-tmp
+#	$(AM_V_at)mv $@-tmp $@
 
 #--------------------------------------------------------------------------
