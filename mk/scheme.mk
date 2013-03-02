@@ -108,12 +108,18 @@ AM_V_IN_TO_SCM_ = $(AM_V_IN_TO_SCM_$(AM_DEFAULT_VERBOSITY))
 AM_V_IN_TO_SCM_0 = @echo "  IN->SCM" $@;
 
 %.scm: %.scm.in
-	$(AM_V_IN_TO_SCM)set -e; $(CONFIGURE_SCHEME) < $< > $@-tmp && mv $@-tmp $@
+	$(AM_V_IN_TO_SCM)
+	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
 #--------------------------------------------------------------------------
 #
 # Automatic generation of reëxporters for heirarchical R⁶RS-style
 # libraries.
+
+AM_V_REEXPORT = $(AM_V_REEXPORT_$(V))
+AM_V_REEXPORT_ = $(AM_V_REEXPORT_$(AM_DEFAULT_VERBOSITY))
+AM_V_REEXPORT_0 = @echo "  REEXPORT" $@;
 
 generate_reexporter = $(GUILE_INTERPRET) $(top_srcdir)/guile/generate-reexporter.scm '$1' '$2' '$3'
 

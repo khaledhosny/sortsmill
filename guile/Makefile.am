@@ -165,7 +165,7 @@ GO_FILES += sortsmill.go
 SORTSMILL_REEXPORTED_SCM_FILES = 
 
 sortsmill.scm: $(SORTSMILL_REEXPORTED_SCM_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -250,7 +250,7 @@ EDITOR_REEXPORTED_SCM_FILES =
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/editor.scm
 
 sortsmill/editor.scm: $(EDITOR_REEXPORTED_SCM_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill editor), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -376,7 +376,7 @@ MATH_REEXPORTED_SCM_FILES =
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/math.scm
 
 sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -405,7 +405,7 @@ MATH_REEXPORTED_SCM_FILES += sortsmill/math/gsl.scm
 MATH_GSL_REEXPORTED_SCM_FILES =
 
 sortsmill/math/gsl.scm: $(MATH_GSL_REEXPORTED_SCM_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math gsl), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -452,7 +452,7 @@ MATH_REEXPORTED_SCM_FILES += sortsmill/math/matrices.scm
 MATH_MATRICES_REEXPORTED_SCM_FILES =
 
 sortsmill/math/matrices.scm: $(MATH_MATRICES_REEXPORTED_SCM_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math matrices), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -534,7 +534,7 @@ PKG_INFO_REEXPORTED_SCM_FILES =
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/pkg-info.scm
 
 sortsmill/pkg-info.scm: $(PKG_INFO_REEXPORTED_SCM_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill pkg-info), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -641,7 +641,7 @@ STRINGS_REEXPORTED_SCM_FILES =
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/strings.scm
 
 sortsmill/strings.scm: $(STRINGS_REEXPORTED_SCM_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill strings), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -739,7 +739,7 @@ sortsmill/fontforge-api.scm:											\
 		$(top_builddir)/fontforge/fontforge.types.apii					\
 		$(srcdir)/generate-guile-api.scm								\
 		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill fontforge-api)' $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
@@ -747,7 +747,7 @@ sortsmill/fontforge-api.scm:											\
 sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii			\
 		$(srcdir)/generate-guile-api.scm								\
 		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill gdraw-api)' $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
@@ -783,7 +783,7 @@ libguile_sortsmill_symbols.c:										\
 	sortsmill/strings/hash-guillemet.scm
 
 libguile_sortsmill_symbols.c: $(SCM_SYMBOL_FILES)
-	$(AM_V_GEN)
+	$(AM_V_REEXPORT)
 	$(AM_V_at)$(GUILE_INTERPRET)										\
 		$(srcdir)/generate-libguile-sortsmill_symbols.scm $^ > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
