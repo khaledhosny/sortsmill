@@ -105,7 +105,7 @@ CONFIGURE_SCHEME =														\
 
 AM_V_IN_TO_SCM = $(AM_V_IN_TO_SCM_$(V))
 AM_V_IN_TO_SCM_ = $(AM_V_IN_TO_SCM_$(AM_DEFAULT_VERBOSITY))
-AM_V_IN_TO_SCM_0 = @echo "  .in->SCM" $@;
+AM_V_IN_TO_SCM_0 = @echo "  IN->SCM" $@;
 
 %.scm: %.scm.in
 	$(AM_V_IN_TO_SCM)set -e; $(CONFIGURE_SCHEME) < $< > $@-tmp && mv $@-tmp $@
