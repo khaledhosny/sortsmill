@@ -33,6 +33,10 @@ extern "C"
 }
 #endif
 
+void assert_rank_1_or_2_array (SCM who, SCM array);
+void assert_c_rank_1_or_2_array (const char *who, SCM array,
+                                 scm_t_array_handle *handlep);
+
 gsl_vector_const_view scm_gsl_vector_const_view_array_handle (SCM array,
                                                               scm_t_array_handle
                                                               *handlep);
@@ -99,6 +103,9 @@ void scm_array_handle_to_scm_vector (SCM array, scm_t_array_handle *handlep,
 SCM scm_from_mpz_vector (unsigned int n, mpz_t v[n]);
 SCM scm_from_mpq_vector (unsigned int n, mpq_t v[n]);
 SCM scm_from_scm_vector (unsigned int n, SCM v[n]);
+
+size_t scm_matrix_dim1 (scm_t_array_handle *handlep);
+size_t scm_matrix_dim2 (scm_t_array_handle *handlep);
 
 SCM scm_gsl_matrix_scale (SCM A, SCM x);
 SCM scm_gsl_mpz_matrix_scale (SCM A, SCM x);

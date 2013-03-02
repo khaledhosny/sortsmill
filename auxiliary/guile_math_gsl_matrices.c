@@ -419,14 +419,14 @@ scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index)
   return result;
 }
 
-static void
+VISIBLE void
 assert_rank_1_or_2_array (SCM who, SCM array)
 {
   scm_call_2 (scm_c_private_ref ("sortsmill math gsl matrices",
                                  "assert-rank-1-or-2-array"), who, array);
 }
 
-static void
+VISIBLE void
 assert_c_rank_1_or_2_array (const char *who, SCM array,
                             scm_t_array_handle *handlep)
 {
@@ -509,7 +509,7 @@ scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #define _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX(NAME, TYPE, SCM_TO_TYPE, \
-                                              PICK)                     \
+                                               PICK)                    \
   void                                                                  \
   NAME (scm_t_array_handle *handlep,                                    \
         unsigned int m, unsigned int n,                                 \
@@ -537,24 +537,24 @@ scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
   }
 
 static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
-  (scm_array_handle_nonuniform_to_mpz_matrix, mpz_t, scm_to_mpz, _PICK1);
+(scm_array_handle_nonuniform_to_mpz_matrix, mpz_t, scm_to_mpz, _PICK1);
 
 static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
-  (scm_array_handle_nonuniform_to_mpq_matrix, mpq_t, scm_to_mpq, _PICK1);
+(scm_array_handle_nonuniform_to_mpq_matrix, mpq_t, scm_to_mpq, _PICK1);
 
 static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
-  (scm_array_handle_nonuniform_to_scm_matrix, SCM, _ASSIGN, _PICK1);
+(scm_array_handle_nonuniform_to_scm_matrix, SCM, _ASSIGN, _PICK1);
 
 static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
-  (scm_array_handle_nonuniform_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
-   _PICK2);
+(scm_array_handle_nonuniform_to_transposed_mpz_matrix, mpz_t, scm_to_mpz,
+ _PICK2);
 
 static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
-  (scm_array_handle_nonuniform_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
-   _PICK2);
+(scm_array_handle_nonuniform_to_transposed_mpq_matrix, mpq_t, scm_to_mpq,
+ _PICK2);
 
 static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
-  (scm_array_handle_nonuniform_to_transposed_scm_matrix, SCM, _ASSIGN, _PICK2);
+(scm_array_handle_nonuniform_to_transposed_scm_matrix, SCM, _ASSIGN, _PICK2);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -738,10 +738,10 @@ static _scm_to_mpz_matrix_func_t *scm_to_mpz_matrix_func[14] = {
 };
 
 static _scm_to_transposed_mpz_matrix_func_t
-  * scm_to_transposed_mpz_matrix_func[14] = {
+* scm_to_transposed_mpz_matrix_func[14] = {
   [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_transposed_mpz_matrix,
   [_FF_INDEX_ARRAY_NONUNIFORM] =
-    scm_array_handle_nonuniform_to_transposed_mpz_matrix,
+  scm_array_handle_nonuniform_to_transposed_mpz_matrix,
   [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_transposed_mpz_matrix,
   [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_transposed_mpz_matrix,
   [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_transposed_mpz_matrix,
@@ -774,10 +774,10 @@ static _scm_to_mpq_matrix_func_t *scm_to_mpq_matrix_func[14] = {
 };
 
 static _scm_to_transposed_mpq_matrix_func_t
-  * scm_to_transposed_mpq_matrix_func[14] = {
+* scm_to_transposed_mpq_matrix_func[14] = {
   [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_transposed_mpq_matrix,
   [_FF_INDEX_ARRAY_NONUNIFORM] =
-    scm_array_handle_nonuniform_to_transposed_mpq_matrix,
+  scm_array_handle_nonuniform_to_transposed_mpq_matrix,
   [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_transposed_mpq_matrix,
   [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_transposed_mpq_matrix,
   [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_transposed_mpq_matrix,
@@ -810,10 +810,10 @@ static _scm_to_scm_matrix_func_t *scm_to_scm_matrix_func[14] = {
 };
 
 static _scm_to_transposed_scm_matrix_func_t
-  * scm_to_transposed_scm_matrix_func[14] = {
+* scm_to_transposed_scm_matrix_func[14] = {
   [_FF_INDEX_NOT_AN_ARRAY] = scm_array_handle_illegal_to_transposed_scm_matrix,
   [_FF_INDEX_ARRAY_NONUNIFORM] =
-    scm_array_handle_nonuniform_to_transposed_scm_matrix,
+  scm_array_handle_nonuniform_to_transposed_scm_matrix,
   [_FF_INDEX_ARRAY_U8] = scm_array_handle_u8_to_transposed_scm_matrix,
   [_FF_INDEX_ARRAY_S8] = scm_array_handle_s8_to_transposed_scm_matrix,
   [_FF_INDEX_ARRAY_U16] = scm_array_handle_u16_to_transposed_scm_matrix,
@@ -1098,16 +1098,16 @@ transposed_size (CBLAS_TRANSPOSE_t trans, size_t size1, size_t size2)
   return (trans == CblasNoTrans) ? size1 : size2;
 }
 
-static size_t
-matrix_dim1 (scm_t_array_handle *handlep)
+VISIBLE size_t
+scm_matrix_dim1 (scm_t_array_handle *handlep)
 {
   const size_t rank = scm_array_handle_rank (handlep);
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
   return (rank == 1) ? 1 : dims[0].ubnd - dims[0].lbnd + 1;
 }
 
-static size_t
-matrix_dim2 (scm_t_array_handle *handlep)
+VISIBLE size_t
+scm_matrix_dim2 (scm_t_array_handle *handlep)
 {
   const size_t rank = scm_array_handle_rank (handlep);
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
@@ -1122,8 +1122,8 @@ matrix_dim2 (scm_t_array_handle *handlep)
 static size_t
 vector_dim (SCM array, scm_t_array_handle *handlep)
 {
-  size_t dim1 = matrix_dim1 (handlep);
-  size_t dim2 = matrix_dim2 (handlep);
+  size_t dim1 = scm_matrix_dim1 (handlep);
+  size_t dim2 = scm_matrix_dim2 (handlep);
 
   size_t dim;
   if (dim1 == 1)
@@ -1405,8 +1405,8 @@ scm_gsl_mpz_matrix_scale (SCM A, SCM x)
   scm_dynwind_array_handle_release (&handle_A);
   assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
 
-  const size_t m = matrix_dim1 (&handle_A);
-  const size_t n = matrix_dim2 (&handle_A);
+  const size_t m = scm_matrix_dim1 (&handle_A);
+  const size_t n = scm_matrix_dim2 (&handle_A);
 
   mpz_t _A[m][n];
   mpz_matrix_init (m, n, _A);
@@ -1440,8 +1440,8 @@ scm_gsl_mpq_matrix_scale (SCM A, SCM x)
   scm_dynwind_array_handle_release (&handle_A);
   assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
 
-  const size_t m = matrix_dim1 (&handle_A);
-  const size_t n = matrix_dim2 (&handle_A);
+  const size_t m = scm_matrix_dim1 (&handle_A);
+  const size_t n = scm_matrix_dim2 (&handle_A);
 
   mpq_t _A[m][n];
   mpq_matrix_init (m, n, _A);
@@ -1475,8 +1475,8 @@ scm_gsl_scm_matrix_scale (SCM A, SCM x)
   scm_dynwind_array_handle_release (&handle_A);
   assert_c_rank_1_or_2_array (who, A, &handle_A);
 
-  const size_t m = matrix_dim1 (&handle_A);
-  const size_t n = matrix_dim2 (&handle_A);
+  const size_t m = scm_matrix_dim1 (&handle_A);
+  const size_t n = scm_matrix_dim2 (&handle_A);
 
   SCM _A[m][n];
   scm_array_handle_to_scm_matrix (A, &handle_A, m, n, _A);
@@ -1623,13 +1623,13 @@ scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   scm_dynwind_array_handle_release (&handle_B);
   assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
 
-  const size_t dim1_A = matrix_dim1 (&handle_A);
-  const size_t dim2_A = matrix_dim2 (&handle_A);
+  const size_t dim1_A = scm_matrix_dim1 (&handle_A);
+  const size_t dim2_A = scm_matrix_dim2 (&handle_A);
   const size_t m_A = transposed_size (_TransA, dim1_A, dim2_A);
   const size_t k_A = transposed_size (_TransA, dim2_A, dim1_A);
 
-  const size_t dim1_B = matrix_dim1 (&handle_B);
-  const size_t dim2_B = matrix_dim2 (&handle_B);
+  const size_t dim1_B = scm_matrix_dim1 (&handle_B);
+  const size_t dim2_B = scm_matrix_dim2 (&handle_B);
   const size_t k_B = transposed_size (_TransB, dim1_B, dim2_B);
   const size_t n_B = transposed_size (_TransB, dim2_B, dim1_B);
 
@@ -1656,8 +1656,8 @@ scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
       scm_dynwind_array_handle_release (&handle_C);
       assert_c_exact_rank_1_or_2_array (who, C, &handle_C);
 
-      m_C = matrix_dim1 (&handle_C);
-      n_C = matrix_dim2 (&handle_C);
+      m_C = scm_matrix_dim1 (&handle_C);
+      n_C = scm_matrix_dim2 (&handle_C);
     }
 
   mpz_t _C[m_C][n_C];
@@ -1713,13 +1713,13 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   scm_dynwind_array_handle_release (&handle_B);
   assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
 
-  const size_t dim1_A = matrix_dim1 (&handle_A);
-  const size_t dim2_A = matrix_dim2 (&handle_A);
+  const size_t dim1_A = scm_matrix_dim1 (&handle_A);
+  const size_t dim2_A = scm_matrix_dim2 (&handle_A);
   const size_t m_A = transposed_size (_TransA, dim1_A, dim2_A);
   const size_t k_A = transposed_size (_TransA, dim2_A, dim1_A);
 
-  const size_t dim1_B = matrix_dim1 (&handle_B);
-  const size_t dim2_B = matrix_dim2 (&handle_B);
+  const size_t dim1_B = scm_matrix_dim1 (&handle_B);
+  const size_t dim2_B = scm_matrix_dim2 (&handle_B);
   const size_t k_B = transposed_size (_TransB, dim1_B, dim2_B);
   const size_t n_B = transposed_size (_TransB, dim2_B, dim1_B);
 
@@ -1746,8 +1746,8 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
       scm_dynwind_array_handle_release (&handle_C);
       assert_c_exact_rank_1_or_2_array (who, C, &handle_C);
 
-      m_C = matrix_dim1 (&handle_C);
-      n_C = matrix_dim2 (&handle_C);
+      m_C = scm_matrix_dim1 (&handle_C);
+      n_C = scm_matrix_dim2 (&handle_C);
     }
 
   mpq_t _C[m_C][n_C];
@@ -1793,13 +1793,13 @@ scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   scm_dynwind_array_handle_release (&handle_B);
   assert_c_rank_1_or_2_array (who, B, &handle_B);
 
-  const size_t dim1_A = matrix_dim1 (&handle_A);
-  const size_t dim2_A = matrix_dim2 (&handle_A);
+  const size_t dim1_A = scm_matrix_dim1 (&handle_A);
+  const size_t dim2_A = scm_matrix_dim2 (&handle_A);
   const size_t m_A = transposed_size (_TransA, dim1_A, dim2_A);
   const size_t k_A = transposed_size (_TransA, dim2_A, dim1_A);
 
-  const size_t dim1_B = matrix_dim1 (&handle_B);
-  const size_t dim2_B = matrix_dim2 (&handle_B);
+  const size_t dim1_B = scm_matrix_dim1 (&handle_B);
+  const size_t dim2_B = scm_matrix_dim2 (&handle_B);
   const size_t k_B = transposed_size (_TransB, dim1_B, dim2_B);
   const size_t n_B = transposed_size (_TransB, dim2_B, dim1_B);
 
@@ -1822,8 +1822,8 @@ scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
       scm_dynwind_array_handle_release (&handle_C);
       assert_c_rank_1_or_2_array (who, C, &handle_C);
 
-      m_C = matrix_dim1 (&handle_C);
-      n_C = matrix_dim2 (&handle_C);
+      m_C = scm_matrix_dim1 (&handle_C);
+      n_C = scm_matrix_dim2 (&handle_C);
     }
 
   SCM _C[m_C][n_C];
@@ -1957,11 +1957,11 @@ _FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP (div_elements, gsl_matrix_div_elements,
     scm_dynwind_array_handle_release (&handle_B);                       \
     assert_c_exact_rank_1_or_2_array (who, B, &handle_B);               \
                                                                         \
-    const size_t m_A = matrix_dim1 (&handle_A);                         \
-    const size_t n_A = matrix_dim2 (&handle_A);                         \
+    const size_t m_A = scm_matrix_dim1 (&handle_A);                     \
+    const size_t n_A = scm_matrix_dim2 (&handle_A);                     \
                                                                         \
-    const size_t m_B = matrix_dim1 (&handle_B);                         \
-    const size_t n_B = matrix_dim2 (&handle_B);                         \
+    const size_t m_B = scm_matrix_dim1 (&handle_B);                     \
+    const size_t n_B = scm_matrix_dim2 (&handle_B);                     \
                                                                         \
     assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
                                      A, B, m_A, n_A, m_B, n_B);         \
@@ -2028,11 +2028,11 @@ _FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (q, div_elements,
     scm_dynwind_array_handle_release (&handle_B);                       \
     assert_c_rank_1_or_2_array (who, B, &handle_B);                     \
                                                                         \
-    const size_t m_A = matrix_dim1 (&handle_A);                         \
-    const size_t n_A = matrix_dim2 (&handle_A);                         \
+    const size_t m_A = scm_matrix_dim1 (&handle_A);                     \
+    const size_t n_A = scm_matrix_dim2 (&handle_A);                     \
                                                                         \
-    const size_t m_B = matrix_dim1 (&handle_B);                         \
-    const size_t n_B = matrix_dim2 (&handle_B);                         \
+    const size_t m_B = scm_matrix_dim1 (&handle_B);                     \
+    const size_t n_B = scm_matrix_dim2 (&handle_B);                     \
                                                                         \
     assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
                                      A, B, m_A, n_A, m_B, n_B);         \
@@ -2050,7 +2050,7 @@ _FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (q, div_elements,
     scm_dynwind_end ();                                                 \
                                                                         \
     return result;                                                      \
-}
+  }
 
 _FF_SCM_SCM_MATRIX_ELEMENTWISE_BINARY_OP (add, scm_matrix_add,
                                           addition_non_conformable_message ());
@@ -2113,8 +2113,8 @@ _FF_SCM_GSL_SINGLE_MATRIX_PREDICATE (isnonneg, gsl_matrix_isnonneg);
     scm_dynwind_array_handle_release (&handle_A);                       \
     assert_c_exact_rank_1_or_2_array (who, A, &handle_A);               \
                                                                         \
-    const size_t m = matrix_dim1 (&handle_A);                           \
-    const size_t n = matrix_dim2 (&handle_A);                           \
+    const size_t m = scm_matrix_dim1 (&handle_A);                       \
+    const size_t n = scm_matrix_dim2 (&handle_A);                       \
                                                                         \
     mp##X##_t _A[m][n];                                                 \
     mp##X##_matrix_init (m, n, _A);                                     \
@@ -2158,8 +2158,8 @@ _FF_SCM_GMP_SINGLE_MATRIX_PREDICATE (q, isnonneg, mpq_matrix_isnonneg);
     scm_dynwind_array_handle_release (&handle_A);               \
     assert_c_exact_rank_1_or_2_array (who, A, &handle_A);       \
                                                                 \
-    const size_t m = matrix_dim1 (&handle_A);                   \
-    const size_t n = matrix_dim2 (&handle_A);                   \
+    const size_t m = scm_matrix_dim1 (&handle_A);               \
+    const size_t n = scm_matrix_dim2 (&handle_A);               \
                                                                 \
     SCM _A[m][n];                                               \
     scm_array_handle_to_scm_matrix (A, &handle_A, m, n, _A);    \
@@ -2251,11 +2251,11 @@ _FF_SCM_GSL_SAMESHAPE_MATRICES_PREDICATE (equal, gsl_matrix_equal,
     scm_dynwind_array_handle_release (&handle_B);                       \
     assert_c_exact_rank_1_or_2_array (who, B, &handle_B);               \
                                                                         \
-    const size_t m_A = matrix_dim1 (&handle_A);                         \
-    const size_t n_A = matrix_dim2 (&handle_A);                         \
+    const size_t m_A = scm_matrix_dim1 (&handle_A);                     \
+    const size_t n_A = scm_matrix_dim2 (&handle_A);                     \
                                                                         \
-    const size_t m_B = matrix_dim1 (&handle_B);                         \
-    const size_t n_B = matrix_dim2 (&handle_B);                         \
+    const size_t m_B = scm_matrix_dim1 (&handle_B);                     \
+    const size_t n_B = scm_matrix_dim2 (&handle_B);                     \
                                                                         \
     mp##X##_t _A[m_A][n_A];                                             \
     mp##X##_matrix_init (m_A, n_A, _A);                                 \
@@ -2304,11 +2304,11 @@ _FF_SCM_GMP_SAMESHAPE_MATRICES_PREDICATE (q, equal, mpq_matrix_equal,
     scm_dynwind_array_handle_release (&handle_B);                       \
     assert_c_exact_rank_1_or_2_array (who, B, &handle_B);               \
                                                                         \
-    const size_t m_A = matrix_dim1 (&handle_A);                         \
-    const size_t n_A = matrix_dim2 (&handle_A);                         \
+    const size_t m_A = scm_matrix_dim1 (&handle_A);                     \
+    const size_t n_A = scm_matrix_dim2 (&handle_A);                     \
                                                                         \
-    const size_t m_B = matrix_dim1 (&handle_B);                         \
-    const size_t n_B = matrix_dim2 (&handle_B);                         \
+    const size_t m_B = scm_matrix_dim1 (&handle_B);                     \
+    const size_t n_B = scm_matrix_dim2 (&handle_B);                     \
                                                                         \
     assert_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
                                      A, B, m_A, n_A, m_B, n_B);         \
@@ -2508,8 +2508,8 @@ scm_gsl_linalg_SVD_solve (SCM U, SCM S, SCM V, SCM B)
   gsl_matrix_const_view mB =
     scm_gsl_matrix_const_view_array_handle (B, &handle_B);
 
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
+  const size_t m_B = scm_matrix_dim1 (&handle_B);
+  const size_t n_B = scm_matrix_dim2 (&handle_B);
 
   double X[m_B][n_B];
   gsl_matrix_view mX = gsl_matrix_view_array (&X[0][0], m_B, n_B);
@@ -2551,8 +2551,8 @@ scm_gsl_linalg_LU_decomp (SCM A)
   scm_dynwind_array_handle_release (&handle_A);
   gsl_matrix_view mA = scm_gsl_matrix_view_array_handle (A, &handle_A);
 
-  const size_t m = matrix_dim1 (&handle_A);
-  const size_t n = matrix_dim2 (&handle_A);
+  const size_t m = scm_matrix_dim1 (&handle_A);
+  const size_t n = scm_matrix_dim2 (&handle_A);
 
   assert_matrix_is_square (who, A, m, n);
 
@@ -2594,8 +2594,8 @@ scm_gsl_mpq_linalg_LU_decomp (SCM A)
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
 
-  const size_t m = matrix_dim1 (&handle_A);
-  const size_t n = matrix_dim2 (&handle_A);
+  const size_t m = scm_matrix_dim1 (&handle_A);
+  const size_t n = scm_matrix_dim2 (&handle_A);
 
   assert_matrix_is_square (who, A, m, n);
 
@@ -2635,8 +2635,8 @@ scm_gsl_mpq_linalg_LU_decomp_fast_pivot (SCM A)
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
 
-  const size_t m = matrix_dim1 (&handle_A);
-  const size_t n = matrix_dim2 (&handle_A);
+  const size_t m = scm_matrix_dim1 (&handle_A);
+  const size_t n = scm_matrix_dim2 (&handle_A);
 
   assert_matrix_is_square (who, A, m, n);
 
@@ -2676,8 +2676,8 @@ scm_gsl_scm_linalg_LU_decomp (SCM A)
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
 
-  const size_t m = matrix_dim1 (&handle_A);
-  const size_t n = matrix_dim2 (&handle_A);
+  const size_t m = scm_matrix_dim1 (&handle_A);
+  const size_t n = scm_matrix_dim2 (&handle_A);
 
   assert_matrix_is_square (who, A, m, n);
 
@@ -2715,8 +2715,8 @@ scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   scm_array_get_handle (LU, &handle_LU);
   scm_dynwind_array_handle_release (&handle_LU);
 
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
+  const size_t m = scm_matrix_dim1 (&handle_LU);
+  const size_t n = scm_matrix_dim2 (&handle_LU);
 
   assert_matrix_is_square (who, LU, m, n);
 
@@ -2735,8 +2735,8 @@ scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   gsl_matrix_const_view mB =
     scm_gsl_matrix_const_view_array_handle (B, &handle_B);
 
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
+  const size_t m_B = scm_matrix_dim1 (&handle_B);
+  const size_t n_B = scm_matrix_dim2 (&handle_B);
 
   assert_conformable_for_Ax_equals_B (who, LU, B, m, n, m_B, n_B);
 
@@ -2778,8 +2778,8 @@ scm_gsl_linalg_LU_invert (SCM LU, SCM permutation)
   scm_array_get_handle (LU, &handle_LU);
   scm_dynwind_array_handle_release (&handle_LU);
 
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
+  const size_t m = scm_matrix_dim1 (&handle_LU);
+  const size_t n = scm_matrix_dim2 (&handle_LU);
 
   assert_matrix_is_square (who, LU, m, n);
 
@@ -2826,8 +2826,8 @@ scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   scm_array_get_handle (LU, &handle_LU);
   scm_dynwind_array_handle_release (&handle_LU);
 
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
+  const size_t m = scm_matrix_dim1 (&handle_LU);
+  const size_t n = scm_matrix_dim2 (&handle_LU);
 
   assert_matrix_is_square (who, LU, m, n);
 
@@ -2845,8 +2845,8 @@ scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   scm_array_get_handle (B, &handle_B);
   scm_dynwind_array_handle_release (&handle_B);
 
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
+  const size_t m_B = scm_matrix_dim1 (&handle_B);
+  const size_t n_B = scm_matrix_dim2 (&handle_B);
 
   assert_conformable_for_Ax_equals_B (who, LU, B, m, n, m_B, n_B);
 
@@ -2883,8 +2883,8 @@ scm_gsl_mpq_linalg_LU_invert (SCM LU, SCM permutation)
   scm_array_get_handle (LU, &handle_LU);
   scm_dynwind_array_handle_release (&handle_LU);
 
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
+  const size_t m = scm_matrix_dim1 (&handle_LU);
+  const size_t n = scm_matrix_dim2 (&handle_LU);
 
   assert_matrix_is_square (who, LU, m, n);
 
@@ -2928,8 +2928,8 @@ scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   scm_array_get_handle (LU, &handle_LU);
   scm_dynwind_array_handle_release (&handle_LU);
 
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
+  const size_t m = scm_matrix_dim1 (&handle_LU);
+  const size_t n = scm_matrix_dim2 (&handle_LU);
 
   assert_matrix_is_square (who, LU, m, n);
 
@@ -2944,8 +2944,8 @@ scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   scm_array_get_handle (B, &handle_B);
   scm_dynwind_array_handle_release (&handle_B);
 
-  const size_t m_B = matrix_dim1 (&handle_B);
-  const size_t n_B = matrix_dim2 (&handle_B);
+  const size_t m_B = scm_matrix_dim1 (&handle_B);
+  const size_t n_B = scm_matrix_dim2 (&handle_B);
 
   assert_conformable_for_Ax_equals_B (who, LU, B, m, n, m_B, n_B);
 
@@ -2974,8 +2974,8 @@ scm_gsl_scm_linalg_LU_invert (SCM LU, SCM permutation)
   scm_array_get_handle (LU, &handle_LU);
   scm_dynwind_array_handle_release (&handle_LU);
 
-  const size_t m = matrix_dim1 (&handle_LU);
-  const size_t n = matrix_dim2 (&handle_LU);
+  const size_t m = scm_matrix_dim1 (&handle_LU);
+  const size_t n = scm_matrix_dim2 (&handle_LU);
 
   assert_matrix_is_square (who, LU, m, n);
 

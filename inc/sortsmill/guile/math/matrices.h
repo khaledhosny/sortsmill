@@ -18,6 +18,9 @@
 #ifndef _SORTSMILL_GUILE_MATH_MATRICES_H
 #define _SORTSMILL_GUILE_MATH_MATRICES_H
 
+#include <libguile.h>
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -26,8 +29,20 @@ extern "C"
 }
 #endif
 
-/* This source file is empty, but temporarily. */
+typedef struct
+{
+  unsigned int size1;
+  unsigned int size2;
+  mpq_t *data;
+} mpqmat_t;
 
+SCM scm_mpqmat_p (SCM obj);
+bool scm_is_mpqmat (SCM obj);
+SCM scm_pointer_to_mpqmat (SCM pointer);
+SCM scm_mpqmat_to_pointer (SCM mpqmat);
+SCM scm_matrix_to_mpqmat (SCM A);
+SCM scm_mpqmat_to_matrix (SCM mpqmat);
+  
 #if 0
 {
 #endif

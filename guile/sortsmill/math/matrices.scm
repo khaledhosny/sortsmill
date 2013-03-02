@@ -155,7 +155,12 @@
           ;; if the effective rank is less than full. At the moment,
           ;; this is considered a feature.)
           inv
-          )
+
+          mpqmat?
+          pointer->mpqmat
+          mpqmat->pointer
+          matrix->mpqmat
+          mpqmat->matrix)
 
   (import (sortsmill math gsl matrices)
           (sortsmill arrays)
@@ -168,7 +173,9 @@
           (except (guile) error)
           (only (srfi :1) every iota reduce take)
           (srfi :4)
-          (ice-9 match))
+          (system foreign)
+          (ice-9 match)
+          (ice-9 format))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_sortsmill_math_matrices"))
@@ -823,6 +830,24 @@ effective rank of A."
                                       #:full-rank? #t)])
           X)]
        [else (number-matrix-invert A)] )))
+
+  ;;-----------------------------------------------------------------------
+
+  (define-wrapped-pointer-type mpqmat
+    mpqmat? pointer->mpqmat mpqmat->pointer
+    (lambda (matrix port)
+      (format port "#<mpqmat ~s 0x~x>"
+              (mpqmat->matrix matrix)
+              (pointer-address (mpqmat->pointer matrix)))))
+
+  (define (private:mpqmat? mpqmat)
+    (mpqmat? mpqmat))
+
+  (define (private:pointer->mpqmat p)
+    (pointer->mpqmat p))
+
+  (define (private:mpqmat->pointer mpqmat)
+    (mpqmat->pointer mpqmat))
 
   ;;-----------------------------------------------------------------------
 
