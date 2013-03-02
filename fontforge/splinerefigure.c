@@ -108,7 +108,8 @@ SplineRefigure3 (Spline *spline)
       // spline are calculated exactly, without roundoff. In the
       // monomial basis, on the other hand, the value calculated at
       // the t = 1 endpoint can be way off, even if a, b, and c are
-      // only slightly perturbed.
+      // only slightly perturbed. (Thus, if you use monomial basis,
+      // there are gaps in the piecewise contour!)
       //
       // The transformation between the two bases also is ill
       // conditioned.
