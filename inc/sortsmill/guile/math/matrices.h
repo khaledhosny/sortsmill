@@ -18,6 +18,7 @@
 #ifndef _SORTSMILL_GUILE_MATH_MATRICES_H
 #define _SORTSMILL_GUILE_MATH_MATRICES_H
 
+#include <sortsmill/guile/math/gsl/matrices.h>
 #include <sortsmill/guile/math/matrices/mpqmat.h>
 
 #endif /* _SORTSMILL_GUILE_MATH_MATRICES_H */
