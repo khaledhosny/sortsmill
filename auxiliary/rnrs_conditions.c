@@ -70,7 +70,7 @@ rnrs_make_message_condition (SCM message)
 VISIBLE SCM
 rnrs_c_make_message_condition (const char *message)
 {
-  return rnrs_make_message_condition (scm_from_utf8_string (message));
+  return rnrs_make_message_condition (scm_from_locale_string (message));
 }
 
 VISIBLE SCM
