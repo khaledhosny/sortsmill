@@ -121,6 +121,15 @@ SCM scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
 SCM scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                       SCM beta, SCM C);
 
+SCM scm_gsl_blas_dtrmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha,
+                        SCM A, SCM B);
+SCM scm_gsl_mpz_trmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha,
+                      SCM A, SCM B);
+SCM scm_gsl_mpq_trmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha,
+                      SCM A, SCM B);
+SCM scm_gsl_scm_trmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha,
+                      SCM A, SCM B);
+
 SCM scm_gsl_matrix_add (SCM A, SCM B);
 SCM scm_gsl_mpz_matrix_add (SCM A, SCM B);
 SCM scm_gsl_mpq_matrix_add (SCM A, SCM B);

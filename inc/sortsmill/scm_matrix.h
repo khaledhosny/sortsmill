@@ -56,15 +56,6 @@ void scm_matrix_transpose_memcpy (unsigned int m, unsigned int n,
 /* Matrix scaling, in place. */
 void scm_matrix_scale (unsigned int m, unsigned int n, SCM A[m][n], SCM x);
 
-/* General matrix multiplication.
-   See http://en.wikipedia.org/wiki/General_Matrix_Multiply */
-void
-scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
-                 unsigned int m, unsigned int n, unsigned int k,
-                 SCM alpha,
-                 SCM _FF_TRANSMATRIX (A, TransA, m, k),
-                 SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM beta, SCM C[m][n]);
-
 void scm_matrix_mul_elements (unsigned int m, unsigned int n,
                               SCM A[m][n], SCM B[m][n]);
 void scm_matrix_div_elements (unsigned int m, unsigned int n,
@@ -81,6 +72,24 @@ bool scm_matrix_isneg (unsigned int m, unsigned int n, SCM A[m][n]);
 bool scm_matrix_isnonneg (unsigned int m, unsigned int n, SCM A[m][n]);
 bool scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n],
                        SCM B[m][n]);
+
+/* General matrix multiplication.
+   See http://en.wikipedia.org/wiki/General_Matrix_Multiply */
+void
+scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
+                 unsigned int m, unsigned int n, unsigned int k,
+                 SCM alpha,
+                 SCM _FF_TRANSMATRIX (A, TransA, m, k),
+                 SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM beta, SCM C[m][n]);
+
+/* Triangular matrix multiplication. */
+VISIBLE void
+scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
+                 CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                 unsigned int m, unsigned int n, SCM alpha,
+                 SCM
+                 A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
+                 SCM B[m][n]);
 
 /* Solve triangular systems. */
 void scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,

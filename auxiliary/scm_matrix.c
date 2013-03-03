@@ -119,85 +119,7 @@ scm_matrix_scale (unsigned int m, unsigned int n, SCM A[m][n], SCM x)
         A[i][j] = scm_product (A[i][j], x);
 }
 
-_GL_ATTRIBUTE_CONST static inline unsigned int
-_trans_row (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
-{
-  return (trans == CblasNoTrans) ? i : j;
-}
-
-_GL_ATTRIBUTE_CONST static inline unsigned int
-_trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
-{
-  return (trans == CblasNoTrans) ? j : i;
-}
-
-static inline void
-scm_matmul_alpha1_beta1 (CBLAS_TRANSPOSE_t TransA,
-                         CBLAS_TRANSPOSE_t TransB,
-                         unsigned int m, unsigned int n, unsigned int k,
-                         SCM _FF_TRANSMATRIX (A, TransA, m, k),
-                         SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM C[m][n])
-{
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
-      {
-        for (unsigned int p = 0; p < k; p++)
-          {
-            const unsigned int rA = _trans_row (TransA, i, p);
-            const unsigned int cA = _trans_col (TransA, i, p);
-            const unsigned int rB = _trans_row (TransB, p, j);
-            const unsigned int cB = _trans_col (TransB, p, j);
-            C[i][j] = scm_sum (C[i][j], scm_product (A[rA][cA], B[rB][cB]));
-          }
-      }
-}
-
-static inline void
-scm_matmul_beta1 (CBLAS_TRANSPOSE_t TransA,
-                  CBLAS_TRANSPOSE_t TransB,
-                  unsigned int m, unsigned int n, unsigned int k,
-                  const SCM alpha,
-                  SCM _FF_TRANSMATRIX (A, TransA, m, k),
-                  SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM C[m][n])
-{
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
-      {
-        for (unsigned int p = 0; p < k; p++)
-          {
-            const unsigned int rA = _trans_row (TransA, i, p);
-            const unsigned int cA = _trans_col (TransA, i, p);
-            const unsigned int rB = _trans_row (TransB, p, j);
-            const unsigned int cB = _trans_col (TransB, p, j);
-            C[i][j] = scm_sum (C[i][j],
-                               scm_product (scm_product (A[rA][cA], B[rB][cB]),
-                                            alpha));
-          }
-      }
-}
-
-VISIBLE void
-scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA,
-                 CBLAS_TRANSPOSE_t TransB,
-                 unsigned int m, unsigned int n, unsigned int k,
-                 const SCM alpha,
-                 SCM _FF_TRANSMATRIX (A, TransA, m, k),
-                 SCM _FF_TRANSMATRIX (B, TransB, k, n),
-                 const SCM beta, SCM C[m][n])
-{
-  // FIXME: We do not yet support conjugate transposes.
-  assert (TransA != CblasConjTrans);
-  assert (TransB != CblasConjTrans);
-
-  scm_matrix_scale (m, n, C, beta);
-  if (scm_is_false (scm_zero_p (alpha)))
-    {
-      if (scm_is_true (scm_zero_p (scm_oneminus (alpha))))
-        scm_matmul_alpha1_beta1 (TransA, TransB, m, n, k, A, B, C);
-      else
-        scm_matmul_beta1 (TransA, TransB, m, n, k, alpha, A, B, C);
-    }
-}
+//-------------------------------------------------------------------------
 
 VISIBLE void
 scm_matrix_mul_elements (unsigned int m, unsigned int n,
@@ -291,6 +213,327 @@ scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
 }
 
 //-------------------------------------------------------------------------
+
+_GL_ATTRIBUTE_CONST static inline unsigned int
+_trans_row (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
+{
+  return (trans == CblasNoTrans) ? i : j;
+}
+
+_GL_ATTRIBUTE_CONST static inline unsigned int
+_trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
+{
+  return (trans == CblasNoTrans) ? j : i;
+}
+
+//-------------------------------------------------------------------------
+//
+// General matrix multiplication.
+
+static inline void
+scm_matmul_alpha1_beta1 (CBLAS_TRANSPOSE_t TransA,
+                         CBLAS_TRANSPOSE_t TransB,
+                         unsigned int m, unsigned int n, unsigned int k,
+                         SCM _FF_TRANSMATRIX (A, TransA, m, k),
+                         SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM C[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        for (unsigned int p = 0; p < k; p++)
+          {
+            const unsigned int rA = _trans_row (TransA, i, p);
+            const unsigned int cA = _trans_col (TransA, i, p);
+            const unsigned int rB = _trans_row (TransB, p, j);
+            const unsigned int cB = _trans_col (TransB, p, j);
+            C[i][j] = scm_sum (C[i][j], scm_product (A[rA][cA], B[rB][cB]));
+          }
+      }
+}
+
+static inline void
+scm_matmul_beta1 (CBLAS_TRANSPOSE_t TransA,
+                  CBLAS_TRANSPOSE_t TransB,
+                  unsigned int m, unsigned int n, unsigned int k,
+                  const SCM alpha,
+                  SCM _FF_TRANSMATRIX (A, TransA, m, k),
+                  SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM C[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        for (unsigned int p = 0; p < k; p++)
+          {
+            const unsigned int rA = _trans_row (TransA, i, p);
+            const unsigned int cA = _trans_col (TransA, i, p);
+            const unsigned int rB = _trans_row (TransB, p, j);
+            const unsigned int cB = _trans_col (TransB, p, j);
+            C[i][j] = scm_sum (C[i][j],
+                               scm_product (scm_product (A[rA][cA], B[rB][cB]),
+                                            alpha));
+          }
+      }
+}
+
+VISIBLE void
+scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA,
+                 CBLAS_TRANSPOSE_t TransB,
+                 unsigned int m, unsigned int n, unsigned int k,
+                 const SCM alpha,
+                 SCM _FF_TRANSMATRIX (A, TransA, m, k),
+                 SCM _FF_TRANSMATRIX (B, TransB, k, n),
+                 const SCM beta, SCM C[m][n])
+{
+  // FIXME: We do not yet support conjugate transposes.
+  assert (TransA != CblasConjTrans);
+  assert (TransB != CblasConjTrans);
+
+  scm_matrix_scale (m, n, C, beta);
+  if (scm_is_false (scm_zero_p (alpha)))
+    {
+      if (scm_is_true (scm_zero_p (scm_oneminus (alpha))))
+        scm_matmul_alpha1_beta1 (TransA, TransB, m, n, k, A, B, C);
+      else
+        scm_matmul_beta1 (TransA, TransB, m, n, k, alpha, A, B, C);
+    }
+}
+
+//-------------------------------------------------------------------------
+//
+// Multiplication by a triangular matrix on one or the other side.
+
+static void
+scm_matrix_trmm_left_lower_notrans (CBLAS_DIAG_t Diag,
+                                    unsigned int m, unsigned int n,
+                                    SCM A[m][m], SCM B[m][n])
+{
+  for (unsigned int j = 0; j < n; j++)
+    for (unsigned int i = 0; i < m; i++)
+      {
+        SCM sum = B[m - i - 1][j];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[m - i - 1][m - i - 1]);
+        for (unsigned int q = 0; q < m - i - 1; q++)
+          sum = scm_sum (sum, scm_product (B[q][j], A[m - i - 1][q]));
+        B[m - i - 1][j] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_left_lower_trans (CBLAS_DIAG_t Diag,
+                                  unsigned int m, unsigned int n,
+                                  SCM A[m][m], SCM B[m][n])
+{
+  for (unsigned int j = 0; j < n; j++)
+    for (unsigned int i = 0; i < m; i++)
+      {
+        SCM sum = B[i][j];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[i][i]);
+        for (unsigned int q = i + 1; q < m; q++)
+          sum = scm_sum (sum, scm_product (B[q][j], A[q][i]));
+        B[i][j] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_left_upper_notrans (CBLAS_DIAG_t Diag,
+                                    unsigned int m, unsigned int n,
+                                    SCM A[m][m], SCM B[m][n])
+{
+  for (unsigned int j = 0; j < n; j++)
+    for (unsigned int i = 0; i < m; i++)
+      {
+        SCM sum = B[i][j];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[i][i]);
+        for (unsigned int q = i + 1; q < m; q++)
+          sum = scm_sum (sum, scm_product (B[q][j], A[i][q]));
+        B[i][j] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_left_upper_trans (CBLAS_DIAG_t Diag,
+                                  unsigned int m, unsigned int n,
+                                  SCM A[m][m], SCM B[m][n])
+{
+  for (unsigned int j = 0; j < n; j++)
+    for (unsigned int i = 0; i < m; i++)
+      {
+        SCM sum = B[m - i - 1][j];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[m - i - 1][m - i - 1]);
+        for (unsigned int q = 0; q < m - i - 1; q++)
+          sum = scm_sum (sum, scm_product (B[q][j], A[q][m - i - 1]));
+        B[m - i - 1][j] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_right_lower_notrans (CBLAS_DIAG_t Diag,
+                                     unsigned int m, unsigned int n,
+                                     SCM A[n][n], SCM B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        SCM sum = B[i][j];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[j][j]);
+        for (unsigned int q = j + 1; q < n; q++)
+          sum = scm_sum (sum, scm_product (B[i][q], A[q][j]));
+        B[i][j] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_right_lower_trans (CBLAS_DIAG_t Diag,
+                                   unsigned int m, unsigned int n,
+                                   SCM A[n][n], SCM B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        SCM sum = B[i][n - j - 1];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[n - j - 1][n - j - 1]);
+        for (unsigned int q = 0; q < n - j - 1; q++)
+          sum = scm_sum (sum, scm_product (B[i][q], A[n - j - 1][q]));
+        B[i][n - j - 1] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_right_upper_notrans (CBLAS_DIAG_t Diag,
+                                     unsigned int m, unsigned int n,
+                                     SCM A[n][n], SCM B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        SCM sum = B[i][n - j - 1];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[n - j - 1][n - j - 1]);
+        for (unsigned int q = 0; q < n - j - 1; q++)
+          sum = scm_sum (sum, scm_product (B[i][q], A[q][n - j - 1]));
+        B[i][n - j - 1] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_right_upper_trans (CBLAS_DIAG_t Diag,
+                                   unsigned int m, unsigned int n,
+                                   SCM A[n][n], SCM B[m][n])
+{
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        SCM sum = B[i][j];
+        if (Diag == CblasNonUnit)
+          sum = scm_product (sum, A[j][j]);
+        for (unsigned int q = j + 1; q < n; q++)
+          sum = scm_sum (sum, scm_product (B[i][q], A[j][q]));
+        B[i][j] = sum;
+      }
+}
+
+static void
+scm_matrix_trmm_left_lower (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                            unsigned int m, unsigned int n,
+                            SCM A[m][m], SCM B[m][n])
+{
+  if (TransA == CblasNoTrans)
+    scm_matrix_trmm_left_lower_notrans (Diag, m, n, A, B);
+  else
+    scm_matrix_trmm_left_lower_trans (Diag, m, n, A, B);
+}
+
+static void
+scm_matrix_trmm_left_upper (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                            unsigned int m, unsigned int n,
+                            SCM A[m][m], SCM B[m][n])
+{
+  if (TransA == CblasNoTrans)
+    scm_matrix_trmm_left_upper_notrans (Diag, m, n, A, B);
+  else
+    scm_matrix_trmm_left_upper_trans (Diag, m, n, A, B);
+}
+
+static void
+scm_matrix_trmm_right_lower (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                             unsigned int m, unsigned int n,
+                             SCM A[n][n], SCM B[m][n])
+{
+  if (TransA == CblasNoTrans)
+    scm_matrix_trmm_right_lower_notrans (Diag, m, n, A, B);
+  else
+    scm_matrix_trmm_right_lower_trans (Diag, m, n, A, B);
+}
+
+static void
+scm_matrix_trmm_right_upper (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                             unsigned int m, unsigned int n,
+                             SCM A[n][n], SCM B[m][n])
+{
+  if (TransA == CblasNoTrans)
+    scm_matrix_trmm_right_upper_notrans (Diag, m, n, A, B);
+  else
+    scm_matrix_trmm_right_upper_trans (Diag, m, n, A, B);
+}
+
+static void
+scm_matrix_trmm_left (CBLAS_UPLO_t Uplo,
+                      CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                      unsigned int m, unsigned int n, SCM A[m][m], SCM B[m][n])
+{
+  if (Uplo == CblasLower)
+    scm_matrix_trmm_left_lower (TransA, Diag, m, n, A, B);
+  else
+    scm_matrix_trmm_left_upper (TransA, Diag, m, n, A, B);
+}
+
+static void
+scm_matrix_trmm_right (CBLAS_UPLO_t Uplo,
+                       CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                       unsigned int m, unsigned int n, SCM A[n][n], SCM B[m][n])
+{
+  if (Uplo == CblasLower)
+    scm_matrix_trmm_right_lower (TransA, Diag, m, n, A, B);
+  else
+    scm_matrix_trmm_right_upper (TransA, Diag, m, n, A, B);
+}
+
+VISIBLE void
+scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
+                 CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                 unsigned int m, unsigned int n, SCM alpha,
+                 SCM
+                 A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
+                 SCM B[m][n])
+{
+  assert (0 < m);
+  assert (0 < n);
+  assert (Side == CblasLeft || Side == CblasRight);
+  assert (Uplo == CblasLower || Uplo == CblasUpper);
+  assert (Diag == CblasNonUnit || Diag == CblasUnit);
+
+  // FIXME: We do not yet support conjugate transposes.
+  assert (TransA == CblasNoTrans || TransA == CblasTrans);
+
+  if (scm_is_true (scm_zero_p (alpha)))
+    scm_matrix_set_zero (m, n, B);
+  else
+    {
+      scm_matrix_scale (m, n, B, alpha);
+      if (Side == CblasLeft)
+        scm_matrix_trmm_left (Uplo, TransA, Diag, m, n, A, B);
+      else
+        scm_matrix_trmm_right (Uplo, TransA, Diag, m, n, A, B);
+    }
+}
+
+//-------------------------------------------------------------------------
 //
 // Solve triangular linear systems by forward/back substitution.
 
@@ -373,14 +616,19 @@ scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
   assert (TransA == CblasNoTrans || TransA == CblasTrans);
 
   if (Uplo == CblasLower)
-    if (TransA == CblasNoTrans)
-      upper_triangle_no_trans (Diag, n, A, x);
-    else
-      upper_triangle_trans (Diag, n, A, x);
-  else if (TransA == CblasNoTrans)
-    lower_triangle_no_trans (Diag, n, A, x);
+    {
+      if (TransA == CblasNoTrans)
+        upper_triangle_no_trans (Diag, n, A, x);
+      else
+        upper_triangle_trans (Diag, n, A, x);
+    }
   else
-    lower_triangle_trans (Diag, n, A, x);
+    {
+      if (TransA == CblasNoTrans)
+        lower_triangle_no_trans (Diag, n, A, x);
+      else
+        lower_triangle_trans (Diag, n, A, x);
+    }
 }
 
 //-------------------------------------------------------------------------

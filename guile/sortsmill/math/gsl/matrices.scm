@@ -47,6 +47,12 @@
           gsl:gemm-mpq                  ; Exact rationals.
           gsl:gemm-scm                  ; General numbers.
 
+          ;; Triangular matrix multiplication.
+          gsl:trmm-f64                  ; Real floating point.
+          gsl:trmm-mpz                  ; Integers.
+          gsl:trmm-mpq                  ; Exact rationals.
+          gsl:trmm-scm                  ; General numbers.
+
           ;; Matrix addition.
           ;;
           ;; (gsl:matrix-add-WHATEVER A B) → A + B
@@ -181,6 +187,22 @@
       (assertion-violation who (_ "expected an array of exact numbers") A))
     (assert-rank-1-or-2-array who A))
 
+  (define (assert-CblasUplo-flag who uplo)
+    (unless (or (eqv? uplo gsl:CblasUpper)
+                (eqv? uplo gsl:CblasLower))
+      (assertion-violation
+       who
+       (_ "expected gsl:CblasUpper or gsl:CblasLower")
+       uplo)))
+
+  (define (assert-CblasSide-flag who side)
+    (unless (or (eqv? side gsl:CblasLeft)
+                (eqv? side gsl:CblasRight))
+      (assertion-violation
+       who
+       (_ "expected gsl:CblasLeft or gsl:CblasRight")
+       side)))
+
   (define (assert-CblasTrans-flag who trans)
     (unless (or (eqv? trans gsl:CblasNoTrans)
                 (eqv? trans gsl:CblasTrans)
@@ -189,6 +211,14 @@
        who
        (_ "expected gsl:CblasNoTrans, gsl:CblasTrans, or gsl:CblasConjTrans")
        trans)))
+
+  (define (assert-CblasDiag-flag who diag)
+    (unless (or (eqv? diag gsl:CblasNonUnit)
+                (eqv? diag gsl:CblasUnit))
+      (assertion-violation
+       who
+       (_ "expected gsl:CblasNonUnit or gsl:CblasUnit")
+       diag)))
 
   (define (array-dimensions-simplified A)
     (map

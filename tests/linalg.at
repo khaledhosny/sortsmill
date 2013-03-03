@@ -292,143 +292,6 @@ check_linalg([test_scm_matrix_scale 2 3 -3 1 2 3 4 5 6],[0],[ -3 -6 -9 | -12 -15
 
 #--------------------------------------------------------------------------
 
-# alpha = beta = 0.
-check_linalg([test_mpz_matrix_gemm 0 0 2 1 2 0 0 1 2 3 4 5 6 100 200],[0],[ 0 | 0 |],[])
-
-# alpha = 0, beta = 1.
-check_linalg([test_mpz_matrix_gemm 0 0 2 1 2 0 1 1 2 3 4 5 6 100 200],[0],[ 100 | 200 |],[])
-
-# alpha = 0, beta = -2.
-check_linalg([test_mpz_matrix_gemm 0 0 2 1 2 0 -2 1 2 3 4 5 6 100 200],[0],[ -200 | -400 |],[])
-
-# alpha = 1, beta = 0.
-check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 1 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 1 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 1 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 1 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-
-# alpha = 1, beta = 1.
-check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 1 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 1 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 1 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 1 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-
-# alpha = 1, beta = -2.
-check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 1 -2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
-check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 1 -2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
-check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 1 -2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
-check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 1 -2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
-
-# alpha = 5, beta = 0.
-check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 5 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 5 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 5 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 5 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-
-# alpha = 5, beta = 1.
-check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 5 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 5 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 5 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 5 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-
-# alpha = 5, beta = -2.
-check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 5 -2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
-check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 5 -2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
-check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 5 -2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
-check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 5 -2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
-
-# alpha = beta = 0.
-check_linalg([test_mpq_matrix_gemm 0 0 2 1 2 0 0 1 2 3 4 5 6 100 200],[0],[ 0 | 0 |],[])
-
-# alpha = 0, beta = 1.
-check_linalg([test_mpq_matrix_gemm 0 0 2 1 2 0 1 1 2 3 4 5 6 100 200],[0],[ 100 | 200 |],[])
-
-# alpha = 0, beta = -1/2.
-check_linalg([test_mpq_matrix_gemm 0 0 2 1 2 0 -1/2 1 2 3 4 5 6 100 200],[0],[ -50 | -100 |],[])
-
-# alpha = 1, beta = 0.
-check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 1 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 1 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 1 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 1 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-
-# alpha = 1, beta = 1.
-check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 1 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 1 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 1 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 1 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-
-# alpha = 1, beta = -1/2.
-check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 1 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 1 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 1 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 1 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-
-# alpha = 5, beta = 0.
-check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 5 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 5 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 5 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 5 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-
-# alpha = 5, beta = 1.
-check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 5 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 5 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 5 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 5 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-
-# alpha = 5, beta = -1/2.
-check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 5 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 5 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 5 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 5 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-
-# alpha = beta = 0.
-check_linalg([test_scm_matrix_gemm 0 0 2 1 2 0 0 1 2 3 4 5 6 100 200],[0],[ 0 | 0 |],[])
-
-# alpha = 0, beta = 1.
-check_linalg([test_scm_matrix_gemm 0 0 2 1 2 0 1 1 2 3 4 5 6 100 200],[0],[ 100 | 200 |],[])
-
-# alpha = 0, beta = -1/2.
-check_linalg([test_scm_matrix_gemm 0 0 2 1 2 0 -1/2 1 2 3 4 5 6 100 200],[0],[ -50 | -100 |],[])
-
-# alpha = 1, beta = 0.
-check_linalg([test_scm_matrix_gemm 0 0 2 2 3 1 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_scm_matrix_gemm 1 0 2 2 3 1 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_scm_matrix_gemm 0 1 2 2 3 1 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-check_linalg([test_scm_matrix_gemm 1 1 2 2 3 1 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
-
-# alpha = 1, beta = 1.
-check_linalg([test_scm_matrix_gemm 0 0 2 2 3 1 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_scm_matrix_gemm 1 0 2 2 3 1 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_scm_matrix_gemm 0 1 2 2 3 1 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-check_linalg([test_scm_matrix_gemm 1 1 2 2 3 1 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
-
-# alpha = 1, beta = -1/2.
-check_linalg([test_scm_matrix_gemm 0 0 2 2 3 1 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-check_linalg([test_scm_matrix_gemm 1 0 2 2 3 1 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-check_linalg([test_scm_matrix_gemm 0 1 2 2 3 1 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-check_linalg([test_scm_matrix_gemm 1 1 2 2 3 1 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
-
-# alpha = 5, beta = 0.
-check_linalg([test_scm_matrix_gemm 0 0 2 2 3 5 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_scm_matrix_gemm 1 0 2 2 3 5 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_scm_matrix_gemm 0 1 2 2 3 5 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-check_linalg([test_scm_matrix_gemm 1 1 2 2 3 5 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
-
-# alpha = 5, beta = 1.
-check_linalg([test_scm_matrix_gemm 0 0 2 2 3 5 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_scm_matrix_gemm 1 0 2 2 3 5 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_scm_matrix_gemm 0 1 2 2 3 5 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-check_linalg([test_scm_matrix_gemm 1 1 2 2 3 5 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
-
-# alpha = 5, beta = -1/2.
-check_linalg([test_scm_matrix_gemm 0 0 2 2 3 5 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-check_linalg([test_scm_matrix_gemm 1 0 2 2 3 5 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-check_linalg([test_scm_matrix_gemm 0 1 2 2 3 5 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-check_linalg([test_scm_matrix_gemm 1 1 2 2 3 5 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
-
-#--------------------------------------------------------------------------
-
 check_linalg([test_mpz_matrix_mul_elements 1 1 123246 -642321],[0],[ -79163493966 | *** | -642321 |],[])
 check_linalg([test_mpz_matrix_mul_elements 3 2 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 7 16 | 27 40 | 55 72 | *** | 7 8 | 9 10 | 11 12 |],[])
 check_linalg([test_mpz_matrix_mul_elements 2 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 7 16 27 | 40 55 72 | *** | 7 8 9 | 10 11 12 |],[])
@@ -619,6 +482,170 @@ check_linalg([test_scm_matrix_equal 3 2 3 4 4 6 7 8 3 4 5 6 7 8],[0],[0],[])
 check_linalg([test_scm_matrix_equal 3 2 3 4 5 8 7 8 3 4 5 6 7 1],[0],[0],[])
 check_linalg([test_scm_matrix_equal 3 2 0 0 0 0 0 0 1 1 1 1 1 1],[0],[0],[])
 check_linalg([test_scm_matrix_equal 3 2 3 4 5 6 7 8 3 4 5 6 7 8],[0],[1],[])
+
+#--------------------------------------------------------------------------
+
+# alpha = beta = 0.
+check_linalg([test_mpz_matrix_gemm 0 0 2 1 2 0 0 1 2 3 4 5 6 100 200],[0],[ 0 | 0 |],[])
+
+# alpha = 0, beta = 1.
+check_linalg([test_mpz_matrix_gemm 0 0 2 1 2 0 1 1 2 3 4 5 6 100 200],[0],[ 100 | 200 |],[])
+
+# alpha = 0, beta = -2.
+check_linalg([test_mpz_matrix_gemm 0 0 2 1 2 0 -2 1 2 3 4 5 6 100 200],[0],[ -200 | -400 |],[])
+
+# alpha = 1, beta = 0.
+check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 1 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 1 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 1 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 1 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+
+# alpha = 1, beta = 1.
+check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 1 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 1 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 1 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 1 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+
+# alpha = 1, beta = -2.
+check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 1 -2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
+check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 1 -2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
+check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 1 -2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
+check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 1 -2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ -142 -336 | -461 -646 |],[])
+
+# alpha = 5, beta = 0.
+check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 5 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 5 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 5 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 5 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+
+# alpha = 5, beta = 1.
+check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 5 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 5 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 5 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 5 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+
+# alpha = 5, beta = -2.
+check_linalg([test_mpz_matrix_gemm 0 0 2 2 3 5 -2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
+check_linalg([test_mpz_matrix_gemm 1 0 2 2 3 5 -2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
+check_linalg([test_mpz_matrix_gemm 0 1 2 2 3 5 -2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
+check_linalg([test_mpz_matrix_gemm 1 1 2 2 3 5 -2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 90 -80 | 95 -30 |],[])
+
+# alpha = beta = 0.
+check_linalg([test_mpq_matrix_gemm 0 0 2 1 2 0 0 1 2 3 4 5 6 100 200],[0],[ 0 | 0 |],[])
+
+# alpha = 0, beta = 1.
+check_linalg([test_mpq_matrix_gemm 0 0 2 1 2 0 1 1 2 3 4 5 6 100 200],[0],[ 100 | 200 |],[])
+
+# alpha = 0, beta = -1/2.
+check_linalg([test_mpq_matrix_gemm 0 0 2 1 2 0 -1/2 1 2 3 4 5 6 100 200],[0],[ -50 | -100 |],[])
+
+# alpha = 1, beta = 0.
+check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 1 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 1 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 1 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 1 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+
+# alpha = 1, beta = 1.
+check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 1 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 1 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 1 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 1 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+
+# alpha = 1, beta = -1/2.
+check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 1 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 1 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 1 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 1 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+
+# alpha = 5, beta = 0.
+check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 5 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 5 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 5 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 5 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+
+# alpha = 5, beta = 1.
+check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 5 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 5 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 5 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 5 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+
+# alpha = 5, beta = -1/2.
+check_linalg([test_mpq_matrix_gemm 0 0 2 2 3 5 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+check_linalg([test_mpq_matrix_gemm 1 0 2 2 3 5 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+check_linalg([test_mpq_matrix_gemm 0 1 2 2 3 5 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+check_linalg([test_mpq_matrix_gemm 1 1 2 2 3 5 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+
+# alpha = beta = 0.
+check_linalg([test_scm_matrix_gemm 0 0 2 1 2 0 0 1 2 3 4 5 6 100 200],[0],[ 0 | 0 |],[])
+
+# alpha = 0, beta = 1.
+check_linalg([test_scm_matrix_gemm 0 0 2 1 2 0 1 1 2 3 4 5 6 100 200],[0],[ 100 | 200 |],[])
+
+# alpha = 0, beta = -1/2.
+check_linalg([test_scm_matrix_gemm 0 0 2 1 2 0 -1/2 1 2 3 4 5 6 100 200],[0],[ -50 | -100 |],[])
+
+# alpha = 1, beta = 0.
+check_linalg([test_scm_matrix_gemm 0 0 2 2 3 1 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_scm_matrix_gemm 1 0 2 2 3 1 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_scm_matrix_gemm 0 1 2 2 3 1 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+check_linalg([test_scm_matrix_gemm 1 1 2 2 3 1 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 58 64 | 139 154 |],[])
+
+# alpha = 1, beta = 1.
+check_linalg([test_scm_matrix_gemm 0 0 2 2 3 1 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_scm_matrix_gemm 1 0 2 2 3 1 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_scm_matrix_gemm 0 1 2 2 3 1 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+check_linalg([test_scm_matrix_gemm 1 1 2 2 3 1 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 158 264 | 439 554 |],[])
+
+# alpha = 1, beta = -1/2.
+check_linalg([test_scm_matrix_gemm 0 0 2 2 3 1 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+check_linalg([test_scm_matrix_gemm 1 0 2 2 3 1 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+check_linalg([test_scm_matrix_gemm 0 1 2 2 3 1 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+check_linalg([test_scm_matrix_gemm 1 1 2 2 3 1 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 8 -36 | -11 -46 |],[])
+
+# alpha = 5, beta = 0.
+check_linalg([test_scm_matrix_gemm 0 0 2 2 3 5 0 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_scm_matrix_gemm 1 0 2 2 3 5 0 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_scm_matrix_gemm 0 1 2 2 3 5 0 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+check_linalg([test_scm_matrix_gemm 1 1 2 2 3 5 0 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 290 320 | 695 770 |],[])
+
+# alpha = 5, beta = 1.
+check_linalg([test_scm_matrix_gemm 0 0 2 2 3 5 1 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_scm_matrix_gemm 1 0 2 2 3 5 1 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_scm_matrix_gemm 0 1 2 2 3 5 1 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+check_linalg([test_scm_matrix_gemm 1 1 2 2 3 5 1 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 390 520 | 995 1170 |],[])
+
+# alpha = 5, beta = -1/2.
+check_linalg([test_scm_matrix_gemm 0 0 2 2 3 5 -1/2 1 2 3 4 5 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+check_linalg([test_scm_matrix_gemm 1 0 2 2 3 5 -1/2 1 4 2 5 3 6 7 8 9 10 11 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+check_linalg([test_scm_matrix_gemm 0 1 2 2 3 5 -1/2 1 2 3 4 5 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+check_linalg([test_scm_matrix_gemm 1 1 2 2 3 5 -1/2 1 4 2 5 3 6 7 9 11 8 10 12 100 200 300 400],[0],[ 240 220 | 545 570 |],[])
+
+#--------------------------------------------------------------------------
+
+m4_foreach_w([SIDE],[L R],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 0 1 1],[0],[ignore],[])
+        check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 1 1 1],[0],[ignore],[])
+        check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 1 1],[0],[ignore],[])
+        check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 1 3],[0],[ignore],[])
+        check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 3 1],[0],[ignore],[])
+  ]) ]) ]) ])
+m4_foreach_w([SIDE],[L],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        m4_foreach_w([ALPHA],[-2 -1 0 1 2 21/17],[
+          check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 3 2 ALPHA 3 1 -1 5 15 13/3 27 1 2 3 -3 -2 -1/15 4/555 3/222],[0],[ignore],[])
+  ]) ]) ]) ]) ])
+m4_foreach_w([SIDE],[R],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        m4_foreach_w([ALPHA],[-2 -1 0 1 2 21/17],[
+          check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 2 3 ALPHA 3 1 -1 5 15 13/3 27 1 2 3 -3 -2 -1/15 4/555 3/222],[0],[ignore],[])
+  ]) ]) ]) ]) ])
 
 #--------------------------------------------------------------------------
 

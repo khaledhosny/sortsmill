@@ -57,7 +57,7 @@ SCM scm_pointer_to_mpqmat (SCM pointer);
 SCM scm_mpqmat_to_pointer (SCM mpqmat);
 SCM scm_matrix_to_mpqmat (SCM A);
 SCM scm_mpqmat_to_matrix (SCM mpqmat);
-  
+
 #if 0
 {
 #endif
