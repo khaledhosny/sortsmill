@@ -155,6 +155,16 @@ mpz_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                  mpz_t _FF_TRANSMATRIX (B, TransB, k, n),
                  const mpz_t beta, mpz_t C[m][n]);
 
+/* Matrix multiplication by a triangular matrix on one or the other
+   side. */
+void
+mpz_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
+                 CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                 unsigned int m, unsigned int n, mpz_t alpha,
+                 mpz_t
+                 A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
+                 mpz_t B[m][n]);
+
 /* Matrix scaling, in place. */
 void
 mpq_matrix_scale (unsigned int m, unsigned int n, mpq_t A[m][n], const mpq_t x);
@@ -168,6 +178,16 @@ mpq_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                  mpq_t _FF_TRANSMATRIX (A, TransA, m, k),
                  mpq_t _FF_TRANSMATRIX (B, TransB, k, n),
                  const mpq_t beta, mpq_t C[m][n]);
+
+/* Matrix multiplication by a triangular matrix on one or the other
+   side. */
+void
+mpq_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
+                 CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
+                 unsigned int m, unsigned int n, mpq_t alpha,
+                 mpq_t
+                 A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
+                 mpq_t B[m][n]);
 
 /*-----------------------------------------------------------------------*/
 

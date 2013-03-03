@@ -626,6 +626,56 @@ m4_foreach_w([SIDE],[L R],[
   m4_foreach_w([UPLO],[U L],[
     m4_foreach_w([TRANS],[N T],[
       m4_foreach_w([DIAG],[N U],[
+        check_linalg([test_mpz_matrix_trmm SIDE UPLO TRANS DIAG 1 1 0 1 1],[0],[ignore],[])
+        check_linalg([test_mpz_matrix_trmm SIDE UPLO TRANS DIAG 1 1 1 1 1],[0],[ignore],[])
+        check_linalg([test_mpz_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 1 1],[0],[ignore],[])
+        check_linalg([test_mpz_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 1 3],[0],[ignore],[])
+        check_linalg([test_mpz_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 3 1],[0],[ignore],[])
+  ]) ]) ]) ])
+m4_foreach_w([SIDE],[L],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        m4_foreach_w([ALPHA],[-2 -1 0 1 2 2117],[
+          check_linalg([test_mpz_matrix_trmm SIDE UPLO TRANS DIAG 3 2 ALPHA 3 1 -1 5 15 133 27 1 2 3 -3 -2 -115 4555 3222],[0],[ignore],[])
+  ]) ]) ]) ]) ])
+m4_foreach_w([SIDE],[R],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        m4_foreach_w([ALPHA],[-2 -1 0 1 2 2117],[
+          check_linalg([test_mpz_matrix_trmm SIDE UPLO TRANS DIAG 2 3 ALPHA 3 1 -1 5 15 133 27 1 2 3 -3 -2 -115 4555 3222],[0],[ignore],[])
+  ]) ]) ]) ]) ])
+
+m4_foreach_w([SIDE],[L R],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        check_linalg([test_mpq_matrix_trmm SIDE UPLO TRANS DIAG 1 1 0 1 1],[0],[ignore],[])
+        check_linalg([test_mpq_matrix_trmm SIDE UPLO TRANS DIAG 1 1 1 1 1],[0],[ignore],[])
+        check_linalg([test_mpq_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 1 1],[0],[ignore],[])
+        check_linalg([test_mpq_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 1 3],[0],[ignore],[])
+        check_linalg([test_mpq_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 3 1],[0],[ignore],[])
+  ]) ]) ]) ])
+m4_foreach_w([SIDE],[L],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        m4_foreach_w([ALPHA],[-2 -1 0 1 2 21/17],[
+          check_linalg([test_mpq_matrix_trmm SIDE UPLO TRANS DIAG 3 2 ALPHA 3 1 -1 5 15 13/3 27 1 2 3 -3 -2 -1/15 4/555 3/222],[0],[ignore],[])
+  ]) ]) ]) ]) ])
+m4_foreach_w([SIDE],[R],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
+        m4_foreach_w([ALPHA],[-2 -1 0 1 2 21/17],[
+          check_linalg([test_mpq_matrix_trmm SIDE UPLO TRANS DIAG 2 3 ALPHA 3 1 -1 5 15 13/3 27 1 2 3 -3 -2 -1/15 4/555 3/222],[0],[ignore],[])
+  ]) ]) ]) ]) ])
+
+m4_foreach_w([SIDE],[L R],[
+  m4_foreach_w([UPLO],[U L],[
+    m4_foreach_w([TRANS],[N T],[
+      m4_foreach_w([DIAG],[N U],[
         check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 0 1 1],[0],[ignore],[])
         check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 1 1 1],[0],[ignore],[])
         check_linalg([test_scm_matrix_trmm SIDE UPLO TRANS DIAG 1 1 2 1 1],[0],[ignore],[])
