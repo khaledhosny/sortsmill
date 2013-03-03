@@ -163,7 +163,9 @@ guile/sortsmill/views.scm
 guile/sortsmill/pure.scm
 guile/sortsmill/python.scm
 guile/sortsmill/math/gsl/matrices.scm
-guile/sortsmill/math/matrices.scm
+guile/sortsmill/math/matrices/arithmetic.scm
+guile/sortsmill/math/matrices/base.scm
+guile/sortsmill/math/matrices/mpqmat.scm
 main/compare.c
 main/image.c
 main/lint.c
