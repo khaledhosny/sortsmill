@@ -73,6 +73,10 @@ nobase_include_HEADERS += sortsmill/c_version.h
 # Attribute tags to put in the code for the benefit of the compiler.
 nobase_include_HEADERS += sortsmill/attributes.h
 
+# Automatic, thread-safe initialization of nontrivial global
+# constants.
+nobase_include_HEADERS += sortsmill/initialized_global_constants.h
+
 # Allocation.
 nobase_include_HEADERS += sortsmill/null_passthru.h
 nobase_include_HEADERS += sortsmill/xdie_on_null.h

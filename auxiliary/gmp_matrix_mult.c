@@ -529,7 +529,8 @@ _GMP_TYPE (_matrix_trmm_right) (CBLAS_UPLO_t Uplo,
 VISIBLE void
 _GMP_TYPE (_matrix_trmm) (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                           CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                          unsigned int m, unsigned int n, _GMP_TYPE (_t) alpha,
+                          unsigned int m, unsigned int n,
+                          const _GMP_TYPE (_t) alpha,
                           _GMP_TYPE (_t)
                           A[(Side == CblasLeft) ? m : n][(Side ==
                                                           CblasLeft) ? m : n],

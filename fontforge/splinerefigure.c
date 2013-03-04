@@ -30,89 +30,84 @@
 #include "splinefont.h"
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/gmp_constants.h>
-#include <sortsmill/polyspline.h>
+#include <sortsmill/guile.h>
+#include <sortsmill/initialized_global_constants.h>
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
 
-/*
-#include <sortsmill/guile.h>
-#include <atomic_ops.h>
-
-static volatile AO_t matrix_is_initialized = false;
-static pthread_mutex_t matrix_mutex = PTHREAD_MUTEX_INITIALIZER;
-mpqmat_t the_matrix;
-
-static mpqmat_t
-transformation_matrix (void)
+static void
+initialize_T (mpqmat_t *T)
 {
-  if (!AO_load_acquire_read (&matrix_is_initialized))
-    {
-      pthread_mutex_lock (&matrix_mutex);
-      if (!matrix_is_initialized)
-        {
-          //          SCM scm_matrix = 
-          AO_store_release_write (&matrix_is_initialized, true);
-        }
-      pthread_mutex_unlock (&matrix_mutex);
-    }
+  // *INDENT-OFF*
+  const int T_data[4][4] = {
+    {1, -3,  3, -1},
+    {0,  3, -6,  3},
+    {0,  0,  3, -3},
+    {0,  0,  0,  1}
+  };
+  // *INDENT-ON*
+
+  *T = scm_c_make_mpqmat_t (4, 4);
+  for (unsigned int i = 0; i < 4; i++)
+    for (unsigned int j = 0; j < 4; j++)
+      mpq_set_si (MPQMAT_REF (*T)[i][j], T_data[i][j], 1);
 }
-*/
+
+INITIALIZED_CONSTANT (static, mpqmat_t, T, initialize_T);
 
 static void
 bernstein_to_monomial (const double b[4], double m[4])
 {
-  mpq_t q[4];
-  mpq_vector_init (4, q);
-
-  mpq_t x[4];
-  mpq_vector_init (4, x);
-
-  mpq_t y[4];
-  mpq_vector_init (4, y);
-
-  for (int i = 0; i < 4; i++)
-    mpq_set_d (q[i], b[i]);
-
-  // Multiply
+  // In exact arithmetic, because the transformation is unstable,
+  // multiply
   //
-  //                  (1 -3  3 -1)
-  //   (q0 q1 q2 q3)  (0  3 -6  3) = (d c b a)
-  //                  (0  0  3 -3)
-  //                  (0  0  0  1)
+  //   (b[0] b[1] b[2] b[3]) T = (d c b a)
+  //
+  // where
+  //
+  //        ⎛1 -3  3 -1⎞
+  //   T =  ⎜0  3 -6  3⎟
+  //        ⎜0  0  3 -3⎟
+  //        ⎝0  0  0  1⎠
+  //
+  // Here T = T₁T₂ where
+  //
+  //   T₁ =
+  //         ⎛1  0  0  0⎞
+  //         ⎜0  3  0  0⎟
+  //         ⎜0  0  3  0⎟
+  //         ⎝0  0  0  1⎠
+  //
+  // (row-wise multiplication by binomial coefficients) is the
+  // coefficient transformation from the Bernstein basis to ‘scaled
+  // Bernstein’ basis, and
+  //
+  //   T₂ =
+  //         ⎛1 -3  3 -1⎞
+  //         ⎜0  1 -2  1⎟
+  //         ⎜0  0  1 -1⎟
+  //         ⎝0  0  0  1⎠
+  //
+  // is the coefficient transformation from scaled Bernstein basis to
+  // the ordinary monomial (power series) basis.
+  //
+  // The scaled Bernstein basis is very useful in itself, but that is
+  // another topic.
 
-  mpq_set (x[0], mpq_one ());
-  mpq_set (x[1], mpq_neg_three ());
-  mpq_set (x[2], mpq_three ());
-  mpq_set (x[3], mpq_neg_one ());
+  mpq_t x[1][4];
+  mpq_matrix_init (1, 4, x);
+
   for (int i = 0; i < 4; i++)
-    mpq_mul (x[i], x[i], q[0]);
+    mpq_set_d (x[0][i], b[i]);
 
-  mpq_set (y[1], mpq_three ());
-  mpq_set (y[2], mpq_neg_six ());
-  mpq_set (y[3], mpq_three ());
-  for (int i = 1; i < 4; i++)
-    {
-      mpq_mul (y[i], y[i], q[1]);
-      mpq_add (x[i], x[i], y[i]);
-    }
-
-  mpq_set (y[2], mpq_three ());
-  mpq_set (y[3], mpq_neg_three ());
-  for (int i = 2; i < 4; i++)
-    {
-      mpq_mul (y[i], y[i], q[2]);
-      mpq_add (x[i], x[i], y[i]);
-    }
-
-  mpq_add (x[3], x[3], q[3]);
+  mpq_matrix_trmm (CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit,
+                   1, 4, mpq_one (), MPQMAT_REF (T ()), x);
 
   for (int i = 0; i < 4; i++)
-    m[i] = mpq_get_d (x[i]);
+    m[i] = mpq_get_d (x[0][i]);
 
-  mpq_vector_clear (4, y);
-  mpq_vector_clear (4, x);
-  mpq_vector_clear (4, q);
+  mpq_matrix_clear (1, 4, x);
 }
 
 
@@ -123,6 +118,11 @@ bernstein_to_monomial (const double b[4], double m[4])
 // Note by Barry Schwartz, 2013.03.01: Sure, if you let the optimizer
 // change the order of operations and so forth. The real problem here
 // is that we are using the monomial basis at all in floating point.
+//
+// Note by Barry Schwartz, 2013.03.04: We are trying out exact
+// arithmetic, and if it works alright then the optimizer can be let
+// loose, though I _really, really, really_ do not recommend using
+// -Ofast or anything like that, anyway.
 
 void
 SplineRefigure3 (Spline *spline)
@@ -160,11 +160,11 @@ SplineRefigure3 (Spline *spline)
       //
       // Note by Barry Schwartz, 2013.03.01. What is described there
       // is the conversion of coefficients of a cubic polynomial from
-      // monomial basis to bernstein basis:
+      // monomial basis to Bernstein basis:
       //
       //     x(t) = x₀ + ct + bt² + at³        monomial basis
       //
-      //     x(t) = x₀β₀ + x₁β₁ + x₂β₂ + x₃β₃     bernstein basis
+      //     x(t) = x₀β₀ + x₁β₁ + x₂β₂ + x₃β₃     Bernstein basis
       //
       // where
       //
@@ -173,7 +173,7 @@ SplineRefigure3 (Spline *spline)
       //     β₂ = 3t²(1 − t)
       //     β₃ = t³
       //
-      // are the bernstein polynomials of degree three. The
+      // are the Bernstein polynomials of degree three. The
       // coefficients xₖ correspond exactly to (one coordinate of) the
       // bezier control points.
       //
@@ -189,7 +189,7 @@ SplineRefigure3 (Spline *spline)
       //     β₂ = 0
       //     β₃ = 1       if t = 1
       //
-      // Thus, in the bernstein basis, both endpoints of the bezier
+      // Thus, in the Bernstein basis, both endpoints of the bezier
       // spline are calculated exactly, without roundoff. In the
       // monomial basis, on the other hand, the value calculated at
       // the t = 1 endpoint can be way off, even if a, b, and c are
@@ -202,7 +202,7 @@ SplineRefigure3 (Spline *spline)
       // See also http://en.wikipedia.org/wiki/Bernstein_polynomial
       //
 
-#if 0 // The old code.
+#if 0                           // The old code.
 
       xsp->c = 3 * (from->nextcp.x - from->me.x);
       ysp->c = 3 * (from->nextcp.y - from->me.y);
@@ -229,7 +229,7 @@ SplineRefigure3 (Spline *spline)
       ysp->b = my[2];
       ysp->a = my[3];
 
-#if 1 // FIXME: A temporary double-check.
+#if 1                           // FIXME: A temporary double-check.
       double _xc = 3 * (from->nextcp.x - from->me.x);
       double _yc = 3 * (from->nextcp.y - from->me.y);
       double _xb = 3 * (to->prevcp.x - from->nextcp.x) - xsp->c;

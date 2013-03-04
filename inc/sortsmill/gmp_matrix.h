@@ -160,7 +160,7 @@ mpz_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
 void
 mpz_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                 unsigned int m, unsigned int n, mpz_t alpha,
+                 unsigned int m, unsigned int n, const mpz_t alpha,
                  mpz_t
                  A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
                  mpz_t B[m][n]);
@@ -184,7 +184,7 @@ mpq_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
 void
 mpq_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                 unsigned int m, unsigned int n, mpq_t alpha,
+                 unsigned int m, unsigned int n, const mpq_t alpha,
                  mpq_t
                  A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
                  mpq_t B[m][n]);

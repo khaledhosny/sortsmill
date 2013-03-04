@@ -54,6 +54,8 @@
 -T rexp_match_t
 -T rexp_interval_t
 -T precomputed_data_by_degree_t
+-T mpqmat_t
+-T mpqmat_struct_t
 
 -T real
 -T bigreal
