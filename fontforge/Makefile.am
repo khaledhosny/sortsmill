@@ -101,42 +101,123 @@ CLEANFILES += fontforge_type_inspector.c fontforge.types.apii
 
 lib_LTLIBRARIES += libsortsmill_fontforge.la
 
-libsortsmill_fontforge_la_SOURCES = autohint.c autosave.c autotrace.c	\
-	autowidth.c bezctx_ff.c bitmapchar.c bitmapcontrol.c bvedit.c		\
-	clipnoui.c crctab.c cvexport.c cvimages.c cvundoes.c dumpbdf.c		\
-	dumppfa.c effects.c encoding.c featurefile.c fontviewbase.c			\
-	fvcomposite.c fvfonts.c fvimportbdf.c fvmetrics.c glyphcomp.c		\
-	http.c ikarus.c lookups.c macbinary.c macenc.c mathconstants.c		\
-	mm.c namelist.c namelist_data.c nonlineartrans.c noprefs.c			\
-	nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c palmfonts.c		\
-	parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c parsettf.c		\
-	print.c psread.c pua.c python.c generatefont.c scstyles.c			\
-	search.c sfd1.c sfd.c sflayout.c splinechar.c splinefill.c			\
-	splinefont.c splineorder2.c splineoverlap.c splinesaveafm.c			\
-	splinesave.c splinestroke.c splineutil2.c splineutil.c start.c		\
-	stemdb.c svg.c tottfaat.c tottfgpos.c tottf.c ttfinstrs.c			\
-	ttfspecial.c ufo.c unicoderange.c utils.c winfonts.c zapfnomen.c	\
-	groups.c langfreq.c autowidth2.c woff.c activeinui.c				\
-	is_LIGATURE.c flaglist.c contour_interface.c freetype.c ftdelta.c	\
-	some_global_variables.c getfontnames.c arrayfree.c spiro_ff.c		\
-	bezctx.c spiro.c spiroentrypoints.c guile_notices.c
+libsortsmill_fontforge_la_SOURCES =
+libsortsmill_fontforge_la_SOURCES += autohint.c
+libsortsmill_fontforge_la_SOURCES += autosave.c
+libsortsmill_fontforge_la_SOURCES += autotrace.c
+libsortsmill_fontforge_la_SOURCES += autowidth.c
+libsortsmill_fontforge_la_SOURCES += bezctx_ff.c
+libsortsmill_fontforge_la_SOURCES += bitmapchar.c
+libsortsmill_fontforge_la_SOURCES += bitmapcontrol.c
+libsortsmill_fontforge_la_SOURCES += bvedit.c
+libsortsmill_fontforge_la_SOURCES += clipnoui.c
+libsortsmill_fontforge_la_SOURCES += crctab.c
+libsortsmill_fontforge_la_SOURCES += cvexport.c
+libsortsmill_fontforge_la_SOURCES += cvimages.c
+libsortsmill_fontforge_la_SOURCES += cvundoes.c
+libsortsmill_fontforge_la_SOURCES += dumpbdf.c
+libsortsmill_fontforge_la_SOURCES += dumppfa.c
+libsortsmill_fontforge_la_SOURCES += effects.c
+libsortsmill_fontforge_la_SOURCES += encoding.c
+libsortsmill_fontforge_la_SOURCES += featurefile.c
+libsortsmill_fontforge_la_SOURCES += fontviewbase.c
+libsortsmill_fontforge_la_SOURCES += fvcomposite.c
+libsortsmill_fontforge_la_SOURCES += fvfonts.c
+libsortsmill_fontforge_la_SOURCES += fvimportbdf.c
+libsortsmill_fontforge_la_SOURCES += fvmetrics.c
+libsortsmill_fontforge_la_SOURCES += glyphcomp.c
+libsortsmill_fontforge_la_SOURCES += http.c
+libsortsmill_fontforge_la_SOURCES += ikarus.c
+libsortsmill_fontforge_la_SOURCES += lookups.c
+libsortsmill_fontforge_la_SOURCES += macbinary.c
+libsortsmill_fontforge_la_SOURCES += macenc.c
+libsortsmill_fontforge_la_SOURCES += mathconstants.c
+libsortsmill_fontforge_la_SOURCES += mm.c
+libsortsmill_fontforge_la_SOURCES += namelist.c
+libsortsmill_fontforge_la_SOURCES += namelist_data.c
+libsortsmill_fontforge_la_SOURCES += nonlineartrans.c
+libsortsmill_fontforge_la_SOURCES += noprefs.c
+libsortsmill_fontforge_la_SOURCES += nouiutil.c
+libsortsmill_fontforge_la_SOURCES += nowakowskittfinstr.c
+libsortsmill_fontforge_la_SOURCES += ofl.c
+libsortsmill_fontforge_la_SOURCES += othersubrs.c
+libsortsmill_fontforge_la_SOURCES += palmfonts.c
+libsortsmill_fontforge_la_SOURCES += parsepdf.c
+libsortsmill_fontforge_la_SOURCES += parsepfa.c
+libsortsmill_fontforge_la_SOURCES += parsettfatt.c
+libsortsmill_fontforge_la_SOURCES += parsettfbmf.c
+libsortsmill_fontforge_la_SOURCES += parsettf.c
+libsortsmill_fontforge_la_SOURCES += print.c
+libsortsmill_fontforge_la_SOURCES += psread.c
+libsortsmill_fontforge_la_SOURCES += pua.c
+libsortsmill_fontforge_la_SOURCES += python.c
+libsortsmill_fontforge_la_SOURCES += generatefont.c
+libsortsmill_fontforge_la_SOURCES += scstyles.c
+libsortsmill_fontforge_la_SOURCES += search.c
+libsortsmill_fontforge_la_SOURCES += sfd1.c
+libsortsmill_fontforge_la_SOURCES += sfd.c
+libsortsmill_fontforge_la_SOURCES += sflayout.c
+libsortsmill_fontforge_la_SOURCES += splinechar.c
+libsortsmill_fontforge_la_SOURCES += splinefill.c
+libsortsmill_fontforge_la_SOURCES += splinefont.c
+libsortsmill_fontforge_la_SOURCES += splineorder2.c
+libsortsmill_fontforge_la_SOURCES += splineoverlap.c
+libsortsmill_fontforge_la_SOURCES += splinesaveafm.c
+libsortsmill_fontforge_la_SOURCES += splinesave.c
+libsortsmill_fontforge_la_SOURCES += splinestroke.c
+libsortsmill_fontforge_la_SOURCES += splineutil2.c
+libsortsmill_fontforge_la_SOURCES += splineutil.c
+libsortsmill_fontforge_la_SOURCES += start.c
+libsortsmill_fontforge_la_SOURCES += stemdb.c
+libsortsmill_fontforge_la_SOURCES += svg.c
+libsortsmill_fontforge_la_SOURCES += tottfaat.c
+libsortsmill_fontforge_la_SOURCES += tottfgpos.c
+libsortsmill_fontforge_la_SOURCES += tottf.c
+libsortsmill_fontforge_la_SOURCES += ttfinstrs.c
+libsortsmill_fontforge_la_SOURCES += ttfspecial.c
+libsortsmill_fontforge_la_SOURCES += ufo.c
+libsortsmill_fontforge_la_SOURCES += unicoderange.c
+libsortsmill_fontforge_la_SOURCES += utils.c
+libsortsmill_fontforge_la_SOURCES += winfonts.c
+libsortsmill_fontforge_la_SOURCES += zapfnomen.c
+libsortsmill_fontforge_la_SOURCES += groups.c
+libsortsmill_fontforge_la_SOURCES += langfreq.c
+libsortsmill_fontforge_la_SOURCES += autowidth2.c
+libsortsmill_fontforge_la_SOURCES += woff.c
+libsortsmill_fontforge_la_SOURCES += activeinui.c
+libsortsmill_fontforge_la_SOURCES += is_LIGATURE.c
+libsortsmill_fontforge_la_SOURCES += flaglist.c
+libsortsmill_fontforge_la_SOURCES += contour_interface.c
+libsortsmill_fontforge_la_SOURCES += freetype.c
+libsortsmill_fontforge_la_SOURCES += ftdelta.c
+libsortsmill_fontforge_la_SOURCES += some_global_variables.c
+libsortsmill_fontforge_la_SOURCES += getfontnames.c
+libsortsmill_fontforge_la_SOURCES += arrayfree.c
+libsortsmill_fontforge_la_SOURCES += spiro_ff.c
+libsortsmill_fontforge_la_SOURCES += bezctx.c
+libsortsmill_fontforge_la_SOURCES += spiro.c
+libsortsmill_fontforge_la_SOURCES += spiroentrypoints.c
+libsortsmill_fontforge_la_SOURCES += guile_notices.c
+libsortsmill_fontforge_la_SOURCES += splinerefigure.c
 
 nodist_libsortsmill_fontforge_la_SOURCES = fontforge_api.c
-EXTRA_libsortsmill_fontforge_la_SOURCES = splinerefigure.c
+#EXTRA_libsortsmill_fontforge_la_SOURCES = splinerefigure.c
 
-libsortsmill_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
-	$(top_builddir)/lib/libgnu.la
+#libsortsmill_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
+#	$(top_builddir)/lib/libgnu.la
+libsortsmill_fontforge_la_LIBADD = $(LIBADD)
+libsortsmill_fontforge_la_LIBADD += $(top_builddir)/lib/libgnu.la
 libsortsmill_fontforge_la_LDFLAGS = $(call ldflags) -export-dynamic
 libsortsmill_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
 	$(top_builddir)/lib/libgnu.la
 
-# In splinerefigure.c, the slight error introduced occasionally by
-# optimization turns out to have disastrous effects. Compile it
-# without optimization.
-splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
-	$(AM_V_CC) $(LIBTOOL) $(AM_V_lt) --mode=compile $(CC) -g	\
-	-c -o splinerefigure.lo $(AM_CPPFLAGS)						\
-	$(srcdir)/splinerefigure.c
+# # In splinerefigure.c, the slight error introduced occasionally by
+# # optimization turns out to have disastrous effects. Compile it
+# # without optimization.
+# splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
+# 	$(AM_V_CC) $(LIBTOOL) $(AM_V_lt) --mode=compile $(CC) -g	\
+# 	-c -o splinerefigure.lo $(AM_CPPFLAGS)						\
+# 	$(srcdir)/splinerefigure.c
 
 EXTRA_SCRIPTS += generate_codepoint_selector.py
 

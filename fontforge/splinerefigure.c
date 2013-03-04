@@ -215,7 +215,7 @@ SplineRefigure3 (Spline *spline)
       ysp->b = my[2];
       ysp->a = my[3];
 
-#if 1                           // FIXME: A temporary double-check.
+#if 0                           // FIXME: A temporary double-check.
       double _xc = 3 * (from->nextcp.x - from->me.x);
       double _yc = 3 * (from->nextcp.y - from->me.y);
       double _xb = 3 * (to->prevcp.x - from->nextcp.x) - xsp->c;
