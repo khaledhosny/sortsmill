@@ -72,10 +72,10 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
-MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
-	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
-	sortsmill_precompute.at precomputed_data.at bernstein.at		\
-	monomial.at gmp_constants.at brentroot.at linalg.at				\
+MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at		\
+	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at					\
+	sortsmill_precompute.at precomputed_data.at math_functions.at		\
+	bernstein.at monomial.at gmp_constants.at brentroot.at linalg.at	\
 	sortsmill_iconv.at psMat.at old_python_tests.at
 #sortsmill_linalg.at <-- Needs to be adapted to newer modules.
 
@@ -102,6 +102,8 @@ TESTS_BERNSTEIN = test_bernstein
 TESTS_MONOMIAL = test_monomial
 
 TESTS_GMP_CONSTANTS = test_gmp_constants
+
+TESTS_MATH_FUNCTIONS = test_bincoef
 
 TESTS_BRENTROOT = test_brentroot test_qbrentroot
 
@@ -147,10 +149,19 @@ TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_gemm test_scm_matrix_trmm test_scm_matrix_trsv	\
 	test_scm_lu
 
-check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
-	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
-	$(TESTS_PRECOMPUTEDDATA) $(TESTS_BERNSTEIN) $(TESTS_MONOMIAL)	\
-	$(TESTS_GMP_CONSTANTS) $(TESTS_BRENTROOT) $(TESTS_LINALG)
+check_PROGRAMS =
+check_PROGRAMS += $(TESTS_XGC_H)
+check_PROGRAMS += $(TESTS_XUNISTRING_H)
+check_PROGRAMS += $(TESTS_GFILE_C)
+check_PROGRAMS += $(TESTS_PS_NUMBER_H)
+check_PROGRAMS += $(TESTS_REXP_H)
+check_PROGRAMS += $(TESTS_PRECOMPUTEDDATA)
+check_PROGRAMS += $(TESTS_BERNSTEIN)
+check_PROGRAMS += $(TESTS_MONOMIAL)
+check_PROGRAMS += $(TESTS_GMP_CONSTANTS)
+check_PROGRAMS += $(TESTS_MATH_FUNCTIONS)
+check_PROGRAMS += $(TESTS_BRENTROOT)
+check_PROGRAMS += $(TESTS_LINALG)
 
 # Just make all C programs dependent, rather than sort out who really
 # is dependent.

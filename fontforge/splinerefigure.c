@@ -27,12 +27,37 @@
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "fontforge.h"
-#include <stdio.h>
-#include <math.h>
 #include "splinefont.h"
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/gmp_constants.h>
 #include <sortsmill/polyspline.h>
+#include <stdio.h>
+#include <math.h>
+#include <assert.h>
+
+/*
+#include <sortsmill/guile.h>
+#include <atomic_ops.h>
+
+static volatile AO_t matrix_is_initialized = false;
+static pthread_mutex_t matrix_mutex = PTHREAD_MUTEX_INITIALIZER;
+mpqmat_t the_matrix;
+
+static mpqmat_t
+transformation_matrix (void)
+{
+  if (!AO_load_acquire_read (&matrix_is_initialized))
+    {
+      pthread_mutex_lock (&matrix_mutex);
+      if (!matrix_is_initialized)
+        {
+          //          SCM scm_matrix = 
+          AO_store_release_write (&matrix_is_initialized, true);
+        }
+      pthread_mutex_unlock (&matrix_mutex);
+    }
+}
+*/
 
 static void
 bernstein_to_monomial (const double b[4], double m[4])
@@ -203,6 +228,22 @@ SplineRefigure3 (Spline *spline)
       ysp->c = my[1];
       ysp->b = my[2];
       ysp->a = my[3];
+
+#if 1 // FIXME: A temporary double-check.
+      double _xc = 3 * (from->nextcp.x - from->me.x);
+      double _yc = 3 * (from->nextcp.y - from->me.y);
+      double _xb = 3 * (to->prevcp.x - from->nextcp.x) - xsp->c;
+      double _yb = 3 * (to->prevcp.y - from->nextcp.y) - ysp->c;
+      double _xa = to->me.x - from->me.x - xsp->c - xsp->b;
+      double _ya = to->me.y - from->me.y - ysp->c - ysp->b;
+      double my_eps = 1e-6;
+      assert (fabs (xsp->c - _xc) < my_eps);
+      assert (fabs (ysp->c - _yc) < my_eps);
+      assert (fabs (xsp->b - _xb) < my_eps);
+      assert (fabs (ysp->b - _yb) < my_eps);
+      assert (fabs (xsp->a - _xa) < my_eps);
+      assert (fabs (ysp->a - _ya) < my_eps);
+#endif
 
 #endif
 

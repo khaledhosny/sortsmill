@@ -111,7 +111,7 @@ scm_to_mpqmat_t (SCM mpqmat)
   return scm_to_pointer (scm_mpqmat_to_pointer (mpqmat));
 }
 
-#if 0 // Do we need these?
+#if 0                           // Do we need these?
 
 static void
 scm_c_mpqmat_error (const char *who, SCM message, SCM irritants)
@@ -131,23 +131,26 @@ assert_c_mpqmat_dimensions_nonzero (const char *who, mpqmat_t A)
 {
   if (A.size1 == 0 || A.size2 == 0)
     {
-      SCM message =
-        scm_c_locale_sformat (_("dimension of size zero: ~ax~a"),
-                              scm_list_2 (scm_from_umaxint (A.size1),
-                                          scm_from_umaxint (A.size2)));
+      SCM message = scm_c_locale_sformat (_("dimension of size zero: ~ax~a"),
+                                          scm_list_2 (scm_from_umaxint
+                                                      (A.size1),
+                                                      scm_from_umaxint
+                                                      (A.size2)));
       SCM irritants = scm_list_1 (scm_from_mpqmat_t (A));
       scm_c_mpqmat_error (who, message, irritants);
     }
 }
 
 static void
-assert_c_mpqmat_conformable_for_addition (const char *who, mpqmat_t A, mpqmat_t B)
+assert_c_mpqmat_conformable_for_addition (const char *who, mpqmat_t A,
+                                          mpqmat_t B)
 {
   if (A.size1 != B.size1 && A.size2 != B.size2)
     {
-      SCM message = scm_c_locale_sformat (_("non-conformable matrices: ~ax~a plus ~ax~a"),
-                                          scm_list_2 (scm_from_umaxint (A.size1),
-                                                      scm_from_umaxint (A.size2)));
+      SCM message =
+        scm_c_locale_sformat (_("non-conformable matrices: ~ax~a plus ~ax~a"),
+                              scm_list_2 (scm_from_umaxint (A.size1),
+                                          scm_from_umaxint (A.size2)));
       SCM irritants = scm_list_2 (scm_from_mpqmat_t (A),
                                   scm_from_mpqmat_t (B));
       scm_c_mpqmat_error (who, message, irritants);

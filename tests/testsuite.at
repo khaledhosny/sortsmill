@@ -15,6 +15,7 @@ m4_include([bernstein.at]) dnl FIXME: Tests for conversions of multiple splines 
 m4_include([monomial.at])  dnl FIXME: Tests for conversions of multiple splines at once.
                            dnl FIXME: Test that Python preserves container type; etc.
 m4_include([gmp_constants.at])
+m4_include([math_functions.at])
 m4_include([brentroot.at])
 m4_include([linalg.at])
 

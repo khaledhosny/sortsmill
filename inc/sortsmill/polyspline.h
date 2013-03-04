@@ -36,6 +36,7 @@ extern "C"
  * vectors as their rows (or columns, if accessed from Fortran).
  */
 
+/* FIXME: Consider getting rid of these. */
 const double *fl_binomial_coefficients (unsigned int degree);
 const double *fl_binomial_coefficients_altsigns (unsigned int degree);
 
