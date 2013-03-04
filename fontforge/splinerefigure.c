@@ -55,9 +55,6 @@ bernstein_to_monomial (const double b[4], double m[4])
   //   (q0 q1 q2 q3)  (0  3 -6  3) = (d c b a)
   //                  (0  0  3 -3)
   //                  (0  0  0  1)
-  //
-  // The rows of the square matrix are the coefficients of 1, t, t²,
-  // t³ in terms of the bernstein polynomials of degree 3.
 
   mpq_set (x[0], mpq_one ());
   mpq_set (x[1], mpq_neg_three ());
