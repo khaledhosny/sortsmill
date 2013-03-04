@@ -110,20 +110,6 @@ bernstein_to_monomial (const double b[4], double m[4])
   mpq_matrix_clear (1, 4, x);
 }
 
-
-// The slight errors introduced by the optimizer turn out to have
-// nasty side effects. An error on the order of 7e-8 in splines[1].b
-// caused the rasterizer to have conniptions.
-
-// Note by Barry Schwartz, 2013.03.01: Sure, if you let the optimizer
-// change the order of operations and so forth. The real problem here
-// is that we are using the monomial basis at all in floating point.
-//
-// Note by Barry Schwartz, 2013.03.04: We are trying out exact
-// arithmetic, and if it works alright then the optimizer can be let
-// loose, though I _really, really, really_ do not recommend using
-// -Ofast or anything like that, anyway.
-
 void
 SplineRefigure3 (Spline *spline)
 {
