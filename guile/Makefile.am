@@ -390,12 +390,20 @@ DIST_SCM_FILES += sortsmill/math/brentroot.scm
 GO_FILES += sortsmill/math/brentroot.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/brentroot.scm
 
-sortsmill/math/brentroot.go: $(lib_LTLIBRARIES)
+sortsmill/math/brentroot.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 @ifndefmk@ GENERATED_GO_DEPS
-sortsmill/math/brentroot.go: sortsmill/dynlink.go
 sortsmill/math/brentroot.go: sortsmill/math/math-constants.go
 @endifmk@
+
+# (sortsmill math functions)
+
+DIST_SCM_FILES += sortsmill/math/functions.scm
+GO_FILES += sortsmill/math/functions.go
+MATH_REEXPORTED_SCM_FILES += sortsmill/math/functions.scm
+
+sortsmill/math/functions.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
 
 # (sortsmill math gsl)
 
@@ -490,11 +498,39 @@ sortsmill/math/matrices/mpqmat.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline)
 
-DIST_SCM_FILES += sortsmill/math/polyspline.scm
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/math/polyspline.scm
 GO_FILES += sortsmill/math/polyspline.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/polyspline.scm
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES =
+MATH_REEXPORTED_SCM_FILES += sortsmill/math/polyspline.scm
 
-sortsmill/math/polyspline.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+sortsmill/math/polyspline.scm: $(MATH_POLYSPLINE_REEXPORTED_SCM_FILES)
+	$(AM_V_REEXPORT)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill math polyspline), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+
+# (sortsmill math polyspline f64)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/f64.scm
+GO_FILES += sortsmill/math/polyspline/f64.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/f64.scm
+
+sortsmill/math/polyspline/f64.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
+
+# (sortsmill math polyspline gmp)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/gmp.scm
+GO_FILES += sortsmill/math/polyspline/gmp.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/gmp.scm
+
+
+# (sortsmill math polyspline scm)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/scm.scm
+GO_FILES += sortsmill/math/polyspline/scm.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/scm.scm
 
 #--------------------------------------------------------------------------
 #

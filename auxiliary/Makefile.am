@@ -41,40 +41,58 @@ dist_libsortsmill_aux_la_SOURCES =
 nodist_libsortsmill_aux_la_SOURCES =
 
 # Source files inherited from FontForge.
-dist_libsortsmill_aux_la_SOURCES += ArabicForms.c alphabet.c	\
-	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c		\
-	combiners.h
+dist_libsortsmill_aux_la_SOURCES += ArabicForms.c
+dist_libsortsmill_aux_la_SOURCES += alphabet.c
+dist_libsortsmill_aux_la_SOURCES += backtrns.c
+dist_libsortsmill_aux_la_SOURCES += cjk.c
+dist_libsortsmill_aux_la_SOURCES += ucharmap.c
+dist_libsortsmill_aux_la_SOURCES += unialt.c
+dist_libsortsmill_aux_la_SOURCES += ustring.c
+dist_libsortsmill_aux_la_SOURCES += utype.c
+dist_libsortsmill_aux_la_SOURCES += combiners.h
 
 # Recognition of numbers written in PostScript’s notation.
 dist_libsortsmill_aux_la_SOURCES += ps_number.c
 
 # Extensions to xalloc and Boehm GC.
-dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c x_alloc.c xgc.c	\
-	xgc_strjoin.c
+dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c
+dist_libsortsmill_aux_la_SOURCES += x_alloc.c
+dist_libsortsmill_aux_la_SOURCES += xgc.c
+dist_libsortsmill_aux_la_SOURCES += xgc_strjoin.c
 
 # Extensions to PCRE.
 dist_libsortsmill_aux_la_SOURCES += rexp.c
 
 # Extensions to GNU MP.
-dist_libsortsmill_aux_la_SOURCES += gmp_constants.c gmp_matrix.c	\
-	mpq_lu.c
+dist_libsortsmill_aux_la_SOURCES += gmp_constants.c
+dist_libsortsmill_aux_la_SOURCES += gmp_matrix.c
+dist_libsortsmill_aux_la_SOURCES += mpq_lu.c
 
 # C matrices of SCM (Guile) numbers.
 dist_libsortsmill_aux_la_SOURCES += scm_matrix.c scm_lu.c
 
 # Extensions to libunistring.
-dist_libsortsmill_aux_la_SOURCES += xunicase.c xuniconv.c xuninorm.c	\
-	xunistr.c xunistr_strjoin.c
+dist_libsortsmill_aux_la_SOURCES += xunicase.c
+dist_libsortsmill_aux_la_SOURCES += xuniconv.c
+dist_libsortsmill_aux_la_SOURCES += xuninorm.c
+dist_libsortsmill_aux_la_SOURCES += xunistr.c
+dist_libsortsmill_aux_la_SOURCES += xunistr_strjoin.c
+
+# Mathematical functions.
+dist_libsortsmill_aux_la_SOURCES += bincoef.c
 
 # Polynomial splines.
-dist_libsortsmill_aux_la_SOURCES += precomputed_gmp_polyspline_data.c	\
-	polyspline_data.c polyspline.c guile_math_polyspline.c				\
-	guile_contours.c
+dist_libsortsmill_aux_la_SOURCES += precomputed_gmp_polyspline_data.c
+dist_libsortsmill_aux_la_SOURCES += polyspline_data.c
+dist_libsortsmill_aux_la_SOURCES += polyspline.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_polyspline.c
+dist_libsortsmill_aux_la_SOURCES += guile_contours.c
 nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
 
 # Brent’s root-finding algorithm.
-dist_libsortsmill_aux_la_SOURCES += brentroot.c qbrentroot.c	\
-	guile_math_brentroot.c
+dist_libsortsmill_aux_la_SOURCES += brentroot.c
+dist_libsortsmill_aux_la_SOURCES += qbrentroot.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_brentroot.c
 
 # Guile-Pure interface
 if HAVE_PURE_API
@@ -85,15 +103,23 @@ endif HAVE_PURE_API
 if HAVE_PYTHON_API
 # FIXME: Now that all this Guile-Python support has been moved to one
 # library, the source files can be merged or broken up differently.
-dist_libsortsmill_aux_la_SOURCES += scm_python.c guile_python.c
+dist_libsortsmill_aux_la_SOURCES += scm_python.c
+dist_libsortsmill_aux_la_SOURCES += guile_python.c
 endif HAVE_PYTHON_API
 
 # Miscellaneous C interface to Guile and Guile extensions.
-dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c				\
-	guile_math_gsl_error.c guile_math_gsl_matrices.c				\
-	guile_math_gsl_permutations.c guile_math_gmp.c guile_arrays.c	\
-	guile_math_matrices_mpqmat.c guile_iconv.c						\
-	guile_directory_layout.c guile_options.c guile_format.c
+dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_functions.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_error.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_matrices.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_permutations.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_gmp.c
+dist_libsortsmill_aux_la_SOURCES += guile_arrays.c
+dist_libsortsmill_aux_la_SOURCES += guile_math_matrices_mpqmat.c
+dist_libsortsmill_aux_la_SOURCES += guile_iconv.c
+dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
+dist_libsortsmill_aux_la_SOURCES += guile_options.c
+dist_libsortsmill_aux_la_SOURCES += guile_format.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
@@ -103,9 +129,15 @@ libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 
 # The GMP_MATRIX_EXTRAS files are included by gmp_matrix.c rather than
 # compiled directly.
-GMP_MATRIX_EXTRAS = gmp_matrix_init.c gmp_matrix_set.c		\
-	gmp_matrix_copy.c gmp_matrix_swap.c gmp_matrix_mult.c	\
-	gmp_matrix_add.c gmp_matrix_pred.c gmp_matrix_trsv.c
+GMP_MATRIX_EXTRAS =
+GMP_MATRIX_EXTRAS += gmp_matrix_init.c
+GMP_MATRIX_EXTRAS += gmp_matrix_set.c
+GMP_MATRIX_EXTRAS += gmp_matrix_copy.c
+GMP_MATRIX_EXTRAS += gmp_matrix_swap.c
+GMP_MATRIX_EXTRAS += gmp_matrix_mult.c
+GMP_MATRIX_EXTRAS += gmp_matrix_add.c
+GMP_MATRIX_EXTRAS += gmp_matrix_pred.c
+GMP_MATRIX_EXTRAS += gmp_matrix_trsv.c
 
 gmp_matrix.lo: $(GMP_MATRIX_EXTRAS)
 

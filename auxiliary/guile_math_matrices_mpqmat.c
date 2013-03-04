@@ -23,10 +23,10 @@ void init_guile_sortsmill_math_matrices_mpqmat (void);
 static void
 mpqmat_finalizer (void *p)
 {
-  mpqmat_t *mat = (mpqmat_t *) p;
+  mpqmat_t mat = (mpqmat_t) p;
   const unsigned int m = mat->size1;
   const unsigned int n = mat->size2;
-  mpq_matrix_clear (m, n, (mpq_t (*)[(unsigned int) n]) mat->data);
+  mpq_matrix_clear (m, n, (mpq_t (*)[(unsigned int)n]) mat->data);
   free (mat->data);
   free (mat);
 }
@@ -35,8 +35,7 @@ VISIBLE SCM
 scm_mpqmat_p (SCM obj)
 {
   return scm_call_1 (scm_c_private_ref ("sortsmill math matrices mpqmat",
-                                        "private:mpqmat?"),
-                     obj);
+                                        "private:mpqmat?"), obj);
 }
 
 VISIBLE bool
@@ -49,16 +48,14 @@ VISIBLE SCM
 scm_pointer_to_mpqmat (SCM pointer)
 {
   return scm_call_1 (scm_c_private_ref ("sortsmill math matrices mpqmat",
-                                        "private:pointer->mpqmat"),
-                     pointer);
+                                        "private:pointer->mpqmat"), pointer);
 }
 
 VISIBLE SCM
 scm_mpqmat_to_pointer (SCM mpqmat)
 {
   return scm_call_1 (scm_c_private_ref ("sortsmill math matrices mpqmat",
-                                        "private:mpqmat->pointer"),
-                     mpqmat);
+                                        "private:mpqmat->pointer"), mpqmat);
 }
 
 VISIBLE SCM
@@ -81,25 +78,107 @@ scm_matrix_to_mpqmat (SCM A)
   mpq_matrix_init (m, n, (mpq_t (*)[n]) _A);
 
   scm_array_handle_to_mpq_matrix (A, &handle_A, m, n,
-                                  (mpq_t (*)[(unsigned int) n]) _A);
+                                  (mpq_t (*)[(unsigned int)n]) _A);
 
   scm_dynwind_end ();
 
-  mpqmat_t *mat = scm_malloc (sizeof (mpqmat_t));
+  mpqmat_t mat = scm_malloc (sizeof (mpqmat_t));
   mat->size1 = m;
   mat->size2 = n;
   mat->data = _A;
-  
+
   return scm_pointer_to_mpqmat (scm_from_pointer (mat, mpqmat_finalizer));
 }
 
 VISIBLE SCM
 scm_mpqmat_to_matrix (SCM mpqmat)
 {
-  mpqmat_t *mat = (mpqmat_t *) scm_to_pointer (scm_mpqmat_to_pointer (mpqmat));
+  mpqmat_t mat = (mpqmat_t) scm_to_pointer (scm_mpqmat_to_pointer (mpqmat));
   const unsigned int m = mat->size1;
   const unsigned int n = mat->size2;
-  return scm_from_mpq_matrix (m, n, (mpq_t (*)[(unsigned int) n]) mat->data);
+  return scm_from_mpq_matrix (m, n, (mpq_t (*)[(unsigned int)n]) mat->data);
+}
+
+VISIBLE SCM
+scm_from_mpqmat_t (const mpqmat_t A)
+{
+  return scm_pointer_to_mpqmat (scm_from_pointer (A, NULL));
+}
+
+VISIBLE mpqmat_t
+scm_to_mpqmat_t (SCM mpqmat)
+{
+  return scm_to_pointer (scm_mpqmat_to_pointer (mpqmat));
+}
+
+#if 0 // Do we need these?
+
+static void
+scm_c_mpqmat_error (const char *who, SCM message, SCM irritants)
+{
+  SCM message =
+    scm_c_locale_sformat (_("mpqmat error: ~a"), scm_list_1 (message));
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_error (),
+      rnrs_c_make_who_condition (who),
+      rnrs_make_message_condition (message);
+      rnrs_make_irritants_condition (irritants)));
+}
+
+static void
+assert_c_mpqmat_dimensions_nonzero (const char *who, mpqmat_t A)
+{
+  if (A.size1 == 0 || A.size2 == 0)
+    {
+      SCM message =
+        scm_c_locale_sformat (_("dimension of size zero: ~ax~a"),
+                              scm_list_2 (scm_from_umaxint (A.size1),
+                                          scm_from_umaxint (A.size2)));
+      SCM irritants = scm_list_1 (scm_from_mpqmat_t (A));
+      scm_c_mpqmat_error (who, message, irritants);
+    }
+}
+
+static void
+assert_c_mpqmat_conformable_for_addition (const char *who, mpqmat_t A, mpqmat_t B)
+{
+  if (A.size1 != B.size1 && A.size2 != B.size2)
+    {
+      SCM message = scm_c_locale_sformat (_("non-conformable matrices: ~ax~a plus ~ax~a"),
+                                          scm_list_2 (scm_from_umaxint (A.size1),
+                                                      scm_from_umaxint (A.size2)));
+      SCM irritants = scm_list_2 (scm_from_mpqmat_t (A),
+                                  scm_from_mpqmat_t (B));
+      scm_c_mpqmat_error (who, message, irritants);
+    }
+}
+
+#endif // Do we need these?
+
+VISIBLE SCM
+scm_c_make_mpqmat (unsigned int m, unsigned int n)
+{
+  assert (0 < m);
+  assert (0 < n);
+
+  mpq_t *_A = scm_malloc (m * n * sizeof (mpq_t));
+  mpq_matrix_init (m, n, (mpq_t (*)[n]) _A);
+
+  mpqmat_t mat = scm_malloc (sizeof (mpqmat_t));
+  mat->size1 = m;
+  mat->size2 = n;
+  mat->data = _A;
+
+  return scm_pointer_to_mpqmat (scm_from_pointer (mat, mpqmat_finalizer));
+}
+
+VISIBLE mpqmat_t
+scm_c_make_mpqmat_t (unsigned int m, unsigned int n)
+{
+  assert (0 < m);
+  assert (0 < n);
+  return (scm_to_mpqmat_t (scm_c_make_mpqmat (m, n)));
 }
 
 VISIBLE void

@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill math polyspline)
+(library (sortsmill math polyspline f64)
 
   (export f64vector-binomial-coefficients
           f64vector-binomial-coefficients-altsigns

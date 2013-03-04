@@ -35,7 +35,9 @@ typedef struct
   unsigned int size1;
   unsigned int size2;
   mpq_t *data;
-} mpqmat_t;
+} mpqmat_struct_t;
+
+typedef mpqmat_struct_t *mpqmat_t;
 
 
 #if _FF_C99_OR_GREATER
@@ -57,6 +59,13 @@ SCM scm_pointer_to_mpqmat (SCM pointer);
 SCM scm_mpqmat_to_pointer (SCM mpqmat);
 SCM scm_matrix_to_mpqmat (SCM A);
 SCM scm_mpqmat_to_matrix (SCM mpqmat);
+
+SCM scm_from_mpqmat_t (const mpqmat_t A);
+mpqmat_t scm_to_mpqmat_t (SCM mpqmat);
+
+/* Make an uninitialized mpqmat. */
+SCM scm_c_make_mpqmat (unsigned int m, unsigned int n);
+mpqmat_t scm_c_make_mpqmat_t (unsigned int m, unsigned int n);
 
 #if 0
 {

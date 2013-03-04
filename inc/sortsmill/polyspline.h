@@ -39,10 +39,12 @@ extern "C"
 const double *fl_binomial_coefficients (unsigned int degree);
 const double *fl_binomial_coefficients_altsigns (unsigned int degree);
 
+/* FIXME: Get rid of these. */
 __mpz_struct *mpz_binomial_coefficients (unsigned int degree);
 __mpz_struct *mpz_binomial_coefficients_altsigns (unsigned int degree);
 void free_mpz_binomial_coefficients (unsigned int degree, __mpz_struct *);
 
+/* FIXME: Get rid of these. */
 __mpq_struct *mpq_binomial_coefficients (unsigned int degree);
 __mpq_struct *mpq_binomial_coefficients_altsigns (unsigned int degree);
 void free_mpq_binomial_coefficients (unsigned int degree, __mpq_struct *);
@@ -52,12 +54,14 @@ const double *fl_mono_basis_in_sbern (unsigned int degree);
 const double *fl_sbern_basis_in_spower (unsigned int degree);
 const double *fl_spower_basis_in_sbern (unsigned int degree);
 
+/* FIXME: Get rid of these. */
 __mpz_struct *mpz_sbern_basis_in_mono (unsigned int degree);
 __mpz_struct *mpz_mono_basis_in_sbern (unsigned int degree);
 __mpz_struct *mpz_sbern_basis_in_spower (unsigned int degree);
 __mpz_struct *mpz_spower_basis_in_sbern (unsigned int degree);
 void free_mpz_transformation_matrix (unsigned int degree, __mpz_struct *);
 
+/* FIXME: Get rid of these. */
 __mpq_struct *mpq_sbern_basis_in_mono (unsigned int degree);
 __mpq_struct *mpq_mono_basis_in_sbern (unsigned int degree);
 __mpq_struct *mpq_sbern_basis_in_spower (unsigned int degree);

@@ -89,6 +89,9 @@ nobase_include_HEADERS += sortsmill/xunistring.h
 # Parsing of PostScript-style numerals.
 nobase_include_HEADERS += sortsmill/ps_number.h
 
+# Mathematical functions.
+nobase_include_HEADERS += sortsmill/bincoef.h
+
 # `Easy' regular expression processing, based on PCRE.
 nobase_include_HEADERS += sortsmill/rexp.h
 

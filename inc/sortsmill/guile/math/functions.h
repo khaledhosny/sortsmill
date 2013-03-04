@@ -15,14 +15,26 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_MATH_H
-#define _SORTSMILL_GUILE_MATH_H
+#ifndef _SORTSMILL_GUILE_MATH_FUNCTIONS_H
+#define _SORTSMILL_GUILE_MATH_FUNCTIONS_H
 
-#include <sortsmill/guile/math/brentroot.h>
-#include <sortsmill/guile/math/functions.h>
-#include <sortsmill/guile/math/gmp.h>
-#include <sortsmill/guile/math/gsl.h>
-#include <sortsmill/guile/math/matrices.h>
-#include <sortsmill/guile/math/polyspline.h>
+#include <libguile.h>
 
-#endif /* _SORTSMILL_GUILE_MATH_H */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+SCM scm_bincoef (SCM n, SCM k);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_MATH_FUNCTIONS_H */

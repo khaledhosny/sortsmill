@@ -30,11 +30,13 @@ extern "C"
 
 /* ‘format’ from (ice-9 format). */
 SCM scm_format (SCM destination, SCM message, SCM args);
-SCM scm_c_format (SCM destination, const char *message, SCM args);
+SCM scm_c_utf8_format (SCM destination, const char *message, SCM args);
+SCM scm_c_locale_format (SCM destination, const char *message, SCM args);
 
 /* ‘format’ with ‘destination’ set to #f. */
 SCM scm_sformat (SCM message, SCM args);
-SCM scm_c_sformat (const char *message, SCM args);
+SCM scm_c_utf8_sformat (const char *message, SCM args);
+SCM scm_c_locale_sformat (const char *message, SCM args);
 
 #if 0
 {

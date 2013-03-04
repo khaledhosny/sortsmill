@@ -15,14 +15,14 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_MATH_H
-#define _SORTSMILL_GUILE_MATH_H
+#ifndef _SORTSMILL_BINCOEF_H
+#define _SORTSMILL_BINCOEF_H
 
-#include <sortsmill/guile/math/brentroot.h>
-#include <sortsmill/guile/math/functions.h>
-#include <sortsmill/guile/math/gmp.h>
-#include <sortsmill/guile/math/gsl.h>
-#include <sortsmill/guile/math/matrices.h>
-#include <sortsmill/guile/math/polyspline.h>
+#include <stdint.h>
+#include <gmp.h>
 
-#endif /* _SORTSMILL_GUILE_MATH_H */
+/* The binary coefficient C(n,k). */
+uintmax_t bincoef (uintmax_t n, uintmax_t k);
+void mpz_bincoef_ui (mpz_t C, uintmax_t n, uintmax_t k);
+
+#endif /* _SORTSMILL_BINCOEF_H */
