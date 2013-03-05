@@ -17,20 +17,28 @@
 
 (library (sortsmill math polyspline f64)
 
-  (export f64vector-binomial-coefficients
-          f64vector-binomial-coefficients-altsigns
-          vector-binomial-coefficients
-          vector-binomial-coefficients-altsigns
+  (export
 
-          f64vector-sbern-basis-in-mono
-          f64vector-mono-basis-in-sbern
-          f64vector-sbern-basis-in-spower
-          f64vector-spower-basis-in-sbern
-          vector-sbern-basis-in-mono
-          vector-mono-basis-in-sbern
-          vector-sbern-basis-in-spower
-          vector-spower-basis-in-sbern
+;;;; FIXME: Should these be exported?
+;;;          f64vector-binomial-coefficients
+;;;          f64vector-binomial-coefficients-altsigns
+;;;          vector-binomial-coefficients
+;;;          vector-binomial-coefficients-altsigns
 
+;;;; FIXME: Should these be exported?
+;;;          f64vector-sbern-basis-in-mono
+;;;          f64vector-mono-basis-in-sbern
+;;;          f64vector-sbern-basis-in-spower
+;;;          f64vector-spower-basis-in-sbern
+;;;          vector-sbern-basis-in-mono
+;;;          vector-mono-basis-in-sbern
+;;;          vector-sbern-basis-in-spower
+;;;          vector-spower-basis-in-sbern
+
+;;;;;;; FIXME: Change the names of these to something obviously
+;;;;;;; ‘covariant’ with the coefficient transformation, to minimize
+;;;;;;; confusion; or ‘covariant’ with the basis transformation. But
+;;;;;;; something with an arrow or the like.
           f64matrix-sbern-basis-in-mono
           f64matrix-mono-basis-in-sbern
           f64matrix-sbern-basis-in-spower

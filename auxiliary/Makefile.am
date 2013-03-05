@@ -85,13 +85,17 @@ dist_libsortsmill_aux_la_SOURCES += xunistr_strjoin.c
 # Mathematical functions.
 dist_libsortsmill_aux_la_SOURCES += bincoef.c
 
-# Polynomial splines.
+# Polynomial splines. FIXME: Replace much of this stuff.
 dist_libsortsmill_aux_la_SOURCES += precomputed_gmp_polyspline_data.c
 dist_libsortsmill_aux_la_SOURCES += polyspline_data.c
 dist_libsortsmill_aux_la_SOURCES += polyspline.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_polyspline.c
 dist_libsortsmill_aux_la_SOURCES += guile_contours.c
 nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
+
+# Polynomial splines. FIXME: This is new work. Develop this in
+# conjuction with phasing out or reworking the stuff above.
+dist_libsortsmill_aux_la_SOURCES += polyspline_basis_matrices.c
 
 # Brent’s root-finding algorithm.
 dist_libsortsmill_aux_la_SOURCES += brentroot.c

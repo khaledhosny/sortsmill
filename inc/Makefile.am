@@ -116,6 +116,7 @@ nobase_include_HEADERS += sortsmill/qbrentroot.h
 
 # Polynomial splines.
 nobase_include_HEADERS += sortsmill/polyspline.h
+nobase_include_HEADERS += sortsmill/polyspline/basis_matrices.h
 
 # FIXME: These headers need to be examined for relevance and for
 # whether the functions they declare need to be moved into the
