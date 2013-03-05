@@ -121,18 +121,23 @@ SplineRefigure3 (Spline *spline)
   Spline old;
 
   spline->isquadratic = false;
+
   if (spline->acceptableextrema)
     old = *spline;
+
   xsp->d = from->me.x;
   ysp->d = from->me.y;
+
   if (from->nonextcp)
     from->nextcp = from->me;
   else if (from->nextcp.x == from->me.x && from->nextcp.y == from->me.y)
     from->nonextcp = true;
+
   if (to->noprevcp)
     to->prevcp = to->me;
   else if (to->prevcp.x == to->me.x && to->prevcp.y == to->me.y)
     to->noprevcp = true;
+
   if (from->nonextcp && to->noprevcp)
     {
       spline->islinear = true;
@@ -254,6 +259,11 @@ SplineRefigure3 (Spline *spline)
           && (Within16RoundingErrors (ysp->a + from->me.y, from->me.y)
               || Within16RoundingErrors (ysp->a + to->me.y, to->me.y)))
         ysp->a = 0;
+
+      // Note by Barry Schwartz, 2013.03.04: I am not completely sure
+      // what is going on here, but estimating the minimum degree of a
+      // spline is better done by conversion to the Sánchez-Reyes
+      // (s-power) basis than to the monomial basis.
       SplineIsLinear (spline);
       spline->islinear = false;
       if (ysp->a == 0 && xsp->a == 0)
@@ -261,13 +271,16 @@ SplineRefigure3 (Spline *spline)
           if (ysp->b == 0 && xsp->b == 0)
             spline->islinear = true;    // This seems extremely unlikely...
           else
-            spline->isquadratic = true; // Only likely if we read in a
-          // TTF.
+            spline->isquadratic = true; // Only likely if we read in a TTF.
         }
     }
+
   if (!finite (ysp->a) || !finite (xsp->a) || !finite (ysp->c)
       || !finite (xsp->c) || !finite (ysp->d) || !finite (xsp->d))
+    // Note by Barry Schwartz, 2013.03.04: How this could happen
+    // except from roundoff or non-number inputs I do not know.
     IError ("NaN value in spline creation");
+
   LinearApproxFree (spline->approx);
   spline->approx = NULL;
   spline->knowncurved = false;
