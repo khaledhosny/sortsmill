@@ -557,4 +557,29 @@ _GMP_TYPE (_matrix_trmm) (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
     }
 }
 
-  //-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+
+// In-place multiplication by a diagonal matrix (represented as a
+// vector). @var{Side} says whether the diagonal matrix is on the left
+// or the right side of the multiplication.
+VISIBLE void
+_GMP_TYPE (_matrix_mul_diagonal) (CBLAS_SIDE_t Side,
+                                  unsigned int m, unsigned int n,
+                                  _GMP_TYPE (_t) A[m][n],
+                                  _GMP_TYPE (_t) x[(Side == CblasLeft) ? m : n])
+{
+  assert (Side == CblasLeft || Side == CblasRight);
+
+  if (Side == CblasLeft)
+    // Scale the rows of A.
+    for (unsigned int i = 0; i < m; i++)
+      for (unsigned int j = 0; j < n; j++)
+        _GMP_TYPE (_mul) (A[i][j], A[i][j], x[i]);
+  else
+    // Scale the columns of A.
+    for (unsigned int j = 0; j < n; j++)
+      for (unsigned int i = 0; i < m; i++)
+        _GMP_TYPE (_mul) (A[i][j], A[i][j], x[j]);
+}
+
+//-------------------------------------------------------------------------

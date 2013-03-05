@@ -73,7 +73,12 @@ bool scm_matrix_isnonneg (unsigned int m, unsigned int n, SCM A[m][n]);
 bool scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n],
                        SCM B[m][n]);
 
-/* General matrix multiplication.
+/* Multiply by a diagonal matrix that is represented by a vector. */
+void scm_matrix_mul_diagonal (CBLAS_SIDE_t Side,
+                              unsigned int m, unsigned int n,
+                              SCM A[m][n], SCM x[(Side == CblasLeft) ? m : n]);
+
+/* General matrix multiplication; based on BLAS Level 3 xGEMM.
    See http://en.wikipedia.org/wiki/General_Matrix_Multiply */
 void
 scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
@@ -82,7 +87,7 @@ scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                  SCM _FF_TRANSMATRIX (A, TransA, m, k),
                  SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM beta, SCM C[m][n]);
 
-/* Triangular matrix multiplication. */
+/* Triangular matrix multiplication; based on BLAS Level 3 xTRMM. */
 VISIBLE void
 scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
@@ -91,7 +96,7 @@ scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
                  SCM B[m][n]);
 
-/* Solve triangular systems. */
+/* Solve triangular systems; based on BLAS Level 2 xTRSV. */
 void scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
                       CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n]);
 

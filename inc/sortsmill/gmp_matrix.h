@@ -165,6 +165,14 @@ mpz_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
                  mpz_t B[m][n]);
 
+/* Multiplication by a diagonal matrix (represented as a vector) on
+   one or the other side. */
+void mpz_matrix_mul_diagonal (CBLAS_SIDE_t Side,
+                              unsigned int m, unsigned int n,
+                              mpz_t A[m][n],
+                              mpz_t x[(Side == CblasLeft) ? m : n]);
+
+
 /* Matrix scaling, in place. */
 void
 mpq_matrix_scale (unsigned int m, unsigned int n, mpq_t A[m][n], const mpq_t x);
@@ -188,6 +196,13 @@ mpq_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  mpq_t
                  A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
                  mpq_t B[m][n]);
+
+/* Multiplication by a diagonal matrix (represented as a vector) on
+   one or the other side. */
+void mpq_matrix_mul_diagonal (CBLAS_SIDE_t Side,
+                              unsigned int m, unsigned int n,
+                              mpq_t A[m][n],
+                              mpq_t x[(Side == CblasLeft) ? m : n]);
 
 /*-----------------------------------------------------------------------*/
 
