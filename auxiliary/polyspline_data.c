@@ -169,7 +169,7 @@ _fill_spower_basis_in_sbern (unsigned int deg, double A[deg + 1][deg + 1])
 }
 
 VISIBLE const double *
-fl_sbern_basis_in_mono (unsigned int degree)
+f64_sbern_basis_in_mono (unsigned int degree)
 {
   const double *data = fl_precomputed_sbern_basis_in_mono (degree);
   if (data == NULL)
@@ -184,7 +184,7 @@ fl_sbern_basis_in_mono (unsigned int degree)
 }
 
 VISIBLE const double *
-fl_mono_basis_in_sbern (unsigned int degree)
+f64_mono_basis_in_sbern (unsigned int degree)
 {
   const double *data = fl_precomputed_mono_basis_in_sbern (degree);
   if (data == NULL)
@@ -199,7 +199,7 @@ fl_mono_basis_in_sbern (unsigned int degree)
 }
 
 VISIBLE const double *
-fl_sbern_basis_in_spower (unsigned int degree)
+f64_sbern_basis_in_spower (unsigned int degree)
 {
   const double *data = fl_precomputed_sbern_basis_in_spower (degree);
   if (data == NULL)
@@ -214,7 +214,7 @@ fl_sbern_basis_in_spower (unsigned int degree)
 }
 
 VISIBLE const double *
-fl_spower_basis_in_sbern (unsigned int degree)
+f64_spower_basis_in_sbern (unsigned int degree)
 {
   const double *data = fl_precomputed_spower_basis_in_sbern (degree);
   if (data == NULL)

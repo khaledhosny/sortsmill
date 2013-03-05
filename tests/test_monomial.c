@@ -25,18 +25,18 @@ my_main (int argc, char **argv)
     mono[i] = atof (argv[i + 1]);
 
   double sbern[deg + 1];
-  fl_mono_to_sbern (deg, mono, sbern, 1);
+  f64_mono_to_sbern (deg, mono, sbern, 1);
 
   double mono2[deg + 1];
-  fl_sbern_to_mono (deg, sbern, mono2, 1);
+  f64_sbern_to_mono (deg, sbern, mono2, 1);
   for (unsigned int i = 0; i <= deg; i++)
     if (10 * DBL_EPSILON < fabs (mono[i] - mono2[i]))
       exit (10);
 
   double bern[deg + 1];
-  fl_mono_to_bern (deg, mono, bern, 1);
+  f64_mono_to_bern (deg, mono, bern, 1);
 
-  fl_bern_to_mono (deg, bern, mono2, 1);
+  f64_bern_to_mono (deg, bern, mono2, 1);
   for (unsigned int i = 0; i <= deg; i++)
     if (10 * DBL_EPSILON < fabs (mono[i] - mono2[i]))
       exit (20);

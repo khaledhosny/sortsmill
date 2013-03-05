@@ -127,34 +127,34 @@ CHANGE_BASIS_MPQ(mpq_varlen_mono_to_sbern, mpq_mono_to_sbern, mpq_mono_basis_in_
 
 // FIXME: For these, maybe use special matrix multiplication for
 // triangular matrices.
-VISIBLE CHANGE_BASIS (fl_sbern_to_mono, fl_mono_basis_in_sbern);
-VISIBLE CHANGE_BASIS (fl_mono_to_sbern, fl_sbern_basis_in_mono);
+VISIBLE CHANGE_BASIS (f64_sbern_to_mono, f64_mono_basis_in_sbern);
+VISIBLE CHANGE_BASIS (f64_mono_to_sbern, f64_sbern_basis_in_mono);
 
 // Doing this with a single transformation matrix seems less stable
 // than doing it this way.
 VISIBLE void
-fl_bern_to_mono (unsigned int deg, const double *from, double *to,
+f64_bern_to_mono (unsigned int deg, const double *from, double *to,
                  size_t num_splines)
 {
   double sbern[deg + 1];
-  fl_bern_to_sbern (deg, from, sbern, 1);
-  fl_sbern_to_mono (deg, sbern, to, 1);
+  f64_bern_to_sbern (deg, from, sbern, 1);
+  f64_sbern_to_mono (deg, sbern, to, 1);
 }
 
 // Doing this with a single transformation matrix seems less stable
 // than doing it this way.
 VISIBLE void
-fl_mono_to_bern (unsigned int deg, const double *from, double *to,
+f64_mono_to_bern (unsigned int deg, const double *from, double *to,
                  size_t num_splines)
 {
   double sbern[deg + 1];
-  fl_mono_to_sbern (deg, from, sbern, 1);
-  fl_sbern_to_bern (deg, sbern, to, 1);
+  f64_mono_to_sbern (deg, from, sbern, 1);
+  f64_sbern_to_bern (deg, sbern, to, 1);
 }
 
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
-fl_sbern_to_bern (unsigned int deg, const double *from, double *to,
+f64_sbern_to_bern (unsigned int deg, const double *from, double *to,
                   size_t num_splines)
 {
   const double *bc = fl_binomial_coefficients (deg);
@@ -165,7 +165,7 @@ fl_sbern_to_bern (unsigned int deg, const double *from, double *to,
 
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
-fl_bern_to_sbern (unsigned int deg, const double *from, double *to,
+f64_bern_to_sbern (unsigned int deg, const double *from, double *to,
                   size_t num_splines)
 {
   const double *bc = fl_binomial_coefficients (deg);
@@ -233,7 +233,7 @@ VISIBLE double
 fl_eval_bern (unsigned int deg, const double *spline, double t)
 {
   double sbern[deg + 1];
-  fl_bern_to_sbern (deg, spline, sbern, 1);
+  f64_bern_to_sbern (deg, spline, sbern, 1);
   return fl_eval_sbern (deg, sbern, t);
 }
 
@@ -241,7 +241,7 @@ VISIBLE double
 fl_evaldc_sbern (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
-  fl_sbern_to_bern (deg, spline, b, 1);
+  f64_sbern_to_bern (deg, spline, b, 1);
   for (unsigned int i = 0; i < deg; i++)
     for (unsigned int j = 0; j < deg; j++)
       b[j] += t * (b[j + 1] - b[j]);
@@ -279,10 +279,10 @@ fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
                  double *a, double *b)
 {
   double bern[deg + 1];
-  fl_sbern_to_bern (deg, spline, bern, 1);
+  f64_sbern_to_bern (deg, spline, bern, 1);
   fl_subdiv_bern (deg, bern, t, a, b);
-  fl_bern_to_sbern (deg, a, a, 1);
-  fl_bern_to_sbern (deg, b, b, 1);
+  f64_bern_to_sbern (deg, a, a, 1);
+  f64_bern_to_sbern (deg, b, b, 1);
 }
 
 VISIBLE void
@@ -335,10 +335,10 @@ fl_mul_bern (unsigned int deg1, const double *spline1,
   double sbern1[deg1 + 1];
   double sbern2[deg2 + 1];
   double sbern3[deg1 + deg2 + 1];
-  fl_bern_to_sbern (deg1, spline1, sbern1, 1);
-  fl_bern_to_sbern (deg2, spline2, sbern2, 1);
+  f64_bern_to_sbern (deg1, spline1, sbern1, 1);
+  f64_bern_to_sbern (deg2, spline2, sbern2, 1);
   fl_mul_sbern (deg1, sbern1, deg2, sbern2, sbern3);
-  fl_sbern_to_bern (deg1 + deg2, sbern3, result, 1);
+  f64_sbern_to_bern (deg1 + deg2, sbern3, result, 1);
 }
 
 VISIBLE void

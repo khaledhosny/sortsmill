@@ -16,12 +16,12 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 cdef extern from "sortsmill/polyspline.h":
-  void fl_sbern_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void fl_bern_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void fl_mono_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void fl_sbern_to_mono (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void fl_mono_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void fl_bern_to_mono (unsigned int deg, double *_from, double *_to, size_t num_splines)
+  void f64_sbern_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
+  void f64_bern_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
+  void f64_mono_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
+  void f64_sbern_to_mono (unsigned int deg, double *_from, double *_to, size_t num_splines)
+  void f64_mono_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
+  void f64_bern_to_mono (unsigned int deg, double *_from, double *_to, size_t num_splines)
 
   double fl_eval_sbern (unsigned int deg, double *spline, double t)
   double fl_eval_bern (unsigned int deg, double *spline, double t)

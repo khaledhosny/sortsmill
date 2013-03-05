@@ -50,10 +50,10 @@ __mpq_struct *mpq_binomial_coefficients (unsigned int degree);
 __mpq_struct *mpq_binomial_coefficients_altsigns (unsigned int degree);
 void free_mpq_binomial_coefficients (unsigned int degree, __mpq_struct *);
 
-const double *fl_sbern_basis_in_mono (unsigned int degree);
-const double *fl_mono_basis_in_sbern (unsigned int degree);
-const double *fl_sbern_basis_in_spower (unsigned int degree);
-const double *fl_spower_basis_in_sbern (unsigned int degree);
+const double *f64_sbern_basis_in_mono (unsigned int degree);
+const double *f64_mono_basis_in_sbern (unsigned int degree);
+const double *f64_sbern_basis_in_spower (unsigned int degree);
+const double *f64_spower_basis_in_sbern (unsigned int degree);
 
 /* FIXME: Get rid of these. */
 __mpz_struct *mpz_sbern_basis_in_mono (unsigned int degree);
@@ -73,74 +73,74 @@ void free_mpq_transformation_matrix (unsigned int degree, __mpq_struct *);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_sbern_to_bern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void f64_sbern_to_bern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from scaled Bernstein to Bernstein basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void fl_sbern_to_bern (unsigned int deg, const double *from, double *to,
+void f64_sbern_to_bern (unsigned int deg, const double *from, double *to,
                        size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_bern_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void f64_bern_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from Bernstein to scaled Bernstein basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void fl_bern_to_sbern (unsigned int deg, const double *from, double *to,
+void f64_bern_to_sbern (unsigned int deg, const double *from, double *to,
                        size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_sbern_to_mono (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void f64_sbern_to_mono (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from scaled Bernstein to monomial basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void fl_sbern_to_mono (unsigned int deg, const double *from, double *to,
+void f64_sbern_to_mono (unsigned int deg, const double *from, double *to,
                        size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_mono_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void f64_mono_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from monomial basis to scaled Bernstein.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void fl_mono_to_sbern (unsigned int deg, const double *from, double *to,
+void f64_mono_to_sbern (unsigned int deg, const double *from, double *to,
                        size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_bern_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void f64_bern_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from Bernstein to monomial basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void fl_bern_to_mono (unsigned int deg, const double *from, double *to,
+void f64_bern_to_mono (unsigned int deg, const double *from, double *to,
                       size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_mono_to_bern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void f64_mono_to_bern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from monomial basis to Bernstein.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void fl_mono_to_bern (unsigned int deg, const double *from, double *to,
+void f64_mono_to_bern (unsigned int deg, const double *from, double *to,
                       size_t num_splines);
 
 /*

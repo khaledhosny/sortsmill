@@ -98,25 +98,25 @@ _scm_mpz_vector_basis (SCM degree, __mpz_struct *(*mpz_basis) (unsigned int))
 VISIBLE SCM
 scm_f64vector_sbern_basis_in_mono (SCM degree)
 {
-  return _scm_f64vector_basis (degree, fl_sbern_basis_in_mono);
+  return _scm_f64vector_basis (degree, f64_sbern_basis_in_mono);
 }
 
 VISIBLE SCM
 scm_f64vector_mono_basis_in_sbern (SCM degree)
 {
-  return _scm_f64vector_basis (degree, fl_mono_basis_in_sbern);
+  return _scm_f64vector_basis (degree, f64_mono_basis_in_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_sbern_basis_in_spower (SCM degree)
 {
-  return _scm_f64vector_basis (degree, fl_sbern_basis_in_spower);
+  return _scm_f64vector_basis (degree, f64_sbern_basis_in_spower);
 }
 
 VISIBLE SCM
 scm_f64vector_spower_basis_in_sbern (SCM degree)
 {
-  return _scm_f64vector_basis (degree, fl_spower_basis_in_sbern);
+  return _scm_f64vector_basis (degree, f64_spower_basis_in_sbern);
 }
 
 VISIBLE SCM
@@ -163,37 +163,37 @@ change_basis (SCM spline,
 VISIBLE SCM
 scm_f64vector_sbern_to_bern (SCM spline)
 {
-  return change_basis (spline, fl_sbern_to_bern);
+  return change_basis (spline, f64_sbern_to_bern);
 }
 
 VISIBLE SCM
 scm_f64vector_bern_to_sbern (SCM spline)
 {
-  return change_basis (spline, fl_bern_to_sbern);
+  return change_basis (spline, f64_bern_to_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_sbern_to_mono (SCM spline)
 {
-  return change_basis (spline, fl_sbern_to_mono);
+  return change_basis (spline, f64_sbern_to_mono);
 }
 
 VISIBLE SCM
 scm_f64vector_mono_to_sbern (SCM spline)
 {
-  return change_basis (spline, fl_mono_to_sbern);
+  return change_basis (spline, f64_mono_to_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_bern_to_mono (SCM spline)
 {
-  return change_basis (spline, fl_bern_to_mono);
+  return change_basis (spline, f64_bern_to_mono);
 }
 
 VISIBLE SCM
 scm_f64vector_mono_to_bern (SCM spline)
 {
-  return change_basis (spline, fl_mono_to_bern);
+  return change_basis (spline, f64_mono_to_bern);
 }
 
 static SCM
