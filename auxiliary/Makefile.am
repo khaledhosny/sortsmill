@@ -71,6 +71,10 @@ dist_libsortsmill_aux_la_SOURCES += mpq_lu.c
 # C matrices of SCM (Guile) numbers.
 dist_libsortsmill_aux_la_SOURCES += scm_matrix.c scm_lu.c
 
+# C matrices of double precision numbers. (Supplementary to the
+# routines in GSL.)
+dist_libsortsmill_aux_la_SOURCES += f64_matrix.c
+
 # Extensions to libunistring.
 dist_libsortsmill_aux_la_SOURCES += xunicase.c
 dist_libsortsmill_aux_la_SOURCES += xuniconv.c

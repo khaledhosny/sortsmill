@@ -107,6 +107,9 @@ nobase_include_HEADERS += sortsmill/transmatrix.h
 nobase_include_HEADERS += sortsmill/gmp_matrix.h
 nobase_include_HEADERS += sortsmill/scm_matrix.h
 
+# Floating point matrix operations supplementary to those of GSL.
+nobase_include_HEADERS += sortsmill/f64_matrix.h
+
 # Brent’s method for root-finding.
 nobase_include_HEADERS += sortsmill/brentroot.h
 nobase_include_HEADERS += sortsmill/qbrentroot.h

@@ -108,7 +108,7 @@ TESTS_MATH_FUNCTIONS = test_bincoef
 TESTS_BRENTROOT = test_brentroot test_qbrentroot
 
 TESTS_LINALG = $(TESTS_LINALG_MPZ) $(TESTS_LINALG_MPQ)	\
-	$(TESTS_LINALG_SCM)
+	$(TESTS_LINALG_SCM) $(TESTS_LINALG_F64)
 
 TESTS_LINALG_MPZ = test_mpz_matrix_set_all test_mpz_matrix_set_zero		\
 	test_mpz_matrix_set_identity test_mpz_matrix_memcpy					\
@@ -150,6 +150,8 @@ TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 	test_scm_matrix_mul_diagonal test_scm_matrix_gemm				\
 	test_scm_matrix_trmm test_scm_matrix_trsv test_scm_lu
 
+TESTS_LINALG_F64 = test_f64_matrix_mul_diagonal
+
 check_PROGRAMS =
 check_PROGRAMS += $(TESTS_XGC_H)
 check_PROGRAMS += $(TESTS_XUNISTRING_H)
@@ -172,8 +174,8 @@ AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/gdraw/libsortsmill_gdraw.la					\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la			\
-	$(top_builddir)/gutils/libsortsmill_gutils.la					\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la					\
+	$(top_builddir)/gutils/libsortsmill_gutils.la				\
+	$(top_builddir)/auxiliary/libsortsmill_aux.la				\
 	$(top_builddir)/lib/libgnu.la
 AM_LDFLAGS = -export-dynamic -avoid-version
 

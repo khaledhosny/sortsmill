@@ -506,6 +506,13 @@ check_linalg([test_scm_matrix_mul_diagonal R 1 1 2/7 -3],[0],[| -6/7 |],[])
 check_linalg([test_scm_matrix_mul_diagonal L 2 3 1 2 3 4 5 6 10 20],[0],[| 10 20 30 | 80 100 120 |],[])
 check_linalg([test_scm_matrix_mul_diagonal R 2 3 1 2 3 4 5 6 10 20 30],[0],[| 10 40 90 | 40 100 180 |],[])
 
+check_linalg([test_f64_matrix_mul_diagonal L 1 1 0 0],[0],[| 0 |],[])
+check_linalg([test_f64_matrix_mul_diagonal L 1 1 2.5 -3],[0],[| -7.5 |],[])
+check_linalg([test_f64_matrix_mul_diagonal R 1 1 0 0],[0],[| 0 |],[])
+check_linalg([test_f64_matrix_mul_diagonal R 1 1 2.5 -3],[0],[| -7.5 |],[])
+check_linalg([test_f64_matrix_mul_diagonal L 2 3 1 2 3 4 5 6 10 20],[0],[| 10 20 30 | 80 100 120 |],[])
+check_linalg([test_f64_matrix_mul_diagonal R 2 3 1 2 3 4 5 6 10 20 30],[0],[| 10 40 90 | 40 100 180 |],[])
+
 #--------------------------------------------------------------------------
 
 # alpha = beta = 0.
