@@ -38,7 +38,8 @@
           gsl:matrix-scale-mpq
           gsl:matrix-scale-scm
 
-          ;; General matrix multiplication.
+          ;; General matrix multiplication, similar to BLAS Level 3
+          ;; xGEMM routines.
           ;;
           ;; (gsl:gemm-WHATEVER TransA TransB alpha A B beta C) → αAB + βC
           ;;
@@ -47,7 +48,8 @@
           gsl:gemm-mpq                  ; Exact rationals.
           gsl:gemm-scm                  ; General numbers.
 
-          ;; Triangular matrix multiplication.
+          ;; Triangular matrix multiplication, similar to BLAS Level 3
+          ;; xTRMM routines.
           gsl:trmm-f64                  ; Real floating point.
           gsl:trmm-mpz                  ; Integers.
           gsl:trmm-mpq                  ; Exact rationals.

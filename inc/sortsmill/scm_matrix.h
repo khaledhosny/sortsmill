@@ -88,7 +88,7 @@ scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                  SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM beta, SCM C[m][n]);
 
 /* Triangular matrix multiplication; based on BLAS Level 3 xTRMM. */
-VISIBLE void
+void
 scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
                  unsigned int m, unsigned int n, SCM alpha,

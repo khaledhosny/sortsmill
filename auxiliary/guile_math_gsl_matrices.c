@@ -1680,7 +1680,7 @@ scm_gsl_mpz_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   // Note: if beta = 0 exactly, then C is ignored. You can set it to
   // anything.
 
-  const char *who = "scm_gsl_mpz_dgemm";
+  const char *who = "scm_gsl_mpz_gemm";
 
   scm_t_array_handle handle_A;
   scm_t_array_handle handle_B;
@@ -1770,7 +1770,7 @@ scm_gsl_mpq_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   // Note: if beta = 0 exactly, then C is ignored. You can set it to
   // anything.
 
-  const char *who = "scm_gsl_mpq_dgemm";
+  const char *who = "scm_gsl_mpq_gemm";
 
   scm_t_array_handle handle_A;
   scm_t_array_handle handle_B;
@@ -1860,7 +1860,7 @@ scm_gsl_scm_gemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B, SCM beta,
   // Note: if beta = 0 exactly, then C is ignored. You can set it to
   // anything.
 
-  const char *who = "scm_gsl_scm_dgemm";
+  const char *who = "scm_gsl_scm_gemm";
 
   scm_t_array_handle handle_A;
   scm_t_array_handle handle_B;
@@ -1997,6 +1997,215 @@ scm_gsl_blas_dtrmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha, SCM A,
                    scm_list_n (Side, Uplo, TransA, Diag, alpha, A, B,
                                SCM_UNDEFINED), SCM_UNDEFINED));
   SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_mpz_trmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha, SCM A,
+                  SCM B)
+{
+  const char *who = "scm_mpz_scm_trmm";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  CBLAS_SIDE_t _Side = scm_to_CBLAS_SIDE_t (who, Side);
+  CBLAS_UPLO_t _Uplo = scm_to_CBLAS_UPLO_t (who, Uplo);
+  CBLAS_TRANSPOSE_t _TransA = scm_to_CBLAS_TRANSPOSE_t (who, TransA);
+  CBLAS_DIAG_t _Diag = scm_to_CBLAS_DIAG_t (who, Diag);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t dim1_A = scm_matrix_dim1 (&handle_A);
+  const size_t dim2_A = scm_matrix_dim2 (&handle_A);
+  assert_c_matrix_is_square (who, A, dim1_A, dim2_A);
+
+  const size_t m = dim1_A;      // == dim2_A
+
+  const size_t dim1_B = scm_matrix_dim1 (&handle_B);
+  const size_t dim2_B = scm_matrix_dim2 (&handle_B);
+
+  if (_Side == CblasLeft)
+    {
+      const size_t k = dim1_B;
+      const size_t n = dim2_B;
+      assert_c_conformable_for_multiplication (who, _TransA, CblasNoTrans,
+                                               A, B, m, m, k, n);
+    }
+  else
+    {
+      const size_t n = dim1_B;
+      const size_t k = dim2_B;
+      assert_c_conformable_for_multiplication (who, CblasNoTrans, _TransA,
+                                               B, A, n, k, m, m);
+    }
+
+  mpz_t _alpha;
+  mpz_init (_alpha);
+  scm_dynwind_mpz_clear (_alpha);
+  scm_to_mpz (alpha, _alpha);
+
+  mpz_t _A[dim1_A][dim2_A];
+  mpz_matrix_init (dim1_A, dim2_A, _A);
+  scm_dynwind_mpz_matrix_clear (dim1_A, dim2_A, _A);
+  scm_array_handle_to_mpz_matrix (A, &handle_A, dim1_A, dim2_A, _A);
+
+  mpz_t _B[dim1_B][dim2_B];
+  mpz_matrix_init (dim1_B, dim2_B, _B);
+  scm_dynwind_mpz_matrix_clear (dim1_B, dim2_B, _B);
+  scm_array_handle_to_mpz_matrix (B, &handle_B, dim1_B, dim2_B, _B);
+
+  mpz_matrix_trmm (_Side, _Uplo, _TransA, _Diag, dim1_B, dim2_B,
+                   _alpha, _A, _B);
+
+  SCM result = scm_from_mpz_matrix (dim1_B, dim2_B, _B);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_mpq_trmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha, SCM A,
+                  SCM B)
+{
+  const char *who = "scm_mpq_scm_trmm";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  CBLAS_SIDE_t _Side = scm_to_CBLAS_SIDE_t (who, Side);
+  CBLAS_UPLO_t _Uplo = scm_to_CBLAS_UPLO_t (who, Uplo);
+  CBLAS_TRANSPOSE_t _TransA = scm_to_CBLAS_TRANSPOSE_t (who, TransA);
+  CBLAS_DIAG_t _Diag = scm_to_CBLAS_DIAG_t (who, Diag);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_exact_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_exact_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t dim1_A = scm_matrix_dim1 (&handle_A);
+  const size_t dim2_A = scm_matrix_dim2 (&handle_A);
+  assert_c_matrix_is_square (who, A, dim1_A, dim2_A);
+
+  const size_t m = dim1_A;      // == dim2_A
+
+  const size_t dim1_B = scm_matrix_dim1 (&handle_B);
+  const size_t dim2_B = scm_matrix_dim2 (&handle_B);
+
+  if (_Side == CblasLeft)
+    {
+      const size_t k = dim1_B;
+      const size_t n = dim2_B;
+      assert_c_conformable_for_multiplication (who, _TransA, CblasNoTrans,
+                                               A, B, m, m, k, n);
+    }
+  else
+    {
+      const size_t n = dim1_B;
+      const size_t k = dim2_B;
+      assert_c_conformable_for_multiplication (who, CblasNoTrans, _TransA,
+                                               B, A, n, k, m, m);
+    }
+
+  mpq_t _alpha;
+  mpq_init (_alpha);
+  scm_dynwind_mpq_clear (_alpha);
+  scm_to_mpq (alpha, _alpha);
+
+  mpq_t _A[dim1_A][dim2_A];
+  mpq_matrix_init (dim1_A, dim2_A, _A);
+  scm_dynwind_mpq_matrix_clear (dim1_A, dim2_A, _A);
+  scm_array_handle_to_mpq_matrix (A, &handle_A, dim1_A, dim2_A, _A);
+
+  mpq_t _B[dim1_B][dim2_B];
+  mpq_matrix_init (dim1_B, dim2_B, _B);
+  scm_dynwind_mpq_matrix_clear (dim1_B, dim2_B, _B);
+  scm_array_handle_to_mpq_matrix (B, &handle_B, dim1_B, dim2_B, _B);
+
+  mpq_matrix_trmm (_Side, _Uplo, _TransA, _Diag, dim1_B, dim2_B,
+                   _alpha, _A, _B);
+
+  SCM result = scm_from_mpq_matrix (dim1_B, dim2_B, _B);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gsl_scm_trmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha, SCM A,
+                  SCM B)
+{
+  const char *who = "scm_gsl_scm_trmm";
+
+  scm_t_array_handle handle_A;
+  scm_t_array_handle handle_B;
+
+  CBLAS_SIDE_t _Side = scm_to_CBLAS_SIDE_t (who, Side);
+  CBLAS_UPLO_t _Uplo = scm_to_CBLAS_UPLO_t (who, Uplo);
+  CBLAS_TRANSPOSE_t _TransA = scm_to_CBLAS_TRANSPOSE_t (who, TransA);
+  CBLAS_DIAG_t _Diag = scm_to_CBLAS_DIAG_t (who, Diag);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_c_rank_1_or_2_array (who, A, &handle_A);
+
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_c_rank_1_or_2_array (who, B, &handle_B);
+
+  const size_t dim1_A = scm_matrix_dim1 (&handle_A);
+  const size_t dim2_A = scm_matrix_dim2 (&handle_A);
+  assert_c_matrix_is_square (who, A, dim1_A, dim2_A);
+
+  const size_t m = dim1_A;      // == dim2_A
+
+  const size_t dim1_B = scm_matrix_dim1 (&handle_B);
+  const size_t dim2_B = scm_matrix_dim2 (&handle_B);
+
+  if (_Side == CblasLeft)
+    {
+      const size_t k = dim1_B;
+      const size_t n = dim2_B;
+      assert_c_conformable_for_multiplication (who, _TransA, CblasNoTrans,
+                                               A, B, m, m, k, n);
+    }
+  else
+    {
+      const size_t n = dim1_B;
+      const size_t k = dim2_B;
+      assert_c_conformable_for_multiplication (who, CblasNoTrans, _TransA,
+                                               B, A, n, k, m, m);
+    }
+
+  SCM _A[dim1_A][dim2_A];
+  scm_array_handle_to_scm_matrix (A, &handle_A, dim1_A, dim2_A, _A);
+
+  SCM _B[dim1_B][dim2_B];
+  scm_array_handle_to_scm_matrix (B, &handle_B, dim1_B, dim2_B, _B);
+
+  scm_matrix_trmm (_Side, _Uplo, _TransA, _Diag, dim1_B, dim2_B, alpha, _A, _B);
+
+  SCM result = scm_from_scm_matrix (dim1_B, dim2_B, _B);
 
   scm_dynwind_end ();
 
@@ -3189,9 +3398,9 @@ init_guile_sortsmill_math_gsl_matrices (void)
   scm_c_define_gsubr ("gsl:gemm-scm", 7, 0, 0, scm_gsl_scm_gemm);
 
   scm_c_define_gsubr ("gsl:trmm-f64", 7, 0, 0, scm_gsl_blas_dtrmm);
-  //  scm_c_define_gsubr ("gsl:trmm-mpz", 7, 0, 0, scm_gsl_mpz_trmm);
-  //  scm_c_define_gsubr ("gsl:trmm-mpq", 7, 0, 0, scm_gsl_mpq_trmm);
-  //  scm_c_define_gsubr ("gsl:trmm-scm", 7, 0, 0, scm_gsl_scm_trmm);
+  scm_c_define_gsubr ("gsl:trmm-mpz", 7, 0, 0, scm_gsl_mpz_trmm);
+  scm_c_define_gsubr ("gsl:trmm-mpq", 7, 0, 0, scm_gsl_mpq_trmm);
+  scm_c_define_gsubr ("gsl:trmm-scm", 7, 0, 0, scm_gsl_scm_trmm);
 
   scm_c_define_gsubr ("gsl:matrix-add-f64", 2, 0, 0, scm_gsl_matrix_add);
   scm_c_define_gsubr ("gsl:matrix-add-mpz", 2, 0, 0, scm_gsl_mpz_matrix_add);
