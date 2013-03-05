@@ -176,12 +176,22 @@ scm_c_make_mpqmat (unsigned int m, unsigned int n)
   return scm_pointer_to_mpqmat (scm_from_pointer (mat, mpqmat_finalizer));
 }
 
+VISIBLE SCM
+scm_c_make_permanent_mpqmat (unsigned int m, unsigned int n)
+{
+  return scm_permanent_object (scm_c_make_mpqmat (m, n));
+}
+
 VISIBLE mpqmat_t
 scm_c_make_mpqmat_t (unsigned int m, unsigned int n)
 {
-  assert (0 < m);
-  assert (0 < n);
   return (scm_to_mpqmat_t (scm_c_make_mpqmat (m, n)));
+}
+
+VISIBLE mpqmat_t
+scm_c_make_permanent_mpqmat_t (unsigned int m, unsigned int n)
+{
+  return (scm_to_mpqmat_t (scm_c_make_permanent_mpqmat (m, n)));
 }
 
 VISIBLE void

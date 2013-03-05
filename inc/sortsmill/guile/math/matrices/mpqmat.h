@@ -1,4 +1,5 @@
-/*
+/* -*- coding: utf-8 -*-
+ *
  * Copyright (C) 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -63,9 +64,13 @@ SCM scm_mpqmat_to_matrix (SCM mpqmat);
 SCM scm_from_mpqmat_t (const mpqmat_t A);
 mpqmat_t scm_to_mpqmat_t (SCM mpqmat);
 
-/* Make an uninitialized mpqmat. */
+/* Make an uninitialized mpqmat. The ‘permanent’ versions create
+   objects (global constants, for instance) that are permanently
+   protected from garbage collection. */
 SCM scm_c_make_mpqmat (unsigned int m, unsigned int n);
+SCM scm_c_make_permanent_mpqmat (unsigned int m, unsigned int n);
 mpqmat_t scm_c_make_mpqmat_t (unsigned int m, unsigned int n);
+mpqmat_t scm_c_make_permanent_mpqmat_t (unsigned int m, unsigned int n);
 
 #if 0
 {

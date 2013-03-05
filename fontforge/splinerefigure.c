@@ -48,8 +48,7 @@ initialize_T (mpqmat_t *T)
   };
   // *INDENT-ON*
 
-  SCM scm_T = scm_permanent_object (scm_c_make_mpqmat (4, 4));
-  *T = scm_to_mpqmat_t (scm_T);
+  *T = scm_c_make_permanent_mpqmat_t (4, 4);
   for (unsigned int i = 0; i < 4; i++)
     for (unsigned int j = 0; j < 4; j++)
       mpq_set_si (MPQMAT_REF (*T)[i][j], T_data[i][j], 1);
