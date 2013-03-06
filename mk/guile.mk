@@ -53,9 +53,10 @@ AM_V_GUILEC_0 = @echo "  GUILEC" $@;
 %.go: %.scm
 	$(AM_V_GUILEC)$(GUILE_COMPILE) $< -o $@
 
-#%.scm: %.scm.in
-#	$(AM_V_GEN)
-#	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@-tmp
-#	$(AM_V_at)mv $@-tmp $@
+#--------------------------------------------------------------------------
+
+AM_V_GUILEAPI = $(AM_V_GUILEAPI_$(V))
+AM_V_GUILEAPI_ = $(AM_V_GUILEAPI_$(AM_DEFAULT_VERBOSITY))
+AM_V_GUILEAPI_0 = @echo "  GUILEAPI" $@;
 
 #--------------------------------------------------------------------------

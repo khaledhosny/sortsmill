@@ -81,7 +81,7 @@ void free_mpq_transformation_matrix (unsigned int degree, __mpq_struct *);
  * vis--
  */
 void f64_sbern_to_bern (unsigned int deg, const double *from, double *to,
-                       size_t num_splines);
+                        size_t num_splines);
 
 /*
  * vis--
@@ -93,7 +93,7 @@ void f64_sbern_to_bern (unsigned int deg, const double *from, double *to,
  * vis--
  */
 void f64_bern_to_sbern (unsigned int deg, const double *from, double *to,
-                       size_t num_splines);
+                        size_t num_splines);
 
 /*
  * vis--
@@ -105,7 +105,7 @@ void f64_bern_to_sbern (unsigned int deg, const double *from, double *to,
  * vis--
  */
 void f64_sbern_to_mono (unsigned int deg, const double *from, double *to,
-                       size_t num_splines);
+                        size_t num_splines);
 
 /*
  * vis--
@@ -117,7 +117,7 @@ void f64_sbern_to_mono (unsigned int deg, const double *from, double *to,
  * vis--
  */
 void f64_mono_to_sbern (unsigned int deg, const double *from, double *to,
-                       size_t num_splines);
+                        size_t num_splines);
 
 /*
  * vis--
@@ -129,7 +129,7 @@ void f64_mono_to_sbern (unsigned int deg, const double *from, double *to,
  * vis--
  */
 void f64_bern_to_mono (unsigned int deg, const double *from, double *to,
-                      size_t num_splines);
+                       size_t num_splines);
 
 /*
  * vis--
@@ -141,7 +141,7 @@ void f64_bern_to_mono (unsigned int deg, const double *from, double *to,
  * vis--
  */
 void f64_mono_to_bern (unsigned int deg, const double *from, double *to,
-                      size_t num_splines);
+                       size_t num_splines);
 
 /*
  * vis--

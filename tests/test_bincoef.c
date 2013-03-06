@@ -25,8 +25,10 @@ my_main (int argc, char **argv)
   const size_t m = 100;
 
   mpz_t P[m][m];
+  mpq_t Q[m][m];
 
   mpz_matrix_init (m, m, P);
+  mpq_matrix_init (m, m, Q);
 
   // Compute Pascal’s triangle.
   mpz_set_ui (P[0][0], 1);
@@ -84,7 +86,43 @@ my_main (int argc, char **argv)
       mpz_clear (C);
     }
 
+  if (exit_status == 0)
+    {
+      mpq_t C;
+      mpq_init (C);
+
+      // Compare the results of mpq_bincoef_ui() against Pascal’s
+      // triangle.
+      for (size_t n = 0; n <= m - 1; n++)
+        for (size_t k = 0; k <= m - 1; k++)
+          {
+            mpq_bincoef_ui (C, n, k);
+            if (mpz_cmp (mpq_numref (C), P[n][k]) != 0
+                || mpz_cmp_ui (mpq_denref (C), 1) != 0)
+              exit_status = 210;
+          }
+
+      mpq_clear (C);
+    }
+
+  if (exit_status == 0)
+    {
+      mpq_t C;
+      mpq_init (C);
+
+      // Check for n < k.
+      for (size_t n = 0; n <= m - 1; n++)
+        {
+          mpq_bincoef_ui (C, n, n + 1);
+          if (mpq_sgn (C) != 0)
+            exit_status = 220;
+        }
+
+      mpq_clear (C);
+    }
+
   mpz_matrix_clear (m, m, P);
+  mpq_matrix_clear (m, m, Q);
 
   return exit_status;
 }

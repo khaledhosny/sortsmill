@@ -16,8 +16,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_POLYSPLINE_BASIS_MATRICES_H
-#define _SORTSMILL_POLYSPLINE_BASIS_MATRICES_H
+#ifndef _SORTSMILL_POLYSPLINE_BASES_H
+#define _SORTSMILL_POLYSPLINE_BASES_H
 
 /*
  * Polynomial bases.
@@ -47,7 +47,7 @@
  *
  * Bernstein (Bézier) basis.
  *
- * The coordinates of the spline in this basis are equal to the
+ * The coefficients of the spline in this basis are equal to the
  * coordinates of the ‘Bézier control points’. This basis is very
  * stable numerically.
  *
@@ -59,12 +59,16 @@
  * The constants (1, 3, 3, 1) are the binomial coefficients C(n,k),
  * where in this case n = 3.
  *
+ * References.
+ *
+ * http://en.wikipedia.org/wiki/Bernstein_polynomial
+ *
  *
  * Scaled (or modified) Bernstein basis.
  *
- * The Bernstein basis, but with the binomial coefficients moved from
- * the basis polynomials into the coordinates. This variant of the
- * Bernstein basis is more convenient for many calculations.
+ * The Bernstein basis, but with the binomial coefficients moved out
+ * of the basis polynomials. This variant of the Bernstein basis is
+ * more convenient for many calculations.
  *
  *    b₀(t) = (1 − t)³
  *    b₁(t) = t(1 − t)²
@@ -100,7 +104,7 @@
  *
  */
 
-
+#include <sortsmill/guile.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -110,6 +114,29 @@ extern "C"
 }
 #endif
 
+// Multiply a row vector by this matrix to convert coefficients from
+// monomial basis to Bernstein basis.
+mpqmat_t coefficients_mono_to_bern (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// monomial basis to scaled Bernstein basis.
+mpqmat_t coefficients_mono_to_sbern (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// Bernstein basis to monomial basis.
+mpqmat_t coefficients_bern_to_mono (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// Bernstein basis to scaled Bernstein basis.
+mpqmat_t coefficients_bern_to_sbern (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// scaled Bernstein basis to monomial basis.
+mpqmat_t coefficients_sbern_to_mono (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// scaled Bernstein basis to Bernstein basis.
+mpqmat_t coefficients_sbern_to_bern (unsigned int degree);
 
 #if 0
 {
@@ -118,4 +145,4 @@ extern "C"
 }
 #endif
 
-#endif /* _SORTSMILL_POLYSPLINE_BASIS_MATRICES_H */
+#endif /* _SORTSMILL_POLYSPLINE_BASES_H */

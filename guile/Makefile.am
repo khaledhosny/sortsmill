@@ -510,7 +510,7 @@ sortsmill/math/polyspline.scm: $(MATH_POLYSPLINE_REEXPORTED_SCM_FILES)
 	$(AM_V_at)mv $@-tmp $@
 
 
-# (sortsmill math polyspline f64)
+# (sortsmill math polyspline f64)   FIXME: Get rid of this.
 
 DIST_SCM_FILES += sortsmill/math/polyspline/f64.scm
 GO_FILES += sortsmill/math/polyspline/f64.go
@@ -519,18 +519,11 @@ MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/f64.scm
 sortsmill/math/polyspline/f64.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 
-# (sortsmill math polyspline gmp)
+# (sortsmill math polyspline bases)
 
-DIST_SCM_FILES += sortsmill/math/polyspline/gmp.scm
-GO_FILES += sortsmill/math/polyspline/gmp.go
-MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/gmp.scm
-
-
-# (sortsmill math polyspline scm)
-
-DIST_SCM_FILES += sortsmill/math/polyspline/scm.scm
-GO_FILES += sortsmill/math/polyspline/scm.go
-MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/scm.scm
+DIST_SCM_FILES += sortsmill/math/polyspline/bases.scm
+GO_FILES += sortsmill/math/polyspline/bases.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/bases.scm
 
 #--------------------------------------------------------------------------
 #
@@ -775,7 +768,7 @@ sortsmill/fontforge-api.scm:											\
 		$(top_builddir)/fontforge/fontforge.types.apii					\
 		$(srcdir)/generate-guile-api.scm								\
 		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
-	$(AM_V_REEXPORT)
+	$(AM_V_GUILEAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill fontforge-api)' $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
@@ -783,7 +776,7 @@ sortsmill/fontforge-api.scm:											\
 sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii			\
 		$(srcdir)/generate-guile-api.scm								\
 		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
-	$(AM_V_REEXPORT)
+	$(AM_V_GUILEAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill gdraw-api)' $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@

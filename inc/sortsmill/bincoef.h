@@ -24,5 +24,6 @@
 /* The binary coefficient C(n,k). */
 uintmax_t bincoef (uintmax_t n, uintmax_t k);
 void mpz_bincoef_ui (mpz_t C, uintmax_t n, uintmax_t k);
+void mpq_bincoef_ui (mpq_t C, uintmax_t n, uintmax_t k);
 
 #endif /* _SORTSMILL_BINCOEF_H */

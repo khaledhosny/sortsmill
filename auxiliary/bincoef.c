@@ -89,3 +89,10 @@ mpz_bincoef_ui (mpz_t C, uintmax_t n, uintmax_t k)
 
   mpz_clear (temp);
 }
+
+VISIBLE void
+mpq_bincoef_ui (mpq_t C, uintmax_t n, uintmax_t k)
+{
+  mpz_bincoef_ui (mpq_numref (C), n, k);
+  mpz_set_ui (mpq_denref (C), 1);
+}
