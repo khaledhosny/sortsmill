@@ -18,8 +18,8 @@
 #include <assert.h>
 #include <sortsmill/guile.h>
 #include <sortsmill/gmp_constants.h>
-#include <sortsmill/gmp_matrix.h>
-#include <sortsmill/scm_matrix.h>
+#include <sortsmill/math/gmp_matrix.h>
+#include <sortsmill/math/scm_matrix.h>
 #include <sortsmill/xgc.h>
 #include <sortsmill/xdie_on_null.h>
 #include <intl.h>

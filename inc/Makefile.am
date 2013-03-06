@@ -103,12 +103,12 @@ nobase_include_HEADERS += sortsmill/rexp.h
 nobase_include_HEADERS += sortsmill/gmp_constants.h
 
 # GSL-like matrix operations for GNU MP and Guile numbers.
-nobase_include_HEADERS += sortsmill/transmatrix.h
-nobase_include_HEADERS += sortsmill/gmp_matrix.h
-nobase_include_HEADERS += sortsmill/scm_matrix.h
+nobase_include_HEADERS += sortsmill/math/transmatrix.h
+nobase_include_HEADERS += sortsmill/math/gmp_matrix.h
+nobase_include_HEADERS += sortsmill/math/scm_matrix.h
 
 # Floating point matrix operations supplementary to those of GSL.
-nobase_include_HEADERS += sortsmill/f64_matrix.h
+nobase_include_HEADERS += sortsmill/math/f64_matrix.h
 
 # Brent’s method for root-finding.
 nobase_include_HEADERS += sortsmill/math/brentroot.h

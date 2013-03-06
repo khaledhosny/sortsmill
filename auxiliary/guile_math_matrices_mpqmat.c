@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/math/gmp_matrix.h>
 
 void init_guile_sortsmill_math_matrices_mpqmat (void);
 

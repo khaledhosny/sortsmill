@@ -7,7 +7,7 @@
 #include <float.h>
 #include <math.h>
 #include <libguile.h>
-#include <sortsmill/f64_matrix.h>
+#include <sortsmill/math/f64_matrix.h>
 
 #include <main_with_guile.x>
 

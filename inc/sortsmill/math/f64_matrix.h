@@ -20,7 +20,7 @@
 
 #include <libguile.h>
 #include <sortsmill/c_version.h>
-#include <sortsmill/transmatrix.h>
+#include <sortsmill/math/transmatrix.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus

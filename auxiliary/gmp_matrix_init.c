@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/math/gmp_matrix.h>
 #include <xalloc.h>
 
 VISIBLE void

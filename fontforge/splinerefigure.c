@@ -28,7 +28,7 @@
 
 #include "fontforge.h"
 #include "splinefont.h"
-#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/math/gmp_matrix.h>
 #include <sortsmill/gmp_constants.h>
 #include <sortsmill/guile.h>
 #include <sortsmill/math/polyspline/bases.h>

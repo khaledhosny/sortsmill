@@ -65,15 +65,15 @@ dist_libsortsmill_aux_la_SOURCES += rexp.c
 
 # Extensions to GNU MP.
 dist_libsortsmill_aux_la_SOURCES += gmp_constants.c
-dist_libsortsmill_aux_la_SOURCES += gmp_matrix.c
-dist_libsortsmill_aux_la_SOURCES += mpq_lu.c
+dist_libsortsmill_aux_la_SOURCES += math_gmp_matrix.c
+dist_libsortsmill_aux_la_SOURCES += math_mpq_lu.c
 
 # C matrices of SCM (Guile) numbers.
-dist_libsortsmill_aux_la_SOURCES += scm_matrix.c scm_lu.c
+dist_libsortsmill_aux_la_SOURCES += math_scm_matrix.c math_scm_lu.c
 
 # C matrices of double precision numbers. (Supplementary to the
 # routines in GSL.)
-dist_libsortsmill_aux_la_SOURCES += f64_matrix.c
+dist_libsortsmill_aux_la_SOURCES += math_f64_matrix.c
 
 # Extensions to libunistring.
 dist_libsortsmill_aux_la_SOURCES += xunicase.c

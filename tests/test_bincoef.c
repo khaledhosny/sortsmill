@@ -10,7 +10,7 @@
 #include <float.h>
 #include <math.h>
 #include <libguile.h>
-#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/math/gmp_matrix.h>
 #include <sortsmill/bincoef.h>
 
 #include <main_with_guile.x>

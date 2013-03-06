@@ -19,7 +19,7 @@
 
 // Based on the GSL implementation, linalg/lu.c, by G. Jungman.
 
-#include <sortsmill/scm_matrix.h>
+#include <sortsmill/math/scm_matrix.h>
 
 /* Factorise a general N x N matrix A into,
  *

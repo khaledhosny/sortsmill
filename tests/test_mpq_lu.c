@@ -8,7 +8,7 @@
 #include <math.h>
 #include <libguile.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/gmp_matrix.h>
+#include <sortsmill/math/gmp_matrix.h>
 #include <sortsmill/gmp_constants.h>
 #include <gsl/gsl_linalg.h>
 
