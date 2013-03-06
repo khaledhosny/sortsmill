@@ -6,7 +6,7 @@
 #include <locale.h>
 #include <float.h>
 #include <math.h>
-#include <sortsmill/brentroot.h>
+#include <sortsmill/math/brentroot.h>
 
 //
 // FIXME: This test is far from adequate.

@@ -15,8 +15,10 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_BRENTROOT_H
-#define _SORTSMILL_BRENTROOT_H
+#ifndef _SORTSMILL_MATH_BRENTROOT_H
+#define _SORTSMILL_MATH_BRENTROOT_H
+
+#include <gmp.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -27,6 +29,8 @@ extern "C"
 #endif
 
 typedef double (*brentroot_func_t) (double, void *);
+typedef void (*qbrentroot_func_t) (mpq_t, const mpq_t, void *);
+
 
 /* FIXME: Add an @var{epsilon} parameter to brentroot so it is in
    parallel with qbrentroot; assert that epsilon is at least
@@ -48,6 +52,24 @@ void brentroot (int max_iters, double tol, double t1, double t2,
                 brentroot_func_t func, void *data, double *root,
                 int *err, unsigned int *iter_no);
 
+/*
+ * vis--
+ * vis-- @deftypefun void qbrentroot (int @var{max_iters}, const mpq_t @var{tol}, const mpq_t @var{epsilon}, const mpq_t @var{t1}, const mpq_t @var{t2}, void (*@var{func}) (mpq_t, const mpq_t, const void *), const void *@var{data}, mpq_t @var{root}, int *@var{err}, unsigned int *@var{iter_no})
+ * vis--
+ * vis-- Brent's method for root-finding.
+ * vis--
+ * vis-- FIXME: Document the parameters, including
+ * vis-- (a)~that max_iters < 0 and tol < 0 mean to use defaults,
+ * vis-- and (b)~what the error codes are.
+ * vis--
+ * vis-- @end deftypefun
+ * vis--
+ */
+void qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
+                 const mpq_t t1, const mpq_t t2,
+                 qbrentroot_func_t func, void *data, mpq_t root,
+                 int *err, unsigned int *iter_no);
+
 #if 0
 {
 #endif
@@ -55,4 +77,4 @@ void brentroot (int max_iters, double tol, double t1, double t2,
 }
 #endif
 
-#endif /* _SORTSMILL_BRENTROOT_H */
+#endif /* _SORTSMILL_MATH_BRENTROOT_H */

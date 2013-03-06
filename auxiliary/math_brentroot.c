@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/brentroot.h>
+#include <sortsmill/math/brentroot.h>
 #include <stdbool.h>
 #include <math.h>
 #include <float.h>

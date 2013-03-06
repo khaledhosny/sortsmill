@@ -16,8 +16,8 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile/math/brentroot.h>
-#include <sortsmill/brentroot.h>
-#include <sortsmill/qbrentroot.h>
+#include <sortsmill/math/brentroot.h>
+#include <sortsmill/math/brentroot.h>
 #include <math.h>
 #include <gmp.h>
 
