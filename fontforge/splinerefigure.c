@@ -31,30 +31,10 @@
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/gmp_constants.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/initialized_global_constants.h>
+#include <sortsmill/polyspline/bases.h>
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
-
-static void
-initialize_T (mpqmat_t *T)
-{
-  // *INDENT-OFF*
-  const int T_data[4][4] = {
-    {1, -3,  3, -1},
-    {0,  3, -6,  3},
-    {0,  0,  3, -3},
-    {0,  0,  0,  1}
-  };
-  // *INDENT-ON*
-
-  *T = scm_c_make_permanent_mpqmat_t (4, 4);
-  for (unsigned int i = 0; i < 4; i++)
-    for (unsigned int j = 0; j < 4; j++)
-      mpq_set_si (MPQMAT_REF (*T)[i][j], T_data[i][j], 1);
-}
-
-INITIALIZED_CONSTANT (static, mpqmat_t, T, initialize_T);
 
 static void
 bernstein_to_monomial (const double b[4], double m[4])
@@ -102,7 +82,8 @@ bernstein_to_monomial (const double b[4], double m[4])
     mpq_set_d (x[0][i], b[i]);
 
   mpq_matrix_trmm (CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit,
-                   1, 4, mpq_one (), MPQMAT_REF (T ()), x);
+                   1, 4, mpq_one (),
+                   MPQMAT_REF (coefficients_bern_to_mono (3)), x);
 
   for (int i = 0; i < 4; i++)
     m[i] = mpq_get_d (x[0][i]);

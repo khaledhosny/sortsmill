@@ -56,6 +56,7 @@
 -T precomputed_data_by_degree_t
 -T mpqmat_t
 -T mpqmat_struct_t
+-T _precomputed_matrices_t
 
 -T real
 -T bigreal

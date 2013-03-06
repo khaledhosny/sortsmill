@@ -1,4 +1,5 @@
-/*
+/* -*- coding: utf-8 -*-
+ *
  * Copyright (C) 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -23,15 +24,23 @@
                                    correct order. */
 #include <libguile.h>
 #include <stdbool.h>
+#include <sortsmill/c_version.h>
+
+#if _FF_C99_OR_GREATER          /* For standard variadic macros support. */
 
 /*
  * We use "double-checked locking".
- *
  * See http://www.hpl.hp.com/research/linux/atomic_ops/example.php4
+ *
+ * Values defined with this macro are ‘lazy’; that is, they are not
+ * initialized until the first time they are used.
  */
 
+/* Unfortunately, in a C99-conforming program, the
+   INITIALIZER_FUNCTION must take at least one extra argument, even if
+   unused. GCC is more permissive. */
 #define INITIALIZED_CONSTANT(MODIFIERS, TYPE, NAME,                     \
-                             INITIALIZER_FUNCTION)                      \
+                             INITIALIZER_FUNCTION, ...)                 \
                                                                         \
   static struct __##NAME##__data_t__                                    \
   {                                                                     \
@@ -61,7 +70,8 @@
                                     SCM_F_WIND_EXPLICITLY);             \
         if (!__##NAME##__data__.is_initialized)                         \
           {                                                             \
-            INITIALIZER_FUNCTION (&__##NAME##__data__.value);           \
+            INITIALIZER_FUNCTION (&__##NAME##__data__.value,            \
+                                  __VA_ARGS__);                         \
             AO_store_release_write (&__##NAME##__data__.is_initialized, \
                                     true);                              \
           }                                                             \
@@ -69,5 +79,7 @@
       }                                                                 \
     return __##NAME##__data__.value;                                    \
   }
+
+#endif /* _FF_C99_OR_GREATER */
 
 #endif /* _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H */

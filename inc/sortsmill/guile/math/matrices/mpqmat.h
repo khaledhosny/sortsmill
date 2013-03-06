@@ -72,6 +72,9 @@ SCM scm_c_make_permanent_mpqmat (unsigned int m, unsigned int n);
 mpqmat_t scm_c_make_mpqmat_t (unsigned int m, unsigned int n);
 mpqmat_t scm_c_make_permanent_mpqmat_t (unsigned int m, unsigned int n);
 
+/* Take an existing mpqmat_t and convert it to a permanent one. */
+mpqmat_t scm_make_mpqmat_t_permanent (const mpqmat_t A);
+
 #if 0
 {
 #endif

@@ -194,6 +194,12 @@ scm_c_make_permanent_mpqmat_t (unsigned int m, unsigned int n)
   return (scm_to_mpqmat_t (scm_c_make_permanent_mpqmat (m, n)));
 }
 
+VISIBLE mpqmat_t
+scm_make_mpqmat_t_permanent (const mpqmat_t A)
+{
+  return scm_to_mpqmat_t (scm_permanent_object (scm_from_mpqmat_t (A)));
+}
+
 VISIBLE void
 init_guile_sortsmill_math_matrices_mpqmat (void)
 {

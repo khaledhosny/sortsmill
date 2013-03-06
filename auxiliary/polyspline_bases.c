@@ -18,6 +18,10 @@
 #include <sortsmill/polyspline/bases.h>
 #include <sortsmill/bincoef.h>
 #include <sortsmill/gmp_constants.h>
+#include <sortsmill/initialized_global_constants.h>
+#include <xalloc.h>
+
+//-------------------------------------------------------------------------
 
 // Multiply a row vector by this matrix to convert coefficients from
 // monomial basis to Bernstein basis.
@@ -32,8 +36,8 @@
 //    t² =                            ⅓⋅3t²(1 - t) + 1⋅t³
 //    t³ =                                           1⋅t³
 //
-VISIBLE mpqmat_t
-coefficients_mono_to_bern (unsigned int degree)
+static mpqmat_t
+coefficients_mono_to_bern__base (unsigned int degree)
 {
   mpq_t divisor;
   mpq_init (divisor);
@@ -73,8 +77,8 @@ coefficients_mono_to_bern (unsigned int degree)
 //    t² =                          t²(1 - t) + t³
 //    t³ =                                      t³
 //
-VISIBLE mpqmat_t
-coefficients_mono_to_sbern (unsigned int degree)
+static mpqmat_t
+coefficients_mono_to_sbern__base (unsigned int degree)
 {
   mpqmat_t T = scm_c_make_mpqmat_t (degree + 1, degree + 1);
   for (unsigned int i = 0; i <= degree; i++)
@@ -100,8 +104,8 @@ coefficients_mono_to_sbern (unsigned int degree)
 //    3t²(1 - t) =          3t² − 3t³
 //    t³         =                 t³
 //
-VISIBLE mpqmat_t
-coefficients_bern_to_mono (unsigned int degree)
+static mpqmat_t
+coefficients_bern_to_mono__base (unsigned int degree)
 {
   mpq_t factor;
   mpq_init (factor);
@@ -141,8 +145,8 @@ coefficients_bern_to_mono (unsigned int degree)
 //    3t²(1 - t) = 3⋅t²(1 - t)
 //    t³         = 1⋅t³
 //
-VISIBLE mpqmat_t
-coefficients_bern_to_sbern (unsigned int degree)
+static mpqmat_t
+coefficients_bern_to_sbern__base (unsigned int degree)
 {
   mpqmat_t T = scm_c_make_mpqmat_t (degree + 1, degree + 1);
   for (unsigned int i = 0; i <= degree; i++)
@@ -167,8 +171,8 @@ coefficients_bern_to_sbern (unsigned int degree)
 //    t²(1 - t) =           t² - t³
 //    t³        =                t³
 //
-VISIBLE mpqmat_t
-coefficients_sbern_to_mono (unsigned int degree)
+static mpqmat_t
+coefficients_sbern_to_mono__base (unsigned int degree)
 {
   mpqmat_t T = scm_c_make_mpqmat_t (degree + 1, degree + 1);
   for (unsigned int i = 0; i <= degree; i++)
@@ -196,8 +200,8 @@ coefficients_sbern_to_mono (unsigned int degree)
 //    t²(1 - t) = ⅓⋅t²(1 - t)
 //    t³        = 1⋅t³
 //
-VISIBLE mpqmat_t
-coefficients_sbern_to_bern (unsigned int degree)
+static mpqmat_t
+coefficients_sbern_to_bern__base (unsigned int degree)
 {
   mpqmat_t T = scm_c_make_mpqmat_t (degree + 1, degree + 1);
   for (unsigned int i = 0; i <= degree; i++)
@@ -213,3 +217,105 @@ coefficients_sbern_to_bern (unsigned int degree)
         mpq_set (MPQMAT_REF (T)[i][j], mpq_zero ());
   return T;
 }
+
+//-------------------------------------------------------------------------
+
+#define __PRECOMPUTED_MAX_DEGREE 9
+
+typedef struct
+{
+  mpqmat_t matrices[__PRECOMPUTED_MAX_DEGREE + 1];
+} _precomputed_matrices_t;
+
+static void
+initialize_precomputed_matrices (_precomputed_matrices_t **precomputed,
+                                 mpqmat_t (*base_function) (unsigned int
+                                                            degree))
+{
+  (*precomputed) = XMALLOC (_precomputed_matrices_t);
+  for (unsigned int degree = 0; degree <= __PRECOMPUTED_MAX_DEGREE; degree++)
+    (*precomputed)->matrices[degree] =
+      scm_make_mpqmat_t_permanent (base_function (degree));
+}
+
+INITIALIZED_CONSTANT (static, _precomputed_matrices_t *,
+                      precomputed_mono_to_bern,
+                      initialize_precomputed_matrices,
+                      coefficients_mono_to_bern__base);
+
+INITIALIZED_CONSTANT (static, _precomputed_matrices_t *,
+                      precomputed_mono_to_sbern,
+                      initialize_precomputed_matrices,
+                      coefficients_mono_to_sbern__base);
+
+INITIALIZED_CONSTANT (static, _precomputed_matrices_t *,
+                      precomputed_bern_to_mono,
+                      initialize_precomputed_matrices,
+                      coefficients_bern_to_mono__base);
+
+INITIALIZED_CONSTANT (static, _precomputed_matrices_t *,
+                      precomputed_bern_to_sbern,
+                      initialize_precomputed_matrices,
+                      coefficients_bern_to_sbern__base);
+
+INITIALIZED_CONSTANT (static, _precomputed_matrices_t *,
+                      precomputed_sbern_to_mono,
+                      initialize_precomputed_matrices,
+                      coefficients_sbern_to_mono__base);
+
+INITIALIZED_CONSTANT (static, _precomputed_matrices_t *,
+                      precomputed_sbern_to_bern,
+                      initialize_precomputed_matrices,
+                      coefficients_sbern_to_bern__base);
+
+//-------------------------------------------------------------------------
+
+VISIBLE mpqmat_t
+coefficients_mono_to_bern (unsigned int degree)
+{
+  return (degree <= __PRECOMPUTED_MAX_DEGREE) ?
+    precomputed_mono_to_bern ()->matrices[degree] :
+    coefficients_mono_to_bern__base (degree);
+}
+
+VISIBLE mpqmat_t
+coefficients_mono_to_sbern (unsigned int degree)
+{
+  return (degree <= __PRECOMPUTED_MAX_DEGREE) ?
+    precomputed_mono_to_sbern ()->matrices[degree] :
+    coefficients_mono_to_sbern__base (degree);
+}
+
+VISIBLE mpqmat_t
+coefficients_bern_to_mono (unsigned int degree)
+{
+  return (degree <= __PRECOMPUTED_MAX_DEGREE) ?
+    precomputed_bern_to_mono ()->matrices[degree] :
+    coefficients_bern_to_mono__base (degree);
+}
+
+VISIBLE mpqmat_t
+coefficients_bern_to_sbern (unsigned int degree)
+{
+  return (degree <= __PRECOMPUTED_MAX_DEGREE) ?
+    precomputed_bern_to_sbern ()->matrices[degree] :
+    coefficients_bern_to_sbern__base (degree);
+}
+
+VISIBLE mpqmat_t
+coefficients_sbern_to_mono (unsigned int degree)
+{
+  return (degree <= __PRECOMPUTED_MAX_DEGREE) ?
+    precomputed_sbern_to_mono ()->matrices[degree] :
+    coefficients_sbern_to_mono__base (degree);
+}
+
+VISIBLE mpqmat_t
+coefficients_sbern_to_bern (unsigned int degree)
+{
+  return (degree <= __PRECOMPUTED_MAX_DEGREE) ?
+    precomputed_sbern_to_bern ()->matrices[degree] :
+    coefficients_sbern_to_bern__base (degree);
+}
+
+//-------------------------------------------------------------------------
