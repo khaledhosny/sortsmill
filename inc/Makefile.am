@@ -98,7 +98,7 @@ nobase_include_HEADERS += sortsmill/ps_number.h
 
 #--------------------------------------------------------------------------
 #
-# Mathematical heirarchy.
+# Mathematical hierarchy.
 
 nobase_include_HEADERS += sortsmill/math.h
 
