@@ -72,7 +72,7 @@
    times)
   (display "\n"))
 
-(display "fl_subdiv_sbern\n");
+(display "f64_subdiv_sbern\n");
 (do ((deg 0 (1+ deg))) ((= 5 deg))
     (for-each
      (lambda (t)
@@ -88,7 +88,7 @@
          (display "\n")))
      times))
     
-(display "fl_subdiv_bern\n");
+(display "f64_subdiv_bern\n");
 (do ((deg 0 (1+ deg))) ((= 5 deg))
     (for-each
      (lambda (t)

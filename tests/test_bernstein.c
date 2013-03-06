@@ -51,7 +51,7 @@ my_main (int argc, char **argv)
       printf ("\n");
     }
 
-  printf ("fl_subdiv_sbern\n");
+  printf ("f64_subdiv_sbern\n");
   for (size_t deg = 0; deg < 5; deg++)
     {
       double spline1a[deg + 1];
@@ -60,7 +60,7 @@ my_main (int argc, char **argv)
       for (size_t i = 0; 0 <= times[i]; i++)
         {
           printf ("t=%lf|", times[i]);
-          fl_subdiv_sbern (deg, spline1, times[i], spline1a, spline1b);
+          f64_subdiv_sbern (deg, spline1, times[i], spline1a, spline1b);
           for (size_t j = 0; j <= deg; j++)
             printf ("%lf|", spline1a[j]);
           for (size_t j = 0; j <= deg; j++)
@@ -69,7 +69,7 @@ my_main (int argc, char **argv)
         }
     }
 
-  printf ("fl_subdiv_bern\n");
+  printf ("f64_subdiv_bern\n");
   for (size_t deg = 0; deg < 5; deg++)
     {
       double spline1a[deg + 1];
@@ -78,7 +78,7 @@ my_main (int argc, char **argv)
       for (size_t i = 0; 0 <= times[i]; i++)
         {
           printf ("t=%lf|", times[i]);
-          fl_subdiv_bern (deg, spline1, times[i], spline1a, spline1b);
+          f64_subdiv_bern (deg, spline1, times[i], spline1a, spline1b);
           for (size_t j = 0; j <= deg; j++)
             printf ("%lf|", spline1a[j]);
           for (size_t j = 0; j <= deg; j++)

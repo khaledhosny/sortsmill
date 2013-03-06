@@ -254,7 +254,7 @@ scm_f64vector_subdiv_sbern (SCM spline, SCM t)
     b[i] = elem[inc * i];
   scm_array_handle_release (&handle);
   double *a = xmalloc (len * sizeof (double));
-  fl_subdiv_sbern (len - 1, b, scm_to_double (t), a, b);
+  f64_subdiv_sbern (len - 1, b, scm_to_double (t), a, b);
   SCM new_splines[2];
   new_splines[0] = scm_take_f64vector (a, len);
   new_splines[1] = scm_take_f64vector (b, len);
@@ -273,7 +273,7 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
     b[i] = elem[inc * i];
   scm_array_handle_release (&handle);
   double *a = xmalloc (len * sizeof (double));
-  fl_subdiv_bern (len - 1, b, scm_to_double (t), a, b);
+  f64_subdiv_bern (len - 1, b, scm_to_double (t), a, b);
   SCM new_splines[2];
   new_splines[0] = scm_take_f64vector (a, len);
   new_splines[1] = scm_take_f64vector (b, len);
@@ -282,7 +282,7 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
 
 VISIBLE SCM
 multiply_splines (SCM spline1, SCM spline2,
-                  void (*fl_mul) (unsigned int deg1, const double *spline1,
+                  void (*f64_mul) (unsigned int deg1, const double *spline1,
                                   unsigned int deg2, const double *spline2,
                                   double *result))
 {
@@ -306,7 +306,7 @@ multiply_splines (SCM spline1, SCM spline2,
   scm_array_handle_release (&handle);
 
   double *result = xmalloc ((deg1 + deg2 + 1) * sizeof (double));
-  fl_mul (deg1, a, deg2, b, result);
+  f64_mul (deg1, a, deg2, b, result);
   return scm_take_f64vector (result, deg1 + deg2 + 1);
 }
 
@@ -314,21 +314,21 @@ multiply_splines (SCM spline1, SCM spline2,
 VISIBLE SCM
 scm_f64vector_mul_sbern (SCM spline1, SCM spline2)
 {
-  return multiply_splines (spline1, spline2, fl_mul_sbern);
+  return multiply_splines (spline1, spline2, f64_mul_sbern);
 }
 
 // FIXME: Write a test for this.
 VISIBLE SCM
 scm_f64vector_mul_bern (SCM spline1, SCM spline2)
 {
-  return multiply_splines (spline1, spline2, fl_mul_bern);
+  return multiply_splines (spline1, spline2, f64_mul_bern);
 }
 
 // FIXME: Write a test for this.
 VISIBLE SCM
 scm_f64vector_mul_mono (SCM spline1, SCM spline2)
 {
-  return multiply_splines (spline1, spline2, fl_mul_mono);
+  return multiply_splines (spline1, spline2, f64_mul_mono);
 }
 
 VISIBLE void

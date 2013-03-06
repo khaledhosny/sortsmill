@@ -154,7 +154,7 @@ void f64_mono_to_bern (unsigned int deg, const double *from, double *to,
  * vis--
  */
 _FF_ATTRIBUTE_PURE double f64_eval_sbern (unsigned int deg,
-                                         const double *spline, double t);
+                                          const double *spline, double t);
 
 /*
  * vis--
@@ -167,7 +167,7 @@ _FF_ATTRIBUTE_PURE double f64_eval_sbern (unsigned int deg,
  * vis--
  */
 _FF_ATTRIBUTE_PURE double f64_eval_bern (unsigned int deg,
-                                        const double *spline, double t);
+                                         const double *spline, double t);
 
 /*
  * vis--
@@ -183,7 +183,7 @@ _FF_ATTRIBUTE_PURE double f64_eval_bern (unsigned int deg,
  * vis--
  */
 _FF_ATTRIBUTE_PURE double f64_evaldc_sbern (unsigned int deg,
-                                           const double *spline, double t);
+                                            const double *spline, double t);
 
 /*
  * vis--
@@ -199,7 +199,7 @@ _FF_ATTRIBUTE_PURE double f64_evaldc_sbern (unsigned int deg,
  * vis--
  */
 _FF_ATTRIBUTE_PURE double f64_evaldc_bern (unsigned int deg,
-                                          const double *spline, double t);
+                                           const double *spline, double t);
 
 /*
  * vis--
@@ -211,11 +211,11 @@ _FF_ATTRIBUTE_PURE double f64_evaldc_bern (unsigned int deg,
  * vis--
  */
 _FF_ATTRIBUTE_PURE double f64_eval_mono (unsigned int deg,
-                                        const double *spline, double t);
+                                         const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_subdiv_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
+ * vis-- @deftypefun void f64_subdiv_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
  * vis--
  * vis-- Subdivide a spline in scaled Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -223,12 +223,12 @@ _FF_ATTRIBUTE_PURE double f64_eval_mono (unsigned int deg,
  * vis-- @end deftypefun
  * vis--
  */
-void fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
-                      double *a, double *b);
+void f64_subdiv_sbern (unsigned int deg, const double *spline, double t,
+                       double *a, double *b);
 
 /*
  * vis--
- * vis-- @deftypefun void fl_subdiv_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
+ * vis-- @deftypefun void f64_subdiv_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
  * vis--
  * vis-- Subdivide a spline in Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -236,17 +236,17 @@ void fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
  * vis-- @end deftypefun
  * vis--
  */
-void fl_subdiv_bern (unsigned int deg, const double *spline, double t,
-                     double *a, double *b);
+void f64_subdiv_bern (unsigned int deg, const double *spline, double t,
+                      double *a, double *b);
 
 /* FIXME: The stuff below is entirely undocumented so far. */
 
-void fl_mul_sbern (unsigned int deg1, const double *spline1,
+void f64_mul_sbern (unsigned int deg1, const double *spline1,
+                    unsigned int deg2, const double *spline2, double *result);
+void f64_mul_bern (unsigned int deg1, const double *spline1,
                    unsigned int deg2, const double *spline2, double *result);
-void fl_mul_bern (unsigned int deg1, const double *spline1,
-                  unsigned int deg2, const double *spline2, double *result);
-void fl_mul_mono (unsigned int deg1, const double *spline1,
-                  unsigned int deg2, const double *spline2, double *result);
+void f64_mul_mono (unsigned int deg1, const double *spline1,
+                   unsigned int deg2, const double *spline2, double *result);
 
 #if 0
 {

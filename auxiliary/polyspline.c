@@ -275,18 +275,18 @@ f64_eval_mono (unsigned int deg, const double *spline, double t)
 //
 
 VISIBLE void
-fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
+f64_subdiv_sbern (unsigned int deg, const double *spline, double t,
                  double *a, double *b)
 {
   double bern[deg + 1];
   f64_sbern_to_bern (deg, spline, bern, 1);
-  fl_subdiv_bern (deg, bern, t, a, b);
+  f64_subdiv_bern (deg, bern, t, a, b);
   f64_bern_to_sbern (deg, a, a, 1);
   f64_bern_to_sbern (deg, b, b, 1);
 }
 
 VISIBLE void
-fl_subdiv_bern (unsigned int deg, const double *spline, double t,
+f64_subdiv_bern (unsigned int deg, const double *spline, double t,
                 double *a, double *b)
 {
   memmove (b, spline, (deg + 1) * sizeof (double));
@@ -322,14 +322,14 @@ convolve (unsigned int deg1, const double *poly1,
 // Multiplication of two splines in scaled Bernstein basis; this
 // operation is just convolution by another name.
 VISIBLE void
-fl_mul_sbern (unsigned int deg1, const double *spline1,
+f64_mul_sbern (unsigned int deg1, const double *spline1,
               unsigned int deg2, const double *spline2, double *result)
 {
   convolve (deg1, spline1, deg2, spline2, result);
 }
 
 VISIBLE void
-fl_mul_bern (unsigned int deg1, const double *spline1,
+f64_mul_bern (unsigned int deg1, const double *spline1,
              unsigned int deg2, const double *spline2, double *result)
 {
   double sbern1[deg1 + 1];
@@ -337,12 +337,12 @@ fl_mul_bern (unsigned int deg1, const double *spline1,
   double sbern3[deg1 + deg2 + 1];
   f64_bern_to_sbern (deg1, spline1, sbern1, 1);
   f64_bern_to_sbern (deg2, spline2, sbern2, 1);
-  fl_mul_sbern (deg1, sbern1, deg2, sbern2, sbern3);
+  f64_mul_sbern (deg1, sbern1, deg2, sbern2, sbern3);
   f64_sbern_to_bern (deg1 + deg2, sbern3, result, 1);
 }
 
 VISIBLE void
-fl_mul_mono (unsigned int deg1, const double *spline1,
+f64_mul_mono (unsigned int deg1, const double *spline1,
              unsigned int deg2, const double *spline2, double *result)
 {
   convolve (deg1, spline1, deg2, spline2, result);

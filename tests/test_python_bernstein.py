@@ -39,24 +39,24 @@ for deg in range (0, 11):
     write ("{:.6f}|".format (spline.f64_evaldc_bern (b, t)))
   write ("\n")
 
-write ("fl_subdiv_sbern\n")
+write ("f64_subdiv_sbern\n")
 for deg in range (0, 5):
   for t in times:
     write ("t={:.6f}|".format (t))
     s = array.array ("d", spline1[:deg + 1])
-    (a, b) = spline.fl_subdiv_sbern (s, t)
+    (a, b) = spline.f64_subdiv_sbern (s, t)
     for j in range (0, deg + 1):
       write ("{:.6f}|".format (a[j]))
     for j in range (0, deg + 1):
       write ("{:.6f}|".format (b[j]))
     write ("\n")
 
-write ("fl_subdiv_bern\n")
+write ("f64_subdiv_bern\n")
 for deg in range (0, 5):
   for t in times:
     write ("t={:.6f}|".format (t))
     s = array.array ("d", spline1[:deg + 1])
-    (a, b) = spline.fl_subdiv_bern (s, t)
+    (a, b) = spline.f64_subdiv_bern (s, t)
     for j in range (0, deg + 1):
       write ("{:.6f}|".format (a[j]))
     for j in range (0, deg + 1):

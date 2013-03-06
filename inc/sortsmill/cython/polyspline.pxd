@@ -29,5 +29,5 @@ cdef extern from "sortsmill/math/polyspline.h":
   double f64_evaldc_bern (unsigned int deg, double *spline, double t)
   double f64_eval_mono (unsigned int deg, double *spline, double t)
 
-  void fl_subdiv_sbern (unsigned int deg, double *spline, double t, double *a, double *b)
-  void fl_subdiv_bern (unsigned int deg, double *spline, double t, double *a, double *b)
+  void f64_subdiv_sbern (unsigned int deg, double *spline, double t, double *a, double *b)
+  void f64_subdiv_bern (unsigned int deg, double *spline, double t, double *a, double *b)
