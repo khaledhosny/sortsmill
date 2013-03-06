@@ -31,9 +31,9 @@
 AC_PREREQ([2.69])
 AC_INIT([Sorts Mill Tools],
         [2.0.0_alpha1],
-        [http://bitbucket.org/sortsmill/sortsmill-fontforge/issues],
+        [http://bitbucket.org/sortsmill/sortsmill-tools/issues],
         [sortsmill-tools],
-        [http://bitbucket.org/sortsmill/sortsmill-fontforge])
+        [http://bitbucket.org/sortsmill/sortsmill-tools])
 
 AC_CONFIG_SRCDIR([fontforge/splinerefigure.c])
 

@@ -224,8 +224,8 @@ cyclo-tools.html: $(CYCLO_SOURCEFILES)
 		| $(AWK) -f $(top_srcdir)/config/pmccabe2html \
 			-v lang=html \
 			-v name="$(PACKAGE_NAME)" \
-			-v vcurl="http://bitbucket.org/sortsmill/sortsmill-fontforge/raw/master/%FILENAME%" \
-			-v url="http://bitbucket.org/sortsmill/sortsmill-fontforge" \
+			-v vcurl="http://bitbucket.org/sortsmill/sortsmill-tools/raw/master/%FILENAME%" \
+			-v url="http://bitbucket.org/sortsmill/sortsmill-tools" \
 			-v css=$(top_srcdir)/config/pmccabe.css \
 			-v cut_dir=$(top_srcdir)/ \
 			> $@-tmp
