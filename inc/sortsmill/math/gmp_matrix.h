@@ -16,8 +16,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GMP_MATRIX_H
-#define _SORTSMILL_GMP_MATRIX_H
+#ifndef _SORTSMILL_MATH_GMP_MATRIX_H
+#define _SORTSMILL_MATH_GMP_MATRIX_H
 
 #include <gmp.h>
 #include <libguile.h>
@@ -306,4 +306,4 @@ int mpq_linalg_LU_sgndet (unsigned int n, mpq_t LU[n][n], int signum);
 }
 #endif
 
-#endif /* _SORTSMILL_GMP_MATRIX_H */
+#endif /* _SORTSMILL_MATH_GMP_MATRIX_H */

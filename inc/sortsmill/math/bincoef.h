@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2013 Barry Schwartz
+ * Copyright (C) 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,15 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_MATH_TRANSMATRIX_H
-#define _SORTSMILL_MATH_TRANSMATRIX_H
+#ifndef _SORTSMILL_MATH_BINCOEF_H
+#define _SORTSMILL_MATH_BINCOEF_H
 
-#include <gsl/gsl_blas.h>
+#include <stdint.h>
+#include <gmp.h>
 
-#define _FF_TRANSMATRIX(A,T,I,J)                                        \
-  A[((T) == CblasNoTrans ? (I) : (J))][((T) == CblasNoTrans ? (J) : (I))]
+/* The binary coefficient C(n,k). */
+uintmax_t bincoef (uintmax_t n, uintmax_t k);
+void mpz_bincoef_ui (mpz_t C, uintmax_t n, uintmax_t k);
+void mpq_bincoef_ui (mpq_t C, uintmax_t n, uintmax_t k);
 
-#define _FF_TRANSMATRIX_CAST(TYPE,T,I,J)                        \
-  (TYPE (*)[(unsigned int) ((T) == CblasNoTrans ? (J) : (I))])
-
-#endif /* _SORTSMILL_MATH_TRANSMATRIX_H */
+#endif /* _SORTSMILL_MATH_BINCOEF_H */

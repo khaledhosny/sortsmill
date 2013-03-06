@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_SCM_MATRIX_H
-#define _SORTSMILL_SCM_MATRIX_H
+#ifndef _SORTSMILL_MATH_SCM_MATRIX_H
+#define _SORTSMILL_MATH_SCM_MATRIX_H
 
 #include <libguile.h>
 #include <sortsmill/c_version.h>
@@ -124,4 +124,4 @@ int scm_linalg_LU_sgndet (unsigned int n, SCM LU[n][n], int signum);
 }
 #endif
 
-#endif /* _SORTSMILL_SCM_MATRIX_H */
+#endif /* _SORTSMILL_MATH_SCM_MATRIX_H */

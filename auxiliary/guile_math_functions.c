@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/bincoef.h>
+#include <sortsmill/math/bincoef.h>
 #include <stdint.h>
 #include <intl.h>
 

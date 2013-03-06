@@ -15,15 +15,17 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_BINCOEF_H
-#define _SORTSMILL_BINCOEF_H
+#ifndef _SORTSMILL_MATH_H
+#define _SORTSMILL_MATH_H
 
-#include <stdint.h>
-#include <gmp.h>
+#include <sortsmill/math/bincoef.h>
+#include <sortsmill/math/brentroot.h>
+#include <sortsmill/math/gmp_constants.h>
+#include <sortsmill/math/polyspline.h>
 
-/* The binary coefficient C(n,k). */
-uintmax_t bincoef (uintmax_t n, uintmax_t k);
-void mpz_bincoef_ui (mpz_t C, uintmax_t n, uintmax_t k);
-void mpq_bincoef_ui (mpq_t C, uintmax_t n, uintmax_t k);
+#include <sortsmill/math/f64_matrix.h>
+#include <sortsmill/math/gmp_matrix.h>
+#include <sortsmill/math/scm_matrix.h>
+#include <sortsmill/math/transmatrix.h>
 
-#endif /* _SORTSMILL_BINCOEF_H */
+#endif /* _SORTSMILL_MATH_H */

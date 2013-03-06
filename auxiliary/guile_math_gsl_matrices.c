@@ -17,7 +17,7 @@
 
 #include <assert.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/gmp_constants.h>
+#include <sortsmill/math/gmp_constants.h>
 #include <sortsmill/math/gmp_matrix.h>
 #include <sortsmill/math/scm_matrix.h>
 #include <sortsmill/xgc.h>

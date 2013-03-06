@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_F64_MATRIX_H
-#define _SORTSMILL_F64_MATRIX_H
+#ifndef _SORTSMILL_MATH_F64_MATRIX_H
+#define _SORTSMILL_MATH_F64_MATRIX_H
 
 #include <libguile.h>
 #include <sortsmill/c_version.h>
@@ -48,4 +48,4 @@ void f64_matrix_mul_diagonal (CBLAS_SIDE_t Side,
 }
 #endif
 
-#endif /* _SORTSMILL_F64_MATRIX_H */
+#endif /* _SORTSMILL_MATH_F64_MATRIX_H */

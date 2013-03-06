@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SORTSMILL_GMP_CONSTANTS_H
-#define _SORTSMILL_GMP_CONSTANTS_H
+#ifndef _SORTSMILL_MATH_GMP_CONSTANTS_H
+#define _SORTSMILL_MATH_GMP_CONSTANTS_H
 
 #ifdef __cplusplus
 extern "C"
@@ -75,4 +75,4 @@ _FF_GMP_CONSTANT_DECL (mpq, mpq_neg_six);
 }
 #endif
 
-#endif /* _SORTSMILL_GMP_CONSTANTS_H */
+#endif /* _SORTSMILL_MATH_GMP_CONSTANTS_H */

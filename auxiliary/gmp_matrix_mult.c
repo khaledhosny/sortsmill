@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/math/gmp_matrix.h>
-#include <sortsmill/gmp_constants.h>
+#include <sortsmill/math/gmp_constants.h>
 
 VISIBLE void
 _GMP_TYPE (_matrix_scale) (unsigned int m, unsigned int n,

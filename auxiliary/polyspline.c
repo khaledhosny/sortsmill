@@ -17,7 +17,7 @@
 
 #include <sortsmill/math/polyspline.h>
 #include <sortsmill/math/gmp_matrix.h>
-#include <sortsmill/gmp_constants.h>
+#include <sortsmill/math/gmp_constants.h>
 #include <string.h>
 #include <math.h>
 #include <gsl/gsl_matrix.h>

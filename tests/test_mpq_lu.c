@@ -9,7 +9,7 @@
 #include <libguile.h>
 #include <sortsmill/guile.h>
 #include <sortsmill/math/gmp_matrix.h>
-#include <sortsmill/gmp_constants.h>
+#include <sortsmill/math/gmp_constants.h>
 #include <gsl/gsl_linalg.h>
 
 #include <main_with_guile.x>

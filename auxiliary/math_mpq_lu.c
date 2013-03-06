@@ -20,7 +20,7 @@
 // Based on the GSL implementation, linalg/lu.c, by G. Jungman.
 
 #include <sortsmill/math/gmp_matrix.h>
-#include <sortsmill/gmp_constants.h>
+#include <sortsmill/math/gmp_constants.h>
 
 /* Factorise a general N x N matrix A into,
  *

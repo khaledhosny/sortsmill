@@ -16,8 +16,8 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/math/polyspline/bases.h>
-#include <sortsmill/bincoef.h>
-#include <sortsmill/gmp_constants.h>
+#include <sortsmill/math/bincoef.h>
+#include <sortsmill/math/gmp_constants.h>
 #include <sortsmill/initialized_global_constants.h>
 #include <xalloc.h>
 

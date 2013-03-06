@@ -90,17 +90,23 @@ nobase_include_HEADERS += sortsmill/xuninorm.h
 nobase_include_HEADERS += sortsmill/xunistr.h
 nobase_include_HEADERS += sortsmill/xunistring.h
 
-# Parsing of PostScript-style numerals.
-nobase_include_HEADERS += sortsmill/ps_number.h
-
-# Mathematical functions.
-nobase_include_HEADERS += sortsmill/bincoef.h
-
 # `Easy' regular expression processing, based on PCRE.
 nobase_include_HEADERS += sortsmill/rexp.h
 
+# Parsing of PostScript-style numerals.
+nobase_include_HEADERS += sortsmill/ps_number.h
+
+#--------------------------------------------------------------------------
+#
+# Mathematical heirarchy.
+
+nobase_include_HEADERS += sortsmill/math.h
+
+# Mathematical functions.
+nobase_include_HEADERS += sortsmill/math/bincoef.h
+
 # Pre-computed constants for GNU MP.
-nobase_include_HEADERS += sortsmill/gmp_constants.h
+nobase_include_HEADERS += sortsmill/math/gmp_constants.h
 
 # GSL-like matrix operations for GNU MP and Guile numbers.
 nobase_include_HEADERS += sortsmill/math/transmatrix.h
@@ -116,6 +122,8 @@ nobase_include_HEADERS += sortsmill/math/brentroot.h
 # Polynomial splines.
 nobase_include_HEADERS += sortsmill/math/polyspline.h
 nobase_include_HEADERS += sortsmill/math/polyspline/bases.h
+
+#--------------------------------------------------------------------------
 
 # FIXME: These headers need to be examined for relevance and for
 # whether the functions they declare need to be moved into the
@@ -148,6 +156,8 @@ nobase_include_HEADERS += sortsmill/guile/math/gsl/permutations.h
 if HAVE_PURE_API
 nobase_include_HEADERS += sortsmill/guile/pure.h
 endif HAVE_PURE_API
+
+#--------------------------------------------------------------------------
 
 if HAVE_PYTHON_API
 nobase_include_HEADERS += sortsmill/__init__.pxd
