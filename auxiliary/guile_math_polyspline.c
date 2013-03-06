@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile/math/polyspline.h>
-#include <sortsmill/polyspline.h>
+#include <sortsmill/math/polyspline.h>
 #include <xalloc.h>
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -215,31 +215,31 @@ evaluate (SCM spline, SCM t,
 VISIBLE SCM
 scm_f64vector_eval_sbern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, fl_eval_sbern);
+  return evaluate (spline, t, f64_eval_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_eval_bern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, fl_eval_bern);
+  return evaluate (spline, t, f64_eval_bern);
 }
 
 VISIBLE SCM
 scm_f64vector_evaldc_sbern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, fl_evaldc_sbern);
+  return evaluate (spline, t, f64_evaldc_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_evaldc_bern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, fl_evaldc_bern);
+  return evaluate (spline, t, f64_evaldc_bern);
 }
 
 VISIBLE SCM
 scm_f64vector_eval_mono (SCM spline, SCM t)
 {
-  return evaluate (spline, t, fl_eval_mono);
+  return evaluate (spline, t, f64_eval_mono);
 }
 
 VISIBLE SCM

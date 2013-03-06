@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-cdef extern from "sortsmill/polyspline.h":
+cdef extern from "sortsmill/math/polyspline.h":
   void f64_sbern_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
   void f64_bern_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
   void f64_mono_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
@@ -23,11 +23,11 @@ cdef extern from "sortsmill/polyspline.h":
   void f64_mono_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
   void f64_bern_to_mono (unsigned int deg, double *_from, double *_to, size_t num_splines)
 
-  double fl_eval_sbern (unsigned int deg, double *spline, double t)
-  double fl_eval_bern (unsigned int deg, double *spline, double t)
-  double fl_evaldc_sbern (unsigned int deg, double *spline, double t)
-  double fl_evaldc_bern (unsigned int deg, double *spline, double t)
-  double fl_eval_mono (unsigned int deg, double *spline, double t)
+  double f64_eval_sbern (unsigned int deg, double *spline, double t)
+  double f64_eval_bern (unsigned int deg, double *spline, double t)
+  double f64_evaldc_sbern (unsigned int deg, double *spline, double t)
+  double f64_evaldc_bern (unsigned int deg, double *spline, double t)
+  double f64_eval_mono (unsigned int deg, double *spline, double t)
 
   void fl_subdiv_sbern (unsigned int deg, double *spline, double t, double *a, double *b)
   void fl_subdiv_bern (unsigned int deg, double *spline, double t, double *a, double *b)

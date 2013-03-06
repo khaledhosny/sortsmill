@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/polyspline.h>
+#include <sortsmill/math/polyspline.h>
 #include <precomputed_polyspline_data.h>
 #include <sortsmill/xgc.h>
 #include <sortsmill/gmp_constants.h>

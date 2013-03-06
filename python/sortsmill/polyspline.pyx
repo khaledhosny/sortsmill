@@ -82,33 +82,33 @@ cdef double[::contiguous] c_f64_bern_to_mono (double[::contiguous] spline):
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double c_fl_eval_sbern (double[::contiguous] spline, double t):
+cdef double c_f64_eval_sbern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.fl_eval_sbern (deg, &spline[0], t)
+  return ps.f64_eval_sbern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double c_fl_eval_bern (double[::contiguous] spline, double t):
+cdef double c_f64_eval_bern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.fl_eval_bern (deg, &spline[0], t)
+  return ps.f64_eval_bern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double c_fl_evaldc_sbern (double[::contiguous] spline, double t):
+cdef double c_f64_evaldc_sbern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.fl_evaldc_sbern (deg, &spline[0], t)
+  return ps.f64_evaldc_sbern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double c_fl_evaldc_bern (double[::contiguous] spline, double t):
+cdef double c_f64_evaldc_bern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.fl_evaldc_bern (deg, &spline[0], t)
+  return ps.f64_evaldc_bern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double c_fl_eval_mono (double[::contiguous] spline, double t):
+cdef double c_f64_eval_mono (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.fl_eval_mono (deg, &spline[0], t)
+  return ps.f64_eval_mono (deg, &spline[0], t)
 
 #--------------------------------------------------------------------------
 
@@ -153,7 +153,7 @@ cdef object _fl_change_basis (object spline,
     result = list (b)           # The default output format is a list.
   return result
 
-cdef object _fl_evaluate (object spline, double t,
+cdef object _f64_evaluate (object spline, double t,
                           double (*evaluator) (double[::contiguous] spline,
                                                double t)):
   cdef double[::contiguous] a = \
@@ -205,20 +205,20 @@ def f64_bern_to_mono (spline not None):
 def f64_mono_to_bern (spline not None):
   return _fl_change_basis (spline, c_f64_mono_to_bern)
 
-def fl_eval_sbern (spline not None, double t):
-  return _fl_evaluate (spline, t, c_fl_eval_sbern)
+def f64_eval_sbern (spline not None, double t):
+  return _f64_evaluate (spline, t, c_f64_eval_sbern)
 
-def fl_eval_bern (spline not None, double t):
-  return _fl_evaluate (spline, t, c_fl_eval_bern)
+def f64_eval_bern (spline not None, double t):
+  return _f64_evaluate (spline, t, c_f64_eval_bern)
 
-def fl_evaldc_sbern (spline not None, double t):
-  return _fl_evaluate (spline, t, c_fl_evaldc_sbern)
+def f64_evaldc_sbern (spline not None, double t):
+  return _f64_evaluate (spline, t, c_f64_evaldc_sbern)
 
-def fl_evaldc_bern (spline not None, double t):
-  return _fl_evaluate (spline, t, c_fl_evaldc_bern)
+def f64_evaldc_bern (spline not None, double t):
+  return _f64_evaluate (spline, t, c_f64_evaldc_bern)
 
-def fl_eval_mono (spline not None, double t):
-  return _fl_evaluate (spline, t, c_fl_eval_mono)
+def f64_eval_mono (spline not None, double t):
+  return _f64_evaluate (spline, t, c_f64_eval_mono)
 
 def fl_subdiv_sbern (spline not None, double t):
   return _fl_subdivide (spline, t, c_fl_subdiv_sbern)

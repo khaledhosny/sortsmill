@@ -7,7 +7,7 @@
 #include <float.h>
 #include <math.h>
 #include <libguile.h>
-#include <sortsmill/polyspline.h>
+#include <sortsmill/math/polyspline.h>
 
 #include <main_with_guile.x>
 
@@ -19,35 +19,35 @@ my_main (int argc, char **argv)
   double spline1[] = { 5, 4, -3, 2, 1, 0, 1, -2, 3, 4, 5 };
   double times[] = { 0, 0.25, 0.5, 0.75, 1, -1 };
 
-  printf ("fl_eval_sbern\n");
+  printf ("f64_eval_sbern\n");
   for (size_t deg = 0; deg < 11; deg++)
     {
       for (size_t i = 0; 0 <= times[i]; i++)
-        printf ("%lf|", fl_eval_sbern (deg, spline1, times[i]));
+        printf ("%lf|", f64_eval_sbern (deg, spline1, times[i]));
       printf ("\n");
     }
 
-  printf ("fl_eval_bern\n");
+  printf ("f64_eval_bern\n");
   for (size_t deg = 0; deg < 11; deg++)
     {
       for (size_t i = 0; 0 <= times[i]; i++)
-        printf ("%lf|", fl_eval_bern (deg, spline1, times[i]));
+        printf ("%lf|", f64_eval_bern (deg, spline1, times[i]));
       printf ("\n");
     }
 
-  printf ("fl_evaldc_sbern\n");
+  printf ("f64_evaldc_sbern\n");
   for (size_t deg = 0; deg < 11; deg++)
     {
       for (size_t i = 0; 0 <= times[i]; i++)
-        printf ("%lf|", fl_evaldc_sbern (deg, spline1, times[i]));
+        printf ("%lf|", f64_evaldc_sbern (deg, spline1, times[i]));
       printf ("\n");
     }
 
-  printf ("fl_evaldc_bern\n");
+  printf ("f64_evaldc_bern\n");
   for (size_t deg = 0; deg < 11; deg++)
     {
       for (size_t i = 0; 0 <= times[i]; i++)
-        printf ("%lf|", fl_evaldc_bern (deg, spline1, times[i]));
+        printf ("%lf|", f64_evaldc_bern (deg, spline1, times[i]));
       printf ("\n");
     }
 
@@ -86,7 +86,7 @@ my_main (int argc, char **argv)
 
           // Check that subdivision gives the same result as
           // evaluation.
-          double v = fl_eval_bern (deg, spline1, times[i]);
+          double v = f64_eval_bern (deg, spline1, times[i]);
           double difference = fabs (spline1b[0] - v);
           bool close_enough = (difference <= 10 * DBL_EPSILON);
           printf ("%d", close_enough);

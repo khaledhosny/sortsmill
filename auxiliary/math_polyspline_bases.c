@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/polyspline/bases.h>
+#include <sortsmill/math/polyspline/bases.h>
 #include <sortsmill/bincoef.h>
 #include <sortsmill/gmp_constants.h>
 #include <sortsmill/initialized_global_constants.h>

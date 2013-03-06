@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/polyspline.h>
+#include <sortsmill/math/polyspline.h>
 #include <sortsmill/gmp_matrix.h>
 #include <sortsmill/gmp_constants.h>
 #include <string.h>
@@ -180,7 +180,7 @@ f64_bern_to_sbern (unsigned int deg, const double *from, double *to,
 //
 
 VISIBLE double
-fl_eval_sbern (unsigned int deg, const double *spline, double t)
+f64_eval_sbern (unsigned int deg, const double *spline, double t)
 {
   double v;
 
@@ -230,15 +230,15 @@ fl_eval_sbern (unsigned int deg, const double *spline, double t)
 }
 
 VISIBLE double
-fl_eval_bern (unsigned int deg, const double *spline, double t)
+f64_eval_bern (unsigned int deg, const double *spline, double t)
 {
   double sbern[deg + 1];
   f64_bern_to_sbern (deg, spline, sbern, 1);
-  return fl_eval_sbern (deg, sbern, t);
+  return f64_eval_sbern (deg, sbern, t);
 }
 
 VISIBLE double
-fl_evaldc_sbern (unsigned int deg, const double *spline, double t)
+f64_evaldc_sbern (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
   f64_sbern_to_bern (deg, spline, b, 1);
@@ -249,7 +249,7 @@ fl_evaldc_sbern (unsigned int deg, const double *spline, double t)
 }
 
 VISIBLE double
-fl_evaldc_bern (unsigned int deg, const double *spline, double t)
+f64_evaldc_bern (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
   memcpy (b, spline, (deg + 1) * sizeof (double));
@@ -260,7 +260,7 @@ fl_evaldc_bern (unsigned int deg, const double *spline, double t)
 }
 
 VISIBLE double
-fl_eval_mono (unsigned int deg, const double *spline, double t)
+f64_eval_mono (unsigned int deg, const double *spline, double t)
 {
   // Horner’s rule.
   double x = spline[deg];

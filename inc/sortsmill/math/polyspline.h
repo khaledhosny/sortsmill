@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_POLYSPLINE_H
-#define _SORTSMILL_POLYSPLINE_H
+#ifndef _SORTSMILL_MATH_POLYSPLINE_H
+#define _SORTSMILL_MATH_POLYSPLINE_H
 
 #include <stdlib.h>
 #include <gmp.h>
@@ -145,7 +145,7 @@ void f64_mono_to_bern (unsigned int deg, const double *from, double *to,
 
 /*
  * vis--
- * vis-- @deftypefun double fl_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double f64_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in scaled Bernstein basis, using the
  * vis-- algorithm of Schumaker and Volk.
@@ -153,12 +153,12 @@ void f64_mono_to_bern (unsigned int deg, const double *from, double *to,
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double fl_eval_sbern (unsigned int deg,
+_FF_ATTRIBUTE_PURE double f64_eval_sbern (unsigned int deg,
                                          const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun double fl_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double f64_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in Bernstein basis, using the
  * vis-- algorithm of Schumaker and Volk.
@@ -166,12 +166,12 @@ _FF_ATTRIBUTE_PURE double fl_eval_sbern (unsigned int deg,
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double fl_eval_bern (unsigned int deg,
+_FF_ATTRIBUTE_PURE double f64_eval_bern (unsigned int deg,
                                         const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun double fl_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double f64_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in scaled Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -182,12 +182,12 @@ _FF_ATTRIBUTE_PURE double fl_eval_bern (unsigned int deg,
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double fl_evaldc_sbern (unsigned int deg,
+_FF_ATTRIBUTE_PURE double f64_evaldc_sbern (unsigned int deg,
                                            const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun double fl_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double f64_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -198,19 +198,19 @@ _FF_ATTRIBUTE_PURE double fl_evaldc_sbern (unsigned int deg,
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double fl_evaldc_bern (unsigned int deg,
+_FF_ATTRIBUTE_PURE double f64_evaldc_bern (unsigned int deg,
                                           const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun double fl_eval_mono (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double f64_eval_mono (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in monomial basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double fl_eval_mono (unsigned int deg,
+_FF_ATTRIBUTE_PURE double f64_eval_mono (unsigned int deg,
                                         const double *spline, double t);
 
 /*
@@ -255,4 +255,4 @@ void fl_mul_mono (unsigned int deg1, const double *spline1,
 }
 #endif
 
-#endif /* _SORTSMILL_POLYSPLINE_H */
+#endif /* _SORTSMILL_MATH_POLYSPLINE_H */

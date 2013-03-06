@@ -7,7 +7,7 @@
 #include <float.h>
 #include <math.h>
 #include <libguile.h>
-#include <sortsmill/polyspline.h>
+#include <sortsmill/math/polyspline.h>
 
 #include <main_with_guile.x>
 
@@ -44,9 +44,9 @@ my_main (int argc, char **argv)
   for (unsigned int i = 0; i <= 100; i++)
     {
       double t = i / 100.0;
-      double x1 = fl_eval_mono (deg, mono, t);
-      double x2 = fl_evaldc_sbern (deg, sbern, t);
-      double x3 = fl_evaldc_bern (deg, bern, t);
+      double x1 = f64_eval_mono (deg, mono, t);
+      double x2 = f64_evaldc_sbern (deg, sbern, t);
+      double x3 = f64_evaldc_bern (deg, bern, t);
       if (10 * DBL_EPSILON < fabs (x1 - x2))
         exit (30);
       if (10 * DBL_EPSILON < fabs (x1 - x3))

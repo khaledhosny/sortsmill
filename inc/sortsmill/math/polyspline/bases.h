@@ -16,8 +16,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_POLYSPLINE_BASES_H
-#define _SORTSMILL_POLYSPLINE_BASES_H
+#ifndef _SORTSMILL_MATH_POLYSPLINE_BASES_H
+#define _SORTSMILL_MATH_POLYSPLINE_BASES_H
 
 /*
  * Polynomial bases.
@@ -145,4 +145,4 @@ mpqmat_t coefficients_sbern_to_bern (unsigned int degree);
 }
 #endif
 
-#endif /* _SORTSMILL_POLYSPLINE_BASES_H */
+#endif /* _SORTSMILL_MATH_POLYSPLINE_BASES_H */

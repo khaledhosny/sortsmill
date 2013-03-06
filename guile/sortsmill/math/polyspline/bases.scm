@@ -28,7 +28,7 @@
           (system foreign)
           (only (srfi :26) cut))
 
-  (sortsmill-dynlink-declarations "#include <sortsmill/polyspline/bases.h>")
+  (sortsmill-dynlink-declarations "#include <sortsmill/math/polyspline/bases.h>")
 
   ;;------------------------------------------------------------------------
 
