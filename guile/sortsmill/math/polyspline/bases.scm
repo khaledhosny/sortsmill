@@ -95,9 +95,9 @@
   ;;------------------------------------------------------------------------
 
   (define (poly:spower-halves coefs)
-    "Shared matrix views of the symmetric halves of s-power
-splines. If the spline degree is even, then both halves will contain
-the middle coefficient as their last (highest degree) coefficient."
+    "Shared array views of the symmetric halves of s-power splines. If
+the spline degree is even, then both halves will contain the middle
+coefficient as their last (highest degree) coefficient."
     (let* ([dims (matrix-dimensions coefs)]
            [row-count (car dims)]
            [column-count (cadr dims)]
