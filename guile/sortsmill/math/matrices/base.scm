@@ -25,6 +25,8 @@
 
           matrix-shape
           matrix-dimensions
+          matrix-row-count
+          matrix-column-count
           square-matrix?
           conformable-for*?
           conformable-for+?
@@ -205,6 +207,12 @@
 
   (define (matrix-dimensions A)
     (map cadr (matrix-shape (one-based A))))
+
+  (define (matrix-row-count A)
+    (cadar (matrix-shape (one-based A))))
+
+  (define (matrix-column-count A)
+    (cadadr (matrix-shape (one-based A))))
 
   (define (square-matrix? A)
     (apply eqv? (matrix-dimensions A)))

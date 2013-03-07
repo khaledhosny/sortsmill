@@ -17,11 +17,17 @@
 
 (library (sortsmill math polyspline bases)
 
-  (export polyspline-basis-transformation-set!
-          polyspline-basis-transformation)
+  (export poly:basis-transformation-set!
+          poly:basis-transformation
+          poly:change-basis
 
-  (import (sortsmill math matrices base)
-          (sortsmill math matrices mpqmat)
+          ;; Shared matrix views of the symmetric halves of s-power
+          ;; splines. If the spline degree is even, then both halves
+          ;; will contain the middle coefficient as their last
+          ;; (highest degree) coefficient.
+          poly:spower-halves)
+
+  (import (sortsmill math matrices)
           (sortsmill dynlink)
           (sortsmill i18n)
           (rnrs)
@@ -33,29 +39,33 @@
 
   ;;------------------------------------------------------------------------
 
-  (define polyspline-basis-transformations (make-hashtable equal-hash equal?))
+  (define poly:basis-transformations (make-hashtable equal-hash equal?))
 
-  (define (polyspline-basis-transformation-set! from-coefficients
-                                                to-coefficients
-                                                matrix-proc)
-    (hashtable-set! polyspline-basis-transformations
+  (define (poly:basis-transformation-set! from-coefficients
+                                          to-coefficients
+                                          matrix-proc)
+    (hashtable-set! poly:basis-transformations
                     `(,from-coefficients . ,to-coefficients) matrix-proc))
 
-  (define (polyspline-basis-transformation-ref from-coefficients
-                                               to-coefficients)
-    (hashtable-ref polyspline-basis-transformations
+  (define (poly:basis-transformation-ref from-coefficients
+                                         to-coefficients)
+    (hashtable-ref poly:basis-transformations
                    `(,from-coefficients . ,to-coefficients) #f))
 
-  (define (polyspline-basis-transformation from-coefficients
-                                           to-coefficients
-                                           degree)
-    (let ([proc (polyspline-basis-transformation-ref from-coefficients
-                                                     to-coefficients)])
+  (define (poly:basis-transformation from-coefficients
+                                     to-coefficients
+                                     degree)
+    (let ([proc (poly:basis-transformation-ref from-coefficients
+                                               to-coefficients)])
       (if proc
           (proc degree)
-          (error 'polyspline-basis-transformation
+          (error 'poly:basis-transformation
                  (_ "transformation matrix not found")
                  `(,from-coefficients ,to-coefficients ,degree)))))
+
+  (define (poly:change-basis from to coefs)
+    (let ([degree (- (matrix-column-count coefs) 1)])
+      (matrix* coefs (poly:basis-transformation from to degree))))
 
   (define (basis->basis:c-func c-func)
     (let ([proc (pointer->procedure
@@ -64,7 +74,7 @@
         (mpqmat->matrix (pointer->mpqmat (proc degree))))))
 
   (for-each
-   (cut apply polyspline-basis-transformation-set! <...>)
+   (cut apply poly:basis-transformation-set! <...>)
    `(
      (mono mono ,(basis->basis:c-func "coefficients_mono_to_mono"))
      (mono bern ,(basis->basis:c-func "coefficients_mono_to_bern"))
@@ -86,6 +96,24 @@
      (spower sbern ,(basis->basis:c-func "coefficients_spower_to_sbern"))
      (spower spower ,(basis->basis:c-func "coefficients_spower_to_spower"))
      ))
+
+  ;;------------------------------------------------------------------------
+
+  (define (poly:spower-halves coefs)
+    (let* ([dims (matrix-dimensions coefs)]
+           [row-count (car dims)]
+           [column-count (cadr dims)]
+           [degree (- column-count 1)]
+           [quot (div degree 2)])
+      (let ([left-half (make-shared-array coefs list
+                                          `(1 ,row-count)
+                                          `(1 ,(+ quot 1)))]
+            [right-half (make-shared-array coefs
+                                           (lambda (i j)
+                                             `(,i  ,(- column-count j -1)))
+                                           `(1 ,row-count)
+                                           `(1 ,(+ quot 1)))])
+            (values left-half right-half))))
 
   ;;------------------------------------------------------------------------
 
