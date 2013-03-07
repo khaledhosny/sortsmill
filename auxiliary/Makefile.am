@@ -137,6 +137,8 @@ libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 
 # The GMP_MATRIX_EXTRAS files are included by gmp_matrix.c rather than
 # compiled directly.
+#
+# FIXME: Rename these as math_gmp_matrix_init.c, etc.
 GMP_MATRIX_EXTRAS =
 GMP_MATRIX_EXTRAS += gmp_matrix_init.c
 GMP_MATRIX_EXTRAS += gmp_matrix_set.c

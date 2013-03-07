@@ -107,6 +107,7 @@ _fill_spower_middle_row (unsigned int deg, double A[deg + 1][deg + 1])
     }
 }
 
+// FIXME: I think this is actually the inverse of what is claimed.
 static void
 _fill_sbern_basis_in_spower (unsigned int deg, double A[deg + 1][deg + 1])
 {
@@ -132,6 +133,7 @@ _fill_sbern_basis_in_spower (unsigned int deg, double A[deg + 1][deg + 1])
   _fill_spower_middle_row (n, A);
 }
 
+// FIXME: I think this is actually the inverse of what is claimed.
 static void
 _fill_spower_basis_in_sbern (unsigned int deg, double A[deg + 1][deg + 1])
 {

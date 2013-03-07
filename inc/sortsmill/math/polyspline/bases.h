@@ -114,6 +114,9 @@ extern "C"
 }
 #endif
 
+// Returns an identity matrix.
+mpqmat_t coefficients_mono_to_mono (unsigned int degree);
+
 // Multiply a row vector by this matrix to convert coefficients from
 // monomial basis to Bernstein basis.
 mpqmat_t coefficients_mono_to_bern (unsigned int degree);
@@ -123,12 +126,23 @@ mpqmat_t coefficients_mono_to_bern (unsigned int degree);
 mpqmat_t coefficients_mono_to_sbern (unsigned int degree);
 
 // Multiply a row vector by this matrix to convert coefficients from
+// monomial basis to Sánchez-Reyes s-power basis.
+mpqmat_t coefficients_mono_to_spower (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
 // Bernstein basis to monomial basis.
 mpqmat_t coefficients_bern_to_mono (unsigned int degree);
+
+// Returns an identity matrix.
+mpqmat_t coefficients_bern_to_bern (unsigned int degree);
 
 // Multiply a row vector by this matrix to convert coefficients from
 // Bernstein basis to scaled Bernstein basis.
 mpqmat_t coefficients_bern_to_sbern (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// Bernstein basis to Sánchez-Reyes s-power basis.
+mpqmat_t coefficients_bern_to_spower (unsigned int degree);
 
 // Multiply a row vector by this matrix to convert coefficients from
 // scaled Bernstein basis to monomial basis.
@@ -137,6 +151,29 @@ mpqmat_t coefficients_sbern_to_mono (unsigned int degree);
 // Multiply a row vector by this matrix to convert coefficients from
 // scaled Bernstein basis to Bernstein basis.
 mpqmat_t coefficients_sbern_to_bern (unsigned int degree);
+
+// Returns an identity matrix.
+mpqmat_t coefficients_sbern_to_sbern (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// scaled Bernstein basis to Sánchez-Reyes s-power basis.
+mpqmat_t coefficients_sbern_to_spower (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// Sánchez-Reyes s-power basis to monomial basis.
+mpqmat_t coefficients_spower_to_mono (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// Sánchez-Reyes s-power basis to Bernstein basis.
+mpqmat_t coefficients_spower_to_bern (unsigned int degree);
+
+// Multiply a row vector by this matrix to convert coefficients from
+// Sánchez-Reyes s-power basis to scaled Bernstein basis.
+mpqmat_t coefficients_spower_to_sbern (unsigned int degree);
+
+// Returns an identity matrix.
+mpqmat_t coefficients_spower_to_spower (unsigned int degree);
+
 
 #if 0
 {

@@ -21,7 +21,9 @@
 #include <sortsmill/math/bincoef.h>
 #include <sortsmill/math/brentroot.h>
 #include <sortsmill/math/gmp_constants.h>
-#include <sortsmill/math/polyspline.h>
+#include <sortsmill/math/polyspline.h>  /* FIXME: Make polyspline.h
+                                           hierarchical. */
+#include <sortsmill/math/polyspline/bases.h>
 
 #include <sortsmill/math/f64_matrix.h>
 #include <sortsmill/math/gmp_matrix.h>

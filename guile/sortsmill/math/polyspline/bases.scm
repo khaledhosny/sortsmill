@@ -20,9 +20,10 @@
   (export polyspline-basis-transformation-set!
           polyspline-basis-transformation)
 
-  (import (sortsmill dynlink)
-          (sortsmill math matrices base)
+  (import (sortsmill math matrices base)
           (sortsmill math matrices mpqmat)
+          (sortsmill dynlink)
+          (sortsmill i18n)
           (rnrs)
           (except (guile) error)
           (system foreign)
@@ -50,10 +51,11 @@
                                            degree)
     (let ([proc (polyspline-basis-transformation-ref from-coefficients
                                                      to-coefficients)])
-      (proc degree)))
-
-  (define (basis->same-basis degree)
-    (I-matrix (+ degree 1)))
+      (if proc
+          (proc degree)
+          (error 'polyspline-basis-transformation
+                 (_ "transformation matrix not found")
+                 `(,from-coefficients ,to-coefficients ,degree)))))
 
   (define (basis->basis:c-func c-func)
     (let ([proc (pointer->procedure
@@ -64,25 +66,25 @@
   (for-each
    (cut apply polyspline-basis-transformation-set! <...>)
    `(
-     (mono mono ,basis->same-basis)
+     (mono mono ,(basis->basis:c-func "coefficients_mono_to_mono"))
      (mono bern ,(basis->basis:c-func "coefficients_mono_to_bern"))
      (mono sbern ,(basis->basis:c-func "coefficients_mono_to_sbern"))
-     (mono spower #f)
+     (mono spower ,(basis->basis:c-func "coefficients_mono_to_spower"))
 
      (bern mono ,(basis->basis:c-func "coefficients_bern_to_mono"))
-     (bern bern ,basis->same-basis)
+     (bern bern ,(basis->basis:c-func "coefficients_bern_to_bern"))
      (bern sbern ,(basis->basis:c-func "coefficients_bern_to_sbern"))
-     (bern spower #f)
+     (bern spower ,(basis->basis:c-func "coefficients_bern_to_spower"))
 
      (sbern mono ,(basis->basis:c-func "coefficients_sbern_to_mono"))
      (sbern bern ,(basis->basis:c-func "coefficients_sbern_to_bern"))
-     (sbern sbern ,basis->same-basis)
-     (sbern spower #f)
+     (sbern sbern ,(basis->basis:c-func "coefficients_sbern_to_sbern"))
+     (sbern spower ,(basis->basis:c-func "coefficients_sbern_to_spower"))
 
-     (spower mono #f)
-     (spower bern #f)
-     (spower sbern #f)
-     (spower spower ,basis->same-basis)
+     (spower mono ,(basis->basis:c-func "coefficients_spower_to_mono"))
+     (spower bern ,(basis->basis:c-func "coefficients_spower_to_bern"))
+     (spower sbern ,(basis->basis:c-func "coefficients_spower_to_sbern"))
+     (spower spower ,(basis->basis:c-func "coefficients_spower_to_spower"))
      ))
 
   ;;------------------------------------------------------------------------
