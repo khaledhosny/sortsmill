@@ -116,6 +116,7 @@
 -T Spline1D
 -T KernPair
 -T KernPair1
+-T LineList
 -T Val
 -T Array
 -T Context
