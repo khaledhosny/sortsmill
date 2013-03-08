@@ -144,6 +144,7 @@ nobase_include_HEADERS += sortsmill/guile/editor/main_loop.h
 
 nobase_include_HEADERS += sortsmill/guile/math.h
 nobase_include_HEADERS += sortsmill/guile/math/brentroot.h
+nobase_include_HEADERS += sortsmill/guile/math/functions.h
 nobase_include_HEADERS += sortsmill/guile/math/gmp.h
 nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl.h
