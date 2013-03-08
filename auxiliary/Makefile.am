@@ -123,7 +123,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_matrices.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_permutations.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gmp.c
 dist_libsortsmill_aux_la_SOURCES += guile_arrays.c
-dist_libsortsmill_aux_la_SOURCES += guile_math_matrices_mpqmat.c
 dist_libsortsmill_aux_la_SOURCES += guile_iconv.c
 dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
 dist_libsortsmill_aux_la_SOURCES += guile_options.c

@@ -6,7 +6,6 @@ auxiliary/rnrs_conditions.c
 auxiliary/guile_math_functions.c
 auxiliary/guile_math_gsl_matrices.c
 auxiliary/guile_math_gsl_permutations.c
-auxiliary/guile_math_matrices_mpqmat.c
 auxiliary/guile_python.c
 fontforge/alignment.c
 fontforge/anchorsaway.c
@@ -166,7 +165,6 @@ guile/sortsmill/python.scm
 guile/sortsmill/math/gsl/matrices.scm
 guile/sortsmill/math/matrices/arithmetic.scm
 guile/sortsmill/math/matrices/base.scm
-guile/sortsmill/math/matrices/mpqmat.scm
 guile/sortsmill/math/polyspline/bases.scm
 main/compare.c
 main/image.c

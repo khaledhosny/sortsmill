@@ -485,15 +485,6 @@ DIST_SCM_FILES += sortsmill/math/matrices/linalg.scm
 GO_FILES += sortsmill/math/matrices/linalg.go
 MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/linalg.scm
 
-
-# (sortsmill math matrices mpqmat)
-
-DIST_SCM_FILES += sortsmill/math/matrices/mpqmat.scm
-GO_FILES += sortsmill/math/matrices/mpqmat.go
-MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/mpqmat.scm
-
-sortsmill/math/matrices/mpqmat.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
-
 #--------------------------------------------------------------------------
 
 # (sortsmill math polyspline)

@@ -22,7 +22,6 @@
 #include <sortsmill/guile/math/functions.h>
 #include <sortsmill/guile/math/gmp.h>
 #include <sortsmill/guile/math/gsl.h>
-#include <sortsmill/guile/math/matrices.h>
 #include <sortsmill/guile/math/polyspline.h>
 
 #endif /* _SORTSMILL_GUILE_MATH_H */
