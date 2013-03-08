@@ -28,13 +28,35 @@
 
 #include "fontforge.h"
 #include "splinefont.h"
-#include <sortsmill/math/gmp_matrix.h>
-#include <sortsmill/math/gmp_constants.h>
+#include <sortsmill/math.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/math/polyspline/bases.h>
+#include <sortsmill/initialized_global_constants.h>
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
+
+static mpq_t T_storage[4][4];
+
+static void
+initialize_T (mpq_t **T, void *UNUSED (_))
+{
+  // *INDENT-OFF*
+  const int T_data[4][4] = {
+    {1, -3,  3, -1},
+    {0,  3, -6,  3},
+    {0,  0,  3, -3},
+    {0,  0,  0,  1}
+  };
+  // *INDENT-ON*
+
+  mpq_matrix_init (4, 4, T_storage);
+  for (unsigned int i = 0; i < 4; i++)
+    for (unsigned int j = 0; j < 4; j++)
+      mpq_set_si (T_storage[i][j], T_data[i][j], 1);
+  *T = (mpq_t *) &T_storage[0][0];
+}
+
+INITIALIZED_CONSTANT (static, mpq_t *, T, initialize_T, NULL);
 
 static void
 bernstein_to_monomial (const double b[4], double m[4])
@@ -82,8 +104,7 @@ bernstein_to_monomial (const double b[4], double m[4])
     mpq_set_d (x[0][i], b[i]);
 
   mpq_matrix_trmm (CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit,
-                   1, 4, mpq_one (),
-                   MPQMAT_REF (coefficients_bern_to_mono (3)), x);
+                   1, 4, mpq_one (), (mpq_t (*)[4]) T (), x);
 
   for (int i = 0; i < 4; i++)
     m[i] = mpq_get_d (x[0][i]);
