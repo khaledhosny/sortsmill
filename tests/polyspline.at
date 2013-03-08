@@ -1,0 +1,11 @@
+# -*- coding: utf-8 -*-
+
+m4_defun([check_guile],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([polyspline auxiliary guile scheme unit])
+AT_CHECK_UNQUOTED([${run_guile} "${abs_srcdir}"/$1],[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_guile([test_guile_polyspline_bases.scm],[0],[],[])

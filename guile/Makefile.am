@@ -812,7 +812,7 @@ libguile_sortsmill_symbols.c:										\
 	sortsmill/strings/hash-guillemet.scm
 
 libguile_sortsmill_symbols.c: $(SCM_SYMBOL_FILES)
-	$(AM_V_REEXPORT)
+	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET)										\
 		$(srcdir)/generate-libguile-sortsmill_symbols.scm $^ > $@-tmp
 	$(AM_V_at)mv $@-tmp $@

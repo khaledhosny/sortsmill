@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/math/gmp_matrix.h>
+#include <sortsmill/math.h>
 
 void init_guile_sortsmill_math_matrices_mpqmat (void);
 
@@ -27,8 +27,6 @@ mpqmat_finalizer (void *p)
   const unsigned int m = mat->size1;
   const unsigned int n = mat->size2;
   mpq_matrix_clear (m, n, (mpq_t (*)[(unsigned int)n]) mat->data);
-  free (mat->data);
-  free (mat);
 }
 
 VISIBLE SCM
@@ -74,7 +72,7 @@ scm_matrix_to_mpqmat (SCM A)
   const unsigned int m = scm_matrix_dim1 (&handle_A);
   const unsigned int n = scm_matrix_dim2 (&handle_A);
 
-  mpq_t *_A = scm_malloc (m * n * sizeof (mpq_t));
+  mpq_t *_A = (mpq_t *) scm_gc_malloc (m * n * sizeof (mpq_t));
   mpq_matrix_init (m, n, (mpq_t (*)[n]) _A);
 
   scm_array_handle_to_mpq_matrix (A, &handle_A, m, n,
@@ -82,7 +80,7 @@ scm_matrix_to_mpqmat (SCM A)
 
   scm_dynwind_end ();
 
-  mpqmat_t mat = scm_malloc (sizeof (mpqmat_t));
+  mpqmat_t mat = scm_gc_malloc (sizeof (mpqmat_t), "mpqmat");
   mat->size1 = m;
   mat->size2 = n;
   mat->data = _A;
@@ -96,7 +94,10 @@ scm_mpqmat_to_matrix (SCM mpqmat)
   mpqmat_t mat = (mpqmat_t) scm_to_pointer (scm_mpqmat_to_pointer (mpqmat));
   const unsigned int m = mat->size1;
   const unsigned int n = mat->size2;
-  return scm_from_mpq_matrix (m, n, (mpq_t (*)[(unsigned int)n]) mat->data);
+  SCM result =
+    scm_from_mpq_matrix (m, n, (mpq_t (*)[(unsigned int)n]) mat->data);
+  scm_remember_upto_here_1 (mpqmat);
+  return result;
 }
 
 VISIBLE SCM
@@ -165,15 +166,12 @@ scm_c_make_mpqmat (unsigned int m, unsigned int n)
   assert (0 < m);
   assert (0 < n);
 
-  mpq_t *_A = scm_malloc (m * n * sizeof (mpq_t));
-  mpq_matrix_init (m, n, (mpq_t (*)[n]) _A);
-
-  mpqmat_t mat = scm_malloc (sizeof (mpqmat_t));
-  mat->size1 = m;
-  mat->size2 = n;
-  mat->data = _A;
-
-  return scm_pointer_to_mpqmat (scm_from_pointer (mat, mpqmat_finalizer));
+  return (scm_matrix_to_mpqmat
+          (scm_make_array (scm_from_uint (0),
+                           scm_list_2 (scm_list_2 (scm_from_uint (1),
+                                                   scm_from_uint (m)),
+                                       scm_list_2 (scm_from_uint (1),
+                                                   scm_from_uint (n))))));
 }
 
 VISIBLE SCM

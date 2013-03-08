@@ -76,7 +76,7 @@ MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at		\
 	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at					\
 	sortsmill_precompute.at precomputed_data.at math_functions.at		\
 	bernstein.at monomial.at gmp_constants.at brentroot.at linalg.at	\
-	sortsmill_iconv.at psMat.at old_python_tests.at
+	polyspline.at sortsmill_iconv.at psMat.at old_python_tests.at
 #sortsmill_linalg.at <-- Needs to be adapted to newer modules.
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
@@ -186,7 +186,7 @@ EXTRA_DIST += $(MY_AT_FILES)
 EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 
 EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm	\
-	test_guile_precompute.scm
+	test_guile_polyspline.scm test_guile_precompute.scm
 
 EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
 	test_guile_monomial.scm test_python_monomial.py				\

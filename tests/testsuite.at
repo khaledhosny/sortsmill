@@ -18,6 +18,7 @@ m4_include([gmp_constants.at])
 m4_include([math_functions.at])
 m4_include([brentroot.at])
 m4_include([linalg.at])
+m4_include([polyspline.at])
 
 AT_BANNER([gutils])
 m4_include([gfile_c.at])
