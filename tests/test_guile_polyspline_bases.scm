@@ -157,7 +157,7 @@ exec guile -s "${0}" ${1+"$@"}
     bases))
  bases)
 
-(define (check-basis-vectors basis1 basis2 degree)
+(define (check-change-basis-vectors basis1 basis2 degree)
   (let* ([basis-vector-matrix (I-matrix (+ degree 1))]
          [basis-vectors (map (cut matrix-row basis-vector-matrix <>)
                              (iota (+ degree 1) 1))]
@@ -167,7 +167,51 @@ exec guile -s "${0}" ${1+"$@"}
                                (cut poly:change-basis basis1 basis2 <>)
                                basis-vectors)]
          [vectors-equal? (for-all equal?
-                                  (map matrix->vector transformed-vectors)
+                                  (map row-matrix->vector transformed-vectors)
                                   (map (cut matrix-row transformed-matrix <>)
-                                       (iota (+ degree 1) 1)))])
-    (write vectors-equal?)))
+                                       (iota (+ degree 1) 1)))]
+         [transformation-matrix (poly:basis-transformation basis1 basis2
+                                                           degree)])
+    (unless vectors-equal?
+      (assertion-violation "test_guile_polyspline_bases.scm"
+                           "poly:change-basis vectors-equal? failed"
+                           (list basis1 basis2 degree)))
+    (unless (equal? transformed-matrix transformation-matrix)
+      (assertion-violation "test_guile_polyspline_bases.scm"
+                           "poly:change-basis failed"
+                           (list basis1 basis2 degree)))))
+
+(for-each
+ (lambda (basis1)
+   (for-each
+    (lambda (basis2)
+      (for-each
+       (lambda (degree)
+         (check-change-basis-vectors basis1 basis2 degree))
+       (iota 20)))
+    bases))
+ bases)
+
+(define (check-spower-halves coefs expected1 expected2)
+  (let-values ([(half1 half2) (poly:spower-halves coefs)])
+    (unless (and (equal? half1 expected1)
+                 (equal? half2 expected2))
+      (assertion-violation "test_guile_polyspline_bases.scm"
+                           "check-spower-halves failed"
+                           (list coefs expected1 expected2 half1 half2)))))
+
+(check-spower-halves #(0) #2@1@1((0)) #2@1@1((0)))
+(check-spower-halves #(123) #2@1@1((123)) #2@1@1((123)))
+(check-spower-halves #(0 1) #2@1@1((0)) #2@1@1((1)))
+(check-spower-halves #(123 321) #2@1@1((123)) #2@1@1((321)))
+(check-spower-halves #(123 321 456) #2@1@1((123 321)) #2@1@1((456 321)))
+(check-spower-halves #(123 321 456 654) #2@1@1((123 321)) #2@1@1((654 456)))
+(check-spower-halves #2((123 321 456 654)
+                        (8123 8321 8456 8654)
+                        (9123 9321 9456 9654))
+                     #2@1@1((123 321)
+                            (8123 8321)
+                            (9123 9321))
+                     #2@1@1((654 456)
+                            (8654 8456)
+                            (9654 9456)))
