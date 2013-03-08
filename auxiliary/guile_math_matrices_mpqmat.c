@@ -72,7 +72,7 @@ scm_matrix_to_mpqmat (SCM A)
   const unsigned int m = scm_matrix_dim1 (&handle_A);
   const unsigned int n = scm_matrix_dim2 (&handle_A);
 
-  mpq_t *_A = (mpq_t *) scm_gc_malloc (m * n * sizeof (mpq_t));
+  mpq_t *_A = (mpq_t *) scm_gc_malloc (m * n * sizeof (mpq_t), "mpqmat");
   mpq_matrix_init (m, n, (mpq_t (*)[n]) _A);
 
   scm_array_handle_to_mpq_matrix (A, &handle_A, m, n,
