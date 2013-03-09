@@ -96,6 +96,7 @@ nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
 # Polynomial splines. FIXME: This is new work. Develop this in
 # conjuction with phasing out or reworking the stuff above.
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_bases.c
+dist_libsortsmill_aux_la_SOURCES += math_polyspline_eval.c
 
 # Brent’s root-finding algorithm.
 dist_libsortsmill_aux_la_SOURCES += math_brentroot.c

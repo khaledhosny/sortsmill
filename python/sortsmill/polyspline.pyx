@@ -108,7 +108,7 @@ cdef double c_f64_evaldc_bern (double[::contiguous] spline, double t):
 @cython.wraparound(False)
 cdef double c_f64_eval_mono (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.f64_eval_mono (deg, &spline[0], t)
+  return ps.eval_f64_mono (deg, 1, &spline[0], t)
 
 #--------------------------------------------------------------------------
 

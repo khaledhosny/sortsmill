@@ -259,15 +259,15 @@ f64_evaldc_bern (unsigned int deg, const double *spline, double t)
   return b[0];
 }
 
-VISIBLE double
-f64_eval_mono (unsigned int deg, const double *spline, double t)
-{
-  // Horner’s rule.
-  double x = spline[deg];
-  for (unsigned int i = 1; i <= deg; i++)
-    x = MY_FAST_FMA (x, t, spline[deg - i]);
-  return x;
-}
+//VISIBLE double
+//f64_eval_mono (unsigned int deg, const double *spline, double t)
+//{
+//  // Horner’s rule.
+//  double x = spline[deg];
+//  for (unsigned int i = 1; i <= deg; i++)
+//    x = MY_FAST_FMA (x, t, spline[deg - i]);
+//  return x;
+//}
 
 //-------------------------------------------------------------------------
 //

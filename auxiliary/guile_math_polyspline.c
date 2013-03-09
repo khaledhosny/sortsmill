@@ -19,9 +19,11 @@
 #include <sortsmill/math/polyspline.h>
 #include <xalloc.h>
 
-/////////////////////////////////////////////////////////////////////////////////
-// FIXME FIXME FIXME: It seems a good idea to use dynwinds to release handles. //
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+// FIXME FIXME FIXME: Get rid of this.                                   //
+///////////////////////////////////////////////////////////////////////////
+// OLDER FIXME: It seems a good idea to use dynwinds to release handles. //
+///////////////////////////////////////////////////////////////////////////
 
 void init_guile_sortsmill_math_polyspline (void);
 
@@ -236,10 +238,16 @@ scm_f64vector_evaldc_bern (SCM spline, SCM t)
   return evaluate (spline, t, f64_evaldc_bern);
 }
 
+static double
+__f64_eval_mono (unsigned int degree, const double *spline, double t)
+{
+  return eval_f64_mono (degree, 1, spline, t);
+}
+
 VISIBLE SCM
 scm_f64vector_eval_mono (SCM spline, SCM t)
 {
-  return evaluate (spline, t, f64_eval_mono);
+  return evaluate (spline, t, __f64_eval_mono);
 }
 
 VISIBLE SCM

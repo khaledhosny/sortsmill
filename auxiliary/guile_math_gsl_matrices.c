@@ -76,7 +76,7 @@ exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants)
       rnrs_make_irritants_condition (irritants)));
 }
 
-static void
+VISIBLE void
 exception__expected_a_vector (const char *who, SCM irritants)
 {
   const char *message = _("expected a vector, row matrix, or column matrix");

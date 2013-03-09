@@ -18,6 +18,13 @@
 #ifndef _SORTSMILL_MATH_POLYSPLINE_H
 #define _SORTSMILL_MATH_POLYSPLINE_H
 
+#include <sortsmill/math/polyspline/bases.h>
+#include <sortsmill/math/polyspline/eval.h>
+
+/***************************************************************************/
+/* FIXME: The stuff below eventually is to be replaced by the stuff above. */
+/***************************************************************************/
+
 #include <stdlib.h>
 #include <gmp.h>
 #include <sortsmill/attributes.h>
@@ -202,16 +209,16 @@ _FF_ATTRIBUTE_PURE double f64_evaldc_bern (unsigned int deg,
                                            const double *spline, double t);
 
 /*
- * vis--
- * vis-- @deftypefun double f64_eval_mono (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
- * vis--
- * vis-- Evaluate a spline in monomial basis.
- * vis--
- * vis-- @end deftypefun
- * vis--
+ * XvisX--
+ * XvisX-- @deftypefun double f64_eval_mono (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * XvisX--
+ * XvisX-- Evaluate a spline in monomial basis.
+ * XvisX--
+ * XvisX-- @end deftypefun
+ * XvisX--
  */
-_FF_ATTRIBUTE_PURE double f64_eval_mono (unsigned int deg,
-                                         const double *spline, double t);
+/*_FF_ATTRIBUTE_PURE double f64_eval_mono (unsigned int deg,
+  const double *spline, double t);*/
 
 /*
  * vis--

@@ -44,7 +44,7 @@ my_main (int argc, char **argv)
   for (unsigned int i = 0; i <= 100; i++)
     {
       double t = i / 100.0;
-      double x1 = f64_eval_mono (deg, mono, t);
+      double x1 = f64_eval_mono (deg, 1, mono, t);
       double x2 = f64_evaldc_sbern (deg, sbern, t);
       double x3 = f64_evaldc_bern (deg, bern, t);
       if (10 * DBL_EPSILON < fabs (x1 - x2))

@@ -122,6 +122,7 @@ nobase_include_HEADERS += sortsmill/math/brentroot.h
 # Polynomial splines.
 nobase_include_HEADERS += sortsmill/math/polyspline.h
 nobase_include_HEADERS += sortsmill/math/polyspline/bases.h
+nobase_include_HEADERS += sortsmill/math/polyspline/eval.h
 
 #--------------------------------------------------------------------------
 
