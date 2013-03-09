@@ -75,6 +75,14 @@ SCM scm_c_eval_sbern_de_casteljau (unsigned int deg, int stride,
 SCM scm_eval_f64_sbern_de_casteljau (SCM splines, SCM t);
 SCM scm_eval_scm_sbern_de_casteljau (SCM splines, SCM t);
 
+/* Polynomial evaluation in the s-power basis of Sánchez-Reyes. */
+double eval_f64_spower (unsigned int degree, int stride,
+                        const double *spline, double t);
+SCM scm_c_eval_spower (unsigned int degree, int stride,
+                       const SCM *spline, SCM t);
+SCM scm_eval_f64_spower (SCM vector, SCM t);
+SCM scm_eval_scm_spower (SCM vector, SCM t);
+
 #if 0
 {
 #endif

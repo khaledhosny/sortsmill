@@ -30,7 +30,10 @@
           poly:eval-scm-sbern-schumaker-volk
 
           poly:eval-f64-sbern-de-casteljau
-          poly:eval-scm-sbern-de-casteljau)
+          poly:eval-scm-sbern-de-casteljau
+
+          poly:eval-f64-spower
+          poly:eval-scm-spower)
 
   (import (sortsmill dynlink)
           (rnrs)
