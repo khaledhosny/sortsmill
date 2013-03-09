@@ -358,14 +358,12 @@ eval_f64_spower (unsigned int degree, int stride,
   // The Sánchez-Reyes coefficients are the monomial coefficients of
   // the two shorter polynomials in s.
 
-  const unsigned int q = degree / 2 + degree % 2;
-
   const double t1 = 1.0 - t;
   const double s = t * t1;
 
-  const double left = eval_f64_mono (q - 1, stride, spline, s);
+  const double left = eval_f64_mono (degree / 2, stride, spline, s);
   const double right =
-    eval_f64_mono (q - 1, -stride, &spline[stride * (int) degree], s);
+    eval_f64_mono (degree / 2, -stride, &spline[stride * (int) degree], s);
 
   return (t1 * left + t * right);
 }
@@ -380,14 +378,12 @@ scm_c_eval_spower (unsigned int degree, int stride, const SCM *spline, SCM t)
   // The Sánchez-Reyes coefficients are the monomial coefficients of
   // the two shorter polynomials in s.
 
-  const unsigned int q = degree / 2 + degree % 2;
-
   const SCM t1 = scm_difference (scm_from_uint (1), t);
   const SCM s = scm_product (t, t1);
 
-  const SCM left = scm_c_eval_mono (q - 1, stride, spline, s);
+  const SCM left = scm_c_eval_mono (degree / 2, stride, spline, s);
   const SCM right =
-    scm_c_eval_mono (q - 1, -stride, &spline[stride * (int) degree], s);
+    scm_c_eval_mono (degree / 2, -stride, &spline[stride * (int) degree], s);
 
   return scm_sum (scm_product (t1, left), scm_product (t, right));
 }
