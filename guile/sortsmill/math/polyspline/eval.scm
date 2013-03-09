@@ -23,8 +23,14 @@
           poly:eval-f64-bern-schumaker-volk
           poly:eval-scm-bern-schumaker-volk
 
+          poly:eval-f64-bern-de-casteljau
+          poly:eval-scm-bern-de-casteljau
+
           poly:eval-f64-sbern-schumaker-volk
-          poly:eval-scm-sbern-schumaker-volk)
+          poly:eval-scm-sbern-schumaker-volk
+
+          poly:eval-f64-sbern-de-casteljau
+          poly:eval-scm-sbern-de-casteljau)
 
   (import (sortsmill dynlink)
           (rnrs)
