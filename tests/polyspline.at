@@ -9,3 +9,4 @@ AT_CLEANUP
 ])
 
 check_guile([test_guile_polyspline_bases.scm],[0],[],[])
+check_guile([test_guile_polyspline_eval.scm],[0],[],[])

@@ -185,8 +185,9 @@ EXTRA_DIST += $(MY_AT_FILES)
 
 EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 
-EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm		\
-	test_guile_polyspline_bases.scm test_guile_precompute.scm
+EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm			\
+	test_guile_polyspline_bases.scm test_guile_polyspline_eval.scm	\
+	test_guile_precompute.scm
 
 EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
 	test_guile_monomial.scm test_python_monomial.py				\
