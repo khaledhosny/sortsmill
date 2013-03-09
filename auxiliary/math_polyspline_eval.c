@@ -308,6 +308,45 @@ eval_f64_bern_de_casteljau (unsigned int degree, int stride,
   return b[0];
 }
 
+VISIBLE SCM
+scm_c_eval_sbern_de_casteljau (unsigned int degree, int stride,
+                               const SCM *spline, SCM t)
+{
+  scm_dynwind_begin (0);
+
+  mpz_t C;
+  mpz_init (C);
+  scm_dynwind_mpz_clear (C);
+
+  SCM b[degree + 1];
+  for (unsigned int i = 0; i <= degree; i++)
+    {
+      mpz_bincoef_ui (C, degree, i);
+      b[i] = scm_divide (spline[stride * i], scm_from_mpz (C));
+    }
+
+  scm_dynwind_end ();
+
+  for (unsigned int i = 0; i < degree; i++)
+    for (unsigned int j = 0; j < degree; j++)
+      b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
+
+  return b[0];
+}
+
+VISIBLE SCM
+scm_c_eval_bern_de_casteljau (unsigned int degree, int stride,
+                              const SCM *spline, SCM t)
+{
+  SCM b[degree + 1];
+  for (unsigned int i = 0; i <= degree; i++)
+    b[i] = spline[stride * i];
+  for (unsigned int i = 0; i < degree; i++)
+    for (unsigned int j = 0; j < degree; j++)
+      b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
+  return b[0];
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -446,10 +485,24 @@ scm_eval_scm_bern_schumaker_volk (SCM vector, SCM t)
 }
 
 VISIBLE SCM
+scm_eval_scm_bern_de_casteljau (SCM vector, SCM t)
+{
+  return scm_eval_scm_spline ("scm_eval_scm_bern_de_casteljau",
+                              scm_c_eval_bern_de_casteljau, vector, t);
+}
+
+VISIBLE SCM
 scm_eval_scm_sbern_schumaker_volk (SCM vector, SCM t)
 {
   return scm_eval_scm_spline ("scm_eval_scm_sbern_schumaker_volk",
                               scm_c_eval_sbern_schumaker_volk, vector, t);
+}
+
+VISIBLE SCM
+scm_eval_scm_sbern_de_casteljau (SCM vector, SCM t)
+{
+  return scm_eval_scm_spline ("scm_eval_scm_sbern_de_casteljau",
+                              scm_c_eval_sbern_de_casteljau, vector, t);
 }
 
 //-------------------------------------------------------------------------
@@ -469,6 +522,8 @@ init_math_polyspline_eval (void)
 
   scm_c_define_gsubr ("poly:eval-f64-bern-de-casteljau", 2, 0, 0,
                       scm_eval_f64_bern_de_casteljau);
+  scm_c_define_gsubr ("poly:eval-scm-bern-de-casteljau", 2, 0, 0,
+                      scm_eval_scm_bern_de_casteljau);
 
   scm_c_define_gsubr ("poly:eval-f64-sbern-schumaker-volk", 2, 0, 0,
                       scm_eval_f64_sbern_schumaker_volk);
@@ -477,6 +532,8 @@ init_math_polyspline_eval (void)
 
   scm_c_define_gsubr ("poly:eval-f64-sbern-de-casteljau", 2, 0, 0,
                       scm_eval_f64_sbern_de_casteljau);
+  scm_c_define_gsubr ("poly:eval-scm-sbern-de-casteljau", 2, 0, 0,
+                      scm_eval_scm_sbern_de_casteljau);
 
 }
 
