@@ -123,6 +123,7 @@ nobase_include_HEADERS += sortsmill/math/brentroot.h
 nobase_include_HEADERS += sortsmill/math/polyspline.h
 nobase_include_HEADERS += sortsmill/math/polyspline/bases.h
 nobase_include_HEADERS += sortsmill/math/polyspline/eval.h
+nobase_include_HEADERS += sortsmill/math/polyspline/subdiv.h
 
 #--------------------------------------------------------------------------
 

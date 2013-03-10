@@ -411,6 +411,7 @@ scm_eval_f64_spline (const char *who,
   unsigned int degree;
   int stride;
 
+  // FIXME: Make this section reusable.
   if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
     {
       // A vector or a column matrix
