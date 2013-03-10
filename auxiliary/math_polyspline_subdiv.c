@@ -114,6 +114,8 @@ scm_subdiv_f64_spline (const char *who,
                        SCM vector, SCM t)
 {
   scm_t_array_handle handle;
+  scm_t_array_handle handle_a;
+  scm_t_array_handle handle_b;
 
   scm_dynwind_begin (0);
 
@@ -144,22 +146,25 @@ scm_subdiv_f64_spline (const char *who,
   else
     exception__expected_a_vector (who, scm_list_1 (vector));
 
-  double *a = scm_malloc ((degree + 1) * sizeof (double));
-  double *b = scm_malloc ((degree + 1) * sizeof (double));
+  SCM values[2];
+
+  values[0] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
+                                    scm_list_2 (scm_from_uint (1),
+                                                scm_from_uint (degree + 1)));
+  scm_array_get_handle (values[0], &handle_a);
+  scm_dynwind_array_handle_release (&handle_a);
+  double *a = scm_array_handle_f64_writable_elements (&handle_a);
+
+  values[1] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
+                                    scm_list_2 (scm_from_uint (1),
+                                                scm_from_uint (degree + 1)));
+  scm_array_get_handle (values[1], &handle_b);
+  scm_dynwind_array_handle_release (&handle_b);
+  double *b = scm_array_handle_f64_writable_elements (&handle_b);
 
   subdiv_f64_spline (degree, stride, spline, scm_to_double (t), a, b);
 
   scm_dynwind_end ();
-
-  // FIXME: These calls can be made reusable: ‘one-based’ can have a C
-  // function made for it. Or -- and this may be a better alternative
-  // -- use scm_make_typed_array instead of scm_malloc and
-  // scm_take_f64vector.
-  SCM values[2];
-  values[0] = scm_call_1 (scm_c_public_ref ("sortsmill", "one-based"),
-                          scm_take_f64vector (a, degree + 1));
-  values[1] = scm_call_1 (scm_c_public_ref ("sortsmill", "one-based"),
-                          scm_take_f64vector (b, degree + 1));
 
   return scm_c_values (values, 2);
 }
