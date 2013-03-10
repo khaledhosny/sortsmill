@@ -98,8 +98,8 @@ TESTS_PS_NUMBER_H = test_ps_number_h
 TESTS_REXP_H = test_rexp_h test_rexp_h_u8
 
 TESTS_PRECOMPUTEDDATA = #test_precomputed_data
-TESTS_BERNSTEIN = test_bernstein
-TESTS_MONOMIAL = test_monomial
+TESTS_BERNSTEIN = #test_bernstein
+TESTS_MONOMIAL = #test_monomial
 
 TESTS_GMP_CONSTANTS = test_gmp_constants
 
@@ -158,9 +158,9 @@ check_PROGRAMS += $(TESTS_XUNISTRING_H)
 check_PROGRAMS += $(TESTS_GFILE_C)
 check_PROGRAMS += $(TESTS_PS_NUMBER_H)
 check_PROGRAMS += $(TESTS_REXP_H)
-check_PROGRAMS += $(TESTS_PRECOMPUTEDDATA)
-check_PROGRAMS += $(TESTS_BERNSTEIN)
-check_PROGRAMS += $(TESTS_MONOMIAL)
+#check_PROGRAMS += $(TESTS_PRECOMPUTEDDATA)
+#check_PROGRAMS += $(TESTS_BERNSTEIN)
+#check_PROGRAMS += $(TESTS_MONOMIAL)
 check_PROGRAMS += $(TESTS_GMP_CONSTANTS)
 check_PROGRAMS += $(TESTS_MATH_FUNCTIONS)
 check_PROGRAMS += $(TESTS_BRENTROOT)

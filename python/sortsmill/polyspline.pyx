@@ -84,25 +84,25 @@ cdef double[::contiguous] c_f64_bern_to_mono (double[::contiguous] spline):
 @cython.wraparound(False)
 cdef double c_f64_eval_sbern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.f64_eval_sbern (deg, &spline[0], t)
+  return ps.eval_f64_sbern_schumaker_volk (deg, 1, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_f64_eval_bern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.f64_eval_bern (deg, &spline[0], t)
+  return ps.eval_f64_bern_schumaker_volk (deg, 1, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_f64_evaldc_sbern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.f64_evaldc_sbern (deg, &spline[0], t)
+  return ps.eval_f64_sbern_de_casteljau (deg, 1, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_f64_evaldc_bern (double[::contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return ps.f64_evaldc_bern (deg, &spline[0], t)
+  return ps.eval_f64_bern_de_casteljau (deg, 1, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)

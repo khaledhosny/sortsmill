@@ -214,28 +214,52 @@ evaluate (SCM spline, SCM t,
   return scm_from_double (v);
 }
 
+static double
+__f64_eval_sbern (unsigned int degree, const double *spline, double t)
+{
+  return eval_f64_sbern_schumaker_volk (degree, 1, spline, t);
+}
+
 VISIBLE SCM
 scm_f64vector_eval_sbern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, f64_eval_sbern);
+  return evaluate (spline, t, __f64_eval_sbern);
+}
+
+static double
+__f64_eval_bern (unsigned int degree, const double *spline, double t)
+{
+  return eval_f64_bern_schumaker_volk (degree, 1, spline, t);
 }
 
 VISIBLE SCM
 scm_f64vector_eval_bern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, f64_eval_bern);
+  return evaluate (spline, t, __f64_eval_bern);
+}
+
+static double
+__f64_evaldc_sbern (unsigned int degree, const double *spline, double t)
+{
+  return eval_f64_sbern_de_casteljau (degree, 1, spline, t);
 }
 
 VISIBLE SCM
 scm_f64vector_evaldc_sbern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, f64_evaldc_sbern);
+  return evaluate (spline, t, __f64_evaldc_sbern);
+}
+
+static double
+__f64_evaldc_bern (unsigned int degree, const double *spline, double t)
+{
+  return eval_f64_bern_de_casteljau (degree, 1, spline, t);
 }
 
 VISIBLE SCM
 scm_f64vector_evaldc_bern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, f64_evaldc_bern);
+  return evaluate (spline, t, __f64_evaldc_bern);
 }
 
 static double

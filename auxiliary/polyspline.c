@@ -179,86 +179,86 @@ f64_bern_to_sbern (unsigned int deg, const double *from, double *to,
 // Evaluation at a point.
 //
 
-VISIBLE double
-f64_eval_sbern (unsigned int deg, const double *spline, double t)
-{
-  double v;
-
-  const double s = 1.0 - t;
-
-  if (t <= 0.5)
-    {
-      // Horner form in the variable @var{u} = @var{t} / @var{s}.
-      double u = t / s;
-      v = spline[deg];
-      for (unsigned int i = 1; i <= deg; i++)
-        v = MY_FAST_FMA (v, u, spline[deg - i]);
-
-      // Multiply by @var{s} raised to the power @var{deg}.
-      double power = s;
-      unsigned int i = deg;
-      while (i != 0)
-        {
-          if ((i & 1) != 0)
-            v *= power;
-          i >>= 1;
-          if (i != 0)
-            power *= power;
-        }
-    }
-  else
-    {
-      // Horner form in the variable @var{u} = @var{s} / @var{t}.
-      double u = s / t;
-      v = spline[0];
-      for (unsigned int i = 1; i <= deg; i++)
-        v = MY_FAST_FMA (v, u, spline[i]);
-
-      // Multiply by @var{t} raised to the power @var{deg}.
-      double power = t;
-      unsigned int i = deg;
-      while (i != 0)
-        {
-          if ((i & 1) != 0)
-            v *= power;
-          i >>= 1;
-          if (i != 0)
-            power *= power;
-        }
-    }
-  return v;
-}
-
-VISIBLE double
-f64_eval_bern (unsigned int deg, const double *spline, double t)
-{
-  double sbern[deg + 1];
-  f64_bern_to_sbern (deg, spline, sbern, 1);
-  return f64_eval_sbern (deg, sbern, t);
-}
-
-VISIBLE double
-f64_evaldc_sbern (unsigned int deg, const double *spline, double t)
-{
-  double b[deg + 1];
-  f64_sbern_to_bern (deg, spline, b, 1);
-  for (unsigned int i = 0; i < deg; i++)
-    for (unsigned int j = 0; j < deg; j++)
-      b[j] += t * (b[j + 1] - b[j]);
-  return b[0];
-}
-
-VISIBLE double
-f64_evaldc_bern (unsigned int deg, const double *spline, double t)
-{
-  double b[deg + 1];
-  memcpy (b, spline, (deg + 1) * sizeof (double));
-  for (unsigned int i = 0; i < deg; i++)
-    for (unsigned int j = 0; j < deg; j++)
-      b[j] += t * (b[j + 1] - b[j]);
-  return b[0];
-}
-
+//VISIBLE double
+//f64_eval_sbern (unsigned int deg, const double *spline, double t)
+//{
+//  double v;
+//
+//  const double s = 1.0 - t;
+//
+//  if (t <= 0.5)
+//    {
+//      // Horner form in the variable @var{u} = @var{t} / @var{s}.
+//      double u = t / s;
+//      v = spline[deg];
+//      for (unsigned int i = 1; i <= deg; i++)
+//        v = MY_FAST_FMA (v, u, spline[deg - i]);
+//
+//      // Multiply by @var{s} raised to the power @var{deg}.
+//      double power = s;
+//      unsigned int i = deg;
+//      while (i != 0)
+//        {
+//          if ((i & 1) != 0)
+//            v *= power;
+//          i >>= 1;
+//          if (i != 0)
+//            power *= power;
+//        }
+//    }
+//  else
+//    {
+//      // Horner form in the variable @var{u} = @var{s} / @var{t}.
+//      double u = s / t;
+//      v = spline[0];
+//      for (unsigned int i = 1; i <= deg; i++)
+//        v = MY_FAST_FMA (v, u, spline[i]);
+//
+//      // Multiply by @var{t} raised to the power @var{deg}.
+//      double power = t;
+//      unsigned int i = deg;
+//      while (i != 0)
+//        {
+//          if ((i & 1) != 0)
+//            v *= power;
+//          i >>= 1;
+//          if (i != 0)
+//            power *= power;
+//        }
+//    }
+//  return v;
+//}
+//
+//VISIBLE double
+//f64_eval_bern (unsigned int deg, const double *spline, double t)
+//{
+//  double sbern[deg + 1];
+//  f64_bern_to_sbern (deg, spline, sbern, 1);
+//  return f64_eval_sbern (deg, sbern, t);
+//}
+//
+//VISIBLE double
+//f64_evaldc_sbern (unsigned int deg, const double *spline, double t)
+//{
+//  double b[deg + 1];
+//  f64_sbern_to_bern (deg, spline, b, 1);
+//  for (unsigned int i = 0; i < deg; i++)
+//    for (unsigned int j = 0; j < deg; j++)
+//      b[j] += t * (b[j + 1] - b[j]);
+//  return b[0];
+//}
+//
+//VISIBLE double
+//f64_evaldc_bern (unsigned int deg, const double *spline, double t)
+//{
+//  double b[deg + 1];
+//  memcpy (b, spline, (deg + 1) * sizeof (double));
+//  for (unsigned int i = 0; i < deg; i++)
+//    for (unsigned int j = 0; j < deg; j++)
+//      b[j] += t * (b[j + 1] - b[j]);
+//  return b[0];
+//}
+//
 //VISIBLE double
 //f64_eval_mono (unsigned int deg, const double *spline, double t)
 //{

@@ -151,62 +151,62 @@ void f64_mono_to_bern (unsigned int deg, const double *from, double *to,
                        size_t num_splines);
 
 /*
- * vis--
- * vis-- @deftypefun double f64_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
- * vis--
- * vis-- Evaluate a spline in scaled Bernstein basis, using the
- * vis-- algorithm of Schumaker and Volk.
- * vis--
- * vis-- @end deftypefun
- * vis--
+ * XvisX--
+ * XvisX-- @deftypefun double f64_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * XvisX--
+ * XvisX-- Evaluate a spline in scaled Bernstein basis, using the
+ * XvisX-- algorithm of Schumaker and Volk.
+ * XvisX--
+ * XvisX-- @end deftypefun
+ * XvisX--
  */
-_FF_ATTRIBUTE_PURE double f64_eval_sbern (unsigned int deg,
-                                          const double *spline, double t);
+/*_FF_ATTRIBUTE_PURE double f64_eval_sbern (unsigned int deg,
+  const double *spline, double t);*/
 
 /*
- * vis--
- * vis-- @deftypefun double f64_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
- * vis--
- * vis-- Evaluate a spline in Bernstein basis, using the
- * vis-- algorithm of Schumaker and Volk.
- * vis--
- * vis-- @end deftypefun
- * vis--
+ * XvisX--
+ * XvisX-- @deftypefun double f64_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * XvisX--
+ * XvisX-- Evaluate a spline in Bernstein basis, using the
+ * XvisX-- algorithm of Schumaker and Volk.
+ * XvisX--
+ * XvisX-- @end deftypefun
+ * XvisX--
  */
-_FF_ATTRIBUTE_PURE double f64_eval_bern (unsigned int deg,
-                                         const double *spline, double t);
+/*_FF_ATTRIBUTE_PURE double f64_eval_bern (unsigned int deg,
+  const double *spline, double t);*/
 
 /*
- * vis--
- * vis-- @deftypefun double f64_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
- * vis--
- * vis-- Evaluate a spline in scaled Bernstein basis, using the
- * vis-- algorithm of De~Casteljau.
- * vis--
- * vis-- (De~Casteljau’s generally is the most stable algorithm, but
- * vis-- can be expensive.)
- * vis--
- * vis-- @end deftypefun
- * vis--
+ * XvisX--
+ * XvisX-- @deftypefun double f64_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * XvisX--
+ * XvisX-- Evaluate a spline in scaled Bernstein basis, using the
+ * XvisX-- algorithm of De~Casteljau.
+ * XvisX--
+ * XvisX-- (De~Casteljau’s generally is the most stable algorithm, but
+ * XvisX-- can be expensive.)
+ * XvisX--
+ * XvisX-- @end deftypefun
+ * XvisX--
  */
-_FF_ATTRIBUTE_PURE double f64_evaldc_sbern (unsigned int deg,
-                                            const double *spline, double t);
+/*_FF_ATTRIBUTE_PURE double f64_evaldc_sbern (unsigned int deg,
+  const double *spline, double t);*/
 
 /*
- * vis--
- * vis-- @deftypefun double f64_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
- * vis--
- * vis-- Evaluate a spline in Bernstein basis, using the
- * vis-- algorithm of De~Casteljau.
- * vis--
- * vis-- (De~Casteljau’s generally is the most stable algorithm, but
- * vis-- can be expensive.)
- * vis--
- * vis-- @end deftypefun
- * vis--
+ * XvisX--
+ * XvisX-- @deftypefun double f64_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * XvisX--
+ * XvisX-- Evaluate a spline in Bernstein basis, using the
+ * XvisX-- algorithm of De~Casteljau.
+ * XvisX--
+ * XvisX-- (De~Casteljau’s generally is the most stable algorithm, but
+ * XvisX-- can be expensive.)
+ * XvisX--
+ * XvisX-- @end deftypefun
+ * XvisX--
  */
-_FF_ATTRIBUTE_PURE double f64_evaldc_bern (unsigned int deg,
-                                           const double *spline, double t);
+/*_FF_ATTRIBUTE_PURE double f64_evaldc_bern (unsigned int deg,
+  const double *spline, double t);*/
 
 /*
  * XvisX--
