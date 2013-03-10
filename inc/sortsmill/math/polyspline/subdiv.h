@@ -33,12 +33,18 @@ extern "C"
 /* Subdivision of polynomials in Bernstein form. */
 void subdiv_f64_bern (unsigned int degree, int stride, const double *spline,
                       double t, double *a, double *b);
+void scm_c_subdiv_bern (unsigned int degree, int stride, const SCM *spline,
+                        SCM t, SCM *a, SCM *b);
 SCM scm_subdiv_f64_bern (SCM vector, SCM t);
+SCM scm_subdiv_scm_bern (SCM vector, SCM t);
 
 /* Subdivision of polynomials in scaled Bernstein form. */
 void subdiv_f64_sbern (unsigned int degree, int stride, const double *spline,
                        double t, double *a, double *b);
+void scm_c_subdiv_sbern (unsigned int degree, int stride, const SCM *spline,
+                         SCM t, SCM *a, SCM *b);
 SCM scm_subdiv_f64_sbern (SCM vector, SCM t);
+SCM scm_subdiv_scm_sbern (SCM vector, SCM t);
 
 #if 0
 {
