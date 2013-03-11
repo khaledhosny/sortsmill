@@ -522,6 +522,12 @@ DIST_SCM_FILES += sortsmill/math/polyspline/eval.scm
 GO_FILES += sortsmill/math/polyspline/eval.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/eval.scm
 
+# (sortsmill math polyspline mul)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/mul.scm
+GO_FILES += sortsmill/math/polyspline/mul.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/mul.scm
+
 # (sortsmill math polyspline subdiv)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/subdiv.scm

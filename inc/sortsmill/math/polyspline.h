@@ -20,6 +20,8 @@
 
 #include <sortsmill/math/polyspline/bases.h>
 #include <sortsmill/math/polyspline/eval.h>
+#include <sortsmill/math/polyspline/mul.h>
+#include <sortsmill/math/polyspline/subdiv.h>
 
 /***************************************************************************/
 /* FIXME: The stuff below eventually is to be replaced by the stuff above. */
