@@ -76,7 +76,7 @@ exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants)
       rnrs_make_irritants_condition (irritants)));
 }
 
-VISIBLE void
+static void
 exception__expected_a_vector (const char *who, SCM irritants)
 {
   const char *message = _("expected a vector, row matrix, or column matrix");
@@ -85,6 +85,33 @@ exception__expected_a_vector (const char *who, SCM irritants)
      (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
       rnrs_make_message_condition (scm_from_locale_string (message)),
       rnrs_make_irritants_condition (irritants)));
+}
+
+VISIBLE void
+scm_array_handle_get_vector_dim_and_stride (const char *who,
+                                            SCM vector,
+                                            scm_t_array_handle *handlep,
+                                            size_t *dim, ssize_t *stride)
+{
+  assert_c_rank_1_or_2_array (who, vector, handlep);
+
+  const size_t rank = scm_array_handle_rank (handlep);
+  const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
+
+  if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
+    {
+      // A vector or a column matrix
+      *dim = (dims[0].ubnd - dims[0].lbnd) + 1;
+      *stride = dims[0].inc;
+    }
+  else if (dims[0].ubnd == dims[0].lbnd)
+    {
+      // A row matrix.
+      *dim = (dims[1].ubnd - dims[1].lbnd) + 1;
+      *stride = dims[1].inc;
+    }
+  else
+    exception__expected_a_vector (who, scm_list_1 (vector));
 }
 
 static void

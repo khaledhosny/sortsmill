@@ -123,46 +123,29 @@ scm_subdiv_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  const size_t rank = scm_array_handle_rank (&handle);
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
+                                              &dim, &stride);
   const double *spline = scm_array_handle_f64_elements (&handle);
-
-  unsigned int degree;
-  int stride;
-
-  // FIXME: Make this section reusable.
-  if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
-    {
-      // A vector or a column matrix
-      degree = dims[0].ubnd - dims[0].lbnd;
-      stride = dims[0].inc;
-    }
-  else if (dims[0].ubnd == dims[0].lbnd)
-    {
-      // A row matrix.
-      degree = dims[1].ubnd - dims[1].lbnd;
-      stride = dims[1].inc;
-    }
-  else
-    exception__expected_a_vector (who, scm_list_1 (vector));
 
   SCM values[2];
 
   values[0] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                     scm_list_2 (scm_from_uint (1),
-                                                scm_from_uint (degree + 1)));
+                                                scm_from_uint (dim)));
   scm_array_get_handle (values[0], &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
   double *a = scm_array_handle_f64_writable_elements (&handle_a);
 
   values[1] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                     scm_list_2 (scm_from_uint (1),
-                                                scm_from_uint (degree + 1)));
+                                                scm_from_uint (dim)));
   scm_array_get_handle (values[1], &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
   double *b = scm_array_handle_f64_writable_elements (&handle_b);
 
-  subdiv_f64_spline (degree, stride, spline, scm_to_double (t), a, b);
+  subdiv_f64_spline (dim - 1, stride, spline, scm_to_double (t), a, b);
 
   scm_dynwind_end ();
 
@@ -202,46 +185,29 @@ scm_subdiv_scm_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  const size_t rank = scm_array_handle_rank (&handle);
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
+                                              &dim, &stride);
   const SCM *spline = scm_array_handle_elements (&handle);
-
-  unsigned int degree;
-  int stride;
-
-  // FIXME: Make this section reusable.
-  if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
-    {
-      // A vector or a column matrix
-      degree = dims[0].ubnd - dims[0].lbnd;
-      stride = dims[0].inc;
-    }
-  else if (dims[0].ubnd == dims[0].lbnd)
-    {
-      // A row matrix.
-      degree = dims[1].ubnd - dims[1].lbnd;
-      stride = dims[1].inc;
-    }
-  else
-    exception__expected_a_vector (who, scm_list_1 (vector));
 
   SCM values[2];
 
   values[0] = scm_make_array (SCM_UNSPECIFIED,
                               scm_list_2 (scm_from_uint (1),
-                                          scm_from_uint (degree + 1)));
+                                          scm_from_uint (dim)));
   scm_array_get_handle (values[0], &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
   SCM *a = scm_array_handle_writable_elements (&handle_a);
 
   values[1] = scm_make_array (SCM_UNSPECIFIED,
                               scm_list_2 (scm_from_uint (1),
-                                          scm_from_uint (degree + 1)));
+                                          scm_from_uint (dim)));
   scm_array_get_handle (values[1], &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
   SCM *b = scm_array_handle_writable_elements (&handle_b);
 
-  scm_c_subdiv_spline (degree, stride, spline, t, a, b);
+  scm_c_subdiv_spline (dim - 1, stride, spline, t, a, b);
 
   scm_dynwind_end ();
 

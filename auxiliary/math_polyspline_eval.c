@@ -290,7 +290,7 @@ eval_f64_sbern_de_casteljau (unsigned int degree, int stride,
   for (unsigned int i = 0; i <= degree; i++)
     b[i] = spline[stride * (int) i] / bincoef (degree, i);
   for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree; j++)
+    for (unsigned int j = 0; j < degree - i; j++)
       b[j] += t * (b[j + 1] - b[j]);
   return b[0];
 }
@@ -303,7 +303,7 @@ eval_f64_bern_de_casteljau (unsigned int degree, int stride,
   for (unsigned int i = 0; i <= degree; i++)
     b[i] = spline[stride * (int) i];
   for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree; j++)
+    for (unsigned int j = 0; j < degree - i; j++)
       b[j] += t * (b[j + 1] - b[j]);
   return b[0];
 }
@@ -328,7 +328,7 @@ scm_c_eval_sbern_de_casteljau (unsigned int degree, int stride,
   scm_dynwind_end ();
 
   for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree; j++)
+    for (unsigned int j = 0; j < degree - i; j++)
       b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
 
   return b[0];
@@ -342,7 +342,7 @@ scm_c_eval_bern_de_casteljau (unsigned int degree, int stride,
   for (unsigned int i = 0; i <= degree; i++)
     b[i] = spline[stride * (int) i];
   for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree; j++)
+    for (unsigned int j = 0; j < degree - i; j++)
       b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
   return b[0];
 }
@@ -404,30 +404,13 @@ scm_eval_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  const size_t rank = scm_array_handle_rank (&handle);
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
+                                              &dim, &stride);
   const double *spline = scm_array_handle_f64_elements (&handle);
 
-  unsigned int degree;
-  int stride;
-
-  // FIXME: Make this section reusable.
-  if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
-    {
-      // A vector or a column matrix
-      degree = dims[0].ubnd - dims[0].lbnd;
-      stride = dims[0].inc;
-    }
-  else if (dims[0].ubnd == dims[0].lbnd)
-    {
-      // A row matrix.
-      degree = dims[1].ubnd - dims[1].lbnd;
-      stride = dims[1].inc;
-    }
-  else
-    exception__expected_a_vector (who, scm_list_1 (vector));
-
-  double value = eval_f64_spline (degree, stride, spline, scm_to_double (t));
+  double value = eval_f64_spline (dim - 1, stride, spline, scm_to_double (t));
 
   scm_dynwind_end ();
 
@@ -489,31 +472,14 @@ scm_eval_scm_spline (const char *who,
 
   scm_array_get_handle (vector, &handle);
   scm_dynwind_array_handle_release (&handle);
-  assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  const size_t rank = scm_array_handle_rank (&handle);
-  const scm_t_array_dim *dims = scm_array_handle_dims (&handle);
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
+                                              &dim, &stride);
   const SCM *spline = scm_array_handle_elements (&handle);
 
-  unsigned int degree;
-  int stride;
-
-  if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
-    {
-      // A vector or a column matrix
-      degree = dims[0].ubnd - dims[0].lbnd;
-      stride = dims[0].inc;
-    }
-  else if (dims[0].ubnd == dims[0].lbnd)
-    {
-      // A row matrix.
-      degree = dims[1].ubnd - dims[1].lbnd;
-      stride = dims[1].inc;
-    }
-  else
-    exception__expected_a_vector (who, scm_list_1 (vector));
-
-  SCM value = scm_c_eval_spline (degree, stride, spline, t);
+  SCM value = scm_c_eval_spline (dim - 1, stride, spline, t);
 
   scm_dynwind_end ();
 
