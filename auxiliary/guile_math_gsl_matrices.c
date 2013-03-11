@@ -88,30 +88,51 @@ exception__expected_a_vector (const char *who, SCM irritants)
 }
 
 VISIBLE void
-scm_array_handle_get_vector_dim_and_stride (const char *who,
-                                            SCM vector,
+scm_array_handle_get_vector_dim_and_stride (const char *who, SCM vector,
                                             scm_t_array_handle *handlep,
-                                            size_t *dim, ssize_t *stride)
+                                            unsigned int *dim, int *stride)
 {
   assert_c_rank_1_or_2_array (who, vector, handlep);
 
   const size_t rank = scm_array_handle_rank (handlep);
   const scm_t_array_dim *dims = scm_array_handle_dims (handlep);
 
+  size_t _dim;
+  ssize_t _stride;
+
   if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
     {
       // A vector or a column matrix
-      *dim = (dims[0].ubnd - dims[0].lbnd) + 1;
-      *stride = dims[0].inc;
+      _dim = (dims[0].ubnd - dims[0].lbnd) + 1;
+      _stride = dims[0].inc;
     }
   else if (dims[0].ubnd == dims[0].lbnd)
     {
       // A row matrix.
-      *dim = (dims[1].ubnd - dims[1].lbnd) + 1;
-      *stride = dims[1].inc;
+      _dim = (dims[1].ubnd - dims[1].lbnd) + 1;
+      _stride = dims[1].inc;
     }
   else
     exception__expected_a_vector (who, scm_list_1 (vector));
+
+  if (UINT_MAX < _dim)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition
+        (_("dimension does not fit in unsigned int")),
+        rnrs_make_irritants_condition (scm_list_1 (scm_from_size_t (_dim)))));
+
+  if (_stride < INT_MIN || INT_MAX < _stride)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("stride does not fit in int")),
+        rnrs_make_irritants_condition (scm_list_1
+                                       (scm_from_ssize_t (_stride)))));
+
+  *dim = _dim;
+  *stride = _stride;
 }
 
 static void

@@ -39,7 +39,8 @@ void assert_c_rank_1_or_2_array (const char *who, SCM array,
 void scm_array_handle_get_vector_dim_and_stride (const char *who,
                                                  SCM vector,
                                                  scm_t_array_handle *handlep,
-                                                 size_t *dim, ssize_t *stride);
+                                                 unsigned int *dim,
+                                                 int *stride);
 
 gsl_vector_const_view scm_gsl_vector_const_view_array_handle (SCM array,
                                                               scm_t_array_handle

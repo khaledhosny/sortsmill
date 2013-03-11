@@ -123,8 +123,8 @@ scm_subdiv_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  size_t dim;
-  ssize_t stride;
+  unsigned int dim;
+  int stride;
   scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
                                               &dim, &stride);
   const double *spline = scm_array_handle_f64_elements (&handle);
@@ -185,8 +185,8 @@ scm_subdiv_scm_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  size_t dim;
-  ssize_t stride;
+  unsigned int dim;
+  int stride;
   scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
                                               &dim, &stride);
   const SCM *spline = scm_array_handle_elements (&handle);
