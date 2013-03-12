@@ -335,6 +335,7 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type
          -Wparentheses -Wformat -Wchar-subscripts
          -Wno-unused-but-set-variable -Wno-unused-result
+         -Wstrict-aliasing
          -Werror=missing-prototypes
          -Werror=implicit])
 
@@ -345,7 +346,7 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
 AC_SUBST([CYTHON_EXTRA_CFLAGS])
 CYTHON_EXTRA_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([CYTHON_EXTRA_CFLAGS],
-        [-Wno-unused -fwrapv -fno-strict-aliasing])
+        [-Wno-unused -fwrapv -fno-strict-aliasing -Wno-strict-aliasing])
 
 AC_SUBST([VISIBILITY_DEFAULT_EXTRA_CFLAGS])
 VISIBILITY_DEFAULT_EXTRA_CFLAGS=""

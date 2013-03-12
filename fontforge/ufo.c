@@ -1088,13 +1088,11 @@ XMLEntryToPython (xmlDocPtr doc, xmlNodePtr entry)
 
   if (xmlStrcmp (entry->name, (const xmlChar *) "true") == 0)
     {
-      Py_INCREF (Py_True);
-      return Py_True;
+      return PyBool_FromLong (true);
     }
   if (xmlStrcmp (entry->name, (const xmlChar *) "false") == 0)
     {
-      Py_INCREF (Py_False);
-      return Py_False;
+      return PyBool_FromLong (false);
     }
   if (xmlStrcmp (entry->name, (const xmlChar *) "none") == 0)
     {
