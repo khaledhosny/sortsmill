@@ -23,6 +23,31 @@
 
 //-------------------------------------------------------------------------
 
+VISIBLE void
+unsplit_f64_spower (unsigned int degree,
+                    int stride0, const double *a0,
+                    int stride1, const double *a1,
+                    int result_stride, double *result)
+{
+  double *result1 = &result[result_stride * (int) degree];
+
+  for (unsigned int i = 0; i < degree / 2; i++)
+    {
+      *result = *a0;
+      a0 += stride0;
+      result += result_stride;
+
+      *result1 = *a1;
+      a1 += stride1;
+      result1 -= result_stride;
+    }
+
+  if (degree % 2 == 0)
+    *result = 0.5 * (*a0 + *a1);
+}
+
+//-------------------------------------------------------------------------
+
 // This routine is used below in a couple of places.
 static void
 fill_spower_middle_row (unsigned int n, mpq_t T[n + 1][n + 1])

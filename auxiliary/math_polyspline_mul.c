@@ -98,42 +98,40 @@ mul_f64_spower (unsigned int degree1, int stride1, const double *spline1,
   //    Δb = b¹ − b⁰
   //
 
-  /*
-     // q1 = degree of a symmetric half of spline1.
-     // q2 = degree of a symmetric half of spline2.
-     const unsigned int q1 = degree1 / 2 + degree1 % 2;
-     const unsigned int q2 = degree2 / 2 + degree2 % 2;
+  // q1 = degree of a symmetric half of spline1.
+  // q2 = degree of a symmetric half of spline2.
+  const unsigned int q1 = degree1 / 2;
+  const unsigned int q2 = degree2 / 2;
 
-     // Compute Δa∗Δb.
-     double delta1[q1 + 1];
-     double delta2[q2 + 1];
-     sub_f64_splines (q1, -stride1, &spline1[stride1 * (int) degree1],
-     stride1, spline1, delta1);
-     sub_f64_splines (q2, -stride2, &spline2[stride2 * (int) degree2],
-     stride2, spline2, delta2);
-     double d[q1 + q2 + 1];
-     f64_convolve (q1, 1, delta1, q2, 1, delta2, d);
+  // Compute Δa∗Δb.
+  double DaDb[q1 + q2 + 1];
+  {
+    double delta1[q1 + 1];
+    double delta2[q2 + 1];
+    sub_f64_splines (q1, -stride1, &spline1[stride1 * (int) degree1],
+                     stride1, spline1, 1, delta1);
+    sub_f64_splines (q2, -stride2, &spline2[stride2 * (int) degree2],
+                     stride2, spline2, 1, delta2);
+    f64_convolve (q1, 1, delta1, q2, 1, delta2, 1, DaDb);
+  }
 
-     // Compute a⁰∗b⁰ − shift₁(Δa∗Δb).
-     f64_convolve (q1, stride1, spline1, q2, stride2, spline2,
-     result_stride, result);
-     for (unsigned int i = 1; i <= q1 + q2; i++)
-     result[result_stride * (int) i] -= d[i - 1];
+  // Compute a⁰∗b⁰ − shift₁(Δa∗Δb).
+  double c0[q1 + q2 + 2];
+  f64_convolve (q1, stride1, spline1, q2, stride2, spline2, 1, c0);
+  for (unsigned int i = 1; i <= q1 + q2; i++)
+    c0[i] -= DaDb[i - 1];
+  c0[q1 + q2 + 1] = -DaDb[q1 + q2];
 
+  // Compute a¹∗b¹ − shift₁(Δa∗Δb).
+  double c1[q1 + q2 + 2];
+  f64_convolve (q1, -stride1, &spline1[stride1 * (int) degree1],
+                q2, -stride2, &spline2[stride2 * (int) degree2], 1, c1);
+  for (unsigned int i = 1; i <= q1 + q2; i++)
+    c1[i] -= DaDb[i - 1];
+  c1[q1 + q2 + 1] = -DaDb[q1 + q2];
 
-     //?????????????????????????????????????????????????????????????????????????????????????????????????????
-     // Compute a¹∗b¹ − shift₁(Δa∗Δb), except for the term of highest
-     // degree.
-     f64_convolve (q1, -stride1, &spline1[stride1 * (int) degree1],
-     q2, -stride2, &spline2[stride2 * (int) degree2],
-     -1, &result[degree1 + degree2]);
-     for (unsigned int i = 1; i <= q1 + q2; i++)
-     result[degree1 + degree2 - i] -= d[i - 1];
-
-     // Set the term or terms of highest degree.
-     result[q1 + q2] = -d[q1 + q2];
-     result[degree1 + degree2 - (q1 + q2)] = -d[q1 + q2];
-   */
+  // Now put it all together.
+  unsplit_f64_spower (degree1 + degree2, 1, c0, 1, c1, result_stride, result);
 }
 
 //-------------------------------------------------------------------------
@@ -208,6 +206,13 @@ VISIBLE SCM
 scm_mul_f64_sbern (SCM spline1, SCM spline2)
 {
   return scm_mul_f64_spline ("scm_mul_f64_sbern", mul_f64_sbern,
+                             spline1, spline2);
+}
+
+VISIBLE SCM
+scm_mul_f64_spower (SCM spline1, SCM spline2)
+{
+  return scm_mul_f64_spline ("scm_mul_f64_spower", mul_f64_spower,
                              spline1, spline2);
 }
 
@@ -291,7 +296,7 @@ init_math_polyspline_mul (void)
   scm_c_define_gsubr ("poly:mul-f64-sbern", 2, 0, 0, scm_mul_f64_sbern);
   //  scm_c_define_gsubr ("poly:mul-scm-sbern", 2, 0, 0, scm_mul_scm_sbern);
 
-  //  scm_c_define_gsubr ("poly:mul-f64-spower", 2, 0, 0, scm_mul_f64_spower);
+  scm_c_define_gsubr ("poly:mul-f64-spower", 2, 0, 0, scm_mul_f64_spower);
   //  scm_c_define_gsubr ("poly:mul-scm-spower", 2, 0, 0, scm_mul_scm_spower);
 }
 
