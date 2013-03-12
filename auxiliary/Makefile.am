@@ -93,8 +93,12 @@ dist_libsortsmill_aux_la_SOURCES += guile_math_polyspline.c
 dist_libsortsmill_aux_la_SOURCES += guile_contours.c
 nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
 
+# Moving data around, taking into account non-unit strides.
+dist_libsortsmill_aux_la_SOURCES += copy_with_strides.c
+
 # Polynomial splines. FIXME: This is new work. Develop this in
 # conjuction with phasing out or reworking the stuff above.
+dist_libsortsmill_aux_la_SOURCES += math_polyspline_add.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_bases.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_eval.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_mul.c

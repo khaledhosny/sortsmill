@@ -18,6 +18,9 @@
 #ifndef _SORTSMILL_MATH_POLYSPLINE_H
 #define _SORTSMILL_MATH_POLYSPLINE_H
 
+/* FIXME: Existing tests may be deficient in testing non-unit and
+   negative strides in the routines included below. */
+#include <sortsmill/math/polyspline/add.h>
 #include <sortsmill/math/polyspline/bases.h>
 #include <sortsmill/math/polyspline/eval.h>
 #include <sortsmill/math/polyspline/mul.h>

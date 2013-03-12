@@ -30,29 +30,33 @@ extern "C"
 }
 #endif
 
-/* Multiplication of polynomials in monomial form. (Not guaranteed
-   safe for in-place calculation.) */
+/* Multiplication of polynomials in monomial form. Guaranteed safe for
+   in-place calculation. */
 void mul_f64_mono (unsigned int degree1, int stride1, const double *spline1,
                    unsigned int degree2, int stride2, const double *spline2,
-                   double *result);
+                   int result_stride, double *result);
 SCM scm_mul_f64_mono (SCM vector, SCM t);
 
-/* Multiplication of polynomials in Bernstein form. (Not guaranteed
-   safe for in-place calculation.) */
+/* Multiplication of polynomials in Bernstein form. Guaranteed safe
+   for in-place calculation. */
 void mul_f64_bern (unsigned int degree1, int stride1, const double *spline1,
                    unsigned int degree2, int stride2, const double *spline2,
-                   double *result);
+                   int result_stride, double *result);
 SCM scm_mul_f64_bern (SCM vector, SCM t);
 
-/* Multiplication of polynomials in scaled Bernstein form. (Not
-   guaranteed safe for in-place calculation.) */
+/* Multiplication of polynomials in scaled Bernstein form. Guaranteed
+   safe for in-place calculation. */
 void mul_f64_sbern (unsigned int degree1, int stride1, const double *spline1,
                     unsigned int degree2, int stride2, const double *spline2,
-                    double *result);
+                    int result_stride, double *result);
 SCM scm_mul_f64_sbern (SCM vector, SCM t);
 
-/* Multiplication of polynomials in s-power form. (Not guaranteed safe
-   for in-place calculation.) */
+/* Multiplication of polynomials in s-power form. Guaranteed safe for
+   in-place calculation. */
+void mul_f64_spower (unsigned int degree1, int stride1, const double *spline1,
+                     unsigned int degree2, int stride2, const double *spline2,
+                     int result_stride, double *result);
+SCM scm_mul_f64_spower (SCM vector, SCM t);
 
 #if 0
 {
