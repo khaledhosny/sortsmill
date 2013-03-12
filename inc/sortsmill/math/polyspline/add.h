@@ -32,27 +32,27 @@ extern "C"
 
 /* Addition of polynomial coefficients. Guaranteed safe for in-place
    calculation. */
-void add_f64_splines (unsigned int degree,
-                      int stride1, const double *spline1,
-                      int stride2, const double *spline2,
-                      int result_stride, double *result);
-void add_scm_splines (unsigned int degree,
-                      int stride1, const SCM *spline1,
-                      int stride2, const SCM *spline2,
-                      int result_stride, SCM *result);
+void add_f64_splines (size_t degree,
+                      ssize_t stride1, const double *spline1,
+                      ssize_t stride2, const double *spline2,
+                      ssize_t result_stride, double *result);
+void add_scm_splines (size_t degree,
+                      ssize_t stride1, const SCM *spline1,
+                      ssize_t stride2, const SCM *spline2,
+                      ssize_t result_stride, SCM *result);
 SCM scm_add_f64_splines (SCM spline1, SCM spline2);
 SCM scm_add_scm_splines (SCM spline1, SCM spline2);
 
 /* Subtraction of polynomial coefficients. Guaranteed safe for
    in-place calculation. */
-void sub_f64_splines (unsigned int degree,
-                      int stride1, const double *spline1,
-                      int stride2, const double *spline2,
-                      int result_stride, double *result);
-void sub_scm_splines (unsigned int degree,
-                      int stride1, const SCM *spline1,
-                      int stride2, const SCM *spline2,
-                      int result_stride, SCM *result);
+void sub_f64_splines (size_t degree,
+                      ssize_t stride1, const double *spline1,
+                      ssize_t stride2, const double *spline2,
+                      ssize_t result_stride, double *result);
+void sub_scm_splines (size_t degree,
+                      ssize_t stride1, const SCM *spline1,
+                      ssize_t stride2, const SCM *spline2,
+                      ssize_t result_stride, SCM *result);
 SCM scm_sub_f64_splines (SCM spline1, SCM spline2);
 SCM scm_sub_scm_splines (SCM spline1, SCM spline2);
 

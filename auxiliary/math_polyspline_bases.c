@@ -24,14 +24,14 @@
 //-------------------------------------------------------------------------
 
 VISIBLE void
-unsplit_f64_spower (unsigned int degree,
-                    int stride0, const double *a0,
-                    int stride1, const double *a1,
-                    int result_stride, double *result)
+unsplit_f64_spower (size_t degree,
+                    ssize_t stride0, const double *a0,
+                    ssize_t stride1, const double *a1,
+                    ssize_t result_stride, double *result)
 {
-  double *result1 = &result[result_stride * (int) degree];
+  double *result1 = &result[result_stride * (ssize_t) degree];
 
-  for (unsigned int i = 0; i < degree / 2; i++)
+  for (size_t i = 0; i < degree / 2; i++)
     {
       *result = *a0;
       a0 += stride0;
@@ -50,17 +50,17 @@ unsplit_f64_spower (unsigned int degree,
 
 // This routine is used below in a couple of places.
 static void
-fill_spower_middle_row (unsigned int n, mpq_t T[n + 1][n + 1])
+fill_spower_middle_row (size_t n, mpq_t T[n + 1][n + 1])
 {
-  const unsigned int q = n / 2 + n % 2;
+  const size_t q = n / 2 + n % 2;
 
   // A middle row for the extra term in polynomials of even degree.
   if (n % 2 == 0)
     {
-      for (unsigned int j = 0; j <= q; j++)
+      for (size_t j = 0; j <= q; j++)
         mpq_set (T[q][j], mpq_zero ());
       mpq_set (T[q][q], mpq_one ());
-      for (unsigned int j = q + 1; j <= n; j++)
+      for (size_t j = q + 1; j <= n; j++)
         mpq_set (T[q][j], mpq_zero ());
     }
 }
@@ -81,24 +81,23 @@ fill_spower_middle_row (unsigned int n, mpq_t T[n + 1][n + 1])
 //    t³ =                                           1⋅t³
 //
 VISIBLE void
-mpq_coefficients_mono_to_bern (unsigned int degree,
-                               mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_mono_to_bern (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   mpq_t divisor;
   mpq_init (divisor);
 
-  for (unsigned int i = 0; i <= degree; i++)
+  for (size_t i = 0; i <= degree; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         mpq_set (T[i][j], mpq_zero ());
-      for (unsigned int j = i; j <= degree; j++)
+      for (size_t j = i; j <= degree; j++)
         mpq_bincoef_ui (T[i][j], degree - i, j - i);
     }
 
-  for (unsigned int j = 1; j < degree; j++)
+  for (size_t j = 1; j < degree; j++)
     {
       mpq_bincoef_ui (divisor, degree, j);
-      for (unsigned int i = 0; i <= degree; i++)
+      for (size_t i = 0; i <= degree; i++)
         mpq_div (T[i][j], T[i][j], divisor);
     }
 
@@ -119,14 +118,13 @@ mpq_coefficients_mono_to_bern (unsigned int degree,
 //    t³ =                                      t³
 //
 VISIBLE void
-mpq_coefficients_mono_to_sbern (unsigned int degree,
-                                mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_mono_to_sbern (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
-  for (unsigned int i = 0; i <= degree; i++)
+  for (size_t i = 0; i <= degree; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         mpq_set (T[i][j], mpq_zero ());
-      for (unsigned int j = i; j <= degree; j++)
+      for (size_t j = i; j <= degree; j++)
         mpq_bincoef_ui (T[i][j], degree - i, j - i);
     }
 }
@@ -145,26 +143,25 @@ mpq_coefficients_mono_to_sbern (unsigned int degree,
 //    t³         =                 t³
 //
 VISIBLE void
-mpq_coefficients_bern_to_mono (unsigned int degree,
-                               mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_bern_to_mono (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   mpq_t factor;
   mpq_init (factor);
 
-  for (unsigned int i = 0; i <= degree; i++)
+  for (size_t i = 0; i <= degree; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         mpq_set (T[i][j], mpq_zero ());
-      for (unsigned int j = i; j <= degree; j++)
+      for (size_t j = i; j <= degree; j++)
         mpq_bincoef_ui (T[i][j], degree - i, j - i);
-      for (unsigned int j = i + 1; j <= degree; j += 2)
+      for (size_t j = i + 1; j <= degree; j += 2)
         mpq_neg (T[i][j], T[i][j]);
     }
 
-  for (unsigned int i = 1; i < degree; i++)
+  for (size_t i = 1; i < degree; i++)
     {
       mpq_bincoef_ui (factor, degree, i);
-      for (unsigned int j = 0; j <= degree; j++)
+      for (size_t j = 0; j <= degree; j++)
         mpq_mul (T[i][j], T[i][j], factor);
     }
 
@@ -185,11 +182,10 @@ mpq_coefficients_bern_to_mono (unsigned int degree,
 //    t³         = 1⋅t³
 //
 VISIBLE void
-mpq_coefficients_bern_to_sbern (unsigned int degree,
-                                mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_bern_to_sbern (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
-  for (unsigned int i = 0; i <= degree; i++)
-    for (unsigned int j = 0; j <= degree; j++)
+  for (size_t i = 0; i <= degree; i++)
+    for (size_t j = 0; j <= degree; j++)
       if (i == j)
         mpq_bincoef_ui (T[i][j], degree, i);
       else
@@ -210,16 +206,15 @@ mpq_coefficients_bern_to_sbern (unsigned int degree,
 //    t³        =                t³
 //
 VISIBLE void
-mpq_coefficients_sbern_to_mono (unsigned int degree,
-                                mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_sbern_to_mono (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
-  for (unsigned int i = 0; i <= degree; i++)
+  for (size_t i = 0; i <= degree; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         mpq_set (T[i][j], mpq_zero ());
-      for (unsigned int j = i; j <= degree; j++)
+      for (size_t j = i; j <= degree; j++)
         mpq_bincoef_ui (T[i][j], degree - i, j - i);
-      for (unsigned int j = i + 1; j <= degree; j += 2)
+      for (size_t j = i + 1; j <= degree; j += 2)
         mpq_neg (T[i][j], T[i][j]);
     }
 }
@@ -238,11 +233,10 @@ mpq_coefficients_sbern_to_mono (unsigned int degree,
 //    t³        = 1⋅t³
 //
 VISIBLE void
-mpq_coefficients_sbern_to_bern (unsigned int degree,
-                                mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_sbern_to_bern (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
-  for (unsigned int i = 0; i <= degree; i++)
-    for (unsigned int j = 0; j <= degree; j++)
+  for (size_t i = 0; i <= degree; i++)
+    for (size_t j = 0; j <= degree; j++)
       if (i == j)
         {
           // The following produces canonical form, making a call to
@@ -260,18 +254,18 @@ mpq_coefficients_sbern_to_bern (unsigned int degree,
 // The matrix’s rows are the Sánchez-Reyes coefficients of the scaled
 // Bernstein basis polynomials.
 VISIBLE void
-mpq_coefficients_sbern_to_spower (unsigned int degree,
+mpq_coefficients_sbern_to_spower (size_t degree,
                                   mpq_t T[degree + 1][degree + 1])
 {
-  const unsigned int n = degree;
-  const unsigned int q = n / 2 + n % 2;
+  const size_t n = degree;
+  const size_t q = n / 2 + n % 2;
 
   mpq_matrix_set_zero (q + 1, n + 1, T);
 
-  for (unsigned int i = 0; i < q; i++)
+  for (size_t i = 0; i < q; i++)
     {
       // Fill in a top-half row.
-      for (unsigned int j = i; j < q; j++)
+      for (size_t j = i; j < q; j++)
         {
           mpq_bincoef_ui (T[i][j], n - j - i, j - i);
           if ((j - i) % 2 == 1)
@@ -279,7 +273,7 @@ mpq_coefficients_sbern_to_spower (unsigned int degree,
         }
       if (n % 2 == 0)
         mpq_set (T[i][q], (((q - i) % 2 == 1) ? mpq_neg_one () : mpq_one ()));
-      for (unsigned int j = i + 1; j < q; j++)
+      for (size_t j = i + 1; j < q; j++)
         {
           mpq_bincoef_ui (T[i][n - j], n - j - i - 1, j - i - 1);
           if ((j - i) % 2 == 1)
@@ -287,7 +281,7 @@ mpq_coefficients_sbern_to_spower (unsigned int degree,
         }
 
       // The corresponding bottom-half row is the reverse.
-      for (unsigned int j = 0; j <= n; j++)
+      for (size_t j = 0; j <= n; j++)
         mpq_set (T[n - i][n - j], T[i][j]);
     }
 
@@ -302,25 +296,25 @@ mpq_coefficients_sbern_to_spower (unsigned int degree,
 // The matrix’s rows are the scaled Bernstein coefficients of the
 // Sánchez-Reyes basis polynomials.
 VISIBLE void
-mpq_coefficients_spower_to_sbern (unsigned int degree,
+mpq_coefficients_spower_to_sbern (size_t degree,
                                   mpq_t T[degree + 1][degree + 1])
 {
-  const unsigned int n = degree;
-  const unsigned int q = n / 2 + n % 2;
+  const size_t n = degree;
+  const size_t q = n / 2 + n % 2;
 
-  for (unsigned int i = 0; i < q; i++)
+  for (size_t i = 0; i < q; i++)
     {
       // Fill in a top-half row.
-      for (unsigned int j = 0; j <= i; j++)
+      for (size_t j = 0; j <= i; j++)
         mpq_set (T[i][j], mpq_zero ());
-      const unsigned int d = n - (2 * i) - 1;
-      for (unsigned int j = i; j <= i + d; j++)
+      const size_t d = n - (2 * i) - 1;
+      for (size_t j = i; j <= i + d; j++)
         mpq_bincoef_ui (T[i][j], d, j - i);
-      for (unsigned int j = i + d + 1; j <= n; j++)
+      for (size_t j = i + d + 1; j <= n; j++)
         mpq_set (T[i][j], mpq_zero ());
 
       // The corresponding bottom-half row is the reverse.
-      for (unsigned int j = 0; j <= n; j++)
+      for (size_t j = 0; j <= n; j++)
         mpq_set (T[n - i][n - j], T[i][j]);
     }
 
@@ -334,36 +328,33 @@ mpq_coefficients_spower_to_sbern (unsigned int degree,
 // Multiply a row vector by this matrix to make no change to the
 // vector.
 static void
-mpq_identity_matrix (unsigned int degree, mpq_t T[degree + 1][degree + 1])
+mpq_identity_matrix (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
-  for (unsigned int i = 0; i <= degree; i++)
-    for (unsigned int j = 0; j <= degree; j++)
+  for (size_t i = 0; i <= degree; i++)
+    for (size_t j = 0; j <= degree; j++)
       mpq_set (T[i][j], ((i == j) ? mpq_one () : mpq_zero ()));
 }
 
 VISIBLE void
-mpq_coefficients_mono_to_mono (unsigned int degree,
-                               mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_mono_to_mono (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   mpq_identity_matrix (degree, T);
 }
 
 VISIBLE void
-mpq_coefficients_bern_to_bern (unsigned int degree,
-                               mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_bern_to_bern (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   mpq_identity_matrix (degree, T);
 }
 
 VISIBLE void
-mpq_coefficients_sbern_to_sbern (unsigned int degree,
-                                 mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_sbern_to_sbern (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   mpq_identity_matrix (degree, T);
 }
 
 VISIBLE void
-mpq_coefficients_spower_to_spower (unsigned int degree,
+mpq_coefficients_spower_to_spower (size_t degree,
                                    mpq_t T[degree + 1][degree + 1])
 {
   mpq_identity_matrix (degree, T);
@@ -375,11 +366,11 @@ mpq_coefficients_spower_to_spower (unsigned int degree,
 // than filling them in directly.
 
 static void
-compose_matrices (void (*func1) (unsigned int degree,
+compose_matrices (void (*func1) (size_t degree,
                                  mpq_t T[degree + 1][degree + 1]),
-                  void (*func2) (unsigned int degree,
+                  void (*func2) (size_t degree,
                                  mpq_t T[degree + 1][degree + 1]),
-                  unsigned int degree, mpq_t T[degree + 1][degree + 1])
+                  size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   mpq_t T1[degree + 1][degree + 1];
   mpq_t T2[degree + 1][degree + 1];
@@ -399,32 +390,28 @@ compose_matrices (void (*func1) (unsigned int degree,
 }
 
 VISIBLE void
-mpq_coefficients_mono_to_spower (unsigned int degree,
-                                 mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_mono_to_spower (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   return compose_matrices (mpq_coefficients_mono_to_sbern,
                            mpq_coefficients_sbern_to_spower, degree, T);
 }
 
 VISIBLE void
-mpq_coefficients_bern_to_spower (unsigned int degree,
-                                 mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_bern_to_spower (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   return compose_matrices (mpq_coefficients_bern_to_sbern,
                            mpq_coefficients_sbern_to_spower, degree, T);
 }
 
 VISIBLE void
-mpq_coefficients_spower_to_mono (unsigned int degree,
-                                 mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_spower_to_mono (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   return compose_matrices (mpq_coefficients_spower_to_sbern,
                            mpq_coefficients_sbern_to_mono, degree, T);
 }
 
 VISIBLE void
-mpq_coefficients_spower_to_bern (unsigned int degree,
-                                 mpq_t T[degree + 1][degree + 1])
+mpq_coefficients_spower_to_bern (size_t degree, mpq_t T[degree + 1][degree + 1])
 {
   return compose_matrices (mpq_coefficients_spower_to_sbern,
                            mpq_coefficients_sbern_to_bern, degree, T);
@@ -433,9 +420,9 @@ mpq_coefficients_spower_to_bern (unsigned int degree,
 //-------------------------------------------------------------------------
 
 static SCM
-scm_coefficient_matrix (void (*func) (unsigned int degree,
+scm_coefficient_matrix (void (*func) (size_t degree,
                                       mpq_t T[degree + 1][degree + 1]),
-                        unsigned int degree)
+                        size_t degree)
 {
   scm_dynwind_begin (0);
 
@@ -463,11 +450,11 @@ typedef struct
 
 static void
 initialize_precomputed_matrices (_precomputed_matrices_t **precomputed,
-                                 void (*func) (unsigned int deg,
+                                 void (*func) (size_t deg,
                                                mpq_t T[deg + 1][deg + 1]))
 {
   (*precomputed) = XMALLOC (_precomputed_matrices_t);
-  for (unsigned int degree = 0; degree <= __PRECOMPUTED_MAX_DEGREE; degree++)
+  for (size_t degree = 0; degree <= __PRECOMPUTED_MAX_DEGREE; degree++)
     (*precomputed)->matrices[degree] =
       scm_permanent_object (scm_coefficient_matrix (func, degree));
 }
@@ -493,7 +480,7 @@ _PRECOMPUTED_MATRICES_FROM_BASIS_TO_BASIS (spower);
 
 #define _SCM_C_COEF_BASIS_TO_BASIS(BASIS1, BASIS2)                      \
   VISIBLE SCM                                                           \
-  scm_c_coefficients_##BASIS1##_to_##BASIS2 (unsigned int degree)       \
+  scm_c_coefficients_##BASIS1##_to_##BASIS2 (size_t degree)             \
   {                                                                     \
     return (degree <= __PRECOMPUTED_MAX_DEGREE) ?                       \
       precomputed_##BASIS1##_to_##BASIS2 ()->matrices[degree] :         \
@@ -519,7 +506,7 @@ _SCM_C_COEF_FROM_BASIS (spower);
   scm_coefficients_##BASIS1##_to_##BASIS2 (SCM degree)                  \
   {                                                                     \
     return                                                              \
-      scm_c_coefficients_##BASIS1##_to_##BASIS2 (scm_to_uint (degree)); \
+      scm_c_coefficients_##BASIS1##_to_##BASIS2 (scm_to_size_t (degree)); \
   }
 
 #define _SCM_COEF_FROM_BASIS(BASIS)             \

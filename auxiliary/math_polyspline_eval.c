@@ -34,27 +34,27 @@
 //-------------------------------------------------------------------------
 
 VISIBLE double
-eval_f64_mono (unsigned int degree, int stride, const double *spline, double t)
+eval_f64_mono (size_t degree, ssize_t stride, const double *spline, double t)
 {
   // Horner’s rule.
-  double x = spline[stride * (int) degree];
-  for (int i = 1; i <= degree; i++)
-    x = MY_FAST_FMA (x, t, spline[stride * (int) (degree - i)]);
+  double x = spline[stride * (ssize_t) degree];
+  for (size_t i = 1; i <= degree; i++)
+    x = MY_FAST_FMA (x, t, spline[stride * (ssize_t) (degree - i)]);
   return x;
 }
 
 VISIBLE SCM
-scm_c_eval_mono (unsigned int degree, int stride, const SCM *spline, SCM t)
+scm_c_eval_mono (size_t degree, ssize_t stride, const SCM *spline, SCM t)
 {
   // Horner’s rule.
-  SCM x = spline[stride * (int) degree];
-  for (int i = 1; i <= degree; i++)
-    x = scm_sum (scm_product (x, t), spline[stride * (int) (degree - i)]);
+  SCM x = spline[stride * (ssize_t) degree];
+  for (size_t i = 1; i <= degree; i++)
+    x = scm_sum (scm_product (x, t), spline[stride * (ssize_t) (degree - i)]);
   return x;
 }
 
 VISIBLE double
-eval_f64_sbern_schumaker_volk (unsigned int degree, int stride,
+eval_f64_sbern_schumaker_volk (size_t degree, ssize_t stride,
                                const double *spline, double t)
 {
   double v;
@@ -65,13 +65,13 @@ eval_f64_sbern_schumaker_volk (unsigned int degree, int stride,
     {
       // Horner form in the variable @var{u} = @var{t} / @var{s}.
       double u = t / s;
-      v = spline[stride * (int) degree];
-      for (unsigned int i = 1; i <= degree; i++)
-        v = MY_FAST_FMA (v, u, spline[stride * (int) (degree - i)]);
+      v = spline[stride * (ssize_t) degree];
+      for (size_t i = 1; i <= degree; i++)
+        v = MY_FAST_FMA (v, u, spline[stride * (ssize_t) (degree - i)]);
 
       // Multiply by @var{s} raised to the power @var{degree}.
       double power = s;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -86,12 +86,12 @@ eval_f64_sbern_schumaker_volk (unsigned int degree, int stride,
       // Horner form in the variable @var{u} = @var{s} / @var{t}.
       double u = s / t;
       v = spline[0];
-      for (unsigned int i = 1; i <= degree; i++)
-        v = MY_FAST_FMA (v, u, spline[stride * (int) i]);
+      for (size_t i = 1; i <= degree; i++)
+        v = MY_FAST_FMA (v, u, spline[stride * (ssize_t) i]);
 
       // Multiply by @var{t} raised to the power @var{degree}.
       double power = t;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -105,7 +105,7 @@ eval_f64_sbern_schumaker_volk (unsigned int degree, int stride,
 }
 
 VISIBLE double
-eval_f64_bern_schumaker_volk (unsigned int degree, int stride,
+eval_f64_bern_schumaker_volk (size_t degree, ssize_t stride,
                               const double *spline, double t)
 {
   double v;
@@ -116,16 +116,16 @@ eval_f64_bern_schumaker_volk (unsigned int degree, int stride,
     {
       // Horner form in the variable @var{u} = @var{t} / @var{s}.
       double u = t / s;
-      v = spline[stride * (int) degree];
-      for (unsigned int i = 1; i <= degree; i++)
+      v = spline[stride * (ssize_t) degree];
+      for (size_t i = 1; i <= degree; i++)
         v =
           MY_FAST_FMA (v, u,
                        bincoef (degree, degree - i) *
-                       spline[stride * (int) (degree - i)]);
+                       spline[stride * (ssize_t) (degree - i)]);
 
       // Multiply by @var{s} raised to the power @var{degree}.
       double power = s;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -140,12 +140,14 @@ eval_f64_bern_schumaker_volk (unsigned int degree, int stride,
       // Horner form in the variable @var{u} = @var{s} / @var{t}.
       double u = s / t;
       v = spline[0];
-      for (unsigned int i = 1; i <= degree; i++)
-        v = MY_FAST_FMA (v, u, bincoef (degree, i) * spline[stride * (int) i]);
+      for (size_t i = 1; i <= degree; i++)
+        v =
+          MY_FAST_FMA (v, u,
+                       bincoef (degree, i) * spline[stride * (ssize_t) i]);
 
       // Multiply by @var{t} raised to the power @var{degree}.
       double power = t;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -159,7 +161,7 @@ eval_f64_bern_schumaker_volk (unsigned int degree, int stride,
 }
 
 VISIBLE SCM
-scm_c_eval_sbern_schumaker_volk (unsigned int degree, int stride,
+scm_c_eval_sbern_schumaker_volk (size_t degree, ssize_t stride,
                                  const SCM *spline, SCM t)
 {
   SCM v;
@@ -172,13 +174,14 @@ scm_c_eval_sbern_schumaker_volk (unsigned int degree, int stride,
     {
       // Horner form in the variable @var{u} = @var{t} / @var{s}.
       SCM u = scm_divide (t, s);
-      v = spline[stride * (int) degree];
-      for (unsigned int i = 1; i <= degree; i++)
-        v = scm_sum (scm_product (v, u), spline[stride * (int) (degree - i)]);
+      v = spline[stride * (ssize_t) degree];
+      for (size_t i = 1; i <= degree; i++)
+        v =
+          scm_sum (scm_product (v, u), spline[stride * (ssize_t) (degree - i)]);
 
       // Multiply by @var{s} raised to the power @var{degree}.
       SCM power = s;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -193,12 +196,12 @@ scm_c_eval_sbern_schumaker_volk (unsigned int degree, int stride,
       // Horner form in the variable @var{u} = @var{s} / @var{t}.
       SCM u = scm_divide (s, t);
       v = spline[0];
-      for (unsigned int i = 1; i <= degree; i++)
-        v = scm_sum (scm_product (v, u), spline[stride * (int) i]);
+      for (size_t i = 1; i <= degree; i++)
+        v = scm_sum (scm_product (v, u), spline[stride * (ssize_t) i]);
 
       // Multiply by @var{t} raised to the power @var{degree}.
       SCM power = t;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -212,7 +215,7 @@ scm_c_eval_sbern_schumaker_volk (unsigned int degree, int stride,
 }
 
 VISIBLE SCM
-scm_c_eval_bern_schumaker_volk (unsigned int degree, int stride,
+scm_c_eval_bern_schumaker_volk (size_t degree, ssize_t stride,
                                 const SCM *spline, SCM t)
 {
   SCM v;
@@ -231,18 +234,18 @@ scm_c_eval_bern_schumaker_volk (unsigned int degree, int stride,
     {
       // Horner form in the variable @var{u} = @var{t} / @var{s}.
       SCM u = scm_divide (t, s);
-      v = spline[stride * (int) degree];
-      for (unsigned int i = 1; i <= degree; i++)
+      v = spline[stride * (ssize_t) degree];
+      for (size_t i = 1; i <= degree; i++)
         {
           mpz_bincoef_ui (C, degree, degree - i);
           v = scm_sum (scm_product (v, u),
                        scm_product (scm_from_mpz (C),
-                                    spline[stride * (int) (degree - i)]));
+                                    spline[stride * (ssize_t) (degree - i)]));
         }
 
       // Multiply by @var{s} raised to the power @var{degree}.
       SCM power = s;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -257,17 +260,18 @@ scm_c_eval_bern_schumaker_volk (unsigned int degree, int stride,
       // Horner form in the variable @var{u} = @var{s} / @var{t}.
       SCM u = scm_divide (s, t);
       v = spline[0];
-      for (unsigned int i = 1; i <= degree; i++)
+      for (size_t i = 1; i <= degree; i++)
         {
           mpz_bincoef_ui (C, degree, i);
           v =
             scm_sum (scm_product (v, u),
-                     scm_product (scm_from_mpz (C), spline[stride * (int) i]));
+                     scm_product (scm_from_mpz (C),
+                                  spline[stride * (ssize_t) i]));
         }
 
       // Multiply by @var{t} raised to the power @var{degree}.
       SCM power = t;
-      unsigned int i = degree;
+      size_t i = degree;
       while (i != 0)
         {
           if ((i & 1) != 0)
@@ -283,33 +287,33 @@ scm_c_eval_bern_schumaker_volk (unsigned int degree, int stride,
 }
 
 VISIBLE double
-eval_f64_sbern_de_casteljau (unsigned int degree, int stride,
+eval_f64_sbern_de_casteljau (size_t degree, ssize_t stride,
                              const double *spline, double t)
 {
   double b[degree + 1];
-  for (unsigned int i = 0; i <= degree; i++)
-    b[i] = spline[stride * (int) i] / bincoef (degree, i);
-  for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree - i; j++)
+  for (size_t i = 0; i <= degree; i++)
+    b[i] = spline[stride * (ssize_t) i] / bincoef (degree, i);
+  for (size_t i = 0; i < degree; i++)
+    for (size_t j = 0; j < degree - i; j++)
       b[j] += t * (b[j + 1] - b[j]);
   return b[0];
 }
 
 VISIBLE double
-eval_f64_bern_de_casteljau (unsigned int degree, int stride,
+eval_f64_bern_de_casteljau (size_t degree, ssize_t stride,
                             const double *spline, double t)
 {
   double b[degree + 1];
-  for (unsigned int i = 0; i <= degree; i++)
-    b[i] = spline[stride * (int) i];
-  for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree - i; j++)
+  for (size_t i = 0; i <= degree; i++)
+    b[i] = spline[stride * (ssize_t) i];
+  for (size_t i = 0; i < degree; i++)
+    for (size_t j = 0; j < degree - i; j++)
       b[j] += t * (b[j + 1] - b[j]);
   return b[0];
 }
 
 VISIBLE SCM
-scm_c_eval_sbern_de_casteljau (unsigned int degree, int stride,
+scm_c_eval_sbern_de_casteljau (size_t degree, ssize_t stride,
                                const SCM *spline, SCM t)
 {
   scm_dynwind_begin (0);
@@ -319,37 +323,36 @@ scm_c_eval_sbern_de_casteljau (unsigned int degree, int stride,
   scm_dynwind_mpz_clear (C);
 
   SCM b[degree + 1];
-  for (unsigned int i = 0; i <= degree; i++)
+  for (size_t i = 0; i <= degree; i++)
     {
       mpz_bincoef_ui (C, degree, i);
-      b[i] = scm_divide (spline[stride * (int) i], scm_from_mpz (C));
+      b[i] = scm_divide (spline[stride * (ssize_t) i], scm_from_mpz (C));
     }
 
   scm_dynwind_end ();
 
-  for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree - i; j++)
+  for (size_t i = 0; i < degree; i++)
+    for (size_t j = 0; j < degree - i; j++)
       b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
 
   return b[0];
 }
 
 VISIBLE SCM
-scm_c_eval_bern_de_casteljau (unsigned int degree, int stride,
+scm_c_eval_bern_de_casteljau (size_t degree, ssize_t stride,
                               const SCM *spline, SCM t)
 {
   SCM b[degree + 1];
-  for (unsigned int i = 0; i <= degree; i++)
-    b[i] = spline[stride * (int) i];
-  for (unsigned int i = 0; i < degree; i++)
-    for (unsigned int j = 0; j < degree - i; j++)
+  for (size_t i = 0; i <= degree; i++)
+    b[i] = spline[stride * (ssize_t) i];
+  for (size_t i = 0; i < degree; i++)
+    for (size_t j = 0; j < degree - i; j++)
       b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
   return b[0];
 }
 
 VISIBLE double
-eval_f64_spower (unsigned int degree, int stride,
-                 const double *spline, double t)
+eval_f64_spower (size_t degree, ssize_t stride, const double *spline, double t)
 {
   // Compute a convex combination of two shorter polynomials in
   //
@@ -363,13 +366,13 @@ eval_f64_spower (unsigned int degree, int stride,
 
   const double left = eval_f64_mono (degree / 2, stride, spline, s);
   const double right =
-    eval_f64_mono (degree / 2, -stride, &spline[stride * (int) degree], s);
+    eval_f64_mono (degree / 2, -stride, &spline[stride * (ssize_t) degree], s);
 
   return (t1 * left + t * right);
 }
 
 VISIBLE SCM
-scm_c_eval_spower (unsigned int degree, int stride, const SCM *spline, SCM t)
+scm_c_eval_spower (size_t degree, ssize_t stride, const SCM *spline, SCM t)
 {
   // Compute a convex combination of two shorter polynomials in
   //
@@ -383,7 +386,8 @@ scm_c_eval_spower (unsigned int degree, int stride, const SCM *spline, SCM t)
 
   const SCM left = scm_c_eval_mono (degree / 2, stride, spline, s);
   const SCM right =
-    scm_c_eval_mono (degree / 2, -stride, &spline[stride * (int) degree], s);
+    scm_c_eval_mono (degree / 2, -stride, &spline[stride * (ssize_t) degree],
+                     s);
 
   return scm_sum (scm_product (t1, left), scm_product (t, right));
 }
@@ -392,7 +396,7 @@ scm_c_eval_spower (unsigned int degree, int stride, const SCM *spline, SCM t)
 
 static SCM
 scm_eval_f64_spline (const char *who,
-                     double (*eval_f64_spline) (unsigned int degree, int stride,
+                     double (*eval_f64_spline) (size_t degree, ssize_t stride,
                                                 const double *spline, double t),
                      SCM vector, SCM t)
 {
@@ -404,8 +408,8 @@ scm_eval_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  unsigned int dim;
-  int stride;
+  size_t dim;
+  ssize_t stride;
   scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
                                               &dim, &stride);
   const double *spline = scm_array_handle_f64_elements (&handle);
@@ -462,7 +466,7 @@ scm_eval_f64_spower (SCM vector, SCM t)
 
 static SCM
 scm_eval_scm_spline (const char *who,
-                     SCM (*scm_c_eval_spline) (unsigned int degree, int stride,
+                     SCM (*scm_c_eval_spline) (size_t degree, ssize_t stride,
                                                const SCM *spline, SCM t),
                      SCM vector, SCM t)
 {
@@ -473,8 +477,8 @@ scm_eval_scm_spline (const char *who,
   scm_array_get_handle (vector, &handle);
   scm_dynwind_array_handle_release (&handle);
 
-  unsigned int dim;
-  int stride;
+  size_t dim;
+  ssize_t stride;
   scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
                                               &dim, &stride);
   const SCM *spline = scm_array_handle_elements (&handle);

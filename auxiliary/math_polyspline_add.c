@@ -23,54 +23,54 @@
 //-------------------------------------------------------------------------
 
 VISIBLE void
-add_f64_splines (unsigned int degree,
-                 int stride1, const double *spline1,
-                 int stride2, const double *spline2,
-                 int result_stride, double *result)
+add_f64_splines (size_t degree,
+                 ssize_t stride1, const double *spline1,
+                 ssize_t stride2, const double *spline2,
+                 ssize_t result_stride, double *result)
 {
   double buffer[degree + 1];
   copy_f64_with_strides (1, buffer, stride1, spline1, degree + 1);
-  for (unsigned int i = 0; i <= degree; i++)
-    buffer[i] += spline2[stride2 * (int) i];
+  for (size_t i = 0; i <= degree; i++)
+    buffer[i] += spline2[stride2 * (ssize_t) i];
   copy_f64_with_strides (result_stride, result, 1, buffer, degree + 1);
 }
 
 VISIBLE void
-add_scm_splines (unsigned int degree,
-                 int stride1, const SCM *spline1,
-                 int stride2, const SCM *spline2,
-                 int result_stride, SCM *result)
+add_scm_splines (size_t degree,
+                 ssize_t stride1, const SCM *spline1,
+                 ssize_t stride2, const SCM *spline2,
+                 ssize_t result_stride, SCM *result)
 {
   SCM buffer[degree + 1];
   copy_scm_with_strides (1, buffer, stride1, spline1, degree + 1);
-  for (unsigned int i = 0; i <= degree; i++)
-    buffer[i] = scm_sum (buffer[i], spline2[stride2 * (int) i]);
+  for (size_t i = 0; i <= degree; i++)
+    buffer[i] = scm_sum (buffer[i], spline2[stride2 * (ssize_t) i]);
   copy_scm_with_strides (result_stride, result, 1, buffer, degree + 1);
 }
 
 VISIBLE void
-sub_f64_splines (unsigned int degree,
-                 int stride1, const double *spline1,
-                 int stride2, const double *spline2,
-                 int result_stride, double *result)
+sub_f64_splines (size_t degree,
+                 ssize_t stride1, const double *spline1,
+                 ssize_t stride2, const double *spline2,
+                 ssize_t result_stride, double *result)
 {
   double buffer[degree + 1];
   copy_f64_with_strides (1, buffer, stride1, spline1, degree + 1);
-  for (unsigned int i = 0; i <= degree; i++)
-    buffer[i] -= spline2[stride2 * (int) i];
+  for (size_t i = 0; i <= degree; i++)
+    buffer[i] -= spline2[stride2 * (ssize_t) i];
   copy_f64_with_strides (result_stride, result, 1, buffer, degree + 1);
 }
 
 VISIBLE void
-sub_scm_splines (unsigned int degree,
-                 int stride1, const SCM *spline1,
-                 int stride2, const SCM *spline2,
-                 int result_stride, SCM *result)
+sub_scm_splines (size_t degree,
+                 ssize_t stride1, const SCM *spline1,
+                 ssize_t stride2, const SCM *spline2,
+                 ssize_t result_stride, SCM *result)
 {
   SCM buffer[degree + 1];
   copy_scm_with_strides (1, buffer, stride1, spline1, degree + 1);
-  for (unsigned int i = 0; i <= degree; i++)
-    buffer[i] = scm_difference (buffer[i], spline2[stride2 * (int) i]);
+  for (size_t i = 0; i <= degree; i++)
+    buffer[i] = scm_difference (buffer[i], spline2[stride2 * (ssize_t) i]);
   copy_scm_with_strides (result_stride, result, 1, buffer, degree + 1);
 }
 
@@ -103,10 +103,10 @@ splines_nonconformable_for_subtraction (const char *who,
 
 static SCM
 scm_op_f64_spline (const char *who,
-                   void op_f64 (unsigned int degree,
-                                int stride1, const double *spline1,
-                                int stride2, const double *spline2,
-                                int result_stride, double *result),
+                   void op_f64 (size_t degree,
+                                ssize_t stride1, const double *spline1,
+                                ssize_t stride2, const double *spline2,
+                                ssize_t result_stride, double *result),
                    void splines_nonconformable (const char *who,
                                                 SCM spline1, SCM spline2),
                    SCM spline1, SCM spline2)
@@ -121,8 +121,8 @@ scm_op_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle1);
   assert_c_rank_1_or_2_array (who, spline1, &handle1);
 
-  unsigned int dim1;
-  int stride1;
+  size_t dim1;
+  ssize_t stride1;
   scm_array_handle_get_vector_dim_and_stride (who, spline1, &handle1,
                                               &dim1, &stride1);
   const double *_spline1 = scm_array_handle_f64_elements (&handle1);
@@ -131,8 +131,8 @@ scm_op_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle2);
   assert_c_rank_1_or_2_array (who, spline2, &handle2);
 
-  unsigned int dim2;
-  int stride2;
+  size_t dim2;
+  ssize_t stride2;
   scm_array_handle_get_vector_dim_and_stride (who, spline2, &handle2,
                                               &dim2, &stride2);
   const double *_spline2 = scm_array_handle_f64_elements (&handle2);
@@ -142,7 +142,7 @@ scm_op_f64_spline (const char *who,
 
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                      scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                             scm_from_uint
+                                                             scm_from_size_t
                                                              (dim1))));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
@@ -175,10 +175,10 @@ scm_sub_f64_splines (SCM spline1, SCM spline2)
 
 static SCM
 scm_op_scm_spline (const char *who,
-                   void op_scm (unsigned int degree,
-                                int stride1, const SCM *spline1,
-                                int stride2, const SCM *spline2,
-                                int result_stride, SCM *result),
+                   void op_scm (size_t degree,
+                                ssize_t stride1, const SCM *spline1,
+                                ssize_t stride2, const SCM *spline2,
+                                ssize_t result_stride, SCM *result),
                    void splines_nonconformable (const char *who,
                                                 SCM spline1, SCM spline2),
                    SCM spline1, SCM spline2)
@@ -193,8 +193,8 @@ scm_op_scm_spline (const char *who,
   scm_dynwind_array_handle_release (&handle1);
   assert_c_rank_1_or_2_array (who, spline1, &handle1);
 
-  unsigned int dim1;
-  int stride1;
+  size_t dim1;
+  ssize_t stride1;
   scm_array_handle_get_vector_dim_and_stride (who, spline1, &handle1,
                                               &dim1, &stride1);
   const SCM *_spline1 = scm_array_handle_elements (&handle1);
@@ -203,8 +203,8 @@ scm_op_scm_spline (const char *who,
   scm_dynwind_array_handle_release (&handle2);
   assert_c_rank_1_or_2_array (who, spline2, &handle2);
 
-  unsigned int dim2;
-  int stride2;
+  size_t dim2;
+  ssize_t stride2;
   scm_array_handle_get_vector_dim_and_stride (who, spline2, &handle2,
                                               &dim2, &stride2);
   const SCM *_spline2 = scm_array_handle_elements (&handle2);
@@ -214,7 +214,8 @@ scm_op_scm_spline (const char *who,
 
   SCM result = scm_make_array (SCM_UNSPECIFIED,
                                scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                       scm_from_uint (dim1))));
+                                                       scm_from_size_t
+                                                       (dim1))));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   SCM *_result = scm_array_handle_writable_elements (&handle);

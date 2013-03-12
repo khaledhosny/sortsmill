@@ -15,65 +15,80 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/math/polyspline/subdiv.h>
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
+#include <sortsmill/copy_with_strides.h>
 
 VISIBLE void
-subdiv_f64_bern (unsigned int degree, int stride, const double *spline,
-                 double t, double *a, double *b)
+subdiv_f64_bern (size_t degree, ssize_t stride, const double *spline,
+                 double t,
+                 ssize_t stride_a, double *a, ssize_t stride_b, double *b)
 {
-  for (unsigned int i = 0; i <= degree; i++)
-    b[i] = spline[stride * (int) i];
-  for (unsigned int i = 0; i < degree; i++)
+  double _a[degree + 1];
+  double _b[degree + 1];
+  for (size_t i = 0; i <= degree; i++)
+    _b[i] = spline[stride * (ssize_t) i];
+  for (size_t i = 0; i < degree; i++)
     {
-      a[i] = b[0];
-      for (unsigned int j = 0; j < degree - i; j++)
-        b[j] += t * (b[j + 1] - b[j]);
+      _a[i] = _b[0];
+      for (size_t j = 0; j < degree - i; j++)
+        _b[j] += t * (_b[j + 1] - _b[j]);
     }
-  a[degree] = b[0];
+  _a[degree] = _b[0];
+  copy_f64_with_strides (stride_a, a, 1, _a, degree + 1);
+  copy_f64_with_strides (stride_b, b, 1, _b, degree + 1);
 }
 
 VISIBLE void
-scm_c_subdiv_bern (unsigned int degree, int stride, const SCM *spline,
-                   SCM t, SCM *a, SCM *b)
+scm_c_subdiv_bern (size_t degree, ssize_t stride, const SCM *spline,
+                   SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
 {
-  for (unsigned int i = 0; i <= degree; i++)
-    b[i] = spline[stride * (int) i];
-  for (unsigned int i = 0; i < degree; i++)
+  SCM _a[degree + 1];
+  SCM _b[degree + 1];
+  for (size_t i = 0; i <= degree; i++)
+    _b[i] = spline[stride * (ssize_t) i];
+  for (size_t i = 0; i < degree; i++)
     {
-      a[i] = b[0];
-      for (unsigned int j = 0; j < degree - i; j++)
-        b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
+      _a[i] = _b[0];
+      for (size_t j = 0; j < degree - i; j++)
+        _b[j] =
+          scm_sum (_b[j], scm_product (t, scm_difference (_b[j + 1], _b[j])));
     }
-  a[degree] = b[0];
+  _a[degree] = _b[0];
+  copy_scm_with_strides (stride_a, a, 1, _a, degree + 1);
+  copy_scm_with_strides (stride_b, b, 1, _b, degree + 1);
 }
 
 VISIBLE void
-subdiv_f64_sbern (unsigned int degree, int stride, const double *spline,
-                  double t, double *a, double *b)
+subdiv_f64_sbern (size_t degree, ssize_t stride, const double *spline,
+                  double t,
+                  ssize_t stride_a, double *a, ssize_t stride_b, double *b)
 {
-  for (unsigned int i = 0; i <= degree; i++)
-    b[i] = spline[stride * (int) i] / bincoef (degree, i);
-  for (unsigned int i = 0; i < degree; i++)
+  double _a[degree + 1];
+  double _b[degree + 1];
+  for (size_t i = 0; i <= degree; i++)
+    _b[i] = spline[stride * (ssize_t) i] / bincoef (degree, i);
+  for (size_t i = 0; i < degree; i++)
     {
-      a[i] = b[0];
-      for (unsigned int j = 0; j < degree - i; j++)
-        b[j] += t * (b[j + 1] - b[j]);
+      _a[i] = _b[0];
+      for (size_t j = 0; j < degree - i; j++)
+        _b[j] += t * (_b[j + 1] - _b[j]);
     }
-  a[degree] = b[0];
-  for (unsigned int i = 0; i <= degree; i++)
+  _a[degree] = _b[0];
+  for (size_t i = 0; i <= degree; i++)
     {
       double C = bincoef (degree, i);
-      a[i] *= C;
-      b[i] *= C;
+      _a[i] *= C;
+      _b[i] *= C;
     }
+  copy_f64_with_strides (stride_a, a, 1, _a, degree + 1);
+  copy_f64_with_strides (stride_b, b, 1, _b, degree + 1);
 }
 
 
 VISIBLE void
-scm_c_subdiv_sbern (unsigned int degree, int stride, const SCM *spline,
-                    SCM t, SCM *a, SCM *b)
+scm_c_subdiv_sbern (size_t degree, ssize_t stride, const SCM *spline,
+                    SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
 {
   scm_dynwind_begin (0);
 
@@ -81,25 +96,30 @@ scm_c_subdiv_sbern (unsigned int degree, int stride, const SCM *spline,
   mpz_init (C);
   scm_dynwind_mpz_clear (C);
 
-  for (unsigned int i = 0; i <= degree; i++)
+  SCM _a[degree + 1];
+  SCM _b[degree + 1];
+  for (size_t i = 0; i <= degree; i++)
     {
       mpz_bincoef_ui (C, degree, i);
-      b[i] = scm_divide (spline[stride * (int) i], scm_from_mpz (C));
+      _b[i] = scm_divide (spline[stride * (ssize_t) i], scm_from_mpz (C));
     }
-  for (unsigned int i = 0; i < degree; i++)
+  for (size_t i = 0; i < degree; i++)
     {
-      a[i] = b[0];
-      for (unsigned int j = 0; j < degree - i; j++)
-        b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
+      _a[i] = _b[0];
+      for (size_t j = 0; j < degree - i; j++)
+        _b[j] =
+          scm_sum (_b[j], scm_product (t, scm_difference (_b[j + 1], _b[j])));
     }
-  a[degree] = b[0];
-  for (unsigned int i = 0; i <= degree; i++)
+  _a[degree] = _b[0];
+  for (size_t i = 0; i <= degree; i++)
     {
       mpz_bincoef_ui (C, degree, i);
       SCM _C = scm_from_mpz (C);
-      a[i] = scm_product (a[i], _C);
-      b[i] = scm_product (b[i], _C);
+      _a[i] = scm_product (_a[i], _C);
+      _b[i] = scm_product (_b[i], _C);
     }
+  copy_scm_with_strides (stride_a, a, 1, _a, degree + 1);
+  copy_scm_with_strides (stride_b, b, 1, _b, degree + 1);
 
   scm_dynwind_end ();
 }
@@ -108,9 +128,11 @@ scm_c_subdiv_sbern (unsigned int degree, int stride, const SCM *spline,
 
 static SCM
 scm_subdiv_f64_spline (const char *who,
-                       void subdiv_f64_spline (unsigned int degree, int stride,
+                       void subdiv_f64_spline (size_t degree, ssize_t stride,
                                                const double *spline,
-                                               double t, double *a, double *b),
+                                               double t,
+                                               ssize_t stride_a, double *a,
+                                               ssize_t stride_b, double *b),
                        SCM vector, SCM t)
 {
   scm_t_array_handle handle;
@@ -123,8 +145,8 @@ scm_subdiv_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  unsigned int dim;
-  int stride;
+  size_t dim;
+  ssize_t stride;
   scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
                                               &dim, &stride);
   const double *spline = scm_array_handle_f64_elements (&handle);
@@ -134,7 +156,7 @@ scm_subdiv_f64_spline (const char *who,
   values[0] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                     scm_list_1 (scm_list_2
                                                 (scm_from_uint (1),
-                                                 scm_from_uint (dim))));
+                                                 scm_from_size_t (dim))));
   scm_array_get_handle (values[0], &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
   double *a = scm_array_handle_f64_writable_elements (&handle_a);
@@ -142,12 +164,12 @@ scm_subdiv_f64_spline (const char *who,
   values[1] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                     scm_list_1 (scm_list_2
                                                 (scm_from_uint (1),
-                                                 scm_from_uint (dim))));
+                                                 scm_from_size_t (dim))));
   scm_array_get_handle (values[1], &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
   double *b = scm_array_handle_f64_writable_elements (&handle_b);
 
-  subdiv_f64_spline (dim - 1, stride, spline, scm_to_double (t), a, b);
+  subdiv_f64_spline (dim - 1, stride, spline, scm_to_double (t), 1, a, 1, b);
 
   scm_dynwind_end ();
 
@@ -172,9 +194,11 @@ scm_subdiv_f64_sbern (SCM vector, SCM t)
 
 static SCM
 scm_subdiv_scm_spline (const char *who,
-                       void scm_c_subdiv_spline (unsigned int degree,
-                                                 int stride, const SCM *spline,
-                                                 SCM t, SCM *a, SCM *b),
+                       void scm_c_subdiv_spline (size_t degree,
+                                                 ssize_t stride,
+                                                 const SCM *spline, SCM t,
+                                                 ssize_t stride_a, SCM *a,
+                                                 ssize_t stride_b, SCM *b),
                        SCM vector, SCM t)
 {
   scm_t_array_handle handle;
@@ -187,8 +211,8 @@ scm_subdiv_scm_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  unsigned int dim;
-  int stride;
+  size_t dim;
+  ssize_t stride;
   scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
                                               &dim, &stride);
   const SCM *spline = scm_array_handle_elements (&handle);
@@ -198,7 +222,7 @@ scm_subdiv_scm_spline (const char *who,
   values[0] = scm_make_array (SCM_UNSPECIFIED,
                               scm_list_1 (scm_list_2
                                           (scm_from_uint (1),
-                                           scm_from_uint (dim))));
+                                           scm_from_size_t (dim))));
   scm_array_get_handle (values[0], &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
   SCM *a = scm_array_handle_writable_elements (&handle_a);
@@ -206,12 +230,12 @@ scm_subdiv_scm_spline (const char *who,
   values[1] = scm_make_array (SCM_UNSPECIFIED,
                               scm_list_1 (scm_list_2
                                           (scm_from_uint (1),
-                                           scm_from_uint (dim))));
+                                           scm_from_size_t (dim))));
   scm_array_get_handle (values[1], &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
   SCM *b = scm_array_handle_writable_elements (&handle_b);
 
-  scm_c_subdiv_spline (dim - 1, stride, spline, t, a, b);
+  scm_c_subdiv_spline (dim - 1, stride, spline, t, 1, a, 1, b);
 
   scm_dynwind_end ();
 

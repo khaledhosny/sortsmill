@@ -116,119 +116,119 @@ extern "C"
 #endif
 
 /* Returns an identity matrix. */
-void mpq_coefficients_mono_to_mono (unsigned int degree,
+void mpq_coefficients_mono_to_mono (size_t degree,
                                     mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_mono_to_mono (unsigned int degree);
+SCM scm_c_coefficients_mono_to_mono (size_t degree);
 SCM scm_coefficients_mono_to_mono (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    monomial basis to Bernstein basis. */
-void mpq_coefficients_mono_to_bern (unsigned int degree,
+void mpq_coefficients_mono_to_bern (size_t degree,
                                     mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_mono_to_bern (unsigned int degree);
+SCM scm_c_coefficients_mono_to_bern (size_t degree);
 SCM scm_coefficients_mono_to_bern (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    monomial basis to scaled Bernstein basis. */
-void mpq_coefficients_mono_to_sbern (unsigned int degree,
+void mpq_coefficients_mono_to_sbern (size_t degree,
                                      mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_mono_to_sbern (unsigned int degree);
+SCM scm_c_coefficients_mono_to_sbern (size_t degree);
 SCM scm_coefficients_mono_to_sbern (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    monomial basis to Sánchez-Reyes s-power basis. */
-void mpq_coefficients_mono_to_spower (unsigned int degree,
+void mpq_coefficients_mono_to_spower (size_t degree,
                                       mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_mono_to_spower (unsigned int degree);
+SCM scm_c_coefficients_mono_to_spower (size_t degree);
 SCM scm_coefficients_mono_to_spower (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    Bernstein basis to monomial basis. */
-void mpq_coefficients_bern_to_mono (unsigned int degree,
+void mpq_coefficients_bern_to_mono (size_t degree,
                                     mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_bern_to_mono (unsigned int degree);
+SCM scm_c_coefficients_bern_to_mono (size_t degree);
 SCM scm_coefficients_bern_to_mono (SCM degree);
 
 /* Returns an identity matrix. */
-void mpq_coefficients_bern_to_bern (unsigned int degree,
+void mpq_coefficients_bern_to_bern (size_t degree,
                                     mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_bern_to_bern (unsigned int degree);
+SCM scm_c_coefficients_bern_to_bern (size_t degree);
 SCM scm_coefficients_bern_to_bern (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    Bernstein basis to scaled Bernstein basis. */
-void mpq_coefficients_bern_to_sbern (unsigned int degree,
+void mpq_coefficients_bern_to_sbern (size_t degree,
                                      mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_bern_to_sbern (unsigned int degree);
+SCM scm_c_coefficients_bern_to_sbern (size_t degree);
 SCM scm_coefficients_bern_to_sbern (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    Bernstein basis to Sánchez-Reyes s-power basis. */
-void mpq_coefficients_bern_to_spower (unsigned int degree,
+void mpq_coefficients_bern_to_spower (size_t degree,
                                       mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_bern_to_spower (unsigned int degree);
+SCM scm_c_coefficients_bern_to_spower (size_t degree);
 SCM scm_coefficients_bern_to_spower (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    scaled Bernstein basis to monomial basis. */
-void mpq_coefficients_sbern_to_mono (unsigned int degree,
+void mpq_coefficients_sbern_to_mono (size_t degree,
                                      mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_sbern_to_mono (unsigned int degree);
+SCM scm_c_coefficients_sbern_to_mono (size_t degree);
 SCM scm_coefficients_sbern_to_mono (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    scaled Bernstein basis to Bernstein basis. */
-void mpq_coefficients_sbern_to_bern (unsigned int degree,
+void mpq_coefficients_sbern_to_bern (size_t degree,
                                      mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_sbern_to_bern (unsigned int degree);
+SCM scm_c_coefficients_sbern_to_bern (size_t degree);
 SCM scm_coefficients_sbern_to_bern (SCM degree);
 
 /* Returns an identity matrix. */
-void mpq_coefficients_sbern_to_sbern (unsigned int degree,
+void mpq_coefficients_sbern_to_sbern (size_t degree,
                                       mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_sbern_to_sbern (unsigned int degree);
+SCM scm_c_coefficients_sbern_to_sbern (size_t degree);
 SCM scm_coefficients_sbern_to_sbern (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    scaled Bernstein basis to Sánchez-Reyes s-power basis. */
-void mpq_coefficients_sbern_to_spower (unsigned int degree,
+void mpq_coefficients_sbern_to_spower (size_t degree,
                                        mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_sbern_to_spower (unsigned int degree);
+SCM scm_c_coefficients_sbern_to_spower (size_t degree);
 SCM scm_coefficients_sbern_to_spower (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    Sánchez-Reyes s-power basis to monomial basis. */
-void mpq_coefficients_spower_to_mono (unsigned int degree,
+void mpq_coefficients_spower_to_mono (size_t degree,
                                       mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_spower_to_mono (unsigned int degree);
+SCM scm_c_coefficients_spower_to_mono (size_t degree);
 SCM scm_coefficients_spower_to_mono (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    Sánchez-Reyes s-power basis to Bernstein basis. */
-void mpq_coefficients_spower_to_bern (unsigned int degree,
+void mpq_coefficients_spower_to_bern (size_t degree,
                                       mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_spower_to_bern (unsigned int degree);
+SCM scm_c_coefficients_spower_to_bern (size_t degree);
 SCM scm_coefficients_spower_to_bern (SCM degree);
 
 /* Multiply a row vector by this matrix to convert coefficients from
    Sánchez-Reyes s-power basis to scaled Bernstein basis. */
-void mpq_coefficients_spower_to_sbern (unsigned int degree,
+void mpq_coefficients_spower_to_sbern (size_t degree,
                                        mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_spower_to_sbern (unsigned int degree);
+SCM scm_c_coefficients_spower_to_sbern (size_t degree);
 SCM scm_coefficients_spower_to_sbern (SCM degree);
 
 /* Returns an identity matrix. */
-void mpq_coefficients_spower_to_spower (unsigned int degree,
+void mpq_coefficients_spower_to_spower (size_t degree,
                                         mpq_t T[degree + 1][degree + 1]);
-SCM scm_c_coefficients_spower_to_spower (unsigned int degree);
+SCM scm_c_coefficients_spower_to_spower (size_t degree);
 SCM scm_coefficients_spower_to_spower (SCM degree);
 
 /* Construct an s-power spline from its symmetric halves, dropping
    excess terms. */
-void unsplit_f64_spower (unsigned int degree,
-                         int stride0, const double *a0,
-                         int stride1, const double *a1,
-                         int result_stride, double *result);
+void unsplit_f64_spower (size_t degree,
+                         ssize_t stride0, const double *a0,
+                         ssize_t stride1, const double *a1,
+                         ssize_t result_stride, double *result);
 
 #if 0
 {

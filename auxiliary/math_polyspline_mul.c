@@ -23,65 +23,66 @@
 //-------------------------------------------------------------------------
 
 static void
-f64_convolve (unsigned int degree1, int stride1, const double *poly1,
-              unsigned int degree2, int stride2, const double *poly2,
-              int result_stride, double *result)
+f64_convolve (size_t degree1, ssize_t stride1, const double *poly1,
+              size_t degree2, ssize_t stride2, const double *poly2,
+              ssize_t result_stride, double *result)
 {
   // This is just the ‘naïve’ algorithm (no Karatsuba, FFT, etc.).
 
-  const int degree = degree1 + degree2;
+  const size_t degree = degree1 + degree2;
   double buffer[degree + 1];
-  for (unsigned int i = 0; i <= degree; i++)
+  for (size_t i = 0; i <= degree; i++)
     buffer[i] = 0.0;
-  for (unsigned int j = 0; j <= degree2; j++)
-    for (unsigned int i = 0; i <= degree1; i++)
-      buffer[j + i] += poly2[stride2 * (int) j] * poly1[stride1 * (int) i];
+  for (size_t j = 0; j <= degree2; j++)
+    for (size_t i = 0; i <= degree1; i++)
+      buffer[j + i] +=
+        poly2[stride2 * (ssize_t) j] * poly1[stride1 * (ssize_t) i];
   copy_f64_with_strides (result_stride, result, 1, buffer, degree + 1);
 }
 
 //-------------------------------------------------------------------------
 
 VISIBLE void
-mul_f64_mono (unsigned int degree1, int stride1, const double *spline1,
-              unsigned int degree2, int stride2, const double *spline2,
-              int result_stride, double *result)
+mul_f64_mono (size_t degree1, ssize_t stride1, const double *spline1,
+              size_t degree2, ssize_t stride2, const double *spline2,
+              ssize_t result_stride, double *result)
 {
   f64_convolve (degree1, stride1, spline1, degree2, stride2, spline2,
                 result_stride, result);
 }
 
 VISIBLE void
-mul_f64_bern (unsigned int degree1, int stride1, const double *spline1,
-              unsigned int degree2, int stride2, const double *spline2,
-              int result_stride, double *result)
+mul_f64_bern (size_t degree1, ssize_t stride1, const double *spline1,
+              size_t degree2, ssize_t stride2, const double *spline2,
+              ssize_t result_stride, double *result)
 {
-  const int degree = degree1 + degree2;
+  const size_t degree = degree1 + degree2;
   double buffer[degree + 1];
-  for (unsigned int i = 0; i <= degree; i++)
+  for (size_t i = 0; i <= degree; i++)
     buffer[i] = 0.0;
-  for (unsigned int j = 0; j <= degree2; j++)
-    for (unsigned int i = 0; i <= degree1; i++)
+  for (size_t j = 0; j <= degree2; j++)
+    for (size_t i = 0; i <= degree1; i++)
       buffer[j + i] +=
-        (bincoef (degree2, j) * spline2[stride2 * (int) j]) *
-        (bincoef (degree1, i) * spline1[stride1 * (int) i]);
-  for (unsigned int i = 0; i <= degree; i++)
+        (bincoef (degree2, j) * spline2[stride2 * (ssize_t) j]) *
+        (bincoef (degree1, i) * spline1[stride1 * (ssize_t) i]);
+  for (size_t i = 0; i <= degree; i++)
     buffer[i] /= bincoef (degree, i);
   copy_f64_with_strides (result_stride, result, 1, buffer, degree + 1);
 }
 
 VISIBLE void
-mul_f64_sbern (unsigned int degree1, int stride1, const double *spline1,
-               unsigned int degree2, int stride2, const double *spline2,
-               int result_stride, double *result)
+mul_f64_sbern (size_t degree1, ssize_t stride1, const double *spline1,
+               size_t degree2, ssize_t stride2, const double *spline2,
+               ssize_t result_stride, double *result)
 {
   f64_convolve (degree1, stride1, spline1, degree2, stride2, spline2,
                 result_stride, result);
 }
 
 VISIBLE void
-mul_f64_spower (unsigned int degree1, int stride1, const double *spline1,
-                unsigned int degree2, int stride2, const double *spline2,
-                int result_stride, double *result)
+mul_f64_spower (size_t degree1, ssize_t stride1, const double *spline1,
+                size_t degree2, ssize_t stride2, const double *spline2,
+                ssize_t result_stride, double *result)
 {
   // See J. Sánchez-Reyes, ‘Applications of the polynomial s-power
   // basis in geometry processing’, ACM Transactions on Graphics, vol
@@ -100,17 +101,17 @@ mul_f64_spower (unsigned int degree1, int stride1, const double *spline1,
 
   // q1 = degree of a symmetric half of spline1.
   // q2 = degree of a symmetric half of spline2.
-  const unsigned int q1 = degree1 / 2;
-  const unsigned int q2 = degree2 / 2;
+  const size_t q1 = degree1 / 2;
+  const size_t q2 = degree2 / 2;
 
   // Compute Δa∗Δb.
   double DaDb[q1 + q2 + 1];
   {
     double delta1[q1 + 1];
     double delta2[q2 + 1];
-    sub_f64_splines (q1, -stride1, &spline1[stride1 * (int) degree1],
+    sub_f64_splines (q1, -stride1, &spline1[stride1 * (ssize_t) degree1],
                      stride1, spline1, 1, delta1);
-    sub_f64_splines (q2, -stride2, &spline2[stride2 * (int) degree2],
+    sub_f64_splines (q2, -stride2, &spline2[stride2 * (ssize_t) degree2],
                      stride2, spline2, 1, delta2);
     f64_convolve (q1, 1, delta1, q2, 1, delta2, 1, DaDb);
   }
@@ -118,15 +119,15 @@ mul_f64_spower (unsigned int degree1, int stride1, const double *spline1,
   // Compute a⁰∗b⁰ − shift₁(Δa∗Δb).
   double c0[q1 + q2 + 2];
   f64_convolve (q1, stride1, spline1, q2, stride2, spline2, 1, c0);
-  for (unsigned int i = 1; i <= q1 + q2; i++)
+  for (size_t i = 1; i <= q1 + q2; i++)
     c0[i] -= DaDb[i - 1];
   c0[q1 + q2 + 1] = -DaDb[q1 + q2];
 
   // Compute a¹∗b¹ − shift₁(Δa∗Δb).
   double c1[q1 + q2 + 2];
-  f64_convolve (q1, -stride1, &spline1[stride1 * (int) degree1],
-                q2, -stride2, &spline2[stride2 * (int) degree2], 1, c1);
-  for (unsigned int i = 1; i <= q1 + q2; i++)
+  f64_convolve (q1, -stride1, &spline1[stride1 * (ssize_t) degree1],
+                q2, -stride2, &spline2[stride2 * (ssize_t) degree2], 1, c1);
+  for (size_t i = 1; i <= q1 + q2; i++)
     c1[i] -= DaDb[i - 1];
   c1[q1 + q2 + 1] = -DaDb[q1 + q2];
 
@@ -138,11 +139,11 @@ mul_f64_spower (unsigned int degree1, int stride1, const double *spline1,
 
 static SCM
 scm_mul_f64_spline (const char *who,
-                    void mul_f64_spline (unsigned int degree1,
-                                         int stride1, const double *spline1,
-                                         unsigned int degree2,
-                                         int stride2, const double *spline2,
-                                         int result_stride, double *result),
+                    void mul_f64_spline (size_t degree1,
+                                         ssize_t stride1, const double *spline1,
+                                         size_t degree2,
+                                         ssize_t stride2, const double *spline2,
+                                         ssize_t result_stride, double *result),
                     SCM spline1, SCM spline2)
 {
   scm_t_array_handle handle1;
@@ -155,8 +156,8 @@ scm_mul_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle1);
   assert_c_rank_1_or_2_array (who, spline1, &handle1);
 
-  unsigned int dim1;
-  int stride1;
+  size_t dim1;
+  ssize_t stride1;
   scm_array_handle_get_vector_dim_and_stride (who, spline1, &handle1,
                                               &dim1, &stride1);
   const double *_spline1 = scm_array_handle_f64_elements (&handle1);
@@ -165,17 +166,17 @@ scm_mul_f64_spline (const char *who,
   scm_dynwind_array_handle_release (&handle2);
   assert_c_rank_1_or_2_array (who, spline2, &handle2);
 
-  unsigned int dim2;
-  int stride2;
+  size_t dim2;
+  ssize_t stride2;
   scm_array_handle_get_vector_dim_and_stride (who, spline2, &handle2,
                                               &dim2, &stride2);
   const double *_spline2 = scm_array_handle_f64_elements (&handle2);
 
-  unsigned int dim = dim1 + dim2 - 1;
+  size_t dim = dim1 + dim2 - 1;
 
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
                                      scm_list_2 (scm_from_uint (1),
-                                                 scm_from_uint (dim)));
+                                                 scm_from_size_t (dim)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   double *_result = scm_array_handle_f64_writable_elements (&handle);
@@ -221,8 +222,8 @@ scm_mul_f64_spower (SCM spline1, SCM spline2)
 /*
 static SCM
 scm_subdiv_scm_spline (const char *who,
-                       void scm_c_subdiv_spline (unsigned int degree,
-                                                 int stride, const SCM *spline,
+                       void scm_c_subdiv_spline (size_t degree,
+                                                 ssize_t stride, const SCM *spline,
                                                  SCM t, SCM *a, SCM *b),
                        SCM vector, SCM t)
 {
@@ -236,8 +237,8 @@ scm_subdiv_scm_spline (const char *who,
   scm_dynwind_array_handle_release (&handle);
   assert_c_rank_1_or_2_array (who, vector, &handle);
 
-  unsigned int dim;
-  int stride;
+  size_t dim;
+  ssize_t stride;
   scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
                                               &dim, &stride);
   const SCM *spline = scm_array_handle_elements (&handle);
@@ -246,14 +247,14 @@ scm_subdiv_scm_spline (const char *who,
 
   values[0] = scm_make_array (SCM_UNSPECIFIED,
                               scm_list_2 (scm_from_uint (1),
-                                          scm_from_uint (dim)));
+                                          scm_from_size_t (dim)));
   scm_array_get_handle (values[0], &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
   SCM *a = scm_array_handle_writable_elements (&handle_a);
 
   values[1] = scm_make_array (SCM_UNSPECIFIED,
                               scm_list_2 (scm_from_uint (1),
-                                          scm_from_uint (dim)));
+                                          scm_from_size_t (dim)));
   scm_array_get_handle (values[1], &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
   SCM *b = scm_array_handle_writable_elements (&handle_b);

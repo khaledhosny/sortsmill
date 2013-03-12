@@ -32,30 +32,30 @@ extern "C"
 
 /* Multiplication of polynomials in monomial form. Guaranteed safe for
    in-place calculation. */
-void mul_f64_mono (unsigned int degree1, int stride1, const double *spline1,
-                   unsigned int degree2, int stride2, const double *spline2,
-                   int result_stride, double *result);
+void mul_f64_mono (size_t degree1, ssize_t stride1, const double *spline1,
+                   size_t degree2, ssize_t stride2, const double *spline2,
+                   ssize_t result_stride, double *result);
 SCM scm_mul_f64_mono (SCM vector, SCM t);
 
 /* Multiplication of polynomials in Bernstein form. Guaranteed safe
    for in-place calculation. */
-void mul_f64_bern (unsigned int degree1, int stride1, const double *spline1,
-                   unsigned int degree2, int stride2, const double *spline2,
-                   int result_stride, double *result);
+void mul_f64_bern (size_t degree1, ssize_t stride1, const double *spline1,
+                   size_t degree2, ssize_t stride2, const double *spline2,
+                   ssize_t result_stride, double *result);
 SCM scm_mul_f64_bern (SCM vector, SCM t);
 
 /* Multiplication of polynomials in scaled Bernstein form. Guaranteed
    safe for in-place calculation. */
-void mul_f64_sbern (unsigned int degree1, int stride1, const double *spline1,
-                    unsigned int degree2, int stride2, const double *spline2,
-                    int result_stride, double *result);
+void mul_f64_sbern (size_t degree1, ssize_t stride1, const double *spline1,
+                    size_t degree2, ssize_t stride2, const double *spline2,
+                    ssize_t result_stride, double *result);
 SCM scm_mul_f64_sbern (SCM vector, SCM t);
 
 /* Multiplication of polynomials in s-power form. Guaranteed safe for
    in-place calculation. */
-void mul_f64_spower (unsigned int degree1, int stride1, const double *spline1,
-                     unsigned int degree2, int stride2, const double *spline2,
-                     int result_stride, double *result);
+void mul_f64_spower (size_t degree1, ssize_t stride1, const double *spline1,
+                     size_t degree2, ssize_t stride2, const double *spline2,
+                     ssize_t result_stride, double *result);
 SCM scm_mul_f64_spower (SCM vector, SCM t);
 
 #if 0
