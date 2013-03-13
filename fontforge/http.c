@@ -56,6 +56,7 @@ int URLFromFile(char *url,FILE *from) {
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
 #include <errno.h>
 
 #include "ffthread.h"
