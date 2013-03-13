@@ -46,6 +46,29 @@ unsplit_f64_spower (size_t degree,
     *result = 0.5 * (*a0 + *a1);
 }
 
+VISIBLE void
+unsplit_scm_spower (size_t degree,
+                    ssize_t stride0, const SCM *a0,
+                    ssize_t stride1, const SCM *a1,
+                    ssize_t result_stride, SCM *result)
+{
+  SCM *result1 = &result[result_stride * (ssize_t) degree];
+
+  for (size_t i = 0; i < degree / 2; i++)
+    {
+      *result = *a0;
+      a0 += stride0;
+      result += result_stride;
+
+      *result1 = *a1;
+      a1 += stride1;
+      result1 -= result_stride;
+    }
+
+  if (degree % 2 == 0)
+    *result = scm_divide (scm_sum (*a0, *a1), scm_from_uint (2));
+}
+
 //-------------------------------------------------------------------------
 
 // This routine is used below in a couple of places.

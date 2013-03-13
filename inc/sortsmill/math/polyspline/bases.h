@@ -223,12 +223,18 @@ void mpq_coefficients_spower_to_spower (size_t degree,
 SCM scm_c_coefficients_spower_to_spower (size_t degree);
 SCM scm_coefficients_spower_to_spower (SCM degree);
 
-/* Construct an s-power spline from its symmetric halves, dropping
-   excess terms. */
+/* Construct an s-power spline from its symmetric halves, truncating
+   them if necessary to fit the specified degree. (Thus, thanks to the
+   properties of s-power splines, these routines can be used for
+   degree reduction.) */
 void unsplit_f64_spower (size_t degree,
                          ssize_t stride0, const double *a0,
                          ssize_t stride1, const double *a1,
                          ssize_t result_stride, double *result);
+void unsplit_scm_spower (size_t degree,
+                         ssize_t stride0, const SCM *a0,
+                         ssize_t stride1, const SCM *a1,
+                         ssize_t result_stride, SCM *result);
 
 #if 0
 {
