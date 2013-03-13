@@ -46,14 +46,14 @@
  */
 
 static void
-initialize_permutation (unsigned int n, size_t p[n])
+initialize_permutation (size_t n, size_t p[n])
 {
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     p[i] = i;
 }
 
 VISIBLE void
-mpq_linalg_LU_decomp (unsigned int n, mpq_t A[n][n], size_t p[n], int *signum)
+mpq_linalg_LU_decomp (size_t n, mpq_t A[n][n], size_t p[n], int *signum)
 {
   initialize_permutation (n, p);
   *signum = 1;
@@ -61,14 +61,14 @@ mpq_linalg_LU_decomp (unsigned int n, mpq_t A[n][n], size_t p[n], int *signum)
   mpq_t max, aij, aik, ajj, ajk, product;
   mpq_inits (max, aij, aik, ajj, ajk, product, NULL);
 
-  for (unsigned int j = 0; j < n - 1; j++)
+  for (size_t j = 0; j < n - 1; j++)
     {
       // Find maximum in the j-th column.
 
       mpq_abs (max, A[j][j]);
-      unsigned int i_pivot = j;
+      size_t i_pivot = j;
 
-      for (unsigned int i = j + 1; i < n; i++)
+      for (size_t i = j + 1; i < n; i++)
         {
           mpq_abs (aij, A[i][j]);
 
@@ -83,7 +83,7 @@ mpq_linalg_LU_decomp (unsigned int n, mpq_t A[n][n], size_t p[n], int *signum)
         {
           mpq_matrix_swap_rows (n, n, A, j, i_pivot);
 
-          unsigned int temp = p[i_pivot];
+          size_t temp = p[i_pivot];
           p[i_pivot] = p[j];
           p[j] = temp;
 
@@ -94,12 +94,12 @@ mpq_linalg_LU_decomp (unsigned int n, mpq_t A[n][n], size_t p[n], int *signum)
 
       if (mpq_sgn (ajj) != 0)
         {
-          for (unsigned int i = j + 1; i < n; i++)
+          for (size_t i = j + 1; i < n; i++)
             {
               mpq_div (aij, A[i][j], ajj);
               mpq_set (A[i][j], aij);
 
-              for (unsigned int k = j + 1; k < n; k++)
+              for (size_t k = j + 1; k < n; k++)
                 {
                   mpq_set (aik, A[i][k]);
                   mpq_set (ajk, A[j][k]);
@@ -114,7 +114,7 @@ mpq_linalg_LU_decomp (unsigned int n, mpq_t A[n][n], size_t p[n], int *signum)
 }
 
 VISIBLE void
-mpq_linalg_LU_decomp_fast_pivot (unsigned int n, mpq_t A[n][n], size_t p[n],
+mpq_linalg_LU_decomp_fast_pivot (size_t n, mpq_t A[n][n], size_t p[n],
                                  int *signum)
 {
   initialize_permutation (n, p);
@@ -123,14 +123,14 @@ mpq_linalg_LU_decomp_fast_pivot (unsigned int n, mpq_t A[n][n], size_t p[n],
   mpq_t aij, aik, ajj, ajk, product;
   mpq_inits (aij, aik, ajj, ajk, product, NULL);
 
-  for (unsigned int j = 0; j < n - 1; j++)
+  for (size_t j = 0; j < n - 1; j++)
     {
       // Take the first non-zero pivot.
 
       int sign = mpq_sgn (A[j][j]);
-      unsigned int i_pivot = j;
+      size_t i_pivot = j;
 
-      unsigned int i = j + 1;
+      size_t i = j + 1;
       while (sign == 0 && i < n)
         {
           sign = mpq_sgn (A[i][j]);
@@ -145,7 +145,7 @@ mpq_linalg_LU_decomp_fast_pivot (unsigned int n, mpq_t A[n][n], size_t p[n],
         {
           mpq_matrix_swap_rows (n, n, A, j, i_pivot);
 
-          unsigned int temp = p[i_pivot];
+          size_t temp = p[i_pivot];
           p[i_pivot] = p[j];
           p[j] = temp;
 
@@ -156,12 +156,12 @@ mpq_linalg_LU_decomp_fast_pivot (unsigned int n, mpq_t A[n][n], size_t p[n],
 
       if (mpq_sgn (ajj) != 0)
         {
-          for (unsigned int i = j + 1; i < n; i++)
+          for (size_t i = j + 1; i < n; i++)
             {
               mpq_div (aij, A[i][j], ajj);
               mpq_set (A[i][j], aij);
 
-              for (unsigned int k = j + 1; k < n; k++)
+              for (size_t k = j + 1; k < n; k++)
                 {
                   mpq_set (aik, A[i][k]);
                   mpq_set (ajk, A[j][k]);
@@ -176,7 +176,7 @@ mpq_linalg_LU_decomp_fast_pivot (unsigned int n, mpq_t A[n][n], size_t p[n],
 }
 
 VISIBLE void
-mpq_linalg_LU_solve (unsigned int n, mpq_t LU[n][n], size_t p[n],
+mpq_linalg_LU_solve (size_t n, mpq_t LU[n][n], size_t p[n],
                      mpq_t b[n], mpq_t x[n], bool *singular)
 {
   // Copy x <- b.
@@ -187,7 +187,7 @@ mpq_linalg_LU_solve (unsigned int n, mpq_t LU[n][n], size_t p[n],
 }
 
 static void
-permute_vector (unsigned int n, size_t p[n], mpq_t x[n])
+permute_vector (size_t n, size_t p[n], mpq_t x[n])
 {
   // Do a simple permutation by copying. Note that there is an
   // implementation of in-place permutation in the GSL sources, which
@@ -196,7 +196,7 @@ permute_vector (unsigned int n, size_t p[n], mpq_t x[n])
   mpq_t temp[n];
   mpq_vector_init (n, temp);
 
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     mpq_set (temp[i], x[p[i]]);
 
   mpq_matrix_memcpy (n, 1, (mpq_t (*)[1]) x, (mpq_t (*)[1]) temp);
@@ -205,7 +205,7 @@ permute_vector (unsigned int n, size_t p[n], mpq_t x[n])
 }
 
 VISIBLE void
-mpq_linalg_LU_svx (unsigned int n, mpq_t LU[n][n], size_t p[n], mpq_t x[n],
+mpq_linalg_LU_svx (size_t n, mpq_t LU[n][n], size_t p[n], mpq_t x[n],
                    bool *singular)
 {
   // Apply permutation to RHS.
@@ -221,7 +221,7 @@ mpq_linalg_LU_svx (unsigned int n, mpq_t LU[n][n], size_t p[n], mpq_t x[n],
 }
 
 VISIBLE void
-mpq_linalg_LU_invert (unsigned int n, mpq_t LU[n][n], size_t p[n],
+mpq_linalg_LU_invert (size_t n, mpq_t LU[n][n], size_t p[n],
                       mpq_t inverse[n][n], bool *singular)
 {
   mpq_t temp[n];
@@ -229,18 +229,18 @@ mpq_linalg_LU_invert (unsigned int n, mpq_t LU[n][n], size_t p[n],
 
   *singular = false;
 
-  unsigned int j = 0;
+  size_t j = 0;
   while (!*singular && j < n)
     {
       // temp = j-th column of inverse.
 
-      for (unsigned int i = 0; i < n; i++)
+      for (size_t i = 0; i < n; i++)
         mpq_set_si (temp[i], ((int) (i == j)), 1);
 
       mpq_linalg_LU_svx (n, LU, p, temp, singular);
 
       if (!*singular)
-        for (unsigned int i = 0; i < n; i++)
+        for (size_t i = 0; i < n; i++)
           mpq_set (inverse[i][j], temp[i]);
 
       j++;
@@ -250,20 +250,20 @@ mpq_linalg_LU_invert (unsigned int n, mpq_t LU[n][n], size_t p[n],
 }
 
 VISIBLE void
-mpq_linalg_LU_det (unsigned int n, mpq_t LU[n][n], int signum, mpq_t det)
+mpq_linalg_LU_det (size_t n, mpq_t LU[n][n], int signum, mpq_t det)
 {
   mpq_set_si (det, signum, 1);
 
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     mpq_mul (det, det, LU[i][i]);
 }
 
 VISIBLE int
-mpq_linalg_LU_sgndet (unsigned int n, mpq_t LU[n][n], int signum)
+mpq_linalg_LU_sgndet (size_t n, mpq_t LU[n][n], int signum)
 {
   int s = signum;
 
-  unsigned int i = 0;
+  size_t i = 0;
   while (s != 0 && i < n)
     {
       s *= mpq_sgn (LU[i][i]);

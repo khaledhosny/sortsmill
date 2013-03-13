@@ -22,7 +22,7 @@
 // Solve triangular linear systems by forward/back substitution.
 
 static void
-upper_triangle_no_trans (CBLAS_DIAG_t Diag, unsigned int n,
+upper_triangle_no_trans (CBLAS_DIAG_t Diag, size_t n,
                          _GMP_TYPE (_t) A[n][n], _GMP_TYPE (_t) x[n])
 {
   _GMP_TYPE (_t) product;
@@ -30,9 +30,9 @@ upper_triangle_no_trans (CBLAS_DIAG_t Diag, unsigned int n,
 
   if (Diag == CblasNonUnit)
     _GMP_TYPE (_div) (x[0], x[0], A[0][0]);
-  for (unsigned int i = 1; i < n; i++)
+  for (size_t i = 1; i < n; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         {
           _GMP_TYPE (_mul) (product, A[i][j], x[j]);
           _GMP_TYPE (_sub) (x[i], x[i], product);
@@ -45,21 +45,21 @@ upper_triangle_no_trans (CBLAS_DIAG_t Diag, unsigned int n,
 }
 
 static void
-upper_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n,
+upper_triangle_trans (CBLAS_DIAG_t Diag, size_t n,
                       _GMP_TYPE (_t) A[n][n], _GMP_TYPE (_t) x[n])
 {
   _GMP_TYPE (_t) product;
   _GMP_TYPE (_init) (product);
 
-  const unsigned int n1 = n - 1;
+  const size_t n1 = n - 1;
   if (Diag == CblasNonUnit)
     _GMP_TYPE (_div) (x[n1], x[n1], A[n1][n1]);
-  for (unsigned int ni = 1; ni < n; ni++)
+  for (size_t ni = 1; ni < n; ni++)
     {
-      const unsigned int i = n1 - ni;
-      for (unsigned int nj = 0; nj < ni; nj++)
+      const size_t i = n1 - ni;
+      for (size_t nj = 0; nj < ni; nj++)
         {
-          const unsigned int j = n1 - nj;
+          const size_t j = n1 - nj;
           _GMP_TYPE (_mul) (product, A[j][i], x[j]);
           _GMP_TYPE (_sub) (x[i], x[i], product);
         }
@@ -71,21 +71,21 @@ upper_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n,
 }
 
 static void
-lower_triangle_no_trans (CBLAS_DIAG_t Diag, unsigned int n,
+lower_triangle_no_trans (CBLAS_DIAG_t Diag, size_t n,
                          _GMP_TYPE (_t) A[n][n], _GMP_TYPE (_t) x[n])
 {
   _GMP_TYPE (_t) product;
   _GMP_TYPE (_init) (product);
 
-  const unsigned int n1 = n - 1;
+  const size_t n1 = n - 1;
   if (Diag == CblasNonUnit)
     _GMP_TYPE (_div) (x[n1], x[n1], A[n1][n1]);
-  for (unsigned int ni = 1; ni < n; ni++)
+  for (size_t ni = 1; ni < n; ni++)
     {
-      const unsigned int i = n1 - ni;
-      for (unsigned int nj = 0; nj < ni; nj++)
+      const size_t i = n1 - ni;
+      for (size_t nj = 0; nj < ni; nj++)
         {
-          const unsigned int j = n1 - nj;
+          const size_t j = n1 - nj;
           _GMP_TYPE (_mul) (product, A[i][j], x[j]);
           _GMP_TYPE (_sub) (x[i], x[i], product);
         }
@@ -97,7 +97,7 @@ lower_triangle_no_trans (CBLAS_DIAG_t Diag, unsigned int n,
 }
 
 static void
-lower_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n,
+lower_triangle_trans (CBLAS_DIAG_t Diag, size_t n,
                       _GMP_TYPE (_t) A[n][n], _GMP_TYPE (_t) x[n])
 {
   _GMP_TYPE (_t) product;
@@ -105,9 +105,9 @@ lower_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n,
 
   if (Diag == CblasNonUnit)
     _GMP_TYPE (_div) (x[0], x[0], A[0][0]);
-  for (unsigned int i = 1; i < n; i++)
+  for (size_t i = 1; i < n; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         {
           _GMP_TYPE (_mul) (product, A[j][i], x[j]);
           _GMP_TYPE (_sub) (x[i], x[i], product);
@@ -120,10 +120,10 @@ lower_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n,
 }
 
 static bool
-determinant_is_zero (unsigned int n, _GMP_TYPE (_t) A[n][n])
+determinant_is_zero (size_t n, _GMP_TYPE (_t) A[n][n])
 {
   bool is_zero = false;
-  unsigned int i = 0;
+  size_t i = 0;
   while (!is_zero && i < n)
     {
       is_zero = (_GMP_TYPE (_sgn) (A[i][i]) == 0);
@@ -134,7 +134,7 @@ determinant_is_zero (unsigned int n, _GMP_TYPE (_t) A[n][n])
 
 VISIBLE void
 _GMP_TYPE (_matrix_trsv) (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
-                          CBLAS_DIAG_t Diag, unsigned int n,
+                          CBLAS_DIAG_t Diag, size_t n,
                           _GMP_TYPE (_t) A[n][n], _GMP_TYPE (_t) x[n],
                           bool *singular)
 {

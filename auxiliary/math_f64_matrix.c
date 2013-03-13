@@ -24,20 +24,20 @@
 // vector). @var{Side} says whether the diagonal matrix is on the left
 // or the right side of the multiplication.
 VISIBLE void
-f64_matrix_mul_diagonal (CBLAS_SIDE_t Side, unsigned int m, unsigned int n,
+f64_matrix_mul_diagonal (CBLAS_SIDE_t Side, size_t m, size_t n,
                          double A[m][n], double x[(Side == CblasLeft) ? m : n])
 {
   assert (Side == CblasLeft || Side == CblasRight);
 
   if (Side == CblasLeft)
     // Scale the rows of A.
-    for (unsigned int i = 0; i < m; i++)
-      for (unsigned int j = 0; j < n; j++)
+    for (size_t i = 0; i < m; i++)
+      for (size_t j = 0; j < n; j++)
         A[i][j] *= x[i];
   else
     // Scale the columns of A.
-    for (unsigned int j = 0; j < n; j++)
-      for (unsigned int i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
+      for (size_t i = 0; i < m; i++)
         A[i][j] *= x[j];
 }
 

@@ -18,40 +18,40 @@
 #include <sortsmill/math/gmp_matrix.h>
 
 VISIBLE void
-_GMP_TYPE (_matrix_swap_rows) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_swap_rows) (size_t m, size_t n,
                                _GMP_TYPE (_t) A[m][n],
-                               unsigned int i, unsigned int j)
+                               size_t i, size_t j)
 {
   if (i != j)
-    for (unsigned int p = 0; p < n; p++)
+    for (size_t p = 0; p < n; p++)
       _GMP_TYPE (_swap) (A[i][p], A[j][p]);
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_swap_columns) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_swap_columns) (size_t m, size_t n,
                                   _GMP_TYPE (_t) A[m][n],
-                                  unsigned int i, unsigned int j)
+                                  size_t i, size_t j)
 {
   if (i != j)
-    for (unsigned int p = 0; p < m; p++)
+    for (size_t p = 0; p < m; p++)
       _GMP_TYPE (_swap) (A[p][i], A[p][j]);
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_swap_rowcol) (unsigned int m,
+_GMP_TYPE (_matrix_swap_rowcol) (size_t m,
                                  _GMP_TYPE (_t) A[m][m],
-                                 unsigned int i, unsigned int j)
+                                 size_t i, size_t j)
 {
-  for (unsigned int p = 0; p < m; p++)
+  for (size_t p = 0; p < m; p++)
     _GMP_TYPE (_swap) (A[i][p], A[p][j]);
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_transpose_memcpy) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_transpose_memcpy) (size_t m, size_t n,
                                       _GMP_TYPE (_t) result[n][m],
                                       _GMP_TYPE (_t) A[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       _GMP_TYPE (_set) (result[j][i], A[i][j]);
 }

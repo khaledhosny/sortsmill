@@ -19,16 +19,16 @@
 #include <sortsmill/math/gmp_constants.h>
 
 VISIBLE void
-_GMP_TYPE (_matrix_set_all) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_set_all) (size_t m, size_t n,
                              _GMP_TYPE (_t) A[m][n], const _GMP_TYPE (_t) x)
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       _GMP_TYPE (_set) (A[i][j], x);
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_set_zero) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_set_zero) (size_t m, size_t n,
                               _GMP_TYPE (_t) A[m][n])
 {
   const _GMP_TYPE2 (__, _struct) * zero = _GMP_TYPE (_zero) ();
@@ -36,12 +36,12 @@ _GMP_TYPE (_matrix_set_zero) (unsigned int m, unsigned int n,
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_set_identity) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_set_identity) (size_t m, size_t n,
                                   _GMP_TYPE (_t) A[m][n])
 {
   const _GMP_TYPE2 (__, _struct) * zero = _GMP_TYPE (_zero) ();
   const _GMP_TYPE2 (__, _struct) * one = _GMP_TYPE (_one) ();
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       _GMP_TYPE (_set) (A[i][j], ((i == j) ? one : zero));
 }

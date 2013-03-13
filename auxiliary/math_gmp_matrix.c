@@ -24,20 +24,20 @@ mpz_equal (const mpz_t a, const mpz_t b)
   return (mpz_cmp (a, b) == 0);
 }
 
-_GL_ATTRIBUTE_CONST static inline unsigned int
-_trans_row (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
+_GL_ATTRIBUTE_CONST static inline size_t
+_trans_row (CBLAS_TRANSPOSE_t trans, size_t i, size_t j)
 {
   return (trans == CblasNoTrans) ? i : j;
 }
 
-_GL_ATTRIBUTE_CONST static inline unsigned int
-_trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
+_GL_ATTRIBUTE_CONST static inline size_t
+_trans_col (CBLAS_TRANSPOSE_t trans, size_t i, size_t j)
 {
   return (trans == CblasNoTrans) ? j : i;
 }
 
 #undef _GMP_MATRIX
-#define _GMP_MATRIX(_m_ignored, n) _GMP_TYPE (_t) (*)[(unsigned int) (n)]
+#define _GMP_MATRIX(_m_ignored, n) _GMP_TYPE (_t) (*)[(size_t) (n)]
 
 #undef _GMP_TYPE_MPZ
 #undef _GMP_TYPE_MPQ

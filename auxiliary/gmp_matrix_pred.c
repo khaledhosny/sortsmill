@@ -21,11 +21,11 @@
 
 #define _FF_GMP_ELEMENTWISE_PRED(NAME, ELEMENT_PRED)            \
   bool                                                          \
-  NAME (unsigned int m, unsigned int n, _GMP_TYPE (_t) A[m][n]) \
+  NAME (size_t m, size_t n, _GMP_TYPE (_t) A[m][n])             \
   {                                                             \
     bool result = true;                                         \
-    for (unsigned int i = 0; i < m; i++)                        \
-      for (unsigned int j = 0; j < n; j++)                      \
+    for (size_t i = 0; i < m; i++)                              \
+      for (size_t j = 0; j < n; j++)                            \
         {                                                       \
           /* The following is coded purposely to make early  */ \
           /* exit necessary for correct results. Thus we can */ \
@@ -73,12 +73,12 @@ VISIBLE _FF_GMP_ELEMENTWISE_PRED (_GMP_TYPE (_matrix_isnonneg),
                                   _GMP_TYPE (_isnonneg));
 
 VISIBLE bool
-_GMP_TYPE (_matrix_equal) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_equal) (size_t m, size_t n,
                            _GMP_TYPE (_t) A[m][n], _GMP_TYPE (_t) B[m][n])
 {
   bool result = true;
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
         // The following is coded purposely to make early exit
         // necessary for correct results. Thus we can more easily

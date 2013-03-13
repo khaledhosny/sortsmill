@@ -35,7 +35,7 @@ extern "C"
 
 /* Multiply by a diagonal matrix that is represented by a vector. */
 void f64_matrix_mul_diagonal (CBLAS_SIDE_t Side,
-                              unsigned int m, unsigned int n,
+                              size_t m, size_t n,
                               double A[m][n],
                               double x[(Side == CblasLeft) ? m : n]);
 

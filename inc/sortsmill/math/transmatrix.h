@@ -24,6 +24,6 @@
   A[((T) == CblasNoTrans ? (I) : (J))][((T) == CblasNoTrans ? (J) : (I))]
 
 #define _FF_TRANSMATRIX_CAST(TYPE,T,I,J)                        \
-  (TYPE (*)[(unsigned int) ((T) == CblasNoTrans ? (J) : (I))])
+  (TYPE (*)[(size_t) ((T) == CblasNoTrans ? (J) : (I))])
 
 #endif /* _SORTSMILL_MATH_TRANSMATRIX_H */

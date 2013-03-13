@@ -19,27 +19,25 @@
 #include <xalloc.h>
 
 VISIBLE void
-_GMP_TYPE (_matrix_init) (unsigned int m, unsigned int n,
-                          _GMP_TYPE (_t) A[m][n])
+_GMP_TYPE (_matrix_init) (size_t m, size_t n, _GMP_TYPE (_t) A[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       _GMP_TYPE (_init) (A[i][j]);
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_clear) (unsigned int m, unsigned int n,
-                           _GMP_TYPE (_t) A[m][n])
+_GMP_TYPE (_matrix_clear) (size_t m, size_t n, _GMP_TYPE (_t) A[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       _GMP_TYPE (_clear) (A[i][j]);
 }
 
 typedef struct
 {
-  unsigned int m;
-  unsigned int n;
+  size_t m;
+  size_t n;
   void *elems;
 } _GMP_TYPE2 (_, _t_matrix_view);
 
@@ -50,13 +48,13 @@ _GMP_TYPE2 (scm_dynwind_, _matrix_unwind_handler) (void *p)
 {
   _GMP_TYPE2 (_, _t_matrix_view) * q = (_GMP_TYPE2 (_, _t_matrix_view) *) p;
   _GMP_TYPE (_matrix_clear)
-    (q->m, q->n, (_GMP_TYPE (_t) (*)[(unsigned int) q->n]) q->elems);
+    (q->m, q->n, (_GMP_TYPE (_t) (*)[(size_t) q->n]) q->elems);
   free (q);
 }
 
 //                                                          *INDENT-OFF*
 VISIBLE void
-_GMP_TYPE2 (scm_dynwind_, _matrix_clear) (unsigned int m, unsigned int n,
+_GMP_TYPE2 (scm_dynwind_, _matrix_clear) (size_t m, size_t n,
                                           _GMP_TYPE (_t) A[m][n])
 //                                                           *INDENT-ON*
 

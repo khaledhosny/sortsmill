@@ -19,41 +19,40 @@
 #include <assert.h>
 
 VISIBLE void
-scm_matrix_set_all (unsigned int m, unsigned int n, SCM A[m][n], SCM x)
+scm_matrix_set_all (size_t m, size_t n, SCM A[m][n], SCM x)
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       A[i][j] = x;
 }
 
 VISIBLE void
-scm_matrix_set_zero (unsigned int m, unsigned int n, SCM A[m][n])
+scm_matrix_set_zero (size_t m, size_t n, SCM A[m][n])
 {
   scm_matrix_set_all (m, n, A, scm_from_int (0));
 }
 
 VISIBLE void
-scm_matrix_set_identity (unsigned int m, unsigned int n, SCM A[m][n])
+scm_matrix_set_identity (size_t m, size_t n, SCM A[m][n])
 {
   SCM zero = scm_from_int (0);
   SCM one = scm_from_int (1);
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       A[i][j] = (i == j) ? one : zero;
 }
 
 VISIBLE void
-scm_matrix_memcpy (unsigned int m, unsigned int n,
-                   SCM result[m][n], SCM A[m][n])
+scm_matrix_memcpy (size_t m, size_t n, SCM result[m][n], SCM A[m][n])
 {
   memcpy (&result[0][0], &A[0][0], m * n * sizeof (SCM));
 }
 
 VISIBLE void
-scm_matrix_swap (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
+scm_matrix_swap (size_t m, size_t n, SCM A[m][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
         SCM x = A[i][j];
         A[i][j] = B[i][j];
@@ -62,11 +61,10 @@ scm_matrix_swap (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
 }
 
 VISIBLE void
-scm_matrix_swap_rows (unsigned int m, unsigned int n,
-                      SCM A[m][n], unsigned int i, unsigned int j)
+scm_matrix_swap_rows (size_t m, size_t n, SCM A[m][n], size_t i, size_t j)
 {
   if (i != j)
-    for (unsigned int p = 0; p < n; p++)
+    for (size_t p = 0; p < n; p++)
       {
         SCM x = A[i][p];
         A[i][p] = A[j][p];
@@ -75,11 +73,10 @@ scm_matrix_swap_rows (unsigned int m, unsigned int n,
 }
 
 VISIBLE void
-scm_matrix_swap_columns (unsigned int m, unsigned int n,
-                         SCM A[m][n], unsigned int i, unsigned int j)
+scm_matrix_swap_columns (size_t m, size_t n, SCM A[m][n], size_t i, size_t j)
 {
   if (i != j)
-    for (unsigned int p = 0; p < m; p++)
+    for (size_t p = 0; p < m; p++)
       {
         SCM x = A[p][i];
         A[p][i] = A[p][j];
@@ -88,10 +85,9 @@ scm_matrix_swap_columns (unsigned int m, unsigned int n,
 }
 
 VISIBLE void
-scm_matrix_swap_rowcol (unsigned int m,
-                        SCM A[m][m], unsigned int i, unsigned int j)
+scm_matrix_swap_rowcol (size_t m, SCM A[m][m], size_t i, size_t j)
 {
-  for (unsigned int p = 0; p < m; p++)
+  for (size_t p = 0; p < m; p++)
     {
       SCM x = A[i][p];
       A[i][p] = A[p][j];
@@ -100,76 +96,73 @@ scm_matrix_swap_rowcol (unsigned int m,
 }
 
 VISIBLE void
-scm_matrix_transpose_memcpy (unsigned int m, unsigned int n,
-                             SCM result[n][m], SCM A[m][n])
+scm_matrix_transpose_memcpy (size_t m, size_t n, SCM result[n][m], SCM A[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       result[j][i] = A[i][j];
 }
 
 VISIBLE void
-scm_matrix_scale (unsigned int m, unsigned int n, SCM A[m][n], SCM x)
+scm_matrix_scale (size_t m, size_t n, SCM A[m][n], SCM x)
 {
   if (scm_is_true (scm_zero_p (x)))
     scm_matrix_set_zero (m, n, A);
   else if (scm_is_false (scm_zero_p (scm_oneminus (x))))
-    for (unsigned int i = 0; i < m; i++)
-      for (unsigned int j = 0; j < n; j++)
+    for (size_t i = 0; i < m; i++)
+      for (size_t j = 0; j < n; j++)
         A[i][j] = scm_product (A[i][j], x);
 }
 
 //-------------------------------------------------------------------------
 
 VISIBLE void
-scm_matrix_mul_elements (unsigned int m, unsigned int n,
-                         SCM A[m][n], SCM B[m][n])
+scm_matrix_mul_elements (size_t m, size_t n, SCM A[m][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       A[i][j] = scm_product (A[i][j], B[i][j]);
 }
 
 VISIBLE void
-scm_matrix_div_elements (unsigned int m, unsigned int n,
-                         SCM A[m][n], SCM B[m][n])
+scm_matrix_div_elements (size_t m, size_t n, SCM A[m][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       A[i][j] = scm_divide (A[i][j], B[i][j]);
 }
 
 VISIBLE void
-scm_matrix_add (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
+scm_matrix_add (size_t m, size_t n, SCM A[m][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       A[i][j] = scm_sum (A[i][j], B[i][j]);
 }
 
 VISIBLE void
-scm_matrix_sub (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
+scm_matrix_sub (size_t m, size_t n, SCM A[m][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       A[i][j] = scm_difference (A[i][j], B[i][j]);
 }
 
 VISIBLE void
-scm_matrix_add_constant (unsigned int m, unsigned int n, SCM A[m][n], SCM x)
+scm_matrix_add_constant (size_t m, size_t n, SCM A[m][n], SCM x)
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       A[i][j] = scm_sum (A[i][j], x);
 }
 
 #define _FF_SCM_ELEMENTWISE_PRED(NAME, TRUTH, ELEMENT_PRED)     \
   bool                                                          \
-  NAME (unsigned int m, unsigned int n, SCM A[m][n])            \
+  NAME (size_t m, size_t n, SCM A[m][n])                        \
   {                                                             \
     bool result = true;                                         \
-    for (unsigned int i = 0; i < m; i++)                        \
-      for (unsigned int j = 0; j < n; j++)                      \
+    for (size_t i = 0; i < m; i++)                              \
+      for (size_t j = 0; j < n; j++)                            \
         {                                                       \
           /* The following is coded purposely to make early  */ \
           /* exit necessary for correct results. Thus we can */ \
@@ -193,11 +186,11 @@ VISIBLE _FF_SCM_ELEMENTWISE_PRED (scm_matrix_isnonneg, scm_is_false,
                                   scm_negative_p);
 
 VISIBLE bool
-scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
+scm_matrix_equal (size_t m, size_t n, SCM A[m][n], SCM B[m][n])
 {
   bool result = true;
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
         // The following is coded purposely to make early exit
         // necessary for correct results. Thus we can more easily
@@ -214,14 +207,14 @@ scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n])
 
 //-------------------------------------------------------------------------
 
-_GL_ATTRIBUTE_CONST static inline unsigned int
-_trans_row (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
+_GL_ATTRIBUTE_CONST static inline size_t
+_trans_row (CBLAS_TRANSPOSE_t trans, size_t i, size_t j)
 {
   return (trans == CblasNoTrans) ? i : j;
 }
 
-_GL_ATTRIBUTE_CONST static inline unsigned int
-_trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
+_GL_ATTRIBUTE_CONST static inline size_t
+_trans_col (CBLAS_TRANSPOSE_t trans, size_t i, size_t j)
 {
   return (trans == CblasNoTrans) ? j : i;
 }
@@ -233,19 +226,19 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 static inline void
 scm_matmul_alpha1_beta1 (CBLAS_TRANSPOSE_t TransA,
                          CBLAS_TRANSPOSE_t TransB,
-                         unsigned int m, unsigned int n, unsigned int k,
+                         size_t m, size_t n, size_t k,
                          SCM _FF_TRANSMATRIX (A, TransA, m, k),
                          SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM C[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
-        for (unsigned int p = 0; p < k; p++)
+        for (size_t p = 0; p < k; p++)
           {
-            const unsigned int rA = _trans_row (TransA, i, p);
-            const unsigned int cA = _trans_col (TransA, i, p);
-            const unsigned int rB = _trans_row (TransB, p, j);
-            const unsigned int cB = _trans_col (TransB, p, j);
+            const size_t rA = _trans_row (TransA, i, p);
+            const size_t cA = _trans_col (TransA, i, p);
+            const size_t rB = _trans_row (TransB, p, j);
+            const size_t cB = _trans_col (TransB, p, j);
             C[i][j] = scm_sum (C[i][j], scm_product (A[rA][cA], B[rB][cB]));
           }
       }
@@ -254,20 +247,20 @@ scm_matmul_alpha1_beta1 (CBLAS_TRANSPOSE_t TransA,
 static inline void
 scm_matmul_beta1 (CBLAS_TRANSPOSE_t TransA,
                   CBLAS_TRANSPOSE_t TransB,
-                  unsigned int m, unsigned int n, unsigned int k,
+                  size_t m, size_t n, size_t k,
                   const SCM alpha,
                   SCM _FF_TRANSMATRIX (A, TransA, m, k),
                   SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM C[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
-        for (unsigned int p = 0; p < k; p++)
+        for (size_t p = 0; p < k; p++)
           {
-            const unsigned int rA = _trans_row (TransA, i, p);
-            const unsigned int cA = _trans_col (TransA, i, p);
-            const unsigned int rB = _trans_row (TransB, p, j);
-            const unsigned int cB = _trans_col (TransB, p, j);
+            const size_t rA = _trans_row (TransA, i, p);
+            const size_t cA = _trans_col (TransA, i, p);
+            const size_t rB = _trans_row (TransB, p, j);
+            const size_t cB = _trans_col (TransB, p, j);
             C[i][j] = scm_sum (C[i][j],
                                scm_product (scm_product (A[rA][cA], B[rB][cB]),
                                             alpha));
@@ -278,7 +271,7 @@ scm_matmul_beta1 (CBLAS_TRANSPOSE_t TransA,
 VISIBLE void
 scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA,
                  CBLAS_TRANSPOSE_t TransB,
-                 unsigned int m, unsigned int n, unsigned int k,
+                 size_t m, size_t n, size_t k,
                  const SCM alpha,
                  SCM _FF_TRANSMATRIX (A, TransA, m, k),
                  SCM _FF_TRANSMATRIX (B, TransB, k, n),
@@ -304,16 +297,16 @@ scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA,
 
 static void
 scm_matrix_trmm_left_lower_notrans (CBLAS_DIAG_t Diag,
-                                    unsigned int m, unsigned int n,
+                                    size_t m, size_t n,
                                     SCM A[m][m], SCM B[m][n])
 {
-  for (unsigned int j = 0; j < n; j++)
-    for (unsigned int i = 0; i < m; i++)
+  for (size_t j = 0; j < n; j++)
+    for (size_t i = 0; i < m; i++)
       {
         SCM sum = B[m - i - 1][j];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[m - i - 1][m - i - 1]);
-        for (unsigned int q = 0; q < m - i - 1; q++)
+        for (size_t q = 0; q < m - i - 1; q++)
           sum = scm_sum (sum, scm_product (B[q][j], A[m - i - 1][q]));
         B[m - i - 1][j] = sum;
       }
@@ -321,16 +314,15 @@ scm_matrix_trmm_left_lower_notrans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_left_lower_trans (CBLAS_DIAG_t Diag,
-                                  unsigned int m, unsigned int n,
-                                  SCM A[m][m], SCM B[m][n])
+                                  size_t m, size_t n, SCM A[m][m], SCM B[m][n])
 {
-  for (unsigned int j = 0; j < n; j++)
-    for (unsigned int i = 0; i < m; i++)
+  for (size_t j = 0; j < n; j++)
+    for (size_t i = 0; i < m; i++)
       {
         SCM sum = B[i][j];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[i][i]);
-        for (unsigned int q = i + 1; q < m; q++)
+        for (size_t q = i + 1; q < m; q++)
           sum = scm_sum (sum, scm_product (B[q][j], A[q][i]));
         B[i][j] = sum;
       }
@@ -338,16 +330,16 @@ scm_matrix_trmm_left_lower_trans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_left_upper_notrans (CBLAS_DIAG_t Diag,
-                                    unsigned int m, unsigned int n,
+                                    size_t m, size_t n,
                                     SCM A[m][m], SCM B[m][n])
 {
-  for (unsigned int j = 0; j < n; j++)
-    for (unsigned int i = 0; i < m; i++)
+  for (size_t j = 0; j < n; j++)
+    for (size_t i = 0; i < m; i++)
       {
         SCM sum = B[i][j];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[i][i]);
-        for (unsigned int q = i + 1; q < m; q++)
+        for (size_t q = i + 1; q < m; q++)
           sum = scm_sum (sum, scm_product (B[q][j], A[i][q]));
         B[i][j] = sum;
       }
@@ -355,16 +347,15 @@ scm_matrix_trmm_left_upper_notrans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_left_upper_trans (CBLAS_DIAG_t Diag,
-                                  unsigned int m, unsigned int n,
-                                  SCM A[m][m], SCM B[m][n])
+                                  size_t m, size_t n, SCM A[m][m], SCM B[m][n])
 {
-  for (unsigned int j = 0; j < n; j++)
-    for (unsigned int i = 0; i < m; i++)
+  for (size_t j = 0; j < n; j++)
+    for (size_t i = 0; i < m; i++)
       {
         SCM sum = B[m - i - 1][j];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[m - i - 1][m - i - 1]);
-        for (unsigned int q = 0; q < m - i - 1; q++)
+        for (size_t q = 0; q < m - i - 1; q++)
           sum = scm_sum (sum, scm_product (B[q][j], A[q][m - i - 1]));
         B[m - i - 1][j] = sum;
       }
@@ -372,16 +363,16 @@ scm_matrix_trmm_left_upper_trans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_right_lower_notrans (CBLAS_DIAG_t Diag,
-                                     unsigned int m, unsigned int n,
+                                     size_t m, size_t n,
                                      SCM A[n][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
         SCM sum = B[i][j];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[j][j]);
-        for (unsigned int q = j + 1; q < n; q++)
+        for (size_t q = j + 1; q < n; q++)
           sum = scm_sum (sum, scm_product (B[i][q], A[q][j]));
         B[i][j] = sum;
       }
@@ -389,16 +380,15 @@ scm_matrix_trmm_right_lower_notrans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_right_lower_trans (CBLAS_DIAG_t Diag,
-                                   unsigned int m, unsigned int n,
-                                   SCM A[n][n], SCM B[m][n])
+                                   size_t m, size_t n, SCM A[n][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
         SCM sum = B[i][n - j - 1];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[n - j - 1][n - j - 1]);
-        for (unsigned int q = 0; q < n - j - 1; q++)
+        for (size_t q = 0; q < n - j - 1; q++)
           sum = scm_sum (sum, scm_product (B[i][q], A[n - j - 1][q]));
         B[i][n - j - 1] = sum;
       }
@@ -406,16 +396,16 @@ scm_matrix_trmm_right_lower_trans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_right_upper_notrans (CBLAS_DIAG_t Diag,
-                                     unsigned int m, unsigned int n,
+                                     size_t m, size_t n,
                                      SCM A[n][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
         SCM sum = B[i][n - j - 1];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[n - j - 1][n - j - 1]);
-        for (unsigned int q = 0; q < n - j - 1; q++)
+        for (size_t q = 0; q < n - j - 1; q++)
           sum = scm_sum (sum, scm_product (B[i][q], A[q][n - j - 1]));
         B[i][n - j - 1] = sum;
       }
@@ -423,16 +413,15 @@ scm_matrix_trmm_right_upper_notrans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_right_upper_trans (CBLAS_DIAG_t Diag,
-                                   unsigned int m, unsigned int n,
-                                   SCM A[n][n], SCM B[m][n])
+                                   size_t m, size_t n, SCM A[n][n], SCM B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       {
         SCM sum = B[i][j];
         if (Diag == CblasNonUnit)
           sum = scm_product (sum, A[j][j]);
-        for (unsigned int q = j + 1; q < n; q++)
+        for (size_t q = j + 1; q < n; q++)
           sum = scm_sum (sum, scm_product (B[i][q], A[j][q]));
         B[i][j] = sum;
       }
@@ -440,8 +429,7 @@ scm_matrix_trmm_right_upper_trans (CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_left_lower (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                            unsigned int m, unsigned int n,
-                            SCM A[m][m], SCM B[m][n])
+                            size_t m, size_t n, SCM A[m][m], SCM B[m][n])
 {
   if (TransA == CblasNoTrans)
     scm_matrix_trmm_left_lower_notrans (Diag, m, n, A, B);
@@ -451,8 +439,7 @@ scm_matrix_trmm_left_lower (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_left_upper (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                            unsigned int m, unsigned int n,
-                            SCM A[m][m], SCM B[m][n])
+                            size_t m, size_t n, SCM A[m][m], SCM B[m][n])
 {
   if (TransA == CblasNoTrans)
     scm_matrix_trmm_left_upper_notrans (Diag, m, n, A, B);
@@ -462,8 +449,7 @@ scm_matrix_trmm_left_upper (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_right_lower (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                             unsigned int m, unsigned int n,
-                             SCM A[n][n], SCM B[m][n])
+                             size_t m, size_t n, SCM A[n][n], SCM B[m][n])
 {
   if (TransA == CblasNoTrans)
     scm_matrix_trmm_right_lower_notrans (Diag, m, n, A, B);
@@ -473,8 +459,7 @@ scm_matrix_trmm_right_lower (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
 
 static void
 scm_matrix_trmm_right_upper (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                             unsigned int m, unsigned int n,
-                             SCM A[n][n], SCM B[m][n])
+                             size_t m, size_t n, SCM A[n][n], SCM B[m][n])
 {
   if (TransA == CblasNoTrans)
     scm_matrix_trmm_right_upper_notrans (Diag, m, n, A, B);
@@ -485,7 +470,7 @@ scm_matrix_trmm_right_upper (CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
 static void
 scm_matrix_trmm_left (CBLAS_UPLO_t Uplo,
                       CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                      unsigned int m, unsigned int n, SCM A[m][m], SCM B[m][n])
+                      size_t m, size_t n, SCM A[m][m], SCM B[m][n])
 {
   if (Uplo == CblasLower)
     scm_matrix_trmm_left_lower (TransA, Diag, m, n, A, B);
@@ -496,7 +481,7 @@ scm_matrix_trmm_left (CBLAS_UPLO_t Uplo,
 static void
 scm_matrix_trmm_right (CBLAS_UPLO_t Uplo,
                        CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                       unsigned int m, unsigned int n, SCM A[n][n], SCM B[m][n])
+                       size_t m, size_t n, SCM A[n][n], SCM B[m][n])
 {
   if (Uplo == CblasLower)
     scm_matrix_trmm_right_lower (TransA, Diag, m, n, A, B);
@@ -507,7 +492,7 @@ scm_matrix_trmm_right (CBLAS_UPLO_t Uplo,
 VISIBLE void
 scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                 unsigned int m, unsigned int n, SCM alpha,
+                 size_t m, size_t n, SCM alpha,
                  SCM
                  A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
                  SCM B[m][n])
@@ -538,14 +523,13 @@ scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
 // Solve triangular linear systems by forward/back substitution.
 
 static void
-upper_triangle_no_trans (CBLAS_DIAG_t Diag,
-                         unsigned int n, SCM A[n][n], SCM x[n])
+upper_triangle_no_trans (CBLAS_DIAG_t Diag, size_t n, SCM A[n][n], SCM x[n])
 {
   if (Diag == CblasNonUnit)
     x[0] = scm_divide (x[0], A[0][0]);
-  for (unsigned int i = 1; i < n; i++)
+  for (size_t i = 1; i < n; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         x[i] = scm_difference (x[i], scm_product (A[i][j], x[j]));
       if (Diag == CblasNonUnit)
         x[i] = scm_divide (x[i], A[i][i]);
@@ -553,17 +537,17 @@ upper_triangle_no_trans (CBLAS_DIAG_t Diag,
 }
 
 static void
-upper_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
+upper_triangle_trans (CBLAS_DIAG_t Diag, size_t n, SCM A[n][n], SCM x[n])
 {
-  const unsigned int n1 = n - 1;
+  const size_t n1 = n - 1;
   if (Diag == CblasNonUnit)
     x[n1] = scm_divide (x[n1], A[n1][n1]);
-  for (unsigned int ni = 1; ni < n; ni++)
+  for (size_t ni = 1; ni < n; ni++)
     {
-      const unsigned int i = n1 - ni;
-      for (unsigned int nj = 0; nj < ni; nj++)
+      const size_t i = n1 - ni;
+      for (size_t nj = 0; nj < ni; nj++)
         {
-          const unsigned int j = n1 - nj;
+          const size_t j = n1 - nj;
           x[i] = scm_difference (x[i], scm_product (A[j][i], x[j]));
         }
       if (Diag == CblasNonUnit)
@@ -572,18 +556,17 @@ upper_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
 }
 
 static void
-lower_triangle_no_trans (CBLAS_DIAG_t Diag,
-                         unsigned int n, SCM A[n][n], SCM x[n])
+lower_triangle_no_trans (CBLAS_DIAG_t Diag, size_t n, SCM A[n][n], SCM x[n])
 {
-  const unsigned int n1 = n - 1;
+  const size_t n1 = n - 1;
   if (Diag == CblasNonUnit)
     x[n1] = scm_divide (x[n1], A[n1][n1]);
-  for (unsigned int ni = 1; ni < n; ni++)
+  for (size_t ni = 1; ni < n; ni++)
     {
-      const unsigned int i = n1 - ni;
-      for (unsigned int nj = 0; nj < ni; nj++)
+      const size_t i = n1 - ni;
+      for (size_t nj = 0; nj < ni; nj++)
         {
-          const unsigned int j = n1 - nj;
+          const size_t j = n1 - nj;
           x[i] = scm_difference (x[i], scm_product (A[i][j], x[j]));
         }
       if (Diag == CblasNonUnit)
@@ -592,13 +575,13 @@ lower_triangle_no_trans (CBLAS_DIAG_t Diag,
 }
 
 static void
-lower_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
+lower_triangle_trans (CBLAS_DIAG_t Diag, size_t n, SCM A[n][n], SCM x[n])
 {
   if (Diag == CblasNonUnit)
     x[0] = scm_divide (x[0], A[0][0]);
-  for (unsigned int i = 1; i < n; i++)
+  for (size_t i = 1; i < n; i++)
     {
-      for (unsigned int j = 0; j < i; j++)
+      for (size_t j = 0; j < i; j++)
         x[i] = scm_difference (x[i], scm_product (A[j][i], x[j]));
       if (Diag == CblasNonUnit)
         x[i] = scm_divide (x[i], A[i][i]);
@@ -607,7 +590,7 @@ lower_triangle_trans (CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
 
 VISIBLE void
 scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
-                 CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n])
+                 CBLAS_DIAG_t Diag, size_t n, SCM A[n][n], SCM x[n])
 {
   assert (0 < n);
   assert (Uplo == CblasLower || Uplo == CblasUpper);
@@ -637,20 +620,20 @@ scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
 // vector). @var{Side} says whether the diagonal matrix is on the left
 // or the right side of the multiplication.
 VISIBLE void
-scm_matrix_mul_diagonal (CBLAS_SIDE_t Side, unsigned int m, unsigned int n,
+scm_matrix_mul_diagonal (CBLAS_SIDE_t Side, size_t m, size_t n,
                          SCM A[m][n], SCM x[(Side == CblasLeft) ? m : n])
 {
   assert (Side == CblasLeft || Side == CblasRight);
 
   if (Side == CblasLeft)
     // Scale the rows of A.
-    for (unsigned int i = 0; i < m; i++)
-      for (unsigned int j = 0; j < n; j++)
+    for (size_t i = 0; i < m; i++)
+      for (size_t j = 0; j < n; j++)
         A[i][j] = scm_product (A[i][j], x[i]);
   else
     // Scale the columns of A.
-    for (unsigned int j = 0; j < n; j++)
-      for (unsigned int i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
+      for (size_t i = 0; i < m; i++)
         A[i][j] = scm_product (A[i][j], x[j]);
 }
 

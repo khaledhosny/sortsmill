@@ -45,26 +45,26 @@
  */
 
 static void
-initialize_permutation (unsigned int n, size_t p[n])
+initialize_permutation (size_t n, size_t p[n])
 {
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     p[i] = i;
 }
 
 VISIBLE void
-scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], size_t p[n], int *signum)
+scm_linalg_LU_decomp (size_t n, SCM A[n][n], size_t p[n], int *signum)
 {
   initialize_permutation (n, p);
   *signum = 1;
 
-  for (unsigned int j = 0; j < n - 1; j++)
+  for (size_t j = 0; j < n - 1; j++)
     {
       // Find maximum in the j-th column.
 
       SCM max = scm_magnitude (A[j][j]);
-      unsigned int i_pivot = j;
+      size_t i_pivot = j;
 
-      for (unsigned int i = j + 1; i < n; i++)
+      for (size_t i = j + 1; i < n; i++)
         {
           SCM aij = scm_magnitude (A[i][j]);
 
@@ -79,7 +79,7 @@ scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], size_t p[n], int *signum)
         {
           scm_matrix_swap_rows (n, n, A, j, i_pivot);
 
-          unsigned int temp = p[i_pivot];
+          size_t temp = p[i_pivot];
           p[i_pivot] = p[j];
           p[j] = temp;
 
@@ -90,12 +90,12 @@ scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], size_t p[n], int *signum)
 
       if (scm_is_false (scm_zero_p (ajj)))
         {
-          for (unsigned int i = j + 1; i < n; i++)
+          for (size_t i = j + 1; i < n; i++)
             {
               SCM aij = scm_divide (A[i][j], ajj);
               A[i][j] = aij;
 
-              for (unsigned int k = j + 1; k < n; k++)
+              for (size_t k = j + 1; k < n; k++)
                 {
                   SCM aik = A[i][k];
                   SCM ajk = A[j][k];
@@ -107,8 +107,7 @@ scm_linalg_LU_decomp (unsigned int n, SCM A[n][n], size_t p[n], int *signum)
 }
 
 VISIBLE void
-scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], size_t p[n],
-                     SCM b[n], SCM x[n])
+scm_linalg_LU_solve (size_t n, SCM LU[n][n], size_t p[n], SCM b[n], SCM x[n])
 {
   // Copy x <- b.
   memcpy (&x[0], &b[0], n * sizeof (SCM));
@@ -118,20 +117,20 @@ scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], size_t p[n],
 }
 
 static void
-permute_vector (unsigned int n, size_t p[n], SCM x[n])
+permute_vector (size_t n, size_t p[n], SCM x[n])
 {
   // Do a simple permutation by copying. Note that there is an
   // implementation of in-place permutation in the GSL sources, which
   // could be adapted if desired.
 
   SCM temp[n];
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     temp[i] = x[p[i]];
   memcpy (x, temp, n * sizeof (SCM));
 }
 
 VISIBLE void
-scm_linalg_LU_svx (unsigned int n, SCM LU[n][n], size_t p[n], SCM x[n])
+scm_linalg_LU_svx (size_t n, SCM LU[n][n], size_t p[n], SCM x[n])
 {
   // Apply permutation to RHS.
   permute_vector (n, p, x);
@@ -144,7 +143,7 @@ scm_linalg_LU_svx (unsigned int n, SCM LU[n][n], size_t p[n], SCM x[n])
 }
 
 VISIBLE void
-scm_linalg_LU_refine (unsigned int n, SCM A[n][n], SCM LU[n][n],
+scm_linalg_LU_refine (size_t n, SCM A[n][n], SCM LU[n][n],
                       size_t p[n], SCM b[n], SCM x[n], SCM residual[n])
 {
   // Compute residual, residual = (A * x - b).
@@ -154,60 +153,59 @@ scm_linalg_LU_refine (unsigned int n, SCM A[n][n], SCM LU[n][n],
 
   // Find correction, delta = - (A^-1) * residual, and apply it.
   scm_linalg_LU_svx (n, LU, p, residual);
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     x[i] = scm_difference (x[i], residual[i]);
 }
 
 VISIBLE void
-scm_linalg_LU_invert (unsigned int n, SCM LU[n][n], size_t p[n],
-                      SCM inverse[n][n])
+scm_linalg_LU_invert (size_t n, SCM LU[n][n], size_t p[n], SCM inverse[n][n])
 {
   SCM temp[n];
 
-  for (unsigned int j = 0; j < n; j++)
+  for (size_t j = 0; j < n; j++)
     {
       // temp = j-th column of inverse.
 
-      for (unsigned int i = 0; i < n; i++)
+      for (size_t i = 0; i < n; i++)
         temp[i] = scm_from_int ((int) (i == j));
 
       scm_linalg_LU_svx (n, LU, p, temp);
 
-      for (unsigned int i = 0; i < n; i++)
+      for (size_t i = 0; i < n; i++)
         inverse[i][j] = temp[i];
     }
 }
 
 VISIBLE SCM
-scm_linalg_LU_det (unsigned int n, SCM LU[n][n], int signum)
+scm_linalg_LU_det (size_t n, SCM LU[n][n], int signum)
 {
   SCM det = scm_from_int (signum);
 
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     det = scm_product (det, LU[i][i]);
 
   return det;
 }
 
 VISIBLE SCM
-scm_linalg_LU_lndet (unsigned int n, SCM LU[n][n])
+scm_linalg_LU_lndet (size_t n, SCM LU[n][n])
 {
   SCM lndet = scm_from_int (0);
 
   SCM scm_log = scm_c_public_ref ("rnrs base", "log");
 
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     lndet = scm_sum (lndet, scm_call_1 (scm_log, scm_magnitude (LU[i][i])));
 
   return lndet;
 }
 
 VISIBLE int
-scm_linalg_LU_sgndet (unsigned int n, SCM LU[n][n], int signum)
+scm_linalg_LU_sgndet (size_t n, SCM LU[n][n], int signum)
 {
   int s = signum;
 
-  unsigned int i = 0;
+  size_t i = 0;
   while (s != 0 && i < n)
     {
       SCM u = LU[i][i];

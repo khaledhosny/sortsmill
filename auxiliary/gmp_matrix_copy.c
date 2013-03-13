@@ -18,19 +18,19 @@
 #include <sortsmill/math/gmp_matrix.h>
 
 VISIBLE void
-_GMP_TYPE (_matrix_memcpy) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_memcpy) (size_t m, size_t n,
                             _GMP_TYPE (_t) result[m][n], _GMP_TYPE (_t) A[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       _GMP_TYPE (_set) (result[i][j], A[i][j]);
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_swap) (unsigned int m, unsigned int n,
+_GMP_TYPE (_matrix_swap) (size_t m, size_t n,
                           _GMP_TYPE (_t) A[m][n], _GMP_TYPE (_t) B[m][n])
 {
-  for (unsigned int i = 0; i < m; i++)
-    for (unsigned int j = 0; j < n; j++)
+  for (size_t i = 0; i < m; i++)
+    for (size_t j = 0; j < n; j++)
       _GMP_TYPE (_swap) (A[i][j], B[i][j]);
 }

@@ -33,56 +33,49 @@ extern "C"
 
 #if _FF_C99_OR_GREATER
 
-void scm_matrix_set_all (unsigned int m, unsigned int n, SCM A[m][n], SCM x);
-void scm_matrix_set_zero (unsigned int m, unsigned int n, SCM A[m][n]);
-void scm_matrix_set_identity (unsigned int m, unsigned int n, SCM A[m][n]);
+void scm_matrix_set_all (size_t m, size_t n, SCM A[m][n], SCM x);
+void scm_matrix_set_zero (size_t m, size_t n, SCM A[m][n]);
+void scm_matrix_set_identity (size_t m, size_t n, SCM A[m][n]);
 
-void scm_matrix_memcpy (unsigned int m, unsigned int n,
-                        SCM result[m][n], SCM A[m][n]);
-void scm_matrix_swap (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
+void scm_matrix_memcpy (size_t m, size_t n, SCM result[m][n], SCM A[m][n]);
+void scm_matrix_swap (size_t m, size_t n, SCM A[m][n], SCM B[m][n]);
 
 /* Row and column swapping, in place. */
-void scm_matrix_swap_rows (unsigned int m, unsigned int n, SCM A[m][n],
-                           unsigned int i, unsigned int j);
-void scm_matrix_swap_columns (unsigned int m, unsigned int n, SCM A[m][n],
-                              unsigned int i, unsigned int j);
-void scm_matrix_swap_rowcol (unsigned int m, SCM A[m][m],
-                             unsigned int i, unsigned int j);
+void scm_matrix_swap_rows (size_t m, size_t n, SCM A[m][n], size_t i, size_t j);
+void scm_matrix_swap_columns (size_t m, size_t n, SCM A[m][n],
+                              size_t i, size_t j);
+void scm_matrix_swap_rowcol (size_t m, SCM A[m][m], size_t i, size_t j);
 
 /* Matrix transposition, not in place. */
-void scm_matrix_transpose_memcpy (unsigned int m, unsigned int n,
+void scm_matrix_transpose_memcpy (size_t m, size_t n,
                                   SCM result[n][m], SCM A[m][n]);
 
 /* Matrix scaling, in place. */
-void scm_matrix_scale (unsigned int m, unsigned int n, SCM A[m][n], SCM x);
+void scm_matrix_scale (size_t m, size_t n, SCM A[m][n], SCM x);
 
-void scm_matrix_mul_elements (unsigned int m, unsigned int n,
-                              SCM A[m][n], SCM B[m][n]);
-void scm_matrix_div_elements (unsigned int m, unsigned int n,
-                              SCM A[m][n], SCM B[m][n]);
+void scm_matrix_mul_elements (size_t m, size_t n, SCM A[m][n], SCM B[m][n]);
+void scm_matrix_div_elements (size_t m, size_t n, SCM A[m][n], SCM B[m][n]);
 
-void scm_matrix_add (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
-void scm_matrix_sub (unsigned int m, unsigned int n, SCM A[m][n], SCM B[m][n]);
-void scm_matrix_add_constant (unsigned int m, unsigned int n,
-                              SCM A[m][n], SCM x);
+void scm_matrix_add (size_t m, size_t n, SCM A[m][n], SCM B[m][n]);
+void scm_matrix_sub (size_t m, size_t n, SCM A[m][n], SCM B[m][n]);
+void scm_matrix_add_constant (size_t m, size_t n, SCM A[m][n], SCM x);
 
-bool scm_matrix_isnull (unsigned int m, unsigned int n, SCM A[m][n]);
-bool scm_matrix_ispos (unsigned int m, unsigned int n, SCM A[m][n]);
-bool scm_matrix_isneg (unsigned int m, unsigned int n, SCM A[m][n]);
-bool scm_matrix_isnonneg (unsigned int m, unsigned int n, SCM A[m][n]);
-bool scm_matrix_equal (unsigned int m, unsigned int n, SCM A[m][n],
-                       SCM B[m][n]);
+bool scm_matrix_isnull (size_t m, size_t n, SCM A[m][n]);
+bool scm_matrix_ispos (size_t m, size_t n, SCM A[m][n]);
+bool scm_matrix_isneg (size_t m, size_t n, SCM A[m][n]);
+bool scm_matrix_isnonneg (size_t m, size_t n, SCM A[m][n]);
+bool scm_matrix_equal (size_t m, size_t n, SCM A[m][n], SCM B[m][n]);
 
 /* Multiply by a diagonal matrix that is represented by a vector. */
 void scm_matrix_mul_diagonal (CBLAS_SIDE_t Side,
-                              unsigned int m, unsigned int n,
+                              size_t m, size_t n,
                               SCM A[m][n], SCM x[(Side == CblasLeft) ? m : n]);
 
 /* General matrix multiplication; based on BLAS Level 3 xGEMM.
    See http://en.wikipedia.org/wiki/General_Matrix_Multiply */
 void
 scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
-                 unsigned int m, unsigned int n, unsigned int k,
+                 size_t m, size_t n, size_t k,
                  SCM alpha,
                  SCM _FF_TRANSMATRIX (A, TransA, m, k),
                  SCM _FF_TRANSMATRIX (B, TransB, k, n), SCM beta, SCM C[m][n]);
@@ -91,29 +84,28 @@ scm_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
 void
 scm_matrix_trmm (CBLAS_SIDE_t Side, CBLAS_UPLO_t Uplo,
                  CBLAS_TRANSPOSE_t TransA, CBLAS_DIAG_t Diag,
-                 unsigned int m, unsigned int n, SCM alpha,
+                 size_t m, size_t n, SCM alpha,
                  SCM
                  A[(Side == CblasLeft) ? m : n][(Side == CblasLeft) ? m : n],
                  SCM B[m][n]);
 
 /* Solve triangular systems; based on BLAS Level 2 xTRSV. */
 void scm_matrix_trsv (CBLAS_UPLO_t Uplo, CBLAS_TRANSPOSE_t TransA,
-                      CBLAS_DIAG_t Diag, unsigned int n, SCM A[n][n], SCM x[n]);
+                      CBLAS_DIAG_t Diag, size_t n, SCM A[n][n], SCM x[n]);
 
 /* LU decomposition. The permutation vectors here are size_t arrays
    for compatibility with gsl_permutation. */
-void scm_linalg_LU_decomp (unsigned int n, SCM A[n][n],
-                           size_t p[n], int *signum);
-void scm_linalg_LU_solve (unsigned int n, SCM LU[n][n], size_t p[n],
+void scm_linalg_LU_decomp (size_t n, SCM A[n][n], size_t p[n], int *signum);
+void scm_linalg_LU_solve (size_t n, SCM LU[n][n], size_t p[n],
                           SCM b[n], SCM x[n]);
-void scm_linalg_LU_svx (unsigned int n, SCM LU[n][n], size_t p[n], SCM x[n]);
-void scm_linalg_LU_refine (unsigned int n, SCM A[n][n], SCM LU[n][n],
+void scm_linalg_LU_svx (size_t n, SCM LU[n][n], size_t p[n], SCM x[n]);
+void scm_linalg_LU_refine (size_t n, SCM A[n][n], SCM LU[n][n],
                            size_t p[n], SCM b[n], SCM x[n], SCM residual[n]);
-void scm_linalg_LU_invert (unsigned int n, SCM LU[n][n], size_t p[n],
+void scm_linalg_LU_invert (size_t n, SCM LU[n][n], size_t p[n],
                            SCM inverse[n][n]);
-SCM scm_linalg_LU_det (unsigned int n, SCM LU[n][n], int signum);
-SCM scm_linalg_LU_lndet (unsigned int n, SCM LU[n][n]);
-int scm_linalg_LU_sgndet (unsigned int n, SCM LU[n][n], int signum);
+SCM scm_linalg_LU_det (size_t n, SCM LU[n][n], int signum);
+SCM scm_linalg_LU_lndet (size_t n, SCM LU[n][n]);
+int scm_linalg_LU_sgndet (size_t n, SCM LU[n][n], int signum);
 
 #endif /* _FF_C99_OR_GREATER */
 
