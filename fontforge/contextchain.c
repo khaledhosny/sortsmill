@@ -3234,7 +3234,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
       ggcd[i][k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
       ggcd[i][k].gd.handle_controlevent = CCD_FromSelection;
       ggcd[i][k].data =
-        (void *) (intptr_t) CID_GlyphList + (0 * 100 + i * 20);
+        (void *) (intptr_t) (CID_GlyphList + (0 * 100 + i * 20));
       ggcd[i][k++].creator = GButtonCreate;
       subvarray[i][0] = &ggcd[i][k - 1];
 
