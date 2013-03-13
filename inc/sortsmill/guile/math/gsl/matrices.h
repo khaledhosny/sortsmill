@@ -59,38 +59,32 @@ SCM scm_gsl_matrix_to_f64matrix (const gsl_matrix *m, int low_index);
 #if _FF_C99_OR_GREATER
 
 void scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
-                                     unsigned int m, unsigned int n,
-                                     mpz_t A[m][n]);
+                                     size_t m, size_t n, mpz_t A[m][n]);
 void scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
-                                     unsigned int m, unsigned int n,
-                                     mpq_t A[m][n]);
+                                     size_t m, size_t n, mpq_t A[m][n]);
 void scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
-                                     unsigned int m, unsigned int n,
-                                     SCM A[m][n]);
+                                     size_t m, size_t n, SCM A[m][n]);
 
 void scm_array_handle_to_transposed_mpz_matrix (SCM array,
                                                 scm_t_array_handle *handlep,
-                                                unsigned int m, unsigned int n,
+                                                size_t m, size_t n,
                                                 mpz_t A[n][m]);
 void scm_array_handle_to_transposed_mpq_matrix (SCM array,
                                                 scm_t_array_handle *handlep,
-                                                unsigned int m, unsigned int n,
+                                                size_t m, size_t n,
                                                 mpq_t A[n][m]);
 void scm_array_handle_to_transposed_scm_matrix (SCM array,
                                                 scm_t_array_handle *handlep,
-                                                unsigned int m, unsigned int n,
+                                                size_t m, size_t n,
                                                 SCM A[n][m]);
 
-SCM scm_from_mpz_matrix (unsigned int m, unsigned int n, mpz_t A[m][n]);
-SCM scm_from_mpq_matrix (unsigned int m, unsigned int n, mpq_t A[m][n]);
-SCM scm_from_scm_matrix (unsigned int m, unsigned int n, SCM A[m][n]);
+SCM scm_from_mpz_matrix (size_t m, size_t n, mpz_t A[m][n]);
+SCM scm_from_mpq_matrix (size_t m, size_t n, mpq_t A[m][n]);
+SCM scm_from_scm_matrix (size_t m, size_t n, SCM A[m][n]);
 
-SCM scm_from_transposed_mpz_matrix (unsigned int m, unsigned int n,
-                                    mpz_t A[n][m]);
-SCM scm_from_transposed_mpq_matrix (unsigned int m, unsigned int n,
-                                    mpq_t A[n][m]);
-SCM scm_from_transposed_scm_matrix (unsigned int m, unsigned int n,
-                                    SCM A[n][m]);
+SCM scm_from_transposed_mpz_matrix (size_t m, size_t n, mpz_t A[n][m]);
+SCM scm_from_transposed_mpq_matrix (size_t m, size_t n, mpq_t A[n][m]);
+SCM scm_from_transposed_scm_matrix (size_t m, size_t n, SCM A[n][m]);
 
 #endif /* _FF_C99_OR_GREATER */
 
@@ -98,15 +92,15 @@ SCM scm_from_transposed_scm_matrix (unsigned int m, unsigned int n,
    row or column matrices as vectors. FIXME: Make the f64 counterpart
    accept them, too. */
 void scm_array_handle_to_mpz_vector (SCM array, scm_t_array_handle *handlep,
-                                     unsigned int n, mpz_t A[n]);
+                                     size_t n, mpz_t A[n]);
 void scm_array_handle_to_mpq_vector (SCM array, scm_t_array_handle *handlep,
-                                     unsigned int n, mpq_t A[n]);
+                                     size_t n, mpq_t A[n]);
 void scm_array_handle_to_scm_vector (SCM array, scm_t_array_handle *handlep,
-                                     unsigned int n, SCM A[n]);
+                                     size_t n, SCM A[n]);
 
-SCM scm_from_mpz_vector (unsigned int n, mpz_t v[n]);
-SCM scm_from_mpq_vector (unsigned int n, mpq_t v[n]);
-SCM scm_from_scm_vector (unsigned int n, SCM v[n]);
+SCM scm_from_mpz_vector (size_t n, mpz_t v[n]);
+SCM scm_from_mpq_vector (size_t n, mpq_t v[n]);
+SCM scm_from_scm_vector (size_t n, SCM v[n]);
 
 size_t scm_matrix_dim1 (scm_t_array_handle *handlep);
 size_t scm_matrix_dim2 (scm_t_array_handle *handlep);

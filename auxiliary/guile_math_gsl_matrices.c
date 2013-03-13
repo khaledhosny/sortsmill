@@ -470,50 +470,45 @@ assert_c_rank_1_or_2_array (const char *who, SCM array,
 
 static void
 scm_array_handle_illegal_to_mpz_matrix (scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        mpz_t A[m][n])
+                                        size_t m, size_t n, mpz_t A[m][n])
 {
   assert (false);
 }
 
 static void
 scm_array_handle_illegal_to_transposed_mpz_matrix (scm_t_array_handle *handlep,
-                                                   unsigned int m,
-                                                   unsigned int n,
-                                                   mpz_t A[n][m])
+                                                   size_t m,
+                                                   size_t n, mpz_t A[n][m])
 {
   assert (false);
 }
 
 static void
 scm_array_handle_illegal_to_mpq_matrix (scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        mpq_t A[m][n])
+                                        size_t m, size_t n, mpq_t A[m][n])
 {
   assert (false);
 }
 
 static void
 scm_array_handle_illegal_to_transposed_mpq_matrix (scm_t_array_handle *handlep,
-                                                   unsigned int m,
-                                                   unsigned int n,
-                                                   mpq_t A[n][m])
+                                                   size_t m,
+                                                   size_t n, mpq_t A[n][m])
 {
   assert (false);
 }
 
 static void
 scm_array_handle_illegal_to_scm_matrix (scm_t_array_handle *handlep,
-                                        unsigned int m, unsigned int n,
-                                        SCM A[m][n])
+                                        size_t m, size_t n, SCM A[m][n])
 {
   assert (false);
 }
 
 static void
 scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
-                                                   unsigned int m,
-                                                   unsigned int n, SCM A[n][m])
+                                                   size_t m,
+                                                   size_t n, SCM A[n][m])
 {
   assert (false);
 }
@@ -538,7 +533,7 @@ scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
                                                PICK)                    \
   void                                                                  \
   NAME (scm_t_array_handle *handlep,                                    \
-        unsigned int m, unsigned int n,                                 \
+        size_t m, size_t n,                                             \
         TYPE A[PICK (m, n)][PICK (n, m)])                               \
   {                                                                     \
     const size_t rank = scm_array_handle_rank (handlep);                \
@@ -547,15 +542,15 @@ scm_array_handle_illegal_to_transposed_scm_matrix (scm_t_array_handle *handlep,
     if (rank == 1)                                                      \
       {                                                                 \
         assert (m == 1);                                                \
-        for (unsigned int j = 0; j < n; j++)                            \
+        for (size_t j = 0; j < n; j++)                                  \
           {                                                             \
             SCM x = elems[j * dims[0].inc];                             \
             SCM_TO_TYPE (x, A[PICK (0, j)][PICK (j, 0)]);               \
           }                                                             \
       }                                                                 \
     else                                                                \
-      for (unsigned int i = 0; i < m; i++)                              \
-        for (unsigned int j = 0; j < n; j++)                            \
+      for (size_t i = 0; i < m; i++)                                    \
+        for (size_t j = 0; j < n; j++)                                  \
           {                                                             \
             SCM x = elems[i * dims[0].inc + j * dims[1].inc];           \
             SCM_TO_TYPE (x, A[PICK (i, j)][PICK (j, i)]);               \
@@ -588,7 +583,7 @@ static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
                                             ELEMENTS, ELEM_TYPE,        \
                                             SCM_FROM_ELEM, PICK, MULT)  \
   void                                                                  \
-  NAME (scm_t_array_handle *handlep, unsigned int m, unsigned int n,    \
+  NAME (scm_t_array_handle *handlep, size_t m, size_t n,                \
         TYPE A[PICK (m, n)][PICK (n, m)])                               \
   {                                                                     \
     const size_t rank = scm_array_handle_rank (handlep);                \
@@ -599,12 +594,12 @@ static _SCM_ARRAY_HANDLE_NONUNIFORM_TO_MATRIX
     const scm_t_array_dim *dims = scm_array_handle_dims (handlep);      \
     const ELEM_TYPE *elems = ELEMENTS (handlep);                        \
     if (rank == 1)                                                      \
-      for (unsigned int j = 0; j < n; j++)                              \
+      for (size_t j = 0; j < n; j++)                                    \
         SCM_TO_TYPE (SCM_FROM_ELEM (elems[MULT (j) * dims[0].inc]),     \
                      A[PICK (0, j)][PICK (j, 0)]);                      \
     else                                                                \
-      for (unsigned int i = 0; i < m; i++)                              \
-        for (unsigned int j = 0; j < n; j++)                            \
+      for (size_t i = 0; i < m; i++)                                    \
+        for (size_t j = 0; j < n; j++)                                  \
           SCM_TO_TYPE                                                   \
             (SCM_FROM_ELEM (elems[MULT (i) * dims[0].inc                \
                                   + MULT (j) * dims[1].inc]),           \
@@ -732,7 +727,7 @@ _SAHUTM_TRANSPOSED_SCM_COMPLEX (double, 64);
 
 #define _SCM_TO_MATRIX_FUNC_T(NAME, TYPE, PICK)         \
   typedef void NAME (scm_t_array_handle *handlep,       \
-                     unsigned int m, unsigned int n,    \
+                     size_t m, size_t n,                \
                      TYPE A[PICK (m, n)][PICK (n, m)]);
 
 _SCM_TO_MATRIX_FUNC_T (_scm_to_mpz_matrix_func_t, mpz_t, _PICK1);
@@ -858,7 +853,7 @@ static _scm_to_transposed_scm_matrix_func_t
 
 VISIBLE void
 scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
-                                unsigned int m, unsigned int n, mpz_t A[m][n])
+                                size_t m, size_t n, mpz_t A[m][n])
 {
   const char *who = "scm_array_handle_to_mpz_matrix";
 
@@ -874,8 +869,7 @@ scm_array_handle_to_mpz_matrix (SCM array, scm_t_array_handle *handlep,
 VISIBLE void
 scm_array_handle_to_transposed_mpz_matrix (SCM array,
                                            scm_t_array_handle *handlep,
-                                           unsigned int m, unsigned int n,
-                                           mpz_t A[n][m])
+                                           size_t m, size_t n, mpz_t A[n][m])
 {
   const char *who = "scm_array_handle_to_transposed_mpz_matrix";
 
@@ -890,7 +884,7 @@ scm_array_handle_to_transposed_mpz_matrix (SCM array,
 
 VISIBLE void
 scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
-                                unsigned int m, unsigned int n, mpq_t A[m][n])
+                                size_t m, size_t n, mpq_t A[m][n])
 {
   const char *who = "scm_array_handle_to_mpq_matrix";
 
@@ -906,8 +900,7 @@ scm_array_handle_to_mpq_matrix (SCM array, scm_t_array_handle *handlep,
 VISIBLE void
 scm_array_handle_to_transposed_mpq_matrix (SCM array,
                                            scm_t_array_handle *handlep,
-                                           unsigned int m, unsigned int n,
-                                           mpq_t A[n][m])
+                                           size_t m, size_t n, mpq_t A[n][m])
 {
   const char *who = "scm_array_handle_to_transposed_mpq_matrix";
 
@@ -922,7 +915,7 @@ scm_array_handle_to_transposed_mpq_matrix (SCM array,
 
 VISIBLE void
 scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
-                                unsigned int m, unsigned int n, SCM A[m][n])
+                                size_t m, size_t n, SCM A[m][n])
 {
   const char *who = "scm_array_handle_to_scm_matrix";
 
@@ -935,8 +928,7 @@ scm_array_handle_to_scm_matrix (SCM array, scm_t_array_handle *handlep,
 VISIBLE void
 scm_array_handle_to_transposed_scm_matrix (SCM array,
                                            scm_t_array_handle *handlep,
-                                           unsigned int m, unsigned int n,
-                                           SCM A[n][m])
+                                           size_t m, size_t n, SCM A[n][m])
 {
   const char *who = "scm_array_handle_to_transposed_scm_matrix";
 
@@ -951,7 +943,7 @@ scm_array_handle_to_transposed_scm_matrix (SCM array,
 #define _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR(NAME, TYPE, TO_MATRIX)        \
   void                                                                  \
   NAME (SCM array, scm_t_array_handle *handlep,                         \
-        unsigned int n, TYPE v[n])                                      \
+        size_t n, TYPE v[n])                                            \
   {                                                                     \
     assert_c_rank_1_or_2_array (#NAME, array, handlep);                 \
                                                                         \
@@ -985,7 +977,7 @@ VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_scm_vector, SCM,
 
 #define _SCM_FROM_TYPED_MATRIX(NAME, TYPE, SCM_FROM_TYPE, PICK)         \
   SCM                                                                   \
-  NAME (unsigned int m, unsigned int n,                                 \
+  NAME (size_t m, size_t n,                                             \
         TYPE A[PICK (m, n)][PICK (n, m)])                               \
   {                                                                     \
     scm_t_array_handle handle;                                          \
@@ -1003,8 +995,8 @@ VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_scm_vector, SCM,
                                                                         \
     const scm_t_array_dim *dims = scm_array_handle_dims (&handle);      \
     SCM *elems = scm_array_handle_writable_elements (&handle);          \
-    for (unsigned int i = 0; i < m; i++)                                \
-      for (unsigned int j = 0; j < n; j++)                              \
+    for (size_t i = 0; i < m; i++)                                      \
+      for (size_t j = 0; j < n; j++)                                    \
         elems[i * dims[0].inc + j * dims[1].inc] =                      \
           SCM_FROM_TYPE (A[PICK (i, j)][PICK (j, i)]);                  \
                                                                         \
@@ -1032,7 +1024,7 @@ VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_transposed_scm_matrix,
 
 #define _SCM_FROM_TYPED_VECTOR(NAME, TYPE, SCM_FROM_TYPE)               \
   SCM                                                                   \
-  NAME (unsigned int n, TYPE v[n])                                      \
+  NAME (size_t n, TYPE v[n])                                            \
   {                                                                     \
     scm_t_array_handle handle;                                          \
                                                                         \
@@ -1047,7 +1039,7 @@ VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_transposed_scm_matrix,
                                                                         \
     const scm_t_array_dim *dims = scm_array_handle_dims (&handle);      \
     SCM *elems = scm_array_handle_writable_elements (&handle);          \
-    for (unsigned int i = 0; i < n; i++)                                \
+    for (size_t i = 0; i < n; i++)                                      \
       elems[i * dims[0].inc] = SCM_FROM_TYPE (v[i]);                    \
                                                                         \
     scm_dynwind_end ();                                                 \
@@ -2298,8 +2290,8 @@ equal_non_conformable_message (void)
     const size_t m_B = _B.matrix.size1;                                 \
     const size_t n_B = _B.matrix.size2;                                 \
                                                                         \
-    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
-                                     A, B, m_A, n_A, m_B, n_B);         \
+    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who, \
+                                       A, B, m_A, n_A, m_B, n_B);       \
                                                                         \
     double result_buffer[m_A][n_A];                                     \
     gsl_matrix_view _result =                                           \
@@ -2360,8 +2352,8 @@ _FF_SCM_GSL_MATRIX_ELEMENTWISE_BINARY_OP (div_elements, gsl_matrix_div_elements,
     const size_t m_B = scm_matrix_dim1 (&handle_B);                     \
     const size_t n_B = scm_matrix_dim2 (&handle_B);                     \
                                                                         \
-    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
-                                     A, B, m_A, n_A, m_B, n_B);         \
+    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who, \
+                                       A, B, m_A, n_A, m_B, n_B);       \
                                                                         \
     mp##X##_t _A[m_A][n_A];                                             \
     mp##X##_matrix_init (m_A, n_A, _A);                                 \
@@ -2431,8 +2423,8 @@ _FF_SCM_GMP_MATRIX_ELEMENTWISE_BINARY_OP (q, div_elements,
     const size_t m_B = scm_matrix_dim1 (&handle_B);                     \
     const size_t n_B = scm_matrix_dim2 (&handle_B);                     \
                                                                         \
-    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
-                                     A, B, m_A, n_A, m_B, n_B);         \
+    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who, \
+                                       A, B, m_A, n_A, m_B, n_B);       \
                                                                         \
     SCM _A[m_A][n_A];                                                   \
     scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);        \
@@ -2610,8 +2602,8 @@ _FF_SCM_SCM_SINGLE_MATRIX_PREDICATE (isnonneg, scm_matrix_isnonneg);
     const size_t m_B = _B.matrix.size1;                                 \
     const size_t n_B = _B.matrix.size2;                                 \
                                                                         \
-    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
-                                     A, B, m_A, n_A, m_B, n_B);         \
+    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who, \
+                                       A, B, m_A, n_A, m_B, n_B);       \
                                                                         \
     const bool result = FUNC (&_A.matrix, &_B.matrix);                  \
                                                                         \
@@ -2707,8 +2699,8 @@ _FF_SCM_GMP_SAMESHAPE_MATRICES_PREDICATE (q, equal, mpq_matrix_equal,
     const size_t m_B = scm_matrix_dim1 (&handle_B);                     \
     const size_t n_B = scm_matrix_dim2 (&handle_B);                     \
                                                                         \
-    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who,   \
-                                     A, B, m_A, n_A, m_B, n_B);         \
+    assert_c_conformable_for_addition (NON_CONFORMABILITY_MESSAGE, who, \
+                                       A, B, m_A, n_A, m_B, n_B);       \
                                                                         \
     SCM _A[m_A][n_A];                                                   \
     scm_array_handle_to_scm_matrix (A, &handle_A, m_A, n_A, _A);        \
@@ -3253,7 +3245,7 @@ scm_gsl_mpq_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
 
   scm_array_handle_to_transposed_mpq_matrix (B, &handle_B, m_B, n_B, _Bt);
 
-  for (unsigned int i = 0; i < n_B; i++)
+  for (size_t i = 0; i < n_B; i++)
     {
       bool singular;
       mpq_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _Bt[i], &singular);
@@ -3349,7 +3341,7 @@ scm_gsl_scm_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
   SCM _Bt[n_B][m_B];
   scm_array_handle_to_transposed_scm_matrix (B, &handle_B, m_B, n_B, _Bt);
 
-  for (unsigned int i = 0; i < n_B; i++)
+  for (size_t i = 0; i < n_B; i++)
     scm_linalg_LU_svx (n, _LU, gsl_permutation_data (p), _Bt[i]);
 
   SCM solution = scm_from_transposed_scm_matrix (m_B, n_B, _Bt);
