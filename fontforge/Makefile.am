@@ -48,8 +48,7 @@ LIBADD = $(top_builddir)/auxiliary/libsortsmill_aux.la	\
 
 GUILIBADD =
 if HAVE_GUI
-GUILIBADD += $(top_builddir)/gdraw/libsortsmill_gdraw.la	\
-	$(XINPUT_LIBS) $(XKB_LIBS)
+GUILIBADD += $(top_builddir)/gdraw/libsortsmill_gdraw.la
 endif HAVE_GUI
 
 LDADD = $(LIBADD) $(GUILIBADD)
