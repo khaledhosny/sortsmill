@@ -62,6 +62,32 @@ compose_scm_mono (size_t degree_a, ssize_t stride_a, const SCM *a,
 }
 
 VISIBLE void
+compose_f64_bern (size_t degree_a, ssize_t stride_a, const double *a,
+                  size_t degree_b, ssize_t stride_b, const double *b,
+                  ssize_t stride_c, double *c)
+{
+  // Transform the problem to scaled Bernstein basis.
+
+  double _a[degree_a + 1];
+  double _b[degree_b + 1];
+  double _c[degree_a * degree_b + 1];
+
+  copy_f64_with_strides (1, _a, stride_a, a, degree_a + 1);
+  for (size_t i = 1; i < degree_a; i++)
+    _a[i] *= bincoef (degree_a, i);
+
+  copy_f64_with_strides (1, _b, stride_b, b, degree_b + 1);
+  for (size_t i = 1; i < degree_b; i++)
+    _b[i] *= bincoef (degree_b, i);
+
+  compose_f64_sbern (degree_a, 1, _a, degree_b, 1, _b, 1, _c);
+
+  for (size_t i = 1; i < degree_a * degree_b; i++)
+    _c[i] /= bincoef (degree_a * degree_b, i);
+  copy_f64_with_strides (stride_c, c, 1, _c, degree_a * degree_b + 1);
+}
+
+VISIBLE void
 compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
                    size_t degree_b, ssize_t stride_b, const double *b,
                    ssize_t stride_c, double *c)
@@ -294,6 +320,13 @@ scm_compose_f64_mono (SCM a, SCM b)
 }
 
 VISIBLE SCM
+scm_compose_f64_bern (SCM a, SCM b)
+{
+  return scm_compose_f64_spline ("scm_compose_f64_bern",
+                                 compose_f64_bern, a, b);
+}
+
+VISIBLE SCM
 scm_compose_f64_sbern (SCM a, SCM b)
 {
   return scm_compose_f64_spline ("scm_compose_f64_sbern",
@@ -379,7 +412,7 @@ init_math_polyspline_compose (void)
   scm_c_define_gsubr ("poly:compose-f64-mono", 2, 0, 0, scm_compose_f64_mono);
   scm_c_define_gsubr ("poly:compose-scm-mono", 2, 0, 0, scm_compose_scm_mono);
 
-  //scm_c_define_gsubr ("poly:compose-f64-bern", 2, 0, 0, scm_compose_f64_bern);
+  scm_c_define_gsubr ("poly:compose-f64-bern", 2, 0, 0, scm_compose_f64_bern);
   //scm_c_define_gsubr ("poly:compose-scm-bern", 2, 0, 0, scm_compose_scm_bern);
 
   scm_c_define_gsubr ("poly:compose-f64-sbern", 2, 0, 0, scm_compose_f64_sbern);
