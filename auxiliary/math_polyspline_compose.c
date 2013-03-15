@@ -66,7 +66,18 @@ compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
                    size_t degree_b, ssize_t stride_b, const double *b,
                    ssize_t stride_c, double *c)
 {
-  // Use a simple modified Horner scheme, with polynomial values.
+  // Use a simple modified Horner scheme, with polynomial values. The
+  // approach is to treat b as a ‘polynomial’ with coefficients
+  //
+  //    [1 − a(t)]ⁿ⋅b₀
+  //    [1 − a(t)]ⁿ⁻¹⋅b₁
+  //    [1 − a(t)]ⁿ⁻²⋅b₂
+  //    [1 − a(t)]ⁿ⁻³⋅b₃
+  //         ⋮
+  //    [1 − a(t)]⁰⋅bₙ
+  //
+  // and evaluate that ‘polynomial’ by Horner’s rule, using polynomial
+  // multiplication and polynomial addition.
   //
   // (De Casteljau’s algorithm also would work but is expensive.  The
   // Schumaker-Volk algorithm would require rational functions.)
