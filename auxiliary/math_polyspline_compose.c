@@ -62,74 +62,6 @@ compose_scm_mono (size_t degree_a, ssize_t stride_a, const SCM *a,
 }
 
 /*
-static void
-f64_convex (size_t degree_a, ssize_t stride_a, const double *a,
-            double b0, double b1, double *v)
-{
-  // This is written for internal use by compose_f64_spower. It
-  // computes
-  //
-  //    bₖ(t) = [1 − a(t)]⋅b⁰ₖ + a(t)⋅b¹ₖ
-  //
-  // taking into account that our representations of the constant
-  // polynomial ‘1’ in s-power basis look like the vectors
-  //
-  //    (1)
-  //    (1 0 1)
-  //    (1 0 0 1)
-  //    (1 0 0 0 1)
-  //         ⋮
-  //
-
-  double b0_a_minus_1[degree_a + 1];
-  copy_f64_with_strides (1, b0_a_minus_1, stride_a, a, degree_a + 1);
-  b0_a_minus_1[0] -= 1.0;
-  if (degree_a != 0)
-    b0_a_minus_1[degree_a] -= 1.0;
-  for (size_t i = 0; i <= degree_a; i++)
-    b0_a_minus_1[i] *= b0;
-
-  copy_f64_with_strides (1, v, stride_a, a, degree_a + 1);
-  for (size_t i = 0; i <= degree_a; i++)
-    v[i] *= b1;
-
-  sub_f64_splines (degree_a, 1, v, 1, b0_a_minus_1, 1, v);
-}
-*/
- /*
-    VISIBLE void
-    compose_f64_spower (size_t degree_a, ssize_t stride_a, const double *a,
-    size_t degree_b, ssize_t stride_b, const double *b,
-    ssize_t stride_c, double *c)
-    {
-    // 1 − a(t)
-    double one_minus_a[degree_a + 1];
-    one_minus_f64_spower (degree_a, stride_a, a, 1, one_minus_a);
-
-    // s(t) = [1 − a(t)]⋅a(t)
-    double s[2 * degree_a + 1];
-    mul_f64_spower (degree_a, 1, one_minus_a, degree_a, stride_a, a, 1, s);
-
-    double left[degree_a * degree_b + 1];
-    compose_f64_mono (2 * degree_a, 1, s, degree_b / 2, stride_b, b, 1, left);
-
-    double right[degree_a * degree_b + 1];
-    compose_f64_mono (2 * degree_a, 1, s,
-    degree_b / 2, -stride_b, &b[stride_b * (ssize_t) degree_b],
-    1, right);
-
-    ////////////////////////////////////////////////////////////////////////
-    const double t1 = 1.0 - t;
-    const double s = t * t1;
-
-    const double left = eval_f64_mono (degree / 2, stride, spline, s);
-    const double right =
-    eval_f64_mono (degree / 2, -stride, &spline[stride * (ssize_t) degree], s);
-
-    return (t1 * left + t * right);
-    }
-  */
-
 VISIBLE void
 compose_f64_spower (size_t degree_a, ssize_t stride_a, const double *a,
                     size_t degree_b, ssize_t stride_b, const double *b,
@@ -193,6 +125,188 @@ compose_f64_spower (size_t degree_a, ssize_t stride_a, const double *a,
     }
 
   copy_f64_with_strides (stride_c, c, 1, _c, degree_c + 1);
+}
+*/
+
+/*
+VISIBLE void
+compose_f64_spower (size_t degree_a, ssize_t stride_a, const double *a,
+                    size_t degree_b, ssize_t stride_b, const double *b,
+                    ssize_t stride_c, double *c)
+{
+  // Use Horner’s rule to compute
+  //
+  //    c(t) = b(a(t)) = b₀(t) + s(t)[b₁(t) + s(t)[b₂(t) + s(t)[b₃(t) + ⋯]]]
+  //
+  // where
+  //
+  //    s(t) = [1 − a(t)]⋅a(t)
+  //    bₖ(t) = [1 − a(t)]⋅b⁰ₖ + a(t)⋅b¹ₖ
+  //
+  // and (b⁰ₖ, b¹ₖ) are the symmetric coefficient pairs of b.
+  //
+
+  double one_minus_a[degree_a + 1];
+  one_minus_f64_spower (degree_a, stride_a, a, 1, one_minus_a);
+
+  double s[2 * degree_a + 1];
+  mul_f64_spower (degree_a, 1, one_minus_a, degree_a, stride_a, a, 1, s);
+
+  const size_t degree_c = degree_a * degree_b;
+  double _c[degree_c + 1];
+  size_t degree_so_far;
+  size_t i_left = degree_b / 2;
+  size_t i_right;
+  if (degree_a % 2 == 1)
+    {
+      i_right = i_left + 1;
+      weighted_add_f64_splines (degree_a,
+                                b[stride_b * (ssize_t) i_left],
+                                1, one_minus_a,
+                                b[stride_b * (ssize_t) i_right],
+                                stride_a, a, 1, _c);
+      degree_so_far = degree_a;
+    }
+  else
+    {
+      i_right = i_left;
+      _c[0] = b[stride_b * (ssize_t) i_left];
+      degree_so_far = 0;
+    }
+  for (size_t i = degree_a + 1; i <= degree_c; i++)
+    _c[i] = 0.0;
+
+  double bk[degree_c + 1];
+  for (size_t i = 1; i < degree_b / 2; i++)
+    {
+      mul_f64_spower (2 * degree_a, 1, s, degree_so_far, 1, _c, 1, _c);
+      degree_so_far += 2 * degree_a;
+      i_left--;
+      i_right++;
+      weighted_add_f64_splines (degree_a,
+                                b[stride_b * (ssize_t) i_left],
+                                1, one_minus_a,
+                                b[stride_b * (ssize_t) i_right],
+                                stride_a, a, 1, bk);
+      add_f64_spower (degree_so_far, 1, _c, degree_a, 1, bk, 1, c);
+    }
+
+  copy_f64_with_strides (stride_c, c, 1, _c, degree_c + 1);
+}
+*/
+
+static void
+compose_f64_spower_odd_degree (size_t degree_a,
+                               ssize_t stride_a, const double *a,
+                               size_t degree_b,
+                               ssize_t stride_b, const double *b,
+                               ssize_t stride_c, double *c)
+{
+  // Use Horner’s rule to compute
+  //
+  //    c(t) = b(a(t)) = b₀(t) + s(t)[b₁(t) + s(t)[b₂(t) + s(t)[b₃(t) + ⋯]]]
+  //
+  // where
+  //
+  //    s(t) = [1 − a(t)]⋅a(t)
+  //    bₖ(t) = [1 − a(t)]⋅b⁰ₖ + a(t)⋅b¹ₖ
+  //
+  // and (b⁰ₖ, b¹ₖ) are the symmetric coefficient pairs of b.
+  //
+
+  double one_minus_a[degree_a + 1];
+  one_minus_f64_spower (degree_a, stride_a, a, 1, one_minus_a);
+
+  double s[2 * degree_a + 1];
+  mul_f64_spower (degree_a, 1, one_minus_a, degree_a, stride_a, a, 1, s);
+
+  // qb = the degree of a symmetric half of b.
+  const size_t qb = degree_b / 2;
+
+  // degree_c = the degree of the result.
+  const size_t degree_c = degree_a * degree_b;
+
+  double _c[degree_c + 1];
+  weighted_add_f64_splines (degree_a,
+                            b[stride_b * (ssize_t) qb], 1, one_minus_a,
+                            b[stride_b * (ssize_t) (degree_b - qb)], stride_a,
+                            a, 1, _c);
+
+  double bk[degree_a + 1];
+  for (size_t k = 1; k <= qb; k++)
+    {
+      mul_f64_spower ((2 * k - 1) * degree_a, 1, _c, 2 * degree_a, 1, s, 1, _c);
+      weighted_add_f64_splines (degree_a,
+                                b[stride_b * (ssize_t) (qb - k)], 1,
+                                one_minus_a,
+                                b[stride_b * (ssize_t) (degree_b - qb + k)],
+                                stride_a, a, 1, bk);
+      add_f64_spower ((2 * k + 1) * degree_a, 1, _c, degree_a, 1, bk, 1, _c);
+    }
+
+  copy_f64_with_strides (stride_c, c, 1, _c, degree_c + 1);
+}
+
+static void
+compose_f64_spower_even_degree (size_t degree_a,
+                                ssize_t stride_a, const double *a,
+                                size_t degree_b,
+                                ssize_t stride_b, const double *b,
+                                ssize_t stride_c, double *c)
+{
+  // Use Horner’s rule to compute
+  //
+  //    c(t) = b(a(t)) = b₀(t) + s(t)[b₁(t) + s(t)[b₂(t) + s(t)[b₃(t) + ⋯]]]
+  //
+  // where
+  //
+  //    s(t) = [1 − a(t)]⋅a(t)
+  //    bₖ(t) = [1 − a(t)]⋅b⁰ₖ + a(t)⋅b¹ₖ
+  //
+  // and (b⁰ₖ, b¹ₖ) are the symmetric coefficient pairs of b.
+  //
+
+  double one_minus_a[degree_a + 1];
+  one_minus_f64_spower (degree_a, stride_a, a, 1, one_minus_a);
+
+  double s[2 * degree_a + 1];
+  mul_f64_spower (degree_a, 1, one_minus_a, degree_a, stride_a, a, 1, s);
+
+  // qb = the degree of a symmetric half of b.
+  const size_t qb = degree_b / 2;
+
+  // degree_c = the degree of the result.
+  const size_t degree_c = degree_a * degree_b;
+
+  double _c[degree_c + 1];
+  _c[0] = b[stride_b * (ssize_t) qb];
+
+  double bk[degree_a + 1];
+  for (size_t k = 1; k <= qb; k++)
+    {
+      mul_f64_spower (2 * (k - 1) * degree_a, 1, _c, 2 * degree_a, 1, s, 1, _c);
+      weighted_add_f64_splines (degree_a,
+                                b[stride_b * (ssize_t) (qb - k)], 1,
+                                one_minus_a,
+                                b[stride_b * (ssize_t) (degree_b - qb + k)],
+                                stride_a, a, 1, bk);
+      add_f64_spower (2 * k * degree_a, 1, _c, degree_a, 1, bk, 1, _c);
+    }
+
+  copy_f64_with_strides (stride_c, c, 1, _c, degree_c + 1);
+}
+
+VISIBLE void
+compose_f64_spower (size_t degree_a, ssize_t stride_a, const double *a,
+                    size_t degree_b, ssize_t stride_b, const double *b,
+                    ssize_t stride_c, double *c)
+{
+  if (degree_b % 2 == 1)
+    compose_f64_spower_odd_degree (degree_a, stride_a, a,
+                                   degree_b, stride_b, b, stride_c, c);
+  else
+    compose_f64_spower_even_degree (degree_a, stride_a, a,
+                                    degree_b, stride_b, b, stride_c, c);
 }
 
 //-------------------------------------------------------------------------
