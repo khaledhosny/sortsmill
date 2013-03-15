@@ -19,6 +19,66 @@
 #include <sortsmill/guile.h>
 #include <sortsmill/copy_with_strides.h>
 
+//-------------------------------------------------------------------------
+
+VISIBLE void
+portion_f64_mono (size_t degree, ssize_t stride, const double *spline,
+                  double t1, double t2, ssize_t result_stride, double *result)
+{
+  // Compose with the polynomial p(t) = t₁ + (t₂ − t₁)t.
+
+  double p[2] = {
+    [0] = t1,
+    [1] = t2 - t1
+  };
+
+  compose_f64_mono (1, 1, p, degree, stride, spline, result_stride, result);
+}
+
+VISIBLE void
+portion_scm_mono (size_t degree, ssize_t stride, const SCM *spline,
+                  SCM t1, SCM t2, ssize_t result_stride, SCM *result)
+{
+  // Compose with the polynomial p(t) = t₁ + (t₂ − t₁)t.
+
+  SCM p[2] = {
+    [0] = t1,
+    [1] = scm_difference (t2, t1)
+  };
+
+  compose_scm_mono (1, 1, p, degree, stride, spline, result_stride, result);
+}
+
+VISIBLE void
+portion_f64_spower (size_t degree, ssize_t stride, const double *spline,
+                    double t1, double t2, ssize_t result_stride, double *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + t₂⋅t.
+
+  double p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_f64_spower (1, 1, p, degree, stride, spline, result_stride, result);
+}
+
+VISIBLE void
+portion_scm_spower (size_t degree, ssize_t stride, const SCM *spline,
+                    SCM t1, SCM t2, ssize_t result_stride, SCM *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + (t₂⋅t).
+
+  SCM p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_scm_spower (1, 1, p, degree, stride, spline, result_stride, result);
+}
+
+//-------------------------------------------------------------------------
+
 VISIBLE void
 subdiv_f64_bern (size_t degree, ssize_t stride, const double *spline,
                  double t,
@@ -258,6 +318,114 @@ scm_subdiv_scm_sbern (SCM vector, SCM t)
 
 //-------------------------------------------------------------------------
 
+static SCM
+scm_portion_f64_spline (const char *who,
+                        void portion (size_t degree, ssize_t stride,
+                                      const double *spline,
+                                      double t1, double t2,
+                                      ssize_t result_stride, double *result),
+                        SCM vector, SCM t1, SCM t2)
+{
+  scm_t_array_handle handle;
+  scm_t_array_handle handle1;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (vector, &handle);
+  scm_dynwind_array_handle_release (&handle);
+  assert_c_rank_1_or_2_array (who, vector, &handle);
+
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
+                                              &dim, &stride);
+  const double *spline = scm_array_handle_f64_elements (&handle);
+
+  SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
+                                     scm_list_1 (scm_list_2 (scm_from_uint (1),
+                                                             scm_from_size_t
+                                                             (dim))));
+  scm_array_get_handle (result, &handle1);
+  scm_dynwind_array_handle_release (&handle1);
+  double *_result = scm_array_handle_f64_writable_elements (&handle1);
+
+  portion (dim - 1, stride, spline, scm_to_double (t1), scm_to_double (t2),
+           1, _result);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_portion_f64_mono (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_f64_spline ("scm_portion_f64_mono",
+                                 portion_f64_mono, vector, t1, t2);
+}
+
+VISIBLE SCM
+scm_portion_f64_spower (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_f64_spline ("scm_portion_f64_spower",
+                                 portion_f64_spower, vector, t1, t2);
+}
+
+//-------------------------------------------------------------------------
+
+static SCM
+scm_portion_scm_spline (const char *who,
+                        void portion (size_t degree, ssize_t stride,
+                                      const SCM *spline,
+                                      SCM t1, SCM t2,
+                                      ssize_t result_stride, SCM *result),
+                        SCM vector, SCM t1, SCM t2)
+{
+  scm_t_array_handle handle;
+  scm_t_array_handle handle1;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (vector, &handle);
+  scm_dynwind_array_handle_release (&handle);
+  assert_c_rank_1_or_2_array (who, vector, &handle);
+
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, vector, &handle,
+                                              &dim, &stride);
+  const SCM *spline = scm_array_handle_elements (&handle);
+
+  SCM result = scm_make_array (SCM_UNSPECIFIED,
+                               scm_list_1 (scm_list_2 (scm_from_uint (1),
+                                                       scm_from_size_t (dim))));
+  scm_array_get_handle (result, &handle1);
+  scm_dynwind_array_handle_release (&handle1);
+  SCM *_result = scm_array_handle_writable_elements (&handle1);
+
+  portion (dim - 1, stride, spline, t1, t2, 1, _result);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_portion_scm_mono (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_scm_spline ("scm_portion_scm_mono",
+                                 portion_scm_mono, vector, t1, t2);
+}
+
+VISIBLE SCM
+scm_portion_scm_spower (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_scm_spline ("scm_portion_scm_spower",
+                                 portion_scm_spower, vector, t1, t2);
+}
+
+//-------------------------------------------------------------------------
+
 void init_math_polyspline_subdiv (void);
 
 VISIBLE void
@@ -274,6 +442,20 @@ init_math_polyspline_subdiv (void)
 
   //  scm_c_define_gsubr ("poly:subdiv-f64-spower", 2, 0, 0, scm_subdiv_f64_spower);
   //  scm_c_define_gsubr ("poly:subdiv-scm-spower", 2, 0, 0, scm_subdiv_scm_spower);
+
+  scm_c_define_gsubr ("poly:portion-f64-mono", 3, 0, 0, scm_portion_f64_mono);
+  scm_c_define_gsubr ("poly:portion-scm-mono", 3, 0, 0, scm_portion_scm_mono);
+
+  //  scm_c_define_gsubr ("poly:portion-f64-bern", 3, 0, 0, scm_portion_f64_bern);
+  //  scm_c_define_gsubr ("poly:portion-scm-bern", 3, 0, 0, scm_portion_scm_bern);
+
+  //  scm_c_define_gsubr ("poly:portion-f64-sbern", 3, 0, 0, scm_portion_f64_sbern);
+  //  scm_c_define_gsubr ("poly:portion-scm-sbern", 3, 0, 0, scm_portion_scm_sbern);
+
+  scm_c_define_gsubr ("poly:portion-f64-spower", 3, 0, 0,
+                      scm_portion_f64_spower);
+  scm_c_define_gsubr ("poly:portion-scm-spower", 3, 0, 0,
+                      scm_portion_scm_spower);
 }
 
 //-------------------------------------------------------------------------

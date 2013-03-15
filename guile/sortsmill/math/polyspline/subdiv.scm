@@ -27,7 +27,19 @@
           poly:subdiv-scm-sbern
 
           poly:subdiv-f64-spower
-          poly:subdiv-scm-spower)
+          poly:subdiv-scm-spower
+
+          poly:portion-f64-mono
+          poly:portion-scm-mono
+
+          poly:portion-f64-bern
+          poly:portion-scm-bern
+
+          poly:portion-f64-sbern
+          poly:portion-scm-sbern
+
+          poly:portion-f64-spower
+          poly:portion-scm-spower)
 
   (import (sortsmill dynlink)
           (rnrs)
