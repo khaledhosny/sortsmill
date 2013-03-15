@@ -18,6 +18,8 @@
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
 #include <sortsmill/copy_with_strides.h>
+#include <math.h>
+#include <assert.h>
 
 //-------------------------------------------------------------------------
 
@@ -209,6 +211,31 @@ subdiv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
   scm_dynwind_end ();
 }
 
+VISIBLE void
+subdiv_f64_spower (size_t degree, ssize_t stride, const double *spline,
+                   double t,
+                   ssize_t stride_a, double *a, ssize_t stride_b, double *b)
+{
+  // FIXME FIXME FIXME: PROVE that the algorithm leaves no gaps.
+
+  portion_f64_spower (degree, stride, spline, 0.0, t, stride_a, a);
+  portion_f64_spower (degree, stride, spline, t, 1.0, stride_b, b);
+
+  // Guarantee that there are no gaps. FIXME FIXME FIXME: PROVE that
+  // the algorithm leaves no gaps.
+  assert (!isfinite (a[degree]) || !isfinite (b[0]) || a[degree] == b[0]);
+}
+
+VISIBLE void
+subdiv_scm_spower (size_t degree, ssize_t stride, const SCM *spline,
+                   SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
+{
+  // FIXME FIXME FIXME: PROVE that the algorithm leaves no gaps.
+
+  portion_scm_spower (degree, stride, spline, scm_from_int (0), t, stride_a, a);
+  portion_scm_spower (degree, stride, spline, t, scm_from_int (1), stride_b, b);
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -282,6 +309,13 @@ scm_subdiv_f64_sbern (SCM vector, SCM t)
                                 subdiv_f64_sbern, vector, t);
 }
 
+VISIBLE SCM
+scm_subdiv_f64_spower (SCM vector, SCM t)
+{
+  return scm_subdiv_f64_spline ("scm_subdiv_f64_spower",
+                                subdiv_f64_spower, vector, t);
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -353,6 +387,13 @@ scm_subdiv_scm_sbern (SCM vector, SCM t)
 {
   return scm_subdiv_scm_spline ("scm_subdiv_scm_sbern",
                                 subdiv_scm_sbern, vector, t);
+}
+
+VISIBLE SCM
+scm_subdiv_scm_spower (SCM vector, SCM t)
+{
+  return scm_subdiv_scm_spline ("scm_subdiv_scm_spower",
+                                subdiv_scm_spower, vector, t);
 }
 
 //-------------------------------------------------------------------------
@@ -479,8 +520,8 @@ init_math_polyspline_subdiv (void)
   scm_c_define_gsubr ("poly:subdiv-f64-sbern", 2, 0, 0, scm_subdiv_f64_sbern);
   scm_c_define_gsubr ("poly:subdiv-scm-sbern", 2, 0, 0, scm_subdiv_scm_sbern);
 
-  //  scm_c_define_gsubr ("poly:subdiv-f64-spower", 2, 0, 0, scm_subdiv_f64_spower);
-  //  scm_c_define_gsubr ("poly:subdiv-scm-spower", 2, 0, 0, scm_subdiv_scm_spower);
+  scm_c_define_gsubr ("poly:subdiv-f64-spower", 2, 0, 0, scm_subdiv_f64_spower);
+  scm_c_define_gsubr ("poly:subdiv-scm-spower", 2, 0, 0, scm_subdiv_scm_spower);
 
   scm_c_define_gsubr ("poly:portion-f64-mono", 3, 0, 0, scm_portion_f64_mono);
   scm_c_define_gsubr ("poly:portion-scm-mono", 3, 0, 0, scm_portion_scm_mono);
