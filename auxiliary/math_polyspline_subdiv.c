@@ -80,10 +80,29 @@ portion_scm_spower (size_t degree, ssize_t stride, const SCM *spline,
 //-------------------------------------------------------------------------
 
 VISIBLE void
+subdiv_f64_mono (size_t degree, ssize_t stride, const double *spline,
+                 double t,
+                 ssize_t stride_a, double *a, ssize_t stride_b, double *b)
+{
+  portion_f64_mono (degree, stride, spline, 0.0, t, stride_a, a);
+  portion_f64_mono (degree, stride, spline, t, 1.0, stride_b, b);
+}
+
+VISIBLE void
+subdiv_scm_mono (size_t degree, ssize_t stride, const SCM *spline,
+                 SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
+{
+  portion_scm_mono (degree, stride, spline, scm_from_int (0), t, stride_a, a);
+  portion_scm_mono (degree, stride, spline, t, scm_from_int (1), stride_b, b);
+}
+
+VISIBLE void
 subdiv_f64_bern (size_t degree, ssize_t stride, const double *spline,
                  double t,
                  ssize_t stride_a, double *a, ssize_t stride_b, double *b)
 {
+  // De Casteljau’s algorithm.
+
   double _a[degree + 1];
   double _b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
@@ -100,9 +119,11 @@ subdiv_f64_bern (size_t degree, ssize_t stride, const double *spline,
 }
 
 VISIBLE void
-scm_c_subdiv_bern (size_t degree, ssize_t stride, const SCM *spline,
-                   SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
+subdiv_scm_bern (size_t degree, ssize_t stride, const SCM *spline,
+                 SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
 {
+  // De Casteljau’s algorithm.
+
   SCM _a[degree + 1];
   SCM _b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
@@ -124,6 +145,8 @@ subdiv_f64_sbern (size_t degree, ssize_t stride, const double *spline,
                   double t,
                   ssize_t stride_a, double *a, ssize_t stride_b, double *b)
 {
+  // De Casteljau’s algorithm.
+
   double _a[degree + 1];
   double _b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
@@ -147,9 +170,11 @@ subdiv_f64_sbern (size_t degree, ssize_t stride, const double *spline,
 
 
 VISIBLE void
-scm_c_subdiv_sbern (size_t degree, ssize_t stride, const SCM *spline,
-                    SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
+subdiv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
+                  SCM t, ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b)
 {
+  // De Casteljau’s algorithm.
+
   scm_dynwind_begin (0);
 
   mpz_t C;
@@ -237,6 +262,13 @@ scm_subdiv_f64_spline (const char *who,
 }
 
 VISIBLE SCM
+scm_subdiv_f64_mono (SCM vector, SCM t)
+{
+  return scm_subdiv_f64_spline ("scm_subdiv_f64_mono",
+                                subdiv_f64_mono, vector, t);
+}
+
+VISIBLE SCM
 scm_subdiv_f64_bern (SCM vector, SCM t)
 {
   return scm_subdiv_f64_spline ("scm_subdiv_f64_bern",
@@ -254,11 +286,11 @@ scm_subdiv_f64_sbern (SCM vector, SCM t)
 
 static SCM
 scm_subdiv_scm_spline (const char *who,
-                       void scm_c_subdiv_spline (size_t degree,
-                                                 ssize_t stride,
-                                                 const SCM *spline, SCM t,
-                                                 ssize_t stride_a, SCM *a,
-                                                 ssize_t stride_b, SCM *b),
+                       void subdiv_scm_spline (size_t degree,
+                                               ssize_t stride,
+                                               const SCM *spline, SCM t,
+                                               ssize_t stride_a, SCM *a,
+                                               ssize_t stride_b, SCM *b),
                        SCM vector, SCM t)
 {
   scm_t_array_handle handle;
@@ -295,7 +327,7 @@ scm_subdiv_scm_spline (const char *who,
   scm_dynwind_array_handle_release (&handle_b);
   SCM *b = scm_array_handle_writable_elements (&handle_b);
 
-  scm_c_subdiv_spline (dim - 1, stride, spline, t, 1, a, 1, b);
+  subdiv_scm_spline (dim - 1, stride, spline, t, 1, a, 1, b);
 
   scm_dynwind_end ();
 
@@ -303,17 +335,24 @@ scm_subdiv_scm_spline (const char *who,
 }
 
 VISIBLE SCM
+scm_subdiv_scm_mono (SCM vector, SCM t)
+{
+  return scm_subdiv_scm_spline ("scm_subdiv_scm_mono",
+                                subdiv_scm_mono, vector, t);
+}
+
+VISIBLE SCM
 scm_subdiv_scm_bern (SCM vector, SCM t)
 {
   return scm_subdiv_scm_spline ("scm_subdiv_scm_bern",
-                                scm_c_subdiv_bern, vector, t);
+                                subdiv_scm_bern, vector, t);
 }
 
 VISIBLE SCM
 scm_subdiv_scm_sbern (SCM vector, SCM t)
 {
   return scm_subdiv_scm_spline ("scm_subdiv_scm_sbern",
-                                scm_c_subdiv_sbern, vector, t);
+                                subdiv_scm_sbern, vector, t);
 }
 
 //-------------------------------------------------------------------------
@@ -431,8 +470,8 @@ void init_math_polyspline_subdiv (void);
 VISIBLE void
 init_math_polyspline_subdiv (void)
 {
-  //  scm_c_define_gsubr ("poly:subdiv-f64-mono", 2, 0, 0, scm_subdiv_f64_mono);
-  //  scm_c_define_gsubr ("poly:subdiv-scm-mono", 2, 0, 0, scm_subdiv_scm_mono);
+  scm_c_define_gsubr ("poly:subdiv-f64-mono", 2, 0, 0, scm_subdiv_f64_mono);
+  scm_c_define_gsubr ("poly:subdiv-scm-mono", 2, 0, 0, scm_subdiv_scm_mono);
 
   scm_c_define_gsubr ("poly:subdiv-f64-bern", 2, 0, 0, scm_subdiv_f64_bern);
   scm_c_define_gsubr ("poly:subdiv-scm-bern", 2, 0, 0, scm_subdiv_scm_bern);

@@ -35,9 +35,9 @@ extern "C"
 void subdiv_f64_mono (size_t degree, ssize_t stride, const double *spline,
                       double t,
                       ssize_t stride_a, double *a, ssize_t stride_b, double *b);
-void scm_c_subdiv_mono (size_t degree, ssize_t stride, const SCM *spline,
-                        SCM t,
-                        ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
+void subdiv_scm_mono (size_t degree, ssize_t stride, const SCM *spline,
+                      SCM t,
+                      ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
 SCM scm_subdiv_f64_mono (SCM vector, SCM t);
 SCM scm_subdiv_scm_mono (SCM vector, SCM t);
 
@@ -46,9 +46,9 @@ SCM scm_subdiv_scm_mono (SCM vector, SCM t);
 void subdiv_f64_bern (size_t degree, ssize_t stride, const double *spline,
                       double t,
                       ssize_t stride_a, double *a, ssize_t stride_b, double *b);
-void scm_c_subdiv_bern (size_t degree, ssize_t stride, const SCM *spline,
-                        SCM t,
-                        ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
+void subdiv_scm_bern (size_t degree, ssize_t stride, const SCM *spline,
+                      SCM t,
+                      ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
 SCM scm_subdiv_f64_bern (SCM vector, SCM t);
 SCM scm_subdiv_scm_bern (SCM vector, SCM t);
 
@@ -58,9 +58,9 @@ void subdiv_f64_sbern (size_t degree, ssize_t stride, const double *spline,
                        double t,
                        ssize_t stride_a, double *a,
                        ssize_t stride_b, double *b);
-void scm_c_subdiv_sbern (size_t degree, ssize_t stride, const SCM *spline,
-                         SCM t,
-                         ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
+void subdiv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
+                       SCM t,
+                       ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
 SCM scm_subdiv_f64_sbern (SCM vector, SCM t);
 SCM scm_subdiv_scm_sbern (SCM vector, SCM t);
 
@@ -70,9 +70,9 @@ void subdiv_f64_spower (size_t degree, ssize_t stride, const double *spline,
                         double t,
                         ssize_t stride_a, double *a,
                         ssize_t stride_b, double *b);
-void scm_c_subdiv_spower (size_t degree, ssize_t stride, const SCM *spline,
-                          SCM t,
-                          ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
+void subdiv_scm_spower (size_t degree, ssize_t stride, const SCM *spline,
+                        SCM t,
+                        ssize_t stride_a, SCM *a, ssize_t stride_b, SCM *b);
 SCM scm_subdiv_f64_spower (SCM vector, SCM t);
 SCM scm_subdiv_scm_spower (SCM vector, SCM t);
 
