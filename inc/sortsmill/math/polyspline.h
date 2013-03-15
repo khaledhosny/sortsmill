@@ -22,6 +22,8 @@
    negative strides in the routines included below. */
 #include <sortsmill/math/polyspline/add.h>
 #include <sortsmill/math/polyspline/bases.h>
+#include <sortsmill/math/polyspline/compose.h>
+#include <sortsmill/math/polyspline/elev.h>
 #include <sortsmill/math/polyspline/eval.h>
 #include <sortsmill/math/polyspline/mul.h>
 #include <sortsmill/math/polyspline/subdiv.h>

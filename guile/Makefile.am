@@ -522,6 +522,18 @@ DIST_SCM_FILES += sortsmill/math/polyspline/bases.scm
 GO_FILES += sortsmill/math/polyspline/bases.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/bases.scm
 
+# (sortsmill math polyspline compose)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/compose.scm
+GO_FILES += sortsmill/math/polyspline/compose.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/compose.scm
+
+# (sortsmill math polyspline elev)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/elev.scm
+GO_FILES += sortsmill/math/polyspline/elev.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/elev.scm
+
 # (sortsmill math polyspline eval)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/eval.scm

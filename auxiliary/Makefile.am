@@ -100,6 +100,8 @@ dist_libsortsmill_aux_la_SOURCES += copy_with_strides.c
 # conjuction with phasing out or reworking the stuff above.
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_add.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_bases.c
+dist_libsortsmill_aux_la_SOURCES += math_polyspline_compose.c
+dist_libsortsmill_aux_la_SOURCES += math_polyspline_elev.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_eval.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_mul.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_subdiv.c

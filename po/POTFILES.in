@@ -8,6 +8,7 @@ auxiliary/guile_math_gsl_matrices.c
 auxiliary/guile_math_gsl_permutations.c
 auxiliary/guile_python.c
 auxiliary/math_polyspline_add.c
+auxiliary/math_polyspline_elev.c
 fontforge/alignment.c
 fontforge/anchorsaway.c
 fontforge/autotrace.c

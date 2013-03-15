@@ -18,7 +18,6 @@
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
 #include <sortsmill/copy_with_strides.h>
-#include <assert.h>
 
 //-------------------------------------------------------------------------
 

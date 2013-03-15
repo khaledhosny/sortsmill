@@ -223,6 +223,30 @@ void mpq_coefficients_spower_to_spower (size_t degree,
 SCM scm_c_coefficients_spower_to_spower (size_t degree);
 SCM scm_coefficients_spower_to_spower (SCM degree);
 
+/* Construct the polynomial that is equal to the constant one. */
+void one_f64_mono (size_t degree, ssize_t stride, double *one);
+void one_scm_mono (size_t degree, ssize_t stride, SCM *one);
+void one_f64_bern (size_t degree, ssize_t stride, double *one);
+void one_scm_bern (size_t degree, ssize_t stride, SCM *one);
+void one_f64_sbern (size_t degree, ssize_t stride, double *one);
+void one_scm_sbern (size_t degree, ssize_t stride, SCM *one);
+void one_f64_spower (size_t degree, ssize_t stride, double *one);
+void one_scm_spower (size_t degree, ssize_t stride, SCM *one);
+
+/* Construct the polynomial that is equal to a constant number. */
+void constant_f64_mono (double w, size_t degree, ssize_t stride,
+                        double *spline);
+void constant_scm_mono (SCM w, size_t degree, ssize_t stride, SCM *spline);
+void constant_f64_bern (double w, size_t degree, ssize_t stride,
+                        double *spline);
+void constant_scm_bern (SCM w, size_t degree, ssize_t stride, SCM *spline);
+void constant_f64_sbern (double w, size_t degree, ssize_t stride,
+                         double *spline);
+void constant_scm_sbern (SCM w, size_t degree, ssize_t stride, SCM *spline);
+void constant_f64_spower (double w, size_t degree, ssize_t stride,
+                          double *spline);
+void constant_scm_spower (SCM w, size_t degree, ssize_t stride, SCM *spline);
+
 /* Construct an s-power spline from its symmetric halves, truncating
    them if necessary to fit the specified degree. (Thus, thanks to the
    properties of s-power splines, these routines can be used for

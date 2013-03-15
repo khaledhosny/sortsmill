@@ -71,6 +71,260 @@ unsplit_scm_spower (size_t degree,
 
 //-------------------------------------------------------------------------
 
+VISIBLE void
+constant_f64_mono (double w, size_t degree, ssize_t stride, double *constant)
+{
+  //    (w)
+  //    (w 0)
+  //    (w 0 0)
+  //    (w 0 0 0)
+  //    (w 0 0 0 0)
+  //         ⋮
+  //
+  constant[0] = w;
+  for (size_t i = 1; i <= degree; i++)
+    constant[stride * (ssize_t) i] = 0.0;
+}
+
+VISIBLE void
+constant_scm_mono (SCM w, size_t degree, ssize_t stride, SCM *constant)
+{
+  //    (w)
+  //    (w 0)
+  //    (w 0 0)
+  //    (w 0 0 0)
+  //    (w 0 0 0 0)
+  //         ⋮
+  //
+  constant[0] = w;
+  const SCM number_zero = scm_from_uint (0);
+  for (size_t i = 1; i <= degree; i++)
+    constant[stride * (ssize_t) i] = number_zero;
+}
+
+VISIBLE void
+constant_f64_bern (double w, size_t degree, ssize_t stride, double *constant)
+{
+  //    (w)
+  //    (w w)
+  //    (w w w)
+  //    (w w w w)
+  //    (w w w w w)
+  //         ⋮
+  //
+  for (size_t i = 0; i <= degree; i++)
+    constant[stride * (ssize_t) i] = w;
+}
+
+VISIBLE void
+constant_scm_bern (SCM w, size_t degree, ssize_t stride, SCM *constant)
+{
+  //    (w)
+  //    (w w)
+  //    (w w w)
+  //    (w w w w)
+  //    (w w w w w)
+  //         ⋮
+  //
+  for (size_t i = 0; i <= degree; i++)
+    constant[stride * (ssize_t) i] = w;
+}
+
+VISIBLE void
+constant_f64_sbern (double w, size_t degree, ssize_t stride, double *constant)
+{
+  // The coefficients of a(t) = 1 are the successive rows of Pascal’s
+  // triangle:
+  //
+  //    (w)
+  //    (w w)
+  //    (w 2w w)
+  //    (w 3w 3w w)
+  //    (w 4w 6w 4w w)
+  //    (w 5w 10w 10w 5w w)
+  //    (w 6w 15w 20w 15w 6w w)
+  //         ⋮
+  //
+  for (size_t i = 0; i <= degree; i++)
+    constant[stride * (ssize_t) i] = bincoef (degree, i) * w;
+}
+
+VISIBLE void
+constant_scm_sbern (SCM w, size_t degree, ssize_t stride, SCM *constant)
+{
+  // The coefficients of a(t) = 1 are the successive rows of Pascal’s
+  // triangle:
+  //
+  //    (w)
+  //    (w w)
+  //    (w 2w w)
+  //    (w 3w 3w w)
+  //    (w 4w 6w 4w w)
+  //    (w 5w 10w 10w 5w w)
+  //    (w 6w 15w 20w 15w 6w w)
+  //         ⋮
+  //
+  mpz_t C;
+  mpz_init (C);
+  for (size_t i = 0; i <= degree; i++)
+    {
+      mpz_bincoef_ui (C, degree, i);
+      constant[stride * (ssize_t) i] = scm_product (scm_from_mpz (C), w);
+    }
+  mpz_clear (C);
+}
+
+VISIBLE void
+constant_f64_spower (double w, size_t degree, ssize_t stride, double *constant)
+{
+  //    (w)
+  //    (w w)
+  //    (w 0 w)
+  //    (w 0 0 w)
+  //    (w 0 0 0 w)
+  //         ⋮
+  //
+  constant[0] = w;
+  for (size_t i = 1; i < degree; i++)
+    constant[stride * (ssize_t) i] = 0.0;
+  constant[stride * (ssize_t) degree] = w;
+}
+
+VISIBLE void
+constant_scm_spower (SCM w, size_t degree, ssize_t stride, SCM *constant)
+{
+  //    (w)
+  //    (w w)
+  //    (w 0 w)
+  //    (w 0 0 w)
+  //    (w 0 0 0 w)
+  //         ⋮
+  //
+  const SCM number_zero = scm_from_uint (0);
+  constant[0] = w;
+  for (size_t i = 1; i < degree; i++)
+    constant[stride * (ssize_t) i] = number_zero;
+  constant[stride * (ssize_t) degree] = w;
+}
+
+//-------------------------------------------------------------------------
+
+VISIBLE void
+one_f64_mono (size_t degree, ssize_t stride, double *one)
+{
+  //    (1)
+  //    (1 0)
+  //    (1 0 0)
+  //    (1 0 0 0)
+  //    (1 0 0 0 0)
+  //         ⋮
+  //
+  constant_f64_mono (1.0, degree, stride, one);
+}
+
+VISIBLE void
+one_scm_mono (size_t degree, ssize_t stride, SCM *one)
+{
+  //    (1)
+  //    (1 0)
+  //    (1 0 0)
+  //    (1 0 0 0)
+  //    (1 0 0 0 0)
+  //         ⋮
+  //
+  constant_scm_mono (scm_from_int (1), degree, stride, one);
+}
+
+VISIBLE void
+one_f64_bern (size_t degree, ssize_t stride, double *one)
+{
+  //    (1)
+  //    (1 1)
+  //    (1 1 1)
+  //    (1 1 1 1)
+  //    (1 1 1 1 1)
+  //         ⋮
+  //
+  constant_f64_bern (1.0, degree, stride, one);
+}
+
+VISIBLE void
+one_scm_bern (size_t degree, ssize_t stride, SCM *one)
+{
+  //    (1)
+  //    (1 1)
+  //    (1 1 1)
+  //    (1 1 1 1)
+  //    (1 1 1 1 1)
+  //         ⋮
+  //
+  constant_scm_bern (scm_from_int (1), degree, stride, one);
+}
+
+VISIBLE void
+one_f64_sbern (size_t degree, ssize_t stride, double *one)
+{
+  // The coefficients of a(t) = 1 are the successive rows of Pascal’s
+  // triangle:
+  //
+  //    (1)
+  //    (1 1)
+  //    (1 2 1)
+  //    (1 3 3 1)
+  //    (1 4 6 4 1)
+  //    (1 5 10 10 5 1)
+  //    (1 6 15 20 15 6 1)
+  //         ⋮
+  //
+  constant_f64_sbern (1.0, degree, stride, one);
+}
+
+VISIBLE void
+one_scm_sbern (size_t degree, ssize_t stride, SCM *one)
+{
+  // The coefficients of a(t) = 1 are the successive rows of Pascal’s
+  // triangle:
+  //
+  //    (1)
+  //    (1 1)
+  //    (1 2 1)
+  //    (1 3 3 1)
+  //    (1 4 6 4 1)
+  //    (1 5 10 10 5 1)
+  //    (1 6 15 20 15 6 1)
+  //         ⋮
+  //
+  constant_scm_sbern (scm_from_int (1), degree, stride, one);
+}
+
+VISIBLE void
+one_f64_spower (size_t degree, ssize_t stride, double *one)
+{
+  //    (1)
+  //    (1 1)
+  //    (1 0 1)
+  //    (1 0 0 1)
+  //    (1 0 0 0 1)
+  //         ⋮
+  //
+  constant_f64_spower (1.0, degree, stride, one);
+}
+
+VISIBLE void
+one_scm_spower (size_t degree, ssize_t stride, SCM *one)
+{
+  //    (1)
+  //    (1 1)
+  //    (1 0 1)
+  //    (1 0 0 1)
+  //    (1 0 0 0 1)
+  //         ⋮
+  //
+  constant_scm_spower (scm_from_int (1), degree, stride, one);
+}
+
+//-------------------------------------------------------------------------
+
 // This routine is used below in a couple of places.
 static void
 fill_spower_middle_row (size_t n, mpq_t T[n + 1][n + 1])

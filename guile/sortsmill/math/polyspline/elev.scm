@@ -15,31 +15,25 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill math polyspline add)
+(library (sortsmill math polyspline elev)
 
-  (export poly:add-f64-splines
-          poly:add-scm-splines
+  (export poly:elev-f64-mono
+          poly:elev-scm-mono
 
-          poly:sub-f64-splines
-          poly:sub-scm-splines
+          poly:elev-f64-bern
+          poly:elev-scm-bern
 
-          poly:add-f64-mono
-          poly:add-scm-mono
+          poly:elev-f64-sbern
+          poly:elev-scm-sbern
 
-          poly:add-f64-bern
-          poly:add-scm-bern
-
-          poly:add-f64-sbern
-          poly:add-scm-sbern
-
-          poly:add-f64-spower
-          poly:add-scm-spower)
+          poly:elev-f64-spower
+          poly:elev-scm-spower)
 
   (import (sortsmill dynlink)
           (rnrs)
           (except (guile) error))
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_math_polyspline_add"))
+    (sortsmill-dynlink-load-extension "init_math_polyspline_elev"))
 
   ) ;; end of library.
