@@ -88,6 +88,49 @@ compose_f64_bern (size_t degree_a, ssize_t stride_a, const double *a,
 }
 
 VISIBLE void
+compose_scm_bern (size_t degree_a, ssize_t stride_a, const SCM *a,
+                  size_t degree_b, ssize_t stride_b, const SCM *b,
+                  ssize_t stride_c, SCM *c)
+{
+  // Transform the problem to scaled Bernstein basis.
+
+  scm_dynwind_begin (0);
+
+  mpz_t C;
+  mpz_init (C);
+  scm_dynwind_mpz_clear (C);
+
+  SCM _a[degree_a + 1];
+  SCM _b[degree_b + 1];
+  SCM _c[degree_a * degree_b + 1];
+
+  copy_scm_with_strides (1, _a, stride_a, a, degree_a + 1);
+  for (size_t i = 1; i < degree_a; i++)
+    {
+      mpz_bincoef_ui (C, degree_a, i);
+      _a[i] = scm_product (_a[i], scm_from_mpz (C));
+    }
+
+  copy_scm_with_strides (1, _b, stride_b, b, degree_b + 1);
+  for (size_t i = 1; i < degree_b; i++)
+    {
+      mpz_bincoef_ui (C, degree_b, i);
+      _b[i] = scm_product (_b[i], scm_from_mpz (C));
+    }
+
+  compose_scm_sbern (degree_a, 1, _a, degree_b, 1, _b, 1, _c);
+
+  for (size_t i = 1; i < degree_a * degree_b; i++)
+    {
+      mpz_bincoef_ui (C, degree_a * degree_b, i);
+      _c[i] = scm_divide (_c[i], scm_from_mpz (C));
+    }
+  copy_scm_with_strides (stride_c, c, 1, _c, degree_a * degree_b + 1);
+
+  scm_dynwind_end ();
+}
+
+VISIBLE void
 compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
                    size_t degree_b, ssize_t stride_b, const double *b,
                    ssize_t stride_c, double *c)
@@ -140,6 +183,62 @@ compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
     }
 
   copy_f64_with_strides (stride_c, c, 1, accumulator, degree_c + 1);
+}
+
+VISIBLE void
+compose_scm_sbern (size_t degree_a, ssize_t stride_a, const SCM *a,
+                   size_t degree_b, ssize_t stride_b, const SCM *b,
+                   ssize_t stride_c, SCM *c)
+{
+  // Use a simple modified Horner scheme, with polynomial values. The
+  // approach is to treat b as a ‘polynomial’ with coefficients
+  //
+  //    [1 − a(t)]ⁿ⋅b₀
+  //    [1 − a(t)]ⁿ⁻¹⋅b₁
+  //    [1 − a(t)]ⁿ⁻²⋅b₂
+  //    [1 − a(t)]ⁿ⁻³⋅b₃
+  //         ⋮
+  //    [1 − a(t)]⁰⋅bₙ
+  //
+  // and evaluate that ‘polynomial’ by Horner’s rule, using polynomial
+  // multiplication and polynomial addition.
+  //
+  // (De Casteljau’s algorithm also would work but is expensive.  The
+  // Schumaker-Volk algorithm would require rational functions.)
+
+  SCM one_minus_a[degree_a + 1];
+  one_minus_scm_sbern (degree_a, stride_a, a, 1, one_minus_a);
+
+  // degree_c = the degree of the result.
+  const size_t degree_c = degree_a * degree_b;
+
+  SCM power_of_one_minus_a[degree_c + 1];
+  memcpy (power_of_one_minus_a, one_minus_a, (degree_a + 1) * sizeof (SCM));
+
+  SCM accumulator[degree_c + 1];
+  accumulator[0] = b[stride_b * (ssize_t) degree_b];
+
+  SCM new_term[degree_c + 1];
+  for (size_t i = 1; i <= degree_b; i++)
+    {
+      mul_scm_sbern ((i - 1) * degree_a, 1, accumulator,
+                     degree_a, stride_a, a, 1, accumulator);
+
+      memcpy (new_term, power_of_one_minus_a,
+              (i * degree_a + 1) * sizeof (SCM));
+      for (size_t j = 0; j <= i * degree_a; j++)
+        new_term[j] =
+          scm_product (new_term[j], b[stride_b * (ssize_t) (degree_b - i)]);
+
+      add_scm_splines (i * degree_a, 1, accumulator, 1, new_term, 1,
+                       accumulator);
+
+      if (i < degree_b)
+        mul_scm_sbern (i * degree_a, 1, power_of_one_minus_a,
+                       degree_a, 1, one_minus_a, 1, power_of_one_minus_a);
+    }
+
+  copy_scm_with_strides (stride_c, c, 1, accumulator, degree_c + 1);
 }
 
 static void
@@ -253,6 +352,120 @@ compose_f64_spower (size_t degree_a, ssize_t stride_a, const double *a,
                                    degree_b, stride_b, b, stride_c, c);
   else
     compose_f64_spower_even_degree (degree_a, stride_a, a,
+                                    degree_b, stride_b, b, stride_c, c);
+}
+
+static void
+compose_scm_spower_odd_degree (size_t degree_a,
+                               ssize_t stride_a, const SCM *a,
+                               size_t degree_b,
+                               ssize_t stride_b, const SCM *b,
+                               ssize_t stride_c, SCM *c)
+{
+  // Use Horner’s rule to compute
+  //
+  //    c(t) = b(a(t)) = b₀(t) + s(t)[b₁(t) + s(t)[b₂(t) + s(t)[b₃(t) + ⋯]]]
+  //
+  // where
+  //
+  //    s(t) = [1 − a(t)]⋅a(t)
+  //    bₖ(t) = [1 − a(t)]⋅b⁰ₖ + a(t)⋅b¹ₖ
+  //
+  // and (b⁰ₖ, b¹ₖ) are the symmetric coefficient pairs of b.
+  //
+
+  SCM one_minus_a[degree_a + 1];
+  one_minus_scm_spower (degree_a, stride_a, a, 1, one_minus_a);
+
+  SCM s[2 * degree_a + 1];
+  mul_scm_spower (degree_a, 1, one_minus_a, degree_a, stride_a, a, 1, s);
+
+  // qb = the degree of a symmetric half of b.
+  const size_t qb = degree_b / 2;
+
+  // degree_c = the degree of the result.
+  const size_t degree_c = degree_a * degree_b;
+
+  SCM _c[degree_c + 1];
+  weighted_add_scm_splines (degree_a,
+                            b[stride_b * (ssize_t) qb], 1, one_minus_a,
+                            b[stride_b * (ssize_t) (degree_b - qb)], stride_a,
+                            a, 1, _c);
+
+  SCM bk[degree_a + 1];
+  for (size_t k = 1; k <= qb; k++)
+    {
+      mul_scm_spower ((2 * k - 1) * degree_a, 1, _c, 2 * degree_a, 1, s, 1, _c);
+      weighted_add_scm_splines (degree_a,
+                                b[stride_b * (ssize_t) (qb - k)], 1,
+                                one_minus_a,
+                                b[stride_b * (ssize_t) (degree_b - qb + k)],
+                                stride_a, a, 1, bk);
+      add_scm_spower ((2 * k + 1) * degree_a, 1, _c, degree_a, 1, bk, 1, _c);
+    }
+
+  copy_scm_with_strides (stride_c, c, 1, _c, degree_c + 1);
+}
+
+static void
+compose_scm_spower_even_degree (size_t degree_a,
+                                ssize_t stride_a, const SCM *a,
+                                size_t degree_b,
+                                ssize_t stride_b, const SCM *b,
+                                ssize_t stride_c, SCM *c)
+{
+  // Use Horner’s rule to compute
+  //
+  //    c(t) = b(a(t)) = b₀(t) + s(t)[b₁(t) + s(t)[b₂(t) + s(t)[b₃(t) + ⋯]]]
+  //
+  // where
+  //
+  //    s(t) = [1 − a(t)]⋅a(t)
+  //    bₖ(t) = [1 − a(t)]⋅b⁰ₖ + a(t)⋅b¹ₖ
+  //
+  // and (b⁰ₖ, b¹ₖ) are the symmetric coefficient pairs of b.
+  //
+
+  SCM one_minus_a[degree_a + 1];
+  one_minus_scm_spower (degree_a, stride_a, a, 1, one_minus_a);
+
+  SCM s[2 * degree_a + 1];
+  mul_scm_spower (degree_a, 1, one_minus_a, degree_a, stride_a, a, 1, s);
+
+  // qb = the degree of a symmetric half of b.
+  const size_t qb = degree_b / 2;
+
+  // degree_c = the degree of the result.
+  const size_t degree_c = degree_a * degree_b;
+
+  SCM _c[degree_c + 1];
+  _c[0] = b[stride_b * (ssize_t) qb];
+
+  SCM bk[degree_a + 1];
+  for (size_t k = 1; k <= qb; k++)
+    {
+      mul_scm_spower (2 * (k - 1) * degree_a, 1, _c, 2 * degree_a, 1, s, 1, _c);
+      weighted_add_scm_splines (degree_a,
+                                b[stride_b * (ssize_t) (qb - k)], 1,
+                                one_minus_a,
+                                b[stride_b * (ssize_t) (degree_b - qb + k)],
+                                stride_a, a, 1, bk);
+      add_scm_spower (2 * k * degree_a, 1, _c, degree_a, 1, bk, 1, _c);
+    }
+
+  copy_scm_with_strides (stride_c, c, 1, _c, degree_c + 1);
+}
+
+VISIBLE void
+compose_scm_spower (size_t degree_a, ssize_t stride_a, const SCM *a,
+                    size_t degree_b, ssize_t stride_b, const SCM *b,
+                    ssize_t stride_c, SCM *c)
+{
+  if (degree_b % 2 == 1)
+    compose_scm_spower_odd_degree (degree_a, stride_a, a,
+                                   degree_b, stride_b, b, stride_c, c);
+  else
+    compose_scm_spower_even_degree (degree_a, stride_a, a,
                                     degree_b, stride_b, b, stride_c, c);
 }
 
@@ -402,6 +615,27 @@ scm_compose_scm_mono (SCM a, SCM b)
                                  compose_scm_mono, a, b);
 }
 
+VISIBLE SCM
+scm_compose_scm_bern (SCM a, SCM b)
+{
+  return scm_compose_scm_spline ("scm_compose_scm_bern",
+                                 compose_scm_bern, a, b);
+}
+
+VISIBLE SCM
+scm_compose_scm_sbern (SCM a, SCM b)
+{
+  return scm_compose_scm_spline ("scm_compose_scm_sbern",
+                                 compose_scm_sbern, a, b);
+}
+
+VISIBLE SCM
+scm_compose_scm_spower (SCM a, SCM b)
+{
+  return scm_compose_scm_spline ("scm_compose_scm_spower",
+                                 compose_scm_spower, a, b);
+}
+
 //-------------------------------------------------------------------------
 
 void init_math_polyspline_compose (void);
@@ -413,14 +647,15 @@ init_math_polyspline_compose (void)
   scm_c_define_gsubr ("poly:compose-scm-mono", 2, 0, 0, scm_compose_scm_mono);
 
   scm_c_define_gsubr ("poly:compose-f64-bern", 2, 0, 0, scm_compose_f64_bern);
-  //scm_c_define_gsubr ("poly:compose-scm-bern", 2, 0, 0, scm_compose_scm_bern);
+  scm_c_define_gsubr ("poly:compose-scm-bern", 2, 0, 0, scm_compose_scm_bern);
 
   scm_c_define_gsubr ("poly:compose-f64-sbern", 2, 0, 0, scm_compose_f64_sbern);
-  //scm_c_define_gsubr ("poly:compose-scm-sbern", 2, 0, 0, scm_compose_scm_sbern);
+  scm_c_define_gsubr ("poly:compose-scm-sbern", 2, 0, 0, scm_compose_scm_sbern);
 
   scm_c_define_gsubr ("poly:compose-f64-spower", 2, 0, 0,
                       scm_compose_f64_spower);
-  //scm_c_define_gsubr ("poly:compose-scm-spower", 2, 0, 0, scm_compose_scm_spower);
+  scm_c_define_gsubr ("poly:compose-scm-spower", 2, 0, 0,
+                      scm_compose_scm_spower);
 }
 
 //-------------------------------------------------------------------------
