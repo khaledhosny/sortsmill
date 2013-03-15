@@ -256,7 +256,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   // _do not_ want. Sorts Mill Editor should be usable as a plug-in or //
   // library.                                                          //
   ///////////////////////////////////////////////////////////////////////
-  
+
   // *INDENT-OFF*
   GOptionEntry entries[] = {
     { "version", 'V', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
@@ -393,6 +393,11 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
           file = g_file_new_for_commandline_arg (remaining_args[i]);
           path = g_file_get_path (file);
+
+          // if no local path, check if it has a URI scheme and assume it is
+          // valid URI
+          if (!path && g_uri_parse_scheme (remaining_args[i]) != NULL)
+            path = strdup (remaining_args[i]);
 
           if (GFileIsDir (path))
             {
