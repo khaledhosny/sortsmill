@@ -33,7 +33,19 @@
           poly:add-scm-sbern
 
           poly:add-f64-spower
-          poly:add-scm-spower)
+          poly:add-scm-spower
+
+          poly:sub-f64-mono
+          poly:sub-scm-mono
+
+          poly:sub-f64-bern
+          poly:sub-scm-bern
+
+          poly:sub-f64-sbern
+          poly:sub-scm-sbern
+
+          poly:sub-f64-spower
+          poly:sub-scm-spower)
 
   (import (sortsmill dynlink)
           (rnrs)

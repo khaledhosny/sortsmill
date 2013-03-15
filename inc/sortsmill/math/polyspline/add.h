@@ -91,6 +91,41 @@ void add_scm_spower (size_t degree1, ssize_t stride1, const SCM *spline1,
 SCM scm_add_f64_spower (SCM spline1, SCM spline2);
 SCM scm_add_scm_spower (SCM spline1, SCM spline2);
 
+/* Subtraction of polynomial coefficients, with automatic elevation to
+   the higher degree. Guaranteed safe for in-place calculation. */
+void sub_f64_mono (size_t degree1, ssize_t stride1, const double *spline1,
+                   size_t degree2, ssize_t stride2, const double *spline2,
+                   ssize_t result_stride, double *result);
+void sub_scm_mono (size_t degree1, ssize_t stride1, const SCM *spline1,
+                   size_t degree2, ssize_t stride2, const SCM *spline2,
+                   ssize_t result_stride, SCM *result);
+SCM scm_sub_f64_mono (SCM spline1, SCM spline2);
+SCM scm_sub_scm_mono (SCM spline1, SCM spline2);
+void sub_f64_bern (size_t degree1, ssize_t stride1, const double *spline1,
+                   size_t degree2, ssize_t stride2, const double *spline2,
+                   ssize_t result_stride, double *result);
+void sub_scm_bern (size_t degree1, ssize_t stride1, const SCM *spline1,
+                   size_t degree2, ssize_t stride2, const SCM *spline2,
+                   ssize_t result_stride, SCM *result);
+SCM scm_sub_f64_bern (SCM spline1, SCM spline2);
+SCM scm_sub_scm_bern (SCM spline1, SCM spline2);
+void sub_f64_sbern (size_t degree1, ssize_t stride1, const double *spline1,
+                    size_t degree2, ssize_t stride2, const double *spline2,
+                    ssize_t result_stride, double *result);
+void sub_scm_sbern (size_t degree1, ssize_t stride1, const SCM *spline1,
+                    size_t degree2, ssize_t stride2, const SCM *spline2,
+                    ssize_t result_stride, SCM *result);
+SCM scm_sub_f64_sbern (SCM spline1, SCM spline2);
+SCM scm_sub_scm_sbern (SCM spline1, SCM spline2);
+void sub_f64_spower (size_t degree1, ssize_t stride1, const double *spline1,
+                     size_t degree2, ssize_t stride2, const double *spline2,
+                     ssize_t result_stride, double *result);
+void sub_scm_spower (size_t degree1, ssize_t stride1, const SCM *spline1,
+                     size_t degree2, ssize_t stride2, const SCM *spline2,
+                     ssize_t result_stride, SCM *result);
+SCM scm_sub_f64_spower (SCM spline1, SCM spline2);
+SCM scm_sub_scm_spower (SCM spline1, SCM spline2);
+
 /* Weighted addition of polynomial coefficients. Guaranteed safe for
    in-place calculation. */
 void weighted_add_f64_splines (size_t degree,

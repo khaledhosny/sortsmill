@@ -272,6 +272,138 @@ add_scm_spower (size_t degree1, ssize_t stride1,
 //-------------------------------------------------------------------------
 
 static void
+sub_f64_with_degree_elevation (void
+                               add (size_t, ssize_t, const double *, size_t,
+                                    ssize_t, const double *, ssize_t, double *),
+                               size_t degree1, ssize_t stride1,
+                               const double *spline1, size_t degree2,
+                               ssize_t stride2, const double *spline2,
+                               ssize_t result_stride, double *result)
+{
+  double _spline2[degree2 + 1];
+  copy_f64_with_strides (1, _spline2, stride2, spline2, degree2 + 1);
+  for (size_t i = 0; i <= degree2; i++)
+    _spline2[i] = -_spline2[i];
+  add (degree1, stride1, spline1, degree2, 1, _spline2, result_stride, result);
+}
+
+static void
+sub_scm_with_degree_elevation (void
+                               add (size_t, ssize_t, const SCM *, size_t,
+                                    ssize_t, const SCM *, ssize_t, SCM *),
+                               size_t degree1, ssize_t stride1,
+                               const SCM *spline1, size_t degree2,
+                               ssize_t stride2, const SCM *spline2,
+                               ssize_t result_stride, SCM *result)
+{
+  const SCM zero = scm_from_int (0);
+
+  SCM _spline2[degree2 + 1];
+  copy_scm_with_strides (1, _spline2, stride2, spline2, degree2 + 1);
+  for (size_t i = 0; i <= degree2; i++)
+    _spline2[i] = scm_difference (zero, _spline2[i]);
+  add (degree1, stride1, spline1, degree2, 1, _spline2, result_stride, result);
+}
+
+VISIBLE void
+sub_f64_mono (size_t degree1, ssize_t stride1,
+              const double *spline1, size_t degree2,
+              ssize_t stride2, const double *spline2,
+              ssize_t result_stride, double *result)
+{
+  sub_f64_with_degree_elevation (add_f64_mono,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+VISIBLE void
+sub_scm_mono (size_t degree1, ssize_t stride1,
+              const SCM *spline1, size_t degree2,
+              ssize_t stride2, const SCM *spline2,
+              ssize_t result_stride, SCM *result)
+{
+  sub_scm_with_degree_elevation (add_scm_mono,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+VISIBLE void
+sub_f64_bern (size_t degree1, ssize_t stride1,
+              const double *spline1, size_t degree2,
+              ssize_t stride2, const double *spline2,
+              ssize_t result_stride, double *result)
+{
+  sub_f64_with_degree_elevation (add_f64_bern,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+VISIBLE void
+sub_scm_bern (size_t degree1, ssize_t stride1,
+              const SCM *spline1, size_t degree2,
+              ssize_t stride2, const SCM *spline2,
+              ssize_t result_stride, SCM *result)
+{
+  sub_scm_with_degree_elevation (add_scm_bern,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+VISIBLE void
+sub_f64_sbern (size_t degree1, ssize_t stride1,
+               const double *spline1, size_t degree2,
+               ssize_t stride2, const double *spline2,
+               ssize_t result_stride, double *result)
+{
+  sub_f64_with_degree_elevation (add_f64_sbern,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+VISIBLE void
+sub_scm_sbern (size_t degree1, ssize_t stride1,
+               const SCM *spline1, size_t degree2,
+               ssize_t stride2, const SCM *spline2,
+               ssize_t result_stride, SCM *result)
+{
+  sub_scm_with_degree_elevation (add_scm_sbern,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+VISIBLE void
+sub_f64_spower (size_t degree1, ssize_t stride1,
+                const double *spline1, size_t degree2,
+                ssize_t stride2, const double *spline2,
+                ssize_t result_stride, double *result)
+{
+  sub_f64_with_degree_elevation (add_f64_spower,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+VISIBLE void
+sub_scm_spower (size_t degree1, ssize_t stride1,
+                const SCM *spline1, size_t degree2,
+                ssize_t stride2, const SCM *spline2,
+                ssize_t result_stride, SCM *result)
+{
+  sub_scm_with_degree_elevation (add_scm_spower,
+                                 degree1, stride1, spline1,
+                                 degree2, stride2, spline2,
+                                 result_stride, result);
+}
+
+//-------------------------------------------------------------------------
+
+static void
 one_minus_f64_spline (void one_f64_spline (size_t degree, ssize_t stride,
                                            double *one),
                       size_t degree, ssize_t stride, const double *spline,
@@ -601,6 +733,30 @@ scm_add_f64_spower (SCM spline1, SCM spline2)
   return scm_op_f64 ("scm_add_f64_spower", add_f64_spower, spline1, spline2);
 }
 
+VISIBLE SCM
+scm_sub_f64_mono (SCM spline1, SCM spline2)
+{
+  return scm_op_f64 ("scm_sub_f64_mono", sub_f64_mono, spline1, spline2);
+}
+
+VISIBLE SCM
+scm_sub_f64_bern (SCM spline1, SCM spline2)
+{
+  return scm_op_f64 ("scm_sub_f64_bern", sub_f64_bern, spline1, spline2);
+}
+
+VISIBLE SCM
+scm_sub_f64_sbern (SCM spline1, SCM spline2)
+{
+  return scm_op_f64 ("scm_sub_f64_sbern", sub_f64_sbern, spline1, spline2);
+}
+
+VISIBLE SCM
+scm_sub_f64_spower (SCM spline1, SCM spline2)
+{
+  return scm_op_f64 ("scm_sub_f64_spower", sub_f64_spower, spline1, spline2);
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -675,6 +831,30 @@ scm_add_scm_spower (SCM spline1, SCM spline2)
   return scm_op_scm ("scm_add_scm_spower", add_scm_spower, spline1, spline2);
 }
 
+VISIBLE SCM
+scm_sub_scm_mono (SCM spline1, SCM spline2)
+{
+  return scm_op_scm ("scm_sub_scm_mono", sub_scm_mono, spline1, spline2);
+}
+
+VISIBLE SCM
+scm_sub_scm_bern (SCM spline1, SCM spline2)
+{
+  return scm_op_scm ("scm_sub_scm_bern", sub_scm_bern, spline1, spline2);
+}
+
+VISIBLE SCM
+scm_sub_scm_sbern (SCM spline1, SCM spline2)
+{
+  return scm_op_scm ("scm_sub_scm_sbern", sub_scm_sbern, spline1, spline2);
+}
+
+VISIBLE SCM
+scm_sub_scm_spower (SCM spline1, SCM spline2)
+{
+  return scm_op_scm ("scm_sub_scm_spower", sub_scm_spower, spline1, spline2);
+}
+
 //-------------------------------------------------------------------------
 
 void init_math_polyspline_add (void);
@@ -699,6 +879,18 @@ init_math_polyspline_add (void)
 
   scm_c_define_gsubr ("poly:add-f64-spower", 2, 0, 0, scm_add_f64_spower);
   scm_c_define_gsubr ("poly:add-scm-spower", 2, 0, 0, scm_add_scm_spower);
+
+  scm_c_define_gsubr ("poly:sub-f64-mono", 2, 0, 0, scm_sub_f64_mono);
+  scm_c_define_gsubr ("poly:sub-scm-mono", 2, 0, 0, scm_sub_scm_mono);
+
+  scm_c_define_gsubr ("poly:sub-f64-bern", 2, 0, 0, scm_sub_f64_bern);
+  scm_c_define_gsubr ("poly:sub-scm-bern", 2, 0, 0, scm_sub_scm_bern);
+
+  scm_c_define_gsubr ("poly:sub-f64-sbern", 2, 0, 0, scm_sub_f64_sbern);
+  scm_c_define_gsubr ("poly:sub-scm-sbern", 2, 0, 0, scm_sub_scm_sbern);
+
+  scm_c_define_gsubr ("poly:sub-f64-spower", 2, 0, 0, scm_sub_f64_spower);
+  scm_c_define_gsubr ("poly:sub-scm-spower", 2, 0, 0, scm_sub_scm_spower);
 }
 
 //-------------------------------------------------------------------------
