@@ -18,6 +18,7 @@
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
 #include <sortsmill/initialized_global_constants.h>
+#include <sortsmill/copy_with_strides.h>
 #include <xalloc.h>
 #include <assert.h>
 
@@ -29,21 +30,23 @@ unsplit_f64_spower (size_t degree,
                     ssize_t stride1, const double *a1,
                     ssize_t result_stride, double *result)
 {
-  double *result1 = &result[result_stride * (ssize_t) degree];
-
-  for (size_t i = 0; i < degree / 2; i++)
+  if (degree % 2 == 1)
     {
-      *result = *a0;
-      a0 += stride0;
-      result += result_stride;
-
-      *result1 = *a1;
-      a1 += stride1;
-      result1 -= result_stride;
+      copy_f64_with_strides (result_stride, result, stride0, a0,
+                             degree / 2 + 1);
+      copy_f64_with_strides (-result_stride,
+                             &result[result_stride * (ssize_t) degree],
+                             stride1, a1, degree / 2 + 1);
     }
-
-  if (degree % 2 == 0)
-    *result = 0.5 * (*a0 + *a1);
+  else
+    {
+      copy_f64_with_strides (result_stride, result, stride0, a0, degree / 2);
+      result[result_stride * (ssize_t) (degree / 2)] =
+        0.5 * (a0[degree / 2] + a1[degree / 2]);
+      copy_f64_with_strides (-result_stride,
+                             &result[result_stride * (ssize_t) degree],
+                             stride1, a1, degree / 2);
+    }
 }
 
 VISIBLE void
@@ -52,21 +55,24 @@ unsplit_scm_spower (size_t degree,
                     ssize_t stride1, const SCM *a1,
                     ssize_t result_stride, SCM *result)
 {
-  SCM *result1 = &result[result_stride * (ssize_t) degree];
-
-  for (size_t i = 0; i < degree / 2; i++)
+  if (degree % 2 == 1)
     {
-      *result = *a0;
-      a0 += stride0;
-      result += result_stride;
-
-      *result1 = *a1;
-      a1 += stride1;
-      result1 -= result_stride;
+      copy_scm_with_strides (result_stride, result, stride0, a0,
+                             degree / 2 + 1);
+      copy_scm_with_strides (-result_stride,
+                             &result[result_stride * (ssize_t) degree],
+                             stride1, a1, degree / 2 + 1);
     }
-
-  if (degree % 2 == 0)
-    *result = scm_divide (scm_sum (*a0, *a1), scm_from_uint (2));
+  else
+    {
+      copy_scm_with_strides (result_stride, result, stride0, a0, degree / 2);
+      result[result_stride * (ssize_t) (degree / 2)] =
+        scm_divide (scm_sum (a0[degree / 2], a1[degree / 2]),
+                    scm_from_uint (2));
+      copy_scm_with_strides (-result_stride,
+                             &result[result_stride * (ssize_t) degree],
+                             stride1, a1, degree / 2);
+    }
 }
 
 //-------------------------------------------------------------------------
