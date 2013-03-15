@@ -43,7 +43,8 @@ libsortsmill_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c			\
 libsortsmill_gdraw_la_LIBADD =					\
 	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
 	$(top_builddir)/gutils/libsortsmill_gutils.la	\
-	$(top_builddir)/lib/libgnu.la
+	$(top_builddir)/lib/libgnu.la					\
+	$(XINPUT_LIBS) $(XKB_LIBS)
 libsortsmill_gdraw_la_LDFLAGS = $(call ldflags)
 libsortsmill_gdraw_la_DEPENDENCIES = Makefile $(libsortsmill_gdraw_la_LIBADD)
 
