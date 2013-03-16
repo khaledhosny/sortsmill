@@ -44,7 +44,7 @@ eval_f64_mono (size_t degree, ssize_t stride, const double *spline, double t)
 }
 
 VISIBLE SCM
-scm_c_eval_mono (size_t degree, ssize_t stride, const SCM *spline, SCM t)
+eval_scm_mono (size_t degree, ssize_t stride, const SCM *spline, SCM t)
 {
   // Horner’s rule.
   SCM x = spline[stride * (ssize_t) degree];
@@ -161,8 +161,8 @@ eval_f64_bern_schumaker_volk (size_t degree, ssize_t stride,
 }
 
 VISIBLE SCM
-scm_c_eval_sbern_schumaker_volk (size_t degree, ssize_t stride,
-                                 const SCM *spline, SCM t)
+eval_scm_sbern_schumaker_volk (size_t degree, ssize_t stride,
+                               const SCM *spline, SCM t)
 {
   SCM v;
 
@@ -215,8 +215,8 @@ scm_c_eval_sbern_schumaker_volk (size_t degree, ssize_t stride,
 }
 
 VISIBLE SCM
-scm_c_eval_bern_schumaker_volk (size_t degree, ssize_t stride,
-                                const SCM *spline, SCM t)
+eval_scm_bern_schumaker_volk (size_t degree, ssize_t stride,
+                              const SCM *spline, SCM t)
 {
   SCM v;
 
@@ -317,8 +317,8 @@ eval_f64_bern_de_casteljau (size_t degree, ssize_t stride,
 }
 
 VISIBLE SCM
-scm_c_eval_sbern_de_casteljau (size_t degree, ssize_t stride,
-                               const SCM *spline, SCM t)
+eval_scm_sbern_de_casteljau (size_t degree, ssize_t stride,
+                             const SCM *spline, SCM t)
 {
   scm_dynwind_begin (0);
 
@@ -345,11 +345,11 @@ scm_c_eval_sbern_de_casteljau (size_t degree, ssize_t stride,
 }
 
 VISIBLE SCM
-scm_c_eval_bern_de_casteljau (size_t degree, ssize_t stride,
-                              const SCM *spline, SCM t)
+eval_scm_bern_de_casteljau (size_t degree, ssize_t stride,
+                            const SCM *spline, SCM t)
 {
   const SCM t1 = scm_difference (scm_from_int (1), t);
-  
+
   SCM b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
     b[i] = spline[stride * (ssize_t) i];
@@ -380,7 +380,7 @@ eval_f64_spower (size_t degree, ssize_t stride, const double *spline, double t)
 }
 
 VISIBLE SCM
-scm_c_eval_spower (size_t degree, ssize_t stride, const SCM *spline, SCM t)
+eval_scm_spower (size_t degree, ssize_t stride, const SCM *spline, SCM t)
 {
   // Compute a convex combination of two shorter polynomials in
   //
@@ -392,10 +392,10 @@ scm_c_eval_spower (size_t degree, ssize_t stride, const SCM *spline, SCM t)
   const SCM t1 = scm_difference (scm_from_uint (1), t);
   const SCM s = scm_product (t, t1);
 
-  const SCM left = scm_c_eval_mono (degree / 2, stride, spline, s);
+  const SCM left = eval_scm_mono (degree / 2, stride, spline, s);
   const SCM right =
-    scm_c_eval_mono (degree / 2, -stride, &spline[stride * (ssize_t) degree],
-                     s);
+    eval_scm_mono (degree / 2, -stride, &spline[stride * (ssize_t) degree],
+                   s);
 
   return scm_sum (scm_product (t1, left), scm_product (t, right));
 }
@@ -474,8 +474,8 @@ scm_eval_f64_spower (SCM vector, SCM t)
 
 static SCM
 scm_eval_scm_spline (const char *who,
-                     SCM (*scm_c_eval_spline) (size_t degree, ssize_t stride,
-                                               const SCM *spline, SCM t),
+                     SCM (*eval_scm_spline) (size_t degree, ssize_t stride,
+                                             const SCM *spline, SCM t),
                      SCM vector, SCM t)
 {
   scm_t_array_handle handle;
@@ -491,7 +491,7 @@ scm_eval_scm_spline (const char *who,
                                               &dim, &stride);
   const SCM *spline = scm_array_handle_elements (&handle);
 
-  SCM value = scm_c_eval_spline (dim - 1, stride, spline, t);
+  SCM value = eval_scm_spline (dim - 1, stride, spline, t);
 
   scm_dynwind_end ();
 
@@ -501,41 +501,41 @@ scm_eval_scm_spline (const char *who,
 VISIBLE SCM
 scm_eval_scm_mono (SCM vector, SCM t)
 {
-  return scm_eval_scm_spline ("scm_eval_scm_mono", scm_c_eval_mono, vector, t);
+  return scm_eval_scm_spline ("scm_eval_scm_mono", eval_scm_mono, vector, t);
 }
 
 VISIBLE SCM
 scm_eval_scm_bern_schumaker_volk (SCM vector, SCM t)
 {
   return scm_eval_scm_spline ("scm_eval_scm_bern_schumaker_volk",
-                              scm_c_eval_bern_schumaker_volk, vector, t);
+                              eval_scm_bern_schumaker_volk, vector, t);
 }
 
 VISIBLE SCM
 scm_eval_scm_bern_de_casteljau (SCM vector, SCM t)
 {
   return scm_eval_scm_spline ("scm_eval_scm_bern_de_casteljau",
-                              scm_c_eval_bern_de_casteljau, vector, t);
+                              eval_scm_bern_de_casteljau, vector, t);
 }
 
 VISIBLE SCM
 scm_eval_scm_sbern_schumaker_volk (SCM vector, SCM t)
 {
   return scm_eval_scm_spline ("scm_eval_scm_sbern_schumaker_volk",
-                              scm_c_eval_sbern_schumaker_volk, vector, t);
+                              eval_scm_sbern_schumaker_volk, vector, t);
 }
 
 VISIBLE SCM
 scm_eval_scm_sbern_de_casteljau (SCM vector, SCM t)
 {
   return scm_eval_scm_spline ("scm_eval_scm_sbern_de_casteljau",
-                              scm_c_eval_sbern_de_casteljau, vector, t);
+                              eval_scm_sbern_de_casteljau, vector, t);
 }
 
 VISIBLE SCM
 scm_eval_scm_spower (SCM vector, SCM t)
 {
-  return scm_eval_scm_spline ("scm_eval_scm_spower", scm_c_eval_spower, vector,
+  return scm_eval_scm_spline ("scm_eval_scm_spower", eval_scm_spower, vector,
                               t);
 }
 

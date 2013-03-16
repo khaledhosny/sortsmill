@@ -62,9 +62,44 @@ compose_scm_mono (size_t degree_a, ssize_t stride_a, const SCM *a,
 }
 
 VISIBLE void
-compose_f64_bern (size_t degree_a, ssize_t stride_a, const double *a,
-                  size_t degree_b, ssize_t stride_b, const double *b,
-                  ssize_t stride_c, double *c)
+compose_f64_bern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                               const double *a, size_t degree_b,
+                               ssize_t stride_b, const double *b,
+                               ssize_t stride_c, double *c)
+{
+  // De Casteljau’s algorithm with polynomial values.
+
+  // We could get by with a lot less work space, but instead we are
+  // going for ease and clarity of programming. In practice the arrays
+  // are not going to be very large, anyway.
+
+  double one_minus_a[degree_a + 1];
+  one_minus_f64_bern (degree_a, stride_a, a, 1, one_minus_a);
+
+  double _c[degree_b + 1][degree_a * degree_b + 1];
+  double temp1[degree_a * degree_b + 1];
+  double temp2[degree_a * degree_b + 1];
+
+  for (size_t i = 0; i <= degree_b; i++)
+    _c[i][0] = b[stride_b * (ssize_t) i];
+
+  for (size_t i = 0; i < degree_b; i++)
+    for (size_t j = 0; j < degree_b - i; j++)
+      {
+        mul_f64_bern (degree_a, 1, one_minus_a,
+                      i * degree_a, 1, _c[j], 1, temp1);
+        mul_f64_bern (degree_a, stride_a, a,
+                      i * degree_a, 1, _c[j + 1], 1, temp2);
+        add_f64_splines ((i + 1) * degree_a, 1, temp1, 1, temp2, 1, _c[j]);
+      }
+
+  copy_f64_with_strides (stride_c, c, 1, _c[0], degree_a * degree_b + 1);
+}
+
+VISIBLE void
+compose_f64_bern_horner (size_t degree_a, ssize_t stride_a, const double *a,
+                         size_t degree_b, ssize_t stride_b, const double *b,
+                         ssize_t stride_c, double *c)
 {
   // Transform the problem to scaled Bernstein basis.
 
@@ -80,7 +115,7 @@ compose_f64_bern (size_t degree_a, ssize_t stride_a, const double *a,
   for (size_t i = 1; i < degree_b; i++)
     _b[i] *= bincoef (degree_b, i);
 
-  compose_f64_sbern (degree_a, 1, _a, degree_b, 1, _b, 1, _c);
+  compose_f64_sbern_horner (degree_a, 1, _a, degree_b, 1, _b, 1, _c);
 
   for (size_t i = 1; i < degree_a * degree_b; i++)
     _c[i] /= bincoef (degree_a * degree_b, i);
@@ -88,9 +123,9 @@ compose_f64_bern (size_t degree_a, ssize_t stride_a, const double *a,
 }
 
 VISIBLE void
-compose_scm_bern (size_t degree_a, ssize_t stride_a, const SCM *a,
-                  size_t degree_b, ssize_t stride_b, const SCM *b,
-                  ssize_t stride_c, SCM *c)
+compose_scm_bern_horner (size_t degree_a, ssize_t stride_a, const SCM *a,
+                         size_t degree_b, ssize_t stride_b, const SCM *b,
+                         ssize_t stride_c, SCM *c)
 {
   // Transform the problem to scaled Bernstein basis.
 
@@ -118,7 +153,7 @@ compose_scm_bern (size_t degree_a, ssize_t stride_a, const SCM *a,
       _b[i] = scm_product (_b[i], scm_from_mpz (C));
     }
 
-  compose_scm_sbern (degree_a, 1, _a, degree_b, 1, _b, 1, _c);
+  compose_scm_sbern_horner (degree_a, 1, _a, degree_b, 1, _b, 1, _c);
 
   for (size_t i = 1; i < degree_a * degree_b; i++)
     {
@@ -131,9 +166,9 @@ compose_scm_bern (size_t degree_a, ssize_t stride_a, const SCM *a,
 }
 
 VISIBLE void
-compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
-                   size_t degree_b, ssize_t stride_b, const double *b,
-                   ssize_t stride_c, double *c)
+compose_f64_sbern_horner (size_t degree_a, ssize_t stride_a, const double *a,
+                          size_t degree_b, ssize_t stride_b, const double *b,
+                          ssize_t stride_c, double *c)
 {
   // Use a simple modified Horner scheme, with polynomial values. The
   // approach is to treat b as a ‘polynomial’ with coefficients
@@ -147,9 +182,6 @@ compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
   //
   // and evaluate that ‘polynomial’ by Horner’s rule, using polynomial
   // multiplication and polynomial addition.
-  //
-  // (De Casteljau’s algorithm also would work but is expensive.  The
-  // Schumaker-Volk algorithm would require rational functions.)
 
   double one_minus_a[degree_a + 1];
   one_minus_f64_sbern (degree_a, stride_a, a, 1, one_minus_a);
@@ -186,9 +218,9 @@ compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
 }
 
 VISIBLE void
-compose_scm_sbern (size_t degree_a, ssize_t stride_a, const SCM *a,
-                   size_t degree_b, ssize_t stride_b, const SCM *b,
-                   ssize_t stride_c, SCM *c)
+compose_scm_sbern_horner (size_t degree_a, ssize_t stride_a, const SCM *a,
+                          size_t degree_b, ssize_t stride_b, const SCM *b,
+                          ssize_t stride_c, SCM *c)
 {
   // Use a simple modified Horner scheme, with polynomial values. The
   // approach is to treat b as a ‘polynomial’ with coefficients
@@ -533,17 +565,24 @@ scm_compose_f64_mono (SCM a, SCM b)
 }
 
 VISIBLE SCM
-scm_compose_f64_bern (SCM a, SCM b)
+scm_compose_f64_bern_de_casteljau (SCM a, SCM b)
 {
-  return scm_compose_f64_spline ("scm_compose_f64_bern",
-                                 compose_f64_bern, a, b);
+  return scm_compose_f64_spline ("scm_compose_f64_bern_de_casteljau",
+                                 compose_f64_bern_de_casteljau, a, b);
 }
 
 VISIBLE SCM
-scm_compose_f64_sbern (SCM a, SCM b)
+scm_compose_f64_bern_horner (SCM a, SCM b)
 {
-  return scm_compose_f64_spline ("scm_compose_f64_sbern",
-                                 compose_f64_sbern, a, b);
+  return scm_compose_f64_spline ("scm_compose_f64_bern_horner",
+                                 compose_f64_bern_horner, a, b);
+}
+
+VISIBLE SCM
+scm_compose_f64_sbern_horner (SCM a, SCM b)
+{
+  return scm_compose_f64_spline ("scm_compose_f64_sbern_horner",
+                                 compose_f64_sbern_horner, a, b);
 }
 
 VISIBLE SCM
@@ -616,17 +655,17 @@ scm_compose_scm_mono (SCM a, SCM b)
 }
 
 VISIBLE SCM
-scm_compose_scm_bern (SCM a, SCM b)
+scm_compose_scm_bern_horner (SCM a, SCM b)
 {
-  return scm_compose_scm_spline ("scm_compose_scm_bern",
-                                 compose_scm_bern, a, b);
+  return scm_compose_scm_spline ("scm_compose_scm_bern_horner",
+                                 compose_scm_bern_horner, a, b);
 }
 
 VISIBLE SCM
-scm_compose_scm_sbern (SCM a, SCM b)
+scm_compose_scm_sbern_horner (SCM a, SCM b)
 {
-  return scm_compose_scm_spline ("scm_compose_scm_sbern",
-                                 compose_scm_sbern, a, b);
+  return scm_compose_scm_spline ("scm_compose_scm_sbern_horner",
+                                 compose_scm_sbern_horner, a, b);
 }
 
 VISIBLE SCM
@@ -646,11 +685,18 @@ init_math_polyspline_compose (void)
   scm_c_define_gsubr ("poly:compose-f64-mono", 2, 0, 0, scm_compose_f64_mono);
   scm_c_define_gsubr ("poly:compose-scm-mono", 2, 0, 0, scm_compose_scm_mono);
 
-  scm_c_define_gsubr ("poly:compose-f64-bern", 2, 0, 0, scm_compose_f64_bern);
-  scm_c_define_gsubr ("poly:compose-scm-bern", 2, 0, 0, scm_compose_scm_bern);
+  scm_c_define_gsubr ("poly:compose-f64-bern-de-casteljau", 2, 0, 0,
+                      scm_compose_f64_bern_de_casteljau);
 
-  scm_c_define_gsubr ("poly:compose-f64-sbern", 2, 0, 0, scm_compose_f64_sbern);
-  scm_c_define_gsubr ("poly:compose-scm-sbern", 2, 0, 0, scm_compose_scm_sbern);
+  scm_c_define_gsubr ("poly:compose-f64-bern-horner", 2, 0, 0,
+                      scm_compose_f64_bern_horner);
+  scm_c_define_gsubr ("poly:compose-scm-bern-horner", 2, 0, 0,
+                      scm_compose_scm_bern_horner);
+
+  scm_c_define_gsubr ("poly:compose-f64-sbern-horner", 2, 0, 0,
+                      scm_compose_f64_sbern_horner);
+  scm_c_define_gsubr ("poly:compose-scm-sbern-horner", 2, 0, 0,
+                      scm_compose_scm_sbern_horner);
 
   scm_c_define_gsubr ("poly:compose-f64-spower", 2, 0, 0,
                       scm_compose_f64_spower);

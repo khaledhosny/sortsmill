@@ -20,11 +20,17 @@
   (export poly:compose-f64-mono
           poly:compose-scm-mono
 
-          poly:compose-f64-bern
-          poly:compose-scm-bern
+          poly:compose-f64-bern-de-casteljau
+          poly:compose-scm-bern-de-casteljau
 
-          poly:compose-f64-sbern
-          poly:compose-scm-sbern
+          poly:compose-f64-bern-horner
+          poly:compose-scm-bern-horner
+
+          poly:compose-f64-sbern-de-casteljau
+          poly:compose-scm-sbern-de-casteljau
+
+          poly:compose-f64-sbern-horner
+          poly:compose-scm-sbern-horner
 
           poly:compose-f64-spower
           poly:compose-scm-spower)

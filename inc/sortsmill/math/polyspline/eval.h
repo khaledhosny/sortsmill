@@ -33,7 +33,7 @@ extern "C"
 /* Polynomial evaluation in the monomial basis. */
 double eval_f64_mono (size_t degree, ssize_t stride,
                       const double *spline, double t);
-SCM scm_c_eval_mono (size_t degree, ssize_t stride, const SCM *spline, SCM t);
+SCM eval_scm_mono (size_t degree, ssize_t stride, const SCM *spline, SCM t);
 SCM scm_eval_f64_mono (SCM vector, SCM t);
 SCM scm_eval_scm_mono (SCM vector, SCM t);
 
@@ -41,8 +41,8 @@ SCM scm_eval_scm_mono (SCM vector, SCM t);
    reasonably stable algorithm of Schumaker and Volk. */
 double eval_f64_bern_schumaker_volk (size_t deg, ssize_t stride,
                                      const double *spline, double t);
-SCM scm_c_eval_bern_schumaker_volk (size_t deg, ssize_t stride,
-                                    const SCM *spline, SCM t);
+SCM eval_scm_bern_schumaker_volk (size_t deg, ssize_t stride,
+                                  const SCM *spline, SCM t);
 SCM scm_eval_f64_bern_schumaker_volk (SCM splines, SCM t);
 SCM scm_eval_scm_bern_schumaker_volk (SCM splines, SCM t);
 
@@ -51,8 +51,8 @@ SCM scm_eval_scm_bern_schumaker_volk (SCM splines, SCM t);
    http://en.wikipedia.org/wiki/De_Casteljau%27s_algorithm */
 double eval_f64_bern_de_casteljau (size_t deg, ssize_t stride,
                                    const double *spline, double t);
-SCM scm_c_eval_bern_de_casteljau (size_t deg, ssize_t stride,
-                                  const SCM *spline, SCM t);
+SCM eval_scm_bern_de_casteljau (size_t deg, ssize_t stride,
+                                const SCM *spline, SCM t);
 SCM scm_eval_f64_bern_de_casteljau (SCM splines, SCM t);
 SCM scm_eval_scm_bern_de_casteljau (SCM splines, SCM t);
 
@@ -60,8 +60,8 @@ SCM scm_eval_scm_bern_de_casteljau (SCM splines, SCM t);
    reasonably stable algorithm of Schumaker and Volk. */
 double eval_f64_sbern_schumaker_volk (size_t deg, ssize_t stride,
                                       const double *spline, double t);
-SCM scm_c_eval_sbern_schumaker_volk (size_t deg, ssize_t stride,
-                                     const SCM *spline, SCM t);
+SCM eval_scm_sbern_schumaker_volk (size_t deg, ssize_t stride,
+                                   const SCM *spline, SCM t);
 SCM scm_eval_f64_sbern_schumaker_volk (SCM vector, SCM t);
 SCM scm_eval_scm_sbern_schumaker_volk (SCM vector, SCM t);
 
@@ -70,15 +70,15 @@ SCM scm_eval_scm_sbern_schumaker_volk (SCM vector, SCM t);
    http://en.wikipedia.org/wiki/De_Casteljau%27s_algorithm */
 double eval_f64_sbern_de_casteljau (size_t deg, ssize_t stride,
                                     const double *spline, double t);
-SCM scm_c_eval_sbern_de_casteljau (size_t deg, ssize_t stride,
-                                   const SCM *spline, SCM t);
+SCM eval_scm_sbern_de_casteljau (size_t deg, ssize_t stride,
+                                 const SCM *spline, SCM t);
 SCM scm_eval_f64_sbern_de_casteljau (SCM splines, SCM t);
 SCM scm_eval_scm_sbern_de_casteljau (SCM splines, SCM t);
 
 /* Polynomial evaluation in the s-power basis of Sánchez-Reyes. */
 double eval_f64_spower (size_t degree, ssize_t stride,
                         const double *spline, double t);
-SCM scm_c_eval_spower (size_t degree, ssize_t stride, const SCM *spline, SCM t);
+SCM eval_scm_spower (size_t degree, ssize_t stride, const SCM *spline, SCM t);
 SCM scm_eval_f64_spower (SCM vector, SCM t);
 SCM scm_eval_scm_spower (SCM vector, SCM t);
 

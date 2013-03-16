@@ -50,23 +50,36 @@ void compose_scm_mono (size_t degree_a, ssize_t stride_a, const SCM *a,
 SCM scm_compose_f64_mono (SCM a, SCM b);
 SCM scm_compose_scm_mono (SCM a, SCM b);
 
-void compose_f64_bern (size_t degree_a, ssize_t stride_a, const double *a,
-                       size_t degree_b, ssize_t stride_b, const double *b,
-                       ssize_t stride_c, double *c);
-void compose_scm_bern (size_t degree_a, ssize_t stride_a, const SCM *a,
-                       size_t degree_b, ssize_t stride_b, const SCM *b,
-                       ssize_t stride_c, SCM *c);
-SCM scm_compose_f64_bern (SCM a, SCM b);
-SCM scm_compose_scm_bern (SCM a, SCM b);
+void compose_f64_bern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                                    const double *a, size_t degree_b,
+                                    ssize_t stride_b, const double *b,
+                                    ssize_t stride_c, double *c);
+void compose_scm_bern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                                    const SCM *a, size_t degree_b,
+                                    ssize_t stride_b, const SCM *b,
+                                    ssize_t stride_c, SCM *c);
+SCM scm_compose_f64_bern_de_casteljau (SCM a, SCM b);
+SCM scm_compose_scm_bern_de_casteljau (SCM a, SCM b);
 
-void compose_f64_sbern (size_t degree_a, ssize_t stride_a, const double *a,
-                        size_t degree_b, ssize_t stride_b, const double *b,
-                        ssize_t stride_c, double *c);
-void compose_scm_sbern (size_t degree_a, ssize_t stride_a, const SCM *a,
-                        size_t degree_b, ssize_t stride_b, const SCM *b,
-                        ssize_t stride_c, SCM *c);
-SCM scm_compose_f64_sbern (SCM a, SCM b);
-SCM scm_compose_scm_sbern (SCM a, SCM b);
+void compose_f64_bern_horner (size_t degree_a, ssize_t stride_a,
+                              const double *a, size_t degree_b,
+                              ssize_t stride_b, const double *b,
+                              ssize_t stride_c, double *c);
+void compose_scm_bern_horner (size_t degree_a, ssize_t stride_a, const SCM *a,
+                              size_t degree_b, ssize_t stride_b, const SCM *b,
+                              ssize_t stride_c, SCM *c);
+SCM scm_compose_f64_bern_horner (SCM a, SCM b);
+SCM scm_compose_scm_bern_horner (SCM a, SCM b);
+
+void compose_f64_sbern_horner (size_t degree_a, ssize_t stride_a,
+                               const double *a, size_t degree_b,
+                               ssize_t stride_b, const double *b,
+                               ssize_t stride_c, double *c);
+void compose_scm_sbern_horner (size_t degree_a, ssize_t stride_a, const SCM *a,
+                               size_t degree_b, ssize_t stride_b, const SCM *b,
+                               ssize_t stride_c, SCM *c);
+SCM scm_compose_f64_sbern_horner (SCM a, SCM b);
+SCM scm_compose_scm_sbern_horner (SCM a, SCM b);
 
 void compose_f64_spower (size_t degree_a, ssize_t stride_a, const double *a,
                          size_t degree_b, ssize_t stride_b, const double *b,
