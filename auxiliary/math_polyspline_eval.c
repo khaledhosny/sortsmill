@@ -290,12 +290,14 @@ VISIBLE double
 eval_f64_sbern_de_casteljau (size_t degree, ssize_t stride,
                              const double *spline, double t)
 {
+  const double t1 = 1.0 - t;
+
   double b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
     b[i] = spline[stride * (ssize_t) i] / bincoef (degree, i);
   for (size_t i = 0; i < degree; i++)
     for (size_t j = 0; j < degree - i; j++)
-      b[j] += t * (b[j + 1] - b[j]);
+      b[j] = t1 * b[j] + t * b[j + 1];
   return b[0];
 }
 
@@ -303,12 +305,14 @@ VISIBLE double
 eval_f64_bern_de_casteljau (size_t degree, ssize_t stride,
                             const double *spline, double t)
 {
+  const double t1 = 1.0 - t;
+
   double b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
     b[i] = spline[stride * (ssize_t) i];
   for (size_t i = 0; i < degree; i++)
     for (size_t j = 0; j < degree - i; j++)
-      b[j] += t * (b[j + 1] - b[j]);
+      b[j] = t1 * b[j] + t * b[j + 1];
   return b[0];
 }
 
@@ -322,6 +326,8 @@ scm_c_eval_sbern_de_casteljau (size_t degree, ssize_t stride,
   mpz_init (C);
   scm_dynwind_mpz_clear (C);
 
+  const SCM t1 = scm_difference (scm_from_int (1), t);
+
   SCM b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
     {
@@ -333,7 +339,7 @@ scm_c_eval_sbern_de_casteljau (size_t degree, ssize_t stride,
 
   for (size_t i = 0; i < degree; i++)
     for (size_t j = 0; j < degree - i; j++)
-      b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
+      b[j] = scm_sum (scm_product (t1, b[j]), scm_product (t, b[j + 1]));
 
   return b[0];
 }
@@ -342,12 +348,14 @@ VISIBLE SCM
 scm_c_eval_bern_de_casteljau (size_t degree, ssize_t stride,
                               const SCM *spline, SCM t)
 {
+  const SCM t1 = scm_difference (scm_from_int (1), t);
+  
   SCM b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
     b[i] = spline[stride * (ssize_t) i];
   for (size_t i = 0; i < degree; i++)
     for (size_t j = 0; j < degree - i; j++)
-      b[j] = scm_sum (b[j], scm_product (t, scm_difference (b[j + 1], b[j])));
+      b[j] = scm_sum (scm_product (t1, b[j]), scm_product (t, b[j + 1]));
   return b[0];
 }
 
