@@ -52,6 +52,132 @@ portion_scm_mono (size_t degree, ssize_t stride, const SCM *spline,
 }
 
 VISIBLE void
+portion_f64_bern_de_casteljau (size_t degree, ssize_t stride,
+                               const double *spline, double t1, double t2,
+                               ssize_t result_stride, double *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + t₂⋅t.
+
+  double p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_f64_bern_de_casteljau (1, 1, p, degree, stride, spline, result_stride,
+                                 result);
+}
+
+VISIBLE void
+portion_scm_bern_de_casteljau (size_t degree, ssize_t stride, const SCM *spline,
+                               SCM t1, SCM t2, ssize_t result_stride,
+                               SCM *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + (t₂⋅t).
+
+  SCM p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_scm_bern_de_casteljau (1, 1, p, degree, stride, spline, result_stride,
+                                 result);
+}
+
+VISIBLE void
+portion_f64_bern_horner (size_t degree, ssize_t stride, const double *spline,
+                         double t1, double t2, ssize_t result_stride,
+                         double *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + t₂⋅t.
+
+  double p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_f64_bern_horner (1, 1, p, degree, stride, spline, result_stride,
+                           result);
+}
+
+VISIBLE void
+portion_scm_bern_horner (size_t degree, ssize_t stride, const SCM *spline,
+                         SCM t1, SCM t2, ssize_t result_stride, SCM *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + (t₂⋅t).
+
+  SCM p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_scm_bern_horner (1, 1, p, degree, stride, spline, result_stride,
+                           result);
+}
+
+VISIBLE void
+portion_f64_sbern_de_casteljau (size_t degree, ssize_t stride,
+                                const double *spline, double t1, double t2,
+                                ssize_t result_stride, double *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + t₂⋅t.
+
+  double p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_f64_sbern_de_casteljau (1, 1, p, degree, stride, spline,
+                                  result_stride, result);
+}
+
+VISIBLE void
+portion_scm_sbern_de_casteljau (size_t degree, ssize_t stride,
+                                const SCM *spline, SCM t1, SCM t2,
+                                ssize_t result_stride, SCM *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + (t₂⋅t).
+
+  SCM p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_scm_sbern_de_casteljau (1, 1, p, degree, stride, spline,
+                                  result_stride, result);
+}
+
+VISIBLE void
+portion_f64_sbern_horner (size_t degree, ssize_t stride, const double *spline,
+                          double t1, double t2, ssize_t result_stride,
+                          double *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + t₂⋅t.
+
+  double p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_f64_sbern_horner (1, 1, p, degree, stride, spline,
+                            result_stride, result);
+}
+
+VISIBLE void
+portion_scm_sbern_horner (size_t degree, ssize_t stride, const SCM *spline,
+                          SCM t1, SCM t2, ssize_t result_stride, SCM *result)
+{
+  // Compose with the polynomial p(t) = t₁(1 − t) + (t₂⋅t).
+
+  SCM p[2] = {
+    [0] = t1,
+    [1] = t2
+  };
+
+  compose_scm_sbern_horner (1, 1, p, degree, stride, spline,
+                            result_stride, result);
+}
+
+VISIBLE void
 portion_f64_spower (size_t degree, ssize_t stride, const double *spline,
                     double t1, double t2, ssize_t result_stride, double *result)
 {
@@ -445,6 +571,35 @@ scm_portion_f64_mono (SCM vector, SCM t1, SCM t2)
 }
 
 VISIBLE SCM
+scm_portion_f64_bern_de_casteljau (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_f64_spline ("scm_portion_f64_bern",
+                                 portion_f64_bern_de_casteljau, vector, t1, t2);
+}
+
+VISIBLE SCM
+scm_portion_f64_bern_horner (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_f64_spline ("scm_portion_f64_bern",
+                                 portion_f64_bern_horner, vector, t1, t2);
+}
+
+VISIBLE SCM
+scm_portion_f64_sbern_de_casteljau (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_f64_spline ("scm_portion_f64_sbern",
+                                 portion_f64_sbern_de_casteljau, vector, t1,
+                                 t2);
+}
+
+VISIBLE SCM
+scm_portion_f64_sbern_horner (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_f64_spline ("scm_portion_f64_sbern",
+                                 portion_f64_sbern_horner, vector, t1, t2);
+}
+
+VISIBLE SCM
 scm_portion_f64_spower (SCM vector, SCM t1, SCM t2)
 {
   return scm_portion_f64_spline ("scm_portion_f64_spower",
@@ -498,6 +653,35 @@ scm_portion_scm_mono (SCM vector, SCM t1, SCM t2)
 }
 
 VISIBLE SCM
+scm_portion_scm_bern_de_casteljau (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_scm_spline ("scm_portion_scm_bern",
+                                 portion_scm_bern_de_casteljau, vector, t1, t2);
+}
+
+VISIBLE SCM
+scm_portion_scm_bern_horner (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_scm_spline ("scm_portion_scm_bern",
+                                 portion_scm_bern_horner, vector, t1, t2);
+}
+
+VISIBLE SCM
+scm_portion_scm_sbern_de_casteljau (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_scm_spline ("scm_portion_scm_sbern",
+                                 portion_scm_sbern_de_casteljau, vector, t1,
+                                 t2);
+}
+
+VISIBLE SCM
+scm_portion_scm_sbern_horner (SCM vector, SCM t1, SCM t2)
+{
+  return scm_portion_scm_spline ("scm_portion_scm_sbern",
+                                 portion_scm_sbern_horner, vector, t1, t2);
+}
+
+VISIBLE SCM
 scm_portion_scm_spower (SCM vector, SCM t1, SCM t2)
 {
   return scm_portion_scm_spline ("scm_portion_scm_spower",
@@ -526,11 +710,25 @@ init_math_polyspline_subdiv (void)
   scm_c_define_gsubr ("poly:portion-f64-mono", 3, 0, 0, scm_portion_f64_mono);
   scm_c_define_gsubr ("poly:portion-scm-mono", 3, 0, 0, scm_portion_scm_mono);
 
-  //  scm_c_define_gsubr ("poly:portion-f64-bern", 3, 0, 0, scm_portion_f64_bern);
-  //  scm_c_define_gsubr ("poly:portion-scm-bern", 3, 0, 0, scm_portion_scm_bern);
+  scm_c_define_gsubr ("poly:portion-f64-bern-de-casteljau", 3, 0, 0,
+                      scm_portion_f64_bern_de_casteljau);
+  scm_c_define_gsubr ("poly:portion-scm-bern-de-casteljau", 3, 0, 0,
+                      scm_portion_scm_bern_de_casteljau);
 
-  //  scm_c_define_gsubr ("poly:portion-f64-sbern", 3, 0, 0, scm_portion_f64_sbern);
-  //  scm_c_define_gsubr ("poly:portion-scm-sbern", 3, 0, 0, scm_portion_scm_sbern);
+  scm_c_define_gsubr ("poly:portion-f64-bern-horner", 3, 0, 0,
+                      scm_portion_f64_bern_horner);
+  scm_c_define_gsubr ("poly:portion-scm-bern-horner", 3, 0, 0,
+                      scm_portion_scm_bern_horner);
+
+  scm_c_define_gsubr ("poly:portion-f64-sbern-de-casteljau", 3, 0, 0,
+                      scm_portion_f64_sbern_de_casteljau);
+  scm_c_define_gsubr ("poly:portion-scm-sbern-de-casteljau", 3, 0, 0,
+                      scm_portion_scm_sbern_de_casteljau);
+
+  scm_c_define_gsubr ("poly:portion-f64-sbern-horner", 3, 0, 0,
+                      scm_portion_f64_sbern_horner);
+  scm_c_define_gsubr ("poly:portion-scm-sbern-horner", 3, 0, 0,
+                      scm_portion_scm_sbern_horner);
 
   scm_c_define_gsubr ("poly:portion-f64-spower", 3, 0, 0,
                       scm_portion_f64_spower);

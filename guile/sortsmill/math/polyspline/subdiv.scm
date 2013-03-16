@@ -32,11 +32,17 @@
           poly:portion-f64-mono
           poly:portion-scm-mono
 
-          poly:portion-f64-bern
-          poly:portion-scm-bern
+          poly:portion-f64-bern-de-casteljau
+          poly:portion-scm-bern-de-casteljau
 
-          poly:portion-f64-sbern
-          poly:portion-scm-sbern
+          poly:portion-f64-bern-horner
+          poly:portion-scm-bern-horner
+
+          poly:portion-f64-sbern-de-casteljau
+          poly:portion-scm-sbern-de-casteljau
+
+          poly:portion-f64-sbern-horner
+          poly:portion-scm-sbern-horner
 
           poly:portion-f64-spower
           poly:portion-scm-spower)

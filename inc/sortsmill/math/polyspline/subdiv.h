@@ -85,21 +85,41 @@ void portion_scm_mono (size_t degree, ssize_t stride, const SCM *spline,
 SCM scm_portion_f64_mono (SCM vector, SCM t1, SCM t2);
 SCM scm_portion_scm_mono (SCM vector, SCM t1, SCM t2);
 /* */
-void portion_f64_bern (size_t degree, ssize_t stride, const double *spline,
-                       double t1, double t2,
-                       ssize_t result_stride, double *result);
-void portion_scm_bern (size_t degree, ssize_t stride, const SCM *spline,
-                       SCM t1, SCM t2, ssize_t result_stride, SCM *result);
-SCM scm_portion_f64_bern (SCM vector, SCM t1, SCM t2);
-SCM scm_portion_scm_bern (SCM vector, SCM t1, SCM t2);
+void portion_f64_bern_de_casteljau (size_t degree, ssize_t stride,
+                                    const double *spline, double t1, double t2,
+                                    ssize_t result_stride, double *result);
+void portion_scm_bern_de_casteljau (size_t degree, ssize_t stride,
+                                    const SCM *spline, SCM t1, SCM t2,
+                                    ssize_t result_stride, SCM *result);
+SCM scm_portion_f64_bern_de_casteljau (SCM vector, SCM t1, SCM t2);
+SCM scm_portion_scm_bern_de_casteljau (SCM vector, SCM t1, SCM t2);
 /* */
-void portion_f64_sbern (size_t degree, ssize_t stride, const double *spline,
-                        double t1, double t2,
-                        ssize_t result_stride, double *result);
-void portion_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
-                        SCM t1, SCM t2, ssize_t result_stride, SCM *result);
-SCM scm_portion_f64_sbern (SCM vector, SCM t1, SCM t2);
-SCM scm_portion_scm_sbern (SCM vector, SCM t1, SCM t2);
+void portion_f64_bern_horner (size_t degree, ssize_t stride,
+                              const double *spline, double t1, double t2,
+                              ssize_t result_stride, double *result);
+void portion_scm_bern_horner (size_t degree, ssize_t stride, const SCM *spline,
+                              SCM t1, SCM t2, ssize_t result_stride,
+                              SCM *result);
+SCM scm_portion_f64_bern_horner (SCM vector, SCM t1, SCM t2);
+SCM scm_portion_scm_bern_horner (SCM vector, SCM t1, SCM t2);
+/* */
+void portion_f64_sbern_de_casteljau (size_t degree, ssize_t stride,
+                                     const double *spline, double t1, double t2,
+                                     ssize_t result_stride, double *result);
+void portion_scm_sbern_de_casteljau (size_t degree, ssize_t stride,
+                                     const SCM *spline, SCM t1, SCM t2,
+                                     ssize_t result_stride, SCM *result);
+SCM scm_portion_f64_sbern_de_casteljau (SCM vector, SCM t1, SCM t2);
+SCM scm_portion_scm_sbern_de_casteljau (SCM vector, SCM t1, SCM t2);
+/* */
+void portion_f64_sbern_horner (size_t degree, ssize_t stride,
+                               const double *spline, double t1, double t2,
+                               ssize_t result_stride, double *result);
+void portion_scm_sbern_horner (size_t degree, ssize_t stride, const SCM *spline,
+                               SCM t1, SCM t2, ssize_t result_stride,
+                               SCM *result);
+SCM scm_portion_f64_sbern_horner (SCM vector, SCM t1, SCM t2);
+SCM scm_portion_scm_sbern_horner (SCM vector, SCM t1, SCM t2);
 /* */
 void portion_f64_spower (size_t degree, ssize_t stride, const double *spline,
                          double t1, double t2,
