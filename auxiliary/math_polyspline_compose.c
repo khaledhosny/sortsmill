@@ -97,6 +97,41 @@ compose_f64_bern_de_casteljau (size_t degree_a, ssize_t stride_a,
 }
 
 VISIBLE void
+compose_scm_bern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                               const SCM *a, size_t degree_b,
+                               ssize_t stride_b, const SCM *b,
+                               ssize_t stride_c, SCM *c)
+{
+  // De Casteljau’s algorithm with polynomial values.
+
+  // We could get by with a lot less work space, but instead we are
+  // going for ease and clarity of programming. In practice the arrays
+  // are not going to be very large, anyway.
+
+  SCM one_minus_a[degree_a + 1];
+  one_minus_scm_bern (degree_a, stride_a, a, 1, one_minus_a);
+
+  SCM _c[degree_b + 1][degree_a * degree_b + 1];
+  SCM temp1[degree_a * degree_b + 1];
+  SCM temp2[degree_a * degree_b + 1];
+
+  for (size_t i = 0; i <= degree_b; i++)
+    _c[i][0] = b[stride_b * (ssize_t) i];
+
+  for (size_t i = 0; i < degree_b; i++)
+    for (size_t j = 0; j < degree_b - i; j++)
+      {
+        mul_scm_bern (degree_a, 1, one_minus_a,
+                      i * degree_a, 1, _c[j], 1, temp1);
+        mul_scm_bern (degree_a, stride_a, a,
+                      i * degree_a, 1, _c[j + 1], 1, temp2);
+        add_scm_splines ((i + 1) * degree_a, 1, temp1, 1, temp2, 1, _c[j]);
+      }
+
+  copy_scm_with_strides (stride_c, c, 1, _c[0], degree_a * degree_b + 1);
+}
+
+VISIBLE void
 compose_f64_bern_horner (size_t degree_a, ssize_t stride_a, const double *a,
                          size_t degree_b, ssize_t stride_b, const double *b,
                          ssize_t stride_c, double *c)
@@ -163,6 +198,87 @@ compose_scm_bern_horner (size_t degree_a, ssize_t stride_a, const SCM *a,
   copy_scm_with_strides (stride_c, c, 1, _c, degree_a * degree_b + 1);
 
   scm_dynwind_end ();
+}
+
+VISIBLE void
+compose_f64_sbern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                                const double *a, size_t degree_b,
+                                ssize_t stride_b, const double *b,
+                                ssize_t stride_c, double *c)
+{
+  // De Casteljau’s algorithm with polynomial values.
+
+  // We could get by with a lot less work space, but instead we are
+  // going for ease and clarity of programming. In practice the arrays
+  // are not going to be very large, anyway.
+
+  double one_minus_a[degree_a + 1];
+  one_minus_f64_sbern (degree_a, stride_a, a, 1, one_minus_a);
+
+  double _c[degree_b + 1][degree_a * degree_b + 1];
+  double temp1[degree_a * degree_b + 1];
+  double temp2[degree_a * degree_b + 1];
+
+  for (size_t i = 0; i <= degree_b; i++)
+    _c[i][0] = b[stride_b * (ssize_t) i] / bincoef (degree_b, i);
+
+  for (size_t i = 0; i < degree_b; i++)
+    for (size_t j = 0; j < degree_b - i; j++)
+      {
+        mul_f64_sbern (degree_a, 1, one_minus_a,
+                       i * degree_a, 1, _c[j], 1, temp1);
+        mul_f64_sbern (degree_a, stride_a, a,
+                       i * degree_a, 1, _c[j + 1], 1, temp2);
+        add_f64_splines ((i + 1) * degree_a, 1, temp1, 1, temp2, 1, _c[j]);
+      }
+
+  copy_f64_with_strides (stride_c, c, 1, _c[0], degree_a * degree_b + 1);
+}
+
+VISIBLE void
+compose_scm_sbern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                                const SCM *a, size_t degree_b,
+                                ssize_t stride_b, const SCM *b,
+                                ssize_t stride_c, SCM *c)
+{
+  // De Casteljau’s algorithm with polynomial values.
+
+  // We could get by with a lot less work space, but instead we are
+  // going for ease and clarity of programming. In practice the arrays
+  // are not going to be very large, anyway.
+
+  SCM one_minus_a[degree_a + 1];
+  one_minus_scm_sbern (degree_a, stride_a, a, 1, one_minus_a);
+
+  SCM _c[degree_b + 1][degree_a * degree_b + 1];
+  SCM temp1[degree_a * degree_b + 1];
+  SCM temp2[degree_a * degree_b + 1];
+
+  scm_dynwind_begin (0);
+
+  mpz_t C;
+  mpz_init (C);
+  scm_dynwind_mpz_clear (C);
+
+  for (size_t i = 0; i <= degree_b; i++)
+    {
+      mpz_bincoef_ui (C, degree_b, i);
+      _c[i][0] = scm_divide (b[stride_b * (ssize_t) i], scm_from_mpz (C));
+    }
+
+  scm_dynwind_end ();
+
+  for (size_t i = 0; i < degree_b; i++)
+    for (size_t j = 0; j < degree_b - i; j++)
+      {
+        mul_scm_sbern (degree_a, 1, one_minus_a,
+                       i * degree_a, 1, _c[j], 1, temp1);
+        mul_scm_sbern (degree_a, stride_a, a,
+                       i * degree_a, 1, _c[j + 1], 1, temp2);
+        add_scm_splines ((i + 1) * degree_a, 1, temp1, 1, temp2, 1, _c[j]);
+      }
+
+  copy_scm_with_strides (stride_c, c, 1, _c[0], degree_a * degree_b + 1);
 }
 
 VISIBLE void
@@ -579,6 +695,13 @@ scm_compose_f64_bern_horner (SCM a, SCM b)
 }
 
 VISIBLE SCM
+scm_compose_f64_sbern_de_casteljau (SCM a, SCM b)
+{
+  return scm_compose_f64_spline ("scm_compose_f64_sbern_de_casteljau",
+                                 compose_f64_sbern_de_casteljau, a, b);
+}
+
+VISIBLE SCM
 scm_compose_f64_sbern_horner (SCM a, SCM b)
 {
   return scm_compose_f64_spline ("scm_compose_f64_sbern_horner",
@@ -655,10 +778,24 @@ scm_compose_scm_mono (SCM a, SCM b)
 }
 
 VISIBLE SCM
+scm_compose_scm_bern_de_casteljau (SCM a, SCM b)
+{
+  return scm_compose_scm_spline ("scm_compose_scm_bern_de_casteljau",
+                                 compose_scm_bern_de_casteljau, a, b);
+}
+
+VISIBLE SCM
 scm_compose_scm_bern_horner (SCM a, SCM b)
 {
   return scm_compose_scm_spline ("scm_compose_scm_bern_horner",
                                  compose_scm_bern_horner, a, b);
+}
+
+VISIBLE SCM
+scm_compose_scm_sbern_de_casteljau (SCM a, SCM b)
+{
+  return scm_compose_scm_spline ("scm_compose_scm_sbern_de_casteljau",
+                                 compose_scm_sbern_de_casteljau, a, b);
 }
 
 VISIBLE SCM
@@ -687,11 +824,18 @@ init_math_polyspline_compose (void)
 
   scm_c_define_gsubr ("poly:compose-f64-bern-de-casteljau", 2, 0, 0,
                       scm_compose_f64_bern_de_casteljau);
+  scm_c_define_gsubr ("poly:compose-scm-bern-de-casteljau", 2, 0, 0,
+                      scm_compose_scm_bern_de_casteljau);
 
   scm_c_define_gsubr ("poly:compose-f64-bern-horner", 2, 0, 0,
                       scm_compose_f64_bern_horner);
   scm_c_define_gsubr ("poly:compose-scm-bern-horner", 2, 0, 0,
                       scm_compose_scm_bern_horner);
+
+  scm_c_define_gsubr ("poly:compose-f64-sbern-de-casteljau", 2, 0, 0,
+                      scm_compose_f64_sbern_de_casteljau);
+  scm_c_define_gsubr ("poly:compose-scm-sbern-de-casteljau", 2, 0, 0,
+                      scm_compose_scm_sbern_de_casteljau);
 
   scm_c_define_gsubr ("poly:compose-f64-sbern-horner", 2, 0, 0,
                       scm_compose_f64_sbern_horner);

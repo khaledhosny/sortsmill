@@ -71,6 +71,17 @@ void compose_scm_bern_horner (size_t degree_a, ssize_t stride_a, const SCM *a,
 SCM scm_compose_f64_bern_horner (SCM a, SCM b);
 SCM scm_compose_scm_bern_horner (SCM a, SCM b);
 
+void compose_f64_sbern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                                     const double *a, size_t degree_b,
+                                     ssize_t stride_b, const double *b,
+                                     ssize_t stride_c, double *c);
+void compose_scm_sbern_de_casteljau (size_t degree_a, ssize_t stride_a,
+                                     const SCM *a, size_t degree_b,
+                                     ssize_t stride_b, const SCM *b,
+                                     ssize_t stride_c, SCM *c);
+SCM scm_compose_f64_sbern_de_casteljau (SCM a, SCM b);
+SCM scm_compose_scm_sbern_de_casteljau (SCM a, SCM b);
+
 void compose_f64_sbern_horner (size_t degree_a, ssize_t stride_a,
                                const double *a, size_t degree_b,
                                ssize_t stride_b, const double *b,

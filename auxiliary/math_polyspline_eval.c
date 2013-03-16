@@ -320,15 +320,16 @@ VISIBLE SCM
 eval_scm_sbern_de_casteljau (size_t degree, ssize_t stride,
                              const SCM *spline, SCM t)
 {
+  const SCM t1 = scm_difference (scm_from_int (1), t);
+
+  SCM b[degree + 1];
+
   scm_dynwind_begin (0);
 
   mpz_t C;
   mpz_init (C);
   scm_dynwind_mpz_clear (C);
 
-  const SCM t1 = scm_difference (scm_from_int (1), t);
-
-  SCM b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
     {
       mpz_bincoef_ui (C, degree, i);
