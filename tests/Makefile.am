@@ -105,7 +105,7 @@ TESTS_GMP_CONSTANTS = test_gmp_constants
 
 TESTS_MATH_FUNCTIONS = test_bincoef
 
-TESTS_BRENTROOT = test_brentroot test_qbrentroot
+TESTS_BRENTROOT = test_brentroot test_mpq_brentroot
 
 TESTS_LINALG = $(TESTS_LINALG_MPZ) $(TESTS_LINALG_MPQ)	\
 	$(TESTS_LINALG_SCM) $(TESTS_LINALG_F64)

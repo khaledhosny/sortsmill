@@ -38,24 +38,26 @@ cdef double _call_func (double x, void *func_p):
   return PyFloat_AsDouble (result)
 
 def brentroot (double t1, double t2, func not None,
-               int max_iters = -1, double tol = -1):
+               int max_iters = -1, double tol = -1,
+               double epsilon = -1):
   Py_INCREF (func)
   cdef double root
   cdef int err
   cdef unsigned int iter_no
-  brentroot_c.brentroot (max_iters, tol, t1, t2,
+  brentroot_c.brentroot (max_iters, tol, epsilon, t1, t2,
                          _call_func, <PyObject *> func,
                          &root, &err, &iter_no)
   Py_DECREF (func)
   return (root if err == 0 else None)
 
 def brentroot_values (double t1, double t2, func not None,
-                      int max_iters = -1, double tol = -1):
+                      int max_iters = -1, double tol = -1,
+                      double epsilon = -1):
   Py_INCREF (func)
   cdef double root
   cdef int err
   cdef unsigned int iter_no
-  brentroot_c.brentroot (max_iters, tol, t1, t2,
+  brentroot_c.brentroot (max_iters, tol, epsilon, t1, t2,
                          _call_func, <PyObject *> func,
                          &root, &err, &iter_no)
   Py_DECREF (func)
@@ -63,22 +65,20 @@ def brentroot_values (double t1, double t2, func not None,
 
 #--------------------------------------------------------------------------
 
-qbrentroot_default_max_iters = 1000000
-qbrentroot_default_tol = gmpy.mpq (sys.float_info.epsilon) # FIXME: Is
-                                                           # this
-                                                           # value
-                                                           # appropriate?
+mpq_brentroot_default_max_iters = 1000000
+mpq_brentroot_default_tol = gmpy.mpq (sys.float_info.epsilon) # FIXME:
+# Is this value appropriate?
 
-def qbrentroot (t1, t2, func not None,
+def mpq_brentroot (t1, t2, func not None,
                 max_iters = -1, tol = -1,
                 epsilon = sys.float_info.epsilon):
-  return (qbrentroot_values (t1, t2, func, max_iters, tol, epsilon))[0]
+  return (mpq_brentroot_values (t1, t2, func, max_iters, tol, epsilon))[0]
 
 def actual_max_iterations (max_iters):
-  return max_iters if 0 <= max_iters else qbrentroot_default_max_iters
+  return max_iters if 0 <= max_iters else mpq_brentroot_default_max_iters
 
 def actual_tolerance (tol):
-  return gmpy.mpq (tol) if 0 <= tol else qbrentroot_default_tol
+  return gmpy.mpq (tol) if 0 <= tol else mpq_brentroot_default_tol
 
 def bracketed (f1, f2):
   return (f1 <= 0 and 0 <= f2) or (f2 <= 0 and 0 <= f1)
@@ -141,7 +141,7 @@ def step_by_at_least_tolerance (tolerance, new_step, b):
     guess = b + tolerance
   return guess
 
-def qbrentroot_values (t1, t2, func not None,
+def mpq_brentroot_values (t1, t2, func not None,
                        max_iters = -1, tol = -1,
                        epsilon = sys.float_info.epsilon):
   t1 = gmpy.mpq (t1)
@@ -240,16 +240,16 @@ def qbrentroot_values (t1, t2, func not None,
 
 #--------------------------------------------------------------------------
 #
-# qbrentroot_values_c and qbrentroot_c: An implementation of
-# qbrentroot using callbacks from C.
+# mpq_brentroot_values_c and mpq_brentroot_c: An implementation of
+# mpq_brentroot using callbacks from C.
 #
-# qbrentroot_values and qbrentroot, above, written in Python, may be
-# faster. The C versions are here mainly to document how they were
-# implemented. Also, someone might figure out how to speed them up, so
-# they can replace the Python version.
+# mpq_brentroot_values and mpq_brentroot, above, written in Python,
+# may be faster. The C versions are here mainly to document how they
+# were implemented. Also, someone might figure out how to speed them
+# up, so they can replace the Python version.
 #
-# Until that happens, however, use of qbrentroot_values_c or
-# qbrentroot_c is discouraged.
+# Until that happens, however, use of mpq_brentroot_values_c or
+# mpq_brentroot_c is discouraged.
 #
 
 from sortsmill.cython.gmpy cimport *
@@ -262,7 +262,7 @@ cdef void _call_qfunc (__mpq_struct *result, __mpq_struct *x, void *func_p):
   py_obj = gmpy.mpq (<object> py_result)
   py_to_mpq (py_obj, result)
 
-def qbrentroot_values_c (t1 not None, t2 not None, func not None,
+def mpq_brentroot_values_c (t1 not None, t2 not None, func not None,
                          int max_iters = -1,
                          tol not None = gmpy.mpq (-1),
                          epsilon not None = gmpy.mpq (-1)):
@@ -301,7 +301,7 @@ def qbrentroot_values_c (t1 not None, t2 not None, func not None,
                       __mpq_struct *, __mpq_struct *,
                       void (*) (__mpq_struct *, __mpq_struct *, void *),
                       void *, __mpq_struct *, int *,
-                      unsigned int *)> &brentroot_c.qbrentroot  
+                      unsigned int *)> &brentroot_c.mpq_brentroot  
   qbrent (max_iters, c_tol, c_epsilon, c_t1, c_t2,
           _call_qfunc, <PyObject *> func,
           c_root, &err, &iter_no)
@@ -317,8 +317,8 @@ def qbrentroot_values_c (t1 not None, t2 not None, func not None,
   Py_DECREF (func)
   return ((root if err == 0 else None), err, iter_no)
 
-def qbrentroot_c (t1, t2, func not None,
+def mpq_brentroot_c (t1, t2, func not None,
                   max_iters = -1, tol = -1, epsilon = -1):
-  return (qbrentroot_values_c (t1, t2, func, max_iters, tol, epsilon))[0]
+  return (mpq_brentroot_values_c (t1, t2, func, max_iters, tol, epsilon))[0]
 
 #--------------------------------------------------------------------------

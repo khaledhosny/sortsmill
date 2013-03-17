@@ -17,19 +17,19 @@
 // compilation.)
 //
 
+#include <main_with_guile.x>
+
 static void
-my_sine (mpq_t result, const mpq_t x, void *UNUSED (data))
+my_sine (mpq_t result, mpq_t x, void *UNUSED (data))
 {
   return mpq_set_d (result, sin (mpq_get_d (x)));
 }
 
-static void (*func) (mpq_t, const mpq_t, void *) = my_sine;
+static void (*func) (mpq_t, mpq_t, void *) = my_sine;
 
-int
-main (int argc, char **argv)
+static int
+my_main (int argc, char **argv)
 {
-  GC_INIT ();
-
   setlocale (LC_ALL, "");
 
   mpq_t root, t1, t2, tol, epsilon;
@@ -46,8 +46,8 @@ main (int argc, char **argv)
   mpq_set_d (tol, (6 <= argc) ? atof (argv[5]) : -1.0);
   mpq_set_d (epsilon, (7 <= argc) ? atof (argv[6]) : -1.0);
 
-  qbrentroot (max_iters, tol, epsilon, t1, t2, func, NULL, root, &err,
-              &iter_no);
+  mpq_brentroot (max_iters, tol, epsilon, t1, t2, func, NULL, root, &err,
+                 &iter_no);
   printf ("err = %d", err);
   if (err == 0)
     printf (", root = %lf, iter_no = %d", mpq_get_d (root), iter_no);

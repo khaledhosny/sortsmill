@@ -13,8 +13,7 @@
 
 #include <main_with_guile.x>
 
-typedef bool elementwise_predicate (unsigned int m, unsigned int n,
-                                    SCM A[m][n]);
+typedef bool elementwise_predicate (size_t m, size_t n, SCM A[m][n]);
 
 static elementwise_predicate *
 predicate (const char *predicate_name)
@@ -44,10 +43,10 @@ my_main (int argc, char **argv)
 
   SCM A[rows][cols];
 
-  unsigned int i_argv = 4;
+  size_t i_argv = 4;
 
-  for (unsigned int i = 0; i < rows; i++)
-    for (unsigned int j = 0; j < cols; j++)
+  for (size_t i = 0; i < rows; i++)
+    for (size_t j = 0; j < cols; j++)
       {
         A[i][j] = scm_c_locale_stringn_to_number (argv[i_argv],
                                                   strlen (argv[i_argv]), 10);

@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/math/brentroot.h>
+#include <sortsmill/math.h>
+#include <sortsmill/guile.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <float.h>
-#include <sortsmill/math/gmp_constants.h>
 
 //
 // Brent's method for root-finding --
@@ -238,9 +238,9 @@ step_by_at_least_tolerance (mpq_t guess, const mpq_t tolerance,
 }
 
 VISIBLE void
-qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
-            const mpq_t t1, const mpq_t t2, qbrentroot_func_t func,
-            void *data, mpq_t root, int *err, unsigned int *iter_no)
+mpq_brentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
+               const mpq_t t1, const mpq_t t2, mpq_brentroot_func_t func,
+               void *data, mpq_t root, int *err, unsigned int *iter_no)
 {
   mpq_t a, b, fa, fb;
   mpq_t b1, fb1, step, step1;
@@ -250,29 +250,79 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
   mpq_t abs_fa, abs_fb, abs_fguess;
   mpq_t tmp1, tmp2;
 
+  scm_dynwind_begin (0);
+
   mpq_init (a);
+  scm_dynwind_mpq_clear (a);
+
   mpq_init (b);
+  scm_dynwind_mpq_clear (b);
+
   mpq_init (fa);
+  scm_dynwind_mpq_clear (fa);
+
   mpq_init (fb);
+  scm_dynwind_mpq_clear (fb);
+
   mpq_init (b1);
+  scm_dynwind_mpq_clear (b1);
+
   mpq_init (fb1);
+  scm_dynwind_mpq_clear (fb1);
+
   mpq_init (step);
+  scm_dynwind_mpq_clear (step);
+
   mpq_init (step1);
+  scm_dynwind_mpq_clear (step1);
+
   mpq_init (aa);
+  scm_dynwind_mpq_clear (aa);
+
   mpq_init (bb);
+  scm_dynwind_mpq_clear (bb);
+
   mpq_init (faa);
+  scm_dynwind_mpq_clear (faa);
+
   mpq_init (fbb);
+  scm_dynwind_mpq_clear (fbb);
+
   mpq_init (fguess);
+  scm_dynwind_mpq_clear (fguess);
+
   mpq_init (guess);
+  scm_dynwind_mpq_clear (guess);
+
   mpq_init (new_step);
+  scm_dynwind_mpq_clear (new_step);
+
   mpq_init (old_step);
+  scm_dynwind_mpq_clear (old_step);
+
   mpq_init (tolerance);
+  scm_dynwind_mpq_clear (tolerance);
+
   mpq_init (toler);
+  scm_dynwind_mpq_clear (toler);
+
   mpq_init (eps);
+  scm_dynwind_mpq_clear (eps);
+
   mpq_init (abs_fa);
+  scm_dynwind_mpq_clear (abs_fa);
+
   mpq_init (abs_fb);
+  scm_dynwind_mpq_clear (abs_fb);
+
   mpq_init (abs_fguess);
-  mpq_inits (tmp1, tmp2, NULL);
+  scm_dynwind_mpq_clear (abs_fguess);
+
+  mpq_init (tmp1);
+  scm_dynwind_mpq_clear (tmp1);
+
+  mpq_init (tmp2);
+  scm_dynwind_mpq_clear (tmp2);
 
   const unsigned int max_iterations = actual_max_iterations (max_iters);
   actual_tolerance (toler, tol);
@@ -401,27 +451,30 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
         mpq_set (root, b);
     }
 
-  mpq_clear (a);
-  mpq_clear (b);
-  mpq_clear (fa);
-  mpq_clear (fb);
-  mpq_clear (b1);
-  mpq_clear (fb1);
-  mpq_clear (step);
-  mpq_clear (step1);
-  mpq_clear (aa);
-  mpq_clear (bb);
-  mpq_clear (faa);
-  mpq_clear (fbb);
-  mpq_clear (fguess);
-  mpq_clear (guess);
-  mpq_clear (new_step);
-  mpq_clear (old_step);
-  mpq_clear (tolerance);
-  mpq_clear (toler);
-  mpq_clear (eps);
-  mpq_clear (abs_fa);
-  mpq_clear (abs_fb);
-  mpq_clear (abs_fguess);
-  mpq_clears (tmp1, tmp2, NULL);
+  scm_dynwind_end ();
+  /*
+     mpq_clear (a);
+     mpq_clear (b);
+     mpq_clear (fa);
+     mpq_clear (fb);
+     mpq_clear (b1);
+     mpq_clear (fb1);
+     mpq_clear (step);
+     mpq_clear (step1);
+     mpq_clear (aa);
+     mpq_clear (bb);
+     mpq_clear (faa);
+     mpq_clear (fbb);
+     mpq_clear (fguess);
+     mpq_clear (guess);
+     mpq_clear (new_step);
+     mpq_clear (old_step);
+     mpq_clear (tolerance);
+     mpq_clear (toler);
+     mpq_clear (eps);
+     mpq_clear (abs_fa);
+     mpq_clear (abs_fb);
+     mpq_clear (abs_fguess);
+     mpq_clears (tmp1, tmp2, NULL);
+   */
 }

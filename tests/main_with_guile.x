@@ -1,5 +1,7 @@
 //-*- mode: c -*-
 
+#include <libguile.h>
+
 static int my_main (int argc, char **argv);
 
 struct _my_args

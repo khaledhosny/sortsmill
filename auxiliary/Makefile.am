@@ -108,7 +108,7 @@ dist_libsortsmill_aux_la_SOURCES += math_polyspline_subdiv.c
 
 # Brent’s root-finding algorithm.
 dist_libsortsmill_aux_la_SOURCES += math_brentroot.c
-dist_libsortsmill_aux_la_SOURCES += math_qbrentroot.c
+dist_libsortsmill_aux_la_SOURCES += math_mpq_brentroot.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_brentroot.c
 
 # Guile-Pure interface

@@ -41,8 +41,10 @@ main (int argc, char **argv)
 
   int max_iters = (5 <= argc) ? atoi (argv[4]) : -1;
   double tol = (6 <= argc) ? atof (argv[5]) : -1.0;
+  double epsilon = -1;          // FIXME: Put in tests for different epsilon.
 
-  brentroot (max_iters, tol, t1, t2, func, NULL, &root, &err, &iter_no);
+  brentroot (max_iters, tol, epsilon, t1, t2, func, NULL, &root, &err,
+             &iter_no);
   printf ("err = %d", err);
   if (err == 0)
     printf (", root = %lf, iter_no = %d", root, iter_no);

@@ -1,8 +1,8 @@
 #! /bin/env python
 #-*- coding:utf-8; python-indent: 2; -*-
 
-from sortsmill.brentroot import qbrentroot
-from sortsmill.brentroot import qbrentroot_values
+from sortsmill.brentroot import mpq_brentroot
+from sortsmill.brentroot import mpq_brentroot_values
 from gmpy import mpq
 import sys
 import math
@@ -25,9 +25,9 @@ else:
 
 func = eval (func_string)
 
-(root1, err, iter_no) = qbrentroot_values (t1, t2, func,
-                                           max_iters=max_iters,
-                                           tol=tol)
+(root1, err, iter_no) = mpq_brentroot_values (t1, t2, func,
+                                              max_iters=max_iters,
+                                              tol=tol)
 if err == 0:
     write ("err = {:d}, root = {:.6f}, iter_no = {:d}"
            .format (err, float (root1), iter_no))
@@ -37,8 +37,8 @@ else:
     write ("err = {:d}".format (err))
 
 # Check that brentroot returns the same result as brentroot_values.
-root2 = qbrentroot (t1, t2, func, max_iters=max_iters,
-                    tol=tol)
+root2 = mpq_brentroot (t1, t2, func, max_iters=max_iters,
+                       tol=tol)
 if root2 == root1:
     exit (0)
 else:

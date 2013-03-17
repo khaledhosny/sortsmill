@@ -23,10 +23,10 @@
 
 (library (sortsmill math brentroot)
 
-  (export flbrentroot
-          flbrentroot-values
-          qbrentroot
-          qbrentroot-values)
+  (export brentroot-f64
+          brentroot-f64-values
+          brentroot-mpq
+          brentroot-mpq-values)
 
   (import (sortsmill math math-constants)
           (sortsmill dynlink)
@@ -38,22 +38,24 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define* (flbrentroot-values t1 t2 func #:key (max-iters -1) (tol -1))
-    (f64-brentroot max-iters tol t1 t2 func))
+  (define* (brentroot-f64-values t1 t2 func
+                                 #:key (max-iters -1) (tol -1) (epsilon -1))
+    (f64-brentroot max-iters tol epsilon t1 t2 func))
 
-  (define* (flbrentroot t1 t2 func #:key (max-iters -1) (tol -1))
+  (define* (brentroot-f64 t1 t2 func
+                          #:key (max-iters -1) (tol -1) (epsilon -1))
     (let-values (((root _err _iter-no)
-                  (f64-brentroot max-iters tol t1 t2 func)))
+                  (f64-brentroot max-iters tol epsilon t1 t2 func)))
       root))
 
   ;;-------------------------------------------------------------------------
 
-  (define* (qbrentroot-values t1 t2 func
-                              #:key (max-iters -1) (tol -1) (epsilon -1))
+  (define* (brentroot-mpq-values t1 t2 func
+                                 #:key (max-iters -1) (tol -1) (epsilon -1))
     (mpq-brentroot max-iters tol epsilon t1 t2 func))
 
-  (define* (qbrentroot t1 t2 func
-                       #:key (max-iters -1) (tol -1) (epsilon -1))
+  (define* (brentroot-mpq t1 t2 func
+                          #:key (max-iters -1) (tol -1) (epsilon -1))
     (let-values (((root _err _iter-no)
                   (mpq-brentroot max-iters tol epsilon t1 t2 func)))
       root))

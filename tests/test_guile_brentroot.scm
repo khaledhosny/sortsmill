@@ -17,10 +17,11 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(use-modules
- (sortsmill math brentroot)
- (ice-9 receive)
- (ice-9 format))
+(import (sortsmill math brentroot)
+        (rnrs)
+        (except (guile) error)
+        (ice-9 receive)
+        (ice-9 format))
 
 (define argc (length (command-line)))
 

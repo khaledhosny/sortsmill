@@ -29,15 +29,12 @@ extern "C"
 #endif
 
 typedef double (*brentroot_func_t) (double, void *);
-typedef void (*qbrentroot_func_t) (mpq_t, const mpq_t, void *);
+typedef void (*mpq_brentroot_func_t) (mpq_t, mpq_t, void *);
 
 
-/* FIXME: Add an @var{epsilon} parameter to brentroot so it is in
-   parallel with qbrentroot; assert that epsilon is at least
-   DBL_EPSILON. */
 /*
  * vis--
- * vis-- @deftypefun void brentroot (int @var{max_iters}, double @var{tol}, double @var{t1}, double @var{t2}, double (*@var{func}) (double, const void *), const void *@var{data}, double *@var{root}, int *@var{err}, unsigned int *@var{iter_no})
+ * vis-- @deftypefun void brentroot (int @var{max_iters}, double @var{tol}, double @var{epsilon}, double @var{t1}, double @var{t2}, double (*@var{func}) (double, const void *), const void *@var{data}, double *@var{root}, int *@var{err}, unsigned int *@var{iter_no})
  * vis--
  * vis-- Brent's method for root-finding.
  * vis--
@@ -48,13 +45,14 @@ typedef void (*qbrentroot_func_t) (mpq_t, const mpq_t, void *);
  * vis-- @end deftypefun
  * vis--
  */
-void brentroot (int max_iters, double tol, double t1, double t2,
+void brentroot (int max_iters, double tol, double epsilon,
+                double t1, double t2,
                 brentroot_func_t func, void *data, double *root,
                 int *err, unsigned int *iter_no);
 
 /*
  * vis--
- * vis-- @deftypefun void qbrentroot (int @var{max_iters}, const mpq_t @var{tol}, const mpq_t @var{epsilon}, const mpq_t @var{t1}, const mpq_t @var{t2}, void (*@var{func}) (mpq_t, const mpq_t, const void *), const void *@var{data}, mpq_t @var{root}, int *@var{err}, unsigned int *@var{iter_no})
+ * vis-- @deftypefun void mpq_brentroot (int @var{max_iters}, const mpq_t @var{tol}, const mpq_t @var{epsilon}, const mpq_t @var{t1}, const mpq_t @var{t2}, void (*@var{func}) (mpq_t, const mpq_t, const void *), const void *@var{data}, mpq_t @var{root}, int *@var{err}, unsigned int *@var{iter_no})
  * vis--
  * vis-- Brent's method for root-finding.
  * vis--
@@ -65,10 +63,10 @@ void brentroot (int max_iters, double tol, double t1, double t2,
  * vis-- @end deftypefun
  * vis--
  */
-void qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
-                 const mpq_t t1, const mpq_t t2,
-                 qbrentroot_func_t func, void *data, mpq_t root,
-                 int *err, unsigned int *iter_no);
+void mpq_brentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
+                    const mpq_t t1, const mpq_t t2,
+                    mpq_brentroot_func_t func, void *data, mpq_t root,
+                    int *err, unsigned int *iter_no);
 
 #if 0
 {

@@ -11,8 +11,7 @@
 
 #include <main_with_guile.x>
 
-typedef bool elementwise_predicate (unsigned int m, unsigned int n,
-                                    mpq_t A[m][n]);
+typedef bool elementwise_predicate (size_t m, size_t n, mpq_t A[m][n]);
 
 static elementwise_predicate *
 predicate (const char *predicate_name)
@@ -44,10 +43,10 @@ my_main (int argc, char **argv)
 
   mpq_matrix_init (rows, cols, A);
 
-  unsigned int i_argv = 4;
+  size_t i_argv = 4;
 
-  for (unsigned int i = 0; i < rows; i++)
-    for (unsigned int j = 0; j < cols; j++)
+  for (size_t i = 0; i < rows; i++)
+    for (size_t j = 0; j < cols; j++)
       {
         mpq_set_str (A[i][j], argv[i_argv], 0);
         i_argv++;

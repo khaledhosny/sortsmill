@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <float.h>
+#include <assert.h>
 
 //
 // Brent's method for root-finding --
@@ -42,6 +43,12 @@ _GL_ATTRIBUTE_CONST static inline double
 actual_tolerance (double tol)
 {
   return (0.0 <= tol) ? tol : brentroot_default_tol;
+}
+
+_GL_ATTRIBUTE_CONST static inline double
+actual_epsilon (double epsilon)
+{
+  return (epsilon < 0) ? DBL_EPSILON : epsilon;
 }
 
 _GL_ATTRIBUTE_CONST static inline bool
@@ -145,10 +152,13 @@ step_by_at_least_tolerance (double tolerance, double new_step, double b)
 }
 
 VISIBLE void
-brentroot (int max_iters, double tol, double t1, double t2,
+brentroot (int max_iters, double tol, double epsilon,
+           double t1, double t2,
            brentroot_func_t func, void *data, double *root, int *err,
            unsigned int *iter_no)
 {
+  assert (epsilon < 0 || DBL_EPSILON <= epsilon);
+
   double b1, fb1, step, step1;
   double aa, bb, faa, fbb;
   double fguess, guess, new_step, old_step;
@@ -156,6 +166,7 @@ brentroot (int max_iters, double tol, double t1, double t2,
 
   const unsigned int max_iterations = actual_max_iterations (max_iters);
   const double toler = actual_tolerance (tol);
+  const double eps = actual_epsilon (epsilon);
 
   *err = 0;                     // err == 0 means 'no error'.
   *iter_no = 0;
@@ -187,7 +198,7 @@ brentroot (int max_iters, double tol, double t1, double t2,
           b1 = a;
           fb1 = fa;
         }
-      tolerance = 2.0 * DBL_EPSILON * fabs (b) + 0.5 * toler;
+      tolerance = 2.0 * eps * fabs (b) + 0.5 * toler;
       while (!we_are_done (max_iterations, *iter_no, tolerance, step, fb))
         {
           if (fabs (step1) < tolerance || fabs (fa) <= fabs (fb))
@@ -253,7 +264,7 @@ brentroot (int max_iters, double tol, double t1, double t2,
           b = bb;
           fb = fbb;
 
-          tolerance = 2.0 * DBL_EPSILON * fabs (b) + 0.5 * toler;
+          tolerance = 2.0 * eps * fabs (b) + 0.5 * toler;
         }
       if (max_iterations_exceeded (max_iterations, *iter_no))
         *err = 2;               // err == 2 means maximum iterations exceeded.
