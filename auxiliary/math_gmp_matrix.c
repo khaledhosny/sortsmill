@@ -49,13 +49,13 @@ _trans_col (CBLAS_TRANSPOSE_t trans, size_t i, size_t j)
 #define _GMP_TYPE_MPF 0
 #define _GMP_TYPE(y) mpz##y
 #define _GMP_TYPE2(x, y) x##mpz##y
-#include <gmp_matrix_init.c>
-#include <gmp_matrix_set.c>
-#include <gmp_matrix_copy.c>
-#include <gmp_matrix_swap.c>
-#include <gmp_matrix_mult.c>
-#include <gmp_matrix_add.c>
-#include <gmp_matrix_pred.c>
+#include <math_gmp_matrix_init.c>
+#include <math_gmp_matrix_set.c>
+#include <math_gmp_matrix_copy.c>
+#include <math_gmp_matrix_swap.c>
+#include <math_gmp_matrix_mult.c>
+#include <math_gmp_matrix_add.c>
+#include <math_gmp_matrix_pred.c>
 
 #undef _GMP_TYPE_MPZ
 #undef _GMP_TYPE_MPQ
@@ -67,11 +67,11 @@ _trans_col (CBLAS_TRANSPOSE_t trans, size_t i, size_t j)
 #define _GMP_TYPE_MPF 0
 #define _GMP_TYPE(y) mpq##y
 #define _GMP_TYPE2(x, y) x##mpq##y
-#include <gmp_matrix_init.c>
-#include <gmp_matrix_set.c>
-#include <gmp_matrix_copy.c>
-#include <gmp_matrix_swap.c>
-#include <gmp_matrix_mult.c>
-#include <gmp_matrix_add.c>
-#include <gmp_matrix_pred.c>
-#include <gmp_matrix_trsv.c>
+#include <math_gmp_matrix_init.c>
+#include <math_gmp_matrix_set.c>
+#include <math_gmp_matrix_copy.c>
+#include <math_gmp_matrix_swap.c>
+#include <math_gmp_matrix_mult.c>
+#include <math_gmp_matrix_add.c>
+#include <math_gmp_matrix_pred.c>
+#include <math_gmp_matrix_trsv.c>

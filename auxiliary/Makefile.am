@@ -93,6 +93,7 @@ dist_libsortsmill_aux_la_SOURCES += math_polyspline_bases.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_compose.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_elev.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_eval.c
+dist_libsortsmill_aux_la_SOURCES += math_polyspline_implicit.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_mul.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_subdiv.c
 
@@ -136,19 +137,17 @@ libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmill_aux_la_LDFLAGS = $(call ldflags) -export-dynamic
 libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 
-# The GMP_MATRIX_EXTRAS files are included by gmp_matrix.c rather than
-# compiled directly.
-#
-# FIXME: Rename these as math_gmp_matrix_init.c, etc.
+# The GMP_MATRIX_EXTRAS files are included by math_gmp_matrix.c rather
+# than compiled directly.
 GMP_MATRIX_EXTRAS =
-GMP_MATRIX_EXTRAS += gmp_matrix_init.c
-GMP_MATRIX_EXTRAS += gmp_matrix_set.c
-GMP_MATRIX_EXTRAS += gmp_matrix_copy.c
-GMP_MATRIX_EXTRAS += gmp_matrix_swap.c
-GMP_MATRIX_EXTRAS += gmp_matrix_mult.c
-GMP_MATRIX_EXTRAS += gmp_matrix_add.c
-GMP_MATRIX_EXTRAS += gmp_matrix_pred.c
-GMP_MATRIX_EXTRAS += gmp_matrix_trsv.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_init.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_set.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_copy.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_swap.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_mult.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_add.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_pred.c
+GMP_MATRIX_EXTRAS += math_gmp_matrix_trsv.c
 
 EXTRA_DIST += $(GMP_MATRIX_EXTRAS)
 
