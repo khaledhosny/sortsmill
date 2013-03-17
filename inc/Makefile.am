@@ -56,7 +56,6 @@ noinst_HEADERS += ustring.h
 noinst_HEADERS += utype.h
 noinst_HEADERS += annotations_base.h
 noinst_HEADERS += ffthread.h
-noinst_HEADERS += precomputed_polyspline_data.h
 noinst_HEADERS += contour_interface.h
 noinst_HEADERS += moveto_funcs.h
 noinst_HEADERS += invoke_funcs.h

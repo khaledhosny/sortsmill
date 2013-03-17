@@ -30,7 +30,7 @@ cdef double[::contiguous] c_f64_bern_to_sbern (double[::contiguous] spline):
   cdef unsigned int deg = len (spline) - 1
   cdef double[::contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_bern_to_sbern (deg, &spline[0], &result[0], 1)
+  ps.change_basis_f64_bern_to_sbern (deg, 1, &spline[0], 1, &result[0])
   return result
 
 @cython.boundscheck(False)
@@ -39,7 +39,7 @@ cdef double[::contiguous] c_f64_sbern_to_bern (double[::contiguous] spline):
   cdef unsigned int deg = len (spline) - 1
   cdef double[::contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_sbern_to_bern (deg, &spline[0], &result[0], 1)
+  ps.change_basis_f64_sbern_to_bern (deg, 1, &spline[0], 1, &result[0])
   return result
 
 @cython.boundscheck(False)
@@ -48,7 +48,7 @@ cdef double[::contiguous] c_f64_mono_to_sbern (double[::contiguous] spline):
   cdef unsigned int deg = len (spline) - 1
   cdef double[::contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_mono_to_sbern (deg, &spline[0], &result[0], 1)
+  ps.change_basis_f64_mono_to_sbern (deg, 1, &spline[0], 1, &result[0])
   return result
 
 @cython.boundscheck(False)
@@ -57,7 +57,7 @@ cdef double[::contiguous] c_f64_sbern_to_mono (double[::contiguous] spline):
   cdef unsigned int deg = len (spline) - 1
   cdef double[::contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_sbern_to_mono (deg, &spline[0], &result[0], 1)
+  ps.change_basis_f64_sbern_to_mono (deg, 1, &spline[0], 1, &result[0])
   return result
 
 @cython.boundscheck(False)
@@ -66,7 +66,7 @@ cdef double[::contiguous] c_f64_mono_to_bern (double[::contiguous] spline):
   cdef unsigned int deg = len (spline) - 1
   cdef double[::contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_mono_to_bern (deg, &spline[0], &result[0], 1)
+  ps.change_basis_f64_mono_to_bern (deg, 1, &spline[0], 1, &result[0])
   return result
 
 @cython.boundscheck(False)
@@ -75,7 +75,7 @@ cdef double[::contiguous] c_f64_bern_to_mono (double[::contiguous] spline):
   cdef unsigned int deg = len (spline) - 1
   cdef double[::contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_bern_to_mono (deg, &spline[0], &result[0], 1)
+  ps.change_basis_f64_bern_to_mono (deg, 1, &spline[0], 1, &result[0])
   return result
 
 #--------------------------------------------------------------------------
@@ -120,7 +120,7 @@ cdef object c_f64_subdiv_sbern (double[::contiguous] spline, double t):
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
   cdef double[::contiguous] result2 = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_subdiv_sbern (deg, &spline[0], t, &result1[0], &result2[0])
+  ps.subdiv_f64_sbern (deg, 1, &spline[0], t, 1, &result1[0], 1, &result2[0])
   return (result1, result2)
 
 @cython.boundscheck(False)
@@ -131,7 +131,7 @@ cdef object c_f64_subdiv_bern (double[::contiguous] spline, double t):
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
   cdef double[::contiguous] result2 = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  ps.f64_subdiv_bern (deg, &spline[0], t, &result1[0], &result2[0])
+  ps.subdiv_f64_bern (deg, 1, &spline[0], t, 1, &result1[0], 1, &result2[0])
   return (result1, result2)
 
 #--------------------------------------------------------------------------

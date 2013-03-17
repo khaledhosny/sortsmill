@@ -223,6 +223,56 @@ void mpq_coefficients_spower_to_spower (size_t degree,
 SCM scm_c_coefficients_spower_to_spower (size_t degree);
 SCM scm_coefficients_spower_to_spower (SCM degree);
 
+/* Change basis. Guaranteed safe for in-place computation. */
+void change_basis_f64_mono_to_mono (size_t degree,
+                                    ssize_t stride, const double *spline,
+                                    ssize_t result_stride, double *result);
+void change_basis_f64_mono_to_bern (size_t degree,
+                                    ssize_t stride, const double *spline,
+                                    ssize_t result_stride, double *result);
+void change_basis_f64_mono_to_sbern (size_t degree,
+                                     ssize_t stride, const double *spline,
+                                     ssize_t result_stride, double *result);
+void change_basis_f64_mono_to_spower (size_t degree,
+                                      ssize_t stride, const double *spline,
+                                      ssize_t result_stride, double *result);
+void change_basis_f64_bern_to_mono (size_t degree,
+                                    ssize_t stride, const double *spline,
+                                    ssize_t result_stride, double *result);
+void change_basis_f64_bern_to_bern (size_t degree,
+                                    ssize_t stride, const double *spline,
+                                    ssize_t result_stride, double *result);
+void change_basis_f64_bern_to_sbern (size_t degree,
+                                     ssize_t stride, const double *spline,
+                                     ssize_t result_stride, double *result);
+void change_basis_f64_bern_to_spower (size_t degree,
+                                      ssize_t stride, const double *spline,
+                                      ssize_t result_stride, double *result);
+void change_basis_f64_sbern_to_mono (size_t degree,
+                                     ssize_t stride, const double *spline,
+                                     ssize_t result_stride, double *result);
+void change_basis_f64_sbern_to_bern (size_t degree,
+                                     ssize_t stride, const double *spline,
+                                     ssize_t result_stride, double *result);
+void change_basis_f64_sbern_to_sbern (size_t degree,
+                                      ssize_t stride, const double *spline,
+                                      ssize_t result_stride, double *result);
+void change_basis_f64_sbern_to_spower (size_t degree,
+                                       ssize_t stride, const double *spline,
+                                       ssize_t result_stride, double *result);
+void change_basis_f64_spower_to_mono (size_t degree,
+                                      ssize_t stride, const double *spline,
+                                      ssize_t result_stride, double *result);
+void change_basis_f64_spower_to_bern (size_t degree,
+                                      ssize_t stride, const double *spline,
+                                      ssize_t result_stride, double *result);
+void change_basis_f64_spower_to_sbern (size_t degree,
+                                       ssize_t stride, const double *spline,
+                                       ssize_t result_stride, double *result);
+void change_basis_f64_spower_to_spower (size_t degree,
+                                        ssize_t stride, const double *spline,
+                                        ssize_t result_stride, double *result);
+
 /* Construct the polynomial that is equal to the constant one. */
 void one_f64_mono (size_t degree, ssize_t stride, double *one);
 void one_scm_mono (size_t degree, ssize_t stride, SCM *one);

@@ -28,10 +28,9 @@
 include $(top_srcdir)/mk/flags.am
 @includemk@ $(top_srcdir)/mk/guile.mk
 
-POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
-
-EXTRA_DIST =
 lib_LTLIBRARIES =
+EXTRA_DIST =
+MOSTLYCLEANFILES =
 
 #--------------------------------------------------------------------------
 
@@ -85,19 +84,10 @@ dist_libsortsmill_aux_la_SOURCES += xunistr_strjoin.c
 # Mathematical functions.
 dist_libsortsmill_aux_la_SOURCES += bincoef.c
 
-# Polynomial splines. FIXME: Replace much of this stuff.
-dist_libsortsmill_aux_la_SOURCES += precomputed_gmp_polyspline_data.c
-dist_libsortsmill_aux_la_SOURCES += polyspline_data.c
-dist_libsortsmill_aux_la_SOURCES += polyspline.c
-dist_libsortsmill_aux_la_SOURCES += guile_math_polyspline.c
-dist_libsortsmill_aux_la_SOURCES += guile_contours.c
-nodist_libsortsmill_aux_la_SOURCES += precomputed_polyspline_data.c
-
 # Moving data around, taking into account non-unit strides.
 dist_libsortsmill_aux_la_SOURCES += copy_with_strides.c
 
-# Polynomial splines. FIXME: This is new work. Develop this in
-# conjuction with phasing out or reworking the stuff above.
+# Polynomial splines.
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_add.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_bases.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_compose.c
@@ -105,6 +95,10 @@ dist_libsortsmill_aux_la_SOURCES += math_polyspline_elev.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_eval.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_mul.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_subdiv.c
+
+# ‘Contours’ similar to those in the original FontForge’s Python
+# interface.
+dist_libsortsmill_aux_la_SOURCES += guile_contours.c
 
 # Brent’s root-finding algorithm.
 dist_libsortsmill_aux_la_SOURCES += math_brentroot.c
@@ -137,8 +131,7 @@ dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
 dist_libsortsmill_aux_la_SOURCES += guile_options.c
 dist_libsortsmill_aux_la_SOURCES += guile_format.c
 
-libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
-	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
+libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'
 libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmill_aux_la_LDFLAGS = $(call ldflags) -export-dynamic
 libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
@@ -157,16 +150,9 @@ GMP_MATRIX_EXTRAS += gmp_matrix_add.c
 GMP_MATRIX_EXTRAS += gmp_matrix_pred.c
 GMP_MATRIX_EXTRAS += gmp_matrix_trsv.c
 
+EXTRA_DIST += $(GMP_MATRIX_EXTRAS)
+
 gmp_matrix.lo: $(GMP_MATRIX_EXTRAS)
-
-precomputed_polyspline_data.c: precompute-polyspline-data.scm Makefile
-	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) $< $(POLYSPLINE_PRECOMPUTED_DEGREE_MAX) > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
-
-EXTRA_DIST += $(GMP_MATRIX_EXTRAS) precompute-polyspline-data.scm
-
-MOSTLYCLEANFILES = precomputed_polyspline_data.c
 
 #--------------------------------------------------------------------------
 #

@@ -501,13 +501,13 @@ sortsmill/math/polyspline.scm: $(MATH_POLYSPLINE_REEXPORTED_SCM_FILES)
 	$(AM_V_at)mv $@-tmp $@
 
 
-# (sortsmill math polyspline f64)   FIXME: Get rid of this.
-
-DIST_SCM_FILES += sortsmill/math/polyspline/f64.scm
-GO_FILES += sortsmill/math/polyspline/f64.go
-MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/f64.scm
-
-sortsmill/math/polyspline/f64.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+## (sortsmill math polyspline f64)   FIXME: Get rid of this.
+#
+#DIST_SCM_FILES += sortsmill/math/polyspline/f64.scm
+#GO_FILES += sortsmill/math/polyspline/f64.go
+#MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/f64.scm
+#
+#sortsmill/math/polyspline/f64.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 
 # (sortsmill math polyspline add)

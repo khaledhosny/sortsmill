@@ -16,13 +16,54 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 cdef extern from "sortsmill/math/polyspline.h":
-  # FIXME: These are obsolescent.
-  void f64_sbern_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void f64_bern_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void f64_mono_to_sbern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void f64_sbern_to_mono (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void f64_mono_to_bern (unsigned int deg, double *_from, double *_to, size_t num_splines)
-  void f64_bern_to_mono (unsigned int deg, double *_from, double *_to, size_t num_splines)
+  void change_basis_f64_mono_to_mono (size_t degree,
+                                      ssize_t stride, double *spline,
+                                      ssize_t result_stride, double *result)
+  void change_basis_f64_mono_to_bern (size_t degree,
+                                      ssize_t stride, double *spline,
+                                      ssize_t result_stride, double *result)
+  void change_basis_f64_mono_to_sbern (size_t degree,
+                                       ssize_t stride, double *spline,
+                                       ssize_t result_stride, double *result)
+  void change_basis_f64_mono_to_spower (size_t degree,
+                                        ssize_t stride, double *spline,
+                                        ssize_t result_stride, double *result)
+  void change_basis_f64_bern_to_mono (size_t degree,
+                                      ssize_t stride, double *spline,
+                                      ssize_t result_stride, double *result)
+  void change_basis_f64_bern_to_bern (size_t degree,
+                                      ssize_t stride, double *spline,
+                                      ssize_t result_stride, double *result)
+  void change_basis_f64_bern_to_sbern (size_t degree,
+                                       ssize_t stride, double *spline,
+                                       ssize_t result_stride, double *result)
+  void change_basis_f64_bern_to_spower (size_t degree,
+                                        ssize_t stride, double *spline,
+                                        ssize_t result_stride, double *result)
+  void change_basis_f64_sbern_to_mono (size_t degree,
+                                       ssize_t stride, double *spline,
+                                       ssize_t result_stride, double *result)
+  void change_basis_f64_sbern_to_bern (size_t degree,
+                                       ssize_t stride, double *spline,
+                                       ssize_t result_stride, double *result)
+  void change_basis_f64_sbern_to_sbern (size_t degree,
+                                        ssize_t stride, double *spline,
+                                        ssize_t result_stride, double *result)
+  void change_basis_f64_sbern_to_spower (size_t degree,
+                                         ssize_t stride, double *spline,
+                                         ssize_t result_stride, double *result)
+  void change_basis_f64_spower_to_mono (size_t degree,
+                                        ssize_t stride, double *spline,
+                                        ssize_t result_stride, double *result)
+  void change_basis_f64_spower_to_bern (size_t degree,
+                                        ssize_t stride, double *spline,
+                                        ssize_t result_stride, double *result)
+  void change_basis_f64_spower_to_sbern (size_t degree,
+                                         ssize_t stride, double *spline,
+                                         ssize_t result_stride, double *result)
+  void change_basis_f64_spower_to_spower (size_t degree,
+                                          ssize_t stride, double *spline,
+                                          ssize_t result_stride, double *result)
 
   double eval_f64_sbern_schumaker_volk (unsigned int degree, int stride, double *spline, double t)
   double eval_f64_bern_schumaker_volk (unsigned int degree, int stride, double *spline, double t)
@@ -31,6 +72,7 @@ cdef extern from "sortsmill/math/polyspline.h":
   double eval_f64_mono (unsigned int degree, int stride, double *spline, double t)
   double eval_f64_spower (unsigned int degree, int stride, double *spline, double t)
 
-  # FIXME: These are obsolescent.
-  void f64_subdiv_sbern (unsigned int deg, double *spline, double t, double *a, double *b)
-  void f64_subdiv_bern (unsigned int deg, double *spline, double t, double *a, double *b)
+  void subdiv_f64_sbern (size_t degree, ssize_t stride, double *spline,
+                         double t, ssize_t stride_a, double *a, ssize_t stride_b, double *b)
+  void subdiv_f64_bern (size_t degree, ssize_t stride, double *spline,
+                        double t, ssize_t stride_a, double *a, ssize_t stride_b, double *b)

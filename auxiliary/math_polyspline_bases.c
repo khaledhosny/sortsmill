@@ -805,6 +805,59 @@ _SCM_COEF_FROM_BASIS (spower);
 
 //-------------------------------------------------------------------------
 
+#define _FF_CHANGE_BASIS_F64(FROM, TO)                          \
+  void                                                          \
+  change_basis_f64_##FROM##_to_##TO (size_t degree,             \
+                                     ssize_t stride,            \
+                                     const double *spline,      \
+                                     ssize_t result_stride,     \
+                                     double *result)            \
+  {                                                             \
+    mpq_t T[degree + 1][degree + 1];                            \
+    mpq_t x[1][degree + 1];                                     \
+    mpq_t y[1][degree + 1];                                     \
+                                                                \
+    mpq_matrix_init (degree + 1, degree + 1, T);                \
+    mpq_matrix_init (1, degree + 1, x);                         \
+    mpq_matrix_init (1, degree + 1, y);                         \
+                                                                \
+    mpq_coefficients_##FROM##_to_##TO (degree, T);              \
+                                                                \
+    for (size_t i = 0; i <= degree; i++)                        \
+      mpq_set_d (x[0][i], spline[stride * (ssize_t) i]);        \
+                                                                \
+    mpq_matrix_gemm (CblasNoTrans, CblasNoTrans,                \
+                     1, degree + 1, degree + 1,                 \
+                     mpq_one (), x, T, mpq_zero (), y);         \
+                                                                \
+    for (size_t i = 0; i <= degree; i++)                        \
+      result[result_stride * (ssize_t) i] =                     \
+        mpq_get_d (y[0][i]);                                    \
+                                                                \
+    mpq_matrix_clear (degree + 1, degree + 1, T);               \
+    mpq_matrix_clear (1, degree + 1, x);                        \
+    mpq_matrix_clear (1, degree + 1, y);                        \
+  }
+
+VISIBLE _FF_CHANGE_BASIS_F64 (mono, mono);
+VISIBLE _FF_CHANGE_BASIS_F64 (mono, bern);
+VISIBLE _FF_CHANGE_BASIS_F64 (mono, sbern);
+VISIBLE _FF_CHANGE_BASIS_F64 (mono, spower);
+VISIBLE _FF_CHANGE_BASIS_F64 (bern, mono);
+VISIBLE _FF_CHANGE_BASIS_F64 (bern, bern);
+VISIBLE _FF_CHANGE_BASIS_F64 (bern, sbern);
+VISIBLE _FF_CHANGE_BASIS_F64 (bern, spower);
+VISIBLE _FF_CHANGE_BASIS_F64 (sbern, mono);
+VISIBLE _FF_CHANGE_BASIS_F64 (sbern, bern);
+VISIBLE _FF_CHANGE_BASIS_F64 (sbern, sbern);
+VISIBLE _FF_CHANGE_BASIS_F64 (sbern, spower);
+VISIBLE _FF_CHANGE_BASIS_F64 (spower, mono);
+VISIBLE _FF_CHANGE_BASIS_F64 (spower, bern);
+VISIBLE _FF_CHANGE_BASIS_F64 (spower, sbern);
+VISIBLE _FF_CHANGE_BASIS_F64 (spower, spower);
+
+//-------------------------------------------------------------------------
+
 void init_math_polyspline_bases (void);
 
 #define _SCM_C_DEFINE_GSUBR_COEF_BASIS_TO_BASIS(BASIS1, BASIS2)         \
