@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2013 Barry Schwartz
+ * Copyright (C) 2013 Barry Schwartz
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +15,27 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_MATH_POLYSPLINE_H
-#define _SORTSMILL_MATH_POLYSPLINE_H
+#ifndef _SORTSMILL_GUILE_MATH_MULTIVARIATE_POLYNOMIALS_H
+#define _SORTSMILL_GUILE_MATH_MULTIVARIATE_POLYNOMIALS_H
 
-/* FIXME: Existing tests may be deficient in testing non-unit and
-   negative strides in the routines included below. */
-#include <sortsmill/math/polyspline/add.h>
-#include <sortsmill/math/polyspline/bases.h>
-#include <sortsmill/math/polyspline/compose.h>
-#include <sortsmill/math/polyspline/elev.h>
-#include <sortsmill/math/polyspline/eval.h>
-#include <sortsmill/math/polyspline/implicit.h>
-#include <sortsmill/math/polyspline/mul.h>
-#include <sortsmill/math/polyspline/subdiv.h>
+#include <libguile.h>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+/*
+ * Multivariate polynomials represented inefficiently as
+ * multidimensional arrays with nearly half the entries unused. Each
+ * array dimension corresponds to the powers of a variable.
+ */
+
+SCM scm_sum_of_multivariate_polynomials (SCM p, SCM q);
+SCM scm_product_of_multivariate_polynomials (SCM p, SCM q);
 
 #if 0
 {
@@ -36,4 +44,4 @@
 }
 #endif
 
-#endif /* _SORTSMILL_MATH_POLYSPLINE_H */
+#endif /* _SORTSMILL_GUILE_MATH_MULTIVARIATE_POLYNOMIALS_H */

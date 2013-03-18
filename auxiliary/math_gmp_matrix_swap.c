@@ -19,8 +19,7 @@
 
 VISIBLE void
 _GMP_TYPE (_matrix_swap_rows) (size_t m, size_t n,
-                               _GMP_TYPE (_t) A[m][n],
-                               size_t i, size_t j)
+                               _GMP_TYPE (_t) A[m][n], size_t i, size_t j)
 {
   if (i != j)
     for (size_t p = 0; p < n; p++)
@@ -29,8 +28,7 @@ _GMP_TYPE (_matrix_swap_rows) (size_t m, size_t n,
 
 VISIBLE void
 _GMP_TYPE (_matrix_swap_columns) (size_t m, size_t n,
-                                  _GMP_TYPE (_t) A[m][n],
-                                  size_t i, size_t j)
+                                  _GMP_TYPE (_t) A[m][n], size_t i, size_t j)
 {
   if (i != j)
     for (size_t p = 0; p < m; p++)
@@ -39,8 +37,7 @@ _GMP_TYPE (_matrix_swap_columns) (size_t m, size_t n,
 
 VISIBLE void
 _GMP_TYPE (_matrix_swap_rowcol) (size_t m,
-                                 _GMP_TYPE (_t) A[m][m],
-                                 size_t i, size_t j)
+                                 _GMP_TYPE (_t) A[m][m], size_t i, size_t j)
 {
   for (size_t p = 0; p < m; p++)
     _GMP_TYPE (_swap) (A[i][p], A[p][j]);

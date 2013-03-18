@@ -28,16 +28,14 @@ _GMP_TYPE (_matrix_set_all) (size_t m, size_t n,
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_set_zero) (size_t m, size_t n,
-                              _GMP_TYPE (_t) A[m][n])
+_GMP_TYPE (_matrix_set_zero) (size_t m, size_t n, _GMP_TYPE (_t) A[m][n])
 {
   const _GMP_TYPE2 (__, _struct) * zero = _GMP_TYPE (_zero) ();
   _GMP_TYPE (_matrix_set_all) (m, n, A, zero);
 }
 
 VISIBLE void
-_GMP_TYPE (_matrix_set_identity) (size_t m, size_t n,
-                                  _GMP_TYPE (_t) A[m][n])
+_GMP_TYPE (_matrix_set_identity) (size_t m, size_t n, _GMP_TYPE (_t) A[m][n])
 {
   const _GMP_TYPE2 (__, _struct) * zero = _GMP_TYPE (_zero) ();
   const _GMP_TYPE2 (__, _struct) * one = _GMP_TYPE (_one) ();

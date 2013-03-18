@@ -155,11 +155,12 @@ nobase_include_HEADERS += sortsmill/guile/math.h
 nobase_include_HEADERS += sortsmill/guile/math/brentroot.h
 nobase_include_HEADERS += sortsmill/guile/math/functions.h
 nobase_include_HEADERS += sortsmill/guile/math/gmp.h
-nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl/error.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl/matrices.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl/permutations.h
+nobase_include_HEADERS += sortsmill/guile/math/multivariate_polynomials.h
+nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 
 if HAVE_PURE_API
 nobase_include_HEADERS += sortsmill/guile/pure.h

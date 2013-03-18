@@ -450,6 +450,14 @@ CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/math-constants.scm
 GO_FILES += sortsmill/math/math-constants.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/math-constants.scm
 
+# (sortsmill math multivariate-polynomials)
+
+DIST_SCM_FILES += sortsmill/math/multivariate-polynomials.scm
+GO_FILES += sortsmill/math/multivariate-polynomials.go
+MATH_REEXPORTED_SCM_FILES += sortsmill/math/multivariate-polynomials.scm
+
+sortsmill/math/multivariate-polynomials.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
 #--------------------------------------------------------------------------
 #
 # (sortsmill math matrices)
@@ -499,15 +507,6 @@ sortsmill/math/polyspline.scm: $(MATH_POLYSPLINE_REEXPORTED_SCM_FILES)
 	$(AM_V_REEXPORT)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math polyspline), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
-
-
-## (sortsmill math polyspline f64)   FIXME: Get rid of this.
-#
-#DIST_SCM_FILES += sortsmill/math/polyspline/f64.scm
-#GO_FILES += sortsmill/math/polyspline/f64.go
-#MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/f64.scm
-#
-#sortsmill/math/polyspline/f64.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 
 # (sortsmill math polyspline add)
