@@ -20,6 +20,7 @@
   (export )
 
   (import (sortsmill math multivariate-polynomials)
+          (sortsmill math matrices bezout)
           (sortsmill dynlink)
           (rnrs)
           (except (guile) error))

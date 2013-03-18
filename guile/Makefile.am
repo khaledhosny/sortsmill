@@ -487,6 +487,13 @@ GO_FILES += sortsmill/math/matrices/base.go
 MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/base.scm
 
 
+# (sortsmill math matrices bezout)
+
+DIST_SCM_FILES += sortsmill/math/matrices/bezout.scm
+GO_FILES += sortsmill/math/matrices/bezout.go
+MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/bezout.scm
+
+
 # (sortsmill math matrices linalg)
 
 DIST_SCM_FILES += sortsmill/math/matrices/linalg.scm
