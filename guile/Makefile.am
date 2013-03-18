@@ -515,11 +515,15 @@ DIST_SCM_FILES += sortsmill/math/polyspline/add.scm
 GO_FILES += sortsmill/math/polyspline/add.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/add.scm
 
+sortsmill/math/add.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
 # (sortsmill math polyspline bases)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/bases.scm
 GO_FILES += sortsmill/math/polyspline/bases.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/bases.scm
+
+sortsmill/math/bases.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline compose)
 
@@ -527,11 +531,15 @@ DIST_SCM_FILES += sortsmill/math/polyspline/compose.scm
 GO_FILES += sortsmill/math/polyspline/compose.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/compose.scm
 
+sortsmill/math/compose.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
 # (sortsmill math polyspline elev)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/elev.scm
 GO_FILES += sortsmill/math/polyspline/elev.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/elev.scm
+
+sortsmill/math/elev.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline eval)
 
@@ -539,17 +547,31 @@ DIST_SCM_FILES += sortsmill/math/polyspline/eval.scm
 GO_FILES += sortsmill/math/polyspline/eval.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/eval.scm
 
+sortsmill/math/eval.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
+# (sortsmill math polyspline implicit)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/implicit.scm
+GO_FILES += sortsmill/math/polyspline/implicit.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/implicit.scm
+
+sortsmill/math/implicit.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
 # (sortsmill math polyspline mul)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/mul.scm
 GO_FILES += sortsmill/math/polyspline/mul.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/mul.scm
 
+sortsmill/math/mul.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
 # (sortsmill math polyspline subdiv)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
 GO_FILES += sortsmill/math/polyspline/subdiv.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
+
+sortsmill/math/subdiv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #

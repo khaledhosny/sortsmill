@@ -17,8 +17,24 @@
 
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
+#include <intl.h>
 
 //-------------------------------------------------------------------------
+
+/*
+static VISIBLE SCM
+scm_c_bezout_matrix (SCM poly1, SCM poly2,
+                     SCM sum (SCM, SCM),
+                     SCM product (SCM, SCM))
+{
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_c_make_message_condition (_("array is not hypercubic")),
+      rnrs_make_irritants_condition (scm_list_1 (array))));
+}
+*/
 
 //-------------------------------------------------------------------------
 

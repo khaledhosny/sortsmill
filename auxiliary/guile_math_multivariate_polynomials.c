@@ -18,7 +18,6 @@
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
 #include <intl.h>
-#include <assert.h>
 
 //
 // Multivariate polynomials represented inefficiently as
