@@ -23,6 +23,7 @@ unused. Each array dimension corresponds to the powers of a
 variable; the index of the entry equals the power. |#
 
   (export multipoly+
+          multipoly-
           multipoly*)
 
   (import (sortsmill dynlink)

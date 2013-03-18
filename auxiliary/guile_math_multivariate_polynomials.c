@@ -79,9 +79,10 @@ assert_array_ranks_match (const char *who,
 }
 
 static void
-add_bivariate_polynomials (scm_t_array_handle *handlep1,
-                           scm_t_array_handle *handlep2,
-                           scm_t_array_handle *handlep3)
+add_or_subtract_bivariate_polynomials (SCM (*op) (SCM, SCM),
+                                       scm_t_array_handle *handlep1,
+                                       scm_t_array_handle *handlep2,
+                                       scm_t_array_handle *handlep3)
 {
   const scm_t_array_dim *dims1 = scm_array_handle_dims (handlep1);
   const SCM *elems1 = scm_array_handle_elements (handlep1);
@@ -95,8 +96,8 @@ add_bivariate_polynomials (scm_t_array_handle *handlep1,
   for (ssize_t i = 0; i <= dims1[0].ubnd; i++)
     for (ssize_t j = 0; j <= dims1[0].ubnd - i; j++)
       elems3[i * dims3[0].inc + j * dims3[1].inc] =
-        scm_sum (elems1[i * dims1[0].inc + j * dims1[1].inc],
-                 elems2[i * dims2[0].inc + j * dims2[1].inc]);
+        op (elems1[i * dims1[0].inc + j * dims1[1].inc],
+            elems2[i * dims2[0].inc + j * dims2[1].inc]);
 }
 
 static void
@@ -125,11 +126,10 @@ multiply_bivariate_polynomials (scm_t_array_handle *handlep1,
 
 //-------------------------------------------------------------------------
 
-VISIBLE SCM
-scm_sum_of_multivariate_polynomials (SCM p, SCM q)
+static SCM
+scm_sum_or_diff_of_multivariate_polynomials (const char *who,
+                                             SCM (*op) (SCM, SCM), SCM p, SCM q)
 {
-  const char *who = "scm_sum_of_multivariate_polynomials";
-
   scm_t_array_handle handle_p;
   scm_t_array_handle handle_q;
   scm_t_array_handle handle;
@@ -159,7 +159,7 @@ scm_sum_of_multivariate_polynomials (SCM p, SCM q)
   switch (rank)
     {
     case 2:
-      add_bivariate_polynomials (&handle_p, &handle_q, &handle);
+      add_or_subtract_bivariate_polynomials (op, &handle_p, &handle_q, &handle);
       break;
 
     default:
@@ -174,6 +174,21 @@ scm_sum_of_multivariate_polynomials (SCM p, SCM q)
   scm_dynwind_end ();
 
   return result;
+}
+
+VISIBLE SCM
+scm_sum_of_multivariate_polynomials (SCM p, SCM q)
+{
+  const char *who = "scm_sum_of_multivariate_polynomials";
+  return scm_sum_or_diff_of_multivariate_polynomials (who, scm_sum, p, q);
+}
+
+VISIBLE SCM
+scm_difference_of_multivariate_polynomials (SCM p, SCM q)
+{
+  const char *who = "scm_difference_of_multivariate_polynomials";
+  return scm_sum_or_diff_of_multivariate_polynomials (who, scm_difference,
+                                                      p, q);
 }
 
 VISIBLE SCM
@@ -244,6 +259,8 @@ init_guile_math_multivariate_polynomials (void)
 {
   scm_c_define_gsubr ("multipoly+", 2, 0, 0,
                       scm_sum_of_multivariate_polynomials);
+  scm_c_define_gsubr ("multipoly-", 2, 0, 0,
+                      scm_difference_of_multivariate_polynomials);
   scm_c_define_gsubr ("multipoly*", 2, 0, 0,
                       scm_product_of_multivariate_polynomials);
 }

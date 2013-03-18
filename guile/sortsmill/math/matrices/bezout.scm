@@ -38,8 +38,8 @@
              [B (make-array *unspecified* `(1 ,n) `(1 ,n))])
         (do ([i 1 (+ i 1)]) ([= n1 i])
           (do ([j 1 (+ j 1)]) ([= n1 j])
-            ;; The following code avoids having to know the zero
-            ;; element of the field.
+            ;; The following code avoids using the zero element of the
+            ;; field.
             [let ([m (min i (- n1 j))]
                   [entry (difference (product (vector-ref poly1 j)
                                               (vector-ref poly2 (- i 1)))

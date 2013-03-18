@@ -35,6 +35,7 @@ extern "C"
  */
 
 SCM scm_sum_of_multivariate_polynomials (SCM p, SCM q);
+SCM scm_difference_of_multivariate_polynomials (SCM p, SCM q);
 SCM scm_product_of_multivariate_polynomials (SCM p, SCM q);
 
 #if 0
