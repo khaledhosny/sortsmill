@@ -19,7 +19,8 @@
 
   #| See http://en.wikipedia.org/wiki/Bézout_matrix |#
 
-  (export bezout-matrix)
+  (export bezout-matrix
+          bezout-resultant)
 
   (import (sortsmill math matrices base)
           (sortsmill math polyspline elev)
@@ -54,5 +55,43 @@
                                                 (vector-ref poly2 (+ j k -1)))))))
               (array-set! B entry i j)] ))
         B)))
+
+  ;;----------------------------------------------------------------------
+  ;;
+  ;; Determinant routines. Not for general use. These assume exact
+  ;; arithmetic.
+
+  (define (det2 B i1 i2 j1 j2 difference product)
+    "Find the determinant of a 2x2 matrix."
+    (difference (product (array-ref B i1 j1) (array-ref B i2 j2))
+                (product (array-ref B i1 j2) (array-ref B i2 j1))))
+
+  (define (det3 B sum difference product)
+    "Find the determinant of a 3x3 matrix by Laplace expansion."
+    (sum (difference (product (array-ref B 1 1)
+                              (det2 B 2 3 2 3 difference product))
+                     (product (array-ref B 1 2)
+                              (det2 B 2 3 1 3 difference product)))
+         (product (array-ref B 1 3) (det2 B 2 3 1 2 difference product))))
+
+  (define/kwargs (bezout-resultant matrix (sum +) (difference -) (product *))
+    "Find the determinant of a Bézout matrix (the Bézout resultant),
+assuming exact arithmetic. This procedure is not designed for general
+use in finding a determinant."
+    (let ([n (car (matrix-dimensions matrix))])
+      (case n
+        [(1) (array-ref matrix 1 1)]
+        [(2) (det2 matrix 1 2 1 2 difference product)]
+        [(3) (det3 matrix sum difference product)]
+        [else
+         ;; We are unlikely to implicitize splines of degree greater
+         ;; than 3, and thus there is no immediate need for more
+         ;; general expansion of the determinant.
+         (assertion-violation
+          'bezout-resultant
+          (_ "not implemented for matrices larger than 3x3")
+          matrix)] )))
+  
+  ;;----------------------------------------------------------------------
 
   ) ;; end of library.
