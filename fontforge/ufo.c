@@ -664,15 +664,16 @@ UFOOutputFontInfo (char *basedir, SplineFont *sf, int layer)
       fc[0] = sf->pfminfo.os2_family_class >> 8;
       fc[1] = sf->pfminfo.os2_family_class & 0xff;
       PListOutputIntArray (plist, "openTypeOS2FamilyClass", fc, 2);
-      {
-        int fscnt, i;
-        char fstype[16];
-        for (i = fscnt = 0; i < 16; ++i)
-          if (sf->pfminfo.fstype & (1 << i))
-            fstype[fscnt++] = i;
-        if (fscnt != 0)
-          PListOutputIntArray (plist, "openTypeOS2Type", fstype, fscnt);
-      }
+      if (sf->pfminfo.fstype != -1)
+        {
+          int fscnt, i;
+          char fstype[16];
+          for (i = fscnt = 0; i < 16; ++i)
+            if (sf->pfminfo.fstype & (1 << i))
+              fstype[fscnt++] = i;
+          if (fscnt != 0)
+            PListOutputIntArray (plist, "openTypeOS2Type", fstype, fscnt);
+        }
       if (sf->pfminfo.typoascent_add)
         PListOutputInteger (plist, "openTypeOS2TypoAscender",
                             sf->ascent + sf->pfminfo.os2_typoascent);
@@ -1283,7 +1284,7 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
   if (xmlStrcmp (glyph->name, (const xmlChar *) "glyph") != 0 ||
       (format != NULL && xmlStrcmp (format, (xmlChar *) "1") != 0))
     {
-      LogError (_("Expected glyph file with format==1\n"));
+      LogError (_("Expected glyph file with format==1"));
       xmlFreeDoc (doc);
       free (format);
       return NULL;
@@ -1638,7 +1639,7 @@ UFOLoadGlyph (char *glifname)
   doc = xmlParseFile (glifname);
   if (doc == NULL)
     {
-      LogError (_("Bad glif file %s\n"), glifname);
+      LogError (_("Bad glif file %s"), glifname);
       return NULL;
     }
   return _UFOLoadGlyph (doc, glifname);
@@ -1660,7 +1661,7 @@ UFORefFixup (SplineFont *sf, SplineChar *sc)
       rsc = SFGetChar (sf, -1, (char *) (r->sc));
       if (rsc == NULL)
         {
-          LogError (_("Failed to find glyph %s when fixing up references\n"),
+          LogError (_("Failed to find glyph %s when fixing up references"),
                     (char *) r->sc);
           if (prev == NULL)
             sc->layers[ly_fore].refs = r->next;
@@ -1695,7 +1696,7 @@ UFOLoadGlyphs (SplineFont *sf, char *glyphdir)
   free (glyphlist);
   if (doc == NULL)
     {
-      LogError (_("Bad contents.plist\n"));
+      LogError (_("Bad contents.plist"));
       return;
     }
   plist = xmlDocGetRootElement (doc);
@@ -1999,7 +2000,7 @@ SFReadUFO (char *basedir, int flags)
   glyphlist = buildname (glyphdir, "contents.plist");
   if (!GFileExists (glyphlist))
     {
-      LogError (_("No glyphs directory or no contents file\n"));
+      LogError (_("No glyphs directory or no contents file"));
       free (glyphlist);
       return NULL;
     }
@@ -2138,7 +2139,17 @@ SFReadUFO (char *basedir, int flags)
                   sf->pfminfo.panose_set = true;
                 }
               else if (xmlStrcmp (keyname + 11, (xmlChar *) "Type") == 0)
-                sf->pfminfo.fstype = UFOGetBits (doc, value);
+                {
+                  sf->pfminfo.fstype = UFOGetBits (doc, value);
+                  if (sf->pfminfo.fstype < 0) {
+                    /* all bits are set, but this is wrong, OpenType spec says
+                     * bits 0, 4-7 and 10-15 must be unset
+                     * http://www.microsoft.com/typography/otspec/os2.htm#fst
+                     */
+                    LogError (_("Bad openTypeOS2type key: all bits are set. It will be ignored"));
+                    sf->pfminfo.fstype = 0;
+                  }
+                }
               else if (xmlStrcmp (keyname + 11, (xmlChar *) "FamilyClass") == 0)
                 {
                   char fc[2];
@@ -2338,7 +2349,7 @@ SFReadUFO (char *basedir, int flags)
     }
   if (em == -1)
     {
-      LogError (_("This font does not specify unitsPerEm\n"));
+      LogError (_("This font does not specify unitsPerEm"));
       xmlFreeDoc (doc);
       setlocale (LC_NUMERIC, oldloc);
       SplineFontFree (sf);
