@@ -1283,7 +1283,7 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
   if (xmlStrcmp (glyph->name, (const xmlChar *) "glyph") != 0 ||
       (format != NULL && xmlStrcmp (format, (xmlChar *) "1") != 0))
     {
-      LogError (_("Expected glyph file with format==1\n"));
+      LogError (_("Expected glyph file with format==1"));
       xmlFreeDoc (doc);
       free (format);
       return NULL;
@@ -1638,7 +1638,7 @@ UFOLoadGlyph (char *glifname)
   doc = xmlParseFile (glifname);
   if (doc == NULL)
     {
-      LogError (_("Bad glif file %s\n"), glifname);
+      LogError (_("Bad glif file %s"), glifname);
       return NULL;
     }
   return _UFOLoadGlyph (doc, glifname);
@@ -1660,7 +1660,7 @@ UFORefFixup (SplineFont *sf, SplineChar *sc)
       rsc = SFGetChar (sf, -1, (char *) (r->sc));
       if (rsc == NULL)
         {
-          LogError (_("Failed to find glyph %s when fixing up references\n"),
+          LogError (_("Failed to find glyph %s when fixing up references"),
                     (char *) r->sc);
           if (prev == NULL)
             sc->layers[ly_fore].refs = r->next;
@@ -1695,7 +1695,7 @@ UFOLoadGlyphs (SplineFont *sf, char *glyphdir)
   free (glyphlist);
   if (doc == NULL)
     {
-      LogError (_("Bad contents.plist\n"));
+      LogError (_("Bad contents.plist"));
       return;
     }
   plist = xmlDocGetRootElement (doc);
@@ -1999,7 +1999,7 @@ SFReadUFO (char *basedir, int flags)
   glyphlist = buildname (glyphdir, "contents.plist");
   if (!GFileExists (glyphlist))
     {
-      LogError (_("No glyphs directory or no contents file\n"));
+      LogError (_("No glyphs directory or no contents file"));
       free (glyphlist);
       return NULL;
     }
@@ -2348,7 +2348,7 @@ SFReadUFO (char *basedir, int flags)
     }
   if (em == -1)
     {
-      LogError (_("This font does not specify unitsPerEm\n"));
+      LogError (_("This font does not specify unitsPerEm"));
       xmlFreeDoc (doc);
       setlocale (LC_NUMERIC, oldloc);
       SplineFontFree (sf);
