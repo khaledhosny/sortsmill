@@ -664,15 +664,16 @@ UFOOutputFontInfo (char *basedir, SplineFont *sf, int layer)
       fc[0] = sf->pfminfo.os2_family_class >> 8;
       fc[1] = sf->pfminfo.os2_family_class & 0xff;
       PListOutputIntArray (plist, "openTypeOS2FamilyClass", fc, 2);
-      {
-        int fscnt, i;
-        char fstype[16];
-        for (i = fscnt = 0; i < 16; ++i)
-          if (sf->pfminfo.fstype & (1 << i))
-            fstype[fscnt++] = i;
-        if (fscnt != 0)
-          PListOutputIntArray (plist, "openTypeOS2Type", fstype, fscnt);
-      }
+      if (sf->pfminfo.fstype != -1)
+        {
+          int fscnt, i;
+          char fstype[16];
+          for (i = fscnt = 0; i < 16; ++i)
+            if (sf->pfminfo.fstype & (1 << i))
+              fstype[fscnt++] = i;
+          if (fscnt != 0)
+            PListOutputIntArray (plist, "openTypeOS2Type", fstype, fscnt);
+        }
       if (sf->pfminfo.typoascent_add)
         PListOutputInteger (plist, "openTypeOS2TypoAscender",
                             sf->ascent + sf->pfminfo.os2_typoascent);
