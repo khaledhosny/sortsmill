@@ -226,6 +226,8 @@ SplineRefigure3 (Spline *spline)
       // An experiment: try implicitizing every spline we get, to see
       // how this affects performance.
 
+#warning Including expensive experimental code of no use to users.
+
       SCM xspline = scm_vector (scm_list_4 (scm_from_double (xsp->d),
                                             scm_from_double (xsp->c),
                                             scm_from_double (xsp->b),
@@ -235,14 +237,15 @@ SplineRefigure3 (Spline *spline)
                                             scm_from_double (ysp->b),
                                             scm_from_double (ysp->a)));
       SCM bezmat =
-        scm_call_2 (scm_c_public_ref ("sortsmill math polyspline implicit",
+        scm_call_4 (scm_c_public_ref ("sortsmill math polyspline implicit",
                                       "poly:bezout-matrix"),
-                    xspline, yspline);
+                    xspline, yspline,
+                    scm_from_utf8_keyword ("allow-inexact?"), SCM_BOOL_F);
       SCM implicit_eq =
         scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
                                       "poly:implicit-equation"),
                     bezmat);
-      SCM by_degrees =
+      SCM UNUSED(by_degrees) =
         scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
                                       "poly:implicit-equation-by-degrees"),
                     implicit_eq);

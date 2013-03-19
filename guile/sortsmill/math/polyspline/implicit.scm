@@ -25,6 +25,7 @@
   (import (sortsmill math multivariate-polynomials)
           (sortsmill math matrices)
           (sortsmill dynlink)
+          (sortsmill kwargs)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) iota list-tabulate zip)
@@ -37,11 +38,12 @@
 
   ;;----------------------------------------------------------------------
 
-  (define (poly:bezout-matrix xspline yspline)
+  (define/kwargs (poly:bezout-matrix xspline yspline (allow-inexact? #f))
     "Make the Bézout matrix for implicitization of a parametric planar
 Bézier spline, given in monomial basis."
-    (let ([xspline (zero-based (row-matrix->vector (matrix-inexact->exact xspline)))]
-          [yspline (zero-based (row-matrix->vector (matrix-inexact->exact yspline)))])
+    (let* ([force-exact (if allow-inexact? identity matrix-inexact->exact)]
+           [xspline (zero-based (row-matrix->vector (force-exact xspline)))]
+           [yspline (zero-based (row-matrix->vector (force-exact yspline)))])
       (assert (= (vector-length xspline) (vector-length yspline)))
       (let ([deg-max (max (max-degree xspline) (max-degree yspline))])
         (let ([xspline (make-shared-array xspline list (+ deg-max 1))]
