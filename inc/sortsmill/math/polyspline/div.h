@@ -46,6 +46,17 @@ void div_scm_mono (size_t degree1, ssize_t stride1, const SCM *spline1,
 SCM scm_div_f64_mono (SCM spline1, SCM spline2);
 SCM scm_div_scm_mono (SCM spline1, SCM spline2);
 
+/* Greatest common divisor of polynomials in monomial form. Guaranteed
+   safe for in-place calculation. */
+void gcd_f64_mono (size_t degree1, ssize_t stride1, const double *spline1,
+                   size_t degree2, ssize_t stride2, const double *spline2,
+                   size_t *degree, ssize_t stride, double *gcd);
+void gcd_scm_mono (size_t degree1, ssize_t stride1, const SCM *spline1,
+                   size_t degree2, ssize_t stride2, const SCM *spline2,
+                   size_t *degree, ssize_t stride, SCM *gcd);
+SCM scm_gcd_f64_mono (SCM spline1, SCM spline2);
+SCM scm_gcd_scm_mono (SCM spline1, SCM spline2);
+
 #if 0
 {
 #endif
