@@ -77,9 +77,11 @@
   (define/kwargs (bezout-resultant matrix (sum +) (difference -) (product *))
     "Find the determinant of a Bézout matrix (the Bézout resultant),
 assuming exact arithmetic. This procedure is not designed for general
-use in finding a determinant."
+use in finding a determinant. Returns #f if the Bézout ‘matrix’ is
+0x0."
     (let ([n (car (matrix-dimensions matrix))])
       (case n
+        [(0) #f]
         [(1) (array-ref matrix 1 1)]
         [(2) (det2 matrix 1 2 1 2 difference product)]
         [(3) (det3 matrix sum difference product)]
