@@ -1,14 +1,20 @@
 [encoding: UTF-8]
+
 data/sortsmill-editor.desktop.in
 data/fontforge.xml.in
+
 auxiliary/rexp.c
 auxiliary/rnrs_conditions.c
+
 auxiliary/guile_math_functions.c
 auxiliary/guile_math_gsl_matrices.c
 auxiliary/guile_math_gsl_permutations.c
+auxiliary/guile_math_multivariate_polynomials.c
+
 auxiliary/guile_python.c
 auxiliary/math_polyspline_add.c
 auxiliary/math_polyspline_elev.c
+
 fontforge/alignment.c
 fontforge/anchorsaway.c
 fontforge/autotrace.c
@@ -135,6 +141,7 @@ fontforge/usermenu.c
 fontforge/windowmenu.c
 fontforge/winfonts.c
 fontforge/woff.c
+
 gdraw/ctlvalues.c
 gdraw/gaskdlg.c
 gdraw/gbuttons.c
@@ -156,7 +163,9 @@ gdraw/gscrollbar.c
 gdraw/gtabset.c
 gdraw/gtextfield.c
 gdraw/gtextinfo.c
+
 guile/site-init.scm
+
 guile/sortsmill/contours.scm
 guile/sortsmill/kwargs.scm
 guile/sortsmill/sfd-to-sxml.scm
@@ -164,12 +173,18 @@ guile/sortsmill/usermenu.scm
 guile/sortsmill/views.scm
 guile/sortsmill/pure.scm
 guile/sortsmill/python.scm
+
 guile/sortsmill/math/gsl/matrices.scm
+
 guile/sortsmill/math/matrices/arithmetic.scm
 guile/sortsmill/math/matrices/base.scm
+guile/sortsmill/math/matrices/bezout.scm
+
 guile/sortsmill/math/polyspline/bases.scm
+
 main/compare.c
 main/image.c
 main/lint.c
+
 sfd2sxml/sfd2sxml.in
 sfd2sxml/sfd2xml.in
