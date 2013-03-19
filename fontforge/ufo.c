@@ -2138,7 +2138,17 @@ SFReadUFO (char *basedir, int flags)
                   sf->pfminfo.panose_set = true;
                 }
               else if (xmlStrcmp (keyname + 11, (xmlChar *) "Type") == 0)
-                sf->pfminfo.fstype = UFOGetBits (doc, value);
+                {
+                  sf->pfminfo.fstype = UFOGetBits (doc, value);
+                  if (sf->pfminfo.fstype < 0) {
+                    /* all bits are set, but this is wrong, OpenType spec says
+                     * bits 0, 4-7 and 10-15 must be unset
+                     * http://www.microsoft.com/typography/otspec/os2.htm#fst
+                     */
+                    LogError (_("Bad openTypeOS2type key: all bits are set. It will be ignored"));
+                    sf->pfminfo.fstype = 0;
+                  }
+                }
               else if (xmlStrcmp (keyname + 11, (xmlChar *) "FamilyClass") == 0)
                 {
                   char fc[2];
