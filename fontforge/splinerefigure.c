@@ -222,6 +222,32 @@ SplineRefigure3 (Spline *spline)
       ysp->b = my[2];
       ysp->a = my[3];
 
+#if 0
+      // An experiment: try implicitizing every spline we get, to see
+      // how this affects performance.
+
+      SCM xspline = scm_vector (scm_list_4 (scm_from_double (xsp->d),
+                                            scm_from_double (xsp->c),
+                                            scm_from_double (xsp->b),
+                                            scm_from_double (xsp->a)));
+      SCM yspline = scm_vector (scm_list_4 (scm_from_double (ysp->d),
+                                            scm_from_double (ysp->c),
+                                            scm_from_double (ysp->b),
+                                            scm_from_double (ysp->a)));
+      SCM bezmat =
+        scm_call_2 (scm_c_public_ref ("sortsmill math polyspline implicit",
+                                      "poly:bezout-matrix"),
+                    xspline, yspline);
+      SCM implicit_eq =
+        scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
+                                      "poly:implicit-equation"),
+                    bezmat);
+      SCM by_degrees =
+        scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
+                                      "poly:implicit-equation-by-degrees"),
+                    implicit_eq);
+#endif
+
 #if 0                           // FIXME: A temporary double-check.
       double _xc = 3 * (from->nextcp.x - from->me.x);
       double _yc = 3 * (from->nextcp.y - from->me.y);

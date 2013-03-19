@@ -18,6 +18,7 @@
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
 #include <intl.h>
+#include <basics.h>
 
 //
 // Multivariate polynomials represented inefficiently as
@@ -93,8 +94,34 @@ add_or_subtract_bivariate_polynomials (SCM (*op) (SCM, SCM),
   const scm_t_array_dim *dims3 = scm_array_handle_dims (handlep3);
   SCM *elems3 = scm_array_handle_writable_elements (handlep3);
 
-  for (ssize_t i = 0; i <= dims1[0].ubnd; i++)
-    for (ssize_t j = 0; j <= dims1[0].ubnd - i; j++)
+  if (dims1[0].ubnd < dims2[0].ubnd)
+    {
+      SCM zero = scm_from_int (0);
+      for (ssize_t degree = dims1[0].ubnd + 1; degree <= dims2[0].ubnd;
+           degree++)
+        for (ssize_t i = 0; i <= degree; i++)
+          {
+            const ssize_t j = degree - i;
+            elems3[i * dims3[0].inc + j * dims3[1].inc] =
+              op (zero, elems2[i * dims2[0].inc + j * dims2[1].inc]);
+          }
+    }
+  else if (dims2[0].ubnd < dims1[0].ubnd)
+    {
+      for (ssize_t degree = dims2[0].ubnd + 1; degree <= dims1[0].ubnd;
+           degree++)
+        for (ssize_t i = 0; i <= degree; i++)
+          {
+            const ssize_t j = degree - i;
+            elems3[i * dims3[0].inc + j * dims3[1].inc] =
+              elems1[i * dims1[0].inc + j * dims1[1].inc];
+          }
+    }
+
+  const size_t min_ubnd = szmin (dims1[0].ubnd, dims2[0].ubnd);
+
+  for (ssize_t i = 0; i <= min_ubnd; i++)
+    for (ssize_t j = 0; j <= min_ubnd - i; j++)
       elems3[i * dims3[0].inc + j * dims3[1].inc] =
         op (elems1[i * dims1[0].inc + j * dims1[1].inc],
             elems2[i * dims2[0].inc + j * dims2[1].inc]);
@@ -152,7 +179,13 @@ scm_sum_or_diff_of_multivariate_polynomials (const char *who,
 
   const size_t rank = scm_array_handle_rank (&handle_p);
 
-  SCM result = scm_make_array (scm_from_int (0), scm_array_dimensions (p));
+  const scm_t_array_dim *dims_p = scm_array_handle_dims (&handle_p);
+  const scm_t_array_dim *dims_q = scm_array_handle_dims (&handle_q);
+  const size_t result_size = szmax (dims_p[0].ubnd, dims_q[0].ubnd) + 1;
+
+  SCM result = scm_make_array (scm_from_int (0),
+                               scm_list_2 (scm_from_size_t (result_size),
+                                           scm_from_size_t (result_size)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
 

@@ -60,20 +60,24 @@ Bézier spline, given in monomial basis."
 
   (define (x-xspline xspline)
     (let* ([n (vector-length xspline)]
-           [sp (make-vector n)])
-      (do ([i 0 (+ i 1)]) ([= i n])
-        (vector-set! sp i (make-array 0 2 2))
-        (array-set! (vector-ref sp i) (- (vector-ref xspline i)) 0 0))
-      (array-set! (vector-ref sp 0) 1 1 0) ; Represents ‘x’.
+           [sp (make-vector n)]
+           [deg0-entry (make-array 0 2 2)])
+      (array-set! deg0-entry (- (vector-ref xspline 0)) 0 0)
+      (array-set! deg0-entry 1 1 0)     ; Represents ‘x’.
+      (vector-set! sp 0 deg0-entry)
+      (do ([i 1 (+ i 1)]) ([= i n])
+        (vector-set! sp i (make-array (- (vector-ref xspline i)) 1 1)))
       sp))
 
   (define (y-yspline yspline)
     (let* ([n (vector-length yspline)]
-           [sp (make-vector n)])
-      (do ([i 0 (+ i 1)]) ([= i n])
-        (vector-set! sp i (make-array 0 2 2))
-        (array-set! (vector-ref sp i) (- (vector-ref yspline i)) 0 0))
-      (array-set! (vector-ref sp 0) 1 0 1) ; Represents ‘y’.
+           [sp (make-vector n)]
+           [deg0-entry (make-array 0 2 2)])
+      (array-set! deg0-entry (- (vector-ref yspline 0)) 0 0)
+      (array-set! deg0-entry 1 0 1)     ; Represents ‘y’.
+      (vector-set! sp 0 deg0-entry)
+      (do ([i 1 (+ i 1)]) ([= i n])
+        (vector-set! sp i (make-array (- (vector-ref yspline i)) 1 1)))
       sp))
 
   (define (poly:implicit-equation matrix)
@@ -81,18 +85,8 @@ Bézier spline, given in monomial basis."
 determinant (the Bézout resultant), which is the implicit equation of
 the spline. Returns #f if there is no implicit equation because the
 curve is degenerated to a point."
-    (let ([resultant (bezout-resultant matrix #:sum multipoly+
-                                       #:difference multipoly-
-                                       #:product multipoly*)])
-      (if resultant
-          ;; The degree of the implicit equation is limited; it is no
-          ;; higher than the degrees of the parametric x and y
-          ;; equations. Ignore the extra degrees, which are filled
-          ;; with zeros.
-          [let* ([max-degree (car (matrix-dimensions matrix))]
-                 [n (+ max-degree 1)])
-            (make-shared-array resultant list n n)]
-          #f)))
+    (bezout-resultant matrix #:sum multipoly+ #:difference multipoly-
+                      #:product multipoly*))
 
   (define (poly:implicit-equation-by-degrees eq)
     (if eq
