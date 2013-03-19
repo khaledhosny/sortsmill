@@ -99,6 +99,18 @@ szmax (size_t a, size_t b)
   return (a < b) ? b : a;
 }
 
+static inline ssize_t
+sszmin (ssize_t a, ssize_t b)
+{
+  return (a < b) ? a : b;
+}
+
+static inline ssize_t
+sszmax (ssize_t a, ssize_t b)
+{
+  return (a < b) ? b : a;
+}
+
 static inline char *
 xstrdup_or_null (const char *str)
 {

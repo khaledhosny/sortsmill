@@ -245,7 +245,7 @@ SplineRefigure3 (Spline *spline)
         scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
                                       "poly:implicit-equation"),
                     bezmat);
-      SCM UNUSED(by_degrees) =
+      SCM UNUSED (by_degrees) =
         scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
                                       "poly:implicit-equation-by-degrees"),
                     implicit_eq);
