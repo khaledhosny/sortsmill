@@ -131,6 +131,7 @@ nobase_include_HEADERS += sortsmill/math/polyspline/elev.h
 nobase_include_HEADERS += sortsmill/math/polyspline/eval.h
 nobase_include_HEADERS += sortsmill/math/polyspline/implicit.h
 nobase_include_HEADERS += sortsmill/math/polyspline/mul.h
+nobase_include_HEADERS += sortsmill/math/polyspline/roots.h
 nobase_include_HEADERS += sortsmill/math/polyspline/subdiv.h
 
 #--------------------------------------------------------------------------
