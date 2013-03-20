@@ -79,7 +79,8 @@ exception__expected_array_of_rank_1_or_2 (const char *who, SCM irritants)
 static void
 exception__expected_a_vector (const char *who, SCM irritants)
 {
-  const char *message = _("expected a vector, row matrix, or column matrix");
+  const char *message =
+    _("expected a non-empty vector, row matrix, or column matrix");
   rnrs_raise_condition
     (scm_list_4
      (rnrs_make_assertion_violation (), rnrs_c_make_who_condition (who),
@@ -100,12 +101,16 @@ scm_array_handle_get_vector_dim_and_stride (const char *who, SCM vector,
   if (rank == 1 || dims[1].ubnd == dims[1].lbnd)
     {
       // A vector or a column matrix
+      if (dims[0].ubnd < dims[0].lbnd)
+        exception__expected_a_vector (who, scm_list_1 (vector));
       *dim = (dims[0].ubnd - dims[0].lbnd) + 1;
       *stride = dims[0].inc;
     }
   else if (dims[0].ubnd == dims[0].lbnd)
     {
       // A row matrix.
+      if (dims[1].ubnd < dims[1].lbnd)
+        exception__expected_a_vector (who, scm_list_1 (vector));
       *dim = (dims[1].ubnd - dims[1].lbnd) + 1;
       *stride = dims[1].inc;
     }
