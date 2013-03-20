@@ -39,6 +39,11 @@ size_t sign_variations_scm (size_t degree, ssize_t stride, const SCM *spline);
 SCM scm_sign_variations_f64 (SCM spline);
 SCM scm_sign_variations_scm (SCM spline);
 
+/* Budan’s 0_1 roots test for polynomials in the monomial basis. See
+   http://en.wikipedia.org/wiki/Budan%27s_theorem#Early_applications_of_Budan.27s_theorem */
+size_t budan_0_1_scm_mono (size_t degree, ssize_t stride, const SCM *spline);
+SCM scm_budan_0_1_scm_mono (SCM spline);
+
 #if 0
 {
 #endif

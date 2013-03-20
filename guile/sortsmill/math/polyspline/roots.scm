@@ -18,7 +18,9 @@
 (library (sortsmill math polyspline roots)
 
   (export poly:sign-variations-f64
-          poly:sign-variations-scm)
+          poly:sign-variations-scm
+
+          poly:budan-0_1-scm)
 
   (import (sortsmill dynlink)
           (rnrs)
