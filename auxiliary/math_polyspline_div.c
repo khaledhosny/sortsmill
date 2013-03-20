@@ -185,6 +185,32 @@ gcd_recursion_f64 (ssize_t degree, double *a, double *b, double *result)
     }
 }
 
+static void
+gcd_recursion_scm (ssize_t degree, SCM *a, SCM *b, SCM *result)
+{
+  const ssize_t deg_a = scm_mono_min_degree (degree, a);
+  const ssize_t deg_b = scm_mono_min_degree (degree, b);
+  if (0 <= deg_b)
+    {
+      SCM q[degree + 1];
+      size_t deg_q;
+      size_t deg_r;
+      bool division_by_zero;
+      div_scm_mono (sszmax (0, deg_a), 1, a, deg_b, 1, b,
+                    &deg_q, 1, q, &deg_r, 1, a, &division_by_zero);
+      assert (!division_by_zero);
+      gcd_recursion_scm (deg_b, b, a, result);
+    }
+  else if (0 <= deg_a)
+    {
+      // Make the result monic.
+      for (size_t i = 0; i < deg_a; i++)
+        a[i] = scm_divide (a[i], a[deg_a]);
+      a[deg_a] = scm_from_int (1);
+      memmove (result, a, (degree + 1) * sizeof (SCM));
+    }
+}
+
 VISIBLE void
 gcd_f64_mono (size_t degree1, ssize_t stride1, const double *spline1,
               size_t degree2, ssize_t stride2, const double *spline2,
@@ -213,6 +239,38 @@ gcd_f64_mono (size_t degree1, ssize_t stride1, const double *spline1,
 
   *degree = sszmax (0, f64_mono_min_degree (degree_max, a));
   copy_f64_with_strides (stride, gcd, 1, a, degree_max + 1);
+}
+
+VISIBLE void
+gcd_scm_mono (size_t degree1, ssize_t stride1, const SCM *spline1,
+              size_t degree2, ssize_t stride2, const SCM *spline2,
+              size_t *degree, ssize_t stride, SCM *gcd)
+{
+  // See
+  // http://en.wikipedia.org/wiki/Greatest_common_divisor_of_two_polynomials
+
+  const SCM zero = scm_from_int (0);
+
+  SCM poly1[degree1 + 1];
+  copy_scm_with_strides (1, poly1, stride1, spline1, degree1 + 1);
+
+  SCM poly2[degree2 + 1];
+  copy_scm_with_strides (1, poly2, stride2, spline2, degree2 + 1);
+
+  size_t degree_max = szmax (degree1, degree2);
+
+  SCM a[degree_max + 1];
+  scm_fill (degree_max, a, zero);
+  memcpy (a, poly1, (degree1 + 1) * sizeof (SCM));
+
+  SCM b[degree_max + 1];
+  scm_fill (degree_max, b, zero);
+  memcpy (b, poly2, (degree2 + 1) * sizeof (SCM));
+
+  gcd_recursion_scm (degree_max, a, b, a);
+
+  *degree = sszmax (0, scm_mono_min_degree (degree_max, a));
+  copy_scm_with_strides (stride, gcd, 1, a, degree_max + 1);
 }
 
 //-------------------------------------------------------------------------
@@ -446,6 +504,66 @@ scm_gcd_f64_mono (SCM spline1, SCM spline2)
 
 //-------------------------------------------------------------------------
 
+static SCM
+scm_gcd_scm_spline (const char *who,
+                    void gcd (size_t degree1, ssize_t stride1,
+                              const SCM *spline1, size_t degree2,
+                              ssize_t stride2, const SCM *spline2,
+                              size_t *degree, ssize_t stride, SCM *gcd),
+                    SCM spline1, SCM spline2)
+{
+  scm_t_array_handle handle1;
+  scm_t_array_handle handle2;
+  scm_t_array_handle handle;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (spline1, &handle1);
+  scm_dynwind_array_handle_release (&handle1);
+  assert_c_rank_1_or_2_array (who, spline1, &handle1);
+  size_t dim1;
+  ssize_t stride1;
+  scm_array_handle_get_vector_dim_and_stride (who, spline1, &handle1,
+                                              &dim1, &stride1);
+  const SCM *_spline1 = scm_array_handle_elements (&handle1);
+
+  scm_array_get_handle (spline2, &handle2);
+  scm_dynwind_array_handle_release (&handle2);
+  assert_c_rank_1_or_2_array (who, spline2, &handle2);
+  size_t dim2;
+  ssize_t stride2;
+  scm_array_handle_get_vector_dim_and_stride (who, spline2, &handle2,
+                                              &dim2, &stride2);
+  const SCM *_spline2 = scm_array_handle_elements (&handle2);
+
+  SCM gcd_poly[szmax (dim1, dim2)];
+  size_t deg;
+  gcd (dim1 - 1, stride1, _spline1, dim2 - 1, stride2, _spline2, &deg, 1,
+       gcd_poly);
+
+  SCM result = scm_make_array (SCM_UNSPECIFIED,
+                               scm_list_1 (scm_list_2 (scm_from_uint (1),
+                                                       scm_from_size_t
+                                                       (deg + 1))));
+  scm_array_get_handle (result, &handle);
+  scm_dynwind_array_handle_release (&handle);
+  SCM *_result = scm_array_handle_writable_elements (&handle);
+  memcpy (_result, gcd_poly, (deg + 1) * sizeof (SCM));
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+VISIBLE SCM
+scm_gcd_scm_mono (SCM spline1, SCM spline2)
+{
+  return scm_gcd_scm_spline ("scm_gcd_scm_mono",
+                             gcd_scm_mono, spline1, spline2);
+}
+
+//-------------------------------------------------------------------------
+
 void init_math_polyspline_div (void);
 VISIBLE void
 init_math_polyspline_div (void)
@@ -456,7 +574,7 @@ init_math_polyspline_div (void)
   //scm_c_define_gsubr ("poly:div-scm-spower", 2, 0, 0, scm_div_scm_spower);
 
   scm_c_define_gsubr ("poly:gcd-f64-mono", 2, 0, 0, scm_gcd_f64_mono);
-  //scm_c_define_gsubr ("poly:gcd-scm-mono", 2, 0, 0, scm_gcd_scm_mono);
+  scm_c_define_gsubr ("poly:gcd-scm-mono", 2, 0, 0, scm_gcd_scm_mono);
   //scm_c_define_gsubr ("poly:gcd-f64-spower", 2, 0, 0, scm_gcd_f64_spower);
   //scm_c_define_gsubr ("poly:gcd-scm-spower", 2, 0, 0, scm_gcd_scm_spower);
 }
