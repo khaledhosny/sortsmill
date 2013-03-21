@@ -44,6 +44,10 @@ SCM scm_sign_variations_scm (SCM spline);
 size_t budan_0_1_scm_mono (size_t degree, ssize_t stride, const SCM *spline);
 SCM scm_budan_0_1_scm_mono (SCM spline);
 
+/* Isolate roots of a polynomial in the closed interval [0,1]. */
+SCM isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly);
+SCM scm_isolate_roots_scm_mono (SCM poly);
+
 #if 0
 {
 #endif

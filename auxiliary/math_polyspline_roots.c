@@ -213,8 +213,6 @@ scm_budan_0_1_scm_mono (SCM spline)
 // monomial basis) in the open interval (0,1). See
 // http://en.wikipedia.org/wiki/Vincent%27s_theorem
 
-#if 0
-
 static void
 p_0_mid_to_p_mid_1 (size_t degree, const SCM *p_0_mid, SCM *p_mid_1)
 {
@@ -224,11 +222,26 @@ p_0_mid_to_p_mid_1 (size_t degree, const SCM *p_0_mid, SCM *p_mid_1)
   //
   // to simplify and speed things up.
 
+  p_mid_1[0] = p_0_mid[degree];
+  for (size_t i = 1; i < degree; i++)
+    p_mid_1[i] = scm_product (scm_c_bincoef (degree, i), p_0_mid[degree]);
+  p_mid_1[degree] = p_0_mid[degree];
 
+  for (size_t k = 1; k < degree; k++)
+    {
+      p_mid_1[0] = scm_sum (p_mid_1[0], p_0_mid[degree - k]);
+      for (size_t i = 1; i < degree - k; i++)
+        p_mid_1[i] = scm_sum (p_mid_1[i],
+                              scm_product (scm_c_bincoef (degree - k, i),
+                                           p_0_mid[degree - k]));
+      p_mid_1[degree - k] = scm_sum (p_mid_1[degree - k], p_0_mid[degree - k]);
+    }
+
+  p_mid_1[0] = scm_sum (p_mid_1[0], p_0_mid[0]);
 }
 
 static SCM
-vca_resursion_scm (size_t degree, ssize_t stride, const SCM *p, SCM a, SCM b)
+vca_recursion_scm (size_t degree, ssize_t stride, const SCM *p, SCM a, SCM b)
 {
   SCM intervals = SCM_EOL;
 
@@ -236,7 +249,7 @@ vca_resursion_scm (size_t degree, ssize_t stride, const SCM *p, SCM a, SCM b)
   switch (var)
     {
     case 0:
-      // Nothing here.
+      // Do nothing here; leave @var{intervals} an empty list.
       break;
 
     case 1:
@@ -259,7 +272,23 @@ vca_resursion_scm (size_t degree, ssize_t stride, const SCM *p, SCM a, SCM b)
 
         p_0_mid_to_p_mid_1 (degree, p_0_mid, p_mid_1);
 
-        //???????????????????????????????????????????????????????
+        SCM one = scm_from_int (1);
+        SCM two = scm_from_int (2);
+        SCM one_half = scm_divide (one, two);
+
+        SCM mid = scm_divide (scm_sum (a, b), two);
+
+        SCM p_mid = eval_scm_mono (degree, stride, p, one_half);
+
+        if (scm_is_true (scm_zero_p (p_mid)))
+          // The midpoint is a root.
+          intervals = scm_cons (scm_cons (mid, mid), intervals);
+
+        SCM left_intervals = vca_recursion_scm (degree, 1, p_0_mid, a, mid);
+        SCM right_intervals = vca_recursion_scm (degree, 1, p_mid_1, mid, b);
+
+        intervals =
+          scm_append (scm_list_3 (left_intervals, intervals, right_intervals));
       }
       break;
     }
@@ -267,7 +296,53 @@ vca_resursion_scm (size_t degree, ssize_t stride, const SCM *p, SCM a, SCM b)
   return intervals;
 }
 
-#endif
+VISIBLE SCM
+isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly)
+{
+  SCM zero = scm_from_int (0);
+  SCM one = scm_from_int (1);
+
+  // Isolate roots in (0,1).
+  SCM intervals = vca_recursion_scm (degree, stride, poly, zero, one);
+
+  // Is one a root?
+  SCM p1 = eval_scm_mono (degree, stride, poly, one);
+  if (scm_is_true (scm_zero_p (p1)))
+    intervals = scm_append (scm_list_2 (intervals,
+                                        scm_list_1 (scm_cons (one, one))));
+
+  // Is zero a root?
+  SCM p0 = eval_scm_mono (degree, stride, poly, zero);
+  if (scm_is_true (scm_zero_p (p0)))
+    intervals = scm_cons (scm_cons (zero, zero), intervals);
+
+  return intervals;
+}
+
+VISIBLE SCM
+scm_isolate_roots_scm_mono (SCM poly)
+{
+  const char *who = "scm_isolate_roots_scm_mono";
+
+  scm_t_array_handle handle;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (poly, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, poly, &handle,
+                                              &dim, &stride);
+  const SCM *_poly = scm_array_handle_elements (&handle);
+
+  SCM intervals = isolate_roots_scm_mono (dim - 1, stride, _poly);
+
+  scm_dynwind_end ();
+
+  return intervals;
+}
 
 //-------------------------------------------------------------------------
 
@@ -283,6 +358,9 @@ init_math_polyspline_roots (void)
 
   scm_c_define_gsubr ("poly:budan-0_1-scm-mono", 1, 0, 0,
                       scm_budan_0_1_scm_mono);
+
+  scm_c_define_gsubr ("poly:isolate-roots-scm-mono", 1, 0, 0,
+                      scm_isolate_roots_scm_mono);
 }
 
 //-------------------------------------------------------------------------

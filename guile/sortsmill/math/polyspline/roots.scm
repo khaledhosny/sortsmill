@@ -32,20 +32,4 @@
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_math_polyspline_roots"))
 
-  #|
-  (define (poly:isolate-roots-scm-mono poly)
-    "The Vincent-Collins-Akritas method for isolating roots of a
-square-free polynomial (with coefficients given in the ordinary
-monomial basis) in the open interval (0,1). See
-http://en.wikipedia.org/wiki/Vincent%27s_theorem"
-    (vca-recursion poly 0 1))
-
-  (define (vca-resursion poly a b)
-    (case (poly:budan-0_1-scm-mono poly01)
-      [(0) '()]
-      [(1) `((,a . ,b))]
-      [else 
-       ] ))
-  |#
-
   ) ;; end of library.
