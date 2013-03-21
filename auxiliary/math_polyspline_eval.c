@@ -220,12 +220,6 @@ eval_scm_bern_schumaker_volk (size_t degree, ssize_t stride,
 {
   SCM v;
 
-  scm_dynwind_begin (0);
-
-  mpz_t C;
-  mpz_init (C);
-  scm_dynwind_mpz_clear (C);
-
   const SCM one = scm_from_int (1);
 
   const SCM s = scm_difference (one, t);
@@ -236,12 +230,9 @@ eval_scm_bern_schumaker_volk (size_t degree, ssize_t stride,
       SCM u = scm_divide (t, s);
       v = spline[stride * (ssize_t) degree];
       for (size_t i = 1; i <= degree; i++)
-        {
-          mpz_bincoef_ui (C, degree, degree - i);
-          v = scm_sum (scm_product (v, u),
-                       scm_product (scm_from_mpz (C),
-                                    spline[stride * (ssize_t) (degree - i)]));
-        }
+        v = scm_sum (scm_product (v, u),
+                     scm_product (scm_c_bincoef (degree, degree - i),
+                                  spline[stride * (ssize_t) (degree - i)]));
 
       // Multiply by @var{s} raised to the power @var{degree}.
       SCM power = s;
@@ -261,13 +252,9 @@ eval_scm_bern_schumaker_volk (size_t degree, ssize_t stride,
       SCM u = scm_divide (s, t);
       v = spline[0];
       for (size_t i = 1; i <= degree; i++)
-        {
-          mpz_bincoef_ui (C, degree, i);
-          v =
-            scm_sum (scm_product (v, u),
-                     scm_product (scm_from_mpz (C),
+        v = scm_sum (scm_product (v, u),
+                     scm_product (scm_c_bincoef (degree, i),
                                   spline[stride * (ssize_t) i]));
-        }
 
       // Multiply by @var{t} raised to the power @var{degree}.
       SCM power = t;
@@ -282,7 +269,6 @@ eval_scm_bern_schumaker_volk (size_t degree, ssize_t stride,
         }
     }
 
-  scm_dynwind_end ();
   return v;
 }
 
@@ -324,19 +310,8 @@ eval_scm_sbern_de_casteljau (size_t degree, ssize_t stride,
 
   SCM b[degree + 1];
 
-  scm_dynwind_begin (0);
-
-  mpz_t C;
-  mpz_init (C);
-  scm_dynwind_mpz_clear (C);
-
   for (size_t i = 0; i <= degree; i++)
-    {
-      mpz_bincoef_ui (C, degree, i);
-      b[i] = scm_divide (spline[stride * (ssize_t) i], scm_from_mpz (C));
-    }
-
-  scm_dynwind_end ();
+    b[i] = scm_divide (spline[stride * (ssize_t) i], scm_c_bincoef (degree, i));
 
   for (size_t i = 0; i < degree; i++)
     for (size_t j = 0; j < degree - i; j++)

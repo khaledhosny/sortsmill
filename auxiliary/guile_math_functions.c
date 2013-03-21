@@ -24,31 +24,39 @@ void init_guile_sortsmill_math_functions (void);
 
 // Binary coefficients C(n,k).
 VISIBLE SCM
+scm_c_bincoef (uintmax_t n, uintmax_t k)
+{
+  SCM coef;
+
+  if (n <= 34)
+    // C(34,17) = 2333606220, which can be represented as a 32-bit
+    // unsigned integer. Therefore we are safe using machine integers.
+    coef = scm_from_uintmax (bincoef (n, k));
+  else
+    {
+      mpz_t C;
+      mpz_init (C);
+      mpz_bincoef_ui (C, n, k);
+      coef = scm_from_mpz (C);
+      mpz_clear (C);
+    }
+  return coef;
+}
+
+// Binary coefficients C(n,k).
+VISIBLE SCM
 scm_bincoef (SCM n, SCM k)
 {
-  SCM coef = SCM_UNSPECIFIED;
+  SCM coef;
 
   if (scm_is_unsigned_integer (n, 0, UINTMAX_MAX) &&
       scm_is_unsigned_integer (k, 0, UINTMAX_MAX))
     {
-      const uintmax_t n_c = scm_to_uintmax (n);
-      const uintmax_t k_c = scm_to_uintmax (k);
-      if (n_c <= 34)
-        // C(34,17) = 2333606220, which can be represented as a 32-bit
-        // unsigned integer. Therefore we are safe using machine
-        // integers.
-        coef = scm_from_uintmax (bincoef (n_c, k_c));
-      else
-        {
-          mpz_t C;
-          mpz_init (C);
-          mpz_bincoef_ui (C, n_c, k_c);
-          coef = scm_from_mpz (C);
-          mpz_clear (C);
-        }
+      coef = scm_c_bincoef (scm_to_uintmax (n), scm_to_uintmax (k));
     }
   else
     {
+      coef = SCM_UNSPECIFIED;
       SCM message =
         scm_c_locale_sformat
         (_("scm_bincoef(n,k) is not implemented "

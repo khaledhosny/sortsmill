@@ -28,6 +28,7 @@ extern "C"
 }
 #endif
 
+SCM scm_c_bincoef (uintmax_t n, uintmax_t k);
 SCM scm_bincoef (SCM n, SCM k);
 
 #if 0

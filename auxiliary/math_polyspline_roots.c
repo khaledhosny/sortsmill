@@ -154,20 +154,11 @@ budan_0_1_scm_mono (size_t degree, ssize_t stride, const SCM *spline)
 
   if (degree != 0)
     {
-      scm_dynwind_begin (0);
-
-      mpz_t C;
-      mpz_init (C);
-      scm_dynwind_mpz_clear (C);
-
       SCM p[degree + 1];
 
       p[0] = *spline;
       for (size_t i = 1; i < degree; i++)
-        {
-          mpz_bincoef_ui (C, degree, i);
-          p[i] = scm_product (scm_from_mpz (C), *spline);
-        }
+        p[i] = scm_product (scm_c_bincoef (degree, i), *spline);
       p[degree] = *spline;
 
       for (size_t k = 1; k < degree; k++)
@@ -175,14 +166,10 @@ budan_0_1_scm_mono (size_t degree, ssize_t stride, const SCM *spline)
           spline += stride;
           p[0] = scm_sum (p[0], *spline);
           for (size_t i = 1; i < degree - k; i++)
-            {
-              mpz_bincoef_ui (C, degree - k, i);
-              p[i] = scm_sum (p[i], scm_product (scm_from_mpz (C), *spline));
-            }
+            p[i] = scm_sum (p[i], scm_product (scm_c_bincoef (degree - k, i),
+                                               *spline));
           p[degree - k] = scm_sum (p[degree - k], *spline);
         }
-
-      scm_dynwind_end ();
 
       spline += stride;
       p[0] = scm_sum (p[0], *spline);
@@ -220,6 +207,69 @@ scm_budan_0_1_scm_mono (SCM spline)
 }
 
 //-------------------------------------------------------------------------
+//
+// The Vincent-Collins-Akritas method for isolating roots of a
+// square-free polynomial (with coefficients given in the ordinary
+// monomial basis) in the open interval (0,1). See
+// http://en.wikipedia.org/wiki/Vincent%27s_theorem
+
+#if 0
+
+static void
+p_0_mid_to_p_mid_1 (size_t degree, const SCM *p_0_mid, SCM *p_mid_1)
+{
+  // Here we use the binomial expansion
+  //
+  //    (1 + x)ⁿ = ∑ᵢC(n,i)xⁱ for i = 0,1,...,n
+  //
+  // to simplify and speed things up.
+
+
+}
+
+static SCM
+vca_resursion_scm (size_t degree, ssize_t stride, const SCM *p, SCM a, SCM b)
+{
+  SCM intervals = SCM_EOL;
+
+  size_t var = budan_0_1_scm_mono (degree, stride, p);
+  switch (var)
+    {
+    case 0:
+      // Nothing here.
+      break;
+
+    case 1:
+      intervals = scm_cons (scm_cons (a, b), intervals);
+      break;
+
+    default:
+      {
+        SCM p_0_mid[degree + 1];
+        SCM p_mid_1[degree + 1];
+
+        SCM pow2 = scm_from_int (1);
+        p_0_mid[degree] = p[stride * (ssize_t) degree];
+        for (size_t i = 1; i <= degree; i++)
+          {
+            pow2 = scm_sum (pow2, pow2);
+            p_0_mid[degree - i] =
+              scm_product (pow2, p[stride * (ssize_t) (degree - i)]);
+          }
+
+        p_0_mid_to_p_mid_1 (degree, p_0_mid, p_mid_1);
+
+        //???????????????????????????????????????????????????????
+      }
+      break;
+    }
+
+  return intervals;
+}
+
+#endif
+
+//-------------------------------------------------------------------------
 
 void init_math_polyspline_roots (void);
 
@@ -231,7 +281,8 @@ init_math_polyspline_roots (void)
   scm_c_define_gsubr ("poly:sign-variations-scm", 1, 0, 0,
                       scm_sign_variations_scm);
 
-  scm_c_define_gsubr ("poly:budan-0_1-scm", 1, 0, 0, scm_budan_0_1_scm_mono);
+  scm_c_define_gsubr ("poly:budan-0_1-scm-mono", 1, 0, 0,
+                      scm_budan_0_1_scm_mono);
 }
 
 //-------------------------------------------------------------------------

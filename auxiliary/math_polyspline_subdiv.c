@@ -303,19 +303,11 @@ subdiv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
 {
   // De Casteljau’s algorithm.
 
-  scm_dynwind_begin (0);
-
-  mpz_t C;
-  mpz_init (C);
-  scm_dynwind_mpz_clear (C);
-
   SCM _a[degree + 1];
   SCM _b[degree + 1];
   for (size_t i = 0; i <= degree; i++)
-    {
-      mpz_bincoef_ui (C, degree, i);
-      _b[i] = scm_divide (spline[stride * (ssize_t) i], scm_from_mpz (C));
-    }
+    _b[i] =
+      scm_divide (spline[stride * (ssize_t) i], scm_c_bincoef (degree, i));
   for (size_t i = 0; i < degree; i++)
     {
       _a[i] = _b[0];
@@ -326,15 +318,12 @@ subdiv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
   _a[degree] = _b[0];
   for (size_t i = 0; i <= degree; i++)
     {
-      mpz_bincoef_ui (C, degree, i);
-      SCM _C = scm_from_mpz (C);
+      SCM _C = scm_c_bincoef (degree, i);
       _a[i] = scm_product (_a[i], _C);
       _b[i] = scm_product (_b[i], _C);
     }
   copy_scm_with_strides (stride_a, a, 1, _a, degree + 1);
   copy_scm_with_strides (stride_b, b, 1, _b, degree + 1);
-
-  scm_dynwind_end ();
 }
 
 VISIBLE void

@@ -106,28 +106,16 @@ mul_scm_bern (size_t degree1, ssize_t stride1, const SCM *spline1,
 {
   const SCM zero = scm_from_uint (0);
 
-  scm_dynwind_begin (0);
-
-  mpz_t zCi;
-  mpz_init (zCi);
-  scm_dynwind_mpz_clear (zCi);
-
-  mpz_t zCj;
-  mpz_init (zCj);
-  scm_dynwind_mpz_clear (zCj);
-
   const size_t degree = degree1 + degree2;
   SCM buffer[degree + 1];
   for (size_t i = 0; i <= degree; i++)
     buffer[i] = zero;
   for (size_t j = 0; j <= degree2; j++)
     {
-      mpz_bincoef_ui (zCj, degree2, j);
-      const SCM Cj = scm_from_mpz (zCj);
+      const SCM Cj = scm_c_bincoef (degree2, j);
       for (size_t i = 0; i <= degree1; i++)
         {
-          mpz_bincoef_ui (zCi, degree1, i);
-          const SCM Ci = scm_from_mpz (zCi);
+          const SCM Ci = scm_c_bincoef (degree1, i);
           const SCM tempj = scm_product (Cj, spline2[stride2 * (ssize_t) j]);
           const SCM tempi = scm_product (Ci, spline1[stride1 * (ssize_t) i]);
           buffer[j + i] = scm_sum (buffer[j + i], scm_product (tempj, tempi));
@@ -135,12 +123,9 @@ mul_scm_bern (size_t degree1, ssize_t stride1, const SCM *spline1,
     }
   for (size_t i = 0; i <= degree; i++)
     {
-      mpz_bincoef_ui (zCi, degree, i);
-      const SCM Ci = scm_from_mpz (zCi);
+      const SCM Ci = scm_c_bincoef (degree, i);
       buffer[i] = scm_divide (buffer[i], Ci);
     }
-
-  scm_dynwind_end ();
 
   copy_scm_with_strides (result_stride, result, 1, buffer, degree + 1);
 }

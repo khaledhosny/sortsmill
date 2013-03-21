@@ -170,14 +170,8 @@ constant_scm_sbern (SCM w, size_t degree, ssize_t stride, SCM *constant)
   //    (w 6w 15w 20w 15w 6w w)
   //         ⋮
   //
-  mpz_t C;
-  mpz_init (C);
   for (size_t i = 0; i <= degree; i++)
-    {
-      mpz_bincoef_ui (C, degree, i);
-      constant[stride * (ssize_t) i] = scm_product (scm_from_mpz (C), w);
-    }
-  mpz_clear (C);
+    constant[stride * (ssize_t) i] = scm_product (scm_c_bincoef (degree, i), w);
 }
 
 VISIBLE void

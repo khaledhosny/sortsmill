@@ -164,40 +164,23 @@ compose_scm_bern_horner (size_t degree_a, ssize_t stride_a, const SCM *a,
 {
   // Transform the problem to scaled Bernstein basis.
 
-  scm_dynwind_begin (0);
-
-  mpz_t C;
-  mpz_init (C);
-  scm_dynwind_mpz_clear (C);
-
   SCM _a[degree_a + 1];
   SCM _b[degree_b + 1];
   SCM _c[degree_a * degree_b + 1];
 
   copy_scm_with_strides (1, _a, stride_a, a, degree_a + 1);
   for (size_t i = 1; i < degree_a; i++)
-    {
-      mpz_bincoef_ui (C, degree_a, i);
-      _a[i] = scm_product (_a[i], scm_from_mpz (C));
-    }
+    _a[i] = scm_product (_a[i], scm_c_bincoef (degree_a, i));
 
   copy_scm_with_strides (1, _b, stride_b, b, degree_b + 1);
   for (size_t i = 1; i < degree_b; i++)
-    {
-      mpz_bincoef_ui (C, degree_b, i);
-      _b[i] = scm_product (_b[i], scm_from_mpz (C));
-    }
+    _b[i] = scm_product (_b[i], scm_c_bincoef (degree_b, i));
 
   compose_scm_sbern_horner (degree_a, 1, _a, degree_b, 1, _b, 1, _c);
 
   for (size_t i = 1; i < degree_a * degree_b; i++)
-    {
-      mpz_bincoef_ui (C, degree_a * degree_b, i);
-      _c[i] = scm_divide (_c[i], scm_from_mpz (C));
-    }
+    _c[i] = scm_divide (_c[i], scm_c_bincoef (degree_a * degree_b, i));
   copy_scm_with_strides (stride_c, c, 1, _c, degree_a * degree_b + 1);
-
-  scm_dynwind_end ();
 }
 
 VISIBLE void
@@ -254,19 +237,9 @@ compose_scm_sbern_de_casteljau (size_t degree_a, ssize_t stride_a,
   SCM temp1[degree_a * degree_b + 1];
   SCM temp2[degree_a * degree_b + 1];
 
-  scm_dynwind_begin (0);
-
-  mpz_t C;
-  mpz_init (C);
-  scm_dynwind_mpz_clear (C);
-
   for (size_t i = 0; i <= degree_b; i++)
-    {
-      mpz_bincoef_ui (C, degree_b, i);
-      _c[i][0] = scm_divide (b[stride_b * (ssize_t) i], scm_from_mpz (C));
-    }
-
-  scm_dynwind_end ();
+    _c[i][0] =
+      scm_divide (b[stride_b * (ssize_t) i], scm_c_bincoef (degree_b, i));
 
   for (size_t i = 0; i < degree_b; i++)
     for (size_t j = 0; j < degree_b - i; j++)
