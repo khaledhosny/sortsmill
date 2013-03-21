@@ -42,6 +42,20 @@ void deriv_scm_mono (size_t degree, ssize_t stride, const SCM *spline,
 SCM scm_deriv_f64_mono (SCM spline);
 SCM scm_deriv_scm_mono (SCM spline);
 
+void deriv_f64_bern (size_t degree, ssize_t stride, const double *spline,
+                     ssize_t deriv_stride, double *deriv);
+void deriv_scm_bern (size_t degree, ssize_t stride, const SCM *spline,
+                     ssize_t deriv_stride, SCM *deriv);
+SCM scm_deriv_f64_bern (SCM spline);
+SCM scm_deriv_scm_bern (SCM spline);
+
+void deriv_f64_sbern (size_t degree, ssize_t stride, const double *spline,
+                      ssize_t deriv_stride, double *deriv);
+void deriv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
+                      ssize_t deriv_stride, SCM *deriv);
+SCM scm_deriv_f64_sbern (SCM spline);
+SCM scm_deriv_scm_sbern (SCM spline);
+
 #if 0
 {
 #endif

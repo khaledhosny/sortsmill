@@ -51,6 +51,80 @@ deriv_scm_mono (size_t degree, ssize_t stride, const SCM *spline,
     }
 }
 
+VISIBLE void
+deriv_f64_bern (size_t degree, ssize_t stride, const double *spline,
+                ssize_t deriv_stride, double *deriv)
+{
+  if (degree == 0)
+    deriv[0] = 0.0;
+  else
+    {
+      double d[degree];
+      for (size_t i = 0; i < degree; i++)
+        d[i] =
+          degree * spline[stride * (ssize_t) (i + 1)] -
+          degree * spline[stride * (ssize_t) i];
+      copy_f64_with_strides (deriv_stride, deriv, 1, d, degree);
+    }
+}
+
+VISIBLE void
+deriv_scm_bern (size_t degree, ssize_t stride, const SCM *spline,
+                ssize_t deriv_stride, SCM *deriv)
+{
+  if (degree == 0)
+    deriv[0] = scm_from_int (0);
+  else
+    {
+      SCM d[degree];
+      for (size_t i = 0; i < degree; i++)
+        {
+          SCM deg = scm_from_size_t (degree);
+          d[i] =
+            scm_difference (scm_product
+                            (deg, spline[stride * (ssize_t) (i + 1)]),
+                            scm_product (deg, spline[stride * (ssize_t) i]));
+        }
+      copy_scm_with_strides (deriv_stride, deriv, 1, d, degree);
+    }
+}
+
+VISIBLE void
+deriv_f64_sbern (size_t degree, ssize_t stride, const double *spline,
+                 ssize_t deriv_stride, double *deriv)
+{
+  if (degree == 0)
+    deriv[0] = 0.0;
+  else
+    {
+      double d[degree];
+      for (size_t i = 0; i < degree; i++)
+        d[i] =
+          (i + 1) * spline[stride * (ssize_t) (i + 1)] -
+          (degree - i) * spline[stride * (ssize_t) i];
+      copy_f64_with_strides (deriv_stride, deriv, 1, d, degree);
+    }
+}
+
+VISIBLE void
+deriv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
+                 ssize_t deriv_stride, SCM *deriv)
+{
+  if (degree == 0)
+    deriv[0] = scm_from_int (0);
+  else
+    {
+      SCM d[degree];
+      for (size_t i = 0; i < degree; i++)
+        d[i] =
+          scm_difference (scm_product (scm_from_size_t (i + 1),
+                                       spline[stride * (ssize_t) (i + 1)]),
+                          scm_product (scm_from_size_t (degree - i),
+                                       spline[stride * (ssize_t) i]));
+      copy_scm_with_strides (deriv_stride, deriv, 1, d, degree);
+    }
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -100,6 +174,18 @@ scm_deriv_f64_mono (SCM spline)
   return scm_deriv_f64_spline ("scm_deriv_f64_mono", deriv_f64_mono, spline);
 }
 
+VISIBLE SCM
+scm_deriv_f64_bern (SCM spline)
+{
+  return scm_deriv_f64_spline ("scm_deriv_f64_bern", deriv_f64_bern, spline);
+}
+
+VISIBLE SCM
+scm_deriv_f64_sbern (SCM spline)
+{
+  return scm_deriv_f64_spline ("scm_deriv_f64_sbern", deriv_f64_sbern, spline);
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -147,6 +233,18 @@ scm_deriv_scm_mono (SCM spline)
   return scm_deriv_scm_spline ("scm_deriv_scm_mono", deriv_scm_mono, spline);
 }
 
+VISIBLE SCM
+scm_deriv_scm_bern (SCM spline)
+{
+  return scm_deriv_scm_spline ("scm_deriv_scm_bern", deriv_scm_bern, spline);
+}
+
+VISIBLE SCM
+scm_deriv_scm_sbern (SCM spline)
+{
+  return scm_deriv_scm_spline ("scm_deriv_scm_sbern", deriv_scm_sbern, spline);
+}
+
 //-------------------------------------------------------------------------
 
 void init_math_polyspline_deriv (void);
@@ -156,6 +254,12 @@ init_math_polyspline_deriv (void)
 {
   scm_c_define_gsubr ("poly:deriv-f64-mono", 1, 0, 0, scm_deriv_f64_mono);
   scm_c_define_gsubr ("poly:deriv-scm-mono", 1, 0, 0, scm_deriv_scm_mono);
+
+  scm_c_define_gsubr ("poly:deriv-f64-bern", 1, 0, 0, scm_deriv_f64_bern);
+  scm_c_define_gsubr ("poly:deriv-scm-bern", 1, 0, 0, scm_deriv_scm_bern);
+
+  scm_c_define_gsubr ("poly:deriv-f64-sbern", 1, 0, 0, scm_deriv_f64_sbern);
+  scm_c_define_gsubr ("poly:deriv-scm-sbern", 1, 0, 0, scm_deriv_scm_sbern);
 }
 
 //-------------------------------------------------------------------------
