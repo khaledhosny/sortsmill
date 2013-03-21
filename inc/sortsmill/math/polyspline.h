@@ -23,6 +23,7 @@
 #include <sortsmill/math/polyspline/add.h>
 #include <sortsmill/math/polyspline/bases.h>
 #include <sortsmill/math/polyspline/compose.h>
+#include <sortsmill/math/polyspline/deriv.h>
 #include <sortsmill/math/polyspline/div.h>
 #include <sortsmill/math/polyspline/elev.h>
 #include <sortsmill/math/polyspline/eval.h>

@@ -26,6 +26,7 @@
           poly:sqfr-scm-mono)
 
   (import (sortsmill math polyspline add)
+          (sortsmill math polyspline deriv)
           (sortsmill math matrices)
           (sortsmill dynlink)
           (rnrs)
@@ -39,13 +40,13 @@
     "Yun’s algorithm for the square-free decomposition of a univariate
 polynomial. See http://en.wikipedia.org/wiki/Square-free_polynomial"
     (let* ([poly (matrix-inexact->exact poly)]
-           [poly^ (formal-derivative poly)]
+           [poly^ (poly:deriv-scm-mono poly)]
            [a0 (poly:gcd-scm-mono poly poly^)])
       (match (one-based a0)
         [#@1(0) (list #@1(0))]
         [_      (let* ([b (poly:div-scm-mono poly a0)]
                        [c (poly:div-scm-mono poly^ a0)]
-                       [d (poly:sub-scm-mono c (formal-derivative b))])
+                       [d (poly:sub-scm-mono c (poly:deriv-scm-mono b))])
                   (yun-recursion '() b c d))] )))
 
   (define (yun-recursion prior b c d)
@@ -54,18 +55,7 @@ polynomial. See http://en.wikipedia.org/wiki/Square-free_polynomial"
       (match (one-based bb)
         [#@1(1) (reverse (cons aa prior))]
         [_      (let* ([cc (poly:div-scm-mono d aa)]
-                       [dd (poly:sub-scm-mono cc (formal-derivative bb))])
+                       [dd (poly:sub-scm-mono cc (poly:deriv-scm-mono bb))])
                   (yun-recursion (cons aa prior) bb cc dd)) ] )))
-
-  ;; FIXME: Replace this with a globally available implementation,
-  ;; likely in C. This will get us working, however.
-  (define (formal-derivative poly)
-    (let ([n (vector-length poly)])
-      (if (= n 1)
-          #(0)
-          [let ([deriv (make-vector (- n 1))])
-            (do ([i 1 (+ i 1)]) ([= i n])
-              (vector-set! deriv (- i 1) (* i (vector-ref poly i))))
-            deriv] )))
 
   ) ;; end of library.
