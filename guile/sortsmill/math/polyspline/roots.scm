@@ -24,7 +24,10 @@
           poly:budan-0_1-scm-mono
 
           ;; Isolate roots of a square-free polynomial in the interval
-          ;; [0,1]. You want to do this with exact arithmetic.
+          ;; [0,1]. You want to do this with exact arithmetic. The
+          ;; intervals are returned as an ordered list. Intervals of
+          ;; length zero are closed; intervals of non-zero length are
+          ;; open.
           poly:isolate-roots-scm-mono)
 
   (import (sortsmill dynlink)
