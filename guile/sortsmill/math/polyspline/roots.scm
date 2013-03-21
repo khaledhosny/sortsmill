@@ -20,8 +20,11 @@
   (export poly:sign-variations-f64
           poly:sign-variations-scm
 
+          ;; Budan’s 0_1 roots test.
           poly:budan-0_1-scm-mono
 
+          ;; Isolate roots of a square-free polynomial in the interval
+          ;; [0,1].
           poly:isolate-roots-scm-mono)
 
   (import (sortsmill dynlink)
