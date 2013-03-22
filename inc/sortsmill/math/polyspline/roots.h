@@ -79,6 +79,12 @@ SCM scm_find_bracketed_root_f64_spower (SCM spline, SCM a, SCM b, SCM tolerance,
                                         SCM epsilon);
 SCM scm_find_bracketed_root_scm_mono_exact (SCM spline, SCM a, SCM b,
                                             SCM tolerance, SCM epsilon);
+SCM scm_find_bracketed_root_scm_bern_exact (SCM spline, SCM a, SCM b,
+                                            SCM tolerance, SCM epsilon);
+SCM scm_find_bracketed_root_scm_sbern_exact (SCM spline, SCM a, SCM b,
+                                             SCM tolerance, SCM epsilon);
+SCM scm_find_bracketed_root_scm_spower_exact (SCM spline, SCM a, SCM b,
+                                              SCM tolerance, SCM epsilon);
 
 #if 0
 {

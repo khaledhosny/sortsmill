@@ -586,6 +586,36 @@ scm_find_bracketed_root_scm_mono_exact (SCM spline, SCM a, SCM b,
                                        epsilon);
 }
 
+VISIBLE SCM
+scm_find_bracketed_root_scm_bern_exact (SCM spline, SCM a, SCM b,
+                                        SCM tolerance, SCM epsilon)
+{
+  return
+    scm_find_bracketed_root_scm_exact ("scm_find_bracketed_root_scm_bern_exact",
+                                       eval_scm_bern_schumaker_volk, spline, a,
+                                       b, tolerance, epsilon);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_scm_sbern_exact (SCM spline, SCM a, SCM b,
+                                         SCM tolerance, SCM epsilon)
+{
+  return
+    scm_find_bracketed_root_scm_exact
+    ("scm_find_bracketed_root_scm_sbern_exact", eval_scm_sbern_schumaker_volk,
+     spline, a, b, tolerance, epsilon);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_scm_spower_exact (SCM spline, SCM a, SCM b,
+                                          SCM tolerance, SCM epsilon)
+{
+  return
+    scm_find_bracketed_root_scm_exact
+    ("scm_find_bracketed_root_scm_spower_exact", eval_scm_spower, spline, a, b,
+     tolerance, epsilon);
+}
+
 //-------------------------------------------------------------------------
 
 void init_math_polyspline_roots (void);
@@ -618,6 +648,12 @@ init_math_polyspline_roots (void)
                       scm_find_bracketed_root_f64_spower);
   scm_c_define_gsubr ("poly:find-bracketed-root-scm-mono-exact", 3, 2, 0,
                       scm_find_bracketed_root_scm_mono_exact);
+  scm_c_define_gsubr ("poly:find-bracketed-root-scm-bern-exact", 3, 2, 0,
+                      scm_find_bracketed_root_scm_bern_exact);
+  scm_c_define_gsubr ("poly:find-bracketed-root-scm-sbern-exact", 3, 2, 0,
+                      scm_find_bracketed_root_scm_sbern_exact);
+  scm_c_define_gsubr ("poly:find-bracketed-root-scm-spower-exact", 3, 2, 0,
+                      scm_find_bracketed_root_scm_spower_exact);
 }
 
 //-------------------------------------------------------------------------

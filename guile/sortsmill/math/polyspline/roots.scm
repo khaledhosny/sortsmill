@@ -36,7 +36,10 @@
           poly:find-bracketed-root-f64-sbern-schumaker-volk
           poly:find-bracketed-root-f64-sbern-de-casteljau
           poly:find-bracketed-root-f64-spower
-          poly:find-bracketed-root-scm-mono-exact)
+          poly:find-bracketed-root-scm-mono-exact
+          poly:find-bracketed-root-scm-bern-exact
+          poly:find-bracketed-root-scm-sbern-exact
+          poly:find-bracketed-root-scm-spower-exact)
 
   (import (sortsmill dynlink)
           (rnrs)
