@@ -125,6 +125,74 @@ deriv_scm_sbern (size_t degree, ssize_t stride, const SCM *spline,
     }
 }
 
+VISIBLE void
+deriv_f64_spower (size_t degree, ssize_t stride, const double *spline,
+                  ssize_t deriv_stride, double *deriv)
+{
+  if (degree == 0)
+    deriv[0] = 0.0;
+  else
+    {
+      double s[degree + 1];
+      copy_f64_with_strides (1, s, stride, spline, degree + 1);
+
+      double d[degree];
+
+      const size_t n = degree;
+      const size_t n2 = n / 2;
+
+      for (size_t i = 1; i <= n2; i++)
+        {
+          const double like_terms =
+            (2 * i - 1) * s[n - i + 1] - (2 * i - 1) * s[i - 1];
+          d[i - 1] = like_terms + i * s[i];
+          d[n - i] = like_terms - i * s[n - i];
+        }
+
+      if (n % 2 == 1)
+        d[n2] = (2 * n2 + 1) * s[n2 + 1] - (2 * n2 + 1) * s[n2];
+
+      copy_f64_with_strides (deriv_stride, deriv, 1, d, degree);
+    }
+}
+
+VISIBLE void
+deriv_scm_spower (size_t degree, ssize_t stride, const SCM *spline,
+                  ssize_t deriv_stride, SCM *deriv)
+{
+  if (degree == 0)
+    deriv[0] = scm_from_int (0);
+  else
+    {
+      SCM s[degree + 1];
+      copy_scm_with_strides (1, s, stride, spline, degree + 1);
+
+      SCM d[degree];
+
+      const size_t n = degree;
+      const size_t n2 = n / 2;
+
+      for (size_t i = 1; i <= n2; i++)
+        {
+          const SCM a = scm_from_size_t (2 * i - 1);
+          const SCM like_terms = scm_difference (scm_product (a, s[n - i + 1]),
+                                                 scm_product (a, s[i - 1]));
+          const SCM b = scm_from_size_t (i);
+          d[i - 1] = scm_sum (like_terms, scm_product (b, s[i]));
+          d[n - i] = scm_difference (like_terms, scm_product (b, s[n - i]));
+        }
+
+      if (n % 2 == 1)
+        {
+          const SCM a = scm_from_size_t (2 * n2 + 1);
+          d[n2] = scm_difference (scm_product (a, s[n2 + 1]),
+                                  scm_product (a, s[n2]));
+        }
+
+      copy_scm_with_strides (deriv_stride, deriv, 1, d, degree);
+    }
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -186,6 +254,13 @@ scm_deriv_f64_sbern (SCM spline)
   return scm_deriv_f64_spline ("scm_deriv_f64_sbern", deriv_f64_sbern, spline);
 }
 
+VISIBLE SCM
+scm_deriv_f64_spower (SCM spline)
+{
+  return scm_deriv_f64_spline ("scm_deriv_f64_spower", deriv_f64_spower,
+                               spline);
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -245,6 +320,13 @@ scm_deriv_scm_sbern (SCM spline)
   return scm_deriv_scm_spline ("scm_deriv_scm_sbern", deriv_scm_sbern, spline);
 }
 
+VISIBLE SCM
+scm_deriv_scm_spower (SCM spline)
+{
+  return scm_deriv_scm_spline ("scm_deriv_scm_spower", deriv_scm_spower,
+                               spline);
+}
+
 //-------------------------------------------------------------------------
 
 void init_math_polyspline_deriv (void);
@@ -260,6 +342,9 @@ init_math_polyspline_deriv (void)
 
   scm_c_define_gsubr ("poly:deriv-f64-sbern", 1, 0, 0, scm_deriv_f64_sbern);
   scm_c_define_gsubr ("poly:deriv-scm-sbern", 1, 0, 0, scm_deriv_scm_sbern);
+
+  scm_c_define_gsubr ("poly:deriv-f64-spower", 1, 0, 0, scm_deriv_f64_spower);
+  scm_c_define_gsubr ("poly:deriv-scm-spower", 1, 0, 0, scm_deriv_scm_spower);
 }
 
 //-------------------------------------------------------------------------

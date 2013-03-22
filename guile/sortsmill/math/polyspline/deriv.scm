@@ -24,7 +24,10 @@
           poly:deriv-scm-bern
 
           poly:deriv-f64-sbern
-          poly:deriv-scm-sbern)
+          poly:deriv-scm-sbern
+
+          poly:deriv-f64-spower
+          poly:deriv-scm-spower)
 
   (import (sortsmill dynlink)
           (rnrs)
