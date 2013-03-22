@@ -26,8 +26,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _NAMELIST_DATA_H
-#define _NAMELIST_DATA_H 1
+#ifndef ___NAMELIST_DATA_H
+#define ___NAMELIST_DATA_H 1
 
 #include "fontforgevw.h"
 #include "ustring.h"
@@ -48,4 +48,4 @@ extern NameList greeksc;
 extern NameList tex;
 extern NameList ams;
 
-#endif	// _NAMELIST_DATA_H
+#endif	// ___NAMELIST_DATA_H

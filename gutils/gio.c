@@ -32,6 +32,8 @@
 #include <ustring.h>
 #include <errno.h>
 
+gdraw_sync_thread_t *gdraw_sync_thread;
+
 static struct protocols {
     int index;
     uint32_t *proto;

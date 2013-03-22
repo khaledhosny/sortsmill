@@ -44,7 +44,8 @@
 #include "ffthread.h"
 #endif
 
-void (*gdraw_sync_thread)(void *,void *,void *);
+typedef void gdraw_sync_thread_t (void *,void *,void *);
+extern gdraw_sync_thread_t *gdraw_sync_thread;
 
 struct gio_threaddata {
 #ifdef HAVE_PTHREAD_H

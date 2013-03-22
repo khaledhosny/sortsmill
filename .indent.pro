@@ -59,6 +59,7 @@
 -T _precomputed_matrices_t
 -T _scm_evaluator_t
 -T _scm_evaluator_and_spline_t
+-T gdraw_sync_thread_t
 
 -T real
 -T bigreal

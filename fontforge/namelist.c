@@ -40,15 +40,6 @@
 VISIBLE int recognizePUA = false;
 VISIBLE NameList *force_names_when_opening=NULL;
 VISIBLE NameList *force_names_when_saving=NULL;
-
-NameList agl_sans;
-NameList agl;
-NameList agl_nf;
-NameList adobepua;
-NameList greeksc;
-NameList tex;
-NameList ams;
-
 VISIBLE NameList *namelist_for_new_fonts = &agl_nf;
 
 /* Adobe's standard names are wrong for: */
