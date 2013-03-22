@@ -885,7 +885,7 @@ LoadNamelistDir (char *dir)
 }
 
 /* ************************************************************************** */
-const char *
+static const char *
 RenameGlyphToNamelist (char *buffer, SplineChar *sc, NameList * old,
                        NameList * new_, char **sofar)
 {

@@ -3549,9 +3549,6 @@ VISIBLE extern NameList *DefaultNameListForNewFonts (void);
 VISIBLE extern NameList *NameListByName (char *name);
 VISIBLE extern NameList *LoadNamelist (char *filename);
 VISIBLE extern void LoadNamelistDir (char *dir);
-extern const char *RenameGlyphToNamelist (char *buffer, SplineChar *sc,
-                                          NameList * old, NameList * new_,
-                                          char **sofar);
 VISIBLE extern void SFRenameGlyphsToNamelist (SplineFont *sf,
                                               NameList * new_);
 VISIBLE extern char **SFTemporaryRenameGlyphsToNamelist (SplineFont *sf,
