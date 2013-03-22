@@ -19,6 +19,7 @@
 #include <sortsmill/guile.h>
 #include <sortsmill/initialized_global_constants.h>
 #include <sortsmill/copy_with_strides.h>
+#include <intl.h>
 #include <xalloc.h>
 #include <assert.h>
 
@@ -782,8 +783,18 @@ _SCM_C_COEF_FROM_BASIS (spower);
   VISIBLE SCM                                                           \
   scm_coefficients_##BASIS1##_to_##BASIS2 (SCM degree)                  \
   {                                                                     \
+    if (scm_is_true (scm_negative_p (degree)))                          \
+      rnrs_raise_condition                                              \
+        (scm_list_4                                                     \
+         (rnrs_make_assertion_violation (),                             \
+          rnrs_c_make_who_condition ("scm_coefficients_"                \
+                                     #BASIS1 "_to_" #BASIS2),           \
+          rnrs_c_make_message_condition                                 \
+          (_("negative basis transformation degree")),                  \
+          rnrs_make_irritants_condition (scm_list_1 (degree))));        \
     return                                                              \
-      scm_c_coefficients_##BASIS1##_to_##BASIS2 (scm_to_size_t (degree)); \
+      scm_c_coefficients_##BASIS1##_to_##BASIS2                         \
+      (scm_to_size_t (degree));                                         \
   }
 
 #define _SCM_COEF_FROM_BASIS(BASIS)             \

@@ -84,6 +84,11 @@
                (_ "expected vectors or matrices")
                irritant more-irritants)))
 
+  (define (matrix-empty caller . irritants)
+    (assertion-violation caller
+                         (_ "a vector or matrix is empty")
+                         irritants))
+
   (define (rank-deficiency-exception caller . irritants)
     (apply error caller (_ "rank-deficient matrix") irritants))
 
@@ -148,10 +153,14 @@
   (define (zero-based A)
     (match (array-shape A)
       [[(lo hi)]
+       (when (< hi lo)
+         (matrix-empty 'zero-based A))
        (make-shared-array A
                           (lambda (i) `[,(+ i lo)])
                           `[0 ,(- hi lo)] )]
       [[(lo1 hi1) (lo2 hi2)]
+       (when (or (< hi1 lo1) (< hi2 lo2))
+         (matrix-empty 'zero-based A))
        (make-shared-array A
                           (lambda (i j) `[,(+ i lo1) ,(+ j lo2)])
                           `[0 ,(- hi1 lo1)] `[0 ,(- hi2 lo2)] )]
@@ -160,10 +169,14 @@
   (define (one-based A)
     (match (array-shape A)
       [[(lo hi)]
+       (when (< hi lo)
+         (matrix-empty 'one-based A))
        (make-shared-array A
                           (lambda (i) `[,(+ i lo -1)])
                           `[1 ,(- hi lo -1)] )]
       [[(lo1 hi1) (lo2 hi2)]
+       (when (or (< hi1 lo1) (< hi2 lo2))
+         (matrix-empty 'one-based A))
        (make-shared-array A
                           (lambda (i j) `[,(+ i lo1 -1) ,(+ j lo2 -1)])
                           `[1 ,(- hi1 lo1 -1)] `[1 ,(- hi2 lo2 -1)] )]
