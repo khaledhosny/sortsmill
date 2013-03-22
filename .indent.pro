@@ -57,6 +57,8 @@
 -T mpqmat_t
 -T mpqmat_struct_t
 -T _precomputed_matrices_t
+-T _scm_evaluator_t
+-T _scm_evaluator_and_spline_t
 
 -T real
 -T bigreal

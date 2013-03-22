@@ -28,7 +28,9 @@
           ;; intervals are returned as an ordered list. Intervals of
           ;; length zero are closed; intervals of non-zero length are
           ;; open.
-          poly:isolate-roots-scm-mono)
+          poly:isolate-roots-scm-mono
+
+          poly:find-bracketed-root-scm-mono-exact)
 
   (import (sortsmill dynlink)
           (rnrs)

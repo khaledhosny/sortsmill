@@ -48,6 +48,17 @@ SCM scm_budan_0_1_scm_mono (SCM spline);
 SCM isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly);
 SCM scm_isolate_roots_scm_mono (SCM poly);
 
+/* Find an isolated root that has been bracketed by a sign
+   variation. */
+void find_bracketed_root_scm_exact (SCM (*eval) (size_t degree, ssize_t stride,
+                                                 const SCM *spline, SCM t),
+                                    size_t degree, ssize_t stride,
+                                    const SCM *spline, SCM a, SCM b,
+                                    SCM tolerance, SCM epsilon, SCM *root,
+                                    int *err, unsigned int *iter_no);
+SCM scm_find_bracketed_root_scm_mono_exact (SCM spline, SCM a, SCM b,
+                                            SCM tolerance, SCM epsilon);
+
 #if 0
 {
 #endif

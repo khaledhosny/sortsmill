@@ -346,6 +346,114 @@ scm_isolate_roots_scm_mono (SCM poly)
 
 //-------------------------------------------------------------------------
 
+typedef SCM _scm_evaluator_t (size_t degree, ssize_t stride, const SCM *spline,
+                              SCM t);
+
+typedef struct
+{
+  _scm_evaluator_t *eval;
+  size_t degree;
+  ssize_t stride;
+  const SCM *spline;
+} _scm_evaluator_and_spline_t;
+
+static void
+mpq_eval (mpq_t value, mpq_t t, void *eval_struct)
+{
+  _scm_evaluator_and_spline_t *e = (_scm_evaluator_and_spline_t *) eval_struct;
+  scm_to_mpq (e->eval (e->degree, e->stride, e->spline, scm_from_mpq (t)),
+              value);
+}
+
+VISIBLE void
+find_bracketed_root_scm_exact (_scm_evaluator_t *eval,
+                               size_t degree, ssize_t stride, const SCM *spline,
+                               SCM a, SCM b, SCM tolerance, SCM epsilon,
+                               SCM *root, int *err, unsigned int *iter_no)
+{
+  scm_dynwind_begin (0);
+
+  mpq_t t1;
+  mpq_init (t1);
+  scm_dynwind_mpq_clear (t1);
+  scm_to_mpq (a, t1);
+
+  mpq_t t2;
+  mpq_init (t2);
+  scm_dynwind_mpq_clear (t2);
+  scm_to_mpq (b, t2);
+
+  mpq_t tol;
+  mpq_init (tol);
+  scm_dynwind_mpq_clear (tol);
+  scm_to_mpq (tolerance, tol);
+
+  mpq_t eps;
+  mpq_init (eps);
+  scm_dynwind_mpq_clear (eps);
+  scm_to_mpq (epsilon, eps);
+
+  mpq_t t;
+  mpq_init (t);
+  scm_dynwind_mpq_clear (t);
+
+  _scm_evaluator_and_spline_t e = {
+    .eval = eval,
+    .degree = degree,
+    .stride = stride,
+    .spline = spline
+  };
+  mpq_brentroot (-1, tol, eps, t1, t2, mpq_eval, &e, t, err, iter_no);
+
+  *root = (*err == 0) ? scm_from_mpq (t) : SCM_BOOL_F;
+
+  scm_dynwind_end ();
+}
+
+static SCM
+scm_find_bracketed_root_scm_exact (_scm_evaluator_t *eval, SCM spline,
+                                   SCM a, SCM b, SCM tolerance, SCM epsilon)
+{
+  const char *who = "scm_find_bracketed_root_scm_exact";
+
+  scm_t_array_handle handle;
+
+  SCM tol = (SCM_UNBNDP (tolerance)) ? scm_from_int (-1) : tolerance;
+  SCM eps = (SCM_UNBNDP (epsilon)) ? scm_from_int (-1) : epsilon;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (spline, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, spline, &handle,
+                                              &dim, &stride);
+  const SCM *_spline = scm_array_handle_elements (&handle);
+
+  SCM root;
+  int err;
+  unsigned int iter_no;
+  find_bracketed_root_scm_exact (eval, dim - 1, stride, _spline, a, b, tol, eps,
+                                 &root, &err, &iter_no);
+
+  scm_dynwind_end ();
+
+  SCM values[3] = { root, scm_from_int (err), scm_from_uint (iter_no) };
+  return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_scm_mono_exact (SCM spline, SCM a, SCM b,
+                                        SCM tolerance, SCM epsilon)
+{
+  return scm_find_bracketed_root_scm_exact (eval_scm_mono, spline, a, b,
+                                            tolerance, epsilon);
+}
+
+//-------------------------------------------------------------------------
+
 void init_math_polyspline_roots (void);
 
 VISIBLE void
@@ -361,6 +469,9 @@ init_math_polyspline_roots (void)
 
   scm_c_define_gsubr ("poly:isolate-roots-scm-mono", 1, 0, 0,
                       scm_isolate_roots_scm_mono);
+
+  scm_c_define_gsubr ("poly:find-bracketed-root-scm-mono-exact", 3, 2, 0,
+                      scm_find_bracketed_root_scm_mono_exact);
 }
 
 //-------------------------------------------------------------------------
