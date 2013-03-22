@@ -409,7 +409,9 @@ scm_find_bracketed_root_f64 (const char *who,
   scm_dynwind_end ();
 
   SCM values[3] = {
-    scm_from_double (root), scm_from_int (err), scm_from_uint (iter_no)
+    ((err == 0) ? scm_from_double (root) : SCM_BOOL_F),
+    scm_from_int (err),
+    scm_from_uint (iter_no)
   };
   return scm_c_values (values, 3);
 }
