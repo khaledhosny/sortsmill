@@ -346,8 +346,136 @@ scm_isolate_roots_scm_mono (SCM poly)
 
 //-------------------------------------------------------------------------
 
-typedef SCM _scm_evaluator_t (size_t degree, ssize_t stride, const SCM *spline,
-                              SCM t);
+typedef double _f64_evaluator_t (size_t degree, ssize_t stride,
+                                 const double *spline, double t);
+
+typedef struct
+{
+  _f64_evaluator_t *eval;
+  size_t degree;
+  ssize_t stride;
+  const double *spline;
+} _f64_evaluator_and_spline_t;
+
+static double
+f64_eval (double t, void *eval_struct)
+{
+  _f64_evaluator_and_spline_t *e = (_f64_evaluator_and_spline_t *) eval_struct;
+  return e->eval (e->degree, e->stride, e->spline, t);
+}
+
+VISIBLE void
+find_bracketed_root_f64 (_f64_evaluator_t * eval,
+                         size_t degree, ssize_t stride,
+                         const double *spline, double a, double b,
+                         double tolerance, double epsilon, double *root,
+                         int *err, unsigned int *iter_no)
+{
+  _f64_evaluator_and_spline_t e = {
+    .eval = eval,.degree = degree,.stride = stride,.spline = spline
+  };
+  brentroot (-1, tolerance, epsilon, a, b, f64_eval, &e, root, err, iter_no);
+  if (*err != 0)
+    *root = nan ("");
+}
+
+static SCM
+scm_find_bracketed_root_f64 (const char *who,
+                             _f64_evaluator_t * eval, SCM spline,
+                             SCM a, SCM b, SCM tolerance, SCM epsilon)
+{
+  scm_t_array_handle handle;
+
+  double tol = (SCM_UNBNDP (tolerance)) ? -1.0 : scm_to_double (tolerance);
+  double eps = (SCM_UNBNDP (epsilon)) ? -1.0 : scm_to_double (epsilon);
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (spline, &handle);
+  scm_dynwind_array_handle_release (&handle);
+
+  size_t dim;
+  ssize_t stride;
+  scm_array_handle_get_vector_dim_and_stride (who, spline, &handle, &dim,
+                                              &stride);
+  const double *_spline = scm_array_handle_f64_elements (&handle);
+
+  double root;
+  int err;
+  unsigned int iter_no;
+  find_bracketed_root_f64 (eval, dim - 1, stride, _spline, scm_to_double (a),
+                           scm_to_double (b), tol, eps, &root, &err, &iter_no);
+
+  scm_dynwind_end ();
+
+  SCM values[3] = {
+    scm_from_double (root), scm_from_int (err), scm_from_uint (iter_no)
+  };
+  return scm_c_values (values, 3);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_f64_mono (SCM spline, SCM a, SCM b,
+                                  SCM tolerance, SCM epsilon)
+{
+  return scm_find_bracketed_root_f64 ("scm_find_bracketed_root_f64_mono",
+                                      eval_f64_mono, spline, a, b,
+                                      tolerance, epsilon);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_f64_bern_schumaker_volk (SCM spline, SCM a, SCM b,
+                                                 SCM tolerance, SCM epsilon)
+{
+  return
+    scm_find_bracketed_root_f64
+    ("scm_find_bracketed_root_f64_bern_schumaker_volk",
+     eval_f64_bern_schumaker_volk, spline, a, b, tolerance, epsilon);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_f64_bern_de_casteljau (SCM spline, SCM a, SCM b,
+                                               SCM tolerance, SCM epsilon)
+{
+  return
+    scm_find_bracketed_root_f64
+    ("scm_find_bracketed_root_f64_bern_de_casteljau",
+     eval_f64_bern_de_casteljau, spline, a, b, tolerance, epsilon);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_f64_sbern_schumaker_volk (SCM spline, SCM a, SCM b,
+                                                  SCM tolerance, SCM epsilon)
+{
+  return
+    scm_find_bracketed_root_f64
+    ("scm_find_bracketed_root_f64_sbern_schumaker_volk",
+     eval_f64_sbern_schumaker_volk, spline, a, b, tolerance, epsilon);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_f64_sbern_de_casteljau (SCM spline, SCM a, SCM b,
+                                                SCM tolerance, SCM epsilon)
+{
+  return
+    scm_find_bracketed_root_f64
+    ("scm_find_bracketed_root_f64_sbern_de_casteljau",
+     eval_f64_sbern_de_casteljau, spline, a, b, tolerance, epsilon);
+}
+
+VISIBLE SCM
+scm_find_bracketed_root_f64_spower (SCM spline, SCM a, SCM b, SCM tolerance,
+                                    SCM epsilon)
+{
+  return scm_find_bracketed_root_f64 ("scm_find_bracketed_root_f64_spower",
+                                      eval_f64_spower, spline, a, b,
+                                      tolerance, epsilon);
+}
+
+//-------------------------------------------------------------------------
+
+typedef SCM _scm_evaluator_t (size_t degree, ssize_t stride,
+                              const SCM *spline, SCM t);
 
 typedef struct
 {
@@ -367,9 +495,10 @@ mpq_eval (mpq_t value, mpq_t t, void *eval_struct)
 
 VISIBLE void
 find_bracketed_root_scm_exact (_scm_evaluator_t *eval,
-                               size_t degree, ssize_t stride, const SCM *spline,
-                               SCM a, SCM b, SCM tolerance, SCM epsilon,
-                               SCM *root, int *err, unsigned int *iter_no)
+                               size_t degree, ssize_t stride,
+                               const SCM *spline, SCM a, SCM b,
+                               SCM tolerance, SCM epsilon, SCM *root,
+                               int *err, unsigned int *iter_no)
 {
   scm_dynwind_begin (0);
 
@@ -411,11 +540,10 @@ find_bracketed_root_scm_exact (_scm_evaluator_t *eval,
 }
 
 static SCM
-scm_find_bracketed_root_scm_exact (_scm_evaluator_t *eval, SCM spline,
+scm_find_bracketed_root_scm_exact (const char *who,
+                                   _scm_evaluator_t *eval, SCM spline,
                                    SCM a, SCM b, SCM tolerance, SCM epsilon)
 {
-  const char *who = "scm_find_bracketed_root_scm_exact";
-
   scm_t_array_handle handle;
 
   SCM tol = (SCM_UNBNDP (tolerance)) ? scm_from_int (-1) : tolerance;
@@ -435,12 +563,14 @@ scm_find_bracketed_root_scm_exact (_scm_evaluator_t *eval, SCM spline,
   SCM root;
   int err;
   unsigned int iter_no;
-  find_bracketed_root_scm_exact (eval, dim - 1, stride, _spline, a, b, tol, eps,
-                                 &root, &err, &iter_no);
+  find_bracketed_root_scm_exact (eval, dim - 1, stride, _spline, a, b,
+                                 tol, eps, &root, &err, &iter_no);
 
   scm_dynwind_end ();
 
-  SCM values[3] = { root, scm_from_int (err), scm_from_uint (iter_no) };
+  SCM values[3] = {
+    root, scm_from_int (err), scm_from_uint (iter_no)
+  };
   return scm_c_values (values, 3);
 }
 
@@ -448,8 +578,10 @@ VISIBLE SCM
 scm_find_bracketed_root_scm_mono_exact (SCM spline, SCM a, SCM b,
                                         SCM tolerance, SCM epsilon)
 {
-  return scm_find_bracketed_root_scm_exact (eval_scm_mono, spline, a, b,
-                                            tolerance, epsilon);
+  return
+    scm_find_bracketed_root_scm_exact ("scm_find_bracketed_root_scm_mono_exact",
+                                       eval_scm_mono, spline, a, b, tolerance,
+                                       epsilon);
 }
 
 //-------------------------------------------------------------------------
@@ -470,6 +602,18 @@ init_math_polyspline_roots (void)
   scm_c_define_gsubr ("poly:isolate-roots-scm-mono", 1, 0, 0,
                       scm_isolate_roots_scm_mono);
 
+  scm_c_define_gsubr ("poly:find-bracketed-root-f64-mono", 3, 2, 0,
+                      scm_find_bracketed_root_f64_mono);
+  scm_c_define_gsubr ("poly:find-bracketed-root-f64-bern-schumaker-volk", 3, 2,
+                      0, scm_find_bracketed_root_f64_bern_schumaker_volk);
+  scm_c_define_gsubr ("poly:find-bracketed-root-f64-bern-de-casteljau", 3, 2, 0,
+                      scm_find_bracketed_root_f64_bern_de_casteljau);
+  scm_c_define_gsubr ("poly:find-bracketed-root-f64-sbern-schumaker-volk", 3, 2,
+                      0, scm_find_bracketed_root_f64_sbern_schumaker_volk);
+  scm_c_define_gsubr ("poly:find-bracketed-root-f64-sbern-de-casteljau", 3, 2,
+                      0, scm_find_bracketed_root_f64_sbern_de_casteljau);
+  scm_c_define_gsubr ("poly:find-bracketed-root-f64-spower", 3, 2, 0,
+                      scm_find_bracketed_root_f64_spower);
   scm_c_define_gsubr ("poly:find-bracketed-root-scm-mono-exact", 3, 2, 0,
                       scm_find_bracketed_root_scm_mono_exact);
 }

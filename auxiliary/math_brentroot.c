@@ -51,7 +51,7 @@ actual_tolerance (double tol)
 _GL_ATTRIBUTE_CONST static inline double
 actual_epsilon (double epsilon)
 {
-  return (epsilon < 0) ? DBL_EPSILON : epsilon;
+  return (epsilon <= 0) ? DBL_EPSILON : epsilon;
 }
 
 _GL_ATTRIBUTE_CONST static inline bool

@@ -18,6 +18,8 @@
 #ifndef _SORTSMILL_GUILE_MATH_H
 #define _SORTSMILL_GUILE_MATH_H
 
+#include <math.h>
+
 #include <sortsmill/guile/math/brentroot.h>
 #include <sortsmill/guile/math/functions.h>
 #include <sortsmill/guile/math/gmp.h>

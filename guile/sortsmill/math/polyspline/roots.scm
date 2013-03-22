@@ -30,6 +30,12 @@
           ;; open.
           poly:isolate-roots-scm-mono
 
+          poly:find-bracketed-root-f64-mono
+          poly:find-bracketed-root-f64-bern-schumaker-volk
+          poly:find-bracketed-root-f64-bern-de-casteljau
+          poly:find-bracketed-root-f64-sbern-schumaker-volk
+          poly:find-bracketed-root-f64-sbern-de-casteljau
+          poly:find-bracketed-root-f64-spower
           poly:find-bracketed-root-scm-mono-exact)
 
   (import (sortsmill dynlink)

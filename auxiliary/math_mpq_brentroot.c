@@ -54,7 +54,7 @@ actual_tolerance (mpq_t result, const mpq_t tol)
 static inline void
 actual_epsilon (mpq_t result, const mpq_t epsilon)
 {
-  if (mpq_sgn (epsilon) < 0)
+  if (mpq_sgn (epsilon) <= 0)
     mpq_set_d (result, DBL_EPSILON);
   else
     mpq_set (result, epsilon);
