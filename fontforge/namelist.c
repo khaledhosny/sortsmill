@@ -887,7 +887,7 @@ LoadNamelistDir (char *dir)
 /* ************************************************************************** */
 static const char *
 RenameGlyphToNamelist (char *buffer, SplineChar *sc, NameList * old,
-                       NameList * new_, char **sofar)
+                       NameList * new_nl, char **sofar)
 {
   int i, up, ub, uc, ch, gid;
   char space[80];               /* glyph names are supposed to be less<=31 chars */
@@ -902,7 +902,7 @@ RenameGlyphToNamelist (char *buffer, SplineChar *sc, NameList * old,
       up = sc->unicodeenc >> 16;
       ub = (sc->unicodeenc >> 8) & 0xff;
       uc = (sc->unicodeenc & 0xff);
-      for (nl = new_; nl != NULL; nl = nl->basedon)
+      for (nl = new_nl; nl != NULL; nl = nl->basedon)
         if (nl->unicode[up] != NULL && nl->unicode[up][ub] != NULL
             && nl->unicode[up][ub][uc] != NULL)
           return nl->unicode[up][ub][uc];
@@ -920,11 +920,11 @@ RenameGlyphToNamelist (char *buffer, SplineChar *sc, NameList * old,
             if (strcmp (sc->name, old->renames[i].from) == 0)
               return old->renames[i].to;
         }
-      if (new_->renames != NULL)
+      if (new_nl->renames != NULL)
         {
-          for (i = 0; new_->renames[i].from != NULL; ++i)
-            if (strcmp (sc->name, new_->renames[i].to) == 0)
-              return new_->renames[i].from;
+          for (i = 0; new_nl->renames[i].from != NULL; ++i)
+            if (strcmp (sc->name, new_nl->renames[i].to) == 0)
+              return new_nl->renames[i].from;
         }
       if (strlen (sc->name) > sizeof (space) - 1)
         return sc->name;
@@ -943,8 +943,8 @@ RenameGlyphToNamelist (char *buffer, SplineChar *sc, NameList * old,
           tempsc = SFGetChar (sc->parent, -1, start);
           newsubname = NULL;
           if (tempsc != NULL)
-            newsubname =
-              RenameGlyphToNamelist (tempbuf, tempsc, old, new_, sofar);
+            newsubname = RenameGlyphToNamelist (tempbuf, tempsc,
+                                                old, new_nl, sofar);
           else if (sofar != NULL)
             {
               for (gid = sc->parent->glyphcnt - 1; gid >= 0; --gid)
@@ -994,21 +994,21 @@ BuildHash (struct glyphnamehash *hash, SplineFont *sf, char **oldnames)
 {
   int gid, hv;
   SplineChar *sc;
-  struct glyphnamebucket *new_;
+  struct glyphnamebucket *new_name;
 
   memset (hash, 0, sizeof (*hash));
   for (gid = 0; gid < sf->glyphcnt; ++gid)
     {
       if ((sc = sf->glyphs[gid]) != NULL && oldnames[gid] != NULL)
         {
-          new_ =
+          new_name =
             (struct glyphnamebucket *)
             xzalloc (sizeof (struct glyphnamebucket));
-          new_->sc = sf->glyphs[gid];
+          new_name->sc = sf->glyphs[gid];
           hv = hashname (oldnames[gid]);
-          new_->next = hash->table[hv];
-          new_->name = oldnames[gid];
-          hash->table[hv] = new_;
+          new_name->next = hash->table[hv];
+          new_name->name = oldnames[gid];
+          hash->table[hv] = new_name;
         }
     }
 }
@@ -1230,7 +1230,7 @@ SFRenameLookupsByHash (SplineFont *sf, struct glyphnamehash *hash)
 }
 
 char **
-SFTemporaryRenameGlyphsToNamelist (SplineFont *sf, NameList * new_)
+SFTemporaryRenameGlyphsToNamelist (SplineFont *sf, NameList * new_nl)
 {
   int gid;
   char buffer[40];
@@ -1239,15 +1239,15 @@ SFTemporaryRenameGlyphsToNamelist (SplineFont *sf, NameList * new_)
   char **ret;
   struct glyphnamehash hash;
 
-  if (new_ == NULL)
+  if (new_nl == NULL)
     return NULL;
 
   ret = xcalloc (sf->glyphcnt, sizeof (char *));
   for (gid = 0; gid < sf->glyphcnt; ++gid)
     if ((sc = sf->glyphs[gid]) != NULL)
       {
-        name =
-          RenameGlyphToNamelist (buffer, sc, sf->for_new_glyphs, new_, ret);
+        name = RenameGlyphToNamelist (buffer, sc,
+                                      sf->for_new_glyphs, new_nl, ret);
         if (name != sc->name)
           {
             ret[gid] = sc->name;
@@ -1289,20 +1289,20 @@ SFTemporaryRestoreGlyphNames (SplineFont *sf, char **former)
 }
 
 void
-SFRenameGlyphsToNamelist (SplineFont *sf, NameList * new_)
+SFRenameGlyphsToNamelist (SplineFont *sf, NameList * new_nl)
 {
   char **ret;
   int gid;
 
-  if (new_ == NULL)
+  if (new_nl == NULL)
     return;
 
-  ret = SFTemporaryRenameGlyphsToNamelist (sf, new_);
+  ret = SFTemporaryRenameGlyphsToNamelist (sf, new_nl);
   for (gid = 0; gid < sf->glyphcnt; ++gid)
     free (ret[gid]);
   free (ret);
 
-  sf->for_new_glyphs = new_;
+  sf->for_new_glyphs = new_nl;
 }
 
 /* ************************************************************************** */
