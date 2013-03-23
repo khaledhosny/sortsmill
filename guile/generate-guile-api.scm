@@ -48,8 +48,8 @@
       (pretty-print
        `(library ,(call-with-input-string module-name read)
                  (export ,@exports)
-                 (import (sortsmill alloc)
-                         (sortsmill pkg-info)
+                 (import (sortsmill alloc alloc-base)
+                         (sortsmill pkg-info package)
                          (rnrs)
                          (system foreign)
                          (ice-9 format))

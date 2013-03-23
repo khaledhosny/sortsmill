@@ -15,52 +15,43 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill alloc)
+(library (sortsmill alloc alloc-base)
 
   (export c:zalloc ;; Allocate and fill with zeroes.
           c:free
           c:gc-zalloc ;; Garbage-collected.
-          c:gc-free
-          c:alloc-die
-          c:alloc-die-on-null)
+          c:gc-free)
 
-  (import (sortsmill dynlink)
-          (rnrs)
+  (import (rnrs)
           (except (guile) error)
           (system foreign))
 
+  (define what (string->pointer "sortsmill alloc"))
+
+  (define (alloc-dynlink-func func-name)
+    "Dynamic link to symbols that hopefully are nearly, almost
+positively, entirely, with luck guaranteed to be available."
+    (dynamic-pointer func-name (dynamic-link)))
+
   (define c:zalloc
-    (pointer->procedure
-     '*
-     (sortsmill-dynlink-func "x_zalloc" "#include <sortsmill/x_alloc.h>")
-     `(,size_t)))
+    (pointer->procedure '* (alloc-dynlink-func "scm_calloc") `(,size_t)))
 
   (define c:free
-    (pointer->procedure
-     void
-     (sortsmill-dynlink-func "free" "#include <stdlib.h>")
-     '(*)))
+    (pointer->procedure void (alloc-dynlink-func "free") '(*)))
 
   (define c:gc-zalloc
-    (pointer->procedure
-     '*
-     (sortsmill-dynlink-func "x_gc_malloc" "#include <sortsmill/xgc.h>")
-     `(,size_t)))
+    (let ([proc
+           (pointer->procedure
+            '* (alloc-dynlink-func "scm_gc_calloc") `(,size_t *))])
+      (lambda (size)
+        (proc size what))))
 
   (define c:gc-free
-    (pointer->procedure
-     void
-     (sortsmill-dynlink-func "GC_free" "#include <sortsmill/xgc.h>")
-     '(*)))
-
-  (define c:alloc-die
-    (pointer->procedure
-     void
-     (sortsmill-dynlink-func "x_alloc_die" "#include <sortsmill/x_alloc.h>")
-     '()))
-    
-  (define (c:alloc-die-on-null p)
-    (when (null-pointer? p) (c:alloc-die))
-    p)
+    (let ([proc
+           (pointer->procedure
+            void (alloc-dynlink-func "scm_gc_free") `(* ,size_t *))]
+          [size-parameter-that-thankfully-is-ignored-in-Guile-2.x 0])
+      (lambda (p)
+        (proc p size-parameter-that-thankfully-is-ignored-in-Guile-2.x what))))
 
   ) ;; end of library.

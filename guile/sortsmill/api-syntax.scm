@@ -23,8 +23,8 @@
         expand-api)
 
 (import (sortsmill machine)
-        (sortsmill alloc)
-        (sortsmill pkg-info)
+        (sortsmill alloc alloc-base)
+        (sortsmill pkg-info package)
         (rnrs)
         (only (system foreign)
               pointer->bytevector bytevector->pointer

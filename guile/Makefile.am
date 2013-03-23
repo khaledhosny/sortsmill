@@ -72,6 +72,23 @@ distclean-local::
 
 #--------------------------------------------------------------------------
 #
+# A temporary (FIXME) mechanism for generating Guile dependencies.
+
+# FIXME FIXME FIXME FIXME FIXME!!!!! -- This has to be run by someone
+# who has all the different language options enabled.
+depend: $(SCM_FILES)
+	$(GUILE_INTERPRET) $(srcdir)/generate-go-dependencies.scm $^ > $(srcdir)/guile-deps.mk
+
+-@includemk@ $(srcdir)/guile-deps.mk
+
+EXTRA_DIST += $(srcdir)/guile-deps.mk
+
+# Anything that depends on sortsmill/dynlink.go is going to need
+# $(lib_LTLIBRARIES) as well, so for now let us encode that this way:
+sortsmill/dynlink.go: $(lib_LTLIBRARIES)
+
+#--------------------------------------------------------------------------
+#
 # Visualization of Guile module dependencies.
 #
 # FIXME: Currently this examines only R⁶RS-style imports.
@@ -152,9 +169,9 @@ MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 # The following rule is unpleasant but helps us avoid having to keep
 # track of dependencies. Consolation: it is no worse than if we used a
 # whole-program compiler.
-@ifndefmk@ GENERATED_GO_DEPS
-$(GO_FILES): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#$(GO_FILES): $(DIST_SCM_FILES) $(NODIST_SCM_FILES)
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -169,19 +186,39 @@ sortsmill.scm: $(SORTSMILL_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill.go: $(SORTSMILL_REEXPORTED_SCM_FILES:%.scm=%.go)
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill.go: $(SORTSMILL_REEXPORTED_SCM_FILES:%.scm=%.go)
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
 # (sortsmill alloc)
 
-DIST_SCM_FILES += sortsmill/alloc.scm
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/alloc.scm
 GO_FILES += sortsmill/alloc.go
+ALLOC_REEXPORTED_SCM_FILES = 
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/alloc.scm
 
-sortsmill/alloc.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+sortsmill/alloc.scm: $(ALLOC_REEXPORTED_SCM_FILES)
+	$(AM_V_REEXPORT)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill alloc), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+
+# (sortsmill alloc alloc-base)
+
+DIST_SCM_FILES += sortsmill/alloc/alloc-base.scm
+GO_FILES += sortsmill/alloc/alloc-base.go
+ALLOC_REEXPORTED_SCM_FILES += sortsmill/alloc/alloc-base.scm
+
+
+# (sortsmill alloc alloc-die)
+
+DIST_SCM_FILES += sortsmill/alloc/alloc-die.scm
+GO_FILES += sortsmill/alloc/alloc-die.go
+ALLOC_REEXPORTED_SCM_FILES += sortsmill/alloc/alloc-die.scm
+
+#sortsmill/alloc-die.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -191,10 +228,10 @@ DIST_SCM_FILES += sortsmill/api-syntax.scm
 GO_FILES += sortsmill/api-syntax.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/api-syntax.scm
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/api-syntax.go: sortsmill/pkg-info.go
-sortsmill/api-syntax.go: sortsmill/machine.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/api-syntax.go: sortsmill/pkg-info/package.go
+#sortsmill/api-syntax.go: sortsmill/machine.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -204,10 +241,10 @@ DIST_SCM_FILES += sortsmill/argv.scm
 GO_FILES += sortsmill/argv.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/argv.scm
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/argv.go: sortsmill/kwargs.go
-sortsmill/argv.go: sortsmill/machine.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/argv.go: sortsmill/kwargs.go
+#sortsmill/argv.go: sortsmill/machine.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -217,7 +254,7 @@ DIST_SCM_FILES += sortsmill/arrays.scm
 GO_FILES += sortsmill/arrays.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/arrays.scm
 
-sortsmill/arrays.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/arrays.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -229,9 +266,9 @@ DIST_SCM_FILES += sortsmill/contours.scm
 GO_FILES += sortsmill/contours.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/contours.scm
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/contours.go: sortsmill/fontforge-api.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/contours.go: sortsmill/fontforge-api.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -254,9 +291,9 @@ sortsmill/editor.scm: $(EDITOR_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill editor), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill.go: $(EDITOR_REEXPORTED_SCM_FILES:%.scm=%.go)
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill.go: $(EDITOR_REEXPORTED_SCM_FILES:%.scm=%.go)
+#@endifmk@
 
 # (sortsmill editor finalization)
 
@@ -270,11 +307,11 @@ DIST_SCM_FILES += sortsmill/editor/main.scm
 GO_FILES += sortsmill/editor/main.go
 EDITOR_REEXPORTED_SCM_FILES += sortsmill/editor/main.scm
 
-sortsmill/editor/main.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/editor/main.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/editor/main.go: sortsmill/argv.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/editor/main.go: sortsmill/argv.go
+#@endifmk@
 
 # (sortsmill editor main-loop)
 
@@ -282,11 +319,11 @@ DIST_SCM_FILES += sortsmill/editor/main-loop.scm
 GO_FILES += sortsmill/editor/main-loop.go
 EDITOR_REEXPORTED_SCM_FILES += sortsmill/editor/main-loop.scm
 
-sortsmill/editor/main-loop.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/editor/main-loop.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/editor/main-loop.go: sortsmill/kwargs.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/editor/main-loop.go: sortsmill/kwargs.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -297,7 +334,7 @@ sortsmill/editor/main-loop.go: sortsmill/kwargs.go
 DIST_SCM_FILES += sortsmill/ffcompat.scm
 GO_FILES += sortsmill/ffcompat.go
 
-sortsmill/ffcompat.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/ffcompat.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -325,11 +362,11 @@ DIST_SCM_FILES += sortsmill/i18n.scm
 GO_FILES += sortsmill/i18n.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/i18n.scm
 
-sortsmill/i18n.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/i18n.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/i18n.go: sortsmill/pkg-info.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/i18n.go: sortsmill/pkg-info.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -339,7 +376,7 @@ DIST_SCM_FILES += sortsmill/iconv.scm
 GO_FILES += sortsmill/iconv.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/iconv.scm
 
-sortsmill/iconv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/iconv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -349,9 +386,9 @@ DIST_SCM_FILES += sortsmill/kwargs.scm
 GO_FILES += sortsmill/kwargs.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/kwargs.scm
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/kwargs.go: sortsmill/i18n.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/kwargs.go: sortsmill/i18n.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -362,9 +399,9 @@ CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm
 GO_FILES += sortsmill/machine.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/machine.scm
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/machine.go: sortsmill/math/math-constants.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/machine.go: sortsmill/math/math-constants.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -380,9 +417,9 @@ sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/math.go: $(MATH_REEXPORTED_SCM_FILES:%.scm=%.go)
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/math.go: $(MATH_REEXPORTED_SCM_FILES:%.scm=%.go)
+#@endifmk@
 
 # (sortsmill math brentroot)
 
@@ -390,11 +427,11 @@ DIST_SCM_FILES += sortsmill/math/brentroot.scm
 GO_FILES += sortsmill/math/brentroot.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/brentroot.scm
 
-sortsmill/math/brentroot.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/brentroot.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/math/brentroot.go: sortsmill/math/math-constants.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/math/brentroot.go: sortsmill/math/math-constants.go
+#@endifmk@
 
 # (sortsmill math functions)
 
@@ -402,7 +439,7 @@ DIST_SCM_FILES += sortsmill/math/functions.scm
 GO_FILES += sortsmill/math/functions.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/functions.scm
 
-sortsmill/math/functions.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/functions.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 
 # (sortsmill math gsl)
@@ -417,9 +454,9 @@ sortsmill/math/gsl.scm: $(MATH_GSL_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math gsl), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/math/gsl.go: $(MATH_GSL_REEXPORTED_SCM_FILES:%.scm=%.go)
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/math/gsl.go: $(MATH_GSL_REEXPORTED_SCM_FILES:%.scm=%.go)
+#@endifmk@
 
 # (sortsmill math gsl error)
 
@@ -427,11 +464,11 @@ CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/gsl/error.scm
 GO_FILES += sortsmill/math/gsl/error.go
 MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/error.scm
 
-sortsmill/math/gsl/error.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/gsl/error.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/math/gsl/error.go: sortsmill/kwargs.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/math/gsl/error.go: sortsmill/kwargs.go
+#@endifmk@
 
 
 # (sortsmill math gsl matrices)
@@ -440,7 +477,7 @@ DIST_SCM_FILES += sortsmill/math/gsl/matrices.scm
 GO_FILES += sortsmill/math/gsl/matrices.go
 MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/matrices.scm
 
-sortsmill/math/gsl/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/gsl/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 
 # (sortsmill math math-constants)
@@ -456,7 +493,7 @@ DIST_SCM_FILES += sortsmill/math/multivariate-polynomials.scm
 GO_FILES += sortsmill/math/multivariate-polynomials.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/multivariate-polynomials.scm
 
-sortsmill/math/multivariate-polynomials.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/multivariate-polynomials.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -522,7 +559,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/add.scm
 GO_FILES += sortsmill/math/polyspline/add.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/add.scm
 
-sortsmill/math/add.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/add.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline bases)
 
@@ -530,7 +567,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/bases.scm
 GO_FILES += sortsmill/math/polyspline/bases.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/bases.scm
 
-sortsmill/math/bases.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/bases.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline compose)
 
@@ -538,7 +575,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/compose.scm
 GO_FILES += sortsmill/math/polyspline/compose.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/compose.scm
 
-sortsmill/math/compose.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/compose.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline deriv)
 
@@ -546,7 +583,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/deriv.scm
 GO_FILES += sortsmill/math/polyspline/deriv.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/deriv.scm
 
-sortsmill/math/deriv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/deriv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline div)
 
@@ -554,7 +591,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/div.scm
 GO_FILES += sortsmill/math/polyspline/div.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/div.scm
 
-sortsmill/math/div.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/div.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline elev)
 
@@ -562,7 +599,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/elev.scm
 GO_FILES += sortsmill/math/polyspline/elev.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/elev.scm
 
-sortsmill/math/elev.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/elev.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline eval)
 
@@ -570,7 +607,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/eval.scm
 GO_FILES += sortsmill/math/polyspline/eval.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/eval.scm
 
-sortsmill/math/eval.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/eval.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline implicit)
 
@@ -578,7 +615,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/implicit.scm
 GO_FILES += sortsmill/math/polyspline/implicit.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/implicit.scm
 
-sortsmill/math/implicit.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/implicit.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline mul)
 
@@ -586,7 +623,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/mul.scm
 GO_FILES += sortsmill/math/polyspline/mul.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/mul.scm
 
-sortsmill/math/mul.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/mul.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline roots)
 
@@ -594,7 +631,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/roots.scm
 GO_FILES += sortsmill/math/polyspline/roots.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/roots.scm
 
-sortsmill/math/roots.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/roots.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline subdiv)
 
@@ -602,7 +639,7 @@ DIST_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
 GO_FILES += sortsmill/math/polyspline/subdiv.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
 
-sortsmill/math/subdiv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/math/subdiv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -615,7 +652,7 @@ DIST_SCM_FILES += sortsmill/notices.scm
 GO_FILES += sortsmill/notices.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/notices.scm
 
-sortsmill/notices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/notices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
@@ -624,13 +661,13 @@ sortsmill/notices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 DIST_SCM_FILES += sortsmill/options.scm
 GO_FILES += sortsmill/options.go
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/options.go: sortsmill/alloc.go
-sortsmill/options.go: sortsmill/argv.go
-sortsmill/options.go: sortsmill/machine.go
-sortsmill/options.go: sortsmill/pkg-info.go
-sortsmill/options.go: sortsmill/strings.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/options.go: sortsmill/alloc.go
+#sortsmill/options.go: sortsmill/argv.go
+#sortsmill/options.go: sortsmill/machine.go
+#sortsmill/options.go: sortsmill/pkg-info.go
+#sortsmill/options.go: sortsmill/strings.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -646,16 +683,16 @@ sortsmill/pkg-info.scm: $(PKG_INFO_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill pkg-info), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/pkg-info.go: $(PKG_INFO_REEXPORTED_SCM_FILES:%.scm=%.go)
-sortsmill/pkg-info.go: sortsmill/strings/hash-guillemet.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/pkg-info.go: $(PKG_INFO_REEXPORTED_SCM_FILES:%.scm=%.go)
+#sortsmill/pkg-info.go: sortsmill/strings/hash-guillemet.go
+#@endifmk@
 
 DIST_SCM_FILES += sortsmill/pkg-info/directory-layout.scm
 GO_FILES += sortsmill/pkg-info/directory-layout.go
 PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/directory-layout.scm
 
-sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 DIST_SCM_IN_FILES += sortsmill/pkg-info/i18n.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/i18n.scm
@@ -698,13 +735,13 @@ if HAVE_PURE_API
 DIST_SCM_FILES += sortsmill/pure.scm
 GO_FILES += sortsmill/pure.go
 
-sortsmill/pure.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/pure.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/pure.go: sortsmill/argv.go
-sortsmill/pure.go: sortsmill/strings/hash-guillemet.go
-sortsmill/pure.go: sortsmill/i18n.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/pure.go: sortsmill/argv.go
+#sortsmill/pure.go: sortsmill/strings/hash-guillemet.go
+#sortsmill/pure.go: sortsmill/i18n.go
+#@endifmk@
 
 endif HAVE_PURE_API
 
@@ -717,13 +754,13 @@ if HAVE_PYTHON_API
 DIST_SCM_FILES += sortsmill/python.scm
 GO_FILES += sortsmill/python.go
 
-sortsmill/python.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/python.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/python.go: sortsmill/strings/hash-guillemet.go
-sortsmill/python.go: sortsmill/i18n.go
-sortsmill/python.go: sortsmill/pkg-info.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/python.go: sortsmill/strings/hash-guillemet.go
+#sortsmill/python.go: sortsmill/i18n.go
+#sortsmill/python.go: sortsmill/pkg-info.go
+#@endifmk@
 
 endif HAVE_PYTHON_API
 
@@ -734,10 +771,10 @@ endif HAVE_PYTHON_API
 DIST_SCM_FILES += sortsmill/sfd-to-sxml.scm
 GO_FILES += sortsmill/sfd-to-sxml.go
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
-sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/sfd-to-sxml.go: sortsmill/i18n.go
+#sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
@@ -753,9 +790,9 @@ sortsmill/strings.scm: $(STRINGS_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill strings), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/strings.go: $(STRINGS_REEXPORTED_SCM_FILES:%.scm=%.go)
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/strings.go: $(STRINGS_REEXPORTED_SCM_FILES:%.scm=%.go)
+#@endifmk@
 
 # (sortsmill strings grabbed-strings)
 
@@ -784,24 +821,24 @@ if HAVE_GUI
 DIST_SCM_FILES += sortsmill/usermenu.scm
 GO_FILES += sortsmill/usermenu.go
 
-sortsmill/usermenu.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/usermenu.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu.go: sortsmill/strings/hash-guillemet.go
-sortsmill/usermenu.go: sortsmill/i18n.go
-sortsmill/usermenu.go: sortsmill/machine.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/usermenu.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+#sortsmill/usermenu.go: sortsmill/strings/hash-guillemet.go
+#sortsmill/usermenu.go: sortsmill/i18n.go
+#sortsmill/usermenu.go: sortsmill/machine.go
+#@endifmk@
 
 if HAVE_PURE_API
 
 DIST_SCM_FILES += sortsmill/usermenu/pure.scm
 GO_FILES += sortsmill/usermenu/pure.go
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/pure.go: sortsmill/strings/hash-guillemet.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/usermenu/pure.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+#sortsmill/usermenu/pure.go: sortsmill/strings/hash-guillemet.go
+#@endifmk@
 
 endif HAVE_PURE_API
 
@@ -810,15 +847,15 @@ if HAVE_PYTHON_API
 DIST_SCM_FILES += sortsmill/usermenu/python.scm
 GO_FILES += sortsmill/usermenu/python.go
 
-sortsmill/usermenu/python.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+#sortsmill/usermenu/python.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
-sortsmill/usermenu/python.go: sortsmill/machine.go
-sortsmill/usermenu/python.go: sortsmill/pkg-info.go
-sortsmill/usermenu/python.go: sortsmill/strings.go
-sortsmill/usermenu/python.go: sortsmill/usermenu.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/usermenu/python.go: sortsmill/fontforge-api.go sortsmill/gdraw-api.go
+#sortsmill/usermenu/python.go: sortsmill/machine.go
+#sortsmill/usermenu/python.go: sortsmill/pkg-info.go
+#sortsmill/usermenu/python.go: sortsmill/strings.go
+#sortsmill/usermenu/python.go: sortsmill/usermenu.go
+#@endifmk@
 
 endif HAVE_PYTHON_API
 
@@ -834,27 +871,27 @@ DIST_SCM_FILES += sortsmill/views.scm
 GO_FILES += sortsmill/views.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/views.scm
 
-@ifndefmk@ GENERATED_GO_DEPS
-sortsmill/views.go: sortsmill/fontforge-api.go
-sortsmill/views.go: sortsmill/i18n.go
-@endifmk@
+#@ifndefmk@ GENERATED_GO_DEPS
+#sortsmill/views.go: sortsmill/fontforge-api.go
+#sortsmill/views.go: sortsmill/i18n.go
+#@endifmk@
 
 #--------------------------------------------------------------------------
 #
 # Guile sources generated from ‘API instructions’ (.apii files).
 
-sortsmill/fontforge-api.scm:											\
-		$(top_builddir)/fontforge/fontforge.types.apii					\
-		$(srcdir)/generate-guile-api.scm								\
-		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
+sortsmill/fontforge-api.scm:							\
+		$(top_builddir)/fontforge/fontforge.types.apii	\
+		$(srcdir)/generate-guile-api.scm				\
+		ff-internal/generate-types.scm
 	$(AM_V_GUILEAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill fontforge-api)' $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii			\
-		$(srcdir)/generate-guile-api.scm								\
-		ff-internal/generate-types.scm libguile-sortsmill_symbols.la
+sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
+		$(srcdir)/generate-guile-api.scm						\
+		ff-internal/generate-types.scm
 	$(AM_V_GUILEAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
 			'(sortsmill gdraw-api)' $< > $@-tmp
