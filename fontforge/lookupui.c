@@ -227,7 +227,7 @@ GTextInfo scripts[] = {
     { (uint32_t *) NC_("Script", "Mandaean"), NULL, 0, 0, (void *) CHR('m','a','n','d'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /*  { (uint32_t *) NC_("Script", "Mayan hieroglyphs"), NULL, 0, 0, (void *) CHR('m','a','y','a'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},*/
     { (uint32_t *) NC_("Script", "Malayālam"), NULL, 0, 0, (void *) CHR('m','l','y','m'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NC_("Script", "Malayālam2"), NULL, 0, 0, (void *) CHR('m','l','y','2'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) NC_("Script", "Malayālam2"), NULL, 0, 0, (void *) CHR('m','l','m','2'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Script", "Mathematical Alphanumeric Symbols"), NULL, 0, 0, (void *) CHR('m','a','t','h'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Script", "Mongolian"), NULL, 0, 0, (void *) CHR('m','o','n','g'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Script", "Musical"), NULL, 0, 0, (void *) CHR('m','u','s','i'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
