@@ -33,6 +33,8 @@
 (format #t "// It is used to create a dynamically loadable module\n")
 (format #t "// that exports symbols used by our Guile code.\n")
 (format #t "//\n")
+(format #t "// The current implementation is (almost?) comic in its\n")
+(format #t "// efforts to fool the toolchain that the code is useful.\n")
 (format #t "\n")
 (write-c-code-using-dynlink-symbols
  (apply extract-dynlink-symbols-from-files (cdr (command-line))))

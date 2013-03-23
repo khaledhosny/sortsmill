@@ -30,6 +30,11 @@
     (define sortsmill-dynlink-dll
       (dynamic-link "libguile-sortsmill_symbols")))
 
+  (eval-when (compile load eval)
+    (dynamic-call
+     (dynamic-func "init_guile_sortsmill_dynlink" sortsmill-dynlink-dll)
+     sortsmill-dynlink-dll))
+
   (define (sortsmill-dynlink-pointer func-name . ignored)
     (dynamic-pointer func-name sortsmill-dynlink-dll))
 

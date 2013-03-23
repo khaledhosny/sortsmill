@@ -89,7 +89,13 @@
             dynlink-data #:optional (port (current-output-port)))
     (for-each [lambda (sym)
                 (unless (string=? sym "")
-                  (format port "  printf (\"%p\", &~a);\n" sym))]
+                  (format port "  {\n")
+                  (format port "    static char b[2];\n")
+                  (format port "    snprintf (b, 2, \"%p\", (void *) &~a);\n" sym)
+                  (format port "    for (size_t i = 0; i < 2; i++)\n")
+                  (format port "      buf[i] = b[i];\n")
+                  (format port "  }\n")
+                  )]
               [delete-duplicates (map car dynlink-data)] ))
 
   (define* (write-c-code-using-dynlink-symbols
@@ -104,12 +110,21 @@
     (format port "\n")
     (write-declarations-for-dynlink-symbols dynlink-data port)
     (format port "\n")
-    (format port "void function_that_uses_the_dynlink_symbols (void);\n")
+    (format port "void function_that_uses_the_dynlink_symbols (volatile char buf[2]);\n")
     (format port "\n")
     (format port "void\n")
-    (format port "function_that_uses_the_dynlink_symbols (void)\n")
+    (format port "function_that_uses_the_dynlink_symbols (volatile char buf[2])\n")
     (format port "{\n")
     (write-statements-using-dynlink-symbols dynlink-data port)
+    (format port "}\n")
+    (format port "\n")
+    (format port "VISIBLE volatile char _init_guile_sortsmill_dynlink_buffer[2];\n")
+    (format port "\n")
+    (format port "VISIBLE void\n")
+    (format port "init_guile_sortsmill_dynlink (void)\n")
+    (format port "{\n")
+    (format port "  function_that_uses_the_dynlink_symbols (_init_guile_sortsmill_dynlink_buffer);\n")
     (format port "}\n"))
+    
 
   ) ;; end of library.
