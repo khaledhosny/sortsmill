@@ -20,15 +20,18 @@
   (export poly:bezout-matrix
           poly:implicit-equation
           poly:implicit-equation-by-degrees
-          poly:pretty-print-implicit-equation)
+          poly:pretty-print-implicit-equation
+          poly:plug-into-implicit-equation)
 
-  (import (sortsmill math multivariate-polynomials)
+  (import (sortsmill math polyspline add)
+          (sortsmill math polyspline mul)
+          (sortsmill math multivariate-polynomials)
           (sortsmill math matrices)
           (sortsmill dynlink)
           (sortsmill kwargs)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) iota list-tabulate zip)
+          (only (srfi :1) iota list-tabulate take zip)
           (ice-9 format)
           (ice-9 match))
 
@@ -174,6 +177,39 @@ curve is degenerated to a point."
       [#\- #\⁻]
       [other other]))
 
+  ;;----------------------------------------------------------------------
+
+  (define (poly:plug-into-implicit-equation eq x y)
+    (let* ([eq (if (array? eq) (poly:implicit-equation-by-degrees eq) eq)]
+           [n (length eq)]
+           [max-degree (- n 1)]
+           [powers-of-x (powers-of-polynomial x max-degree)]
+           [powers-of-y (powers-of-polynomial y max-degree)])
+      (fold-left (lambda (prior coefs-of-degree)
+                   (poly:add-scm-mono prior
+                                      (plug-into-degree coefs-of-degree
+                                                        powers-of-x
+                                                        powers-of-y)))
+                 #(0) eq)))
+
+  (define (plug-into-degree coefs-of-degree powers-of-x powers-of-y)
+    (let ([n (length coefs-of-degree)])
+      (fold-left poly:add-scm-mono
+                 #(0)
+                 (map poly:mul-scm-mono
+                      (map matrix* coefs-of-degree (take powers-of-x n))
+                      (reverse (take powers-of-y n))))))
+
+  (define (powers-of-polynomial p max-degree)
+    (assert (<= 0 max-degree))
+    (if (= max-degree 0)
+        (list #(1))
+        (reverse (fold-left (lambda (prior i)
+                              (cons (poly:mul-scm-mono p (car prior))
+                                    prior))
+                            (list p #(1))
+                            (iota (- max-degree 1))))))
+  
   ;;----------------------------------------------------------------------
 
   ) ;; end of library.

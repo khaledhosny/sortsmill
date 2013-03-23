@@ -23,7 +23,7 @@ sortsmill/math/polyspline/deriv.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/div.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/deriv.go sortsmill/math/matrices.go sortsmill/dynlink.go
 sortsmill/math/polyspline/elev.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/eval.go: sortsmill/dynlink.go
-sortsmill/math/polyspline/implicit.go: sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/kwargs.go
+sortsmill/math/polyspline/implicit.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/mul.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/math/polyspline/mul.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/roots.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/subdiv.go: sortsmill/dynlink.go

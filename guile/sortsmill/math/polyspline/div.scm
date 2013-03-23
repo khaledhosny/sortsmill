@@ -31,6 +31,7 @@
           (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
+          (only (srfi :1) drop-while)
           (ice-9 match))
 
   (eval-when (compile load eval)
@@ -38,24 +39,45 @@
 
   (define (poly:sqfr-scm-mono poly)
     "Yun’s algorithm for the square-free decomposition of a univariate
-polynomial. See http://en.wikipedia.org/wiki/Square-free_polynomial"
-    (let* ([poly (matrix-inexact->exact poly)]
-           [poly^ (poly:deriv-scm-mono poly)]
-           [a0 (poly:gcd-scm-mono poly poly^)])
-      (match (one-based a0)
-        [#@1(0) (list #@1(0))]
-        [_      (let* ([b (poly:div-scm-mono poly a0)]
-                       [c (poly:div-scm-mono poly^ a0)]
-                       [d (poly:sub-scm-mono c (poly:deriv-scm-mono b))])
-                  (yun-recursion '() b c d))] )))
+polynomial. See http://en.wikipedia.org/wiki/Square-free_polynomial
 
-  (define (yun-recursion prior b c d)
-    (let* ([aa (poly:gcd-scm-mono b d)]
-           [bb (poly:div-scm-mono b aa)])
-      (match (one-based bb)
-        [#@1(1) (reverse (cons aa prior))]
-        [_      (let* ([cc (poly:div-scm-mono d aa)]
-                       [dd (poly:sub-scm-mono cc (poly:deriv-scm-mono bb))])
-                  (yun-recursion (cons aa prior) bb cc dd)) ] )))
+This version first reduces the polynomial to minimum (actual) degree,
+and then normalizes the polynomial to monic form. There are two return
+values: the square-free decomposition of the monic polynomial, and the
+original lead coefficient of the minimum degree polynomial. If the
+polynomial is identically zero, then the return values are @code{#(0)}
+and @code{0}, respectively."
+    (let* ([f (zero-based (reduce-to-min-degree
+                           (matrix-inexact->exact poly)))])
+      (match f
+        [#(0) (values (list #(0)) 0)]
+        [_ (let* ([lead-coef (vector-ref f (- (vector-length f) 1))]
+                  [f  (vector-map (lambda (x) (/ x lead-coef)) f)]
+                  [f^ (poly:deriv-scm-mono f)]
+                  [a0 (poly:gcd-scm-mono f f^)]
+                  [b1 (poly:div-scm-mono f a0)]
+                  [c1 (poly:div-scm-mono f^ a0)])
+             (match (zero-based b1)
+               [#(1) (values (list #(1)) lead-coef)]
+               [_ (values (reverse (yun-recursion '() b1 c1))
+                          lead-coef)] ))] )))
+
+  (define (yun-recursion prior b c)
+    (let* ([b^ (poly:deriv-scm-mono b)]
+           [c-b^ (poly:sub-scm-mono c b^)]
+           [a (poly:gcd-scm-mono b c-b^)]
+           [next (cons a prior)]
+           [b-next (poly:div-scm-mono b a)])
+      (match (zero-based b-next)
+        [#(1) next]
+        [_ (yun-recursion next b-next (poly:div-scm-mono c-b^ a))] )))
+
+  ;; FIXME: Replace this with a reusable procedure. There is a C
+  ;; version in math_polyspline_div.c that can be adapted.
+  (define (reduce-to-min-degree poly)
+    (let ([lst (drop-while zero? (reverse (vector->list poly)))])
+      (if (null? lst)
+          #(0)
+          (list->vector (reverse lst)))))
 
   ) ;; end of library.
