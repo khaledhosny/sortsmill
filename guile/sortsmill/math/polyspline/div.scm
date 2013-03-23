@@ -75,7 +75,8 @@ and @code{0}, respectively."
   ;; FIXME: Replace this with a reusable procedure. There is a C
   ;; version in math_polyspline_div.c that can be adapted.
   (define (reduce-to-min-degree poly)
-    (let ([lst (drop-while zero? (reverse (vector->list poly)))])
+    (let ([lst (drop-while zero? (reverse (vector->list
+                                           (row-matrix->vector poly))))])
       (if (null? lst)
           #(0)
           (list->vector (reverse lst)))))
