@@ -70,6 +70,7 @@
     "Find the real roots of a univariate polynomial in monomial form,
 in the closed interval [0,1]. Multiple roots are counted only
 once. The roots are returned as a list of values in ascending order."
+    (assert (not (identically-zero? poly)))
     (let-values ([(finder basis) (choose-finder eval-algorithm)])
       (let* ([sqfr (filter (negate identically-one) (poly:sqfr-scm-mono poly))]
              [roots (apply append
@@ -81,6 +82,9 @@ once. The roots are returned as a list of values in ascending order."
         ;;
         ;; because the sublists already are ordered.
         (sort roots <))))
+
+  (define (identically-zero? poly)
+    (for-all zero? (vector->list (row-matrix->vector poly))))
 
   (define (choose-finder algorithm)
     (match algorithm
