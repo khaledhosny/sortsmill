@@ -29,6 +29,7 @@
 #include <sortsmill/math/polyspline/eval.h>
 #include <sortsmill/math/polyspline/implicit.h>
 #include <sortsmill/math/polyspline/mul.h>
+#include <sortsmill/math/polyspline/reduce.h>
 #include <sortsmill/math/polyspline/roots.h>
 #include <sortsmill/math/polyspline/subdiv.h>
 

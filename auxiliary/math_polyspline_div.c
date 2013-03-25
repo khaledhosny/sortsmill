@@ -25,8 +25,7 @@
 //-------------------------------------------------------------------------
 
 // Return the actual (minimum) degree of a polynomial in monomial
-// form, or -1 if the polynomial equals zero identically. If degree <
-// 0 then the routine returns that value unchanged.
+// form, or -1 if the polynomial equals zero identically.
 static ssize_t
 f64_mono_min_degree (size_t degree, const double *poly)
 {
@@ -37,8 +36,7 @@ f64_mono_min_degree (size_t degree, const double *poly)
 }
 
 // Return the actual (minimum) degree of a polynomial in monomial
-// form, or -1 if the polynomial equals zero identically. If degree <
-// 0 then the routine returns that value unchanged.
+// form, or -1 if the polynomial equals zero identically.
 static ssize_t
 scm_mono_min_degree (size_t degree, const SCM *poly)
 {
@@ -565,6 +563,7 @@ scm_gcd_scm_mono (SCM spline1, SCM spline2)
 //-------------------------------------------------------------------------
 
 void init_math_polyspline_div (void);
+
 VISIBLE void
 init_math_polyspline_div (void)
 {

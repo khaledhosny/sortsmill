@@ -625,6 +625,14 @@ MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/mul.scm
 
 #sortsmill/math/mul.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
+# (sortsmill math polyspline reduce)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/reduce.scm
+GO_FILES += sortsmill/math/polyspline/reduce.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/reduce.scm
+
+#sortsmill/math/reduce.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
 # (sortsmill math polyspline roots)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/roots.scm
