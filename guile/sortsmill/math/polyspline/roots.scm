@@ -72,7 +72,7 @@ in the closed interval [0,1]. Multiple roots are counted only
 once. The roots are returned as a list of values in ascending order."
     (assert (not (identically-zero? poly)))
     (let-values ([(finder basis) (choose-finder eval-algorithm)])
-      (let* ([sqfr (filter (negate identically-one) (poly:sqfr-scm-mono poly))]
+      (let* ([sqfr (filter (negate identically-one?) (poly:sqfr-scm-mono poly))]
              [roots (apply append
                            (map (cut solve-sqfr-poly finder basis <>) sqfr))])
         ;; Instead of the big sort below, one could do merges of the
@@ -117,7 +117,7 @@ once. The roots are returned as a list of values in ascending order."
                  [root_in_0_1 (finder (matrix->f64matrix bern0_1) 0.0 1.0)])
             (+ a (* (- b a) (inexact->exact root_in_0_1))))] )] ))
 
-  (define (identically-one poly)
+  (define (identically-one? poly)
     (match (zero-based poly)
       [#(1) #t]
       [_ #f]))
