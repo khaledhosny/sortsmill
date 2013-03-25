@@ -42,8 +42,10 @@ unsplit_f64_spower (size_t degree,
   else
     {
       copy_f64_with_strides (result_stride, result, stride0, a0, degree / 2);
+      const double m0 = a0[stride0 * (ssize_t) (degree / 2)];
+      const double m1 = a1[stride1 * (ssize_t) (degree / 2)];
       result[result_stride * (ssize_t) (degree / 2)] =
-        0.5 * (a0[degree / 2] + a1[degree / 2]);
+        (m0 == m1) ? m0 : 0.5 * (m0 + m1);
       copy_f64_with_strides (-result_stride,
                              &result[result_stride * (ssize_t) degree],
                              stride1, a1, degree / 2);
@@ -67,9 +69,10 @@ unsplit_scm_spower (size_t degree,
   else
     {
       copy_scm_with_strides (result_stride, result, stride0, a0, degree / 2);
+      const SCM m0 = a0[stride0 * (ssize_t) (degree / 2)];
+      const SCM m1 = a1[stride1 * (ssize_t) (degree / 2)];
       result[result_stride * (ssize_t) (degree / 2)] =
-        scm_divide (scm_sum (a0[degree / 2], a1[degree / 2]),
-                    scm_from_uint (2));
+        (m0 == m1) ? m0 : scm_divide (scm_sum (m0, m1), scm_from_int (2));
       copy_scm_with_strides (-result_stride,
                              &result[result_stride * (ssize_t) degree],
                              stride1, a1, degree / 2);

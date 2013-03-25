@@ -44,6 +44,30 @@ size_t scm_c_min_degree_scm_spower (SCM poly);
 SCM scm_min_degree_f64_spower (SCM poly);
 SCM scm_min_degree_scm_spower (SCM poly);
 
+/* Reduce the degree of a polynomial. The value of @var{new_degree}
+   must be less than or equal the old degree. These routines are
+   guaranteed safe for in-place computation. */
+void reduce_degree_f64_mono (size_t old_degree, ssize_t stride,
+                             const double *poly, size_t new_degree,
+                             ssize_t result_stride, double *result);
+void reduce_degree_scm_mono (size_t old_degree, ssize_t stride,
+                             const SCM *poly, size_t new_degree,
+                             ssize_t result_stride, SCM *result);
+void reduce_degree_f64_spower (size_t old_degree, ssize_t stride,
+                               const double *poly, size_t new_degree,
+                               ssize_t result_stride, double *result);
+void reduce_degree_scm_spower (size_t old_degree, ssize_t stride,
+                               const SCM *poly, size_t new_degree,
+                               ssize_t result_stride, SCM *result);
+SCM scm_c_reduce_degree_f64_mono (SCM poly, size_t new_degree);
+SCM scm_c_reduce_degree_scm_mono (SCM poly, size_t new_degree);
+SCM scm_reduce_degree_f64_mono (SCM poly, SCM new_degree);
+SCM scm_reduce_degree_scm_mono (SCM poly, SCM new_degree);
+SCM scm_c_reduce_degree_f64_spower (SCM poly, size_t new_degree);
+SCM scm_c_reduce_degree_scm_spower (SCM poly, size_t new_degree);
+SCM scm_reduce_degree_f64_spower (SCM poly, SCM new_degree);
+SCM scm_reduce_degree_scm_spower (SCM poly, SCM new_degree);
+
 #if 0
 {
 #endif

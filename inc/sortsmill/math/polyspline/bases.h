@@ -300,7 +300,8 @@ void constant_scm_spower (SCM w, size_t degree, ssize_t stride, SCM *spline);
 /* Construct an s-power spline from its symmetric halves, truncating
    them if necessary to fit the specified degree. (Thus, thanks to the
    properties of s-power splines, these routines can be used for
-   degree reduction.) */
+   degree reduction.) These two routines are _not_ guaranteed to be
+   safe for in-place computation. */
 void unsplit_f64_spower (size_t degree,
                          ssize_t stride0, const double *a0,
                          ssize_t stride1, const double *a1,
