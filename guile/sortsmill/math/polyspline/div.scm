@@ -27,6 +27,7 @@
 
   (import (sortsmill math polyspline add)
           (sortsmill math polyspline deriv)
+          (sortsmill math polyspline reduce)
           (sortsmill math matrices)
           (sortsmill dynlink)
           (rnrs)
@@ -47,7 +48,7 @@ values: the square-free decomposition of the monic polynomial, and the
 original lead coefficient of the minimum degree polynomial. If the
 polynomial is identically zero, then the return values are @code{#(0)}
 and @code{0}, respectively."
-    (let* ([f (zero-based (reduce-to-min-degree
+    (let* ([f (zero-based (poly:reduce-to-min-degree-scm-mono
                            (matrix-inexact->exact poly)))])
       (match f
         [#(0) (values (list #(0)) 0)]
@@ -71,14 +72,5 @@ and @code{0}, respectively."
       (match (zero-based b-next)
         [#(1) next]
         [_ (yun-recursion next b-next (poly:div-scm-mono c-b^ a))] )))
-
-  ;; FIXME: Replace this with a reusable procedure. There is a C
-  ;; version in math_polyspline_div.c that can be adapted.
-  (define (reduce-to-min-degree poly)
-    (let ([lst (drop-while zero? (reverse (vector->list
-                                           (row-matrix->vector poly))))])
-      (if (null? lst)
-          #(0)
-          (list->vector (reverse lst)))))
 
   ) ;; end of library.

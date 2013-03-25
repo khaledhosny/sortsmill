@@ -389,6 +389,34 @@ scm_reduce_degree_scm_spower (SCM poly, SCM new_degree)
 
 //-------------------------------------------------------------------------
 
+VISIBLE SCM
+scm_reduce_to_min_degree_f64_mono (SCM poly)
+{
+  return scm_c_reduce_degree_f64_mono (poly, scm_c_min_degree_f64_mono (poly));
+}
+
+VISIBLE SCM
+scm_reduce_to_min_degree_scm_mono (SCM poly)
+{
+  return scm_c_reduce_degree_scm_mono (poly, scm_c_min_degree_scm_mono (poly));
+}
+
+VISIBLE SCM
+scm_reduce_to_min_degree_f64_spower (SCM poly)
+{
+  return scm_c_reduce_degree_f64_spower (poly,
+                                         scm_c_min_degree_f64_spower (poly));
+}
+
+VISIBLE SCM
+scm_reduce_to_min_degree_scm_spower (SCM poly)
+{
+  return scm_c_reduce_degree_scm_spower (poly,
+                                         scm_c_min_degree_scm_spower (poly));
+}
+
+//-------------------------------------------------------------------------
+
 void init_math_polyspline_reduce (void);
 
 VISIBLE void
@@ -411,6 +439,15 @@ init_math_polyspline_reduce (void)
                       scm_reduce_degree_scm_mono);
   scm_c_define_gsubr ("poly:reduce-degree-scm-spower", 2, 0, 0,
                       scm_reduce_degree_scm_spower);
+
+  scm_c_define_gsubr ("poly:reduce-to-min-degree-f64-mono", 1, 0, 0,
+                      scm_reduce_to_min_degree_f64_mono);
+  scm_c_define_gsubr ("poly:reduce-to-min-degree-f64-spower", 1, 0, 0,
+                      scm_reduce_to_min_degree_f64_spower);
+  scm_c_define_gsubr ("poly:reduce-to-min-degree-scm-mono", 1, 0, 0,
+                      scm_reduce_to_min_degree_scm_mono);
+  scm_c_define_gsubr ("poly:reduce-to-min-degree-scm-spower", 1, 0, 0,
+                      scm_reduce_to_min_degree_scm_spower);
 }
 
 //-------------------------------------------------------------------------

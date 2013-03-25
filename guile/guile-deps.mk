@@ -20,12 +20,13 @@ sortsmill/math/polyspline/add.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/bases.go: sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/i18n.go
 sortsmill/math/polyspline/compose.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/deriv.go: sortsmill/dynlink.go
-sortsmill/math/polyspline/div.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/deriv.go sortsmill/math/matrices.go sortsmill/dynlink.go
+sortsmill/math/polyspline/div.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/deriv.go sortsmill/math/polyspline/reduce.go sortsmill/math/matrices.go sortsmill/dynlink.go
 sortsmill/math/polyspline/elev.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/eval.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/implicit.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/mul.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/math/polyspline/mul.go: sortsmill/dynlink.go
-sortsmill/math/polyspline/roots.go: sortsmill/dynlink.go
+sortsmill/math/polyspline/reduce.go: sortsmill/dynlink.go
+sortsmill/math/polyspline/roots.go: sortsmill/math/polyspline/bases.go sortsmill/math/polyspline/div.go sortsmill/math/polyspline/subdiv.go sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/kwargs.go sortsmill/i18n.go
 sortsmill/math/polyspline/subdiv.go: sortsmill/dynlink.go
 sortsmill/notices.go: sortsmill/dynlink.go
 sortsmill/options.go: sortsmill/dynlink.go sortsmill/kwargs.go sortsmill/pkg-info.go sortsmill/api-syntax.go sortsmill/strings.go sortsmill/argv.go sortsmill/alloc.go sortsmill/machine.go
@@ -48,6 +49,6 @@ sortsmill/gdraw-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package
 sortsmill/math.go: sortsmill/math/brentroot.go sortsmill/math/functions.go sortsmill/math/gsl.go sortsmill/math/math-constants.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
 sortsmill/math/gsl.go: sortsmill/math/gsl/error.go sortsmill/math/gsl/matrices.go
 sortsmill/math/matrices.go: sortsmill/math/matrices/arithmetic.go sortsmill/math/matrices/base.go sortsmill/math/matrices/bezout.go sortsmill/math/matrices/linalg.go
-sortsmill/math/polyspline.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/bases.go sortsmill/math/polyspline/compose.go sortsmill/math/polyspline/deriv.go sortsmill/math/polyspline/div.go sortsmill/math/polyspline/elev.go sortsmill/math/polyspline/eval.go sortsmill/math/polyspline/implicit.go sortsmill/math/polyspline/mul.go sortsmill/math/polyspline/roots.go sortsmill/math/polyspline/subdiv.go
+sortsmill/math/polyspline.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/bases.go sortsmill/math/polyspline/compose.go sortsmill/math/polyspline/deriv.go sortsmill/math/polyspline/div.go sortsmill/math/polyspline/elev.go sortsmill/math/polyspline/eval.go sortsmill/math/polyspline/implicit.go sortsmill/math/polyspline/mul.go sortsmill/math/polyspline/reduce.go sortsmill/math/polyspline/roots.go sortsmill/math/polyspline/subdiv.go
 sortsmill/pkg-info.go: sortsmill/pkg-info/directory-layout.go sortsmill/pkg-info/i18n.go sortsmill/pkg-info/package.go sortsmill/pkg-info/pure.go sortsmill/pkg-info/python.go sortsmill/pkg-info/version.go
 sortsmill/strings.go: sortsmill/strings/grabbed-strings.go sortsmill/strings/hash-guillemet.go sortsmill/strings/text-embedding.go

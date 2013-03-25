@@ -68,6 +68,12 @@ SCM scm_c_reduce_degree_scm_spower (SCM poly, size_t new_degree);
 SCM scm_reduce_degree_f64_spower (SCM poly, SCM new_degree);
 SCM scm_reduce_degree_scm_spower (SCM poly, SCM new_degree);
 
+/* Reduce a polynomial to its minimum degree (actual degree). */
+SCM scm_reduce_to_min_degree_f64_mono (SCM poly);
+SCM scm_reduce_to_min_degree_scm_mono (SCM poly);
+SCM scm_reduce_to_min_degree_f64_spower (SCM poly);
+SCM scm_reduce_to_min_degree_scm_spower (SCM poly);
+
 #if 0
 {
 #endif

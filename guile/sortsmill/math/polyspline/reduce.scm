@@ -25,7 +25,12 @@
           poly:reduce-degree-f64-mono
           poly:reduce-degree-scm-mono
           poly:reduce-degree-f64-spower
-          poly:reduce-degree-scm-spower)
+          poly:reduce-degree-scm-spower
+
+          poly:reduce-to-min-degree-f64-mono
+          poly:reduce-to-min-degree-scm-mono
+          poly:reduce-to-min-degree-f64-spower
+          poly:reduce-to-min-degree-scm-spower)
 
   (import (sortsmill dynlink)
           (rnrs)
