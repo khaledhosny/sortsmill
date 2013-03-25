@@ -417,9 +417,6 @@ sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-#@ifndefmk@ GENERATED_GO_DEPS
-#sortsmill/math.go: $(MATH_REEXPORTED_SCM_FILES:%.scm=%.go)
-#@endifmk@
 
 # (sortsmill math brentroot)
 
@@ -427,11 +424,6 @@ DIST_SCM_FILES += sortsmill/math/brentroot.scm
 GO_FILES += sortsmill/math/brentroot.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/brentroot.scm
 
-#sortsmill/math/brentroot.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
-
-#@ifndefmk@ GENERATED_GO_DEPS
-#sortsmill/math/brentroot.go: sortsmill/math/math-constants.go
-#@endifmk@
 
 # (sortsmill math functions)
 
@@ -439,8 +431,28 @@ DIST_SCM_FILES += sortsmill/math/functions.scm
 GO_FILES += sortsmill/math/functions.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/functions.scm
 
-#sortsmill/math/functions.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+# (sortsmill math geometry)
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/math/geometry.scm
+GO_FILES += sortsmill/math/geometry.go
+MATH_REEXPORTED_SCM_FILES += sortsmill/math/geometry.scm
+MATH_GEOMETRY_REEXPORTED_SCM_FILES =
+
+sortsmill/math/geometry.scm: $(MATH_GEOMETRY_REEXPORTED_SCM_FILES)
+	$(AM_V_REEXPORT)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill math geometry), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+
+# (sortsmill math geometry lines)
+
+CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/geometry/lines.scm
+GO_FILES += sortsmill/math/geometry/lines.go
+MATH_GEOMETRY_REEXPORTED_SCM_FILES += sortsmill/math/geometry/lines.scm
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # (sortsmill math gsl)
 
@@ -454,21 +466,12 @@ sortsmill/math/gsl.scm: $(MATH_GSL_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math gsl), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-#@ifndefmk@ GENERATED_GO_DEPS
-#sortsmill/math/gsl.go: $(MATH_GSL_REEXPORTED_SCM_FILES:%.scm=%.go)
-#@endifmk@
 
 # (sortsmill math gsl error)
 
 CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/gsl/error.scm
 GO_FILES += sortsmill/math/gsl/error.go
 MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/error.scm
-
-#sortsmill/math/gsl/error.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
-
-#@ifndefmk@ GENERATED_GO_DEPS
-#sortsmill/math/gsl/error.go: sortsmill/kwargs.go
-#@endifmk@
 
 
 # (sortsmill math gsl matrices)
@@ -477,8 +480,7 @@ DIST_SCM_FILES += sortsmill/math/gsl/matrices.scm
 GO_FILES += sortsmill/math/gsl/matrices.go
 MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/matrices.scm
 
-#sortsmill/math/gsl/matrices.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
-
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # (sortsmill math math-constants)
 
@@ -487,16 +489,15 @@ CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/math-constants.scm
 GO_FILES += sortsmill/math/math-constants.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/math-constants.scm
 
+
 # (sortsmill math multivariate-polynomials)
 
 DIST_SCM_FILES += sortsmill/math/multivariate-polynomials.scm
 GO_FILES += sortsmill/math/multivariate-polynomials.go
 MATH_REEXPORTED_SCM_FILES += sortsmill/math/multivariate-polynomials.scm
 
-#sortsmill/math/multivariate-polynomials.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#--------------------------------------------------------------------------
-#
 # (sortsmill math matrices)
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/math/matrices.scm
@@ -537,7 +538,7 @@ DIST_SCM_FILES += sortsmill/math/matrices/linalg.scm
 GO_FILES += sortsmill/math/matrices/linalg.go
 MATH_MATRICES_REEXPORTED_SCM_FILES += sortsmill/math/matrices/linalg.scm
 
-#--------------------------------------------------------------------------
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # (sortsmill math polyspline)
 
@@ -559,7 +560,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/add.scm
 GO_FILES += sortsmill/math/polyspline/add.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/add.scm
 
-#sortsmill/math/add.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline bases)
 
@@ -567,7 +567,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/bases.scm
 GO_FILES += sortsmill/math/polyspline/bases.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/bases.scm
 
-#sortsmill/math/bases.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline compose)
 
@@ -575,7 +574,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/compose.scm
 GO_FILES += sortsmill/math/polyspline/compose.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/compose.scm
 
-#sortsmill/math/compose.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline deriv)
 
@@ -583,7 +581,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/deriv.scm
 GO_FILES += sortsmill/math/polyspline/deriv.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/deriv.scm
 
-#sortsmill/math/deriv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline div)
 
@@ -591,7 +588,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/div.scm
 GO_FILES += sortsmill/math/polyspline/div.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/div.scm
 
-#sortsmill/math/div.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline elev)
 
@@ -599,7 +595,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/elev.scm
 GO_FILES += sortsmill/math/polyspline/elev.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/elev.scm
 
-#sortsmill/math/elev.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline eval)
 
@@ -607,7 +602,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/eval.scm
 GO_FILES += sortsmill/math/polyspline/eval.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/eval.scm
 
-#sortsmill/math/eval.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline implicit)
 
@@ -615,7 +609,13 @@ DIST_SCM_FILES += sortsmill/math/polyspline/implicit.scm
 GO_FILES += sortsmill/math/polyspline/implicit.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/implicit.scm
 
-#sortsmill/math/implicit.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
+
+# (sortsmill math polyspline inversion)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/inversion.scm
+GO_FILES += sortsmill/math/polyspline/inversion.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/inversion.scm
+
 
 # (sortsmill math polyspline mul)
 
@@ -623,7 +623,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/mul.scm
 GO_FILES += sortsmill/math/polyspline/mul.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/mul.scm
 
-#sortsmill/math/mul.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline reduce)
 
@@ -631,7 +630,6 @@ DIST_SCM_FILES += sortsmill/math/polyspline/reduce.scm
 GO_FILES += sortsmill/math/polyspline/reduce.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/reduce.scm
 
-#sortsmill/math/reduce.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline roots)
 
@@ -639,15 +637,12 @@ DIST_SCM_FILES += sortsmill/math/polyspline/roots.scm
 GO_FILES += sortsmill/math/polyspline/roots.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/roots.scm
 
-#sortsmill/math/roots.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 # (sortsmill math polyspline subdiv)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
 GO_FILES += sortsmill/math/polyspline/subdiv.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
-
-#sortsmill/math/subdiv.go: sortsmill/dynlink.go $(lib_LTLIBRARIES)
 
 #--------------------------------------------------------------------------
 #
