@@ -86,17 +86,24 @@ situation."
       (let ([B (bezout-matrix x-xspline y-yspline)])
         (let-values ([(U S V) (f64matrix-svd (matrix->f64matrix B))])
           (case (matrix-svd-effective-rank S)
-            [(0) (invert-rank0 xspline t1 t2 x)]
+            [(0) (invert-rank0 xspline yspline t1 t2 x y)]
             [(1 2)
              ;; If the effective rank is 2, assume we have a lot of
              ;; round-off and the rank really is 1.
              (invert-quadratic-rank1 V t1 t2)])))))
 
-  (define (invert-rank0 xspline t1 t2 x)
-    (let ([x-xspline (zero-based
-                      (matrix-inexact->exact
-                       (poly:sub-scm-mono (make-vector 1 x) xspline)))])
-      (poly:find-roots-scm-mono x-xspline t1 t2)))
+  (define (invert-rank0 xspline yspline t1 t2 x y)
+    (let* ([xspline (row-matrix->vector xspline)]
+           [yspline (row-matrix->vector yspline)]
+           [degree  (- (vector-length xspline) 1)])
+      (if (< (abs (vector-ref xspline degree))
+             (abs (vector-ref yspline degree)))
+          [let ([y-yspline (matrix-inexact->exact
+                            (poly:sub-scm-mono (make-vector 1 y) yspline))])
+            (poly:find-roots-scm-mono y-yspline t1 t2)]
+          [let ([x-xspline (matrix-inexact->exact
+                            (poly:sub-scm-mono (make-vector 1 x) xspline))])
+            (poly:find-roots-scm-mono x-xspline t1 t2)] )))
 
   (define (invert-quadratic-rank1 V t1 t2)
     "The right column of V is a basis of the null space of the Bézout
@@ -116,7 +123,7 @@ matrix may vary by a scalar factor or in the order of entries.)"
       (let ([B (bezout-matrix x-xspline y-yspline)])
         (let-values ([(U S V) (f64matrix-svd (matrix->f64matrix B))])
           (case (matrix-svd-effective-rank S)
-            [(0) (invert-rank0 xspline t1 t2 x)]
+            [(0) (invert-rank0 xspline yspline t1 t2 x y)]
             [(1) (invert-cubic-rank1 V t1 t2)]
             [(2 3)
              ;; If the effective rank is 3, assume we have a lot of

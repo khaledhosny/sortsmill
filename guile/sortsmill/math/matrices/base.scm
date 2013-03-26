@@ -15,6 +15,13 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+;;;
+;;; FIXME: Perhaps lot of these routines could be made significantly
+;;; less expensive by rewriting in C. It would take some of the worry
+;;; out of using them, in any case. This may make for a good project
+;;; on lazy days.
+;;;
+
 (library (sortsmill math matrices base)
 
   (export not-a-matrix
@@ -51,6 +58,9 @@
 
           matrix-1x1->scalar
 
+          matrix-ref
+          matrix-ref0
+          matrix-ref1
           matrix-row
           matrix-column-transpose
           matrix-column
@@ -268,6 +278,15 @@
           A] ))
 
   ;;-----------------------------------------------------------------------
+
+  (define (matrix-ref A i j)
+    (array-ref (vector->matrix A) i j))
+
+  (define (matrix-ref0 A i j)
+    (array-ref (zero-based (vector->matrix A)) i j))
+
+  (define (matrix-ref1 A i j)
+    (array-ref (one-based (vector->matrix A)) i j))
 
   (define (matrix-row A i)
     "Return a view of a matrix row as a row vector (in the form of
