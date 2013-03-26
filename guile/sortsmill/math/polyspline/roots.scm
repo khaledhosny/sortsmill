@@ -23,11 +23,16 @@
           ;; Budan’s 0_1 roots test.
           poly:budan-0_1-scm-mono
 
+          ;; (poly:isolate-roots-scm-mono poly a b)
+          ;;
           ;; Isolate roots of a square-free polynomial in the interval
-          ;; [0,1]. You want to do this with exact arithmetic. The
+          ;; [a,b]. You want to do this with exact arithmetic. The
           ;; intervals are returned as an ordered list. Intervals of
           ;; length zero are closed; intervals of non-zero length are
           ;; open.
+          ;;
+          ;; The parameters @var{a} and @var{b} may be left out, in
+          ;; which case they default to 0 and 1, respectively.
           poly:isolate-roots-scm-mono
 
           poly:find-bracketed-root-f64-mono
@@ -41,6 +46,7 @@
           poly:find-bracketed-root-scm-sbern-exact
           poly:find-bracketed-root-scm-spower-exact
 
+          poly:find-roots-scm-mono
           poly:find-roots-0_1-scm-mono
           poly:preferred-find-roots-eval-algorithm)
 
@@ -64,17 +70,17 @@
     ;; @code{'schumaker-volk}.
     (make-fluid 'schumaker-volk))
 
-  (define/kwargs (poly:find-roots-0_1-scm-mono
-                  poly
+  (define/kwargs (poly:find-roots-scm-mono
+                  poly a b
                   [eval-algorithm (fluid-ref poly:preferred-find-roots-eval-algorithm)])
     "Find the real roots of a univariate polynomial in monomial form,
-in the closed interval [0,1]. Multiple roots are counted only
+in the closed interval [a,b]. Multiple roots are counted only
 once. The roots are returned as a list of values in ascending order."
     (assert (not (identically-zero? poly)))
     (let-values ([(finder basis) (choose-finder eval-algorithm)])
       (let* ([sqfr (filter (negate identically-one?) (poly:sqfr-scm-mono poly))]
              [roots (apply append
-                           (map (cut solve-sqfr-poly finder basis <>) sqfr))])
+                           (map (cut solve-sqfr-poly finder basis <> a b) sqfr))])
         ;; Instead of the big sort below, one could do merges of the
         ;; output of
         ;;
@@ -82,6 +88,12 @@ once. The roots are returned as a list of values in ascending order."
         ;;
         ;; because the sublists already are ordered.
         (sort roots <))))
+
+  (define (poly:find-roots-0_1-scm-mono poly . rest)
+    "Find the real roots of a univariate polynomial in monomial form,
+in the closed interval [0,1]. Multiple roots are counted only
+once. The roots are returned as a list of values in ascending order."
+    (apply poly:find-roots-scm-mono poly 0 1 rest))
 
   (define (identically-zero? poly)
     (for-all zero? (vector->list (row-matrix->vector poly))))
@@ -96,8 +108,8 @@ once. The roots are returned as a list of values in ascending order."
                               (_ "expected 'de-casteljau or 'schumaker-volk")
                               algorithm)]))
 
-  (define (solve-sqfr-poly finder basis poly)
-    (let ([intervals (poly:isolate-roots-scm-mono poly)])
+  (define (solve-sqfr-poly finder basis poly a b)
+    (let ([intervals (poly:isolate-roots-scm-mono poly a b)])
       (map (cut interval->root finder basis poly <>) intervals)))
 
   (define (interval->root finder basis poly interval)

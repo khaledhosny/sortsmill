@@ -44,9 +44,12 @@ SCM scm_sign_variations_scm (SCM spline);
 size_t budan_0_1_scm_mono (size_t degree, ssize_t stride, const SCM *spline);
 SCM scm_budan_0_1_scm_mono (SCM spline);
 
-/* Isolate roots of a polynomial in the closed interval [0,1]. */
-SCM isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly);
-SCM scm_isolate_roots_scm_mono (SCM poly);
+/* Isolate roots of a polynomial in the closed interval [a,b]. If
+   @var{a} is unset it defaults to 0, and if @var{b} is unset it
+   defaults to 1. */
+SCM isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly,
+                            SCM a, SCM b);
+SCM scm_isolate_roots_scm_mono (SCM poly, SCM a, SCM b);
 
 /* Find an isolated root that has been bracketed by a sign
    variation. */

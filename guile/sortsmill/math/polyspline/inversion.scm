@@ -26,13 +26,15 @@
           (sortsmill math math-constants)
           (sortsmill i18n)
           (rnrs)
-          (except (guile) error))
+          (except (guile) error)
+          (ice-9 match))
 
   (define (poly:invert-spline-mono xspline yspline x y)
     "Given a spline in monomial basis, and a point (x,y), try to find
 the values of the parameter t corresponding to (x,y). The results,
-which are returned as a list, are approximate in general, may fall
-outside [0,1]. If the spline effectively is a point, then the symbol
+which are returned as a list, are approximate in general, and may fall
+outside [0,1]. If a root is well outside [0,1], it may or may not be
+returned. If the spline effectively is a point, then the symbol
 @code{point} is returned instead of a list of t values."
     (let* ([min-degree (max (poly:min-degree-scm-mono xspline)
                             (poly:min-degree-scm-mono yspline))]
@@ -70,22 +72,35 @@ situation."
           (- (/ x0 x1)))))
 
   (define (invert-quadratic xspline yspline x y)
-    (assertion-violation 'invert-quadratic
-                         "not yet implemented"))
-    #|
-    ;; Construct a Bézout matrix and find its null space.
+    ;; Construct a Bézout matrix and compute its singular value
+    ;; decomposition.
+    (let ([x-xspline (poly:sub-scm-mono (make-vector 1 x) xspline)]
+          [y-yspline (poly:sub-scm-mono (make-vector 1 y) yspline)])
+      (let ([B (bezout-matrix x-xspline y-yspline)])
+        (let-values ([(U S V) (f64matrix-svd (matrix->f64matrix B))])
+          (case (matrix-svd-effective-rank S)
+            [(0) (invert-flat-quadratic xspline yspline x y)]
+            [(1) (assertion-violation 'invert-quadratic "not yet implemented")]
+            [(2) (assertion-violation 'invert-quadratic "not yet implemented")])))))
+
+  (define (invert-flat-quadratic xspline yspline x y)
     (let ([x-xspline (zero-based
-                      (row-matrix->vector
+                      (matrix-inexact->exact
                        (poly:sub-scm-mono (make-vector 1 x) xspline)))]
           [y-yspline (zero-based
-                      (row-matrix->vector
+                      (matrix-inexact->exact
                        (poly:sub-scm-mono (make-vector 1 y) yspline)))])
-      (let ([B (bezout-matrix x-xspline y-yspline)])
-        B)))
-    |#
+      (match x-xspline
+        [#(x0 x1 x2)
+         (match y-yspline
+           [#(y0 y1 y2)
+            (if (< (abs x2) (abs y2))
+;;;;;;;;;                (poly:find-roots-0_1-scm-mono)
+                (assertion-violation 'invert-flat-quadratic "not yet implemented")
+                (assertion-violation 'invert-flat-quadratic "not yet implemented")
+                )] )] )))
 
   (define (invert-cubic xspline yspline x y)
-    (assertion-violation 'invert-cubic
-                         "not yet implemented"))
+    (assertion-violation 'invert-cubic "not yet implemented"))
 
   ) ;; end of library.

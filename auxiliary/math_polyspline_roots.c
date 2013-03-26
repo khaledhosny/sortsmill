@@ -17,6 +17,7 @@
 
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
+#include <sortsmill/copy_with_strides.h>
 
 //-------------------------------------------------------------------------
 
@@ -297,30 +298,42 @@ vca_recursion_scm (size_t degree, ssize_t stride, const SCM *p, SCM a, SCM b)
 }
 
 VISIBLE SCM
-isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly)
+isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly,
+                        SCM a, SCM b)
 {
   SCM zero = scm_from_int (0);
   SCM one = scm_from_int (1);
 
-  // Isolate roots in (0,1).
-  SCM intervals = vca_recursion_scm (degree, stride, poly, zero, one);
+  if (SCM_UNBNDP (a))
+    a = zero;
+  if (SCM_UNBNDP (b))
+    b = one;
 
-  // Is one a root?
-  SCM p1 = eval_scm_mono (degree, stride, poly, one);
+  SCM p[degree + 1];
+  if (scm_is_true (scm_zero_p (a)) && scm_is_true (scm_num_eq_p (b, one)))
+    copy_scm_with_strides (1, p, stride, poly, degree + 1);
+  else
+    portion_scm_mono (degree, stride, poly, a, b, 1, p);
+
+  // Isolate roots in (a,b).
+  SCM intervals = vca_recursion_scm (degree, 1, p, a, b);
+
+  // Is @var{b} a root?
+  SCM p1 = eval_scm_mono (degree, 1, p, b);
   if (scm_is_true (scm_zero_p (p1)))
     intervals = scm_append (scm_list_2 (intervals,
-                                        scm_list_1 (scm_cons (one, one))));
+                                        scm_list_1 (scm_cons (b, b))));
 
-  // Is zero a root?
-  SCM p0 = eval_scm_mono (degree, stride, poly, zero);
+  // Is @var{a} a root?
+  SCM p0 = eval_scm_mono (degree, 1, p, a);
   if (scm_is_true (scm_zero_p (p0)))
-    intervals = scm_cons (scm_cons (zero, zero), intervals);
+    intervals = scm_cons (scm_cons (a, a), intervals);
 
   return intervals;
 }
 
 VISIBLE SCM
-scm_isolate_roots_scm_mono (SCM poly)
+scm_isolate_roots_scm_mono (SCM poly, SCM a, SCM b)
 {
   const char *who = "scm_isolate_roots_scm_mono";
 
@@ -337,7 +350,7 @@ scm_isolate_roots_scm_mono (SCM poly)
                                               &dim, &stride);
   const SCM *_poly = scm_array_handle_elements (&handle);
 
-  SCM intervals = isolate_roots_scm_mono (dim - 1, stride, _poly);
+  SCM intervals = isolate_roots_scm_mono (dim - 1, stride, _poly, a, b);
 
   scm_dynwind_end ();
 
@@ -631,7 +644,7 @@ init_math_polyspline_roots (void)
   scm_c_define_gsubr ("poly:budan-0_1-scm-mono", 1, 0, 0,
                       scm_budan_0_1_scm_mono);
 
-  scm_c_define_gsubr ("poly:isolate-roots-scm-mono", 1, 0, 0,
+  scm_c_define_gsubr ("poly:isolate-roots-scm-mono", 1, 2, 0,
                       scm_isolate_roots_scm_mono);
 
   scm_c_define_gsubr ("poly:find-bracketed-root-f64-mono", 3, 2, 0,
