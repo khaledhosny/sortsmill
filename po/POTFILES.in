@@ -12,9 +12,11 @@ auxiliary/guile_math_gsl_permutations.c
 auxiliary/guile_math_multivariate_polynomials.c
 
 auxiliary/guile_python.c
+
 auxiliary/math_polyspline_add.c
 auxiliary/math_polyspline_div.c
 auxiliary/math_polyspline_elev.c
+auxiliary/math_polyspline_reduce.c
 
 fontforge/alignment.c
 fontforge/anchorsaway.c
@@ -175,6 +177,8 @@ guile/sortsmill/views.scm
 guile/sortsmill/pure.scm
 guile/sortsmill/python.scm
 
+guile/sortsmill/math/geometry/lines.scm
+
 guile/sortsmill/math/gsl/matrices.scm
 
 guile/sortsmill/math/matrices/arithmetic.scm
@@ -182,6 +186,8 @@ guile/sortsmill/math/matrices/base.scm
 guile/sortsmill/math/matrices/bezout.scm
 
 guile/sortsmill/math/polyspline/bases.scm
+guile/sortsmill/math/polyspline/inversion.scm
+guile/sortsmill/math/polyspline/roots.scm
 
 main/compare.c
 main/image.c
