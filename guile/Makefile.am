@@ -448,7 +448,7 @@ sortsmill/math/geometry.scm: $(MATH_GEOMETRY_REEXPORTED_SCM_FILES)
 
 # (sortsmill math geometry lines)
 
-CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/geometry/lines.scm
+DIST_SCM_FILES += sortsmill/math/geometry/lines.scm
 GO_FILES += sortsmill/math/geometry/lines.go
 MATH_GEOMETRY_REEXPORTED_SCM_FILES += sortsmill/math/geometry/lines.scm
 
