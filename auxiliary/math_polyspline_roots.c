@@ -319,13 +319,13 @@ isolate_roots_scm_mono (size_t degree, ssize_t stride, const SCM *poly,
   SCM intervals = vca_recursion_scm (degree, 1, p, a, b);
 
   // Is @var{b} a root?
-  SCM p1 = eval_scm_mono (degree, 1, p, b);
+  SCM p1 = eval_scm_mono (degree, 1, poly, b);
   if (scm_is_true (scm_zero_p (p1)))
     intervals = scm_append (scm_list_2 (intervals,
                                         scm_list_1 (scm_cons (b, b))));
 
   // Is @var{a} a root?
-  SCM p0 = eval_scm_mono (degree, 1, p, a);
+  SCM p0 = eval_scm_mono (degree, 1, poly, a);
   if (scm_is_true (scm_zero_p (p0)))
     intervals = scm_cons (scm_cons (a, a), intervals);
 
