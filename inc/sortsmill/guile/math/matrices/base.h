@@ -84,6 +84,13 @@ SCM scm_matrix_1ref (SCM A, SCM i, SCM j);
 SCM scm_c_matrix_ref (SCM A, ssize_t i, ssize_t j);
 SCM scm_matrix_ref (SCM A, SCM i, SCM j);
 
+SCM scm_c_matrix_0set_x (SCM A, ssize_t i, ssize_t j, SCM x);
+SCM scm_matrix_0set_x (SCM A, SCM i, SCM j, SCM x);
+SCM scm_c_matrix_1set_x (SCM A, ssize_t i, ssize_t j, SCM x);
+SCM scm_matrix_1set_x (SCM A, SCM i, SCM j, SCM x);
+SCM scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM x);
+SCM scm_matrix_set_x (SCM A, SCM i, SCM j, SCM x);
+
 #if 0
 {
 #endif

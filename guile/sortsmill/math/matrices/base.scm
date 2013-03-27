@@ -58,9 +58,24 @@
 
           matrix-1x1->scalar
 
+          ;; (matrix-ref A i j) → value
+          ;; (matrix-0ref A i j) → value   (zero-based indexing)
+          ;; (matrix-1ref A i j) → value   (one-based indexing)
+          ;;
+          ;; These accept both typed and untyped arrays.
           matrix-ref
           matrix-0ref
           matrix-1ref
+
+          ;; (matrix-set! A i j value) → *unspecified*
+          ;; (matrix-0set! A i j value) → *unspecified*   (zero-based indexing)
+          ;; (matrix-1set! A i j value) → *unspecified*   (one-based indexing)
+          ;;
+          ;; These accept both typed and untyped arrays.
+          matrix-set!
+          matrix-0set!
+          matrix-1set!
+
           matrix-row
           matrix-column-transpose
           matrix-column
