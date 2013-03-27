@@ -18,8 +18,8 @@
 (library (sortsmill math polyspline implicit)
 
   (export poly:bezout-matrix
+          poly:pretty-print-bezout-matrix
           poly:implicit-equation
-          poly:implicit-equation-by-degrees
           poly:pretty-print-implicit-equation
           poly:plug-into-implicit-equation)
 
@@ -54,6 +54,39 @@ Bézier spline, given in monomial basis."
           (bezout-matrix (x-xspline xspline) (y-yspline yspline)
                          #:sum multipoly+ #:difference multipoly-
                          #:product multipoly*)))))
+
+  (define (poly:pretty-print-bezout-matrix B)
+    (let* ([B (one-based B)]
+           [n (car (matrix-dimensions B))]
+           [strings
+            (fold-left
+             (lambda (i-prior i)
+               (cons
+                 (fold-left
+                  (lambda (j-prior j)
+                    (cons
+                     (multipoly:pretty-print (array-ref B i j))
+                     j-prior))
+                  '()
+                  (iota n 1))
+                 i-prior))
+             '()
+             (iota n 1))]
+           [max-length (apply max (map string-length (apply append strings)))]
+           [column-width (+ max-length 3)])
+      (string-append
+       (string-join
+        (map
+         (lambda (row)
+           (fold-left
+            (lambda (row-so-far entry)
+              (format #f "~a~va" row-so-far column-width entry))
+            ""
+            row))
+         strings)
+        "\n")
+       "\n")))
+        
 
   (define (max-degree spline)
     (let* ([n (vector-length spline)]
@@ -93,94 +126,13 @@ curve is degenerated to a point."
     (bezout-resultant matrix #:sum multipoly+ #:difference multipoly-
                       #:product multipoly*))
 
-  (define (poly:implicit-equation-by-degrees eq)
-    (if eq
-        [begin
-          (assert (apply = (matrix-dimensions eq)))
-          (let ([n (car (matrix-dimensions eq))])
-            (fold-left
-             (lambda (prior degree)
-               (cons (fold-left
-                      (lambda (prior^ i)
-                        (let ([j (- degree i)])
-                          (cons (array-ref eq i j) prior^)))
-                      '()
-                      (iota (+ degree 1) 0))
-                     prior))
-             '()
-             (iota n (- n 1) -1)))]
-        #f))
-
   (define (poly:pretty-print-implicit-equation eq)
-    (let ([eq (if (array? eq) (poly:implicit-equation-by-degrees eq) eq)])
-      (if eq
-          [let ([terms (apply append (map terms-for-degree eq))])
-            (if (null? terms)
-                "0"
-                (string-join terms " + "))]
-          #f)))
-
-  (define (terms-for-degree coefs)
-    (let ([p (- (length coefs) 1)])
-      (map format-term
-           (filter (lambda (e) (not (= (car e) 0)))
-                   (zip coefs (basis-for-degree p))))))
-
-  (define (format-term term)
-    (cond
-     [(string=? (cadr term) "1") (format #f "~a" (car term))]
-     [(= (car term) 1) (format #f "~a" (cadr term))]
-     [(= (car term) -1) (format #f "-~a" (cadr term))]
-     [else (format #f "~a~a" (car term) (cadr term))] ))
-
-  (define (basis-for-degree p)
-    (case p
-      [(0) '("1")]
-      [else
-       (let ([x-count (lambda (i) (- p i))]
-             [y-count (lambda (i) i)]
-             [show-x  (lambda (n)
-                        (case n
-                          [(0) ""]
-                          [(1) "x"]
-                          [else (format #f "x~a"
-                                        (integer->superscript n))]))]
-             [show-y  (lambda (n)
-                        (case n
-                          [(0) ""]
-                          [(1) "y"]
-                          [else (format #f "y~a"
-                                        (integer->superscript n))]))])
-         (list-tabulate (+ p 1)
-                        (lambda (i)
-                          (format #f "~a~a"
-                                  (show-x (x-count i))
-                                  (show-y (y-count i))))))] ))
-
-  (define (integer->superscript n)
-    (string-map char->superscript (format #f "~d" n)))
-
-  (define (char->superscript d)
-    ;; Note that to display these superscripts you will have to switch
-    ;; to a compatible locale. Guile’s default locale is inadequate.
-    (match d
-      [#\0 #\⁰]
-      [#\1 #\¹]
-      [#\2 #\²]
-      [#\3 #\³]
-      [#\4 #\⁴]
-      [#\5 #\⁵]
-      [#\6 #\⁶]
-      [#\7 #\⁷]
-      [#\8 #\⁸]
-      [#\9 #\⁹]
-      [#\- #\⁻]
-      [other other]))
+    (format #f "~a = 0" (multipoly:pretty-print eq)))
 
   ;;----------------------------------------------------------------------
 
   (define (poly:plug-into-implicit-equation eq x y)
-    (let* ([eq (if (array? eq) (poly:implicit-equation-by-degrees eq) eq)]
+    (let* ([eq (if (array? eq) (multipoly:by-degrees eq) eq)]
            [n (length eq)]
            [max-degree (- n 1)]
            [powers-of-x (powers-of-polynomial x max-degree)]

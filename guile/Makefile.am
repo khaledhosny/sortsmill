@@ -638,6 +638,13 @@ GO_FILES += sortsmill/math/polyspline/roots.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/roots.scm
 
 
+## (sortsmill math polyspline self-intersection)
+#
+#DIST_SCM_FILES += sortsmill/math/polyspline/self-intersection.scm
+#GO_FILES += sortsmill/math/polyspline/self-intersection.go
+#MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/self-intersection.scm
+
+
 # (sortsmill math polyspline subdiv)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
