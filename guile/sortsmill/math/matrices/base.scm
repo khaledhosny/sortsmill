@@ -62,7 +62,7 @@
           ;; (matrix-0ref A i j) → value   (zero-based indexing)
           ;; (matrix-1ref A i j) → value   (one-based indexing)
           ;;
-          ;; These accept both typed and untyped arrays.
+          ;; These accept both typed and untyped arrays and vectors.
           matrix-ref
           matrix-0ref
           matrix-1ref
@@ -71,7 +71,7 @@
           ;; (matrix-0set! A i j value) → *unspecified*   (zero-based indexing)
           ;; (matrix-1set! A i j value) → *unspecified*   (one-based indexing)
           ;;
-          ;; These accept both typed and untyped arrays.
+          ;; These accept both typed and untyped arrays and vectors.
           matrix-set!
           matrix-0set!
           matrix-1set!
@@ -245,18 +245,6 @@
             'row-matrix->vector (_ "not a row matrix") V))]
       [[(_ _)] V]
       [_ (not-a-matrix 'row-matrix->vector V)] ))
-
-  (define (matrix-shape A)
-    (array-shape (vector->matrix A)))
-
-  (define (matrix-dimensions A)
-    (map cadr (matrix-shape (one-based A))))
-
-  (define (matrix-row-count A)
-    (cadar (matrix-shape (one-based A))))
-
-  (define (matrix-column-count A)
-    (cadadr (matrix-shape (one-based A))))
 
   (define (square-matrix? A)
     (apply eqv? (matrix-dimensions A)))

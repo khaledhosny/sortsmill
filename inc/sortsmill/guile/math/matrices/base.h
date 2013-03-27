@@ -91,6 +91,16 @@ SCM scm_matrix_1set_x (SCM A, SCM i, SCM j, SCM x);
 SCM scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM x);
 SCM scm_matrix_set_x (SCM A, SCM i, SCM j, SCM x);
 
+void scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_hbnd,
+                         ssize_t *column_lbnd, ssize_t *column_hbnd);
+void scm_c_matrix_dimensions (SCM A, size_t *row_count, size_t *column_count);
+size_t scm_c_matrix_row_count (SCM A);
+size_t scm_c_matrix_column_count (SCM A);
+SCM scm_matrix_shape (SCM A);
+SCM scm_matrix_dimensions (SCM A);
+SCM scm_matrix_row_count (SCM A);
+SCM scm_matrix_column_count (SCM A);
+
 #if 0
 {
 #endif

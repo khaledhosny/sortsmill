@@ -385,6 +385,194 @@ scm_matrix_set_x (SCM A, SCM i, SCM j, SCM v)
 
 //-------------------------------------------------------------------------
 
+VISIBLE void
+scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_ubnd,
+                    ssize_t *column_lbnd, ssize_t *column_ubnd)
+{
+  scm_t_array_handle handle_A;
+
+  scm_array_get_handle (A, &handle_A);
+
+  const size_t rank = scm_array_handle_rank (&handle_A);
+
+  switch (rank)
+    {
+    case 1:
+      *row_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *row_ubnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *column_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *column_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
+      break;
+
+    case 2:
+      *row_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *row_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
+      *column_lbnd = scm_array_handle_dims (&handle_A)[1].lbnd;
+      *column_ubnd = scm_array_handle_dims (&handle_A)[1].ubnd;
+      break;
+
+    default:
+      // Do nothing.
+      break;
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  if (rank != 1 && rank != 2)
+    assert_rank_1_or_2_array (scm_from_latin1_string ("scm_c_matrix_shape"), A);
+}
+
+VISIBLE void
+scm_c_matrix_dimensions (SCM A, size_t *row_count, size_t *column_count)
+{
+  scm_t_array_handle handle_A;
+
+  scm_array_get_handle (A, &handle_A);
+
+  const size_t rank = scm_array_handle_rank (&handle_A);
+
+  switch (rank)
+    {
+    case 1:
+      *row_count = 1;
+      *column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      break;
+
+    case 2:
+      *row_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      *column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[1].ubnd -
+                  scm_array_handle_dims (&handle_A)[1].lbnd) + 1;
+      break;
+
+    default:
+      // Do nothing.
+      break;
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  if (rank != 1 && rank != 2)
+    assert_rank_1_or_2_array (scm_from_latin1_string
+                              ("scm_c_matrix_dimensions"), A);
+}
+
+VISIBLE size_t
+scm_c_matrix_row_count (SCM A)
+{
+  scm_t_array_handle handle_A;
+  size_t row_count;
+
+  scm_array_get_handle (A, &handle_A);
+
+  const size_t rank = scm_array_handle_rank (&handle_A);
+
+  switch (rank)
+    {
+    case 1:
+      row_count = 1;
+      break;
+
+    case 2:
+      row_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      break;
+
+    default:
+      // Do nothing.
+      break;
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  if (rank != 1 && rank != 2)
+    assert_rank_1_or_2_array (scm_from_latin1_string
+                              ("scm_c_matrix_row_count"), A);
+
+  return row_count;
+}
+
+VISIBLE size_t
+scm_c_matrix_column_count (SCM A)
+{
+  scm_t_array_handle handle_A;
+  size_t column_count;
+
+  scm_array_get_handle (A, &handle_A);
+
+  const size_t rank = scm_array_handle_rank (&handle_A);
+
+  switch (rank)
+    {
+    case 1:
+      column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      break;
+
+    case 2:
+      column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[1].ubnd -
+                  scm_array_handle_dims (&handle_A)[1].lbnd) + 1;
+      break;
+
+    default:
+      // Do nothing.
+      break;
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  if (rank != 1 && rank != 2)
+    assert_rank_1_or_2_array (scm_from_latin1_string
+                              ("scm_c_matrix_column_count"), A);
+
+  return column_count;
+}
+
+VISIBLE SCM
+scm_matrix_shape (SCM A)
+{
+  ssize_t row_lbnd;
+  ssize_t row_ubnd;
+  ssize_t column_lbnd;
+  ssize_t column_ubnd;
+  scm_c_matrix_shape (A, &row_lbnd, &row_ubnd, &column_lbnd, &column_ubnd);
+  return scm_list_2 (scm_list_2 (scm_from_ssize_t (row_lbnd),
+                                 scm_from_ssize_t (row_ubnd)),
+                     scm_list_2 (scm_from_ssize_t (column_lbnd),
+                                 scm_from_ssize_t (column_ubnd)));
+}
+
+VISIBLE SCM
+scm_matrix_dimensions (SCM A)
+{
+  size_t row_count;
+  size_t column_count;
+  scm_c_matrix_dimensions (A, &row_count, &column_count);
+  return scm_list_2 (scm_from_size_t (row_count),
+                     scm_from_size_t (column_count));
+}
+
+VISIBLE SCM
+scm_matrix_row_count (SCM A)
+{
+  return scm_from_size_t (scm_c_matrix_row_count (A));
+}
+
+VISIBLE SCM
+scm_matrix_column_count (SCM A)
+{
+  return scm_from_size_t (scm_c_matrix_column_count (A));
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_sortsmill_math_matrices_base (void);
 
 VISIBLE void
@@ -397,6 +585,11 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-0set!", 4, 0, 0, scm_matrix_0set_x);
   scm_c_define_gsubr ("matrix-1set!", 4, 0, 0, scm_matrix_1set_x);
   scm_c_define_gsubr ("matrix-set!", 4, 0, 0, scm_matrix_set_x);
+
+  scm_c_define_gsubr ("matrix-shape", 1, 0, 0, scm_matrix_shape);
+  scm_c_define_gsubr ("matrix-dimensions", 1, 0, 0, scm_matrix_dimensions);
+  scm_c_define_gsubr ("matrix-row-count", 1, 0, 0, scm_matrix_row_count);
+  scm_c_define_gsubr ("matrix-column-count", 1, 0, 0, scm_matrix_column_count);
 }
 
 //-------------------------------------------------------------------------
