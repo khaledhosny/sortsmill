@@ -689,82 +689,82 @@ struct contexttree {
 #define _SCALED_OFFSETS		0x800	/* Use Apple definition of offset interpretation */
 #define _UNSCALED_OFFSETS	0x1000	/* Use MS definition */
 
-VISIBLE extern int ttfFixupRef(SplineChar **chars,int i);
+VISIBLE int ttfFixupRef(SplineChar **chars,int i);
 extern const char *cffnames[];
 extern const int nStdStrings;
 
     /* Open type Advanced Typography Tables */
-extern void otf_dumpgpos(struct alltabs *at, SplineFont *sf);
-extern void otf_dumpgsub(struct alltabs *at, SplineFont *sf);
-extern void otf_dumpgdef(struct alltabs *at, SplineFont *sf);
-extern void otf_dumpbase(struct alltabs *at, SplineFont *sf);
-extern void otf_dumpjstf(struct alltabs *at, SplineFont *sf);
-extern void otf_dump_dummydsig(struct alltabs *at, SplineFont *sf);
-VISIBLE extern int gdefclass(SplineChar *sc);
+void otf_dumpgpos(struct alltabs *at, SplineFont *sf);
+void otf_dumpgsub(struct alltabs *at, SplineFont *sf);
+void otf_dumpgdef(struct alltabs *at, SplineFont *sf);
+void otf_dumpbase(struct alltabs *at, SplineFont *sf);
+void otf_dumpjstf(struct alltabs *at, SplineFont *sf);
+void otf_dump_dummydsig(struct alltabs *at, SplineFont *sf);
+VISIBLE int gdefclass(SplineChar *sc);
 
-extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
+void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
 
     /* TrueType instructions */
-VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);
-extern int32_t memlong(uint8_t *data,int table_len, int offset);
-VISIBLE extern int memushort(uint8_t *data,int table_len, int offset);
-VISIBLE extern void memputshort(uint8_t *data,int offset,uint16_t val);
-extern int TTF__getcvtval(SplineFont *sf,int val);
-extern int TTF_getcvtval(SplineFont *sf,int val);
-extern void SCinitforinstrs(SplineChar *sc);
-extern int SSAddPoints(SplineSet *ss,int ptcnt,BasePoint *bp, char *flags);
+VISIBLE struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);
+int32_t memlong(uint8_t *data,int table_len, int offset);
+VISIBLE int memushort(uint8_t *data,int table_len, int offset);
+VISIBLE void memputshort(uint8_t *data,int offset,uint16_t val);
+int TTF__getcvtval(SplineFont *sf,int val);
+int TTF_getcvtval(SplineFont *sf,int val);
+void SCinitforinstrs(SplineChar *sc);
+int SSAddPoints(SplineSet *ss,int ptcnt,BasePoint *bp, char *flags);
 
     /* Used by both otf and apple */
-extern int LigCaretCnt(SplineChar *sc);
-extern uint16_t *ClassesFromNames(SplineFont *sf,char **classnames,int class_cnt,
-	int numGlyphs, SplineChar ***glyphs, int apple_kc);
-extern SplineChar **SFGlyphsFromNames(SplineFont *sf,char *names);
+int LigCaretCnt(SplineChar *sc);
+uint16_t *ClassesFromNames(SplineFont *sf,char **classnames,int class_cnt,
+                           int numGlyphs, SplineChar ***glyphs, int apple_kc);
+SplineChar **SFGlyphsFromNames(SplineFont *sf,char *names);
 
 
-extern void AnchorClassOrder(SplineFont *sf);
-VISIBLE extern SplineChar **EntryExitDecompose(SplineFont *sf,AnchorClass *ac,
-	struct glyphinfo *gi);
-VISIBLE extern void AnchorClassDecompose(SplineFont *sf,AnchorClass *_ac, int classcnt, int *subcnts,
+void AnchorClassOrder(SplineFont *sf);
+VISIBLE SplineChar **EntryExitDecompose(SplineFont *sf,AnchorClass *ac,
+                                        struct glyphinfo *gi);
+VISIBLE void AnchorClassDecompose(SplineFont *sf,AnchorClass *_ac, int classcnt, int *subcnts,
 	SplineChar ***marks,SplineChar ***base,
 	SplineChar ***lig,SplineChar ***mkmk,
 	struct glyphinfo *gi);
 
 #ifdef HAVE_LONG_LONG_INT
-extern void cvt_unix_to_1904( long long time, int32_t result[2]);
+void cvt_unix_to_1904( long long time, int32_t result[2]);
 #else
-extern void cvt_unix_to_1904( long time, int32_t result[2]);
+void cvt_unix_to_1904( long time, int32_t result[2]);
 #endif
 
 
     /* Non-standard tables */
 	/* My PfEd table for FontForge/PfaEdit specific info */
-extern void pfed_dump(struct alltabs *at, SplineFont *sf);
-extern void pfed_read(FILE *ttf,struct ttfinfo *info);
-	/* The TeX table, to contain stuff the TeX people want */
-extern void tex_dump(struct alltabs *at, SplineFont *sf);
-extern void tex_read(FILE *ttf,struct ttfinfo *info);
-	/* The BDF table, to contain bdf properties the X people want */
-extern int ttf_bdf_dump(SplineFont *sf,struct alltabs *at,int32_t *sizes);
-extern void ttf_bdf_read(FILE *ttf,struct ttfinfo *info);
-	/* The FFTM table, to some timestamps I'd like */
-extern int ttf_fftm_dump(SplineFont *sf,struct alltabs *at);
+void pfed_dump(struct alltabs *at, SplineFont *sf);
+void pfed_read(FILE *ttf,struct ttfinfo *info);
+ /* The TeX table, to contain stuff the TeX people want */
+void tex_dump(struct alltabs *at, SplineFont *sf);
+void tex_read(FILE *ttf,struct ttfinfo *info);
+ /* The BDF table, to contain bdf properties the X people want */
+int ttf_bdf_dump(SplineFont *sf,struct alltabs *at,int32_t *sizes);
+void ttf_bdf_read(FILE *ttf,struct ttfinfo *info);
+ /* The FFTM table, to some timestamps I'd like */
+int ttf_fftm_dump(SplineFont *sf,struct alltabs *at);
 
     /* The MATH table */
-extern void otf_dump_math(struct alltabs *at, SplineFont *sf);
-extern void otf_read_math(FILE *ttf,struct ttfinfo *info);
-extern void otf_read_math_used(FILE *ttf,struct ttfinfo *info);
-extern void GuessNamesFromMATH(FILE *ttf,struct ttfinfo *info);
+void otf_dump_math(struct alltabs *at, SplineFont *sf);
+void otf_read_math(FILE *ttf,struct ttfinfo *info);
+void otf_read_math_used(FILE *ttf,struct ttfinfo *info);
+void GuessNamesFromMATH(FILE *ttf,struct ttfinfo *info);
 
     /* Parsing advanced typography */
-extern void readttfkerns(FILE *ttf,struct ttfinfo *info);
-extern void readttfgsubUsed(FILE *ttf,struct ttfinfo *info);
-extern void GuessNamesFromGSUB(FILE *ttf,struct ttfinfo *info);
-extern void readttfgpossub(FILE *ttf,struct ttfinfo *info,int gpos);
-extern void readttfgdef(FILE *ttf,struct ttfinfo *info);
-extern void readttfbase(FILE *ttf,struct ttfinfo *info);
-extern void readttfjstf(FILE *ttf,struct ttfinfo *info);
+void readttfkerns(FILE *ttf,struct ttfinfo *info);
+void readttfgsubUsed(FILE *ttf,struct ttfinfo *info);
+void GuessNamesFromGSUB(FILE *ttf,struct ttfinfo *info);
+void readttfgpossub(FILE *ttf,struct ttfinfo *info,int gpos);
+void readttfgdef(FILE *ttf,struct ttfinfo *info);
+void readttfbase(FILE *ttf,struct ttfinfo *info);
+void readttfjstf(FILE *ttf,struct ttfinfo *info);
 
-extern struct otfname *FindAllLangEntries(FILE *ttf, struct ttfinfo *info, int id );
+struct otfname *FindAllLangEntries(FILE *ttf, struct ttfinfo *info, int id );
 
 /* Known font parameters for 'TeX ' table (fontdims, spacing params, whatever you want to call them) */
     /* Used by all fonts */
@@ -802,4 +802,4 @@ extern struct otfname *FindAllLangEntries(FILE *ttf, struct ttfinfo *info, int i
 #define TeX_BigOpSpace4		CHR('B','O','S','4')
 #define TeX_BigOpSpace5		CHR('B','O','S','5')
 
-extern void SFDummyUpCIDs(struct glyphinfo *gi,SplineFont *sf);
+void SFDummyUpCIDs(struct glyphinfo *gi,SplineFont *sf);

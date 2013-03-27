@@ -209,11 +209,11 @@ typedef struct stembundle {
     struct stemdata **stemlist;
 } StemBundle;
     
-extern struct glyphdata *GlyphDataBuild(SplineChar *sc, int layer, BlueData *bd, int use_existing);
-extern struct glyphdata *GlyphDataInit(SplineChar *sc, int layer, double em_size, int only_hv);
-extern struct glyphdata *StemInfoToStemData( struct glyphdata *gd,StemInfo *si,int is_v );
-extern struct glyphdata *DStemInfoToStemData( struct glyphdata *gd,DStemInfo *dsi );
-extern int IsStemAssignedToPoint( struct pointdata *pd,struct stemdata *stem,int is_next );
-extern void GlyphDataFree(struct glyphdata *gd);
+struct glyphdata *GlyphDataBuild(SplineChar *sc, int layer, BlueData *bd, int use_existing);
+struct glyphdata *GlyphDataInit(SplineChar *sc, int layer, double em_size, int only_hv);
+struct glyphdata *StemInfoToStemData( struct glyphdata *gd,StemInfo *si,int is_v );
+struct glyphdata *DStemInfoToStemData( struct glyphdata *gd,DStemInfo *dsi );
+int IsStemAssignedToPoint( struct pointdata *pd,struct stemdata *stem,int is_next );
+void GlyphDataFree(struct glyphdata *gd);
 
 #endif		/* _STEMDB_H_ */
