@@ -163,6 +163,8 @@ nobase_include_HEADERS += sortsmill/guile/math/gsl.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl/error.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl/matrices.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl/permutations.h
+nobase_include_HEADERS += sortsmill/guile/math/matrices.h
+nobase_include_HEADERS += sortsmill/guile/math/matrices/base.h
 nobase_include_HEADERS += sortsmill/guile/math/multivariate_polynomials.h
 nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 

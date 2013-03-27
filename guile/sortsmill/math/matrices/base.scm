@@ -59,8 +59,8 @@
           matrix-1x1->scalar
 
           matrix-ref
-          matrix-ref0
-          matrix-ref1
+          matrix-0ref
+          matrix-1ref
           matrix-row
           matrix-column-transpose
           matrix-column
@@ -78,12 +78,18 @@
           f64matrix->matrix
           )
 
-  (import (sortsmill i18n)
+  (import (sortsmill dynlink)
+          (sortsmill i18n)
           (rnrs)
           (except (guile) error)
           (srfi :4)                  ; SRFI-4 uniform numeric vectors.
-          (ice-9 match)
-          )
+          (ice-9 match))
+
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension
+     "init_guile_sortsmill_math_matrices_base"))
+
+  ;;-----------------------------------------------------------------------
 
   (define (not-a-matrix caller irritant . more-irritants)
     (if (null? more-irritants)
@@ -278,15 +284,6 @@
           A] ))
 
   ;;-----------------------------------------------------------------------
-
-  (define (matrix-ref A i j)
-    (array-ref (vector->matrix A) i j))
-
-  (define (matrix-ref0 A i j)
-    (array-ref (zero-based (vector->matrix A)) i j))
-
-  (define (matrix-ref1 A i j)
-    (array-ref (one-based (vector->matrix A)) i j))
 
   (define (matrix-row A i)
     "Return a view of a matrix row as a row vector (in the form of

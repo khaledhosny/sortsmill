@@ -12,9 +12,9 @@ sortsmill/math/brentroot.go: sortsmill/math/math-constants.go sortsmill/dynlink.
 sortsmill/math/functions.go: sortsmill/dynlink.go
 sortsmill/math/geometry/lines.go: sortsmill/math/matrices.go sortsmill/kwargs.go sortsmill/i18n.go
 sortsmill/math/gsl/matrices.go: sortsmill/arrays.go sortsmill/dynlink.go sortsmill/i18n.go
-sortsmill/math/multivariate-polynomials.go: sortsmill/dynlink.go
+sortsmill/math/multivariate-polynomials.go: sortsmill/math/matrices.go sortsmill/dynlink.go
 sortsmill/math/matrices/arithmetic.go: sortsmill/math/matrices/base.go sortsmill/math/gsl/matrices.go sortsmill/arrays.go sortsmill/i18n.go
-sortsmill/math/matrices/base.go: sortsmill/i18n.go
+sortsmill/math/matrices/base.go: sortsmill/dynlink.go sortsmill/i18n.go
 sortsmill/math/matrices/bezout.go: sortsmill/math/matrices/base.go sortsmill/math/polyspline/elev.go sortsmill/kwargs.go sortsmill/i18n.go
 sortsmill/math/matrices/linalg.go: sortsmill/math/matrices/base.go sortsmill/math/matrices/arithmetic.go sortsmill/math/gsl/matrices.go sortsmill/arrays.go sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/kwargs.go
 sortsmill/math/polyspline/add.go: sortsmill/dynlink.go

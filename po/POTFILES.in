@@ -9,6 +9,7 @@ auxiliary/rnrs_conditions.c
 auxiliary/guile_math_functions.c
 auxiliary/guile_math_gsl_matrices.c
 auxiliary/guile_math_gsl_permutations.c
+auxiliary/guile_math_matrices_base.c
 auxiliary/guile_math_multivariate_polynomials.c
 
 auxiliary/guile_python.c

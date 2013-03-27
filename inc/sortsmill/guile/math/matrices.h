@@ -15,17 +15,9 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_MATH_H
-#define _SORTSMILL_GUILE_MATH_H
+#ifndef _SORTSMILL_GUILE_MATH_MATRICES_H
+#define _SORTSMILL_GUILE_MATH_MATRICES_H
 
-#include <math.h>
+#include <sortsmill/guile/math/matrices/base.h>
 
-#include <sortsmill/guile/math/brentroot.h>
-#include <sortsmill/guile/math/functions.h>
-#include <sortsmill/guile/math/gmp.h>
-#include <sortsmill/guile/math/gsl.h>
-#include <sortsmill/guile/math/matrices.h>
-#include <sortsmill/guile/math/multivariate_polynomials.h>
-#include <sortsmill/guile/math/polyspline.h>
-
-#endif /* _SORTSMILL_GUILE_MATH_H */
+#endif /* _SORTSMILL_GUILE_MATH_MATRICES_H */
