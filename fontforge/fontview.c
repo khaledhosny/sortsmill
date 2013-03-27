@@ -12793,7 +12793,7 @@ FontView_ReformatAll (SplineFont *sf)
       }
 }
 
-void
+static void
 FontViewRemove (FontView *fv)
 {
   if (fv_list == fv)

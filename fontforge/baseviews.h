@@ -213,13 +213,13 @@ struct cvcontainer_funcs
 
 typedef struct
 {
-  int tag;	     /* Identifies which kind of view base this is. */
+  int tag;                      /* Identifies which kind of view base this is. */
 } ViewBase;
 
 typedef struct charviewbase
 {
-  int tag;  /* == FF_GLYPH_WINDOW. This field must come first and must
-	       be set. */
+  int tag;                      /* == FF_GLYPH_WINDOW. This field must come first and must
+                                   be set. */
   struct charviewbase *next;
   struct fontviewbase *fv;
   SplineChar *sc;
@@ -227,7 +227,7 @@ typedef struct charviewbase
   uint8_t drawmode;
   uint16_t ft_gridfitwidth;
   SplineSet *gridfit;
-  struct cvcontainer *container; /* The sv (or whatever) within which this view is embedded (if it is embedded) */
+  struct cvcontainer *container;        /* The sv (or whatever) within which this view is embedded (if it is embedded) */
 } CharViewBase;
 
 struct fvcontainer
@@ -255,20 +255,20 @@ struct fvcontainer_funcs
 
 typedef struct fontviewbase
 {
-  int tag;   /* == FF_FONT_WINDOW. This field must come first and must
-		be set. */
-  struct fontviewbase *next;	 /* Next on list of open fontviews. */
-  struct fontviewbase *nextsame; /* Next fv looking at this font. */
-  EncMap *map;			 /* Current encoding info. */
-  EncMap *normal;		 /* If this is not NULL then we have a
-				    compacted encoding in map, and this
-				   is the original. */
+  int tag;                      /* == FF_FONT_WINDOW. This field must come first and must
+                                   be set. */
+  struct fontviewbase *next;    /* Next on list of open fontviews. */
+  struct fontviewbase *nextsame;        /* Next fv looking at this font. */
+  EncMap *map;                  /* Current encoding info. */
+  EncMap *normal;               /* If this is not NULL then we have a
+                                   compacted encoding in map, and this
+                                   is the original. */
   SplineFont *sf;               /* Current font. */
   SplineFont *cidmaster;        /* If CID keyed, contains master font. */
   int active_layer;
   BDFFont *active_bitmap;       /* Set if the fontview displays a bitmap strike. */
   uint8_t *selected;            /* Current selection. */
-  void *python_fv_object;	/* Used only if Python is supported. */
+  void *python_fv_object;       /* Used only if Python is supported. */
   struct fvcontainer *container;
 } FontViewBase;
 
@@ -391,114 +391,110 @@ enum fvformats
   fv_pythonbase = 0x100
 };
 
-VISIBLE extern enum undotype CopyUndoType (void);
-VISIBLE extern int CopyContainsSomething (void);
-VISIBLE extern int CopyContainsBitmap (void);
-extern int CopyContainsVectors (void);
-extern const Undoes *CopyBufferGet (void);
-VISIBLE extern RefChar *CopyContainsRef (SplineFont *);
-extern char **CopyGetPosSubData (enum possub_type *type,
-                                 SplineFont **copied_from, int pst_depth);
-VISIBLE extern void CopyReference (SplineChar *sc);
-VISIBLE extern void SCCopyLookupData (SplineChar *sc);
-extern void PasteRemoveSFAnchors (SplineFont *);
-extern void PasteAnchorClassMerge (SplineFont *sf, AnchorClass * into,
-                                   AnchorClass * from);
-extern void PasteRemoveAnchorClass (SplineFont *sf, AnchorClass * dying);
-VISIBLE extern void ClipboardClear (void);
-VISIBLE extern SplineSet *ClipBoardToSplineSet (void);
-VISIBLE extern void BCCopySelected (BDFChar * bc, int pixelsize, int depth);
-VISIBLE extern void BCCopyReference (BDFChar * bc, int pixelsize, int depth);
-VISIBLE extern void PasteToBC (BDFChar * bc, int pixelsize, int depth);
-VISIBLE extern void FVCopyWidth (FontViewBase *fv, enum undotype ut);
-extern void FVCopyAnchors (FontViewBase *fv);
+VISIBLE enum undotype CopyUndoType (void);
+VISIBLE int CopyContainsSomething (void);
+VISIBLE int CopyContainsBitmap (void);
+int CopyContainsVectors (void);
+const Undoes *CopyBufferGet (void);
+VISIBLE RefChar *CopyContainsRef (SplineFont *);
+char **CopyGetPosSubData (enum possub_type *type,
+                          SplineFont **copied_from, int pst_depth);
+VISIBLE void CopyReference (SplineChar *sc);
+VISIBLE void SCCopyLookupData (SplineChar *sc);
+void PasteRemoveSFAnchors (SplineFont *);
+void PasteAnchorClassMerge (SplineFont *sf, AnchorClass * into,
+                            AnchorClass * from);
+void PasteRemoveAnchorClass (SplineFont *sf, AnchorClass * dying);
+VISIBLE void ClipboardClear (void);
+VISIBLE SplineSet *ClipBoardToSplineSet (void);
+VISIBLE void BCCopySelected (BDFChar *bc, int pixelsize, int depth);
+VISIBLE void BCCopyReference (BDFChar *bc, int pixelsize, int depth);
+VISIBLE void PasteToBC (BDFChar *bc, int pixelsize, int depth);
+VISIBLE void FVCopyWidth (FontViewBase *fv, enum undotype ut);
+void FVCopyAnchors (FontViewBase *fv);
 enum fvcopy_type
-{ ct_fullcopy, ct_reference, ct_lookups, ct_unlinkrefs };
-VISIBLE extern void FVCopy (FontViewBase *fv, enum fvcopy_type copytype);
-VISIBLE extern void PasteIntoFV (FontViewBase *fv, int pasteinto,
-                                 real trans[6]);
-VISIBLE extern void FVCopyFgtoBg (FontViewBase *fv);
-VISIBLE extern void FVSameGlyphAs (FontViewBase *fv);
-VISIBLE extern void FVClearBackground (FontViewBase *fv);
-VISIBLE extern void FVClear (FontViewBase *fv);
-VISIBLE extern void FVUnlinkRef (FontViewBase *fv);
-VISIBLE extern void FVUndo (FontViewBase *fv);
-VISIBLE extern void FVRedo (FontViewBase *fv);
-VISIBLE extern void FVJoin (FontViewBase *fv);
-VISIBLE extern void FVBuildDuplicate (FontViewBase *fv);
-VISIBLE extern void FVTrans (FontViewBase *fv, SplineChar *sc,
-                             real transform[6], uint8_t *sel,
-                             enum fvtrans_flags);
-VISIBLE extern void FVTransFunc (void *_fv, real transform[6], int otype,
-                                 BVTFunc * bvts, enum fvtrans_flags);
-VISIBLE extern void FVReencode (FontViewBase *fv, Encoding *enc);
-VISIBLE extern void FVOverlap (FontViewBase *fv, enum overlap_type ot);
-VISIBLE extern void FVAddExtrema (FontViewBase *fv, int force_adding);
-VISIBLE extern void FVCorrectDir (FontViewBase *fv);
-VISIBLE extern void FVRound2Int (FontViewBase *fv, real factor);
-VISIBLE extern void FVCanonicalStart (FontViewBase *fv);
-VISIBLE extern void FVCanonicalContours (FontViewBase *fv);
-VISIBLE extern void FVCluster (FontViewBase *fv);
-VISIBLE extern void CIDSetEncMap (FontViewBase *fv, SplineFont *new);
-VISIBLE extern void FVInsertInCID (FontViewBase *fv, SplineFont *sf);
+{
+  ct_fullcopy,
+  ct_reference,
+  ct_lookups,
+  ct_unlinkrefs
+};
 
-VISIBLE extern void FVAutoHint (FontViewBase *fv);
-VISIBLE extern void FVAutoHintSubs (FontViewBase *fv);
-VISIBLE extern void FVAutoCounter (FontViewBase *fv);
-VISIBLE extern void FVDontAutoHint (FontViewBase *fv);
-VISIBLE extern void FVAutoInstr (FontViewBase *fv);
-VISIBLE extern void FVClearInstrs (FontViewBase *fv);
-VISIBLE extern void FVClearHints (FontViewBase *fv);
-VISIBLE extern void SCAutoTrace (SplineChar *sc, int layer, int ask);
-VISIBLE extern char *FindAutoTraceName (void);
-VISIBLE extern void *GetAutoTraceArgs (void);
-VISIBLE extern void SetAutoTraceArgs (void *a);
-extern char *FindMFName (void);
-VISIBLE extern char *ProgramExists (char *prog, char *buffer);
-VISIBLE extern void MfArgsInit (void);
-VISIBLE extern void FVAutoTrace (FontViewBase *fv, int ask);
-extern void FVAddEncodingSlot (FontViewBase *fv, int gid);
-VISIBLE extern int FVImportMult (FontViewBase *fv, char *filename,
-                                 int toback, int bf);
-VISIBLE extern int FVImportBDF (FontViewBase *fv, char *filename, int ispk,
-                                int toback);
-VISIBLE extern void MergeFont (FontViewBase *fv, SplineFont *other,
-                               int preserveCrossFontKerning);
-VISIBLE extern int FVImportImages (FontViewBase *fv, char *path, int isimage,
-                                   int toback, int flags);
-VISIBLE extern int FVImportImageTemplate (FontViewBase *fv, char *path,
-                                          int isimage, int toback, int flags);
-extern void ScriptPrint (FontViewBase *fv, int type, int32_t *pointsizes,
-                         char *samplefile, uint32_t *sample,
-                         char *outputfile);
-VISIBLE extern int FVBParseSelectByPST (FontViewBase *fv,
-                                        struct lookup_subtable *sub,
-                                        int search_type);
-VISIBLE extern int SFScaleToEm (SplineFont *sf, int ascent, int descent);
-VISIBLE extern void TransHints (StemInfo * stem, real mul1, real off1,
-                                real mul2, real off2, int round_to_int);
-VISIBLE extern void TransDStemHints (DStemInfo * ds, real xmul, real xoff,
-                                     real ymul, real yoff, int round_to_int);
-VISIBLE extern void VrTrans (struct vr *vr, real transform[6]);
-extern int SFNLTrans (FontViewBase *fv, char *x_expr, char *y_expr);
-extern int SSNLTrans (SplineSet *ss, char *x_expr, char *y_expr);
-extern int SCNLTrans (SplineChar *sc, int layer, char *x_expr, char *y_expr);
-VISIBLE extern void FVPointOfView (FontViewBase *fv, struct pov_data *);
-VISIBLE extern void FVStrokeItScript (void *fv, StrokeInfo * si,
-                                      int pointless);
-VISIBLE extern void FVOutline (struct fontviewbase *fv, real width);
-VISIBLE extern void FVInline (struct fontviewbase *fv, real width,
-                              real inset);
-VISIBLE extern void FVShadow (struct fontviewbase *fv, real angle,
-                              real outline_width, real shadow_length,
-                              int wireframe);
-VISIBLE extern void CI_Init (struct counterinfo *ci, SplineFont *sf);
-VISIBLE extern void FVEmbolden (struct fontviewbase *fv,
-                                enum embolden_type type,
-                                struct lcg_zones *zones);
-VISIBLE extern void FVCondenseExtend (struct fontviewbase *fv,
-                                      struct counterinfo *ci);
-extern void ScriptSCCondenseExtend (SplineChar *sc, struct counterinfo *ci);
+VISIBLE void FVCopy (FontViewBase *fv, enum fvcopy_type copytype);
+VISIBLE void PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6]);
+VISIBLE void FVCopyFgtoBg (FontViewBase *fv);
+VISIBLE void FVSameGlyphAs (FontViewBase *fv);
+VISIBLE void FVClearBackground (FontViewBase *fv);
+VISIBLE void FVClear (FontViewBase *fv);
+VISIBLE void FVUnlinkRef (FontViewBase *fv);
+VISIBLE void FVUndo (FontViewBase *fv);
+VISIBLE void FVRedo (FontViewBase *fv);
+VISIBLE void FVJoin (FontViewBase *fv);
+VISIBLE void FVBuildDuplicate (FontViewBase *fv);
+VISIBLE void FVTrans (FontViewBase *fv, SplineChar *sc,
+                      real transform[6], uint8_t *sel, enum fvtrans_flags);
+VISIBLE void FVTransFunc (void *_fv, real transform[6], int otype,
+                          BVTFunc *bvts, enum fvtrans_flags);
+VISIBLE void FVReencode (FontViewBase *fv, Encoding *enc);
+VISIBLE void FVOverlap (FontViewBase *fv, enum overlap_type ot);
+VISIBLE void FVAddExtrema (FontViewBase *fv, int force_adding);
+VISIBLE void FVCorrectDir (FontViewBase *fv);
+VISIBLE void FVRound2Int (FontViewBase *fv, real factor);
+VISIBLE void FVCanonicalStart (FontViewBase *fv);
+VISIBLE void FVCanonicalContours (FontViewBase *fv);
+VISIBLE void FVCluster (FontViewBase *fv);
+VISIBLE void CIDSetEncMap (FontViewBase *fv, SplineFont *new);
+VISIBLE void FVInsertInCID (FontViewBase *fv, SplineFont *sf);
+
+VISIBLE void FVAutoHint (FontViewBase *fv);
+VISIBLE void FVAutoHintSubs (FontViewBase *fv);
+VISIBLE void FVAutoCounter (FontViewBase *fv);
+VISIBLE void FVDontAutoHint (FontViewBase *fv);
+VISIBLE void FVAutoInstr (FontViewBase *fv);
+VISIBLE void FVClearInstrs (FontViewBase *fv);
+VISIBLE void FVClearHints (FontViewBase *fv);
+VISIBLE void SCAutoTrace (SplineChar *sc, int layer, int ask);
+VISIBLE char *FindAutoTraceName (void);
+VISIBLE void *GetAutoTraceArgs (void);
+VISIBLE void SetAutoTraceArgs (void *a);
+char *FindMFName (void);
+VISIBLE char *ProgramExists (char *prog, char *buffer);
+VISIBLE void MfArgsInit (void);
+VISIBLE void FVAutoTrace (FontViewBase *fv, int ask);
+void FVAddEncodingSlot (FontViewBase *fv, int gid);
+VISIBLE int FVImportMult (FontViewBase *fv, char *filename, int toback, int bf);
+VISIBLE int FVImportBDF (FontViewBase *fv, char *filename, int ispk,
+                         int toback);
+VISIBLE void MergeFont (FontViewBase *fv, SplineFont *other,
+                        int preserveCrossFontKerning);
+VISIBLE int FVImportImages (FontViewBase *fv, char *path, int isimage,
+                            int toback, int flags);
+VISIBLE int FVImportImageTemplate (FontViewBase *fv, char *path,
+                                   int isimage, int toback, int flags);
+void ScriptPrint (FontViewBase *fv, int type, int32_t *pointsizes,
+                  char *samplefile, uint32_t *sample, char *outputfile);
+VISIBLE int FVBParseSelectByPST (FontViewBase *fv,
+                                 struct lookup_subtable *sub, int search_type);
+VISIBLE int SFScaleToEm (SplineFont *sf, int ascent, int descent);
+VISIBLE void TransHints (StemInfo * stem, real mul1, real off1,
+                         real mul2, real off2, int round_to_int);
+VISIBLE void TransDStemHints (DStemInfo * ds, real xmul, real xoff,
+                              real ymul, real yoff, int round_to_int);
+VISIBLE void VrTrans (struct vr *vr, real transform[6]);
+int SFNLTrans (FontViewBase *fv, char *x_expr, char *y_expr);
+int SSNLTrans (SplineSet *ss, char *x_expr, char *y_expr);
+int SCNLTrans (SplineChar *sc, int layer, char *x_expr, char *y_expr);
+VISIBLE void FVPointOfView (FontViewBase *fv, struct pov_data *);
+VISIBLE void FVStrokeItScript (void *fv, StrokeInfo *si, int pointless);
+VISIBLE void FVOutline (struct fontviewbase *fv, real width);
+VISIBLE void FVInline (struct fontviewbase *fv, real width, real inset);
+VISIBLE void FVShadow (struct fontviewbase *fv, real angle,
+                       real outline_width, real shadow_length, int wireframe);
+VISIBLE void CI_Init (struct counterinfo *ci, SplineFont *sf);
+VISIBLE void FVEmbolden (struct fontviewbase *fv,
+                         enum embolden_type type, struct lcg_zones *zones);
+VISIBLE void FVCondenseExtend (struct fontviewbase *fv, struct counterinfo *ci);
+void ScriptSCCondenseExtend (SplineChar *sc, struct counterinfo *ci);
 
 struct smallcaps
 {
@@ -513,8 +509,8 @@ struct smallcaps
   double italic_angle, tan_ia;
 };
 
-VISIBLE extern void SmallCapsFindConstants (struct smallcaps *small,
-                                            SplineFont *sf, int layer);
+VISIBLE void SmallCapsFindConstants (struct smallcaps *small,
+                                     SplineFont *sf, int layer);
 
 enum glyphchange_type
 {
@@ -568,12 +564,11 @@ struct genericchange
   double italic_angle, tan_ia;
 };
 
-VISIBLE extern void FVAddSmallCaps (FontViewBase *fv,
-                                    struct genericchange *genchange);
-VISIBLE extern void FVGenericChange (FontViewBase *fv,
-                                     struct genericchange *genchange);
-VISIBLE extern void CVGenericChange (CharViewBase *cv,
-                                     struct genericchange *genchange);
+VISIBLE void FVAddSmallCaps (FontViewBase *fv, struct genericchange *genchange);
+VISIBLE void FVGenericChange (FontViewBase *fv,
+                              struct genericchange *genchange);
+VISIBLE void CVGenericChange (CharViewBase *cv,
+                              struct genericchange *genchange);
 
 struct xheightinfo
 {
@@ -581,97 +576,88 @@ struct xheightinfo
   double serif_height;
 };
 
-VISIBLE extern void InitXHeightInfo (SplineFont *sf, int layer,
-                                     struct xheightinfo *xi);
-VISIBLE extern void ChangeXHeight (FontViewBase *fv, CharViewBase *cv,
-                                   struct xheightinfo *xi);
-extern SplineSet *SSControlStems (SplineSet *ss, double stemwidthscale,
-                                  double stemheightscale, double hscale,
-                                  double vscale, double xheight);
-VISIBLE extern void MakeItalic (FontViewBase *fv, CharViewBase *cv,
-                                ItalicInfo * ii);
-extern int FVReplaceAll (FontViewBase *fv, SplineSet *find, SplineSet *rpl,
-                         double fudge, int flags);
-VISIBLE extern void FVBReplaceOutlineWithReference (FontViewBase *fv,
-                                                    double fudge);
-VISIBLE extern void FVCorrectReferences (FontViewBase *fv);
-VISIBLE extern void _FVSimplify (FontViewBase *fv, struct simplifyinfo *smpl);
-VISIBLE extern void UnlinkThisReference (FontViewBase *fv, SplineChar *sc,
-                                         int layer);
-VISIBLE extern FontViewBase *ViewPostScriptFont (char *filename,
-                                                 int openflags);
-VISIBLE extern void FVBuildAccent (FontViewBase *fv, int onlyaccents);
-VISIBLE extern void FVRemoveKerns (FontViewBase *fv);
-VISIBLE extern void FVRemoveVKerns (FontViewBase *fv);
-VISIBLE extern void FVVKernFromHKern (FontViewBase *fv);
-VISIBLE extern void FVAddUnencoded (FontViewBase *fv, int cnt);
-VISIBLE extern void FVRemoveUnused (FontViewBase *fv);
-VISIBLE extern void FVCompact (FontViewBase *fv);
-VISIBLE extern void FVDetachGlyphs (FontViewBase *fv);
-VISIBLE extern void FVDetachAndRemoveGlyphs (FontViewBase *fv);
-extern int AutoWidthScript (FontViewBase *fv, int spacing);
-extern int AutoKernScript (FontViewBase *fv, int spacing, int threshold,
-                           struct lookup_subtable *sub, char *kernfile);
+VISIBLE void InitXHeightInfo (SplineFont *sf, int layer,
+                              struct xheightinfo *xi);
+VISIBLE void ChangeXHeight (FontViewBase *fv, CharViewBase *cv,
+                            struct xheightinfo *xi);
+SplineSet *SSControlStems (SplineSet *ss, double stemwidthscale,
+                           double stemheightscale, double hscale,
+                           double vscale, double xheight);
+VISIBLE void MakeItalic (FontViewBase *fv, CharViewBase *cv, ItalicInfo * ii);
+int FVReplaceAll (FontViewBase *fv, SplineSet *find, SplineSet *rpl,
+                  double fudge, int flags);
+VISIBLE void FVBReplaceOutlineWithReference (FontViewBase *fv, double fudge);
+VISIBLE void FVCorrectReferences (FontViewBase *fv);
+VISIBLE void _FVSimplify (FontViewBase *fv, struct simplifyinfo *smpl);
+VISIBLE void UnlinkThisReference (FontViewBase *fv, SplineChar *sc, int layer);
+VISIBLE FontViewBase *ViewPostScriptFont (char *filename, int openflags);
+VISIBLE void FVBuildAccent (FontViewBase *fv, int onlyaccents);
+VISIBLE void FVRemoveKerns (FontViewBase *fv);
+VISIBLE void FVRemoveVKerns (FontViewBase *fv);
+VISIBLE void FVVKernFromHKern (FontViewBase *fv);
+VISIBLE void FVAddUnencoded (FontViewBase *fv, int cnt);
+VISIBLE void FVRemoveUnused (FontViewBase *fv);
+VISIBLE void FVCompact (FontViewBase *fv);
+VISIBLE void FVDetachGlyphs (FontViewBase *fv);
+VISIBLE void FVDetachAndRemoveGlyphs (FontViewBase *fv);
+int AutoWidthScript (FontViewBase *fv, int spacing);
+int AutoKernScript (FontViewBase *fv, int spacing, int threshold,
+                    struct lookup_subtable *sub, char *kernfile);
 
-extern void BCTrans (BDFFont *bdf, BDFChar * bc, BVTFunc * bvts,
-                     FontViewBase *fv);
-VISIBLE extern void BCSetPoint (BDFChar * bc, int x, int y, int color);
-VISIBLE extern void BCTransFunc (BDFChar * bc, enum bvtools type, int xoff,
-                                 int yoff);
-VISIBLE extern void skewselect (BVTFunc * bvtf, real t);
+void BCTrans (BDFFont *bdf, BDFChar *bc, BVTFunc *bvts, FontViewBase *fv);
+VISIBLE void BCSetPoint (BDFChar *bc, int x, int y, int color);
+VISIBLE void BCTransFunc (BDFChar *bc, enum bvtools type, int xoff, int yoff);
+VISIBLE void skewselect (BVTFunc *bvtf, real t);
 
-VISIBLE extern BDFFloat *BDFFloatCreate (BDFChar * bc, int xmin, int xmax,
-                                         int ymin, int ymax, int clear);
-extern BDFFloat *BDFFloatCopy (BDFFloat * sel);
-extern BDFFloat *BDFFloatConvert (BDFFloat * sel, int newdepth, int olddepth);
-VISIBLE extern void BDFFloatFree (BDFFloat * sel);
+VISIBLE BDFFloat *BDFFloatCreate (BDFChar *bc, int xmin, int xmax,
+                                  int ymin, int ymax, int clear);
+BDFFloat *BDFFloatCopy (BDFFloat * sel);
+BDFFloat *BDFFloatConvert (BDFFloat * sel, int newdepth, int olddepth);
+VISIBLE void BDFFloatFree (BDFFloat * sel);
 
-VISIBLE extern void BCMergeReferences (BDFChar * base, BDFChar * cur,
-                                       int8_t xoff, int8_t yoff);
-VISIBLE extern BDFChar *BDFGetMergedChar (BDFChar * bc);
-VISIBLE extern void BCUnlinkThisReference (struct fontviewbase *fv,
-                                           BDFChar * bc);
+VISIBLE void BCMergeReferences (BDFChar *base, BDFChar *cur,
+                                int8_t xoff, int8_t yoff);
+VISIBLE BDFChar *BDFGetMergedChar (BDFChar *bc);
+VISIBLE void BCUnlinkThisReference (struct fontviewbase *fv, BDFChar *bc);
 
-VISIBLE extern int CVLayer (CharViewBase *cv);
-VISIBLE extern Undoes *CVPreserveStateHints (CharViewBase *cv);
-VISIBLE extern Undoes *CVPreserveState (CharViewBase *cv);
-VISIBLE extern Undoes *_CVPreserveTState (CharViewBase *cv, PressedOn *);
-extern Undoes *CVPreserveWidth (CharViewBase *cv, int width);
-extern Undoes *CVPreserveVWidth (CharViewBase *cv, int vwidth);
-VISIBLE extern void CVDoRedo (CharViewBase *cv);
-VISIBLE extern void CVDoUndo (CharViewBase *cv);
-VISIBLE extern void _CVRestoreTOriginalState (CharViewBase *cv,
-                                              PressedOn * p);
-VISIBLE extern void _CVUndoCleanup (CharViewBase *cv, PressedOn * p);
-VISIBLE extern void CVRemoveTopUndo (CharViewBase *cv);
-VISIBLE extern void CopySelected (CharViewBase *cv, int doanchors);
-VISIBLE extern void CVCopyGridFit (CharViewBase *cv);
-VISIBLE extern void CopyWidth (CharViewBase *cv, enum undotype);
-VISIBLE extern void PasteToCV (CharViewBase *cv);
-VISIBLE extern void CVYPerspective (CharViewBase *cv, bigreal x_vanish,
-                                    bigreal y_vanish);
-extern void ScriptSCEmbolden (SplineChar *sc, int layer,
-                              enum embolden_type type,
-                              struct lcg_zones *zones);
-VISIBLE extern void CVEmbolden (CharViewBase *cv, enum embolden_type type,
-                                struct lcg_zones *zones);
-VISIBLE extern void SCCondenseExtend (struct counterinfo *ci, SplineChar *sc,
-                                      int layer, int do_undoes);
-extern void SCClearSelPt (SplineChar *sc);
-extern void SC_MoreLayers (SplineChar *, Layer *old);
-extern void SCLayersChange (SplineChar *sc);
-extern void SFLayerChange (SplineFont *sf);
-extern void SCTile (SplineChar *sc, int layer);
-VISIBLE extern void _CVMenuMakeLine (CharViewBase *cv, int do_arc,
-                                     int ellipse_to_back);
+VISIBLE int CVLayer (CharViewBase *cv);
+VISIBLE Undoes *CVPreserveStateHints (CharViewBase *cv);
+VISIBLE Undoes *CVPreserveState (CharViewBase *cv);
+VISIBLE Undoes *_CVPreserveTState (CharViewBase *cv, PressedOn *);
+Undoes *CVPreserveWidth (CharViewBase *cv, int width);
+Undoes *CVPreserveVWidth (CharViewBase *cv, int vwidth);
+VISIBLE void CVDoRedo (CharViewBase *cv);
+VISIBLE void CVDoUndo (CharViewBase *cv);
+VISIBLE void _CVRestoreTOriginalState (CharViewBase *cv, PressedOn *p);
+VISIBLE void _CVUndoCleanup (CharViewBase *cv, PressedOn *p);
+VISIBLE void CVRemoveTopUndo (CharViewBase *cv);
+VISIBLE void CopySelected (CharViewBase *cv, int doanchors);
+VISIBLE void CVCopyGridFit (CharViewBase *cv);
+VISIBLE void CopyWidth (CharViewBase *cv, enum undotype);
+VISIBLE void PasteToCV (CharViewBase *cv);
+VISIBLE void CVYPerspective (CharViewBase *cv, bigreal x_vanish,
+                             bigreal y_vanish);
+void ScriptSCEmbolden (SplineChar *sc, int layer,
+                       enum embolden_type type, struct lcg_zones *zones);
+VISIBLE void CVEmbolden (CharViewBase *cv, enum embolden_type type,
+                         struct lcg_zones *zones);
+VISIBLE void SCCondenseExtend (struct counterinfo *ci, SplineChar *sc,
+                               int layer, int do_undoes);
+void SCClearSelPt (SplineChar *sc);
+void SC_MoreLayers (SplineChar *, Layer *old);
+void SCLayersChange (SplineChar *sc);
+void SFLayerChange (SplineFont *sf);
+void SCTile (SplineChar *sc, int layer);
+VISIBLE void _CVMenuMakeLine (CharViewBase *cv, int do_arc,
+                              int ellipse_to_back);
     /* Ellipse to back is a debugging flag and adds the generated ellipse to */
     /*  the background layer so we can look at it. I thought it might actually */
     /*  be useful, so I left it in. Activated with the Alt key in the menu */
 
-VISIBLE extern void MVCopyChar (FontViewBase *fv, BDFFont *bdf,
-                                SplineChar *sc, enum fvcopy_type fullcopy);
-VISIBLE extern void PasteIntoMV (FontViewBase *fv, BDFFont *bdf,
-                                 SplineChar *sc, int doclear);
+VISIBLE void MVCopyChar (FontViewBase *fv, BDFFont *bdf,
+                         SplineChar *sc, enum fvcopy_type fullcopy);
+VISIBLE void PasteIntoMV (FontViewBase *fv, BDFFont *bdf,
+                          SplineChar *sc, int doclear);
 
 enum search_flags
 {
@@ -733,11 +719,11 @@ typedef struct searchdata
   int last_gid;
 } SearchData;
 
-extern struct searchdata *SDFromContour (FontViewBase *fv, SplineSet *find,
-                                         double fudge, int flags);
-extern SplineChar *SDFindNext (struct searchdata *sv);
+struct searchdata *SDFromContour (FontViewBase *fv, SplineSet *find,
+                                  double fudge, int flags);
+SplineChar *SDFindNext (struct searchdata *sv);
 
-extern struct python_import_export
+struct python_import_export
 {
   struct _object *import;       /* None becomes NULL */
   struct _object *export;       /* None becomes NULL */
@@ -747,15 +733,15 @@ extern struct python_import_export
   char *all_extensions;
 } *py_ie;
 
-VISIBLE extern void PyFF_SCExport (SplineChar *sc, int ie_index,
-                                   char *filename, int layer);
-VISIBLE extern void PyFF_SCImport (SplineChar *sc, int ie_index,
-                                   char *filename, int layer, int clear);
-VISIBLE extern void PyFF_InitFontHook (FontViewBase *fv);
+VISIBLE void PyFF_SCExport (SplineChar *sc, int ie_index,
+                            char *filename, int layer);
+VISIBLE void PyFF_SCImport (SplineChar *sc, int ie_index,
+                            char *filename, int layer, int clear);
+VISIBLE void PyFF_InitFontHook (FontViewBase *fv);
 
-VISIBLE extern void LookupInit (void);
-VISIBLE extern int UserFeaturesDiffer (void);
-VISIBLE extern uint32_t *StdFeaturesOfScript (uint32_t script);
+VISIBLE void LookupInit (void);
+VISIBLE int UserFeaturesDiffer (void);
+VISIBLE uint32_t *StdFeaturesOfScript (uint32_t script);
 
 enum byte_types
 {
@@ -781,57 +767,53 @@ struct instrdata
   struct instrdata *next;
 };
 
-VISIBLE extern uint8_t *_IVParse (SplineFont *sf, char *text, int *len,
-                                  void (*IVError) (void *, char *, int),
-                                  void *iv);
-VISIBLE extern char *_IVUnParseInstrs (uint8_t *instrs, int instr_cnt);
+VISIBLE uint8_t *_IVParse (SplineFont *sf, char *text, int *len,
+                           void (*IVError) (void *, char *, int), void *iv);
+VISIBLE char *_IVUnParseInstrs (uint8_t *instrs, int instr_cnt);
 
-extern int BitmapControl (FontViewBase *fv, int32_t *sizes, int isavail,
-                          int rasterize);
-extern void FVSetWidthScript (FontViewBase *fv, enum widthtype wtype,
-                              int val, int incr);
-VISIBLE extern void FVMetricsCenter (FontViewBase *fv, int docenter);
-VISIBLE extern void FVRevert (FontViewBase *fv);
-VISIBLE extern void FVRevertBackup (FontViewBase *fv);
-VISIBLE extern void FVRevertGlyph (FontViewBase *fv);
-VISIBLE extern int MMReblend (FontViewBase *fv, MMSet *mm);
-VISIBLE extern FontViewBase *MMCreateBlendedFont (MMSet *mm,
-                                                  FontViewBase *fv,
-                                                  real blends[MmMax],
-                                                  int tonew);
-VISIBLE extern void FVB_MakeNamelist (FontViewBase *fv, FILE *file);
+int BitmapControl (FontViewBase *fv, int32_t *sizes, int isavail,
+                   int rasterize);
+void FVSetWidthScript (FontViewBase *fv, enum widthtype wtype,
+                       int val, int incr);
+VISIBLE void FVMetricsCenter (FontViewBase *fv, int docenter);
+VISIBLE void FVRevert (FontViewBase *fv);
+VISIBLE void FVRevertBackup (FontViewBase *fv);
+VISIBLE void FVRevertGlyph (FontViewBase *fv);
+VISIBLE int MMReblend (FontViewBase *fv, MMSet *mm);
+VISIBLE FontViewBase *MMCreateBlendedFont (MMSet *mm,
+                                           FontViewBase *fv,
+                                           real blends[MmMax], int tonew);
+VISIBLE void FVB_MakeNamelist (FontViewBase *fv, FILE *file);
 
-VISIBLE extern void AutoWidth2 (FontViewBase *fv, int separation,
-                                int min_side, int max_side, int chunk_height,
-                                int loop_cnt);
-VISIBLE extern void GuessOpticalOffset (SplineChar *sc, int layer,
-                                        real *_loff, real *_roff,
-                                        int chunk_height);
-VISIBLE extern void AutoKern2 (SplineFont *sf, int layer, SplineChar **left,
-                               SplineChar **right,
-                               struct lookup_subtable *into, int separation,
-                               int min_kern, int from_closest_approach,
-                               int only_closer, int chunk_height,
-                               void (*addkp) (void *data, SplineChar *left,
-                                              SplineChar *r, int off),
-                               void *data);
-VISIBLE extern void AutoKern2NewClass (SplineFont *sf, int layer,
-                                       char **leftnames, char **rightnames,
-                                       int lcnt, int rcnt,
-                                       void (*kcAddOffset) (void *data,
-                                                            int left_index,
-                                                            int right_index,
-                                                            int offset),
-                                       void *data, int separation,
-                                       int min_kern,
-                                       int from_closest_approach,
-                                       int only_closer, int chunk_height);
-VISIBLE extern void AutoKern2BuildClasses (SplineFont *sf, int layer,
-                                           SplineChar **leftglyphs,
-                                           SplineChar **rightglyphs,
-                                           struct lookup_subtable *sub,
-                                           int separation, int min_kern,
-                                           int touching, int only_closer,
-                                           int autokern, real good_enough);
+VISIBLE void AutoWidth2 (FontViewBase *fv, int separation,
+                         int min_side, int max_side, int chunk_height,
+                         int loop_cnt);
+VISIBLE void GuessOpticalOffset (SplineChar *sc, int layer,
+                                 real *_loff, real *_roff, int chunk_height);
+VISIBLE void AutoKern2 (SplineFont *sf, int layer, SplineChar **left,
+                        SplineChar **right,
+                        struct lookup_subtable *into, int separation,
+                        int min_kern, int from_closest_approach,
+                        int only_closer, int chunk_height,
+                        void (*addkp) (void *data, SplineChar *left,
+                                       SplineChar *r, int off), void *data);
+VISIBLE void AutoKern2NewClass (SplineFont *sf, int layer,
+                                char **leftnames, char **rightnames,
+                                int lcnt, int rcnt,
+                                void (*kcAddOffset) (void *data,
+                                                     int left_index,
+                                                     int right_index,
+                                                     int offset),
+                                void *data, int separation,
+                                int min_kern,
+                                int from_closest_approach,
+                                int only_closer, int chunk_height);
+VISIBLE void AutoKern2BuildClasses (SplineFont *sf, int layer,
+                                    SplineChar **leftglyphs,
+                                    SplineChar **rightglyphs,
+                                    struct lookup_subtable *sub,
+                                    int separation, int min_kern,
+                                    int touching, int only_closer,
+                                    int autokern, real good_enough);
 
 #endif
