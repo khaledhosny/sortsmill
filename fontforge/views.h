@@ -1361,7 +1361,6 @@ extern Color view_bgcol;        /* Background color for views */
 extern void MVColInit (void);
 extern void CVColInit (void);
 
-extern void FontViewRemove (FontView *fv);
 extern void FVChar (FontView *fv, GEvent *event);
 extern void FVDrawInfo (FontView *fv, GWindow pixmap, GEvent *event);
 extern void KFFontViewInits (struct kf_dlg *kf, GGadget *drawable);
