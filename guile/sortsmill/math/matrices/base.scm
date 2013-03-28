@@ -32,6 +32,7 @@
 
           ;; Shape inquiry procedures, accepting both typed and
           ;; untyped arrays and vectors.
+          matrix?           ; (matrix? A) → boolean
           matrix-shape      ; (matrix-shape A) → ((lr ur) (lc rc))
           matrix-dimensions ; (matrix-dimensions A) → (numrows numcols)
           matrix-row-count  ; (matrix-row-count A) → numrows

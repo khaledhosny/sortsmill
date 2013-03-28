@@ -77,6 +77,9 @@ void assert_valid_scm_matrix_indices (const char *who, SCM A,
                                       ssize_t i, ssize_t j,
                                       ssize_t i_base, ssize_t j_base,
                                       size_t i_dim, size_t j_dim);
+void assert_is_matrix (SCM who, SCM A);
+void assert_array_handle_is_matrix (const char *who, SCM A,
+                                    scm_t_array_handle *handlep_A);
 
 SCM scm_c_matrix_0ref (SCM A, ssize_t i, ssize_t j);
 SCM scm_matrix_0ref (SCM A, SCM i, SCM j);
@@ -92,6 +95,7 @@ SCM scm_matrix_1set_x (SCM A, SCM i, SCM j, SCM x);
 SCM scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM x);
 SCM scm_matrix_set_x (SCM A, SCM i, SCM j, SCM x);
 
+bool scm_is_matrix (SCM A);
 void scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_hbnd,
                          ssize_t *column_lbnd, ssize_t *column_hbnd);
 void scm_c_matrix_dimensions (SCM A, size_t *row_count, size_t *column_count);
@@ -102,6 +106,7 @@ size_t scm_c_column_matrix_size (SCM A);
 bool scm_is_square_matrix (SCM A);
 bool scm_are_conformable_for_matrix_product (SCM A, SCM B);
 bool scm_are_conformable_for_matrix_sum (SCM A, SCM B);
+SCM scm_matrix_p (SCM A);
 SCM scm_matrix_shape (SCM A);
 SCM scm_matrix_dimensions (SCM A);
 SCM scm_matrix_row_count (SCM A);

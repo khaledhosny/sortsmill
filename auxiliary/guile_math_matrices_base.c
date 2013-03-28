@@ -85,6 +85,50 @@ assert_valid_scm_matrix_indices (const char *who, SCM A,
   assert_column_index_inside_bounds (who, A, j, j_base, j_dim);
 }
 
+VISIBLE void
+assert_is_matrix (SCM who, SCM A)
+{
+  if (!scm_is_matrix (A))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_make_who_condition (who),
+        rnrs_c_make_message_condition (_("matrix error: "
+                                         "not a (non-empty) matrix")),
+        rnrs_make_irritants_condition (scm_list_1 (A))));
+}
+
+VISIBLE void
+assert_array_handle_is_matrix (const char *who, SCM A,
+                               scm_t_array_handle *handlep_A)
+{
+  bool is_a_matrix;
+
+  switch (scm_array_handle_rank (handlep_A))
+    {
+    case 1:
+      is_a_matrix =
+        (scm_array_handle_dims (handlep_A)[0].lbnd <=
+         scm_array_handle_dims (handlep_A)[0].ubnd);
+      break;
+
+    case 2:
+      is_a_matrix =
+        ((scm_array_handle_dims (handlep_A)[0].lbnd <=
+          scm_array_handle_dims (handlep_A)[0].ubnd)
+         && (scm_array_handle_dims (handlep_A)[1].lbnd <=
+             scm_array_handle_dims (handlep_A)[1].ubnd));
+      break;
+
+    default:
+      is_a_matrix = false;
+      break;
+    }
+
+  if (!is_a_matrix)
+    assert_is_matrix (scm_from_utf8_string (who), A);
+}
+
 //-------------------------------------------------------------------------
 
 #define _SCM_MATRIX_ENTRY_REF(NAME, TYPE, ELEMTYPE, FROM_TYPE)          \
@@ -164,7 +208,7 @@ scm_c_matrix_0ref (SCM A, ssize_t i, ssize_t j)
 
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
 
   SCM entry = entry_ref (who, A, &handle_A, i, j, 0, 0);
 
@@ -190,7 +234,7 @@ scm_c_matrix_1ref (SCM A, ssize_t i, ssize_t j)
 
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
 
   SCM entry = entry_ref (who, A, &handle_A, i, j, 1, 1);
 
@@ -216,7 +260,7 @@ scm_c_matrix_ref (SCM A, ssize_t i, ssize_t j)
 
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
 
   SCM entry = entry_ref (who, A, &handle_A, i, j,
                          scm_c_matrix_lbnd0 (&handle_A),
@@ -315,7 +359,7 @@ scm_c_matrix_0set_x (SCM A, ssize_t i, ssize_t j, SCM v)
 
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
 
   entry_set_x (who, A, &handle_A, i, j, 0, 0, v);
 
@@ -341,7 +385,7 @@ scm_c_matrix_1set_x (SCM A, ssize_t i, ssize_t j, SCM v)
 
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
 
   entry_set_x (who, A, &handle_A, i, j, 1, 1, v);
 
@@ -367,7 +411,7 @@ scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM v)
 
   scm_array_get_handle (A, &handle_A);
   scm_dynwind_array_handle_release (&handle_A);
-  assert_c_rank_1_or_2_array (who, A, &handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
 
   entry_set_x (who, A, &handle_A, i, j,
                scm_c_matrix_lbnd0 (&handle_A),
@@ -385,6 +429,48 @@ scm_matrix_set_x (SCM A, SCM i, SCM j, SCM v)
 }
 
 //-------------------------------------------------------------------------
+
+VISIBLE bool
+scm_is_matrix (SCM A)
+{
+  bool is_a_matrix;
+
+  if (scm_is_false (scm_array_p (A, SCM_UNDEFINED)))
+    is_a_matrix = false;
+  else
+    {
+      scm_t_array_handle handle_A;
+
+      scm_array_get_handle (A, &handle_A);
+
+      const size_t rank = scm_array_handle_rank (&handle_A);
+
+      switch (rank)
+        {
+        case 1:
+          is_a_matrix =
+            (scm_array_handle_dims (&handle_A)[0].lbnd <=
+             scm_array_handle_dims (&handle_A)[0].ubnd);
+          break;
+
+        case 2:
+          is_a_matrix =
+            ((scm_array_handle_dims (&handle_A)[0].lbnd <=
+              scm_array_handle_dims (&handle_A)[0].ubnd)
+             && (scm_array_handle_dims (&handle_A)[1].lbnd <=
+                 scm_array_handle_dims (&handle_A)[1].ubnd));
+          break;
+
+        default:
+          is_a_matrix = false;
+          break;
+        }
+
+      scm_array_handle_release (&handle_A);
+    }
+
+  return is_a_matrix;
+}
 
 VISIBLE void
 scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_ubnd,
@@ -582,7 +668,8 @@ scm_c_row_matrix_size (SCM A)
       (scm_list_4
        (rnrs_make_assertion_violation (),
         rnrs_c_make_who_condition (who),
-        rnrs_c_make_message_condition (_("not a (non-empty) row matrix")),
+        rnrs_c_make_message_condition (_("matrix error: "
+                                         "not a (non-empty) row matrix")),
         rnrs_make_irritants_condition (scm_list_1 (A))));
 
   return column_count;
@@ -634,7 +721,8 @@ scm_c_column_matrix_size (SCM A)
       (scm_list_4
        (rnrs_make_assertion_violation (),
         rnrs_c_make_who_condition (who),
-        rnrs_c_make_message_condition (_("not a (non-empty) column matrix")),
+        rnrs_c_make_message_condition (_("matrix error: "
+                                         "not a (non-empty) column matrix")),
         rnrs_make_irritants_condition (scm_list_1 (A))));
 
   return row_count;
@@ -679,6 +767,12 @@ scm_are_conformable_for_matrix_sum (SCM A, SCM B)
   return (0 < row_count_A && 0 < column_count_A
           && 0 < row_count_B && 0 < column_count_B
           && row_count_A == row_count_B && column_count_A == column_count_B);
+}
+
+VISIBLE SCM
+scm_matrix_p (SCM A)
+{
+  return scm_from_bool (scm_is_matrix (A));
 }
 
 VISIBLE SCM
@@ -762,6 +856,7 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-1set!", 4, 0, 0, scm_matrix_1set_x);
   scm_c_define_gsubr ("matrix-set!", 4, 0, 0, scm_matrix_set_x);
 
+  scm_c_define_gsubr ("matrix?", 1, 0, 0, scm_matrix_p);
   scm_c_define_gsubr ("matrix-shape", 1, 0, 0, scm_matrix_shape);
   scm_c_define_gsubr ("matrix-dimensions", 1, 0, 0, scm_matrix_dimensions);
   scm_c_define_gsubr ("matrix-row-count", 1, 0, 0, scm_matrix_row_count);
