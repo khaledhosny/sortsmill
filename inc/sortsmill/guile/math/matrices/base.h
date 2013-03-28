@@ -19,6 +19,7 @@
 #define _SORTSMILL_GUILE_MATH_MATRICES_BASE_H
 
 #include <libguile.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -96,10 +97,16 @@ void scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_hbnd,
 void scm_c_matrix_dimensions (SCM A, size_t *row_count, size_t *column_count);
 size_t scm_c_matrix_row_count (SCM A);
 size_t scm_c_matrix_column_count (SCM A);
+bool scm_is_square_matrix (SCM A);
+bool scm_are_conformable_for_matrix_product (SCM A, SCM B);
+bool scm_are_conformable_for_matrix_sum (SCM A, SCM B);
 SCM scm_matrix_shape (SCM A);
 SCM scm_matrix_dimensions (SCM A);
 SCM scm_matrix_row_count (SCM A);
 SCM scm_matrix_column_count (SCM A);
+SCM scm_square_matrix_p (SCM A);
+SCM scm_conformable_for_matrix_product_p (SCM A, SCM B);
+SCM scm_conformable_for_matrix_sum_p (SCM A, SCM B);
 
 #if 0
 {

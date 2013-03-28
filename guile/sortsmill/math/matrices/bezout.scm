@@ -17,7 +17,7 @@
 
 (library (sortsmill math matrices bezout)
 
-  #| See http://en.wikipedia.org/wiki/Bézout_matrix |#
+  ;; See http://en.wikipedia.org/wiki/Bézout_matrix
 
   (export bezout-matrix
           bezout-resultant)
@@ -29,6 +29,12 @@
           (rnrs)
           (except (guile) error))
 
+;;;;;;
+;;;;;;
+;;;;;; FIXME FIXME FIXME FIXME FIXME FIXME: The Bézout matrix is
+;;;;;; symmetric! Take advantage of that.
+;;;;;;
+;;;;;;
   (define/kwargs (bezout-matrix poly1 poly2 (sum +) (difference -) (product *))
     (let* ([poly1 (zero-based (row-matrix->vector poly1))]
            [poly2 (zero-based (row-matrix->vector poly2))]

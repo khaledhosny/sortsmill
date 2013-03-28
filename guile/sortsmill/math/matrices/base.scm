@@ -30,13 +30,15 @@
           zero-based
           one-based
 
-          matrix-shape
-          matrix-dimensions
-          matrix-row-count
-          matrix-column-count
-          square-matrix?
-          conformable-for*?
-          conformable-for+?
+          ;; Shape inquiry procedures, accepting both typed and
+          ;; untyped arrays and vectors.
+          matrix-shape      ; (matrix-shape A) → ((lr ur) (lc rc))
+          matrix-dimensions ; (matrix-dimensions A) → (numrows numcols)
+          matrix-row-count  ; (matrix-row-count A) → numrows
+          matrix-column-count      ; (matrix-column-count A) → numcols
+          square-matrix?           ; (square-matrix A) → boolean
+          conformable-for-matrix*? ; (conformable-for-matrix*? A B) → boolean
+          conformable-for-matrix+? ; (conformable-for-matrix+? A B) → boolean
 
           zero-matrix
           zero-f64matrix
@@ -245,20 +247,6 @@
             'row-matrix->vector (_ "not a row matrix") V))]
       [[(_ _)] V]
       [_ (not-a-matrix 'row-matrix->vector V)] ))
-
-  (define (square-matrix? A)
-    (apply eqv? (matrix-dimensions A)))
-
-  (define (conformable-for*? A B)
-    (let ([nk (matrix-dimensions A)]
-          [km (matrix-dimensions B)])
-      (= (cadr nk) (car km))))
-
-  (define (conformable-for+? A B)
-    (let ([nm   (matrix-dimensions A)]
-          [n^m^ (matrix-dimensions B)])
-      (and (= (car nm) (car n^m^))
-           (= (cadr nm) (cadr n^m^)))))
 
   (define (matrix-map proc A)
     (let* ([type (array-type A)]

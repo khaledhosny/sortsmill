@@ -535,6 +535,47 @@ scm_c_matrix_column_count (SCM A)
   return column_count;
 }
 
+VISIBLE bool
+scm_is_square_matrix (SCM A)
+{
+  size_t row_count;
+  size_t column_count;
+  scm_c_matrix_dimensions (A, &row_count, &column_count);
+  return (0 < row_count && 0 < column_count && row_count == column_count);
+}
+
+VISIBLE bool
+scm_are_conformable_for_matrix_product (SCM A, SCM B)
+{
+  size_t row_count_A;
+  size_t column_count_A;
+  size_t row_count_B;
+  size_t column_count_B;
+
+  scm_c_matrix_dimensions (A, &row_count_A, &column_count_A);
+  scm_c_matrix_dimensions (B, &row_count_B, &column_count_B);
+
+  return (0 < row_count_A && 0 < column_count_A
+          && 0 < row_count_B && 0 < column_count_B
+          && column_count_A == row_count_B);
+}
+
+VISIBLE bool
+scm_are_conformable_for_matrix_sum (SCM A, SCM B)
+{
+  size_t row_count_A;
+  size_t column_count_A;
+  size_t row_count_B;
+  size_t column_count_B;
+
+  scm_c_matrix_dimensions (A, &row_count_A, &column_count_A);
+  scm_c_matrix_dimensions (B, &row_count_B, &column_count_B);
+
+  return (0 < row_count_A && 0 < column_count_A
+          && 0 < row_count_B && 0 < column_count_B
+          && row_count_A == row_count_B && column_count_A == column_count_B);
+}
+
 VISIBLE SCM
 scm_matrix_shape (SCM A)
 {
@@ -571,6 +612,24 @@ scm_matrix_column_count (SCM A)
   return scm_from_size_t (scm_c_matrix_column_count (A));
 }
 
+VISIBLE SCM
+scm_square_matrix_p (SCM A)
+{
+  return scm_from_bool (scm_is_square_matrix (A));
+}
+
+VISIBLE SCM
+scm_conformable_for_matrix_product_p (SCM A, SCM B)
+{
+  return scm_from_bool (scm_are_conformable_for_matrix_product (A, B));
+}
+
+VISIBLE SCM
+scm_conformable_for_matrix_sum_p (SCM A, SCM B)
+{
+  return scm_from_bool (scm_are_conformable_for_matrix_sum (A, B));
+}
+
 //-------------------------------------------------------------------------
 
 void init_guile_sortsmill_math_matrices_base (void);
@@ -590,6 +649,11 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-dimensions", 1, 0, 0, scm_matrix_dimensions);
   scm_c_define_gsubr ("matrix-row-count", 1, 0, 0, scm_matrix_row_count);
   scm_c_define_gsubr ("matrix-column-count", 1, 0, 0, scm_matrix_column_count);
+  scm_c_define_gsubr ("square-matrix?", 1, 0, 0, scm_square_matrix_p);
+  scm_c_define_gsubr ("conformable-for-matrix*?", 2, 0, 0,
+                      scm_conformable_for_matrix_product_p);
+  scm_c_define_gsubr ("conformable-for-matrix+?", 2, 0, 0,
+                      scm_conformable_for_matrix_sum_p);
 }
 
 //-------------------------------------------------------------------------
