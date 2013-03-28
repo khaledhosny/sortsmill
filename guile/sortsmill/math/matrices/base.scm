@@ -82,6 +82,8 @@
           matrix-1set!
 
           matrix-row
+          matrix-0row
+          matrix-1row
           matrix-column-transpose
           matrix-column
           matrix-diagonal
@@ -279,6 +281,7 @@
 
   ;;-----------------------------------------------------------------------
 
+  #|
   (define (matrix-row A i)
     "Return a view of a matrix row as a row vector (in the form of
 a Guile vector)"
@@ -287,6 +290,7 @@ a Guile vector)"
       (match shape
         [(_ (lo hi)) (make-shared-array A (lambda (j) `[,i ,j]) `[,lo ,hi])]
         [_ (not-a-matrix 'matrix-row A)] )))
+  |#
 
   (define (matrix-column-transpose A j)
     "Return a view of a matrix column as a row vector (in the form of

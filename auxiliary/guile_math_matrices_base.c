@@ -16,6 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
+#include <sortsmill/initialized_global_constants.h>
 #include <intl.h>
 #include <stdint.h>
 
@@ -59,6 +60,8 @@ raise_column_index_outside_bounds (const char *who, SCM A, ssize_t j,
                          (scm_list_2 (A, scm_from_ssize_t (j)))));
 }
 
+// FIXME: This should be reusable or have a generally reusable
+// equivalent.
 static inline void
 assert_row_index_inside_bounds (const char *who, SCM A, ssize_t i,
                                 ssize_t i_base, size_t i_dim)
@@ -67,6 +70,8 @@ assert_row_index_inside_bounds (const char *who, SCM A, ssize_t i,
     raise_row_index_outside_bounds (who, A, i, i_base, i_dim);
 }
 
+// FIXME: This should be reusable or have a generally reusable
+// equivalent.
 static inline void
 assert_column_index_inside_bounds (const char *who, SCM A, ssize_t j,
                                    ssize_t j_base, size_t j_dim)
@@ -136,8 +141,8 @@ assert_array_handle_is_matrix (const char *who, SCM A,
   NAME (scm_t_array_handle *handlep_A, ssize_t i, ssize_t j)            \
   {                                                                     \
     const TYPE *_A = scm_array_handle_##ELEMTYPE##elements (handlep_A); \
-    return FROM_TYPE (_A[i * scm_c_matrix_inc0 (handlep_A) +            \
-                         j * scm_c_matrix_inc1 (handlep_A)]);           \
+    return FROM_TYPE (_A[i * scm_c_matrix_row_inc (handlep_A) +         \
+                         j * scm_c_matrix_column_inc (handlep_A)]);     \
   }
 
 #define _SCM_MATRIX_COMPLEX_ENTRY_REF(NAME, TYPE, ELEMTYPE)             \
@@ -145,8 +150,8 @@ assert_array_handle_is_matrix (const char *who, SCM A,
   NAME (scm_t_array_handle *handlep_A, ssize_t i, ssize_t j)            \
   {                                                                     \
     const TYPE *_A = scm_array_handle_##ELEMTYPE##elements (handlep_A); \
-    const TYPE *v = &_A[2 * i * scm_c_matrix_inc0 (handlep_A) +         \
-                        2 * j * scm_c_matrix_inc1 (handlep_A)];         \
+    const TYPE *v = &_A[2 * i * scm_c_matrix_row_inc (handlep_A) +      \
+                        2 * j * scm_c_matrix_column_inc (handlep_A)];   \
     return scm_c_make_rectangular (v[0], v[1]);                         \
   }
 
@@ -190,8 +195,8 @@ entry_ref (const char *who, SCM A, scm_t_array_handle *handlep_A,
            ssize_t i, ssize_t j, ssize_t i_base, ssize_t j_base)
 {
   assert_valid_scm_matrix_indices (who, A, i, j, i_base, j_base,
-                                   scm_c_matrix_dim0 (handlep_A),
-                                   scm_c_matrix_dim1 (handlep_A));
+                                   scm_c_matrix_numrows (handlep_A),
+                                   scm_c_matrix_numcols (handlep_A));
   const scm_t_array_type_index t =
     scm_array_handle_to_array_type_index (handlep_A);
   return _entry_ref[t] (handlep_A, i - i_base, j - j_base);
@@ -263,8 +268,8 @@ scm_c_matrix_ref (SCM A, ssize_t i, ssize_t j)
   assert_array_handle_is_matrix (who, A, &handle_A);
 
   SCM entry = entry_ref (who, A, &handle_A, i, j,
-                         scm_c_matrix_lbnd0 (&handle_A),
-                         scm_c_matrix_lbnd1 (&handle_A));
+                         scm_c_matrix_row_lbnd (&handle_A),
+                         scm_c_matrix_column_lbnd (&handle_A));
 
   scm_dynwind_end ();
 
@@ -285,8 +290,8 @@ scm_matrix_ref (SCM A, SCM i, SCM j)
   {                                                                     \
     TYPE *_A =                                                          \
       scm_array_handle_##ELEMTYPE##writable_elements (handlep_A);       \
-    _A[i * scm_c_matrix_inc0 (handlep_A) +                              \
-       j * scm_c_matrix_inc1 (handlep_A)] = TO_TYPE (v);                \
+    _A[i * scm_c_matrix_row_inc (handlep_A) +                           \
+       j * scm_c_matrix_column_inc (handlep_A)] = TO_TYPE (v);          \
   }
 
 #define _SCM_MATRIX_COMPLEX_ENTRY_SET_X(NAME, TYPE, ELEMTYPE)           \
@@ -295,8 +300,8 @@ scm_matrix_ref (SCM A, SCM i, SCM j)
   {                                                                     \
     TYPE *_A =                                                          \
       scm_array_handle_##ELEMTYPE##writable_elements (handlep_A);       \
-    TYPE *a = &_A[2 * i * scm_c_matrix_inc0 (handlep_A) +               \
-                  2 * j * scm_c_matrix_inc1 (handlep_A)];               \
+    TYPE *a = &_A[2 * i * scm_c_matrix_row_inc (handlep_A) +            \
+                  2 * j * scm_c_matrix_column_inc (handlep_A)];         \
     a[0] = scm_to_double (scm_real_part (v));                           \
     a[1] = scm_to_double (scm_imag_part (v));                           \
   }
@@ -341,8 +346,8 @@ entry_set_x (const char *who, SCM A, scm_t_array_handle *handlep_A,
              ssize_t i, ssize_t j, ssize_t i_base, ssize_t j_base, SCM v)
 {
   assert_valid_scm_matrix_indices (who, A, i, j, i_base, j_base,
-                                   scm_c_matrix_dim0 (handlep_A),
-                                   scm_c_matrix_dim1 (handlep_A));
+                                   scm_c_matrix_numrows (handlep_A),
+                                   scm_c_matrix_numcols (handlep_A));
   const scm_t_array_type_index t =
     scm_array_handle_to_array_type_index (handlep_A);
   _entry_set_x[t] (handlep_A, i - i_base, j - j_base, v);
@@ -414,8 +419,8 @@ scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM v)
   assert_array_handle_is_matrix (who, A, &handle_A);
 
   entry_set_x (who, A, &handle_A, i, j,
-               scm_c_matrix_lbnd0 (&handle_A),
-               scm_c_matrix_lbnd1 (&handle_A), v);
+               scm_c_matrix_row_lbnd (&handle_A),
+               scm_c_matrix_column_lbnd (&handle_A), v);
 
   scm_dynwind_end ();
 
@@ -843,6 +848,121 @@ scm_conformable_for_matrix_sum_p (SCM A, SCM B)
 
 //-------------------------------------------------------------------------
 
+// FIXME: This seems quite reusable, though perhaps it could have a
+// better name, and maybe the code could be compiled.
+static void
+scm_c_initialize_from_eval_string (SCM *proc, const char *s)
+{
+  *proc = scm_eval_string (scm_from_utf8_string (s));
+}
+
+INITIALIZED_CONSTANT (static, SCM, matrix_row_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (i) (lambda (j) (list i j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_row_mapfunc,
+                      scm_c_initialize_from_eval_string, "(lambda (i) list)");
+
+static SCM
+matrix_row (const char *who, SCM A, scm_t_array_handle *handlep_A,
+            ssize_t i, ssize_t i_base)
+{
+  assert_row_index_inside_bounds (who, A, i, i_base,
+                                  scm_c_matrix_numrows (handlep_A));
+  const ssize_t lbnd = scm_c_matrix_column_lbnd (handlep_A);
+  const size_t numcols = scm_c_matrix_numcols (handlep_A);
+  const ssize_t ubnd = lbnd + (ssize_t) (numcols - 1);
+  SCM bounds = scm_list_1 (scm_list_2 (scm_from_ssize_t (lbnd),
+                                       scm_from_ssize_t (ubnd)));
+  SCM mapfunc_func =
+    (scm_array_handle_rank (handlep_A) == 1) ?
+    vector_row_mapfunc () : matrix_row_mapfunc ();
+  ssize_t row = (i - i_base) + scm_c_matrix_row_lbnd (handlep_A);
+  SCM mapfunc = scm_call_1 (mapfunc_func, scm_from_ssize_t (row));
+  return scm_make_shared_array (A, mapfunc, bounds);
+}
+
+VISIBLE SCM
+scm_c_matrix_0row (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_0row";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM row = matrix_row (who, A, &handle_A, i, 0);
+
+  scm_dynwind_end ();
+
+  return row;
+}
+
+VISIBLE SCM
+scm_c_matrix_1row (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_1row";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM row = matrix_row (who, A, &handle_A, i, 1);
+
+  scm_dynwind_end ();
+
+  return row;
+}
+
+VISIBLE SCM
+scm_c_matrix_row (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_row";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM row =
+    matrix_row (who, A, &handle_A, i, scm_c_matrix_row_lbnd (&handle_A));
+
+  scm_dynwind_end ();
+
+  return row;
+}
+
+VISIBLE SCM
+scm_matrix_0row (SCM A, SCM i)
+{
+  return scm_c_matrix_0row (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_1row (SCM A, SCM i)
+{
+  return scm_c_matrix_1row (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_row (SCM A, SCM i)
+{
+  return scm_c_matrix_row (A, scm_to_ssize_t (i));
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_sortsmill_math_matrices_base (void);
 
 VISIBLE void
@@ -868,6 +988,10 @@ init_guile_sortsmill_math_matrices_base (void)
                       scm_conformable_for_matrix_product_p);
   scm_c_define_gsubr ("conformable-for-matrix+?", 2, 0, 0,
                       scm_conformable_for_matrix_sum_p);
+
+  scm_c_define_gsubr ("matrix-0row", 2, 0, 0, scm_matrix_0row);
+  scm_c_define_gsubr ("matrix-1row", 2, 0, 0, scm_matrix_1row);
+  scm_c_define_gsubr ("matrix-row", 2, 0, 0, scm_matrix_row);
 }
 
 //-------------------------------------------------------------------------

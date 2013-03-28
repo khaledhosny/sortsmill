@@ -30,20 +30,20 @@ extern "C"
 #endif
 
 static inline ssize_t
-scm_c_matrix_lbnd0 (scm_t_array_handle *handlep)
+scm_c_matrix_row_lbnd (scm_t_array_handle *handlep)
 {
   return scm_array_handle_dims (handlep)[0].lbnd;
 }
 
 static inline ssize_t
-scm_c_matrix_lbnd1 (scm_t_array_handle *handlep)
+scm_c_matrix_column_lbnd (scm_t_array_handle *handlep)
 {
   return
     scm_array_handle_dims (handlep)[scm_array_handle_rank (handlep) - 1].lbnd;
 }
 
 static inline size_t
-scm_c_matrix_dim0 (scm_t_array_handle *handlep)
+scm_c_matrix_numrows (scm_t_array_handle *handlep)
 {
   return (scm_array_handle_rank (handlep) == 1) ? 1 :
     (size_t) (scm_array_handle_dims (handlep)[0].ubnd -
@@ -51,7 +51,7 @@ scm_c_matrix_dim0 (scm_t_array_handle *handlep)
 }
 
 static inline size_t
-scm_c_matrix_dim1 (scm_t_array_handle *handlep)
+scm_c_matrix_numcols (scm_t_array_handle *handlep)
 {
   const size_t i = scm_array_handle_rank (handlep) - 1;
   return (size_t) (scm_array_handle_dims (handlep)[i].ubnd -
@@ -59,7 +59,7 @@ scm_c_matrix_dim1 (scm_t_array_handle *handlep)
 }
 
 static inline ssize_t
-scm_c_matrix_inc0 (scm_t_array_handle *handlep)
+scm_c_matrix_row_inc (scm_t_array_handle *handlep)
 {
   /* The return value is arbitrary if rank is one. */
   return (scm_array_handle_rank (handlep) == 1) ? 0 :
@@ -67,7 +67,7 @@ scm_c_matrix_inc0 (scm_t_array_handle *handlep)
 }
 
 static inline ssize_t
-scm_c_matrix_inc1 (scm_t_array_handle *handlep)
+scm_c_matrix_column_inc (scm_t_array_handle *handlep)
 {
   return
     scm_array_handle_dims (handlep)[scm_array_handle_rank (handlep) - 1].inc;
@@ -116,6 +116,13 @@ SCM scm_column_matrix_size (SCM A);
 SCM scm_square_matrix_p (SCM A);
 SCM scm_conformable_for_matrix_product_p (SCM A, SCM B);
 SCM scm_conformable_for_matrix_sum_p (SCM A, SCM B);
+
+SCM scm_c_matrix_0row (SCM A, ssize_t i);
+SCM scm_c_matrix_1row (SCM A, ssize_t i);
+SCM scm_c_matrix_row (SCM A, ssize_t i);
+SCM scm_matrix_0row (SCM A, SCM i);
+SCM scm_matrix_1row (SCM A, SCM i);
+SCM scm_matrix_row (SCM A, SCM i);
 
 #if 0
 {
