@@ -17,6 +17,7 @@
 
 #include <sortsmill/guile.h>
 #include <intl.h>
+#include <stdint.h>
 
 //-------------------------------------------------------------------------
 
@@ -535,6 +536,110 @@ scm_c_matrix_column_count (SCM A)
   return column_count;
 }
 
+VISIBLE size_t
+scm_c_row_matrix_size (SCM A)
+{
+  const char *who = "scm_c_row_matrix_size";
+
+  scm_t_array_handle handle_A;
+  size_t row_count = SIZE_MAX;
+  size_t column_count;
+
+  scm_array_get_handle (A, &handle_A);
+
+  const size_t rank = scm_array_handle_rank (&handle_A);
+
+  switch (rank)
+    {
+    case 1:
+      row_count = 1;
+      column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      break;
+
+    case 2:
+      row_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[1].ubnd -
+                  scm_array_handle_dims (&handle_A)[1].lbnd) + 1;
+      break;
+
+    default:
+      // Do nothing.
+      break;
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  if (rank != 1 && rank != 2)
+    assert_rank_1_or_2_array (scm_from_latin1_string (who), A);
+
+  if (row_count != 1 || column_count == 0)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("not a (non-empty) row matrix")),
+        rnrs_make_irritants_condition (scm_list_1 (A))));
+
+  return column_count;
+}
+
+VISIBLE size_t
+scm_c_column_matrix_size (SCM A)
+{
+  const char *who = "scm_c_column_matrix_size";
+
+  scm_t_array_handle handle_A;
+  size_t row_count;
+  size_t column_count = SIZE_MAX;
+
+  scm_array_get_handle (A, &handle_A);
+
+  const size_t rank = scm_array_handle_rank (&handle_A);
+
+  switch (rank)
+    {
+    case 1:
+      row_count = 1;
+      column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      break;
+
+    case 2:
+      row_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[0].ubnd -
+                  scm_array_handle_dims (&handle_A)[0].lbnd) + 1;
+      column_count =
+        (size_t) (scm_array_handle_dims (&handle_A)[1].ubnd -
+                  scm_array_handle_dims (&handle_A)[1].lbnd) + 1;
+      break;
+
+    default:
+      // Do nothing.
+      break;
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  if (rank != 1 && rank != 2)
+    assert_rank_1_or_2_array (scm_from_latin1_string (who), A);
+
+  if (column_count != 1 || row_count == 0)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("not a (non-empty) column matrix")),
+        rnrs_make_irritants_condition (scm_list_1 (A))));
+
+  return row_count;
+}
+
 VISIBLE bool
 scm_is_square_matrix (SCM A)
 {
@@ -613,6 +718,18 @@ scm_matrix_column_count (SCM A)
 }
 
 VISIBLE SCM
+scm_row_matrix_size (SCM A)
+{
+  return scm_from_size_t (scm_c_row_matrix_size (A));
+}
+
+VISIBLE SCM
+scm_column_matrix_size (SCM A)
+{
+  return scm_from_size_t (scm_c_column_matrix_size (A));
+}
+
+VISIBLE SCM
 scm_square_matrix_p (SCM A)
 {
   return scm_from_bool (scm_is_square_matrix (A));
@@ -649,6 +766,8 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-dimensions", 1, 0, 0, scm_matrix_dimensions);
   scm_c_define_gsubr ("matrix-row-count", 1, 0, 0, scm_matrix_row_count);
   scm_c_define_gsubr ("matrix-column-count", 1, 0, 0, scm_matrix_column_count);
+  scm_c_define_gsubr ("row-matrix-size", 1, 0, 0, scm_row_matrix_size);
+  scm_c_define_gsubr ("column-matrix-size", 1, 0, 0, scm_column_matrix_size);
   scm_c_define_gsubr ("square-matrix?", 1, 0, 0, scm_square_matrix_p);
   scm_c_define_gsubr ("conformable-for-matrix*?", 2, 0, 0,
                       scm_conformable_for_matrix_product_p);

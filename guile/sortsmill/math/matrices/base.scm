@@ -36,6 +36,8 @@
           matrix-dimensions ; (matrix-dimensions A) → (numrows numcols)
           matrix-row-count  ; (matrix-row-count A) → numrows
           matrix-column-count      ; (matrix-column-count A) → numcols
+          row-matrix-size          ; (row-matrix-size A) → numcols
+          column-matrix-size       ; (column-matrix-size A) → numrows
           square-matrix?           ; (square-matrix A) → boolean
           conformable-for-matrix*? ; (conformable-for-matrix*? A B) → boolean
           conformable-for-matrix+? ; (conformable-for-matrix+? A B) → boolean
