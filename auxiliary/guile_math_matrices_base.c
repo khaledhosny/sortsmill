@@ -468,6 +468,33 @@ scm_matrix_set_x (SCM A, SCM i, SCM j, SCM v)
 //-------------------------------------------------------------------------
 
 VISIBLE bool
+scm_array_handle_is_matrix (scm_t_array_handle *handlep)
+{
+  bool is_a_matrix;
+
+  switch (scm_array_handle_rank (handlep))
+    {
+    case 1:
+      is_a_matrix = (scm_array_handle_dims (handlep)[0].lbnd <=
+                     scm_array_handle_dims (handlep)[0].ubnd);
+      break;
+
+    case 2:
+      is_a_matrix = ((scm_array_handle_dims (handlep)[0].lbnd <=
+                      scm_array_handle_dims (handlep)[0].ubnd)
+                     && (scm_array_handle_dims (handlep)[1].lbnd <=
+                         scm_array_handle_dims (handlep)[1].ubnd));
+      break;
+
+    default:
+      is_a_matrix = false;
+      break;
+    }
+
+  return is_a_matrix;
+}
+
+VISIBLE bool
 scm_is_matrix (SCM A)
 {
   bool is_a_matrix;
@@ -479,30 +506,7 @@ scm_is_matrix (SCM A)
       scm_t_array_handle handle_A;
 
       scm_array_get_handle (A, &handle_A);
-
-      const size_t rank = scm_array_handle_rank (&handle_A);
-
-      switch (rank)
-        {
-        case 1:
-          is_a_matrix =
-            (scm_array_handle_dims (&handle_A)[0].lbnd <=
-             scm_array_handle_dims (&handle_A)[0].ubnd);
-          break;
-
-        case 2:
-          is_a_matrix =
-            ((scm_array_handle_dims (&handle_A)[0].lbnd <=
-              scm_array_handle_dims (&handle_A)[0].ubnd)
-             && (scm_array_handle_dims (&handle_A)[1].lbnd <=
-                 scm_array_handle_dims (&handle_A)[1].ubnd));
-          break;
-
-        default:
-          is_a_matrix = false;
-          break;
-        }
-
+      is_a_matrix = scm_array_handle_is_matrix (&handle_A);
       scm_array_handle_release (&handle_A);
     }
 
@@ -1283,6 +1287,12 @@ scm_matrix_transpose (SCM A)
 
   scm_array_get_handle (A, &handle_A);
 
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_transpose"), A);
+    }
+
   switch (scm_array_handle_rank (&handle_A))
     {
     case 1:
@@ -1290,47 +1300,25 @@ scm_matrix_transpose (SCM A)
         const ssize_t lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
         const ssize_t ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
 
-        const bool is_a_matrix = (lbnd <= ubnd);
-
-        scm_array_handle_release (&handle_A);
-
-        if (!is_a_matrix)
-          raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_transpose"),
-                              A);
-
-        SCM scm_lbnd = scm_from_ssize_t (lbnd);
-        SCM scm_ubnd = scm_from_ssize_t (ubnd);
-        SCM mapfunc = scm_call_0 (vector_to_column_matrix_mapfunc ());
-        SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_ubnd),
-                                 scm_list_2 (scm_lbnd, scm_lbnd));
+        const SCM scm_lbnd = scm_from_ssize_t (lbnd);
+        const SCM scm_ubnd = scm_from_ssize_t (ubnd);
+        const SCM mapfunc = scm_call_0 (vector_to_column_matrix_mapfunc ());
+        const SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_ubnd),
+                                       scm_list_2 (scm_lbnd, scm_lbnd));
         At = scm_make_shared_array (A, mapfunc, bounds);
       }
       break;
 
     case 2:
-      {
-        const bool is_a_matrix =
-          ((scm_array_handle_dims (&handle_A)[0].lbnd <=
-            scm_array_handle_dims (&handle_A)[0].ubnd)
-           && (scm_array_handle_dims (&handle_A)[1].lbnd <=
-               scm_array_handle_dims (&handle_A)[1].ubnd));
-
-        scm_array_handle_release (&handle_A);
-
-        if (!is_a_matrix)
-          raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_transpose"),
-                              A);
-
-        At = scm_transpose_array (A, scm_list_2 (scm_from_int (1),
-                                                 scm_from_int (0)));
-      }
+      At = scm_transpose_array (A, scm_list_2 (scm_from_int (1),
+                                               scm_from_int (0)));
       break;
 
     default:
-      scm_array_handle_release (&handle_A);
-      raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_transpose"), A);
-      break;
+      assert (false);
     }
+
+  scm_array_handle_release (&handle_A);
 
   return At;
 }
@@ -1344,24 +1332,21 @@ scm_matrix_diagonal (SCM A)
 
   scm_array_get_handle (A, &handle_A);
 
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_diagonal"), A);
+    }
+
   switch (scm_array_handle_rank (&handle_A))
     {
     case 1:
       {
         const ssize_t lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
-        const ssize_t ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
 
-        const bool is_a_matrix = (lbnd <= ubnd);
-
-        scm_array_handle_release (&handle_A);
-
-        if (!is_a_matrix)
-          raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_diagonal"),
-                              A);
-
-        SCM bounds = scm_list_1 (scm_from_int (1));
-        SCM mapfunc = scm_call_1 (vector_diagonal_mapfunc (),
-                                  scm_from_ssize_t (lbnd));
+        const SCM bounds = scm_list_1 (scm_from_int (1));
+        const SCM mapfunc = scm_call_1 (vector_diagonal_mapfunc (),
+                                        scm_from_ssize_t (lbnd));
         d = scm_make_shared_array (A, mapfunc, bounds);
       }
       break;
@@ -1373,30 +1358,21 @@ scm_matrix_diagonal (SCM A)
         const ssize_t columns_lbnd = scm_array_handle_dims (&handle_A)[1].lbnd;
         const ssize_t columns_ubnd = scm_array_handle_dims (&handle_A)[1].ubnd;
 
-        const bool is_a_matrix = (rows_lbnd <= rows_ubnd
-                                  && columns_lbnd <= columns_ubnd);
-
-        scm_array_handle_release (&handle_A);
-
-        if (!is_a_matrix)
-          raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_diagonal"),
-                              A);
-
-        size_t n = (size_t) sszmin (rows_ubnd - rows_lbnd,
-                                    columns_ubnd - columns_lbnd) + 1;
-        SCM bounds = scm_list_1 (scm_from_size_t (n));
-        SCM mapfunc = scm_call_2 (matrix_diagonal_mapfunc (),
-                                  scm_from_ssize_t (rows_lbnd),
-                                  scm_from_ssize_t (columns_lbnd));
+        const size_t n = (size_t) sszmin (rows_ubnd - rows_lbnd,
+                                          columns_ubnd - columns_lbnd) + 1;
+        const SCM bounds = scm_list_1 (scm_from_size_t (n));
+        const SCM mapfunc = scm_call_2 (matrix_diagonal_mapfunc (),
+                                        scm_from_ssize_t (rows_lbnd),
+                                        scm_from_ssize_t (columns_lbnd));
         d = scm_make_shared_array (A, mapfunc, bounds);
       }
       break;
 
     default:
-      scm_array_handle_release (&handle_A);
-      raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_diagonal"), A);
-      break;
+      assert (false);
     }
+
+  scm_array_handle_release (&handle_A);
 
   return d;
 }

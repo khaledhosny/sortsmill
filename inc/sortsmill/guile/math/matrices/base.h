@@ -95,6 +95,7 @@ SCM scm_matrix_1set_x (SCM A, SCM i, SCM j, SCM x);
 SCM scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM x);
 SCM scm_matrix_set_x (SCM A, SCM i, SCM j, SCM x);
 
+bool scm_array_handle_is_matrix (scm_t_array_handle *handlep);
 bool scm_is_matrix (SCM A);
 void scm_c_matrix_shape (SCM A, ssize_t *rows_lbnd, ssize_t *rows_ubnd,
                          ssize_t *columns_lbnd, ssize_t *columns_ubnd);
