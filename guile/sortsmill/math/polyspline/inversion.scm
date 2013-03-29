@@ -65,12 +65,10 @@ situation."
     ;; Draw a horizontal or vertical line through (x,y) and catch its
     ;; intersection with the spline. Measure how far along the spline
     ;; that intersection lies.
-    (let* ([xspline (zero-based (row-matrix->vector xspline))]
-           [yspline (zero-based (row-matrix->vector yspline))]
-           [x0 (- (vector-ref xspline 0) x)]
-           [y0 (- (vector-ref yspline 0) y)]
-           [x1 (vector-ref xspline 1)]
-           [y1 (vector-ref yspline 1)])
+    (let* ([x0 (- (matrix-0ref xspline 0 0) x)]
+           [y0 (- (matrix-0ref yspline 0 0) y)]
+           [x1 (matrix-0ref xspline 0 1)]
+           [y1 (matrix-0ref yspline 0 1)])
       (let ([root (if (< (abs x1) (abs y1))
                       (- (/ y0 y1))
                       (- (/ x0 x1)))])
@@ -93,11 +91,9 @@ situation."
              (invert-quadratic-rank1 V t1 t2)])))))
 
   (define (invert-rank0 xspline yspline t1 t2 x y)
-    (let* ([xspline (row-matrix->vector xspline)]
-           [yspline (row-matrix->vector yspline)]
-           [degree  (- (vector-length xspline) 1)])
-      (if (< (abs (vector-ref xspline degree))
-             (abs (vector-ref yspline degree)))
+    (let ([degree  (- (row-matrix-size xspline) 1)])
+      (if (< (abs (matrix-0ref xspline 0 degree))
+             (abs (matrix-0ref yspline 0 degree)))
           [let ([y-yspline (matrix-inexact->exact
                             (poly:sub-scm-mono (scalar->matrix y) yspline))])
             (poly:find-roots-scm-mono y-yspline t1 t2)]
@@ -110,7 +106,7 @@ situation."
 matrix, and thus (for our definition of that matrix) is proportional
 to the transpose of @code{#(1 t)}. (Other definitions of the Bézout
 matrix may vary by a scalar factor or in the order of entries.)"
-    (let ([root (/ (array-ref V 2 2) (array-ref V 1 2))])
+    (let ([root (/ (matrix-1ref V 2 2) (matrix-1ref V 1 2))])
       (if (<= t1 root t2)
           (list root)
           '())))
@@ -140,7 +136,7 @@ matrix may vary by a scalar factor or in the order of entries.)"
 matrix, and thus (for our definition of that matrix) is proportional
 to the transpose of @code{#(1 t t²)}. (Other definitions of the Bézout
 matrix may vary by a scalar factor or in the order of entries.)"
-    (let ([root (/ (array-ref V 2 3) (array-ref V 1 3))])
+    (let ([root (/ (matrix-1ref V 2 3) (matrix-1ref V 1 3))])
       (if (<= t1 root t2)
           (list root)
           '())))
