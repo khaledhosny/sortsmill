@@ -48,7 +48,7 @@ values: the square-free decomposition of the monic polynomial, and the
 original lead coefficient of the minimum degree polynomial. If the
 polynomial is identically zero, then the return values are @code{#(0)}
 and @code{0}, respectively."
-    (let* ([f (zero-based (poly:reduce-to-min-degree-scm-mono
+    (let* ([f (matrix-0based (poly:reduce-to-min-degree-scm-mono
                            (matrix-inexact->exact poly)))])
       (match f
         [#(0) (values (list #(0)) 0)]
@@ -58,7 +58,7 @@ and @code{0}, respectively."
                   [a0 (poly:gcd-scm-mono f f^)]
                   [b1 (poly:div-scm-mono f a0)]
                   [c1 (poly:div-scm-mono f^ a0)])
-             (match (zero-based b1)
+             (match (matrix-0based b1)
                [#(1) (values (list #(1)) lead-coef)]
                [_ (values (reverse (yun-recursion '() b1 c1))
                           lead-coef)] ))] )))
@@ -69,7 +69,7 @@ and @code{0}, respectively."
            [a (poly:gcd-scm-mono b c-b^)]
            [next (cons a prior)]
            [b-next (poly:div-scm-mono b a)])
-      (match (zero-based b-next)
+      (match (matrix-0based b-next)
         [#(1) next]
         [_ (yun-recursion next b-next (poly:div-scm-mono c-b^ a))] )))
 

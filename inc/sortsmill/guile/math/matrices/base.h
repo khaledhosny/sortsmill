@@ -118,6 +118,8 @@ SCM scm_square_matrix_p (SCM A);
 SCM scm_conformable_for_matrix_product_p (SCM A, SCM B);
 SCM scm_conformable_for_matrix_sum_p (SCM A, SCM B);
 
+SCM scm_matrix_0based (SCM A);
+SCM scm_matrix_1based (SCM A);
 SCM scm_c_matrix_0row (SCM A, ssize_t i);
 SCM scm_c_matrix_1row (SCM A, ssize_t i);
 SCM scm_c_matrix_row (SCM A, ssize_t i);

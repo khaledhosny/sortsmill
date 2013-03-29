@@ -17,7 +17,7 @@
 
 (library (sortsmill math multivariate-polynomials)
 
-  ;; Multivariate polynomials represented inefficiently as zero-based,
+  ;; Multivariate polynomials represented inefficiently as matrix-0based,
   ;; multidimensional, hypercubic arrays, with nearly half the entries
   ;; unused. Each array dimension corresponds to the powers of a
   ;; variable; the index of the entry equals the power.

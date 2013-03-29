@@ -20,9 +20,6 @@
   (export not-a-matrix
           rank-deficiency-exception
 
-          zero-based
-          one-based
-
           ;; Shape inquiry procedures, accepting both typed and
           ;; untyped arrays and vectors.
           matrix?           ; (matrix? A) → boolean
@@ -52,8 +49,8 @@
           vector->diagonal-matrix
 
           ;; (matrix-ref A i j) → value
-          ;; (matrix-0ref A i j) → value   (zero-based indexing)
-          ;; (matrix-1ref A i j) → value   (one-based indexing)
+          ;; (matrix-0ref A i j) → value   (0-based indexing)
+          ;; (matrix-1ref A i j) → value   (1-based indexing)
           ;;
           ;; These accept both typed and untyped arrays and vectors.
           matrix-ref
@@ -61,8 +58,8 @@
           matrix-1ref
 
           ;; (matrix-set! A i j value) → *unspecified*
-          ;; (matrix-0set! A i j value) → *unspecified*   (zero-based indexing)
-          ;; (matrix-1set! A i j value) → *unspecified*   (one-based indexing)
+          ;; (matrix-0set! A i j value) → *unspecified*   (0-based indexing)
+          ;; (matrix-1set! A i j value) → *unspecified*   (1-based indexing)
           ;;
           ;; These accept both typed and untyped arrays and vectors.
           matrix-set!
@@ -97,15 +94,17 @@
           ;; Shared-array views of matrices and parts of
           ;; matrices. These accept both typed and untyped arrays and
           ;; vectors.
-          matrix-row ;; (matrix-row A) → vector
-          matrix-0row ;; (matrix-0row A) → vector   (zero-based indexing)
-          matrix-1row ;; (matrix-1row A) → vector   (one-based indexing)
+          matrix-0based ;; (matrix-0based A) → matrix
+          matrix-1based ;; (matrix-1based A) → matrix
+          matrix-row    ;; (matrix-row A) → vector
+          matrix-0row ;; (matrix-0row A) → vector   (0-based indexing)
+          matrix-1row ;; (matrix-1row A) → vector   (1-based indexing)
           matrix-column-transpose ;; (matrix-column-transpose A) → vector
-          matrix-0column-transpose ;; (matrix-0column-transpose A) → vector   (zero-based indexing)
-          matrix-1column-transpose ;; (matrix-0column-transpose A) → vector   (one-based indexing)
+          matrix-0column-transpose ;; (matrix-0column-transpose A) → vector   (0-based indexing)
+          matrix-1column-transpose ;; (matrix-0column-transpose A) → vector   (1-based indexing)
           matrix-column            ;; (matrix-column A) → vector
-          matrix-0column ;; (matrix-0column A) → vector   (zero-based indexing)
-          matrix-1column ;; (matrix-0column A) → vector   (one-based indexing)
+          matrix-0column ;; (matrix-0column A) → vector   (0-based indexing)
+          matrix-1column ;; (matrix-0column A) → vector   (1-based indexing)
           vector->matrix ;; (vector->matrix vector-or-matrix) → matrix
           row-matrix->vector ;; (row-matrix->vector vector-or-matrix) → vector
           matrix-transpose   ;; (matrix-transpose A) → matrix
@@ -209,38 +208,6 @@
                  A)] ))
 
   ;;-----------------------------------------------------------------------
-
-  (define (zero-based A)
-    (match (array-shape A)
-      [[(lo hi)]
-       (when (< hi lo)
-         (matrix-empty 'zero-based A))
-       (make-shared-array A
-                          (lambda (i) `[,(+ i lo)])
-                          `[0 ,(- hi lo)] )]
-      [[(lo1 hi1) (lo2 hi2)]
-       (when (or (< hi1 lo1) (< hi2 lo2))
-         (matrix-empty 'zero-based A))
-       (make-shared-array A
-                          (lambda (i j) `[,(+ i lo1) ,(+ j lo2)])
-                          `[0 ,(- hi1 lo1)] `[0 ,(- hi2 lo2)] )]
-      [_ (not-a-matrix 'zero-based A)]))
-
-  (define (one-based A)
-    (match (array-shape A)
-      [[(lo hi)]
-       (when (< hi lo)
-         (matrix-empty 'one-based A))
-       (make-shared-array A
-                          (lambda (i) `[,(+ i lo -1)])
-                          `[1 ,(- hi lo -1)] )]
-      [[(lo1 hi1) (lo2 hi2)]
-       (when (or (< hi1 lo1) (< hi2 lo2))
-         (matrix-empty 'one-based A))
-       (make-shared-array A
-                          (lambda (i j) `[,(+ i lo1 -1) ,(+ j lo2 -1)])
-                          `[1 ,(- hi1 lo1 -1)] `[1 ,(- hi2 lo2 -1)] )]
-      [_ (not-a-matrix 'one-based A)]))
 
   (define (matrix-map proc A)
     (let* ([type (array-type A)]

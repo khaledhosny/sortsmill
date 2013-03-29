@@ -45,8 +45,8 @@
     "Make the Bézout matrix for implicitization of a parametric planar
 Bézier spline, given in monomial basis."
     (let* ([force-exact (if allow-inexact? identity matrix-inexact->exact)]
-           [xspline (zero-based (row-matrix->vector (force-exact xspline)))]
-           [yspline (zero-based (row-matrix->vector (force-exact yspline)))])
+           [xspline (matrix-0based (row-matrix->vector (force-exact xspline)))]
+           [yspline (matrix-0based (row-matrix->vector (force-exact yspline)))])
       (assert (= (vector-length xspline) (vector-length yspline)))
       (let ([deg-max (max (max-degree xspline) (max-degree yspline))])
         (let ([xspline (make-shared-array xspline list (+ deg-max 1))]
@@ -56,7 +56,7 @@ Bézier spline, given in monomial basis."
                          #:product multipoly*)))))
 
   (define (poly:pretty-print-bezout-matrix B)
-    (let* ([B (one-based B)]
+    (let* ([B (matrix-1based B)]
            [n (car (matrix-dimensions B))]
            [strings
             (fold-left

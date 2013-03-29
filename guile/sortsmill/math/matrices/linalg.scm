@@ -156,7 +156,7 @@
     (case-lambda
       [(S) (matrix-svd-effective-rank S (current-matrix-svd-rcond))]
       [(S rcond)
-       (let* ([S (zero-based (row-matrix->vector S))]
+       (let* ([S (matrix-0based (row-matrix->vector S))]
               [rcond^ (* rcond (generalized-vector-ref S 0))])
          (if (zero? rcond^) 0
              (let ([n (generalized-vector-length S)])

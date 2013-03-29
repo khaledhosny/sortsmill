@@ -116,7 +116,7 @@ once. The roots are returned as a list of values in ascending order."
     (match interval
       [(a . a) a]
       [(a . b)
-       (match (zero-based (row-matrix->vector poly))
+       (match (matrix-0based (row-matrix->vector poly))
          [#(v u)
           ;; The line v + ut = 0. Solve it exactly.
           (- (/ v u))]
@@ -130,7 +130,7 @@ once. The roots are returned as a list of values in ascending order."
             (+ a (* (- b a) (inexact->exact root_in_0_1))))] )] ))
 
   (define (identically-one? poly)
-    (match (zero-based poly)
+    (match (matrix-0based poly)
       [#(1) #t]
       [_ #f]))
 

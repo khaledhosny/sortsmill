@@ -49,8 +49,8 @@ elsewhere in Sorts Mill Tools.)"
   (define (line:implicit-equation-mono xspline yspline)
     "Find an implicit equation for a line given as a degree-one spline
 in monomial basis."
-    (let* ([xspline (zero-based (row-matrix->vector xspline))]
-           [yspline (zero-based (row-matrix->vector yspline))])
+    (let* ([xspline (matrix-0based (row-matrix->vector xspline))]
+           [yspline (matrix-0based (row-matrix->vector yspline))])
       (assert (= 2 (vector-length xspline)))
       (assert (= 2 (vector-length yspline)))
       (let ([x0 (vector-ref xspline 0)]
@@ -62,8 +62,8 @@ in monomial basis."
   (define (line:implicit-equation-bern xspline yspline)
     "Find an implicit equation for a line given as a degree-one spline
 in Bernstein basis."
-    (let* ([xspline (zero-based (row-matrix->vector xspline))]
-           [yspline (zero-based (row-matrix->vector yspline))])
+    (let* ([xspline (matrix-0based (row-matrix->vector xspline))]
+           [yspline (matrix-0based (row-matrix->vector yspline))])
       (assert (= 2 (vector-length xspline)))
       (assert (= 2 (vector-length yspline)))
       (line:implicit-equation #:x0 (vector-ref xspline 0)

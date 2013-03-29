@@ -22,6 +22,67 @@
 #include <stdint.h>
 #include <assert.h>
 
+
+//-------------------------------------------------------------------------
+
+// FIXME: This seems quite reusable, though perhaps it could have a
+// better name.
+static void
+scm_c_initialize_from_eval_string (SCM *proc, const char *s)
+{
+  *proc = scm_call_3 (scm_c_public_ref ("ice-9 eval-string", "eval-string"),
+                      scm_from_utf8_string (s),
+                      scm_from_latin1_keyword ("compile?"), SCM_BOOL_T);
+}
+
+INITIALIZED_CONSTANT (static, SCM, matrix_row_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (i) (lambda (j) (list i j)))");
+
+INITIALIZED_CONSTANT (static, SCM, matrix_column_transpose_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i) (list i j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_column_transpose_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i) (list j)))");
+
+INITIALIZED_CONSTANT (static, SCM, matrix_column_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i k) (list i j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_column_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i k) (list j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_to_matrix_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda () (lambda (i j) (list j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_to_column_matrix_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda () (lambda (i j) (list i)))");
+
+INITIALIZED_CONSTANT (static, SCM, matrix_diagonal_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (rows_lbnd cols_lbnd)"
+                      "  (lambda (i) (list (+ rows_lbnd i)"
+                      "                    (+ cols_lbnd i))))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_diagonal_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (lbnd) (lambda (i) (list (+ lbnd i))))");
+
+INITIALIZED_CONSTANT (static, SCM, matrix_n_based_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (rows_offset cols_offset)"
+                      "  (lambda (i j) (list (+ rows_offset i)"
+                      "                      (+ cols_offset j))))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_n_based_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (offset) (lambda (i) (list (+ offset i))))");
+
 //-------------------------------------------------------------------------
 
 static void
@@ -896,53 +957,6 @@ scm_conformable_for_matrix_sum_p (SCM A, SCM B)
 
 //-------------------------------------------------------------------------
 
-// FIXME: This seems quite reusable, though perhaps it could have a
-// better name.
-static void
-scm_c_initialize_from_eval_string (SCM *proc, const char *s)
-{
-  *proc = scm_call_3 (scm_c_public_ref ("ice-9 eval-string", "eval-string"),
-                      scm_from_utf8_string (s),
-                      scm_from_latin1_keyword ("compile?"), SCM_BOOL_T);
-}
-
-INITIALIZED_CONSTANT (static, SCM, matrix_row_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda (i) (lambda (j) (list i j)))");
-
-INITIALIZED_CONSTANT (static, SCM, matrix_column_transpose_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda (j) (lambda (i) (list i j)))");
-
-INITIALIZED_CONSTANT (static, SCM, vector_column_transpose_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda (j) (lambda (i) (list j)))");
-
-INITIALIZED_CONSTANT (static, SCM, matrix_column_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda (j) (lambda (i k) (list i j)))");
-
-INITIALIZED_CONSTANT (static, SCM, vector_column_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda (j) (lambda (i k) (list j)))");
-
-INITIALIZED_CONSTANT (static, SCM, vector_to_matrix_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda () (lambda (i j) (list j)))");
-
-INITIALIZED_CONSTANT (static, SCM, vector_to_column_matrix_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda () (lambda (i j) (list i)))");
-
-INITIALIZED_CONSTANT (static, SCM, matrix_diagonal_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda (rows_lbnd cols_lbnd)"
-                      "  (lambda (i) (list (+ rows_lbnd i) (+ cols_lbnd i))))");
-
-INITIALIZED_CONSTANT (static, SCM, vector_diagonal_mapfunc,
-                      scm_c_initialize_from_eval_string,
-                      "(lambda (lbnd) (lambda (i) (list (+ lbnd i))))");
-
 // FIXME: On a lazy day, reimplement the matrix-row family without
 // dynwind.
 static SCM
@@ -1486,6 +1500,95 @@ scm_scalar_to_typed_matrix (SCM type, SCM x)
 
 //-------------------------------------------------------------------------
 
+static SCM
+scm_matrix_n_based (const char *who, SCM A, ssize_t n)
+{
+  SCM A_rebased = SCM_UNDEFINED;
+
+  scm_t_array_handle handle_A;
+
+  scm_array_get_handle (A, &handle_A);
+
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string (who), A);
+    }
+
+  SCM scm_n = scm_from_ssize_t (n);
+
+  switch (scm_array_handle_rank (&handle_A))
+    {
+    case 1:
+      {
+        const ssize_t lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+
+        if (lbnd == n)
+          A_rebased = A;
+        else
+          {
+            const ssize_t ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
+            const SCM scm_ubnd = scm_from_ssize_t (n + (ubnd - lbnd));
+            const SCM bounds = scm_list_1 (scm_list_2 (scm_n, scm_ubnd));
+            const SCM mapfunc = scm_call_1 (vector_n_based_mapfunc (),
+                                            scm_from_ssize_t (lbnd - n));
+            A_rebased = scm_make_shared_array (A, mapfunc, bounds);
+          }
+      }
+      break;
+
+    case 2:
+      {
+        const ssize_t rows_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+        const ssize_t columns_lbnd = scm_array_handle_dims (&handle_A)[1].lbnd;
+
+        if (rows_lbnd == n && columns_lbnd == n)
+          A_rebased = A;
+        else
+          {
+            const ssize_t rows_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
+            const ssize_t columns_ubnd =
+              scm_array_handle_dims (&handle_A)[1].ubnd;
+            const ssize_t rows_diff = rows_ubnd - rows_lbnd;
+            const ssize_t columns_diff = columns_ubnd - columns_lbnd;
+            const SCM scm_rows_ubnd = scm_from_ssize_t (n + rows_diff);
+            const SCM scm_columns_ubnd = scm_from_ssize_t (n + columns_diff);
+            const SCM bounds = scm_list_2 (scm_list_2 (scm_n, scm_rows_ubnd),
+                                           scm_list_2 (scm_n,
+                                                       scm_columns_ubnd));
+            const SCM scm_rows_offset = scm_from_ssize_t (rows_lbnd - n);
+            const SCM scm_columns_offset = scm_from_ssize_t (columns_lbnd - n);
+            const SCM mapfunc = scm_call_2 (matrix_n_based_mapfunc (),
+                                            scm_rows_offset,
+                                            scm_columns_offset);
+            A_rebased = scm_make_shared_array (A, mapfunc, bounds);
+          }
+      }
+      break;
+
+    default:
+      assert (false);
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  return A_rebased;
+}
+
+VISIBLE SCM
+scm_matrix_0based (SCM A)
+{
+  return scm_matrix_n_based ("scm_matrix_0based", A, 0);
+}
+
+VISIBLE SCM
+scm_matrix_1based (SCM A)
+{
+  return scm_matrix_n_based ("scm_matrix_1based", A, 1);
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_sortsmill_math_matrices_base (void);
 
 VISIBLE void
@@ -1545,6 +1648,9 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("scalar->c64matrix", 1, 0, 0, scm_scalar_to_c64matrix);
   scm_c_define_gsubr ("scalar->typed-matrix", 2, 0, 0,
                       scm_scalar_to_typed_matrix);
+
+  scm_c_define_gsubr ("matrix-0based", 1, 0, 0, scm_matrix_0based);
+  scm_c_define_gsubr ("matrix-1based", 1, 0, 0, scm_matrix_1based);
 }
 
 //-------------------------------------------------------------------------
