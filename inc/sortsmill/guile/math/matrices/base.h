@@ -129,8 +129,15 @@ SCM scm_c_matrix_column_transpose (SCM A, ssize_t i);
 SCM scm_matrix_0column_transpose (SCM A, SCM i);
 SCM scm_matrix_1column_transpose (SCM A, SCM i);
 SCM scm_matrix_column_transpose (SCM A, SCM i);
+SCM scm_c_matrix_0column (SCM A, ssize_t i);
+SCM scm_c_matrix_1column (SCM A, ssize_t i);
+SCM scm_c_matrix_column (SCM A, ssize_t i);
+SCM scm_matrix_0column (SCM A, SCM i);
+SCM scm_matrix_1column (SCM A, SCM i);
+SCM scm_matrix_column (SCM A, SCM i);
 SCM scm_vector_to_matrix (SCM v);
 SCM scm_row_matrix_to_vector (SCM A);
+SCM scm_matrix_transpose (SCM A);
 
 #if 0
 {

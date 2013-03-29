@@ -881,20 +881,29 @@ INITIALIZED_CONSTANT (static, SCM, matrix_row_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i) (lambda (j) (list i j)))");
 
-INITIALIZED_CONSTANT (static, SCM, vector_row_mapfunc,
-                      scm_c_initialize_from_eval_string, "(lambda (i) list)");
-
 INITIALIZED_CONSTANT (static, SCM, matrix_column_transpose_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (j) (lambda (i) (list i j)))");
 
 INITIALIZED_CONSTANT (static, SCM, vector_column_transpose_mapfunc,
                       scm_c_initialize_from_eval_string,
-                      "(lambda (j) (lambda (i) (list i j)))");
+                      "(lambda (j) (lambda (i) (list j)))");
+
+INITIALIZED_CONSTANT (static, SCM, matrix_column_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i k) (list i j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_column_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i k) (list j)))");
 
 INITIALIZED_CONSTANT (static, SCM, vector_to_matrix_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda () (lambda (i j) (list j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_to_column_matrix_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda () (lambda (i j) (list i)))");
 
 static SCM
 matrix_row (const char *who, SCM A, scm_t_array_handle *handlep_A,
@@ -902,17 +911,21 @@ matrix_row (const char *who, SCM A, scm_t_array_handle *handlep_A,
 {
   assert_row_index_inside_bounds (who, A, i, i_base,
                                   scm_c_matrix_numrows (handlep_A));
-  const ssize_t lbnd = scm_c_matrix_columns_lbnd (handlep_A);
-  const size_t numcols = scm_c_matrix_numcols (handlep_A);
-  const ssize_t ubnd = lbnd + (ssize_t) (numcols - 1);
-  SCM bounds = scm_list_1 (scm_list_2 (scm_from_ssize_t (lbnd),
-                                       scm_from_ssize_t (ubnd)));
-  SCM mapfunc_func =
-    (scm_array_handle_rank (handlep_A) == 1) ?
-    vector_row_mapfunc () : matrix_row_mapfunc ();
-  ssize_t row = (i - i_base) + scm_c_matrix_rows_lbnd (handlep_A);
-  SCM mapfunc = scm_call_1 (mapfunc_func, scm_from_ssize_t (row));
-  return scm_make_shared_array (A, mapfunc, bounds);
+  SCM result;
+  if (scm_array_handle_rank (handlep_A) == 1)
+    result = A;
+  else
+    {
+      const ssize_t lbnd = scm_c_matrix_columns_lbnd (handlep_A);
+      const size_t numcols = scm_c_matrix_numcols (handlep_A);
+      const ssize_t ubnd = lbnd + (ssize_t) (numcols - 1);
+      SCM bounds = scm_list_1 (scm_list_2 (scm_from_ssize_t (lbnd),
+                                           scm_from_ssize_t (ubnd)));
+      ssize_t row = (i - i_base) + scm_c_matrix_rows_lbnd (handlep_A);
+      SCM mapfunc = scm_call_1 (matrix_row_mapfunc (), scm_from_ssize_t (row));
+      result = scm_make_shared_array (A, mapfunc, bounds);
+    }
+  return result;
 }
 
 static SCM
@@ -929,6 +942,27 @@ matrix_column_transpose (const char *who, SCM A, scm_t_array_handle *handlep_A,
   SCM mapfunc_func =
     (scm_array_handle_rank (handlep_A) == 1) ?
     vector_column_transpose_mapfunc () : matrix_column_transpose_mapfunc ();
+  ssize_t column = (j - j_base) + scm_c_matrix_columns_lbnd (handlep_A);
+  SCM mapfunc = scm_call_1 (mapfunc_func, scm_from_ssize_t (column));
+  return scm_make_shared_array (A, mapfunc, bounds);
+}
+
+static SCM
+matrix_column (const char *who, SCM A, scm_t_array_handle *handlep_A,
+               ssize_t j, ssize_t j_base)
+{
+  assert_column_index_inside_bounds (who, A, j, j_base,
+                                     scm_c_matrix_numcols (handlep_A));
+  const ssize_t lbnd = scm_c_matrix_rows_lbnd (handlep_A);
+  const size_t numrows = scm_c_matrix_numrows (handlep_A);
+  const ssize_t ubnd = lbnd + (ssize_t) (numrows - 1);
+  SCM scm_lbnd = scm_from_ssize_t (lbnd);
+  SCM scm_ubnd = scm_from_ssize_t (ubnd);
+  SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_ubnd),
+                           scm_list_2 (scm_lbnd, scm_lbnd));
+  SCM mapfunc_func =
+    (scm_array_handle_rank (handlep_A) == 1) ?
+    vector_column_mapfunc () : matrix_column_mapfunc ();
   ssize_t column = (j - j_base) + scm_c_matrix_columns_lbnd (handlep_A);
   SCM mapfunc = scm_call_1 (mapfunc_func, scm_from_ssize_t (column));
   return scm_make_shared_array (A, mapfunc, bounds);
@@ -1058,6 +1092,67 @@ scm_c_matrix_column_transpose (SCM A, ssize_t i)
 }
 
 VISIBLE SCM
+scm_c_matrix_0column (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_0column";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM column = matrix_column (who, A, &handle_A, i, 0);
+
+  scm_dynwind_end ();
+
+  return column;
+}
+
+VISIBLE SCM
+scm_c_matrix_1column (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_1column";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM column = matrix_column (who, A, &handle_A, i, 1);
+
+  scm_dynwind_end ();
+
+  return column;
+}
+
+VISIBLE SCM
+scm_c_matrix_column (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_column";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM column = matrix_column (who, A, &handle_A, i,
+                              scm_c_matrix_columns_lbnd (&handle_A));
+
+  scm_dynwind_end ();
+
+  return column;
+}
+
+VISIBLE SCM
 scm_matrix_0row (SCM A, SCM i)
 {
   return scm_c_matrix_0row (A, scm_to_ssize_t (i));
@@ -1091,6 +1186,24 @@ VISIBLE SCM
 scm_matrix_column_transpose (SCM A, SCM i)
 {
   return scm_c_matrix_column_transpose (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_0column (SCM A, SCM i)
+{
+  return scm_c_matrix_0column (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_1column (SCM A, SCM i)
+{
+  return scm_c_matrix_1column (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_column (SCM A, SCM i)
+{
+  return scm_c_matrix_column (A, scm_to_ssize_t (i));
 }
 
 VISIBLE SCM
@@ -1144,6 +1257,61 @@ scm_row_matrix_to_vector (SCM A)
   return scm_c_matrix_1row (A, 1);
 }
 
+VISIBLE SCM
+scm_matrix_transpose (SCM A)
+{
+  SCM At = SCM_UNDEFINED;
+
+  scm_t_array_handle handle_A;
+
+  scm_array_get_handle (A, &handle_A);
+
+  bool is_a_matrix;
+
+  switch (scm_array_handle_rank (&handle_A))
+    {
+    case 1:
+      {
+        const ssize_t lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+        const ssize_t ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
+
+        is_a_matrix = (lbnd <= ubnd);
+
+        scm_array_handle_release (&handle_A);
+
+        SCM scm_lbnd = scm_from_ssize_t (lbnd);
+        SCM scm_ubnd = scm_from_ssize_t (ubnd);
+        SCM mapfunc = scm_call_0 (vector_to_column_matrix_mapfunc ());
+        SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_ubnd),
+                                 scm_list_2 (scm_lbnd, scm_lbnd));
+        At = scm_make_shared_array (A, mapfunc, bounds);
+      }
+      break;
+
+    case 2:
+      is_a_matrix = ((scm_array_handle_dims (&handle_A)[0].lbnd <=
+                      scm_array_handle_dims (&handle_A)[0].ubnd)
+                     && (scm_array_handle_dims (&handle_A)[1].lbnd <=
+                         scm_array_handle_dims (&handle_A)[1].ubnd));
+
+      scm_array_handle_release (&handle_A);
+
+      At = scm_transpose_array (A, scm_list_2 (scm_from_int (1),
+                                               scm_from_int (0)));
+      break;
+
+    default:
+      is_a_matrix = false;
+      scm_array_handle_release (&handle_A);
+      break;
+    }
+
+  if (!is_a_matrix)
+    raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_transpose"), A);
+
+  return At;
+}
+
 //-------------------------------------------------------------------------
 
 void init_guile_sortsmill_math_matrices_base (void);
@@ -1181,8 +1349,12 @@ init_guile_sortsmill_math_matrices_base (void)
                       scm_matrix_1column_transpose);
   scm_c_define_gsubr ("matrix-column-transpose", 2, 0, 0,
                       scm_matrix_column_transpose);
+  scm_c_define_gsubr ("matrix-0column", 2, 0, 0, scm_matrix_0column);
+  scm_c_define_gsubr ("matrix-1column", 2, 0, 0, scm_matrix_1column);
+  scm_c_define_gsubr ("matrix-column", 2, 0, 0, scm_matrix_column);
   scm_c_define_gsubr ("vector->matrix", 1, 0, 0, scm_vector_to_matrix);
   scm_c_define_gsubr ("row-matrix->vector", 1, 0, 0, scm_row_matrix_to_vector);
+  scm_c_define_gsubr ("matrix-transpose", 1, 0, 0, scm_matrix_transpose);
 }
 
 //-------------------------------------------------------------------------

@@ -87,15 +87,17 @@
           matrix-column-transpose ;; (matrix-column-transpose A) → vector
           matrix-0column-transpose ;; (matrix-0column-transpose A) → vector   (zero-based indexing)
           matrix-1column-transpose ;; (matrix-0column-transpose A) → vector   (one-based indexing)
+          matrix-column            ;; (matrix-column A) → vector
+          matrix-0column ;; (matrix-0column A) → vector   (zero-based indexing)
+          matrix-1column ;; (matrix-0column A) → vector   (one-based indexing)
           vector->matrix ;; (vector->matrix vector-or-matrix) → matrix
           row-matrix->vector ;; (row-matrix->vector vector-or-matrix) → vector
+          matrix-transpose   ;; (matrix-transpose A) → matrix
 
           ;; Views of parts of a matrix. FIXME: These are to be
           ;; reimplemented in C and moved to the list with the
           ;; ‘matrix-row’ family of procedures.
-          matrix-column
           matrix-diagonal
-          matrix-transpose
 
           matrix-exact->inexact
           matrix-inexact->exact
@@ -315,17 +317,21 @@ a Guile vector)."
         [_ (not-a-matrix 'matrix-column-transpose A)] )))
   |#
 
+  #|
   (define (matrix-column A j)
     "Return a view of a matrix column as a matrix (that is, a rank-2
 array)."
     (matrix-transpose (matrix-column-transpose A j)))
+  |#
 
   (define (matrix-diagonal A)
     (let ([n (apply min (matrix-dimensions A))])
       (make-shared-array A (lambda (i) `[,i ,i]) `[1 ,n])))
 
+#|
   (define (matrix-transpose A)
     (transpose-array (vector->matrix A) 1 0))
+  |#
 
   ;;-----------------------------------------------------------------------
 
