@@ -93,11 +93,7 @@
           vector->matrix ;; (vector->matrix vector-or-matrix) → matrix
           row-matrix->vector ;; (row-matrix->vector vector-or-matrix) → vector
           matrix-transpose   ;; (matrix-transpose A) → matrix
-
-          ;; Views of parts of a matrix. FIXME: These are to be
-          ;; reimplemented in C and moved to the list with the
-          ;; ‘matrix-row’ family of procedures.
-          matrix-diagonal
+          matrix-diagonal    ;; (matrix-transpose A) → vector
 
           matrix-exact->inexact
           matrix-inexact->exact
@@ -244,29 +240,6 @@
           [_ A])
         A))
 
-  #|
-  (define (vector->matrix v)
-    (match (array-rank v)
-      [1
-       (match (array-shape v)
-         [((lo hi))
-          (make-shared-array v (lambda (i j) `[,j]) `[,lo ,lo] `[,lo ,hi])])]
-      [2 v]
-      [_ (not-a-matrix 'vector->matrix v)] ))
-  |#
-
-  #|
-  (define (row-matrix->vector V)
-    (match (array-shape V)
-      [[(lo1 hi1) (lo2 hi2)]
-       (if (= lo1 hi1)
-           (make-shared-array V (lambda (j) `[,lo1 ,j]) `[,lo2 ,hi2])
-           (assertion-violation
-            'row-matrix->vector (_ "not a row matrix") V))]
-      [[(_ _)] V]
-      [_ (not-a-matrix 'row-matrix->vector V)] ))
-  |#
-
   (define (matrix-map proc A)
     (let* ([type (array-type A)]
            [shape (array-shape A)]
@@ -292,46 +265,6 @@
                [A (zero-matrix n)])
           (array-map! (matrix-diagonal A) identity v)
           A] ))
-
-  ;;-----------------------------------------------------------------------
-
-  #|
-  (define (matrix-row A i)
-    "Return a view of a matrix row as a row vector (in the form of
-a Guile vector)"
-    (let* ([A (vector->matrix A)]
-           [shape (array-shape A)])
-      (match shape
-        [(_ (lo hi)) (make-shared-array A (lambda (j) `[,i ,j]) `[,lo ,hi])]
-        [_ (not-a-matrix 'matrix-row A)] )))
-  |#
-
-  #|
-  (define (matrix-column-transpose A j)
-    "Return a view of a matrix column as a row vector (in the form of
-a Guile vector)."
-    (let* ([A (vector->matrix A)]
-           [shape (array-shape A)])
-      (match shape
-        [((lo hi) _) (make-shared-array A (lambda (i) `[,i ,j]) `[,lo ,hi])]
-        [_ (not-a-matrix 'matrix-column-transpose A)] )))
-  |#
-
-  #|
-  (define (matrix-column A j)
-    "Return a view of a matrix column as a matrix (that is, a rank-2
-array)."
-    (matrix-transpose (matrix-column-transpose A j)))
-  |#
-
-  (define (matrix-diagonal A)
-    (let ([n (apply min (matrix-dimensions A))])
-      (make-shared-array A (lambda (i) `[,i ,i]) `[1 ,n])))
-
-#|
-  (define (matrix-transpose A)
-    (transpose-array (vector->matrix A) 1 0))
-  |#
 
   ;;-----------------------------------------------------------------------
 

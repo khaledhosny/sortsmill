@@ -138,6 +138,7 @@ SCM scm_matrix_column (SCM A, SCM i);
 SCM scm_vector_to_matrix (SCM v);
 SCM scm_row_matrix_to_vector (SCM A);
 SCM scm_matrix_transpose (SCM A);
+SCM scm_matrix_diagonal (SCM A);
 
 #if 0
 {
