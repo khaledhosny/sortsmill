@@ -1226,32 +1226,31 @@ scm_matrix_column (SCM A, SCM i)
   return scm_c_matrix_column (A, scm_to_ssize_t (i));
 }
 
-// FIXME: On a lazy day, reimplement without dynwind.
 VISIBLE SCM
 scm_vector_to_matrix (SCM v)
 {
-  const char *who = "scm_vector_to_matrix";
-
   scm_t_array_handle handle_v;
-
-  scm_dynwind_begin (0);
+  SCM A;
 
   scm_array_get_handle (v, &handle_v);
-  scm_dynwind_array_handle_release (&handle_v);
-  assert_array_handle_is_matrix (who, v, &handle_v);
 
-  SCM A;
+  if (!scm_array_handle_is_matrix (&handle_v))
+    {
+      scm_array_handle_release (&handle_v);
+      raise_not_a_matrix (scm_from_latin1_string ("scm_vector_to_matrix"), v);
+    }
+
   switch (scm_array_handle_rank (&handle_v))
     {
     case 1:
       {
-        ssize_t lbnd = scm_array_handle_dims (&handle_v)[0].lbnd;
-        SCM scm_lbnd = scm_from_ssize_t (lbnd);
-        ssize_t ubnd = scm_array_handle_dims (&handle_v)[0].ubnd;
-        SCM scm_ubnd = scm_from_ssize_t (ubnd);
-        SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_lbnd),
-                                 scm_list_2 (scm_lbnd, scm_ubnd));
-        SCM mapfunc = scm_call_0 (vector_to_matrix_mapfunc ());
+        const ssize_t lbnd = scm_array_handle_dims (&handle_v)[0].lbnd;
+        const SCM scm_lbnd = scm_from_ssize_t (lbnd);
+        const ssize_t ubnd = scm_array_handle_dims (&handle_v)[0].ubnd;
+        const SCM scm_ubnd = scm_from_ssize_t (ubnd);
+        const SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_lbnd),
+                                       scm_list_2 (scm_lbnd, scm_ubnd));
+        const SCM mapfunc = scm_call_0 (vector_to_matrix_mapfunc ());
         A = scm_make_shared_array (v, mapfunc, bounds);
       }
       break;
@@ -1264,7 +1263,7 @@ scm_vector_to_matrix (SCM v)
       assert (false);
     }
 
-  scm_dynwind_end ();
+  scm_array_handle_release (&handle_v);
 
   return A;
 }
