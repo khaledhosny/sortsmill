@@ -868,11 +868,13 @@ scm_conformable_for_matrix_sum_p (SCM A, SCM B)
 //-------------------------------------------------------------------------
 
 // FIXME: This seems quite reusable, though perhaps it could have a
-// better name, and maybe the code could be compiled.
+// better name.
 static void
 scm_c_initialize_from_eval_string (SCM *proc, const char *s)
 {
-  *proc = scm_eval_string (scm_from_utf8_string (s));
+  *proc = scm_call_3 (scm_c_public_ref ("ice-9 eval-string", "eval-string"),
+                      scm_from_utf8_string (s),
+                      scm_from_latin1_keyword ("compile?"), SCM_BOOL_T);
 }
 
 INITIALIZED_CONSTANT (static, SCM, matrix_row_mapfunc,
