@@ -19,8 +19,45 @@
 #include <sortsmill/initialized_global_constants.h>
 #include <intl.h>
 #include <stdint.h>
+#include <assert.h>
 
 //-------------------------------------------------------------------------
+
+static void
+raise_not_a_matrix (SCM who, SCM A)
+{
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_make_who_condition (who),
+      rnrs_c_make_message_condition (_("matrix error: "
+                                       "not a (non-empty) matrix")),
+      rnrs_make_irritants_condition (scm_list_1 (A))));
+}
+
+static void
+raise_not_a_row_matrix (SCM who, SCM A)
+{
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_make_who_condition (who),
+      rnrs_c_make_message_condition (_("matrix error: "
+                                       "not a (non-empty) row matrix")),
+      rnrs_make_irritants_condition (scm_list_1 (A))));
+}
+
+static void
+raise_not_a_column_matrix (SCM who, SCM A)
+{
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_make_who_condition (who),
+      rnrs_c_make_message_condition (_("matrix error: "
+                                       "not a (non-empty) column matrix")),
+      rnrs_make_irritants_condition (scm_list_1 (A))));
+}
 
 static void
 raise_row_index_outside_bounds (const char *who, SCM A, ssize_t i,
@@ -94,13 +131,7 @@ VISIBLE void
 assert_is_matrix (SCM who, SCM A)
 {
   if (!scm_is_matrix (A))
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_make_who_condition (who),
-        rnrs_c_make_message_condition (_("matrix error: "
-                                         "not a (non-empty) matrix")),
-        rnrs_make_irritants_condition (scm_list_1 (A))));
+    raise_not_a_matrix (who, A);
 }
 
 VISIBLE void
@@ -131,7 +162,7 @@ assert_array_handle_is_matrix (const char *who, SCM A,
     }
 
   if (!is_a_matrix)
-    assert_is_matrix (scm_from_utf8_string (who), A);
+    raise_not_a_matrix (scm_from_utf8_string (who), A);
 }
 
 //-------------------------------------------------------------------------
@@ -268,8 +299,8 @@ scm_c_matrix_ref (SCM A, ssize_t i, ssize_t j)
   assert_array_handle_is_matrix (who, A, &handle_A);
 
   SCM entry = entry_ref (who, A, &handle_A, i, j,
-                         scm_c_matrix_row_lbnd (&handle_A),
-                         scm_c_matrix_column_lbnd (&handle_A));
+                         scm_c_matrix_rows_lbnd (&handle_A),
+                         scm_c_matrix_columns_lbnd (&handle_A));
 
   scm_dynwind_end ();
 
@@ -419,8 +450,8 @@ scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM v)
   assert_array_handle_is_matrix (who, A, &handle_A);
 
   entry_set_x (who, A, &handle_A, i, j,
-               scm_c_matrix_row_lbnd (&handle_A),
-               scm_c_matrix_column_lbnd (&handle_A), v);
+               scm_c_matrix_rows_lbnd (&handle_A),
+               scm_c_matrix_columns_lbnd (&handle_A), v);
 
   scm_dynwind_end ();
 
@@ -478,8 +509,8 @@ scm_is_matrix (SCM A)
 }
 
 VISIBLE void
-scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_ubnd,
-                    ssize_t *column_lbnd, ssize_t *column_ubnd)
+scm_c_matrix_shape (SCM A, ssize_t *rows_lbnd, ssize_t *rows_ubnd,
+                    ssize_t *columns_lbnd, ssize_t *columns_ubnd)
 {
   scm_t_array_handle handle_A;
 
@@ -490,17 +521,17 @@ scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_ubnd,
   switch (rank)
     {
     case 1:
-      *row_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
-      *row_ubnd = scm_array_handle_dims (&handle_A)[0].lbnd;
-      *column_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
-      *column_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
+      *rows_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *rows_ubnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *columns_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *columns_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
       break;
 
     case 2:
-      *row_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
-      *row_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
-      *column_lbnd = scm_array_handle_dims (&handle_A)[1].lbnd;
-      *column_ubnd = scm_array_handle_dims (&handle_A)[1].ubnd;
+      *rows_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+      *rows_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
+      *columns_lbnd = scm_array_handle_dims (&handle_A)[1].lbnd;
+      *columns_ubnd = scm_array_handle_dims (&handle_A)[1].ubnd;
       break;
 
     default:
@@ -669,13 +700,7 @@ scm_c_row_matrix_size (SCM A)
     assert_rank_1_or_2_array (scm_from_latin1_string (who), A);
 
   if (row_count != 1 || column_count == 0)
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_c_make_message_condition (_("matrix error: "
-                                         "not a (non-empty) row matrix")),
-        rnrs_make_irritants_condition (scm_list_1 (A))));
+    raise_not_a_row_matrix (scm_from_utf8_string (who), A);
 
   return column_count;
 }
@@ -722,13 +747,7 @@ scm_c_column_matrix_size (SCM A)
     assert_rank_1_or_2_array (scm_from_latin1_string (who), A);
 
   if (column_count != 1 || row_count == 0)
-    rnrs_raise_condition
-      (scm_list_4
-       (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (who),
-        rnrs_c_make_message_condition (_("matrix error: "
-                                         "not a (non-empty) column matrix")),
-        rnrs_make_irritants_condition (scm_list_1 (A))));
+    raise_not_a_column_matrix (scm_from_utf8_string (who), A);
 
   return row_count;
 }
@@ -783,15 +802,15 @@ scm_matrix_p (SCM A)
 VISIBLE SCM
 scm_matrix_shape (SCM A)
 {
-  ssize_t row_lbnd;
-  ssize_t row_ubnd;
-  ssize_t column_lbnd;
-  ssize_t column_ubnd;
-  scm_c_matrix_shape (A, &row_lbnd, &row_ubnd, &column_lbnd, &column_ubnd);
-  return scm_list_2 (scm_list_2 (scm_from_ssize_t (row_lbnd),
-                                 scm_from_ssize_t (row_ubnd)),
-                     scm_list_2 (scm_from_ssize_t (column_lbnd),
-                                 scm_from_ssize_t (column_ubnd)));
+  ssize_t rows_lbnd;
+  ssize_t rows_ubnd;
+  ssize_t columns_lbnd;
+  ssize_t columns_ubnd;
+  scm_c_matrix_shape (A, &rows_lbnd, &rows_ubnd, &columns_lbnd, &columns_ubnd);
+  return scm_list_2 (scm_list_2 (scm_from_ssize_t (rows_lbnd),
+                                 scm_from_ssize_t (rows_ubnd)),
+                     scm_list_2 (scm_from_ssize_t (columns_lbnd),
+                                 scm_from_ssize_t (columns_ubnd)));
 }
 
 VISIBLE SCM
@@ -863,13 +882,25 @@ INITIALIZED_CONSTANT (static, SCM, matrix_row_mapfunc,
 INITIALIZED_CONSTANT (static, SCM, vector_row_mapfunc,
                       scm_c_initialize_from_eval_string, "(lambda (i) list)");
 
+INITIALIZED_CONSTANT (static, SCM, matrix_column_transpose_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i) (list i j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_column_transpose_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (j) (lambda (i) (list i j)))");
+
+INITIALIZED_CONSTANT (static, SCM, vector_to_matrix_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda () (lambda (i j) (list j)))");
+
 static SCM
 matrix_row (const char *who, SCM A, scm_t_array_handle *handlep_A,
             ssize_t i, ssize_t i_base)
 {
   assert_row_index_inside_bounds (who, A, i, i_base,
                                   scm_c_matrix_numrows (handlep_A));
-  const ssize_t lbnd = scm_c_matrix_column_lbnd (handlep_A);
+  const ssize_t lbnd = scm_c_matrix_columns_lbnd (handlep_A);
   const size_t numcols = scm_c_matrix_numcols (handlep_A);
   const ssize_t ubnd = lbnd + (ssize_t) (numcols - 1);
   SCM bounds = scm_list_1 (scm_list_2 (scm_from_ssize_t (lbnd),
@@ -877,8 +908,27 @@ matrix_row (const char *who, SCM A, scm_t_array_handle *handlep_A,
   SCM mapfunc_func =
     (scm_array_handle_rank (handlep_A) == 1) ?
     vector_row_mapfunc () : matrix_row_mapfunc ();
-  ssize_t row = (i - i_base) + scm_c_matrix_row_lbnd (handlep_A);
+  ssize_t row = (i - i_base) + scm_c_matrix_rows_lbnd (handlep_A);
   SCM mapfunc = scm_call_1 (mapfunc_func, scm_from_ssize_t (row));
+  return scm_make_shared_array (A, mapfunc, bounds);
+}
+
+static SCM
+matrix_column_transpose (const char *who, SCM A, scm_t_array_handle *handlep_A,
+                         ssize_t j, ssize_t j_base)
+{
+  assert_column_index_inside_bounds (who, A, j, j_base,
+                                     scm_c_matrix_numcols (handlep_A));
+  const ssize_t lbnd = scm_c_matrix_rows_lbnd (handlep_A);
+  const size_t numrows = scm_c_matrix_numrows (handlep_A);
+  const ssize_t ubnd = lbnd + (ssize_t) (numrows - 1);
+  SCM bounds = scm_list_1 (scm_list_2 (scm_from_ssize_t (lbnd),
+                                       scm_from_ssize_t (ubnd)));
+  SCM mapfunc_func =
+    (scm_array_handle_rank (handlep_A) == 1) ?
+    vector_column_transpose_mapfunc () : matrix_column_transpose_mapfunc ();
+  ssize_t column = (j - j_base) + scm_c_matrix_columns_lbnd (handlep_A);
+  SCM mapfunc = scm_call_1 (mapfunc_func, scm_from_ssize_t (column));
   return scm_make_shared_array (A, mapfunc, bounds);
 }
 
@@ -936,11 +986,73 @@ scm_c_matrix_row (SCM A, ssize_t i)
   assert_array_handle_is_matrix (who, A, &handle_A);
 
   SCM row =
-    matrix_row (who, A, &handle_A, i, scm_c_matrix_row_lbnd (&handle_A));
+    matrix_row (who, A, &handle_A, i, scm_c_matrix_rows_lbnd (&handle_A));
 
   scm_dynwind_end ();
 
   return row;
+}
+
+VISIBLE SCM
+scm_c_matrix_0column_transpose (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_0column_transpose";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM column_transpose = matrix_column_transpose (who, A, &handle_A, i, 0);
+
+  scm_dynwind_end ();
+
+  return column_transpose;
+}
+
+VISIBLE SCM
+scm_c_matrix_1column_transpose (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_1column_transpose";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM column_transpose = matrix_column_transpose (who, A, &handle_A, i, 1);
+
+  scm_dynwind_end ();
+
+  return column_transpose;
+}
+
+VISIBLE SCM
+scm_c_matrix_column_transpose (SCM A, ssize_t i)
+{
+  const char *who = "scm_c_matrix_column_transpose";
+
+  scm_t_array_handle handle_A;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  SCM column_transpose = matrix_column_transpose (who, A, &handle_A, i,
+                                                  scm_c_matrix_columns_lbnd
+                                                  (&handle_A));
+
+  scm_dynwind_end ();
+
+  return column_transpose;
 }
 
 VISIBLE SCM
@@ -959,6 +1071,75 @@ VISIBLE SCM
 scm_matrix_row (SCM A, SCM i)
 {
   return scm_c_matrix_row (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_0column_transpose (SCM A, SCM i)
+{
+  return scm_c_matrix_0column_transpose (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_1column_transpose (SCM A, SCM i)
+{
+  return scm_c_matrix_1column_transpose (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_matrix_column_transpose (SCM A, SCM i)
+{
+  return scm_c_matrix_column_transpose (A, scm_to_ssize_t (i));
+}
+
+VISIBLE SCM
+scm_vector_to_matrix (SCM v)
+{
+  const char *who = "scm_vector_to_matrix";
+
+  scm_t_array_handle handle_v;
+
+  scm_dynwind_begin (0);
+
+  scm_array_get_handle (v, &handle_v);
+  scm_dynwind_array_handle_release (&handle_v);
+  assert_array_handle_is_matrix (who, v, &handle_v);
+
+  SCM A;
+  switch (scm_array_handle_rank (&handle_v))
+    {
+    case 1:
+      {
+        ssize_t lbnd = scm_array_handle_dims (&handle_v)[0].lbnd;
+        SCM scm_lbnd = scm_from_ssize_t (lbnd);
+        ssize_t ubnd = scm_array_handle_dims (&handle_v)[0].ubnd;
+        SCM scm_ubnd = scm_from_ssize_t (ubnd);
+        SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_lbnd),
+                                 scm_list_2 (scm_lbnd, scm_ubnd));
+        SCM mapfunc = scm_call_0 (vector_to_matrix_mapfunc ());
+        A = scm_make_shared_array (v, mapfunc, bounds);
+      }
+      break;
+
+    case 2:
+      A = v;
+      break;
+
+    default:
+      assert (false);
+    }
+
+  scm_dynwind_end ();
+
+  return A;
+}
+
+VISIBLE SCM
+scm_row_matrix_to_vector (SCM A)
+{
+  if (scm_c_matrix_row_count (A) != 1)
+    raise_not_a_row_matrix (scm_from_utf8_string ("scm_row_matrix_to_vector"),
+                            A);
+  return scm_c_matrix_1row (A, 1);
 }
 
 //-------------------------------------------------------------------------
@@ -992,6 +1173,14 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-0row", 2, 0, 0, scm_matrix_0row);
   scm_c_define_gsubr ("matrix-1row", 2, 0, 0, scm_matrix_1row);
   scm_c_define_gsubr ("matrix-row", 2, 0, 0, scm_matrix_row);
+  scm_c_define_gsubr ("matrix-0column-transpose", 2, 0, 0,
+                      scm_matrix_0column_transpose);
+  scm_c_define_gsubr ("matrix-1column-transpose", 2, 0, 0,
+                      scm_matrix_1column_transpose);
+  scm_c_define_gsubr ("matrix-column-transpose", 2, 0, 0,
+                      scm_matrix_column_transpose);
+  scm_c_define_gsubr ("vector->matrix", 1, 0, 0, scm_vector_to_matrix);
+  scm_c_define_gsubr ("row-matrix->vector", 1, 0, 0, scm_row_matrix_to_vector);
 }
 
 //-------------------------------------------------------------------------

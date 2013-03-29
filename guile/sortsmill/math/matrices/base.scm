@@ -58,9 +58,6 @@
           f64vector->diagonal-f64matrix
           vector->diagonal-matrix
 
-          vector->matrix
-          row-matrix->vector
-
           matrix-1x1->scalar
 
           ;; (matrix-ref A i j) → value
@@ -81,10 +78,21 @@
           matrix-0set!
           matrix-1set!
 
-          matrix-row
-          matrix-0row
-          matrix-1row
-          matrix-column-transpose
+          ;; Shared-array views of matrices and parts of
+          ;; matrices. These accept both typed and untyped arrays and
+          ;; vectors.
+          matrix-row ;; (matrix-row A) → vector
+          matrix-0row ;; (matrix-0row A) → vector   (zero-based indexing)
+          matrix-1row ;; (matrix-1row A) → vector   (one-based indexing)
+          matrix-column-transpose ;; (matrix-column-transpose A) → vector
+          matrix-0column-transpose ;; (matrix-0column-transpose A) → vector   (zero-based indexing)
+          matrix-1column-transpose ;; (matrix-0column-transpose A) → vector   (one-based indexing)
+          vector->matrix ;; (vector->matrix vector-or-matrix) → matrix
+          row-matrix->vector ;; (row-matrix->vector vector-or-matrix) → vector
+
+          ;; Views of parts of a matrix. FIXME: These are to be
+          ;; reimplemented in C and moved to the list with the
+          ;; ‘matrix-row’ family of procedures.
           matrix-column
           matrix-diagonal
           matrix-transpose
@@ -234,6 +242,7 @@
           [_ A])
         A))
 
+  #|
   (define (vector->matrix v)
     (match (array-rank v)
       [1
@@ -242,7 +251,9 @@
           (make-shared-array v (lambda (i j) `[,j]) `[,lo ,lo] `[,lo ,hi])])]
       [2 v]
       [_ (not-a-matrix 'vector->matrix v)] ))
+  |#
 
+  #|
   (define (row-matrix->vector V)
     (match (array-shape V)
       [[(lo1 hi1) (lo2 hi2)]
@@ -252,6 +263,7 @@
             'row-matrix->vector (_ "not a row matrix") V))]
       [[(_ _)] V]
       [_ (not-a-matrix 'row-matrix->vector V)] ))
+  |#
 
   (define (matrix-map proc A)
     (let* ([type (array-type A)]
@@ -292,6 +304,7 @@ a Guile vector)"
         [_ (not-a-matrix 'matrix-row A)] )))
   |#
 
+  #|
   (define (matrix-column-transpose A j)
     "Return a view of a matrix column as a row vector (in the form of
 a Guile vector)."
@@ -300,6 +313,7 @@ a Guile vector)."
       (match shape
         [((lo hi) _) (make-shared-array A (lambda (i) `[,i ,j]) `[,lo ,hi])]
         [_ (not-a-matrix 'matrix-column-transpose A)] )))
+  |#
 
   (define (matrix-column A j)
     "Return a view of a matrix column as a matrix (that is, a rank-2

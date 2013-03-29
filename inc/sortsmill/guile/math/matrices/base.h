@@ -30,13 +30,13 @@ extern "C"
 #endif
 
 static inline ssize_t
-scm_c_matrix_row_lbnd (scm_t_array_handle *handlep)
+scm_c_matrix_rows_lbnd (scm_t_array_handle *handlep)
 {
   return scm_array_handle_dims (handlep)[0].lbnd;
 }
 
 static inline ssize_t
-scm_c_matrix_column_lbnd (scm_t_array_handle *handlep)
+scm_c_matrix_columns_lbnd (scm_t_array_handle *handlep)
 {
   return
     scm_array_handle_dims (handlep)[scm_array_handle_rank (handlep) - 1].lbnd;
@@ -96,8 +96,8 @@ SCM scm_c_matrix_set_x (SCM A, ssize_t i, ssize_t j, SCM x);
 SCM scm_matrix_set_x (SCM A, SCM i, SCM j, SCM x);
 
 bool scm_is_matrix (SCM A);
-void scm_c_matrix_shape (SCM A, ssize_t *row_lbnd, ssize_t *row_hbnd,
-                         ssize_t *column_lbnd, ssize_t *column_hbnd);
+void scm_c_matrix_shape (SCM A, ssize_t *rows_lbnd, ssize_t *rows_ubnd,
+                         ssize_t *columns_lbnd, ssize_t *columns_ubnd);
 void scm_c_matrix_dimensions (SCM A, size_t *row_count, size_t *column_count);
 size_t scm_c_matrix_row_count (SCM A);
 size_t scm_c_matrix_column_count (SCM A);
@@ -123,6 +123,14 @@ SCM scm_c_matrix_row (SCM A, ssize_t i);
 SCM scm_matrix_0row (SCM A, SCM i);
 SCM scm_matrix_1row (SCM A, SCM i);
 SCM scm_matrix_row (SCM A, SCM i);
+SCM scm_c_matrix_0column_transpose (SCM A, ssize_t i);
+SCM scm_c_matrix_1column_transpose (SCM A, ssize_t i);
+SCM scm_c_matrix_column_transpose (SCM A, ssize_t i);
+SCM scm_matrix_0column_transpose (SCM A, SCM i);
+SCM scm_matrix_1column_transpose (SCM A, SCM i);
+SCM scm_matrix_column_transpose (SCM A, SCM i);
+SCM scm_vector_to_matrix (SCM v);
+SCM scm_row_matrix_to_vector (SCM A);
 
 #if 0
 {
