@@ -81,8 +81,8 @@ situation."
   (define (invert-quadratic xspline yspline t1 t2 x y)
     ;; Construct a Bézout matrix and compute its singular value
     ;; decomposition.
-    (let ([x-xspline (poly:sub-scm-mono (make-vector 1 x) xspline)]
-          [y-yspline (poly:sub-scm-mono (make-vector 1 y) yspline)])
+    (let ([x-xspline (poly:sub-scm-mono (scalar->matrix x) xspline)]
+          [y-yspline (poly:sub-scm-mono (scalar->matrix y) yspline)])
       (let ([B (bezout-matrix x-xspline y-yspline)])
         (let-values ([(U S V) (f64matrix-svd (matrix->f64matrix B))])
           (case (matrix-svd-effective-rank S)
@@ -99,10 +99,10 @@ situation."
       (if (< (abs (vector-ref xspline degree))
              (abs (vector-ref yspline degree)))
           [let ([y-yspline (matrix-inexact->exact
-                            (poly:sub-scm-mono (make-vector 1 y) yspline))])
+                            (poly:sub-scm-mono (scalar->matrix y) yspline))])
             (poly:find-roots-scm-mono y-yspline t1 t2)]
           [let ([x-xspline (matrix-inexact->exact
-                            (poly:sub-scm-mono (make-vector 1 x) xspline))])
+                            (poly:sub-scm-mono (scalar->matrix x) xspline))])
             (poly:find-roots-scm-mono x-xspline t1 t2)] )))
 
   (define (invert-quadratic-rank1 V t1 t2)
@@ -118,8 +118,8 @@ matrix may vary by a scalar factor or in the order of entries.)"
   (define (invert-cubic xspline yspline t1 t2 x y)
     ;; Construct a Bézout matrix and compute its singular value
     ;; decomposition.
-    (let ([x-xspline (poly:sub-scm-mono (make-vector 1 x) xspline)]
-          [y-yspline (poly:sub-scm-mono (make-vector 1 y) yspline)])
+    (let ([x-xspline (poly:sub-scm-mono (scalar->matrix x) xspline)]
+          [y-yspline (poly:sub-scm-mono (scalar->matrix y) yspline)])
       (let ([B (bezout-matrix x-xspline y-yspline)])
         (let-values ([(U S V) (f64matrix-svd (matrix->f64matrix B))])
           (case (matrix-svd-effective-rank S)
