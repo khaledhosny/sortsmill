@@ -141,6 +141,22 @@ SCM scm_row_matrix_to_vector (SCM A);
 SCM scm_matrix_transpose (SCM A);
 SCM scm_matrix_diagonal (SCM A);
 
+SCM scm_matrix_1x1_to_scalar (SCM A);
+SCM scm_scalar_to_matrix (SCM x);
+SCM scm_scalar_to_u8matrix (SCM x);
+SCM scm_scalar_to_s8matrix (SCM x);
+SCM scm_scalar_to_u16matrix (SCM x);
+SCM scm_scalar_to_s16matrix (SCM x);
+SCM scm_scalar_to_u32matrix (SCM x);
+SCM scm_scalar_to_s32matrix (SCM x);
+SCM scm_scalar_to_u64matrix (SCM x);
+SCM scm_scalar_to_s64matrix (SCM x);
+SCM scm_scalar_to_f32matrix (SCM x);
+SCM scm_scalar_to_f64matrix (SCM x);
+SCM scm_scalar_to_c32matrix (SCM x);
+SCM scm_scalar_to_c64matrix (SCM x);
+SCM scm_scalar_to_typed_matrix (SCM type, SCM x);
+
 #if 0
 {
 #endif

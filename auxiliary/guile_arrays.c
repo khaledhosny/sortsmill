@@ -188,7 +188,7 @@ static bool index_means_uniform_number[14] = {
   [_FF_INDEX_ARRAY_C64] = true
 };
 
-static scm_t_array_type_index
+VISIBLE scm_t_array_type_index
 scm_array_type_to_array_type_index (SCM array_type)
 {
   scm_t_array_type_index i = _FF_INDEX_NOT_AN_ARRAY;

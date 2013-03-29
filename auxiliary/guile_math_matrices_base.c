@@ -25,6 +25,18 @@
 //-------------------------------------------------------------------------
 
 static void
+raise_not_a_valid_matrix_type (SCM who, SCM type)
+{
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_make_who_condition (who),
+      rnrs_c_make_message_condition (_("matrix error: "
+                                       "not a valid matrix type")),
+      rnrs_make_irritants_condition (scm_list_1 (type))));
+}
+
+static void
 raise_not_a_matrix (SCM who, SCM A)
 {
   rnrs_raise_condition
@@ -33,6 +45,18 @@ raise_not_a_matrix (SCM who, SCM A)
       rnrs_make_who_condition (who),
       rnrs_c_make_message_condition (_("matrix error: "
                                        "not a (non-empty) matrix")),
+      rnrs_make_irritants_condition (scm_list_1 (A))));
+}
+
+static void
+raise_not_a_1x1_matrix (SCM who, SCM A)
+{
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_make_who_condition (who),
+      rnrs_c_make_message_condition (_("matrix error: "
+                                       "not a 1x1 matrix")),
       rnrs_make_irritants_condition (scm_list_1 (A))));
 }
 
@@ -1378,6 +1402,90 @@ scm_matrix_diagonal (SCM A)
 
 //-------------------------------------------------------------------------
 
+VISIBLE SCM
+scm_matrix_1x1_to_scalar (SCM A)
+{
+  const char *who = "scm_matrix_1x1_to_scalar";
+
+  scm_t_array_handle handle_A;
+
+  scm_array_get_handle (A, &handle_A);
+
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string (who), A);
+    }
+
+  if (scm_c_matrix_numrows (&handle_A) != 1
+      || scm_c_matrix_numcols (&handle_A) != 1)
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_1x1_matrix (scm_from_latin1_string (who), A);
+    }
+
+  scm_array_handle_release (&handle_A);
+
+  return scm_c_matrix_0ref (A, 0, 0);
+}
+
+VISIBLE SCM
+scm_scalar_to_matrix (SCM x)
+{
+  return scm_c_make_vector (1, x);
+}
+
+#define _SCM_SCALAR_TO_TYPED_MATRIX(TYPE)                       \
+  SCM                                                           \
+  scm_scalar_to_##TYPE##matrix (SCM x)                          \
+  {                                                             \
+    return scm_make_##TYPE##vector (scm_from_int (1), x);       \
+  }
+
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (u8);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (s8);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (u16);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (s16);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (u32);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (s32);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (u64);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (s64);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (f32);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (f64);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (c32);
+VISIBLE _SCM_SCALAR_TO_TYPED_MATRIX (c64);
+
+typedef SCM _scm_scalar_to_matrix_t (SCM x);
+
+static _scm_scalar_to_matrix_t *_scalar_to_matrix[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = NULL,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_scalar_to_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_scalar_to_u8matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_scalar_to_s8matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_scalar_to_u16matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_scalar_to_s16matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_scalar_to_u32matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_scalar_to_s32matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_scalar_to_u64matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_scalar_to_s64matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_scalar_to_f32matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_scalar_to_f64matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_scalar_to_c32matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_scalar_to_c64matrix
+};
+
+VISIBLE SCM
+scm_scalar_to_typed_matrix (SCM type, SCM x)
+{
+  const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
+  if (i == _FF_INDEX_NOT_AN_ARRAY)
+    raise_not_a_valid_matrix_type (scm_from_latin1_string
+                                   ("scm_scalar_to_typed_matrix"), type);
+  return _scalar_to_matrix[i] (x);
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_sortsmill_math_matrices_base (void);
 
 VISIBLE void
@@ -1420,6 +1528,23 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("row-matrix->vector", 1, 0, 0, scm_row_matrix_to_vector);
   scm_c_define_gsubr ("matrix-transpose", 1, 0, 0, scm_matrix_transpose);
   scm_c_define_gsubr ("matrix-diagonal", 1, 0, 0, scm_matrix_diagonal);
+
+  scm_c_define_gsubr ("matrix-1x1->scalar", 1, 0, 0, scm_matrix_1x1_to_scalar);
+  scm_c_define_gsubr ("scalar->matrix", 1, 0, 0, scm_scalar_to_matrix);
+  scm_c_define_gsubr ("scalar->u8matrix", 1, 0, 0, scm_scalar_to_u8matrix);
+  scm_c_define_gsubr ("scalar->s8matrix", 1, 0, 0, scm_scalar_to_s8matrix);
+  scm_c_define_gsubr ("scalar->u16matrix", 1, 0, 0, scm_scalar_to_u16matrix);
+  scm_c_define_gsubr ("scalar->s16matrix", 1, 0, 0, scm_scalar_to_s16matrix);
+  scm_c_define_gsubr ("scalar->u32matrix", 1, 0, 0, scm_scalar_to_u32matrix);
+  scm_c_define_gsubr ("scalar->s32matrix", 1, 0, 0, scm_scalar_to_s32matrix);
+  scm_c_define_gsubr ("scalar->u64matrix", 1, 0, 0, scm_scalar_to_u64matrix);
+  scm_c_define_gsubr ("scalar->s64matrix", 1, 0, 0, scm_scalar_to_s64matrix);
+  scm_c_define_gsubr ("scalar->f32matrix", 1, 0, 0, scm_scalar_to_f32matrix);
+  scm_c_define_gsubr ("scalar->f64matrix", 1, 0, 0, scm_scalar_to_f64matrix);
+  scm_c_define_gsubr ("scalar->c32matrix", 1, 0, 0, scm_scalar_to_c32matrix);
+  scm_c_define_gsubr ("scalar->c64matrix", 1, 0, 0, scm_scalar_to_c64matrix);
+  scm_c_define_gsubr ("scalar->typed-matrix", 2, 0, 0,
+                      scm_scalar_to_typed_matrix);
 }
 
 //-------------------------------------------------------------------------

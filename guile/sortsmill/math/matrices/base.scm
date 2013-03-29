@@ -15,13 +15,6 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-;;;
-;;; FIXME: Perhaps lot of these routines could be made significantly
-;;; less expensive by rewriting in C. It would take some of the worry
-;;; out of using them, in any case. This may make for a good project
-;;; on lazy days.
-;;;
-
 (library (sortsmill math matrices base)
 
   (export not-a-matrix
@@ -58,8 +51,6 @@
           f64vector->diagonal-f64matrix
           vector->diagonal-matrix
 
-          matrix-1x1->scalar
-
           ;; (matrix-ref A i j) → value
           ;; (matrix-0ref A i j) → value   (zero-based indexing)
           ;; (matrix-1ref A i j) → value   (one-based indexing)
@@ -77,6 +68,31 @@
           matrix-set!
           matrix-0set!
           matrix-1set!
+
+          ;; (matrix-1x1->scalar A) → scalar
+          ;; (scalar->matrix x) → matrix
+          ;; (scalar->u8matrix x) → u8matrix
+          ;;         ⋮
+          ;; (scalar->c64matrix x) → c64matrix
+          ;; (scalar->typed-matrix type x) → matrix
+          ;;
+          ;; matrix-1x1->scalar accepts both typed and untyped arrays
+          ;; and vectors.
+          matrix-1x1->scalar
+          scalar->matrix
+          scalar->u8matrix
+          scalar->s8matrix
+          scalar->u16matrix
+          scalar->s16matrix
+          scalar->u32matrix
+          scalar->s32matrix
+          scalar->u64matrix
+          scalar->s64matrix
+          scalar->f32matrix
+          scalar->f64matrix
+          scalar->c32matrix
+          scalar->c64matrix
+          scalar->typed-matrix
 
           ;; Shared-array views of matrices and parts of
           ;; matrices. These accept both typed and untyped arrays and
@@ -225,20 +241,6 @@
                           (lambda (i j) `[,(+ i lo1 -1) ,(+ j lo2 -1)])
                           `[1 ,(- hi1 lo1 -1)] `[1 ,(- hi2 lo2 -1)] )]
       [_ (not-a-matrix 'one-based A)]))
-
-  (define (matrix-1x1->scalar A)
-    (if (array? A)
-        (match (array-shape A)
-          [((lo hi))
-           (if (eqv? lo hi)
-               (generalized-vector-ref A lo)
-               A)]
-          [((lo1 hi1) (lo2 hi2))
-           (if (and (eqv? lo1 hi1) (eqv? lo2 hi2))
-               (array-ref A lo1 lo2)
-               A)]
-          [_ A])
-        A))
 
   (define (matrix-map proc A)
     (let* ([type (array-type A)]

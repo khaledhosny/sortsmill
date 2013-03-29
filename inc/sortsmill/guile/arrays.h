@@ -59,6 +59,8 @@ typedef enum
   _FF_INDEX_ARRAY_C64 = 13
 } scm_t_array_type_index;
 
+scm_t_array_type_index scm_array_type_to_array_type_index (SCM array_type);
+
 scm_t_array_type_index scm_array_handle_to_array_type_index (scm_t_array_handle
                                                              *handlep);
 scm_t_array_type_index scm_to_array_type_index (SCM obj);
