@@ -58,18 +58,45 @@
           zero-c64matrix
           typed-zero-matrix
 
+          ;; Create matrices that have all entries equal to some
+          ;; scalar.
+          ;;
+          ;; (filled-matrix fill m n) → matrix
+          ;; (filled-matrix fill m) → square matrix
+          ;; (filled-u8matrix fill m n) → u8matrix
+          ;; (filled-u8matrix fill m) → square u8matrix
+          ;;         ⋮
+          ;; (filled-c64matrix fill m n) → c64matrix
+          ;; (filled-c64matrix fill m) → square c64matrix
+          ;; (typed-filled-matrix type fill m n) → matrix
+          ;; (typed-filled-matrix type fill m) → square matrix
+          filled-matrix
+          filled-u8matrix
+          filled-s8matrix
+          filled-u16matrix
+          filled-s16matrix
+          filled-u32matrix
+          filled-s32matrix
+          filled-u64matrix
+          filled-s64matrix
+          filled-f32matrix
+          filled-f64matrix
+          filled-c32matrix
+          filled-c64matrix
+          typed-filled-matrix
+
           ;; Create matrices that have all diagonal entries equal to
           ;; one and all other entries equal to zero.
           ;;
-          ;; (zero-matrix m n) → matrix
-          ;; (zero-matrix m) → square matrix
-          ;; (zero-u8matrix m n) → u8matrix
-          ;; (zero-u8matrix m) → square u8matrix
+          ;; (I-matrix m n) → matrix
+          ;; (I-matrix m) → square matrix
+          ;; (I-u8matrix m n) → u8matrix
+          ;; (I-u8matrix m) → square u8matrix
           ;;         ⋮
-          ;; (zero-c64matrix m n) → c64matrix
-          ;; (zero-c64matrix m) → square c64matrix
-          ;; (typed-zero-matrix type m n) → matrix
-          ;; (typed-zero-matrix type m) → square matrix
+          ;; (I-c64matrix m n) → c64matrix
+          ;; (I-c64matrix m) → square c64matrix
+          ;; (typed-I-matrix type m n) → matrix
+          ;; (typed-I-matrix type m) → square matrix
           I-matrix
           I-u8matrix
           I-s8matrix
@@ -85,10 +112,32 @@
           I-c64matrix
           typed-I-matrix
 
-          filled-matrix
-          filled-f64matrix
+          ;; Create matrices that have all diagonal entries equal to
+          ;; some scalar and all other entries equal to zero.
+          ;;
+          ;; (scalar-matrix x m n) → matrix
+          ;; (scalar-matrix x m) → square matrix
+          ;; (scalar-u8matrix x m n) → u8matrix
+          ;; (scalar-u8matrix x m) → square u8matrix
+          ;;         ⋮
+          ;; (scalar-c64matrix x m n) → c64matrix
+          ;; (scalar-c64matrix x m) → square c64matrix
+          ;; (typed-scalar-matrix type x m n) → matrix
+          ;; (typed-scalar-matrix type x m) → square matrix
           scalar-matrix
+          scalar-u8matrix
+          scalar-s8matrix
+          scalar-u16matrix
+          scalar-s16matrix
+          scalar-u32matrix
+          scalar-s32matrix
+          scalar-u64matrix
+          scalar-s64matrix
+          scalar-f32matrix
           scalar-f64matrix
+          scalar-c32matrix
+          scalar-c64matrix
+          typed-scalar-matrix
 
           matrix-map
           matrix-copy
@@ -181,36 +230,6 @@
 
   (define (rank-deficiency-exception caller . irritants)
     (apply error caller (_ "rank-deficient matrix") irritants))
-
-  ;;-----------------------------------------------------------------------
-
-  ;; FIXME: Is there a better name for this?
-  (define filled-matrix
-    (case-lambda
-      [(v n)   (make-array v `(1 ,n) `(1 ,n))]
-      [(v n m) (make-array v `(1 ,n) `(1 ,m))] ))
-
-  ;; FIXME: Is there a better name for this?
-  (define filled-f64matrix
-    (case-lambda
-      [(v n)   (make-typed-array 'f64 v `(1 ,n) `(1 ,n))]
-      [(v n m) (make-typed-array 'f64 v `(1 ,n) `(1 ,m))] ))
-
-  (define scalar-matrix
-    (case-lambda
-      [(v n)   (scalar-matrix v n n)]
-      [(v n m) (let* ([A (zero-matrix n m)]
-                      [diag (matrix-diagonal A)])
-                 (array-fill! diag v)
-                 A)] ))
-
-  (define scalar-f64matrix
-    (case-lambda
-      [(v n)   (scalar-f64matrix v n n)]
-      [(v n m) (let* ([A (zero-f64matrix n m)]
-                      [diag (matrix-diagonal A)])
-                 (array-fill! diag v)
-                 A)] ))
 
   ;;-----------------------------------------------------------------------
 

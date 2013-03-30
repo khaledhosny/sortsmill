@@ -1659,57 +1659,9 @@ static _void_writable_elements_func_t *_void_writable_elements_func[] = {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// INITIALIZER(...) must not throw an exception.
-#define _SCM_INITIALIZE_MATRIX(NAME, TYPE, INITIALIZER)         \
-  void                                                          \
-  NAME (void *elems, size_t numrows, ssize_t row_inc,           \
-        size_t numcols, ssize_t col_inc, const void *data)      \
-  {                                                             \
-    TYPE *q = (TYPE *) elems;                                   \
-    for (size_t i = 0; i < numrows; i++)                        \
-      {                                                         \
-        TYPE *p = q;                                            \
-        for (size_t j = 0; j < numcols; j++)                    \
-          {                                                     \
-            *p = INITIALIZER (i, j, data);                      \
-            p += col_inc;                                       \
-          }                                                     \
-        q += row_inc;                                           \
-      }                                                         \
-  }
-
-// Both REAL_INITIALIZER(...) and IMAG_INITIALIZER(...) must not throw
-// an exception.
-#define _SCM_INITIALIZE_COMPLEX_MATRIX(NAME, TYPE,              \
-                                       REAL_INITIALIZER,        \
-                                       IMAG_INITIALIZER)        \
-  void                                                          \
-  NAME (void *elems, size_t numrows, ssize_t row_inc,           \
-        size_t numcols, ssize_t col_inc, const void *data)      \
-  {                                                             \
-    TYPE *q = (TYPE *) elems;                                   \
-    for (size_t i = 0; i < numrows; i++)                        \
-      {                                                         \
-        TYPE *p = q;                                            \
-        for (size_t j = 0; j < numcols; j++)                    \
-          {                                                     \
-            p[0] = REAL_INITIALIZER (i, j, data);               \
-            p[1] = IMAG_INITIALIZER (i, j, data);               \
-            p += 2 * col_inc;                                   \
-          }                                                     \
-        q += 2 * row_inc;                                       \
-      }                                                         \
-  }
-
-typedef void _scm_initialize_matrix_t (void *elems, size_t numrows,
-                                       ssize_t row_inc, size_t numcols,
-                                       ssize_t col_inc, const void *data);
-
 static SCM
-make_initialized_matrix (const char *who,
-                         SCM type, size_t numrows, size_t numcols,
-                         _scm_initialize_matrix_t * initialize,
-                         const void *data)
+make_filled_matrix (const char *who, SCM type, SCM fill, size_t numrows,
+                    size_t numcols)
 {
   const SCM scm_numrows = scm_from_size_t (numrows);
   const SCM scm_numcols = scm_from_size_t (numcols);
@@ -1718,16 +1670,24 @@ make_initialized_matrix (const char *who,
     raise_attempt_to_create_empty_matrix (scm_from_latin1_string (who),
                                           scm_numrows, scm_numcols);
 
-  SCM bounds;
-  SCM A;
+  const SCM bounds = (numrows == 1) ?
+    scm_list_1 (scm_numcols) : scm_list_2 (scm_numrows, scm_numcols);
+
+  return scm_make_typed_array (type, fill, bounds);
+}
+
+typedef void _scm_matrix_alterer_t (void *elements, const void *data,
+                                    size_t numrows, ssize_t row_inc,
+                                    size_t numcols, ssize_t column_inc);
+
+static SCM
+make_altered_filled_matrix (const char *who, SCM type, SCM fill,
+                            _scm_matrix_alterer_t * alterer, const void *data,
+                            size_t numrows, size_t numcols)
+{
+  SCM A = make_filled_matrix (who, type, fill, numrows, numcols);
+
   scm_t_array_handle handle_A;
-
-  if (numrows == 1)
-    bounds = scm_list_1 (scm_numcols);
-  else
-    bounds = scm_list_2 (scm_numrows, scm_numcols);
-
-  A = scm_make_typed_array (type, SCM_UNSPECIFIED, bounds);
 
   scm_array_get_handle (A, &handle_A);
 
@@ -1735,9 +1695,9 @@ make_initialized_matrix (const char *who,
   if (i == _FF_INDEX_NOT_AN_ARRAY)
     raise_not_a_valid_matrix_type (scm_from_latin1_string (who), type);
 
-  initialize (_void_writable_elements_func[i] (&handle_A),
-              numrows, scm_c_matrix_row_inc (&handle_A),
-              numcols, scm_c_matrix_column_inc (&handle_A), NULL);
+  alterer (_void_writable_elements_func[i] (&handle_A), data,
+           numrows, scm_c_matrix_row_inc (&handle_A),
+           numcols, scm_c_matrix_column_inc (&handle_A));
 
   scm_array_handle_release (&handle_A);
 
@@ -1746,51 +1706,112 @@ make_initialized_matrix (const char *who,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#define _SCM_INITIALIZER_SCM_ZERO(i, j, data) (_scm_zero ())
-#define _SCM_INITIALIZER_TYPED_ZERO(i, j, data) (0)
+VISIBLE SCM
+scm_c_filled_matrix (SCM fill, size_t m, size_t n)
+{
+  return make_filled_matrix ("scm_c_filled_matrix", SCM_BOOL_T, fill, m, n);
+}
 
-static _SCM_INITIALIZE_MATRIX (_zero_matrix, SCM, _SCM_INITIALIZER_SCM_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_u8matrix, uint8_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_s8matrix, int8_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_u16matrix, uint16_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_s16matrix, int16_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_u32matrix, uint32_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_s32matrix, int32_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_u64matrix, uint64_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_s64matrix, int64_t,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_f32matrix, float,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_MATRIX (_zero_f64matrix, double,
-                               _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_COMPLEX_MATRIX (_zero_c32matrix, float,
-                                       _SCM_INITIALIZER_TYPED_ZERO,
-                                       _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_COMPLEX_MATRIX (_zero_c64matrix, double,
-                                       _SCM_INITIALIZER_TYPED_ZERO,
-                                       _SCM_INITIALIZER_TYPED_ZERO);
+#define _SCM_C_TYPED_FILLED_MATRIX(ELEMTYPE)                            \
+  SCM                                                                   \
+  scm_c_filled_##ELEMTYPE##matrix (SCM fill, size_t m, size_t n)        \
+  {                                                                     \
+    return make_filled_matrix ("scm_c_filled_" #ELEMTYPE "matrix",      \
+                               scm_symbol_##ELEMTYPE (), fill, m, n);   \
+  }
+
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (u8);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (s8);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (u16);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (s16);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (u32);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (s32);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (u64);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (s64);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (f32);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (f64);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (c32);
+VISIBLE _SCM_C_TYPED_FILLED_MATRIX (c64);
+
+#define _SCM_FILLED_MATRIX(ELEMTYPE)                            \
+  SCM                                                           \
+  scm_filled_##ELEMTYPE##matrix (SCM fill, SCM m, SCM n)        \
+  {                                                             \
+    if (SCM_UNBNDP (n))                                         \
+      n = m;                                                    \
+    return scm_c_filled_##ELEMTYPE##matrix (fill,               \
+                                            scm_to_size_t (m),  \
+                                            scm_to_size_t (n)); \
+  }
+
+VISIBLE _SCM_FILLED_MATRIX ( /* empty */ );
+VISIBLE _SCM_FILLED_MATRIX (u8);
+VISIBLE _SCM_FILLED_MATRIX (s8);
+VISIBLE _SCM_FILLED_MATRIX (u16);
+VISIBLE _SCM_FILLED_MATRIX (s16);
+VISIBLE _SCM_FILLED_MATRIX (u32);
+VISIBLE _SCM_FILLED_MATRIX (s32);
+VISIBLE _SCM_FILLED_MATRIX (u64);
+VISIBLE _SCM_FILLED_MATRIX (s64);
+VISIBLE _SCM_FILLED_MATRIX (f32);
+VISIBLE _SCM_FILLED_MATRIX (f64);
+VISIBLE _SCM_FILLED_MATRIX (c32);
+VISIBLE _SCM_FILLED_MATRIX (c64);
+
+typedef SCM _scm_c_typed_filled_matrix_t (SCM fill, size_t m, size_t n);
+
+static _scm_c_typed_filled_matrix_t *_c_typed_filled_matrix[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = NULL,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_c_filled_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_c_filled_u8matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_c_filled_s8matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_c_filled_u16matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_c_filled_s16matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_c_filled_u32matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_c_filled_s32matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_c_filled_u64matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_c_filled_s64matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_c_filled_f32matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_c_filled_f64matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_c_filled_c32matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_c_filled_c64matrix
+};
+
+VISIBLE SCM
+scm_c_typed_filled_matrix (SCM type, SCM fill, size_t m, size_t n)
+{
+  const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
+  if (i == _FF_INDEX_NOT_AN_ARRAY)
+    raise_not_a_valid_matrix_type
+      (scm_from_latin1_string ("scm_c_typed_filled_matrix"), type);
+  return _c_typed_filled_matrix[i] (fill, m, n);
+}
+
+VISIBLE SCM
+scm_typed_filled_matrix (SCM type, SCM fill, SCM m, SCM n)
+{
+  if (SCM_UNBNDP (n))
+    n = m;
+  return scm_c_typed_filled_matrix (type, fill, scm_to_size_t (m),
+                                    scm_to_size_t (n));
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --
 
 VISIBLE SCM
 scm_c_zero_matrix (size_t m, size_t n)
 {
-  return make_initialized_matrix ("scm_zero_matrix", SCM_BOOL_T, m, n,
-                                  _zero_matrix, NULL);
+  return make_filled_matrix ("scm_c_zero_matrix", SCM_BOOL_T, _scm_zero (), m,
+                             n);
 }
 
 #define _SCM_C_TYPED_ZERO_MATRIX(ELEMTYPE)                              \
   SCM                                                                   \
   scm_c_zero_##ELEMTYPE##matrix (size_t m, size_t n)                    \
   {                                                                     \
-    return make_initialized_matrix ("scm_zero_" #ELEMTYPE "matrix",     \
-                                    scm_symbol_##ELEMTYPE (), m, n,     \
-                                    _zero_##ELEMTYPE##matrix, NULL);    \
+    return make_filled_matrix ("scm_c_zero_" #ELEMTYPE "matrix",        \
+                               scm_symbol_##ELEMTYPE (),                \
+                               _scm_zero (), m, n);                     \
   }
 
 VISIBLE _SCM_C_TYPED_ZERO_MATRIX (u8);
@@ -1869,59 +1890,226 @@ scm_typed_zero_matrix (SCM type, SCM m, SCM n)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --
 
-#define _SCM_INITIALIZER_SCM_I(i, j, data)      \
-  (((i) == (j)) ? _scm_one () : _scm_zero ())
-#define _SCM_INITIALIZER_TYPED_I(i, j, data) (((i) == (j)) ? 1 : 0)
+static void
+fill_diagonal (void *elements, const void *data,
+               size_t numrows, ssize_t row_inc,
+               size_t numcols, ssize_t column_inc)
+{
+  SCM *elems = (SCM *) elements;
+  SCM x = *(SCM *) data;
+  const size_t n = szmin (numrows, numcols);
+  const ssize_t diag_inc = row_inc + column_inc;
+  for (ssize_t i = 0; i < n; i++)
+    {
+      *elems = x;
+      elems += diag_inc;
+    }
+}
 
-static _SCM_INITIALIZE_MATRIX (_I_matrix, SCM, _SCM_INITIALIZER_SCM_I);
-static _SCM_INITIALIZE_MATRIX (_I_u8matrix, uint8_t, _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_s8matrix, int8_t, _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_u16matrix, uint16_t,
-                               _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_s16matrix, int16_t, _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_u32matrix, uint32_t,
-                               _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_s32matrix, int32_t, _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_u64matrix, uint64_t,
-                               _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_s64matrix, int64_t, _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_f32matrix, float, _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_MATRIX (_I_f64matrix, double, _SCM_INITIALIZER_TYPED_I);
-static _SCM_INITIALIZE_COMPLEX_MATRIX (_I_c32matrix, float,
-                                       _SCM_INITIALIZER_TYPED_I,
-                                       _SCM_INITIALIZER_TYPED_ZERO);
-static _SCM_INITIALIZE_COMPLEX_MATRIX (_I_c64matrix, double,
-                                       _SCM_INITIALIZER_TYPED_I,
-                                       _SCM_INITIALIZER_TYPED_ZERO);
+#define _FILL_TYPED_DIAGONAL(ELEMTYPE, TYPE)                    \
+  void                                                          \
+  fill_diagonal_##ELEMTYPE (void *elements, const void *data,   \
+                            size_t numrows, ssize_t row_inc,    \
+                            size_t numcols, ssize_t column_inc) \
+  {                                                             \
+    TYPE *elems = (TYPE*) elements;                             \
+    TYPE x = *(TYPE *) data;                                    \
+    const size_t n = szmin (numrows, numcols);                  \
+    const ssize_t diag_inc = row_inc + column_inc;              \
+    for (ssize_t i = 0; i < n; i++)                             \
+      {                                                         \
+        *elems = x;                                             \
+        elems += diag_inc;                                      \
+      }                                                         \
+  }
+
+#define _FILL_COMPLEX_DIAGONAL(ELEMTYPE, TYPE)                  \
+  void                                                          \
+  fill_diagonal_##ELEMTYPE (void *elements, const void *data,   \
+                            size_t numrows, ssize_t row_inc,    \
+                            size_t numcols, ssize_t column_inc) \
+  {                                                             \
+    TYPE *elems = (TYPE*) elements;                             \
+    const double real_part = ((const double *) data)[0];        \
+    const double imag_part = ((const double *) data)[1];        \
+    const size_t n = szmin (numrows, numcols);                  \
+    const ssize_t diag_inc = 2 * (row_inc + column_inc);        \
+    for (ssize_t i = 0; i < n; i++)                             \
+      {                                                         \
+        elems[0] = real_part;                                   \
+        elems[1] = imag_part;                                   \
+        elems += diag_inc;                                      \
+      }                                                         \
+  }
+
+static _FILL_TYPED_DIAGONAL (u8, uint8_t);
+static _FILL_TYPED_DIAGONAL (s8, int8_t);
+static _FILL_TYPED_DIAGONAL (u16, uint16_t);
+static _FILL_TYPED_DIAGONAL (s16, int16_t);
+static _FILL_TYPED_DIAGONAL (u32, uint32_t);
+static _FILL_TYPED_DIAGONAL (s32, int32_t);
+static _FILL_TYPED_DIAGONAL (u64, uint64_t);
+static _FILL_TYPED_DIAGONAL (s64, int64_t);
+static _FILL_TYPED_DIAGONAL (f32, float);
+static _FILL_TYPED_DIAGONAL (f64, double);
+static _FILL_COMPLEX_DIAGONAL (c32, float);
+static _FILL_COMPLEX_DIAGONAL (c64, double);
+
+VISIBLE SCM
+scm_c_scalar_matrix (SCM x, size_t m, size_t n)
+{
+  return make_altered_filled_matrix ("scm_c_scalar_matrix", SCM_BOOL_T,
+                                     _scm_zero (), fill_diagonal, &x, m, n);
+}
+
+#define _SCM_C_TYPED_SCALAR_MATRIX(ELEMTYPE, TYPE, TO_TYPE)             \
+  SCM                                                                   \
+  scm_c_scalar_##ELEMTYPE##matrix (SCM x, size_t m, size_t n)           \
+  {                                                                     \
+    TYPE _x = TO_TYPE (x);                                              \
+    return                                                              \
+      make_altered_filled_matrix ("scm_c_scalar_" #ELEMTYPE "matrix",   \
+                                  scm_symbol_##ELEMTYPE (),             \
+                                  _scm_zero (),                         \
+                                  fill_diagonal_##ELEMTYPE, &_x, m, n); \
+  }
+
+#define _SCM_C_COMPLEX_SCALAR_MATRIX(ELEMTYPE)                          \
+  SCM                                                                   \
+  scm_c_scalar_##ELEMTYPE##matrix (SCM x, size_t m, size_t n)           \
+  {                                                                     \
+    const double data[2] = {                                            \
+      scm_to_double (scm_real_part (x)),                                \
+      scm_to_double (scm_imag_part (x))                                 \
+    };                                                                  \
+    return                                                              \
+      make_altered_filled_matrix ("scm_c_scalar_" #ELEMTYPE "matrix",   \
+                                  scm_symbol_##ELEMTYPE (),             \
+                                  _scm_zero (),                         \
+                                  fill_diagonal_##ELEMTYPE, data,       \
+                                  m, n);                                \
+  }
+
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (u8, uint8_t, scm_to_uint8);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (s8, int8_t, scm_to_int8);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (u16, uint16_t, scm_to_uint16);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (s16, int16_t, scm_to_int16);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (u32, uint32_t, scm_to_uint32);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (s32, int32_t, scm_to_int32);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (u64, uint64_t, scm_to_uint64);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (s64, int64_t, scm_to_int64);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (f32, float, scm_to_double);
+VISIBLE _SCM_C_TYPED_SCALAR_MATRIX (f64, double, scm_to_double);
+VISIBLE _SCM_C_COMPLEX_SCALAR_MATRIX (c32);
+VISIBLE _SCM_C_COMPLEX_SCALAR_MATRIX (c64);
+
+#define _SCM_SCALAR_MATRIX(ELEMTYPE)                                    \
+  SCM                                                                   \
+  scm_scalar_##ELEMTYPE##matrix (SCM x, SCM m, SCM n)                   \
+  {                                                                     \
+    if (SCM_UNBNDP (n))                                                 \
+      n = m;                                                            \
+    return scm_c_scalar_##ELEMTYPE##matrix (x, scm_to_size_t (m),       \
+                                            scm_to_size_t (n));         \
+  }
+
+VISIBLE _SCM_SCALAR_MATRIX ( /* empty */ );
+VISIBLE _SCM_SCALAR_MATRIX (u8);
+VISIBLE _SCM_SCALAR_MATRIX (s8);
+VISIBLE _SCM_SCALAR_MATRIX (u16);
+VISIBLE _SCM_SCALAR_MATRIX (s16);
+VISIBLE _SCM_SCALAR_MATRIX (u32);
+VISIBLE _SCM_SCALAR_MATRIX (s32);
+VISIBLE _SCM_SCALAR_MATRIX (u64);
+VISIBLE _SCM_SCALAR_MATRIX (s64);
+VISIBLE _SCM_SCALAR_MATRIX (f32);
+VISIBLE _SCM_SCALAR_MATRIX (f64);
+VISIBLE _SCM_SCALAR_MATRIX (c32);
+VISIBLE _SCM_SCALAR_MATRIX (c64);
+
+typedef SCM _scm_c_typed_scalar_matrix_t (SCM x, size_t m, size_t n);
+
+static _scm_c_typed_scalar_matrix_t *_c_typed_scalar_matrix[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = NULL,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_c_scalar_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_c_scalar_u8matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_c_scalar_s8matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_c_scalar_u16matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_c_scalar_s16matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_c_scalar_u32matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_c_scalar_s32matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_c_scalar_u64matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_c_scalar_s64matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_c_scalar_f32matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_c_scalar_f64matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_c_scalar_c32matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_c_scalar_c64matrix
+};
+
+VISIBLE SCM
+scm_c_typed_scalar_matrix (SCM type, SCM x, size_t m, size_t n)
+{
+  const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
+  if (i == _FF_INDEX_NOT_AN_ARRAY)
+    raise_not_a_valid_matrix_type
+      (scm_from_latin1_string ("scm_c_typed_scalar_matrix"), type);
+  return _c_typed_scalar_matrix[i] (x, m, n);
+}
+
+VISIBLE SCM
+scm_typed_scalar_matrix (SCM type, SCM x, SCM m, SCM n)
+{
+  if (SCM_UNBNDP (n))
+    n = m;
+  return scm_c_typed_scalar_matrix (type, x, scm_to_size_t (m),
+                                    scm_to_size_t (n));
+}
 
 VISIBLE SCM
 scm_c_I_matrix (size_t m, size_t n)
 {
-  return make_initialized_matrix ("scm_I_matrix", SCM_BOOL_T, m, n,
-                                  _I_matrix, NULL);
+  SCM x = _scm_one ();
+  return make_altered_filled_matrix ("scm_c_I_matrix", SCM_BOOL_T,
+                                     _scm_zero (), fill_diagonal, &x, m, n);
 }
 
-#define _SCM_C_TYPED_I_MATRIX(ELEMTYPE)                                 \
+#define _SCM_C_TYPED_I_MATRIX(ELEMTYPE, TYPE)                           \
   SCM                                                                   \
   scm_c_I_##ELEMTYPE##matrix (size_t m, size_t n)                       \
   {                                                                     \
-    return make_initialized_matrix ("scm_I_" #ELEMTYPE "matrix",        \
-                                    scm_symbol_##ELEMTYPE (), m, n,     \
-                                    _I_##ELEMTYPE##matrix, NULL);       \
+    TYPE _x = 1;                                                        \
+    return                                                              \
+      make_altered_filled_matrix ("scm_c_I_" #ELEMTYPE "matrix",        \
+                                  scm_symbol_##ELEMTYPE (),             \
+                                  _scm_zero (),                         \
+                                  fill_diagonal_##ELEMTYPE, &_x, m, n); \
   }
 
-VISIBLE _SCM_C_TYPED_I_MATRIX (u8);
-VISIBLE _SCM_C_TYPED_I_MATRIX (s8);
-VISIBLE _SCM_C_TYPED_I_MATRIX (u16);
-VISIBLE _SCM_C_TYPED_I_MATRIX (s16);
-VISIBLE _SCM_C_TYPED_I_MATRIX (u32);
-VISIBLE _SCM_C_TYPED_I_MATRIX (s32);
-VISIBLE _SCM_C_TYPED_I_MATRIX (u64);
-VISIBLE _SCM_C_TYPED_I_MATRIX (s64);
-VISIBLE _SCM_C_TYPED_I_MATRIX (f32);
-VISIBLE _SCM_C_TYPED_I_MATRIX (f64);
-VISIBLE _SCM_C_TYPED_I_MATRIX (c32);
-VISIBLE _SCM_C_TYPED_I_MATRIX (c64);
+#define _SCM_C_COMPLEX_I_MATRIX(ELEMTYPE)                               \
+  SCM                                                                   \
+  scm_c_I_##ELEMTYPE##matrix (size_t m, size_t n)                       \
+  {                                                                     \
+    const double data[2] = { 1.0, 0.0 };                                \
+    return                                                              \
+      make_altered_filled_matrix ("scm_c_I_" #ELEMTYPE "matrix",        \
+                                  scm_symbol_##ELEMTYPE (),             \
+                                  _scm_zero (),                         \
+                                  fill_diagonal_##ELEMTYPE, data,       \
+                                  m, n);                                \
+  }
+
+VISIBLE _SCM_C_TYPED_I_MATRIX (u8, uint8_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (s8, int8_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (u16, uint16_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (s16, int16_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (u32, uint32_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (s32, int32_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (u64, uint64_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (s64, int64_t);
+VISIBLE _SCM_C_TYPED_I_MATRIX (f32, float);
+VISIBLE _SCM_C_TYPED_I_MATRIX (f64, double);
+VISIBLE _SCM_C_COMPLEX_I_MATRIX (c32);
+VISIBLE _SCM_C_COMPLEX_I_MATRIX (c64);
 
 #define _SCM_I_MATRIX(ELEMTYPE)                                 \
   SCM                                                           \
@@ -2063,6 +2251,21 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("zero-c64matrix", 1, 1, 0, scm_zero_c64matrix);
   scm_c_define_gsubr ("typed-zero-matrix", 2, 1, 0, scm_typed_zero_matrix);
 
+  scm_c_define_gsubr ("filled-matrix", 2, 1, 0, scm_filled_matrix);
+  scm_c_define_gsubr ("filled-u8matrix", 2, 1, 0, scm_filled_u8matrix);
+  scm_c_define_gsubr ("filled-s8matrix", 2, 1, 0, scm_filled_s8matrix);
+  scm_c_define_gsubr ("filled-u16matrix", 2, 1, 0, scm_filled_u16matrix);
+  scm_c_define_gsubr ("filled-s16matrix", 2, 1, 0, scm_filled_s16matrix);
+  scm_c_define_gsubr ("filled-u32matrix", 2, 1, 0, scm_filled_u32matrix);
+  scm_c_define_gsubr ("filled-s32matrix", 2, 1, 0, scm_filled_s32matrix);
+  scm_c_define_gsubr ("filled-u64matrix", 2, 1, 0, scm_filled_u64matrix);
+  scm_c_define_gsubr ("filled-s64matrix", 2, 1, 0, scm_filled_s64matrix);
+  scm_c_define_gsubr ("filled-f32matrix", 2, 1, 0, scm_filled_f32matrix);
+  scm_c_define_gsubr ("filled-f64matrix", 2, 1, 0, scm_filled_f64matrix);
+  scm_c_define_gsubr ("filled-c32matrix", 2, 1, 0, scm_filled_c32matrix);
+  scm_c_define_gsubr ("filled-c64matrix", 2, 1, 0, scm_filled_c64matrix);
+  scm_c_define_gsubr ("typed-filled-matrix", 3, 1, 0, scm_typed_filled_matrix);
+
   scm_c_define_gsubr ("I-matrix", 1, 1, 0, scm_I_matrix);
   scm_c_define_gsubr ("I-u8matrix", 1, 1, 0, scm_I_u8matrix);
   scm_c_define_gsubr ("I-s8matrix", 1, 1, 0, scm_I_s8matrix);
@@ -2077,6 +2280,21 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("I-c32matrix", 1, 1, 0, scm_I_c32matrix);
   scm_c_define_gsubr ("I-c64matrix", 1, 1, 0, scm_I_c64matrix);
   scm_c_define_gsubr ("typed-I-matrix", 2, 1, 0, scm_typed_I_matrix);
+
+  scm_c_define_gsubr ("scalar-matrix", 2, 1, 0, scm_scalar_matrix);
+  scm_c_define_gsubr ("scalar-u8matrix", 2, 1, 0, scm_scalar_u8matrix);
+  scm_c_define_gsubr ("scalar-s8matrix", 2, 1, 0, scm_scalar_s8matrix);
+  scm_c_define_gsubr ("scalar-u16matrix", 2, 1, 0, scm_scalar_u16matrix);
+  scm_c_define_gsubr ("scalar-s16matrix", 2, 1, 0, scm_scalar_s16matrix);
+  scm_c_define_gsubr ("scalar-u32matrix", 2, 1, 0, scm_scalar_u32matrix);
+  scm_c_define_gsubr ("scalar-s32matrix", 2, 1, 0, scm_scalar_s32matrix);
+  scm_c_define_gsubr ("scalar-u64matrix", 2, 1, 0, scm_scalar_u64matrix);
+  scm_c_define_gsubr ("scalar-s64matrix", 2, 1, 0, scm_scalar_s64matrix);
+  scm_c_define_gsubr ("scalar-f32matrix", 2, 1, 0, scm_scalar_f32matrix);
+  scm_c_define_gsubr ("scalar-f64matrix", 2, 1, 0, scm_scalar_f64matrix);
+  scm_c_define_gsubr ("scalar-c32matrix", 2, 1, 0, scm_scalar_c32matrix);
+  scm_c_define_gsubr ("scalar-c64matrix", 2, 1, 0, scm_scalar_c64matrix);
+  scm_c_define_gsubr ("typed-scalar-matrix", 3, 1, 0, scm_typed_scalar_matrix);
 }
 
 //-------------------------------------------------------------------------
