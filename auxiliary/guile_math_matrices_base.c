@@ -1695,6 +1695,8 @@ make_altered_filled_matrix (const char *who, SCM type, SCM fill,
   if (i == _FF_INDEX_NOT_AN_ARRAY)
     raise_not_a_valid_matrix_type (scm_from_latin1_string (who), type);
 
+  // WARNING! The alterer must not raise exceptions or otherwise
+  // return non-locally.
   alterer (_void_writable_elements_func[i] (&handle_A), data,
            numrows, scm_c_matrix_row_inc (&handle_A),
            numcols, scm_c_matrix_column_inc (&handle_A));
