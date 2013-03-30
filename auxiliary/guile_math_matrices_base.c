@@ -1685,15 +1685,13 @@ make_altered_filled_matrix (const char *who, SCM type, SCM fill,
                             _scm_matrix_alterer_t * alterer, const void *data,
                             size_t numrows, size_t numcols)
 {
-  SCM A = make_filled_matrix (who, type, fill, numrows, numcols);
-
-  scm_t_array_handle handle_A;
-
-  scm_array_get_handle (A, &handle_A);
-
   const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
   if (i == _FF_INDEX_NOT_AN_ARRAY)
     raise_not_a_valid_matrix_type (scm_from_latin1_string (who), type);
+
+  SCM A = make_filled_matrix (who, type, fill, numrows, numcols);
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
 
   // WARNING! The alterer must not raise exceptions or otherwise
   // return non-locally.
