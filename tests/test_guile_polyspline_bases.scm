@@ -24,7 +24,7 @@ exec guile -s "${0}" ${1+"$@"}
          (let* ([mat1 (poly:basis-transformation basis1 basis2 degree)]
                 [mat2 (poly:basis-transformation basis2 basis1 degree)]
                 [product (matrix* mat1 mat2)])
-           (unless (equal? product (I-matrix (+ degree 1)))
+           (unless (equal? product (vector->matrix (matrix-1based (I-matrix (+ degree 1)))))
              (assertion-violation "test_guile_polyspline_bases.scm"
                                   "inverses test failed"
                                   (list basis1 basis2 degree)))))
@@ -41,10 +41,10 @@ exec guile -s "${0}" ${1+"$@"}
 
 (for-each
  (lambda (degree)
-   (check-matrix 'mono 'mono degree (I-matrix (+ degree 1)))
-   (check-matrix 'bern 'bern degree (I-matrix (+ degree 1)))
-   (check-matrix 'sbern 'sbern degree (I-matrix (+ degree 1)))
-   (check-matrix 'spower 'spower degree (I-matrix (+ degree 1))))
+   (check-matrix 'mono 'mono degree (vector->matrix (matrix-1based (I-matrix (+ degree 1)))))
+   (check-matrix 'bern 'bern degree (vector->matrix (matrix-1based (I-matrix (+ degree 1)))))
+   (check-matrix 'sbern 'sbern degree (vector->matrix (matrix-1based (I-matrix (+ degree 1)))))
+   (check-matrix 'spower 'spower degree (vector->matrix (matrix-1based (I-matrix (+ degree 1))))))
  (iota 20))
 
 (for-each
@@ -158,7 +158,7 @@ exec guile -s "${0}" ${1+"$@"}
  bases)
 
 (define (check-change-basis-vectors basis1 basis2 degree)
-  (let* ([basis-vector-matrix (I-matrix (+ degree 1))]
+  (let* ([basis-vector-matrix (vector->matrix (matrix-1based (I-matrix (+ degree 1))))]
          [basis-vectors (map (cut matrix-row basis-vector-matrix <>)
                              (iota (+ degree 1) 1))]
          [transformed-matrix (poly:change-basis basis1 basis2
