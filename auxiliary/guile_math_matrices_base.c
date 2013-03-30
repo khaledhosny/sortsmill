@@ -43,6 +43,10 @@ INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_zero,
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_one,
                       scm_c_initialize_from_eval_string, "1");
 
+// FIXME: This looks reusable if given a better name.
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_zero_p,
+                      scm_c_initialize_from_eval_string, "zero?");
+
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, matrix_row_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i) (lambda (j) (list i j)))");
@@ -2174,6 +2178,69 @@ scm_typed_I_matrix (SCM type, SCM m, SCM n)
 
 //-------------------------------------------------------------------------
 
+VISIBLE bool
+scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A)
+{
+  const char *who = "scm_c_for_all_in_matrix";
+
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string (who), A);
+    }
+
+  const size_t m = scm_c_matrix_numrows (&handle_A);
+  const size_t n = scm_c_matrix_numcols (&handle_A);
+
+  scm_array_handle_release (&handle_A);
+
+  bool is_sense = true;
+  size_t i = 0;
+  while (is_sense && i < m)
+    {
+      size_t j = 0;
+      while (is_sense && j < n)
+        {
+          SCM x = scm_c_matrix_ref (A, i, j);
+          const bool p = (bool) scm_is_true (scm_call_1 (pred, x));
+          is_sense = (p == sense);
+          j++;
+        }
+      i++;
+    }
+
+  return is_sense;
+}
+
+VISIBLE SCM
+scm_for_all_in_matrix (SCM pred, SCM A)
+{
+  return scm_from_bool (scm_c_for_all_in_matrix (true, pred, A));
+}
+
+VISIBLE SCM
+scm_exists_in_matrix (SCM pred, SCM A)
+{
+  return scm_from_bool (!scm_c_for_all_in_matrix (false, pred, A));
+}
+
+VISIBLE bool
+scm_is_zero_matrix (SCM A)
+{
+  return scm_c_for_all_in_matrix (true, _scm_zero_p (), A);
+}
+
+VISIBLE SCM
+scm_zero_matrix_p (SCM A)
+{
+  return scm_from_bool (scm_is_zero_matrix (A));
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_sortsmill_math_matrices_base (void);
 
 VISIBLE void
@@ -2295,6 +2362,10 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("scalar-c32matrix", 2, 1, 0, scm_scalar_c32matrix);
   scm_c_define_gsubr ("scalar-c64matrix", 2, 1, 0, scm_scalar_c64matrix);
   scm_c_define_gsubr ("typed-scalar-matrix", 3, 1, 0, scm_typed_scalar_matrix);
+
+  scm_c_define_gsubr ("for-all-in-matrix", 2, 0, 0, scm_for_all_in_matrix);
+  scm_c_define_gsubr ("exists-in-matrix", 2, 0, 0, scm_exists_in_matrix);
+  scm_c_define_gsubr ("zero-matrix?", 1, 0, 0, scm_zero_matrix_p);
 }
 
 //-------------------------------------------------------------------------

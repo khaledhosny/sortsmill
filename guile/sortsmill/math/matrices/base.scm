@@ -17,7 +17,7 @@
 
 (library (sortsmill math matrices base)
 
-  (export rank-deficiency-exception
+  (export rank-deficiency-exception ; FIXME: Should we get rid of this?
 
           ;; Shape inquiry procedures, accepting both typed and
           ;; untyped arrays and vectors.
@@ -191,9 +191,12 @@
           scalar-c64matrix
           typed-scalar-matrix
 
+          ;; FIXME: Still written in Guile.
           matrix-map
           matrix-copy
 
+          ;; FIXME: Still written in Guile. And change it to a single
+          ;; ‘diagmat’ procedure.
           f64vector->diagonal-f64matrix
           vector->diagonal-matrix
 
@@ -259,15 +262,29 @@
           matrix-transpose   ;; (matrix-transpose A) → matrix
           matrix-diagonal    ;; (matrix-transpose A) → vector
 
+          ;; FIXME: Still written in Guile.
           matrix-exact->inexact
           matrix-inexact->exact
 
           ;; matrix->f64matrix is the same as matrix-exact->inexact.
+          ;;
+          ;; FIXME: Still written in Guile. And expand it into a whole
+          ;; family.
           matrix->f64matrix
 
           ;; f64matrix->matrix just changes the type tag, without
           ;; converting from inexact to exact numbers.
+          ;;
+          ;; FIXME: Still written in Guile. And expand it into a whole
+          ;; family.
           f64matrix->matrix
+
+          ;; Predicates. These accept both typed and untyped arrays
+          ;; and vectors.
+          for-all-in-matrix    ; (for-all-in-matrix pred? A) → boolean
+          exists-in-matrix     ; (exists-in-matrix pred? A) → boolean
+          zero-matrix?         ; (zero-matrix? A) → boolean
+          matrix-of-ones?      ; (matrix-of-ones? A) → boolean
           )
 
   (import (sortsmill dynlink)
@@ -330,6 +347,9 @@
   (define-initialized-matrix c32matrix-of-ones filled-c32matrix 1)
   (define-initialized-matrix c64matrix-of-ones filled-c64matrix 1)
   (define-typed-initialized-matrix typed-matrix-of-ones typed-filled-matrix 1)
+
+  (define (matrix-of-ones? A)
+    (for-all-in-matrix (lambda (x) (= x 1)) A))
 
   ;;-----------------------------------------------------------------------
 
