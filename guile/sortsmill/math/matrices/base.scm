@@ -281,10 +281,17 @@
 
           ;; Predicates. These accept both typed and untyped arrays
           ;; and vectors.
+          zero-matrix?   ; (zero-matrix? A) → boolean
+          I-matrix?      ; (I-matrix? A) → boolean (allows non-square)
+          matrix-of-ones?      ; (matrix-of-ones? A) → boolean
           for-all-in-matrix    ; (for-all-in-matrix pred? A) → boolean
           exists-in-matrix     ; (exists-in-matrix pred? A) → boolean
-          zero-matrix?         ; (zero-matrix? A) → boolean
-          matrix-of-ones?      ; (matrix-of-ones? A) → boolean
+          for-all-in-matrix-0ij ; (for-all-in-matrix-0ij pred? A) → boolean
+          exists-in-matrix-0ij ; (exists-in-matrix-0ij pred? A) → boolean
+          for-all-in-matrix-1ij ; (for-all-in-matrix-1ij pred? A) → boolean
+          exists-in-matrix-1ij ; (exists-in-matrix-1ij pred? A) → boolean
+          for-all-in-matrix-ij ; (for-all-in-matrix-ij pred? A) → boolean
+          exists-in-matrix-ij ; (exists-in-matrix-ij pred? A) → boolean
           )
 
   (import (sortsmill dynlink)

@@ -276,10 +276,21 @@ SCM scm_scalar_c64matrix (SCM x, SCM m, SCM n);
 SCM scm_typed_scalar_matrix (SCM type, SCM x, SCM m, SCM n);
 
 bool scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A);
+bool scm_c_for_all_in_matrix_0ij (bool sense, SCM pred, SCM A);
+bool scm_c_for_all_in_matrix_1ij (bool sense, SCM pred, SCM A);
+bool scm_c_for_all_in_matrix_ij (bool sense, SCM pred, SCM A);
 SCM scm_for_all_in_matrix (SCM pred, SCM A);
+SCM scm_for_all_in_matrix_0ij (SCM pred, SCM A);
+SCM scm_for_all_in_matrix_1ij (SCM pred, SCM A);
+SCM scm_for_all_in_matrix_ij (SCM pred, SCM A);
 SCM scm_exists_in_matrix (SCM pred, SCM A);
+SCM scm_exists_in_matrix_0ij (SCM pred, SCM A);
+SCM scm_exists_in_matrix_1ij (SCM pred, SCM A);
+SCM scm_exists_in_matrix_ij (SCM pred, SCM A);
 bool scm_is_zero_matrix (SCM A);
 SCM scm_zero_matrix_p (SCM A);
+bool scm_is_I_matrix (SCM A);
+SCM scm_I_matrix_p (SCM A);
 
 #if 0
 {

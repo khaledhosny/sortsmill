@@ -47,6 +47,10 @@ INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_one,
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_zero_p,
                       scm_c_initialize_from_eval_string, "zero?");
 
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_I_element_p,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (x i j) (if (= i j) (= x 1) (zero? x)))");
+
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, matrix_row_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i) (lambda (j) (list i j)))");
@@ -2204,7 +2208,7 @@ scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A)
       size_t j = 0;
       while (is_sense && j < n)
         {
-          SCM x = scm_c_matrix_ref (A, i, j);
+          SCM x = scm_c_matrix_0ref (A, i, j);
           const bool p = (bool) scm_is_true (scm_call_1 (pred, x));
           is_sense = (p == sense);
           j++;
@@ -2237,6 +2241,133 @@ VISIBLE SCM
 scm_zero_matrix_p (SCM A)
 {
   return scm_from_bool (scm_is_zero_matrix (A));
+}
+
+static bool
+scm_c_for_all_in_matrix_ij_based (const char *who,
+                                  bool sense, SCM pred, SCM A,
+                                  ssize_t i_base, ssize_t j_base)
+{
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string (who), A);
+    }
+
+  const size_t m = scm_c_matrix_numrows (&handle_A);
+  const size_t n = scm_c_matrix_numcols (&handle_A);
+
+  scm_array_handle_release (&handle_A);
+
+  bool is_sense = true;
+  size_t i = 0;
+  while (is_sense && i < m)
+    {
+      size_t j = 0;
+      while (is_sense && j < n)
+        {
+          SCM x = scm_c_matrix_0ref (A, i, j);
+          const bool p = (bool) scm_is_true (scm_call_3 (pred, x,
+                                                         scm_from_ssize_t
+                                                         (i_base + i),
+                                                         scm_from_ssize_t
+                                                         (j_base + j)));
+          is_sense = (p == sense);
+          j++;
+        }
+      i++;
+    }
+
+  return is_sense;
+}
+
+VISIBLE bool
+scm_c_for_all_in_matrix_0ij (bool sense, SCM pred, SCM A)
+{
+  return scm_c_for_all_in_matrix_ij_based ("scm_c_for_all_in_matrix_0ij",
+                                           sense, pred, A, 0, 0);
+}
+
+VISIBLE bool
+scm_c_for_all_in_matrix_1ij (bool sense, SCM pred, SCM A)
+{
+  return scm_c_for_all_in_matrix_ij_based ("scm_c_for_all_in_matrix_1ij",
+                                           sense, pred, A, 1, 1);
+}
+
+VISIBLE bool
+scm_c_for_all_in_matrix_ij (bool sense, SCM pred, SCM A)
+{
+  const char *who = "scm_c_for_all_in_matrix_ij";
+
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string (who), A);
+    }
+
+  const ssize_t i_base = scm_c_matrix_rows_lbnd (&handle_A);
+  const ssize_t j_base = scm_c_matrix_columns_lbnd (&handle_A);
+
+  scm_array_handle_release (&handle_A);
+
+  return scm_c_for_all_in_matrix_ij_based (who, sense, pred, A, i_base, j_base);
+}
+
+VISIBLE SCM
+scm_for_all_in_matrix_0ij (SCM pred, SCM A)
+{
+  return scm_from_bool (scm_c_for_all_in_matrix_0ij (true, pred, A));
+}
+
+VISIBLE SCM
+scm_exists_in_matrix_0ij (SCM pred, SCM A)
+{
+  return scm_from_bool (!scm_c_for_all_in_matrix_0ij (false, pred, A));
+}
+
+VISIBLE SCM
+scm_for_all_in_matrix_1ij (SCM pred, SCM A)
+{
+  return scm_from_bool (scm_c_for_all_in_matrix_1ij (true, pred, A));
+}
+
+VISIBLE SCM
+scm_exists_in_matrix_1ij (SCM pred, SCM A)
+{
+  return scm_from_bool (!scm_c_for_all_in_matrix_1ij (false, pred, A));
+}
+
+VISIBLE SCM
+scm_for_all_in_matrix_ij (SCM pred, SCM A)
+{
+  return scm_from_bool (scm_c_for_all_in_matrix_ij (true, pred, A));
+}
+
+VISIBLE SCM
+scm_exists_in_matrix_ij (SCM pred, SCM A)
+{
+  return scm_from_bool (!scm_c_for_all_in_matrix_ij (false, pred, A));
+}
+
+VISIBLE bool
+scm_is_I_matrix (SCM A)
+{
+  // This does not take account of whether the matrix is square. That
+  // behavior is consistent with our definition of I-matrix.
+  return scm_c_for_all_in_matrix_0ij (true, _scm_I_element_p (), A);
+}
+
+VISIBLE SCM
+scm_I_matrix_p (SCM A)
+{
+  return scm_from_bool (scm_is_I_matrix (A));
 }
 
 //-------------------------------------------------------------------------
@@ -2365,7 +2496,19 @@ init_guile_sortsmill_math_matrices_base (void)
 
   scm_c_define_gsubr ("for-all-in-matrix", 2, 0, 0, scm_for_all_in_matrix);
   scm_c_define_gsubr ("exists-in-matrix", 2, 0, 0, scm_exists_in_matrix);
+  scm_c_define_gsubr ("for-all-in-matrix-0ij", 2, 0, 0,
+                      scm_for_all_in_matrix_0ij);
+  scm_c_define_gsubr ("exists-in-matrix-0ij", 2, 0, 0,
+                      scm_exists_in_matrix_0ij);
+  scm_c_define_gsubr ("for-all-in-matrix-1ij", 2, 0, 0,
+                      scm_for_all_in_matrix_1ij);
+  scm_c_define_gsubr ("exists-in-matrix-1ij", 2, 0, 0,
+                      scm_exists_in_matrix_1ij);
+  scm_c_define_gsubr ("for-all-in-matrix-ij", 2, 0, 0,
+                      scm_for_all_in_matrix_ij);
+  scm_c_define_gsubr ("exists-in-matrix-ij", 2, 0, 0, scm_exists_in_matrix_ij);
   scm_c_define_gsubr ("zero-matrix?", 1, 0, 0, scm_zero_matrix_p);
+  scm_c_define_gsubr ("I-matrix?", 1, 0, 0, scm_I_matrix_p);
 }
 
 //-------------------------------------------------------------------------
