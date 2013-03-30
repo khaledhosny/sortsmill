@@ -87,8 +87,6 @@
 
           filled-matrix
           filled-f64matrix
-;;;;;;;;;          I-matrix
-;;;;;;;;;          I-f64matrix
           scalar-matrix
           scalar-f64matrix
 
@@ -186,20 +184,6 @@
 
   ;;-----------------------------------------------------------------------
 
-  #|
-  (define zero-matrix
-    (case-lambda
-      [(n)   (make-array 0 `(1 ,n) `(1 ,n))]
-      [(n m) (make-array 0 `(1 ,n) `(1 ,m))] ))
-  |#
-
-  #|
-  (define zero-f64matrix
-    (case-lambda
-      [(n)   (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,n))]
-      [(n m) (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,m))] ))
-  |#
-
   ;; FIXME: Is there a better name for this?
   (define filled-matrix
     (case-lambda
@@ -211,22 +195,6 @@
     (case-lambda
       [(v n)   (make-typed-array 'f64 v `(1 ,n) `(1 ,n))]
       [(v n m) (make-typed-array 'f64 v `(1 ,n) `(1 ,m))] ))
-
-  (define I-matrix
-    (case-lambda
-      [(n)   (I-matrix n n)]
-      [(n m) (let* ([I (zero-matrix n m)]
-                    [diag (matrix-diagonal I)])
-               (array-fill! diag 1)
-               I)] ))
-
-  (define I-f64matrix
-    (case-lambda
-      [(n)   (I-f64matrix n n)]
-      [(n m) (let* ([I (zero-f64matrix n m)]
-                    [diag (matrix-diagonal I)])
-               (array-fill! diag 1.0)
-               I)] ))
 
   (define scalar-matrix
     (case-lambda
