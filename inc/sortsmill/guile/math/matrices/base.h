@@ -159,6 +159,33 @@ SCM scm_scalar_to_c32matrix (SCM x);
 SCM scm_scalar_to_c64matrix (SCM x);
 SCM scm_scalar_to_typed_matrix (SCM type, SCM x);
 
+SCM scm_c_zero_matrix (size_t m, size_t n);
+SCM scm_c_zero_u8matrix (size_t m, size_t n);
+SCM scm_c_zero_s8matrix (size_t m, size_t n);
+SCM scm_c_zero_u16matrix (size_t m, size_t n);
+SCM scm_c_zero_s16matrix (size_t m, size_t n);
+SCM scm_c_zero_u32matrix (size_t m, size_t n);
+SCM scm_c_zero_s32matrix (size_t m, size_t n);
+SCM scm_c_zero_u64matrix (size_t m, size_t n);
+SCM scm_c_zero_s64matrix (size_t m, size_t n);
+SCM scm_c_zero_f32matrix (size_t m, size_t n);
+SCM scm_c_zero_f64matrix (size_t m, size_t n);
+SCM scm_c_zero_c32matrix (size_t m, size_t n);
+SCM scm_c_zero_c64matrix (size_t m, size_t n);
+SCM scm_zero_matrix (SCM m, SCM n);
+SCM scm_zero_u8matrix (SCM m, SCM n);
+SCM scm_zero_s8matrix (SCM m, SCM n);
+SCM scm_zero_u16matrix (SCM m, SCM n);
+SCM scm_zero_s16matrix (SCM m, SCM n);
+SCM scm_zero_u32matrix (SCM m, SCM n);
+SCM scm_zero_s32matrix (SCM m, SCM n);
+SCM scm_zero_u64matrix (SCM m, SCM n);
+SCM scm_zero_s64matrix (SCM m, SCM n);
+SCM scm_zero_f32matrix (SCM m, SCM n);
+SCM scm_zero_f64matrix (SCM m, SCM n);
+SCM scm_zero_c32matrix (SCM m, SCM n);
+SCM scm_zero_c64matrix (SCM m, SCM n);
+
 #if 0
 {
 #endif

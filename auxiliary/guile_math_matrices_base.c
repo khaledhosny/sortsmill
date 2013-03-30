@@ -35,6 +35,16 @@ scm_c_initialize_from_eval_string (SCM *proc, const char *s)
                       scm_from_latin1_keyword ("compile?"), SCM_BOOL_T);
 }
 
+// FIXME: This looks reusable if given a better name.
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_zero,
+                      scm_c_initialize_from_eval_string, "0");
+
+// FIXME: This looks reusable if given a better name.
+#if 0                           // not used yet.
+INITIALIZED_CONSTANT (static, SCM, _scm_one,
+                      scm_c_initialize_from_eval_string, "1");
+#endif
+
 INITIALIZED_CONSTANT (static, SCM, matrix_row_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i) (lambda (j) (list i j)))");
@@ -95,6 +105,22 @@ raise_not_a_valid_matrix_type (SCM who, SCM type)
       rnrs_c_make_message_condition (_("matrix error: "
                                        "not a valid matrix type")),
       rnrs_make_irritants_condition (scm_list_1 (type))));
+}
+
+static void
+raise_attempt_to_create_empty_matrix (SCM who, SCM numrows, SCM numcols)
+{
+  SCM irritants = scm_list_2 (numrows, numcols);
+  SCM message =
+    scm_c_locale_sformat (_("matrix error: "
+                            "attempt to create a ~ax~a matrix"),
+                          irritants);
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_make_who_condition (who),
+      rnrs_make_message_condition (message),
+      rnrs_make_irritants_condition (irritants)));
 }
 
 static void
@@ -1589,6 +1615,218 @@ scm_matrix_1based (SCM A)
 
 //-------------------------------------------------------------------------
 
+#define _VOID_WRITABLE_ELEMENTS_FUNC(ELEMTYPE)                          \
+  void *                                                                \
+  _void_##ELEMTYPE##writable_elements (scm_t_array_handle *handlep)     \
+  {                                                                     \
+    return (void *)                                                     \
+      scm_array_handle_##ELEMTYPE##writable_elements (handlep);         \
+  }
+
+static _VOID_WRITABLE_ELEMENTS_FUNC ( /* empty */ );
+static _VOID_WRITABLE_ELEMENTS_FUNC (u8_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (s8_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (u16_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (s16_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (u32_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (s32_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (u64_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (s64_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (f32_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (f64_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (c32_);
+static _VOID_WRITABLE_ELEMENTS_FUNC (c64_);
+
+typedef void *_void_writable_elements_func_t (scm_t_array_handle *);
+
+static _void_writable_elements_func_t *_void_writable_elements_func[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = NULL,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = _void_writable_elements,
+  [_FF_INDEX_ARRAY_U8] = _void_u8_writable_elements,
+  [_FF_INDEX_ARRAY_S8] = _void_s8_writable_elements,
+  [_FF_INDEX_ARRAY_U16] = _void_u16_writable_elements,
+  [_FF_INDEX_ARRAY_S16] = _void_s16_writable_elements,
+  [_FF_INDEX_ARRAY_U32] = _void_u32_writable_elements,
+  [_FF_INDEX_ARRAY_S32] = _void_s32_writable_elements,
+  [_FF_INDEX_ARRAY_U64] = _void_u64_writable_elements,
+  [_FF_INDEX_ARRAY_S64] = _void_s64_writable_elements,
+  [_FF_INDEX_ARRAY_F32] = _void_f32_writable_elements,
+  [_FF_INDEX_ARRAY_F64] = _void_f64_writable_elements,
+  [_FF_INDEX_ARRAY_C32] = _void_c32_writable_elements,
+  [_FF_INDEX_ARRAY_C64] = _void_c64_writable_elements
+};
+
+// INITIALIZER(...) must not throw an exception.
+#define _SCM_INITIALIZE_MATRIX(NAME, TYPE, INITIALIZER)         \
+  void                                                          \
+  NAME (void *elems, size_t numrows, ssize_t row_inc,           \
+        size_t numcols, ssize_t col_inc, const void *data)      \
+  {                                                             \
+    TYPE *q = (TYPE *) elems;                                   \
+    for (size_t i = 0; i < numrows; i++)                        \
+      {                                                         \
+        TYPE *p = q;                                            \
+        for (size_t j = 0; j < numcols; j++)                    \
+          {                                                     \
+            *p = INITIALIZER (i, j, data);                      \
+            p += col_inc;                                       \
+          }                                                     \
+        q += row_inc;                                           \
+      }                                                         \
+  }
+
+// Both REAL_INITIALIZER(...) and IMAG_INITIALIZER(...) must not throw
+// an exception.
+#define _SCM_INITIALIZE_COMPLEX_MATRIX(NAME, TYPE,              \
+                                       REAL_INITIALIZER,        \
+                                       IMAG_INITIALIZER)        \
+  void                                                          \
+  NAME (void *elems, size_t numrows, ssize_t row_inc,           \
+        size_t numcols, ssize_t col_inc, const void *data)      \
+  {                                                             \
+    TYPE *q = (TYPE *) elems;                                   \
+    for (size_t i = 0; i < numrows; i++)                        \
+      {                                                         \
+        TYPE *p = q;                                            \
+        for (size_t j = 0; j < numcols; j++)                    \
+          {                                                     \
+            p[0] = REAL_INITIALIZER (i, j, data);               \
+            p[1] = IMAG_INITIALIZER (i, j, data);               \
+            p += 2 * col_inc;                                   \
+          }                                                     \
+        q += 2 * row_inc;                                       \
+      }                                                         \
+  }
+
+typedef void _scm_initialize_matrix_t (void *elems, size_t numrows,
+                                       ssize_t row_inc, size_t numcols,
+                                       ssize_t col_inc, const void *data);
+
+#define _SCM_INITIALIZER_SCM_ZERO(i, j, data) (_scm_zero ())
+#define _SCM_INITIALIZER_TYPED_ZERO(i, j, data) (0)
+
+static _SCM_INITIALIZE_MATRIX (_zero_matrix, SCM, _SCM_INITIALIZER_SCM_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_u8matrix, uint8_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_s8matrix, int8_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_u16matrix, uint16_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_s16matrix, int16_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_u32matrix, uint32_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_s32matrix, int32_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_u64matrix, uint64_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_s64matrix, int64_t,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_f32matrix, float,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_MATRIX (_zero_f64matrix, double,
+                               _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_COMPLEX_MATRIX (_zero_c32matrix, float,
+                                       _SCM_INITIALIZER_TYPED_ZERO,
+                                       _SCM_INITIALIZER_TYPED_ZERO);
+static _SCM_INITIALIZE_COMPLEX_MATRIX (_zero_c64matrix, double,
+                                       _SCM_INITIALIZER_TYPED_ZERO,
+                                       _SCM_INITIALIZER_TYPED_ZERO);
+
+static SCM
+make_initialized_matrix (const char *who,
+                         SCM type, size_t numrows, size_t numcols,
+                         _scm_initialize_matrix_t * initialize,
+                         const void *data)
+{
+  const SCM scm_numrows = scm_from_size_t (numrows);
+  const SCM scm_numcols = scm_from_size_t (numcols);
+
+  if (numrows == 0 || numcols == 0)
+    raise_attempt_to_create_empty_matrix (scm_from_latin1_string (who),
+                                          scm_numrows, scm_numcols);
+
+  SCM bounds;
+  SCM A;
+  scm_t_array_handle handle_A;
+
+  if (numrows == 1)
+    bounds = scm_list_1 (scm_numcols);
+  else
+    bounds = scm_list_2 (scm_numrows, scm_numcols);
+
+  A = scm_make_typed_array (type, SCM_UNSPECIFIED, bounds);
+
+  scm_array_get_handle (A, &handle_A);
+
+  const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
+  if (i == _FF_INDEX_NOT_AN_ARRAY)
+    raise_not_a_valid_matrix_type (scm_from_latin1_string (who), type);
+
+  initialize (_void_writable_elements_func[i] (&handle_A),
+              numrows, scm_c_matrix_row_inc (&handle_A),
+              numcols, scm_c_matrix_column_inc (&handle_A), NULL);
+
+  scm_array_handle_release (&handle_A);
+
+  return A;
+}
+
+VISIBLE SCM
+scm_c_zero_matrix (size_t m, size_t n)
+{
+  return make_initialized_matrix ("scm_zero_matrix", SCM_BOOL_T, m, n,
+                                  _zero_matrix, NULL);
+}
+
+#define _SCM_C_ZERO_TYPED_MATRIX(ELEMTYPE)                              \
+  SCM                                                                   \
+  scm_c_zero_##ELEMTYPE##matrix (size_t m, size_t n)                    \
+  {                                                                     \
+    return make_initialized_matrix ("scm_zero_" #ELEMTYPE "matrix",     \
+                                    scm_symbol_##ELEMTYPE (), m, n,     \
+                                    _zero_##ELEMTYPE##matrix, NULL);    \
+  }
+
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u8);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s8);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u16);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s16);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u32);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s32);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u64);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s64);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (f32);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (f64);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (c32);
+VISIBLE _SCM_C_ZERO_TYPED_MATRIX (c64);
+
+#define _SCM_ZERO_MATRIX(ELEMTYPE)                              \
+  SCM                                                           \
+  scm_zero_##ELEMTYPE##matrix (SCM m, SCM n)                    \
+  {                                                             \
+    if (SCM_UNBNDP (n))                                         \
+      n = m;                                                    \
+    return scm_c_zero_##ELEMTYPE##matrix (scm_to_size_t (m),    \
+                                          scm_to_size_t (n));   \
+  }
+
+VISIBLE _SCM_ZERO_MATRIX ( /* empty */ );
+VISIBLE _SCM_ZERO_MATRIX (u8);
+VISIBLE _SCM_ZERO_MATRIX (s8);
+VISIBLE _SCM_ZERO_MATRIX (u16);
+VISIBLE _SCM_ZERO_MATRIX (s16);
+VISIBLE _SCM_ZERO_MATRIX (u32);
+VISIBLE _SCM_ZERO_MATRIX (s32);
+VISIBLE _SCM_ZERO_MATRIX (u64);
+VISIBLE _SCM_ZERO_MATRIX (s64);
+VISIBLE _SCM_ZERO_MATRIX (f32);
+VISIBLE _SCM_ZERO_MATRIX (f64);
+VISIBLE _SCM_ZERO_MATRIX (c32);
+VISIBLE _SCM_ZERO_MATRIX (c64);
+
+//-------------------------------------------------------------------------
+
 void init_guile_sortsmill_math_matrices_base (void);
 
 VISIBLE void
@@ -1632,6 +1870,8 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-transpose", 1, 0, 0, scm_matrix_transpose);
   scm_c_define_gsubr ("matrix-diagonal", 1, 0, 0, scm_matrix_diagonal);
 
+  scm_c_define_gsubr ("matrix-0based", 1, 0, 0, scm_matrix_0based);
+  scm_c_define_gsubr ("matrix-1based", 1, 0, 0, scm_matrix_1based);
   scm_c_define_gsubr ("matrix-1x1->scalar", 1, 0, 0, scm_matrix_1x1_to_scalar);
   scm_c_define_gsubr ("scalar->matrix", 1, 0, 0, scm_scalar_to_matrix);
   scm_c_define_gsubr ("scalar->u8matrix", 1, 0, 0, scm_scalar_to_u8matrix);
@@ -1649,8 +1889,19 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("scalar->typed-matrix", 2, 0, 0,
                       scm_scalar_to_typed_matrix);
 
-  scm_c_define_gsubr ("matrix-0based", 1, 0, 0, scm_matrix_0based);
-  scm_c_define_gsubr ("matrix-1based", 1, 0, 0, scm_matrix_1based);
+  scm_c_define_gsubr ("zero-matrix", 1, 1, 0, scm_zero_matrix);
+  scm_c_define_gsubr ("zero-u8matrix", 1, 1, 0, scm_zero_u8matrix);
+  scm_c_define_gsubr ("zero-s8matrix", 1, 1, 0, scm_zero_s8matrix);
+  scm_c_define_gsubr ("zero-u16matrix", 1, 1, 0, scm_zero_u16matrix);
+  scm_c_define_gsubr ("zero-s16matrix", 1, 1, 0, scm_zero_s16matrix);
+  scm_c_define_gsubr ("zero-u32matrix", 1, 1, 0, scm_zero_u32matrix);
+  scm_c_define_gsubr ("zero-s32matrix", 1, 1, 0, scm_zero_s32matrix);
+  scm_c_define_gsubr ("zero-u64matrix", 1, 1, 0, scm_zero_u64matrix);
+  scm_c_define_gsubr ("zero-s64matrix", 1, 1, 0, scm_zero_s64matrix);
+  scm_c_define_gsubr ("zero-f32matrix", 1, 1, 0, scm_zero_f32matrix);
+  scm_c_define_gsubr ("zero-f64matrix", 1, 1, 0, scm_zero_f64matrix);
+  scm_c_define_gsubr ("zero-c32matrix", 1, 1, 0, scm_zero_c32matrix);
+  scm_c_define_gsubr ("zero-c64matrix", 1, 1, 0, scm_zero_c64matrix);
 }
 
 //-------------------------------------------------------------------------

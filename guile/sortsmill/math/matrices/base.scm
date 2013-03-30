@@ -17,8 +17,7 @@
 
 (library (sortsmill math matrices base)
 
-  (export not-a-matrix
-          rank-deficiency-exception
+  (export rank-deficiency-exception
 
           ;; Shape inquiry procedures, accepting both typed and
           ;; untyped arrays and vectors.
@@ -34,7 +33,19 @@
           conformable-for-matrix+? ; (conformable-for-matrix+? A B) → boolean
 
           zero-matrix
+          zero-u8matrix
+          zero-s8matrix
+          zero-u16matrix
+          zero-s16matrix
+          zero-u32matrix
+          zero-s32matrix
+          zero-u64matrix
+          zero-s64matrix
+          zero-f32matrix
           zero-f64matrix
+          zero-c32matrix
+          zero-c64matrix
+
           filled-matrix
           filled-f64matrix
           I-matrix
@@ -125,43 +136,30 @@
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
-          (srfi :4)                  ; SRFI-4 uniform numeric vectors.
-          (ice-9 match))
+          (srfi :4))                 ; SRFI-4 uniform numeric vectors.
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension
      "init_guile_sortsmill_math_matrices_base"))
-
-  ;;-----------------------------------------------------------------------
-
-  (define (not-a-matrix caller irritant . more-irritants)
-    (if (null? more-irritants)
-        (assertion-violation caller
-                             (_ "expected a vector or matrix")
-                             irritant)
-        (apply assertion-violation caller
-               (_ "expected vectors or matrices")
-               irritant more-irritants)))
-
-  (define (matrix-empty caller . irritants)
-    (assertion-violation caller
-                         (_ "a vector or matrix is empty")
-                         irritants))
 
   (define (rank-deficiency-exception caller . irritants)
     (apply error caller (_ "rank-deficient matrix") irritants))
 
   ;;-----------------------------------------------------------------------
 
+  #|
   (define zero-matrix
     (case-lambda
       [(n)   (make-array 0 `(1 ,n) `(1 ,n))]
       [(n m) (make-array 0 `(1 ,n) `(1 ,m))] ))
+  |#
 
+  #|
   (define zero-f64matrix
     (case-lambda
       [(n)   (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,n))]
       [(n m) (make-typed-array 'f64 0.0 `(1 ,n) `(1 ,m))] ))
+  |#
 
   ;; FIXME: Is there a better name for this?
   (define filled-matrix
