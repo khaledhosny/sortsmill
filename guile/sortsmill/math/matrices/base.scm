@@ -32,6 +32,17 @@
           conformable-for-matrix*? ; (conformable-for-matrix*? A B) → boolean
           conformable-for-matrix+? ; (conformable-for-matrix+? A B) → boolean
 
+          ;; Create matrices that have all entries equal to zero.
+          ;;
+          ;; (zero-matrix m n) → matrix
+          ;; (zero-matrix m) → square matrix
+          ;; (zero-u8matrix m n) → u8matrix
+          ;; (zero-u8matrix m) → square u8matrix
+          ;;         ⋮
+          ;; (zero-c64matrix m n) → c64matrix
+          ;; (zero-c64matrix m) → square c64matrix
+          ;; (typed-zero-matrix type m n) → matrix
+          ;; (typed-zero-matrix type m) → square matrix
           zero-matrix
           zero-u8matrix
           zero-s8matrix
@@ -45,6 +56,7 @@
           zero-f64matrix
           zero-c32matrix
           zero-c64matrix
+          typed-zero-matrix
 
           filled-matrix
           filled-f64matrix

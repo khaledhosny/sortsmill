@@ -1519,8 +1519,8 @@ scm_scalar_to_typed_matrix (SCM type, SCM x)
 {
   const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
   if (i == _FF_INDEX_NOT_AN_ARRAY)
-    raise_not_a_valid_matrix_type (scm_from_latin1_string
-                                   ("scm_scalar_to_typed_matrix"), type);
+    raise_not_a_valid_matrix_type
+      (scm_from_latin1_string ("scm_scalar_to_typed_matrix"), type);
   return _scalar_to_matrix[i] (x);
 }
 
@@ -1779,7 +1779,7 @@ scm_c_zero_matrix (size_t m, size_t n)
                                   _zero_matrix, NULL);
 }
 
-#define _SCM_C_ZERO_TYPED_MATRIX(ELEMTYPE)                              \
+#define _SCM_C_TYPED_ZERO_MATRIX(ELEMTYPE)                              \
   SCM                                                                   \
   scm_c_zero_##ELEMTYPE##matrix (size_t m, size_t n)                    \
   {                                                                     \
@@ -1788,18 +1788,18 @@ scm_c_zero_matrix (size_t m, size_t n)
                                     _zero_##ELEMTYPE##matrix, NULL);    \
   }
 
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u8);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s8);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u16);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s16);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u32);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s32);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (u64);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (s64);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (f32);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (f64);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (c32);
-VISIBLE _SCM_C_ZERO_TYPED_MATRIX (c64);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (u8);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (s8);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (u16);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (s16);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (u32);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (s32);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (u64);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (s64);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (f32);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (f64);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (c32);
+VISIBLE _SCM_C_TYPED_ZERO_MATRIX (c64);
 
 #define _SCM_ZERO_MATRIX(ELEMTYPE)                              \
   SCM                                                           \
@@ -1824,6 +1824,43 @@ VISIBLE _SCM_ZERO_MATRIX (f32);
 VISIBLE _SCM_ZERO_MATRIX (f64);
 VISIBLE _SCM_ZERO_MATRIX (c32);
 VISIBLE _SCM_ZERO_MATRIX (c64);
+
+typedef SCM _scm_c_typed_zero_matrix_t (size_t m, size_t n);
+
+static _scm_c_typed_zero_matrix_t *_c_typed_zero_matrix[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = NULL,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_c_zero_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_c_zero_u8matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_c_zero_s8matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_c_zero_u16matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_c_zero_s16matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_c_zero_u32matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_c_zero_s32matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_c_zero_u64matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_c_zero_s64matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_c_zero_f32matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_c_zero_f64matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_c_zero_c32matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_c_zero_c64matrix
+};
+
+VISIBLE SCM
+scm_c_typed_zero_matrix (SCM type, size_t m, size_t n)
+{
+  const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
+  if (i == _FF_INDEX_NOT_AN_ARRAY)
+    raise_not_a_valid_matrix_type
+      (scm_from_latin1_string ("scm_c_typed_zero_matrix"), type);
+  return _c_typed_zero_matrix[i] (m, n);
+}
+
+VISIBLE SCM
+scm_typed_zero_matrix (SCM type, SCM m, SCM n)
+{
+  if (SCM_UNBNDP (n))
+    n = m;
+  return scm_c_typed_zero_matrix (type, scm_to_size_t (m), scm_to_size_t (n));
+}
 
 //-------------------------------------------------------------------------
 
@@ -1902,6 +1939,7 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("zero-f64matrix", 1, 1, 0, scm_zero_f64matrix);
   scm_c_define_gsubr ("zero-c32matrix", 1, 1, 0, scm_zero_c32matrix);
   scm_c_define_gsubr ("zero-c64matrix", 1, 1, 0, scm_zero_c64matrix);
+  scm_c_define_gsubr ("typed-zero-matrix", 2, 1, 0, scm_typed_zero_matrix);
 }
 
 //-------------------------------------------------------------------------
