@@ -58,10 +58,37 @@
           zero-c64matrix
           typed-zero-matrix
 
+          ;; Create matrices that have all diagonal entries equal to
+          ;; one and all other entries equal to zero.
+          ;;
+          ;; (zero-matrix m n) → matrix
+          ;; (zero-matrix m) → square matrix
+          ;; (zero-u8matrix m n) → u8matrix
+          ;; (zero-u8matrix m) → square u8matrix
+          ;;         ⋮
+          ;; (zero-c64matrix m n) → c64matrix
+          ;; (zero-c64matrix m) → square c64matrix
+          ;; (typed-zero-matrix type m n) → matrix
+          ;; (typed-zero-matrix type m) → square matrix
+          I-matrix
+          I-u8matrix
+          I-s8matrix
+          I-u16matrix
+          I-s16matrix
+          I-u32matrix
+          I-s32matrix
+          I-u64matrix
+          I-s64matrix
+          I-f32matrix
+          I-f64matrix
+          I-c32matrix
+          I-c64matrix
+          typed-I-matrix
+
           filled-matrix
           filled-f64matrix
-          I-matrix
-          I-f64matrix
+;;;;;;;;;          I-matrix
+;;;;;;;;;          I-f64matrix
           scalar-matrix
           scalar-f64matrix
 
