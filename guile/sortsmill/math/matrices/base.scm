@@ -32,6 +32,32 @@
           conformable-for-matrix*? ; (conformable-for-matrix*? A B) → boolean
           conformable-for-matrix+? ; (conformable-for-matrix+? A B) → boolean
 
+          ;; Create uninitialized matrices.
+          ;;
+          ;; (uninitialized-matrix m n) → matrix
+          ;; (uninitialized-matrix m) → square matrix
+          ;; (uninitialized-u8matrix m n) → u8matrix
+          ;; (uninitialized-u8matrix m) → square u8matrix
+          ;;         ⋮
+          ;; (uninitialized-c64matrix m n) → c64matrix
+          ;; (uninitialized-c64matrix m) → square c64matrix
+          ;; (typed-uninitialized-matrix type m n) → matrix
+          ;; (typed-uninitialized-matrix type m) → square matrix
+          uninitialized-matrix
+          uninitialized-u8matrix
+          uninitialized-s8matrix
+          uninitialized-u16matrix
+          uninitialized-s16matrix
+          uninitialized-u32matrix
+          uninitialized-s32matrix
+          uninitialized-u64matrix
+          uninitialized-s64matrix
+          uninitialized-f32matrix
+          uninitialized-f64matrix
+          uninitialized-c32matrix
+          uninitialized-c64matrix
+          typed-uninitialized-matrix
+
           ;; Create matrices that have all entries equal to zero.
           ;;
           ;; (zero-matrix m n) → matrix
@@ -57,6 +83,32 @@
           zero-c32matrix
           zero-c64matrix
           typed-zero-matrix
+
+          ;; Create matrices that have all entries equal to one.
+          ;;
+          ;; (matrix-of-ones m n) → matrix
+          ;; (matrix-of-ones m) → square matrix
+          ;; (u8matrix-of-ones m n) → u8matrix
+          ;; (u8matrix-of-ones m) → square u8matrix
+          ;;         ⋮
+          ;; (c64matrix-of-ones m n) → c64matrix
+          ;; (c64matrix-of-ones m) → square c64matrix
+          ;; (typed-matrix-of-ones type m n) → matrix
+          ;; (typed-matrix-of-ones type m) → square matrix
+          matrix-of-ones
+          u8matrix-of-ones
+          s8matrix-of-ones
+          u16matrix-of-ones
+          s16matrix-of-ones
+          u32matrix-of-ones
+          s32matrix-of-ones
+          u64matrix-of-ones
+          s64matrix-of-ones
+          f32matrix-of-ones
+          f64matrix-of-ones
+          c32matrix-of-ones
+          c64matrix-of-ones
+          typed-matrix-of-ones
 
           ;; Create matrices that have all entries equal to some
           ;; scalar.
@@ -222,6 +274,7 @@
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
+          (only (srfi :1) zip)
           (srfi :4))                 ; SRFI-4 uniform numeric vectors.
 
   (eval-when (compile load eval)
@@ -230,6 +283,54 @@
 
   (define (rank-deficiency-exception caller . irritants)
     (apply error caller (_ "rank-deficient matrix") irritants))
+
+  ;;-----------------------------------------------------------------------
+
+  (define-syntax define-initialized-matrix
+    (syntax-rules ()
+      [(_ name creator scalar)
+       (define name
+         (case-lambda
+           [(m n) (creator scalar m n)]
+           [(m)   (creator scalar m)]))]))
+
+  (define-syntax define-typed-initialized-matrix
+    (syntax-rules ()
+      [(_ name creator scalar)
+       (define name
+         (case-lambda
+           [(type m n) (creator type scalar m n)]
+           [(type m)   (creator type scalar m)]))]))
+
+  (define-initialized-matrix uninitialized-matrix filled-matrix *unspecified*)
+  (define-initialized-matrix uninitialized-u8matrix filled-u8matrix *unspecified*)
+  (define-initialized-matrix uninitialized-s8matrix filled-s8matrix *unspecified*)
+  (define-initialized-matrix uninitialized-u16matrix filled-u16matrix *unspecified*)
+  (define-initialized-matrix uninitialized-s16matrix filled-s16matrix *unspecified*)
+  (define-initialized-matrix uninitialized-u32matrix filled-u32matrix *unspecified*)
+  (define-initialized-matrix uninitialized-s32matrix filled-s32matrix *unspecified*)
+  (define-initialized-matrix uninitialized-u64matrix filled-u64matrix *unspecified*)
+  (define-initialized-matrix uninitialized-s64matrix filled-s64matrix *unspecified*)
+  (define-initialized-matrix uninitialized-f32matrix filled-f32matrix *unspecified*)
+  (define-initialized-matrix uninitialized-f64matrix filled-f64matrix *unspecified*)
+  (define-initialized-matrix uninitialized-c32matrix filled-c32matrix *unspecified*)
+  (define-initialized-matrix uninitialized-c64matrix filled-c64matrix *unspecified*)
+  (define-typed-initialized-matrix typed-uninitialized-matrix typed-filled-matrix *unspecified*)
+
+  (define-initialized-matrix matrix-of-ones filled-matrix 1)
+  (define-initialized-matrix u8matrix-of-ones filled-u8matrix 1)
+  (define-initialized-matrix s8matrix-of-ones filled-s8matrix 1)
+  (define-initialized-matrix u16matrix-of-ones filled-u16matrix 1)
+  (define-initialized-matrix s16matrix-of-ones filled-s16matrix 1)
+  (define-initialized-matrix u32matrix-of-ones filled-u32matrix 1)
+  (define-initialized-matrix s32matrix-of-ones filled-s32matrix 1)
+  (define-initialized-matrix u64matrix-of-ones filled-u64matrix 1)
+  (define-initialized-matrix s64matrix-of-ones filled-s64matrix 1)
+  (define-initialized-matrix f32matrix-of-ones filled-f32matrix 1)
+  (define-initialized-matrix f64matrix-of-ones filled-f64matrix 1)
+  (define-initialized-matrix c32matrix-of-ones filled-c32matrix 1)
+  (define-initialized-matrix c64matrix-of-ones filled-c64matrix 1)
+  (define-typed-initialized-matrix typed-matrix-of-ones typed-filled-matrix 1)
 
   ;;-----------------------------------------------------------------------
 
