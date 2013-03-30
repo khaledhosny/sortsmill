@@ -274,7 +274,6 @@
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) zip)
           (srfi :4))                 ; SRFI-4 uniform numeric vectors.
 
   (eval-when (compile load eval)
