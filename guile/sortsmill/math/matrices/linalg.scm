@@ -207,7 +207,7 @@ effective rank of A."
           (let* ([S-pinv (matrix-map (lambda (x) (if (flzero? x) x (/ x)))
                                      (matrix-svd-limit-rank S effective-rank))]
                  [A-pinv (f64matrix*
-                          (f64matrix* V (f64vector->diagonal-f64matrix S-pinv))
+                          (f64matrix* V (row-matrix->diagonal-matrix S-pinv))
                           (matrix-transpose U))])
             (values A-pinv effective-rank))))))
 

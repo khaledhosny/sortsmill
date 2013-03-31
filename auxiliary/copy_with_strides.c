@@ -16,27 +16,157 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/copy_with_strides.h>
+#include <sortsmill/guile.h>
+#include <intl.h>
+#include <assert.h>
+
+#define _FF_COPY_WITH_STRIDES(NAME, TYPE)       \
+  void                                          \
+  NAME (ssize_t dest_stride, TYPE *dest,        \
+        ssize_t src_stride, const TYPE *src,    \
+        size_t count)                           \
+  {                                             \
+    for (size_t k = 0; k < count; k++)          \
+      {                                         \
+        *dest = *src;                           \
+        dest += dest_stride;                    \
+        src += src_stride;                      \
+      }                                         \
+  }
+
+#define _FF_COPY_COMPLEX_WITH_STRIDES(NAME,             \
+                                      COMPONENT_TYPE)   \
+  void                                                  \
+  NAME (ssize_t dest_stride, COMPONENT_TYPE *dest,      \
+        ssize_t src_stride, const COMPONENT_TYPE *src,  \
+        size_t count)                                   \
+  {                                                     \
+    for (size_t k = 0; k < count; k++)                  \
+      {                                                 \
+        dest[0] = src[0];                               \
+        dest[1] = src[1];                               \
+        dest += 2 * dest_stride;                        \
+        src += 2 * src_stride;                          \
+      }                                                 \
+  }
+
+VISIBLE _FF_COPY_WITH_STRIDES (copy_scm_with_strides, SCM);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_u8_with_strides, uint8_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_s8_with_strides, int8_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_u16_with_strides, uint16_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_s16_with_strides, int16_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_u32_with_strides, uint32_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_s32_with_strides, int32_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_u64_with_strides, uint64_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_s64_with_strides, int64_t);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_f32_with_strides, float);
+VISIBLE _FF_COPY_WITH_STRIDES (copy_f64_with_strides, double);
+VISIBLE _FF_COPY_COMPLEX_WITH_STRIDES (copy_c32_with_strides, float);
+VISIBLE _FF_COPY_COMPLEX_WITH_STRIDES (copy_c64_with_strides, double);
+
+#define _FF_VOID_COPY_WITH_STRIDES(ELEMTYPE, TYPE)                      \
+  void                                                                  \
+  _void_copy_##ELEMTYPE##_with_strides (ssize_t dest_stride,            \
+                                        void *dest,                     \
+                                        ssize_t src_stride,             \
+                                        const void *src,                \
+                                        size_t count)                   \
+  {                                                                     \
+    copy_##ELEMTYPE##_with_strides (dest_stride, (TYPE *) dest,         \
+                                    src_stride, (const TYPE *) src,     \
+                                    count);                             \
+  }
+
+static inline _FF_VOID_COPY_WITH_STRIDES (scm, SCM);
+static inline _FF_VOID_COPY_WITH_STRIDES (u8, uint8_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (s8, int8_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (u16, uint16_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (s16, int16_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (u32, uint32_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (s32, int32_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (u64, uint64_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (s64, int64_t);
+static inline _FF_VOID_COPY_WITH_STRIDES (f32, float);
+static inline _FF_VOID_COPY_WITH_STRIDES (f64, double);
+static inline _FF_VOID_COPY_WITH_STRIDES (c32, float);
+static inline _FF_VOID_COPY_WITH_STRIDES (c64, double);
 
 VISIBLE void
-copy_f64_with_strides (ssize_t dest_stride, double *dest,
-                       ssize_t src_stride, const double *src, size_t count)
+copy_type_indexed_with_strides (scm_t_array_type_index i,
+                                ssize_t dest_stride, void *dest,
+                                ssize_t src_stride, const void *src,
+                                size_t count)
 {
-  for (size_t k = 0; k < count; k++)
+  switch (i)
     {
-      *dest = *src;
-      dest += dest_stride;
-      src += src_stride;
+    case _FF_INDEX_ARRAY_NONUNIFORM:
+      _void_copy_scm_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_U8:
+      _void_copy_u8_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_S8:
+      _void_copy_s8_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_U16:
+      _void_copy_u16_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_S16:
+      _void_copy_s16_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_U32:
+      _void_copy_u32_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_S32:
+      _void_copy_s32_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_U64:
+      _void_copy_u64_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_S64:
+      _void_copy_s64_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_F32:
+      _void_copy_f32_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_F64:
+      _void_copy_f64_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_C32:
+      _void_copy_c32_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    case _FF_INDEX_ARRAY_C64:
+      _void_copy_c64_with_strides (dest_stride, dest, src_stride, src, count);
+      break;
+
+    default:
+      assert (false);
     }
 }
 
 VISIBLE void
-copy_scm_with_strides (ssize_t dest_stride, SCM *dest,
-                       ssize_t src_stride, const SCM *src, size_t count)
+copy_typed_with_strides (SCM type, ssize_t dest_stride, void *dest,
+                         ssize_t src_stride, const void *src, size_t count)
 {
-  for (size_t k = 0; k < count; k++)
-    {
-      *dest = *src;
-      dest += dest_stride;
-      src += src_stride;
-    }
+  scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
+  if (i == _FF_INDEX_NOT_AN_ARRAY)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("copy_typed_with_strides"),
+        rnrs_c_make_message_condition (_("not a valid array type")),
+        rnrs_make_irritants_condition (scm_list_1 (type))));
+  copy_type_indexed_with_strides (i, dest_stride, dest, src_stride, src, count);
 }

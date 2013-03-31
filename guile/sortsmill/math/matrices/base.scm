@@ -195,10 +195,10 @@
           matrix-map
           matrix-copy
 
-          ;; FIXME: Still written in Guile. And change it to a single
-          ;; ‘diagmat’ procedure.
-          f64vector->diagonal-f64matrix
-          vector->diagonal-matrix
+          ;; (row-matrix->diagonal-matrix row-matrix) → square matrix
+          ;;
+          ;; Accepts both typed and untyped arrays and vectors.
+          row-matrix->diagonal-matrix
 
           ;; (matrix-ref A i j) → value
           ;; (matrix-0ref A i j) → value   (0-based indexing)
@@ -374,6 +374,7 @@
   (define (matrix-copy A)
     (matrix-map identity A))
 
+  #|
   (define (f64vector->diagonal-f64matrix v)
     (let* ([v (row-matrix->vector v)]
            [n (f64vector-length v)]
@@ -389,6 +390,7 @@
                [A (zero-matrix n)])
           (array-map! (matrix-diagonal A) identity v)
           A] ))
+  |#
 
   ;;-----------------------------------------------------------------------
 

@@ -275,6 +275,8 @@ SCM scm_scalar_c32matrix (SCM x, SCM m, SCM n);
 SCM scm_scalar_c64matrix (SCM x, SCM m, SCM n);
 SCM scm_typed_scalar_matrix (SCM type, SCM x, SCM m, SCM n);
 
+SCM scm_row_matrix_to_diagonal_matrix (SCM diag_as_row);
+
 bool scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A);
 bool scm_c_for_all_in_matrix_0ij (bool sense, SCM pred, SCM A);
 bool scm_c_for_all_in_matrix_1ij (bool sense, SCM pred, SCM A);

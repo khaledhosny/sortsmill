@@ -17,6 +17,7 @@
 
 #include <sortsmill/guile.h>
 #include <sortsmill/initialized_global_constants.h>
+#include <sortsmill/copy_with_strides.h>
 #include <intl.h>
 #include <basics.h>
 #include <stdint.h>
@@ -1644,6 +1645,47 @@ scm_matrix_1based (SCM A)
 
 //-------------------------------------------------------------------------
 
+#define _VOID_READONLY_ELEMENTS_FUNC(ELEMTYPE)                          \
+  void *                                                                \
+  _void_##ELEMTYPE##readonly_elements (scm_t_array_handle *handlep)     \
+  {                                                                     \
+    return (void *)                                                     \
+      scm_array_handle_##ELEMTYPE##elements (handlep);                  \
+  }
+
+static _VOID_READONLY_ELEMENTS_FUNC ( /* empty */ );
+static _VOID_READONLY_ELEMENTS_FUNC (u8_);
+static _VOID_READONLY_ELEMENTS_FUNC (s8_);
+static _VOID_READONLY_ELEMENTS_FUNC (u16_);
+static _VOID_READONLY_ELEMENTS_FUNC (s16_);
+static _VOID_READONLY_ELEMENTS_FUNC (u32_);
+static _VOID_READONLY_ELEMENTS_FUNC (s32_);
+static _VOID_READONLY_ELEMENTS_FUNC (u64_);
+static _VOID_READONLY_ELEMENTS_FUNC (s64_);
+static _VOID_READONLY_ELEMENTS_FUNC (f32_);
+static _VOID_READONLY_ELEMENTS_FUNC (f64_);
+static _VOID_READONLY_ELEMENTS_FUNC (c32_);
+static _VOID_READONLY_ELEMENTS_FUNC (c64_);
+
+typedef void *_void_readonly_elements_func_t (scm_t_array_handle *);
+
+static _void_readonly_elements_func_t *_void_readonly_elements_func[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = NULL,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = _void_readonly_elements,
+  [_FF_INDEX_ARRAY_U8] = _void_u8_readonly_elements,
+  [_FF_INDEX_ARRAY_S8] = _void_s8_readonly_elements,
+  [_FF_INDEX_ARRAY_U16] = _void_u16_readonly_elements,
+  [_FF_INDEX_ARRAY_S16] = _void_s16_readonly_elements,
+  [_FF_INDEX_ARRAY_U32] = _void_u32_readonly_elements,
+  [_FF_INDEX_ARRAY_S32] = _void_s32_readonly_elements,
+  [_FF_INDEX_ARRAY_U64] = _void_u64_readonly_elements,
+  [_FF_INDEX_ARRAY_S64] = _void_s64_readonly_elements,
+  [_FF_INDEX_ARRAY_F32] = _void_f32_readonly_elements,
+  [_FF_INDEX_ARRAY_F64] = _void_f64_readonly_elements,
+  [_FF_INDEX_ARRAY_C32] = _void_c32_readonly_elements,
+  [_FF_INDEX_ARRAY_C64] = _void_c64_readonly_elements
+};
+
 #define _VOID_WRITABLE_ELEMENTS_FUNC(ELEMTYPE)                          \
   void *                                                                \
   _void_##ELEMTYPE##writable_elements (scm_t_array_handle *handlep)     \
@@ -1685,7 +1727,7 @@ static _void_writable_elements_func_t *_void_writable_elements_func[] = {
   [_FF_INDEX_ARRAY_C64] = _void_c64_writable_elements
 };
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//-------------------------------------------------------------------------
 
 static SCM
 make_filled_matrix (const char *who, SCM type, SCM fill, size_t numrows,
@@ -2202,6 +2244,38 @@ scm_typed_I_matrix (SCM type, SCM m, SCM n)
 
 //-------------------------------------------------------------------------
 
+VISIBLE SCM
+scm_row_matrix_to_diagonal_matrix (SCM diag_as_row)
+{
+  const size_t n = scm_c_row_matrix_size (diag_as_row);
+  SCM type = scm_array_type (diag_as_row);
+  SCM A = scm_c_typed_zero_matrix (type, n, n);
+
+  scm_t_array_type_index type_index = scm_array_type_to_array_type_index (type);
+
+  scm_t_array_handle handle_diag;
+  scm_array_get_handle (diag_as_row, &handle_diag);
+  const void *_diag = _void_readonly_elements_func[type_index] (&handle_diag);
+
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+  void *_A = _void_writable_elements_func[type_index] (&handle_A);
+
+  const ssize_t diag_inc = scm_c_matrix_column_inc (&handle_diag);
+  const ssize_t row_inc = scm_c_matrix_row_inc (&handle_A);
+  const ssize_t col_inc = scm_c_matrix_column_inc (&handle_A);
+
+  copy_type_indexed_with_strides (type_index, row_inc + col_inc, _A,
+                                  diag_inc, _diag, n);
+
+  scm_array_handle_release (&handle_diag);
+  scm_array_handle_release (&handle_A);
+
+  return A;
+}
+
+//-------------------------------------------------------------------------
+
 VISIBLE bool
 scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A)
 {
@@ -2576,6 +2650,9 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("scalar-c32matrix", 2, 1, 0, scm_scalar_c32matrix);
   scm_c_define_gsubr ("scalar-c64matrix", 2, 1, 0, scm_scalar_c64matrix);
   scm_c_define_gsubr ("typed-scalar-matrix", 3, 1, 0, scm_typed_scalar_matrix);
+
+  scm_c_define_gsubr ("row-matrix->diagonal-matrix", 1, 0, 0,
+                      scm_row_matrix_to_diagonal_matrix);
 
   scm_c_define_gsubr ("for-all-in-matrix", 2, 0, 0, scm_for_all_in_matrix);
   scm_c_define_gsubr ("exists-in-matrix", 2, 0, 0, scm_exists_in_matrix);
