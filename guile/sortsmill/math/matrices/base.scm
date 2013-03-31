@@ -376,24 +376,6 @@
   (define (matrix-copy A)
     (matrix-map identity A))
 
-  #|
-  (define (f64vector->diagonal-f64matrix v)
-  (let* ([v (row-matrix->vector v)]
-  [n (f64vector-length v)]
-  [A (zero-f64matrix n)])
-  (array-map! (matrix-diagonal A) identity v)
-  A))
-
-  (define (vector->diagonal-matrix v)
-  (if (f64vector? v)
-  [f64vector->diagonal-f64matrix v]
-  [let* ([v (row-matrix->vector v)]
-  [n (generalized-vector-length v)]
-  [A (zero-matrix n)])
-  (array-map! (matrix-diagonal A) identity v)
-  A] ))
-  |#
-
   ;;-----------------------------------------------------------------------
 
   (define (matrix-exact->inexact A)
