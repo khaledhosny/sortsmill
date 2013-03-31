@@ -291,6 +291,10 @@ bool scm_is_zero_matrix (SCM A);
 SCM scm_zero_matrix_p (SCM A);
 bool scm_is_I_matrix (SCM A);
 SCM scm_I_matrix_p (SCM A);
+SCM scm_matrix_num_eq_p (SCM A, SCM B);
+SCM scm_matrix_eq_p (SCM A, SCM B);
+SCM scm_matrix_eqv_p (SCM A, SCM B);
+SCM scm_matrix_equal_p (SCM A, SCM B);
 
 #if 0
 {

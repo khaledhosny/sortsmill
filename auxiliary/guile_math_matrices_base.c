@@ -51,6 +51,26 @@ INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_I_element_p,
                       scm_c_initialize_from_eval_string,
                       "(lambda (x i j) (if (= i j) (= x 1) (zero? x)))");
 
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _num_eq_0ij,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (B)"
+                      "  (lambda (x i j) (= x (matrix-0ref B i j))))");
+
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _eq_0ij,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (B)"
+                      "  (lambda (x i j) (eq? x (matrix-0ref B i j))))");
+
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _eqv_0ij,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (B)"
+                      "  (lambda (x i j) (eqv? x (matrix-0ref B i j))))");
+
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _equal_0ij,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (B)"
+                      "  (lambda (x i j) (equal? x (matrix-0ref B i j))))");
+
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, matrix_row_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i) (lambda (j) (list i j)))");
@@ -2270,11 +2290,10 @@ scm_c_for_all_in_matrix_ij_based (const char *who,
       while (is_sense && j < n)
         {
           SCM x = scm_c_matrix_0ref (A, i, j);
-          const bool p = (bool) scm_is_true (scm_call_3 (pred, x,
-                                                         scm_from_ssize_t
-                                                         (i_base + i),
-                                                         scm_from_ssize_t
-                                                         (j_base + j)));
+          const bool p =
+            (bool) scm_is_true (scm_call_3
+                                (pred, x, scm_from_ssize_t (i_base + i),
+                                 scm_from_ssize_t (j_base + j)));
           is_sense = (p == sense);
           j++;
         }
@@ -2368,6 +2387,70 @@ VISIBLE SCM
 scm_I_matrix_p (SCM A)
 {
   return scm_from_bool (scm_is_I_matrix (A));
+}
+
+static SCM
+_scm_matrix_comparison_p (const char *who, SCM comparison_0ij_of_B, SCM A,
+                          SCM B)
+{
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string (who), A);
+    }
+
+  scm_t_array_handle handle_B;
+  scm_array_get_handle (B, &handle_B);
+
+  if (!scm_array_handle_is_matrix (&handle_B))
+    {
+      scm_array_handle_release (&handle_A);
+      scm_array_handle_release (&handle_B);
+      raise_not_a_matrix (scm_from_latin1_string (who), B);
+    }
+
+  const size_t m_A = scm_c_matrix_numrows (&handle_A);
+  const size_t n_A = scm_c_matrix_numcols (&handle_A);
+  const size_t m_B = scm_c_matrix_numrows (&handle_B);
+  const size_t n_B = scm_c_matrix_numcols (&handle_B);
+
+  scm_array_handle_release (&handle_A);
+  scm_array_handle_release (&handle_B);
+
+  SCM equal = SCM_BOOL_F;
+  if (m_A == m_B && n_A == n_B)
+    {
+      SCM pred = scm_call_1 (comparison_0ij_of_B, B);
+      equal = scm_for_all_in_matrix_0ij (pred, A);
+    }
+  return equal;
+}
+
+VISIBLE SCM
+scm_matrix_num_eq_p (SCM A, SCM B)
+{
+  return _scm_matrix_comparison_p ("scm_matrix_num_eq_p", _num_eq_0ij (), A, B);
+}
+
+VISIBLE SCM
+scm_matrix_eq_p (SCM A, SCM B)
+{
+  return _scm_matrix_comparison_p ("scm_matrix_eq_p", _eq_0ij (), A, B);
+}
+
+VISIBLE SCM
+scm_matrix_eqv_p (SCM A, SCM B)
+{
+  return _scm_matrix_comparison_p ("scm_matrix_eqv_p", _eqv_0ij (), A, B);
+}
+
+VISIBLE SCM
+scm_matrix_equal_p (SCM A, SCM B)
+{
+  return _scm_matrix_comparison_p ("scm_matrix_equal_p", _equal_0ij (), A, B);
 }
 
 //-------------------------------------------------------------------------
@@ -2509,6 +2592,10 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("exists-in-matrix-ij", 2, 0, 0, scm_exists_in_matrix_ij);
   scm_c_define_gsubr ("zero-matrix?", 1, 0, 0, scm_zero_matrix_p);
   scm_c_define_gsubr ("I-matrix?", 1, 0, 0, scm_I_matrix_p);
+  scm_c_define_gsubr ("matrix=?", 2, 0, 0, scm_matrix_num_eq_p);
+  scm_c_define_gsubr ("matrix-eq?", 2, 0, 0, scm_matrix_eq_p);
+  scm_c_define_gsubr ("matrix-eqv?", 2, 0, 0, scm_matrix_eqv_p);
+  scm_c_define_gsubr ("matrix-equal?", 2, 0, 0, scm_matrix_equal_p);
 }
 
 //-------------------------------------------------------------------------
