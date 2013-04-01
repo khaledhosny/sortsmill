@@ -1595,6 +1595,7 @@ CI_SCDuplicate (SplineChar *sc)
 
   newsc = xzalloc (sizeof (SplineChar));
   newsc->name = xstrdup_or_null (sc->name);
+  newsc->parent = sc->parent;
   newsc->unicodeenc = sc->unicodeenc;
   newsc->orig_pos = sc->orig_pos;
   newsc->comment = xstrdup_or_null (sc->comment);
