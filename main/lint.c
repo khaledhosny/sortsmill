@@ -100,7 +100,8 @@ failures_of_mask (int mask)
     printf ("  Non integral coordinates in a glyph\n");
   if (mask & 0x100000)
     {
-      printf ("  A glyph uses at least one, but not all, anchor classes in a subtable\n");
+      printf
+        ("  A glyph uses at least one, but not all, anchor classes in a subtable\n");
       printf ("   (I'm not absolutely sure this is an error)\n");
     }
   if (mask & 0x200000)
@@ -131,7 +132,8 @@ failures_of_load_state (int load_state)
   if (load_state & 0x80)
     printf ("  Bad OpenType advanced typography table\n");
   if (load_state & 0x100)
-    printf ("  Bad version number in OS/2 table (must be >0, and must be >1 for OT-CFF fonts)\n");
+    printf
+      ("  Bad version number in OS/2 table (must be >0, and must be >1 for OT-CFF fonts)\n");
   if (load_state & 0x200)
     printf ("  Bad sfnt file header\n");
 }
@@ -190,9 +192,11 @@ failures_of_blues (int blues)
   if (blues & 0x400000)
     printf ("  Bad StemSnapV entry in PostScript Private dictionary\n");
   if (blues & 0x800000)
-    printf ("  StemSnapH does not contain StdHW value in PostScript Private dictionary\n");
+    printf
+      ("  StemSnapH does not contain StdHW value in PostScript Private dictionary\n");
   if (blues & 0x1000000)
-    printf ("  StemSnapV does not contain StdVW value in PostScript Private dictionary\n");
+    printf
+      ("  StemSnapV does not contain StdVW value in PostScript Private dictionary\n");
   if (blues & 0x2000000)
     printf ("  Bad BlueShift entry in PostScript Private dictionary\n");
 }

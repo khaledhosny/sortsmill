@@ -37,7 +37,7 @@ CLEANFILES =
 DISTCLEANFILES =
 
 AM_CPPFLAGS += -I$(top_builddir)/fontforge -I$(top_srcdir)/fontforge
-AM_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
+AM_LDFLAGS = -export-dynamic $(MY_CFLAGS) $(MY_LIBS)
 LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la \
 		$(top_builddir)/auxiliary/libsortsmill_aux.la \
 		$(top_builddir)/gutils/libsortsmill_gutils.la \
@@ -52,6 +52,14 @@ bin_PROGRAMS += sortsmill-editor smed
 sortsmill_editor_SOURCES = sortsmill-editor.c
 sortsmill_editor_LDFLAGS = $(GUILE_LIBS) $(GLIB_LIBS)
 sortsmill_editor_LDADD = $(top_builddir)/lib/libgnu.la
+
+if HAVE_PYTHON_API
+# Python extensions often depend on the main program to export the
+# symbols from libpython, so we should link the main program, no
+# matter how trivial it is, with libpython.
+sortsmill_editor_LDFLAGS += -export-dynamic $(PYTHON_LIBS)
+endif HAVE_PYTHON_API
+
 smed_SOURCES = $(sortsmill_editor_SOURCES)
 smed_LDFLAGS = $(sortsmill_editor_LDFLAGS)
 smed_LDADD = $(sortsmill_editor_LDADD)

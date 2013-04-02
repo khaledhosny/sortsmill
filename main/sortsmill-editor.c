@@ -1,4 +1,4 @@
-#include <config.h>
+#include <config.h>             // -*- coding: utf-8 *-*
 
 // Copyright (C) 2013 Barry Schwartz
 // 
@@ -15,10 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+#if !defined _NO_PYTHON
+#include <Python.h>
+#endif
+
 #include <libguile.h>
 #include <glib.h>
 
-int main (int, char**);
+int main (int, char **);
 
 typedef struct
 {
@@ -51,9 +55,25 @@ run_main (void *my_args_ptr)
   return NULL;
 }
 
+#if !defined _NO_PYTHON
+volatile int python_filled_bitbucket;
+#endif
+
 int
 main (int argc, char **argv)
 {
+#if !defined _NO_PYTHON
+  // Python extensions typically depend on the main program to export
+  // libpython’s symbols. On the other hand, the linker on some
+  // systems, such as Debian and Ubuntu, will not include the symbols
+  // of a library that is not actually used. Therefore, let us use
+  // something from libpython here, for no reason other than to
+  // include libpython symbols in the main program. And let us be
+  // comically thorough in preventing the toolchain from removing the
+  // otherwise pointless code.
+  python_filled_bitbucket = Py_IsInitialized ();
+#endif
+
   // g_set_prgname should be set here, in the _application_, rather
   // than when options are parsed, in the _library_. The editor is not
   // tied to a specific application.

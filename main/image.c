@@ -60,7 +60,8 @@ char *default_text = "<fontname>";
 //-------------------------------------------------------------------------
 
 static void
-make_default_image (char *filename, char *font, int width, int height, int pixelsize)
+make_default_image (char *filename, char *font, int width, int height,
+                    int pixelsize)
 {
   SplineFont *sf = LoadSplineFont (font, of_fstypepermitted);
   if (sf == NULL)
@@ -81,7 +82,8 @@ make_default_image (char *filename, char *font, int width, int height, int pixel
 }
 
 static void
-make_image (char *filename, char *font, int width, int height, int pixelsize, char **lines)
+make_image (char *filename, char *font, int width, int height, int pixelsize,
+            char **lines)
 {
   size_t line_count;
   SplineFont *sf = LoadSplineFont (font, of_fstypepermitted);
@@ -160,7 +162,7 @@ my_main (int argc, char **argv)
   if (show_version)
     {
       printf ("%s: %s\n", program_name, VERSION);
-	  exit (0);
+      exit (0);
     }
 
   if (remaining_args == NULL || remaining_args[1] != NULL)

@@ -59,7 +59,8 @@ static void initialize (void);
 
 static int
 combine_flags (bool ignorehints, bool ignorenames, bool ignoregpos,
-               bool ignoregsub, bool ignorebitmaps, bool exact, bool warn, bool merge)
+               bool ignoregsub, bool ignorebitmaps, bool exact, bool warn,
+               bool merge)
 {
   int flags = 0x789;
   if (ignorehints)
@@ -158,7 +159,7 @@ my_main (int argc, char **argv)
   if (show_version)
     {
       printf ("%s: %s\n", program_name, VERSION);
-	  exit (0);
+      exit (0);
     }
 
   if (remaining_args == NULL || remaining_args[1] == NULL)
