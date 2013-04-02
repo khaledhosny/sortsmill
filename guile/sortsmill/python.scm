@@ -516,6 +516,7 @@
                      [locals #f]
                      [from '()]
                      [level -1])
+;;;                     [level 0]) ;; FIXME: Check that this breaks nothing. (It is for compatibility with Python 3.3.)
     (pointer->pyobject
      (__python_import (pyobject->pointer
                        (make-pytuple (force-pystring 'pyimport module-name)
