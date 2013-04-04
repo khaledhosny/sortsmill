@@ -27,6 +27,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _NO_PYTHON
+#include <Python.h>
+#endif
+
 #include <stdbool.h>
 #include <fontforgeui.h>
 #include <annotations.h>
@@ -6630,6 +6634,7 @@ cv_e_h (GWindow gw, GEvent *event)
 #define MID_Quit	2711
 #define MID_CloseTab	2712
 #define MID_GenerateTTC	2713
+#define MID_ExecuteScript 2714
 
 #define MID_MMReblend	2800
 #define MID_MMAll	2821
@@ -6878,11 +6883,18 @@ fllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     {
       switch (mi->mid)
         {
+#ifndef _NO_PYTHON
+        case MID_ExecuteScript:
+          mi->ti.disabled = (!Py_IsInitialized ());
+          break;
+#endif
+
         case MID_Open:
         case MID_New:
           mi->ti.disabled = cv->b.container != NULL
             && !(cv->b.container->funcs->canOpen) (cv->b.container);
           break;
+
         case MID_GenerateTTC:
           for (fvs = fv_list; fvs != NULL; fvs = (FontView *) (fvs->b.next))
             {
@@ -6891,15 +6903,18 @@ fllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
             }
           mi->ti.disabled = fvs == NULL || cv->b.container != NULL;
           break;
+
         case MID_Revert:
           mi->ti.disabled = cv->b.fv->sf->origname == NULL
             || cv->b.fv->sf->new || cv->b.container;
           break;
+
         case MID_RevertGlyph:
           mi->ti.disabled = cv->b.fv->sf->filename == NULL
             || cv->b.fv->sf->sfd_version < 2 || cv->b.sc->namechanged
             || cv->b.fv->sf->mm != NULL || cv->b.container;
           break;
+
         case MID_Recent:
           mi->ti.disabled = !RecentFilesAny () || (cv->b.container != NULL
                                                    && !(cv->b.
@@ -6907,13 +6922,16 @@ fllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
                                                         canOpen)
                                                    (cv->b.container));
           break;
+
         case MID_Close:
         case MID_Quit:
           mi->ti.disabled = false;
           break;
+
         case MID_CloseTab:
           mi->ti.disabled = cv->tabs == NULL || cv->former_cnt <= 1;
           break;
+
         default:
           mi->ti.disabled = cv->b.container != NULL;
           break;
@@ -12435,7 +12453,7 @@ static GMenuItem fllist[] = {
     },
     .shortcut = H_ ("Execute Script...|Ctl+."),
     .invoke = CVMenuExecute,
-    .mid = 0
+    .mid = MID_ExecuteScript
   },
 
   GMENUITEM_LINE,

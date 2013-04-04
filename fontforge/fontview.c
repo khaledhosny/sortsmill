@@ -28,6 +28,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _NO_PYTHON
+#include <Python.h>
+#endif
+
 #include <stdbool.h>
 #include "fontforgeui.h"
 #include "groups.h"
@@ -1831,6 +1835,7 @@ FVMenuCondense (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 #define MID_RevertToBackup 2708
 #define MID_GenerateTTC 2709
 #define MID_OpenMetrics	2710
+#define MID_ExecuteScript 2714
 #define MID_Cut		2101
 #define MID_Copy	2102
 #define MID_Paste	2103
@@ -5210,6 +5215,12 @@ fllistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     {
       switch (mi->mid)
         {
+#ifndef _NO_PYTHON
+        case MID_ExecuteScript:
+          mi->ti.disabled = (!Py_IsInitialized ());
+          break;
+#endif
+
         case MID_GenerateTTC:
           for (fvs = fv_list; fvs != NULL; fvs = (FontView *) (fvs->b.next))
             {
@@ -5218,9 +5229,11 @@ fllistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
             }
           mi->ti.disabled = fvs == NULL;
           break;
+
         case MID_Revert:
           mi->ti.disabled = fv->b.sf->origname == NULL || fv->b.sf->new;
           break;
+
         case MID_RevertToBackup:
           /* We really do want to use filename here and origname
              above. */
@@ -5244,17 +5257,21 @@ fllistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
                 mi->ti.disabled = false;
             }
           break;
+
         case MID_RevertGlyph:
           mi->ti.disabled = fv->b.sf->origname == NULL
             || fv->b.sf->sfd_version < 2 || anychars == -1
             || fv->b.sf->compression != 0;
           break;
+
         case MID_Recent:
           mi->ti.disabled = !RecentFilesAny ();
           break;
+
         case MID_ScriptMenu:
           mi->ti.disabled = script_menu_names[0] == NULL;
           break;
+
         case MID_Print:
           mi->ti.disabled = fv->b.sf->onlybitmaps || in_modal;
           break;
@@ -5918,7 +5935,7 @@ static GMenuItem fllist[] = {
 
     .shortcut = H_ ("Execute Script...|Ctl+."),
     .invoke = FVMenuExecute,
-    .mid = 0},
+    .mid = MID_ExecuteScript},
 
 #endif
 #if !defined(_NO_PYTHON)

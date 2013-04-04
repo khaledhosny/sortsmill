@@ -33,8 +33,13 @@
  * perhaps _in_ Python. (REPL dialogs can be, also.)
  */
 
+static int
+UNUSED (make_sure_there_is_some_code_in_this_module_even_if_there_is_no_python)
+= 0;
+
 #if !defined(_NO_PYTHON)
 
+#include <Python.h>
 #include "fontforgeui.h"
 #include <gresource.h>
 #include <utype.h>
@@ -159,8 +164,8 @@ sd_e_h (GWindow gw, GEvent *event)
   return (true);
 }
 
-void
-ScriptDlg (FontView *fv, CharView *cv)
+static void
+script_dialog (FontView *fv, CharView *cv)
 {
   GRect pos;
   static GWindow gw;
@@ -286,6 +291,13 @@ ScriptDlg (FontView *fv, CharView *cv)
   GDrawSync (NULL);
   GDrawProcessPendingEvents (NULL);
   GDrawSetUserData (gw, NULL);
+}
+
+void
+ScriptDlg (FontView *fv, CharView *cv)
+{
+  if (Py_IsInitialized ())
+    script_dialog (fv, cv);
 }
 
 #endif /* Python */
