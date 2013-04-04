@@ -1727,6 +1727,23 @@ static _void_writable_elements_func_t *_void_writable_elements_func[] = {
   [_FF_INDEX_ARRAY_C64] = _void_c64_writable_elements
 };
 
+static size_t _matrix_element_size[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = SIZE_MAX,  // This should never be used.
+  [_FF_INDEX_ARRAY_NONUNIFORM] = sizeof (SCM),
+  [_FF_INDEX_ARRAY_U8] = sizeof (uint8_t),
+  [_FF_INDEX_ARRAY_S8] = sizeof (int8_t),
+  [_FF_INDEX_ARRAY_U16] = sizeof (uint16_t),
+  [_FF_INDEX_ARRAY_S16] = sizeof (int16_t),
+  [_FF_INDEX_ARRAY_U32] = sizeof (uint32_t),
+  [_FF_INDEX_ARRAY_S32] = sizeof (int32_t),
+  [_FF_INDEX_ARRAY_U64] = sizeof (uint64_t),
+  [_FF_INDEX_ARRAY_S64] = sizeof (int64_t),
+  [_FF_INDEX_ARRAY_F32] = sizeof (float),
+  [_FF_INDEX_ARRAY_F64] = sizeof (double),
+  [_FF_INDEX_ARRAY_C32] = 2 * sizeof (float),
+  [_FF_INDEX_ARRAY_C64] = 2 * sizeof (double)
+};
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -2247,6 +2264,8 @@ scm_typed_I_matrix (SCM type, SCM m, SCM n)
 VISIBLE SCM
 scm_row_matrix_to_diagonal_matrix (SCM diag_as_row)
 {
+  scm_dynwind_begin (0);
+
   const size_t n = scm_c_row_matrix_size (diag_as_row);
   SCM type = scm_array_type (diag_as_row);
   SCM A = scm_c_typed_zero_matrix (type, n, n);
@@ -2255,10 +2274,12 @@ scm_row_matrix_to_diagonal_matrix (SCM diag_as_row)
 
   scm_t_array_handle handle_diag;
   scm_array_get_handle (diag_as_row, &handle_diag);
+  scm_dynwind_array_handle_release (&handle_diag);
   const void *_diag = _void_readonly_elements_func[type_index] (&handle_diag);
 
   scm_t_array_handle handle_A;
   scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
   void *_A = _void_writable_elements_func[type_index] (&handle_A);
 
   const ssize_t diag_inc = scm_c_matrix_column_inc (&handle_diag);
@@ -2268,10 +2289,79 @@ scm_row_matrix_to_diagonal_matrix (SCM diag_as_row)
   copy_type_indexed_with_strides (type_index, row_inc + col_inc, _A,
                                   diag_inc, _diag, n);
 
-  scm_array_handle_release (&handle_diag);
-  scm_array_handle_release (&handle_A);
+  scm_dynwind_end ();
 
   return A;
+}
+
+//-------------------------------------------------------------------------
+
+VISIBLE SCM
+scm_matrix_copy (SCM A)
+{
+  const char *who = "scm_matrix_copy";
+
+  scm_dynwind_begin (0);
+
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
+
+  const SCM type = scm_array_handle_element_type (&handle_A);
+  const scm_t_array_type_index type_index =
+    scm_array_type_to_array_type_index (type);
+  const size_t rank = scm_array_handle_rank (&handle_A);
+  const scm_t_array_dim *dims = scm_array_handle_dims (&handle_A);
+
+  SCM bounds = (rank == 1) ?
+    scm_list_1 (scm_list_2 (scm_from_ssize_t (dims[0].lbnd),
+                            scm_from_ssize_t (dims[0].ubnd))) :
+    scm_list_2 (scm_list_2 (scm_from_ssize_t (dims[0].lbnd),
+                            scm_from_ssize_t (dims[0].ubnd)),
+                scm_list_2 (scm_from_ssize_t (dims[1].lbnd),
+                            scm_from_ssize_t (dims[1].ubnd)));
+  SCM B = scm_make_typed_array (type, SCM_UNSPECIFIED, bounds);
+
+  scm_t_array_handle handle_B;
+  scm_array_get_handle (B, &handle_B);
+  scm_dynwind_array_handle_release (&handle_B);
+  const scm_t_array_dim *dims_B = scm_array_handle_dims (&handle_B);
+
+  const void *_A = _void_readonly_elements_func[type_index] (&handle_A);
+  void *_B = _void_writable_elements_func[type_index] (&handle_B);
+
+  switch (rank)
+    {
+    case 1:
+      copy_type_indexed_with_strides (type_index, dims_B[0].inc, _B,
+                                      dims[0].inc, _A,
+                                      (dims[0].ubnd - dims[0].lbnd) + 1);
+      break;
+
+    case 2:
+      {
+        const size_t elem_size = _matrix_element_size[type_index];
+        const ssize_t src_row_stride = dims[0].inc * (ssize_t) elem_size;
+        const ssize_t dest_row_stride = dims_B[0].inc * (ssize_t) elem_size;
+        for (ssize_t i = 0; i <= dims[0].ubnd - dims[0].lbnd; i++)
+          {
+            copy_type_indexed_with_strides (type_index, dims_B[1].inc, _B,
+                                            dims[1].inc, _A,
+                                            (dims[1].ubnd - dims[1].lbnd) + 1);
+            _A = (void *) ((char *) _A + src_row_stride);
+            _B = (void *) ((char *) _B + dest_row_stride);
+          }
+      }
+      break;
+
+    default:
+      assert (false);
+    }
+
+  scm_dynwind_end ();
+
+  return B;
 }
 
 //-------------------------------------------------------------------------
@@ -2467,32 +2557,24 @@ static SCM
 _scm_matrix_comparison_p (const char *who, SCM comparison_0ij_of_B, SCM A,
                           SCM B)
 {
+  scm_dynwind_begin (0);
+
   scm_t_array_handle handle_A;
   scm_array_get_handle (A, &handle_A);
-
-  if (!scm_array_handle_is_matrix (&handle_A))
-    {
-      scm_array_handle_release (&handle_A);
-      raise_not_a_matrix (scm_from_latin1_string (who), A);
-    }
+  scm_dynwind_array_handle_release (&handle_A);
+  assert_array_handle_is_matrix (who, A, &handle_A);
 
   scm_t_array_handle handle_B;
   scm_array_get_handle (B, &handle_B);
-
-  if (!scm_array_handle_is_matrix (&handle_B))
-    {
-      scm_array_handle_release (&handle_A);
-      scm_array_handle_release (&handle_B);
-      raise_not_a_matrix (scm_from_latin1_string (who), B);
-    }
+  scm_dynwind_array_handle_release (&handle_B);
+  assert_array_handle_is_matrix (who, B, &handle_B);
 
   const size_t m_A = scm_c_matrix_numrows (&handle_A);
   const size_t n_A = scm_c_matrix_numcols (&handle_A);
   const size_t m_B = scm_c_matrix_numrows (&handle_B);
   const size_t n_B = scm_c_matrix_numcols (&handle_B);
 
-  scm_array_handle_release (&handle_A);
-  scm_array_handle_release (&handle_B);
+  scm_dynwind_end ();
 
   SCM equal = SCM_BOOL_F;
   if (m_A == m_B && n_A == n_B)
@@ -2653,6 +2735,8 @@ init_guile_sortsmill_math_matrices_base (void)
 
   scm_c_define_gsubr ("row-matrix->diagonal-matrix", 1, 0, 0,
                       scm_row_matrix_to_diagonal_matrix);
+
+  scm_c_define_gsubr ("matrix-copy", 1, 0, 0, scm_matrix_copy);
 
   scm_c_define_gsubr ("for-all-in-matrix", 2, 0, 0, scm_for_all_in_matrix);
   scm_c_define_gsubr ("exists-in-matrix", 2, 0, 0, scm_exists_in_matrix);

@@ -24,14 +24,14 @@ scm_format (SCM destination, SCM message, SCM args)
                       destination, message, args);
 }
 
-VISIBLE
-SCM scm_c_utf8_format (SCM destination, const char *message, SCM args)
+VISIBLE SCM
+scm_c_utf8_format (SCM destination, const char *message, SCM args)
 {
   return scm_format (destination, scm_from_utf8_string (message), args);
 }
 
-VISIBLE
-SCM scm_c_locale_format (SCM destination, const char *message, SCM args)
+VISIBLE SCM
+scm_c_locale_format (SCM destination, const char *message, SCM args)
 {
   return scm_format (destination, scm_from_locale_string (message), args);
 }
@@ -42,14 +42,14 @@ scm_sformat (SCM message, SCM args)
   return scm_format (SCM_BOOL_F, message, args);
 }
 
-VISIBLE
-SCM scm_c_utf8_sformat (const char *message, SCM args)
+VISIBLE SCM
+scm_c_utf8_sformat (const char *message, SCM args)
 {
   return scm_sformat (scm_from_utf8_string (message), args);
 }
 
-VISIBLE
-SCM scm_c_locale_sformat (const char *message, SCM args)
+VISIBLE SCM
+scm_c_locale_sformat (const char *message, SCM args)
 {
   return scm_sformat (scm_from_locale_string (message), args);
 }

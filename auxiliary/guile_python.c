@@ -444,16 +444,16 @@ scm_number_to_pyobject (SCM obj)
   if (scm_is_inexact (obj))
     {
       if (scm_is_real (obj))
-	result = scm_inexact_to_pyfloat (obj);
+        result = scm_inexact_to_pyfloat (obj);
       else
-	result = scm_complex_to_pycomplex (obj);
+        result = scm_complex_to_pycomplex (obj);
     }
   else if (scm_is_integer (obj))
     {
       if (scm_is_signed_integer (obj, -2147483648, 2147483647))
-	result = scm_integer_to_pyint (obj);
+        result = scm_integer_to_pyint (obj);
       else
-	result = scm_integer_to_pylong (obj);
+        result = scm_integer_to_pylong (obj);
     }
   else if (scm_is_rational (obj))
     result = scm_rational_to_pympq (obj);
@@ -488,7 +488,8 @@ scm_pyobject_to_number (SCM obj)
       (scm_list_4
        (rnrs_make_assertion_violation (),
         rnrs_c_make_who_condition ("scm_pyobject_to_number"),
-        rnrs_c_make_message_condition (_("cannot convert the Python object to a Guile number")),
+        rnrs_c_make_message_condition (_
+                                       ("cannot convert the Python object to a Guile number")),
         rnrs_make_irritants_condition (scm_list_1 (obj))));
   return result;
 }

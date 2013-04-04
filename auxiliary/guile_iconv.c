@@ -45,8 +45,7 @@ scm_embedded_utf7_to_string (SCM str)
     {
       size_t utf8_bufsize = utf7_length * 6;    /* FIXME: What is a good
                                                    size here? */
-      utf8 = scm_gc_malloc_pointerless (utf8_bufsize * sizeof (char),
-                                        "string");
+      utf8 = scm_gc_malloc_pointerless (utf8_bufsize * sizeof (char), "string");
 
       // iconv(3) modifies these pointers and integers.
       char *utf7_p = utf7;
@@ -61,8 +60,7 @@ scm_embedded_utf7_to_string (SCM str)
     }
   else
     {
-      utf8 = scm_gc_malloc_pointerless (utf7_length * sizeof (char),
-                                        "string");
+      utf8 = scm_gc_malloc_pointerless (utf7_length * sizeof (char), "string");
       memcpy (utf8, utf7, utf7_length * sizeof (char));
       utf8_length = utf7_length;
     }

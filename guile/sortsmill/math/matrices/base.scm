@@ -191,8 +191,21 @@
    scalar-c64matrix
    typed-scalar-matrix
 
-   ;; FIXME: Still written in Guile.
-   matrix-map
+   ;; These accept both type and untyped arrays and vectors; all must
+   ;; have the same @code{matrix-dimensions}. The typed-matrix-map
+   ;; procedure returns a matrix of the given type. The matrix-map
+   ;; procedure is equivalent to calling typed-matrix-map with
+   ;; @var{type} set to @code{#t}.
+   typed-matrix-map  ; (typed-matrix-map type proc A₁ A₂ ...) → matrix
+   matrix-map        ; (matrix-map proc A₁ A₂ ...) → matrix
+
+   ;; (matrix-copy A) → matrix
+   ;;
+   ;; Accepts both typed and untyped arrays and vectors. Returns an
+   ;; array with the same array rank and index bounds as the
+   ;; original’s. (This is not true in general of our matrix routines;
+   ;; we try to treat matrices as implicitly 2-dimensional and as
+   ;; having arbitrary index bases.)
    matrix-copy
 
    ;; (row-matrix->diagonal-matrix row-matrix) → square matrix
@@ -366,15 +379,26 @@
 
   ;;-----------------------------------------------------------------------
 
-  (define (matrix-map proc A)
-    (let* ([type (array-type A)]
-           [shape (array-shape A)]
-           [B (apply make-typed-array type *unspecified* shape)])
-      (array-map! B proc A)
-      B))
+  (define (typed-matrix-map type proc A . more-matrices)
+    (let* ([dimensions (matrix-dimensions A)]
+           [B (apply make-typed-array type *unspecified* dimensions)]
+           [prep-matrix (compose vector->matrix matrix-0based)])
+      (if (null? more-matrices)
+          [array-map! B proc (prep-matrix A)]
+          [begin
+            (unless (for-all (lambda (A^)
+                               (equal? (matrix-dimensions A^) dimensions))
+                             more-matrices)
+              (apply assertion-violation 'matrix-map
+                     "matrix dimension mismatch" A more-matrices))
+            (apply array-map! B proc (prep-matrix A)
+                   (map prep-matrix more-matrices))])
+      (if (= (car dimensions) 1)
+          [row-matrix->vector B]
+          B)))
 
-  (define (matrix-copy A)
-    (matrix-map identity A))
+  (define (matrix-map proc A . more-matrices)
+    (apply typed-matrix-map #t proc A  more-matrices))
 
   ;;-----------------------------------------------------------------------
 

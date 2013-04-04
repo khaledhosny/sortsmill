@@ -90,8 +90,10 @@ init_guile_sortsmill_options (void)
                 scm_from_int (G_OPTION_FLAG_OPTIONAL_ARG));
   scm_c_define ("option-flag-noalias", scm_from_int (G_OPTION_FLAG_NOALIAS));
 
-  scm_c_define ("option-error-unknown-option", scm_from_int (G_OPTION_ERROR_UNKNOWN_OPTION));
-  scm_c_define ("option-error-bad-value", scm_from_int (G_OPTION_ERROR_BAD_VALUE));
+  scm_c_define ("option-error-unknown-option",
+                scm_from_int (G_OPTION_ERROR_UNKNOWN_OPTION));
+  scm_c_define ("option-error-bad-value",
+                scm_from_int (G_OPTION_ERROR_BAD_VALUE));
   scm_c_define ("option-error-failed", scm_from_int (G_OPTION_ERROR_FAILED));
 
   scm_c_define_gsubr ("c-data->GOptionEntry-array", 1, 0, 0,
