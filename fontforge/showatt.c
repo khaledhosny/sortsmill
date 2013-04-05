@@ -2533,12 +2533,12 @@ static void FontCmpDlg(FontView *fv1, FontView *fv2,int flags) {
 }
 
 static void FCAskFilename(FontView *fv,int flags) {
-    char *filename = GetPostScriptFontName(NULL,false);
+    char *filename = GetFontNameDialog(NULL,false);
     FontView *otherfv;
 
     if ( filename==NULL )
 return;
-    otherfv = (FontView *) ViewPostScriptFont(filename,0);
+    otherfv = (FontView *) ViewFont(filename,0);
     if ( otherfv==NULL )
 return;
     FontCmpDlg(fv,otherfv,flags);
