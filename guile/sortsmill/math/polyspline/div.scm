@@ -52,8 +52,8 @@ and @code{0}, respectively."
                               (matrix-inexact->exact poly)))])
       (match f
         [#(0) (values (list #(0)) 0)]
-        [_ (let* ([lead-coef (vector-ref f (- (vector-length f) 1))]
-                  [f  (vector-map (lambda (x) (/ x lead-coef)) f)]
+        [_ (let* ([lead-coef (matrix-0ref f 0 (- (row-matrix-size f) 1))]
+                  [f  (typed-matrix-map #t (lambda (x) (/ x lead-coef)) f)]
                   [f^ (poly:deriv-scm-mono f)]
                   [a0 (poly:gcd-scm-mono f f^)]
                   [b1 (poly:div-scm-mono f a0)]
