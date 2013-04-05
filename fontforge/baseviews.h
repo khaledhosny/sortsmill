@@ -590,7 +590,7 @@ VISIBLE void FVBReplaceOutlineWithReference (FontViewBase *fv, double fudge);
 VISIBLE void FVCorrectReferences (FontViewBase *fv);
 VISIBLE void _FVSimplify (FontViewBase *fv, struct simplifyinfo *smpl);
 VISIBLE void UnlinkThisReference (FontViewBase *fv, SplineChar *sc, int layer);
-VISIBLE FontViewBase *ViewPostScriptFont (char *filename, int openflags);
+VISIBLE FontViewBase *ViewFont (char *filename, int openflags);
 VISIBLE void FVBuildAccent (FontViewBase *fv, int onlyaccents);
 VISIBLE void FVRemoveKerns (FontViewBase *fv);
 VISIBLE void FVRemoveVKerns (FontViewBase *fv);

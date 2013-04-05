@@ -135,7 +135,7 @@ event_e_h (GWindow gw, GEvent *event)
           else if (strcmp (arg, "-open") == 0 || strcmp (arg, "--open") == 0)
             MenuOpen (NULL, NULL, NULL);
           else
-            ViewPostScriptFont (arg, 0);
+            ViewFont (arg, 0);
           free (arg);
           GDrawGrabSelection (eventw, sn_user1);
         }
@@ -378,7 +378,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (open_last)
     {
       if (RecentFiles[0] != NULL
-          && ViewPostScriptFont (RecentFiles[0], openflags))
+          && ViewFont (RecentFiles[0], openflags))
         no_font_loaded = false;
     }
 
@@ -408,7 +408,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
                   || g_file_query_exists (ufo, NULL))
                 {
                   /* It's probably a Unified Font Object directory or sf dir collection */
-                  if (ViewPostScriptFont (path, openflags))
+                  if (ViewFont (path, openflags))
                     no_font_loaded = false;
 
                   g_object_unref (sfdir);
@@ -424,15 +424,15 @@ fontforge_main_in_guile_mode (int argc, char **argv)
                       path[strlen (path)] = '/';
                     }
 
-                  char *fname = GetPostScriptFontName (path, false);
+                  char *fname = GetFontNameDialog (path, false);
                   if (fname != NULL)
-                    ViewPostScriptFont (fname, openflags);
+                    ViewFont (fname, openflags);
 
                   no_font_loaded = false;       /* Even if we didn't get a font, don't bring up dlg again */
                   free (fname);
                 }
             }
-          else if (ViewPostScriptFont (path, openflags) != 0)
+          else if (ViewFont (path, openflags) != 0)
             no_font_loaded = false;
 
           free (path);
