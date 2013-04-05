@@ -156,24 +156,23 @@
     (case-lambda
       [(S) (matrix-svd-effective-rank S (current-matrix-svd-rcond))]
       [(S rcond)
-       (let* ([S (matrix-0based (row-matrix->vector S))]
-              [rcond^ (* rcond (generalized-vector-ref S 0))])
+       (let ([rcond^ (* rcond (matrix-0ref S 0 0))])
          (if (zero? rcond^) 0
-             (let ([n (generalized-vector-length S)])
+             (let ([n (row-matrix-size S)])
                (letrec
                    ([count
                      (lambda (i)
                        (cond [(= i n) n]
-                             [(<= (generalized-vector-ref S i) rcond^) i]
+                             [(<= (matrix-0ref S 0 i) rcond^) i]
                              [else (count (+ i 1))] ))])
                  (count 1)))))] ))
 
   (define (matrix-svd-limit-rank S rank)
-    (let* ([S^ (row-matrix->vector S)]
-           [n (generalized-vector-length S^)]
-           [lst (generalized-vector->list S^)]
-           [lst^ (append (take lst rank) (make-list (- n rank) 0))])
-      (list->typed-array (array-type S) (array-shape S^) lst^)))
+    (let ([T (matrix-copy S)])
+      (let ([n (row-matrix-size T)])
+        (do ([i rank (+ i 1)]) ([<= n i])
+          (matrix-0set! T 0 i 0))
+        T)))
 
   (define/kwargs (f64matrix-solve:AX=B A B
                                        [full-rank? #t]
@@ -182,7 +181,7 @@
       (lambda (U S V)
         (let ([effective-rank (matrix-svd-effective-rank S rcond)])
           (when full-rank?
-            (unless (= effective-rank (f64vector-length S))
+            (unless (= effective-rank (row-matrix-size S))
               (rank-deficiency-exception 'f64matrix-solve:AX=B A)))
           (values (gsl:svd-solve-f64 U S V B) effective-rank)))))
 
@@ -202,10 +201,12 @@ effective rank of A."
       (lambda (U S V)
         (let ([effective-rank (matrix-svd-effective-rank S rcond)])
           (when full-rank?
-            (unless (= effective-rank (f64vector-length S))
+            (unless (= effective-rank (row-matrix-size S))
               (rank-deficiency-exception 'f64matrix-pinv A)))
-          (let* ([S-pinv (matrix-map (lambda (x) (if (flzero? x) x (/ x)))
-                                     (matrix-svd-limit-rank S effective-rank))]
+          (let* ([S-pinv
+                  (typed-matrix-map 'f64
+                                    (lambda (x) (if (zero? x) x (/ x)))
+                                    (matrix-svd-limit-rank S effective-rank))]
                  [A-pinv (f64matrix*
                           (f64matrix* V (row-matrix->diagonal-matrix S-pinv))
                           (matrix-transpose U))])
