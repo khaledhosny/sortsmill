@@ -191,13 +191,9 @@
    scalar-c64matrix
    typed-scalar-matrix
 
-   ;; These accept both typed and untyped arrays and vectors; all must
-   ;; have the same @code{matrix-dimensions}. The typed-matrix-map
-   ;; procedure returns a matrix of the given type. The matrix-map
-   ;; procedure is equivalent to calling typed-matrix-map with
-   ;; @var{type} set to @code{#t}.
+   ;; Accepts both typed and untyped arrays and vectors; all must have
+   ;; the same @code{matrix-dimensions}.
    typed-matrix-map  ; (typed-matrix-map type proc A₁ A₂ ...) → matrix
-   matrix-map        ; (matrix-map proc A₁ A₂ ...) → matrix
 
    ;; Create a matrix of a particular type, initialized to be equal to
    ;; a given matrix. These all accept both typed and untyped arrays
@@ -402,16 +398,13 @@
           (unless (for-all (lambda (A^)
                              (equal? (matrix-dimensions A^) dimensions))
                            more-matrices)
-            (apply assertion-violation 'matrix-map
+            (apply assertion-violation 'typed-matrix-map
                    "matrix dimension mismatch" A more-matrices))
           (apply array-map! B proc (prep-matrix A)
                  (map prep-matrix more-matrices))
           (if (= (car dimensions) 1)
               [row-matrix->vector B]
               B)] ))
-
-  (define (matrix-map proc A . more-matrices)
-    (apply typed-matrix-map #t proc A more-matrices))
 
   ;;-----------------------------------------------------------------------
 
