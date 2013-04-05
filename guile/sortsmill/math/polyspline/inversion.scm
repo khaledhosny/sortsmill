@@ -128,7 +128,7 @@ matrix may vary by a scalar factor or in the order of entries.)"
 
   (define (invert-cubic-rank1 V t1 t2)
     "Solve (v₁₁ v₁₂ v₁₃)⋅(1 t t²)ᵀ = 0."
-    (let ([poly (f64matrix->matrix (matrix-row V 1))])
+    (let ([poly (matrix->matrix (matrix-row V 1))])
       (poly:find-roots-scm-mono poly t1 t2)))
 
   (define (invert-cubic-rank2 V t1 t2)

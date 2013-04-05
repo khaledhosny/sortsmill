@@ -191,13 +191,37 @@
    scalar-c64matrix
    typed-scalar-matrix
 
-   ;; These accept both type and untyped arrays and vectors; all must
+   ;; These accept both typed and untyped arrays and vectors; all must
    ;; have the same @code{matrix-dimensions}. The typed-matrix-map
    ;; procedure returns a matrix of the given type. The matrix-map
    ;; procedure is equivalent to calling typed-matrix-map with
    ;; @var{type} set to @code{#t}.
    typed-matrix-map  ; (typed-matrix-map type proc A₁ A₂ ...) → matrix
    matrix-map        ; (matrix-map proc A₁ A₂ ...) → matrix
+
+   ;; Create a matrix of a particular type, initialized to be equal to
+   ;; a given matrix. These all accept both typed and untyped arrays
+   ;; and vectors.
+   ;;
+   ;; (matrix->matrix A) → non-uniform matrix
+   ;; (matrix->u8matrix A) → u8matrix
+   ;;         ⋮
+   ;; (matrix->c64matrix A) → c64matrix
+   ;; (matrix->typed-matrix type A) → matrix
+   matrix->matrix
+   matrix->u8matrix
+   matrix->s8matrix
+   matrix->u16matrix
+   matrix->s16matrix
+   matrix->u32matrix
+   matrix->s32matrix
+   matrix->u64matrix
+   matrix->s64matrix
+   matrix->f32matrix
+   matrix->f64matrix
+   matrix->c32matrix
+   matrix->c64matrix
+   matrix->typed-matrix
 
    ;; (matrix-copy A) → matrix
    ;;
@@ -278,19 +302,6 @@
    ;; FIXME: Still written in Guile.
    matrix-exact->inexact
    matrix-inexact->exact
-
-   ;; matrix->f64matrix is the same as matrix-exact->inexact.
-   ;;
-   ;; FIXME: Still written in Guile. And expand it into a whole
-   ;; family.
-   matrix->f64matrix
-
-   ;; f64matrix->matrix just changes the type tag, without
-   ;; converting from inexact to exact numbers.
-   ;;
-   ;; FIXME: Still written in Guile. And expand it into a whole
-   ;; family.
-   f64matrix->matrix
 
    ;; Predicates. These accept both typed and untyped arrays
    ;; and vectors.
@@ -398,7 +409,7 @@
           B)))
 
   (define (matrix-map proc A . more-matrices)
-    (apply typed-matrix-map #t proc A  more-matrices))
+    (apply typed-matrix-map #t proc A more-matrices))
 
   ;;-----------------------------------------------------------------------
 
@@ -410,13 +421,6 @@
   (define (matrix-inexact->exact A)
     (let ([B (apply make-array *unspecified* (array-shape A))])
       (array-map! B inexact->exact A)
-      B))
-
-  (define matrix->f64matrix matrix-exact->inexact)
-
-  (define (f64matrix->matrix A)
-    (let ([B (apply make-array *unspecified* (array-shape A))])
-      (array-map! B identity A)
       B))
 
   ;;-----------------------------------------------------------------------

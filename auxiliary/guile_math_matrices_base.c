@@ -1744,6 +1744,116 @@ static size_t _matrix_element_size[] = {
   [_FF_INDEX_ARRAY_C64] = 2 * sizeof (double)
 };
 
+static SCM
+_scm_from_type_indexed_element (scm_t_array_type_index type_index,
+                                const void *elem)
+{
+  SCM result = SCM_UNSPECIFIED;
+
+  switch (type_index)
+    {
+    case _FF_INDEX_ARRAY_NONUNIFORM:
+      result = *(const SCM *) elem;
+      break;
+    case _FF_INDEX_ARRAY_U8:
+      result = scm_from_uint8 (*(const uint8_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_S8:
+      result = scm_from_int8 (*(const int8_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_U16:
+      result = scm_from_uint16 (*(const uint16_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_S16:
+      result = scm_from_int16 (*(const int16_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_U32:
+      result = scm_from_uint32 (*(const uint32_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_S32:
+      result = scm_from_int32 (*(const int32_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_U64:
+      result = scm_from_uint64 (*(const uint64_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_S64:
+      result = scm_from_int64 (*(const int64_t *) elem);
+      break;
+    case _FF_INDEX_ARRAY_F32:
+      result = scm_from_double (*(float *) elem);
+      break;
+    case _FF_INDEX_ARRAY_F64:
+      result = scm_from_double (*(double *) elem);
+      break;
+    case _FF_INDEX_ARRAY_C32:
+      result =
+        scm_c_make_rectangular (((float *) elem)[0], ((float *) elem)[1]);
+      break;
+    case _FF_INDEX_ARRAY_C64:
+      result =
+        scm_c_make_rectangular (((double *) elem)[0], ((double *) elem)[1]);
+      break;
+    default:
+      assert (false);
+      break;
+    }
+
+  return result;
+}
+
+static void
+_scm_to_type_indexed_element (scm_t_array_type_index type_index, void *elem,
+                              SCM value)
+{
+  switch (type_index)
+    {
+    case _FF_INDEX_ARRAY_NONUNIFORM:
+      *(SCM *) elem = value;
+      break;
+    case _FF_INDEX_ARRAY_U8:
+      *(uint8_t *) elem = scm_to_uint8 (value);
+      break;
+    case _FF_INDEX_ARRAY_S8:
+      *(int8_t *) elem = scm_to_int8 (value);
+      break;
+    case _FF_INDEX_ARRAY_U16:
+      *(uint16_t *) elem = scm_to_uint16 (value);
+      break;
+    case _FF_INDEX_ARRAY_S16:
+      *(int16_t *) elem = scm_to_int16 (value);
+      break;
+    case _FF_INDEX_ARRAY_U32:
+      *(uint32_t *) elem = scm_to_uint32 (value);
+      break;
+    case _FF_INDEX_ARRAY_S32:
+      *(int32_t *) elem = scm_to_int32 (value);
+      break;
+    case _FF_INDEX_ARRAY_U64:
+      *(uint64_t *) elem = scm_to_uint64 (value);
+      break;
+    case _FF_INDEX_ARRAY_S64:
+      *(int64_t *) elem = scm_to_int64 (value);
+      break;
+    case _FF_INDEX_ARRAY_F32:
+      *(float *) elem = scm_to_double (value);
+      break;
+    case _FF_INDEX_ARRAY_F64:
+      *(double *) elem = scm_to_double (value);
+      break;
+    case _FF_INDEX_ARRAY_C32:
+      ((float *) elem)[0] = scm_to_double (scm_real_part (value));
+      ((float *) elem)[1] = scm_to_double (scm_imag_part (value));
+      break;
+    case _FF_INDEX_ARRAY_C64:
+      ((double *) elem)[0] = scm_to_double (scm_real_part (value));
+      ((double *) elem)[1] = scm_to_double (scm_imag_part (value));
+      break;
+    default:
+      assert (false);
+      break;
+    }
+}
+
 //-------------------------------------------------------------------------
 
 static SCM
@@ -2366,6 +2476,237 @@ scm_matrix_copy (SCM A)
 
 //-------------------------------------------------------------------------
 
+#define _SCM_MATRIX_TO_TYPED_MATRIX(NAME, PROC_DECL, PROC_IS_NULL, PROC_CALL) \
+  SCM                                                                   \
+  NAME (SCM type, SCM A, PROC_DECL (proc))                              \
+  {                                                                     \
+    scm_dynwind_begin (0);                                              \
+                                                                        \
+    scm_t_array_handle handle_A;                                        \
+    scm_array_get_handle (A, &handle_A);                                \
+    scm_dynwind_array_handle_release (&handle_A);                       \
+    assert_array_handle_is_matrix (#NAME, A, &handle_A);                \
+                                                                        \
+    const size_t m = scm_c_matrix_numrows (&handle_A);                  \
+    const size_t n = scm_c_matrix_numcols (&handle_A);                  \
+                                                                        \
+    SCM B = scm_c_typed_filled_matrix (type, SCM_UNSPECIFIED, m, n);    \
+                                                                        \
+    scm_t_array_handle handle_B;                                        \
+    scm_array_get_handle (B, &handle_B);                                \
+    scm_dynwind_array_handle_release (&handle_B);                       \
+                                                                        \
+    const scm_t_array_type_index src_type_index =                       \
+      scm_array_handle_to_array_type_index (&handle_A);                 \
+    const void *_A =                                                    \
+      _void_readonly_elements_func[src_type_index] (&handle_A);         \
+    const size_t src_elem_size = _matrix_element_size[src_type_index];  \
+    const ssize_t src_row_stride =                                      \
+      scm_c_matrix_row_inc (&handle_A) * (ssize_t) src_elem_size;       \
+    const ssize_t src_col_stride =                                      \
+      scm_c_matrix_column_inc (&handle_A) * (ssize_t) src_elem_size;    \
+                                                                        \
+    const scm_t_array_type_index dst_type_index =                       \
+      scm_array_type_to_array_type_index (type);                        \
+    void *_B =                                                          \
+      _void_writable_elements_func[dst_type_index] (&handle_B);         \
+    const size_t dst_elem_size = _matrix_element_size[dst_type_index];  \
+    const ssize_t dst_row_stride =                                      \
+      scm_c_matrix_row_inc (&handle_B) * (ssize_t) dst_elem_size;       \
+    const ssize_t dst_col_stride =                                      \
+      scm_c_matrix_column_inc (&handle_B) * (ssize_t) dst_elem_size;    \
+                                                                        \
+    if (PROC_IS_NULL (proc) && src_type_index == dst_type_index)        \
+      for (size_t i = 0; i < m; i++)                                    \
+        {                                                               \
+          copy_type_indexed_with_strides (src_type_index,               \
+                                          scm_c_matrix_column_inc (&handle_B), _B, \
+                                          scm_c_matrix_column_inc (&handle_A), _A, \
+                                          n);                           \
+          _A = (void *) ((char *) _A + src_row_stride);                 \
+          _B = (void *) ((char *) _B + dst_row_stride);                 \
+        }                                                               \
+    else                                                                \
+      for (size_t i = 0; i < m; i++)                                    \
+        {                                                               \
+          const void *pA = _A;                                          \
+          void *pB = _B;                                                \
+          for (size_t j = 0; j < n; j++)                                \
+            {                                                           \
+              const SCM x =                                             \
+                _scm_from_type_indexed_element (src_type_index, pA);    \
+              if (PROC_IS_NULL (proc))                                  \
+                _scm_to_type_indexed_element (dst_type_index, pB, x);   \
+              else                                                      \
+                _scm_to_type_indexed_element (dst_type_index, pB,       \
+                                              PROC_CALL (proc, x));     \
+              pA = (void *) ((char *) pA + src_col_stride);             \
+              pB = (void *) ((char *) pB + dst_col_stride);             \
+            }                                                           \
+          _A = (void *) ((char *) _A + src_row_stride);                 \
+          _B = (void *) ((char *) _B + dst_row_stride);                 \
+        }                                                               \
+                                                                        \
+    scm_dynwind_end ();                                                 \
+                                                                        \
+    return B;                                                           \
+  }
+
+#define _C_MAT_TO_TYPED_MAT_PROC_DECL(proc)    SCM (*proc) (SCM)
+#define _C_MAT_TO_TYPED_MAT_PROC_IS_NULL(proc) ((proc) == NULL)
+#define _C_MAT_TO_TYPED_MAT_PROC_CALL(proc, x) ((*(proc)) ((x)))
+
+#define _MAT_TO_TYPED_MAT_PROC_DECL(proc)    SCM proc
+#define _MAT_TO_TYPED_MAT_PROC_IS_NULL(proc) (SCM_UNBNDP (proc))
+#define _MAT_TO_TYPED_MAT_PROC_CALL(proc, x) (scm_call_1 ((proc), (x)))
+
+VISIBLE _SCM_MATRIX_TO_TYPED_MATRIX (scm_c_matrix_mapped_to_typed_matrix,
+                                     _C_MAT_TO_TYPED_MAT_PROC_DECL,
+                                     _C_MAT_TO_TYPED_MAT_PROC_IS_NULL,
+                                     _C_MAT_TO_TYPED_MAT_PROC_CALL);
+
+VISIBLE _SCM_MATRIX_TO_TYPED_MATRIX (scm_matrix_mapped_to_typed_matrix,
+                                     _MAT_TO_TYPED_MAT_PROC_DECL,
+                                     _MAT_TO_TYPED_MAT_PROC_IS_NULL,
+                                     _MAT_TO_TYPED_MAT_PROC_CALL);
+
+#define _SCM_MATRIX_TO_EXACT_MATRIX(ELEMTYPE)                           \
+  SCM                                                                   \
+  scm_matrix_to_##ELEMTYPE##matrix (SCM A)                              \
+  {                                                                     \
+    SCM B = SCM_UNSPECIFIED;                                            \
+                                                                        \
+    switch (scm_to_array_type_index (A))                                \
+      {                                                                 \
+      case _FF_INDEX_ARRAY_U8:                                          \
+      case _FF_INDEX_ARRAY_S8:                                          \
+      case _FF_INDEX_ARRAY_U16:                                         \
+      case _FF_INDEX_ARRAY_S16:                                         \
+      case _FF_INDEX_ARRAY_U32:                                         \
+      case _FF_INDEX_ARRAY_S32:                                         \
+      case _FF_INDEX_ARRAY_U64:                                         \
+      case _FF_INDEX_ARRAY_S64:                                         \
+        B = scm_c_matrix_mapped_to_typed_matrix (scm_symbol_##ELEMTYPE (), \
+                                                 A,                     \
+                                                 NULL);                 \
+        break;                                                          \
+                                                                        \
+      case _FF_INDEX_ARRAY_NONUNIFORM:                                  \
+      case _FF_INDEX_ARRAY_F32:                                         \
+      case _FF_INDEX_ARRAY_F64:                                         \
+      case _FF_INDEX_ARRAY_C32:                                         \
+      case _FF_INDEX_ARRAY_C64:                                         \
+        B = scm_c_matrix_mapped_to_typed_matrix (scm_symbol_##ELEMTYPE (), \
+                                                 A,                     \
+                                                 scm_inexact_to_exact); \
+        break;                                                          \
+                                                                        \
+      default:                                                          \
+        assert_is_matrix (scm_from_latin1_string ("scm_matrix_to_"      \
+                                                  #ELEMTYPE "matrix"),  \
+                          A);                                           \
+        /* If there is a matrix type we missed, the following  */       \
+        /* exception may be raised.                            */       \
+        rnrs_raise_condition                                            \
+          (scm_list_4                                                   \
+           (rnrs_make_assertion_violation (),                           \
+            rnrs_c_make_who_condition ("scm_matrix_to_"                 \
+                                       #ELEMTYPE "matrix"),             \
+            rnrs_c_make_message_condition ("internal error"),           \
+            rnrs_make_irritants_condition (scm_list_1 (A))));           \
+        break;                                                          \
+      }                                                                 \
+                                                                        \
+    return B;                                                           \
+  }
+
+#define _SCM_MATRIX_TO_INEXACT_MATRIX(ELEMTYPE)                         \
+  SCM                                                                   \
+  scm_matrix_to_##ELEMTYPE##matrix (SCM A)                              \
+  {                                                                     \
+    SCM B = SCM_UNSPECIFIED;                                            \
+                                                                        \
+    switch (scm_to_array_type_index (A))                                \
+      {                                                                 \
+      case _FF_INDEX_NOT_AN_ARRAY:                                      \
+        assert_is_matrix (scm_from_latin1_string ("scm_matrix_to_"      \
+                                                  #ELEMTYPE "matrix"),  \
+                          A);                                           \
+        break;                                                          \
+                                                                        \
+      default:                                                          \
+        B = scm_c_matrix_mapped_to_typed_matrix (scm_symbol_##ELEMTYPE (), \
+                                                 A,NULL);               \
+        break;                                                          \
+      }                                                                 \
+                                                                        \
+    return B;                                                           \
+  }
+
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (u8);
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (s8);
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (u16);
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (s16);
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (u32);
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (s32);
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (u64);
+VISIBLE _SCM_MATRIX_TO_EXACT_MATRIX (s64);
+VISIBLE _SCM_MATRIX_TO_INEXACT_MATRIX (f32);
+VISIBLE _SCM_MATRIX_TO_INEXACT_MATRIX (f64);
+VISIBLE _SCM_MATRIX_TO_INEXACT_MATRIX (c32);
+VISIBLE _SCM_MATRIX_TO_INEXACT_MATRIX (c64);
+
+VISIBLE SCM
+scm_matrix_to_matrix (SCM A)
+{
+  SCM B = SCM_UNSPECIFIED;
+
+  switch (scm_to_array_type_index (A))
+    {
+    case _FF_INDEX_NOT_AN_ARRAY:
+      assert_is_matrix (scm_from_latin1_string ("scm_matrix_to_untyped_matrix"),
+                        A);
+      break;
+
+    default:
+      B = scm_c_matrix_mapped_to_typed_matrix (SCM_BOOL_T, A, NULL);
+      break;
+    }
+
+  return B;
+}
+
+typedef SCM _scm_matrix_to_typed_matrix_t (SCM);
+
+static _scm_matrix_to_typed_matrix_t *_matrix_to_typed_matrix[] = {
+  [_FF_INDEX_NOT_AN_ARRAY] = NULL,
+  [_FF_INDEX_ARRAY_NONUNIFORM] = scm_matrix_to_matrix,
+  [_FF_INDEX_ARRAY_U8] = scm_matrix_to_u8matrix,
+  [_FF_INDEX_ARRAY_S8] = scm_matrix_to_s8matrix,
+  [_FF_INDEX_ARRAY_U16] = scm_matrix_to_u16matrix,
+  [_FF_INDEX_ARRAY_S16] = scm_matrix_to_s16matrix,
+  [_FF_INDEX_ARRAY_U32] = scm_matrix_to_u32matrix,
+  [_FF_INDEX_ARRAY_S32] = scm_matrix_to_s32matrix,
+  [_FF_INDEX_ARRAY_U64] = scm_matrix_to_u64matrix,
+  [_FF_INDEX_ARRAY_S64] = scm_matrix_to_s64matrix,
+  [_FF_INDEX_ARRAY_F32] = scm_matrix_to_f32matrix,
+  [_FF_INDEX_ARRAY_F64] = scm_matrix_to_f64matrix,
+  [_FF_INDEX_ARRAY_C32] = scm_matrix_to_c32matrix,
+  [_FF_INDEX_ARRAY_C64] = scm_matrix_to_c64matrix
+};
+
+VISIBLE SCM
+scm_matrix_to_typed_matrix (SCM type, SCM A)
+{
+  const scm_t_array_type_index i = scm_array_type_to_array_type_index (type);
+  if (i == _FF_INDEX_NOT_AN_ARRAY)
+    raise_not_a_valid_matrix_type
+      (scm_from_latin1_string ("scm_matrix_to_typed_matrix"), type);
+  return _matrix_to_typed_matrix[i] (A);
+}
+
+//-------------------------------------------------------------------------
+
 VISIBLE bool
 scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A)
 {
@@ -2737,6 +3078,21 @@ init_guile_sortsmill_math_matrices_base (void)
                       scm_row_matrix_to_diagonal_matrix);
 
   scm_c_define_gsubr ("matrix-copy", 1, 0, 0, scm_matrix_copy);
+  scm_c_define_gsubr ("matrix->matrix", 1, 0, 0, scm_matrix_to_matrix);
+  scm_c_define_gsubr ("matrix->u8matrix", 1, 0, 0, scm_matrix_to_u8matrix);
+  scm_c_define_gsubr ("matrix->s8matrix", 1, 0, 0, scm_matrix_to_s8matrix);
+  scm_c_define_gsubr ("matrix->u16matrix", 1, 0, 0, scm_matrix_to_u16matrix);
+  scm_c_define_gsubr ("matrix->s16matrix", 1, 0, 0, scm_matrix_to_s16matrix);
+  scm_c_define_gsubr ("matrix->u32matrix", 1, 0, 0, scm_matrix_to_u32matrix);
+  scm_c_define_gsubr ("matrix->s32matrix", 1, 0, 0, scm_matrix_to_s32matrix);
+  scm_c_define_gsubr ("matrix->u64matrix", 1, 0, 0, scm_matrix_to_u64matrix);
+  scm_c_define_gsubr ("matrix->s64matrix", 1, 0, 0, scm_matrix_to_s64matrix);
+  scm_c_define_gsubr ("matrix->f32matrix", 1, 0, 0, scm_matrix_to_f32matrix);
+  scm_c_define_gsubr ("matrix->f64matrix", 1, 0, 0, scm_matrix_to_f64matrix);
+  scm_c_define_gsubr ("matrix->c32matrix", 1, 0, 0, scm_matrix_to_c32matrix);
+  scm_c_define_gsubr ("matrix->c64matrix", 1, 0, 0, scm_matrix_to_c64matrix);
+  scm_c_define_gsubr ("matrix->typed-matrix", 2, 0, 0,
+                      scm_matrix_to_typed_matrix);
 
   scm_c_define_gsubr ("for-all-in-matrix", 2, 0, 0, scm_for_all_in_matrix);
   scm_c_define_gsubr ("exists-in-matrix", 2, 0, 0, scm_exists_in_matrix);

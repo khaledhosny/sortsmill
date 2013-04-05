@@ -277,6 +277,25 @@ SCM scm_typed_scalar_matrix (SCM type, SCM x, SCM m, SCM n);
 
 SCM scm_row_matrix_to_diagonal_matrix (SCM diag_as_row);
 
+SCM scm_matrix_copy (SCM A);
+
+SCM scm_c_matrix_mapped_to_typed_matrix (SCM type, SCM A, SCM (*proc) (SCM));
+SCM scm_matrix_mapped_to_typed_matrix (SCM type, SCM A, SCM proc);
+SCM scm_matrix_to_u8matrix (SCM A);
+SCM scm_matrix_to_s8matrix (SCM A);
+SCM scm_matrix_to_u16matrix (SCM A);
+SCM scm_matrix_to_s16matrix (SCM A);
+SCM scm_matrix_to_u32matrix (SCM A);
+SCM scm_matrix_to_s32matrix (SCM A);
+SCM scm_matrix_to_u64matrix (SCM A);
+SCM scm_matrix_to_s64matrix (SCM A);
+SCM scm_matrix_to_f32matrix (SCM A);
+SCM scm_matrix_to_f64matrix (SCM A);
+SCM scm_matrix_to_c32matrix (SCM A);
+SCM scm_matrix_to_c64matrix (SCM A);
+SCM scm_matrix_to_matrix (SCM A);
+SCM scm_matrix_to_typed_matrix (SCM type, SCM A);
+
 bool scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A);
 bool scm_c_for_all_in_matrix_0ij (bool sense, SCM pred, SCM A);
 bool scm_c_for_all_in_matrix_1ij (bool sense, SCM pred, SCM A);
