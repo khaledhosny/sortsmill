@@ -2664,8 +2664,7 @@ scm_matrix_to_matrix (SCM A)
   switch (scm_to_array_type_index (A))
     {
     case _FF_INDEX_NOT_AN_ARRAY:
-      assert_is_matrix (scm_from_latin1_string ("scm_matrix_to_untyped_matrix"),
-                        A);
+      assert_is_matrix (scm_from_latin1_string ("scm_matrix_to_matrix"), A);
       break;
 
     default:
@@ -2703,6 +2702,50 @@ scm_matrix_to_typed_matrix (SCM type, SCM A)
     raise_not_a_valid_matrix_type
       (scm_from_latin1_string ("scm_matrix_to_typed_matrix"), type);
   return _matrix_to_typed_matrix[i] (A);
+}
+
+VISIBLE SCM
+scm_matrix_exact_to_inexact (SCM A)
+{
+  SCM B = SCM_UNSPECIFIED;
+
+  switch (scm_to_array_type_index (A))
+    {
+    case _FF_INDEX_NOT_AN_ARRAY:
+      assert_is_matrix (scm_from_latin1_string ("scm_matrix_exact_to_inexact"),
+                        A);
+      break;
+
+    default:
+      B =
+        scm_c_matrix_mapped_to_typed_matrix (SCM_BOOL_T, A,
+                                             scm_exact_to_inexact);
+      break;
+    }
+
+  return B;
+}
+
+VISIBLE SCM
+scm_matrix_inexact_to_exact (SCM A)
+{
+  SCM B = SCM_UNSPECIFIED;
+
+  switch (scm_to_array_type_index (A))
+    {
+    case _FF_INDEX_NOT_AN_ARRAY:
+      assert_is_matrix (scm_from_latin1_string ("scm_matrix_inexact_to_exact"),
+                        A);
+      break;
+
+    default:
+      B =
+        scm_c_matrix_mapped_to_typed_matrix (SCM_BOOL_T, A,
+                                             scm_inexact_to_exact);
+      break;
+    }
+
+  return B;
 }
 
 //-------------------------------------------------------------------------
@@ -3093,6 +3136,10 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix->c64matrix", 1, 0, 0, scm_matrix_to_c64matrix);
   scm_c_define_gsubr ("matrix->typed-matrix", 2, 0, 0,
                       scm_matrix_to_typed_matrix);
+  scm_c_define_gsubr ("matrix-exact->inexact", 1, 0, 0,
+                      scm_matrix_exact_to_inexact);
+  scm_c_define_gsubr ("matrix-inexact->exact", 1, 0, 0,
+                      scm_matrix_inexact_to_exact);
 
   scm_c_define_gsubr ("for-all-in-matrix", 2, 0, 0, scm_for_all_in_matrix);
   scm_c_define_gsubr ("exists-in-matrix", 2, 0, 0, scm_exists_in_matrix);

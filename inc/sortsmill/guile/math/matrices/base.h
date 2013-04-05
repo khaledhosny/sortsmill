@@ -295,6 +295,8 @@ SCM scm_matrix_to_c32matrix (SCM A);
 SCM scm_matrix_to_c64matrix (SCM A);
 SCM scm_matrix_to_matrix (SCM A);
 SCM scm_matrix_to_typed_matrix (SCM type, SCM A);
+SCM scm_matrix_exact_to_inexact (SCM A);
+SCM scm_matrix_inexact_to_exact (SCM A);
 
 bool scm_c_for_all_in_matrix (bool sense, SCM pred, SCM A);
 bool scm_c_for_all_in_matrix_0ij (bool sense, SCM pred, SCM A);

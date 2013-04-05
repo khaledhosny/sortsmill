@@ -223,6 +223,13 @@
    matrix->c64matrix
    matrix->typed-matrix
 
+   ;; (matrix-exact->inexact A) → non-uniform matrix
+   ;; (matrix-inexact->exact A) → non-uniform matrix
+   ;;
+   ;; These accept both typed and untyped arrays and vectors.
+   matrix-exact->inexact
+   matrix-inexact->exact
+
    ;; (matrix-copy A) → matrix
    ;;
    ;; Accepts both typed and untyped arrays and vectors. Returns an
@@ -298,10 +305,6 @@
    row-matrix->vector ; (row-matrix->vector vector-or-matrix) → vector
    matrix-transpose   ; (matrix-transpose A) → matrix
    matrix-diagonal    ; (matrix-transpose A) → vector
-
-   ;; FIXME: Still written in Guile.
-   matrix-exact->inexact
-   matrix-inexact->exact
 
    ;; Predicates. These accept both typed and untyped arrays
    ;; and vectors.
@@ -410,18 +413,6 @@
 
   (define (matrix-map proc A . more-matrices)
     (apply typed-matrix-map #t proc A more-matrices))
-
-  ;;-----------------------------------------------------------------------
-
-  (define (matrix-exact->inexact A)
-    (let ([B (apply make-typed-array 'f64 *unspecified* (array-shape A))])
-      (array-map! B exact->inexact A)
-      B))
-
-  (define (matrix-inexact->exact A)
-    (let ([B (apply make-array *unspecified* (array-shape A))])
-      (array-map! B inexact->exact A)
-      B))
 
   ;;-----------------------------------------------------------------------
 

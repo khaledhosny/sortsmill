@@ -49,7 +49,7 @@ original lead coefficient of the minimum degree polynomial. If the
 polynomial is identically zero, then the return values are @code{#(0)}
 and @code{0}, respectively."
     (let* ([f (matrix-0based (poly:reduce-to-min-degree-scm-mono
-                           (matrix-inexact->exact poly)))])
+                              (matrix-inexact->exact poly)))])
       (match f
         [#(0) (values (list #(0)) 0)]
         [_ (let* ([lead-coef (vector-ref f (- (vector-length f) 1))]
