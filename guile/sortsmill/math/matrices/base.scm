@@ -394,22 +394,21 @@
   ;;-----------------------------------------------------------------------
 
   (define (typed-matrix-map type proc A . more-matrices)
-    (let* ([dimensions (matrix-dimensions A)]
-           [B (apply make-typed-array type *unspecified* dimensions)]
-           [prep-matrix (compose vector->matrix matrix-0based)])
-      (if (null? more-matrices)
-          [array-map! B proc (prep-matrix A)]
-          [begin
-            (unless (for-all (lambda (A^)
-                               (equal? (matrix-dimensions A^) dimensions))
-                             more-matrices)
-              (apply assertion-violation 'matrix-map
-                     "matrix dimension mismatch" A more-matrices))
-            (apply array-map! B proc (prep-matrix A)
-                   (map prep-matrix more-matrices))])
-      (if (= (car dimensions) 1)
-          [row-matrix->vector B]
-          B)))
+    (if (null? more-matrices)
+        [private:matrix-mapped-to-typed-matrix type A proc]
+        [let* ([dimensions (matrix-dimensions A)]
+               [B (apply make-typed-array type *unspecified* dimensions)]
+               [prep-matrix (compose vector->matrix matrix-0based)])
+          (unless (for-all (lambda (A^)
+                             (equal? (matrix-dimensions A^) dimensions))
+                           more-matrices)
+            (apply assertion-violation 'matrix-map
+                   "matrix dimension mismatch" A more-matrices))
+          (apply array-map! B proc (prep-matrix A)
+                 (map prep-matrix more-matrices))
+          (if (= (car dimensions) 1)
+              [row-matrix->vector B]
+              B)] ))
 
   (define (matrix-map proc A . more-matrices)
     (apply typed-matrix-map #t proc A more-matrices))

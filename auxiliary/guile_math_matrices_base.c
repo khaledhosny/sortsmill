@@ -3121,6 +3121,10 @@ init_guile_sortsmill_math_matrices_base (void)
                       scm_row_matrix_to_diagonal_matrix);
 
   scm_c_define_gsubr ("matrix-copy", 1, 0, 0, scm_matrix_copy);
+
+  scm_c_define_gsubr ("private:matrix-mapped-to-typed-matrix", 2, 1, 0,
+                      scm_matrix_mapped_to_typed_matrix);
+
   scm_c_define_gsubr ("matrix->matrix", 1, 0, 0, scm_matrix_to_matrix);
   scm_c_define_gsubr ("matrix->u8matrix", 1, 0, 0, scm_matrix_to_u8matrix);
   scm_c_define_gsubr ("matrix->s8matrix", 1, 0, 0, scm_matrix_to_s8matrix);
