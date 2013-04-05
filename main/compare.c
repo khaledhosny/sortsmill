@@ -33,6 +33,7 @@
 #include <Python.h>
 #endif
 
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -236,6 +237,8 @@ call_my_main (void *args)
 int
 main (int argc, char **argv)
 {
+  setlocale (LC_ALL, "");
+
   // This looks complicated only because of the need to pass data
   // around through void pointers.
 

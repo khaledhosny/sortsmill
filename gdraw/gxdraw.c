@@ -3857,7 +3857,9 @@ static GDisplay *_GXDraw_CreateDisplay(char *displayname) {
     if ( display==NULL )
 return( NULL );
 
-    setlocale(LC_ALL,"");
+    // setlocale(LC_ALL,""); <-- This is to be done in the main
+    //                           program now.
+
     XSupportsLocale();
     XSetLocaleModifiers("");
 

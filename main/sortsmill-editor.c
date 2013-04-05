@@ -21,6 +21,7 @@
 
 #include <libguile.h>
 #include <glib.h>
+#include <locale.h>
 
 int main (int, char **);
 
@@ -62,6 +63,8 @@ volatile int python_filled_bitbucket;
 int
 main (int argc, char **argv)
 {
+  setlocale (LC_ALL, "");
+
 #if !defined _NO_PYTHON
   // Python extensions typically depend on the main program to export
   // libpython’s symbols. On the other hand, the linker on some

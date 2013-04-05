@@ -80,7 +80,9 @@ InitSimpleStuff (void)
   initrand ();
   initadobeenc ();
 
-  setlocale (LC_ALL, "");
+  // setlocale (LC_ALL, ""); <-- This is to be done in the main
+  //                             program now.
+
   localeinfo = *localeconv ();
   coord_sep = ",";
   if (*localeinfo.decimal_point == '.')
