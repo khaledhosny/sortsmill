@@ -113,6 +113,22 @@ INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, vector_diagonal_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (lbnd) (lambda (i) (list (+ lbnd i))))");
 
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, matrix_block_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (rows_offset cols_offset)"
+                      "  (lambda (i j) (list (+ rows_offset i)"
+                      "                      (+ cols_offset j))))");
+
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM,
+                      vector_in_matrix_block_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (rows_offset cols_offset)"
+                      "  (lambda (j) (list rows_offset (+ cols_offset j))))");
+
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, vector_block_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (offset) (lambda (i) (list (+ offset i))))");
+
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, matrix_n_based_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (rows_offset cols_offset)"
@@ -305,6 +321,57 @@ assert_array_handle_is_matrix (const char *who, SCM A,
 
   if (!is_a_matrix)
     raise_not_a_matrix (scm_from_utf8_string (who), A);
+}
+
+static void
+raise_bad_block_specification (SCM who, SCM A, SCM i, SCM j, SCM m, SCM n,
+                               SCM i_base, SCM j_base)
+{
+  scm_dynwind_begin (0);
+
+  assert_is_matrix (who, A);
+
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+  scm_dynwind_array_handle_release (&handle_A);
+
+  const size_t i_dim = scm_c_matrix_numrows (&handle_A);
+  const size_t j_dim = scm_c_matrix_numcols (&handle_A);
+
+  char *_who = (char *) scm_to_utf8_stringn (who, NULL);
+  scm_dynwind_free (_who);
+
+  const ssize_t _i = scm_to_ssize_t (i);
+  const ssize_t _j = scm_to_ssize_t (j);
+  const size_t _m = scm_to_size_t (m);
+  const size_t _n = scm_to_size_t (n);
+  const ssize_t _i_base = scm_to_ssize_t (i_base);
+  const ssize_t _j_base = scm_to_ssize_t (j_base);
+
+  assert_row_index_inside_bounds (_who, A, _i, _i_base, i_dim);
+  assert_column_index_inside_bounds (_who, A, _j, _j_base, j_dim);
+
+  if (_m <= 0 || _n <= 0)
+    raise_attempt_to_create_empty_matrix (who, m, n);
+  else
+    {
+      SCM message =
+        scm_c_locale_sformat (_("matrix error: "
+                                "~ax~a block starting at ~a,~a does not fit"
+                                " in ~ax~a matrix indexed starting at ~a,~a"),
+                              scm_list_n (m, n, i, j,
+                                          scm_from_size_t (i_dim),
+                                          scm_from_size_t (j_dim),
+                                          i_base, j_base, SCM_UNDEFINED));
+      rnrs_raise_condition
+        (scm_list_4
+         (rnrs_make_assertion_violation (),
+          rnrs_make_who_condition (who),
+          rnrs_make_message_condition (message),
+          rnrs_make_irritants_condition (scm_list_5 (A, i, j, m, n))));
+    }
+
+  scm_dynwind_end ();
 }
 
 //-------------------------------------------------------------------------
@@ -1321,7 +1388,7 @@ scm_matrix_column (SCM A, SCM i)
 }
 
 VISIBLE SCM
-scm_vector_to_matrix (SCM v)
+scm_matrix_as_rank2_array (SCM v)
 {
   scm_t_array_handle handle_v;
   SCM A;
@@ -1331,7 +1398,8 @@ scm_vector_to_matrix (SCM v)
   if (!scm_array_handle_is_matrix (&handle_v))
     {
       scm_array_handle_release (&handle_v);
-      raise_not_a_matrix (scm_from_latin1_string ("scm_vector_to_matrix"), v);
+      raise_not_a_matrix (scm_from_latin1_string ("scm_matrix_as_rank2_array"),
+                          v);
     }
 
   switch (scm_array_handle_rank (&handle_v))
@@ -1339,8 +1407,11 @@ scm_vector_to_matrix (SCM v)
     case 1:
       {
         const ssize_t lbnd = scm_array_handle_dims (&handle_v)[0].lbnd;
-        const SCM scm_lbnd = scm_from_ssize_t (lbnd);
         const ssize_t ubnd = scm_array_handle_dims (&handle_v)[0].ubnd;
+
+        scm_array_handle_release (&handle_v);
+
+        const SCM scm_lbnd = scm_from_ssize_t (lbnd);
         const SCM scm_ubnd = scm_from_ssize_t (ubnd);
         const SCM bounds = scm_list_2 (scm_list_2 (scm_lbnd, scm_lbnd),
                                        scm_list_2 (scm_lbnd, scm_ubnd));
@@ -1350,14 +1421,13 @@ scm_vector_to_matrix (SCM v)
       break;
 
     case 2:
+      scm_array_handle_release (&handle_v);
       A = v;
       break;
 
     default:
       assert (false);
     }
-
-  scm_array_handle_release (&handle_v);
 
   return A;
 }
@@ -1393,6 +1463,8 @@ scm_matrix_transpose (SCM A)
         const ssize_t lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
         const ssize_t ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
 
+        scm_array_handle_release (&handle_A);
+
         const SCM scm_lbnd = scm_from_ssize_t (lbnd);
         const SCM scm_ubnd = scm_from_ssize_t (ubnd);
         const SCM mapfunc = scm_call_0 (vector_to_column_matrix_mapfunc ());
@@ -1403,6 +1475,9 @@ scm_matrix_transpose (SCM A)
       break;
 
     case 2:
+
+      scm_array_handle_release (&handle_A);
+
       At = scm_transpose_array (A, scm_list_2 (scm_from_int (1),
                                                scm_from_int (0)));
       break;
@@ -1410,8 +1485,6 @@ scm_matrix_transpose (SCM A)
     default:
       assert (false);
     }
-
-  scm_array_handle_release (&handle_A);
 
   return At;
 }
@@ -1437,6 +1510,8 @@ scm_matrix_diagonal (SCM A)
       {
         const ssize_t lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
 
+        scm_array_handle_release (&handle_A);
+
         const SCM bounds = scm_list_1 (scm_from_int (1));
         const SCM mapfunc = scm_call_1 (vector_diagonal_mapfunc (),
                                         scm_from_ssize_t (lbnd));
@@ -1450,6 +1525,8 @@ scm_matrix_diagonal (SCM A)
         const ssize_t rows_ubnd = scm_array_handle_dims (&handle_A)[0].ubnd;
         const ssize_t columns_lbnd = scm_array_handle_dims (&handle_A)[1].lbnd;
         const ssize_t columns_ubnd = scm_array_handle_dims (&handle_A)[1].ubnd;
+
+        scm_array_handle_release (&handle_A);
 
         const size_t n = (size_t) sszmin (rows_ubnd - rows_lbnd,
                                           columns_ubnd - columns_lbnd) + 1;
@@ -1465,9 +1542,142 @@ scm_matrix_diagonal (SCM A)
       assert (false);
     }
 
+  return d;
+}
+
+static bool
+block_is_legal (scm_t_array_handle *handlep, ssize_t i, ssize_t j, size_t m,
+                size_t n, ssize_t i_base, ssize_t j_base)
+{
+  size_t m1 = scm_c_matrix_numrows (handlep);
+  size_t n1 = scm_c_matrix_numcols (handlep);
+  return (i_base <= i && j_base <= j && 0 < m && 0 < n && m + (i - i_base) <= m1
+          && n + (j - j_base) <= n1);
+}
+
+static SCM
+matrix_block (const char *who,
+              SCM A, ssize_t i, ssize_t j, size_t m, size_t n,
+              ssize_t i_base, ssize_t j_base)
+{
+  scm_t_array_handle handle_A;
+  scm_array_get_handle (A, &handle_A);
+
+  if (!scm_array_handle_is_matrix (&handle_A))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_not_a_matrix (scm_from_latin1_string (who), A);
+    }
+
+  if (!block_is_legal (&handle_A, i, j, m, n, i_base, j_base))
+    {
+      scm_array_handle_release (&handle_A);
+      raise_bad_block_specification (scm_from_latin1_string (who),
+                                     A, scm_from_ssize_t (i),
+                                     scm_from_ssize_t (j),
+                                     scm_from_size_t (m),
+                                     scm_from_size_t (n),
+                                     scm_from_ssize_t (i_base),
+                                     scm_from_ssize_t (j_base));
+    }
+
+  SCM mapfunc;
+  SCM bounds;
+
+  switch (scm_array_handle_rank (&handle_A))
+    {
+    case 1:
+      {
+        assert (m == 1);
+
+        const ssize_t lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+
+        scm_array_handle_release (&handle_A);
+
+        mapfunc = scm_call_1 (vector_block_mapfunc (),
+                              scm_from_ssize_t (lbnd + (j - j_base)));
+        bounds = scm_list_1 (scm_from_size_t (n));
+      }
+      break;
+
+    case 2:
+      {
+        const ssize_t rows_lbnd = scm_array_handle_dims (&handle_A)[0].lbnd;
+        const ssize_t columns_lbnd = scm_array_handle_dims (&handle_A)[1].lbnd;
+
+        scm_array_handle_release (&handle_A);
+
+        if (m == 1)
+          {
+            mapfunc =
+              scm_call_2 (vector_in_matrix_block_mapfunc (),
+                          scm_from_ssize_t (rows_lbnd + (i - i_base)),
+                          scm_from_ssize_t (columns_lbnd + (j - j_base)));
+            bounds = scm_list_1 (scm_from_size_t (n));
+          }
+        else
+          {
+            mapfunc =
+              scm_call_2 (matrix_block_mapfunc (),
+                          scm_from_ssize_t (rows_lbnd + (i - i_base)),
+                          scm_from_ssize_t (columns_lbnd + (j - j_base)));
+            bounds = scm_list_2 (scm_from_size_t (m), scm_from_size_t (n));
+          }
+      }
+      break;
+
+    default:
+      assert (false);
+    }
+
+  return scm_make_shared_array (A, mapfunc, bounds);
+}
+
+VISIBLE SCM
+scm_c_matrix_0block (SCM A, ssize_t i, ssize_t j, size_t m, size_t n)
+{
+  return matrix_block ("scm_c_matrix_0block", A, i, j, m, n, 0, 0);
+}
+
+VISIBLE SCM
+scm_c_matrix_1block (SCM A, ssize_t i, ssize_t j, size_t m, size_t n)
+{
+  return matrix_block ("scm_c_matrix_1block", A, i, j, m, n, 1, 1);
+}
+
+VISIBLE SCM
+scm_c_matrix_block (SCM A, ssize_t i, ssize_t j, size_t m, size_t n)
+{
+  scm_t_array_handle handle_A;
+
+  scm_array_get_handle (A, &handle_A);
+  ssize_t i_base = scm_c_matrix_rows_lbnd (&handle_A);
+  ssize_t j_base = scm_c_matrix_columns_lbnd (&handle_A);
   scm_array_handle_release (&handle_A);
 
-  return d;
+  return matrix_block ("scm_c_matrix_block", A, i, j, m, n, i_base, j_base);
+}
+
+VISIBLE SCM
+scm_matrix_0block (SCM A, SCM i, SCM j, SCM m, SCM n)
+{
+  return scm_c_matrix_0block (A, scm_to_ssize_t (i), scm_to_ssize_t (j),
+                              scm_to_size_t (m), scm_to_size_t (n));
+}
+
+
+VISIBLE SCM
+scm_matrix_1block (SCM A, SCM i, SCM j, SCM m, SCM n)
+{
+  return scm_c_matrix_1block (A, scm_to_ssize_t (i), scm_to_ssize_t (j),
+                              scm_to_size_t (m), scm_to_size_t (n));
+}
+
+VISIBLE SCM
+scm_matrix_block (SCM A, SCM i, SCM j, SCM m, SCM n)
+{
+  return scm_c_matrix_block (A, scm_to_ssize_t (i), scm_to_ssize_t (j),
+                             scm_to_size_t (m), scm_to_size_t (n));
 }
 
 //-------------------------------------------------------------------------
@@ -3033,10 +3243,14 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-0column", 2, 0, 0, scm_matrix_0column);
   scm_c_define_gsubr ("matrix-1column", 2, 0, 0, scm_matrix_1column);
   scm_c_define_gsubr ("matrix-column", 2, 0, 0, scm_matrix_column);
-  scm_c_define_gsubr ("vector->matrix", 1, 0, 0, scm_vector_to_matrix);
+  scm_c_define_gsubr ("matrix-as-rank2-array", 1, 0, 0,
+                      scm_matrix_as_rank2_array);
   scm_c_define_gsubr ("row-matrix->vector", 1, 0, 0, scm_row_matrix_to_vector);
   scm_c_define_gsubr ("matrix-transpose", 1, 0, 0, scm_matrix_transpose);
   scm_c_define_gsubr ("matrix-diagonal", 1, 0, 0, scm_matrix_diagonal);
+  scm_c_define_gsubr ("matrix-0block", 5, 0, 0, scm_matrix_0block);
+  scm_c_define_gsubr ("matrix-1block", 5, 0, 0, scm_matrix_1block);
+  scm_c_define_gsubr ("matrix-block", 5, 0, 0, scm_matrix_block);
 
   scm_c_define_gsubr ("matrix-0based", 1, 0, 0, scm_matrix_0based);
   scm_c_define_gsubr ("matrix-1based", 1, 0, 0, scm_matrix_1based);

@@ -92,7 +92,7 @@
     "Shared array views of the symmetric halves of s-power splines. If
 the spline degree is even, then both halves will contain the middle
 coefficient as their last (highest degree) coefficient."
-    (let* ([coefs (vector->matrix (matrix-1based coefs))]
+    (let* ([coefs (matrix-as-rank2-array (matrix-1based coefs))]
            [dims (matrix-dimensions coefs)]
            [row-count (car dims)]
            [column-count (cadr dims)]

@@ -44,20 +44,19 @@
   (define/kwargs (poly:bezout-matrix xspline yspline (allow-inexact? #f))
     "Make the Bézout matrix for implicitization of a parametric planar
 Bézier spline, given in monomial basis."
-    (let* ([force-exact (if allow-inexact? identity matrix-inexact->exact)]
-           [xspline (matrix-0based (row-matrix->vector (force-exact xspline)))]
-           [yspline (matrix-0based (row-matrix->vector (force-exact yspline)))])
-      (assert (= (vector-length xspline) (vector-length yspline)))
-      (let ([deg-max (max (max-degree xspline) (max-degree yspline))])
-        (let ([xspline (make-shared-array xspline list (+ deg-max 1))]
-              [yspline (make-shared-array yspline list (+ deg-max 1))])
-          (bezout-matrix (x-xspline xspline) (y-yspline yspline)
-                         #:sum multipoly+ #:difference multipoly-
-                         #:product multipoly*)))))
+    (let* ([xspline (if allow-inexact? xspline (matrix-inexact->exact xspline))]
+           [yspline (if allow-inexact? yspline (matrix-inexact->exact yspline))])
+      (assert (= (row-matrix-size xspline) (row-matrix-size yspline)))
+      (let* ([deg-max (max (max-degree xspline) (max-degree yspline))]
+             [n (+ deg-max 1)]
+             [xspline (matrix-1block xspline 1 1 1 n)]
+             [yspline (matrix-1block yspline 1 1 1 n)])
+        (bezout-matrix (x-xspline xspline) (y-yspline yspline)
+                       #:sum multipoly+ #:difference multipoly-
+                       #:product multipoly*))))
 
   (define (poly:pretty-print-bezout-matrix B)
-    (let* ([B (matrix-1based B)]
-           [n (car (matrix-dimensions B))]
+    (let* ([n (car (matrix-dimensions B))]
            [strings
             (fold-left
              (lambda (i-prior i)
@@ -65,7 +64,7 @@ Bézier spline, given in monomial basis."
                  (fold-left
                   (lambda (j-prior j)
                     (cons
-                     (multipoly:pretty-print (array-ref B i j))
+                     (multipoly:pretty-print (matrix-1ref B i j))
                      j-prior))
                   '()
                   (iota n 1))
@@ -87,35 +86,34 @@ Bézier spline, given in monomial basis."
         "\n")
        "\n")))
         
-
   (define (max-degree spline)
-    (let* ([n (vector-length spline)]
+    (let* ([n (row-matrix-size spline)]
            [deg (- n 1)])
       (cond [(= deg -1) 0]
-            [(zero? (vector-ref spline deg))
+            [(zero? (matrix-0ref spline 0 deg))
              (max-degree (make-shared-array spline list deg))]
             [else deg])))
 
   (define (x-xspline xspline)
-    (let* ([n (vector-length xspline)]
+    (let* ([n (row-matrix-size xspline)]
            [sp (make-vector n)]
            [deg0-entry (make-array 0 2 2)])
-      (array-set! deg0-entry (- (vector-ref xspline 0)) 0 0)
+      (array-set! deg0-entry (- (matrix-0ref xspline 0 0)) 0 0)
       (array-set! deg0-entry 1 1 0)     ; Represents ‘x’.
       (vector-set! sp 0 deg0-entry)
       (do ([i 1 (+ i 1)]) ([= i n])
-        (vector-set! sp i (make-array (- (vector-ref xspline i)) 1 1)))
+        (vector-set! sp i (make-array (- (matrix-0ref xspline 0 i)) 1 1)))
       sp))
 
   (define (y-yspline yspline)
-    (let* ([n (vector-length yspline)]
+    (let* ([n (row-matrix-size yspline)]
            [sp (make-vector n)]
            [deg0-entry (make-array 0 2 2)])
-      (array-set! deg0-entry (- (vector-ref yspline 0)) 0 0)
+      (array-set! deg0-entry (- (matrix-0ref yspline 0 0)) 0 0)
       (array-set! deg0-entry 1 0 1)     ; Represents ‘y’.
       (vector-set! sp 0 deg0-entry)
       (do ([i 1 (+ i 1)]) ([= i n])
-        (vector-set! sp i (make-array (- (vector-ref yspline i)) 1 1)))
+        (vector-set! sp i (make-array (- (matrix-0ref yspline 0 i)) 1 1)))
       sp))
 
   (define (poly:implicit-equation matrix)

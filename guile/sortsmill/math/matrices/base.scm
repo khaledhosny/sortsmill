@@ -297,10 +297,13 @@
    matrix-column            ; (matrix-column A) → vector
    matrix-0column   ; (matrix-0column A) → vector   (0-based indexing)
    matrix-1column   ; (matrix-0column A) → vector   (1-based indexing)
-   vector->matrix   ; (vector->matrix vector-or-matrix) → matrix
-   row-matrix->vector ; (row-matrix->vector vector-or-matrix) → vector
+   matrix-as-rank2-array ; (matrix-as-rank2-array vector-or-array-matrix) → array matrix
+   row-matrix->vector ; (row-matrix->vector vector-or-array-matrix) → vector
    matrix-transpose   ; (matrix-transpose A) → matrix
    matrix-diagonal    ; (matrix-transpose A) → vector
+   matrix-0block      ; (matrix-0block A i j m n) → matrix
+   matrix-1block      ; (matrix-1block A i j m n) → matrix
+   matrix-block       ; (matrix-block A i j m n) → matrix
 
    ;; Predicates. These accept both typed and untyped arrays
    ;; and vectors.
@@ -394,7 +397,7 @@
         [private:matrix-mapped-to-typed-matrix type A proc]
         [let* ([dimensions (matrix-dimensions A)]
                [B (apply make-typed-array type *unspecified* dimensions)]
-               [prep-matrix (compose vector->matrix matrix-0based)])
+               [prep-matrix (compose matrix-as-rank2-array matrix-0based)])
           (unless (for-all (lambda (A^)
                              (equal? (matrix-dimensions A^) dimensions))
                            more-matrices)
