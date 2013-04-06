@@ -297,13 +297,13 @@
    matrix-column            ; (matrix-column A) → vector
    matrix-0column   ; (matrix-0column A) → vector   (0-based indexing)
    matrix-1column   ; (matrix-0column A) → vector   (1-based indexing)
+   matrix-0block    ; (matrix-0block A i j m n) → matrix
+   matrix-1block    ; (matrix-1block A i j m n) → matrix
+   matrix-block     ; (matrix-block A i j m n) → matrix
+   matrix-transpose ; (matrix-transpose A) → matrix  (preserves index bases of rank-2 arrays)
+   matrix-diagonal  ; (matrix-transpose A) → vector
    matrix-as-rank2-array ; (matrix-as-rank2-array vector-or-array-matrix) → array matrix
    row-matrix->vector ; (row-matrix->vector vector-or-array-matrix) → vector
-   matrix-transpose   ; (matrix-transpose A) → matrix
-   matrix-diagonal    ; (matrix-transpose A) → vector
-   matrix-0block      ; (matrix-0block A i j m n) → matrix
-   matrix-1block      ; (matrix-1block A i j m n) → matrix
-   matrix-block       ; (matrix-block A i j m n) → matrix
 
    ;; Predicates. These accept both typed and untyped arrays
    ;; and vectors.
