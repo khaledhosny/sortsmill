@@ -124,19 +124,7 @@ def identity ():
   """Return an identity matrix as a six-element tuple."""
   return (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 
-# i--
-# i-- @defun compose (@var{mat1}, @var{mat2})
-# i--
-# i-- Return a matrix that is the composition of two input
-# i-- transformations.
-# i--
-# i-- @end defun
-# i--
-def compose (mat1, mat2):
-  """Return a matrix that is the composition of two input
-  transformations.
-    
-  """
+def _compose_two_matrices (mat1, mat2):
   mat1 = map (float, mat1)
   mat2 = map (float, mat2)
   a0 = mat1[0] * mat2[0] + mat1[1] * mat2[2]
@@ -146,6 +134,28 @@ def compose (mat1, mat2):
   a4 = mat1[4] * mat2[0] + mat1[5] * mat2[2] + mat2[4];
   a5 = mat1[4] * mat2[1] + mat1[5] * mat2[3] + mat2[5];
   return (a0, a1, a2, a3, a4, a5)
+
+# i--
+# i-- @defun compose (@var{mat1}, @var{mat2}, ...)
+# i--
+# i-- Return a matrix that is the composition of one or
+# i-- more input transformations.
+# i--
+# i-- @end defun
+# i--
+def compose (mat1, mat2 = None, *rest):
+  """Return a matrix that is the composition of one or
+  more input transformations.
+    
+  """
+  if mat2 is None:
+    assert (len (rest) == 0)
+    result = mat1
+  else:
+    result = _compose_two_matrices (mat1, mat2)
+    for m in rest:
+      result = _compose_two_matrices (result, m)
+  return result
 
 # i--
 # i-- @defun inverse (@var{mat})
