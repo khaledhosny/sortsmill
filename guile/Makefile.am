@@ -640,6 +640,14 @@ PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/version.scm
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill psmat)
+
+DIST_SCM_FILES += sortsmill/psmat.scm
+GO_FILES += sortsmill/psmat.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/psmat.scm
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill pure)
 
 if HAVE_PURE_API

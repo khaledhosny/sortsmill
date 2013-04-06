@@ -113,17 +113,6 @@ def psMat_invert (a):
 
   return tuple (result)
 
-# i--
-# i-- @defun identity ()
-# i--
-# i-- Return an identity matrix as a six-element tuple.
-# i--
-# i-- @end defun
-# i--
-def identity ():
-  """Return an identity matrix as a six-element tuple."""
-  return (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-
 def _compose_two_matrices (mat1, mat2):
   mat1 = map (float, mat1)
   mat2 = map (float, mat2)
@@ -134,6 +123,17 @@ def _compose_two_matrices (mat1, mat2):
   a4 = mat1[4] * mat2[0] + mat1[5] * mat2[2] + mat2[4];
   a5 = mat1[4] * mat2[1] + mat1[5] * mat2[3] + mat2[5];
   return (a0, a1, a2, a3, a4, a5)
+
+# i--
+# i-- @defun identity ()
+# i--
+# i-- Return an identity matrix as a six-element tuple.
+# i--
+# i-- @end defun
+# i--
+def identity ():
+  """Return an identity matrix as a six-element tuple."""
+  return (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 
 # i--
 # i-- @defun compose (@var{mat1}, @var{mat2}, ...)

@@ -43,7 +43,7 @@ sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmil
 sortsmill/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/contours.go sortsmill/editor.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/strings.go sortsmill/views.go
+sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/contours.go sortsmill/editor.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/psmat.go sortsmill/strings.go sortsmill/views.go
 sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
