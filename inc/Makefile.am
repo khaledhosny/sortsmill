@@ -147,13 +147,15 @@ nobase_include_HEADERS += sortsmill/guile/notices.h
 nobase_include_HEADERS += sortsmill/guile.h
 
 nobase_include_HEADERS += sortsmill/guile/iconv.h
-nobase_include_HEADERS += sortsmill/guile/contours.h
 nobase_include_HEADERS += sortsmill/guile/arrays.h
 nobase_include_HEADERS += sortsmill/guile/rnrs_conditions.h
+nobase_include_HEADERS += sortsmill/guile/fonts.h
 nobase_include_HEADERS += sortsmill/guile/format.h
 
 nobase_include_HEADERS += sortsmill/guile/editor.h
 nobase_include_HEADERS += sortsmill/guile/editor/main_loop.h
+
+nobase_include_HEADERS += sortsmill/guile/fonts/contours.h
 
 nobase_include_HEADERS += sortsmill/guile/math.h
 nobase_include_HEADERS += sortsmill/guile/math/brentroot.h

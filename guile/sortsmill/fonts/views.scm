@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill views)
+(library (sortsmill fonts views)
 
   (export font-view-flag
           glyph-view-flag
@@ -46,7 +46,10 @@
           ViewBase->CharViewBase
           CharViewBase->ViewBase
           ViewBase->FontViewBase
-          FontViewBase->ViewBase)
+          FontViewBase->ViewBase
+
+          ;; A convenience function.
+          glyph-view->SplineChar)
 
   (import (sortsmill fontforge-api)
           (sortsmill i18n)
@@ -135,5 +138,10 @@
 
   (define FontViewBase->ViewBase
     (compose pointer->ViewBase FontViewBase->pointer))
+
+  (define (glyph-view->SplineChar gv)
+    (let* ([cvb (glyph-view->CharViewBase gv)]
+           [sc (CharViewBase:sc-dref cvb)])
+      sc))
 
   ) ;; end of library.

@@ -476,7 +476,7 @@ cdef extern from 'sortsmill/guile/python.h':
 
 #--------------------------------------------------------------------------
 
-cdef extern from 'sortsmill/guile/contours.h':
+cdef extern from 'sortsmill/guile/fonts/contours.h':
 
   SCM scm_make_contour_point (SCM x, SCM y, SCM on_curve_p, SCM selected_p,
                               SCM name)

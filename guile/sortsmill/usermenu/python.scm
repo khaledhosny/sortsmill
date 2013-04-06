@@ -33,7 +33,7 @@
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
           (sortsmill machine)
-          (sortsmill views)
+          (sortsmill fonts views)
           (sortsmill dynlink)
           (sortsmill pkg-info)
           (sortsmill notices)

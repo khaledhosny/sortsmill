@@ -41,7 +41,7 @@
 #include <sys/stat.h>
 #include <sd.h>
 #include <xalloc.h>
-#include <sortsmill/guile/contours.h>
+#include <sortsmill/guile.h>
 
 /* ************************************************************************** */
 /* ****************************    SVG Output    **************************** */
@@ -2461,7 +2461,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
 
   // @code{contour->malloced-SplinePointList} returns multiple
   // values. We are interested in the first, only.
-  SCM results = scm_call_1 (scm_c_public_ref ("sortsmill contours",
+  SCM results = scm_call_1 (scm_c_public_ref ("sortsmill fonts contours",
                                               "contour->malloced-SplinePointList"),
                             contour);
   SCM malloced_SplinePointList = scm_c_value_ref (results, 0);

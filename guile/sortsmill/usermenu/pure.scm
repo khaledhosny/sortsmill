@@ -24,7 +24,7 @@
   (import (sortsmill pure)
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
-          (sortsmill views)
+          (sortsmill fonts views)
           (sortsmill editor finalization)
 
           ;; Ensures hash-guillemet is treated as a dependency.

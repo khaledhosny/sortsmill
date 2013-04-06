@@ -103,7 +103,7 @@ dist_libsortsmill_aux_la_SOURCES += math_polyspline_subdiv.c
 
 # ‘Contours’ similar to those in the original FontForge’s Python
 # interface.
-dist_libsortsmill_aux_la_SOURCES += guile_contours.c
+dist_libsortsmill_aux_la_SOURCES += guile_fonts_contours.c
 
 # Brent’s root-finding algorithm.
 dist_libsortsmill_aux_la_SOURCES += math_brentroot.c

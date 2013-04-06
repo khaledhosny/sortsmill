@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_CONTOURS_H
-#define _SORTSMILL_GUILE_CONTOURS_H
+#ifndef _SORTSMILL_GUILE_FONTS_CONTOURS_H
+#define _SORTSMILL_GUILE_FONTS_CONTOURS_H
 
 #include <libguile.h>
 #include <stdbool.h>
@@ -205,4 +205,4 @@ scm_c_contour_name_set_x (SCM contour, const char *value)
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_CONTOURS_H */
+#endif /* _SORTSMILL_GUILE_FONTS_CONTOURS_H */

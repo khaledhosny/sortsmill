@@ -15,24 +15,9 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_H
-#define _SORTSMILL_GUILE_H
+#ifndef _SORTSMILL_GUILE_FONTS_H
+#define _SORTSMILL_GUILE_FONTS_H
 
-#include <sortsmill/guile/arrays.h>
-#include <sortsmill/guile/editor.h>
-#include <sortsmill/guile/fonts.h>
-#include <sortsmill/guile/format.h>
-#include <sortsmill/guile/iconv.h>
-#include <sortsmill/guile/math.h>
-#include <sortsmill/guile/notices.h>
-#include <sortsmill/guile/rnrs_conditions.h>
+#include <sortsmill/guile/fonts/contours.h>
 
-#if 0
-/* These have to be included explicitly by the user. One reason is not
-   to force the poor behavior of ‘#include <Python.h>’ on people. But,
-   also, they are not part of the core system. */
-#include <sortsmill/guile/pure.h>
-#include <sortsmill/guile/python.h>
-#endif
-
-#endif /* _SORTSMILL_GUILE_H */
+#endif /* _SORTSMILL_GUILE_FONTS_H */

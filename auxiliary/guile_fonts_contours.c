@@ -17,9 +17,9 @@
 
 
 #include <libguile.h>
-#include <sortsmill/guile/contours.h>
+#include <sortsmill/guile.h>
 
-static const char *contours_module = "sortsmill contours";
+static const char *contours_module = "sortsmill fonts contours";
 
 VISIBLE SCM
 scm_make_contour_point (SCM x, SCM y, SCM on_curve_p, SCM selected_p, SCM name)

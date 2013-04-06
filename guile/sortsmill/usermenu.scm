@@ -42,7 +42,7 @@
           (sortsmill i18n)
           (sortsmill machine)
           (sortsmill notices)
-          (sortsmill views)
+          (sortsmill fonts views)
 
           ;; Ensures hash-guillemet is treated as a dependency.
           (sortsmill strings hash-guillemet)

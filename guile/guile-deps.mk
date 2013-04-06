@@ -1,10 +1,13 @@
 sortsmill/alloc/alloc-die.go: sortsmill/dynlink.go
 sortsmill/argv.go: sortsmill/machine.go sortsmill/kwargs.go
 sortsmill/arrays.go: sortsmill/dynlink.go
-sortsmill/contours.go: sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go
 sortsmill/editor/main.go: sortsmill/dynlink.go sortsmill/argv.go
 sortsmill/editor/main-loop.go: sortsmill/editor/finalization.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
+sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go
+sortsmill/fonts/contours.go: sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go
+sortsmill/fonts/psmat.go: sortsmill/math/matrices.go
+sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go
 sortsmill/i18n.go: sortsmill/pkg-info.go sortsmill/dynlink.go
 sortsmill/iconv.go: sortsmill/dynlink.go
 sortsmill/kwargs.go: sortsmill/i18n.go
@@ -37,16 +40,16 @@ sortsmill/pure.go: sortsmill/i18n.go sortsmill/dynlink.go sortsmill/editor/final
 sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.go sortsmill/ffcompat.go sortsmill/editor/finalization.go sortsmill/strings.go
 sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/iconv.go
 sortsmill/strings/grabbed-strings.go: sortsmill/alloc.go
-sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/views.go sortsmill/strings/hash-guillemet.go
-sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/views.go sortsmill/editor/finalization.go sortsmill/strings/hash-guillemet.go
-sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
-sortsmill/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go
+sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings/hash-guillemet.go
+sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/fonts/views.go sortsmill/editor/finalization.go sortsmill/strings/hash-guillemet.go
+sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/contours.go sortsmill/editor.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/psmat.go sortsmill/strings.go sortsmill/views.go
+sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/peg-spacing.go sortsmill/pkg-info.go sortsmill/strings.go
 sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
+sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/psmat.go sortsmill/fonts/views.go
 sortsmill/gdraw-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
 sortsmill/math.go: sortsmill/math/brentroot.go sortsmill/math/functions.go sortsmill/math/geometry.go sortsmill/math/gsl.go sortsmill/math/math-constants.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
 sortsmill/math/geometry.go: sortsmill/math/geometry/lines.go

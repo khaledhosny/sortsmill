@@ -171,13 +171,14 @@ gdraw/gtextinfo.c
 
 guile/site-init.scm
 
-guile/sortsmill/contours.scm
 guile/sortsmill/kwargs.scm
 guile/sortsmill/sfd-to-sxml.scm
 guile/sortsmill/usermenu.scm
-guile/sortsmill/views.scm
 guile/sortsmill/pure.scm
 guile/sortsmill/python.scm
+
+guile/sortsmill/fonts/contours.scm
+guile/sortsmill/fonts/views.scm
 
 guile/sortsmill/math/geometry/lines.scm
 

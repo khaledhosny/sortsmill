@@ -222,16 +222,6 @@ SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/arrays.scm
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill contours)
-
-# FIXME: Put this under a category along with (sortsmill views), etc.
-
-DIST_SCM_FILES += sortsmill/contours.scm
-GO_FILES += sortsmill/contours.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/contours.scm
-
-#--------------------------------------------------------------------------
-#
 # (sortsmill dynlink)
 
 DIST_SCM_FILES += sortsmill/dynlink.scm
@@ -284,6 +274,48 @@ GO_FILES += sortsmill/ffcompat.go
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/fontforge-api.scm
 GO_FILES += sortsmill/fontforge-api.go
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill fonts)
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/fonts.scm
+GO_FILES += sortsmill/fonts.go
+FONTS_REEXPORTED_SCM_FILES = 
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/fonts.scm
+
+sortsmill/fonts.scm: $(FONTS_REEXPORTED_SCM_FILES)
+	$(AM_V_REEXPORT)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill fonts), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+
+# (sortsmill fonts anchors)
+
+DIST_SCM_FILES += sortsmill/fonts/anchors.scm
+GO_FILES += sortsmill/fonts/anchors.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/anchors.scm
+
+
+# (sortsmill fonts contours)
+
+DIST_SCM_FILES += sortsmill/fonts/contours.scm
+GO_FILES += sortsmill/fonts/contours.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/contours.scm
+
+
+# (sortsmill fonts psmat)
+
+DIST_SCM_FILES += sortsmill/fonts/psmat.scm
+GO_FILES += sortsmill/fonts/psmat.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/psmat.scm
+
+
+# (sortsmill fonts views)
+
+DIST_SCM_FILES += sortsmill/fonts/views.scm
+GO_FILES += sortsmill/fonts/views.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/views.scm
 
 #--------------------------------------------------------------------------
 #
@@ -597,6 +629,14 @@ GO_FILES += sortsmill/options.go
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill peg-spacing)
+
+DIST_SCM_FILES += sortsmill/peg-spacing.scm
+GO_FILES += sortsmill/peg-spacing.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/peg-spacing.scm
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill pkg-info ...)
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info.scm
@@ -637,14 +677,6 @@ DIST_SCM_IN_FILES += sortsmill/pkg-info/version.scm.in
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info/version.scm
 GO_FILES += sortsmill/pkg-info/version.go
 PKG_INFO_REEXPORTED_SCM_FILES += sortsmill/pkg-info/version.scm
-
-#--------------------------------------------------------------------------
-#
-# (sortsmill psmat)
-
-DIST_SCM_FILES += sortsmill/psmat.scm
-GO_FILES += sortsmill/psmat.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/psmat.scm
 
 #--------------------------------------------------------------------------
 #
@@ -731,16 +763,6 @@ GO_FILES += sortsmill/usermenu/python.go
 endif HAVE_PYTHON_API
 
 endif HAVE_GUI
-
-#--------------------------------------------------------------------------
-#
-# (sortsmill views)
-
-# FIXME: This probably belongs in a category with (sortsmill contours).
-
-DIST_SCM_FILES += sortsmill/views.scm
-GO_FILES += sortsmill/views.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/views.scm
 
 #--------------------------------------------------------------------------
 #
