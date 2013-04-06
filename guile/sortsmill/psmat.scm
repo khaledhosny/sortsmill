@@ -34,20 +34,20 @@
           (except (guile) error)
           (ice-9 match))
 
-  (define psmat:identity #(1 0 0 1 0 0))
+  (define psmat:identity '(1 0 0 1 0 0))
 
   (define (compose-two-matrices mat1 mat2)
     (match mat1
-      [#(m10 m11 m12 m13 m14 m15)
+      [(m10 m11 m12 m13 m14 m15)
        (match mat2
-         [#(m20 m21 m22 m23 m24 m25)
+         [(m20 m21 m22 m23 m24 m25)
           (let ([a0 (+ (* m10 m20) (* m11 m22))]
                 [a1 (+ (* m10 m21) (* m11 m23))]
                 [a2 (+ (* m12 m20) (* m13 m22))]
                 [a3 (+ (* m12 m21) (* m13 m23))]
                 [a4 (+ (* m14 m20) (* m15 m22) m24)]
                 [a5 (+ (* m14 m21) (* m15 m23) m25)])
-            (list->vector (list a0 a1 a2 a3 a4 a5)))] )] ))
+            (list a0 a1 a2 a3 a4 a5))] )] ))
 
   (define psmat:compose
     (case-lambda
@@ -57,7 +57,7 @@
 
   (define (psmat:inverse mat)
     (match mat
-      [#(m0 m1 m2 m3 m4 m5)
+      [(m0 m1 m2 m3 m4 m5)
        (let* ([A (list->array 2 `((,m0 ,m1)
                                   (,m2 ,m3)))]
               [inv-A (matrix-inv A)]
@@ -67,22 +67,22 @@
               [n3 (matrix-0ref inv-A 1 1)]
               [n4 (- (+ (* m4 n0) (* m5 n2)))]
               [n5 (- (+ (* m4 n1) (* m5 n3)))])
-         (list->vector (list n0 n1 n2 n3 n4 n5)))] ))
+         (list n0 n1 n2 n3 n4 n5))] ))
 
   (define (psmat:rotate theta)
     (let ([c (cos theta)]
           [s (sin theta)])
-      (list->vector (list c s (- s) c 0 0))))
+      (list c s (- s) c 0 0)))
 
   (define psmat:scale
     (case-lambda
-      [(x)   (list->vector (list x 0 0 x 0 0))]
-      [(x y) (list->vector (list x 0 0 y 0 0))] ))
+      [(x)   (list x 0 0 x 0 0)]
+      [(x y) (list x 0 0 y 0 0)] ))
 
   (define (psmat:skew theta)
-    (list->vector (list 1 0 (tan theta) 1 0 0)))
+    (list 1 0 (tan theta) 1 0 0))
 
   (define (psmat:translate x y)
-    (list->vector (list 1 0 0 1 x y)))
+    (list 1 0 0 1 x y))
 
   ) ;; end of library.
