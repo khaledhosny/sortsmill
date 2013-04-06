@@ -222,9 +222,4 @@
        (_ "expected gsl:CblasNonUnit or gsl:CblasUnit")
        diag)))
 
-  (define (array-dimensions-simplified A)
-    (map
-     (match-lambda [(lo hi) (- hi lo -1)])
-     (array-shape A)))
-
   ) ;; end of library.

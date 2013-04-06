@@ -23,7 +23,6 @@
 #include <stdint.h>
 #include <assert.h>
 
-
 //-------------------------------------------------------------------------
 
 // FIXME: This seems quite reusable, though perhaps it could have a

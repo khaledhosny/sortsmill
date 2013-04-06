@@ -987,10 +987,8 @@ VISIBLE _SCM_ARRAY_HANDLE_TO_TYPED_VECTOR (scm_array_handle_to_scm_vector, SCM,
   {                                                                     \
     scm_t_array_handle handle;                                          \
                                                                         \
-    SCM bounds = scm_list_2 (scm_list_2 (scm_from_uint (1),             \
-                                         scm_from_uint (m)),            \
-                             scm_list_2 (scm_from_uint (1),             \
-                                         scm_from_uint (n)));           \
+    SCM bounds = scm_list_2 (scm_from_uint (m),                         \
+                             scm_from_uint (n));                        \
     SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);               \
                                                                         \
     scm_dynwind_begin (0);                                              \
@@ -1033,8 +1031,7 @@ VISIBLE _SCM_FROM_TYPED_MATRIX (scm_from_transposed_scm_matrix,
   {                                                                     \
     scm_t_array_handle handle;                                          \
                                                                         \
-    SCM bounds = scm_list_1 (scm_list_2 (scm_from_uint (1),             \
-                                         scm_from_uint (n)));           \
+    SCM bounds = scm_list_1 (scm_from_uint (n));                        \
     SCM array = scm_make_array (SCM_UNSPECIFIED, bounds);               \
                                                                         \
     scm_dynwind_begin (0);                                              \
@@ -1362,15 +1359,12 @@ permutation_does_not_conform_with_matrix (const char *who,
                                           size_t permutation_size,
                                           SCM permutation, SCM A)
 {
-  SCM dims = scm_call_1 (scm_c_private_ref ("sortsmill math gsl matrices",
-                                            "array-dimensions-simplified"),
-                         A);
-
   const char *localized_message =
     _("permutation of length ~a does not conform with ~ax~a matrix");
   SCM message = scm_sformat (scm_from_locale_string (localized_message),
                              scm_list_3 (scm_from_size_t (permutation_size),
-                                         scm_car (dims), scm_cadr (dims)));
+                                         scm_matrix_row_count (A),
+                                         scm_matrix_column_count (A)));
   rnrs_raise_condition
     (scm_list_4
      (rnrs_make_assertion_violation (),
@@ -1494,7 +1488,7 @@ scm_gsl_matrix_scale (SCM A, SCM x)
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_2 (A, x), SCM_UNDEFINED));
 
-  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
+  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 0);
 
   scm_dynwind_end ();
 
@@ -1689,7 +1683,7 @@ scm_gsl_blas_dgemm (SCM TransA, SCM TransB, SCM alpha, SCM A, SCM B,
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_n (TransA, TransB, alpha, A, B, beta, C,
                                SCM_UNDEFINED), SCM_UNDEFINED));
-  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
+  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 0);
 
   scm_dynwind_end ();
 
@@ -2019,7 +2013,7 @@ scm_gsl_blas_dtrmm (SCM Side, SCM Uplo, SCM TransA, SCM Diag, SCM alpha, SCM A,
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_n (Side, Uplo, TransA, Diag, alpha, A, B,
                                SCM_UNDEFINED), SCM_UNDEFINED));
-  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);
+  SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 0);
 
   scm_dynwind_end ();
 
@@ -2313,7 +2307,7 @@ equal_non_conformable_message (void)
                      scm_from_latin1_keyword ("irritants"),             \
                      scm_list_2 (A, B), SCM_UNDEFINED));                \
                                                                         \
-    SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 1);      \
+    SCM result = scm_gsl_matrix_to_f64matrix (&_result.matrix, 0);      \
                                                                         \
     scm_dynwind_end ();                                                 \
                                                                         \
@@ -2769,9 +2763,9 @@ scm_gsl_linalg_SVD_golub_reinsch (SCM a)
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_1 (a), SCM_UNDEFINED));
   SCM values[3] = {
-    scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
-    scm_gsl_vector_to_f64vector (&s.vector, 1),
-    scm_gsl_matrix_to_f64matrix (&v.matrix, 1)
+    scm_gsl_matrix_to_f64matrix (&u.matrix, 0),
+    scm_gsl_vector_to_f64vector (&s.vector, 0),
+    scm_gsl_matrix_to_f64matrix (&v.matrix, 0)
   };
   return scm_c_values (values, 3);
 }
@@ -2819,9 +2813,9 @@ scm_gsl_linalg_SVD_modified_golub_reinsch (SCM a)
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_1 (a), SCM_UNDEFINED));
   SCM values[3] = {
-    scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
-    scm_gsl_vector_to_f64vector (&s.vector, 1),
-    scm_gsl_matrix_to_f64matrix (&v.matrix, 1)
+    scm_gsl_matrix_to_f64matrix (&u.matrix, 0),
+    scm_gsl_vector_to_f64vector (&s.vector, 0),
+    scm_gsl_matrix_to_f64matrix (&v.matrix, 0)
   };
   return scm_c_values (values, 3);
 }
@@ -2863,9 +2857,9 @@ scm_gsl_linalg_SVD_jacobi (SCM a)
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_1 (a), SCM_UNDEFINED));
   SCM values[3] = {
-    scm_gsl_matrix_to_f64matrix (&u.matrix, 1),
-    scm_gsl_vector_to_f64vector (&s.vector, 1),
-    scm_gsl_matrix_to_f64matrix (&v.matrix, 1)
+    scm_gsl_matrix_to_f64matrix (&u.matrix, 0),
+    scm_gsl_vector_to_f64vector (&s.vector, 0),
+    scm_gsl_matrix_to_f64matrix (&v.matrix, 0)
   };
   return scm_c_values (values, 3);
 }
@@ -2925,7 +2919,7 @@ scm_gsl_linalg_SVD_solve (SCM U, SCM S, SCM V, SCM B)
                        scm_list_4 (U, S, V, B), SCM_UNDEFINED));
     }
 
-  SCM solution = scm_gsl_matrix_to_f64matrix (&mX.matrix, 1);
+  SCM solution = scm_gsl_matrix_to_f64matrix (&mX.matrix, 0);
 
   scm_dynwind_end ();
 
@@ -2966,7 +2960,7 @@ scm_gsl_linalg_LU_decomp (SCM A)
                    scm_list_1 (A), SCM_UNDEFINED));
 
   SCM values[3] = {
-    scm_gsl_matrix_to_f64matrix (&mA.matrix, 1),
+    scm_gsl_matrix_to_f64matrix (&mA.matrix, 0),
     scm_from_gsl_permutation (p),
     scm_from_int (signum)
   };
@@ -3153,7 +3147,7 @@ scm_gsl_linalg_LU_solve (SCM LU, SCM permutation, SCM B)
                        scm_list_3 (LU, permutation, B), SCM_UNDEFINED));
     }
 
-  SCM solution = scm_gsl_matrix_to_f64matrix (&mX.matrix, 1);
+  SCM solution = scm_gsl_matrix_to_f64matrix (&mX.matrix, 0);
 
   scm_dynwind_end ();
 
@@ -3200,7 +3194,7 @@ scm_gsl_linalg_LU_invert (SCM LU, SCM permutation)
                    scm_from_latin1_keyword ("irritants"),
                    scm_list_2 (LU, permutation), SCM_UNDEFINED));
 
-  SCM inverse = scm_gsl_matrix_to_f64matrix (&mX.matrix, 1);
+  SCM inverse = scm_gsl_matrix_to_f64matrix (&mX.matrix, 0);
 
   scm_dynwind_end ();
 
