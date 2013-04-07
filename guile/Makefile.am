@@ -222,6 +222,27 @@ SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/arrays.scm
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill containers)
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/containers.scm
+GO_FILES += sortsmill/containers.go
+CONTAINERS_REEXPORTED_SCM_FILES = 
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/containers.scm
+
+sortsmill/containers.scm: $(CONTAINERS_REEXPORTED_SCM_FILES)
+	$(AM_V_REEXPORT)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill containers), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+
+# (sortsmill containers rnrs-hashtable)
+
+DIST_SCM_FILES += sortsmill/containers/rnrs-hashtable.scm
+GO_FILES += sortsmill/containers/rnrs-hashtable.go
+CONTAINERS_REEXPORTED_SCM_FILES += sortsmill/containers/rnrs-hashtable.scm
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill dynlink)
 
 DIST_SCM_FILES += sortsmill/dynlink.scm

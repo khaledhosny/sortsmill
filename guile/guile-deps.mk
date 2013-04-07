@@ -45,8 +45,9 @@ sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmi
 sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/peg-spacing.go sortsmill/pkg-info.go sortsmill/strings.go
+sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/peg-spacing.go sortsmill/pkg-info.go sortsmill/strings.go
 sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
+sortsmill/containers.go: sortsmill/containers/rnrs-hashtable.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
 sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/psmat.go sortsmill/fonts/views.go
