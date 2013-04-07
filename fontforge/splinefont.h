@@ -594,12 +594,17 @@ typedef struct otlookup
 
 typedef struct devicetab
 {
-  uint16_t first_pixel_size, last_pixel_size;   /* A range of point sizes to which this table applies */
-  int8_t *corrections;          /* a set of pixel corrections, one for each point size */
+  /* A range of point sizes to which this table applies. */
+  uint16_t first_pixel_size;
+  uint16_t last_pixel_size;
+
+  /* A set of pixel corrections, one for each point size. */
+  int8_t *corrections;
 } DeviceTable;
 
 typedef struct valdev
-{                               /* Value records can have four associated device tables */
+{
+  /* Value records can have four associated device tables. */
   DeviceTable xadjust;
   DeviceTable yadjust;
   DeviceTable xadv;
@@ -620,20 +625,25 @@ typedef struct anchorclass
   struct lookup_subtable *subtable;
   uint8_t type;                 /* anchorclass_type */
   uint8_t has_base;
-  uint8_t processed, has_mark, matches, ac_num;
+  uint8_t processed;
+  uint8_t has_mark;
+  uint8_t matches;
+  uint8_t ac_num;
   uint8_t ticked;
   struct anchorclass *next;
 } AnchorClass;
 
 enum anchor_type
 {
-  at_mark,
-  at_basechar,
-  at_baselig,
-  at_basemark,
-  at_centry,
-  at_cexit,
-  at_max,
+  /* Please do not change these values unless you know what you are
+     doing. */
+  at_mark = 0,
+  at_basechar = 1,
+  at_baselig = 2,
+  at_basemark = 3,
+  at_centry = 4,
+  at_cexit = 5,
+  at_max = 6,
   at_illegal = 15
 };
 
@@ -641,8 +651,9 @@ typedef struct anchorpoint
 {
   AnchorClass *anchor;
   BasePoint me;
-  DeviceTable xadjust, yadjust;
-  unsigned int type:4;
+  DeviceTable xadjust;
+  DeviceTable yadjust;
+  uint8_t type;
   bool selected;
   bool ticked;
   bool has_ttf_pt;
@@ -2823,7 +2834,7 @@ VISIBLE void XLFD_CreateComponents (BDFFont *bdf, EncMap *map, int res,
                                     struct xlfd_components *comp);
 /* Two lines intersect in at most 1 point */
 /* Two quadratics intersect in at most 4 points */
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
 VISIBLE int SplinesIntersect (const Spline *s1, const Spline *s2,
                               BasePoint pts[9], extended t1s[10],
                               extended t2s[10]);

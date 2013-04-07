@@ -76,6 +76,29 @@
                  (uint is_clip_path)
                  (* contour_name)))
 
+ (struct DeviceTable
+         (fields (uint first_pixel_size)
+                 (uint last_pixel_size)
+                 (* corrections)))
+
+ (struct AnchorClass
+         (fields (* name))
+         ;; There are more fields, not yet entered here.
+         )
+
+ (struct AnchorPoint
+         (fields ((* AnchorClass) anchor anchor_class)
+                 ((struct BasePoint) me coords)
+                 ((struct DeviceTable) xadjust)
+                 ((struct DeviceTable) yadjust)
+                 (uint type)
+                 (bool selected)
+                 (bool ticked)
+                 (bool has_ttf_pt has_ttf_point)
+                 (uint ttf_pt_index ttf_point_index)
+                 (int lig_index)
+                 ((* AnchorPoint) next)))
+
  (struct Layer
          (fields (bool background)
                  (bool order2)
@@ -173,7 +196,7 @@
           (* ligofme lig_of_me)
           (* comment)
           (uint color)
-          (* anchor)
+          ((* AnchorPoint) anchor anchor_points)
           (* ttf_instrs)
           (int ttf_instrs_len ttf_instrs_length)
           (int countermask_cnt countermask_count)

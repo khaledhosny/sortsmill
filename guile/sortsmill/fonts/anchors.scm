@@ -22,10 +22,48 @@
   (import (sortsmill fonts views)
           (sortsmill fontforge-api)
           (rnrs)
-          (except (guile) error))
+          (except (guile) error)
+          (only (srfi :1) unfold)
+          (system foreign)
+          (ice-9 match))
 
   (define (glyph-view-anchor-points gv)
-    (let ([sc (glyph-view->SplineChar gv)])
-      (format #f "Not yet implemented; but, in the meanwhile, have a look at this SplineChar: ~s\n" sc)))
+    (let ([ap-list (glyph-view->AnchorPoint-list gv)])
+      (map AnchorPoint->alist ap-list)))
 
+  (define (glyph-view->AnchorPoint-list gv)
+    (let ([sc (glyph-view->SplineChar gv)])
+      (unfold null-pointer?
+              pointer->AnchorPoint
+              (compose AnchorPoint:next-ref pointer->AnchorPoint)
+              (SplineChar:anchor-points-ref sc))))
+
+  (define (AnchorPoint->alist ap)
+    (let ([my-coords (AnchorPoint:coords-ref ap)]
+          [ac (AnchorPoint:anchor-class-dref ap)])
+      (let ([type (AnchorPoint->type-symbol ap)]
+            [name (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8")]
+            [x    (BasePoint:x-ref my-coords)]
+            [y    (BasePoint:y-ref my-coords)]
+            [selected? (AnchorPoint:selected-ref ap)]
+            [lig-index (AnchorPoint:lig-index-ref ap)])
+        `([type      . ,type]
+          [name      . ,name]
+          [coords    . ,(list x y)]
+          [selected? . ,selected?]
+          ,@[if (eq? type 'ligature)
+                `([ligature-index . ,lig-index])
+                '()])
+        )))
+
+  (define (AnchorPoint->type-symbol ap)
+    (match (AnchorPoint:type-ref ap)
+      [0 'mark]
+      [1 'base]
+      [2 'ligature]
+      [3 'basemark]
+      [4 'entry]
+      [5 'exit]
+      [_ 'unrecognized]))
+  
   ) ;; end of library.
