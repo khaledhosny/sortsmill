@@ -17,15 +17,29 @@
 
 (library (sortsmill fonts anchors)
 
-  (export glyph-view-anchor-points)
+  (export
+
+   ;; (glyph-view-anchor-points gv) → list of alists
+   ;;
+   ;; alist keys:
+   ;;   'type → 'mark 'base 'ligature 'basemark 'entry 'exit 'unrecognized
+   ;;   'name → string
+   ;;   'coords → (list x y)
+   ;;   'selected? → #f or #t
+   ;;   'ligature-index → integer  (present if type is 'ligature)
+   glyph-view-anchor-points
+   )
 
   (import (sortsmill fonts views)
           (sortsmill fontforge-api)
+          (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) unfold)
-          (system foreign)
-          (ice-9 match))
+          (system foreign))
+
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_guile_fonts_anchors"))
 
   (define (glyph-view-anchor-points gv)
     (let ([ap-list (glyph-view->AnchorPoint-list gv)])
@@ -56,14 +70,16 @@
                 '()])
         )))
 
+  (define (AnchorPoint-type->type-symbol type)
+    (cond [(= type anchor-type:mark) 'mark]
+          [(= type anchor-type:base) 'base]
+          [(= type anchor-type:ligature) 'ligature]
+          [(= type anchor-type:basemark) 'basemark]
+          [(= type anchor-type:entry) 'entry]
+          [(= type anchor-type:exit) 'exit]
+          [else 'unrecognized]))
+
   (define (AnchorPoint->type-symbol ap)
-    (match (AnchorPoint:type-ref ap)
-      [0 'mark]
-      [1 'base]
-      [2 'ligature]
-      [3 'basemark]
-      [4 'entry]
-      [5 'exit]
-      [_ 'unrecognized]))
+    (AnchorPoint-type->type-symbol (AnchorPoint:type-ref ap)))
   
   ) ;; end of library.

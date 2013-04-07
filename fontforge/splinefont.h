@@ -635,8 +635,6 @@ typedef struct anchorclass
 
 enum anchor_type
 {
-  /* Please do not change these values unless you know what you are
-     doing. */
   at_mark = 0,
   at_basechar = 1,
   at_baselig = 2,

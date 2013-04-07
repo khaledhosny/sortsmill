@@ -4,7 +4,7 @@ sortsmill/arrays.go: sortsmill/dynlink.go
 sortsmill/editor/main.go: sortsmill/dynlink.go sortsmill/argv.go
 sortsmill/editor/main-loop.go: sortsmill/editor/finalization.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
-sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go
+sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/dynlink.go
 sortsmill/fonts/contours.go: sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go
 sortsmill/fonts/psmat.go: sortsmill/math/matrices.go
 sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go
