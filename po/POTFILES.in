@@ -177,6 +177,7 @@ guile/sortsmill/usermenu.scm
 guile/sortsmill/pure.scm
 guile/sortsmill/python.scm
 
+guile/sortsmill/fonts/anchors.scm
 guile/sortsmill/fonts/contours.scm
 guile/sortsmill/fonts/views.scm
 
