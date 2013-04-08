@@ -3660,7 +3660,10 @@ VISIBLE struct opentype_str *ApplyTickedFeatures (SplineFont *sf,
                                                   int pixelsize,
                                                   SplineChar **glyphs);
 VISIBLE int VerticalKernFeature (SplineFont *sf, OTLookup *otl, int ask);
-VISIBLE void SFGlyphRenameFixup (SplineFont *sf, char *old, char *new_);
+VISIBLE void SFGlyphRenameFixup (SplineFont *sf,
+                                 char *old_name,
+                                 char *new_name,
+                                 bool rename_related_glyphs);
 
 struct sllk
 {

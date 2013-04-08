@@ -2014,7 +2014,7 @@ CI_ApplyAll (CharInfo * ci)
       if (sc->name == NULL || strcmp (sc->name, cached->name) != 0)
         {
           if (sc->name != NULL)
-            SFGlyphRenameFixup (sf, sc->name, cached->name);
+            SFGlyphRenameFixup (sf, sc->name, cached->name, true);
           free (sc->name);
           sc->name = xstrdup_or_null (cached->name);
           sc->namechanged = true;

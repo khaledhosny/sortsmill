@@ -161,6 +161,8 @@ GMenuInit ()
   menubar_box.active_border = 0xffffff;
   menu_box.padding = 3;
   menu_box.main_background = 0xffffff;
+  menu_box.border_outer = menu_box.disabled_foreground;
+  menu_box.flags |= box_foreground_border_outer;
   menubar_font =
     _GGadgetInitDefaultBox ("GMenuBar.", &menubar_box, menubar_font);
   menu_font = _GGadgetInitDefaultBox ("GMenu.", &menu_box, menubar_font);
