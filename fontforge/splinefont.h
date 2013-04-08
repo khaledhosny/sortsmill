@@ -2503,7 +2503,7 @@ VISIBLE void DStemInfosFree (DStemInfo * h);
 VISIBLE void DStemInfoFree (DStemInfo * h);
 VISIBLE void KernPairsFree (KernPair *kp);
 VISIBLE void SCOrderAP (SplineChar *sc);
-VISIBLE void AnchorPointsFree (AnchorPoint *ap);
+void AnchorPointsFree (AnchorPoint *ap);
 VISIBLE AnchorPoint *AnchorPointsCopy (AnchorPoint *alist);
 VISIBLE void SFRemoveAnchorClass (SplineFont *sf, AnchorClass * an);
 int AnchorClassesNextMerge (AnchorClass * ac);
@@ -2832,7 +2832,7 @@ VISIBLE void XLFD_CreateComponents (BDFFont *bdf, EncMap *map, int res,
                                     struct xlfd_components *comp);
 /* Two lines intersect in at most 1 point */
 /* Two quadratics intersect in at most 4 points */
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
 VISIBLE int SplinesIntersect (const Spline *s1, const Spline *s2,
                               BasePoint pts[9], extended t1s[10],
                               extended t2s[10]);

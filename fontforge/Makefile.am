@@ -198,6 +198,7 @@ libsortsmill_fontforge_la_SOURCES += spiro.c
 libsortsmill_fontforge_la_SOURCES += spiroentrypoints.c
 libsortsmill_fontforge_la_SOURCES += guile_notices.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_anchors.c
+libsortsmill_fontforge_la_SOURCES += guile_fontforge_internals.c
 libsortsmill_fontforge_la_SOURCES += splinerefigure.c
 
 nodist_libsortsmill_fontforge_la_SOURCES = fontforge_api.c

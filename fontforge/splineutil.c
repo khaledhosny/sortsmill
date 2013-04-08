@@ -6777,16 +6777,16 @@ AnchorPointsCopy (AnchorPoint *alist)
   return (head);
 }
 
-void
+VISIBLE void
 AnchorPointsFree (AnchorPoint *ap)
 {
-  AnchorPoint *anext;
-  for (; ap != NULL; ap = anext)
+  while (ap != NULL)
     {
-      anext = ap->next;
+      AnchorPoint *anext = ap->next;
       free (ap->xadjust.corrections);
       free (ap->yadjust.corrections);
       free (ap);
+      ap = anext;
     }
 }
 

@@ -29,6 +29,11 @@
    ;;   'ligature-index → integer  (present if type is 'ligature)
    glyph-view-anchor-points
 
+   ;; (glyph-view-anchor-points-set! gv list-of-alists) → unspecified
+   ;; (glyph-view-anchor-points-add! gv alist) → unspecified
+   glyph-view-anchor-points-set!
+   glyph-view-anchor-points-add!
+
    ;; Get anchor point field values.
    ;;
    ;; (anchor-point-name alist) → string
@@ -80,11 +85,24 @@
           (ice-9 format))
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_fonts_anchors"))
+    (sortsmill-dynlink-load-extension "init_guile_fonts_anchors")
+    (sortsmill-dynlink-load-extension "init_guile_fontforge_internals"))
 
   (define (glyph-view-anchor-points gv)
     (let ([ap-list (glyph-view->AnchorPoint-list gv)])
       (map AnchorPoint->alist ap-list)))
+
+  (define (glyph-view-anchor-points-set! gv anchor-points)
+    (let ([ap-ptr (anchor-points->AnchorPoint-linked-list
+                   gv anchor-points 'set-glyph-view-anchor-points!)]
+          [sc (glyph-view->SplineChar gv)])
+      (SplineChar:anchor-points-set! sc ap-ptr)
+      (update-changed-SplineChar (SplineChar->pointer sc) #f)))
+
+  (define (glyph-view-anchor-points-add! gv alist)
+    (let ([anchor-points (glyph-view-anchor-points gv)])
+      (assertion-violation 'glyph-view-anchor-points-add!
+                           "not yet implemented")))
 
   (define (anchor-point-name alist)
     (match (assq 'name alist)
@@ -201,6 +219,20 @@
 
   (define (check-AnchorPoint-type-symbol who symb)
     (type-symbol->AnchorPoint-type symb who))
+
+  (define* (anchor-points->AnchorPoint-linked-list gv anchor-points #:optional who)
+    (match anchor-points
+      [() %null-pointer]
+      [(h . t)
+       (let ([tail (anchor-points->AnchorPoint-linked-list gv t who)])
+         (catch #t
+           [lambda ()
+             (let ([ap (glyph-view-and-alist->AnchorPoint gv h who)])
+               (AnchorPoint:next-set! ap tail)
+               (AnchorPoint->pointer ap))]
+           [lambda args
+             (free-AnchorPoint-linked-list tail)
+             (apply throw args)] ))] ))
 
   (define* (glyph-view-and-alist->AnchorPoint gv alist #:optional who)
     (alist->AnchorPoint (glyph-view->AnchorClass-linked-list gv) alist who))
