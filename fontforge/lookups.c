@@ -4538,86 +4538,84 @@ gvfixup (struct glyphvariants *gv, char *old, char *new)
 void
 SFGlyphRenameFixup (SplineFont *sf, char *old, char *new)
 {
-  int k, gid, isv;
-  int i, r;
   SplineFont *master = sf;
-  SplineChar *sc;
-  PST *pst;
-  FPST *fpst;
-  KernClass *kc;
 
   CVGlyphRenameFixup (sf, old, new);
   if (sf->cidmaster != NULL)
     master = sf->cidmaster;
 
-  /* Look through all substitutions (and pairwise psts) stored on the glyphs */
-  /*  and change any occurances of the name */
-  /* (KernPairs have a reference to the SC rather than the name, and need no fixup) */
-  /* Also if the name is "f" then look for glyph names like "f.sc" or "f_f_l" */
-  /*  and be ready to change them too */
-  k = 0;
-  do
+  for (int k = 0; k <= master->subfontcnt; k++)
     {
-      sf = k < master->subfontcnt ? master->subfonts[k] : master;
-      for (gid = 0; gid < sf->glyphcnt; ++gid)
-        if ((sc = sf->glyphs[gid]) != NULL)
-          {
-            if (glyphnameIsComponent (sc->name, old))
-              {
-                char *newer = xstrdup_or_null (sc->name);
-                rplglyphname (&newer, old, new);
-                SFGlyphRenameFixup (master, sc->name, newer);
-                free (sc->name);
-                sc->name = newer;
-                sc->namechanged = sc->changed = true;
-              }
-            for (pst = sc->possub; pst != NULL; pst = pst->next)
-              {
-                if (pst->type == pst_substitution || pst->type == pst_alternate
-                    || pst->type == pst_multiple || pst->type == pst_pair
-                    || pst->type == pst_ligature)
-                  {
-                    if (rplstr
-                        (&pst->u.mult.components, old, new,
-                         pst->type == pst_ligature))
-                      sc->changed = true;
-                  }
-              }
-            /* For once I don't want a short circuit eval of "or", so I use */
-            /*  bitwise rather than boolean intentionally */
-            if (gvfixup (sc->vert_variants, old, new) |
-                gvfixup (sc->horiz_variants, old, new))
-              sc->changed = true;
-          }
-      ++k;
+      SplineFont *font = k < master->subfontcnt ? master->subfonts[k] : master;
+      for (int gid = 0; gid < font->glyphcnt; ++gid)
+        {
+          SplineChar *sc = font->glyphs[gid];
+          if (sc != NULL)
+            {
+              /* If the name is "f" then look for glyph names like "f.sc" or
+               * "f_f_l" and be ready to change them too */
+              if (glyphnameIsComponent (sc->name, old))
+                {
+                  char *newer = xstrdup_or_null (sc->name);
+                  rplglyphname (&newer, old, new);
+                  SFGlyphRenameFixup (master, sc->name, newer);
+                  free (sc->name);
+                  sc->name = newer;
+                  sc->namechanged = sc->changed = true;
+                }
+
+              /* Look through all substitutions (and pairwise psts) stored on
+               * the glyphs and change any occurances of the name (KernPairs
+               * have a reference to the SC rather than the name, and need no
+               * fixup) */
+              for (PST *pst = sc->possub; pst != NULL; pst = pst->next)
+                {
+                  if (pst->type == pst_substitution
+                      || pst->type == pst_alternate
+                      || pst->type == pst_multiple
+                      || pst->type == pst_pair
+                      || pst->type == pst_ligature)
+                    {
+                      bool ligature = pst->type == pst_ligature;
+                      if (rplstr (&pst->u.mult.components, old, new, ligature))
+                        sc->changed = true;
+                    }
+                }
+
+              /* For once I don't want a short circuit eval of "or", so I use
+               * bitwise rather than boolean intentionally */
+              if (gvfixup (sc->vert_variants, old, new) |
+                  gvfixup (sc->horiz_variants, old, new))
+                sc->changed = true;
+            }
+        }
     }
-  while (k < master->subfontcnt);
 
   /* Now look for contextual fpsts which might use the name */
-  for (fpst = master->possub; fpst != NULL; fpst = fpst->next)
+  for (FPST *fpst = master->possub; fpst != NULL; fpst = fpst->next)
     {
       if (fpst->format == pst_class)
         {
-          for (i = 0; i < fpst->nccnt; ++i)
+          for (int i = 0; i < fpst->nccnt; ++i)
             if (fpst->nclass[i] != NULL)
               {
                 if (rplstr (&fpst->nclass[i], old, new, false))
                   break;
               }
-          for (i = 0; i < fpst->bccnt; ++i)
+          for (int i = 0; i < fpst->bccnt; ++i)
             if (fpst->bclass[i] != NULL)
               {
                 if (rplstr (&fpst->bclass[i], old, new, false))
                   break;
               }
-          for (i = 0; i < fpst->fccnt; ++i)
+          for (int i = 0; i < fpst->fccnt; ++i)
             if (fpst->fclass[i] != NULL)
               {
                 if (rplstr (&fpst->fclass[i], old, new, false))
                   break;
               }
         }
-      for (r = 0; r < fpst->rule_cnt; ++r)
+      for (int r = 0; r < fpst->rule_cnt; ++r)
         {
           struct fpst_rule *rule = &fpst->rules[r];
           if (fpst->format == pst_glyphs)
@@ -4629,11 +4627,11 @@ SFGlyphRenameFixup (SplineFont *sf, char *old, char *new)
           else if (fpst->format == pst_coverage ||
                    fpst->format == pst_reversecoverage)
             {
-              for (i = 0; i < rule->u.coverage.ncnt; ++i)
+              for (int i = 0; i < rule->u.coverage.ncnt; ++i)
                 rplstr (&rule->u.coverage.ncovers[i], old, new, false);
-              for (i = 0; i < rule->u.coverage.bcnt; ++i)
+              for (int i = 0; i < rule->u.coverage.bcnt; ++i)
                 rplstr (&rule->u.coverage.bcovers[i], old, new, false);
-              for (i = 0; i < rule->u.coverage.fcnt; ++i)
+              for (int i = 0; i < rule->u.coverage.fcnt; ++i)
                 rplstr (&rule->u.coverage.fcovers[i], old, new, false);
               if (fpst->format == pst_reversecoverage)
                 rplstr (&rule->u.rcoverage.replacements, old, new, true);
@@ -4642,17 +4640,18 @@ SFGlyphRenameFixup (SplineFont *sf, char *old, char *new)
     }
 
   /* Now look for contextual kerning classes which might use the name */
-  for (isv = 0; isv < 2; ++isv)
+  for (int isv = 0; isv < 2; ++isv)
     {
-      for (kc = isv ? master->vkerns : master->kerns; kc != NULL; kc = kc->next)
+      for (KernClass *kc = isv ? master->vkerns : master->kerns; kc != NULL;
+           kc = kc->next)
         {
-          for (i = 0; i < kc->first_cnt; ++i)
+          for (int i = 0; i < kc->first_cnt; ++i)
             if (kc->firsts[i] != NULL)
               {
                 if (rplstr (&kc->firsts[i], old, new, false))
                   break;
               }
-          for (i = 0; i < kc->second_cnt; ++i)
+          for (int i = 0; i < kc->second_cnt; ++i)
             if (kc->seconds[i] != NULL)
               {
                 if (rplstr (&kc->seconds[i], old, new, false))
