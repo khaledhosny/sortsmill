@@ -98,7 +98,6 @@
  (struct AnchorClass
          (fields (* name)
                  ((* LookupSubtable) subtable)
-;;;;             (uint type)
                  (bool has_base)
                  (bool processed)
                  (bool has_mark)

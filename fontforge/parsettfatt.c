@@ -932,7 +932,6 @@ gposCursiveSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
   class->name = xstrdup_or_null (buf);
   subtable->anchor_classes = true;
   class->subtable = subtable;
-/////  class->type = act_curs;
   if (info->ahead == NULL)
     info->ahead = class;
   else
@@ -980,8 +979,6 @@ MarkGlyphsProcessMarks (FILE *ttf, int markoffset,
       subtable->anchor_classes = true;
       ac->subtable = subtable;
       /*ac->merge_with = info->anchor_merge_cnt+1; */
-/////      ac->type =
-/////        (l->otlookup->lookup_type == gpos_mark2mark) ? act_mkmk : act_mark;
       /* I don't distinguish between mark to base and mark to lig */
       if (info->ahead == NULL)
         info->ahead = ac;

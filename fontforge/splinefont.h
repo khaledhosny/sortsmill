@@ -613,24 +613,10 @@ typedef struct valdev
   DeviceTable yadv;
 } ValDevTab;
 
-/*
-// FIXME: GET RID OF THIS. It is redundant data. The anchor class type
-// is determined by the lookup type. Reading the anchor class type by
-// following links to the lookup surely is fast enough.
-enum anchorclass_type
-{
-  act_mark,
-  act_mkmk,
-  act_curs,
-  act_mklg
-};
-*/
-
 typedef struct anchorclass
 {
   char *name;                   /* in utf8 */
   struct lookup_subtable *subtable;
-/////  uint8_t type;                 /* anchorclass_type */
   bool has_base;
   bool processed;
   bool has_mark;

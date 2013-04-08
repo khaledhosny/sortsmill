@@ -273,7 +273,6 @@
           ap))))
 
   (define (check-conformability-with-AnchorClass who ac type alist)
-;;;;;;    (let ([ac-type (AnchorClass:type-ref ac)])
     (let ([ac-type (OTLookup:type-ref
                     (LookupSubtable:lookup-dref (AnchorClass:subtable-dref ac)))])
       (cond
@@ -347,7 +346,8 @@
     (find-AnchorClass (glyph-view->AnchorClass-linked-list gv) name))
 
   (define (AnchorClass->alist ac)
-    3)
+      (assertion-violation 'AnchorClass->alist
+                           "not yet implemented"))
 
   #|
   (define (anchor-point-match? AnchorClass-linked-list alist1 alist2)
