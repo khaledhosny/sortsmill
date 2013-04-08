@@ -48,8 +48,9 @@
           ViewBase->FontViewBase
           FontViewBase->ViewBase
 
-          ;; A convenience function.
-          glyph-view->SplineChar)
+          ;; Convenience functions.
+          glyph-view->SplineChar
+          font-view->SplineFont)
 
   (import (sortsmill fontforge-api)
           (sortsmill i18n)
@@ -143,5 +144,10 @@
     (let* ([cvb (glyph-view->CharViewBase gv)]
            [sc (CharViewBase:sc-dref cvb)])
       sc))
+
+  (define (font-view->SplineFont gv)
+    (let* ([fvb (font-view->FontViewBase gv)]
+           [sf (FontViewBase:sf-dref fvb)])
+      sf))
 
   ) ;; end of library.

@@ -18,6 +18,8 @@
 (library (sortsmill fonts anchors)
 
   (export
+   ;; (glyph-view-anchor-classes view) → list of alists
+   view-anchor-classes
 
    ;; (glyph-view-anchor-points gv) → list of alists
    ;;
@@ -85,14 +87,20 @@
           (ice-9 format))
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_fonts_anchors")
     (sortsmill-dynlink-load-extension "init_guile_fontforge_internals"))
+
+  (define (view-anchor-classes view)
+    (let ([ac-list (view->AnchorClass-list view)])
+      (map AnchorClass->alist ac-list)))
 
   (define (glyph-view-anchor-points gv)
     (let ([ap-list (glyph-view->AnchorPoint-list gv)])
       (map AnchorPoint->alist ap-list)))
 
   (define (glyph-view-anchor-points-set! gv anchor-points)
+;;;;; FIXME: First remove duplicates from the anchor-points list.
+;;;;;
+;;;;; FIXME: Then sort the anchor points.
     (let ([ap-ptr (anchor-points->AnchorPoint-linked-list
                    gv anchor-points 'set-glyph-view-anchor-points!)]
           [sc (glyph-view->SplineChar gv)])
@@ -309,12 +317,58 @@
               ac
               (find-AnchorClass (AnchorClass:next-ref ac) name)))))
 
+  (define (view->AnchorClass-list view)
+    (AnchorClass-linked-list->AnchorClass-list
+     (view->AnchorClass-linked-list view)))
+
+  (define (AnchorClass-linked-list->AnchorClass-list ac-ptr)
+    (unfold null-pointer?
+            pointer->AnchorClass
+            (compose AnchorClass:next-ref pointer->AnchorClass)
+            ac-ptr))
+
+  (define (view->AnchorClass-linked-list view)
+    (cond [(font-view? view) (font-view->AnchorClass-linked-list view)]
+          [(glyph-view? view) (glyph-view->AnchorClass-linked-list view)]
+          [else (assertion-violation 'view->AnchorClass-linked-list
+                                     "internal error: expected a view"
+                                     view)]))
+
+  (define (font-view->AnchorClass-linked-list fv)
+    (SplineFont:anchor-classes-ref (font-view->SplineFont fv)))
+
   (define (glyph-view->AnchorClass-linked-list gv)
     (SplineFont:anchor-classes-ref
      (SplineChar:parent-dref (glyph-view->SplineChar gv))))
 
   (define (glyph-view->AnchorClass gv name)
     (find-AnchorClass (glyph-view->AnchorClass-linked-list gv) name))
+
+  (define (AnchorClass->alist ac)
+    3)
+
+  #|
+  (define (anchor-point-match? AnchorClass-linked-list alist1 alist2)
+      (let ([
+      )
+
+  #|
+  find_anchor_point sc::glyph partial_record = find $ SplineChar_anchor sc
+  with
+    match_name ap::pointer =
+      (AnchorClass_name $ AnchorPoint_anchor ap) == partial_record!"name";
+    match ap::pointer =
+      case AnchorClass_type $ AnchorPoint_anchor ap of
+        fontforge::act_mklg =
+          AnchorPoint_lig_index == partial_record!"lig_index" && match_name ap;
+        fontforge::act_mark = match_name ap;
+        _ = AnchorPoint_type ap == partial_record!"type" && match_name ap;
+      end;
+    find ap::pointer = ap if null ap || match ap;
+    find ap::pointer = find (AnchorPoint_next ap) otherwise;
+  end;
+  |#
+  |#
 
   (define (raise:expected-string who key value alist)
     (assertion-violation

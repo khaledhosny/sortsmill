@@ -64,7 +64,7 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h		\
 	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
 	fontimage.h activeinui.h bezctx.h bezctx_intf.h spiro.h				\
-	spiroentrypoints.h zmisc.h
+	spiroentrypoints.h zmisc.h guile_fontforge_internals.h
 
 nobase_nodist_include_HEADERS = sortsmill/fontforge_api.h
 
@@ -198,6 +198,7 @@ libsortsmill_fontforge_la_SOURCES += spiro.c
 libsortsmill_fontforge_la_SOURCES += spiroentrypoints.c
 libsortsmill_fontforge_la_SOURCES += guile_notices.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_anchors.c
+libsortsmill_fontforge_la_SOURCES += guile_fonts_lookups.c
 libsortsmill_fontforge_la_SOURCES += guile_fontforge_internals.c
 libsortsmill_fontforge_la_SOURCES += splinerefigure.c
 

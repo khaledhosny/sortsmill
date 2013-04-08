@@ -526,7 +526,7 @@ enum pst_flags
   pst_markset = 0xffff0000
 };
 
-struct lookup_subtable
+typedef struct lookup_subtable
 {
   char *subtable_name;
   char *suffix;                 /* for gsub_single, used to find a default replacement */
@@ -556,7 +556,7 @@ struct lookup_subtable
   /*  break it up into several smaller subtables, each of which has */
   /*  an offset in this list (extra-subtables[0]==subtable_offset) */
   /*  the list is terminated by an entry of -1 */
-};
+} LookupSubtable;
 
 typedef struct otlookup
 {
@@ -611,6 +611,9 @@ typedef struct valdev
   DeviceTable yadv;
 } ValDevTab;
 
+// FIXME: GET RID OF THIS. It is redundant data. The anchor class type
+// is determined by the lookup type. Reading the anchor class type by
+// following links to the lookup surely is fast enough.
 enum anchorclass_type
 {
   act_mark,

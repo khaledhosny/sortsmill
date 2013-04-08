@@ -4501,7 +4501,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
   if (f & 2)
     si->removeexternal = true;
 /*  if ( f&4 )
-                      	si->removeoverlapifneeded = true; *//* Obsolete */
+                        	si->removeoverlapifneeded = true; *//* Obsolete */
   si->penangle = angle;
   si->minorradius = minor / 2;
 
@@ -9559,8 +9559,9 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
                     case pst_position:
                       PyTuple_SetItem (ret, cnt,
                                        Py_BuildValue ("(ssiiii)",
-                                                      pst->subtable->
-                                                      subtable_name, "Position",
+                                                      pst->
+                                                      subtable->subtable_name,
+                                                      "Position",
                                                       pst->u.pos.xoff,
                                                       pst->u.pos.yoff,
                                                       pst->u.pos.h_adv_off,
@@ -9569,27 +9570,28 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
                     case pst_pair:
                       PyTuple_SetItem (ret, cnt,
                                        Py_BuildValue ("(sssiiiiiiii)",
-                                                      pst->subtable->
-                                                      subtable_name, "Pair",
+                                                      pst->
+                                                      subtable->subtable_name,
+                                                      "Pair",
                                                       pst->u.pair.paired,
                                                       pst->u.pair.vr[0].xoff,
                                                       pst->u.pair.vr[0].yoff,
-                                                      pst->u.pair.vr[0].
-                                                      h_adv_off,
-                                                      pst->u.pair.vr[0].
-                                                      v_adv_off,
+                                                      pst->u.pair.
+                                                      vr[0].h_adv_off,
+                                                      pst->u.pair.
+                                                      vr[0].v_adv_off,
                                                       pst->u.pair.vr[1].xoff,
                                                       pst->u.pair.vr[1].yoff,
-                                                      pst->u.pair.vr[1].
-                                                      h_adv_off,
-                                                      pst->u.pair.vr[1].
-                                                      v_adv_off));
+                                                      pst->u.pair.
+                                                      vr[1].h_adv_off,
+                                                      pst->u.pair.
+                                                      vr[1].v_adv_off));
                       break;
                     case pst_substitution:
                       PyTuple_SetItem (ret, cnt,
                                        Py_BuildValue ("(sss)",
-                                                      pst->subtable->
-                                                      subtable_name,
+                                                      pst->
+                                                      subtable->subtable_name,
                                                       "Substitution",
                                                       pst->u.subs.variant));
                       break;
@@ -9598,8 +9600,8 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
                     case pst_ligature:
                       temp = TupleOfGlyphNames (pst->u.mult.components, 2);
                       PyTuple_SetItem (temp, 0,
-                                       STRING_TO_PY (pst->subtable->
-                                                     subtable_name));
+                                       STRING_TO_PY (pst->
+                                                     subtable->subtable_name));
                       PyTuple_SetItem (temp, 1,
                                        STRING_TO_PY (pst->type ==
                                                      pst_alternate ? "AltSubs" :
@@ -9634,11 +9636,11 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
                             xadv1 = kp->off;
                           PyTuple_SetItem (ret, cnt,
                                            Py_BuildValue ("(sssiiiiiiii)",
-                                                          kp->subtable->
-                                                          subtable_name, "Pair",
-                                                          kp->sc->name, 0, 0,
-                                                          xadv1, yadv1, 0, 0,
-                                                          xadv2, 0));
+                                                          kp->
+                                                          subtable->subtable_name,
+                                                          "Pair", kp->sc->name,
+                                                          0, 0, xadv1, yadv1, 0,
+                                                          0, xadv2, 0));
                         }
                       ++cnt;
                     }
@@ -10400,8 +10402,8 @@ cvtiter_iternext (cvtiterobject * ci)
   if (ci->pos < cvt->cvt->len / 2)
     {
       entry =
-        (((PyObject *) cvt)->ob_type->tp_as_sequence->
-         sq_item) ((PyObject *) cvt, ci->pos++);
+        (((PyObject *) cvt)->ob_type->
+         tp_as_sequence->sq_item) ((PyObject *) cvt, ci->pos++);
       return (entry);
     }
 
@@ -16522,9 +16524,9 @@ PyFFFont_addAnchorClass (PyFF_Font *self, PyObject *args)
   ac->name = xstrdup_or_null (anchor_name);
   ac->subtable = sub;
   ac->type =
-    lookup_type == gpos_cursive ? act_curs : lookup_type ==
-    gpos_mark2base ? act_mark : lookup_type ==
-    gpos_mark2ligature ? act_mklg : act_mkmk;
+    ((lookup_type == gpos_cursive) ? act_curs :
+     ((lookup_type == gpos_mark2base) ? act_mark :
+      ((lookup_type == gpos_mark2ligature) ? act_mklg : act_mkmk)));
   ac->next = sf->anchor;
   sf->anchor = ac;
 
@@ -17925,8 +17927,9 @@ PyFFFont_getLookupInfo (PyFF_Font *self, PyObject *args)
           for (l = 0; l < sl->lang_cnt; ++l)
             PyTuple_SetItem (larray, l,
                              TagToPythonString (l <
-                                                MAX_LANG ? sl->langs[l] : sl->
-                                                morelangs[l - MAX_LANG]));
+                                                MAX_LANG ? sl->
+                                                langs[l] : sl->morelangs[l -
+                                                                         MAX_LANG]));
           PyTuple_SetItem (sarray, scnt,
                            Py_BuildValue ("(OO)",
                                           TagToPythonString (sl->script),

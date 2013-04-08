@@ -20,6 +20,7 @@
 #include <splinefont.h>
 #include <uiinterface.h>
 #include <intl.h>
+#include <guile_fontforge_internals.h>
 
 //-------------------------------------------------------------------------
 
@@ -101,8 +102,6 @@ scm_free_AnchorPoint_linked_list (SCM ap_ptr)
 
 //-------------------------------------------------------------------------
 
-void init_guile_fontforge_internals (void);
-
 VISIBLE void
 init_guile_fontforge_internals (void)
 {
@@ -114,6 +113,9 @@ init_guile_fontforge_internals (void)
 
   scm_c_define_gsubr ("free-AnchorPoint-linked-list", 1, 0, 0,
                       scm_free_AnchorPoint_linked_list);
+
+  init_guile_fonts_lookups ();
+  init_guile_fonts_anchors ();
 }
 
 //-------------------------------------------------------------------------

@@ -17,12 +17,13 @@
 
 #include <libguile.h>
 #include <splinefont.h>
+#include <guile_fontforge_internals.h>
 
-void init_guile_fonts_anchors (void);
-
-VISIBLE void
+void
 init_guile_fonts_anchors (void)
 {
+  // FIXME: GET RID OF THESE. They are redundant data. Use the lookup
+  // type instead.
   scm_c_define ("anchor-class-type:mark-to-base", scm_from_int (act_mark));
   scm_c_define ("anchor-class-type:mark-to-mark", scm_from_int (act_mkmk));
   scm_c_define ("anchor-class-type:cursive", scm_from_int (act_curs));
