@@ -4536,7 +4536,8 @@ gvfixup (struct glyphvariants *gv, char *old, char *new)
 }
 
 void
-SFGlyphRenameFixup (SplineFont *sf, char *old, char *new)
+SFGlyphRenameFixup (SplineFont *sf, char *old, char *new,
+                    bool rename_related_glyphs)
 {
   SplineFont *master = sf;
 
@@ -4554,11 +4555,11 @@ SFGlyphRenameFixup (SplineFont *sf, char *old, char *new)
             {
               /* If the name is "f" then look for glyph names like "f.sc" or
                * "f_f_l" and be ready to change them too */
-              if (glyphnameIsComponent (sc->name, old))
+              if (rename_related_glyphs && glyphnameIsComponent (sc->name, old))
                 {
                   char *newer = xstrdup_or_null (sc->name);
                   rplglyphname (&newer, old, new);
-                  SFGlyphRenameFixup (master, sc->name, newer);
+                  SFGlyphRenameFixup (master, sc->name, newer, true);
                   free (sc->name);
                   sc->name = newer;
                   sc->namechanged = sc->changed = true;
