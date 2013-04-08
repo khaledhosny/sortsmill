@@ -22,21 +22,62 @@
    ;; (glyph-view-anchor-points gv) → list of alists
    ;;
    ;; alist keys:
-   ;;   'type → 'mark 'base 'ligature 'basemark 'entry 'exit 'unrecognized
+   ;;   'type → 'mark 'base 'ligature 'base-mark 'entry 'exit 'unrecognized
    ;;   'name → string
    ;;   'coords → (list x y)
    ;;   'selected? → #f or #t
    ;;   'ligature-index → integer  (present if type is 'ligature)
    glyph-view-anchor-points
+
+   ;; Get anchor point field values.
+   ;;
+   ;; (anchor-point-name alist) → string
+   ;; (anchor-point-type alist) → symbol
+   ;; (anchor-point-coords alist) → (x y)
+   ;; (anchor-point-selected? alist) → boolean
+   ;; (anchor-point-ligature-index alist) → integer
+   ;;
+   ;; These may also raise an assertion-violation, because we want the
+   ;; programmer to have provided us with a good anchor point
+   ;; specification, by the time these procedures are called.
+   ;;
+   ;; We do let programmers add their own fields, _without_ having the
+   ;; presence of extra fields raise assertion violations. Probably
+   ;; one should use keys that start with ‘x-’.
+   anchor-point-name
+   anchor-point-type
+   anchor-point-coords
+   anchor-point-selected?
+   anchor-point-ligature-index          ; Assumes type is 'ligature.
+
+   ;; Set or replace anchor point field values. The ‘value’ arguments
+   ;; are not checked.
+   ;;
+   ;; (anchor-point-with-name alist value) → alist
+   ;; (anchor-point-with-type alist value) → alist
+   ;; (anchor-point-with-coords alist value) → alist
+   ;; (anchor-point-with-selected? alist value) → alist
+   ;; (anchor-point-with-ligature-index alist value) → alist
+   ;; (anchor-point-with-field alist key value) → alist
+   anchor-point-with-name
+   anchor-point-with-type
+   anchor-point-with-coords
+   anchor-point-with-selected?
+   anchor-point-with-ligature-index
+   anchor-point-with-field
    )
 
   (import (sortsmill fonts views)
           (sortsmill fontforge-api)
+          (sortsmill i18n)
           (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) unfold)
-          (system foreign))
+          (only (srfi :1) alist-cons unfold)
+          (only (srfi :26) cut)
+          (system foreign)
+          (ice-9 match)
+          (ice-9 format))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_fonts_anchors"))
@@ -44,6 +85,70 @@
   (define (glyph-view-anchor-points gv)
     (let ([ap-list (glyph-view->AnchorPoint-list gv)])
       (map AnchorPoint->alist ap-list)))
+
+  (define (anchor-point-name alist)
+    (match (assq 'name alist)
+      [(k . (? string? v)) v]
+      [(k . v) (raise:expected-string 'anchor-point-name 'name v alist)]
+      [#f (raise:missing-anchor-point-field 'anchor-point-name 'name alist)]))
+
+  (define (anchor-point-type alist)
+    (match (assq 'type alist)
+      [(k . (? symbol? v))
+       (check-AnchorPoint-type-symbol 'anchor-point-type v)
+       (when (eq? v 'ligature)
+         (unless (assq 'ligature-index alist)
+           (assertion-violation
+            'anchor-point-type
+            (_ "expected 'ligature-index field in anchor point of type 'ligature")
+            alist)))
+       v]
+      [(k . v) (raise:expected-symbol 'anchor-point-type 'type v alist)]
+      [#f (raise:missing-anchor-point-field 'anchor-point-type 'type alist)]))
+
+  (define (anchor-point-coords alist)
+    (match (assq 'coords alist)
+      [(k . (? (match-lambda [((? real? x) (? real? y)) #t] [_ #f]) v)) v]
+      [(k . v) (raise:expected-real-coordinates 'anchor-point-coords
+                                                'coords v alist)]
+      [#f (raise:missing-anchor-point-field 'anchor-point-coords
+                                            'coords alist)]))
+
+  (define (anchor-point-selected? alist)
+    (match (assq 'selected? alist)
+      [(k . (? boolean? v)) v]
+      [(k . v) (raise:expected-boolean 'anchor-point-selected?
+                                       'selected? v alist)]
+
+      ;; The 'selected? field may be left out, and defaults to #f.
+      [#f #f]
+      ))
+
+  (define (anchor-point-ligature-index alist)
+    (match (assq 'ligature-index alist)
+      [(k . (? integer? v)) v] ;; FIXME: Should we check more thoroughly?
+      [(k . v) (raise:expected-integer 'anchor-point-ligature-index
+                                       'ligature-index v alist)]
+      [#f (raise:missing-anchor-point-field 'anchor-point-ligature-index
+                                            'ligature-index alist)]))
+
+  (define (anchor-point-with-field alist key value)
+    (alist-cons key value (remp (lambda (k.v) (eq? (car k.v) key)) alist)))
+
+  (define (anchor-point-with-name alist value)
+    (anchor-point-with-field alist 'name value))
+
+  (define (anchor-point-with-type alist value)
+    (anchor-point-with-field alist 'type value))
+
+  (define (anchor-point-with-coords alist value)
+    (anchor-point-with-field alist 'coords value))
+
+  (define (anchor-point-with-selected? alist value)
+    (anchor-point-with-field alist 'selected? value))
+
+  (define (anchor-point-with-ligature-index alist value)
+    (anchor-point-with-field alist 'ligature-index value))
 
   (define (glyph-view->AnchorPoint-list gv)
     (let ([sc (glyph-view->SplineChar gv)])
@@ -74,12 +179,150 @@
     (cond [(= type anchor-type:mark) 'mark]
           [(= type anchor-type:base) 'base]
           [(= type anchor-type:ligature) 'ligature]
-          [(= type anchor-type:basemark) 'basemark]
+          [(= type anchor-type:base-mark) 'base-mark]
           [(= type anchor-type:entry) 'entry]
           [(= type anchor-type:exit) 'exit]
           [else 'unrecognized]))
 
   (define (AnchorPoint->type-symbol ap)
     (AnchorPoint-type->type-symbol (AnchorPoint:type-ref ap)))
+
+  (define* (type-symbol->AnchorPoint-type symb #:optional who)
+    (match symb
+      ['mark      anchor-type:mark]
+      ['base      anchor-type:base]
+      ['ligature  anchor-type:ligature]
+      ['base-mark anchor-type:base-mark]
+      ['entry     anchor-type:entry]
+      ['exit      anchor-type:exit]
+      [_ (assertion-violation
+          (if who who 'type-symbol->AnchorPoint-type)
+          (_ "unrecognized anchor point type") symb)] ))
+
+  (define (check-AnchorPoint-type-symbol who symb)
+    (type-symbol->AnchorPoint-type symb who))
+
+  (define* (glyph-view-and-alist->AnchorPoint gv alist #:optional who)
+    (alist->AnchorPoint (glyph-view->AnchorClass-linked-list gv) alist who))
+
+  (define* (alist->AnchorPoint ac-ptr alist #:optional who)
+    (let ([name (anchor-point-name alist)]
+          [type (anchor-point-type alist)]
+          [coords (anchor-point-coords alist)]
+          [selected? (anchor-point-selected? alist)])
+      (let ([ac (find-AnchorClass ac-ptr name)])
+        (unless ac
+          (error (if who who 'alist->AnchorPoint)
+                 (format #f (_ "anchor class `~a' not found") name)
+                 alist))
+        (check-conformability-with-AnchorClass who ac type alist)
+        (let ([ap (malloc-AnchorPoint)])
+          (catch #t
+            [lambda ()
+              (AnchorPoint:anchor-class-set! ap (AnchorClass->pointer ac))
+              (AnchorPoint:type-set! ap (type-symbol->AnchorPoint-type type))
+              (let ([bp (AnchorPoint:coords-ref ap)])
+                (BasePoint:x-set! bp (car coords))
+                (BasePoint:y-set! bp (cadr coords)))
+              (AnchorPoint:selected-set! ap selected?)
+              (when (eq? type 'ligature)
+                (AnchorPoint:lig-index-set! ap (anchor-point-ligature-index alist)))]
+            [lambda args
+              (free-AnchorPoint ap)
+              (apply throw args)] )
+          ap))))
+
+  (define (check-conformability-with-AnchorClass who ac type alist)
+    (let ([ac-type (AnchorClass:type-ref ac)])
+      (cond
+       [(= ac-type anchor-class-type:mark-to-base)
+        (unless (or (eq? type 'mark) (eq? type 'base))
+          (assertion-violation
+           who
+           (format #f (_ "anchor class `~a' allows only 'mark and 'base anchors")
+                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+           alist))]
+       [(= ac-type anchor-class-type:mark-to-mark)
+        (unless (or (eq? type 'mark) (eq? type 'base-mark))
+          (assertion-violation
+           who
+           (format #f (_ "anchor class `~a' allows only 'mark and 'base-mark anchors")
+                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+           alist))]
+       [(= ac-type anchor-class-type:cursive)
+        (unless (or (eq? type 'entry) (eq? type 'exit))
+          (assertion-violation
+           who
+           (format #f (_ "anchor class `~a' allows only 'entry and 'exit anchors")
+                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+           alist))]
+       [(= ac-type anchor-class-type:mark-to-ligature)
+        (unless (or (eq? type 'mark) (eq? type 'ligature))
+          (assertion-violation
+           who
+           (format #f (_ "anchor class `~a' allows only 'mark and 'ligature anchors")
+                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+           alist))]
+       [_ (assertion-violation
+           who
+           "internal error: unrecognized anchor class type"
+           ac-type)])))
+
+  (define (find-AnchorClass ac-ptr name)
+    (if (null-pointer? ac-ptr)
+        #f
+        (let ([ac (pointer->AnchorClass ac-ptr)])
+          (if (string=? (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8")
+                        name)
+              ac
+              (find-AnchorClass (AnchorClass:next-ref ac) name)))))
+
+  (define (glyph-view->AnchorClass-linked-list gv)
+    (SplineFont:anchor-classes-ref
+     (SplineChar:parent-dref (glyph-view->SplineChar gv))))
+
+  (define (glyph-view->AnchorClass gv name)
+    (find-AnchorClass (glyph-view->AnchorClass-linked-list gv) name))
+
+  (define (raise:expected-string who key value alist)
+    (assertion-violation
+     who
+     (format #f (_ "expected a string for anchor point field '~a but got ~s")
+             key value)
+     alist))
+  
+  (define (raise:expected-symbol who key value alist)
+    (assertion-violation
+     who
+     (format #f (_ "expected a symbol for anchor point field '~a but got ~s")
+             key value)
+     alist))
+  
+  (define (raise:expected-real-coordinates who key value alist)
+    (assertion-violation
+     who
+     (format #f (_ "expected real-number coordinates for anchor point field '~a but got ~s")
+             key value)
+     alist))
+  
+  (define (raise:expected-boolean who key value alist)
+    (assertion-violation
+     who
+     (format #f (_ "expected #f or #t for anchor point field '~a but got ~s")
+             key value)
+     alist))
+  
+  (define (raise:expected-integer who key value alist)
+    (assertion-violation
+     who
+     (format #f (_ "expected an integer for anchor point field '~a but got ~s")
+             key value)
+     alist))
+  
+  (define (raise:missing-anchor-point-field who key alist)
+    (assertion-violation
+     who
+     (format #f (_ "missing anchor point field '~a") key)
+     alist))
   
   ) ;; end of library.

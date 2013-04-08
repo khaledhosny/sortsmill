@@ -624,12 +624,12 @@ typedef struct anchorclass
   char *name;                   /* in utf8 */
   struct lookup_subtable *subtable;
   uint8_t type;                 /* anchorclass_type */
-  uint8_t has_base;
-  uint8_t processed;
-  uint8_t has_mark;
-  uint8_t matches;
+  bool has_base;
+  bool processed;
+  bool has_mark;
+  bool matches;
   uint8_t ac_num;
-  uint8_t ticked;
+  bool ticked;
   struct anchorclass *next;
 } AnchorClass;
 
@@ -2832,7 +2832,7 @@ VISIBLE void XLFD_CreateComponents (BDFFont *bdf, EncMap *map, int res,
                                     struct xlfd_components *comp);
 /* Two lines intersect in at most 1 point */
 /* Two quadratics intersect in at most 4 points */
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
 VISIBLE int SplinesIntersect (const Spline *s1, const Spline *s2,
                               BasePoint pts[9], extended t1s[10],
                               extended t2s[10]);

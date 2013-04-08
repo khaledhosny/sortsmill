@@ -23,10 +23,15 @@ void init_guile_fonts_anchors (void);
 VISIBLE void
 init_guile_fonts_anchors (void)
 {
+  scm_c_define ("anchor-class-type:mark-to-base", scm_from_int (act_mark));
+  scm_c_define ("anchor-class-type:mark-to-mark", scm_from_int (act_mkmk));
+  scm_c_define ("anchor-class-type:cursive", scm_from_int (act_curs));
+  scm_c_define ("anchor-class-type:mark-to-ligature", scm_from_int (act_mklg));
+
   scm_c_define ("anchor-type:mark", scm_from_int (at_mark));
   scm_c_define ("anchor-type:base", scm_from_int (at_basechar));
   scm_c_define ("anchor-type:ligature", scm_from_int (at_baselig));
-  scm_c_define ("anchor-type:basemark", scm_from_int (at_basemark));
+  scm_c_define ("anchor-type:base-mark", scm_from_int (at_basemark));
   scm_c_define ("anchor-type:entry", scm_from_int (at_centry));
   scm_c_define ("anchor-type:exit", scm_from_int (at_cexit));
   scm_c_define ("anchor-type:max", scm_from_int (at_max));

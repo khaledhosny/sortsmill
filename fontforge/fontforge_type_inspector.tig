@@ -82,9 +82,16 @@
                  (* corrections)))
 
  (struct AnchorClass
-         (fields (* name))
-         ;; There are more fields, not yet entered here.
-         )
+         (fields (* name)
+                 (* subtable)
+                 (uint type)
+                 (bool has_base)
+                 (bool processed)
+                 (bool has_mark)
+                 (bool matches)
+                 (uint ac_num)
+                 (bool ticked)
+                 ((* AnchorClass) next)))
 
  (struct AnchorPoint
          (fields ((* AnchorClass) anchor anchor_class)
@@ -238,5 +245,6 @@
                  (* copyright)
                  (* filename file_name)
                  (* defbasefilename default_base_file_name)
+                 ((* AnchorClass) anchor anchor_classes)
                  ))
  )
