@@ -7912,9 +7912,10 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
       PyErr_Format (PyExc_TypeError, "No anchor class named %s", ac_name);
       return (NULL);
     }
-  switch (ac->type)
+
+  switch (AnchorClass_lookup_type (ac))
     {
-    case act_mark:
+    case gpos_mark2base:
       if (aptype != at_mark && aptype != at_basechar)
         {
           PyErr_Format (PyExc_TypeError,
@@ -7923,7 +7924,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
           return (NULL);
         }
       break;
-    case act_mkmk:
+    case gpos_mark2mark:
       if (aptype != at_mark && aptype != at_basemark)
         {
           PyErr_Format (PyExc_TypeError,
@@ -7932,7 +7933,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
           return (NULL);
         }
       break;
-    case act_mklg:
+    case gpos_mark2ligature:
       if (aptype != at_mark && aptype != at_baselig)
         {
           PyErr_Format (PyExc_TypeError,
@@ -7941,7 +7942,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
           return (NULL);
         }
       break;
-    case act_curs:
+    case gpos_cursive:
       if (aptype != at_centry && aptype != at_cexit)
         {
           PyErr_Format (PyExc_TypeError,
@@ -8844,17 +8845,9 @@ PyFFGlyph_addAnchorPoint (PyObject *self, PyObject *args)
 
   for (ap2 = sc->anchor; ap2 != NULL; ap2 = ap2->next)
     {
-      switch (ap2->anchor->type)
+      switch (AnchorClass_lookup_type (ap2->anchor))
         {
-        default:
-          if (ap2->anchor->name == ap->anchor->name && ap2->type == ap->type)
-            {
-              ap->next = ap2->next;
-              *ap2 = *ap;
-              done = true;
-            }
-          break;
-        case act_mklg:
+        case gpos_mark2ligature:
           if (ap2->anchor->name == ap->anchor->name
               && ap2->lig_index == ap->lig_index)
             {
@@ -8863,8 +8856,18 @@ PyFFGlyph_addAnchorPoint (PyObject *self, PyObject *args)
               done = true;
             }
           break;
-        case act_mark:
+
+        case gpos_mark2base:
           if (ap2->anchor->name == ap->anchor->name)
+            {
+              ap->next = ap2->next;
+              *ap2 = *ap;
+              done = true;
+            }
+          break;
+
+        default:
+          if (ap2->anchor->name == ap->anchor->name && ap2->type == ap->type)
             {
               ap->next = ap2->next;
               *ap2 = *ap;

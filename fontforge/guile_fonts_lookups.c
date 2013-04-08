@@ -30,6 +30,7 @@ init_guile_fonts_lookups (void)
   scm_c_define ("lookup-type:gsub-ligature", scm_from_int (gsub_ligature));
   scm_c_define ("lookup-type:gsub-contextual", scm_from_int (gsub_context));
   scm_c_define ("lookup-type:gsub-chaining-contextual", scm_from_int (gsub_contextchain));
+  scm_c_define ("lookup-type:gsub-extension", scm_from_int (gsub_extension));
   scm_c_define ("lookup-type:gsub-reverse-chaining-contextual", scm_from_int (gsub_reversecchain));
   scm_c_define ("lookup-type:gpos-start", scm_from_int (gpos_start));
   scm_c_define ("lookup-type:gpos-single", scm_from_int (gpos_single));
@@ -40,4 +41,5 @@ init_guile_fonts_lookups (void)
   scm_c_define ("lookup-type:gpos-mark-to-mark", scm_from_int (gpos_mark2mark));
   scm_c_define ("lookup-type:gpos-contextual", scm_from_int (gpos_context));
   scm_c_define ("lookup-type:gpos-chaining-contextual", scm_from_int (gpos_contextchain));
+  scm_c_define ("lookup-type:gpos-extension", scm_from_int (gpos_extension));
 }

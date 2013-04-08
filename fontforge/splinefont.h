@@ -438,21 +438,25 @@ typedef struct bdffloat
 
 #define REQUIRED_FEATURE	CHR(' ','R','Q','D')
 
-enum otlookup_type
+typedef enum otlookup_type
 {
-  ot_undef = 0,                 /* Not a lookup type */
-  gsub_start = 0x000,           /* Not a lookup type */
+  ot_undef = 0,                 // Not really a lookup type.
+
+  // otlookup >> 8 == 0 if GSUB, 1 if GPOS.
+  //
+  // otlookup & 0xff == lookup type for the appropriate table.
+
+  gsub_start = 0x000,           // Not really a lookup type.
   gsub_single = 0x001,
   gsub_multiple = 0x002,
   gsub_alternate = 0x003,
   gsub_ligature = 0x004,
   gsub_context = 0x005,
   gsub_contextchain = 0x006,
-  /* GSUB extension 7 */
+  gsub_extension = 0x007,
   gsub_reversecchain = 0x008,
-  /* ********************* */
-  gpos_start = 0x100,           /* Not a lookup type */
 
+  gpos_start = 0x100,           // Not really a lookup type.
   gpos_single = 0x101,
   gpos_pair = 0x102,
   gpos_cursive = 0x103,
@@ -461,10 +465,8 @@ enum otlookup_type
   gpos_mark2mark = 0x106,
   gpos_context = 0x107,
   gpos_contextchain = 0x108,
-  /* GPOS extension 9 */
-  /* otlookup&0xff == lookup type for the appropriate table */
-  /* otlookup>>8:     0=>GSUB, 1=>GPOS */
-};
+  gpos_extension = 0x109
+} OTLookupType;
 
 enum otlookup_typemasks
 {
@@ -635,6 +637,12 @@ typedef struct anchorclass
   bool ticked;
   struct anchorclass *next;
 } AnchorClass;
+
+static inline OTLookupType
+AnchorClass_lookup_type (const AnchorClass *ac)
+{
+  return ac->subtable->lookup->lookup_type;
+}
 
 enum anchor_type
 {

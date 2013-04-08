@@ -2015,10 +2015,10 @@ static AnchorClass *SFAddAnchorClass(SplineFont *sf,struct lookup_subtable *sub,
 
     ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
     ac->name = xstrdup_or_null(name);
-    ac->type = sub->lookup->lookup_type == gpos_mark2base ? act_mark :
-		sub->lookup->lookup_type == gpos_mark2ligature ? act_mklg :
-		sub->lookup->lookup_type == gpos_cursive ? act_curs :
-							act_mkmk;
+    ac->type =
+      ((sub->lookup->lookup_type == gpos_mark2base) ? act_mark :
+       ((sub->lookup->lookup_type == gpos_mark2ligature) ? act_mklg :
+        ((sub->lookup->lookup_type == gpos_cursive) ? act_curs : act_mkmk)));
     ac->subtable = sub;
     ac->next = sf->anchor;
     sf->anchor = ac;

@@ -981,7 +981,7 @@ MarkGlyphsProcessMarks (FILE *ttf, int markoffset,
       ac->subtable = subtable;
       /*ac->merge_with = info->anchor_merge_cnt+1; */
       ac->type =
-        l->otlookup->lookup_type == gpos_mark2mark ? act_mkmk : act_mark;
+        (l->otlookup->lookup_type == gpos_mark2mark) ? act_mkmk : act_mark;
       /* I don't distinguish between mark to base and mark to lig */
       if (info->ahead == NULL)
         info->ahead = ac;

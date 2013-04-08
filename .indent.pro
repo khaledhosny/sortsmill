@@ -72,6 +72,7 @@
 -T ui_interface_t
 -T ImageList
 -T ASM
+-T AnchorClass
 -T AnchorPoint
 -T BasePoint
 -T BDFChar
@@ -84,6 +85,7 @@
 -T FontView
 -T FontViewBase
 -T DeviceTable
+-T ValDevTab
 -T DRect
 -T BVTFunc
 -T FontRequest

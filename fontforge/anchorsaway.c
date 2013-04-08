@@ -214,7 +214,8 @@ AnchorD_GlyphsInClass (AnchorDlg * a)
           ti = xcalloc (bcnt + mcnt + 5, sizeof (GTextInfo));
           ti[0] = xcalloc (1, sizeof (GTextInfo));
           ti[0]->text =
-            utf82u_copy (ac->type == act_curs ? _("Exits") : _("Bases"));
+            utf82u_copy ((AnchorClass_lookup_type (ac) == gpos_cursive) ?
+                         _("Exits") : _("Bases"));
           ti[0]->fg = ti[0]->bg = COLOR_DEFAULT;
           ti[0]->disabled = true;
           ti[btot] = xcalloc (1, sizeof (GTextInfo));
@@ -222,7 +223,8 @@ AnchorD_GlyphsInClass (AnchorDlg * a)
           ti[btot]->fg = ti[btot]->bg = COLOR_DEFAULT;
           ti[btot + 1] = xcalloc (1, sizeof (GTextInfo));
           ti[btot + 1]->text =
-            utf82u_copy (ac->type == act_curs ? _("Entries") : _("Marks"));
+            utf82u_copy ((AnchorClass_lookup_type (ac) == gpos_cursive) ?
+                         _("Entries") : _("Marks"));
           ti[btot + 1]->fg = ti[btot + 1]->bg = COLOR_DEFAULT;
           ti[btot + 1]->disabled = true;
           ti[btot + mcnt + 1] = xcalloc (1, sizeof (GTextInfo));
@@ -230,16 +232,14 @@ AnchorD_GlyphsInClass (AnchorDlg * a)
           ti[btot + mcnt + 1]->fg = ti[btot + mcnt + 1]->bg = COLOR_DEFAULT;
           ti[btot + mcnt + 2] = xcalloc (1, sizeof (GTextInfo));
           ti[btot + mcnt + 2]->text =
-            utf82u_copy (ac->type ==
-                         act_curs ? _("Add Exit Anchor...") :
-                         _("Add Base Anchor..."));
+            utf82u_copy ((AnchorClass_lookup_type (ac) == gpos_cursive) ?
+                         _("Add Exit Anchor...") : _("Add Base Anchor..."));
           ti[btot + mcnt + 2]->fg = ti[btot + mcnt + 2]->bg = COLOR_DEFAULT;
           ti[btot + mcnt + 2]->userdata = Add_Base;
           ti[btot + mcnt + 3] = xcalloc (1, sizeof (GTextInfo));
           ti[btot + mcnt + 3]->text =
-            utf82u_copy (ac->type ==
-                         act_curs ? _("Add Entry Anchor...") :
-                         _("Add Mark Anchor..."));
+            utf82u_copy ((AnchorClass_lookup_type (ac) == gpos_cursive) ?
+                         _("Add Entry Anchor...") : _("Add Mark Anchor..."));
           ti[btot + mcnt + 3]->fg = ti[btot + mcnt + 3]->bg = COLOR_DEFAULT;
           ti[btot + mcnt + 3]->userdata = Add_Mark;
           ti[btot + mcnt + 4] = xcalloc (1, sizeof (GTextInfo));
@@ -276,15 +276,15 @@ AnchorD_FindComplements (AnchorDlg * a)
   switch (a->ap->type)
     {
     case at_mark:
-      switch (a->ap->anchor->type)
+      switch (AnchorClass_lookup_type (a->ap->anchor))
         {
-        case act_mark:
+        case gpos_mark2base:
           match = at_basechar;
           break;
-        case act_mklg:
+        case gpos_mark2ligature:
           match = at_baselig;
           break;
-        case act_mkmk:
+        case gpos_mark2mark:
           match = at_basemark;
           break;
         default:
@@ -1261,13 +1261,16 @@ AddAnchor (AnchorDlg * a, SplineFont *sf, AnchorClass * ac, int ismarklike)
                 ismrk = true;
               if (ap->anchor == ac)
                 {
-                  if ((ap->type == at_centry ||
-                       (ap->type == at_mark && ac->type == act_mkmk) ||
-                       ap->type == at_baselig) && ismarklike == -1)
+                  if ((ap->type == at_centry
+                       || (ap->type == at_mark
+                           && AnchorClass_lookup_type (ac) == gpos_mark2mark)
+                       || ap->type == at_baselig)
+                      && ismarklike == -1)
                     ismarklike = false;
                   else
                     if ((ap->type == at_cexit
-                         || (ap->type == at_basemark && ac->type == act_mkmk))
+                         || (ap->type == at_basemark
+                             && AnchorClass_lookup_type (ac) == gpos_mark2mark))
                         && ismarklike == -1)
                     ismarklike = true;
                   else if (ap->type != at_baselig ||
@@ -1304,16 +1307,18 @@ AddAnchor (AnchorDlg * a, SplineFont *sf, AnchorClass * ac, int ismarklike)
         }
     }
 
-  if (isliga || (ac->type == act_mklg && ismarklike == 0))
+  if (isliga || (AnchorClass_lookup_type (ac) == gpos_mark2ligature
+                 && ismarklike == 0))
     {
       ap->type = at_baselig;
       ap->lig_index = maxlig + 1;
     }
   else if (ismrk && ismarklike != 0)
     ap->type = at_mark;
-  else if (ismarklike == 0 && (ismrk || ac->type == act_mkmk))
+  else if (ismarklike == 0
+           && (ismrk || AnchorClass_lookup_type (ac) == gpos_mark2mark))
     ap->type = at_basemark;
-  else if (ac->type == act_curs)
+  else if (AnchorClass_lookup_type (ac) == gpos_cursive)
     {
       if (ismarklike == true)
         ap->type = at_centry;

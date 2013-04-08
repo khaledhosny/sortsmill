@@ -749,8 +749,10 @@ static AnchorClass *_AnchorClassUnused(SplineChar *sc,int *waslig, int classmatc
     if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
     for ( an=sf->anchor; an!=NULL; an=an->next ) {
 	if ( classmatch ) {
-	    if (( an->type == act_mklg && !isligatureglyph && !ismarkglyph ) ||
-		    ( an->type == act_mkmk && !ismarkglyph ))
+          if (( AnchorClass_lookup_type (an) == gpos_mark2ligature
+                && !isligatureglyph && !ismarkglyph )
+              || ( AnchorClass_lookup_type (an) == gpos_mark2mark
+                   && !ismarkglyph ))
     continue;
 	}
 	val = IsAnchorClassUsed(sc,an);
@@ -787,25 +789,25 @@ return(NULL);
     ap->anchor = an;
     ap->me.x = cv->p.cx; /* cv->p.cx = 0; */
     ap->me.y = cv->p.cy; /* cv->p.cy = 0; */
-    ap->type = an->type==act_mark ? at_basechar :
-		an->type==act_mkmk ? at_basemark :
-		an->type==act_mklg ? at_baselig :
+    ap->type = (AnchorClass_lookup_type (an) == gpos_mark2base) ? at_basechar :
+		(AnchorClass_lookup_type (an) == gpos_mark2mark) ? at_basemark :
+		(AnchorClass_lookup_type (an) == gpos_mark2ligature) ? at_baselig :
 		at_centry;
     for ( pst = cv->b.sc->possub; pst!=NULL && pst->type!=pst_ligature; pst=pst->next );
-    if ( waslig<-1 && an->type==act_mkmk ) {
+    if ( waslig<-1 && (AnchorClass_lookup_type (an) == gpos_mark2mark) ) {
 	ap->type = waslig==-2 ? at_basemark : at_mark;
-    } else if ( waslig==-2  && an->type==act_curs )
+    } else if ( waslig==-2  && (AnchorClass_lookup_type (an) == gpos_cursive) )
 	ap->type = at_cexit;
-    else if ( waslig==-3 || an->type==act_curs )
+    else if ( waslig==-3 || (AnchorClass_lookup_type (an) == gpos_cursive) )
 	ap->type = at_centry;
     else if (( sc->unicodeenc!=-1 && sc->unicodeenc<0x10000 &&
 	    iscombining(sc->unicodeenc)) || sc->width==0 || sc->glyph_class==(3+1) /* mark class+1 */)
 	ap->type = at_mark;
-    else if ( an->type==act_mkmk )
+    else if ( (AnchorClass_lookup_type (an) == gpos_mark2mark) )
 	ap->type = at_basemark;
-    else if (( pst!=NULL || waslig || sc->glyph_class==2+1) && an->type==act_mklg )
+    else if (( pst!=NULL || waslig || sc->glyph_class==2+1) && (AnchorClass_lookup_type (an) == gpos_mark2ligature) )
 	ap->type = at_baselig;
-    if (( ap->type==at_basechar || ap->type==at_baselig ) && an->type==act_mkmk )
+    if (( ap->type==at_basechar || ap->type==at_baselig ) && (AnchorClass_lookup_type (an) == gpos_mark2mark) )
 	ap->type = at_basemark;
     ap->next = sc->anchor;
     if ( waslig>=0 )
@@ -830,22 +832,29 @@ static void AI_DisplayClass(GIData *ci,AnchorPoint *ap) {
     AnchorPoint *aps;
     int saw[at_max];
 
-    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_BaseChar),ac->type==act_mark);
-    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_BaseLig),ac->type==act_mklg);
-    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_BaseMark),ac->type==act_mkmk);
-    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_CursEntry),ac->type==act_curs);
-    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_CursExit),ac->type==act_curs);
-    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_Mark),ac->type!=act_curs);
+    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_BaseChar),
+                      (AnchorClass_lookup_type (ac) == gpos_mark2base));
+    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_BaseLig),
+                      (AnchorClass_lookup_type (ac) == gpos_mark2ligature));
+    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_BaseMark),
+                      (AnchorClass_lookup_type (ac) == gpos_mark2mark));
+    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_CursEntry),
+                      (AnchorClass_lookup_type (ac) == gpos_cursive));
+    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_CursExit),
+                      (AnchorClass_lookup_type (ac) == gpos_cursive));
+    GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_Mark),
+                      (AnchorClass_lookup_type (ac) != gpos_cursive));
 
     GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_LigIndex),ap->type==at_baselig);
 
-    if ( ac->type==act_mkmk && (ap->type==at_basechar || ap->type==at_baselig)) {
+    if ( (AnchorClass_lookup_type (ac) == gpos_mark2mark)
+         && (ap->type==at_basechar || ap->type==at_baselig)) {
 	GGadgetSetChecked(GWidgetGetControl(ci->gw,CID_BaseMark),true);
 	ap->type = at_basemark;
-    } else if ( ac->type==act_mark && ap->type==at_basemark ) {
+    } else if ( (AnchorClass_lookup_type (ac) == gpos_mark2base) && ap->type==at_basemark ) {
 	GGadgetSetChecked(GWidgetGetControl(ci->gw,CID_BaseChar),true);
 	ap->type = at_basechar;
-    } else if ( ac->type==act_curs && ap->type!=at_centry && ap->type!=at_cexit ) {
+    } else if ( (AnchorClass_lookup_type (ac) == gpos_cursive) && ap->type!=at_centry && ap->type!=at_cexit ) {
 	GGadgetSetChecked(GWidgetGetControl(ci->gw,CID_CursEntry),true);
 	ap->type = at_centry;
     }
@@ -854,7 +863,7 @@ static void AI_DisplayClass(GIData *ci,AnchorPoint *ap) {
     for ( aps=ci->sc->anchor; aps!=NULL; aps=aps->next ) if ( aps!=ap ) {
 	if ( aps->anchor==ac ) saw[aps->type] = true;
     }
-    if ( ac->type==act_curs ) {
+    if ( (AnchorClass_lookup_type (ac) == gpos_cursive) ) {
 	GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_CursEntry),!saw[at_centry]);
 	GGadgetSetEnabled(GWidgetGetControl(ci->gw,CID_CursExit),!saw[at_cexit]);
     } else {
@@ -1148,10 +1157,10 @@ static int AI_ANameChanged(GGadget *g, GEvent *e) {
 return( true );			/* No op */
 
 	ntype = ci->ap->type;
-	if ( an->type==act_curs ) {
+	if ( (AnchorClass_lookup_type (an) == gpos_cursive) ) {
 	    if ( ntype!=at_centry && ntype!=at_cexit )
 		ntype = at_centry;
-	} else if ( an->type==act_mkmk ) {
+	} else if ( (AnchorClass_lookup_type (an) == gpos_mark2mark) ) {
 	    if ( ntype!=at_basemark && ntype!=at_mark )
 		ntype = at_basemark;
 	} else if ( ntype==at_centry || ntype==at_cexit || ntype==at_basemark ||
@@ -1162,7 +1171,7 @@ return( true );			/* No op */
 		    (ci->sc->unicodeenc!=-1 && ci->sc->unicodeenc<0x10000 &&
 		    iscombining(ci->sc->unicodeenc)))
 		ntype = at_mark;
-	    else if (( pst!=NULL || ci->sc->glyph_class==2+1 ) && an->type==act_mklg )
+	    else if (( pst!=NULL || ci->sc->glyph_class==2+1 ) && (AnchorClass_lookup_type (an) == gpos_mark2ligature) )
 		ntype = at_baselig;
 	    else
 		ntype = at_basechar;
@@ -1171,10 +1180,10 @@ return( true );			/* No op */
 	sawentry = sawexit = false;
 	for ( ap=ci->sc->anchor; ap!=NULL; ap = ap->next ) {
 	    if ( ap!=ci->ap && ap->anchor==an ) {
-		if ( an->type==act_curs ) {
+		if ( (AnchorClass_lookup_type (an) == gpos_cursive) ) {
 		    if ( ap->type == at_centry ) sawentry = true;
 		    else if ( ap->type== at_cexit ) sawexit = true;
-		} else if ( an->type==act_mkmk ) {
+		} else if ( (AnchorClass_lookup_type (an) == gpos_mark2mark) ) {
 		    if ( ap->type == at_mark ) sawentry = true;
 		    else if ( ap->type== at_basemark ) sawexit = true;
 		} else {
@@ -1194,10 +1203,10 @@ return( true );			/* No op */
 	    ff_post_error(_("Class already used"),_("This anchor class already is associated with a point in this character"));
 	} else {
 	    ci->ap->anchor = an;
-	    if ( an->type==act_curs ) {
+	    if ( (AnchorClass_lookup_type (an) == gpos_cursive) ) {
 		if ( sawentry ) ntype = at_cexit;
 		else if ( sawexit ) ntype = at_centry;
-	    } else if ( an->type==act_mkmk ) {
+	    } else if ( (AnchorClass_lookup_type (an) == gpos_mark2mark) ) {
 		if ( sawentry ) ntype = at_basemark;
 		else if ( sawexit ) ntype = at_mark;
 	    }
