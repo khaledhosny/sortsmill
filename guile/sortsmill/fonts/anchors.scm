@@ -273,30 +273,32 @@
           ap))))
 
   (define (check-conformability-with-AnchorClass who ac type alist)
-    (let ([ac-type (AnchorClass:type-ref ac)])
+;;;;;;    (let ([ac-type (AnchorClass:type-ref ac)])
+    (let ([ac-type (OTLookup:type-ref
+                    (LookupSubtable:lookup-dref (AnchorClass:subtable-dref ac)))])
       (cond
-       [(= ac-type anchor-class-type:mark-to-base)
+       [(= ac-type lookup-type:gpos-mark-to-base)
         (unless (or (eq? type 'mark) (eq? type 'base))
           (assertion-violation
            who
            (format #f (_ "anchor class `~a' allows only 'mark and 'base anchors")
                    (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
            alist))]
-       [(= ac-type anchor-class-type:mark-to-mark)
+       [(= ac-type lookup-type:gpos-mark-to-mark)
         (unless (or (eq? type 'mark) (eq? type 'base-mark))
           (assertion-violation
            who
            (format #f (_ "anchor class `~a' allows only 'mark and 'base-mark anchors")
                    (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
            alist))]
-       [(= ac-type anchor-class-type:cursive)
+       [(= ac-type lookup-type:gpos-cursive)
         (unless (or (eq? type 'entry) (eq? type 'exit))
           (assertion-violation
            who
            (format #f (_ "anchor class `~a' allows only 'entry and 'exit anchors")
                    (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
            alist))]
-       [(= ac-type anchor-class-type:mark-to-ligature)
+       [(= ac-type lookup-type:gpos-mark-to-ligature)
         (unless (or (eq? type 'mark) (eq? type 'ligature))
           (assertion-violation
            who
@@ -305,7 +307,7 @@
            alist))]
        [_ (assertion-violation
            who
-           "internal error: unrecognized anchor class type"
+           "internal error: unrecognized anchor class lookup type"
            ac-type)])))
 
   (define (find-AnchorClass ac-ptr name)

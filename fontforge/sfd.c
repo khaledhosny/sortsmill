@@ -8586,40 +8586,40 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                   /* Early versions of SfdFormat 2 had a number here */
                   int temp;
                   getint (sfd, &temp);
-                  an->type = temp;
+                  ((AnchorClass1 *) an)->type = temp;
                 }
               else if (old)
                 {
                   if (((AnchorClass1 *) an)->feature_tag ==
                       CHR ('c', 'u', 'r', 's'))
-                    an->type = act_curs;
+                    ((AnchorClass1 *) an)->type = ac1t_curs;
                   else if (((AnchorClass1 *) an)->feature_tag ==
                            CHR ('m', 'k', 'm', 'k'))
-                    an->type = act_mkmk;
+                    ((AnchorClass1 *) an)->type = ac1t_mkmk;
                   else
-                    an->type = act_mark;
+                    ((AnchorClass1 *) an)->type = ac1t_mark;
                 }
-              else
-                {
-                  switch (an->subtable->lookup->lookup_type)
-                    {
-                    case gpos_cursive:
-                      an->type = act_curs;
-                      break;
-                    case gpos_mark2base:
-                      an->type = act_mark;
-                      break;
-                    case gpos_mark2ligature:
-                      an->type = act_mklg;
-                      break;
-                    case gpos_mark2mark:
-                      an->type = act_mkmk;
-                      break;
-                    default:
-                      an->type = act_mark;
-                      break;
-                    }
-                }
+/////              else
+/////                {
+/////                  switch (an->subtable->lookup->lookup_type)
+/////                    {
+/////                    case gpos_cursive:
+/////                      an->type = act_curs;
+/////                      break;
+/////                    case gpos_mark2base:
+/////                      an->type = act_mark;
+/////                      break;
+/////                    case gpos_mark2ligature:
+/////                      an->type = act_mklg;
+/////                      break;
+/////                    case gpos_mark2mark:
+/////                      an->type = act_mkmk;
+/////                      break;
+/////                    default:
+/////                      an->type = act_mark;
+/////                      break;
+/////                    }
+/////                }
               if (lastan == NULL)
                 sf->anchor = an;
               else

@@ -269,17 +269,18 @@ static OTLookup *CreateLookup(SplineFont1 *sf,uint32_t tag, int sli,
 return( otl );
 }
 
-static OTLookup *CreateACLookup(SplineFont1 *sf,AnchorClass1 *ac) {
+static OTLookup *CreateACLookup(SplineFont1 *sf, AnchorClass1 *ac) {
     OTLookup *otl = (OTLookup *) xzalloc(sizeof (OTLookup));
 
     otl->lookup_type =
-	    ac->ac.type == act_mark ? gpos_mark2base :
-	    ac->ac.type == act_mkmk ? gpos_mark2mark :
-	    ac->ac.type == act_curs ? gpos_cursive :
-	    ac->ac.type == act_mklg ? gpos_mark2ligature :
-		ot_undef;
+      ((ac->type == ac1t_mark) ? gpos_mark2base :
+       ((ac->type == ac1t_mkmk) ? gpos_mark2mark :
+        ((ac->type == ac1t_curs) ? gpos_cursive :
+         ((ac->type == ac1t_mklg) ? gpos_mark2ligature : ot_undef))));
+
     if ( otl->lookup_type == ot_undef )
 	IError("Unknown AnchorClass type");
+
     otl->next = sf->sf.gpos_lookups;
     sf->sf.gpos_lookups = otl;
     otl->lookup_flags = ac->flags;
@@ -361,8 +362,8 @@ static void ACHasBaseLig(SplineFont1 *sf,AnchorClass1 *ac) {
     AnchorPoint *ap;
 
     ac->has_bases = ac->has_ligatures = false;
-    if ( ac->ac.type==act_mkmk || ac->ac.type==act_curs )
-return;
+    if ( ac->type==ac1t_mkmk || ac->type==ac1t_curs )
+      return;
     k=0;
     do {
 	subsf = sf->sf.subfontcnt==0 ? sf : (SplineFont1 *) (sf->sf.subfonts[k]);
@@ -373,11 +374,11 @@ return;
 		if ( ap->type==at_basechar ) {
 		    ac->has_bases = true;
 		    if ( ac->has_ligatures )
-return;
+                      return;
 		} else if ( ap->type==at_baselig ) {
 		    ac->has_ligatures = true;
 		    if ( ac->has_bases )
-return;
+                      return;
 		}
 	    }
 	}
@@ -395,7 +396,7 @@ static void ACDisassociateLigatures(SplineFont1 *sf,AnchorClass1 *ac) {
 
     lac = (AnchorClass1 *) xzalloc(sizeof (AnchorClass1));
     *lac = *ac;
-    lac->ac.type = act_mklg;
+    lac->type = ac1t_mklg;
     ac->ac.next = (AnchorClass *) lac;
 
   /* TRANSLATORS: Need to split some AnchorClasses into two classes, one for normal */
@@ -745,7 +746,7 @@ void SFD_AssignLookups(SplineFont1 *sf) {
     for ( ac=(AnchorClass1 *) (sf->sf.anchor); ac!=NULL; ac=(AnchorClass1 *) ac->ac.next ) {
 	ACHasBaseLig(sf,ac);
 	if ( ac->has_ligatures && !ac->has_bases )
-	    ac->ac.type = act_mklg;
+	    ac->type = ac1t_mklg;
 	else if ( ac->has_ligatures && ac->has_bases )
 	    ACDisassociateLigatures(sf,ac);
     }
@@ -755,11 +756,11 @@ void SFD_AssignLookups(SplineFont1 *sf) {
 	    sub = CreateSubtable(otl,sf);
 	    for ( ac2=ac; ac2!=NULL; ac2 = (AnchorClass1 *) ac2->ac.next ) {
 		if ( ac2->feature_tag == ac->feature_tag &&
-			ac2->script_lang_index == ac->script_lang_index &&
-			ac2->flags == ac->flags &&
-			ac2->ac.type == ac->ac.type &&
-			ac2->merge_with == ac->merge_with )
-		    ac2->ac.subtable = sub;
+                     ac2->script_lang_index == ac->script_lang_index &&
+                     ac2->flags == ac->flags &&
+                     ac2->type == ac->type &&
+                     ac2->merge_with == ac->merge_with )
+                  ac2->ac.subtable = sub;
 	    }
 	}
     }

@@ -22,12 +22,12 @@
 void
 init_guile_fonts_anchors (void)
 {
-  // FIXME: GET RID OF THESE. They are redundant data. Use the lookup
-  // type instead.
-  scm_c_define ("anchor-class-type:mark-to-base", scm_from_int (act_mark));
-  scm_c_define ("anchor-class-type:mark-to-mark", scm_from_int (act_mkmk));
-  scm_c_define ("anchor-class-type:cursive", scm_from_int (act_curs));
-  scm_c_define ("anchor-class-type:mark-to-ligature", scm_from_int (act_mklg));
+/////  // FIXME: GET RID OF THESE. They are redundant data. Use the lookup
+/////  // type instead.
+/////  scm_c_define ("anchor-class-type:mark-to-base", scm_from_int (act_mark));
+/////  scm_c_define ("anchor-class-type:mark-to-mark", scm_from_int (act_mkmk));
+/////  scm_c_define ("anchor-class-type:cursive", scm_from_int (act_curs));
+/////  scm_c_define ("anchor-class-type:mark-to-ligature", scm_from_int (act_mklg));
 
   scm_c_define ("anchor-type:mark", scm_from_int (at_mark));
   scm_c_define ("anchor-type:base", scm_from_int (at_basechar));

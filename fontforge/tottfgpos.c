@@ -454,7 +454,7 @@ AnchorClassDecompose (SplineFont *sf, AnchorClass * _ac, int classcnt,
                               if (j)
                                 marks[k][subcnts[k]] = sf->glyphs[gid];
                               ++subcnts[k];
-                              if (ac->type != act_mkmk)
+                              if (AnchorClass_lookup_type (ac) != gpos_mark2mark)
                                 break;
                             }
                           else if (test->type != at_centry
@@ -478,7 +478,7 @@ AnchorClassDecompose (SplineFont *sf, AnchorClass * _ac, int classcnt,
                                 }
                               else
                                 ++heads[test->type].cnt;
-                              if (ac->type != act_mkmk)
+                              if (AnchorClass_lookup_type (ac) != gpos_mark2mark)
                                 break;
                             }
                         }
@@ -2962,7 +2962,7 @@ AnchorsAway (FILE *lfile, SplineFont *sf,
         {
           if (acfirst == NULL)
             acfirst = ac;
-          if (ac->type == act_curs)
+          if (AnchorClass_lookup_type (ac) == gpos_cursive)
             continue;
           else if (ac->has_mark && ac->has_base)
             {

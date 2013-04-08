@@ -5178,7 +5178,7 @@ IsAnchorClassUsed (SplineChar *sc, AnchorClass * an)
             sawentry = true;
           else if (ap->type == at_cexit)
             sawexit = true;
-          else if (an->type == act_mkmk)
+          else if (AnchorClass_lookup_type (an) == gpos_mark2mark)
             {
               if (ap->type == at_basemark)
                 sawexit = true;

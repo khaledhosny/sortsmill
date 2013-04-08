@@ -6101,7 +6101,7 @@ static void fea_ApplyLookupListCursive(struct parseState *tok,
 		last = sub;
 		ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
 		ac->subtable = sub;
-		ac->type = act_curs;
+/////		ac->type = act_curs;
 		ac->next = tok->accreated;
 		tok->accreated = ac;
 	    }
@@ -6179,9 +6179,9 @@ static void fea_ApplyLookupListMark2(struct parseState *tok,
 			last = sub;
 		    }
 		    acs[i]->subtable = sub;
-		    acs[i]->type =
-                      ((otl->lookup_type==gpos_mark2mark) ? act_mkmk :
-                       ((otl->lookup_type==gpos_mark2base) ? act_mark : act_mklg));
+/////		    acs[i]->type =
+/////                      ((otl->lookup_type==gpos_mark2mark) ? act_mkmk :
+/////                       ((otl->lookup_type==gpos_mark2base) ? act_mark : act_mklg));
 		    /* Skip the initial '@' in the named mark class name */
 		    if ( classes[i]->name_used==0 )
 			acs[i]->name = xstrdup_or_null(classes[i]->name+1);

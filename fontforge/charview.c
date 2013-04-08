@@ -2116,7 +2116,7 @@ CVDrawAnchorPoints (CharView *cv, GWindow pixmap)
               continue;
 
             DrawAnchorPoint (pixmap, x, y, ap->selected);
-            if (ap->anchor->type == act_mkmk)
+            if (AnchorClass_lookup_type (ap->anchor) == gpos_mark2mark)
               {
                 strncpy (ubuf, ap->anchor->name, 20);
                 strcat (ubuf, " ");

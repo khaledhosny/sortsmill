@@ -16526,10 +16526,10 @@ PyFFFont_addAnchorClass (PyFF_Font *self, PyObject *args)
   ac = (AnchorClass *) xzalloc (sizeof (AnchorClass));
   ac->name = xstrdup_or_null (anchor_name);
   ac->subtable = sub;
-  ac->type =
-    ((lookup_type == gpos_cursive) ? act_curs :
-     ((lookup_type == gpos_mark2base) ? act_mark :
-      ((lookup_type == gpos_mark2ligature) ? act_mklg : act_mkmk)));
+/////  ac->type =
+/////    ((lookup_type == gpos_cursive) ? act_curs :
+/////     ((lookup_type == gpos_mark2base) ? act_mark :
+/////      ((lookup_type == gpos_mark2ligature) ? act_mklg : act_mkmk)));
   ac->next = sf->anchor;
   sf->anchor = ac;
 

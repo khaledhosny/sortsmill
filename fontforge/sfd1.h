@@ -37,14 +37,23 @@
 #define SLI_UNKNOWN		0xffff
 #define SLI_NESTED		0xfffe
 
+typedef enum anchorclass1_type
+{
+  ac1t_mark,
+  ac1t_mkmk,
+  ac1t_curs,
+  ac1t_mklg
+} AnchorClass1Type;
+
 typedef struct anchorclass1 {
-    AnchorClass ac;
-    uint32_t feature_tag;
-    uint16_t script_lang_index;
-    uint16_t flags;
-    uint16_t merge_with;
-    uint8_t has_bases;
-    uint8_t has_ligatures;
+  AnchorClass ac;
+  uint32_t feature_tag;
+  uint16_t script_lang_index;
+  uint16_t flags;
+  uint16_t merge_with;
+  uint8_t has_bases;
+  uint8_t has_ligatures;
+  AnchorClass1Type type;
 } AnchorClass1;
 
 typedef struct kernpair1 {

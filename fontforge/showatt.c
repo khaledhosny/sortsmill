@@ -1324,7 +1324,7 @@ static void BuildGDEF(struct node *node,struct att_dlg *att) {
     int gdef, lcar, mclass;
 
     for ( ac = _sf->anchor; ac!=NULL; ac=ac->next ) {
-	if ( ac->type==act_curs )
+      if ( AnchorClass_lookup_type (ac) == gpos_cursive )
     break;
     }
     gdef = lcar = 0;
@@ -1570,8 +1570,8 @@ static void BuildTop(struct att_dlg *att) {
     if ( _sf->anchor!=NULL )
 	hasgpos = true;
     for ( ac = sf->anchor; ac!=NULL; ac=ac->next ) {
-	if ( ac->type==act_curs )
-    break;
+      if ( AnchorClass_lookup_type (ac) == gpos_cursive )
+          break;
     }
     if ( ac!=NULL )
 	hasgdef = true;
