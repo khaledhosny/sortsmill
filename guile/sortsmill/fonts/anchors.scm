@@ -21,6 +21,8 @@
    ;; (glyph-view-anchor-classes view) → list of alists
    view-anchor-classes
 
+;;;; FIXME: Get rid of 'unrecognized and instead raise and exception.
+   ;;
    ;; (glyph-view-anchor-points gv) → list of alists
    ;;
    ;; alist keys:
@@ -121,7 +123,7 @@
   (define (anchor-point-type alist)
     (match (assq 'type alist)
       [(k . (? symbol? v))
-       (check-AnchorPoint-type-symbol 'anchor-point-type v)
+       (check-AnchorPointType-symbol 'anchor-point-type v)
        (when (eq? v 'ligature)
          (unless (assq 'ligature-index alist)
            (assertion-violation
@@ -192,6 +194,11 @@
             [y    (BasePoint:y-ref my-coords)]
             [selected? (AnchorPoint:selected-ref ap)]
             [lig-index (AnchorPoint:lig-index-ref ap)])
+        ;; This association list may include whatever potentially
+        ;; useful information we feel like providing. (FIXME: A Python
+        ;; interface using dicts instead of tuples could do the same
+        ;; thing, and would not have required creation of the
+        ;; ‘anchorPointsWithSel’ version.)
         `([type      . ,type]
           [name      . ,name]
           [coords    . ,(list x y)]
@@ -201,32 +208,11 @@
                 '()])
         )))
 
-  (define (AnchorPoint-type->type-symbol type)
-    (cond [(= type anchor-type:mark) 'mark]
-          [(= type anchor-type:base) 'base]
-          [(= type anchor-type:ligature) 'ligature]
-          [(= type anchor-type:base-mark) 'base-mark]
-          [(= type anchor-type:entry) 'entry]
-          [(= type anchor-type:exit) 'exit]
-          [else 'unrecognized]))
-
   (define (AnchorPoint->type-symbol ap)
-    (AnchorPoint-type->type-symbol (AnchorPoint:type-ref ap)))
+    (AnchorPointType->type-symbol (AnchorPoint:type-ref ap)))
 
-  (define* (type-symbol->AnchorPoint-type symb #:optional who)
-    (match symb
-      ['mark      anchor-type:mark]
-      ['base      anchor-type:base]
-      ['ligature  anchor-type:ligature]
-      ['base-mark anchor-type:base-mark]
-      ['entry     anchor-type:entry]
-      ['exit      anchor-type:exit]
-      [_ (assertion-violation
-          (if who who 'type-symbol->AnchorPoint-type)
-          (_ "unrecognized anchor point type") symb)] ))
-
-  (define (check-AnchorPoint-type-symbol who symb)
-    (type-symbol->AnchorPoint-type symb who))
+  (define (check-AnchorPointType-symbol who symb)
+    (type-symbol->AnchorPointType symb who))
 
   (define* (anchor-points->AnchorPoint-linked-list gv anchor-points #:optional who)
     (match anchor-points
@@ -260,7 +246,7 @@
           (catch #t
             [lambda ()
               (AnchorPoint:anchor-class-set! ap (AnchorClass->pointer ac))
-              (AnchorPoint:type-set! ap (type-symbol->AnchorPoint-type type))
+              (AnchorPoint:type-set! ap (type-symbol->AnchorPointType type))
               (let ([bp (AnchorPoint:coords-ref ap)])
                 (BasePoint:x-set! bp (car coords))
                 (BasePoint:y-set! bp (cadr coords)))
@@ -273,41 +259,43 @@
           ap))))
 
   (define (check-conformability-with-AnchorClass who ac type alist)
-    (let ([ac-type (OTLookup:type-ref
-                    (LookupSubtable:lookup-dref (AnchorClass:subtable-dref ac)))])
-      (cond
-       [(= ac-type lookup-type:gpos-mark-to-base)
-        (unless (or (eq? type 'mark) (eq? type 'base))
-          (assertion-violation
-           who
-           (format #f (_ "anchor class `~a' allows only 'mark and 'base anchors")
-                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
-           alist))]
-       [(= ac-type lookup-type:gpos-mark-to-mark)
-        (unless (or (eq? type 'mark) (eq? type 'base-mark))
-          (assertion-violation
-           who
-           (format #f (_ "anchor class `~a' allows only 'mark and 'base-mark anchors")
-                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
-           alist))]
-       [(= ac-type lookup-type:gpos-cursive)
-        (unless (or (eq? type 'entry) (eq? type 'exit))
-          (assertion-violation
-           who
-           (format #f (_ "anchor class `~a' allows only 'entry and 'exit anchors")
-                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
-           alist))]
-       [(= ac-type lookup-type:gpos-mark-to-ligature)
-        (unless (or (eq? type 'mark) (eq? type 'ligature))
-          (assertion-violation
-           who
-           (format #f (_ "anchor class `~a' allows only 'mark and 'ligature anchors")
-                   (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
-           alist))]
-       [_ (assertion-violation
-           who
-           "internal error: unrecognized anchor class lookup type"
-           ac-type)])))
+    (let ([ac-type (OTLookupType->type-symbol
+                    (OTLookup:type-ref
+                     (LookupSubtable:lookup-dref
+                      (AnchorClass:subtable-dref ac))))])
+      (match ac-type
+        ['gpos-mark-to-base
+         (unless (or (eq? type 'mark) (eq? type 'base))
+           (assertion-violation
+            who
+            (format #f (_ "anchor class `~a' allows only 'mark and 'base anchors")
+                    (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+            alist))]
+        ['gpos-mark-to-mark
+         (unless (or (eq? type 'mark) (eq? type 'base-mark))
+           (assertion-violation
+            who
+            (format #f (_ "anchor class `~a' allows only 'mark and 'base-mark anchors")
+                    (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+            alist))]
+        ['gpos-cursive
+         (unless (or (eq? type 'entry) (eq? type 'exit))
+           (assertion-violation
+            who
+            (format #f (_ "anchor class `~a' allows only 'entry and 'exit anchors")
+                    (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+            alist))]
+        ['gpos-mark-to-ligature
+         (unless (or (eq? type 'mark) (eq? type 'ligature))
+           (assertion-violation
+            who
+            (format #f (_ "anchor class `~a' allows only 'mark and 'ligature anchors")
+                    (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8"))
+            alist))]
+        [_ (assertion-violation
+            who
+            "internal error: unrecognized anchor class lookup type"
+            ac-type)])))
 
   (define (find-AnchorClass ac-ptr name)
     (if (null-pointer? ac-ptr)
@@ -346,28 +334,42 @@
     (find-AnchorClass (glyph-view->AnchorClass-linked-list gv) name))
 
   (define (AnchorClass->alist ac)
-      (assertion-violation 'AnchorClass->alist
-                           "not yet implemented"))
+    (let* ([name (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8")]
+           [subtable (AnchorClass:subtable-dref ac)]
+           [subtable-name (pointer->string (LookupSubtable:name-ref subtable)
+                                           -1 "UTF-8")]
+           [lookup (LookupSubtable:lookup-dref subtable)]
+           [lookup-name (pointer->string (OTLookup:name-ref lookup)
+                                         -1 "UTF-8")]
+           [lookup-type (OTLookupType->type-symbol (OTLookup:type-ref lookup))])
+      ;; This association list may include whatever potentially useful
+      ;; information we feel like providing. (FIXME: A Python
+      ;; interface using dicts instead of tuples could do the same
+      ;; thing.)
+      `([name          . ,name]
+        [subtable-name . ,subtable-name]
+        [lookup-name   . ,lookup-name]
+        [lookup-type   . ,lookup-type]) ))
 
   #|
   (define (anchor-point-match? AnchorClass-linked-list alist1 alist2)
-      (let ([
-      )
+  (let ([
+  )
 
   #|
   find_anchor_point sc::glyph partial_record = find $ SplineChar_anchor sc
   with
-    match_name ap::pointer =
-      (AnchorClass_name $ AnchorPoint_anchor ap) == partial_record!"name";
-    match ap::pointer =
-      case AnchorClass_type $ AnchorPoint_anchor ap of
-        fontforge::act_mklg =
-          AnchorPoint_lig_index == partial_record!"lig_index" && match_name ap;
-        fontforge::act_mark = match_name ap;
-        _ = AnchorPoint_type ap == partial_record!"type" && match_name ap;
-      end;
-    find ap::pointer = ap if null ap || match ap;
-    find ap::pointer = find (AnchorPoint_next ap) otherwise;
+  match_name ap::pointer =
+  (AnchorClass_name $ AnchorPoint_anchor ap) == partial_record!"name";
+  match ap::pointer =
+  case AnchorClass_type $ AnchorPoint_anchor ap of
+  fontforge::act_mklg =
+  AnchorPoint_lig_index == partial_record!"lig_index" && match_name ap;
+  fontforge::act_mark = match_name ap;
+  _ = AnchorPoint_type ap == partial_record!"type" && match_name ap;
+  end;
+  find ap::pointer = ap if null ap || match ap;
+  find ap::pointer = find (AnchorPoint_next ap) otherwise;
   end;
   |#
   |#

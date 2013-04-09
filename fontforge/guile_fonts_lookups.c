@@ -17,29 +17,129 @@
 
 #include <libguile.h>
 #include <splinefont.h>
+#include <intl.h>
 #include <guile_fontforge_internals.h>
+#include <sortsmill/guile.h>
+#include <sortsmill/initialized_global_constants.h>
+
+// FIXME: This seems quite reusable, though perhaps it could have a
+// better name.
+static void
+scm_c_initialize_from_eval_string (SCM *proc, const char *s)
+{
+  *proc = scm_call_3 (scm_c_public_ref ("ice-9 eval-string", "eval-string"),
+                      scm_from_utf8_string (s),
+                      scm_from_latin1_keyword ("compile?"), SCM_BOOL_T);
+}
+
+#define _MY_SCM_SYMBOL(C_NAME, SCM_NAME)                        \
+  INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, C_NAME, \
+                        scm_c_initialize_from_eval_string,      \
+                        "(quote " SCM_NAME ")");
+
+_MY_SCM_SYMBOL (scm_symbol_gsub_single, "gsub-single");
+_MY_SCM_SYMBOL (scm_symbol_gsub_multiple, "gsub-multiple");
+_MY_SCM_SYMBOL (scm_symbol_gsub_alternate, "gsub-alternate");
+_MY_SCM_SYMBOL (scm_symbol_gsub_ligature, "gsub-ligature");
+_MY_SCM_SYMBOL (scm_symbol_gsub_context, "gsub-context");
+_MY_SCM_SYMBOL (scm_symbol_gsub_chaining_contextual,
+                "gsub-chaining-contextual");
+_MY_SCM_SYMBOL (scm_symbol_gsub_extension, "gsub-extension");
+_MY_SCM_SYMBOL (scm_symbol_gsub_reverse_chaining_contextual,
+                "gsub-reverse-chaining-contextual");
+_MY_SCM_SYMBOL (scm_symbol_gpos_single, "gpos-single");
+_MY_SCM_SYMBOL (scm_symbol_gpos_pair, "gpos-pair");
+_MY_SCM_SYMBOL (scm_symbol_gpos_cursive, "gpos-cursive");
+_MY_SCM_SYMBOL (scm_symbol_gpos_mark_to_base, "gpos-mark-to-base");
+_MY_SCM_SYMBOL (scm_symbol_gpos_mark_to_ligature, "gpos-mark-to-ligature");
+_MY_SCM_SYMBOL (scm_symbol_gpos_mark_to_mark, "gpos-mark-to-mark");
+_MY_SCM_SYMBOL (scm_symbol_gpos_context, "gpos-context");
+_MY_SCM_SYMBOL (scm_symbol_gpos_chaining_contextual,
+                "gpos-chaining-contextual");
+_MY_SCM_SYMBOL (scm_symbol_gpos_extension, "gpos-extension");
+
+static SCM
+scm_OTLookupType_to_type_symbol (SCM type, SCM who)
+{
+  SCM symb = SCM_UNSPECIFIED;
+
+  const int _type = scm_to_int (type);
+  switch (_type)
+    {
+    case gsub_single:
+      symb = scm_symbol_gsub_single ();
+      break;
+    case gsub_multiple:
+      symb = scm_symbol_gsub_multiple ();
+      break;
+    case gsub_alternate:
+      symb = scm_symbol_gsub_alternate ();
+      break;
+    case gsub_ligature:
+      symb = scm_symbol_gsub_ligature ();
+      break;
+    case gsub_context:
+      symb = scm_symbol_gsub_context ();
+      break;
+    case gsub_contextchain:
+      symb = scm_symbol_gsub_chaining_contextual ();
+      break;
+    case gsub_extension:
+      symb = scm_symbol_gsub_extension ();
+      break;
+    case gsub_reversecchain:
+      symb = scm_symbol_gsub_reverse_chaining_contextual ();
+      break;
+
+    case gpos_single:
+      symb = scm_symbol_gpos_single ();
+      break;
+    case gpos_pair:
+      symb = scm_symbol_gpos_pair ();
+      break;
+    case gpos_cursive:
+      symb = scm_symbol_gpos_cursive ();
+      break;
+    case gpos_mark2base:
+      symb = scm_symbol_gpos_mark_to_base ();
+      break;
+    case gpos_mark2ligature:
+      symb = scm_symbol_gpos_mark_to_ligature ();
+      break;
+    case gpos_mark2mark:
+      symb = scm_symbol_gpos_mark_to_mark ();
+      break;
+    case gpos_context:
+      symb = scm_symbol_gpos_context ();
+      break;
+    case gpos_contextchain:
+      symb = scm_symbol_gpos_chaining_contextual ();
+      break;
+    case gpos_extension:
+      symb = scm_symbol_gpos_extension ();
+      break;
+
+    default:
+      {
+        if (SCM_UNBNDP (who))
+          who = scm_from_latin1_string ("scm_OTLookupType_to_type_symbol");
+        rnrs_raise_condition
+          (scm_list_4
+           (rnrs_make_assertion_violation (),
+            rnrs_make_who_condition (who),
+            rnrs_c_make_message_condition (_("unrecognized OTLookupType "
+                                             "value")),
+            rnrs_make_irritants_condition (scm_list_1 (type))));
+      }
+      break;
+    }
+
+  return symb;
+}
 
 void
 init_guile_fonts_lookups (void)
 {
-  scm_c_define ("lookup-type:ot-undef", scm_from_int (ot_undef));
-  scm_c_define ("lookup-type:gsub-start", scm_from_int (gsub_start));
-  scm_c_define ("lookup-type:gsub-single", scm_from_int (gsub_single));
-  scm_c_define ("lookup-type:gsub-multiple", scm_from_int (gsub_multiple));
-  scm_c_define ("lookup-type:gsub-alternate", scm_from_int (gsub_alternate));
-  scm_c_define ("lookup-type:gsub-ligature", scm_from_int (gsub_ligature));
-  scm_c_define ("lookup-type:gsub-contextual", scm_from_int (gsub_context));
-  scm_c_define ("lookup-type:gsub-chaining-contextual", scm_from_int (gsub_contextchain));
-  scm_c_define ("lookup-type:gsub-extension", scm_from_int (gsub_extension));
-  scm_c_define ("lookup-type:gsub-reverse-chaining-contextual", scm_from_int (gsub_reversecchain));
-  scm_c_define ("lookup-type:gpos-start", scm_from_int (gpos_start));
-  scm_c_define ("lookup-type:gpos-single", scm_from_int (gpos_single));
-  scm_c_define ("lookup-type:gpos-pair", scm_from_int (gpos_pair));
-  scm_c_define ("lookup-type:gpos-cursive", scm_from_int (gpos_cursive));
-  scm_c_define ("lookup-type:gpos-mark-to-base", scm_from_int (gpos_mark2base));
-  scm_c_define ("lookup-type:gpos-mark-to-ligature", scm_from_int (gpos_mark2ligature));
-  scm_c_define ("lookup-type:gpos-mark-to-mark", scm_from_int (gpos_mark2mark));
-  scm_c_define ("lookup-type:gpos-contextual", scm_from_int (gpos_context));
-  scm_c_define ("lookup-type:gpos-chaining-contextual", scm_from_int (gpos_contextchain));
-  scm_c_define ("lookup-type:gpos-extension", scm_from_int (gpos_extension));
+  scm_c_define_gsubr ("OTLookupType->type-symbol", 1, 1, 0,
+                      scm_OTLookupType_to_type_symbol);
 }

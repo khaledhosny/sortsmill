@@ -632,7 +632,7 @@ AnchorClass_lookup_type (const AnchorClass *ac)
   return ac->subtable->lookup->lookup_type;
 }
 
-enum anchor_type
+typedef enum anchor_type
 {
   at_mark = 0,
   at_basechar = 1,
@@ -642,7 +642,7 @@ enum anchor_type
   at_cexit = 5,
   at_max = 6,
   at_illegal = 15
-};
+} AnchorPointType;
 
 typedef struct anchorpoint
 {
@@ -2504,26 +2504,26 @@ VISIBLE void KernPairsFree (KernPair *kp);
 VISIBLE void SCOrderAP (SplineChar *sc);
 void AnchorPointsFree (AnchorPoint *ap);
 VISIBLE AnchorPoint *AnchorPointsCopy (AnchorPoint *alist);
-VISIBLE void SFRemoveAnchorClass (SplineFont *sf, AnchorClass * an);
-int AnchorClassesNextMerge (AnchorClass * ac);
-VISIBLE int IsAnchorClassUsed (SplineChar *sc, AnchorClass * an);
+VISIBLE void SFRemoveAnchorClass (SplineFont *sf, AnchorClass *an);
+int AnchorClassesNextMerge (AnchorClass *ac);
+VISIBLE int IsAnchorClassUsed (SplineChar *sc, AnchorClass *an);
 AnchorPoint *APAnchorClassMerge (AnchorPoint *anchors,
-                                 AnchorClass * into, AnchorClass * from);
-void AnchorClassMerge (SplineFont *sf, AnchorClass * into, AnchorClass * from);
-void AnchorClassesFree (AnchorClass * kp);
+                                 AnchorClass *into, AnchorClass *from);
+void AnchorClassMerge (SplineFont *sf, AnchorClass *into, AnchorClass *from);
+void AnchorClassesFree (AnchorClass *kp);
 VISIBLE void TtfTablesFree (struct ttf_table *tab);
 void SFRemoveSavedTable (SplineFont *sf, uint32_t tag);
 VISIBLE AnchorClass *AnchorClassMatch (SplineChar *sc1,
                                        SplineChar *sc2,
-                                       AnchorClass * restrict_,
+                                       AnchorClass *restrict_,
                                        AnchorPoint **_ap1, AnchorPoint **_ap2);
 AnchorClass *AnchorClassMkMkMatch (SplineChar *sc1, SplineChar *sc2,
                                    AnchorPoint **_ap1, AnchorPoint **_ap2);
 AnchorClass *AnchorClassCursMatch (SplineChar *sc1, SplineChar *sc2,
                                    AnchorPoint **_ap1, AnchorPoint **_ap2);
 void SCInsertPST (SplineChar *sc, PST *new_);
-VISIBLE void ValDevFree (ValDevTab * adjust);
-VISIBLE ValDevTab *ValDevTabCopy (ValDevTab * orig);
+VISIBLE void ValDevFree (ValDevTab *adjust);
+VISIBLE ValDevTab *ValDevTabCopy (ValDevTab *orig);
 VISIBLE void DeviceTableFree (DeviceTable *adjust);
 VISIBLE DeviceTable *DeviceTableCopy (DeviceTable *orig);
 VISIBLE void DeviceTableSet (DeviceTable *adjust, int size, int correction);
@@ -2575,7 +2575,7 @@ struct sfmergecontext
 PST *PSTCopy (PST *base, SplineChar *sc, struct sfmergecontext *mc);
 struct lookup_subtable *MCConvertSubtable (struct sfmergecontext *mc,
                                            struct lookup_subtable *sub);
-AnchorClass *MCConvertAnchorClass (struct sfmergecontext *mc, AnchorClass * ac);
+AnchorClass *MCConvertAnchorClass (struct sfmergecontext *mc, AnchorClass *ac);
 void SFFinishMergeContext (struct sfmergecontext *mc);
 VISIBLE SplineChar *SplineCharCopy (SplineChar *sc, SplineFont *into,
                                     struct sfmergecontext *);
@@ -2831,7 +2831,7 @@ VISIBLE void XLFD_CreateComponents (BDFFont *bdf, EncMap *map, int res,
                                     struct xlfd_components *comp);
 /* Two lines intersect in at most 1 point */
 /* Two quadratics intersect in at most 4 points */
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
 VISIBLE int SplinesIntersect (const Spline *s1, const Spline *s2,
                               BasePoint pts[9], extended t1s[10],
                               extended t2s[10]);
@@ -3658,8 +3658,7 @@ VISIBLE struct opentype_str *ApplyTickedFeatures (SplineFont *sf,
 VISIBLE int VerticalKernFeature (SplineFont *sf, OTLookup *otl, int ask);
 VISIBLE void SFGlyphRenameFixup (SplineFont *sf,
                                  char *old_name,
-                                 char *new_name,
-                                 bool rename_related_glyphs);
+                                 char *new_name, bool rename_related_glyphs);
 
 struct sllk
 {
