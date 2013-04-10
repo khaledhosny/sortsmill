@@ -74,9 +74,9 @@ fontforge/glyphcomp.c
 fontforge/gotodlg.c
 fontforge/groups.c
 fontforge/groupsdlg.c
-fontforge/guile_fontforge_internals.c
-fontforge/guile_fonts_anchors.c
-fontforge/guile_fonts_lookups.c
+fontforge/guile_internals_anchors.c
+fontforge/guile_internals_glyphs.c
+fontforge/guile_internals_lookups.c
 fontforge/histograms.c
 fontforge/http.c
 fontforge/ikarus.c

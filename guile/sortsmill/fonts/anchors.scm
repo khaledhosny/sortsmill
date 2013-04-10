@@ -19,22 +19,34 @@
 
   (export
    ;; (glyph-view-anchor-classes view) → list of alists
+   ;;
+   ;; alist keys:
+   ;;   'name → string
+   ;;   'subtable-name → string
+   ;;   'lookup-name → string
+   ;;   'lookup-type → 'gpos-cursive 'gpos-mark-to-base
+   ;;                     'gpos-mark-to-ligature 'gpos-mark-to-mark
    view-anchor-classes
 
-;;;; FIXME: Get rid of 'unrecognized and instead raise and exception.
-   ;;
    ;; (glyph-view-anchor-points gv) → list of alists
    ;;
    ;; alist keys:
-   ;;   'type → 'mark 'base 'ligature 'base-mark 'entry 'exit 'unrecognized
-   ;;   'name → string
+   ;;   'type → 'mark 'base 'ligature 'base-mark 'entry 'exit
    ;;   'coords → (list x y)
    ;;   'selected? → #f or #t
    ;;   'ligature-index → integer  (present if type is 'ligature)
+   ;;
+   ;; In addition, the results of @code{view-anchor-class} for the
+   ;; anchor point’s class are included in the alist.
    glyph-view-anchor-points
 
    ;; (glyph-view-anchor-points-set! gv list-of-alists) → unspecified
    ;; (glyph-view-anchor-points-add! gv alist) → unspecified
+   ;;
+   ;; @code{glyph-view-anchor-points-set!} ignores duplicate entries,
+   ;; and so an anchor point can be replaced simply by consing a new
+   ;; entry onto the list-of-alists; see the definition of
+   ;; @code{glyph-view-anchor-points-add!} for an example.
    glyph-view-anchor-points-set!
    glyph-view-anchor-points-add!
 
@@ -79,17 +91,14 @@
   (import (sortsmill fonts views)
           (sortsmill fontforge-api)
           (sortsmill i18n)
-          (sortsmill dynlink)
+          (sortsmill __internals__)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) alist-cons unfold)
+          (only (srfi :1) alist-cons delete-duplicates unfold)
           (only (srfi :26) cut)
           (system foreign)
           (ice-9 match)
           (ice-9 format))
-
-  (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_fontforge_internals"))
 
   (define (view-anchor-classes view)
     (let ([ac-list (view->AnchorClass-list view)])
@@ -100,19 +109,22 @@
       (map AnchorPoint->alist ap-list)))
 
   (define (glyph-view-anchor-points-set! gv anchor-points)
-;;;;; FIXME: First remove duplicates from the anchor-points list.
-;;;;;
-;;;;; FIXME: Then sort the anchor points.
-    (let ([ap-ptr (anchor-points->AnchorPoint-linked-list
-                   gv anchor-points 'set-glyph-view-anchor-points!)]
-          [sc (glyph-view->SplineChar gv)])
+    (let* ([ac-ptr (glyph-view->AnchorClass-linked-list gv)]
+           [anchor-points
+            (list-sort
+             (lambda (ap1 ap2)
+               (negative? (anchor-point-compare ac-ptr ap1 ap2)))
+             (delete-duplicates anchor-points
+                                (cut anchor-point-match? ac-ptr <> <>)))]
+           [ap-ptr (anchor-points->AnchorPoint-linked-list
+                    gv anchor-points 'set-glyph-view-anchor-points!)]
+           [sc (glyph-view->SplineChar gv)])
       (SplineChar:anchor-points-set! sc ap-ptr)
       (update-changed-SplineChar (SplineChar->pointer sc) #f)))
 
   (define (glyph-view-anchor-points-add! gv alist)
     (let ([anchor-points (glyph-view-anchor-points gv)])
-      (assertion-violation 'glyph-view-anchor-points-add!
-                           "not yet implemented")))
+      (glyph-view-anchor-points-set! gv (cons alist anchor-points))))
 
   (define (anchor-point-name alist)
     (match (assq 'name alist)
@@ -200,9 +212,9 @@
         ;; thing, and would not have required creation of the
         ;; ‘anchorPointsWithSel’ version.)
         `([type      . ,type]
-          [name      . ,name]
           [coords    . ,(list x y)]
           [selected? . ,selected?]
+          ,@[AnchorClass->alist ac]
           ,@[if (eq? type 'ligature)
                 `([ligature-index . ,lig-index])
                 '()])
@@ -259,10 +271,7 @@
           ap))))
 
   (define (check-conformability-with-AnchorClass who ac type alist)
-    (let ([ac-type (OTLookupType->type-symbol
-                    (OTLookup:type-ref
-                     (LookupSubtable:lookup-dref
-                      (AnchorClass:subtable-dref ac))))])
+    (let ([ac-type (AnchorClass->type-symbol ac)])
       (match ac-type
         ['gpos-mark-to-base
          (unless (or (eq? type 'mark) (eq? type 'base))
@@ -297,6 +306,11 @@
             "internal error: unrecognized anchor class lookup type"
             ac-type)])))
 
+  (define (AnchorClass->type-symbol ac)
+    (OTLookupType->type-symbol (OTLookup:type-ref
+                                (LookupSubtable:lookup-dref
+                                 (AnchorClass:subtable-dref ac)))))
+
   (define (find-AnchorClass ac-ptr name)
     (if (null-pointer? ac-ptr)
         #f
@@ -305,6 +319,15 @@
                         name)
               ac
               (find-AnchorClass (AnchorClass:next-ref ac) name)))))
+
+  (define* (checking-find-AnchorClass who ac-ptr name potential-irritants)
+    (let ([ac (find-AnchorClass ac-ptr name)])
+      (unless ac
+        (apply assertion-violation
+               who
+               (format #f (_ "anchor class `~a' not found") name)
+               potential-irritants))
+      ac))
 
   (define (view->AnchorClass-list view)
     (AnchorClass-linked-list->AnchorClass-list
@@ -330,9 +353,6 @@
     (SplineFont:anchor-classes-ref
      (SplineChar:parent-dref (glyph-view->SplineChar gv))))
 
-  (define (glyph-view->AnchorClass gv name)
-    (find-AnchorClass (glyph-view->AnchorClass-linked-list gv) name))
-
   (define (AnchorClass->alist ac)
     (let* ([name (pointer->string (AnchorClass:name-ref ac) -1 "UTF-8")]
            [subtable (AnchorClass:subtable-dref ac)]
@@ -351,28 +371,49 @@
         [lookup-name   . ,lookup-name]
         [lookup-type   . ,lookup-type]) ))
 
-  #|
-  (define (anchor-point-match? AnchorClass-linked-list alist1 alist2)
-  (let ([
-  )
+  (define (anchor-point-match? ac-ptr alist1 alist2)
+    (zero? (anchor-point-compare ac-ptr alist1 alist2)))
 
-  #|
-  find_anchor_point sc::glyph partial_record = find $ SplineChar_anchor sc
-  with
-  match_name ap::pointer =
-  (AnchorClass_name $ AnchorPoint_anchor ap) == partial_record!"name";
-  match ap::pointer =
-  case AnchorClass_type $ AnchorPoint_anchor ap of
-  fontforge::act_mklg =
-  AnchorPoint_lig_index == partial_record!"lig_index" && match_name ap;
-  fontforge::act_mark = match_name ap;
-  _ = AnchorPoint_type ap == partial_record!"type" && match_name ap;
-  end;
-  find ap::pointer = ap if null ap || match ap;
-  find ap::pointer = find (AnchorPoint_next ap) otherwise;
-  end;
-  |#
-  |#
+  (define (anchor-point-compare ac-ptr alist1 alist2)
+    "@code{anchor-point-compare} determines a relative order of
+@var{alist} and @var{alist2}, returning a negative number, zero, or a
+positive number, accordingly.
+
+What ‘equality’ means is determined by the needs of font-making. What
+‘less than’ means, on the other hand, is arbitrary and subject to
+change."
+    (let* ([name1 (anchor-point-name alist1)]
+           [ac1 (checking-find-AnchorClass 'anchor-point-compare
+                                           ac-ptr name1 (list alist1))]
+           [anchor-class1 (AnchorClass->alist ac1)]
+           [name2 (anchor-point-name alist2)]
+           [ac2 (checking-find-AnchorClass 'anchor-point-compare
+                                           ac-ptr name2 (list alist2))]
+           [anchor-class2 (AnchorClass->alist ac2)])
+      (string-compare
+       (assq-ref anchor-class1 'lookup-name)
+       (assq-ref anchor-class2 'lookup-name)
+       (lambda (ignored) -1)
+       (lambda (ignored)
+         (string-compare
+          (assq-ref anchor-class1 'subtable-name)
+          (assq-ref anchor-class2 'subtable-name)
+          (lambda (ignored) -1)
+          (lambda (ignored)
+            (string-compare
+             (assq-ref anchor-class1 'name)
+             (assq-ref anchor-class2 'name)
+             (lambda (ignored) -1)
+             (lambda (ignored)
+               (match (assq-ref anchor-class1 'lookup-type)
+                 ['gpos-mark-to-base 0]
+                 ['gpos-mark-to-ligature (- (anchor-point-ligature-index alist1)
+                                            (anchor-point-ligature-index alist2))]
+                 [_ (- (anchor-point-type-index (anchor-point-type alist1))
+                       (anchor-point-type-index (anchor-point-type alist2)))] ))
+             (lambda (ignored) 1)))
+          (lambda (ignored) 1)))
+       (lambda (ignored) 1))))
 
   (define (raise:expected-string who key value alist)
     (assertion-violation

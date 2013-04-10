@@ -64,7 +64,7 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h		\
 	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
 	fontimage.h activeinui.h bezctx.h bezctx_intf.h spiro.h				\
-	spiroentrypoints.h zmisc.h guile_fontforge_internals.h
+	spiroentrypoints.h zmisc.h
 
 nobase_nodist_include_HEADERS = sortsmill/fontforge_api.h
 
@@ -196,30 +196,20 @@ libsortsmill_fontforge_la_SOURCES += spiro_ff.c
 libsortsmill_fontforge_la_SOURCES += bezctx.c
 libsortsmill_fontforge_la_SOURCES += spiro.c
 libsortsmill_fontforge_la_SOURCES += spiroentrypoints.c
-libsortsmill_fontforge_la_SOURCES += guile_notices.c
-libsortsmill_fontforge_la_SOURCES += guile_fonts_anchors.c
-libsortsmill_fontforge_la_SOURCES += guile_fonts_lookups.c
-libsortsmill_fontforge_la_SOURCES += guile_fontforge_internals.c
 libsortsmill_fontforge_la_SOURCES += splinerefigure.c
 
-nodist_libsortsmill_fontforge_la_SOURCES = fontforge_api.c
-#EXTRA_libsortsmill_fontforge_la_SOURCES = splinerefigure.c
+libsortsmill_fontforge_la_SOURCES += guile_internals_anchors.c
+libsortsmill_fontforge_la_SOURCES += guile_internals_glyphs.c
+libsortsmill_fontforge_la_SOURCES += guile_internals_lookups.c
+libsortsmill_fontforge_la_SOURCES += guile_notices.c
 
-#libsortsmill_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
-#	$(top_builddir)/lib/libgnu.la
+nodist_libsortsmill_fontforge_la_SOURCES = fontforge_api.c
+
 libsortsmill_fontforge_la_LIBADD = $(LIBADD)
 libsortsmill_fontforge_la_LIBADD += $(top_builddir)/lib/libgnu.la
 libsortsmill_fontforge_la_LDFLAGS = $(call ldflags) -export-dynamic
 libsortsmill_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
 	$(top_builddir)/lib/libgnu.la
-
-# # In splinerefigure.c, the slight error introduced occasionally by
-# # optimization turns out to have disastrous effects. Compile it
-# # without optimization.
-# splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
-# 	$(AM_V_CC) $(LIBTOOL) $(AM_V_lt) --mode=compile $(CC) -g	\
-# 	-c -o splinerefigure.lo $(AM_CPPFLAGS)						\
-# 	$(srcdir)/splinerefigure.c
 
 EXTRA_SCRIPTS += generate_codepoint_selector.py
 

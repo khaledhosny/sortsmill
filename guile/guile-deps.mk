@@ -1,10 +1,13 @@
+sortsmill/__internals__/anchors.go: sortsmill/dynlink.go
+sortsmill/__internals__/glyphs.go: sortsmill/dynlink.go
+sortsmill/__internals__/lookups.go: sortsmill/dynlink.go
 sortsmill/alloc/alloc-die.go: sortsmill/dynlink.go
 sortsmill/argv.go: sortsmill/machine.go sortsmill/kwargs.go
 sortsmill/arrays.go: sortsmill/dynlink.go
 sortsmill/editor/main.go: sortsmill/dynlink.go sortsmill/argv.go
 sortsmill/editor/main-loop.go: sortsmill/editor/finalization.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
-sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/dynlink.go
+sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__.go
 sortsmill/fonts/contours.go: sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go
 sortsmill/fonts/psmat.go: sortsmill/math/matrices.go
 sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go
@@ -46,6 +49,7 @@ sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmil
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/peg-spacing.go sortsmill/pkg-info.go sortsmill/strings.go
+sortsmill/__internals__.go: sortsmill/__internals__/anchors.go sortsmill/__internals__/glyphs.go sortsmill/__internals__/lookups.go
 sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/containers.go: sortsmill/containers/rnrs-hashtable.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go

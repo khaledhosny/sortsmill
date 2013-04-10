@@ -19,9 +19,10 @@
 #include <libguile.h>
 #include <splinefont.h>
 #include <intl.h>
-#include <guile_fontforge_internals.h>
 #include <sortsmill/guile.h>
 #include <sortsmill/initialized_global_constants.h>
+
+//-------------------------------------------------------------------------
 
 // FIXME: This seems quite reusable, though perhaps it could have a
 // better name.
@@ -32,6 +33,8 @@ scm_c_initialize_from_eval_string (SCM *proc, const char *s)
                       scm_from_utf8_string (s),
                       scm_from_latin1_keyword ("compile?"), SCM_BOOL_T);
 }
+
+//-------------------------------------------------------------------------
 
 #define _MY_SCM_SYMBOL(C_NAME, SCM_NAME)                        \
   INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, C_NAME, \
@@ -119,11 +122,29 @@ scm_type_symbol_to_AnchorPointType (SCM symb, SCM who)
   return scm_from_int (type);
 }
 
-void
-init_guile_fonts_anchors (void)
+// FIXME: Try to use garbage-collected allocation for the management
+// of anchor point lists. Note: after this is done, we can get rid of
+// the ‘catch’ calls in the Guile code.
+static SCM
+scm_free_AnchorPoint_linked_list (SCM ap_ptr)
+{
+  AnchorPointsFree (scm_to_pointer (ap_ptr));
+  return SCM_UNSPECIFIED;
+}
+
+//-------------------------------------------------------------------------
+
+void init_guile_internals_anchors (void);
+
+VISIBLE void
+init_guile_internals_anchors (void)
 {
   scm_c_define_gsubr ("AnchorPointType->type-symbol", 1, 1, 0,
                       scm_AnchorPointType_to_type_symbol);
   scm_c_define_gsubr ("type-symbol->AnchorPointType", 1, 1, 0,
                       scm_type_symbol_to_AnchorPointType);
+  scm_c_define_gsubr ("free-AnchorPoint-linked-list", 1, 0, 0,
+                      scm_free_AnchorPoint_linked_list);
 }
+
+//-------------------------------------------------------------------------

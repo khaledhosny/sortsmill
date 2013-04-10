@@ -170,6 +170,40 @@ sortsmill.scm: $(SORTSMILL_REEXPORTED_SCM_FILES)
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill __internals__)
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/__internals__.scm
+GO_FILES += sortsmill/__internals__.go
+__INTERNALS___REEXPORTED_SCM_FILES = 
+
+sortsmill/__internals__.scm: $(__INTERNALS___REEXPORTED_SCM_FILES)
+	$(AM_V_REEXPORT)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill __internals__), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+
+# (sortsmill __internals__ anchors)
+
+DIST_SCM_FILES += sortsmill/__internals__/anchors.scm
+GO_FILES += sortsmill/__internals__/anchors.go
+__INTERNALS___REEXPORTED_SCM_FILES += sortsmill/__internals__/anchors.scm
+
+
+# (sortsmill __internals__ glyphs)
+
+DIST_SCM_FILES += sortsmill/__internals__/glyphs.scm
+GO_FILES += sortsmill/__internals__/glyphs.go
+__INTERNALS___REEXPORTED_SCM_FILES += sortsmill/__internals__/glyphs.scm
+
+
+# (sortsmill __internals__ lookups)
+
+DIST_SCM_FILES += sortsmill/__internals__/lookups.scm
+GO_FILES += sortsmill/__internals__/lookups.go
+__INTERNALS___REEXPORTED_SCM_FILES += sortsmill/__internals__/lookups.scm
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill alloc)
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/alloc.scm

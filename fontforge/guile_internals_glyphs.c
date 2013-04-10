@@ -20,7 +20,6 @@
 #include <splinefont.h>
 #include <uiinterface.h>
 #include <intl.h>
-#include <guile_fontforge_internals.h>
 
 //-------------------------------------------------------------------------
 
@@ -93,29 +92,18 @@ scm_update_changed_SplineChar (SCM splinechar_ptr, SCM layer)
   return SCM_UNSPECIFIED;
 }
 
-static SCM
-scm_free_AnchorPoint_linked_list (SCM ap_ptr)
-{
-  AnchorPointsFree (scm_to_pointer (ap_ptr));
-  return SCM_UNSPECIFIED;
-}
-
 //-------------------------------------------------------------------------
 
+void init_guile_internals_glyphs (void);
+
 VISIBLE void
-init_guile_fontforge_internals (void)
+init_guile_internals_glyphs (void)
 {
   scm_c_define_gsubr ("layer->integer", 1, 0, 0, scm_layer_to_integer);
   scm_c_define_gsubr ("integer->layer", 1, 0, 0, scm_integer_to_layer);
 
   scm_c_define_gsubr ("update-changed-SplineChar", 2, 0, 0,
                       scm_update_changed_SplineChar);
-
-  scm_c_define_gsubr ("free-AnchorPoint-linked-list", 1, 0, 0,
-                      scm_free_AnchorPoint_linked_list);
-
-  init_guile_fonts_lookups ();
-  init_guile_fonts_anchors ();
 }
 
 //-------------------------------------------------------------------------
