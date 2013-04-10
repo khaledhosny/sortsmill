@@ -2459,19 +2459,16 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
   // A closed contour of degree 3, with no name.
   SCM contour = scm_c_make_contour (points, true, 3, "");
 
-  // @code{contour->malloced-SplinePointList} returns multiple
+  // @code{scm_contour_to_malloced_SplinePointList} returns multiple
   // values. We are interested in the first, only.
-  SCM results = scm_call_1 (scm_c_public_ref ("sortsmill fonts contours",
-                                              "contour->malloced-SplinePointList"),
-                            contour);
+  SCM results = scm_contour_to_malloced_SplinePointList (contour);
   SCM malloced_SplinePointList = scm_c_value_ref (results, 0);
 
   // Convert from a Guile ‘SplinePointList’ object to Guile’s generic
   // pointer type, and then to a C pointer.
   return (SplineSet *)
-    scm_to_pointer (scm_call_1 (scm_c_public_ref ("sortsmill fontforge-api",
-                                                  "SplinePointList->pointer"),
-                                malloced_SplinePointList));
+    scm_to_pointer (SCM_FF_API_CALL_1 ("SplinePointList->pointer",
+                                       malloced_SplinePointList));
 }
 
 static SplineSet *

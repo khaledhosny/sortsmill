@@ -18,6 +18,7 @@
 #ifndef _SORTSMILL_GUILE_FONTS_H
 #define _SORTSMILL_GUILE_FONTS_H
 
+#include <sortsmill/guile/fonts/anchors.h>
 #include <sortsmill/guile/fonts/contours.h>
 
 #endif /* _SORTSMILL_GUILE_FONTS_H */

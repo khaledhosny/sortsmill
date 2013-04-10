@@ -26,6 +26,7 @@
 #include <sortsmill/guile/math.h>
 #include <sortsmill/guile/notices.h>
 #include <sortsmill/guile/rnrs_conditions.h>
+#include <sortsmill/guile/wrap.h>
 
 #if 0
 /* These have to be included explicitly by the user. One reason is not

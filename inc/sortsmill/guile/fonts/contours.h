@@ -198,6 +198,8 @@ scm_c_contour_name_set_x (SCM contour, const char *value)
   scm_contour_name_set_x (contour, scm_from_utf8_string (value));
 }
 
+SCM scm_contour_to_malloced_SplinePointList (SCM contour);
+
 #if 0
 {
 #endif

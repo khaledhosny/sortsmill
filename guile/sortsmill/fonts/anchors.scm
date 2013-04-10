@@ -18,7 +18,7 @@
 (library (sortsmill fonts anchors)
 
   (export
-   ;; (glyph-view-anchor-classes view) → list of alists
+   ;; (view-anchor-classes view) → list of alists
    ;;
    ;; alist keys:
    ;;   'name → string
