@@ -74,6 +74,7 @@
 -T ASM
 -T AnchorClass
 -T AnchorPoint
+-T AnchorDlg
 -T BasePoint
 -T BDFChar
 -T BDFFont

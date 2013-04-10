@@ -120,7 +120,7 @@ typedef struct anchord
 #define Add_Base	(void *) (-3)
 
 static void
-AnchorD_FreeChar (AnchorDlg * a)
+AnchorD_FreeChar (AnchorDlg *a)
 {
   int i;
 
@@ -135,7 +135,7 @@ AnchorD_FreeChar (AnchorDlg * a)
 }
 
 static void
-AnchorD_FreeAll (AnchorDlg * a)
+AnchorD_FreeAll (AnchorDlg *a)
 {
   struct state *old, *oldnext;
 
@@ -150,7 +150,7 @@ AnchorD_FreeAll (AnchorDlg * a)
 }
 
 static GTextInfo **
-AnchorD_GlyphsInClass (AnchorDlg * a)
+AnchorD_GlyphsInClass (AnchorDlg *a)
 {
   SplineFont *_sf = a->sc->parent, *sf;
   AnchorClass *ac = a->ap->anchor;
@@ -249,7 +249,7 @@ AnchorD_GlyphsInClass (AnchorDlg * a)
 }
 
 static void
-AnchorD_SetTitle (AnchorDlg * a)
+AnchorD_SetTitle (AnchorDlg *a)
 {
   char buffer[300];
   snprintf (buffer, sizeof (buffer),
@@ -262,7 +262,7 @@ AnchorD_SetTitle (AnchorDlg * a)
 }
 
 static void
-AnchorD_FindComplements (AnchorDlg * a)
+AnchorD_FindComplements (AnchorDlg *a)
 {
   AnchorClass *ac = a->ap->anchor;
   enum anchor_type match;
@@ -357,8 +357,7 @@ AnchorD_FindComplements (AnchorDlg * a)
                 enc = map->backmap[i];
                 if (enc != -1)
                   {
-                    for (ap = sf->glyphs[i]->anchor; ap != NULL;
-                         ap = ap->next)
+                    for (ap = sf->glyphs[i]->anchor; ap != NULL; ap = ap->next)
                       {
                         if (ap->anchor == ac && ap->type == match)
                           {
@@ -414,7 +413,7 @@ APRasterize (void *freetypecontext, SplineChar *sc, int layer, int *off,
 }
 
 static void
-AnchorD_SetSB (AnchorDlg * a)
+AnchorD_SetSB (AnchorDlg *a)
 {
   GScrollBarSetBounds (a->hsb, 0, a->xlen, a->sb_width);
   if (a->xoff + a->sb_width > a->xlen)
@@ -425,7 +424,7 @@ AnchorD_SetSB (AnchorDlg * a)
 }
 
 static void
-AnchorD_Resize (AnchorDlg * a)
+AnchorD_Resize (AnchorDlg *a)
 {
   GRect size;
   int i, extra;
@@ -437,8 +436,7 @@ AnchorD_Resize (AnchorDlg * a)
   a->sb_base = a->full_height - a->sb_height;
   if (a->ctl_len + a->magfactor * a->char_size + 20 < a->full_width)
     {
-      a->sb_width =
-        a->full_width - (a->ctl_len + a->magfactor * a->char_size);
+      a->sb_width = a->full_width - (a->ctl_len + a->magfactor * a->char_size);
       GGadgetResize (a->hsb, a->sb_width, a->sb_height);
       GGadgetMove (a->hsb, a->ctl_len + a->magfactor * a->char_size,
                    a->sb_base);
@@ -469,14 +467,14 @@ AnchorD_Resize (AnchorDlg * a)
 }
 
 static void
-AnchorD_ChangeMag (AnchorDlg * a)
+AnchorD_ChangeMag (AnchorDlg *a)
 {
 
   AnchorD_Resize (a);
 }
 
 static void
-AnchorD_ChangeSize (AnchorDlg * a)
+AnchorD_ChangeSize (AnchorDlg *a)
 {
   int i, off;
 
@@ -534,7 +532,7 @@ AnchorD_ChangeSize (AnchorDlg * a)
 }
 
 static int
-DevTabFind (DeviceTable * adjust, int pixelsize)
+DevTabFind (DeviceTable *adjust, int pixelsize)
 {
   if (adjust == NULL || adjust->corrections == NULL ||
       pixelsize < adjust->first_pixel_size ||
@@ -544,7 +542,7 @@ DevTabFind (DeviceTable * adjust, int pixelsize)
 }
 
 static void
-AnchorD_Expose (AnchorDlg * a, GWindow pixmap, GEvent *event)
+AnchorD_Expose (AnchorDlg *a, GWindow pixmap, GEvent *event)
 {
   GRect *area = &event->u.expose.rect;
   GRect clip, old1, old2;
@@ -658,7 +656,7 @@ AnchorD_Expose (AnchorDlg * a, GWindow pixmap, GEvent *event)
 }
 
 static void
-AnchorD_FigurePos (AnchorDlg * a, GEvent *event)
+AnchorD_FigurePos (AnchorDlg *a, GEvent *event)
 {
   int x = (event->u.mouse.x - a->ctl_len) / a->magfactor;
   int y = (a->baseline - event->u.mouse.y) / a->magfactor;
@@ -668,7 +666,7 @@ AnchorD_FigurePos (AnchorDlg * a, GEvent *event)
 }
 
 static void
-AnchorD_ClearCorrections (AnchorDlg * a)
+AnchorD_ClearCorrections (AnchorDlg *a)
 {
   uint32_t ubuf[2];
 
@@ -683,7 +681,7 @@ AnchorD_ClearCorrections (AnchorDlg * a)
 }
 
 static void
-AnchorD_DrawPos (AnchorDlg * a)
+AnchorD_DrawPos (AnchorDlg *a)
 {
   GRect r;
   char buffer[20];
@@ -704,12 +702,11 @@ AnchorD_DrawPos (AnchorDlg * a)
 }
 
 static void
-AnchorD_SelectGlyph (AnchorDlg * a, AnchorPoint *ap)
+AnchorD_SelectGlyph (AnchorDlg *a, AnchorPoint *ap)
 {
   int i;
   int32_t len;
-  GTextInfo **ti =
-    GGadgetGetList (GWidgetGetControl (a->gw, CID_Glyph), &len);
+  GTextInfo **ti = GGadgetGetList (GWidgetGetControl (a->gw, CID_Glyph), &len);
 
   for (i = 0; i < len; ++i)
     if (ti[i]->userdata == ap)
@@ -718,11 +715,10 @@ AnchorD_SelectGlyph (AnchorDlg * a, AnchorPoint *ap)
     GGadgetSelectOneListItem (GWidgetGetControl (a->gw, CID_Glyph), i);
 }
 
-static int AnchorD_ChangeGlyph (AnchorDlg * a, SplineChar *sc,
-                                AnchorPoint *ap);
+static int AnchorD_ChangeGlyph (AnchorDlg *a, SplineChar *sc, AnchorPoint *ap);
 
 static int
-AnchorD_Mouse (AnchorDlg * a, GEvent *event)
+AnchorD_Mouse (AnchorDlg *a, GEvent *event)
 {
   int on_combo = -1;
   int on_ap = 0;
@@ -748,8 +744,7 @@ AnchorD_Mouse (AnchorDlg * a, GEvent *event)
     {
       int x = event->u.mouse.x - a->ctl_len;
       int y = a->baseline - event->u.mouse.y;
-      int ax =
-        (a->char_off + (int) rint (a->apos.x * a->scale)) * a->magfactor;
+      int ax = (a->char_off + (int) rint (a->apos.x * a->scale)) * a->magfactor;
       int ay = (int) rint (a->apos.y * a->scale) * a->magfactor;
       if (x > ax - 4 && x < ax + 4 && y > ay - 4 && y < ay + 4)
         on_ap = 2;
@@ -804,7 +799,7 @@ AnchorD_Mouse (AnchorDlg * a, GEvent *event)
 }
 
 static void
-AnchorD_HScroll (AnchorDlg * a, struct sbevent *sb)
+AnchorD_HScroll (AnchorDlg *a, struct sbevent *sb)
 {
   int newpos = a->xoff;
   GRect rect;
@@ -880,8 +875,8 @@ SCFindPoint (SplineChar *sc, int layer, int ptnum)
 }
 
 static void
-SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable * xadjust,
-           DeviceTable * yadjust, BasePoint * pos)
+SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
+           DeviceTable *yadjust, BasePoint *pos)
 {
   int ly;
 
@@ -939,7 +934,7 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable * xadjust,
 }
 
 static void
-AnchorD_DoCancel (AnchorDlg * a)
+AnchorD_DoCancel (AnchorDlg *a)
 {
   struct state *old;
 
@@ -1098,7 +1093,7 @@ AnchorD_Cancel (GGadget *g, GEvent *e)
 }
 
 static int
-AnchorD_Apply (AnchorDlg * a)
+AnchorD_Apply (AnchorDlg *a)
 {
   SetAnchor (a->sc, a->layer, a->ap, &a->xadjust, &a->yadjust, &a->apos);
   return (true);
@@ -1117,7 +1112,7 @@ AnchorD_OK (GGadget *g, GEvent *e)
 }
 
 static void
-AnchorD_SetDevTabs (AnchorDlg * a)
+AnchorD_SetDevTabs (AnchorDlg *a)
 {
   char buffer[20];
   uint32_t ubuf[20];
@@ -1181,7 +1176,7 @@ AnchorD_SetDevTabs (AnchorDlg * a)
 }
 
 static int
-AnchorD_ChangeGlyph (AnchorDlg * a, SplineChar *sc, AnchorPoint *ap)
+AnchorD_ChangeGlyph (AnchorDlg *a, SplineChar *sc, AnchorPoint *ap)
 {
   char buf[32];
   struct state *old;
@@ -1191,8 +1186,7 @@ AnchorD_ChangeGlyph (AnchorDlg * a, SplineChar *sc, AnchorPoint *ap)
   if (a->ap == ap)
     return (true);
   /* Do we already have an entry for the current anchor? */
-  for (old = a->orig_vals; old != NULL && old->ap_pt != a->ap;
-       old = old->next);
+  for (old = a->orig_vals; old != NULL && old->ap_pt != a->ap; old = old->next);
   /* If so we've already noted its original state and need do nothing more */
   /*  but otherwise we must store the current state */
   if (old == NULL)
@@ -1226,7 +1220,7 @@ AnchorD_ChangeGlyph (AnchorDlg * a, SplineChar *sc, AnchorPoint *ap)
 }
 
 static SplineChar *
-AddAnchor (AnchorDlg * a, SplineFont *sf, AnchorClass * ac, int ismarklike)
+AddAnchor (AnchorDlg *a, SplineFont *sf, AnchorClass *ac, int ismarklike)
 {
   char *ret, *def;
   SplineChar *sc;
@@ -1264,8 +1258,7 @@ AddAnchor (AnchorDlg * a, SplineFont *sf, AnchorClass * ac, int ismarklike)
                   if ((ap->type == at_centry
                        || (ap->type == at_mark
                            && AnchorClass_lookup_type (ac) == gpos_mark2mark)
-                       || ap->type == at_baselig)
-                      && ismarklike == -1)
+                       || ap->type == at_baselig) && ismarklike == -1)
                     ismarklike = false;
                   else
                     if ((ap->type == at_cexit
@@ -1375,7 +1368,7 @@ AnchorD_GlyphChanged (GGadget *g, GEvent *e)
 }
 
 static void
-AnchorD_NextPrev (AnchorDlg * a, int incr)
+AnchorD_NextPrev (AnchorDlg *a, int incr)
 {
   GGadget *g = GWidgetGetControl (a->gw, CID_Glyph);
   int len;
@@ -1491,16 +1484,14 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
   a.layer = layer;
   if (ap->xadjust.corrections != NULL)
     {
-      int len =
-        ap->xadjust.last_pixel_size - ap->xadjust.first_pixel_size + 1;
+      int len = ap->xadjust.last_pixel_size - ap->xadjust.first_pixel_size + 1;
       a.xadjust = ap->xadjust;
       a.xadjust.corrections = xmalloc (len);
       memcpy (a.xadjust.corrections, ap->xadjust.corrections, len);
     }
   if (ap->yadjust.corrections != NULL)
     {
-      int len =
-        ap->yadjust.last_pixel_size - ap->yadjust.first_pixel_size + 1;
+      int len = ap->yadjust.last_pixel_size - ap->yadjust.first_pixel_size + 1;
       a.yadjust = ap->yadjust;
       a.yadjust.corrections = xmalloc (len);
       memcpy (a.yadjust.corrections, ap->yadjust.corrections, len);
@@ -1825,7 +1816,7 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
 }
 
 void
-AnchorControlClass (SplineFont *_sf, AnchorClass * ac, int layer)
+AnchorControlClass (SplineFont *_sf, AnchorClass *ac, int layer)
 {
   /* Pick a random glyph with an anchor point in the class. If no glyph, */
   /*  give user the chance to create one */
