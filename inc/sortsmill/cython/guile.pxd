@@ -476,6 +476,25 @@ cdef extern from 'sortsmill/guile/python.h':
 
 #--------------------------------------------------------------------------
 
+cdef extern from 'sortsmill/guile/fonts/anchors.h':
+
+  SCM scm_view_anchor_classes (SCM view)
+  SCM scm_glyph_view_anchor_points (SCM gv)
+  SCM scm_glyph_view_anchor_points_set_x (SCM gv, SCM anchor_points)
+  SCM scm_glyph_view_anchor_points_add_x (SCM gv, SCM anchor_point)
+  SCM scm_anchor_point_name (SCM anchor_point)
+  SCM scm_anchor_point_type (SCM anchor_point)
+  SCM scm_anchor_point_coords (SCM anchor_point)
+  SCM scm_anchor_point_selected_p (SCM anchor_point)
+  SCM scm_anchor_point_ligature_index (SCM anchor_point)
+  SCM scm_anchor_point_with_name (SCM anchor_point, SCM value)
+  SCM scm_anchor_point_with_type (SCM anchor_point, SCM value)
+  SCM scm_anchor_point_with_coords (SCM anchor_point, SCM value)
+  SCM scm_anchor_point_with_selected_p (SCM anchor_point, SCM value)
+  SCM scm_anchor_point_with_ligature_index (SCM anchor_point, SCM value)
+
+#--------------------------------------------------------------------------
+
 cdef extern from 'sortsmill/guile/fonts/contours.h':
 
   SCM scm_make_contour_point (SCM x, SCM y, SCM on_curve_p, SCM selected_p,
@@ -536,6 +555,8 @@ cdef extern from 'sortsmill/guile/fonts/contours.h':
   void scm_c_contour_closed_p_set_x (SCM contour, bool value)
   void scm_c_contour_degree_set_x (SCM contour, int value)
   void scm_c_contour_name_set_x (SCM contour, const_char_ptr value)
+
+  SCM scm_contour_to_malloced_SplinePointList (SCM contour)
 
 #--------------------------------------------------------------------------
 

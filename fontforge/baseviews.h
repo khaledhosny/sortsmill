@@ -230,6 +230,24 @@ typedef struct charviewbase
   struct cvcontainer *container;        /* The sv (or whatever) within which this view is embedded (if it is embedded) */
 } CharViewBase;
 
+static inline CharViewBase
+minimalist_CharViewBase (SplineChar *sc)
+{
+  /* The minimum necessary for use as a glyph-view in Guile. */
+  CharViewBase cvb = {
+    .tag = FF_GLYPH_WINDOW,
+    .next = NULL,
+    .fv = NULL,
+    .sc = sc,
+    .layerheads = { NULL, NULL, NULL },
+    .drawmode = 0,
+    .ft_gridfitwidth = 0,
+    .gridfit = NULL,
+    .container = NULL
+  };
+  return cvb;
+}
+
 struct fvcontainer
 {
   struct fvcontainer_funcs *funcs;

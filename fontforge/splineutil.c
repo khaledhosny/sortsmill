@@ -1,5 +1,20 @@
 #include <config.h>
 
+// Copyright (C) 2013 Barry Schwartz
+// 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see <http://www.gnu.org/licenses/>.
+
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +49,7 @@
 #include "ustring.h"
 #include "utype.h"
 #include "views.h"              /* for FindSel structure */
+#include <sortsmill/guile.h>
 
 // #define DEBUG 1
 
@@ -6729,7 +6745,7 @@ APAnchorClassMerge (AnchorPoint *anchors, AnchorClass * into,
 }
 
 void
-AnchorClassMerge (SplineFont *sf, AnchorClass * into, AnchorClass * from)
+AnchorClassMerge (SplineFont *sf, AnchorClass *into, AnchorClass *from)
 {
   int i;
 
@@ -6745,7 +6761,17 @@ AnchorClassMerge (SplineFont *sf, AnchorClass * into, AnchorClass * from)
       }
 }
 
-AnchorPoint *
+VISIBLE void
+SCAnchorPointsSort (SplineChar *sc)
+{
+  CharViewBase c_cvb = minimalist_CharViewBase (sc);
+  SCM cvb = SCM_FF_API_CALL_1 ("pointer->CharViewBase",
+                               scm_from_pointer (&c_cvb, NULL));
+  SCM gv = scm_CharViewBase_to_glyph_view (cvb);
+  scm_glyph_view_anchor_points_set_x (gv, scm_glyph_view_anchor_points (gv));
+}
+
+VISIBLE AnchorPoint *
 AnchorPointsCopy (AnchorPoint *alist)
 {
   AnchorPoint *head = NULL, *last, *ap;

@@ -15,11 +15,27 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_FONTS_H
-#define _SORTSMILL_GUILE_FONTS_H
+#ifndef _SORTSMILL_GUILE_FONTS_VIEWS_H
+#define _SORTSMILL_GUILE_FONTS_VIEWS_H
 
-#include <sortsmill/guile/fonts/anchors.h>
-#include <sortsmill/guile/fonts/contours.h>
-#include <sortsmill/guile/fonts/views.h>
+#include <libguile.h>
 
-#endif /* _SORTSMILL_GUILE_FONTS_H */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+SCM scm_glyph_view_to_CharViewBase (SCM);
+SCM scm_CharViewBase_to_glyph_view (SCM);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_FONTS_VIEWS_H */

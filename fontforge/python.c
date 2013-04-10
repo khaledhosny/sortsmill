@@ -8003,6 +8003,9 @@ PyFF_Glyph_set_anchorPoints (PyFF_Glyph *self, PyObject *value,
     }
   AnchorPointsFree (sc->anchor);
   sc->anchor = aphead;
+
+  SCAnchorPointsSort (sc);
+  
   SCCharChangedUpdate (sc, ly_none);
   return (0);
 }
@@ -8837,7 +8840,9 @@ static PyObject *
 PyFFGlyph_addAnchorPoint (PyObject *self, PyObject *args)
 {
   SplineChar *sc = ((PyFF_Glyph *) self)->sc;
-  AnchorPoint *ap = APFromTuple (sc, args), *ap2;
+  AnchorPoint *ap = APFromTuple (sc, args);
+  AnchorPoint *ap2;
+
   int done = false;
 
   if (ap == NULL)
@@ -8882,6 +8887,8 @@ PyFFGlyph_addAnchorPoint (PyObject *self, PyObject *args)
       ap->next = sc->anchor;
       sc->anchor = ap;
     }
+
+  SCAnchorPointsSort (sc);
 
   SCCharChangedUpdate (sc, ((PyFF_Glyph *) self)->layer);
 
