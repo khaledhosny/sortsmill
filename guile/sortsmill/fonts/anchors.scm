@@ -86,6 +86,11 @@
    anchor-point-with-selected?
    anchor-point-with-ligature-index
    anchor-point-with-field
+
+   ;; Control over the sort order of anchor points.
+   ;;
+   ;; ((fluid-ref anchor-point-<-for-sorting) alist1 alist2) → boolean
+   anchor-point-<-for-sorting
    )
 
   (import (sortsmill fonts views)
@@ -104,20 +109,43 @@
     (let ([ac-list (view->AnchorClass-list view)])
       (map AnchorClass->alist ac-list)))
 
+  (define (default-anchor-point-<-for-sorting alist1 alist2)
+    (let ([coords1 (anchor-point-coords alist1)]
+          [coords2 (anchor-point-coords alist2)])
+      (if (< (car coords1) (car coords2))
+          #t
+          (if (< (car coords2) (car coords1))
+              #f
+              (if (< (cadr coords1) (cadr coords2))
+                  #t
+                  (let ([ap-type1 (anchor-point-type alist1)]
+                        [ap-type2 (anchor-point-type alist2)])
+                    (if (< (anchor-point-type-index ap-type1)
+                           (anchor-point-type-index ap-type2))
+                        #t
+                        (if (eq? ap-type1 ap-type2 'gpos-mark-to-ligature)
+                            (< (anchor-point-ligature-index alist1)
+                               (anchor-point-ligature-index alist2))
+                            #f))))))))
+
+  (define anchor-point-<-for-sorting
+    (make-fluid default-anchor-point-<-for-sorting))
+
   (define (glyph-view-anchor-points gv)
     (let ([ap-list (glyph-view->AnchorPoint-list gv)])
       (map AnchorPoint->alist ap-list)))
 
   (define (glyph-view-anchor-points-set! gv anchor-points)
     (let* ([ac-ptr (glyph-view->AnchorClass-linked-list gv)]
-           [anchor-points
+           [anchor-points-sorted
             (list-sort
-             (lambda (ap1 ap2)
-               (negative? (anchor-point-compare ac-ptr ap1 ap2)))
-             (delete-duplicates anchor-points
-                                (cut anchor-point-match? ac-ptr <> <>)))]
+             (fluid-ref anchor-point-<-for-sorting)
+             (map (cut complete-anchor-point ac-ptr <>
+                       'glyph-view-anchor-points-set!)
+                  (delete-duplicates
+                   anchor-points (cut anchor-point-match? ac-ptr <> <>))))]
            [ap-ptr (anchor-points->AnchorPoint-linked-list
-                    gv anchor-points 'set-glyph-view-anchor-points!)]
+                    gv anchor-points-sorted 'set-glyph-view-anchor-points!)]
            [sc (glyph-view->SplineChar gv)])
       (SplineChar:anchor-points-set! sc ap-ptr)
       (update-changed-SplineChar (SplineChar->pointer sc) #f)))
@@ -196,6 +224,18 @@
               pointer->AnchorPoint
               (compose AnchorPoint:next-ref pointer->AnchorPoint)
               (SplineChar:anchor-points-ref sc))))
+
+  (define* (complete-anchor-point ac-ptr alist #:optional who)
+    "Fill an anchor point’s association list with fields from its
+anchor class. This action also corrects erroneous entries that the
+programmer may have inserted."
+    (let* ([name (anchor-point-name alist)]
+           [ac (checking-find-AnchorClass
+                (if who who 'complete-anchor-point)
+                ac-ptr name (list alist))]
+           [completed-alist (append (AnchorClass->alist ac) alist)])
+      (delete-duplicates completed-alist
+                         (lambda (a b) (eq? (car a) (car b))))))
 
   (define (AnchorPoint->alist ap)
     (let ([my-coords (AnchorPoint:coords-ref ap)]
