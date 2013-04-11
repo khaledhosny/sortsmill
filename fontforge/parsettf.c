@@ -7185,6 +7185,19 @@ ASCIIcheck (char **str)
     }
 }
 
+static void
+sort_anchor_points (SplineFont *sf)
+{
+  for (size_t gid = 0; gid < sf->glyphcnt; gid++)
+    if (sf->glyphs[gid] != NULL)
+      {
+        AnchorPoint *temp =
+          AnchorPointsSort (sf->anchor, sf->glyphs[gid]->anchor);
+        AnchorPointsFree (sf->glyphs[gid]->anchor);
+        sf->glyphs[gid]->anchor = temp;
+      }
+}
+
 static SplineFont *
 SFFillFromTTF (struct ttfinfo *info)
 {
@@ -7380,13 +7393,6 @@ SFFillFromTTF (struct ttfinfo *info)
       sf->layer_cnt = info->layer_cnt;
     }
 
-
-  for (i = 0; i < info->glyph_cnt; ++i)
-    if (info->chars[i] != NULL)
-      {
-        SCOrderAP (info->chars[i]);
-      }
-
   if (info->subfontcnt == 0)
     {
       UseGivenEncoding (sf, info);
@@ -7490,6 +7496,9 @@ SFFillFromTTF (struct ttfinfo *info)
     (info->bad_ot ? lvs_bad_ot_table : 0) |
     (info->bad_os2_version ? lvs_bad_os2_version : 0) |
     (info->bad_sfnt_header ? lvs_bad_sfnt_header : 0);
+
+  sort_anchor_points (sf);
+
   return (sf);
 }
 
@@ -7537,6 +7546,7 @@ SFReadTTF (char *filename, int flags, enum openflags openflags)
 
   sf = _SFReadTTF (ttf, flags, openflags, filename, NULL);
   fclose (ttf);
+
   return (sf);
 }
 

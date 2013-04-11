@@ -910,56 +910,45 @@ void AltUniAdd_DontCheckDups(SplineChar *sc,int uni) {
     }
 }
 
-static void
-the_original_SCOrderAP(SplineChar *sc)
-{
-  int lc=0, cnt=0, out=false, i,j;
-  AnchorPoint *ap, **array;
-  
-  /* Order so that first ligature index comes first */
-
-  for ( ap=sc->anchor; ap!=NULL; ap=ap->next )
-    {
-      if ( ap->lig_index<lc )
-        out = true;
-      if ( ap->lig_index>lc )
-        lc = ap->lig_index;
-      ++cnt;
-    }
-  if ( out ) 
-    {
-      array = xmalloc(cnt*sizeof(AnchorPoint *));
-      for ( i=0, ap=sc->anchor; ap!=NULL; ++i, ap=ap->next )
-        array[i] = ap;
-      for ( i=0; i<cnt-1; ++i )
-        for ( j=i+1; j<cnt; ++j )
-          if ( array[i]->lig_index>array[j]->lig_index ) {
-            ap = array[i];
-            array[i] = array[j];
-            array[j] = ap;
-          }
-      sc->anchor = array[0];
-      for ( i=0; i<cnt-1; ++i )
-        array[i]->next = array[i+1];
-      array[cnt-1]->next = NULL;
-      free( array );
-    }
-}
-
-void
-SCOrderAP(SplineChar *sc)
-{
-  // FIXME: This is ugly.
-  
-  if (sc->parent != NULL)
-    {
-      AnchorPoint *temp = AnchorPointsSort (sc->parent->anchor, sc->anchor);
-      AnchorPointsFree (sc->anchor);
-      sc->anchor = temp;
-    }
-  else
-    the_original_SCOrderAP (sc);
-}
+// FIXME: This is the code that did what AnchorPointsSort() does
+// now. It is left here temporarily as reference, in case
+// AnchorPointsSort() gives us trouble.
+//
+//static void
+//SCOrderAP(SplineChar *sc)
+//{
+//  int lc=0, cnt=0, out=false, i,j;
+//  AnchorPoint *ap, **array;
+//  
+//  /* Order so that first ligature index comes first */
+//
+//  for ( ap=sc->anchor; ap!=NULL; ap=ap->next )
+//    {
+//      if ( ap->lig_index<lc )
+//        out = true;
+//      if ( ap->lig_index>lc )
+//        lc = ap->lig_index;
+//      ++cnt;
+//    }
+//  if ( out ) 
+//    {
+//      array = xmalloc(cnt*sizeof(AnchorPoint *));
+//      for ( i=0, ap=sc->anchor; ap!=NULL; ++i, ap=ap->next )
+//        array[i] = ap;
+//      for ( i=0; i<cnt-1; ++i )
+//        for ( j=i+1; j<cnt; ++j )
+//          if ( array[i]->lig_index>array[j]->lig_index ) {
+//            ap = array[i];
+//            array[i] = array[j];
+//            array[j] = ap;
+//          }
+//      sc->anchor = array[0];
+//      for ( i=0; i<cnt-1; ++i )
+//        array[i]->next = array[i+1];
+//      array[cnt-1]->next = NULL;
+//      free( array );
+//    }
+//}
 
 void UnlinkThisReference(FontViewBase *fv,SplineChar *sc,int layer) {
     /* We are about to clear out sc. But somebody refers to it and that we */
