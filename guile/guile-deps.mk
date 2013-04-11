@@ -48,13 +48,13 @@ sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmi
 sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/peg-spacing.go sortsmill/pkg-info.go sortsmill/strings.go
+sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/strings.go
 sortsmill/__internals__.go: sortsmill/__internals__/anchors.go sortsmill/__internals__/glyphs.go sortsmill/__internals__/lookups.go
 sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/containers.go: sortsmill/containers/rnrs-hashtable.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
-sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/psmat.go sortsmill/fonts/views.go
+sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/psmat.go sortsmill/fonts/views.go
 sortsmill/gdraw-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
 sortsmill/math.go: sortsmill/math/brentroot.go sortsmill/math/functions.go sortsmill/math/geometry.go sortsmill/math/gsl.go sortsmill/math/math-constants.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
 sortsmill/math/geometry.go: sortsmill/math/geometry/lines.go

@@ -359,6 +359,13 @@ GO_FILES += sortsmill/fonts/contours.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/contours.scm
 
 
+# (sortsmill peg-spacing)
+
+DIST_SCM_FILES += sortsmill/fonts/peg-spacing.scm
+GO_FILES += sortsmill/fonts/peg-spacing.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/peg-spacing.scm
+
+
 # (sortsmill fonts psmat)
 
 DIST_SCM_FILES += sortsmill/fonts/psmat.scm
@@ -681,14 +688,6 @@ SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/notices.scm
 
 DIST_SCM_FILES += sortsmill/options.scm
 GO_FILES += sortsmill/options.go
-
-#--------------------------------------------------------------------------
-#
-# (sortsmill peg-spacing)
-
-DIST_SCM_FILES += sortsmill/peg-spacing.scm
-GO_FILES += sortsmill/peg-spacing.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/peg-spacing.scm
 
 #--------------------------------------------------------------------------
 #
