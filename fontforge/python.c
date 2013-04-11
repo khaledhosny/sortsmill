@@ -7980,9 +7980,10 @@ static int
 PyFF_Glyph_set_anchorPoints (PyFF_Glyph *self, PyObject *value,
                              void *UNUSED (closure))
 {
-  AnchorPoint *aphead = NULL, *aplast = NULL, *ap;
+  AnchorPoint *aphead = NULL, *aplast = NULL;
   int i;
   SplineChar *sc = self->sc;
+  AnchorClass *ac_list = self->sc->parent->anchor;
 
   if (!PySequence_Check (value))
     {
@@ -7992,7 +7993,7 @@ PyFF_Glyph_set_anchorPoints (PyFF_Glyph *self, PyObject *value,
 
   for (i = 0; i < PySequence_Size (value); ++i)
     {
-      ap = APFromTuple (sc, PySequence_GetItem (value, i));
+      AnchorPoint *ap = APFromTuple (sc, PySequence_GetItem (value, i));
       if (ap == NULL)
         return (-1);
       if (aphead == NULL)
@@ -8002,10 +8003,9 @@ PyFF_Glyph_set_anchorPoints (PyFF_Glyph *self, PyObject *value,
       aplast = ap;
     }
   AnchorPointsFree (sc->anchor);
-  sc->anchor = aphead;
+  sc->anchor = AnchorPointsSort (ac_list, aphead);
+  AnchorPointsFree (aphead);
 
-  SCAnchorPointsSort (sc);
-  
   SCCharChangedUpdate (sc, ly_none);
   return (0);
 }
@@ -8840,15 +8840,15 @@ static PyObject *
 PyFFGlyph_addAnchorPoint (PyObject *self, PyObject *args)
 {
   SplineChar *sc = ((PyFF_Glyph *) self)->sc;
+  AnchorClass *ac_list = ((PyFF_Glyph *) self)->sc->parent->anchor;
   AnchorPoint *ap = APFromTuple (sc, args);
-  AnchorPoint *ap2;
 
   int done = false;
 
   if (ap == NULL)
     return (NULL);
 
-  for (ap2 = sc->anchor; ap2 != NULL; ap2 = ap2->next)
+  for (AnchorPoint *ap2 = sc->anchor; ap2 != NULL; ap2 = ap2->next)
     {
       switch (AnchorClass_lookup_type (ap2->anchor))
         {
@@ -8888,7 +8888,9 @@ PyFFGlyph_addAnchorPoint (PyObject *self, PyObject *args)
       sc->anchor = ap;
     }
 
-  SCAnchorPointsSort (sc);
+  AnchorPoint *temp = AnchorPointsSort (ac_list, sc->anchor);
+  AnchorPointsFree (sc->anchor);
+  sc->anchor = temp;
 
   SCCharChangedUpdate (sc, ((PyFF_Glyph *) self)->layer);
 

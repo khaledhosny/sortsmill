@@ -12061,21 +12061,23 @@ static void
 CVMenuAnchorsAway (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  AnchorPoint *ap;
-
-  ap = mi->ti.userdata;
+  AnchorPoint *ap = mi->ti.userdata;
   if (ap == NULL)
-    for (ap = cv->b.sc->anchor; ap != NULL && !ap->selected; ap = ap->next);
+    {
+      ap = cv->b.sc->anchor;
+      while (ap != NULL && !ap->selected)
+        ap = ap->next;
+    }
   if (ap == NULL)
     ap = cv->b.sc->anchor;
-  if (ap == NULL)
-    return;
-
-  GDrawSetCursor (cv->v, ct_watch);
-  GDrawSync (NULL);
-  GDrawProcessPendingEvents (NULL);
-  AnchorControl (cv->b.sc, ap, CVLayer ((CharViewBase *) cv));
-  GDrawSetCursor (cv->v, ct_pointer);
+  if (ap != NULL)
+    {
+      GDrawSetCursor (cv->v, ct_watch);
+      GDrawSync (NULL);
+      GDrawProcessPendingEvents (NULL);
+      AnchorControl (cv->b.sc, ap, CVLayer ((CharViewBase *) cv));
+      GDrawSetCursor (cv->v, ct_pointer);
+    }
 }
 
 // *INDENT-OFF*
@@ -14950,6 +14952,9 @@ ap2listbuild_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       mi->sub = NULL;
     }
 
+  // FIXME: Rewrite this without the zany k-indexed loop that actually
+  // increases the amount of code and the number of branches,
+  // pointlessly turning it into spaghetti.
   for (k = 0; k < 2; ++k)
     {
       cnt = 0;

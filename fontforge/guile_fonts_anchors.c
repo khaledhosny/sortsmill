@@ -47,3 +47,17 @@ VISIBLE C_WRAP_SCM_CALL_2 (scm_anchor_point_with_selected_p, my_module,
                            "anchor-point-with-selected?");
 VISIBLE C_WRAP_SCM_CALL_2 (scm_anchor_point_with_ligature_index, my_module,
                            "anchor-point-with-ligature-index");
+
+// Procedures for internal use.
+VISIBLE C_WRAP_SCM_CALL_1 (scm_from_AnchorClasses, my_module,
+                           "AnchorClasses->scm");
+VISIBLE C_WRAP_SCM_CALL_1 (scm_from_AnchorPoints, my_module,
+                           "AnchorPoints->scm");
+VISIBLE C_WRAP_SCM_CALL_2 (scm_to_AnchorPoint, my_module,
+                           "scm->AnchorPoint");
+VISIBLE C_WRAP_SCM_CALL_2 (scm_to_AnchorPoints, my_module,
+                           "scm->AnchorPoints");
+VISIBLE C_WRAP_SCM_CALL_2 (scm_sort_anchor_points, my_module,
+                           "sort-anchor-points");
+VISIBLE C_WRAP_SCM_CALL_2 (scm_sort_AnchorPoints, my_module,
+                           "sort-AnchorPoints");

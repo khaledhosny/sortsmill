@@ -89,8 +89,33 @@
 
    ;; Control over the sort order of anchor points.
    ;;
+   ;; In case anyone cares: the sort is stable, and therefore a
+   ;; function always returning #f is equivalent to not sorting at
+   ;; all, except for the time spent. Thus there is no special
+   ;; provision for turning off sorting.
+   ;;
    ;; ((fluid-ref anchor-point-<-for-sorting) alist1 alist2) → boolean
    anchor-point-<-for-sorting
+
+   ;; Some procedures that are mainly for use for use internally,
+   ;; rather than in extensions. They are liable to change or go away
+   ;; without warning.
+   ;;
+   ;; FIXME: Change this documentation if we switch to
+   ;; garbage-collected AnchorPoints.
+   ;;
+   ;; (AnchorClasses->scm AnchorClass*) → list of alists
+   ;; (AnchorPoints->scm AnchorPoint*) → list of alists
+   ;; (scm->AnchorPoint AnchorClass* alist) → malloced AnchorPoint*
+   ;; (scm->AnchorPoints AnchorClass* list-of-alists) → malloced AnchorPoint*
+   ;; (sort-anchor-points AnchorClass* list-of-alists) → list of alists
+   ;; (sort-AnchorPoints AnchorClass* AnchorPoint*) → malloced AnchorPoint*
+   AnchorClasses->scm
+   AnchorPoints->scm
+   scm->AnchorPoint
+   scm->AnchorPoints
+   sort-anchor-points
+   sort-AnchorPoints
    )
 
   (import (sortsmill fonts views)
@@ -104,6 +129,8 @@
           (system foreign)
           (ice-9 match)
           (ice-9 format))
+
+  ;;-----------------------------------------------------------------------
 
   (define (view-anchor-classes view)
     (let ([ac-list (view->AnchorClass-list view)])
@@ -136,16 +163,11 @@
       (map AnchorPoint->alist ap-list)))
 
   (define (glyph-view-anchor-points-set! gv anchor-points)
-    (let* ([ac-ptr (glyph-view->AnchorClass-linked-list gv)]
+    (let* ([who 'glyph-view-anchor-points-set!]
+           [ac-ptr (glyph-view->AnchorClass-linked-list gv)]
            [anchor-points-sorted
-            (list-sort
-             (fluid-ref anchor-point-<-for-sorting)
-             (map (cut complete-anchor-point ac-ptr <>
-                       'glyph-view-anchor-points-set!)
-                  (delete-duplicates
-                   anchor-points (cut anchor-point-match? ac-ptr <> <>))))]
-           [ap-ptr (anchor-points->AnchorPoint-linked-list
-                    gv anchor-points-sorted 'set-glyph-view-anchor-points!)]
+            (sort-anchor-points ac-ptr anchor-points)]
+           [ap-ptr (scm->AnchorPoints ac-ptr anchor-points-sorted)]
            [sc (glyph-view->SplineChar gv)])
       (SplineChar:anchor-points-set! sc ap-ptr)
       (update-changed-SplineChar (SplineChar->pointer sc) #f)))
@@ -218,12 +240,58 @@
   (define (anchor-point-with-ligature-index alist value)
     (anchor-point-with-field alist 'ligature-index value))
 
+  (define (AnchorClasses->scm ac-ptr)
+    (map AnchorClass->alist
+         (AnchorClass-linked-list->AnchorClass-list ac-ptr)))
+
+  (define (AnchorPoints->scm ap-ptr)
+    (map AnchorPoint->alist
+         (AnchorPoint-linked-list->AnchorPoint-list ap-ptr)))
+
+  (define (scm->AnchorPoint AnchorClasses alist)
+    (alist->AnchorPoint AnchorClasses alist 'scm->AnchorPoint))
+
+  (define (scm->AnchorPoints AnchorClasses anchor-points)
+    (match anchor-points
+      [() %null-pointer]
+      [(h . t)
+       (let ([tail (scm->AnchorPoints AnchorClasses t)])
+         (catch #t
+           [lambda ()
+             (let ([ap (scm->AnchorPoint AnchorClasses h)])
+               (AnchorPoint:next-set! ap tail)
+               (AnchorPoint->pointer ap))]
+           [lambda args
+             (free-AnchorPoint-linked-list tail)
+             (apply throw args)] ))] ))
+
+  (define (sort-anchor-points ac-ptr anchor-points)
+    "Stable sorting of anchor point lists. Before sorting, removes
+redundant entries and completes the association lists with data from
+the corresponding anchor classes."
+    ;; R⁶RS specifies that list-sort be stable.  See
+    ;; http://www.r6rs.org/final/html/r6rs-lib/r6rs-lib-Z-H-5.html#node_chap_4
+    (list-sort
+     (fluid-ref anchor-point-<-for-sorting)
+     (map (cut complete-anchor-point ac-ptr <> 'sort-anchor-points)
+          (delete-duplicates
+           anchor-points (cut anchor-point-match? ac-ptr <> <>)))))
+
+  (define (sort-AnchorPoints ac-ptr ap-ptr)
+    (scm->AnchorPoints
+     ac-ptr (sort-anchor-points ac-ptr (AnchorPoints->scm ap-ptr))))
+
+  ;;-----------------------------------------------------------------------
+
   (define (glyph-view->AnchorPoint-list gv)
-    (let ([sc (glyph-view->SplineChar gv)])
-      (unfold null-pointer?
-              pointer->AnchorPoint
-              (compose AnchorPoint:next-ref pointer->AnchorPoint)
-              (SplineChar:anchor-points-ref sc))))
+    (AnchorPoint-linked-list->AnchorPoint-list
+     (SplineChar:anchor-points-ref (glyph-view->SplineChar gv))))
+
+  (define (AnchorPoint-linked-list->AnchorPoint-list ap-ptr)
+    (unfold null-pointer?
+            pointer->AnchorPoint
+            (compose AnchorPoint:next-ref pointer->AnchorPoint)
+            ap-ptr))
 
   (define* (complete-anchor-point ac-ptr alist #:optional who)
     "Fill an anchor point’s association list with fields from its
@@ -266,6 +334,7 @@ programmer may have inserted."
   (define (check-AnchorPointType-symbol who symb)
     (type-symbol->AnchorPointType symb who))
 
+#|
   (define* (anchor-points->AnchorPoint-linked-list gv anchor-points #:optional who)
     (match anchor-points
       [() %null-pointer]
@@ -282,6 +351,7 @@ programmer may have inserted."
 
   (define* (glyph-view-and-alist->AnchorPoint gv alist #:optional who)
     (alist->AnchorPoint (glyph-view->AnchorClass-linked-list gv) alist who))
+|#
 
   (define* (alist->AnchorPoint ac-ptr alist #:optional who)
     (let ([name (anchor-point-name alist)]
@@ -455,6 +525,8 @@ change."
           (lambda (ignored) 1)))
        (lambda (ignored) 1))))
 
+  ;;-----------------------------------------------------------------------
+
   (define (raise:expected-string who key value alist)
     (assertion-violation
      who
@@ -496,4 +568,6 @@ change."
      (format #f (_ "missing anchor point field '~a") key)
      alist))
   
+  ;;-----------------------------------------------------------------------
+
   ) ;; end of library.

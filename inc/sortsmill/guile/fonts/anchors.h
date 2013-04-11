@@ -43,6 +43,16 @@ SCM scm_anchor_point_with_coords (SCM anchor_point, SCM value);
 SCM scm_anchor_point_with_selected_p (SCM anchor_point, SCM value);
 SCM scm_anchor_point_with_ligature_index (SCM anchor_point, SCM value);
 
+/* The following procedures are meant mainly for internal use, and are
+   liable to change or go away without warning. */
+SCM scm_from_AnchorClasses (SCM AnchorClass_linked_list_ptr);
+SCM scm_from_AnchorPoints (SCM AnchorPoint_linked_list_ptr);
+SCM scm_to_AnchorPoint (SCM AnchorClass_linked_list_ptr, SCM anchor_point);
+SCM scm_to_AnchorPoints (SCM AnchorClass_linked_list_ptr, SCM anchor_points);
+SCM scm_sort_anchor_points (SCM AnchorClass_linked_list_ptr, SCM anchor_points);
+SCM scm_sort_AnchorPoints (SCM AnchorClass_linked_list_ptr,
+                           SCM AnchorPoint_linked_list_ptr);
+
 #if 0
 {
 #endif

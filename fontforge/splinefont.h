@@ -2519,7 +2519,7 @@ VISIBLE void KernPairsFree (KernPair *kp);
 VISIBLE void SCOrderAP (SplineChar *sc);
 void AnchorPointsFree (AnchorPoint *ap);
 AnchorPoint *AnchorPointsCopy (AnchorPoint *alist);
-void SCAnchorPointsSort (SplineChar *sc);
+AnchorPoint *AnchorPointsSort (AnchorClass *ac_list, AnchorPoint *ap_list);
 VISIBLE void SFRemoveAnchorClass (SplineFont *sf, AnchorClass *an);
 int AnchorClassesNextMerge (AnchorClass *ac);
 VISIBLE int IsAnchorClassUsed (SplineChar *sc, AnchorClass *an);

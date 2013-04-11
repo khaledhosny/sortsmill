@@ -6761,14 +6761,12 @@ AnchorClassMerge (SplineFont *sf, AnchorClass *into, AnchorClass *from)
       }
 }
 
-VISIBLE void
-SCAnchorPointsSort (SplineChar *sc)
+VISIBLE AnchorPoint *
+AnchorPointsSort (AnchorClass *ac_list, AnchorPoint *ap_list)
 {
-  CharViewBase c_cvb = minimalist_CharViewBase (sc);
-  SCM cvb = SCM_FF_API_CALL_1 ("pointer->CharViewBase",
-                               scm_from_pointer (&c_cvb, NULL));
-  SCM gv = scm_CharViewBase_to_glyph_view (cvb);
-  scm_glyph_view_anchor_points_set_x (gv, scm_glyph_view_anchor_points (gv));
+  return (AnchorPoint *)
+    scm_to_pointer (scm_sort_AnchorPoints (scm_from_pointer (ac_list, NULL),
+                                           scm_from_pointer (ap_list, NULL)));
 }
 
 VISIBLE AnchorPoint *
