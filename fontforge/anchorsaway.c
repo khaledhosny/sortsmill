@@ -930,6 +930,9 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
           ly = ly_none;
         }
     }
+  AnchorPoint *temp = AnchorPointsSort (sc->parent->anchor, sc->anchor);
+  AnchorPointsFree (sc->anchor);
+  sc->anchor = temp;
   SCCharChangedUpdate (sc, ly);
 }
 
@@ -1284,9 +1287,11 @@ AddAnchor (AnchorDlg *a, SplineFont *sf, AnchorClass *ac, int ismarklike)
 
   ap = (AnchorPoint *) xzalloc (sizeof (AnchorPoint));
   ap->anchor = ac;
-  ap->me.x = ap->me.y = 0;
+  ap->me.x = 0;
+  ap->me.y = 0;
   ap->next = sc->anchor;
-  sc->anchor = ap;
+  sc->anchor = AnchorPointsSort (sf->anchor, ap);
+  AnchorPointsFree (ap);
   SCCharChangedUpdate (sc, ly_none);
 
   if (sc->width == 0)

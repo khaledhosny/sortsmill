@@ -5911,9 +5911,10 @@ static SplineFont *SFFillFromTTF(struct ttfinfo *info) {
     }
 	
 
-    for ( i=0; i<info->glyph_cnt; ++i ) if ( info->chars[i]!=NULL ) {
+    for ( i=0; i<info->glyph_cnt; ++i )
+      if ( info->chars[i]!=NULL ) {
 	SCOrderAP(info->chars[i]);
-    }
+      }
 
     if ( info->subfontcnt == 0 ) {
 	UseGivenEncoding(sf,info);
