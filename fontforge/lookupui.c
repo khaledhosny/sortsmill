@@ -38,6 +38,7 @@
 #include "ttf.h"
 #include <gkeysym.h>
 #include "lookups.h"
+#include <assert.h>
 
 int add_char_to_name_list = true;
 int default_autokern_dlg = true;
@@ -2911,10 +2912,12 @@ static GTextInfo magnifications[] = {
 static AnchorClass *
 SFAddAnchorClass (SplineFont *sf, struct lookup_subtable *sub, char *name)
 {
-  AnchorClass *ac;
+  assert (sf != NULL);
+  assert (sub != NULL);
+  assert (name != NULL);
 
-  ac = (AnchorClass *) xzalloc (sizeof (AnchorClass));
-  ac->name = xstrdup_or_null (name);
+  AnchorClass *ac = (AnchorClass *) xzalloc (sizeof (AnchorClass));
+  ac->name = xstrdup (name);
   ac->subtable = sub;
   ac->next = sf->anchor;
   sf->anchor = ac;
@@ -2930,26 +2933,30 @@ AnchorClassD_ShowAnchors (GGadget *g, GEvent *e)
     {
       struct matrix_data *classes;
       int32_t class_cnt;
-      int row;
       AnchorClass *ac;
 
       acd = GDrawGetUserData (GGadgetGetWindow (g));
       classes =
         GMatrixEditGet (GWidgetGetControl (acd->gw, CID_Anchors), &class_cnt);
-      row = GMatrixEditGetActiveRow (GWidgetGetControl (acd->gw, CID_Anchors));
+      GGadget *thing = GWidgetGetControl (acd->gw, CID_Anchors);
+      int cols = GMatrixEditGetColCnt (thing);
+      int row = GMatrixEditGetActiveRow (thing);
       if (row == -1)
         return (true);
-      ac = classes[2 * row + 1].u.md_addr;
+
+      ac = classes[cols * row + 1].u.md_addr;
       if (ac == NULL)
         {
-          ac =
-            SFAddAnchorClass (acd->sf, acd->sub, classes[2 * row + 1].u.md_str);
+          ac = SFAddAnchorClass (acd->sf, acd->sub,
+                                 classes[cols * row + 0].u.md_str);
+          classes[cols * row + 1].u.md_addr = ac;
         }
       else if (ac->subtable != acd->sub)
         {
           ff_post_error (_("Name in use"),
-                         _
-                         ("The name, %.80s, has already been used to identify an anchor class in a different lookup subtable (%.80s)"),
+                         _("The name, %.80s, has already been used to "
+                           "identify an anchor class in a different "
+                           "lookup subtable (%.80s)"),
                          ac->name, ac->subtable->subtable_name);
           return (true);
         }
@@ -4560,12 +4567,11 @@ PSTKD_DoPopulate (PSTKernDlg * pstkd, char *suffix, enum pop_type pt)
           if (SCReasonable (sc = sf->glyphs[gid])
               && (pt == pt_selected
                   || ScriptInFeatureScriptList
-                  (SCScriptFromUnicode (sc),
-                   features)) && (pt != pt_selected || (gid < fv->b.sf->glyphcnt
-                                                        && (enc =
-                                                            map->
-                                                            backmap[gid]) != -1
-                                                        && fv->b.selected[enc]))
+                  (SCScriptFromUnicode (sc), features))
+              && (pt != pt_selected
+                  || (gid < fv->b.sf->glyphcnt
+                      && (enc = map->backmap[gid]) != -1
+                      && fv->b.selected[enc]))
               && (pos = SCNameUnused (sc->name, old, old_rows, cols)) != -1
               && (pstkd->sub->lookup->lookup_type != gsub_ligature
                   || SCIsLigature (sc)))
@@ -6346,9 +6352,8 @@ SFSubtablesOfType (SplineFont *sf, int lookup_type, int kernclass, int add_none)
               for (sub = otl->subtables; sub != NULL; sub = sub->next)
                 {
                   if (lookup_type != gpos_pair || kernclass == -1
-                      || (kernclass && sub->kc != NULL) || (!kernclass
-                                                            &&
-                                                            sub->per_glyph_pst_or_kern))
+                      || (kernclass && sub->kc != NULL)
+                      || (!kernclass && sub->per_glyph_pst_or_kern))
                     {
                       if (k)
                         {
