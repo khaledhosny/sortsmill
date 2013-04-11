@@ -641,8 +641,8 @@ CI_NameCheck (const uint32_t *name)
   else if (isdigit (*name) || *name == '.')
     {
       ff_post_error (_("Bad Name"),
-                     _
-                     ("A glyph name may not start with a digit nor a full stop (period)"));
+                     _("A glyph name may not start with a digit nor "
+                       "a full stop (period)"));
       return false;
     }
   bad = questionable = false;
@@ -660,16 +660,17 @@ CI_NameCheck (const uint32_t *name)
   if (bad)
     {
       ff_post_error (_("Bad Name"),
-                     _
-                     ("A glyph name must be ASCII, without spaces and may not contain the characters \"([{<>}])/%%\", and should contain only alphanumerics, periods and underscores"));
+                     _("A glyph name must be ASCII, without spaces and may not "
+                       "contain the characters \"([{<>}])/%%\", and should "
+                       "contain only alphanumerics, periods and underscores"));
       return false;
     }
   else if (questionable)
     {
       if (gwwv_ask
           (_("Bad Name"), (const char **) buts, 0, 1,
-           _
-           ("A glyph name should contain only alphanumerics, periods and underscores\nDo you want to use this name in spite of that?"))
+           _("A glyph name should contain only alphanumerics, periods and "
+             "underscores\nDo you want to use this name in spite of that?"))
           == 1)
         return false;
     }
@@ -1074,8 +1075,9 @@ CI_ProcessPosSubs (CharInfo * ci)
                          possub[cols * j + 1].u.md_str) == 0)
             {
               ff_post_error (_("Duplicate Ligature"),
-                             _
-                             ("There are two ligature entries with the same components (%.80s) in the same lookup subtable (%.30s)"),
+                             _("There are two ligature entries with the same "
+                               "components (%.80s) in the same lookup subtable "
+                               "(%.30s)"),
                              possub[cols * j + 1].u.md_str,
                              ((struct lookup_subtable *) possub[cols * i + 0].u.
                               md_ival)->subtable_name);
@@ -1098,8 +1100,9 @@ CI_ProcessPosSubs (CharInfo * ci)
                          possub[cols * j + 1].u.md_str) == 0)
             {
               ff_post_error (_("Duplicate Kern data"),
-                             _
-                             ("There are two kerning entries for the same glyph (%.80s) in the same lookup subtable (%.30s)"),
+                             _("There are two kerning entries for the same "
+                               "glyph (%.80s) in the same lookup subtable "
+                               "(%.30s)"),
                              possub[cols * j + 1].u.md_str,
                              ((struct lookup_subtable *) possub[cols * i + 0].u.
                               md_ival)->subtable_name);
@@ -1126,8 +1129,8 @@ CI_ProcessPosSubs (CharInfo * ci)
               if (!DeviceTableOK (possub[r * cols + c].u.md_str, &low, &high))
                 {
                   ff_post_error (_("Bad Device Table Adjustment"),
-                                 _
-                                 ("A device table adjustment specified for %.80s is invalid"),
+                                 _("A device table adjustment specified for "
+                                   "%.80s is invalid"),
                                  possub[cols * r + 0].u.md_str);
                   return true;
                 }
@@ -1169,8 +1172,9 @@ CI_ProcessPosSubs (CharInfo * ci)
                   buts[2] = NULL;
                   if (gwwv_ask
                       (_("Missing glyph"), (const char **) buts, 0, 1,
-                       _
-                       ("In lookup subtable %.30s you refer to a glyph named %.80s, which is not in the font yet. Was this intentional?"),
+                       _("In lookup subtable %.30s you refer to a glyph "
+                         "named %.80s, which is not in the font yet. "
+                         "Was this intentional?"),
                        ((struct lookup_subtable *) possub[cols * i + 0].u.
                         md_ival)->subtable_name, start) == 1)
                     {
@@ -1186,8 +1190,8 @@ CI_ProcessPosSubs (CharInfo * ci)
                   if (gwwv_ask
                       (_("Substitution generates itself"), (const char **) buts,
                        0, 1,
-                       _
-                       ("In lookup subtable %.30s you replace a glyph with itself. Was this intentional?"),
+                       _("In lookup subtable %.30s you replace a glyph with "
+                         "itself. Was this intentional?"),
                        ((struct lookup_subtable *) possub[cols * i + 0].u.
                         md_ival)->subtable_name) == 1)
                     {
@@ -1426,8 +1430,8 @@ CI_ValidateAltUnis (CharInfo * ci)
       if (uni < 0 || uni >= unicode4_size || vs < -1 || vs >= unicode4_size)
         {
           ff_post_error (_("Unicode out of range"),
-                         _
-                         ("Bad unicode value for an alternate unicode / variation selector"));
+                         _("Bad unicode value for an alternate unicode / "
+                           "variation selector"));
           return false;
         }
       if ((vs >= 0x180B && vs <= 0x180D) ||     /* Mongolian VS */
@@ -2847,8 +2851,8 @@ DevTabDlg_OK (GGadget *g, GEvent *e)
               || corrections[2 * i + 1].u.md_ival > 127)
             {
               ff_post_error (_("Bad correction"),
-                             _
-                             ("The correction on line %d is too big.  It must be between -128 and 127"),
+                             _("The correction on line %d is too big. "
+                               "It must be between -128 and 127"),
                              i + 1);
               return true;
             }
@@ -5608,9 +5612,17 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   ugcd[12].gd.label = &ulabel[12];
   ugcd[12].gd.cid = CID_UnlinkRmOverlap;
   ugcd[12].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("A few glyphs, like Aring, Ccedilla, Eogonek\nare composed of two overlapping references.\nOften it is desirable to retain the references\n(so that changes made to the base glyph are\nreflected in the composed glyph), but that\nmeans you are stuck with overlapping contours.\nThis flag means that just before generating the\nfont, fontforge will unlink the references,\nand run remove overlap on them, then just\nafter generating it will undo the operation\nthereby retaining the references.");
+    (uint32_t *) _("A few glyphs, like Aring, Ccedilla, Eogonek\n"
+                   "are composed of two overlapping references.\n"
+                   "Often it is desirable to retain the references\n"
+                   "(so that changes made to the base glyph are\n"
+                   "reflected in the composed glyph), but that\n"
+                   "means you are stuck with overlapping contours.\n"
+                   "This flag means that just before generating the\n"
+                   "font, fontforge will unlink the references,\n"
+                   "and run remove overlap on them, then just\n"
+                   "after generating it will undo the operation\n"
+                   "thereby retaining the references.");
   ugcd[12].creator = GCheckBoxCreate;
   uhvarray[21] = &ugcd[12];
   uhvarray[22] = GCD_ColSpan;
@@ -5706,9 +5718,10 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
         lookup_hideunused ? (gg_enabled | gg_visible | gg_cb_on | gg_utf8_popup)
         : (gg_enabled | gg_visible | gg_utf8_popup);
       psgcd[i - 1][1].gd.popup_msg =
-        (uint32_t *)
-        _
-        ("Don't display columns of 0s.\nThe OpenType lookup allows for up to 8 kinds\nof data, but almost all kerning lookups will use just one.\nOmitting the others makes the behavior clearer.");
+        (uint32_t *) _("Don't display columns of 0s.\n"
+                       "The OpenType lookup allows for up to 8 kinds of data,\n"
+                       "but almost all kerning lookups will use just one.\n"
+                       "Omitting the others makes the behavior clearer.");
       psgcd[i - 1][1].gd.handle_controlevent =
         i == pst_position ? CI_HideUnusedSingle : CI_HideUnusedPair;
       psgcd[i - 1][1].creator = GCheckBoxCreate;
@@ -5824,9 +5837,9 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   tgcd[0].gd.pos.y = 5 + 4;
   tgcd[0].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
   tgcd[0].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("The height and depth fields are the metrics fields used\nby TeX, they are corrected for optical distortion.\nSo 'x' and 'o' probably have the same height.");
+    (uint32_t *) _("The height and depth fields are the metrics fields used\n"
+                   "by TeX, they are corrected for optical distortion.\n"
+                   "So 'x' and 'o' probably have the same height.");
   tgcd[0].creator = GLabelCreate;
   thvarray[0] = &tgcd[0];
 
@@ -5891,8 +5904,10 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   tgcd[6].creator = GLabelCreate;
   tgcd[6].gd.popup_msg =
     (uint32_t *)
-    _
-    ("The Italic correction field is used by both TeX and the MS 'MATH'\ntable. It is used when joining slanted text (italic) to upright.\nIt is the amount of extra white space needed so the slanted text\nwill not run into the upright text.");
+    _("The Italic correction field is used by both TeX and the MS 'MATH'\n"
+      "table. It is used when joining slanted text (italic) to upright.\n"
+      "It is the amount of extra white space needed so the slanted text\n"
+      "will not run into the upright text.");
   thvarray[10] = &tgcd[6];
 
   tgcd[7].gd.pos.x = 85;
@@ -5919,8 +5934,9 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   tgcd[9].creator = GTextFieldCreate;
   tgcd[9].gd.popup_msg =
     (uint32_t *)
-    _
-    ("A device table for italic correction.\nExpects a comma separated list of <pixelsize>\":\"<adjustment>\nAs \"9:-1,12:1,13:1\"");
+    _("A device table for italic correction.\n"
+      "Expects a comma separated list of <pixelsize>\":\"<adjustment>\n"
+      "As \"9:-1,12:1,13:1\"");
   thvarray[13] = &tgcd[9];
   thvarray[14] = NULL;
 
@@ -5934,8 +5950,9 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   tgcd[10].creator = GLabelCreate;
   tgcd[10].gd.popup_msg =
     (uint32_t *)
-    _
-    ("In the MS 'MATH' table this value specifies where (horizontally)\nan accent should be placed above the glyph. Vertical placement\nis handled by other means");
+    _("In the MS 'MATH' table this value specifies where (horizontally)\n"
+      "an accent should be placed above the glyph. Vertical placement\n"
+       "is handled by other means");
   thvarray[15] = &tgcd[10];
 
   tgcd[11].gd.pos.x = 85;
@@ -5962,8 +5979,9 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   tgcd[13].creator = GTextFieldCreate;
   tgcd[13].gd.popup_msg =
     (uint32_t *)
-    _
-    ("A device table for horizontal accent positioning.\nExpects a comma separated list of <pixelsize>\":\"<adjustment>\nAs \"9:-1,12:1,13:1\"");
+    _("A device table for horizontal accent positioning.\n"
+      "Expects a comma separated list of <pixelsize>\":\"<adjustment>\n"
+      "As \"9:-1,12:1,13:1\"");
   thvarray[18] = &tgcd[13];
   thvarray[19] = NULL;
 
@@ -5977,8 +5995,9 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   tgcd[14].creator = GCheckBoxCreate;
   tgcd[14].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Is this an extended shape (like a tall parenthesis)?\nExtended shapes need special attention for vertical\nsuperscript placement.");
+    _("Is this an extended shape (like a tall parenthesis)?\n"
+      "Extended shapes need special attention for vertical\n"
+      "superscript placement.");
   thvarray[20] = &tgcd[14];
   thvarray[21] = thvarray[22] = GCD_ColSpan;
   thvarray[23] = GCD_Glue;
@@ -5992,8 +6011,9 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   tgcd[15].creator = GButtonCreate;
   tgcd[15].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Brings up a dialog which gives fine control over\nhorizontal positioning of subscripts and superscripts\ndepending on their vertical positioning.");
+    _("Brings up a dialog which gives fine control over\n"
+      "horizontal positioning of subscripts and superscripts\n"
+      "depending on their vertical positioning.");
   tbarray[0] = GCD_Glue;
   tbarray[1] = &tgcd[15];
   tbarray[2] = GCD_Glue;
@@ -6027,8 +6047,14 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   lcgcd[0].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
   lcgcd[0].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place).");
+    _("Ligature caret locations are used by a text editor\n"
+      "when it needs to draw a text edit caret inside a\n"
+      "ligature. This means there should be a caret between\n"
+      "each ligature component so if there are n components\n"
+      "there should be n-1 caret locations.\n"
+      "You may adjust the caret locations themselves in the\n"
+      "outline glyph view (drag them from to origin to the\n"
+      "appropriate place).");
   lcgcd[0].gd.handle_controlevent = CI_DefLCChange;
   lcgcd[0].creator = GCheckBoxCreate;
   lchvarray[0][0] = &lcgcd[0];
@@ -6043,8 +6069,14 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   lcgcd[1].gd.cid = CID_LCCountLab;
   lcgcd[1].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place).");
+    _("Ligature caret locations are used by a text editor\n"
+      "when it needs to draw a text edit caret inside a\n"
+      "ligature. This means there should be a caret between\n"
+      "each ligature component so if there are n components\n"
+      "there should be n-1 caret locations.\n"
+      "You may adjust the caret locations themselves in the\n"
+      "outline glyph view (drag them from to origin to the\n"
+      "appropriate place).");
   lcgcd[1].creator = GLabelCreate;
   lchvarray[1][0] = &lcgcd[1];
 
@@ -6053,8 +6085,14 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   lcgcd[2].gd.cid = CID_LCCount;
   lcgcd[2].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place).");
+    _("Ligature caret locations are used by a text editor\n"
+      "when it needs to draw a text edit caret inside a\n"
+      "ligature. This means there should be a caret between\n"
+      "each ligature component so if there are n components\n"
+      "there should be n-1 caret locations.\n"
+      "You may adjust the caret locations themselves in the\n"
+      "outline glyph view (drag them from to origin to the\n"
+      "appropriate place).");
   lcgcd[2].creator = GNumericFieldCreate;
   lchvarray[1][1] = &lcgcd[2];
   lchvarray[1][2] = GCD_Glue;
@@ -6082,8 +6120,8 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
       vargcd[i][0].creator = GLabelCreate;
       vargcd[i][0].gd.popup_msg =
         (uint32_t *)
-        _
-        ("A list of the names of pre defined glyphs which represent\nbigger versions of the current glyph.");
+        _("A list of the names of pre defined glyphs which represent\n"
+          "bigger versions of the current glyph.");
       varhvarray[i][0][0] = &vargcd[i][0];
 
       vargcd[i][1].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
@@ -6101,8 +6139,14 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
       vargcd[i][2].creator = GLabelCreate;
       vargcd[i][2].gd.popup_msg =
         (uint32_t *)
-        _
-        ("A really big version of this glyph may be made up of the\nfollowing component glyphs. They will be stacked either\nhorizontally or vertically. Glyphs marked as Extenders may\nbe removed or repeated (to make shorter or longer versions).\nThe StartLength is the length of the flat section at the\nstart of the glyph which may be overlapped with the previous\nglyph, while the EndLength is the similar region at the end\nof the glyph. The FullLength is the full length of the glyph.");
+        _("A really big version of this glyph may be made up of the\n"
+          "following component glyphs. They will be stacked either\n"
+          "horizontally or vertically. Glyphs marked as Extenders may\n"
+          "be removed or repeated (to make shorter or longer versions).\n"
+          "The StartLength is the length of the flat section at the\n"
+          "start of the glyph which may be overlapped with the previous\n"
+          "glyph, while the EndLength is the similar region at the end\n"
+          "of the glyph. The FullLength is the full length of the glyph.");
       varhvarray[i][1][0] = &vargcd[i][2];
       varhvarray[i][1][1] = varhvarray[i][1][2] = GCD_ColSpan;
       varhvarray[i][1][3] = NULL;
@@ -6115,8 +6159,8 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
       vargcd[i][3].creator = GLabelCreate;
       vargcd[i][3].gd.popup_msg =
         (uint32_t *)
-        _
-        ("The italic correction of the composed glyph. Should be independent of glyph size");
+        _("The italic correction of the composed glyph. "
+          "Should be independent of glyph size");
       varhvarray[i][2][0] = &vargcd[i][3];
 
       vargcd[i][4].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
@@ -6707,9 +6751,8 @@ FVSelectByPST (FontView *fv)
   gcd[i].gd.pos.y = gcd[i - 1].gd.pos.y + 15;
   gcd[i].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
   gcd[i].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("Expand the selection of the font view to include\nall the glyphs found by this search");
+    (uint32_t *) _("Expand the selection of the font view to include\n"
+                   "all the glyphs found by this search");
   gcd[i].gd.cid = CID_MergeResults;
   gcd[i++].creator = GRadioCreate;
   varray[j++] = &gcd[i - 1];
@@ -6722,9 +6765,8 @@ FVSelectByPST (FontView *fv)
   gcd[i].gd.pos.y = gcd[i - 1].gd.pos.y + 15;
   gcd[i].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
   gcd[i].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("Only search the selected glyphs, and unselect\nany characters which do not match this search");
+    (uint32_t *) _("Only search the selected glyphs, and unselect\n"
+                   "any characters which do not match this search");
   gcd[i].gd.cid = CID_RestrictSelection;
   gcd[i++].creator = GRadioCreate;
   varray[j++] = &gcd[i - 1];

@@ -1379,9 +1379,9 @@ AI_TestOrdering (GIData * ci, real x)
                ((isr2l && aps->me.x > x) || (!isr2l && aps->me.x < x))))
             {
               ff_post_error (_("Out Of Order"),
-                             _
-                             ("Marks within a ligature should be ordered with the direction of writing.\n"
-                              "This one and %d are out of order."),
+                             _("Marks within a ligature should be ordered "
+                               "with the direction of writing.\n"
+                               "This one and %d are out of order."),
                              aps->lig_index);
               return;
             }
@@ -1425,8 +1425,8 @@ AI_LigIndexChanged (GGadget *g, GEvent *e)
         {
           char buf[20];
           ff_post_error (_("Too Big"),
-                         _
-                         ("This index is much larger than the closest neighbor"));
+                         _("This index is much larger than "
+                           "the closest neighbor"));
           sprintf (buf, "%d", max + 1);
           GGadgetSetTitle8 (g, buf);
           index = max + 1;
@@ -1518,8 +1518,8 @@ AI_ANameChanged (GGadget *g, GEvent *e)
         {
           AI_SelectList (ci, ci->ap);
           ff_post_error (_("Class already used"),
-                         _
-                         ("This anchor class already is associated with a point in this character"));
+                         _("This anchor class already is associated with "
+                           "a point in this character"));
         }
       else
         {
@@ -3236,8 +3236,8 @@ PI_HintSel (GGadget *g, GEvent *e)
             }
           if (h2 != NULL)
             ff_post_error (_("Overlapped Hints"),
-                           _
-                           ("The hint you have just selected overlaps with <%.2f,%.2f>. You should deselect one of the two."),
+                           _("The hint you have just selected overlaps "
+                             "with <%.2f,%.2f>. You should deselect one of the two."),
                            h2->start, h2->width);
         }
     }
