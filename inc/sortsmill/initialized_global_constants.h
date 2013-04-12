@@ -82,4 +82,8 @@
 
 #endif /* _FF_C99_OR_GREATER */
 
+/* An INITIALIZER function for Guile data specified as Scheme source
+   code in a C string. */
+void scm_c_initialize_from_eval_string (SCM *proc, const char *s);
+
 #endif /* _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H */

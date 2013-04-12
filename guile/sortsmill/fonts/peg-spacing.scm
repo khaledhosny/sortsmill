@@ -17,20 +17,25 @@
 
 (library (sortsmill fonts peg-spacing)
 
-  (export )
+  (export
+   ;; (spacing-peg-name? anchor-name) → boolean
+   spacing-peg-name?
 
-  (import (rnrs)
-          (except (guile) error)
-          (ice-9 match))
+   ;; (spacing-peg-side anchor-name) → 'left, 'right, or #f
+   spacing-peg-side
 
-  (define (split-peg-name name)
-    (assert (string? name))
-    (let ([legal-part1? (lambda (s) (or (string=? s "l") (string=? s "r")))]
-          [legal-part3? (lambda (s) (or (string=? s "k") (string=? s "s")))]
-          [parts (string-split name #\;)])
-      (match parts
-        [((? legal-part1? part1) part2) parts]
-        [((? legal-part1? part1) part2 (? legal-part3? part3)) parts]
-        [_ #f])))
+   ;; (spacing-peg-modifier anchor-name) → 'kerning-only, 'special, or #f
+   spacing-peg-modifier
+
+   ;; (spacing-peg-identifier anchor-name) → string or #f
+   spacing-peg-identifier
+   )
+
+  (import (sortsmill dynlink)
+          (rnrs)
+          (except (guile) error))
+
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_guile_fonts_peg_spacing"))
 
   ) ;; end of library.

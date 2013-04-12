@@ -110,6 +110,10 @@ dist_libsortsmill_aux_la_SOURCES += math_brentroot.c
 dist_libsortsmill_aux_la_SOURCES += math_mpq_brentroot.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_brentroot.c
 
+# Initialized global constants implemented as small functions, using
+# atomic_ops.
+dist_libsortsmill_aux_la_SOURCES += initialized_global_constants.c
+
 # Guile-Pure interface
 if HAVE_PURE_API
 dist_libsortsmill_aux_la_SOURCES += guile_pure.c

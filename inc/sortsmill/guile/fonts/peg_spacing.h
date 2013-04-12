@@ -15,12 +15,31 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_FONTS_H
-#define _SORTSMILL_GUILE_FONTS_H
+#ifndef _SORTSMILL_GUILE_FONTS_PEG_SPACING_H
+#define _SORTSMILL_GUILE_FONTS_PEG_SPACING_H
 
-#include <sortsmill/guile/fonts/anchors.h>
-#include <sortsmill/guile/fonts/contours.h>
-#include <sortsmill/guile/fonts/peg_spacing.h>
-#include <sortsmill/guile/fonts/views.h>
+#include <libguile.h>
+#include <stdbool.h>
 
-#endif /* _SORTSMILL_GUILE_FONTS_H */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+bool scm_is_spacing_peg_name (SCM name);
+SCM scm_spacing_peg_name_p (SCM name);
+SCM scm_spacing_peg_side (SCM name);
+SCM scm_spacing_peg_modifier (SCM name);
+SCM scm_spacing_peg_identifier (SCM name);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_FONTS_PEG_SPACING_H */

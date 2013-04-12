@@ -25,16 +25,6 @@
 
 //-------------------------------------------------------------------------
 
-// FIXME: This seems quite reusable, though perhaps it could have a
-// better name.
-static void
-scm_c_initialize_from_eval_string (SCM *proc, const char *s)
-{
-  *proc = scm_call_3 (scm_c_public_ref ("ice-9 eval-string", "eval-string"),
-                      scm_from_utf8_string (s),
-                      scm_from_latin1_keyword ("compile?"), SCM_BOOL_T);
-}
-
 // FIXME: This looks reusable if given a better name.
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _scm_zero,
                       scm_c_initialize_from_eval_string, "0");
