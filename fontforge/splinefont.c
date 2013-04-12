@@ -132,8 +132,7 @@ SCBuildDummy (SplineChar *dummy, SplineFont *sf, EncMap *map, int i)
   else
     dummy->name = (char *) StdGlyphName (namebuf,
                                          dummy->unicodeenc,
-                                         sf->uni_interp,
-                                         sf->for_new_glyphs);
+                                         sf->uni_interp, sf->for_new_glyphs);
   if (dummy->name == NULL)
     {
       /*if ( dummy->unicodeenc!=-1 || i<256 )
@@ -1090,7 +1089,7 @@ ForceFileToHaveName (FILE *file, char *exten)
             fwrite (buffer, 1, len, newfile);
           fclose (newfile);
         }
-      return xstrdup_or_null (tmpfilename);   /* The filename does not exist */
+      return xstrdup_or_null (tmpfilename);     /* The filename does not exist */
     }
 }
 
@@ -1561,9 +1560,7 @@ _ReadSplineFont (FILE *file, char *filename, enum openflags openflags)
            _("This font is marked with an FSType of 2 (Restricted\n"
              "License). That means it is not editable without the\n"
              "permission of the legal owner.\n"
-             "\n"
-             "Do you have such permission?"))
-          == 1)
+             "\n" "Do you have such permission?")) == 1)
         {
           SplineFontFree (sf);
           return NULL;
@@ -1585,7 +1582,8 @@ LoadSplineFont (char *filename, enum openflags openflags)
   char *pt, *ept, *tobefreed1 = NULL, *tobefreed2 = NULL;
   static char *extens[] =
     { ".sfd", ".pfa", ".pfb", ".ttf", ".otf", ".ps", ".cid", ".bin", ".dfont",
-".PFA", ".PFB", ".TTF", ".OTF", ".PS", ".CID", ".BIN", ".DFONT", NULL };
+    ".PFA", ".PFB", ".TTF", ".OTF", ".PS", ".CID", ".BIN", ".DFONT", NULL
+  };
   int i;
 
   if (filename == NULL)
@@ -1672,7 +1670,7 @@ const char *knownweights[] = { "Demi", "Bold", "Regu", "Medi", "Book", "Thin",
 const char *realweights[] =
   { "Demi", "Bold", "Regular", "Medium", "Book", "Thin",
   "Light", "Heavy", "Black", "Ultra", "Nord", "Normal", "Gras", "Standard",
-    "Halbfett",
+  "Halbfett",
   "Fett", "Mager", "Mittel", "Buchschrift", NULL
 };
 static const char *moreweights[] = { "ExtraLight", "VeryLight", NULL };
@@ -1947,9 +1945,9 @@ SFIsDuplicatable (SplineFont *sf, SplineChar *sc)
   const int *pua = NULL;
 
   if (sf->uni_interp == ui_trad_chinese)
-	  pua = cns14pua;
+    pua = cns14pua;
   else if (sf->uni_interp == ui_ams)
-	  pua = amspua;
+    pua = amspua;
 
   if (pua != NULL && sc->unicodeenc >= 0xe000 && sc->unicodeenc <= 0xf8ff)
     baseuni = pua[sc->unicodeenc - 0xe000];
@@ -2250,7 +2248,7 @@ SFStandardHeight (SplineFont *sf, int layer, int do_max, uint32_t *list)
       result = test / tot;
     }
   else if (ccnt == 0)
-    return do_max ? -1e23 : 1e23;     /* We didn't find any glyphs */
+    return do_max ? -1e23 : 1e23;       /* We didn't find any glyphs */
   else
     {
       /* Italic fonts will often have no flat surfaces for x-height just wavies */
@@ -2306,17 +2304,17 @@ SFStandardHeight (SplineFont *sf, int layer, int do_max, uint32_t *list)
 static uint32_t capheight_str[] = { 'A', RANGE, 'Z',
   0x391, RANGE, 0x3a9,
   0x402, 0x404, 0x405, 0x406, 0x408, RANGE, 0x40b, 0x40f, RANGE, 0x418, 0x41a,
-    0x42f,
+  0x42f,
   0
 };
 
 static uint32_t xheight_str[] =
   { 'a', 'c', 'e', 'g', 'm', 'n', 'o', 'p', 'q', 'r', 's', 'u', 'v', 'w', 'x',
-'y', 'z', 0x131,
+  'y', 'z', 0x131,
   0x3b3, 0x3b9, 0x3ba, 0x3bc, 0x3bd, 0x3c0, 0x3c3, 0x3c4, 0x3c5, 0x3c7, 0x3c8,
-    0x3c9,
+  0x3c9,
   0x432, 0x433, 0x438, 0x43a, RANGE, 0x43f, 0x442, 0x443, 0x445, 0x44c, 0x44f,
-    0x459, 0x45a,
+  0x459, 0x45a,
   0
 };
 
