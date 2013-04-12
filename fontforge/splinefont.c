@@ -879,19 +879,8 @@ ArchiveParseTOC (char *listfile, enum archive_list_style ars, int *doall)
   pt = strrchr (files[0], '/');
   if (pt != NULL)
     {
-      if ((pt - files[0] > 4
-           && (strncasecmp (pt - 4, ".ufo", 4) == 0
-               || strncasecmp (pt - 4, "_ufo", 4) == 0)) || (pt - files[0] > 6
-                                                             &&
-                                                             (strncasecmp
-                                                              (pt - 6, ".sfdir",
-                                                               6) == 0
-                                                              || strncasecmp (pt
-                                                                              -
-                                                                              6,
-                                                                              "_sfdir",
-                                                                              6)
-                                                              == 0)))
+      if ((pt - files[0] > 4 && strncasecmp (pt - 4, ".ufo", 4) == 0)
+          || (pt - files[0] > 6 && strncasecmp (pt - 6, ".sfdir", 6) == 0))
         {
           /* Ok, looks like a potential directory font. Now is EVERYTHING */
           /*  in the archive inside this guy? */
@@ -1953,11 +1942,14 @@ int
 SFIsDuplicatable (SplineFont *sf, SplineChar *sc)
 {
   extern const int cns14pua[], amspua[];
-  const int *pua =
-    sf->uni_interp == ui_trad_chinese ? cns14pua : sf->uni_interp ==
-    ui_ams ? amspua : NULL;
   int baseuni = 0;
   const uint32_t *pt;
+  const int *pua = NULL;
+
+  if (sf->uni_interp == ui_trad_chinese)
+	  pua = cns14pua;
+  else if (sf->uni_interp == ui_ams)
+	  pua = amspua;
 
   if (pua != NULL && sc->unicodeenc >= 0xe000 && sc->unicodeenc <= 0xf8ff)
     baseuni = pua[sc->unicodeenc - 0xe000];

@@ -18517,15 +18517,9 @@ PyFFFont_Save (PyFF_Font *self, PyObject *args)
         return (NULL);
       locfilename = utf82def_copy (filename);
       free (filename);
-#ifdef VMS
-      pt = strrchr (locfilename, '_');
-      if (pt != NULL && strcasecmp (pt, "_sfdir") == 0)
-        s2d = true;
-#else
       pt = strrchr (locfilename, '.');
       if (pt != NULL && strcasecmp (pt, ".sfdir") == 0)
         s2d = true;
-#endif
       if (!SFDWrite (locfilename, fv->sf, fv->map, fv->normal, s2d))
         {
           PyErr_Format (PyExc_EnvironmentError, "Save As \"%s\" failed",
