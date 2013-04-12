@@ -947,14 +947,6 @@ WriteUFOFont (char *basedir, SplineFont *sf, enum fontformat ff, int flags,
             if (isupper (*start++))
               *gstart++ = '_';
           }
-#ifdef __VMS
-        *gstart = '\0';
-        for (gstart = gfname; *gstart; ++gstart)
-          {
-            if (*gstart == '.')
-              *gstart = '@';    /* VMS only allows one "." in a filename */
-          }
-#endif
         strcpy (gstart, ".glif");
         PListOutputString (plist, sc->name, gfname);
         err |= !GlifDump (glyphdir, gfname, sc, layer);
@@ -1296,8 +1288,6 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
       name = xstrdup_or_null (pt + 1);
       for (pt = cpt = name; *cpt != '\0'; ++cpt)
         {
-          if (*cpt == '@')      /* VMS doesn't let me have two "." in a filename so I use @ instead when a "." is called for */
-            *cpt = '.';
           if (*cpt != '_')
             *pt++ = *cpt;
           else if (islower (*name))
