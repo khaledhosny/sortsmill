@@ -19,35 +19,8 @@
 #include <splinefont.h>
 #include <intl.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/initialized_global_constants.h>
 
 //-------------------------------------------------------------------------
-
-#define _MY_SCM_SYMBOL(C_NAME, SCM_NAME)                        \
-  INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, C_NAME, \
-                        scm_c_initialize_from_eval_string,      \
-                        "(quote " SCM_NAME ")");
-
-_MY_SCM_SYMBOL (scm_symbol_gsub_single, "gsub-single");
-_MY_SCM_SYMBOL (scm_symbol_gsub_multiple, "gsub-multiple");
-_MY_SCM_SYMBOL (scm_symbol_gsub_alternate, "gsub-alternate");
-_MY_SCM_SYMBOL (scm_symbol_gsub_ligature, "gsub-ligature");
-_MY_SCM_SYMBOL (scm_symbol_gsub_context, "gsub-context");
-_MY_SCM_SYMBOL (scm_symbol_gsub_chaining_contextual,
-                "gsub-chaining-contextual");
-_MY_SCM_SYMBOL (scm_symbol_gsub_extension, "gsub-extension");
-_MY_SCM_SYMBOL (scm_symbol_gsub_reverse_chaining_contextual,
-                "gsub-reverse-chaining-contextual");
-_MY_SCM_SYMBOL (scm_symbol_gpos_single, "gpos-single");
-_MY_SCM_SYMBOL (scm_symbol_gpos_pair, "gpos-pair");
-_MY_SCM_SYMBOL (scm_symbol_gpos_cursive, "gpos-cursive");
-_MY_SCM_SYMBOL (scm_symbol_gpos_mark_to_base, "gpos-mark-to-base");
-_MY_SCM_SYMBOL (scm_symbol_gpos_mark_to_ligature, "gpos-mark-to-ligature");
-_MY_SCM_SYMBOL (scm_symbol_gpos_mark_to_mark, "gpos-mark-to-mark");
-_MY_SCM_SYMBOL (scm_symbol_gpos_context, "gpos-context");
-_MY_SCM_SYMBOL (scm_symbol_gpos_chaining_contextual,
-                "gpos-chaining-contextual");
-_MY_SCM_SYMBOL (scm_symbol_gpos_extension, "gpos-extension");
 
 static SCM
 scm_OTLookupType_to_type_symbol (SCM type, SCM who)
@@ -58,56 +31,56 @@ scm_OTLookupType_to_type_symbol (SCM type, SCM who)
   switch (_type)
     {
     case gsub_single:
-      symb = scm_symbol_gsub_single ();
+      symb = scm_symbol__gsub_single ();
       break;
     case gsub_multiple:
-      symb = scm_symbol_gsub_multiple ();
+      symb = scm_symbol__gsub_multiple ();
       break;
     case gsub_alternate:
-      symb = scm_symbol_gsub_alternate ();
+      symb = scm_symbol__gsub_alternate ();
       break;
     case gsub_ligature:
-      symb = scm_symbol_gsub_ligature ();
+      symb = scm_symbol__gsub_ligature ();
       break;
     case gsub_context:
-      symb = scm_symbol_gsub_context ();
+      symb = scm_symbol__gsub_context ();
       break;
     case gsub_contextchain:
-      symb = scm_symbol_gsub_chaining_contextual ();
+      symb = scm_symbol__gsub_chaining_contextual ();
       break;
     case gsub_extension:
-      symb = scm_symbol_gsub_extension ();
+      symb = scm_symbol__gsub_extension ();
       break;
     case gsub_reversecchain:
-      symb = scm_symbol_gsub_reverse_chaining_contextual ();
+      symb = scm_symbol__gsub_reverse_chaining_contextual ();
       break;
 
     case gpos_single:
-      symb = scm_symbol_gpos_single ();
+      symb = scm_symbol__gpos_single ();
       break;
     case gpos_pair:
-      symb = scm_symbol_gpos_pair ();
+      symb = scm_symbol__gpos_pair ();
       break;
     case gpos_cursive:
-      symb = scm_symbol_gpos_cursive ();
+      symb = scm_symbol__gpos_cursive ();
       break;
     case gpos_mark2base:
-      symb = scm_symbol_gpos_mark_to_base ();
+      symb = scm_symbol__gpos_mark_to_base ();
       break;
     case gpos_mark2ligature:
-      symb = scm_symbol_gpos_mark_to_ligature ();
+      symb = scm_symbol__gpos_mark_to_ligature ();
       break;
     case gpos_mark2mark:
-      symb = scm_symbol_gpos_mark_to_mark ();
+      symb = scm_symbol__gpos_mark_to_mark ();
       break;
     case gpos_context:
-      symb = scm_symbol_gpos_context ();
+      symb = scm_symbol__gpos_context ();
       break;
     case gpos_contextchain:
-      symb = scm_symbol_gpos_chaining_contextual ();
+      symb = scm_symbol__gpos_chaining_contextual ();
       break;
     case gpos_extension:
-      symb = scm_symbol_gpos_extension ();
+      symb = scm_symbol__gpos_extension ();
       break;
 
     default:
@@ -132,42 +105,39 @@ static SCM
 scm_type_symbol_to_OTLookupType (SCM symb, SCM who)
 {
   int type = INT_MIN;
-  if (scm_is_true (scm_eq_p (symb, scm_symbol_gsub_single ())))
+  if (scm_is_eq (symb, scm_symbol__gsub_single ()))
     type = gsub_single;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gsub_multiple ())))
+  else if (scm_is_eq (symb, scm_symbol__gsub_multiple ()))
     type = gsub_multiple;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gsub_alternate ())))
+  else if (scm_is_eq (symb, scm_symbol__gsub_alternate ()))
     type = gsub_alternate;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gsub_ligature ())))
+  else if (scm_is_eq (symb, scm_symbol__gsub_ligature ()))
     type = gsub_ligature;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gsub_context ())))
+  else if (scm_is_eq (symb, scm_symbol__gsub_context ()))
     type = gsub_context;
-  else if (scm_is_true
-           (scm_eq_p (symb, scm_symbol_gsub_chaining_contextual ())))
+  else if (scm_is_eq (symb, scm_symbol__gsub_chaining_contextual ()))
     type = gsub_contextchain;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gsub_extension ())))
+  else if (scm_is_eq (symb, scm_symbol__gsub_extension ()))
     type = gsub_extension;
-  else if (scm_is_true
-           (scm_eq_p (symb, scm_symbol_gsub_reverse_chaining_contextual ())))
+  else if (scm_is_eq (symb, scm_symbol__gsub_reverse_chaining_contextual ()))
     type = gsub_reversecchain;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_single ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_single ()))
     type = gpos_single;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_pair ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_pair ()))
     type = gpos_pair;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_cursive ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_cursive ()))
     type = gpos_cursive;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_mark_to_base ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_mark_to_base ()))
     type = gpos_mark2base;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_mark_to_ligature ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_mark_to_ligature ()))
     type = gpos_mark2ligature;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_mark_to_mark ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_mark_to_mark ()))
     type = gpos_mark2mark;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_context ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_context ()))
     type = gpos_context;
-  else if (scm_is_true
-           (scm_eq_p (symb, scm_symbol_gpos_chaining_contextual ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_chaining_contextual ()))
     type = gpos_contextchain;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_gpos_extension ())))
+  else if (scm_is_eq (symb, scm_symbol__gpos_extension ()))
     type = gpos_extension;
   else
     {

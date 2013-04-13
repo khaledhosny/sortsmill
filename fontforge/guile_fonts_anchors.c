@@ -16,8 +16,11 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
+#include <sortsmill/xgc.h>
 
 static const char my_module[] = "sortsmill fonts anchors";
+
+//-------------------------------------------------------------------------
 
 VISIBLE C_WRAP_SCM_CALL_1 (scm_view_anchor_classes, my_module,
                            "view-anchor-classes");
@@ -48,16 +51,58 @@ VISIBLE C_WRAP_SCM_CALL_2 (scm_anchor_point_with_selected_p, my_module,
 VISIBLE C_WRAP_SCM_CALL_2 (scm_anchor_point_with_ligature_index, my_module,
                            "anchor-point-with-ligature-index");
 
-// Procedures for internal use.
+//-------------------------------------------------------------------------
+//
+// Guile procedures for internal use.
+
 VISIBLE C_WRAP_SCM_CALL_1 (scm_from_AnchorClasses, my_module,
                            "AnchorClasses->scm");
 VISIBLE C_WRAP_SCM_CALL_1 (scm_from_AnchorPoints, my_module,
                            "AnchorPoints->scm");
-VISIBLE C_WRAP_SCM_CALL_2 (scm_to_AnchorPoint, my_module,
-                           "scm->AnchorPoint");
-VISIBLE C_WRAP_SCM_CALL_2 (scm_to_AnchorPoints, my_module,
-                           "scm->AnchorPoints");
+VISIBLE C_WRAP_SCM_CALL_2 (scm_to_AnchorPoint, my_module, "scm->AnchorPoint");
+VISIBLE C_WRAP_SCM_CALL_2 (scm_to_AnchorPoints, my_module, "scm->AnchorPoints");
 VISIBLE C_WRAP_SCM_CALL_2 (scm_sort_anchor_points, my_module,
                            "sort-anchor-points");
 VISIBLE C_WRAP_SCM_CALL_2 (scm_sort_AnchorPoints, my_module,
                            "sort-AnchorPoints");
+
+//-------------------------------------------------------------------------
+//
+// Some C functions convenient for work with anchor points.
+
+VISIBLE SCM
+scm_anchor_point_name_2 (SCM anchor_point)
+{
+  const char *who = "scm_c_anchor_point_name";
+
+  SCM p = anchor_point;
+  scm_c_assert_list_does_not_end_here (who, anchor_point, p);
+  scm_c_assert_can_be_alist_link (who, anchor_point, p);
+  while (!scm_is_eq (SCM_CAAR (p), scm_symbol__name ()))
+    {
+      p = SCM_CDR (p);
+      scm_c_assert_list_does_not_end_here (who, anchor_point, p);
+      scm_c_assert_can_be_alist_link (who, anchor_point, p);
+    }
+  return SCM_CDAR (p);
+}
+
+VISIBLE void
+scm_c_anchor_point_coords (SCM anchor_point, double *x, double *y)
+{
+  const char *who = "scm_c_anchor_point_coords";
+
+  SCM p = anchor_point;
+  scm_c_assert_list_does_not_end_here (who, anchor_point, p);
+  scm_c_assert_can_be_alist_link (who, anchor_point, p);
+  while (!scm_is_eq (SCM_CAAR (p), scm_symbol__coords ()))
+    {
+      p = SCM_CDR (p);
+      scm_c_assert_list_does_not_end_here (who, anchor_point, p);
+      scm_c_assert_can_be_alist_link (who, anchor_point, p);
+    }
+  *x = scm_to_double (SCM_CADAR (p));
+  *y = scm_to_double (SCM_CADDAR (p));
+}
+
+//-------------------------------------------------------------------------

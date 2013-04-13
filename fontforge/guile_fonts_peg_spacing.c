@@ -46,16 +46,6 @@ INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, rexp_t,
                       peg_name_re, initialize_u8_re, &peg_name_re_buf,
                       peg_name_re_string);
 
-#define _MY_SCM_SYMBOL(C_NAME, SCM_NAME)                        \
-  INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, C_NAME, \
-                        scm_c_initialize_from_eval_string,      \
-                        "(quote " SCM_NAME ")");
-
-_MY_SCM_SYMBOL (scm_symbol_left, "left");
-_MY_SCM_SYMBOL (scm_symbol_right, "right");
-_MY_SCM_SYMBOL (scm_symbol_kerning_only, "kerning-only");
-_MY_SCM_SYMBOL (scm_symbol_special, "special");
-
 static rexp_match_t
 peg_name_match (uint8_t *name)
 {
@@ -89,10 +79,10 @@ scm_spacing_peg_side (SCM name)
       switch (s[interv.i_start])
         {
         case 'l':
-          result = scm_symbol_left ();
+          result = scm_symbol__left ();
           break;
         case 'r':
-          result = scm_symbol_right ();
+          result = scm_symbol__right ();
           break;
         default:
           assert (false);
@@ -116,10 +106,10 @@ scm_spacing_peg_modifier (SCM name)
         switch (s[interv.i_start])
           {
           case 'k':
-            result = scm_symbol_kerning_only ();
+            result = scm_symbol__kerning_only ();
             break;
           case 's':
-            result = scm_symbol_special ();
+            result = scm_symbol__special ();
             break;
           default:
             break;
@@ -145,6 +135,138 @@ scm_spacing_peg_identifier (SCM name)
   return result;
 }
 
+VISIBLE SCM
+scm_spacing_pegs (SCM anchor_points)
+{
+  const char *who = "scm_spacing_pegs";
+
+  SCM pegs = SCM_EOL;
+  SCM p = anchor_points;
+  while (!scm_is_null (p))
+    {
+      scm_c_assert_can_be_list_link (who, anchor_points, p);
+      SCM anchor_name = scm_anchor_point_name_2 (SCM_CAR (p));
+      if (scm_is_spacing_peg_name (anchor_name))
+        pegs = scm_cons (SCM_CAR (p), pegs);
+      p = SCM_CDR (p);
+    }
+  return pegs;
+}
+
+VISIBLE SCM
+scm_left_spacing_pegs (SCM anchor_points)
+{
+  const char *who = "scm_left_spacing_pegs";
+
+  SCM pegs = SCM_EOL;
+  SCM p = anchor_points;
+  while (!scm_is_null (p))
+    {
+      scm_c_assert_can_be_list_link (who, anchor_points, p);
+      SCM anchor_name = scm_anchor_point_name_2 (SCM_CAR (p));
+      if (scm_is_eq (scm_spacing_peg_side (anchor_name), scm_symbol__left ()))
+        pegs = scm_cons (SCM_CAR (p), pegs);
+      p = SCM_CDR (p);
+    }
+  return pegs;
+}
+
+VISIBLE SCM
+scm_right_spacing_pegs (SCM anchor_points)
+{
+  const char *who = "scm_right_spacing_pegs";
+
+  SCM pegs = SCM_EOL;
+  SCM p = anchor_points;
+  while (!scm_is_null (p))
+    {
+      scm_c_assert_can_be_list_link (who, anchor_points, p);
+      SCM anchor_name = scm_anchor_point_name_2 (SCM_CAR (p));
+      if (scm_is_eq (scm_spacing_peg_side (anchor_name), scm_symbol__right ()))
+        pegs = scm_cons (SCM_CAR (p), pegs);
+      p = SCM_CDR (p);
+    }
+  return pegs;
+}
+
+VISIBLE SCM
+scm_ordinary_spacing_pegs (SCM anchor_points)
+{
+  const char *who = "scm_ordinary_spacing_pegs";
+
+  SCM pegs = SCM_EOL;
+  SCM p = anchor_points;
+  while (!scm_is_null (p))
+    {
+      scm_c_assert_can_be_list_link (who, anchor_points, p);
+      SCM anchor_name = scm_anchor_point_name_2 (SCM_CAR (p));
+      if (scm_is_spacing_peg_name (anchor_name)
+          && scm_is_eq (scm_spacing_peg_modifier (anchor_name), SCM_BOOL_F))
+        pegs = scm_cons (SCM_CAR (p), pegs);
+      p = SCM_CDR (p);
+    }
+  return pegs;
+}
+
+VISIBLE SCM
+scm_kerning_only_spacing_pegs (SCM anchor_points)
+{
+  const char *who = "scm_kerning_only_spacing_pegs";
+
+  SCM pegs = SCM_EOL;
+  SCM p = anchor_points;
+  while (!scm_is_null (p))
+    {
+      scm_c_assert_can_be_list_link (who, anchor_points, p);
+      SCM anchor_name = scm_anchor_point_name_2 (SCM_CAR (p));
+      if (scm_is_eq (scm_spacing_peg_modifier (anchor_name),
+                     scm_symbol__kerning_only ()))
+        pegs = scm_cons (SCM_CAR (p), pegs);
+      p = SCM_CDR (p);
+    }
+  return pegs;
+}
+
+VISIBLE SCM
+scm_special_spacing_pegs (SCM anchor_points)
+{
+  const char *who = "scm_special_spacing_pegs";
+
+  SCM pegs = SCM_EOL;
+  SCM p = anchor_points;
+  while (!scm_is_null (p))
+    {
+      scm_c_assert_can_be_list_link (who, anchor_points, p);
+      SCM anchor_name = scm_anchor_point_name_2 (SCM_CAR (p));
+      if (scm_is_eq (scm_spacing_peg_modifier (anchor_name),
+                     scm_symbol__special ()))
+        pegs = scm_cons (SCM_CAR (p), pegs);
+      p = SCM_CDR (p);
+    }
+  return pegs;
+}
+
+
+VISIBLE SCM
+scm_nonspecial_spacing_pegs (SCM anchor_points)
+{
+  const char *who = "scm_nonspecial_spacing_pegs";
+
+  SCM pegs = SCM_EOL;
+  SCM p = anchor_points;
+  while (!scm_is_null (p))
+    {
+      scm_c_assert_can_be_list_link (who, anchor_points, p);
+      SCM anchor_name = scm_anchor_point_name_2 (SCM_CAR (p));
+      if (scm_is_spacing_peg_name (anchor_name)
+          && !scm_is_eq (scm_spacing_peg_modifier (anchor_name),
+                         scm_symbol__special ()))
+        pegs = scm_cons (SCM_CAR (p), pegs);
+      p = SCM_CDR (p);
+    }
+  return pegs;
+}
+
 //-------------------------------------------------------------------------
 
 void init_guile_fonts_peg_spacing (void);
@@ -154,8 +276,22 @@ init_guile_fonts_peg_spacing (void)
 {
   scm_c_define_gsubr ("spacing-peg-name?", 1, 0, 0, scm_spacing_peg_name_p);
   scm_c_define_gsubr ("spacing-peg-side", 1, 0, 0, scm_spacing_peg_side);
-  scm_c_define_gsubr ("spacing-peg-modifier", 1, 0, 0, scm_spacing_peg_modifier);
-  scm_c_define_gsubr ("spacing-peg-identifier", 1, 0, 0, scm_spacing_peg_identifier);
+  scm_c_define_gsubr ("spacing-peg-modifier", 1, 0, 0,
+                      scm_spacing_peg_modifier);
+  scm_c_define_gsubr ("spacing-peg-identifier", 1, 0, 0,
+                      scm_spacing_peg_identifier);
+
+  scm_c_define_gsubr ("spacing-pegs", 1, 0, 0, scm_spacing_pegs);
+  scm_c_define_gsubr ("left-spacing-pegs", 1, 0, 0, scm_left_spacing_pegs);
+  scm_c_define_gsubr ("right-spacing-pegs", 1, 0, 0, scm_right_spacing_pegs);
+  scm_c_define_gsubr ("ordinary-spacing-pegs", 1, 0, 0,
+                      scm_ordinary_spacing_pegs);
+  scm_c_define_gsubr ("kerning-only-spacing-pegs", 1, 0, 0,
+                      scm_kerning_only_spacing_pegs);
+  scm_c_define_gsubr ("special-spacing-pegs", 1, 0, 0,
+                      scm_special_spacing_pegs);
+  scm_c_define_gsubr ("nonspecial-spacing-pegs", 1, 0, 0,
+                      scm_nonspecial_spacing_pegs);
 }
 
 //-------------------------------------------------------------------------

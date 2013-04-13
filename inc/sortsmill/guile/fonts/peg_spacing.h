@@ -35,6 +35,14 @@ SCM scm_spacing_peg_side (SCM name);
 SCM scm_spacing_peg_modifier (SCM name);
 SCM scm_spacing_peg_identifier (SCM name);
 
+SCM scm_spacing_pegs (SCM anchor_points);
+SCM scm_left_spacing_pegs (SCM anchor_points);
+SCM scm_right_spacing_pegs (SCM anchor_points);
+SCM scm_ordinary_spacing_pegs (SCM anchor_points);
+SCM scm_kerning_only_spacing_pegs (SCM anchor_points);
+SCM scm_special_spacing_pegs (SCM anchor_points);
+SCM scm_nonspecial_spacing_pegs (SCM anchor_points);
+
 #if 0
 {
 #endif

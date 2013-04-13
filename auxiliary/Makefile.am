@@ -141,6 +141,8 @@ dist_libsortsmill_aux_la_SOURCES += guile_iconv.c
 dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
 dist_libsortsmill_aux_la_SOURCES += guile_options.c
 dist_libsortsmill_aux_la_SOURCES += guile_format.c
+dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
+dist_libsortsmill_aux_la_SOURCES += guile_types.c
 
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'
 libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la

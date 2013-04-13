@@ -20,21 +20,8 @@
 #include <splinefont.h>
 #include <intl.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/initialized_global_constants.h>
 
 //-------------------------------------------------------------------------
-
-#define _MY_SCM_SYMBOL(C_NAME, SCM_NAME)                        \
-  INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, C_NAME, \
-                        scm_c_initialize_from_eval_string,      \
-                        "(quote " SCM_NAME ")");
-
-_MY_SCM_SYMBOL (scm_symbol_mark, "mark");
-_MY_SCM_SYMBOL (scm_symbol_base, "base");
-_MY_SCM_SYMBOL (scm_symbol_ligature, "ligature");
-_MY_SCM_SYMBOL (scm_symbol_base_mark, "base-mark");
-_MY_SCM_SYMBOL (scm_symbol_entry, "entry");
-_MY_SCM_SYMBOL (scm_symbol_exit, "exit");
 
 static SCM
 scm_AnchorPointType_to_type_symbol (SCM type, SCM who)
@@ -44,22 +31,22 @@ scm_AnchorPointType_to_type_symbol (SCM type, SCM who)
   switch (_type)
     {
     case at_mark:
-      symb = scm_symbol_mark ();
+      symb = scm_symbol__mark ();
       break;
     case at_basechar:
-      symb = scm_symbol_base ();
+      symb = scm_symbol__base ();
       break;
     case at_baselig:
-      symb = scm_symbol_ligature ();
+      symb = scm_symbol__ligature ();
       break;
     case at_basemark:
-      symb = scm_symbol_base_mark ();
+      symb = scm_symbol__base_mark ();
       break;
     case at_centry:
-      symb = scm_symbol_entry ();
+      symb = scm_symbol__entry ();
       break;
     case at_cexit:
-      symb = scm_symbol_exit ();
+      symb = scm_symbol__exit ();
       break;
 
     default:
@@ -84,17 +71,17 @@ static SCM
 scm_type_symbol_to_AnchorPointType (SCM symb, SCM who)
 {
   int type = INT_MIN;
-  if (scm_is_true (scm_eq_p (symb, scm_symbol_mark ())))
+  if (scm_is_eq (symb, scm_symbol__mark ()))
     type = at_mark;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_base ())))
+  else if (scm_is_eq (symb, scm_symbol__base ()))
     type = at_basechar;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_ligature ())))
+  else if (scm_is_eq (symb, scm_symbol__ligature ()))
     type = at_baselig;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_base_mark ())))
+  else if (scm_is_eq (symb, scm_symbol__base_mark ()))
     type = at_basemark;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_entry ())))
+  else if (scm_is_eq (symb, scm_symbol__entry ()))
     type = at_centry;
-  else if (scm_is_true (scm_eq_p (symb, scm_symbol_exit ())))
+  else if (scm_is_eq (symb, scm_symbol__exit ()))
     type = at_cexit;
   else
     {

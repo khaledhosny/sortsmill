@@ -18,6 +18,9 @@
 (library (sortsmill fonts peg-spacing)
 
   (export
+   peg-spacing-tolerance
+   peg-spacing-rounding-function
+
    ;; (spacing-peg-name? anchor-name) → boolean
    spacing-peg-name?
 
@@ -29,13 +32,29 @@
 
    ;; (spacing-peg-identifier anchor-name) → string or #f
    spacing-peg-identifier
+
+   ;; (spacing-pegs anchor-points-list) → anchor-points-list
+   ;; (left-spacing-pegs anchor-points-list) → anchor-points-list
+   ;; (right-spacing-pegs anchor-points-list) → anchor-points-list
+   ;;                   ⋮
+   spacing-pegs
+   left-spacing-pegs
+   right-spacing-pegs
+   ordinary-spacing-pegs
+   kerning-only-spacing-pegs
+   special-spacing-pegs
+   nonspecial-spacing-pegs
    )
 
   (import (sortsmill dynlink)
           (rnrs)
-          (except (guile) error))
+          (except (guile) error)
+          (ice-9 match))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_fonts_peg_spacing"))
+
+  (define peg-spacing-tolerance (make-fluid #f))
+  (define peg-spacing-rounding-function (make-fluid identity))
 
   ) ;; end of library.

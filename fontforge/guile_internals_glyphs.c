@@ -27,14 +27,14 @@ static SCM
 scm_layer_to_integer (SCM layer)
 {
   SCM i;
-  if (scm_is_true (scm_eq_p (layer, SCM_BOOL_F)))
+  if (scm_is_eq (layer, SCM_BOOL_F))
     i = scm_from_int (ly_none);
   else if (scm_is_true (scm_integer_p (layer))
            && scm_is_false (scm_negative_p (layer)))
     i = layer;
-  else if (scm_is_true (scm_eq_p (layer, scm_from_latin1_symbol ("all"))))
+  else if (scm_is_eq (layer, scm_from_latin1_symbol ("all")))
     i = scm_from_int (ly_all);
-  else if (scm_is_true (scm_eq_p (layer, scm_from_latin1_symbol ("grid"))))
+  else if (scm_is_eq (layer, scm_from_latin1_symbol ("grid")))
     i = scm_from_int (ly_grid);
   else
     {

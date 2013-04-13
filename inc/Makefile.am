@@ -174,6 +174,9 @@ nobase_include_HEADERS += sortsmill/guile/math/matrices/base.h
 nobase_include_HEADERS += sortsmill/guile/math/multivariate_polynomials.h
 nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 
+nobase_include_HEADERS += sortsmill/guile/symbols.h
+nobase_include_HEADERS += sortsmill/guile/types.h
+
 if HAVE_PURE_API
 nobase_include_HEADERS += sortsmill/guile/pure.h
 endif HAVE_PURE_API
