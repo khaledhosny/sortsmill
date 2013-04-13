@@ -3345,8 +3345,8 @@ rplarraydecimal (const char *orig, const char *decimal_point,
       if (rpl == NULL)
         {
           gwwv_post_notice (_("Bad type"),
-                            _
-                            ("Expected array of numbers.\nFailed to parse \"%.*s\" as a number."),
+                            _("Expected array of numbers.\n"
+                              "Failed to parse \"%.*s\" as a number."),
                             pt - start, start);
           free (new);
           return (NULL);
@@ -3432,15 +3432,15 @@ PSPrivate_FinishEdit (GGadget *g, int r, int c, int wasnew)
 /* here by what PostScript understands, and it only understands the English */
 /* words. You may, of course, change it to something like ("true" (vrai) ou "false" (faux)) */
             gwwv_post_notice (_("Bad type"),
-                              _
-                              ("Expected boolean value.\n(\"true\" or \"false\")"));
+                              _("Expected boolean value.\n"
+                                "(\"true\" or \"false\")"));
         }
       else if (KnownPrivates[i].type == pt_code)
         {
           if (*pt != '\0' && (*pt != '{' || (ept >= pt && *ept != '}')))
             gwwv_post_notice (_("Bad type"),
-                              _
-                              ("Expected PostScript code.\nWhich usually begins with a \"{\" and ends with a \"}\"."));
+                              _("Expected PostScript code.\n"
+                                "Which usually begins with a \"{\" and ends with a \"}\"."));
         }
       else if (KnownPrivates[i].type == pt_number)
         {
@@ -6134,8 +6134,9 @@ GFI_OK (GGadget *g, GEvent *e)
           buts[2] = NULL;
           if (gwwv_ask
               (_("Too many Unique Font IDs"), (const char **) buts, 0, 1,
-               _
-               ("You should only specify the TrueType Unique Font Identification string in one language. This font has more. Do you want to continue anyway?"))
+               _("You should only specify the TrueType Unique Font "
+                 "Identification string in one language. This font "
+                 "has more. Do you want to continue anyway?"))
               == 1)
             return (true);
         }
@@ -6183,57 +6184,59 @@ GFI_OK (GGadget *g, GEvent *e)
               || fontstyle_name != NULL))
         {
           ff_post_error (_("Bad Design Size Info"),
-                         _
-                         ("If the design size is 0, then all other fields on that pane must be zero (or unspecified) too."));
+                         _("If the design size is 0, then all other fields on "
+                           "that pane must be zero (or unspecified) too."));
           return (true);
         }
       else if (styleid != 0 && fontstyle_name == NULL)
         {
           ff_post_error (_("Bad Design Size Info"),
-                         _
-                         ("If you specify a style id for the design size, then you must specify a style name"));
+                         _("If you specify a style id for the design size, "
+                           "then you must specify a style name"));
           return (true);
         }
       else if (fontstyle_name == NULL && styleid != 0)
         {
           ff_post_error (_("Bad Design Size Info"),
-                         _
-                         ("If you specify a style name for the design size, then you must specify a style id"));
+                         _("If you specify a style name for the design size, "
+                           "then you must specify a style id"));
           return (true);
         }
       else if (design_size < 0)
         {
           ff_post_error (_("Bad Design Size Info"),
-                         _
-                         ("If you specify a design size, it must be positive"));
+                         _("If you specify a design size, "
+                           "it must be positive"));
           return (true);
         }
       else if (size_bottom != 0 && size_bottom > design_size)
         {
           ff_post_error (_("Bad Design Size Info"),
-                         _
-                         ("In the design size range, the bottom field must be less than the design size."));
+                         _("In the design size range, the bottom field must be "
+                           "less than the design size."));
           return (true);
         }
       else if (size_top != 0 && size_top < design_size)
         {
           ff_post_error (_("Bad Design Size Info"),
-                         _
-                         ("In the design size range, the bottom top must be more than the design size."));
+                         _("In the design size range, the bottom top must be "
+                           "more than the design size."));
           return (true);
         }
       else if (styleid != 0 && size_top == 0)
         {
           ff_post_error (_("Bad Design Size Info"),
-                         _
-                         ("If you specify a style id for the design size, then you must specify a size range"));
+                         _("If you specify a style id for the design size, "
+                           "then you must specify a size range"));
           return (true);
         }
       else if (size_top != 0 && styleid == 0)
         {
           ff_post_notice (_("Bad Design Size Info"),
-                          _
-                          ("If you specify a design size range, then you are supposed to specify a style id and style name too. FontForge will allow you to leave those fields blank, but other applications may not."));
+                          _("If you specify a design size range, then you are "
+                            "supposed to specify a style id and style name too. "
+                            "FontForge will allow you to leave those fields "
+                            "blank, but other applications may not."));
           /* no return, this is just a warning */
         }
 
@@ -6396,8 +6399,8 @@ GFI_OK (GGadget *g, GEvent *e)
       if (as + des > 16384 || des < 0 || as < 0)
         {
           ff_post_error (_("Bad Ascent/Descent"),
-                         _
-                         ("Ascent and Descent must be positive and their sum less than 16384"));
+                         _("Ascent and Descent must be positive "
+                           "and their sum less than 16384"));
           return (true);
         }
       mcs = -1;
@@ -6412,8 +6415,8 @@ GFI_OK (GGadget *g, GEvent *e)
           if ((mcs & sf_condense) && (mcs & sf_extend))
             {
               ff_post_error (_("Bad Style"),
-                             _
-                             ("A style may not have both condense and extend set (it makes no sense)"));
+                             _("A style may not have both condense and "
+                               "extend set (it makes no sense)"));
               return (true);
             }
         }
@@ -6429,8 +6432,11 @@ GFI_OK (GGadget *g, GEvent *e)
       if (nl->uses_unicode && !allow_utf8_glyphnames)
         {
           ff_post_error (_("Namelist contains non-ASCII names"),
-                         _
-                         ("Glyph names should be limited to characters in the ASCII character set,\nbut there are names in this namelist which use characters outside\nthat range."));
+                         _("Glyph names should be limited to characters "
+						   "in the ASCII character set,\n"
+						   "but there are names in this namelist which use "
+						   "characters outside\n"
+						   "that range."));
           return (true);
         }
       if (!SSNameValidate (d))
@@ -6481,8 +6487,10 @@ GFI_OK (GGadget *g, GEvent *e)
           buts[3] = NULL;
           ans =
             gwwv_ask (_("Change UniqueID?"), (const char **) buts, 0, 2,
-                      _
-                      ("You have changed this font's name without changing the UniqueID (or XUID).\nThis is probably not a good idea, would you like me to\ngenerate a random new value?"));
+                      _("You have changed this font's name without changing "
+                        "the UniqueID (or XUID).\n"
+                        "This is probably not a good idea, would you like me\n"
+                        "to generate a random new value?"));
           if (ans == 2)
             {
               GDrawSetCursor (gw, ct_pointer);
@@ -11486,8 +11494,8 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].creator = GRadioCreate;
   lgcd[k++].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Allow editing of multiple colors and shades, fills and strokes.\nMulti layered fonts can only be output as type3 or svg fonts.");
+    _("Allow editing of multiple colors and shades, fills and strokes.\n"
+      "Multi layered fonts can only be output as type3 or svg fonts.");
   larray2[j++] = GCD_HPad10;
   larray2[j++] = &lgcd[k - 1];
   larray2[j++] = GCD_ColSpan;
@@ -11509,8 +11517,8 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].creator = GRadioCreate;
   lgcd[k++].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Glyphs will be composed of stroked lines rather than filled outlines.\nAll glyphs are stroked at the following width");
+    _("Glyphs will be composed of stroked lines rather than filled outlines.\n"
+      "All glyphs are stroked at the following width");
   larray2[j++] = GCD_HPad10;
   larray2[j++] = &lgcd[k - 1];
 
@@ -11779,8 +11787,9 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   vgcd[6].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Can this font be embedded in a downloadable (pdf)\ndocument, and if so, what behaviors are permitted on\nboth the document and the font.");
+    _("Can this font be embedded in a downloadable (pdf)\n"
+      "document, and if so, what behaviors are permitted on\n"
+      "both the document and the font.");
   vgcd[6].creator = GLabelCreate;
 
   vgcd[7].gd.pos.x = 90;
@@ -11814,8 +11823,10 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     vgcd[8].gd.flags |= gg_cb_on;
   vgcd[8].gd.popup_msg =
     (uint32_t *)
-    _
-    ("If set then the entire font must be\nembedded in a document when any character is.\nOtherwise the document creator need\nonly include the characters it uses.");
+    _("If set then the entire font must be\n"
+      "embedded in a document when any character is.\n"
+      "Otherwise the document creator need\n"
+      "only include the characters it uses.");
   vgcd[8].gd.cid = CID_NoSubsetting;
   vgcd[8].creator = GCheckBoxCreate;
 
@@ -11829,8 +11840,10 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     vgcd[9].gd.flags |= gg_cb_on;
   vgcd[9].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Only Bitmaps may be embedded.\nOutline descriptions may not be\n(if font file contains no bitmaps\nthen nothing may be embedded).");
+    _("Only Bitmaps may be embedded.\n"
+      "Outline descriptions may not be\n"
+      "(if font file contains no bitmaps\n"
+      "then nothing may be embedded).");
   vgcd[9].gd.cid = CID_OnlyBitmaps;
   vgcd[9].creator = GCheckBoxCreate;
 
@@ -11876,8 +11889,9 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[14].gd.cid = CID_WeightWidthSlopeOnly;
   vgcd[14].gd.popup_msg =
     (uint32_t *)
-    _
-    ("MS needs to know whether a font family's members differ\nonly in weight, width and slope (and not in other variables\nlike optical size).");
+    _("MS needs to know whether a font family's members differ\n"
+      "only in weight, width and slope (and not in other variables\n"
+      "like optical size).");
   vgcd[14].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   vgcd[14].creator = GCheckBoxCreate;
 
@@ -11889,8 +11903,9 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[15].gd.label = &vlabel[15];
   vgcd[15].gd.popup_msg =
     (uint32_t *)
-    _
-    ("The 'OS/2' table has changed slightly over the years.\nGenerally fields have been added, but occasionally their\nmeanings have been redefined.");
+    _("The 'OS/2' table has changed slightly over the years.\n"
+      "Generally fields have been added, but occasionally their\n"
+      "meanings have been redefined.");
   vgcd[15].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   vgcd[15].creator = GLabelCreate;
 
@@ -11968,8 +11983,18 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Anything outside the OS/2 WinAscent &\nWinDescent fields will be clipped by windows.\nThis includes marks, etc. that have been repositioned by GPOS.\n(The descent field is usually positive.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in OS/2.\nIf set then any number you enter will be added to the\nfont's bounds. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNote: WinDescent is a POSITIVE number for\nthings below the baseline");
+    _("Anything outside the OS/2 WinAscent &\n"
+      "WinDescent fields will be clipped by windows.\n"
+      "This includes marks, etc. that have been repositioned by GPOS.\n"
+      "(The descent field is usually positive.)\n"
+      "If the \"[] Is Offset\" checkbox is clear then\n"
+      "any number you enter will be the value used in OS/2.\n"
+      "If set then any number you enter will be added to the\n"
+      "font's bounds. You should leave this\n"
+      "field 0 and check \"[*] Is Offset\" in most cases.\n"
+      "\n"
+      "Note: WinDescent is a POSITIVE number for\n"
+      "things below the baseline");
   metgcd[i].gd.cid = CID_WinAscentLab;
   metarray[j++] = &metgcd[i];
   metgcd[i++].creator = GLabelCreate;
@@ -12044,8 +12069,10 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.cid = CID_UseTypoMetrics;
   metgcd[i].gd.popup_msg =
     (uint32_t *)
-    _
-    ("The specification already says that the typo metrics should be\nused to determine line spacing. But so many\nprograms fail to follow the spec. that MS decided an additional\nbit was needed to remind them to do so.");
+    _("The specification already says that the typo metrics should be\n"
+      "used to determine line spacing. But so many\n"
+      "programs fail to follow the spec. that MS decided an additional\n"
+      "bit was needed to remind them to do so.");
   metarray[j++] = &metgcd[i];
   metarray[j++] = GCD_ColSpan;
   metarray[j++] = GCD_Glue;
@@ -12061,8 +12088,18 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
     (uint32_t *)
-    _
-    ("The typo ascent&descent fields are>supposed<\nto specify the line spacing on windows.\nIn fact usually the win ascent/descent fields do.\n(The descent field is usually negative.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in OS/2.\nIf set then any number you enter will be added to the\nEm-size. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNOTE: Typo Descent is a NEGATIVE number for\nthings below the baseline");
+    _("The typo ascent&descent fields are>supposed<\n"
+      "to specify the line spacing on windows.\n"
+      "In fact usually the win ascent/descent fields do.\n"
+      "(The descent field is usually negative.)\n"
+      "If the \"[] Is Offset\" checkbox is clear then\n"
+      "any number you enter will be the value used in OS/2.\n"
+      "If set then any number you enter will be added to the\n"
+      "Em-size. You should leave this\n"
+      "field 0 and check \"[*] Is Offset\" in most cases.\n"
+      "\n"
+      "NOTE: Typo Descent is a NEGATIVE number for\n"
+      "things below the baseline");
   metgcd[i].gd.cid = CID_TypoAscentLab;
   metarray[j++] = &metgcd[i];
   metgcd[i++].creator = GLabelCreate;
@@ -12161,8 +12198,16 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
     (uint32_t *)
-    _
-    ("This specifies the line spacing on the mac.\n(The descent field is usually negative.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in hhea.\nIf set then any number you enter will be added to the\nfont's bounds. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNOTE: hhea Descent is a NEGATIVE value for things\nbelow the baseline");
+    _("This specifies the line spacing on the mac.\n"
+      "(The descent field is usually negative.)\n"
+      "If the \"[] Is Offset\" checkbox is clear then\n"
+      "any number you enter will be the value used in hhea.\n"
+      "If set then any number you enter will be added to the\n"
+      "font's bounds. You should leave this\n"
+      "field 0 and check \"[*] Is Offset\" in most cases.\n"
+      "\n"
+      "NOTE: hhea Descent is a NEGATIVE value for things\n"
+      "below the baseline");
   metgcd[i].gd.cid = CID_HHeadAscentLab;
   metarray[j++] = &metgcd[i];
   metgcd[i++].creator = GLabelCreate;
@@ -12258,14 +12303,14 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metlabel[i].text_is_1byte = true;
   metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
-  metgcd[i].gd.flags =
-    sf->
-    hasvmetrics ? (gg_visible | gg_enabled | gg_utf8_popup) : (gg_visible |
-                                                               gg_utf8_popup);
+  metgcd[i].gd.flags = gg_visible | gg_utf8_popup;
+  if (sf->hasvmetrics)
+    metgcd[i].gd.flags |= gg_enabled;
   metgcd[i].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Sets the linegap field in the vhea table.\nThis is the horizontal spacing between rows\nof vertically set text.");
+    _("Sets the linegap field in the vhea table.\n"
+      "This is the horizontal spacing between rows\n"
+      "of vertically set text.");
   metgcd[i].gd.cid = CID_VLineGapLab;
   metarray[j++] = &metgcd[i];
   metgcd[i++].creator = GLabelCreate;
@@ -12273,10 +12318,9 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.x = 125;
   metgcd[i].gd.pos.y = metgcd[i - 1].gd.pos.y - 6;
   metgcd[i].gd.pos.width = 50;
-  metgcd[i].gd.flags =
-    sf->
-    hasvmetrics ? (gg_visible | gg_enabled | gg_utf8_popup) : (gg_visible |
-                                                               gg_utf8_popup);
+  metgcd[i].gd.flags = gg_visible | gg_utf8_popup;
+  if (sf->hasvmetrics)
+    metgcd[i].gd.flags |= gg_enabled;
   /* V Line gap value set later */
   metgcd[i].gd.cid = CID_VLineGap;
   metgcd[i].gd.popup_msg = metgcd[17].gd.popup_msg;
@@ -13012,8 +13056,8 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     gaspgcd[i].gd.flags |= gg_cb_on;
   gaspgcd[i].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Actually a bit in the 'head' table.\nIf unset then certain East Asian fonts will not be hinted");
+    _("Actually a bit in the 'head' table.\n"
+      "If unset then certain East Asian fonts will not be hinted");
   gaspharray[j++] = &gaspgcd[i];
   gaspgcd[i++].creator = GCheckBoxCreate;
   gaspharray[j++] = NULL;
@@ -13117,14 +13161,14 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   tngcd[4].gd.u.matrix = &mi;
   tngcd[4].gd.popup_msg =
     (uint32_t *)
-    _
-    ("To create a new name, left click on the <New> button, and select a locale.\n"
-     "To change the locale, left click on it.\n"
-     "To change the string type, left click on it.\n"
-     "To change the text, left click in it and then type.\n"
-     "To delete a name, right click on the name & select Delete from the menu.\n"
-     "To associate or disassociate a truetype name to its postscript equivalent\n"
-     "right click and select the appropriate menu item.");
+    _("To create a new name, left click on the <New> button, "
+      "and select a locale.\n"
+      "To change the locale, left click on it.\n"
+      "To change the string type, left click on it.\n"
+      "To change the text, left click in it and then type.\n"
+      "To delete a name, right click on the name & select Delete from the menu.\n"
+      "To associate or disassociate a truetype name to its postscript equivalent\n"
+      "right click and select the appropriate menu item.");
   tngcd[4].data = d;
   tngcd[4].creator = GMatrixEditCreate;
 
@@ -13264,8 +13308,8 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   floggcd[0].gd.flags = gg_visible | gg_enabled;
   floglabel[0].text =
     (uint32_t *)
-    _
-    ("The FONTLOG contains some description of the \n font project, a detailed changelog, and a list of contributors");
+    _("The FONTLOG contains some description of the\n"
+      "font project, a detailed changelog, and a list of contributors");
   floglabel[0].text_is_1byte = true;
   floggcd[0].gd.label = &floglabel[0];
   floggcd[0].creator = GLabelCreate;

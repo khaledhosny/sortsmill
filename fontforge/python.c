@@ -15220,34 +15220,38 @@ PyFF_Font_get_em (PyFF_Font *self, void *UNUSED (closure))
 static int
 PyFF_Font_set_em (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
 {
-  int newem, as, ds, oldem;
-  SplineFont *sf;
+  int ret = -1;
 
-  if (CheckIfFontClosed (self))
-    return (-1);
-  if (value == NULL)
+  if (!CheckIfFontClosed (self))
     {
-      PyErr_Format (PyExc_TypeError, "Cannot delete em field");
-      return (-1);
+      if (value == NULL)
+        PyErr_Format (PyExc_TypeError, "Cannot delete em field");
+      else
+        {
+          if (!PyInt_Check (value))
+            PyErr_Format (PyExc_TypeError, "Unexpected type");
+          else
+            {
+              int newem = PyInt_AsLong (value);
+              if (newem < 10 || newem >= 16 * 1024)
+                PyErr_Format (PyExc_ValueError, "Em size too big or too small");
+              else
+                {
+                  SplineFont *sf = self->fv->sf;
+                  int oldem = sf->ascent + sf->descent;
+                  if (oldem <= 0)
+                    oldem = 1;
+                  int ds = newem * sf->descent / oldem;
+                  int as = newem - ds;
+
+                  SFScaleToEm (sf, as, ds);
+                  ret = 0;
+                }
+            }
+        }
     }
-  if (!PyInt_Check (value))
-    {
-      PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (-1);
-    }
-  newem = PyInt_AsLong (value);
-  if (newem < 10 || newem >= 16 * 1024)
-    {
-      PyErr_Format (PyExc_ValueError, "Em size too big or too small");
-      return (-1);
-    }
-  sf = self->fv->sf;
-  if ((oldem = sf->ascent + sf->descent) <= 0)
-    oldem = 1;
-  ds = newem * sf->descent / oldem;
-  as = newem - ds;
-  SFScaleToEm (sf, as, ds);
-  return (0);
+
+  return ret;
 }
 
 static int
@@ -18513,15 +18517,9 @@ PyFFFont_Save (PyFF_Font *self, PyObject *args)
         return (NULL);
       locfilename = utf82def_copy (filename);
       free (filename);
-#ifdef VMS
-      pt = strrchr (locfilename, '_');
-      if (pt != NULL && strcasecmp (pt, "_sfdir") == 0)
-        s2d = true;
-#else
       pt = strrchr (locfilename, '.');
       if (pt != NULL && strcasecmp (pt, ".sfdir") == 0)
         s2d = true;
-#endif
       if (!SFDWrite (locfilename, fv->sf, fv->map, fv->normal, s2d))
         {
           PyErr_Format (PyExc_EnvironmentError, "Save As \"%s\" failed",

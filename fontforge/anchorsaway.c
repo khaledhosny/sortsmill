@@ -924,8 +924,9 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
       if (!any)
         {
           ff_post_notice (_("Detaching Anchor Point"),
-                          _
-                          ("This anchor was attached to point %d, but that's not a point I can move. I'm detaching the anchor from the point."));
+                          _("This anchor was attached to point %d, but that's "
+                            "not a point I can move. I'm detaching the anchor "
+                            "from the point."));
           ap->has_ttf_pt = false;
           ly = ly_none;
         }
@@ -1044,8 +1045,8 @@ AnchorD_CorrectionChanged (GGadget *g, GEvent *e)
       if (correction < -128 || correction > 127)
         {
           ff_post_error (_("Out of Range"),
-                         _
-                         ("Corrections must be between -128 and 127 (and should be smaller)"));
+                         _("Corrections must be between -128 and 127 "
+                           "(and should be smaller)"));
           return (true);
         }
 
@@ -1237,8 +1238,8 @@ AddAnchor (AnchorDlg *a, SplineFont *sf, AnchorClass *ac, int ismarklike)
     {
       ret =
         gwwv_ask_string (_("Provide a glyph name"), def,
-                         _
-                         ("Please identify a glyph by name, and FontForge will add an anchor to that glyph."));
+                         _("Please identify a glyph by name, and FontForge "
+                           "will add an anchor to that glyph."));
       free (def);
       if (ret == NULL)
         return (NULL);
@@ -1272,8 +1273,8 @@ AddAnchor (AnchorDlg *a, SplineFont *sf, AnchorClass *ac, int ismarklike)
                   else if (ap->type != at_baselig ||
                            (ap->type == at_baselig && ismarklike > 0))
                     ff_post_error (_("Duplicate Anchor Class"),
-                                   _
-                                   ("The glyph, %.80s, already contains an anchor in this class, %.80s."),
+                                   _("The glyph, %.80s, already contains an "
+                                     "anchor in this class, %.80s."),
                                    ret, ac->name);
                   else if (maxlig < ap->lig_index)
                     maxlig = ap->lig_index;
@@ -1574,9 +1575,12 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   gcd[k].gd.cid = CID_DisplaySize;
   gcd[k].gd.handle_controlevent = AnchorD_DisplaySizeChanged;
-  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg = (uint32_t *)
-    _
-    ("The size at which the current glyph is rasterized.\nFor small pixelsize you may want to use the magnification\nfactor below to get a clearer view.\n\nThe pulldown list contains the pixelsizes at which there\nare device table corrections.");
+  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg =
+    (uint32_t *) _("The size at which the current glyph is rasterized.\n"
+                   "For small pixelsize you may want to use the magnification\n"
+                   "factor below to get a clearer view.\n\n"
+                   "The pulldown list contains the pixelsizes at which there\n"
+                   "are device table corrections.");
   gcd[k++].creator = GListFieldCreate;
   hvarray[hv++] = &gcd[k - 1];
   hvarray[hv++] = GCD_ColSpan;
@@ -1601,9 +1605,12 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
   gcd[k].gd.cid = CID_Mag;
   gcd[k].gd.u.list = magnifications;
   gcd[k].gd.handle_controlevent = AnchorD_MagnificationChanged;
-  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg = (uint32_t *)
-    _
-    ("The glyph is rasterized at the size above, but it\nmay be difficult to see the alignment errors\nthat can happen at small pixelsizes. This allows\nyou to expand each pixel to show potential problems\nbetter.");
+  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg =
+    (uint32_t *) _("The glyph is rasterized at the size above, but it\n"
+                   "may be difficult to see the alignment errors\n"
+                   "that can happen at small pixelsizes. This allows\n"
+                   "you to expand each pixel to show potential problems\n"
+                   "better.");
   gcd[k++].creator = GListButtonCreate;
   hvarray[hv++] = &gcd[k - 1];
   hvarray[hv++] = GCD_Glue;
@@ -1646,9 +1653,9 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 30;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   gcd[k].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("Correction in pixels to the horizontal positioning of this anchor point\nwhen rasterizing at the given pixelsize.\n(Lives in a Device Table)");
+    (uint32_t *) _("Correction in pixels to the horizontal positioning of this "
+                   "anchor point\nwhen rasterizing at the given pixelsize.\n"
+                   "(Lives in a Device Table)");
   gcd[k++].creator = GLabelCreate;
   hvarray[hv++] = GCD_HPad10;
   hvarray[hv++] = &gcd[k - 1];
@@ -1663,9 +1670,14 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   gcd[k].gd.cid = CID_XCor;
   gcd[k].gd.handle_controlevent = AnchorD_CorrectionChanged;
-  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg = (uint32_t *)
-    _
-    ("This is the number of pixels by which the anchor\nshould be moved horizontally when the glyph is\nrasterized at the above size.  This information\nis part of the device table for this anchor.\nDevice tables are particularly important at small\npixelsizes where rounding errors will have a\nproportionally greater effect.");
+  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg =
+    (uint32_t *) _("This is the number of pixels by which the anchor\n"
+                   "should be moved horizontally when the glyph is\n"
+                   "rasterized at the above size.  This information\n"
+                   "is part of the device table for this anchor.\n"
+                   "Device tables are particularly important at small\n"
+                   "pixelsizes where rounding errors will have a\n"
+                   "proportionally greater effect.");
   gcd[k++].creator = GNumericFieldCreate;
   hvarray[hv++] = &gcd[k - 1];
   hvarray[hv++] = GCD_Glue;
@@ -1708,9 +1720,10 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 30;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   gcd[k].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("Correction in pixels to the horizontal positioning of this anchor point\nwhen rasterizing at the given pixelsize.\n(Lives in a Device Table)");
+    (uint32_t *) _("Correction in pixels to the horizontal "
+                   "positioning of this anchor point\n"
+                   "when rasterizing at the given pixelsize.\n"
+                   "(Lives in a Device Table)");
   gcd[k++].creator = GLabelCreate;
   hvarray[hv++] = GCD_HPad10;
   hvarray[hv++] = &gcd[k - 1];
@@ -1725,9 +1738,14 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   gcd[k].gd.cid = CID_YCor;
   gcd[k].gd.handle_controlevent = AnchorD_CorrectionChanged;
-  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg = (uint32_t *)
-    _
-    ("This is the number of pixels by which the anchor\nshould be moved vertically when the glyph is\nrasterized at the above size.  This information\nis part of the device table for this anchor.\nDevice tables are particularly important at small\npixelsizes where rounding errors will have a\nproportionally greater effect.");
+  gcd[k].gd.popup_msg = gcd[k - 1].gd.popup_msg =
+    (uint32_t *) _("This is the number of pixels by which the anchor\n"
+                   "should be moved vertically when the glyph is\n"
+                   "rasterized at the above size.  This information\n"
+                   "is part of the device table for this anchor.\n"
+                   "Device tables are particularly important at small\n"
+                   "pixelsizes where rounding errors will have a\n"
+                   "proportionally greater effect.");
   gcd[k++].creator = GNumericFieldCreate;
   hvarray[hv++] = &gcd[k - 1];
   hvarray[hv++] = GCD_Glue;

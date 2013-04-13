@@ -82,23 +82,12 @@ static const char *unicode_interp_names[] = { "none", "adobe", "greek",
 /* sfdir files and extensions */
 #define FONT_PROPS	"font.props"
 #define STRIKE_PROPS	"strike.props"
-#ifndef	VMS
 #define EXT_CHAR	'.'
 #define GLYPH_EXT	".glyph"
 #define BITMAP_EXT	".bitmap"
 #define STRIKE_EXT	".strike"
 #define SUBFONT_EXT	".subfont"
 #define INSTANCE_EXT	".instance"
-#else
-/* Under VMS directories can't have extensions (or rather they must end in .dir) */
-/* So let's be consistent and use fake extensions for everything. */
-#define EXT_CHAR	'$'
-#define GLYPH_EXT	"$glyph"
-#define BITMAP_EXT	"$bitmap"
-#define STRIKE_EXT	"$strike"
-#define SUBFONT_EXT	"$subfont"
-#define INSTANCE_EXT	"$instance"
-#endif
 
 signed char inbase64[256] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -1840,7 +1829,6 @@ appendnames (char *dest, char *dir, char *dir_char, char *name, char *ext)
   dest += strlen (dest);
   /* Windows, Mac & VMS all ignore case in the file system so we can't just */
   /* copy the glyph name blindly (else "A" and "a" would map to the same file */
-  /* VMS also can't handle multiple "."s in a filename */
   while (true)
     {
       if (strncmp (name, "uni", 3) == 0 && ishexdigit (name[3])
@@ -1881,12 +1869,6 @@ appendnames (char *dest, char *dir, char *dir_char, char *name, char *ext)
         {
           *dest++ = '_';
           *dest++ = *name;
-#ifdef VMS
-        }
-      else if (*name == '.')
-        {
-          *dest++ = '@';
-#endif
         }
       else
         *dest++ = *name;
