@@ -44,6 +44,14 @@
    kerning-only-spacing-pegs
    special-spacing-pegs
    nonspecial-spacing-pegs
+   left-ordinary-spacing-pegs
+   right-ordinary-spacing-pegs
+
+   ;; (within-peg-spacing-tolerance? real1 real2) → boolean
+   within-peg-spacing-tolerance?
+
+   peg-spacing-left-spacing
+   peg-spacing-right-spacing
    )
 
   (import (sortsmill dynlink)

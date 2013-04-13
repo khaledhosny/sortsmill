@@ -42,6 +42,12 @@ SCM scm_ordinary_spacing_pegs (SCM anchor_points);
 SCM scm_kerning_only_spacing_pegs (SCM anchor_points);
 SCM scm_special_spacing_pegs (SCM anchor_points);
 SCM scm_nonspecial_spacing_pegs (SCM anchor_points);
+SCM scm_left_ordinary_spacing_pegs (SCM anchor_points);
+SCM scm_right_ordinary_spacing_pegs (SCM anchor_points);
+
+SCM scm_within_peg_spacing_tolerance_p (SCM a, SCM b);
+SCM scm_peg_spacing_left_spacing (SCM anchor_points);
+SCM scm_peg_spacing_right_spacing (SCM anchor_points);
 
 #if 0
 {

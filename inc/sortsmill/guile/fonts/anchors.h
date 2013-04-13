@@ -73,7 +73,15 @@ SCM scm_sort_AnchorPoints (SCM AnchorClass_linked_list_ptr,
    already are in the anchor point list. */
 SCM scm_anchor_point_name_2 (SCM anchor_point);
 
-void scm_c_anchor_point_coords (SCM anchor_point, double *x, double *y);
+/* The next function is an alternative to scm_anchor_point_coords. It
+   may be faster, and it has different checking. Use
+   scm_anchor_point_coords if you are validating anchors before adding
+   them to the anchor point list; but you might use
+   scm_anchor_point_coords_2 if you are sifting through the anchors that
+   already are in the anchor point list. */
+SCM scm_anchor_point_coords_2 (SCM anchor_point);
+
+void scm_c_anchor_point_coords (SCM anchor_point, SCM *x, SCM *y);
 
 /*-----------------------------------------------------------------------*/
 

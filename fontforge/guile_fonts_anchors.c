@@ -87,10 +87,10 @@ scm_anchor_point_name_2 (SCM anchor_point)
   return SCM_CDAR (p);
 }
 
-VISIBLE void
-scm_c_anchor_point_coords (SCM anchor_point, double *x, double *y)
+VISIBLE SCM
+scm_anchor_point_coords_2 (SCM anchor_point)
 {
-  const char *who = "scm_c_anchor_point_coords";
+  const char *who = "scm_anchor_point_coords_2";
 
   SCM p = anchor_point;
   scm_c_assert_list_does_not_end_here (who, anchor_point, p);
@@ -101,8 +101,15 @@ scm_c_anchor_point_coords (SCM anchor_point, double *x, double *y)
       scm_c_assert_list_does_not_end_here (who, anchor_point, p);
       scm_c_assert_can_be_alist_link (who, anchor_point, p);
     }
-  *x = scm_to_double (SCM_CADAR (p));
-  *y = scm_to_double (SCM_CADDAR (p));
+  return SCM_CDAR (p);
+}
+
+VISIBLE void
+scm_c_anchor_point_coords (SCM anchor_point, SCM *x, SCM *y)
+{
+  SCM coords = scm_anchor_point_coords_2 (anchor_point);
+  *x = scm_car (coords);
+  *y = scm_cadr (coords);
 }
 
 //-------------------------------------------------------------------------
