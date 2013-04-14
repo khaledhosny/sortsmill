@@ -37,8 +37,8 @@ scm_update_changed_SplineChar (SCM splinechar_ptr, SCM layer)
 {
   SplineChar *sc = scm_to_pointer (splinechar_ptr);
   SCM layer_names = scm_c_SplineFont_layer_names (sc->parent);
-  SCCharChangedUpdate (sc, scm_to_int (scm_layer_to_integer
-                                       (layer, layer_names)));
+  const int i_layer = scm_to_int (scm_layer_to_integer (layer, layer_names));
+  SCCharChangedUpdate (sc, i_layer);
   return SCM_UNSPECIFIED;
 }
 

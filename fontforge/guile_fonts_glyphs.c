@@ -53,8 +53,19 @@ scm_SplineFont_preserve_guide_layer_as_undo (SCM splinefont)
 }
 
 static SCM
-scm_SplineChar_preserve_layer_as_undo (SCM splinechar, SCM i_layer, SCM hints_p)
+scm_SplineChar_preserve_layer_as_undo (SCM who, SCM splinechar, SCM layer, SCM layer_names, SCM hints_p)
 {
+  SCM i_layer = scm_layer_to_integer (layer, layer_names);
+  if (scm_is_true (scm_negative_p (i_layer)))
+    {
+      const char *message = _("not a valid layer to preserve for undo");
+      rnrs_raise_condition
+        (scm_list_4
+         (rnrs_make_assertion_violation (),
+          rnrs_make_who_condition (who),
+          rnrs_c_make_message_condition (message),
+          rnrs_make_irritants_condition (scm_list_1 (layer))));
+    }
   SplineChar *sc = scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
                                                       splinechar));
   _SCPreserveLayer (sc, scm_to_int (i_layer), scm_is_true (hints_p));
@@ -325,7 +336,7 @@ init_guile_fonts_glyphs (void)
   // Unexported variables.
   scm_c_define_gsubr ("private:SplineFont-preserve-guide-layer-as-undo", 1, 0,
                       0, scm_SplineFont_preserve_guide_layer_as_undo);
-  scm_c_define_gsubr ("private:SplineChar-preserve-layer-as-undo", 3, 0, 0,
+  scm_c_define_gsubr ("private:SplineChar-preserve-layer-as-undo", 5, 0, 0,
                       scm_SplineChar_preserve_layer_as_undo);
 }
 

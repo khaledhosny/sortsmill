@@ -130,7 +130,12 @@
         (match layer
           ['grid (private:SplineFont-preserve-guide-layer-as-undo
                   (SplineChar:parent-dref sc))]
-          [_ (let ([i-layer (layer->integer layer)])
-               (private:SplineChar-preserve-layer-as-undo sc i-layer hints?))] ))))
+          ['all (for-each
+                 (lambda (layer^)
+                   (glyph&layer:preserve-as-undo `(,gv ,layer^) #:hints? hints?))
+                 (view:layer-names gv))]
+          [_ (private:SplineChar-preserve-layer-as-undo
+              'glyph&layer:preserve-as-undo
+              sc layer (view:layer-names gv) hints?)] ))))
 
   ) ;; end of library.
