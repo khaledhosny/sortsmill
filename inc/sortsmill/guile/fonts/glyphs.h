@@ -32,6 +32,7 @@ SCM scm_glyphlayer_to_glyph_view (SCM gl);
 SCM scm_glyphlayer_to_layer (SCM gl);
 
 SCM scm_glyphlayer_update_changed (SCM gl);
+SCM scm_view_update_layer_palette (SCM view);
 
 SCM scm_glyph_view_transform_by_psmat (SCM gv, SCM ps_matrix, SCM flags);
 

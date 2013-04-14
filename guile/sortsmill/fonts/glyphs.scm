@@ -34,6 +34,9 @@
    ;; (glyph&layer:update-changed (list glyph-view layer)) → *unspecified*
    glyph&layer:update-changed
 
+   ;; (view:update-layer-palette view) → *unspecified*
+   view:update-layer-palette
+
    ;; (view:active-layer view) → layer
    ;; (view:active-layer-set! view layer) → *unspecified*
    view:active-layer

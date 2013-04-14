@@ -18,6 +18,7 @@
 #include <sortsmill/guile.h>
 #include <baseviews.h>
 #include <splinefont.h>
+#include <uiinterface.h>
 #include <intl.h>
 #include <assert.h>
 
@@ -193,6 +194,16 @@ scm_view_layer_names (SCM view)
 }
 
 VISIBLE SCM
+scm_view_update_layer_palette (SCM view)
+{
+  SCM splinefont = scm_view_to_SplineFont (view);
+  SplineFont *sf = scm_to_pointer (SCM_FF_API_CALL_1 ("SplineFont->pointer",
+                                                      splinefont));
+  CVLayerPaletteCheck (sf);
+  return SCM_UNSPECIFIED;
+}
+
+VISIBLE SCM
 scm_glyph_view_editable_layer (SCM gv)
 {
   CharViewBase *cvb =
@@ -250,7 +261,7 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
         {
           cvb->drawmode = dm_grid;
           scm_glyphlayer_update_changed (gv);
-          // FIXME FIXME FIXME: Update the layer palette, as well.
+          scm_view_update_layer_palette (gv);
         }
       break;
 
@@ -259,7 +270,7 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
         {
           cvb->drawmode = dm_fore;
           scm_glyphlayer_update_changed (gv);
-          // FIXME FIXME FIXME: Update the layer palette, as well.
+          scm_view_update_layer_palette (gv);
         }
       break;
 
@@ -280,7 +291,7 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
           cvb->drawmode = dm_back;
           cvb->layerheads[dm_back] = &cvb->sc->layers[i_layer];
           scm_glyphlayer_update_changed (gv);
-          // FIXME FIXME FIXME: Update the layer palette, as well.
+          scm_view_update_layer_palette (gv);
         }
       break;
     }
@@ -296,6 +307,9 @@ VISIBLE void
 init_guile_fonts_glyphs (void)
 {
   scm_c_define_gsubr ("view:layer-names", 1, 0, 0, scm_view_layer_names);
+
+  scm_c_define_gsubr ("view:update-layer-palette", 1, 0, 0,
+                      scm_view_update_layer_palette);
 
   scm_c_define_gsubr ("glyph-view:editable-layer", 1, 0, 0,
                       scm_glyph_view_editable_layer);
