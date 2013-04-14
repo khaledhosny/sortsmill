@@ -17,9 +17,7 @@
 
 (library (sortsmill __internals__ glyphs)
 
-  (export layer->integer
-          integer->layer
-          update-changed-SplineChar)
+  (export update-changed-SplineChar)
 
   (import (sortsmill dynlink)
           (rnrs)

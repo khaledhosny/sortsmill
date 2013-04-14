@@ -18,7 +18,7 @@
 (library (sortsmill fonts anchors)
 
   (export
-   ;; (view-anchor-classes view) → list of alists
+   ;; (view:anchor-classes view) → list of alists
    ;;
    ;; alist keys:
    ;;   'name → string
@@ -26,9 +26,9 @@
    ;;   'lookup-name → string
    ;;   'lookup-type → 'gpos-cursive 'gpos-mark-to-base
    ;;                     'gpos-mark-to-ligature 'gpos-mark-to-mark
-   view-anchor-classes
+   view:anchor-classes
 
-   ;; (glyph-view-anchor-points gv) → list of alists
+   ;; (glyph-view:anchor-points gv) → list of alists
    ;;
    ;; alist keys:
    ;;   'type → 'mark 'base 'ligature 'base-mark 'entry 'exit
@@ -36,19 +36,19 @@
    ;;   'selected? → #f or #t
    ;;   'ligature-index → integer  (present if type is 'ligature)
    ;;
-   ;; In addition, the results of @code{view-anchor-class} for the
+   ;; In addition, the results of @code{view:anchor-class} for the
    ;; anchor point’s class are included in the alist.
-   glyph-view-anchor-points
+   glyph-view:anchor-points
 
-   ;; (glyph-view-anchor-points-set! gv list-of-alists) → unspecified
-   ;; (glyph-view-anchor-points-add! gv alist) → unspecified
+   ;; (glyph-view:anchor-points-set! gv list-of-alists) → unspecified
+   ;; (glyph-view:anchor-points-add! gv alist) → unspecified
    ;;
-   ;; @code{glyph-view-anchor-points-set!} ignores duplicate entries,
+   ;; @code{glyph-view:anchor-points-set!} ignores duplicate entries,
    ;; and so an anchor point can be replaced simply by consing a new
    ;; entry onto the list-of-alists; see the definition of
-   ;; @code{glyph-view-anchor-points-add!} for an example.
-   glyph-view-anchor-points-set!
-   glyph-view-anchor-points-add!
+   ;; @code{glyph-view:anchor-points-add!} for an example.
+   glyph-view:anchor-points-set!
+   glyph-view:anchor-points-add!
 
    ;; Get anchor point field values.
    ;;
@@ -132,7 +132,7 @@
 
   ;;-----------------------------------------------------------------------
 
-  (define (view-anchor-classes view)
+  (define (view:anchor-classes view)
     (let ([ac-list (view->AnchorClass-list view)])
       (map AnchorClass->alist ac-list)))
 
@@ -158,12 +158,12 @@
   (define anchor-point-<-for-sorting
     (make-fluid default-anchor-point-<-for-sorting))
 
-  (define (glyph-view-anchor-points gv)
+  (define (glyph-view:anchor-points gv)
     (let ([ap-list (glyph-view->AnchorPoint-list gv)])
       (map AnchorPoint->alist ap-list)))
 
-  (define (glyph-view-anchor-points-set! gv anchor-points)
-    (let* ([who 'glyph-view-anchor-points-set!]
+  (define (glyph-view:anchor-points-set! gv anchor-points)
+    (let* ([who 'glyph-view:anchor-points-set!]
            [ac-ptr (glyph-view->AnchorClass-linked-list gv)]
            [anchor-points-sorted
             (sort-anchor-points ac-ptr anchor-points)]
@@ -172,9 +172,9 @@
       (SplineChar:anchor-points-set! sc ap-ptr)
       (update-changed-SplineChar (SplineChar->pointer sc) #f)))
 
-  (define (glyph-view-anchor-points-add! gv alist)
-    (let ([anchor-points (glyph-view-anchor-points gv)])
-      (glyph-view-anchor-points-set! gv (cons alist anchor-points))))
+  (define (glyph-view:anchor-points-add! gv alist)
+    (let ([anchor-points (glyph-view:anchor-points gv)])
+      (glyph-view:anchor-points-set! gv (cons alist anchor-points))))
 
   (define (anchor-point-name alist)
     (match (assq 'name alist)

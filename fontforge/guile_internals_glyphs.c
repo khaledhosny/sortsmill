@@ -24,71 +24,21 @@
 //-------------------------------------------------------------------------
 
 static SCM
-scm_layer_to_integer (SCM layer)
+scm_c_SplineFont_layer_names (SplineFont *sf)
 {
-  SCM i;
-  if (scm_is_eq (layer, SCM_BOOL_F))
-    i = scm_from_int (ly_none);
-  else if (scm_is_true (scm_integer_p (layer))
-           && scm_is_false (scm_negative_p (layer)))
-    i = layer;
-  else if (scm_is_eq (layer, scm_from_latin1_symbol ("all")))
-    i = scm_from_int (ly_all);
-  else if (scm_is_eq (layer, scm_from_latin1_symbol ("grid")))
-    i = scm_from_int (ly_grid);
-  else
-    {
-      const char *message =
-        _("expected a non-negative integer, 'all, 'grid, or #f");
-      rnrs_raise_condition
-        (scm_list_4
-         (rnrs_make_assertion_violation (),
-          rnrs_c_make_who_condition ("scm_layer_to_integer"),
-          rnrs_c_make_message_condition (message),
-          rnrs_make_irritants_condition (scm_list_1 (layer))));
-    }
-  return i;
-}
-
-static SCM
-scm_integer_to_layer (SCM i)
-{
-  SCM layer;
-  const int _i = scm_to_int (i);
-  switch (_i)
-    {
-    case ly_none:
-      layer = SCM_BOOL_F;
-      break;
-    case ly_all:
-      layer = scm_from_latin1_symbol ("all");
-      break;
-    case ly_grid:
-      layer = scm_from_latin1_symbol ("grid");
-      break;
-    default:
-      if (0 <= _i)
-        layer = i;
-      else
-        {
-          const char *message = _("not a recognized layer index");
-          rnrs_raise_condition
-            (scm_list_4
-             (rnrs_make_assertion_violation (),
-              rnrs_c_make_who_condition ("scm_integer_to_layer"),
-              rnrs_c_make_message_condition (message),
-              rnrs_make_irritants_condition (scm_list_1 (i))));
-        }
-      break;
-    }
-  return layer;
+  SCM names = SCM_EOL;
+  for (size_t i = sf->layer_cnt; 0 < i; i--)
+    names = scm_cons (scm_from_utf8_string (sf->layers[i - 1].name), names);
+  return names;
 }
 
 static SCM
 scm_update_changed_SplineChar (SCM splinechar_ptr, SCM layer)
 {
-  SCCharChangedUpdate (scm_to_pointer (splinechar_ptr),
-                       scm_to_int (scm_layer_to_integer (layer)));
+  SplineChar *sc = scm_to_pointer (splinechar_ptr);
+  SCM layer_names = scm_c_SplineFont_layer_names (sc->parent);
+  SCCharChangedUpdate (sc, scm_to_int (scm_layer_to_integer
+                                       (layer, layer_names)));
   return SCM_UNSPECIFIED;
 }
 
@@ -99,9 +49,6 @@ void init_guile_internals_glyphs (void);
 VISIBLE void
 init_guile_internals_glyphs (void)
 {
-  scm_c_define_gsubr ("layer->integer", 1, 0, 0, scm_layer_to_integer);
-  scm_c_define_gsubr ("integer->layer", 1, 0, 0, scm_integer_to_layer);
-
   scm_c_define_gsubr ("update-changed-SplineChar", 2, 0, 0,
                       scm_update_changed_SplineChar);
 }

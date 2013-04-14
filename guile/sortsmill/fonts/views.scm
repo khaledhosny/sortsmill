@@ -50,7 +50,9 @@
 
           ;; Convenience functions.
           glyph-view->SplineChar
-          font-view->SplineFont)
+          font-view->SplineFont
+          view->SplineFont
+          view->FontViewBase)
 
   (import (sortsmill fontforge-api)
           (sortsmill i18n)
@@ -100,9 +102,7 @@
   (define (view->pointer v)
     (cond ((glyph-view? v) (glyph-view->pointer v))
           ((font-view? v) (font-view->pointer v))
-          (else (assertion-violation
-                 'view->pointer
-                 (_ "expected a font-view or glyph-view") v))))
+          [else raise-not-a-view 'view->pointer v]))
 
   (define font-view->FontViewBase
     (compose pointer->FontViewBase font-view->pointer))
@@ -145,9 +145,25 @@
            [sc (CharViewBase:sc-dref cvb)])
       sc))
 
-  (define (font-view->SplineFont gv)
-    (let* ([fvb (font-view->FontViewBase gv)]
+  (define (font-view->SplineFont fv)
+    (let* ([fvb (font-view->FontViewBase fv)]
            [sf (FontViewBase:sf-dref fvb)])
       sf))
+
+  (define (view->SplineFont v)
+    (cond [(font-view? v) (font-view->SplineFont v)]
+          [(glyph-view? v)
+           (SplineChar:parent-dref (glyph-view->SplineChar v))]
+          [else raise-not-a-view 'view->SplineFont v]))
+
+  (define (view->FontViewBase v)
+    (cond [(font-view? v) (font-view->FontViewBase v)]
+          [(glyph-view? v)
+           (SplineFont:fv-dref
+            (SplineChar:parent-dref (glyph-view->SplineChar v)))]
+          [else raise-not-a-view 'view->FontViewBase v]))
+
+  (define (raise-not-a-view who obj)
+    (assertion-violation who (_ "expected a font-view or glyph-view") obj))
 
   ) ;; end of library.

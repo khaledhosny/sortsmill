@@ -325,7 +325,7 @@ scm_within_peg_spacing_tolerance_p (SCM a, SCM b)
   return scm_leq_p (scm_abs (scm_difference (a, b)), tolerance);
 }
 
-#if 0 // NOT YET USED
+#if 0                           // NOT YET USED
 
 static int
 compare_anchor_point_coords (const void *coords1, const void *coords2)
@@ -374,7 +374,7 @@ _my_scm_compare_func (const char *who, SCM side)
   return result;
 }
 
-#if 0 // NOT YET USED
+#if 0                           // NOT YET USED
 
 static void
 make_peg_signature (const char *who, SCM side, size_t *peg_count,
@@ -413,7 +413,8 @@ make_peg_signature (const char *who, SCM side, size_t *peg_count,
 }
 
 static void
-normalize_peg_signature (SCM spacing, size_t peg_count, SCM coords[peg_count][2])
+normalize_peg_signature (SCM spacing, size_t peg_count,
+                         SCM coords[peg_count][2])
 {
   for (size_t i = 0; i < peg_count; i++)
     coords[i][0] = scm_difference (coords[i][0], spacing);
@@ -422,7 +423,8 @@ normalize_peg_signature (SCM spacing, size_t peg_count, SCM coords[peg_count][2]
 #endif // NOT YET USED
 
 static SCM
-calculate_spacing (const char *who, SCM side, size_t peg_count, SCM coords[peg_count][2])
+calculate_spacing (const char *who, SCM side, size_t peg_count,
+                   SCM coords[peg_count][2])
 {
   // Choose the x coordinate that juts out the most on the given side.
 

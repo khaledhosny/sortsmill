@@ -55,6 +55,8 @@
    )
 
   (import (sortsmill dynlink)
+          (sortsmill fonts glyphs)
+          (sortsmill fontforge-api)
           (rnrs)
           (except (guile) error)
           (ice-9 match))

@@ -218,10 +218,17 @@ typedef struct
 
 typedef struct charviewbase
 {
+  /* WARNING: If you change the fields of CharViewBase, be sure to
+     update the definition of minimalist_CharViewBase. */
+
+  /* FIXME: Do we need a field to tell us whether or not this
+     CharViewBase is embedded in a CharView? */
+  
   int tag;                      /* == FF_GLYPH_WINDOW. This field must come first and must
                                    be set. */
   struct charviewbase *next;
-  struct fontviewbase *fv;
+  struct fontviewbase *fv; /* FIXME: Is this field redundant with
+                              sc->parent->fv ? */
   SplineChar *sc;
   Layer *layerheads[dm_max];
   uint8_t drawmode;
@@ -230,23 +237,7 @@ typedef struct charviewbase
   struct cvcontainer *container;        /* The sv (or whatever) within which this view is embedded (if it is embedded) */
 } CharViewBase;
 
-static inline CharViewBase
-minimalist_CharViewBase (SplineChar *sc)
-{
-  /* The minimum necessary for use as a glyph-view in Guile. */
-  CharViewBase cvb = {
-    .tag = FF_GLYPH_WINDOW,
-    .next = NULL,
-    .fv = NULL,
-    .sc = sc,
-    .layerheads = { NULL, NULL, NULL },
-    .drawmode = 0,
-    .ft_gridfitwidth = 0,
-    .gridfit = NULL,
-    .container = NULL
-  };
-  return cvb;
-}
+CharViewBase minimalist_CharViewBase (SplineChar *sc);
 
 struct fvcontainer
 {

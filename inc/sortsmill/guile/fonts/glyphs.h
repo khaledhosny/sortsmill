@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_FONTS_VIEWS_H
-#define _SORTSMILL_GUILE_FONTS_VIEWS_H
+#ifndef _SORTSMILL_GUILE_FONTS_GLYPHS_H
+#define _SORTSMILL_GUILE_FONTS_GLYPHS_H
 
 #include <libguile.h>
 
@@ -28,20 +28,23 @@ extern "C"
 }
 #endif
 
-SCM scm_font_view_p (SCM);
-SCM scm_pointer_to_font_view (SCM);
-SCM scm_font_view_to_pointer (SCM);
+SCM scm_glyphlayer_to_glyph_view (SCM gl);
+SCM scm_glyphlayer_to_layer (SCM gl);
 
-SCM scm_glyph_view_p (SCM);
-SCM scm_pointer_to_glyph_view (SCM);
-SCM scm_glyph_view_to_pointer (SCM);
+SCM scm_glyphlayer_update_changed (SCM gl);
 
-SCM scm_glyph_view_to_CharViewBase (SCM);
-SCM scm_CharViewBase_to_glyph_view (SCM);
+SCM scm_glyph_view_transform_by_psmat (SCM gv, SCM ps_matrix, SCM flags);
 
-SCM scm_glyph_view_to_SplineChar (SCM);
-SCM scm_font_view_to_SplineFont (SCM);
-SCM scm_view_to_SplineFont (SCM);
+SCM scm_view_active_layer (SCM view);
+SCM scm_view_active_layer_set_p (SCM view, SCM layer);
+
+SCM scm_glyph_view_editable_layer (SCM gv);
+SCM scm_glyph_view_editable_layer_set_p (SCM gv, SCM layer);
+
+SCM scm_view_layer_names (SCM view);
+
+SCM scm_layer_to_integer (SCM layer, SCM layer_names);
+SCM scm_integer_to_layer (SCM i);
 
 #if 0
 {
@@ -50,4 +53,4 @@ SCM scm_view_to_SplineFont (SCM);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_FONTS_VIEWS_H */
+#endif /* _SORTSMILL_GUILE_FONTS_GLYPHS_H */

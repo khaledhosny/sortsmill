@@ -23,13 +23,13 @@ static const char my_module[] = "sortsmill fonts anchors";
 //-------------------------------------------------------------------------
 
 VISIBLE C_WRAP_SCM_CALL_1 (scm_view_anchor_classes, my_module,
-                           "view-anchor-classes");
+                           "view:anchor-classes");
 VISIBLE C_WRAP_SCM_CALL_1 (scm_glyph_view_anchor_points, my_module,
-                           "glyph-view-anchor-points");
+                           "glyph-view:anchor-points");
 VISIBLE C_WRAP_SCM_CALL_2 (scm_glyph_view_anchor_points_set_x, my_module,
-                           "glyph-view-anchor-points-set!");
+                           "glyph-view:anchor-points-set!");
 VISIBLE C_WRAP_SCM_CALL_2 (scm_glyph_view_anchor_points_add_x, my_module,
-                           "glyph-view-anchor-points-add!");
+                           "glyph-view:anchor-points-add!");
 VISIBLE C_WRAP_SCM_CALL_1 (scm_anchor_point_name, my_module,
                            "anchor-point-name");
 VISIBLE C_WRAP_SCM_CALL_1 (scm_anchor_point_type, my_module,

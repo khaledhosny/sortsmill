@@ -9,6 +9,8 @@ sortsmill/editor/main-loop.go: sortsmill/editor/finalization.go sortsmill/dynlin
 sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
 sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__.go
 sortsmill/fonts/contours.go: sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go
+sortsmill/fonts/glyphs.go: sortsmill/dynlink.go
+sortsmill/fonts/peg-spacing.go: sortsmill/dynlink.go sortsmill/fonts/glyphs.go sortsmill/fontforge-api.go
 sortsmill/fonts/psmat.go: sortsmill/math/matrices.go
 sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go
 sortsmill/i18n.go: sortsmill/pkg-info.go sortsmill/dynlink.go
@@ -54,7 +56,7 @@ sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/containers.go: sortsmill/containers/rnrs-hashtable.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
-sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/psmat.go sortsmill/fonts/views.go
+sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/glyphs.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/psmat.go sortsmill/fonts/views.go
 sortsmill/gdraw-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go
 sortsmill/math.go: sortsmill/math/brentroot.go sortsmill/math/functions.go sortsmill/math/geometry.go sortsmill/math/gsl.go sortsmill/math/math-constants.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
 sortsmill/math/geometry.go: sortsmill/math/geometry/lines.go

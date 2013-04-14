@@ -853,13 +853,16 @@ SCTransLayer (FontViewBase *fv, SplineChar *sc, int flags, int i,
     BackgroundImageTransform (sc, img, transform);
 }
 
-/* If sel is specified then we decide how to transform references based on */
-/*  whether the refered glyph is selected. (If we tranform a reference that */
-/*  is selected we are, in effect, transforming it twice -- since the glyph */
-/*  itself will be transformed -- so instead we just transform the offsets */
-/*  of the reference */
-/* If sel is NULL then we transform the reference */
-/* if flags&fvt_partialreftrans then we always just transform the offsets */
+// If sel is specified then we decide how to transform references
+// based on whether the referred glyph is selected. If we tranform a
+// reference that is selected we are, in effect, transforming it twice
+// – since the glyph itself will be transformed – so instead we just
+// transform the offsets of the reference.
+//
+// If sel is NULL then we transform the reference.
+//
+// If flags&fvt_partialreftrans then we always just transform the
+// offsets.
 void
 FVTrans (FontViewBase *fv, SplineChar *sc, real transform[6], uint8_t *sel,
          enum fvtrans_flags flags)
@@ -974,10 +977,17 @@ FVTrans (FontViewBase *fv, SplineChar *sc, real transform[6], uint8_t *sel,
   /*if ( flags&fvt_round_to_int ) */
   if ((flags & fvt_round_to_int) && !sc->inspiro)
     {
-      /* Rounding the spiros might be a bad idea. */
-      /* Not rounding the spiros is also a bad idea. */
-      /* Not sure which is worse */
-      /* Barry thinks rounding them is a bad idea. */
+      // Rounding the spiros might be a bad idea.  Not rounding the
+      // spiros is also a bad idea.  Not sure which is worse. Barry
+      // thinks rounding them is a bad idea.
+      //
+      // 13 April 2013: Barry thinks Spiro and Sorts Mill Editor go
+      // together like oil and water. He has no idea whether to round
+      // the Spiro points, and he hardly cares.  Anyway, if it
+      // matters, we can always use a Guile fluid for the user to set
+      // a preference, without cluttering the GUI. If someone wants a
+      // GUI they can write an extension and so pioneer GUI extension
+      // techniques for Sorts Mill Editor. :)
       SCRound2Int (sc, fv->active_layer, 1.0);
     }
   SCCharChangedUpdate (sc, fv->active_layer);

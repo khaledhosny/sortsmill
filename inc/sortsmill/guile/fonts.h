@@ -20,6 +20,7 @@
 
 #include <sortsmill/guile/fonts/anchors.h>
 #include <sortsmill/guile/fonts/contours.h>
+#include <sortsmill/guile/fonts/glyphs.h>
 #include <sortsmill/guile/fonts/peg_spacing.h>
 #include <sortsmill/guile/fonts/views.h>
 

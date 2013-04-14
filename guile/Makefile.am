@@ -359,6 +359,13 @@ GO_FILES += sortsmill/fonts/contours.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/contours.scm
 
 
+# (sortsmill fonts glyphs)
+
+DIST_SCM_FILES += sortsmill/fonts/glyphs.scm
+GO_FILES += sortsmill/fonts/glyphs.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/glyphs.scm
+
+
 # (sortsmill peg-spacing)
 
 DIST_SCM_FILES += sortsmill/fonts/peg-spacing.scm

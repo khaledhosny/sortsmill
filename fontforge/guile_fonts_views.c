@@ -19,7 +19,26 @@
 
 static const char my_module[] = "sortsmill fonts views";
 
+VISIBLE C_WRAP_SCM_CALL_1 (scm_font_view_p, my_module, "font-view?");
+VISIBLE C_WRAP_SCM_CALL_1 (scm_pointer_to_font_view, my_module,
+                           "pointer->font-view");
+VISIBLE C_WRAP_SCM_CALL_1 (scm_font_view_to_pointer, my_module,
+                           "font-view->pointer");
+
+VISIBLE C_WRAP_SCM_CALL_1 (scm_glyph_view_p, my_module, "glyph-view?");
+VISIBLE C_WRAP_SCM_CALL_1 (scm_pointer_to_glyph_view, my_module,
+                           "pointer->glyph-view");
+VISIBLE C_WRAP_SCM_CALL_1 (scm_glyph_view_to_pointer, my_module,
+                           "glyph-view->pointer");
+
 VISIBLE C_WRAP_SCM_CALL_1 (scm_glyph_view_to_CharViewBase, my_module,
                            "glyph-view->CharViewBase");
 VISIBLE C_WRAP_SCM_CALL_1 (scm_CharViewBase_to_glyph_view, my_module,
                            "CharViewBase->glyph-view");
+
+VISIBLE C_WRAP_SCM_CALL_1 (scm_glyph_view_to_SplineChar, my_module,
+                           "glyph-view->SplineChar");
+VISIBLE C_WRAP_SCM_CALL_1 (scm_font_view_to_SplineFont, my_module,
+                           "font-view->SplineFont");
+VISIBLE C_WRAP_SCM_CALL_1 (scm_view_to_SplineFont, my_module,
+                           "view->SplineFont");

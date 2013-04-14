@@ -39,6 +39,14 @@ SCM scm_symbol__type (void);    /* type */
 SCM scm_symbol__left (void);    /* left */
 SCM scm_symbol__right (void);   /* right */
 
+SCM scm_symbol__all (void);     /* all */
+
+/*-----------------------------------------------------------------------*/
+
+/* Glyph layers. */
+
+SCM scm_symbol__grid (void);    /* grid */
+
 /*-----------------------------------------------------------------------*/
 
 /* OpenType lookups. */

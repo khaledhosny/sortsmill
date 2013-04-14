@@ -109,6 +109,7 @@ libsortsmill_fontforge_la_SOURCES += bezctx_ff.c
 libsortsmill_fontforge_la_SOURCES += bitmapchar.c
 libsortsmill_fontforge_la_SOURCES += bitmapcontrol.c
 libsortsmill_fontforge_la_SOURCES += bvedit.c
+libsortsmill_fontforge_la_SOURCES += charviewbase.c
 libsortsmill_fontforge_la_SOURCES += clipnoui.c
 libsortsmill_fontforge_la_SOURCES += crctab.c
 libsortsmill_fontforge_la_SOURCES += cvexport.c
@@ -204,6 +205,7 @@ libsortsmill_fontforge_la_SOURCES += guile_internals_lookups.c
 
 libsortsmill_fontforge_la_SOURCES += guile_fonts_anchors.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_contours.c
+libsortsmill_fontforge_la_SOURCES += guile_fonts_glyphs.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_peg_spacing.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_views.c
 

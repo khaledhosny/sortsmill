@@ -75,6 +75,7 @@ fontforge/glyphcomp.c
 fontforge/gotodlg.c
 fontforge/groups.c
 fontforge/groupsdlg.c
+fontforge/guile_fonts_glyphs.c
 fontforge/guile_fonts_peg_spacing.c
 fontforge/guile_internals_anchors.c
 fontforge/guile_internals_glyphs.c
@@ -184,6 +185,7 @@ guile/sortsmill/python.scm
 
 guile/sortsmill/fonts/anchors.scm
 guile/sortsmill/fonts/contours.scm
+guile/sortsmill/fonts/glyphs.scm
 guile/sortsmill/fonts/views.scm
 
 guile/sortsmill/math/geometry/lines.scm
