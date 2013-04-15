@@ -60,6 +60,11 @@
    ;; (glyph-view:transform-by-psmat glyph-view psmat flags) → *unspecified*
    glyph-view:transform-by-psmat
 
+   ;; (glyph-view:width glyph-view) → integer
+   ;; (glyph-view:width-set! glyph-view integer) → *unspecified*
+   glyph-view:width
+   glyph-view:width-set!
+
    ;; Conversion between the Guile representation of layers and the
    ;; integer representation used internally in the C code as a legacy
    ;; from the original FontForge. These procedures are liable to

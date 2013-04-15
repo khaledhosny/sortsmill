@@ -151,7 +151,7 @@ SCSynchronizeWidth (SplineChar *sc, real newwidth, real oldwidth,
 /* If they change the left bearing of a character, then in all chars */
 /*  that depend on it should be adjusted too. */
 /* Also all vstem hints */
-/* I deliberately don't set undoes in the dependants. The change is not */
+/* I deliberately don't set undoes in the dependents. The change is not */
 /*  in them, after all */
 void
 SCSynchronizeLBearing (SplineChar *sc, real off, int layer)

@@ -44,6 +44,9 @@ SCM scm_glyph_view_editable_layer_set_p (SCM gv, SCM layer);
 
 SCM scm_view_layer_names (SCM view);
 
+SCM scm_glyph_view_width (SCM gv);
+SCM scm_glyph_view_width_set_x (SCM gv, SCM width);
+
 SCM scm_layer_to_integer (SCM layer, SCM layer_names);
 SCM scm_integer_to_layer (SCM i);
 

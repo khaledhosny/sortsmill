@@ -113,6 +113,29 @@ scm_glyph_view_transform_by_psmat (SCM gv, SCM ps_matrix, SCM flags)
 //-------------------------------------------------------------------------
 
 VISIBLE SCM
+scm_glyph_view_width (SCM gv)
+{
+  SplineChar *sc =
+    scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
+                                       scm_glyph_view_to_SplineChar (gv)));
+  return scm_from_intmax (sc->width);
+}
+
+VISIBLE SCM
+scm_glyph_view_width_set_x (SCM gv, SCM width)
+{
+  SplineChar *sc =
+    scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
+                                       scm_glyph_view_to_SplineChar (gv)));
+  const intmax_t new_width = scm_to_intmax (scm_round_number (width));
+  SCSynchronizeWidth (sc, new_width, sc->width, NULL);
+  scm_glyphlayer_update_changed (gv);
+  return SCM_UNSPECIFIED;
+}
+
+//-------------------------------------------------------------------------
+
+VISIBLE SCM
 scm_layer_to_integer (SCM layer, SCM layer_names)
 {
   const char *who = "scm_layer_to_integer";
@@ -272,7 +295,6 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
       if (cvb->drawmode != dm_grid)
         {
           cvb->drawmode = dm_grid;
-          scm_glyphlayer_update_changed (gv);
           scm_view_update_layer_palette (gv);
         }
       break;
@@ -281,7 +303,6 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
       if (cvb->drawmode != dm_fore)
         {
           cvb->drawmode = dm_fore;
-          scm_glyphlayer_update_changed (gv);
           scm_view_update_layer_palette (gv);
         }
       break;
@@ -302,7 +323,6 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
         {
           cvb->drawmode = dm_back;
           cvb->layerheads[dm_back] = &cvb->sc->layers[i_layer];
-          scm_glyphlayer_update_changed (gv);
           scm_view_update_layer_palette (gv);
         }
       break;
@@ -330,6 +350,9 @@ init_guile_fonts_glyphs (void)
 
   scm_c_define_gsubr ("glyph-view:transform-by-psmat", 2, 1, 0,
                       scm_glyph_view_transform_by_psmat);
+
+  scm_c_define_gsubr ("glyph-view:width", 1, 0, 0, scm_glyph_view_width);
+  scm_c_define_gsubr ("glyph-view:width-set!", 2, 0, 0, scm_glyph_view_width_set_x);
 
   scm_c_define_gsubr ("layer->integer", 1, 1, 0, scm_layer_to_integer);
   scm_c_define_gsubr ("integer->layer", 1, 0, 0, scm_integer_to_layer);

@@ -18,8 +18,12 @@
 (library (sortsmill fonts peg-spacing)
 
   (export
-   peg-spacing-tolerance
-   peg-spacing-rounding-function
+   ;; Fluids for peg-spacing parameters.
+   peg-spacing-tolerance                ; A non-negative number.
+   peg-spacing-rounding-function        ; A number→number function.
+
+   ;; (within-peg-spacing-tolerance? real1 real2) → boolean
+   within-peg-spacing-tolerance?
 
    ;; (spacing-peg-name? anchor-name) → boolean
    spacing-peg-name?
@@ -47,16 +51,23 @@
    left-ordinary-spacing-pegs
    right-ordinary-spacing-pegs
 
-   ;; (within-peg-spacing-tolerance? real1 real2) → boolean
-   within-peg-spacing-tolerance?
-
+   ;; (peg-spacing-left-spacing anchor-points-list) → real-number
+   ;; (peg-spacing-right-spacing anchor-points-list) → real-number
    peg-spacing-left-spacing
    peg-spacing-right-spacing
+
+   ;; FIXME: Document these. (They are #:action and #:enabled
+   ;; procedures, currently implemented only for glyph-view, but they
+   ;; will need font-view support, too.) FIXME: Consider renaming
+   ;; ‘#:enabled’ keyword as ‘#:enabled?’
+   glyph-view:space-by-pegs
+   glyph-view:space-by-pegs-enabled?
    )
 
-  (import (sortsmill dynlink)
-          (sortsmill fonts glyphs)
+  (import (sortsmill fonts glyphs)
+          (sortsmill fonts anchors)
           (sortsmill fontforge-api)
+          (sortsmill dynlink)
           (rnrs)
           (except (guile) error)
           (ice-9 match))
@@ -66,5 +77,21 @@
 
   (define peg-spacing-tolerance (make-fluid #f))
   (define peg-spacing-rounding-function (make-fluid identity))
+
+  (define (glyph-view:space-by-pegs gv)
+    (let* ([anchor-points (glyph-view:anchor-points gv)]
+           [left-spacing (peg-spacing-left-spacing anchor-points)]
+           [right-spacing (peg-spacing-right-spacing anchor-points)])
+      (when (and left-spacing right-spacing)
+        (glyph&layer:preserve-as-undo `(,gv all) #:hints? #t)
+        (glyph-view:transform-by-psmat gv `(1 0 0 1 ,(- left-spacing) 0))
+        (glyph-view:width-set! gv (inexact->exact
+                                   (- right-spacing left-spacing)))) ))
+
+    (define (glyph-view:space-by-pegs-enabled? gv)
+      (let* ([anchor-points (glyph-view:anchor-points gv)]
+             [left-spacing (peg-spacing-left-spacing anchor-points)]
+             [right-spacing (peg-spacing-right-spacing anchor-points)])
+        (and left-spacing right-spacing)))
 
   ) ;; end of library.
