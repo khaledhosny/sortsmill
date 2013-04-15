@@ -53,7 +53,8 @@ scm_SplineFont_preserve_guide_layer_as_undo (SCM splinefont)
 }
 
 static SCM
-scm_SplineChar_preserve_layer_as_undo (SCM who, SCM splinechar, SCM layer, SCM layer_names, SCM hints_p)
+scm_SplineChar_preserve_layer_as_undo (SCM who, SCM splinechar, SCM layer,
+                                       SCM layer_names, SCM hints_p)
 {
   SCM i_layer = scm_layer_to_integer (layer, layer_names);
   if (scm_is_true (scm_negative_p (i_layer)))

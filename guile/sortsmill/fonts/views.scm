@@ -56,13 +56,14 @@
 
   (import (sortsmill fontforge-api)
           (sortsmill i18n)
+          (sortsmill dynlink)
           (rnrs)
-          (only (guile) compose)
+          (only (guile) compose eval-when)
           (system foreign)
           (ice-9 format))
 
-  (define font-view-flag 1)
-  (define glyph-view-flag 2)
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_guile_fonts_views"))
 
   (define-wrapped-pointer-type font-view
     font-view?

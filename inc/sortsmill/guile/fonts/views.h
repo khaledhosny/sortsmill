@@ -36,12 +36,30 @@ SCM scm_glyph_view_p (SCM);
 SCM scm_pointer_to_glyph_view (SCM);
 SCM scm_glyph_view_to_pointer (SCM);
 
+SCM scm_view_p (SCM);
+SCM scm_pointer_to_view (SCM);
+SCM scm_view_to_pointer (SCM);
+
 SCM scm_glyph_view_to_CharViewBase (SCM);
 SCM scm_CharViewBase_to_glyph_view (SCM);
+
+SCM scm_font_view_to_FontViewBase (SCM);
+SCM scm_FontViewBase_to_font_view (SCM);
+
+SCM scm_glyph_view_to_ViewBase (SCM);
+SCM scm_ViewBase_to_glyph_view (SCM);
+SCM scm_font_view_to_ViewBase (SCM);
+SCM scm_ViewBase_to_font_view (SCM);
+
+SCM scm_ViewBase_to_CharViewBase (SCM);
+SCM scm_CharViewBase_to_ViewBase (SCM);
+SCM scm_ViewBase_to_FontViewBase (SCM);
+SCM scm_FontViewBase_to_ViewBase (SCM);
 
 SCM scm_glyph_view_to_SplineChar (SCM);
 SCM scm_font_view_to_SplineFont (SCM);
 SCM scm_view_to_SplineFont (SCM);
+SCM scm_view_to_FontViewBase (SCM);
 
 #if 0
 {
