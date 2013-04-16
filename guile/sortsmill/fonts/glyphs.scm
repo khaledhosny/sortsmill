@@ -73,7 +73,7 @@
    ;; (layer->integer layer) → integer
    ;; (integer->layer integer) → layer
    ;;
-   ;; where layer is a non-negative integer, string, 'all, 'grid, or
+   ;; where layer is a non-negative integer, string, 'all, 'guide, or
    ;; #f.
    layer->integer
    integer->layer
@@ -133,14 +133,13 @@
     (let-values ([(gv layer) (glyph&layer->glyph-view-and-layer gl)])
       (let ([sc (glyph-view->SplineChar gv)])
         (match layer
-          ['grid (private:SplineFont-preserve-guide-layer-as-undo
-                  (SplineChar:parent-dref sc))]
+          ['guide (private:view:preserve-guide-layer-as-undo gv)]
           ['all (for-each
                  (lambda (layer^)
                    (glyph&layer:preserve-as-undo `(,gv ,layer^) #:hints? hints?))
                  (view:layer-names gv))]
-          [_ (private:SplineChar-preserve-layer-as-undo
+          [_ (private:glyph&layer:preserve-nonguide-layer-as-undo
               'glyph&layer:preserve-as-undo
-              sc layer (view:layer-names gv) hints?)] ))))
+              gl (view:layer-names gv) hints?)] ))))
 
   ) ;; end of library.

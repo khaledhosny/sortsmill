@@ -45,7 +45,7 @@ SCM scm_symbol__all (void);     /* all */
 
 /* Glyph layers. */
 
-SCM scm_symbol__grid (void);    /* grid */
+SCM scm_symbol__guide (void);   /* guide */
 
 /*-----------------------------------------------------------------------*/
 

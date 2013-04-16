@@ -77,6 +77,44 @@ VISIBLE C_WRAP_SCM_CALL_1 (scm_view_to_FontViewBase, my_module,
 
 //-------------------------------------------------------------------------
 
+VISIBLE void *
+scm_c_glyph_view_to_CharViewBase (SCM gv)
+{
+  return scm_to_pointer (SCM_FF_API_CALL_1 ("CharViewBase->pointer",
+                                            scm_glyph_view_to_CharViewBase
+                                            (gv)));
+}
+
+VISIBLE void *
+scm_c_glyph_view_to_SplineChar (SCM gv)
+{
+  return scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
+                                            scm_glyph_view_to_SplineChar (gv)));
+}
+
+VISIBLE void *
+scm_c_font_view_to_SplineFont (SCM fv)
+{
+  return scm_to_pointer (SCM_FF_API_CALL_1 ("SplineFont->pointer",
+                                            scm_font_view_to_SplineFont (fv)));
+}
+
+VISIBLE void *
+scm_c_view_to_SplineFont (SCM v)
+{
+  return scm_to_pointer (SCM_FF_API_CALL_1 ("SplineFont->pointer",
+                                            scm_view_to_SplineFont (v)));
+}
+
+VISIBLE void *
+scm_c_view_to_FontViewBase (SCM v)
+{
+  return scm_to_pointer (SCM_FF_API_CALL_1 ("FontViewBase->pointer",
+                                            scm_view_to_FontViewBase (v)));
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_fonts_views (void);
 
 VISIBLE void

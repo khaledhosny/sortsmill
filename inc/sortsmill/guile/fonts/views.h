@@ -61,6 +61,14 @@ SCM scm_font_view_to_SplineFont (SCM);
 SCM scm_view_to_SplineFont (SCM);
 SCM scm_view_to_FontViewBase (SCM);
 
+/* The following functions return void pointers so they can be
+   included here without any reference to internal structures. */
+void *scm_c_glyph_view_to_CharViewBase (SCM);
+void *scm_c_glyph_view_to_SplineChar (SCM);
+void *scm_c_font_view_to_SplineFont (SCM);
+void *scm_c_view_to_SplineFont (SCM);
+void *scm_c_view_to_FontViewBase (SCM);
+
 #if 0
 {
 #endif

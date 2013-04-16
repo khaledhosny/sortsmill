@@ -35,7 +35,7 @@ SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__all, "all");
 //
 // Glyph layers.
 
-SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__grid, "grid");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__guide, "guide");
 
 //-------------------------------------------------------------------------
 //

@@ -44,20 +44,19 @@ VISIBLE C_WRAP_SCM_CALL_1 (scm_view_active_layer_set_x, my_module,
 //-------------------------------------------------------------------------
 
 static SCM
-scm_SplineFont_preserve_guide_layer_as_undo (SCM splinefont)
+scm_view_preserve_guide_layer_as_undo (SCM view)
 {
-  SplineFont *sf = scm_to_pointer (SCM_FF_API_CALL_1 ("SplineFont->pointer",
-                                                      splinefont));
-  _SFPreserveGuide (sf);
+  _SFPreserveGuide ((SplineFont *) scm_c_font_view_to_SplineFont (view));
   return SCM_UNSPECIFIED;
 }
 
 static SCM
-scm_SplineChar_preserve_layer_as_undo (SCM who, SCM splinechar, SCM layer,
-                                       SCM layer_names, SCM hints_p)
+scm_glyphlayer_preserve_nonguide_layer_as_undo (SCM who, SCM glyphlayer,
+                                                SCM layer_names, SCM hints_p)
 {
-  SCM i_layer = scm_layer_to_integer (layer, layer_names);
-  if (scm_is_true (scm_negative_p (i_layer)))
+  SCM layer = scm_glyphlayer_to_layer (glyphlayer);
+  int i_layer = scm_to_int (scm_layer_to_integer (layer, layer_names));
+  if (i_layer < 0)
     {
       const char *message = _("not a valid layer to preserve for undo");
       rnrs_raise_condition
@@ -65,49 +64,40 @@ scm_SplineChar_preserve_layer_as_undo (SCM who, SCM splinechar, SCM layer,
          (rnrs_make_assertion_violation (),
           rnrs_make_who_condition (who),
           rnrs_c_make_message_condition (message),
-          rnrs_make_irritants_condition (scm_list_1 (layer))));
+          rnrs_make_irritants_condition (scm_list_1 (glyphlayer))));
     }
-  SplineChar *sc = scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
-                                                      splinechar));
-  _SCPreserveLayer (sc, scm_to_int (i_layer), scm_is_true (hints_p));
+
+  SCM gv = scm_glyphlayer_to_glyph_view (glyphlayer);
+  SplineChar *sc = (SplineChar *) scm_c_glyph_view_to_SplineChar (gv);
+
+  _SCPreserveLayer (sc, i_layer, scm_is_true (hints_p));
+
   return SCM_UNSPECIFIED;
 }
 
 //-------------------------------------------------------------------------
 
-static SCM
-scm_FVTrans (SCM fontviewbase, SCM splinechar, SCM ps_matrix, SCM sel,
-             SCM flags)
+static void
+scm_psmat_to_real_array (SCM ps_matrix, real array[6])
 {
-  real transform[6];
   for (size_t i = 0; i < 6; i++)
-    transform[i] =
-      scm_to_double (scm_list_ref (ps_matrix, scm_from_size_t (i)));
-  FVTrans (scm_to_pointer (SCM_FF_API_CALL_1 ("FontViewBase->pointer",
-                                              fontviewbase)),
-           scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
-                                              splinechar)),
-           transform, scm_to_pointer (sel), scm_to_int (flags));
-  return SCM_UNSPECIFIED;
-}
-
-static SCM
-scm_ffglyph_transform (SCM splinechar, SCM ps_matrix, SCM flags)
-{
-  SCM splinefont = SCM_FF_API_CALL_1 ("SplineChar:parent-dref", splinechar);
-  SCM fontviewbase = SCM_FF_API_CALL_1 ("SplineFont:fv-dref", splinefont);
-  SCM sel = scm_from_pointer (NULL, NULL);
-  SCM flags2 = scm_logior (flags, scm_from_int (fvt_alllayers));
-  return scm_FVTrans (fontviewbase, splinechar, ps_matrix, sel, flags2);
+    array[i] = scm_to_double (scm_list_ref (ps_matrix, scm_from_size_t (i)));
 }
 
 VISIBLE SCM
 scm_glyph_view_transform_by_psmat (SCM gv, SCM ps_matrix, SCM flags)
 {
-  if (SCM_UNBNDP (flags))
-    flags = scm_from_int (0);
-  SCM sc = scm_glyph_view_to_SplineChar (gv);
-  return scm_ffglyph_transform (sc, ps_matrix, flags);
+  real transform[6];
+  scm_psmat_to_real_array (ps_matrix, transform);
+
+  int i_flags =
+    (SCM_UNBNDP (flags)) ? fvt_alllayers : (scm_to_int (flags) | fvt_alllayers);
+
+  FVTrans ((FontViewBase *) scm_c_view_to_FontViewBase (gv),
+           (SplineChar *) scm_c_glyph_view_to_SplineChar (gv),
+           transform, NULL, i_flags);
+
+  return SCM_UNSPECIFIED;
 }
 
 //-------------------------------------------------------------------------
@@ -115,18 +105,14 @@ scm_glyph_view_transform_by_psmat (SCM gv, SCM ps_matrix, SCM flags)
 VISIBLE SCM
 scm_glyph_view_width (SCM gv)
 {
-  SplineChar *sc =
-    scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
-                                       scm_glyph_view_to_SplineChar (gv)));
+  SplineChar *sc = (SplineChar *) scm_c_glyph_view_to_SplineChar (gv);
   return scm_from_intmax (sc->width);
 }
 
 VISIBLE SCM
 scm_glyph_view_width_set_x (SCM gv, SCM width)
 {
-  SplineChar *sc =
-    scm_to_pointer (SCM_FF_API_CALL_1 ("SplineChar->pointer",
-                                       scm_glyph_view_to_SplineChar (gv)));
+  SplineChar *sc = (SplineChar *) scm_c_glyph_view_to_SplineChar (gv);
   const intmax_t new_width = scm_to_intmax (scm_round_number (width));
   SCSynchronizeWidth (sc, new_width, sc->width, NULL);
   scm_glyphlayer_update_changed (gv);
@@ -148,7 +134,7 @@ scm_layer_to_integer (SCM layer, SCM layer_names)
     i = layer;
   else if (scm_is_eq (layer, scm_symbol__all ()))
     i = scm_from_int (ly_all);
-  else if (scm_is_eq (layer, scm_symbol__grid ()))
+  else if (scm_is_eq (layer, scm_symbol__guide ()))
     i = scm_from_int (ly_grid);
   else if (!SCM_UNBNDP (layer_names) && scm_is_string (layer))
     {
@@ -170,8 +156,8 @@ scm_layer_to_integer (SCM layer, SCM layer_names)
     {
       const char *message =
         (SCM_UNBNDP (layer_names)) ?
-        _("expected a non-negative integer, 'all, 'grid, or #f") :
-        _("expected a non-negative integer, string, 'all, 'grid, or #f");
+        _("expected a non-negative integer, 'all, 'guide, or #f") :
+        _("expected a non-negative integer, string, 'all, 'guide, or #f");
       rnrs_raise_condition
         (scm_list_4
          (rnrs_make_assertion_violation (),
@@ -196,7 +182,7 @@ scm_integer_to_layer (SCM i)
       layer = scm_symbol__all ();
       break;
     case ly_grid:
-      layer = scm_symbol__grid ();
+      layer = scm_symbol__guide ();
       break;
     default:
       if (0 <= _i)
@@ -219,9 +205,7 @@ scm_integer_to_layer (SCM i)
 VISIBLE SCM
 scm_view_layer_names (SCM view)
 {
-  SCM splinefont = scm_view_to_SplineFont (view);
-  SplineFont *sf = scm_to_pointer (SCM_FF_API_CALL_1 ("SplineFont->pointer",
-                                                      splinefont));
+  SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
   SCM names = SCM_EOL;
   for (size_t i = sf->layer_cnt; 0 < i; i--)
     names = scm_cons (scm_from_utf8_string (sf->layers[i - 1].name), names);
@@ -231,9 +215,7 @@ scm_view_layer_names (SCM view)
 VISIBLE SCM
 scm_view_update_layer_palette (SCM view)
 {
-  SCM splinefont = scm_view_to_SplineFont (view);
-  SplineFont *sf = scm_to_pointer (SCM_FF_API_CALL_1 ("SplineFont->pointer",
-                                                      splinefont));
+  SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
   CVLayerPaletteCheck (sf);
   return SCM_UNSPECIFIED;
 }
@@ -241,14 +223,12 @@ scm_view_update_layer_palette (SCM view)
 VISIBLE SCM
 scm_glyph_view_editable_layer (SCM gv)
 {
-  CharViewBase *cvb =
-    scm_to_pointer (SCM_FF_API_CALL_1 ("CharViewBase->pointer",
-                                       scm_glyph_view_to_CharViewBase (gv)));
+  CharViewBase *cvb = (CharViewBase *) scm_c_glyph_view_to_CharViewBase (gv);
   SCM layer = SCM_UNSPECIFIED;
   switch (cvb->drawmode)
     {
     case dm_grid:
-      layer = scm_symbol__grid ();
+      layer = scm_symbol__guide ();
       break;
     case dm_fore:
       layer = scm_from_int (1);
@@ -283,9 +263,7 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
 {
   const char *who = "scm_glyph_view_editable_layer_set_x";
 
-  CharViewBase *cvb =
-    scm_to_pointer (SCM_FF_API_CALL_1 ("CharViewBase->pointer",
-                                       scm_glyph_view_to_CharViewBase (gv)));
+  CharViewBase *cvb = (CharViewBase *) scm_c_glyph_view_to_CharViewBase (gv);
 
   int i_layer =
     scm_to_int (scm_layer_to_integer (layer, scm_view_layer_names (gv)));
@@ -352,16 +330,17 @@ init_guile_fonts_glyphs (void)
                       scm_glyph_view_transform_by_psmat);
 
   scm_c_define_gsubr ("glyph-view:width", 1, 0, 0, scm_glyph_view_width);
-  scm_c_define_gsubr ("glyph-view:width-set!", 2, 0, 0, scm_glyph_view_width_set_x);
+  scm_c_define_gsubr ("glyph-view:width-set!", 2, 0, 0,
+                      scm_glyph_view_width_set_x);
 
   scm_c_define_gsubr ("layer->integer", 1, 1, 0, scm_layer_to_integer);
   scm_c_define_gsubr ("integer->layer", 1, 0, 0, scm_integer_to_layer);
 
   // Unexported variables.
-  scm_c_define_gsubr ("private:SplineFont-preserve-guide-layer-as-undo", 1, 0,
-                      0, scm_SplineFont_preserve_guide_layer_as_undo);
-  scm_c_define_gsubr ("private:SplineChar-preserve-layer-as-undo", 5, 0, 0,
-                      scm_SplineChar_preserve_layer_as_undo);
+  scm_c_define_gsubr ("private:view:preserve-guide-layer-as-undo", 1, 0, 0,
+                      scm_view_preserve_guide_layer_as_undo);
+  scm_c_define_gsubr ("private:glyph&layer:preserve-nonguide-layer-as-undo", 4,
+                      0, 0, scm_glyphlayer_preserve_nonguide_layer_as_undo);
 }
 
 //-------------------------------------------------------------------------
