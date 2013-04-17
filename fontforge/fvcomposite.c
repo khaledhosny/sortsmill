@@ -1531,7 +1531,7 @@ _SplineSetFindXRangeAtYExtremum (SplinePointList *spl, DBounds *bounds,
               || (!findymax
                   && !(yextreme < spline->from->me.y
                        && yextreme < spline->from->nextcp.y
-                       && y / extreme < spline->to->me.y
+                       && yextreme < spline->to->me.y
                        && yextreme < spline->to->prevcp.y)))
             {
               /* Ok this spline might be bigger(less) than our current */
