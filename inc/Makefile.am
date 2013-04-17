@@ -59,6 +59,7 @@ noinst_HEADERS += ffthread.h
 noinst_HEADERS += contour_interface.h
 noinst_HEADERS += moveto_funcs.h
 noinst_HEADERS += invoke_funcs.h
+noinst_HEADERS += libguile_sortsmill_aux.h
 
 # C entry point for Sorts Mill Editor.
 nobase_include_HEADERS += sortsmill/fontforge_main.h

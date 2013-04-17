@@ -22,36 +22,9 @@
           c:gc-zalloc ;; Garbage-collected.
           c:gc-free)
 
-  (import (rnrs)
-          (except (guile) error)
-          (system foreign))
+  (import (guile))
 
-  (define what (string->pointer "sortsmill alloc"))
-
-  (define (alloc-dynlink-func func-name)
-    "Dynamic link to symbols that hopefully are nearly, almost
-positively, entirely, with luck guaranteed to be available."
-    (dynamic-pointer func-name (dynamic-link)))
-
-  (define c:zalloc
-    (pointer->procedure '* (alloc-dynlink-func "scm_calloc") `(,size_t)))
-
-  (define c:free
-    (pointer->procedure void (alloc-dynlink-func "free") '(*)))
-
-  (define c:gc-zalloc
-    (let ([proc
-           (pointer->procedure
-            '* (alloc-dynlink-func "scm_gc_calloc") `(,size_t *))])
-      (lambda (size)
-        (proc size what))))
-
-  (define c:gc-free
-    (let ([proc
-           (pointer->procedure
-            void (alloc-dynlink-func "scm_gc_free") `(* ,size_t *))]
-          [size-parameter-that-thankfully-is-ignored-in-Guile-2.x 0])
-      (lambda (p)
-        (proc p size-parameter-that-thankfully-is-ignored-in-Guile-2.x what))))
+  (eval-when (compile load eval)
+    (load-extension "libguile-sortsmill_aux" "init_libguile_sortsmill_aux"))
 
   ) ;; end of library.

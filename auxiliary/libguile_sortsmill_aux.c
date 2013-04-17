@@ -15,12 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/guile/scm_type.h>
-
-void init_libguile_sortsmill_aux (void);
+#include <libguile_sortsmill_aux.h>
 
 VISIBLE void
 init_libguile_sortsmill_aux (void)
 {
   init_sortsmill_guile_scm_type ();
+  init_sortsmill_guile_alloc_base ();
 }
