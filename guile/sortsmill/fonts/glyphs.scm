@@ -65,6 +65,9 @@
    glyph-view:width
    glyph-view:width-set!
 
+   ;; (view:glyph-count view) → non-negative integer
+   view:glyph-count
+
    ;; Conversion between the Guile representation of layers and the
    ;; integer representation used internally in the C code as a legacy
    ;; from the original FontForge. These procedures are liable to

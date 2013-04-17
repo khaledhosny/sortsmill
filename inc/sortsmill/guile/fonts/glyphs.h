@@ -47,6 +47,9 @@ SCM scm_view_layer_names (SCM view);
 SCM scm_glyph_view_width (SCM gv);
 SCM scm_glyph_view_width_set_x (SCM gv, SCM width);
 
+size_t scm_c_view_glyph_count (SCM view);
+SCM scm_view_glyph_count (SCM view);
+
 SCM scm_layer_to_integer (SCM layer, SCM layer_names);
 SCM scm_integer_to_layer (SCM i);
 

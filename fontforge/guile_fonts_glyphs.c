@@ -311,6 +311,25 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
 
 //-------------------------------------------------------------------------
 
+VISIBLE size_t
+scm_c_view_glyph_count (SCM view)
+{
+  SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
+  size_t count = 0;
+  for (ssize_t i = 0; i < sf->glyphcnt; i++)
+    if (sf->glyphs[i] != NULL)
+      count++;
+  return count;
+}
+
+VISIBLE SCM
+scm_view_glyph_count (SCM view)
+{
+  return scm_from_size_t (scm_c_view_glyph_count (view));
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_fonts_glyphs (void);
 
 VISIBLE void
@@ -332,6 +351,8 @@ init_guile_fonts_glyphs (void)
   scm_c_define_gsubr ("glyph-view:width", 1, 0, 0, scm_glyph_view_width);
   scm_c_define_gsubr ("glyph-view:width-set!", 2, 0, 0,
                       scm_glyph_view_width_set_x);
+
+  scm_c_define_gsubr ("view:glyph-count", 1, 0, 0, scm_view_glyph_count);
 
   scm_c_define_gsubr ("layer->integer", 1, 1, 0, scm_layer_to_integer);
   scm_c_define_gsubr ("integer->layer", 1, 0, 0, scm_integer_to_layer);

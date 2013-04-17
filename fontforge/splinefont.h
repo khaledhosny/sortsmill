@@ -2018,15 +2018,22 @@ struct gasp
 
 typedef struct splinefont
 {
-  char *fontname, *fullname, *familyname, *weight;
+  char *fontname;
+  char *fullname;
+  char *familyname;
+  char *weight;
   char *copyright;
   char *filename;               /* sfd name. NULL if we open a font, that's origname */
   char *defbasefilename;
   char *version;
-  real italicangle, upos, uwidth;       /* In font info */
-  int ascent, descent;
+  real italicangle;
+  real upos;
+  real uwidth;                  /* In font info */
+  int ascent;
+  int descent;
   int uniqueid;                 /* Not copied when reading in!!!! */
-  int glyphcnt, glyphmax;       /* allocated size of glyphs array */
+  int glyphcnt;
+  int glyphmax;                 /* allocated size of glyphs array */
   SplineChar **glyphs;
   bool changed;
   bool changed_since_autosave;
