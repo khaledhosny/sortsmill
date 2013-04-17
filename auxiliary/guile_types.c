@@ -19,9 +19,10 @@
 #include <intl.h>
 
 // Generate instances of inline functions.
-void scm_c_assert_can_be_list_link (const char *who, SCM lst, SCM p);
-void scm_c_assert_can_be_alist_link (const char *who, SCM lst, SCM p);
-void scm_c_assert_list_does_not_end_here (const char *who, SCM lst, SCM p);
+VISIBLE void scm_c_assert_can_be_list_link (const char *who, SCM lst, SCM p);
+VISIBLE void scm_c_assert_can_be_alist_link (const char *who, SCM lst, SCM p);
+VISIBLE void scm_c_assert_list_does_not_end_here (const char *who, SCM lst,
+                                                  SCM p);
 
 VISIBLE void
 scm_c_raise_is_not_a_list (const char *who, SCM lst)

@@ -1,4 +1,4 @@
-#! @GUILE@ \ -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+#! @GUILE@ \ -*- mode: scheme; coding: utf-8 -*-
 --no-auto-compile -s
 !#
 
@@ -100,6 +100,7 @@
     [('bool . _) "bool"]
     [('float . _) "double"]
     [('* . _) "void *"]
+    [('SCM . _) "SCM"]
     [('struct . _) (error "NOT YET IMPLEMENTED")]
     [('array . _) (error "NOT YET IMPLEMENTED")] ))
 
@@ -112,6 +113,7 @@
       [('bool . n) (format #f "((bool) (*(~a *) ~a != 0))" (c:uint-type n) address)]
       [('float . n) (format #f "(*(~a *) ~a)" (c:float-type n) address)]
       [('* . n) (format #f "((void *) *(~a *) ~a)" (c:uint-type n) address)]
+      [('SCM . _) (format #f "(*(SCM *) ~a)" address)]
       [('struct . _) (error "NOT YET IMPLEMENTED")]
       [('array . _) (error "NOT YET IMPLEMENTED")] )))
 
@@ -130,6 +132,7 @@
                             (c:float-type n)  address value-expression)]
       [('* . n) (format #f "(*(~a *) ~a = (uint8_t) (uintptr_t) (~a))"
                         (c:uint-type n) address value-expression)]
+      [('SCM . _) (format #f "(*(SCM *) ~a = (~a))" address value-expression)]
       [('struct . _) (error "NOT YET IMPLEMENTED")]
       [('array . _) (error "NOT YET IMPLEMENTED")] )))
 
@@ -142,6 +145,7 @@
   (format #t "#include <stdlib.h>\n")
   (format #t "#include <stdint.h>\n")
   (format #t "#include <stdbool.h>\n")
+  (format #t "#include <libguile.h>\n")
   (format #t "#include <sortsmill/xgc.h>\n")
   (format #t "#include <sortsmill/xdie_on_null.h>\n")
   (format #t "\n")

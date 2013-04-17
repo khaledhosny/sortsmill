@@ -473,6 +473,7 @@
    (('* 2) #'(lambda (bv offset) (make-pointer (bytevector-u16-native-ref bv offset))))
    (('* 4) #'(lambda (bv offset) (make-pointer (bytevector-u32-native-ref bv offset))))
    (('* 8) #'(lambda (bv offset) (make-pointer (bytevector-u64-native-ref bv offset))))
+   (('SCM _) #'(lambda (bv offset) (bytevector-SCM-ref bv offset)))
    (else (syntax-violation #f "illegal field type or size in API instruction"
                            (syntax->datum (current-form))
                            (syntax->datum (current-subform))))
@@ -499,6 +500,7 @@
    (('* 2) #'(lambda (bv offset v) (bytevector-u16-native-set! bv offset (pointer-address v))))
    (('* 4) #'(lambda (bv offset v) (bytevector-u32-native-set! bv offset (pointer-address v))))
    (('* 8) #'(lambda (bv offset v) (bytevector-u64-native-set! bv offset (pointer-address v))))
+   (('SCM _) #'(lambda (bv offset v) (bytevector-SCM-set! bv offset v)))
    (else (syntax-violation #f "illegal field type or size in API instruction"
                            (syntax->datum (current-form))
                            (syntax->datum (current-subform))))

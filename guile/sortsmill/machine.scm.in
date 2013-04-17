@@ -36,6 +36,11 @@
           set-pointer!
           get-pointer
 
+          SCM-ref
+          SCM-set!
+          bytevector-SCM-ref
+          bytevector-SCM-set!
+
           ;; Re-exported from (sortsmill math math-constants).
           c:flt-epsilon
           c:dbl-epsilon
@@ -46,8 +51,12 @@
                 c:flt-epsilon c:dbl-epsilon
                 c:flt-epsilon-exact c:dbl-epsilon-exact)
           (rnrs)
+          (except (guile) error)
           (ice-9 match)
           (system foreign))
+
+  (eval-when (compile load eval)
+    (load-extension "libguile-sortsmill_aux" "init_libguile_sortsmill_aux"))
 
   (define-syntax _Bool-size
     (identifier-syntax @SIZEOF__BOOL@))

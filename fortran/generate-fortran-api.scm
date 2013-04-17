@@ -134,7 +134,8 @@
     ['uint (write-uint-field-definitions struct-name field-name offset size)]
     ['bool (write-bool-field-definitions struct-name field-name offset size)]
     ['float (write-float-field-definitions struct-name field-name offset size)]
-    ['* (write-pointer-field-definitions struct-name field-name offset size)] ))
+    ['* (write-pointer-field-definitions struct-name field-name offset size)]
+    ['SCM (write-SCM-field-definitions struct-name field-name offset size)] ))
 
 (define (write-int-field-definitions struct-name field-name offset size)
   (write-get-int-field-definition struct-name field-name offset size)
@@ -273,6 +274,35 @@
   (format #t "  integer(c_intptr_t), intent(in) :: v\n")
   (format #t "  p%bv(~d:~d) = transfer (uint~d_to_uint~d (v), p%bv)\n"
           (1+ offset) (+ offset size) (* 8 intptr_t-size) (* 8 size))
+  (format #t "end subroutine set_~a_~a\n" struct-name field-name)
+  (format #t "\n"))
+
+(define (write-SCM-field-definitions struct-name field-name offset size)
+  (write-get-SCM-field-definition struct-name field-name offset size)
+  (write-set-SCM-field-definition struct-name field-name offset size))
+
+(define (write-get-SCM-field-definition struct-name field-name offset size)
+  (format #t "integer(c_intptr_t) function get_~a_~a (p) result(q)\n" struct-name field-name)
+  (format #t "  type(~a), intent(in) :: p\n" struct-name)
+  (format #t "  !\n")
+  (format #t "  ! NOT YET IMPLEMENTED\n")
+  (format #t "  !\n")
+;;;;;;;  
+;;;;;;; FIXME: Implement SCM type for Fortran.
+;;;;;;;
+  (format #t "end function get_~a_~a\n" struct-name field-name)
+  (format #t "\n"))
+
+(define (write-set-SCM-field-definition struct-name field-name offset size)
+  (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
+  (format #t "  type(~a), intent(inout) :: p\n" struct-name)
+  (format #t "  integer(c_intptr_t), intent(in) :: v\n")
+  (format #t "  !\n")
+  (format #t "  ! NOT YET IMPLEMENTED\n")
+  (format #t "  !\n")
+;;;;;;;  
+;;;;;;; FIXME: Implement SCM type for Fortran.
+;;;;;;;
   (format #t "end subroutine set_~a_~a\n" struct-name field-name)
   (format #t "\n"))
 

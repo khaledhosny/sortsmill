@@ -141,6 +141,7 @@ dist_libsortsmill_aux_la_SOURCES += guile_iconv.c
 dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
 dist_libsortsmill_aux_la_SOURCES += guile_options.c
 dist_libsortsmill_aux_la_SOURCES += guile_format.c
+dist_libsortsmill_aux_la_SOURCES += guile_scm_type.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
 dist_libsortsmill_aux_la_SOURCES += guile_types.c
 
@@ -164,6 +165,18 @@ GMP_MATRIX_EXTRAS += math_gmp_matrix_trsv.c
 EXTRA_DIST += $(GMP_MATRIX_EXTRAS)
 
 gmp_matrix.lo: $(GMP_MATRIX_EXTRAS)
+
+#--------------------------------------------------------------------------
+#
+# A module version of the auxiliary library. This is mostly for
+# loading auxiliary library functions in Guile programs that cannot
+# load libguile-sortsmill_symbols.la.
+
+lib_LTLIBRARIES += libguile-sortsmill_aux.la
+libguile_sortsmill_aux_la_SOURCES = libguile_sortsmill_aux.c
+libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la
+libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
+	$(AM_LDFLAGS)
 
 #--------------------------------------------------------------------------
 #

@@ -1,4 +1,4 @@
-#! @GUILE@ \ -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+#! @GUILE@ \ -*- mode: scheme; coding: utf-8 -*-
 --no-auto-compile -s
 !#
 
@@ -78,6 +78,7 @@
     [('bool . _) "bool"]
     [('float . _) "double"]
     [('* . _) "void *"]
+    [('SCM . _) "SCM"]
     [('struct . _) (error "NOT YET IMPLEMENTED")]
     [('array . _) (error "NOT YET IMPLEMENTED")] ))
 
