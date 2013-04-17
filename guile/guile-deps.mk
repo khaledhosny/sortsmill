@@ -10,7 +10,7 @@ sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
 sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__.go
 sortsmill/fonts/contours.go: sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go
 sortsmill/fonts/glyphs.go: sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__/glyphs.go
-sortsmill/fonts/peg-spacing.go: sortsmill/dynlink.go sortsmill/fonts/glyphs.go sortsmill/fontforge-api.go
+sortsmill/fonts/peg-spacing.go: sortsmill/fonts/glyphs.go sortsmill/fonts/anchors.go sortsmill/fontforge-api.go sortsmill/dynlink.go
 sortsmill/fonts/psmat.go: sortsmill/math/matrices.go
 sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/dynlink.go
 sortsmill/i18n.go: sortsmill/pkg-info.go sortsmill/dynlink.go
