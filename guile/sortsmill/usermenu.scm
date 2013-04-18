@@ -43,6 +43,7 @@
           (sortsmill machine)
           (sortsmill notices)
           (sortsmill fonts views)
+          (sortsmill strings)
 
           ;; Ensures hash-guillemet is treated as a dependency.
           (sortsmill strings hash-guillemet)
@@ -58,7 +59,7 @@
           (only (ice-9 format) format)
           (only (system foreign) sizeof void int
                 %null-pointer null-pointer?
-                pointer? pointer-address string->pointer
+                pointer? pointer-address
                 procedure->pointer pointer->procedure
                 pointer->bytevector))
 
@@ -310,8 +311,8 @@
           [v (car value)])
       (match key
         ('id *unspecified*)
-        ('text (GTextInfo:text-set! ti (string->pointer v "UTF-8")))
-        ('image (GTextInfo:image-set! ti (string->pointer v)))
+        ('text (GTextInfo:text-set! ti (gc-grabstr-utf8 v)))
+        ('image (GTextInfo:image-set! ti (gc-grabstr-utf8 v)))
         ('foreground-color (GTextInfo:fg-set! ti v))
         ('background-color (GTextInfo:bg-set! ti v))
         ('disabled (GTextInfo:disabled-set! ti v))
@@ -319,7 +320,7 @@
         ('checkable (GTextInfo:checkable-set! ti v))
         ('checked (GTextInfo:checked-set! ti v))
         ('is-line (GTextInfo:line-set! ti v))
-        ('shortcut (GMenuItem:shortcut-set! mi (string->pointer v "UTF-8")))
+        ('shortcut (GMenuItem:shortcut-set! mi (gc-grabstr-utf8 v)))
         ('integer-key (GMenuItem:mid-set! mi v))
         ('moveto (GMenuItem:moveto-set! mi (force-to-menu-func-pointer v)))
         ('invoke (GMenuItem:invoke-set! mi (force-to-menu-func-pointer v)))

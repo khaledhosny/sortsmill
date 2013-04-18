@@ -1,6 +1,6 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
-;; Copyright (C) 2012, 2013 Barry Schwartz
+;; Copyright (C) 2013 Barry Schwartz
 ;; 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,16 +15,13 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill alloc alloc-base)
+(library (sortsmill strings gc)
 
-  (export c:zalloc ;; Allocate and fill with zeroes.
-          c:free
-          c:gc-zalloc ;; Garbage-collected.
-          c:gc-free)
+  (export gc-grabstr-utf8)
 
   (import (only (guile) eval-when load-extension))
 
   (eval-when (compile load eval)
-    (load-extension "libguile-sortsmill_aux" "init_libguile_sortsmill_aux"))
+    (load-extension "libguile-sortsmill_aux" "init_sortsmill_guile_strings_gc"))
 
   ) ;; end of library.
