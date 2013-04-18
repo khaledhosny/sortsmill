@@ -17,7 +17,7 @@
 
 (library (sortsmill strings gc)
 
-  (export gc-grabstr-utf8)
+  (export string->pointer-gc-utf8)
 
   (import (only (guile) eval-when load-extension))
 

@@ -21,16 +21,16 @@
 //-------------------------------------------------------------------------
 
 VISIBLE char *
-scm_c_gc_grabstr_utf8 (SCM string)
+scm_c_string_to_pointer_gc_utf8 (SCM string)
 {
   char *s = scm_to_utf8_stringn (string, NULL);
   return x_gc_grabstr (s);
 }
 
 VISIBLE SCM
-scm_gc_grabstr_utf8 (SCM string)
+scm_string_to_pointer_gc_utf8 (SCM string)
 {
-  return scm_from_pointer (scm_c_gc_grabstr_utf8 (string), NULL);
+  return scm_from_pointer (scm_c_string_to_pointer_gc_utf8 (string), NULL);
 }
 
 //-------------------------------------------------------------------------
@@ -40,7 +40,8 @@ void init_sortsmill_guile_strings_gc (void);
 VISIBLE void
 init_sortsmill_guile_strings_gc (void)
 {
-  scm_c_define_gsubr ("gc-grabstr-utf8", 1, 0, 0, scm_gc_grabstr_utf8);
+  scm_c_define_gsubr ("string->pointer-gc-utf8", 1, 0, 0,
+                      scm_string_to_pointer_gc_utf8);
 }
 
 //-------------------------------------------------------------------------

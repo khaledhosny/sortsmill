@@ -28,8 +28,8 @@ extern "C"
 }
 #endif
 
-char *scm_c_gc_grabstr_utf8 (SCM string);
-SCM scm_gc_grabstr_utf8 (SCM string);
+char *scm_c_string_to_pointer_gc_utf8 (SCM string);
+SCM scm_string_to_pointer_gc_utf8 (SCM string);
 
 #if 0
 {
