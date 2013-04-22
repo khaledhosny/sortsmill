@@ -83,15 +83,15 @@
            [left-spacing (peg-spacing-left-spacing anchor-points)]
            [right-spacing (peg-spacing-right-spacing anchor-points)])
       (when (and left-spacing right-spacing)
-        (glyph&layer:preserve-as-undo `(,gv all) #:hints? #t)
+        ;;(glyph&layer:preserve-as-undo `(,gv all) #:hints? #t)
         (glyph-view:transform-by-psmat gv `(1 0 0 1 ,(- left-spacing) 0))
         (glyph-view:width-set! gv (inexact->exact
                                    (- right-spacing left-spacing)))) ))
 
-    (define (glyph-view:space-by-pegs-enabled? gv)
-      (let* ([anchor-points (glyph-view:anchor-points gv)]
-             [left-spacing (peg-spacing-left-spacing anchor-points)]
-             [right-spacing (peg-spacing-right-spacing anchor-points)])
-        (and left-spacing right-spacing)))
+  (define (glyph-view:space-by-pegs-enabled? gv)
+    (let* ([anchor-points (glyph-view:anchor-points gv)]
+           [left-spacing (peg-spacing-left-spacing anchor-points)]
+           [right-spacing (peg-spacing-right-spacing anchor-points)])
+      (and left-spacing right-spacing)))
 
   ) ;; end of library.

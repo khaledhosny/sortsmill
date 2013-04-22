@@ -16,6 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
+#include <xalloc.h>
 #include <baseviews.h>
 #include <splinefont.h>
 #include <uiinterface.h>
@@ -328,6 +329,27 @@ scm_view_glyph_count (SCM view)
   return scm_from_size_t (scm_c_view_glyph_count (view));
 }
 
+VISIBLE SCM
+scm_view_glyphs (SCM view)
+{
+  const size_t n = scm_c_view_glyph_count (view);
+  SCM result = scm_c_make_vector (n, SCM_UNSPECIFIED);
+
+  SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
+  size_t k = 0;
+  for (ssize_t i = 0; i < sf->glyphcnt; i++)
+    if (sf->glyphs[i] != NULL)
+      {
+        CharViewBase *cvb = scm_malloc (sizeof (CharViewBase));
+        cvb[0] = minimalist_CharViewBase (sf->glyphs[i]);
+        SCM gv = scm_pointer_to_glyph_view (scm_from_pointer (cvb, free));
+        scm_c_vector_set_x (result, k, gv);
+        k++;
+      }
+
+  return result;
+}
+
 //-------------------------------------------------------------------------
 
 void init_guile_fonts_glyphs (void);
@@ -353,6 +375,7 @@ init_guile_fonts_glyphs (void)
                       scm_glyph_view_width_set_x);
 
   scm_c_define_gsubr ("view:glyph-count", 1, 0, 0, scm_view_glyph_count);
+  scm_c_define_gsubr ("view:glyphs", 1, 0, 0, scm_view_glyphs);
 
   scm_c_define_gsubr ("layer->integer", 1, 1, 0, scm_layer_to_integer);
   scm_c_define_gsubr ("integer->layer", 1, 0, 0, scm_integer_to_layer);

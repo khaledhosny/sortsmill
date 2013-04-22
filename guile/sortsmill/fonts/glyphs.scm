@@ -66,7 +66,9 @@
    glyph-view:width-set!
 
    ;; (view:glyph-count view) → non-negative integer
+   ;; (view:glyphs view) → vector of glyph-view entries
    view:glyph-count
+   view:glyphs
 
    ;; Conversion between the Guile representation of layers and the
    ;; integer representation used internally in the C code as a legacy
