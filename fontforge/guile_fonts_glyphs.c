@@ -16,6 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
+#include <sortsmill/xgc.h>
 #include <xalloc.h>
 #include <baseviews.h>
 #include <splinefont.h>
@@ -340,9 +341,9 @@ scm_view_glyphs (SCM view)
   for (ssize_t i = 0; i < sf->glyphcnt; i++)
     if (sf->glyphs[i] != NULL)
       {
-        CharViewBase *cvb = scm_malloc (sizeof (CharViewBase));
+        CharViewBase *cvb = x_gc_malloc (sizeof (CharViewBase));
         cvb[0] = minimalist_CharViewBase (sf->glyphs[i]);
-        SCM gv = scm_pointer_to_glyph_view (scm_from_pointer (cvb, free));
+        SCM gv = scm_pointer_to_glyph_view (scm_from_pointer (cvb, NULL));
         scm_c_vector_set_x (result, k, gv);
         k++;
       }
