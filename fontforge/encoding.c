@@ -229,7 +229,7 @@ FindUnicharName (void)
 }
 
 static int
-TryEscape (Encoding * enc, char *escape_sequence)
+TryEscape (Encoding *enc, char *escape_sequence)
 {
   char from[20], ucs[20];
   size_t fromlen, tolen;
@@ -256,8 +256,7 @@ TryEscape (Encoding * enc, char *escape_sequence)
             tolen = sizeof (ucs);
             if (iconv (enc->tounicode, &fpt, &fromlen, &upt, &tolen) !=
                 (size_t) (-1)
-                && upt - ucs ==
-                sizeof (uint32_t) /* Exactly one character */ )
+                && upt - ucs == sizeof (uint32_t) /* Exactly one character */ )
               {
                 if (low == -1)
                   {
@@ -321,8 +320,7 @@ _FindOrMakeEncoding (const char *name, int make_it)
     name = "iso8859-8";
   else if (strcasecmp (name, "isothai") == 0)
     name = "tis-620";           /* TIS doesn't define non-breaking space in 0xA0 */
-  else if (strcasecmp (name, "latin0") == 0
-           || strcasecmp (name, "latin9") == 0)
+  else if (strcasecmp (name, "latin0") == 0 || strcasecmp (name, "latin9") == 0)
     name = "iso8859-15";        /* "latin-9" is supported (libiconv bug?) */
   else if (strcasecmp (name, "koi8r") == 0)
     name = "koi8-r";
@@ -404,8 +402,7 @@ _FindOrMakeEncoding (const char *name, int make_it)
       fpt = from;
       upt = ucs;
       tolen = sizeof (ucs);
-      if (iconv (temp.tounicode, &fpt, &fromlen, &upt, &tolen) !=
-          (size_t) (-1))
+      if (iconv (temp.tounicode, &fpt, &fromlen, &upt, &tolen) != (size_t) (-1))
         {
           good[i] = true;
           any = true;
@@ -456,8 +453,7 @@ _FindOrMakeEncoding (const char *name, int make_it)
       if (!temp.has_2byte && !good[033] /* escape */ )
         {
           if (strstr (iconv_name, "2022") != NULL &&
-              strstr (iconv_name, "JP3") != NULL &&
-              TryEscape (&temp, "\33$(O"))
+              strstr (iconv_name, "JP3") != NULL && TryEscape (&temp, "\33$(O"))
             ;
           else if (strstr (iconv_name, "2022") != NULL &&
                    strstr (iconv_name, "JP2") != NULL &&
@@ -544,7 +540,7 @@ getPfaEditEncodings (void)
 }
 
 static void
-EncodingFree (Encoding * item)
+EncodingFree (Encoding *item)
 {
   int i;
 
@@ -558,7 +554,7 @@ EncodingFree (Encoding * item)
 }
 
 void
-DeleteEncoding (Encoding * me)
+DeleteEncoding (Encoding *me)
 {
   FontViewBase *fv;
   Encoding *prev;
@@ -575,8 +571,7 @@ DeleteEncoding (Encoding * me)
     enclist = me->next;
   else
     {
-      for (prev = enclist; prev != NULL && prev->next != me;
-           prev = prev->next);
+      for (prev = enclist; prev != NULL && prev->next != me; prev = prev->next);
       if (prev != NULL)
         prev->next = me->next;
     }
@@ -634,7 +629,7 @@ ParseConsortiumEncodingFile (FILE *file)
 }
 
 void
-RemoveMultiples (Encoding * item)
+RemoveMultiples (Encoding *item)
 {
   Encoding *test;
 
@@ -1516,8 +1511,7 @@ ParseCMap (char *filename)
             {
               pos = cmap->groups[in].n;
               cmap->groups[in].ranges =
-                ExtendArray (cmap->groups[in].ranges, &cmap->groups[in].n,
-                             val);
+                ExtendArray (cmap->groups[in].ranges, &cmap->groups[in].n, val);
             }
         }
       else if (strncmp (pt, "end", 3) == 0)
@@ -1608,8 +1602,7 @@ CompressCMap (struct cmap *cmap)
     {
       for (k = 0; cmap->remap[k].infont != -1; ++k)
         if (cmap->groups[cmt_cid].ranges[i].first >= cmap->remap[k].firstenc
-            && cmap->groups[cmt_cid].ranges[i].first <=
-            cmap->remap[k].lastenc)
+            && cmap->groups[cmt_cid].ranges[i].first <= cmap->remap[k].lastenc)
           break;
       if (cmap->remap[k].infont == -1)
         continue;
@@ -1701,7 +1694,10 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
               xrealloc (fvs->map->backmap,
                         (fvs->map->backmax = new->glyphcnt) * sizeof (int));
           for (j = 0; j < new->glyphcnt; ++j)
-            fvs->map->map[j] = fvs->map->backmap[j] = j;
+            {
+              fvs->map->map[j] = j;
+              fvs->map->backmap[j] = j;
+            }
         }
       fvs->sf = new;
       FVSetTitle (fvs);
@@ -1791,8 +1787,7 @@ SFFlattenByCMap (SplineFont *sf, char *cmapname)
   for (i = 0; i < curmax; ++i)
     {
       for (k = 0; k < sf->subfontcnt; ++k)
-        if (i < sf->subfonts[k]->glyphcnt
-            && sf->subfonts[k]->glyphs[i] != NULL)
+        if (i < sf->subfonts[k]->glyphcnt && sf->subfonts[k]->glyphs[i] != NULL)
           {
             glyphs[i] = sf->subfonts[k]->glyphs[i];
             sf->subfonts[k]->glyphs[i] = NULL;
@@ -1859,8 +1854,7 @@ SFFlattenByCMap (SplineFont *sf, char *cmapname)
                             {
                               int pos =
                                 cmap->groups[cmt_cid].ranges[found[l]].first +
-                                i -
-                                cmap->groups[cmt_cid].ranges[found[l]].cid;
+                                i - cmap->groups[cmt_cid].ranges[found[l]].cid;
                               map->map[pos] = sc->orig_pos;
                             }
                         }
@@ -1901,7 +1895,7 @@ Enc2CMap (struct cmap *cmap, int enc)
 }
 
 static void
-SFEncodeToCMap (SplineFont *cidmaster, SplineFont *sf, EncMap * oldmap,
+SFEncodeToCMap (SplineFont *cidmaster, SplineFont *sf, EncMap *oldmap,
                 struct cmap *cmap)
 {
   SplineChar *sc, *GID0 = NULL;
@@ -2008,7 +2002,7 @@ CIDMasterAsDes (SplineFont *sf)
 }
 
 SplineFont *
-MakeCIDMaster (SplineFont *sf, EncMap * oldmap, int bycmap,
+MakeCIDMaster (SplineFont *sf, EncMap *oldmap, int bycmap,
                char *cmapfilename, struct cidmap *cidmap)
 {
   SplineFont *cidmaster;
@@ -2108,13 +2102,13 @@ MakeCIDMaster (SplineFont *sf, EncMap * oldmap, int bycmap,
 }
 
 int
-CountOfEncoding (Encoding * encoding_name)
+CountOfEncoding (Encoding *encoding_name)
 {
   return (encoding_name->char_cnt);
 }
 
 char *
-SFEncodingName (SplineFont *sf, EncMap * map)
+SFEncodingName (SplineFont *sf, EncMap *map)
 {
   char buffer[130];
 
@@ -2163,7 +2157,7 @@ BDFOrigFixup (BDFFont *bdf, int orig_cnt, SplineFont *sf)
 }
 
 static int
-_SFForceEncoding (SplineFont *sf, EncMap * old, Encoding * new_enc)
+_SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
 {
   int enc_cnt, i;
   BDFFont *bdf;
@@ -2199,8 +2193,7 @@ _SFForceEncoding (SplineFont *sf, EncMap * old, Encoding * new_enc)
             int layer;
             RefChar *ref;
 
-            for (scl = sf->glyphs[i]->dependents; scl != NULL;
-                 scl = scl->next)
+            for (scl = sf->glyphs[i]->dependents; scl != NULL; scl = scl->next)
               {
                 for (layer = 0; layer < scl->sc->layer_cnt; ++layer)
                   for (ref = scl->sc->layers[layer].refs; ref != NULL;
@@ -2294,7 +2287,7 @@ _SFForceEncoding (SplineFont *sf, EncMap * old, Encoding * new_enc)
 }
 
 int
-SFForceEncoding (SplineFont *sf, EncMap * old, Encoding * new_enc)
+SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
 {
   if (sf->mm != NULL)
     {
@@ -2311,7 +2304,7 @@ SFForceEncoding (SplineFont *sf, EncMap * old, Encoding * new_enc)
 }
 
 EncMap *
-EncMapFromEncoding (SplineFont *sf, Encoding * enc)
+EncMapFromEncoding (SplineFont *sf, Encoding *enc)
 {
   int i, j, extras, found, base, unmax;
   int *encoded, *unencoded;
@@ -2434,7 +2427,7 @@ EncMapFromEncoding (SplineFont *sf, Encoding * enc)
 }
 
 EncMap *
-CompactEncMap (EncMap * map, SplineFont *sf)
+CompactEncMap (EncMap *map, SplineFont *sf)
 {
   int i, inuse, gid;
   int32_t *newmap;
@@ -2459,7 +2452,7 @@ CompactEncMap (EncMap * map, SplineFont *sf)
 }
 
 static void
-BCProtectUndoes (Undoes * undo, BDFChar * bc)
+BCProtectUndoes (Undoes *undo, BDFChar *bc)
 {
   BDFRefChar *brhead, *brprev = NULL, *brnext;
 
@@ -2468,8 +2461,7 @@ BCProtectUndoes (Undoes * undo, BDFChar * bc)
       switch (undo->undotype)
         {
         case ut_bitmap:
-          for (brhead = undo->u.bmpstate.refs; brhead != NULL;
-               brhead = brnext)
+          for (brhead = undo->u.bmpstate.refs; brhead != NULL; brhead = brnext)
             {
               brnext = brhead->next;
               if (brhead->bdfc == bc)
@@ -2625,7 +2617,7 @@ SFRemoveGlyph (SplineFont *sf, SplineChar *sc, int *flags)
 }
 
 static int
-MapAddEncodingSlot (EncMap * map, int gid)
+MapAddEncodingSlot (EncMap *map, int gid)
 {
   int enc;
 
@@ -2638,7 +2630,7 @@ MapAddEncodingSlot (EncMap * map, int gid)
 }
 
 void
-FVAddEncodingSlot (FontViewBase * fv, int gid)
+FVAddEncodingSlot (FontViewBase *fv, int gid)
 {
   EncMap *map = fv->map;
   int enc;
@@ -2659,8 +2651,8 @@ SFAddEncodingSlot (SplineFont *sf, int gid)
 }
 
 static int
-MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap * basemap, EncMap * map,
-           int baseenc, int gid, FontViewBase * fv)
+MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap *basemap, EncMap *map,
+           int baseenc, int gid, FontViewBase *fv)
 {
   bool any = false;
   int enc;
@@ -2719,7 +2711,7 @@ MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap * basemap, EncMap * map,
 }
 
 void
-SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap * basemap,
+SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
                      int baseenc)
 {
   int gid;
@@ -2751,8 +2743,7 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap * basemap,
           EncMap *map = fv->map;
           if (gid >= map->backmax)
             map->backmap =
-              xrealloc (map->backmap,
-                        (map->backmax = gid + 10) * sizeof (int));
+              xrealloc (map->backmap, (map->backmax = gid + 10) * sizeof (int));
           map->backmap[gid] = -1;
         }
     }
@@ -2964,7 +2955,7 @@ MMMatchGlyphs (MMSet *mm)
 }
 
 int32_t
-UniFromEnc (int enc, Encoding * encname)
+UniFromEnc (int enc, Encoding *encname)
 {
   char from[20];
   uint32_t to[20];
@@ -3008,7 +2999,7 @@ UniFromEnc (int enc, Encoding * encname)
           from[fromlen++] = enc & 0xff;
         }
       if (iconv (encname->tounicode, &fpt, &fromlen, &tpt, &tolen) ==
-          (size_t) - 1)
+          (size_t) -1)
         return (-1);
       if (tpt - (char *) to == 0)
         {
@@ -3017,7 +3008,7 @@ UniFromEnc (int enc, Encoding * encname)
           /*  out. As there is no state, and no shift out I have no idea why */
           /*  this works, but it does. */
           if (iconv (encname->tounicode, NULL, &fromlen, &tpt, &tolen) ==
-              (size_t) - 1)
+              (size_t) -1)
             return (-1);
         }
       if (tpt - (char *) to == sizeof (uint32_t))
@@ -3029,7 +3020,7 @@ UniFromEnc (int enc, Encoding * encname)
 }
 
 int32_t
-EncFromUni (int32_t uni, Encoding * enc)
+EncFromUni (int32_t uni, Encoding *enc)
 {
   uint32_t from[20];
   unsigned char to[20];
@@ -3062,8 +3053,7 @@ EncFromUni (int32_t uni, Encoding * enc)
       tpt = (char *) to;
       tolen = sizeof (to);
       iconv (enc->fromunicode, NULL, NULL, NULL, NULL); /* reset shift in/out, etc. */
-      if (iconv (enc->fromunicode, &fpt, &fromlen, &tpt, &tolen) ==
-          (size_t) - 1)
+      if (iconv (enc->fromunicode, &fpt, &fromlen, &tpt, &tolen) == (size_t) -1)
         return (-1);
       if (tpt - (char *) to == 1)
         return (to[0]);
@@ -3087,7 +3077,7 @@ EncFromUni (int32_t uni, Encoding * enc)
 }
 
 int32_t
-EncFromName (const char *name, enum uni_interp interp, Encoding * encname)
+EncFromName (const char *name, enum uni_interp interp, Encoding *encname)
 {
   int i;
   if (encname->psnames != NULL)
