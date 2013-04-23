@@ -313,27 +313,51 @@ scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer)
 
 //-------------------------------------------------------------------------
 
+static bool
+scm_glyph_view_satisfies_predicate (SCM gv, SCM pred)
+{
+  SCM base_pred =
+    scm_fluid_ref (scm_c_public_ref (my_module, "base-glyph-view-predicate"));
+  bool result;
+  if (scm_is_true (scm_call_1 (base_pred, gv)))
+    {
+      if (SCM_UNBNDP (pred))
+        result = true;
+      else
+        result = scm_is_true (scm_call_1 (pred, gv));
+    }
+  else
+    result = false;
+  return result;
+}
+
 VISIBLE size_t
-scm_c_view_glyph_count (SCM view)
+scm_c_view_glyph_count (SCM view, SCM pred)
 {
   SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
   size_t count = 0;
   for (ssize_t i = 0; i < sf->glyphcnt; i++)
     if (sf->glyphs[i] != NULL)
-      count++;
+      {
+        CharViewBase *cvb = x_gc_malloc (sizeof (CharViewBase));
+        cvb[0] = minimalist_CharViewBase (sf->glyphs[i]);
+        SCM gv = scm_pointer_to_glyph_view (scm_from_pointer (cvb, NULL));
+        if (scm_glyph_view_satisfies_predicate (gv, pred))
+          count++;
+      }
   return count;
 }
 
 VISIBLE SCM
-scm_view_glyph_count (SCM view)
+scm_view_glyph_count (SCM view, SCM pred)
 {
-  return scm_from_size_t (scm_c_view_glyph_count (view));
+  return scm_from_size_t (scm_c_view_glyph_count (view, pred));
 }
 
 VISIBLE SCM
-scm_view_glyphs (SCM view)
+scm_view_glyphs (SCM view, SCM pred)
 {
-  const size_t n = scm_c_view_glyph_count (view);
+  const size_t n = scm_c_view_glyph_count (view, pred);
   SCM result = scm_c_make_vector (n, SCM_UNSPECIFIED);
 
   SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
@@ -344,11 +368,24 @@ scm_view_glyphs (SCM view)
         CharViewBase *cvb = x_gc_malloc (sizeof (CharViewBase));
         cvb[0] = minimalist_CharViewBase (sf->glyphs[i]);
         SCM gv = scm_pointer_to_glyph_view (scm_from_pointer (cvb, NULL));
-        scm_c_vector_set_x (result, k, gv);
+        if (scm_glyph_view_satisfies_predicate (gv, pred))
+          scm_c_vector_set_x (result, k, gv);
         k++;
       }
 
   return result;
+}
+
+VISIBLE bool
+scm_glyph_view_is_worth_outputting (SCM gv)
+{
+  return (bool) SCWorthOutputting (scm_c_glyph_view_to_SplineChar (gv));
+}
+
+VISIBLE SCM
+scm_glyph_view_worth_outputting_p (SCM gv)
+{
+  return scm_from_bool (scm_glyph_view_is_worth_outputting (gv));
 }
 
 //-------------------------------------------------------------------------
@@ -375,8 +412,11 @@ init_guile_fonts_glyphs (void)
   scm_c_define_gsubr ("glyph-view:width-set!", 2, 0, 0,
                       scm_glyph_view_width_set_x);
 
-  scm_c_define_gsubr ("view:glyph-count", 1, 0, 0, scm_view_glyph_count);
-  scm_c_define_gsubr ("view:glyphs", 1, 0, 0, scm_view_glyphs);
+  scm_c_define_gsubr ("view:glyph-count", 1, 1, 0, scm_view_glyph_count);
+  scm_c_define_gsubr ("view:glyphs", 1, 1, 0, scm_view_glyphs);
+
+  scm_c_define_gsubr ("glyph-view:worth-outputting?", 1, 0, 0,
+                      scm_glyph_view_worth_outputting_p);
 
   scm_c_define_gsubr ("layer->integer", 1, 1, 0, scm_layer_to_integer);
   scm_c_define_gsubr ("integer->layer", 1, 0, 0, scm_integer_to_layer);

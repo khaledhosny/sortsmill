@@ -66,9 +66,22 @@
    glyph-view:width-set!
 
    ;; (view:glyph-count view) → non-negative integer
+   ;; (view:glyph-count view predicate) → non-negative integer
    ;; (view:glyphs view) → vector of glyph-view entries
+   ;; (view:glyphs view predicate) → vector of glyph-view entries
    view:glyph-count
    view:glyphs
+
+   ;; A fluid giving the ‘base’ predicate for glyph selection. By
+   ;; default this is @code{glyph-view:worth-outputting?}.
+   ;;
+   ;; ((fluid-ref base-glyph-view-predicate) glyph-view) → boolean
+   ;;
+   ;; FIXME: Surely there is a better name for this.
+   base-glyph-view-predicate
+
+   ;; (glyph-view:worth-outputting? glyph-view) → boolean
+   glyph-view:worth-outputting?
 
    ;; Conversion between the Guile representation of layers and the
    ;; integer representation used internally in the C code as a legacy
@@ -95,6 +108,9 @@
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_fonts_glyphs"))
+
+  (define base-glyph-view-predicate
+    (make-fluid glyph-view:worth-outputting?))
 
   (define (raise-not-a-glyph&layer who obj)
     (assertion-violation who (_ "expected a glyph&layer") obj))
