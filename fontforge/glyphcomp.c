@@ -88,8 +88,8 @@ FindNewT (double pos, const Spline1D *s, double old_t)
 /*  Thus when we walk forward on one splineset we will walk forward on the */
 /*  other. So no need to back track here */
 static int
-NearSplineSet (BasePoint * here, const SplineSet *ss,
-               const Spline ** last_found, double *last_t, double err)
+NearSplineSet (BasePoint *here, const SplineSet *ss,
+               const Spline **last_found, double *last_t, double err)
 {
   const Spline *first, *s, *best_s;
   extended ts[3];
@@ -617,7 +617,7 @@ SSRefCompare (const SplineSet *ss1, const SplineSet *ss2,
 /* ************************************************************************** */
 
 enum Compare_Ret
-BitmapCompare (BDFChar * bc1, BDFChar * bc2, int err, int bb_err)
+BitmapCompare (BDFChar *bc1, BDFChar *bc2, int err, int bb_err)
 {
   uint8_t *pt1, *pt2;
   int i, j, d, xlen;
@@ -952,8 +952,7 @@ CompareSplines (FontViewBase *fv, SplineChar *sc, const Undoes *cur,
               temp =
                 CompareLayer (sc->layers[ly].splines, cur->u.state.splines,
                               sc->layers[ly].refs, cur->u.state.refs, pt_err,
-                              spline_err, sc->name, diffs_are_errors,
-                              &hmfail);
+                              spline_err, sc->name, diffs_are_errors, &hmfail);
               if (temp == -1)
                 return (-1);
               if (temp & SS_NoMatch)
@@ -1106,8 +1105,7 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
             GCError ("Unexpected clipboard contents");
             return (-1);
           }
-        if (ret &
-            (SS_NoMatch | SS_RefMismatch | SS_WidthMismatch | BC_NoMatch))
+        if (ret & (SS_NoMatch | SS_RefMismatch | SS_WidthMismatch | BC_NoMatch))
           {
             ret &= ~(BC_Match | SS_PointsMatch | SS_ContourMatch);
             return (ret);
@@ -1453,8 +1451,7 @@ SCCompare (SplineChar *sc1, SplineChar *sc2, struct font_diff *fd)
     GlyphDiffSCError (fd, sc1,
                       _
                       ("Glyph “%s” has advance width %d in %s but %d in %s\n"),
-                      sc1->name, sc1->width, fd->name1, sc2->width,
-                      fd->name2);
+                      sc1->name, sc1->width, fd->name1, sc2->width, fd->name2);
   if (sc1->vwidth != sc2->vwidth)
     GlyphDiffSCError (fd, sc1,
                       _
@@ -1578,8 +1575,7 @@ comparefontglyphs (struct font_diff *fd)
   fd->local_diff = false;
   for (gid1 = 0; gid1 < fd->sf1_glyphcnt; ++gid1)
     {
-      if ((sc = sf1->glyphs[gid1]) != NULL
-          && (sc2 = fd->matches[gid1]) != NULL)
+      if ((sc = sf1->glyphs[gid1]) != NULL && (sc2 = fd->matches[gid1]) != NULL)
         SCCompare (sc, sc2, fd);
     }
 }
@@ -1631,8 +1627,7 @@ comparebitmapglyphs (struct font_diff *fd, BDFFont *bdf1, BDFFont *bdf2)
                            fd->name1, fd->name2, bdf1->pixelsize,
                            BDFDepth (bdf1));
                 }
-              fd->local_diff = fd->middle_diff = fd->top_diff = fd->diff =
-                true;
+              fd->local_diff = fd->middle_diff = fd->top_diff = fd->diff = true;
               fputs ("   ", fd->diffs);
               fprintf (fd->diffs,
                        _("Glyph “%s” missing from %s at %d@%d\n"),
@@ -1735,8 +1730,7 @@ comparebitmapglyphs (struct font_diff *fd, BDFFont *bdf1, BDFFont *bdf2)
                            ("Glyph “%s” has a different bitmap at %d@%d\n"),
                            bdfc->sc->name, bdf1->pixelsize, BDFDepth (bdf1));
                 }
-              fd->local_diff = fd->middle_diff = fd->top_diff = fd->diff =
-                true;
+              fd->local_diff = fd->middle_diff = fd->top_diff = fd->diff = true;
             }
         }
     }
@@ -1846,8 +1840,7 @@ TtfNameCompare (struct font_diff *fd, char *name1, char *name2,
 
   if (strcmp (name1, name2) == 0)
     return;
-  sprintf (strnamebuf, "%.90s %.90s", TTFNameIds (strid),
-           MSLangString (lang));
+  sprintf (strnamebuf, "%.90s %.90s", TTFNameIds (strid), MSLangString (lang));
   NameCompare (fd, name1, name2, strnamebuf);
 }
 
@@ -1857,8 +1850,7 @@ TtfMissingName (struct font_diff *fd, char *fontname_present,
 {
   char strnamebuf[200];
 
-  sprintf (strnamebuf, "%.90s %.90s", TTFNameIds (strid),
-           MSLangString (lang));
+  sprintf (strnamebuf, "%.90s %.90s", TTFNameIds (strid), MSLangString (lang));
   if (!fd->top_diff)
     fprintf (fd->diffs, "Names\n");
   fd->top_diff = fd->diff = true;
