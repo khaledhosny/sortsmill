@@ -270,8 +270,7 @@ figure_fontdesc (PI * pi, int sfid, struct fontdesc *fd, int fonttype,
               || uni == 0x3c7 || uni == 0x3bd
               || (uni >= 0x432 && uni <= 0x434)
               || uni == 0x438 || (uni >= 0x43a && uni <= 0x43d)
-              || uni == 0x43f || uni == 0x432
-              || (uni >= 0x445 && uni <= 0x44c))
+              || uni == 0x43f || uni == 0x432 || (uni >= 0x445 && uni <= 0x44c))
             {
               fd->xheight += b.maxy;
               ++xhcnt;
@@ -498,7 +497,7 @@ struct glyph_res
 
 
 void
-makePatName (char *buffer, RefChar * ref, SplineChar *sc, int layer,
+makePatName (char *buffer, RefChar *ref, SplineChar *sc, int layer,
              int isstroke, int isgrad)
 {
   /* In PDF patterns (which include gradients) are fixed to the page. They */
@@ -525,7 +524,7 @@ makePatName (char *buffer, RefChar * ref, SplineChar *sc, int layer,
 
 static void
 pdf_BrushCheck (PI * pi, struct glyph_res *gr, struct brush *brush,
-                int isfill, int layer, SplineChar *sc, RefChar * ref)
+                int isfill, int layer, SplineChar *sc, RefChar *ref)
 {
   char buffer[400];
   int function_obj, shade_obj;
@@ -545,8 +544,7 @@ pdf_BrushCheck (PI * pi, struct glyph_res *gr, struct brush *brush,
       fprintf (pi->out, "  /Size [%d]\n", grad->stop_cnt == 2 ? 2 : 101);
       fprintf (pi->out, "  /BitsPerSample 8\n");
       fprintf (pi->out, "  /Decode [0 1.0 0 1.0 0 1.0]\n");
-      fprintf (pi->out, "  /Length %d\n",
-               3 * (grad->stop_cnt == 2 ? 2 : 101));
+      fprintf (pi->out, "  /Length %d\n", 3 * (grad->stop_cnt == 2 ? 2 : 101));
       fprintf (pi->out, ">>\n");
       fprintf (pi->out, "stream\n");
       if (grad->stop_cnt == 2)
@@ -603,8 +601,7 @@ pdf_BrushCheck (PI * pi, struct glyph_res *gr, struct brush *brush,
                     ((col1 >> 8) & 0xff) * (1 - percent) +
                     ((col2 >> 8) & 0xff) * percent;
                   int blue =
-                    ((col1) & 0xff) * (1 - percent) +
-                    ((col2) & 0xff) * percent;
+                    ((col1) & 0xff) * (1 - percent) + ((col2) & 0xff) * percent;
                   col = (red << 16) | (green << 8) | blue;
                 }
               if (col == COLOR_INHERITED)
@@ -755,7 +752,7 @@ pdf_BrushCheck (PI * pi, struct glyph_res *gr, struct brush *brush,
 }
 
 static void
-pdf_ImageCheck (PI * pi, struct glyph_res *gr, ImageList * images, int layer,
+pdf_ImageCheck (PI * pi, struct glyph_res *gr, ImageList *images, int layer,
                 SplineChar *sc)
 {
   char buffer[400];
@@ -814,8 +811,7 @@ pdf_ImageCheck (PI * pi, struct glyph_res *gr, ImageList * images, int layer,
       fprintf (pi->out, "stream\n");
       if (base->image_type != it_true)
         {
-          fwrite (base->data, 1, base->height * base->bytes_per_line,
-                  pi->out);
+          fwrite (base->data, 1, base->height * base->bytes_per_line, pi->out);
         }
       else
         {
@@ -1052,8 +1048,7 @@ pdf_charproc (PI * pi, SplineChar *sc)
                       && (ref->layers[j].stroke_pen.brush.col !=
                           COLOR_INHERITED
                           || ref->layers[j].stroke_pen.brush.gradient != NULL
-                          || ref->layers[j].stroke_pen.brush.pattern !=
-                          NULL)))
+                          || ref->layers[j].stroke_pen.brush.pattern != NULL)))
                 break;
               for (img = ref->layers[j].images; img != NULL; img = img->next)
                 if (img->image->u.image->image_type != it_mono)
@@ -1092,7 +1087,7 @@ pdf_charproc (PI * pi, SplineChar *sc)
 }
 
 static void
-dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds * bb, int notdefproc)
+dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
 {
   int i, first = -1, last, gid;
   int charprocs[256];
@@ -1135,8 +1130,7 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds * bb, int notdefproc)
   fprintf (pi->out, "    /FontBBox [%g %g %g %g]\n", floor (bb->minx),
            floor (bb->miny), ceil (bb->maxx), ceil (bb->maxy));
   fprintf (pi->out, "    /FontMatrix [%g 0 0 %g 0 0]\n",
-           1.0 / (sf->ascent + sf->descent),
-           1.0 / (sf->ascent + sf->descent));
+           1.0 / (sf->ascent + sf->descent), 1.0 / (sf->ascent + sf->descent));
   fprintf (pi->out, "    /FirstChar %d\n", first);
   fprintf (pi->out, "    /LastChar %d\n", last);
   fprintf (pi->out, "    /Widths %d 0 R\n", pi->next_object);
@@ -1337,8 +1331,7 @@ pdf_build_type0 (PI * pi, int sfid)
         }
       fprintf (pi->out, "    %d [", i);
       j = i;
-      while (j == cidmax - 1
-             || (j < cidmax - 1 && widths[j + 1] != widths[j]))
+      while (j == cidmax - 1 || (j < cidmax - 1 && widths[j + 1] != widths[j]))
         {
           fprintf (pi->out, "%d ", widths[j]);
           ++j;
@@ -1390,8 +1383,7 @@ dump_pdfprologue (PI * pi)
     }
   else if (pi->pt == pt_fontsample)
     {
-      fprintf (pi->out, "  /Title (Text Sample of %s)\n",
-               pi->mainsf->fullname);
+      fprintf (pi->out, "  /Title (Text Sample of %s)\n", pi->mainsf->fullname);
     }
   else if (pi->sc != NULL)
     fprintf (pi->out, "  /Title (Character Display for %s from %s)\n",
@@ -1473,8 +1465,7 @@ dump_pdftrailer (PI * pi)
     fprintf (pi->out, "    %d 0 R\n", pi->page_objects[i]);
   fprintf (pi->out, "  ]\n");
   fprintf (pi->out, "  /Count %d\n", pi->next_page);
-  fprintf (pi->out, "  /MediaBox [0 0 %d %d]\n", pi->pagewidth,
-           pi->pageheight);
+  fprintf (pi->out, "  /MediaBox [0 0 %d %d]\n", pi->pagewidth, pi->pageheight);
   fprintf (pi->out, "  /Resources <<\n");
   /* In case we have a type3 font, include the image procsets */
   fprintf (pi->out, "    /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]\n");
@@ -1648,8 +1639,7 @@ dump_prologue (PI * pi)
     }
   else if (pi->pt == pt_fontsample)
     {
-      fprintf (pi->out, "%%%%Title: Text Sample of %s\n",
-               pi->mainsf->fullname);
+      fprintf (pi->out, "%%%%Title: Text Sample of %s\n", pi->mainsf->fullname);
       fprintf (pi->out, "%%%%DocumentSuppliedResources: font %s\n",
                pi->mainsf->fontname);
     }
@@ -1717,8 +1707,7 @@ dump_prologue (PI * pi)
                        pi->pointsize);
               if (!sfbit->iscid)
                 fprintf (pi->out, "/%s /%s findfont %d scalefont def\n",
-                         sfbit->psfontname, sfbit->sf->fontname,
-                         pi->pointsize);
+                         sfbit->psfontname, sfbit->sf->fontname, pi->pointsize);
               else
                 fprintf (pi->out,
                          "/%s /%s--Noop /Noop-%d [ /%s ] composefont %d scalefont def\n",
@@ -1785,7 +1774,7 @@ dump_prologue (PI * pi)
 }
 
 static int
-PIDownloadFont (PI * pi, SplineFont *sf, EncMap * map)
+PIDownloadFont (PI * pi, SplineFont *sf, EncMap *map)
 {
   int is_mm = sf->mm != NULL && MMValid (sf->mm, false);
   int error = false;
@@ -1835,9 +1824,9 @@ PIDownloadFont (PI * pi, SplineFont *sf, EncMap * map)
         (sfbit->fontfile, sf,
          pi->printtype ==
          pt_pdf ? ff_pfb : sf->multilayer ? ff_ptype3 : is_mm ? ff_mma :
-         sfbit->istype42cid ? ff_type42cid : sfbit->
-         iscid ? ff_cid : sfbit->twobyte ? ff_ptype0 : ff_pfa,
-         ps_flag_identitycidmap, map, NULL, ly_fore))
+         sfbit->istype42cid ? ff_type42cid : sfbit->iscid ? ff_cid : sfbit->
+         twobyte ? ff_ptype0 : ff_pfa, ps_flag_identitycidmap, map, NULL,
+         ly_fore))
     error = true;
 
   ff_progress_end_indicator ();
@@ -2071,8 +2060,7 @@ DumpLine (PI * pi)
           if (sfbit->iscid && !sfbit->istype42cid)
             fprintf (pi->out, "(%d) 26.88 %d n_show\n", pi->chline, pi->ypos);
           else
-            fprintf (pi->out, "(%04X) 26.88 %d n_show\n", pi->chline,
-                     pi->ypos);
+            fprintf (pi->out, "(%04X) 26.88 %d n_show\n", pi->chline, pi->ypos);
         }
       fprintf (pi->out, "%s setfont\n", sfbit->psfontname);
       for (i = 0; i < pi->max; ++i)
@@ -2165,8 +2153,7 @@ PIFontDisplay (PI * pi)
     ;
 
   if (pi->chline == 0)
-    ff_post_notice (_("Print Failed"),
-                    _("Warning: Font contained no glyphs"));
+    ff_post_notice (_("Print Failed"), _("Warning: Font contained no glyphs"));
   else
     dump_trailer (pi);
 }
@@ -2224,8 +2211,7 @@ SCPrintPage (PI * pi, SplineChar *sc)
       fprintf (pi->out, "BT\n");
       fprintf (pi->out, "  /FTB 12 Tf\n");
       fprintf (pi->out, "  80 %g Td\n", (double) (page.maxy - 12));
-      fprintf (pi->out, "  (%s from %s) Tj\n", sc->name,
-               sc->parent->fullname);
+      fprintf (pi->out, "  (%s from %s) Tj\n", sc->name, sc->parent->fullname);
       fprintf (pi->out, "ET\n");
     }
   page.maxy -= 20;
@@ -2258,8 +2244,7 @@ SCPrintPage (PI * pi, SplineChar *sc)
       fprintf (pi->out, "%g %g moveto %g %g lineto stroke\n",
                (double) (pi->xoff + sc->width * pi->scale),
                (double) page.miny,
-               (double) (pi->xoff + sc->width * pi->scale),
-               (double) page.maxy);
+               (double) (pi->xoff + sc->width * pi->scale), (double) page.maxy);
       fprintf (pi->out, "grestore\n");
       fprintf (pi->out, "gsave\n %g %g translate\n", (double) pi->xoff,
                (double) pi->yoff);
@@ -2294,8 +2279,7 @@ SCPrintPage (PI * pi, SplineChar *sc)
       fprintf (pi->out, "%g %g m %g %g l S\n",
                (double) (pi->xoff + sc->width * pi->scale),
                (double) page.miny,
-               (double) (pi->xoff + sc->width * pi->scale),
-               (double) page.maxy);
+               (double) (pi->xoff + sc->width * pi->scale), (double) page.maxy);
       fprintf (pi->out, "Q\n");
       fprintf (pi->out, "q \n %g 0 0 %g %g %g cm\n", (double) pi->scale,
                (double) pi->scale, (double) pi->xoff, (double) pi->yoff);
@@ -2350,8 +2334,7 @@ samplestartpage (PI * pi)
   if (pi->printtype == pt_pdf)
     {
       pdf_addpage (pi);
-      fprintf (pi->out, "BT\n  /FTB 12 Tf\n  80 %d Td\n",
-               pi->pageheight - 84);
+      fprintf (pi->out, "BT\n  /FTB 12 Tf\n  80 %d Td\n", pi->pageheight - 84);
       if (pi->pt == pt_fontsample)
         fprintf (pi->out, "(Sample Text from %s) Tj\nET\n",
                  sfbit->sf->fullname);
@@ -2442,8 +2425,7 @@ outputotchar (PI * pi, struct opentype_str *osc, int x, int baseline)
   if (pi->printtype == pt_pdf)
     {
       int fn = sfbit->iscid ? 0 : sfbit->fonts[enc / 256];
-      if (pi->wassfid != sfid || fn != pi->wasfn
-          || fd->pointsize != pi->wasps)
+      if (pi->wassfid != sfid || fn != pi->wasfn || fd->pointsize != pi->wasps)
         {
           fprintf (pi->out, "/F%d-%d %d Tf\n ", sfid, fn, fd->pointsize);
           pi->wassfid = sfid;
@@ -2469,8 +2451,7 @@ outputotchar (PI * pi, struct opentype_str *osc, int x, int baseline)
                           osc->bsln_off) * pi->scale));
       if ((sfbit->twobyte && enc > 0xffff) || (!sfbit->twobyte && enc > 0xff))
         fn = enc >> 8;
-      if (pi->wassfid != sfid || fn != pi->wasfn
-          || fd->pointsize != pi->wasps)
+      if (pi->wassfid != sfid || fn != pi->wasfn || fd->pointsize != pi->wasps)
         {
           if (sfbit->iscid)
             putc ('<', pi->out);
@@ -2831,7 +2812,7 @@ static char *_antigone[] = {
   NULL
 };
 
-                                                                                                                                     /* Hebrew *//* Seder */
+                                                                                                                                                 /* Hebrew *//* Seder */
 static char *_hebrew[] = {
   "וְאָתָא מַלְאַךְ הַמָּוֶת, וְשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
   "וְאָתָא הַקָּדוֹשׁ כָּדוּךְ הוּא, וְשָׁחַט לְמַלְאַךְ הַמָּוֶת, רְּשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
@@ -3088,13 +3069,13 @@ static char *_swahilijohn[] = {
   NULL
 };
 
-                                                                                                                    /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
+                                                                                                                              /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
 static char *_thaijohn[] = {
   "๏ ในทีเดิมนะนพวุํลอโฆเปนอยู่ แลเปนอยู่ดว้ยกันกับ พวุํเฆ้า",
   NULL
 };
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
 static char *_mayanPopolWuj[] = {
   "Are u xe' ojer tzij waral, C'i Che' u bi'. Waral xchikatz'ibaj-wi, xchikatiquiba-wi ojer tzij, u ticaribal, u xe'nabal puch ronojel xban pa tinamit C'i Che', ramak C'i Che' winak.",
   NULL
@@ -3134,8 +3115,7 @@ static struct langsamples
   {
   _faust, "de", sc_latin, CHR ('l', 'a', 't', 'n'), CHR ('D', 'E', 'U', ' ')},
   {
-  _pheadra, "fr", sc_latin, CHR ('l', 'a', 't', 'n'),
-      CHR ('F', 'R', 'A', ' ')},
+  _pheadra, "fr", sc_latin, CHR ('l', 'a', 't', 'n'), CHR ('F', 'R', 'A', ' ')},
   {
   _antigone, "el", sc_greek, CHR ('g', 'r', 'e', 'k'), CHR ('P', 'G', 'R', ' ')},       /* Is this polytonic? */
   {
@@ -3145,14 +3125,11 @@ static struct langsamples
   _serbcyriljohn, "sr", sc_cyrillic, CHR ('c', 'y', 'r', 'l'),
       CHR ('S', 'R', 'B', ' ')},
   {
-  _debello, "la", sc_latin, CHR ('l', 'a', 't', 'n'),
-      CHR ('L', 'A', 'T', ' ')},
+  _debello, "la", sc_latin, CHR ('l', 'a', 't', 'n'), CHR ('L', 'A', 'T', ' ')},
   {
-  _hebrew, "he", sc_hebrew, CHR ('h', 'e', 'b', 'r'),
-      CHR ('I', 'W', 'R', ' ')},
+  _hebrew, "he", sc_hebrew, CHR ('h', 'e', 'b', 'r'), CHR ('I', 'W', 'R', ' ')},
   {
-  _arabic, "ar", sc_arabic, CHR ('a', 'r', 'a', 'b'),
-      CHR ('A', 'R', 'A', ' ')},
+  _arabic, "ar", sc_arabic, CHR ('a', 'r', 'a', 'b'), CHR ('A', 'R', 'A', ' ')},
   {
   _hangulsijo, "ko", sc_hangul, CHR ('h', 'a', 'n', 'g'),
       CHR ('K', 'O', 'R', ' ')},
@@ -3160,19 +3137,17 @@ static struct langsamples
   _TaoTeChing, "zh", sc_chinesetrad, CHR ('h', 'a', 'n', 'i'),
       CHR ('Z', 'H', 'T', ' ')},
   {
-  _LiBai, "zh", sc_chinesetrad, CHR('h', 'a', 'n', 'i'),
+  _LiBai, "zh", sc_chinesetrad, CHR ('h', 'a', 'n', 'i'),
       CHR ('Z', 'H', 'T', ' ')},
   {
   _Genji, "ja", sc_kanji, CHR ('h', 'a', 'n', 'i'), CHR ('J', 'A', 'N', ' ')},
   {
-  _IAmACat, "ja", sc_kanji, CHR ('h', 'a', 'n', 'i'),
-      CHR ('J', 'A', 'N', ' ')},
+  _IAmACat, "ja", sc_kanji, CHR ('h', 'a', 'n', 'i'), CHR ('J', 'A', 'N', ' ')},
   {
   _donquixote, "es", sc_latin, CHR ('l', 'a', 't', 'n'),
       CHR ('E', 'S', 'P', ' ')},
   {
-  _inferno, "it", sc_latin, CHR ('l', 'a', 't', 'n'),
-      CHR ('I', 'T', 'A', ' ')},
+  _inferno, "it", sc_latin, CHR ('l', 'a', 't', 'n'), CHR ('I', 'T', 'A', ' ')},
   {
   _beorwulf, "enm", sc_latin, CHR ('l', 'a', 't', 'n'), CHR ('E', 'N', 'G', ' ')},      /* 639-2 name for middle english */
   {
@@ -3204,11 +3179,9 @@ static struct langsamples
   _lithuanian, "lt", sc_latin, CHR ('l', 'a', 't', 'n'),
       CHR ('L', 'T', 'H', ' ')},
   {
-  _polish, "pl", sc_latin, CHR ('l', 'a', 't', 'n'),
-      CHR ('P', 'L', 'K', ' ')},
+  _polish, "pl", sc_latin, CHR ('l', 'a', 't', 'n'), CHR ('P', 'L', 'K', ' ')},
   {
-  _slovene, "sl", sc_latin, CHR ('l', 'a', 't', 'n'),
-      CHR ('S', 'L', 'V', ' ')},
+  _slovene, "sl", sc_latin, CHR ('l', 'a', 't', 'n'), CHR ('S', 'L', 'V', ' ')},
   {
   _irishjohn, "ga", sc_latin, CHR ('l', 'a', 't', 'n'),
       CHR ('I', 'R', 'I', ' ')},
@@ -3458,8 +3431,7 @@ PrtBuildDef (SplineFont *sf, void *tf,
                     ret[len++] = '\n';
                     ret[len] = '\0';
                     if (langsyscallback != NULL)
-                      (langsyscallback) (tf, len, scriptsthere[s],
-                                         langs[rcnt]);
+                      (langsyscallback) (tf, len, scriptsthere[s], langs[rcnt]);
                   }
                 free (randoms[rcnt]);
               }
@@ -3473,8 +3445,7 @@ PrtBuildDef (SplineFont *sf, void *tf,
                 else
                   {
                     len +=
-                      u8_mbsnlen (randoms[rcnt],
-                                  u8_strlen (randoms[rcnt])) + 2;
+                      u8_mbsnlen (randoms[rcnt], u8_strlen (randoms[rcnt])) + 2;
                     foundsomething = true;
                   }
               }
@@ -3721,7 +3692,7 @@ PIGetPrinterDefs (PI * pi)
 }
 
 void
-PI_Init (PI * pi, FontViewBase * fv, SplineChar *sc)
+PI_Init (PI * pi, FontViewBase *fv, SplineChar *sc)
 {
   int di = fv != NULL ? 0 : sc != NULL ? 1 : 2;
 
@@ -3804,7 +3775,7 @@ FileToUString (char *filename, int max)
 }
 
 void
-ScriptPrint (FontViewBase * fv, int type, int32_t *pointsizes,
+ScriptPrint (FontViewBase *fv, int type, int32_t *pointsizes,
              char *samplefile, uint32_t *sample, char *outputfile)
 {
   PI pi;
