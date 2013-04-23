@@ -134,8 +134,8 @@ LI_FDDrawChar (void *data,
     {
       bdfc =
         fd->fonttype ==
-        sftf_bitmap ? BDFGetMergedChar (fd->bdf->glyphs[gid]) : fd->bdf->
-        glyphs[gid];
+        sftf_bitmap ? BDFGetMergedChar (fd->bdf->glyphs[gid]) : fd->
+        bdf->glyphs[gid];
       if (col != -1)
         {
           if (!fd->antialias)
@@ -324,8 +324,7 @@ FigureBaselineTag (struct opentype_str *ch, LayoutInfo * li,
 }
 
 static int
-BaselineOffset (struct Base *base, struct basescript *bs,
-                uint32_t cur_bsln_tag)
+BaselineOffset (struct Base *base, struct basescript *bs, uint32_t cur_bsln_tag)
 {
   int i;
 
@@ -375,8 +374,7 @@ LIFigureLineHeight (LayoutInfo * li, int l, int p)
               uint32_t cur_bsln_tag;
               if (fd->sf->horiz_base == NULL)
                 continue;
-              cur_bsln_tag =
-                FigureBaselineTag (line[i], li, base, start_base);
+              cur_bsln_tag = FigureBaselineTag (line[i], li, base, start_base);
               if (cur_bsln_tag == start_bsln_tag)
                 continue;       /* Same baseline, offset 0 already set */
               line[i]->bsln_off =
@@ -439,8 +437,7 @@ LIFigureLineHeight (LayoutInfo * li, int l, int p)
   if (l == 0)
     li->lineheights[l].y = 0;
   else
-    li->lineheights[l].y =
-      li->lineheights[l - 1].y + li->lineheights[l - 1].fh;
+    li->lineheights[l].y = li->lineheights[l - 1].y + li->lineheights[l - 1].fh;
   li->lineheights[l].p = p;
   if (line[0] == NULL)          /* Before bidir text */
     li->lineheights[l].start_pos = li->paras[p].start_pos;
@@ -611,8 +608,7 @@ LayoutInfoRefigureLines (LayoutInfo * li, int start_of_change,
     li->paras =
       xrealloc (li->paras,
                 (li->pmax =
-                 li->pcnt + 30 + pcnt - (pe - ps +
-                                         1)) * sizeof (struct paras));
+                 li->pcnt + 30 + pcnt - (pe - ps + 1)) * sizeof (struct paras));
   /* move any old paragraphs around */
   pdiff = pcnt - (pe - ps);
   for (p = ps; p < pe; ++p)
@@ -715,8 +711,7 @@ LayoutInfoRefigureLines (LayoutInfo * li, int start_of_change,
   if (ls + lcnt == 0)
     lcnt = 1;                   /* line 0 always starts at 0 */
   for (l = ls + lcnt; l < li->lcnt; ++l)
-    li->lineheights[l].y =
-      li->lineheights[l - 1].y + li->lineheights[l - 1].fh;
+    li->lineheights[l].y = li->lineheights[l - 1].y + li->lineheights[l - 1].fh;
   li->ps = -1;
 }
 
@@ -807,8 +802,7 @@ LI_fontlistmergecheck (LayoutInfo * li)
                 fl->end = pt - li->text;
               else
                 {
-                  next =
-                    (struct fontlist *) xzalloc (sizeof (struct fontlist));
+                  next = (struct fontlist *) xzalloc (sizeof (struct fontlist));
                   *next = *fl;
                   fl->next = next;
                   fl->end = pt - li->text;
@@ -907,8 +901,7 @@ LayoutInfoChangeFontList (LayoutInfo * li, int rpllen, int sel_start,
       if (p < li->pcnt)
         {
           pe = p;
-          while (l < li->lcnt
-                 && li->lineheights[l].start_pos != oldend->start)
+          while (l < li->lcnt && li->lineheights[l].start_pos != oldend->start)
             ++l;
           if (l < li->lcnt)
             le = l;
@@ -1231,8 +1224,7 @@ FontDataCopyNoBDF (LayoutInfo * print_li, FontData * source)
 }
 
 void
-LayoutInfoInitLangSys (LayoutInfo * li, int end, uint32_t script,
-                       uint32_t lang)
+LayoutInfoInitLangSys (LayoutInfo * li, int end, uint32_t script, uint32_t lang)
 {
   struct fontlist *prev, *next;
 
@@ -1535,8 +1527,7 @@ FontImage (SplineFont *sf, char *filename, Array *arr, int width, int height)
           last = last->next;
         }
       last->fd =
-        LI_FindFontData (li, sf, ly_fore, type, arr->vals[2 * i].u.ival,
-                         true);
+        LI_FindFontData (li, sf, ly_fore, type, arr->vals[2 * i].u.ival, true);
       last->start = len;
 
       utf82u_strcpy (li->text + len, arr->vals[2 * i + 1].u.sval);
@@ -1580,8 +1571,8 @@ FontImage (SplineFont *sf, char *filename, Array *arr, int width, int height)
       p = li->lineheights[i].p;
       if (li->paras[p].para[0] != NULL
           &&
-          ScriptIsRightToLeft (((struct fontlist *) (li->paras[p].para[0]->
-                                                     fl))->script))
+          ScriptIsRightToLeft (((struct fontlist *) (li->paras[p].
+                                                     para[0]->fl))->script))
         x = li->xmax - li->lineheights[i].linelen;
       else
         x = 0;
@@ -1604,8 +1595,7 @@ FontImage (SplineFont *sf, char *filename, Array *arr, int width, int height)
     ff_post_error (_("Unsupported image format"),
                    _("Unsupported image format must be bmp or png"));
   if (!ret)
-    ff_post_error (_("Could not write"), _("Could not write %.100s"),
-                   filename);
+    ff_post_error (_("Could not write"), _("Could not write %.100s"), filename);
   GImageDestroy (image);
 
   LayoutInfo_Destroy (li);
