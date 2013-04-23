@@ -37,189 +37,253 @@
 /* This operations are designed to work on a single font. NOT a CID collection*/
 /*  A CID collection must be treated one sub-font at a time */
 
-struct hentry {
-    int cnt, sum;
-    int char_cnt, max;
-    SplineChar **chars;
+struct hentry
+{
+  int cnt, sum;
+  int char_cnt, max;
+  SplineChar **chars;
 };
 
-typedef struct histdata {
-    int low, high;
-    struct hentry *hist;	/* array of high-low+1 elements */
-    int tot, max;
+typedef struct histdata
+{
+  int low, high;
+  struct hentry *hist;          /* array of high-low+1 elements */
+  int tot, max;
 } HistData;
 
-static void HistDataFree(HistData *h) {
-    int i;
+static void
+HistDataFree (HistData * h)
+{
+  int i;
 
-    for ( i=h->low; i<=h->high; ++i )
-	free(h->hist[i-h->low].chars);
-    free(h->hist);
-    free(h);
+  for (i = h->low; i <= h->high; ++i)
+    free (h->hist[i - h->low].chars);
+  free (h->hist);
+  free (h);
 }
 
-static HistData *HistFindBlues(SplineFont *sf,int layer, uint8_t *selected, EncMap *map) {
-    int i, gid, low,high, top,bottom;
-    SplineChar *sc;
-    DBounds b;
-    HistData *hist;
-    struct hentry *h;
+static HistData *
+HistFindBlues (SplineFont *sf, int layer, uint8_t *selected, EncMap *map)
+{
+  int i, gid, low, high, top, bottom;
+  SplineChar *sc;
+  DBounds b;
+  HistData *hist;
+  struct hentry *h;
 
-    hist = xcalloc(1,sizeof(HistData));
-    hist->hist = xcalloc(sf->ascent+sf->descent+1,sizeof(struct hentry));
-    hist->low = sf->ascent; hist->high = -sf->descent;
-    low = -sf->descent; high = sf->ascent;
+  hist = xcalloc (1, sizeof (HistData));
+  hist->hist = xcalloc (sf->ascent + sf->descent + 1, sizeof (struct hentry));
+  hist->low = sf->ascent;
+  hist->high = -sf->descent;
+  low = -sf->descent;
+  high = sf->ascent;
 
-    for ( i=0; i<(selected==NULL?sf->glyphcnt:map->enccount); ++i ) {
-	gid = selected==NULL ? i : map->map[i];
-	if ( gid!=-1 && (sc = sf->glyphs[gid])!=NULL &&
-		sc->layers[ly_fore].splines!=NULL &&
-		sc->layers[ly_fore].refs==NULL &&
-		(selected==NULL || selected[i])) {
-	    SplineCharLayerFindBounds(sc,layer,&b);
-	    bottom = rint(b.miny);
-	    top = rint(b.maxy);
-	    if ( top==bottom )
-	continue;
-	    if ( top>hist->high ) {
-		hist->high = top;
-		if ( top>high ) {
-		    hist->hist = xrealloc(hist->hist,(top+10-low)*sizeof(struct hentry));
-		    memset(hist->hist + high-low+1,0,(top+10-high-1)*sizeof(struct hentry));
-		    high = top+10 -1;
-		}
-	    }
-	    ++ hist->hist[top-low].cnt;
-	    if ( hist->hist[top-low].char_cnt >= hist->hist[top-low].max ) {
-		if ( hist->hist[top-low].max==0 )
-		    hist->hist[top-low].chars = xmalloc(10*sizeof(SplineChar *));
-		else
-		    hist->hist[top-low].chars = xrealloc(hist->hist[top-low].chars,(hist->hist[top-low].max+10)*sizeof(SplineChar *));
-		hist->hist[top-low].max += 10;
-	    }
-	    hist->hist[top-low].chars[hist->hist[top-low].char_cnt++] = sc;
+  for (i = 0; i < (selected == NULL ? sf->glyphcnt : map->enccount); ++i)
+    {
+      gid = selected == NULL ? i : map->map[i];
+      if (gid != -1 && (sc = sf->glyphs[gid]) != NULL &&
+          sc->layers[ly_fore].splines != NULL &&
+          sc->layers[ly_fore].refs == NULL && (selected == NULL || selected[i]))
+        {
+          SplineCharLayerFindBounds (sc, layer, &b);
+          bottom = rint (b.miny);
+          top = rint (b.maxy);
+          if (top == bottom)
+            continue;
+          if (top > hist->high)
+            {
+              hist->high = top;
+              if (top > high)
+                {
+                  hist->hist =
+                    xrealloc (hist->hist,
+                              (top + 10 - low) * sizeof (struct hentry));
+                  memset (hist->hist + high - low + 1, 0,
+                          (top + 10 - high - 1) * sizeof (struct hentry));
+                  high = top + 10 - 1;
+                }
+            }
+          ++hist->hist[top - low].cnt;
+          if (hist->hist[top - low].char_cnt >= hist->hist[top - low].max)
+            {
+              if (hist->hist[top - low].max == 0)
+                hist->hist[top - low].chars =
+                  xmalloc (10 * sizeof (SplineChar *));
+              else
+                hist->hist[top - low].chars =
+                  xrealloc (hist->hist[top - low].chars,
+                            (hist->hist[top - low].max +
+                             10) * sizeof (SplineChar *));
+              hist->hist[top - low].max += 10;
+            }
+          hist->hist[top - low].chars[hist->hist[top - low].char_cnt++] = sc;
 
-	    if ( bottom<hist->low ) {
-		hist->low = bottom;
-		if ( bottom<low ) {
-		    h = xcalloc((high-bottom+10),sizeof( struct hentry ));
-		    memcpy(h+low-(bottom-10+1),hist->hist,(high+1-low)*sizeof(struct hentry));
-		    low = bottom-10+1;
-		    free( hist->hist );
-		    hist->hist = h;
-		}
-	    }
-	    ++ hist->hist[bottom-low].cnt;
-	    if ( hist->hist[bottom-low].char_cnt >= hist->hist[bottom-low].max ) {
-		if ( hist->hist[bottom-low].max==0 )
-		    hist->hist[bottom-low].chars = xmalloc(10*sizeof(SplineChar *));
-		else
-		    hist->hist[bottom-low].chars = xrealloc(hist->hist[bottom-low].chars,(hist->hist[bottom-low].max+10)*sizeof(SplineChar *));
-		hist->hist[bottom-low].max += 10;
-	    }
-	    hist->hist[bottom-low].chars[hist->hist[bottom-low].char_cnt++] = sc;
-	}
-	hist->tot += 2;
+          if (bottom < hist->low)
+            {
+              hist->low = bottom;
+              if (bottom < low)
+                {
+                  h = xcalloc ((high - bottom + 10), sizeof (struct hentry));
+                  memcpy (h + low - (bottom - 10 + 1), hist->hist,
+                          (high + 1 - low) * sizeof (struct hentry));
+                  low = bottom - 10 + 1;
+                  free (hist->hist);
+                  hist->hist = h;
+                }
+            }
+          ++hist->hist[bottom - low].cnt;
+          if (hist->hist[bottom - low].char_cnt >= hist->hist[bottom - low].max)
+            {
+              if (hist->hist[bottom - low].max == 0)
+                hist->hist[bottom - low].chars =
+                  xmalloc (10 * sizeof (SplineChar *));
+              else
+                hist->hist[bottom - low].chars =
+                  xrealloc (hist->hist[bottom - low].chars,
+                            (hist->hist[bottom - low].max +
+                             10) * sizeof (SplineChar *));
+              hist->hist[bottom - low].max += 10;
+            }
+          hist->hist[bottom - low].chars[hist->hist[bottom - low].char_cnt++] =
+            sc;
+        }
+      hist->tot += 2;
     }
-    if ( hist->low>hist->high ) {		/* Found nothing */
-	hist->low = hist->high = 0;
+  if (hist->low > hist->high)
+    {                           /* Found nothing */
+      hist->low = hist->high = 0;
     }
-    if ( low!=hist->low || high!=hist->high ) {
-	h = xmalloc((hist->high-hist->low+1)*sizeof(struct hentry));
-	memcpy(h,hist->hist + hist->low-low,(hist->high-hist->low+1)*sizeof(struct hentry));
-	free(hist->hist);
-	hist->hist = h;
+  if (low != hist->low || high != hist->high)
+    {
+      h = xmalloc ((hist->high - hist->low + 1) * sizeof (struct hentry));
+      memcpy (h, hist->hist + hist->low - low,
+              (hist->high - hist->low + 1) * sizeof (struct hentry));
+      free (hist->hist);
+      hist->hist = h;
     }
-return( hist );
+  return (hist);
 }
 
-static HistData *HistFindStemWidths(SplineFont *sf,int layer, uint8_t *selected,EncMap *map,int hor) {
-    int i, gid, low,high, val;
-    SplineChar *sc;
-    HistData *hist;
-    struct hentry *h;
-    StemInfo *stem;
+static HistData *
+HistFindStemWidths (SplineFont *sf, int layer, uint8_t *selected, EncMap *map,
+                    int hor)
+{
+  int i, gid, low, high, val;
+  SplineChar *sc;
+  HistData *hist;
+  struct hentry *h;
+  StemInfo *stem;
 
-    hist = xcalloc(1,sizeof(HistData));
-    hist->hist = xcalloc(sf->ascent+sf->descent+1,sizeof(struct hentry));
-    hist->low = sf->ascent+sf->descent;
-    low = 0; high = sf->ascent+sf->descent;
+  hist = xcalloc (1, sizeof (HistData));
+  hist->hist = xcalloc (sf->ascent + sf->descent + 1, sizeof (struct hentry));
+  hist->low = sf->ascent + sf->descent;
+  low = 0;
+  high = sf->ascent + sf->descent;
 
-    for ( i=0; i<(selected==NULL?sf->glyphcnt:map->enccount); ++i ) {
-	gid = selected==NULL ? i : map->map[i];
-	if ( gid!=-1 && (sc = sf->glyphs[gid])!=NULL &&
-		sc->layers[ly_fore].splines!=NULL &&
-		sc->layers[ly_fore].refs==NULL &&
-		(selected==NULL || selected[i])) {
-	    if ( autohint_before_generate && sc->changedsincelasthinted && !sc->manualhints )
-		SplineCharAutoHint(sc,layer,NULL);
-	    for ( stem = hor ? sc->hstem : sc->vstem ; stem!=NULL; stem = stem->next ) {
-		if ( stem->ghost )
-	    continue;
-		val = rint(stem->width);
-		if ( val<=0 )
-		    val = -val;
-		if ( val>hist->high ) {
-		    hist->high = val;
-		    if ( val>high ) {
-			hist->hist = xrealloc(hist->hist,(val+10-low)*sizeof(struct hentry));
-			memset(hist->hist + high-low+1,0,(val+10-high-1)*sizeof(struct hentry));
-			high = val+10 -1;
-		    }
-		}
-		if ( val<hist->low )
-		    hist->low = val;
-		++ hist->hist[val-low].cnt;
-		if ( hist->hist[val-low].char_cnt==0 ||
-			hist->hist[val-low].chars[hist->hist[val-low].char_cnt-1]!=sc ) {
-		    if ( hist->hist[val-low].char_cnt >= hist->hist[val-low].max ) {
-			if ( hist->hist[val-low].max==0 )
-			    hist->hist[val-low].chars = xmalloc(10*sizeof(SplineChar *));
-			else
-			    hist->hist[val-low].chars = xrealloc(hist->hist[val-low].chars,(hist->hist[val-low].max+10)*sizeof(SplineChar *));
-			hist->hist[val-low].max += 10;
-		    }
-		    hist->hist[val-low].chars[hist->hist[val-low].char_cnt++] = sc;
-		}
-		++ hist->tot;
-	    }
-	}
+  for (i = 0; i < (selected == NULL ? sf->glyphcnt : map->enccount); ++i)
+    {
+      gid = selected == NULL ? i : map->map[i];
+      if (gid != -1 && (sc = sf->glyphs[gid]) != NULL &&
+          sc->layers[ly_fore].splines != NULL &&
+          sc->layers[ly_fore].refs == NULL && (selected == NULL || selected[i]))
+        {
+          if (autohint_before_generate && sc->changedsincelasthinted
+              && !sc->manualhints)
+            SplineCharAutoHint (sc, layer, NULL);
+          for (stem = hor ? sc->hstem : sc->vstem; stem != NULL;
+               stem = stem->next)
+            {
+              if (stem->ghost)
+                continue;
+              val = rint (stem->width);
+              if (val <= 0)
+                val = -val;
+              if (val > hist->high)
+                {
+                  hist->high = val;
+                  if (val > high)
+                    {
+                      hist->hist =
+                        xrealloc (hist->hist,
+                                  (val + 10 - low) * sizeof (struct hentry));
+                      memset (hist->hist + high - low + 1, 0,
+                              (val + 10 - high - 1) * sizeof (struct hentry));
+                      high = val + 10 - 1;
+                    }
+                }
+              if (val < hist->low)
+                hist->low = val;
+              ++hist->hist[val - low].cnt;
+              if (hist->hist[val - low].char_cnt == 0 ||
+                  hist->hist[val - low].chars[hist->hist[val - low].char_cnt -
+                                              1] != sc)
+                {
+                  if (hist->hist[val - low].char_cnt >=
+                      hist->hist[val - low].max)
+                    {
+                      if (hist->hist[val - low].max == 0)
+                        hist->hist[val - low].chars =
+                          xmalloc (10 * sizeof (SplineChar *));
+                      else
+                        hist->hist[val - low].chars =
+                          xrealloc (hist->hist[val - low].chars,
+                                    (hist->hist[val - low].max +
+                                     10) * sizeof (SplineChar *));
+                      hist->hist[val - low].max += 10;
+                    }
+                  hist->hist[val -
+                             low].chars[hist->hist[val - low].char_cnt++] = sc;
+                }
+              ++hist->tot;
+            }
+        }
     }
-    if ( hist->low>hist->high ) {		/* Found nothing */
-	hist->low = hist->high = 0;
+  if (hist->low > hist->high)
+    {                           /* Found nothing */
+      hist->low = hist->high = 0;
     }
-    if ( low!=hist->low || high!=hist->high ) {
-	h = xmalloc((hist->high-hist->low+1)*sizeof(struct hentry));
-	memcpy(h,hist->hist + hist->low-low,(hist->high-hist->low+1)*sizeof(struct hentry));
-	free(hist->hist);
-	hist->hist = h;
+  if (low != hist->low || high != hist->high)
+    {
+      h = xmalloc ((hist->high - hist->low + 1) * sizeof (struct hentry));
+      memcpy (h, hist->hist + hist->low - low,
+              (hist->high - hist->low + 1) * sizeof (struct hentry));
+      free (hist->hist);
+      hist->hist = h;
     }
-return( hist );
+  return (hist);
 }
 
-static HistData *HistFindHStemWidths(SplineFont *sf,int layer, uint8_t *selected,EncMap *map) {
-return( HistFindStemWidths(sf,layer,selected,map,true) );
+static HistData *
+HistFindHStemWidths (SplineFont *sf, int layer, uint8_t *selected, EncMap *map)
+{
+  return (HistFindStemWidths (sf, layer, selected, map, true));
 }
 
-static HistData *HistFindVStemWidths(SplineFont *sf,int layer, uint8_t *selected,EncMap *map) {
-return( HistFindStemWidths(sf,layer,selected,map,false) );
+static HistData *
+HistFindVStemWidths (SplineFont *sf, int layer, uint8_t *selected, EncMap *map)
+{
+  return (HistFindStemWidths (sf, layer, selected, map, false));
 }
 
-static void HistFindMax(HistData *h, int sum_around) {
-    int i, j, m=1;
-    int c;
+static void
+HistFindMax (HistData * h, int sum_around)
+{
+  int i, j, m = 1;
+  int c;
 
-    if ( sum_around<0 ) sum_around = 0;
-    for ( i = h->low; i<=h->high; ++i ) {
-	c = 0;
-	for ( j=i-sum_around; j<=i+sum_around; ++j )
-	    if ( j>=h->low && j<=h->high )
-		c += h->hist[j-h->low].cnt;
-	h->hist[i-h->low].sum = c;
-	if ( c>m )
-	    m = c;
+  if (sum_around < 0)
+    sum_around = 0;
+  for (i = h->low; i <= h->high; ++i)
+    {
+      c = 0;
+      for (j = i - sum_around; j <= i + sum_around; ++j)
+        if (j >= h->low && j <= h->high)
+          c += h->hist[j - h->low].cnt;
+      h->hist[i - h->low].sum = c;
+      if (c > m)
+        m = c;
     }
-    h->max = m;
+  h->max = m;
 }
 
 #define CID_ScrollBar		1000
@@ -243,771 +307,942 @@ static void HistFindMax(HistData *h, int sum_around) {
 #define CID_Histogram		4002
 #define CID_RightSide		4003
 
-struct hist_dlg {
-    enum hist_type which;
-    SplineFont *sf;
-    int layer;
-    struct psdict *private;
-    uint8_t *selected;
-    HistData *h;
+struct hist_dlg
+{
+  enum hist_type which;
+  SplineFont *sf;
+  int layer;
+  struct psdict *private;
+  uint8_t *selected;
+  HistData *h;
 
-    int pending_blue;
-    int is_pending;
+  int pending_blue;
+  int is_pending;
 
-    int sum_around, barwidth;
-    int hoff;
+  int sum_around, barwidth;
+  int hoff;
 
-    int x,y;
-    int hwidth, hheight;
-    int yoff;
+  int x, y;
+  int hwidth, hheight;
+  int yoff;
 
-    GWindow gw;
-    GFont *font;
-    int fh, as;
-    int done;
+  GWindow gw;
+  GFont *font;
+  int fh, as;
+  int done;
 };
 
-static void HistPopup(struct hist_dlg *hist,GEvent *e) {
-    int x = e->u.mouse.x;
-    struct hentry *h;
-    static char buffer[300];
-    char *end = buffer + sizeof(buffer)/sizeof(buffer[0]), *pt, *line;
-    int i;
+static void
+HistPopup (struct hist_dlg *hist, GEvent *e)
+{
+  int x = e->u.mouse.x;
+  struct hentry *h;
+  static char buffer[300];
+  char *end = buffer + sizeof (buffer) / sizeof (buffer[0]), *pt, *line;
+  int i;
 
-    x /= hist->barwidth;
-    if ( x + hist->hoff > hist->h->high || x + hist->hoff - hist->h->low<0 )
-return;
+  x /= hist->barwidth;
+  if (x + hist->hoff > hist->h->high || x + hist->hoff - hist->h->low < 0)
+    return;
 
-    h = &hist->h->hist[x + hist->hoff - hist->h->low];
-    if ( hist->sum_around==0 ) {
-	if ( hist->which == hist_blues )
-	    snprintf(buffer,end-buffer,
-		    _("Position: %d\nCount: %d\n"),
-		    x + hist->hoff,
-		    h->sum);
-	else
-	    snprintf(buffer,end-buffer,
-		    _("Width: %d\nCount: %d\nPercentage of Max: %d%%\n"),
-		    x + hist->hoff,
-		    h->sum, (int) rint(h->sum*100.0/hist->h->max));
-    } else {
-	if ( hist->which == hist_blues )
-	    snprintf(buffer,end-buffer,
-		    _("Position: %d-%d (%d)\nCount: %d (%d)\n"),
-		    x+hist->hoff-hist->sum_around, x+hist->hoff+hist->sum_around, x + hist->hoff,
-		    h->sum, h->cnt);
-	else
-	    snprintf(buffer,end-buffer,
-		    _("Width: %d-%d (%d)\nCount: %d (%d)\nPercentage of Max: %d%%\n"),
-		    x+hist->hoff-hist->sum_around, x+hist->hoff+hist->sum_around, x + hist->hoff,
-		    h->sum, h->cnt, (int) rint(h->sum*100.0/hist->h->max));
+  h = &hist->h->hist[x + hist->hoff - hist->h->low];
+  if (hist->sum_around == 0)
+    {
+      if (hist->which == hist_blues)
+        snprintf (buffer, end - buffer,
+                  _("Position: %d\nCount: %d\n"), x + hist->hoff, h->sum);
+      else
+        snprintf (buffer, end - buffer,
+                  _("Width: %d\nCount: %d\nPercentage of Max: %d%%\n"),
+                  x + hist->hoff,
+                  h->sum, (int) rint (h->sum * 100.0 / hist->h->max));
     }
-    pt = buffer+strlen(buffer);
-    line = pt;
-    for ( i = 0; i<h->char_cnt; ++i ) {
-	if ( pt+strlen(h->chars[i]->name)+4>end ) {
-	    strcpy(pt,"...");
-    break;
-	}
-	strcpy(pt,h->chars[i]->name);
-	pt += strlen(pt);
-	if ( pt-line>70 ) {
-	    *pt++ = '\n';
-	    line = pt;
-	} else
-	    *pt++ = ' ';
-	*pt = '\0';
+  else
+    {
+      if (hist->which == hist_blues)
+        snprintf (buffer, end - buffer,
+                  _("Position: %d-%d (%d)\nCount: %d (%d)\n"),
+                  x + hist->hoff - hist->sum_around,
+                  x + hist->hoff + hist->sum_around, x + hist->hoff, h->sum,
+                  h->cnt);
+      else
+        snprintf (buffer, end - buffer,
+                  _
+                  ("Width: %d-%d (%d)\nCount: %d (%d)\nPercentage of Max: %d%%\n"),
+                  x + hist->hoff - hist->sum_around,
+                  x + hist->hoff + hist->sum_around, x + hist->hoff, h->sum,
+                  h->cnt, (int) rint (h->sum * 100.0 / hist->h->max));
     }
-    GGadgetPreparePopup8(hist->gw,buffer);
+  pt = buffer + strlen (buffer);
+  line = pt;
+  for (i = 0; i < h->char_cnt; ++i)
+    {
+      if (pt + strlen (h->chars[i]->name) + 4 > end)
+        {
+          strcpy (pt, "...");
+          break;
+        }
+      strcpy (pt, h->chars[i]->name);
+      pt += strlen (pt);
+      if (pt - line > 70)
+        {
+          *pt++ = '\n';
+          line = pt;
+        }
+      else
+        *pt++ = ' ';
+      *pt = '\0';
+    }
+  GGadgetPreparePopup8 (hist->gw, buffer);
 }
 
-static uint32_t *ArrayOrder(const uint32_t *old,int args,int val1,int val2) {
-    uint32_t *end;
-    double array[40];
-    int i,j,k;
-    uint32_t *new, *pt;
-    uint32_t ubuf[40];
+static uint32_t *
+ArrayOrder (const uint32_t *old, int args, int val1, int val2)
+{
+  uint32_t *end;
+  double array[40];
+  int i, j, k;
+  uint32_t *new, *pt;
+  uint32_t ubuf[40];
 
-    if ( *old=='[' ) ++old;
+  if (*old == '[')
+    ++old;
 
-    for ( i=0; i<40 && *old!=']' && *old!='\0'; ++i ) {
-	array[i] = u32_strtod(old,&end);
-	if ( old==end )
-    break;
-	old = end;
-	while ( *old==' ' ) ++old;
+  for (i = 0; i < 40 && *old != ']' && *old != '\0'; ++i)
+    {
+      array[i] = u32_strtod (old, &end);
+      if (old == end)
+        break;
+      old = end;
+      while (*old == ' ')
+        ++old;
     }
-    array[i++] = val1;
-    if ( args==2 )
-	array[i++] = val2;
-    for ( j=0; j<i; ++j ) for ( k=j+1; k<i; ++k ) if ( array[j]>array[k] ) {
-	double temp = array[j];
-	array[j] = array[k];
-	array[k] = temp;
-    }
+  array[i++] = val1;
+  if (args == 2)
+    array[i++] = val2;
+  for (j = 0; j < i; ++j)
+    for (k = j + 1; k < i; ++k)
+      if (array[j] > array[k])
+        {
+          double temp = array[j];
+          array[j] = array[k];
+          array[k] = temp;
+        }
 
-    u32_sprintf (ubuf, "%g", val1);
-    new = xmalloc(2*(u32_strlen(ubuf)+u32_strlen(old)+10)*sizeof(uint32_t));
+  u32_sprintf (ubuf, "%g", val1);
+  new =
+    xmalloc (2 * (u32_strlen (ubuf) + u32_strlen (old) + 10) *
+             sizeof (uint32_t));
 
-    pt = new;
-    *pt++ = '[';
-    for ( k=0; k<i; ++k ) {
-	u32_sprintf (pt, "%g", array[k]);
-	pt += u32_strlen(pt);
-	if ( k==i-1 )
-	    *pt++ = ']';
-	else
-	    *pt++ = ' ';
+  pt = new;
+  *pt++ = '[';
+  for (k = 0; k < i; ++k)
+    {
+      u32_sprintf (pt, "%g", array[k]);
+      pt += u32_strlen (pt);
+      if (k == i - 1)
+        *pt++ = ']';
+      else
+        *pt++ = ' ';
     }
-    *pt = '\0';
-return( new );
+  *pt = '\0';
+  return (new);
 }
 
-static void HistPress(struct hist_dlg *hist,GEvent *e) {
-    int x = e->u.mouse.x;
-    uint32_t ubuf[20];
+static void
+HistPress (struct hist_dlg *hist, GEvent *e)
+{
+  int x = e->u.mouse.x;
+  uint32_t ubuf[20];
 
-    x /= hist->barwidth;
-    x += hist->hoff;
-    if ( x > hist->h->high || x<hist->h->low )
-return;
+  x /= hist->barwidth;
+  x += hist->hoff;
+  if (x > hist->h->high || x < hist->h->low)
+    return;
 
-    if ( hist->which==hist_blues ) {
-	if ( hist->is_pending ) {
-	    if ( x<hist->pending_blue )
-		ff_post_error(_("Bad Value"),_("The smaller number must be selected first in a pair of bluevalues"));
-	    else if ( x<0 ) {	/* OtherBlues */
-		const uint32_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
-		uint32_t *new = ArrayOrder(old,2,hist->pending_blue,x);
-		GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal),new);
-		free(new);
-	    } else {
-		const uint32_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_MainVal));
-		uint32_t *new = ArrayOrder(old,2,hist->pending_blue,x);
-		GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_MainVal),new);
-		free(new);
-	    }
-	    GDrawSetCursor(hist->gw,ct_pointer);
-	    hist->is_pending = false;
-	} else {
-	    hist->is_pending = true;
-	    hist->pending_blue = x;
-	    GDrawSetCursor(hist->gw,ct_eyedropper);
-	}
-	GGadgetSetVisible(GWidgetGetControl(hist->gw,CID_MainVal),!hist->is_pending);
-	GGadgetSetVisible(GWidgetGetControl(hist->gw,CID_MainValL),!hist->is_pending);
-	GGadgetSetVisible(GWidgetGetControl(hist->gw,CID_BlueMsg),hist->is_pending);
-    } else {
-	if ( !( e->u.mouse.state&ksm_shift )) {
-	    u32_sprintf (ubuf, "[%d]", x);
-	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_MainVal),ubuf);
-	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal),ubuf);
-	} else {
-	    const uint32_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
-	    uint32_t *new = ArrayOrder(old,1,x,0);
-	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal),new);
-	    free(new);
-	}
+  if (hist->which == hist_blues)
+    {
+      if (hist->is_pending)
+        {
+          if (x < hist->pending_blue)
+            ff_post_error (_("Bad Value"),
+                           _
+                           ("The smaller number must be selected first in a pair of bluevalues"));
+          else if (x < 0)
+            {                   /* OtherBlues */
+              const uint32_t *old =
+                _GGadgetGetTitle (GWidgetGetControl
+                                  (hist->gw, CID_SecondaryVal));
+              uint32_t *new = ArrayOrder (old, 2, hist->pending_blue, x);
+              GGadgetSetTitle (GWidgetGetControl (hist->gw, CID_SecondaryVal),
+                               new);
+              free (new);
+            }
+          else
+            {
+              const uint32_t *old =
+                _GGadgetGetTitle (GWidgetGetControl (hist->gw, CID_MainVal));
+              uint32_t *new = ArrayOrder (old, 2, hist->pending_blue, x);
+              GGadgetSetTitle (GWidgetGetControl (hist->gw, CID_MainVal), new);
+              free (new);
+            }
+          GDrawSetCursor (hist->gw, ct_pointer);
+          hist->is_pending = false;
+        }
+      else
+        {
+          hist->is_pending = true;
+          hist->pending_blue = x;
+          GDrawSetCursor (hist->gw, ct_eyedropper);
+        }
+      GGadgetSetVisible (GWidgetGetControl (hist->gw, CID_MainVal),
+                         !hist->is_pending);
+      GGadgetSetVisible (GWidgetGetControl (hist->gw, CID_MainValL),
+                         !hist->is_pending);
+      GGadgetSetVisible (GWidgetGetControl (hist->gw, CID_BlueMsg),
+                         hist->is_pending);
+    }
+  else
+    {
+      if (!(e->u.mouse.state & ksm_shift))
+        {
+          u32_sprintf (ubuf, "[%d]", x);
+          GGadgetSetTitle (GWidgetGetControl (hist->gw, CID_MainVal), ubuf);
+          GGadgetSetTitle (GWidgetGetControl (hist->gw, CID_SecondaryVal),
+                           ubuf);
+        }
+      else
+        {
+          const uint32_t *old =
+            _GGadgetGetTitle (GWidgetGetControl (hist->gw, CID_SecondaryVal));
+          uint32_t *new = ArrayOrder (old, 1, x, 0);
+          GGadgetSetTitle (GWidgetGetControl (hist->gw, CID_SecondaryVal), new);
+          free (new);
+        }
     }
 }
 
-static void HistExpose(GWindow pixmap, struct hist_dlg *hist) {
-    GRect r,old;
-    int height;
-    double yscale;
-    int i;
-    char buf[20];
-    GRect size;
-    GDrawGetSize(GDrawableGetWindow(GWidgetGetControl(hist->gw,CID_Histogram)),&size);
+static void
+HistExpose (GWindow pixmap, struct hist_dlg *hist)
+{
+  GRect r, old;
+  int height;
+  double yscale;
+  int i;
+  char buf[20];
+  GRect size;
+  GDrawGetSize (GDrawableGetWindow
+                (GWidgetGetControl (hist->gw, CID_Histogram)), &size);
 
-    height = size.height-hist->fh-2;
-    yscale = (4*height/5.0)/(hist->h->max-0);
+  height = size.height - hist->fh - 2;
+  yscale = (4 * height / 5.0) / (hist->h->max - 0);
 
-    GDrawSetLineWidth(pixmap,0);
-    r.x = 0; r.y = 0;
-    r.width = size.width-1; r.height = height-1;
-    GDrawDrawRect(pixmap,&r,0x000000);
+  GDrawSetLineWidth (pixmap, 0);
+  r.x = 0;
+  r.y = 0;
+  r.width = size.width - 1;
+  r.height = height - 1;
+  GDrawDrawRect (pixmap, &r, 0x000000);
 
-    ++r.x; r.width--;
-    ++r.y; r.height--;
-    GDrawPushClip(pixmap,&r,&old);
+  ++r.x;
+  r.width--;
+  ++r.y;
+  r.height--;
+  GDrawPushClip (pixmap, &r, &old);
 
-    for ( i=hist->hoff; (i-hist->hoff)*hist->barwidth<size.width-2 && i<=hist->h->high; ++i ) {
-	r.x = (i-hist->hoff)*hist->barwidth+1; r.width = hist->barwidth;
-	r.height = rint(hist->h->hist[i-hist->h->low].sum * yscale);
-	if ( r.height>=0 ) {
-	    r.y = height - r.height;
-	    GDrawFillRect(pixmap,&r,0x2020ff);
-	}
+  for (i = hist->hoff;
+       (i - hist->hoff) * hist->barwidth < size.width - 2 && i <= hist->h->high;
+       ++i)
+    {
+      r.x = (i - hist->hoff) * hist->barwidth + 1;
+      r.width = hist->barwidth;
+      r.height = rint (hist->h->hist[i - hist->h->low].sum * yscale);
+      if (r.height >= 0)
+        {
+          r.y = height - r.height;
+          GDrawFillRect (pixmap, &r, 0x2020ff);
+        }
     }
 
-    GDrawPopClip(pixmap,&old);
+  GDrawPopClip (pixmap, &old);
 
-    GDrawSetFont(pixmap,hist->font);
-    sprintf(buf,"%d",hist->hoff);
-    GDrawDrawText8(pixmap,0,height+2+hist->as, buf,-1,0x000000);
-    sprintf(buf,"%d",hist->hoff+hist->hwidth/hist->barwidth);
-    GDrawDrawText8(pixmap,size.width-GDrawGetText8Width(pixmap,buf,-1),height+2+hist->as,
-	    buf,-1,0x000000);
+  GDrawSetFont (pixmap, hist->font);
+  sprintf (buf, "%d", hist->hoff);
+  GDrawDrawText8 (pixmap, 0, height + 2 + hist->as, buf, -1, 0x000000);
+  sprintf (buf, "%d", hist->hoff + hist->hwidth / hist->barwidth);
+  GDrawDrawText8 (pixmap, size.width - GDrawGetText8Width (pixmap, buf, -1),
+                  height + 2 + hist->as, buf, -1, 0x000000);
 }
 
-static void HistRExpose(GWindow pixmap, struct hist_dlg *hist) {
-    int height;
-    double yscale;
-    GRect size;
-    char buf[20];
+static void
+HistRExpose (GWindow pixmap, struct hist_dlg *hist)
+{
+  int height;
+  double yscale;
+  GRect size;
+  char buf[20];
 
-    GDrawGetSize(GDrawableGetWindow(GWidgetGetControl(hist->gw,CID_RightSide)),&size);
-    height = size.height-hist->fh-2;
-    yscale = (4*height/5.0)/(hist->h->max-0);
+  GDrawGetSize (GDrawableGetWindow
+                (GWidgetGetControl (hist->gw, CID_RightSide)), &size);
+  height = size.height - hist->fh - 2;
+  yscale = (4 * height / 5.0) / (hist->h->max - 0);
 
-    sprintf(buf,"%d",hist->h->max);
-    GDrawDrawText8(pixmap,1,height-rint(hist->h->max*yscale),
-	    buf,-1,0x000000);
+  sprintf (buf, "%d", hist->h->max);
+  GDrawDrawText8 (pixmap, 1, height - rint (hist->h->max * yscale),
+                  buf, -1, 0x000000);
 }
 
-static void HistLExpose(GWindow pixmap, struct hist_dlg *hist) {
-    int height;
-    double yscale;
-    GRect size;
-    char buf[20];
+static void
+HistLExpose (GWindow pixmap, struct hist_dlg *hist)
+{
+  int height;
+  double yscale;
+  GRect size;
+  char buf[20];
 
-    GDrawGetSize(GDrawableGetWindow(GWidgetGetControl(hist->gw,CID_LeftSide)),&size);
-    height = size.height-hist->fh-2;
-    yscale = (4*height/5.0)/(hist->h->max-0);
+  GDrawGetSize (GDrawableGetWindow (GWidgetGetControl (hist->gw, CID_LeftSide)),
+                &size);
+  height = size.height - hist->fh - 2;
+  yscale = (4 * height / 5.0) / (hist->h->max - 0);
 
-    sprintf(buf,"%d",hist->h->max);
-    GDrawDrawText8(pixmap,size.width-GDrawGetText8Width(pixmap,buf,-1)-1,height-rint(hist->h->max*yscale),
-	    buf,-1,0x000000);
+  sprintf (buf, "%d", hist->h->max);
+  GDrawDrawText8 (pixmap, size.width - GDrawGetText8Width (pixmap, buf, -1) - 1,
+                  height - rint (hist->h->max * yscale), buf, -1, 0x000000);
 }
 
-static void HistScroll(struct hist_dlg *hist,struct sbevent *sb) {
-    int newpos = hist->hoff;
-    int cols;
-    GRect size;
-    GGadget *g = GWidgetGetControl(hist->gw,CID_ScrollBar);
+static void
+HistScroll (struct hist_dlg *hist, struct sbevent *sb)
+{
+  int newpos = hist->hoff;
+  int cols;
+  GRect size;
+  GGadget *g = GWidgetGetControl (hist->gw, CID_ScrollBar);
 
-    GGadgetGetSize(g,&size);
-    cols = (size.width-2)/hist->barwidth;
+  GGadgetGetSize (g, &size);
+  cols = (size.width - 2) / hist->barwidth;
 
-    switch( sb->type ) {
-      case et_sb_top:
-        newpos = 0;
+  switch (sb->type)
+    {
+    case et_sb_top:
+      newpos = 0;
       break;
-      case et_sb_uppage:
-        newpos -= cols;
+    case et_sb_uppage:
+      newpos -= cols;
       break;
-      case et_sb_up:
-        --newpos;
+    case et_sb_up:
+      --newpos;
       break;
-      case et_sb_down:
-        ++newpos;
+    case et_sb_down:
+      ++newpos;
       break;
-      case et_sb_downpage:
-        newpos += cols;
+    case et_sb_downpage:
+      newpos += cols;
       break;
-      case et_sb_bottom:
-        newpos = (hist->h->high+1-hist->h->low)-cols;
+    case et_sb_bottom:
+      newpos = (hist->h->high + 1 - hist->h->low) - cols;
       break;
-      case et_sb_thumb:
-      case et_sb_thumbrelease:
-        newpos = sb->pos;
+    case et_sb_thumb:
+    case et_sb_thumbrelease:
+      newpos = sb->pos;
       break;
     }
-    if ( newpos>(hist->h->high+1-hist->h->low)-cols + hist->h->low )
-        newpos = (hist->h->high+1-hist->h->low)-cols + hist->h->low;
-    if ( newpos<hist->h->low ) newpos = hist->h->low;
-    if ( newpos!=hist->hoff ) {
-	/*int diff = newpos-hist->hoff;*/
-	hist->hoff = newpos;
-	GScrollBarSetPos(g,hist->hoff);
-	GDrawRequestExpose(GDrawableGetWindow(GWidgetGetControl(hist->gw,CID_Histogram)),NULL,false);
+  if (newpos > (hist->h->high + 1 - hist->h->low) - cols + hist->h->low)
+    newpos = (hist->h->high + 1 - hist->h->low) - cols + hist->h->low;
+  if (newpos < hist->h->low)
+    newpos = hist->h->low;
+  if (newpos != hist->hoff)
+    {
+      /*int diff = newpos-hist->hoff; */
+      hist->hoff = newpos;
+      GScrollBarSetPos (g, hist->hoff);
+      GDrawRequestExpose (GDrawableGetWindow
+                          (GWidgetGetControl (hist->gw, CID_Histogram)), NULL,
+                          false);
 #if 0
-	r.x = 1; r.y = 1;
-	r.width = hist->hwidth-1; r.height = hist->hheight-1;
-	GDrawScroll(hist->gw,&r,-diff*hist->barwidth,0);
-	r.x = 10; r.y = hist->y+hist->hheight-hist->fh+1;
-	r.width = hist->hwidth+2*(hist->x-10); r.height = hist->fh;
-	GDrawRequestExpose(hist->gw,&r,false);
+      r.x = 1;
+      r.y = 1;
+      r.width = hist->hwidth - 1;
+      r.height = hist->hheight - 1;
+      GDrawScroll (hist->gw, &r, -diff * hist->barwidth, 0);
+      r.x = 10;
+      r.y = hist->y + hist->hheight - hist->fh + 1;
+      r.width = hist->hwidth + 2 * (hist->x - 10);
+      r.height = hist->fh;
+      GDrawRequestExpose (hist->gw, &r, false);
 #endif
     }
 }
 
-static void HistRefigureSB(struct hist_dlg *hist) {
-    GGadget *g = GWidgetGetControl(hist->gw,CID_ScrollBar);
-    int width, hoff, cols;
-    GRect size;
+static void
+HistRefigureSB (struct hist_dlg *hist)
+{
+  GGadget *g = GWidgetGetControl (hist->gw, CID_ScrollBar);
+  int width, hoff, cols;
+  GRect size;
 
-    GGadgetGetSize(g,&size);
-    width = size.width-2;
-    cols = width/hist->barwidth;
+  GGadgetGetSize (g, &size);
+  width = size.width - 2;
+  cols = width / hist->barwidth;
 
-    GScrollBarSetBounds(g,hist->h->low,hist->h->high+1,cols);
-    if ( hist->hoff+cols >hist->h->high ) {
-	hoff = hist->h->high-cols;
-	if ( hoff<0 ) hoff = 0;
-	if ( hoff!=hist->hoff ) {
-	    hist->hoff = hoff;
-	    GScrollBarSetPos(g,hoff);
-	}
+  GScrollBarSetBounds (g, hist->h->low, hist->h->high + 1, cols);
+  if (hist->hoff + cols > hist->h->high)
+    {
+      hoff = hist->h->high - cols;
+      if (hoff < 0)
+        hoff = 0;
+      if (hoff != hist->hoff)
+        {
+          hist->hoff = hoff;
+          GScrollBarSetPos (g, hoff);
+        }
     }
 }
 
-static void HistResize(struct hist_dlg *hist) {
+static void
+HistResize (struct hist_dlg *hist)
+{
 
-    HistRefigureSB(hist);
-    GDrawRequestExpose(hist->gw,NULL,false);
-}
-	
-static void HistSet(struct hist_dlg *hist) {
-    char *primary, *secondary;
-    struct psdict *p = hist->private ? hist->private : hist->sf->private;
-    const uint32_t *ret1, *ret2;
-
-    switch ( hist->which ) {
-      case hist_hstem:
-	primary = "StdHW"; secondary = "StemSnapH";
-      break;
-      case hist_vstem:
-	primary = "StdVW"; secondary = "StemSnapV";
-      break;
-      case hist_blues:
-	primary = "BlueValues"; secondary = "OtherBlues";
-      break;
-    }
-    ret1 = GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_MainVal));
-    ret2 = GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
-    hist->done = true;
-    if ( (*ret1=='\0' || u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ret1)),"[]")==0 ) &&
-	 (*ret2=='\0' || u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ret2)),"[]")==0 ) && p==NULL )
-return;
-    if ( p==NULL ) {
-	hist->sf->private = p = xcalloc(1,sizeof(struct psdict));
-	p->cnt = 10;
-	p->keys = xcalloc(10,sizeof(char *));
-	p->values = xcalloc(10,sizeof(char *));
-    }
-    PSDictChangeEntry(p,primary, x_gc_u32_to_u8 (u32_force_valid (ret1)));
-    PSDictChangeEntry(p,secondary, x_gc_u32_to_u8 (u32_force_valid (ret2)));
+  HistRefigureSB (hist);
+  GDrawRequestExpose (hist->gw, NULL, false);
 }
 
-static int leftside_e_h(GWindow gw, GEvent *event) {
-    struct hist_dlg *hist = GDrawGetUserData(gw);
+static void
+HistSet (struct hist_dlg *hist)
+{
+  char *primary, *secondary;
+  struct psdict *p = hist->private ? hist->private : hist->sf->private;
+  const uint32_t *ret1, *ret2;
 
-    switch ( event->type ) {
-      case et_char:
-	if ( event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help ) {
-	    help("histogram.html");
-return( true );
-	}
-return( false );
+  switch (hist->which)
+    {
+    case hist_hstem:
+      primary = "StdHW";
+      secondary = "StemSnapH";
       break;
-      case et_expose:
-	HistLExpose(gw,hist);
+    case hist_vstem:
+      primary = "StdVW";
+      secondary = "StemSnapV";
       break;
-      case et_mousemove:
-      case et_mousedown:
-	GGadgetEndPopup();
+    case hist_blues:
+      primary = "BlueValues";
+      secondary = "OtherBlues";
       break;
     }
-return( true );
+  ret1 = GGadgetGetTitle (GWidgetGetControl (hist->gw, CID_MainVal));
+  ret2 = GGadgetGetTitle (GWidgetGetControl (hist->gw, CID_SecondaryVal));
+  hist->done = true;
+  if ((*ret1 == '\0'
+       || u8_strcmp (x_gc_u32_to_u8 (u32_force_valid (ret1)), "[]") == 0)
+      && (*ret2 == '\0'
+          || u8_strcmp (x_gc_u32_to_u8 (u32_force_valid (ret2)), "[]") == 0)
+      && p == NULL)
+    return;
+  if (p == NULL)
+    {
+      hist->sf->private = p = xcalloc (1, sizeof (struct psdict));
+      p->cnt = 10;
+      p->keys = xcalloc (10, sizeof (char *));
+      p->values = xcalloc (10, sizeof (char *));
+    }
+  PSDictChangeEntry (p, primary, x_gc_u32_to_u8 (u32_force_valid (ret1)));
+  PSDictChangeEntry (p, secondary, x_gc_u32_to_u8 (u32_force_valid (ret2)));
 }
 
-static int rightside_e_h(GWindow gw, GEvent *event) {
-    struct hist_dlg *hist = GDrawGetUserData(gw);
+static int
+leftside_e_h (GWindow gw, GEvent *event)
+{
+  struct hist_dlg *hist = GDrawGetUserData (gw);
 
-    switch ( event->type ) {
-      case et_char:
-	if ( event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help ) {
-	    help("histogram.html");
-return( true );
-	}
-return( false );
+  switch (event->type)
+    {
+    case et_char:
+      if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
+        {
+          help ("histogram.html");
+          return (true);
+        }
+      return (false);
       break;
-      case et_expose:
-	HistRExpose(gw,hist);
+    case et_expose:
+      HistLExpose (gw, hist);
       break;
-      case et_mousemove:
-      case et_mousedown:
-	GGadgetEndPopup();
+    case et_mousemove:
+    case et_mousedown:
+      GGadgetEndPopup ();
       break;
     }
-return( true );
+  return (true);
 }
 
-static int histogram_e_h(GWindow gw, GEvent *event) {
-    struct hist_dlg *hist = GDrawGetUserData(gw);
+static int
+rightside_e_h (GWindow gw, GEvent *event)
+{
+  struct hist_dlg *hist = GDrawGetUserData (gw);
 
-    switch ( event->type ) {
-      case et_char:
-	if ( event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help ) {
-	    help("histogram.html");
-return( true );
-	}
-return( false );
+  switch (event->type)
+    {
+    case et_char:
+      if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
+        {
+          help ("histogram.html");
+          return (true);
+        }
+      return (false);
       break;
-      case et_expose:
-	HistExpose(gw,hist);
+    case et_expose:
+      HistRExpose (gw, hist);
       break;
-      case et_mousemove:
-	GGadgetEndPopup();
-	HistPopup(hist,event);
-      break;
-      case et_mousedown:
-	GGadgetEndPopup();
-	HistPress(hist,event);
+    case et_mousemove:
+    case et_mousedown:
+      GGadgetEndPopup ();
       break;
     }
-return( true );
+  return (true);
 }
 
-static int hist_e_h(GWindow gw, GEvent *event) {
-    struct hist_dlg *hist = GDrawGetUserData(gw);
-    int temp;
-    const uint32_t *ret;
-    uint32_t *end;
+static int
+histogram_e_h (GWindow gw, GEvent *event)
+{
+  struct hist_dlg *hist = GDrawGetUserData (gw);
 
-    if ( event->type==et_close ) {
-	hist->done = true;
-    } else if ( event->type==et_char ) {
-	if ( event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help ) {
-	    help("histogram.html");
-return( true );
-	}
-return( false );
-    } else if ( event->type==et_resize ) {
-	HistResize(hist);;
-    } else if ( event->type==et_mousemove ) {
-	GGadgetEndPopup();
-    } else if ( event->type==et_mousedown ) {
-	GGadgetEndPopup();
-    } else if ( event->type==et_controlevent ) {
-	switch ( event->u.control.subtype ) {
-	  case et_scrollbarchange:
-	    HistScroll(hist,&event->u.control.u.sb);
-	  break;
-	  case et_textchanged:
-	    switch( GGadgetGetCid(event->u.control.g)) {
-	      case CID_SumAround: case CID_BarWidth:
-		ret = _GGadgetGetTitle(event->u.control.g);
-		temp = u32_strtol(ret,&end,10);
-		if ( temp<0 || *end )
-	      break;
-		if ( GGadgetGetCid(event->u.control.g)==CID_SumAround ) {
-		    hist->sum_around = temp;
-		    HistFindMax(hist->h,temp);
-		} else if ( temp==0 )
-	      break;
-		else {
-		    hist->barwidth = temp;
-		    HistRefigureSB(hist);
-		}
-		GDrawRequestExpose(GDrawableGetWindow(GWidgetGetControl(gw,CID_Histogram)),NULL,false);
-		GDrawRequestExpose(GDrawableGetWindow(GWidgetGetControl(gw,CID_LeftSide)),NULL,false);
-		GDrawRequestExpose(GDrawableGetWindow(GWidgetGetControl(gw,CID_RightSide)),NULL,false);
-	      break;
-	    }
-	  break;
-	  case et_buttonactivate:
-	    if ( GGadgetGetCid(event->u.control.g)==CID_OK ) {
-		HistSet(hist);
-	    } else
-		hist->done = true;
-	  break;
-	}
+  switch (event->type)
+    {
+    case et_char:
+      if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
+        {
+          help ("histogram.html");
+          return (true);
+        }
+      return (false);
+      break;
+    case et_expose:
+      HistExpose (gw, hist);
+      break;
+    case et_mousemove:
+      GGadgetEndPopup ();
+      HistPopup (hist, event);
+      break;
+    case et_mousedown:
+      GGadgetEndPopup ();
+      HistPress (hist, event);
+      break;
     }
-return( true );
+  return (true);
 }
 
-static void CheckSmallSelection(uint8_t *selected,EncMap *map,SplineFont *sf) {
-    int i, cnt, tot;
+static int
+hist_e_h (GWindow gw, GEvent *event)
+{
+  struct hist_dlg *hist = GDrawGetUserData (gw);
+  int temp;
+  const uint32_t *ret;
+  uint32_t *end;
 
-    for ( i=cnt=tot=0; i<map->enccount; ++i ) {
-	int gid = map->map[i];
-	if ( gid!=-1 && sf->glyphs[gid]!=NULL ) {
-	    ++tot;
-	    if ( selected[i] )
-		++cnt;
-	}
+  if (event->type == et_close)
+    {
+      hist->done = true;
     }
-    if ( (cnt==1 && tot>1) || (cnt<8 && tot>30) )
-	ff_post_notice(_("Tiny Selection"),_("There are so few glyphs selected that it seems unlikely to me that you will get a representative sample of this aspect of your font. If you deselect everything the command will apply to all glyphs in the font"));
+  else if (event->type == et_char)
+    {
+      if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
+        {
+          help ("histogram.html");
+          return (true);
+        }
+      return (false);
+    }
+  else if (event->type == et_resize)
+    {
+      HistResize (hist);;
+    }
+  else if (event->type == et_mousemove)
+    {
+      GGadgetEndPopup ();
+    }
+  else if (event->type == et_mousedown)
+    {
+      GGadgetEndPopup ();
+    }
+  else if (event->type == et_controlevent)
+    {
+      switch (event->u.control.subtype)
+        {
+        case et_scrollbarchange:
+          HistScroll (hist, &event->u.control.u.sb);
+          break;
+        case et_textchanged:
+          switch (GGadgetGetCid (event->u.control.g))
+            {
+            case CID_SumAround:
+            case CID_BarWidth:
+              ret = _GGadgetGetTitle (event->u.control.g);
+              temp = u32_strtol (ret, &end, 10);
+              if (temp < 0 || *end)
+                break;
+              if (GGadgetGetCid (event->u.control.g) == CID_SumAround)
+                {
+                  hist->sum_around = temp;
+                  HistFindMax (hist->h, temp);
+                }
+              else if (temp == 0)
+                break;
+              else
+                {
+                  hist->barwidth = temp;
+                  HistRefigureSB (hist);
+                }
+              GDrawRequestExpose (GDrawableGetWindow
+                                  (GWidgetGetControl (gw, CID_Histogram)), NULL,
+                                  false);
+              GDrawRequestExpose (GDrawableGetWindow
+                                  (GWidgetGetControl (gw, CID_LeftSide)), NULL,
+                                  false);
+              GDrawRequestExpose (GDrawableGetWindow
+                                  (GWidgetGetControl (gw, CID_RightSide)), NULL,
+                                  false);
+              break;
+            }
+          break;
+        case et_buttonactivate:
+          if (GGadgetGetCid (event->u.control.g) == CID_OK)
+            {
+              HistSet (hist);
+            }
+          else
+            hist->done = true;
+          break;
+        }
+    }
+  return (true);
 }
 
-void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8_t *selected,
-	EncMap *map,enum hist_type which) {
-    struct hist_dlg hist;
-    GWindow gw;
-    GRect pos;
-    GWindowAttrs wattrs;
-    GGadgetCreateData gcd[17], boxes[6], *hv[4][2], *butarray[9], *hvctls[5][5], *hvbody[3][4];
-    GTextInfo label[17];
-    int i,j;
-    char binsize[20], barwidth[20], *primary, *secondary;
-    int as, ds, ld;
-    static uint32_t n9999[] = { '9', '9', '9', '9', 0 };
-    static GFont *font = NULL;
+static void
+CheckSmallSelection (uint8_t *selected, EncMap *map, SplineFont *sf)
+{
+  int i, cnt, tot;
 
-    memset(&hist,0,sizeof(hist));
-    hist.sf = sf;
-    hist.layer = layer;
-    hist.private = private;
-    if ( private==NULL ) private = sf->private;
-    hist.selected = selected;
-    hist.which = which;
-    hist.barwidth = 6;
-    hist.sum_around = 0;
-    switch ( which ) {
-      case hist_hstem:
-	hist.h = HistFindHStemWidths(sf,layer,selected,map);
+  for (i = cnt = tot = 0; i < map->enccount; ++i)
+    {
+      int gid = map->map[i];
+      if (gid != -1 && sf->glyphs[gid] != NULL)
+        {
+          ++tot;
+          if (selected[i])
+            ++cnt;
+        }
+    }
+  if ((cnt == 1 && tot > 1) || (cnt < 8 && tot > 30))
+    ff_post_notice (_("Tiny Selection"),
+                    _
+                    ("There are so few glyphs selected that it seems unlikely to me that you will get a representative sample of this aspect of your font. If you deselect everything the command will apply to all glyphs in the font"));
+}
+
+void
+SFHistogram (SplineFont *sf, int layer, struct psdict *private,
+             uint8_t *selected, EncMap *map, enum hist_type which)
+{
+  struct hist_dlg hist;
+  GWindow gw;
+  GRect pos;
+  GWindowAttrs wattrs;
+  GGadgetCreateData gcd[17], boxes[6], *hv[4][2], *butarray[9], *hvctls[5][5],
+    *hvbody[3][4];
+  GTextInfo label[17];
+  int i, j;
+  char binsize[20], barwidth[20], *primary, *secondary;
+  int as, ds, ld;
+  static uint32_t n9999[] = { '9', '9', '9', '9', 0 };
+  static GFont *font = NULL;
+
+  memset (&hist, 0, sizeof (hist));
+  hist.sf = sf;
+  hist.layer = layer;
+  hist.private = private;
+  if (private == NULL)
+    private = sf->private;
+  hist.selected = selected;
+  hist.which = which;
+  hist.barwidth = 6;
+  hist.sum_around = 0;
+  switch (which)
+    {
+    case hist_hstem:
+      hist.h = HistFindHStemWidths (sf, layer, selected, map);
       break;
-      case hist_vstem:
-	hist.h = HistFindVStemWidths(sf,layer,selected,map);
+    case hist_vstem:
+      hist.h = HistFindVStemWidths (sf, layer, selected, map);
       break;
-      case hist_blues:
-	hist.h = HistFindBlues(sf,layer,selected,map);
+    case hist_blues:
+      hist.h = HistFindBlues (sf, layer, selected, map);
       break;
     }
-    HistFindMax(hist.h,hist.sum_around);
+  HistFindMax (hist.h, hist.sum_around);
 
-    if ( selected!=NULL )
-	CheckSmallSelection(selected,map,sf);
+  if (selected != NULL)
+    CheckSmallSelection (selected, map, sf);
 
-    memset(&wattrs,0,sizeof(wattrs));
-    wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_isdlg|wam_restrict;
-    wattrs.event_masks = ~(1<<et_charup);
-    wattrs.restrict_input_to_me = 1;
-    wattrs.undercursor = 1;
-    wattrs.cursor = ct_pointer;
-    wattrs.utf8_window_title =  which==hist_hstem?_("HStem") :
-					      which==hist_vstem?_("VStem"):
-							  _("Blues");
-    wattrs.is_dlg = true;
-    pos.x = pos.y = 0;
-    pos.width = GGadgetScale(GDrawPointsToPixels(NULL,210));
-    hist.yoff = GDrawPointsToPixels(NULL,120);
-    pos.height = pos.width + hist.yoff;
-    hist.gw = gw = GDrawCreateTopWindow(NULL,&pos,hist_e_h,&hist,&wattrs);
+  memset (&wattrs, 0, sizeof (wattrs));
+  wattrs.mask =
+    wam_events | wam_cursor | wam_utf8_wtitle | wam_undercursor | wam_isdlg |
+    wam_restrict;
+  wattrs.event_masks = ~(1 << et_charup);
+  wattrs.restrict_input_to_me = 1;
+  wattrs.undercursor = 1;
+  wattrs.cursor = ct_pointer;
+  wattrs.utf8_window_title = which == hist_hstem ? _("HStem") :
+    which == hist_vstem ? _("VStem") : _("Blues");
+  wattrs.is_dlg = true;
+  pos.x = pos.y = 0;
+  pos.width = GGadgetScale (GDrawPointsToPixels (NULL, 210));
+  hist.yoff = GDrawPointsToPixels (NULL, 120);
+  pos.height = pos.width + hist.yoff;
+  hist.gw = gw = GDrawCreateTopWindow (NULL, &pos, hist_e_h, &hist, &wattrs);
 
-    if ( font == NULL ) {
-	font = GDrawNewFont(NULL, "sans-serif", 10, 400, fs_none);
-	font = GResourceFindFont("Histogram.Font",font);
+  if (font == NULL)
+    {
+      font = GDrawNewFont (NULL, "sans-serif", 10, 400, fs_none);
+      font = GResourceFindFont ("Histogram.Font", font);
     }
-    hist.font = font;
-    GDrawGetFontMetrics(gw,hist.font,&as,&ds,&ld);
-    hist.fh = as+ds; hist.as = as;
+  hist.font = font;
+  GDrawGetFontMetrics (gw, hist.font, &as, &ds, &ld);
+  hist.fh = as + ds;
+  hist.as = as;
 
-    GDrawSetFont(gw,hist.font);
-    hist.x = 10+GDrawGetTextWidth(gw,n9999,-1);
-    hist.hwidth = pos.width - 2*hist.x;
-    hist.y = 10; hist.hheight = pos.width-20;
+  GDrawSetFont (gw, hist.font);
+  hist.x = 10 + GDrawGetTextWidth (gw, n9999, -1);
+  hist.hwidth = pos.width - 2 * hist.x;
+  hist.y = 10;
+  hist.hheight = pos.width - 20;
 
-    memset(&gcd,0,sizeof(gcd));
-    memset(&label,0,sizeof(label));
-    memset(&boxes,0,sizeof(boxes));
+  memset (&gcd, 0, sizeof (gcd));
+  memset (&label, 0, sizeof (label));
+  memset (&boxes, 0, sizeof (boxes));
 
-    i=0;
-    gcd[i].gd.pos.width = hist.x; gcd[i].gd.pos.height = 200;
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
-    gcd[i].gd.cid = CID_LeftSide;
-    gcd[i].gd.u.drawable_e_h = leftside_e_h;
-    gcd[i++].creator = GDrawableCreate;
-    hvbody[0][0] = &gcd[i-1];
+  i = 0;
+  gcd[i].gd.pos.width = hist.x;
+  gcd[i].gd.pos.height = 200;
+  gcd[i].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
+  gcd[i].gd.cid = CID_LeftSide;
+  gcd[i].gd.u.drawable_e_h = leftside_e_h;
+  gcd[i++].creator = GDrawableCreate;
+  hvbody[0][0] = &gcd[i - 1];
 
-    gcd[i].gd.pos.width = hist.hwidth+1; gcd[i].gd.pos.height = 200;
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
-    gcd[i].gd.cid = CID_Histogram;
-    gcd[i].gd.u.drawable_e_h = histogram_e_h;
-    gcd[i++].creator = GDrawableCreate;
-    hvbody[0][1] = &gcd[i-1];
+  gcd[i].gd.pos.width = hist.hwidth + 1;
+  gcd[i].gd.pos.height = 200;
+  gcd[i].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
+  gcd[i].gd.cid = CID_Histogram;
+  gcd[i].gd.u.drawable_e_h = histogram_e_h;
+  gcd[i++].creator = GDrawableCreate;
+  hvbody[0][1] = &gcd[i - 1];
 
-    gcd[i].gd.pos.width = hist.x; gcd[i].gd.pos.height = 200;
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
-    gcd[i].gd.cid = CID_RightSide;
-    gcd[i].gd.u.drawable_e_h = rightside_e_h;
-    gcd[i++].creator = GDrawableCreate;
-    hvbody[0][2] = &gcd[i-1];
-    hvbody[0][3] = NULL;
+  gcd[i].gd.pos.width = hist.x;
+  gcd[i].gd.pos.height = 200;
+  gcd[i].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
+  gcd[i].gd.cid = CID_RightSide;
+  gcd[i].gd.u.drawable_e_h = rightside_e_h;
+  gcd[i++].creator = GDrawableCreate;
+  hvbody[0][2] = &gcd[i - 1];
+  hvbody[0][3] = NULL;
 
-    hvbody[1][0] = GCD_Glue;
-    gcd[i].gd.pos.width = hist.hwidth+1;
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
-    gcd[i].gd.cid = CID_ScrollBar;
-    gcd[i++].creator = GScrollBarCreate;
-    hvbody[1][1] = &gcd[i-1];
-    hvbody[1][2] = GCD_Glue;
-    hvbody[1][3] = NULL;
-    hvbody[2][0] = NULL;
+  hvbody[1][0] = GCD_Glue;
+  gcd[i].gd.pos.width = hist.hwidth + 1;
+  gcd[i].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
+  gcd[i].gd.cid = CID_ScrollBar;
+  gcd[i++].creator = GScrollBarCreate;
+  hvbody[1][1] = &gcd[i - 1];
+  hvbody[1][2] = GCD_Glue;
+  hvbody[1][3] = NULL;
+  hvbody[2][0] = NULL;
 
-    boxes[2].gd.flags = gg_enabled|gg_visible;
-    boxes[2].gd.u.boxelements = &hvbody[0][0];
-    boxes[2].creator = GHVBoxCreate;
+  boxes[2].gd.flags = gg_enabled | gg_visible;
+  boxes[2].gd.u.boxelements = &hvbody[0][0];
+  boxes[2].creator = GHVBoxCreate;
 
-    label[i].text = (uint32_t *) _("Sum Around:");
-    label[i].text_is_1byte = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_SumAroundL;
-    gcd[i++].creator = GLabelCreate;
-    hvctls[0][0] = &gcd[i-1];
+  label[i].text = (uint32_t *) _("Sum Around:");
+  label[i].text_is_1byte = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_SumAroundL;
+  gcd[i++].creator = GLabelCreate;
+  hvctls[0][0] = &gcd[i - 1];
 
-    sprintf(binsize,"%d", hist.sum_around);
-    label[i].text = (uint32_t *) binsize;
-    label[i].text_is_1byte = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.pos.width = 30;
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_SumAround;
-    gcd[i++].creator = GTextFieldCreate;
-    hvctls[0][1] = &gcd[i-1];
+  sprintf (binsize, "%d", hist.sum_around);
+  label[i].text = (uint32_t *) binsize;
+  label[i].text_is_1byte = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.pos.width = 30;
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_SumAround;
+  gcd[i++].creator = GTextFieldCreate;
+  hvctls[0][1] = &gcd[i - 1];
 
-    label[i].text = (uint32_t *) _("Bar Width:");
-    label[i].text_is_1byte = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_BarWidthL;
-    gcd[i++].creator = GLabelCreate;
-    hvctls[0][2] = &gcd[i-1];
+  label[i].text = (uint32_t *) _("Bar Width:");
+  label[i].text_is_1byte = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_BarWidthL;
+  gcd[i++].creator = GLabelCreate;
+  hvctls[0][2] = &gcd[i - 1];
 
-    sprintf(barwidth,"%d", hist.barwidth);
-    label[i].text = (uint32_t *) barwidth;
-    label[i].text_is_1byte = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.pos.width = 30;
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_BarWidth;
-    gcd[i++].creator = GTextFieldCreate;
-    hvctls[0][3] = &gcd[i-1];
-    hvctls[0][4] = NULL;
+  sprintf (barwidth, "%d", hist.barwidth);
+  label[i].text = (uint32_t *) barwidth;
+  label[i].text_is_1byte = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.pos.width = 30;
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_BarWidth;
+  gcd[i++].creator = GTextFieldCreate;
+  hvctls[0][3] = &gcd[i - 1];
+  hvctls[0][4] = NULL;
 
-    label[i].text = (uint32_t *) _("BlueValues come in pairs. Select another.");
-    label[i].text_is_1byte = true;
-    label[i].fg = 0xff0000;
-    label[i].bg = GDrawGetDefaultBackground(NULL);
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.flags = gg_enabled;
-    gcd[i].gd.cid = CID_BlueMsg;
-    gcd[i++].creator = GLabelCreate;
-    hvctls[1][0] = &gcd[i-1];
-    hvctls[1][1] = hvctls[1][2] = hvctls[1][3] = GCD_ColSpan;
-    hvctls[1][4] = NULL;
+  label[i].text = (uint32_t *) _("BlueValues come in pairs. Select another.");
+  label[i].text_is_1byte = true;
+  label[i].fg = 0xff0000;
+  label[i].bg = GDrawGetDefaultBackground (NULL);
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.flags = gg_enabled;
+  gcd[i].gd.cid = CID_BlueMsg;
+  gcd[i++].creator = GLabelCreate;
+  hvctls[1][0] = &gcd[i - 1];
+  hvctls[1][1] = hvctls[1][2] = hvctls[1][3] = GCD_ColSpan;
+  hvctls[1][4] = NULL;
 
-    switch ( which ) {
-      case hist_hstem:
-	label[i].text = (uint32_t *) "StdHW:";
-	label[i+2].text = (uint32_t *) "StemSnapH:";
-	primary = "StdHW"; secondary = "StemSnapH";
+  switch (which)
+    {
+    case hist_hstem:
+      label[i].text = (uint32_t *) "StdHW:";
+      label[i + 2].text = (uint32_t *) "StemSnapH:";
+      primary = "StdHW";
+      secondary = "StemSnapH";
       break;
-      case hist_vstem:
-	label[i].text = (uint32_t *) "StdVW:";
-	label[i+2].text = (uint32_t *) "StemSnapV:";
-	primary = "StdVW"; secondary = "StemSnapV";
+    case hist_vstem:
+      label[i].text = (uint32_t *) "StdVW:";
+      label[i + 2].text = (uint32_t *) "StemSnapV:";
+      primary = "StdVW";
+      secondary = "StemSnapV";
       break;
-      case hist_blues:
-	label[i].text = (uint32_t *) "BlueValues:";
-	label[i+2].text = (uint32_t *) "OtherBlues:";
-	primary = "BlueValues"; secondary = "OtherBlues";
+    case hist_blues:
+      label[i].text = (uint32_t *) "BlueValues:";
+      label[i + 2].text = (uint32_t *) "OtherBlues:";
+      primary = "BlueValues";
+      secondary = "OtherBlues";
       break;
     }
-    label[i].text_is_1byte = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = gcd[i-2].gd.pos.y+28; 
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_MainValL;
-    gcd[i++].creator = GLabelCreate;
-    hvctls[2][0] = &gcd[i-1];
+  label[i].text_is_1byte = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.pos.x = 5;
+  gcd[i].gd.pos.y = gcd[i - 2].gd.pos.y + 28;
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_MainValL;
+  gcd[i++].creator = GLabelCreate;
+  hvctls[2][0] = &gcd[i - 1];
 
-    if ( private!=NULL && (j=PSDictFindEntry(private,primary))!=-1 ) {
-	label[i].text = (uint32_t *) private->values[j];
-	label[i].text_is_1byte = true;
-	gcd[i].gd.label = &label[i];
+  if (private != NULL && (j = PSDictFindEntry (private, primary)) != -1)
+    {
+      label[i].text = (uint32_t *) private->values[j];
+      label[i].text_is_1byte = true;
+      gcd[i].gd.label = &label[i];
     }
-    gcd[i].gd.pos.x = 64; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-4;
-    gcd[i].gd.pos.width = 140;
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_MainVal;
-    gcd[i++].creator = GTextFieldCreate;
-    hvctls[2][1] = &gcd[i-1];
-    hvctls[2][2] = hvctls[2][3] = GCD_ColSpan;
-    hvctls[2][4] = NULL;
+  gcd[i].gd.pos.x = 64;
+  gcd[i].gd.pos.y = gcd[i - 1].gd.pos.y - 4;
+  gcd[i].gd.pos.width = 140;
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_MainVal;
+  gcd[i++].creator = GTextFieldCreate;
+  hvctls[2][1] = &gcd[i - 1];
+  hvctls[2][2] = hvctls[2][3] = GCD_ColSpan;
+  hvctls[2][4] = NULL;
 
-    label[i].text_is_1byte = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+28; 
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_SecondaryValL;
-    gcd[i++].creator = GLabelCreate;
-    hvctls[3][0] = &gcd[i-1];
+  label[i].text_is_1byte = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.pos.x = 5;
+  gcd[i].gd.pos.y = gcd[i - 1].gd.pos.y + 28;
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_SecondaryValL;
+  gcd[i++].creator = GLabelCreate;
+  hvctls[3][0] = &gcd[i - 1];
 
-    if ( private!=NULL && (j=PSDictFindEntry(private,secondary))!=-1 ) {
-	label[i].text = (uint32_t *) private->values[j];
-	label[i].text_is_1byte = true;
-	gcd[i].gd.label = &label[i];
+  if (private != NULL && (j = PSDictFindEntry (private, secondary)) != -1)
+    {
+      label[i].text = (uint32_t *) private->values[j];
+      label[i].text_is_1byte = true;
+      gcd[i].gd.label = &label[i];
     }
-    gcd[i].gd.pos.x = 64; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-4;
-    gcd[i].gd.pos.width = 140;
-    gcd[i].gd.flags = gg_enabled|gg_visible;
-    gcd[i].gd.cid = CID_SecondaryVal;
-    gcd[i++].creator = GTextFieldCreate;
-    hvctls[3][1] = &gcd[i-1];
-    hvctls[3][2] = hvctls[3][3] = GCD_ColSpan;
-    hvctls[3][4] = NULL;
-    hvctls[4][0] = NULL;
+  gcd[i].gd.pos.x = 64;
+  gcd[i].gd.pos.y = gcd[i - 1].gd.pos.y - 4;
+  gcd[i].gd.pos.width = 140;
+  gcd[i].gd.flags = gg_enabled | gg_visible;
+  gcd[i].gd.cid = CID_SecondaryVal;
+  gcd[i++].creator = GTextFieldCreate;
+  hvctls[3][1] = &gcd[i - 1];
+  hvctls[3][2] = hvctls[3][3] = GCD_ColSpan;
+  hvctls[3][4] = NULL;
+  hvctls[4][0] = NULL;
 
-    boxes[3].gd.flags = gg_enabled|gg_visible;
-    boxes[3].gd.u.boxelements = &hvctls[0][0];
-    boxes[3].creator = GHVBoxCreate;
+  boxes[3].gd.flags = gg_enabled | gg_visible;
+  boxes[3].gd.u.boxelements = &hvctls[0][0];
+  boxes[3].creator = GHVBoxCreate;
 
-    gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (uint32_t *) _("_OK");
-    label[i].text_is_1byte = true;
-    label[i].text_has_mnemonic = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.cid = CID_OK;
-    gcd[i++].creator = GButtonCreate;
-    butarray[0] = GCD_Glue; butarray[1] = &gcd[i-1]; butarray[2] = GCD_Glue; butarray[3] = GCD_Glue;
+  gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
+  label[i].text = (uint32_t *) _("_OK");
+  label[i].text_is_1byte = true;
+  label[i].text_has_mnemonic = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.cid = CID_OK;
+  gcd[i++].creator = GButtonCreate;
+  butarray[0] = GCD_Glue;
+  butarray[1] = &gcd[i - 1];
+  butarray[2] = GCD_Glue;
+  butarray[3] = GCD_Glue;
 
-    gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (uint32_t *) _("_Cancel");
-    label[i].text_is_1byte = true;
-    label[i].text_has_mnemonic = true;
-    gcd[i].gd.label = &label[i];
-    gcd[i].gd.cid = CID_Cancel;
-    gcd[i++].creator = GButtonCreate;
-    butarray[4] = GCD_Glue; butarray[5] = &gcd[i-1]; butarray[6] = GCD_Glue; butarray[7] = NULL;
+  gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
+  label[i].text = (uint32_t *) _("_Cancel");
+  label[i].text_is_1byte = true;
+  label[i].text_has_mnemonic = true;
+  gcd[i].gd.label = &label[i];
+  gcd[i].gd.cid = CID_Cancel;
+  gcd[i++].creator = GButtonCreate;
+  butarray[4] = GCD_Glue;
+  butarray[5] = &gcd[i - 1];
+  butarray[6] = GCD_Glue;
+  butarray[7] = NULL;
 
-    boxes[4].gd.flags = gg_enabled|gg_visible;
-    boxes[4].gd.u.boxelements = &butarray[0];
-    boxes[4].creator = GHBoxCreate;
+  boxes[4].gd.flags = gg_enabled | gg_visible;
+  boxes[4].gd.u.boxelements = &butarray[0];
+  boxes[4].creator = GHBoxCreate;
 
-    hv[0][0] = &boxes[2]; hv[0][1] = NULL;
-    hv[1][0] = &boxes[3]; hv[1][1] = NULL;
-    hv[2][0] = &boxes[4]; hv[2][1] = NULL; hv[3][0] = NULL;
+  hv[0][0] = &boxes[2];
+  hv[0][1] = NULL;
+  hv[1][0] = &boxes[3];
+  hv[1][1] = NULL;
+  hv[2][0] = &boxes[4];
+  hv[2][1] = NULL;
+  hv[3][0] = NULL;
 
-    boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
-    boxes[0].gd.flags = gg_enabled|gg_visible;
-    boxes[0].gd.u.boxelements = &hv[0][0];
-    boxes[0].creator = GHVGroupCreate;
+  boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
+  boxes[0].gd.flags = gg_enabled | gg_visible;
+  boxes[0].gd.u.boxelements = &hv[0][0];
+  boxes[0].creator = GHVGroupCreate;
 
-    GGadgetsCreate(gw,boxes);
+  GGadgetsCreate (gw, boxes);
 
-    GHVBoxSetExpandableRow(boxes[0].ret,0);
-    GHVBoxSetExpandableCol(boxes[2].ret,1);
-    GHVBoxSetExpandableRow(boxes[2].ret,0);
-    GHVBoxSetExpandableCol(boxes[3].ret,1);
-    GHVBoxSetExpandableCol(boxes[4].ret,gb_expandglue);
+  GHVBoxSetExpandableRow (boxes[0].ret, 0);
+  GHVBoxSetExpandableCol (boxes[2].ret, 1);
+  GHVBoxSetExpandableRow (boxes[2].ret, 0);
+  GHVBoxSetExpandableCol (boxes[3].ret, 1);
+  GHVBoxSetExpandableCol (boxes[4].ret, gb_expandglue);
 
-    hist.hoff = 0;
-    if ( hist.h->low>0 )
-	hist.hoff = hist.h->low;
-    GScrollBarSetPos(GWidgetGetControl(hist.gw,CID_ScrollBar),hist.hoff);
-    HistRefigureSB(&hist);
+  hist.hoff = 0;
+  if (hist.h->low > 0)
+    hist.hoff = hist.h->low;
+  GScrollBarSetPos (GWidgetGetControl (hist.gw, CID_ScrollBar), hist.hoff);
+  HistRefigureSB (&hist);
 
-    GHVBoxFitWindow(boxes[0].ret);
-    GDrawSetVisible(gw,true);
-    while ( !hist.done )
-	GDrawProcessOneEvent(NULL);
-    GDrawDestroyWindow(gw);
+  GHVBoxFitWindow (boxes[0].ret);
+  GDrawSetVisible (gw, true);
+  while (!hist.done)
+    GDrawProcessOneEvent (NULL);
+  GDrawDestroyWindow (gw);
 
-    HistDataFree(hist.h);
+  HistDataFree (hist.h);
 }
