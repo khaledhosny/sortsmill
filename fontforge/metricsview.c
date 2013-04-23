@@ -1,4 +1,4 @@
-#include <config.h>		/* -*- coding: utf-8 -*- */
+#include <config.h>             /* -*- coding: utf-8 -*- */
 
 /* Copyright (C) 2000-2012 by George Williams */
 /*
@@ -41,7 +41,11 @@ int mv_width = 800, mv_height = 300;
 int mvshowgrid = mv_hidemovinggrid;
 int mv_type = mv_kernonly;
 static int mv_antialias = true;
-static double mv_scales[] = { 8.0, 4.0, 2.0, 1.5, 1.0, 2.0/3.0, .5, 1.0/3.0, .25, .2, 1.0/6.0, .125, .1 };
+static double mv_scales[] =
+  { 8.0, 4.0, 2.0, 1.5, 1.0, 2.0 / 3.0, .5, 1.0 / 3.0, .25, .2, 1.0 / 6.0, .125,
+  .1
+};
+
 #define SCALE_INDEX_NORMAL	4
 
 static Color widthcol = 0x808080;
@@ -54,1813 +58,2273 @@ int pref_mv_shift_and_arrow_skip = 10;
 int pref_mv_control_shift_and_arrow_skip = 5;
 
 
-void MVColInit( void ) {
-    static int cinit=false;
-    GResStruct mvcolors[] = {
-	{ "AdvanceWidthColor", rt_color, &widthcol, NULL, 0 },
-	{ "ItalicAdvanceColor", rt_color, &italicwidthcol, NULL, 0 },
-	{ "SelectedGlyphColor", rt_color, &selglyphcol, NULL, 0 },
-	{ "KernLineColor", rt_color, &kernlinecol, NULL, 0 },
-	{ "SideBearingLineColor", rt_color, &rbearinglinecol, NULL, 0 },
-	GRESSTRUCT_EMPTY
-    };
-    if ( !cinit ) {
-	GResourceFind( mvcolors, "MetricsView.");
-	cinit = true;
+void
+MVColInit (void)
+{
+  static int cinit = false;
+  GResStruct mvcolors[] = {
+    {"AdvanceWidthColor", rt_color, &widthcol, NULL, 0},
+    {"ItalicAdvanceColor", rt_color, &italicwidthcol, NULL, 0},
+    {"SelectedGlyphColor", rt_color, &selglyphcol, NULL, 0},
+    {"KernLineColor", rt_color, &kernlinecol, NULL, 0},
+    {"SideBearingLineColor", rt_color, &rbearinglinecol, NULL, 0},
+    GRESSTRUCT_EMPTY
+  };
+  if (!cinit)
+    {
+      GResourceFind (mvcolors, "MetricsView.");
+      cinit = true;
     }
 }
 
-static int MVSetVSb(MetricsView *mv);
+static int MVSetVSb (MetricsView *mv);
 
-static int MVShowGrid(MetricsView *mv) {
-    if ( mv->showgrid==mv_hidegrid || (mv->showgrid==mv_hidemovinggrid && mv->pressed ))
-return( false );
+static int
+MVShowGrid (MetricsView *mv)
+{
+  if (mv->showgrid == mv_hidegrid
+      || (mv->showgrid == mv_hidemovinggrid && mv->pressed))
+    return (false);
 
-return( true );
+  return (true);
 }
 
-static void MVDrawLine(MetricsView *mv,GWindow pixmap,
-	int xtop, int top,int xbot,int bot,Color col) {
-    if ( mv->showgrid == mv_partialgrid ) {
-	int y1, y2;
-	int x1, x2;
-	y1 =  bot +   ( top- bot)/4;
-	x1 = xbot +   (xtop-xbot)/4;
-	y2 =  bot + 4*( top- bot)/5;
-	x2 = xbot + 4*(xtop-xbot)/5;
-	GDrawDrawLine(pixmap,xtop,top,x2,y2,col);
-	GDrawDrawLine(pixmap,x1,y1,xbot,bot,col);
-    } else
-	GDrawDrawLine(pixmap,xtop,top,xbot,bot,col);
+static void
+MVDrawLine (MetricsView *mv, GWindow pixmap,
+            int xtop, int top, int xbot, int bot, Color col)
+{
+  if (mv->showgrid == mv_partialgrid)
+    {
+      int y1, y2;
+      int x1, x2;
+      y1 = bot + (top - bot) / 4;
+      x1 = xbot + (xtop - xbot) / 4;
+      y2 = bot + 4 * (top - bot) / 5;
+      x2 = xbot + 4 * (xtop - xbot) / 5;
+      GDrawDrawLine (pixmap, xtop, top, x2, y2, col);
+      GDrawDrawLine (pixmap, x1, y1, xbot, bot, col);
+    }
+  else
+    GDrawDrawLine (pixmap, xtop, top, xbot, bot, col);
 }
 
-static void MVSubVExpose(MetricsView *mv, GWindow pixmap, GEvent *event) {
-    /* Expose routine for vertical metrics */
-    GRect *clip;
-    int xbase, y, si, i, x, width, height;
-    double iscale = mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
-    int as = rint(iscale*mv->pixelsize*mv->sf->ascent/(double) (mv->sf->ascent+mv->sf->descent));
-    BDFChar *bdfc;
-    struct _GImage base;
-    GImage gi;
-    GClut clut;
+static void
+MVSubVExpose (MetricsView *mv, GWindow pixmap, GEvent *event)
+{
+  /* Expose routine for vertical metrics */
+  GRect *clip;
+  int xbase, y, si, i, x, width, height;
+  double iscale =
+    mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
+  int as =
+    rint (iscale * mv->pixelsize * mv->sf->ascent /
+          (double) (mv->sf->ascent + mv->sf->descent));
+  BDFChar *bdfc;
+  struct _GImage base;
+  GImage gi;
+  GClut clut;
 
-    clip = &event->u.expose.rect;
+  clip = &event->u.expose.rect;
 
-    xbase = mv->vwidth/2;
-    if ( mv->showgrid )
-	GDrawDrawLine(pixmap,xbase,0,xbase,mv->vheight,widthcol);
+  xbase = mv->vwidth / 2;
+  if (mv->showgrid)
+    GDrawDrawLine (pixmap, xbase, 0, xbase, mv->vheight, widthcol);
 
-    if ( mv->bdf==NULL && MVShowGrid(mv) ) {
-	y = mv->perchar[0].dy-mv->yoff;
-	MVDrawLine(mv,pixmap,0,y,mv->vwidth,y,widthcol);
+  if (mv->bdf == NULL && MVShowGrid (mv))
+    {
+      y = mv->perchar[0].dy - mv->yoff;
+      MVDrawLine (mv, pixmap, 0, y, mv->vwidth, y, widthcol);
     }
 
-    si = -1;
-    for ( i=0; i<mv->glyphcnt; ++i ) {
-	if ( mv->perchar[i].selected ) si = i;
-	y = mv->perchar[i].dy-mv->yoff;
-	if ( mv->bdf==NULL &&  MVShowGrid(mv)) {
-	    int yp = y+mv->perchar[i].dheight+mv->perchar[i].kernafter;
-	    MVDrawLine(mv,pixmap,0, yp,mv->vwidth,yp,
-		    mv->type==mv_kernonly  && i!=mv->glyphcnt-1 ?kernlinecol :
-		    mv->type==mv_widthonly                      ?rbearinglinecol :
-			widthcol);
-	}
-	y += mv->perchar[i].yoff;
-	bdfc = mv->bdf==NULL ?	BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos) :
-				BDFGetMergedChar( mv->bdf->glyphs[mv->glyphs[i].sc->orig_pos]);
-	if ( bdfc==NULL )
-    continue;
-	y += as-rint(iscale * bdfc->ymax);
-	if ( mv->perchar[i].selected )
-	    y += mv->activeoff;
-	x = xbase - rint(iscale * (mv->pixelsize/2 + bdfc->xmin) - mv->perchar[i].xoff);
-	width = bdfc->xmax-bdfc->xmin+1; height = bdfc->ymax-bdfc->ymin+1;
-	if ( clip->y+clip->height<y )
-    break;
-	if ( y+iscale*height>=clip->y && x<clip->x+clip->width && x+iscale*width >= clip->x ) {
-	    memset(&gi,'\0',sizeof(gi));
-	    memset(&base,'\0',sizeof(base));
-	    memset(&clut,'\0',sizeof(clut));
-	    gi.u.image = &base;
-	    base.clut = &clut;
-	    if ( !bdfc->byte_data ) {
-		base.image_type = it_mono;
-		clut.clut_len = 2;
-		clut.clut[0] = 0xffffff;
-		if ( mv->perchar[i].selected )
-		    clut.clut[1] = selglyphcol;
-	    } else {
-		int scale, l;
-		Color fg, bg;
-		if ( mv->bdf!=NULL )
-		    scale = BDFDepth(mv->bdf);
-		else
-		    scale = BDFDepth(mv->show);
-		base.image_type = it_index;
-		clut.clut_len = 1<<scale;
-		bg = view_bgcol;
-		fg = ( mv->perchar[i].selected ) ? selglyphcol : 0x000000;
-		for ( l=0; l<(1<<scale); ++l )
-		    clut.clut[l] =
-			COLOR_CREATE(
-			 COLOR_RED(bg) + (l*(COLOR_RED(fg)-COLOR_RED(bg)))/((1<<scale)-1),
-			 COLOR_GREEN(bg) + (l*(COLOR_GREEN(fg)-COLOR_GREEN(bg)))/((1<<scale)-1),
-			 COLOR_BLUE(bg) + (l*(COLOR_BLUE(fg)-COLOR_BLUE(bg)))/((1<<scale)-1) );
-	    }
-	    base.data = bdfc->bitmap;
-	    base.bytes_per_line = bdfc->bytes_per_line;
-	    base.width = width;
-	    base.height = height;
-	    if ( mv->pixelsize_set_by_window || mv->scale_index==SCALE_INDEX_NORMAL )
-		GDrawDrawGlyph(pixmap,&gi,NULL,x,y);
-	    else
-		GDrawDrawImageMagnified(pixmap, &gi, NULL, x,y,
-			(int) rint((width*mv_scales[mv->scale_index])),
-			(int) rint((height*mv_scales[mv->scale_index])));
-	}
-	if ( mv->bdf!=NULL ) BDFCharFree( bdfc );
+  si = -1;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    {
+      if (mv->perchar[i].selected)
+        si = i;
+      y = mv->perchar[i].dy - mv->yoff;
+      if (mv->bdf == NULL && MVShowGrid (mv))
+        {
+          int yp = y + mv->perchar[i].dheight + mv->perchar[i].kernafter;
+          MVDrawLine (mv, pixmap, 0, yp, mv->vwidth, yp,
+                      mv->type == mv_kernonly
+                      && i != mv->glyphcnt - 1 ? kernlinecol : mv->type ==
+                      mv_widthonly ? rbearinglinecol : widthcol);
+        }
+      y += mv->perchar[i].yoff;
+      bdfc =
+        mv->bdf == NULL ?
+        BDFPieceMealCheck (mv->show, mv->glyphs[i].sc->orig_pos) :
+        BDFGetMergedChar (mv->bdf->glyphs[mv->glyphs[i].sc->orig_pos]);
+      if (bdfc == NULL)
+        continue;
+      y += as - rint (iscale * bdfc->ymax);
+      if (mv->perchar[i].selected)
+        y += mv->activeoff;
+      x =
+        xbase - rint (iscale * (mv->pixelsize / 2 + bdfc->xmin) -
+                      mv->perchar[i].xoff);
+      width = bdfc->xmax - bdfc->xmin + 1;
+      height = bdfc->ymax - bdfc->ymin + 1;
+      if (clip->y + clip->height < y)
+        break;
+      if (y + iscale * height >= clip->y && x < clip->x + clip->width
+          && x + iscale * width >= clip->x)
+        {
+          memset (&gi, '\0', sizeof (gi));
+          memset (&base, '\0', sizeof (base));
+          memset (&clut, '\0', sizeof (clut));
+          gi.u.image = &base;
+          base.clut = &clut;
+          if (!bdfc->byte_data)
+            {
+              base.image_type = it_mono;
+              clut.clut_len = 2;
+              clut.clut[0] = 0xffffff;
+              if (mv->perchar[i].selected)
+                clut.clut[1] = selglyphcol;
+            }
+          else
+            {
+              int scale, l;
+              Color fg, bg;
+              if (mv->bdf != NULL)
+                scale = BDFDepth (mv->bdf);
+              else
+                scale = BDFDepth (mv->show);
+              base.image_type = it_index;
+              clut.clut_len = 1 << scale;
+              bg = view_bgcol;
+              fg = (mv->perchar[i].selected) ? selglyphcol : 0x000000;
+              for (l = 0; l < (1 << scale); ++l)
+                clut.clut[l] =
+                  COLOR_CREATE (COLOR_RED (bg) +
+                                (l * (COLOR_RED (fg) - COLOR_RED (bg))) /
+                                ((1 << scale) - 1),
+                                COLOR_GREEN (bg) +
+                                (l * (COLOR_GREEN (fg) - COLOR_GREEN (bg))) /
+                                ((1 << scale) - 1),
+                                COLOR_BLUE (bg) +
+                                (l * (COLOR_BLUE (fg) - COLOR_BLUE (bg))) /
+                                ((1 << scale) - 1));
+            }
+          base.data = bdfc->bitmap;
+          base.bytes_per_line = bdfc->bytes_per_line;
+          base.width = width;
+          base.height = height;
+          if (mv->pixelsize_set_by_window
+              || mv->scale_index == SCALE_INDEX_NORMAL)
+            GDrawDrawGlyph (pixmap, &gi, NULL, x, y);
+          else
+            GDrawDrawImageMagnified (pixmap, &gi, NULL, x, y,
+                                     (int)
+                                     rint ((width *
+                                            mv_scales[mv->scale_index])),
+                                     (int)
+                                     rint ((height *
+                                            mv_scales[mv->scale_index])));
+        }
+      if (mv->bdf != NULL)
+        BDFCharFree (bdfc);
     }
-    if ( si!=-1 && mv->bdf==NULL &&  MVShowGrid(mv) && mv->type==mv_kernwidth ) {
-	y = mv->perchar[si].dy-mv->yoff;
-	if ( si!=0 )
-	    MVDrawLine(mv,pixmap,0,y,mv->vwidth,y,kernlinecol);
-	y += mv->perchar[si].dheight+mv->perchar[si].kernafter;
-	MVDrawLine(mv,pixmap,0,y,mv->vwidth,y,rbearinglinecol);
-    }
-}
-
-static void MVSubExpose(MetricsView *mv, GWindow pixmap, GEvent *event) {
-    GRect old, *clip;
-    int x,y,ybase, width,height, i;
-    BDFChar *bdfc;
-    struct _GImage base;
-    GImage gi;
-    GClut clut;
-    int si;
-    double iscale = mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
-    double s = sin(-mv->sf->italicangle*3.1415926535897932/180.);
-    int x_iaoffh = 0, x_iaoffl = 0;
-
-    clip = &event->u.expose.rect;
-    GDrawPushClip(pixmap,clip,&old);
-    GDrawSetLineWidth(pixmap,0);
-
-    if ( mv->vertical ) {
-	MVSubVExpose(mv,pixmap,event);
-	GDrawPopClip(pixmap,&old);
-return;
-    }
-
-    ybase = mv->ybaseline - mv->yoff;
-
-    if ( mv->showgrid )
-	GDrawDrawLine(pixmap,0,ybase,mv->dwidth,ybase,widthcol);
-
-    if ( mv->bdf==NULL && MVShowGrid(mv) ) {
-	x = mv->perchar[0].dx-mv->xoff;
-	if ( mv->right_to_left )
-	    x = mv->vwidth - x - mv->perchar[0].dwidth - mv->perchar[0].kernafter;
-	MVDrawLine(mv,pixmap,x,0,x,mv->vheight,widthcol);
-	x_iaoffh = rint(ybase*s), x_iaoffl = rint((mv->vheight-ybase)*s);
-	if ( ItalicConstrained && x_iaoffh!=0 ) {
-	    MVDrawLine(mv,pixmap,x+x_iaoffh,0,x-x_iaoffl,mv->vheight,italicwidthcol);
-	}
-    }
-    si = -1;
-    for ( i=0; i<mv->glyphcnt; ++i ) {
-	if ( mv->perchar[i].selected ) si = i;
-	x = mv->perchar[i].dx-mv->xoff;
-	if ( mv->right_to_left )
-	    x = mv->vwidth - x - mv->perchar[i].dwidth - mv->perchar[i].kernafter;
-	if ( mv->bdf==NULL && MVShowGrid(mv) ) {
-	    int xp = x+mv->perchar[i].dwidth+mv->perchar[i].kernafter;
-	    MVDrawLine(mv,pixmap,xp, 0,xp,mv->vheight,
-		    mv->type==mv_kernonly  && i!=mv->glyphcnt-1 ?kernlinecol :
-		    mv->type==mv_widthonly                      ?rbearinglinecol :
-			widthcol);
-	    if ( ItalicConstrained && x_iaoffh!=0 ) {
-		MVDrawLine(mv,pixmap,xp+x_iaoffh,0,xp-x_iaoffl,mv->vheight,italicwidthcol);
-	    }
-	}
-	if ( mv->right_to_left )
-	    x += mv->perchar[i].kernafter-mv->perchar[i].xoff;
-	else
-	    x += mv->perchar[i].xoff;
-	bdfc = mv->bdf==NULL ?	BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos) :
-				BDFGetMergedChar( mv->bdf->glyphs[mv->glyphs[i].sc->orig_pos]);
-	if ( bdfc==NULL )
-    continue;
-	x += rint( iscale * bdfc->xmin );
-	if ( mv->perchar[i].selected )
-	    x += mv->activeoff;
-	y = ybase - rint( iscale * bdfc->ymax ) - (iscale-1) - mv->perchar[i].yoff;
-	width = bdfc->xmax-bdfc->xmin+1; height = bdfc->ymax-bdfc->ymin+1;
-	if ( !mv->right_to_left && clip->x+clip->width<x )
-    break;
-	if ( x+rint(iscale*width)>=clip->x && y<clip->y+clip->height && y+rint(iscale*height) >= clip->y ) {
-	    memset(&gi,'\0',sizeof(gi));
-	    memset(&base,'\0',sizeof(base));
-	    memset(&clut,'\0',sizeof(clut));
-	    gi.u.image = &base;
-	    base.clut = &clut;
-	    if ( !bdfc->byte_data ) {
-		base.image_type = it_mono;
-		clut.clut_len = 2;
-		clut.clut[0] = 0xffffff;
-		if ( mv->perchar[i].selected )
-		    clut.clut[1] = selglyphcol;
-	    } else {
-		int lscale = 3000/mv->pixelsize, l;
-		Color fg, bg;
-		int scale;
-		if ( mv->bdf!=NULL )
-		    lscale = BDFDepth(mv->bdf);
-		else
-		    lscale = BDFDepth(mv->show);
-		base.image_type = it_index;
-		scale = lscale==8?256:lscale==4?16:4;
-		clut.clut_len = scale;
-		bg = view_bgcol;
-		fg = ( mv->perchar[i].selected ) ? selglyphcol : 0x000000;
-		for ( l=0; l<scale; ++l )
-		    clut.clut[l] =
-			COLOR_CREATE(
-			 COLOR_RED(bg) + ((int32_t) (l*(COLOR_RED(fg)-COLOR_RED(bg))))/(scale-1),
-			 COLOR_GREEN(bg) + ((int32_t) (l*(COLOR_GREEN(fg)-COLOR_GREEN(bg))))/(scale-1),
-			 COLOR_BLUE(bg) + ((int32_t) (l*(COLOR_BLUE(fg)-COLOR_BLUE(bg))))/(scale-1) );
-	    }
-	    base.data = bdfc->bitmap;
-	    base.bytes_per_line = bdfc->bytes_per_line;
-	    base.width = width;
-	    base.height = height;
-	    if ( mv->pixelsize_set_by_window || mv->scale_index==SCALE_INDEX_NORMAL )
-		GDrawDrawGlyph(pixmap,&gi,NULL,x,y);
-	    else
-		GDrawDrawImageMagnified(pixmap, &gi, NULL, x,y,
-			(int) rint((width*mv_scales[mv->scale_index])),
-			(int) rint((height*mv_scales[mv->scale_index])));
-	}
-	if ( mv->bdf!=NULL ) BDFCharFree( bdfc );
-    }
-    if ( si!=-1 && mv->bdf==NULL && MVShowGrid(mv) && mv->type==mv_kernwidth ) {
-	x = mv->perchar[si].dx-mv->xoff;
-	if ( mv->right_to_left )
-	    x = mv->vwidth - x;
-	if ( si!=0 )
-	    MVDrawLine(mv,pixmap,x,0,x,mv->vheight,kernlinecol);
-	if ( mv->right_to_left )
-	    x -= mv->perchar[si].dwidth+mv->perchar[si].kernafter;
-	else
-	    x += mv->perchar[si].dwidth+mv->perchar[si].kernafter;
-	 MVDrawLine(mv,pixmap,x, 0,x,mv->vheight,rbearinglinecol);
-    }
-    GDrawPopClip(pixmap,&old);
-}
-
-static void MVExpose(MetricsView *mv, GWindow pixmap, GEvent *event) {
-    GRect old, *clip;
-    int x;
-    int ke = mv->height-mv->sbh-(mv->fh+4);
-
-    clip = &event->u.expose.rect;
-    if ( clip->y+clip->height < mv->topend )
-return;
-    GDrawPushClip(pixmap,clip,&old);
-    GDrawSetLineWidth(pixmap,0);
-    for ( x=mv->mwidth; x<mv->width; x+=mv->mwidth ) {
-	GDrawDrawLine(pixmap,x,mv->displayend,x,ke,0x000000);
-	GDrawDrawLine(pixmap,x+mv->mwidth/2,ke,x+mv->mwidth/2,mv->height-mv->sbh,0x000000);
-    }
-    GDrawDrawLine(pixmap,0,mv->topend,mv->width,mv->topend,0x000000);
-    GDrawDrawLine(pixmap,0,mv->displayend,mv->width,mv->displayend,0x000000);
-    GDrawDrawLine(pixmap,0,mv->displayend+mv->fh+4,mv->width,mv->displayend+mv->fh+4,0x000000);
-    GDrawDrawLine(pixmap,0,mv->displayend+2*(mv->fh+4),mv->width,mv->displayend+2*(mv->fh+4),0x000000);
-    GDrawDrawLine(pixmap,0,mv->displayend+3*(mv->fh+4),mv->width,mv->displayend+3*(mv->fh+4),0x000000);
-    GDrawDrawLine(pixmap,0,mv->displayend+4*(mv->fh+4),mv->width,mv->displayend+4*(mv->fh+4),0x000000);
-    GDrawDrawLine(pixmap,0,mv->displayend+5*(mv->fh+4),mv->width,mv->displayend+5*(mv->fh+4),0x000000);
-    GDrawPopClip(pixmap,&old);
-}
-
-static void MVSetSubtables(SplineFont *sf) {
-    GTextInfo **ti;
-    OTLookup *otl;
-    struct lookup_subtable *sub;
-    int cnt, doit;
-    MetricsView *mvs;
-    int selected;
-
-    if ( sf->cidmaster ) sf = sf->cidmaster;
-
-    /* There might be more than one metricsview wandering around. Update them all */
-    for ( mvs = sf->metrics; mvs!=NULL; mvs=mvs->next ) {
-	selected = false;
-	for ( doit = 0; doit<2; ++doit ) {
-	    cnt = 0;
-	    for ( otl=sf->gpos_lookups; otl!=NULL; otl=otl->next ) {
-		if ( otl->lookup_type == gpos_pair && FeatureTagInFeatureScriptList(
-			    mvs->vertical?CHR('v','k','r','n') : CHR('k','e','r','n'),
-			    otl->features)) {
-		    for ( sub=otl->subtables; sub!=NULL; sub=sub->next ) {
-			if ( doit ) {
-			    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
-			    ti[cnt]->text = utf82u_copy(sub->subtable_name);
-			    ti[cnt]->userdata = sub;
-			    if ( sub==mvs->cur_subtable ) {
-				ti[cnt]->selected = true;
-				selected = true;
-			    }
-			    ti[cnt]->disabled = sub->kc!=NULL;
-			    ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
-			}
-			++cnt;
-		    }
-		}
-	    }
-	    if ( !doit )
-		ti = xcalloc(cnt+3,sizeof(GTextInfo *));
-	    else {
-		if ( cnt!=0 ) {
-		    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
-		    ti[cnt]->line = true;
-		    ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
-		    ++cnt;
-		}
-		ti[cnt] = xcalloc(1,sizeof(GTextInfo));
-		ti[cnt]->text = utf82u_copy(_("New Lookup Subtable..."));
-		ti[cnt]->userdata = NULL;
-		ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
-		ti[cnt]->selected = !selected;
-		++cnt;
-		ti[cnt] = xcalloc(1,sizeof(GTextInfo));
-	    }
-	}
-	if ( !selected )
-	    mvs->cur_subtable = NULL;
-
-	GGadgetSetList(mvs->subtable_list,ti,false);
+  if (si != -1 && mv->bdf == NULL && MVShowGrid (mv)
+      && mv->type == mv_kernwidth)
+    {
+      y = mv->perchar[si].dy - mv->yoff;
+      if (si != 0)
+        MVDrawLine (mv, pixmap, 0, y, mv->vwidth, y, kernlinecol);
+      y += mv->perchar[si].dheight + mv->perchar[si].kernafter;
+      MVDrawLine (mv, pixmap, 0, y, mv->vwidth, y, rbearinglinecol);
     }
 }
 
-static void MVSetFeatures(MetricsView *mv) {
-    SplineFont *sf = mv->sf;
-    int i, j, cnt;
-    GTextInfo **ti=NULL;
-    uint32_t *tags = NULL, script, lang;
-    char buf[16];
-    uint32_t *stds;
-    const uint32_t *pt = _GGadgetGetTitle(mv->script);
+static void
+MVSubExpose (MetricsView *mv, GWindow pixmap, GEvent *event)
+{
+  GRect old, *clip;
+  int x, y, ybase, width, height, i;
+  BDFChar *bdfc;
+  struct _GImage base;
+  GImage gi;
+  GClut clut;
+  int si;
+  double iscale =
+    mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
+  double s = sin (-mv->sf->italicangle * 3.1415926535897932 / 180.);
+  int x_iaoffh = 0, x_iaoffl = 0;
 
-    if ( sf->cidmaster ) sf=sf->cidmaster;
+  clip = &event->u.expose.rect;
+  GDrawPushClip (pixmap, clip, &old);
+  GDrawSetLineWidth (pixmap, 0);
 
-    script = DEFAULT_SCRIPT;
-    lang = DEFAULT_LANG;
-    if ( u32_strlen(pt)>=4 )
-	script = (pt[0]<<24) | (pt[1]<<16) | (pt[2]<<8) | pt[3];
-    if ( pt[4]=='{' && u32_strlen(pt)>=9 )
-	lang = (pt[5]<<24) | (pt[6]<<16) | (pt[7]<<8) | pt[8];
-    if ( (uint32_t)mv->oldscript!=script || (uint32_t)mv->oldlang!=lang )
-	stds = StdFeaturesOfScript(script);
-    else {		/* features list may have changed, but retain those set */
-	int32_t len, sc;
-	ti = GGadgetGetList(mv->features,&len);
-	stds = xmalloc((len+1)*sizeof(uint32_t));
-	for ( i=sc=0; i<len; ++i ) if ( ti[i]->selected )
-	    stds[sc++] = (uint32_t) (intptr_t) ti[i]->userdata;
-	stds[sc] = 0;
+  if (mv->vertical)
+    {
+      MVSubVExpose (mv, pixmap, event);
+      GDrawPopClip (pixmap, &old);
+      return;
     }
 
-    tags = SFFeaturesInScriptLang(sf,-2,script,lang);
-    /* Never returns NULL */
-    for ( cnt=0; tags[cnt]!=0; ++cnt );
+  ybase = mv->ybaseline - mv->yoff;
 
-    /*qsort(tags,cnt,sizeof(uint32_t),tag_comp);*/ /* The glist will do this for us */
+  if (mv->showgrid)
+    GDrawDrawLine (pixmap, 0, ybase, mv->dwidth, ybase, widthcol);
 
-    ti = xmalloc((cnt+2)*sizeof(GTextInfo *));
-    for ( i=0; i<cnt; ++i ) {
-	ti[i] = xcalloc( 1,sizeof(GTextInfo));
-	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
-	if ( (tags[i]>>24)<' ' || (tags[i]>>24)>0x7e )
-	    sprintf( buf, "<%d,%d>", tags[i]>>16, tags[i]&0xffff );
-	else {
-	    buf[0] = tags[i]>>24;
-	    buf[1] = tags[i]>>16;
-	    buf[2] = tags[i]>>8;
-	    buf[3] = tags[i];
-	    buf[4] = 0;
-	}
-	ti[i]->text = x_u8_to_u32 (u8_force_valid (buf));
-	ti[i]->userdata = (void *) (intptr_t) tags[i];
-	for ( j=0; stds[j]!=0; ++j ) {
-	    if ( stds[j] == tags[i] ) {
-		ti[i]->selected = true;
-	break;
-	    }
-	}
+  if (mv->bdf == NULL && MVShowGrid (mv))
+    {
+      x = mv->perchar[0].dx - mv->xoff;
+      if (mv->right_to_left)
+        x = mv->vwidth - x - mv->perchar[0].dwidth - mv->perchar[0].kernafter;
+      MVDrawLine (mv, pixmap, x, 0, x, mv->vheight, widthcol);
+      x_iaoffh = rint (ybase * s), x_iaoffl = rint ((mv->vheight - ybase) * s);
+      if (ItalicConstrained && x_iaoffh != 0)
+        {
+          MVDrawLine (mv, pixmap, x + x_iaoffh, 0, x - x_iaoffl, mv->vheight,
+                      italicwidthcol);
+        }
     }
-    ti[i] = xcalloc(1,sizeof(GTextInfo));
-    GGadgetSetList(mv->features,ti,false);
-    mv->oldscript = script; mv->oldlang = lang;
-}
-
-static void MVSelectSubtable(MetricsView *mv, struct lookup_subtable *sub) {
-    int32_t len; int i;
-    GTextInfo **old = GGadgetGetList(mv->subtable_list,&len);
-
-    for ( i=0; i<len && (old[i]->userdata!=sub || old[i]->line); ++i );
-    GGadgetSelectOneListItem(mv->subtable_list,i);
-    if ( sub!=NULL )
-	mv->cur_subtable = sub;
-}
-
-static void MVRedrawI(MetricsView *mv,int i,int oldxmin,int oldxmax) {
-    GRect r;
-    BDFChar *bdfc;
-    int off = 0;
-
-    if ( mv->right_to_left || mv->vertical ) {
-	/* right to left clipping is hard to think about, it doesn't happen */
-	/*  often enough (I think) for me to put the effort to make it efficient */
-	GDrawRequestExpose(mv->v,NULL,false);
-return;
+  si = -1;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    {
+      if (mv->perchar[i].selected)
+        si = i;
+      x = mv->perchar[i].dx - mv->xoff;
+      if (mv->right_to_left)
+        x = mv->vwidth - x - mv->perchar[i].dwidth - mv->perchar[i].kernafter;
+      if (mv->bdf == NULL && MVShowGrid (mv))
+        {
+          int xp = x + mv->perchar[i].dwidth + mv->perchar[i].kernafter;
+          MVDrawLine (mv, pixmap, xp, 0, xp, mv->vheight,
+                      mv->type == mv_kernonly
+                      && i != mv->glyphcnt - 1 ? kernlinecol : mv->type ==
+                      mv_widthonly ? rbearinglinecol : widthcol);
+          if (ItalicConstrained && x_iaoffh != 0)
+            {
+              MVDrawLine (mv, pixmap, xp + x_iaoffh, 0, xp - x_iaoffl,
+                          mv->vheight, italicwidthcol);
+            }
+        }
+      if (mv->right_to_left)
+        x += mv->perchar[i].kernafter - mv->perchar[i].xoff;
+      else
+        x += mv->perchar[i].xoff;
+      bdfc =
+        mv->bdf == NULL ? BDFPieceMealCheck (mv->show,
+                                             mv->glyphs[i].
+                                             sc->orig_pos) :
+        BDFGetMergedChar (mv->bdf->glyphs[mv->glyphs[i].sc->orig_pos]);
+      if (bdfc == NULL)
+        continue;
+      x += rint (iscale * bdfc->xmin);
+      if (mv->perchar[i].selected)
+        x += mv->activeoff;
+      y =
+        ybase - rint (iscale * bdfc->ymax) - (iscale - 1) - mv->perchar[i].yoff;
+      width = bdfc->xmax - bdfc->xmin + 1;
+      height = bdfc->ymax - bdfc->ymin + 1;
+      if (!mv->right_to_left && clip->x + clip->width < x)
+        break;
+      if (x + rint (iscale * width) >= clip->x && y < clip->y + clip->height
+          && y + rint (iscale * height) >= clip->y)
+        {
+          memset (&gi, '\0', sizeof (gi));
+          memset (&base, '\0', sizeof (base));
+          memset (&clut, '\0', sizeof (clut));
+          gi.u.image = &base;
+          base.clut = &clut;
+          if (!bdfc->byte_data)
+            {
+              base.image_type = it_mono;
+              clut.clut_len = 2;
+              clut.clut[0] = 0xffffff;
+              if (mv->perchar[i].selected)
+                clut.clut[1] = selglyphcol;
+            }
+          else
+            {
+              int lscale = 3000 / mv->pixelsize, l;
+              Color fg, bg;
+              int scale;
+              if (mv->bdf != NULL)
+                lscale = BDFDepth (mv->bdf);
+              else
+                lscale = BDFDepth (mv->show);
+              base.image_type = it_index;
+              scale = lscale == 8 ? 256 : lscale == 4 ? 16 : 4;
+              clut.clut_len = scale;
+              bg = view_bgcol;
+              fg = (mv->perchar[i].selected) ? selglyphcol : 0x000000;
+              for (l = 0; l < scale; ++l)
+                clut.clut[l] =
+                  COLOR_CREATE (COLOR_RED (bg) +
+                                ((int32_t)
+                                 (l * (COLOR_RED (fg) - COLOR_RED (bg)))) /
+                                (scale - 1),
+                                COLOR_GREEN (bg) +
+                                ((int32_t)
+                                 (l * (COLOR_GREEN (fg) - COLOR_GREEN (bg)))) /
+                                (scale - 1),
+                                COLOR_BLUE (bg) +
+                                ((int32_t)
+                                 (l * (COLOR_BLUE (fg) - COLOR_BLUE (bg)))) /
+                                (scale - 1));
+            }
+          base.data = bdfc->bitmap;
+          base.bytes_per_line = bdfc->bytes_per_line;
+          base.width = width;
+          base.height = height;
+          if (mv->pixelsize_set_by_window
+              || mv->scale_index == SCALE_INDEX_NORMAL)
+            GDrawDrawGlyph (pixmap, &gi, NULL, x, y);
+          else
+            GDrawDrawImageMagnified (pixmap, &gi, NULL, x, y,
+                                     (int)
+                                     rint ((width *
+                                            mv_scales[mv->scale_index])),
+                                     (int)
+                                     rint ((height *
+                                            mv_scales[mv->scale_index])));
+        }
+      if (mv->bdf != NULL)
+        BDFCharFree (bdfc);
     }
-    if ( mv->perchar[i].selected )
-	off = mv->activeoff;
-    r.y = 0; r.height = mv->vheight;
-    r.x = mv->perchar[i].dx-mv->xoff; r.width = mv->perchar[i].dwidth;
-    if ( mv->perchar[i].kernafter>0 )
-	r.width += mv->perchar[i].kernafter;
-    if ( mv->perchar[i].xoff<0 ) {
-	r.x += mv->perchar[i].xoff;
-	r.width -= mv->perchar[i].xoff;
-    } else
-	r.width += mv->perchar[i].xoff;
-    bdfc = mv->bdf==NULL ?  BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos) :
-			    mv->bdf->glyphs[mv->glyphs[i].sc->orig_pos];
-    if ( bdfc==NULL )
-return;
-    if ( bdfc->xmax+off+1>r.width ) r.width = bdfc->xmax+off+1;
-    if ( oldxmax+1>r.width ) r.width = oldxmax+1;
-    if ( bdfc->xmin+off<0 ) {
-	r.x += bdfc->xmin+off;
-	r.width -= bdfc->xmin+off;
+  if (si != -1 && mv->bdf == NULL && MVShowGrid (mv)
+      && mv->type == mv_kernwidth)
+    {
+      x = mv->perchar[si].dx - mv->xoff;
+      if (mv->right_to_left)
+        x = mv->vwidth - x;
+      if (si != 0)
+        MVDrawLine (mv, pixmap, x, 0, x, mv->vheight, kernlinecol);
+      if (mv->right_to_left)
+        x -= mv->perchar[si].dwidth + mv->perchar[si].kernafter;
+      else
+        x += mv->perchar[si].dwidth + mv->perchar[si].kernafter;
+      MVDrawLine (mv, pixmap, x, 0, x, mv->vheight, rbearinglinecol);
     }
-    if ( oldxmin<bdfc->xmin ) {
-	r.width += (bdfc->xmin+off-oldxmin);
-	r.x -= (bdfc->xmin+off-oldxmin);
+  GDrawPopClip (pixmap, &old);
+}
+
+static void
+MVExpose (MetricsView *mv, GWindow pixmap, GEvent *event)
+{
+  GRect old, *clip;
+  int x;
+  int ke = mv->height - mv->sbh - (mv->fh + 4);
+
+  clip = &event->u.expose.rect;
+  if (clip->y + clip->height < mv->topend)
+    return;
+  GDrawPushClip (pixmap, clip, &old);
+  GDrawSetLineWidth (pixmap, 0);
+  for (x = mv->mwidth; x < mv->width; x += mv->mwidth)
+    {
+      GDrawDrawLine (pixmap, x, mv->displayend, x, ke, 0x000000);
+      GDrawDrawLine (pixmap, x + mv->mwidth / 2, ke, x + mv->mwidth / 2,
+                     mv->height - mv->sbh, 0x000000);
     }
-    if ( mv->right_to_left )
-	r.x = mv->dwidth - r.x - r.width;
-    GDrawRequestExpose(mv->v,&r,false);
-    if ( mv->perchar[i].selected && i!=0 ) {
-	struct lookup_subtable *sub = mv->glyphs[i].kp!=NULL ? mv->glyphs[i].kp->subtable : mv->glyphs[i].kc!=NULL && mv->glyphs[i].kc->offsets[mv->glyphs[i].kc_index]!=0 ? mv->glyphs[i].kc->subtable : NULL;
-	if ( sub!=NULL )
-	    MVSelectSubtable(mv,sub);
+  GDrawDrawLine (pixmap, 0, mv->topend, mv->width, mv->topend, 0x000000);
+  GDrawDrawLine (pixmap, 0, mv->displayend, mv->width, mv->displayend,
+                 0x000000);
+  GDrawDrawLine (pixmap, 0, mv->displayend + mv->fh + 4, mv->width,
+                 mv->displayend + mv->fh + 4, 0x000000);
+  GDrawDrawLine (pixmap, 0, mv->displayend + 2 * (mv->fh + 4), mv->width,
+                 mv->displayend + 2 * (mv->fh + 4), 0x000000);
+  GDrawDrawLine (pixmap, 0, mv->displayend + 3 * (mv->fh + 4), mv->width,
+                 mv->displayend + 3 * (mv->fh + 4), 0x000000);
+  GDrawDrawLine (pixmap, 0, mv->displayend + 4 * (mv->fh + 4), mv->width,
+                 mv->displayend + 4 * (mv->fh + 4), 0x000000);
+  GDrawDrawLine (pixmap, 0, mv->displayend + 5 * (mv->fh + 4), mv->width,
+                 mv->displayend + 5 * (mv->fh + 4), 0x000000);
+  GDrawPopClip (pixmap, &old);
+}
+
+static void
+MVSetSubtables (SplineFont *sf)
+{
+  GTextInfo **ti;
+  OTLookup *otl;
+  struct lookup_subtable *sub;
+  int cnt, doit;
+  MetricsView *mvs;
+  int selected;
+
+  if (sf->cidmaster)
+    sf = sf->cidmaster;
+
+  /* There might be more than one metricsview wandering around. Update them all */
+  for (mvs = sf->metrics; mvs != NULL; mvs = mvs->next)
+    {
+      selected = false;
+      for (doit = 0; doit < 2; ++doit)
+        {
+          cnt = 0;
+          for (otl = sf->gpos_lookups; otl != NULL; otl = otl->next)
+            {
+              if (otl->lookup_type == gpos_pair
+                  && FeatureTagInFeatureScriptList (mvs->vertical ?
+                                                    CHR ('v', 'k', 'r',
+                                                         'n') : CHR ('k', 'e',
+                                                                     'r', 'n'),
+                                                    otl->features))
+                {
+                  for (sub = otl->subtables; sub != NULL; sub = sub->next)
+                    {
+                      if (doit)
+                        {
+                          ti[cnt] = xcalloc (1, sizeof (GTextInfo));
+                          ti[cnt]->text = utf82u_copy (sub->subtable_name);
+                          ti[cnt]->userdata = sub;
+                          if (sub == mvs->cur_subtable)
+                            {
+                              ti[cnt]->selected = true;
+                              selected = true;
+                            }
+                          ti[cnt]->disabled = sub->kc != NULL;
+                          ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
+                        }
+                      ++cnt;
+                    }
+                }
+            }
+          if (!doit)
+            ti = xcalloc (cnt + 3, sizeof (GTextInfo *));
+          else
+            {
+              if (cnt != 0)
+                {
+                  ti[cnt] = xcalloc (1, sizeof (GTextInfo));
+                  ti[cnt]->line = true;
+                  ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
+                  ++cnt;
+                }
+              ti[cnt] = xcalloc (1, sizeof (GTextInfo));
+              ti[cnt]->text = utf82u_copy (_("New Lookup Subtable..."));
+              ti[cnt]->userdata = NULL;
+              ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
+              ti[cnt]->selected = !selected;
+              ++cnt;
+              ti[cnt] = xcalloc (1, sizeof (GTextInfo));
+            }
+        }
+      if (!selected)
+        mvs->cur_subtable = NULL;
+
+      GGadgetSetList (mvs->subtable_list, ti, false);
     }
 }
 
-static void MVDeselectChar(MetricsView *mv, int i) {
+static void
+MVSetFeatures (MetricsView *mv)
+{
+  SplineFont *sf = mv->sf;
+  int i, j, cnt;
+  GTextInfo **ti = NULL;
+  uint32_t *tags = NULL, script, lang;
+  char buf[16];
+  uint32_t *stds;
+  const uint32_t *pt = _GGadgetGetTitle (mv->script);
 
-    mv->perchar[i].selected = false;
-    if ( mv->perchar[i].name!=NULL )
-	GGadgetSetEnabled(mv->perchar[i].name,mv->bdf==NULL);
-    MVRedrawI(mv,i,0,0);
-}
+  if (sf->cidmaster)
+    sf = sf->cidmaster;
 
-static void MVSelectSubtableForScript(MetricsView *mv,uint32_t script) {
-    int32_t len;
-    GTextInfo **ti = GGadgetGetList(mv->subtable_list,&len);
-    struct lookup_subtable *sub;
-    int i;
-
-    if ( mv->cur_subtable != NULL && FeatureScriptTagInFeatureScriptList(
-	    mv->vertical?CHR('v','k','r','n') : CHR('k','e','r','n'),script,
-	    mv->cur_subtable->lookup->features ))
-return;
-
-    sub = NULL;
-    for ( i=0; i<len; ++i )
-	if ( ti[i]->userdata!=NULL &&
-		FeatureScriptTagInFeatureScriptList(
-		    mv->vertical?CHR('v','k','r','n') : CHR('k','e','r','n'),
-		    script,((struct lookup_subtable *) (ti[i]->userdata))->lookup->features)) {
-	    sub = ti[i]->userdata;
-    break;
-	}
-    if ( sub!=NULL )
-	MVSelectSubtable(mv,sub);
-}
-
-static void MVSelectChar(MetricsView *mv, int i) {
-
-    if ( i>=mv->glyphcnt || i<0 )
-return;
-    mv->perchar[i].selected = true;
-    if ( mv->perchar[i].name!=NULL )
-	GGadgetSetEnabled(mv->perchar[i].name,false);
-    if ( mv->glyphs[i].kp!=NULL )
-	MVSelectSubtable(mv,mv->glyphs[i].kp->subtable);
-    else if ( mv->glyphs[i].kc!=NULL && mv->glyphs[i].kc->offsets[mv->glyphs[i].kc_index]!=0 )
-	MVSelectSubtable(mv,mv->glyphs[i].kc->subtable);
-    else
-	MVSelectSubtableForScript(mv,SCScriptFromUnicode(mv->glyphs[i].sc));
-    MVRedrawI(mv,i,0,0);
-}
-
-static void MVDoSelect(MetricsView *mv, int i) {
-    int j;
-
-    for ( j=0; j<mv->glyphcnt; ++j )
-	if ( j!=i && mv->perchar[j].selected )
-	    MVDeselectChar(mv,j);
-    MVSelectChar(mv,i);
-}
-
-void MVRefreshChar(MetricsView *mv, SplineChar *sc) {
-    int i;
-    for ( i=0; i<mv->glyphcnt; ++i ) if ( mv->glyphs[i].sc == sc )
-	MVRedrawI(mv,i,0,0);
-}
-
-static void MVRefreshValues(MetricsView *mv, int i) {
-    char buf[40];
-    DBounds bb;
-    SplineChar *sc = mv->glyphs[i].sc;
-    int kern_offset;
-
-    SplineCharFindBounds(sc,&bb);
-
-    GGadgetSetTitle8(mv->perchar[i].name,sc->name);
-
-    sprintf(buf,"%d",mv->vertical ? sc->vwidth : sc->width);
-    GGadgetSetTitle8(mv->perchar[i].width,buf);
-
-    sprintf(buf,"%.2f",mv->vertical ? sc->parent->ascent-(double) bb.maxy : (double) bb.minx);
-    if ( buf[strlen(buf)-1]=='0' ) {
-	buf[strlen(buf)-1] = '\0';
-	if ( buf[strlen(buf)-1]=='0' ) {
-	    buf[strlen(buf)-1] = '\0';
-	    if ( buf[strlen(buf)-1]=='.' )
-		buf[strlen(buf)-1] = '\0';
-	}
+  script = DEFAULT_SCRIPT;
+  lang = DEFAULT_LANG;
+  if (u32_strlen (pt) >= 4)
+    script = (pt[0] << 24) | (pt[1] << 16) | (pt[2] << 8) | pt[3];
+  if (pt[4] == '{' && u32_strlen (pt) >= 9)
+    lang = (pt[5] << 24) | (pt[6] << 16) | (pt[7] << 8) | pt[8];
+  if ((uint32_t) mv->oldscript != script || (uint32_t) mv->oldlang != lang)
+    stds = StdFeaturesOfScript (script);
+  else
+    {                           /* features list may have changed, but retain those set */
+      int32_t len, sc;
+      ti = GGadgetGetList (mv->features, &len);
+      stds = xmalloc ((len + 1) * sizeof (uint32_t));
+      for (i = sc = 0; i < len; ++i)
+        if (ti[i]->selected)
+          stds[sc++] = (uint32_t) (intptr_t) ti[i]->userdata;
+      stds[sc] = 0;
     }
-    GGadgetSetTitle8(mv->perchar[i].lbearing,buf);
 
-    sprintf(buf,"%.2f",(double) (mv->vertical ? sc->vwidth-(sc->parent->ascent-bb.miny) : sc->width-bb.maxx));
-    if ( buf[strlen(buf)-1]=='0' ) {
-	buf[strlen(buf)-1] = '\0';
-	if ( buf[strlen(buf)-1]=='0' ) {
-	    buf[strlen(buf)-1] = '\0';
-	    if ( buf[strlen(buf)-1]=='.' )
-		buf[strlen(buf)-1] = '\0';
-	}
+  tags = SFFeaturesInScriptLang (sf, -2, script, lang);
+  /* Never returns NULL */
+  for (cnt = 0; tags[cnt] != 0; ++cnt);
+
+  /*qsort(tags,cnt,sizeof(uint32_t),tag_comp); *//* The glist will do this for us */
+
+  ti = xmalloc ((cnt + 2) * sizeof (GTextInfo *));
+  for (i = 0; i < cnt; ++i)
+    {
+      ti[i] = xcalloc (1, sizeof (GTextInfo));
+      ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
+      if ((tags[i] >> 24) < ' ' || (tags[i] >> 24) > 0x7e)
+        sprintf (buf, "<%d,%d>", tags[i] >> 16, tags[i] & 0xffff);
+      else
+        {
+          buf[0] = tags[i] >> 24;
+          buf[1] = tags[i] >> 16;
+          buf[2] = tags[i] >> 8;
+          buf[3] = tags[i];
+          buf[4] = 0;
+        }
+      ti[i]->text = x_u8_to_u32 (u8_force_valid (buf));
+      ti[i]->userdata = (void *) (intptr_t) tags[i];
+      for (j = 0; stds[j] != 0; ++j)
+        {
+          if (stds[j] == tags[i])
+            {
+              ti[i]->selected = true;
+              break;
+            }
+        }
     }
-    GGadgetSetTitle8(mv->perchar[i].rbearing,buf);
-
-    kern_offset = 0x7ffffff;
-    if ( mv->glyphs[i].kp!=NULL )
-	kern_offset = mv->glyphs[i].kp->off;
-    else if ( mv->glyphs[i].kc!=NULL )
-	kern_offset = mv->glyphs[i].kc->offsets[ mv->glyphs[i].kc_index ];
-    if ( kern_offset!=0x7ffffff && i!=mv->glyphcnt-1 ) {
-	sprintf(buf,"%d",kern_offset);
-	GGadgetSetTitle8(mv->perchar[i+1].kern,buf);
-    } else if ( i!=mv->glyphcnt-1 )
-	GGadgetSetTitle8(mv->perchar[i+1].kern,"");
+  ti[i] = xcalloc (1, sizeof (GTextInfo));
+  GGadgetSetList (mv->features, ti, false);
+  mv->oldscript = script;
+  mv->oldlang = lang;
 }
 
-static void MVMakeLabels(MetricsView *mv) {
-    static GBox small = GBOX_EMPTY;
-    GGadgetData gd;
-    GTextInfo label;
+static void
+MVSelectSubtable (MetricsView *mv, struct lookup_subtable *sub)
+{
+  int32_t len;
+  int i;
+  GTextInfo **old = GGadgetGetList (mv->subtable_list, &len);
 
-    small.main_background = small.main_foreground = COLOR_DEFAULT;
-    memset(&gd,'\0',sizeof(gd));
-    memset(&label,'\0',sizeof(label));
+  for (i = 0; i < len && (old[i]->userdata != sub || old[i]->line); ++i);
+  GGadgetSelectOneListItem (mv->subtable_list, i);
+  if (sub != NULL)
+    mv->cur_subtable = sub;
+}
 
-    mv->mwidth = GGadgetScale(60);
-    mv->displayend = mv->height- mv->sbh - 5*(mv->fh+4);
-    /* We might not have set mv->vheight-2 yet */
-    if ( mv->pixelsize_set_by_window )
-	mv->pixelsize = mv_scales[mv->scale_index]*(mv->displayend - mv->topend - 4);
+static void
+MVRedrawI (MetricsView *mv, int i, int oldxmin, int oldxmax)
+{
+  GRect r;
+  BDFChar *bdfc;
+  int off = 0;
 
-    label.text = (uint32_t *) _("Name:");
-    label.text_is_1byte = true;
-    label.font = mv->font;
-    gd.pos.x = 2; gd.pos.width = mv->mwidth-4;
-    gd.pos.y = mv->displayend+2;
-    gd.pos.height = mv->fh;
-    gd.label = &label;
-    gd.box = &small;
-    gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_dontcopybox;
-    mv->namelab = GLabelCreate(mv->gw,&gd,NULL);
+  if (mv->right_to_left || mv->vertical)
+    {
+      /* right to left clipping is hard to think about, it doesn't happen */
+      /*  often enough (I think) for me to put the effort to make it efficient */
+      GDrawRequestExpose (mv->v, NULL, false);
+      return;
+    }
+  if (mv->perchar[i].selected)
+    off = mv->activeoff;
+  r.y = 0;
+  r.height = mv->vheight;
+  r.x = mv->perchar[i].dx - mv->xoff;
+  r.width = mv->perchar[i].dwidth;
+  if (mv->perchar[i].kernafter > 0)
+    r.width += mv->perchar[i].kernafter;
+  if (mv->perchar[i].xoff < 0)
+    {
+      r.x += mv->perchar[i].xoff;
+      r.width -= mv->perchar[i].xoff;
+    }
+  else
+    r.width += mv->perchar[i].xoff;
+  bdfc =
+    mv->bdf == NULL ? BDFPieceMealCheck (mv->show,
+                                         mv->glyphs[i].sc->orig_pos) : mv->
+    bdf->glyphs[mv->glyphs[i].sc->orig_pos];
+  if (bdfc == NULL)
+    return;
+  if (bdfc->xmax + off + 1 > r.width)
+    r.width = bdfc->xmax + off + 1;
+  if (oldxmax + 1 > r.width)
+    r.width = oldxmax + 1;
+  if (bdfc->xmin + off < 0)
+    {
+      r.x += bdfc->xmin + off;
+      r.width -= bdfc->xmin + off;
+    }
+  if (oldxmin < bdfc->xmin)
+    {
+      r.width += (bdfc->xmin + off - oldxmin);
+      r.x -= (bdfc->xmin + off - oldxmin);
+    }
+  if (mv->right_to_left)
+    r.x = mv->dwidth - r.x - r.width;
+  GDrawRequestExpose (mv->v, &r, false);
+  if (mv->perchar[i].selected && i != 0)
+    {
+      struct lookup_subtable *sub =
+        mv->glyphs[i].kp !=
+        NULL ? mv->glyphs[i].kp->subtable : mv->glyphs[i].kc != NULL
+        && mv->glyphs[i].kc->offsets[mv->glyphs[i].kc_index] !=
+        0 ? mv->glyphs[i].kc->subtable : NULL;
+      if (sub != NULL)
+        MVSelectSubtable (mv, sub);
+    }
+}
 
-    label.text = (uint32_t *) (mv->vertical ? _("Height:") : _("Width:") );
-    gd.pos.y += mv->fh+4;
-    mv->widthlab = GLabelCreate(mv->gw,&gd,NULL);
+static void
+MVDeselectChar (MetricsView *mv, int i)
+{
+
+  mv->perchar[i].selected = false;
+  if (mv->perchar[i].name != NULL)
+    GGadgetSetEnabled (mv->perchar[i].name, mv->bdf == NULL);
+  MVRedrawI (mv, i, 0, 0);
+}
+
+static void
+MVSelectSubtableForScript (MetricsView *mv, uint32_t script)
+{
+  int32_t len;
+  GTextInfo **ti = GGadgetGetList (mv->subtable_list, &len);
+  struct lookup_subtable *sub;
+  int i;
+
+  if (mv->cur_subtable != NULL
+      && FeatureScriptTagInFeatureScriptList (mv->vertical ? CHR ('v', 'k', 'r',
+                                                                  'n') :
+                                              CHR ('k', 'e', 'r', 'n'), script,
+                                              mv->cur_subtable->
+                                              lookup->features))
+    return;
+
+  sub = NULL;
+  for (i = 0; i < len; ++i)
+    if (ti[i]->userdata != NULL &&
+        FeatureScriptTagInFeatureScriptList (mv->vertical ? CHR ('v', 'k', 'r',
+                                                                 'n') :
+                                             CHR ('k', 'e', 'r', 'n'), script,
+                                             ((struct lookup_subtable
+                                               *) (ti[i]->userdata))->
+                                             lookup->features))
+      {
+        sub = ti[i]->userdata;
+        break;
+      }
+  if (sub != NULL)
+    MVSelectSubtable (mv, sub);
+}
+
+static void
+MVSelectChar (MetricsView *mv, int i)
+{
+
+  if (i >= mv->glyphcnt || i < 0)
+    return;
+  mv->perchar[i].selected = true;
+  if (mv->perchar[i].name != NULL)
+    GGadgetSetEnabled (mv->perchar[i].name, false);
+  if (mv->glyphs[i].kp != NULL)
+    MVSelectSubtable (mv, mv->glyphs[i].kp->subtable);
+  else if (mv->glyphs[i].kc != NULL
+           && mv->glyphs[i].kc->offsets[mv->glyphs[i].kc_index] != 0)
+    MVSelectSubtable (mv, mv->glyphs[i].kc->subtable);
+  else
+    MVSelectSubtableForScript (mv, SCScriptFromUnicode (mv->glyphs[i].sc));
+  MVRedrawI (mv, i, 0, 0);
+}
+
+static void
+MVDoSelect (MetricsView *mv, int i)
+{
+  int j;
+
+  for (j = 0; j < mv->glyphcnt; ++j)
+    if (j != i && mv->perchar[j].selected)
+      MVDeselectChar (mv, j);
+  MVSelectChar (mv, i);
+}
+
+void
+MVRefreshChar (MetricsView *mv, SplineChar *sc)
+{
+  int i;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->glyphs[i].sc == sc)
+      MVRedrawI (mv, i, 0, 0);
+}
+
+static void
+MVRefreshValues (MetricsView *mv, int i)
+{
+  char buf[40];
+  DBounds bb;
+  SplineChar *sc = mv->glyphs[i].sc;
+  int kern_offset;
+
+  SplineCharFindBounds (sc, &bb);
+
+  GGadgetSetTitle8 (mv->perchar[i].name, sc->name);
+
+  sprintf (buf, "%d", mv->vertical ? sc->vwidth : sc->width);
+  GGadgetSetTitle8 (mv->perchar[i].width, buf);
+
+  sprintf (buf, "%.2f",
+           mv->vertical ? sc->parent->ascent -
+           (double) bb.maxy : (double) bb.minx);
+  if (buf[strlen (buf) - 1] == '0')
+    {
+      buf[strlen (buf) - 1] = '\0';
+      if (buf[strlen (buf) - 1] == '0')
+        {
+          buf[strlen (buf) - 1] = '\0';
+          if (buf[strlen (buf) - 1] == '.')
+            buf[strlen (buf) - 1] = '\0';
+        }
+    }
+  GGadgetSetTitle8 (mv->perchar[i].lbearing, buf);
+
+  sprintf (buf, "%.2f",
+           (double) (mv->vertical ? sc->vwidth -
+                     (sc->parent->ascent - bb.miny) : sc->width - bb.maxx));
+  if (buf[strlen (buf) - 1] == '0')
+    {
+      buf[strlen (buf) - 1] = '\0';
+      if (buf[strlen (buf) - 1] == '0')
+        {
+          buf[strlen (buf) - 1] = '\0';
+          if (buf[strlen (buf) - 1] == '.')
+            buf[strlen (buf) - 1] = '\0';
+        }
+    }
+  GGadgetSetTitle8 (mv->perchar[i].rbearing, buf);
+
+  kern_offset = 0x7ffffff;
+  if (mv->glyphs[i].kp != NULL)
+    kern_offset = mv->glyphs[i].kp->off;
+  else if (mv->glyphs[i].kc != NULL)
+    kern_offset = mv->glyphs[i].kc->offsets[mv->glyphs[i].kc_index];
+  if (kern_offset != 0x7ffffff && i != mv->glyphcnt - 1)
+    {
+      sprintf (buf, "%d", kern_offset);
+      GGadgetSetTitle8 (mv->perchar[i + 1].kern, buf);
+    }
+  else if (i != mv->glyphcnt - 1)
+    GGadgetSetTitle8 (mv->perchar[i + 1].kern, "");
+}
+
+static void
+MVMakeLabels (MetricsView *mv)
+{
+  static GBox small = GBOX_EMPTY;
+  GGadgetData gd;
+  GTextInfo label;
+
+  small.main_background = small.main_foreground = COLOR_DEFAULT;
+  memset (&gd, '\0', sizeof (gd));
+  memset (&label, '\0', sizeof (label));
+
+  mv->mwidth = GGadgetScale (60);
+  mv->displayend = mv->height - mv->sbh - 5 * (mv->fh + 4);
+  /* We might not have set mv->vheight-2 yet */
+  if (mv->pixelsize_set_by_window)
+    mv->pixelsize =
+      mv_scales[mv->scale_index] * (mv->displayend - mv->topend - 4);
+
+  label.text = (uint32_t *) _("Name:");
+  label.text_is_1byte = true;
+  label.font = mv->font;
+  gd.pos.x = 2;
+  gd.pos.width = mv->mwidth - 4;
+  gd.pos.y = mv->displayend + 2;
+  gd.pos.height = mv->fh;
+  gd.label = &label;
+  gd.box = &small;
+  gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_dontcopybox;
+  mv->namelab = GLabelCreate (mv->gw, &gd, NULL);
+
+  label.text = (uint32_t *) (mv->vertical ? _("Height:") : _("Width:"));
+  gd.pos.y += mv->fh + 4;
+  mv->widthlab = GLabelCreate (mv->gw, &gd, NULL);
 
 /* TRANSLATORS: Top/Left (side) bearing */
-    label.text = (uint32_t *) (mv->vertical ? _("TBearing:") : _("LBearing:") );
-    gd.pos.y += mv->fh+4;
-    mv->lbearinglab = GLabelCreate(mv->gw,&gd,NULL);
+  label.text = (uint32_t *) (mv->vertical ? _("TBearing:") : _("LBearing:"));
+  gd.pos.y += mv->fh + 4;
+  mv->lbearinglab = GLabelCreate (mv->gw, &gd, NULL);
 
 /* TRANSLATORS: Bottom/Right (side) bearing */
-    label.text = (uint32_t *) (mv->vertical ? _("BBearing:") : _("RBearing:") );
-    gd.pos.y += mv->fh+4;
-    mv->rbearinglab = GLabelCreate(mv->gw,&gd,NULL);
+  label.text = (uint32_t *) (mv->vertical ? _("BBearing:") : _("RBearing:"));
+  gd.pos.y += mv->fh + 4;
+  mv->rbearinglab = GLabelCreate (mv->gw, &gd, NULL);
 
-    label.text = (uint32_t *) (mv->vertical ? _("VKern:") : _("Kern:"));
-    gd.pos.y += mv->fh+4;
-    mv->kernlab = GLabelCreate(mv->gw,&gd,NULL);
+  label.text = (uint32_t *) (mv->vertical ? _("VKern:") : _("Kern:"));
+  gd.pos.y += mv->fh + 4;
+  mv->kernlab = GLabelCreate (mv->gw, &gd, NULL);
 }
 
-static int MV_KernChanged(GGadget *g, GEvent *e);
-static int MV_RBearingChanged(GGadget *g, GEvent *e);
-static int MV_LBearingChanged(GGadget *g, GEvent *e);
-static int MV_WidthChanged(GGadget *g, GEvent *e);
+static int MV_KernChanged (GGadget *g, GEvent *e);
+static int MV_RBearingChanged (GGadget *g, GEvent *e);
+static int MV_LBearingChanged (GGadget *g, GEvent *e);
+static int MV_WidthChanged (GGadget *g, GEvent *e);
 
-static void MVCreateFields(MetricsView *mv,int i) {
-    static GBox small = GBOX_EMPTY;
-    GGadgetData gd;
-    GTextInfo label;
-    static uint32_t nullstr[1] = { 0 };
-    int j;
-    int udaidx = 1; // we leave element zero to be NULL to allow bounds checking.
-    
-    small = _ggadget_Default_Box;
-    small.flags = 0;
-    small.border_type = bt_none;
-    small.border_shape = bs_rect;
-    small.border_width = 0;
-    small.padding = 0;
+static void
+MVCreateFields (MetricsView *mv, int i)
+{
+  static GBox small = GBOX_EMPTY;
+  GGadgetData gd;
+  GTextInfo label;
+  static uint32_t nullstr[1] = { 0 };
+  int j;
+  int udaidx = 1;               // we leave element zero to be NULL to allow bounds checking.
 
-    memset(&gd,'\0',sizeof(gd));
-    memset(&label,'\0',sizeof(label));
-    memset(mv->perchar[i].updownkparray,'\0',sizeof(GGadget*)*10);
-    label.text = nullstr;
-    label.font = mv->font;
-    mv->perchar[i].mx = gd.pos.x = mv->mbase+(i+1-mv->coff)*mv->mwidth+2;
-    mv->perchar[i].mwidth = gd.pos.width = mv->mwidth-4;
-    gd.pos.y = mv->displayend+2;
-    gd.pos.height = mv->fh;
-    gd.label = &label;
-    gd.box = &small;
-    gd.flags = gg_visible | gg_pos_in_pixels | gg_dontcopybox;
-    if ( mv->bdf==NULL )
-	gd.flags |= gg_enabled;
-    mv->perchar[i].name = GLabelCreate(mv->gw,&gd,(void *) (intptr_t) i);
-    if ( mv->perchar[i].selected )
-	GGadgetSetEnabled(mv->perchar[i].name,false);
+  small = _ggadget_Default_Box;
+  small.flags = 0;
+  small.border_type = bt_none;
+  small.border_shape = bs_rect;
+  small.border_width = 0;
+  small.padding = 0;
 
-    gd.pos.y += mv->fh+4;
-    gd.handle_controlevent = MV_WidthChanged;
-    mv->perchar[i].width = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
-    mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].width;
+  memset (&gd, '\0', sizeof (gd));
+  memset (&label, '\0', sizeof (label));
+  memset (mv->perchar[i].updownkparray, '\0', sizeof (GGadget *) * 10);
+  label.text = nullstr;
+  label.font = mv->font;
+  mv->perchar[i].mx = gd.pos.x =
+    mv->mbase + (i + 1 - mv->coff) * mv->mwidth + 2;
+  mv->perchar[i].mwidth = gd.pos.width = mv->mwidth - 4;
+  gd.pos.y = mv->displayend + 2;
+  gd.pos.height = mv->fh;
+  gd.label = &label;
+  gd.box = &small;
+  gd.flags = gg_visible | gg_pos_in_pixels | gg_dontcopybox;
+  if (mv->bdf == NULL)
+    gd.flags |= gg_enabled;
+  mv->perchar[i].name = GLabelCreate (mv->gw, &gd, (void *) (intptr_t) i);
+  if (mv->perchar[i].selected)
+    GGadgetSetEnabled (mv->perchar[i].name, false);
 
-    gd.pos.y += mv->fh+4;
-    gd.handle_controlevent = MV_LBearingChanged;
-    mv->perchar[i].lbearing = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
-    mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].lbearing;
+  gd.pos.y += mv->fh + 4;
+  gd.handle_controlevent = MV_WidthChanged;
+  mv->perchar[i].width = GTextFieldCreate (mv->gw, &gd, (void *) (intptr_t) i);
+  mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].width;
 
-    gd.pos.y += mv->fh+4;
-    gd.handle_controlevent = MV_RBearingChanged;
-    mv->perchar[i].rbearing = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
-    mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].rbearing;
+  gd.pos.y += mv->fh + 4;
+  gd.handle_controlevent = MV_LBearingChanged;
+  mv->perchar[i].lbearing =
+    GTextFieldCreate (mv->gw, &gd, (void *) (intptr_t) i);
+  mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].lbearing;
 
-    if ( i!=0 ) {
-	gd.pos.y += mv->fh+4;
-	gd.pos.x -= mv->mwidth/2;
-	gd.handle_controlevent = MV_KernChanged;
-	mv->perchar[i].kern = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
-	if( i==1 ) {
-	    mv->perchar[i-1].updownkparray[udaidx] = mv->perchar[i].kern;
-	}
-	mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].kern;
-	
-	if ( i>=mv->glyphcnt ) {
-	    for ( j=mv->glyphcnt+1; j<=i ; ++ j )
-		mv->perchar[j].dx = mv->perchar[j-1].dx;
-	    mv->glyphcnt = i+1;
-	}
+  gd.pos.y += mv->fh + 4;
+  gd.handle_controlevent = MV_RBearingChanged;
+  mv->perchar[i].rbearing =
+    GTextFieldCreate (mv->gw, &gd, (void *) (intptr_t) i);
+  mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].rbearing;
+
+  if (i != 0)
+    {
+      gd.pos.y += mv->fh + 4;
+      gd.pos.x -= mv->mwidth / 2;
+      gd.handle_controlevent = MV_KernChanged;
+      mv->perchar[i].kern =
+        GTextFieldCreate (mv->gw, &gd, (void *) (intptr_t) i);
+      if (i == 1)
+        {
+          mv->perchar[i - 1].updownkparray[udaidx] = mv->perchar[i].kern;
+        }
+      mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].kern;
+
+      if (i >= mv->glyphcnt)
+        {
+          for (j = mv->glyphcnt + 1; j <= i; ++j)
+            mv->perchar[j].dx = mv->perchar[j - 1].dx;
+          mv->glyphcnt = i + 1;
+        }
     }
 
-    GWidgetIndicateFocusGadget(mv->text);
+  GWidgetIndicateFocusGadget (mv->text);
 }
 
-static void MVSetSb(MetricsView *mv);
-static int MVSetVSb(MetricsView *mv);
+static void MVSetSb (MetricsView *mv);
+static int MVSetVSb (MetricsView *mv);
 
-static void MVRemetric(MetricsView *mv) {
-    SplineChar *anysc, *goodsc;
-    int i, cnt, x, y, goodpos;
-    const uint32_t *_script = _GGadgetGetTitle(mv->script);
-    uint32_t script, lang, *feats;
-    char buf[20];
-    int32_t len;
-    GTextInfo **ti;
-    SplineChar *sc;
-    BDFChar *bdfc;
-    double iscale = mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
-    double scale = iscale*mv->pixelsize/(double) (mv->sf->ascent+mv->sf->descent);
-    SplineFont *sf;
+static void
+MVRemetric (MetricsView *mv)
+{
+  SplineChar *anysc, *goodsc;
+  int i, cnt, x, y, goodpos;
+  const uint32_t *_script = _GGadgetGetTitle (mv->script);
+  uint32_t script, lang, *feats;
+  char buf[20];
+  int32_t len;
+  GTextInfo **ti;
+  SplineChar *sc;
+  BDFChar *bdfc;
+  double iscale =
+    mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
+  double scale =
+    iscale * mv->pixelsize / (double) (mv->sf->ascent + mv->sf->descent);
+  SplineFont *sf;
 
-    anysc = goodsc = NULL; goodpos = -1;
-    for ( i=0; mv->chars[i] && i<mv->clen; ++i ) {
-	if ( anysc==NULL ) anysc = mv->chars[i];
-	if ( SCScriptFromUnicode(mv->chars[i])!=DEFAULT_SCRIPT ) {
-	    goodsc = mv->chars[i];
-	    goodpos = i;
-    break;
-	}
+  anysc = goodsc = NULL;
+  goodpos = -1;
+  for (i = 0; mv->chars[i] && i < mv->clen; ++i)
+    {
+      if (anysc == NULL)
+        anysc = mv->chars[i];
+      if (SCScriptFromUnicode (mv->chars[i]) != DEFAULT_SCRIPT)
+        {
+          goodsc = mv->chars[i];
+          goodpos = i;
+          break;
+        }
     }
-    if ( _script[0]=='D' && _script[1]=='F' && _script[2]=='L' && _script[3]=='T' ) {
-	if ( goodsc!=NULL ) {
-	    /* Set the script */ /* Remember if we get here the script is DFLT */
-	    script = SCScriptFromUnicode(goodsc);
-	    buf[0] = script>>24; buf[1] = script>>16; buf[2] = script>>8; buf[3] = script;
-	    strcpy(buf+4,"{dflt}");
-	    GGadgetSetTitle8(mv->script,buf);
-	    MVSelectSubtableForScript(mv,script);
-	    MVSetFeatures(mv);
-	}
-    } else {
-	if ( anysc==NULL ) {
-	    /* If we get here the script is not DFLT */
-	    GGadgetSetTitle8(mv->script,"DFLT{dflt}");
-	    MVSetFeatures(mv);
-	}
+  if (_script[0] == 'D' && _script[1] == 'F' && _script[2] == 'L'
+      && _script[3] == 'T')
+    {
+      if (goodsc != NULL)
+        {
+          /* Set the script *//* Remember if we get here the script is DFLT */
+          script = SCScriptFromUnicode (goodsc);
+          buf[0] = script >> 24;
+          buf[1] = script >> 16;
+          buf[2] = script >> 8;
+          buf[3] = script;
+          strcpy (buf + 4, "{dflt}");
+          GGadgetSetTitle8 (mv->script, buf);
+          MVSelectSubtableForScript (mv, script);
+          MVSetFeatures (mv);
+        }
     }
-    _script = _GGadgetGetTitle(mv->script);
-    script = DEFAULT_SCRIPT; lang = DEFAULT_LANG;
-    if ( u32_strlen(_script)>=4 && (u32_strchr(_script,'{')==NULL || u32_strchr(_script,'{')-_script>=4)) {
-	uint32_t *pt;
-	script = (_script[0]<<24) | (_script[1]<<16) | (_script[2]<<8) | _script[3];
-	if ( (pt = u32_strchr(_script,'{'))!=NULL && u32_strlen(pt+1)>=4 &&
-		(u32_strchr(pt+1,'}')==NULL || u32_strchr(pt+1,'}')-(pt+1)>=4 ))
-	    lang = (pt[1]<<24) | (pt[2]<<16) | (pt[3]<<8) | pt[4];
+  else
+    {
+      if (anysc == NULL)
+        {
+          /* If we get here the script is not DFLT */
+          GGadgetSetTitle8 (mv->script, "DFLT{dflt}");
+          MVSetFeatures (mv);
+        }
+    }
+  _script = _GGadgetGetTitle (mv->script);
+  script = DEFAULT_SCRIPT;
+  lang = DEFAULT_LANG;
+  if (u32_strlen (_script) >= 4
+      && (u32_strchr (_script, '{') == NULL
+          || u32_strchr (_script, '{') - _script >= 4))
+    {
+      uint32_t *pt;
+      script =
+        (_script[0] << 24) | (_script[1] << 16) | (_script[2] << 8) |
+        _script[3];
+      if ((pt = u32_strchr (_script, '{')) != NULL && u32_strlen (pt + 1) >= 4
+          && (u32_strchr (pt + 1, '}') == NULL
+              || u32_strchr (pt + 1, '}') - (pt + 1) >= 4))
+        lang = (pt[1] << 24) | (pt[2] << 16) | (pt[3] << 8) | pt[4];
     }
 
-    ti = GGadgetGetList(mv->features,&len);
-    for ( i=cnt=0; i<len; ++i )
-	if ( ti[i]->selected ) ++cnt;
-    feats = xcalloc(cnt+1,sizeof(uint32_t));
-    for ( i=cnt=0; i<len; ++i )
-	if ( ti[i]->selected )
-	    feats[cnt++] = (intptr_t) ti[i]->userdata;
+  ti = GGadgetGetList (mv->features, &len);
+  for (i = cnt = 0; i < len; ++i)
+    if (ti[i]->selected)
+      ++cnt;
+  feats = xcalloc (cnt + 1, sizeof (uint32_t));
+  for (i = cnt = 0; i < len; ++i)
+    if (ti[i]->selected)
+      feats[cnt++] = (intptr_t) ti[i]->userdata;
 
-    free(mv->glyphs);
-    sf = mv->sf;
-    if ( sf->cidmaster ) sf = sf->cidmaster;
-    mv->glyphs = ApplyTickedFeatures(sf,feats,script, lang, mv->pixelsize, mv->chars);
-    free(feats);
-    if ( goodsc!=NULL )
-	mv->right_to_left = SCRightToLeft(goodsc)?1:0;
+  free (mv->glyphs);
+  sf = mv->sf;
+  if (sf->cidmaster)
+    sf = sf->cidmaster;
+  mv->glyphs =
+    ApplyTickedFeatures (sf, feats, script, lang, mv->pixelsize, mv->chars);
+  free (feats);
+  if (goodsc != NULL)
+    mv->right_to_left = SCRightToLeft (goodsc) ? 1 : 0;
 
-    for ( cnt=0; mv->glyphs[cnt].sc!=NULL; ++cnt );
-    if ( cnt>=mv->max ) {
-	int oldmax=mv->max;
-	mv->max = cnt+10;
-	mv->perchar = xrealloc(mv->perchar,mv->max*sizeof(struct metricchar));
-	memset(mv->perchar+oldmax,'\0',(mv->max-oldmax)*sizeof(struct metricchar));
+  for (cnt = 0; mv->glyphs[cnt].sc != NULL; ++cnt);
+  if (cnt >= mv->max)
+    {
+      int oldmax = mv->max;
+      mv->max = cnt + 10;
+      mv->perchar =
+        xrealloc (mv->perchar, mv->max * sizeof (struct metricchar));
+      memset (mv->perchar + oldmax, '\0',
+              (mv->max - oldmax) * sizeof (struct metricchar));
     }
-    for ( i=cnt; i<mv->glyphcnt; ++i ) {
-	static uint32_t nullstr[] = { 0 };
-	GGadgetSetTitle(mv->perchar[i].name,nullstr);
-	GGadgetSetTitle(mv->perchar[i].width,nullstr);
-	GGadgetSetTitle(mv->perchar[i].lbearing,nullstr);
-	GGadgetSetTitle(mv->perchar[i].rbearing,nullstr);
-	if ( mv->perchar[i].kern!=NULL )
-	    GGadgetSetTitle(mv->perchar[i].kern,nullstr);
+  for (i = cnt; i < mv->glyphcnt; ++i)
+    {
+      static uint32_t nullstr[] = { 0 };
+      GGadgetSetTitle (mv->perchar[i].name, nullstr);
+      GGadgetSetTitle (mv->perchar[i].width, nullstr);
+      GGadgetSetTitle (mv->perchar[i].lbearing, nullstr);
+      GGadgetSetTitle (mv->perchar[i].rbearing, nullstr);
+      if (mv->perchar[i].kern != NULL)
+        GGadgetSetTitle (mv->perchar[i].kern, nullstr);
     }
-    mv->glyphcnt = cnt;
-    for ( i=0; i<cnt; ++i ) {
-	if ( mv->perchar[i].width==NULL ) {
-	    MVCreateFields(mv,i);
-	}
+  mv->glyphcnt = cnt;
+  for (i = 0; i < cnt; ++i)
+    {
+      if (mv->perchar[i].width == NULL)
+        {
+          MVCreateFields (mv, i);
+        }
     }
-    x = 10; y = 10;
-    for ( i=0; i<cnt; ++i ) {
-	MVRefreshValues(mv,i);
-	sc = mv->glyphs[i].sc;
-	bdfc = mv->bdf!=NULL ? mv->bdf->glyphs[sc->orig_pos] : BDFPieceMealCheck(mv->show,sc->orig_pos);
-	mv->perchar[i].dwidth = rint(iscale * bdfc->width);
-	mv->perchar[i].dx = x;
-	mv->perchar[i].xoff = rint(iscale * mv->glyphs[i].vr.xoff);
-	mv->perchar[i].yoff = rint(iscale * mv->glyphs[i].vr.yoff);
-	mv->perchar[i].kernafter = rint(iscale * mv->glyphs[i].vr.h_adv_off);
-	x += mv->perchar[i].dwidth + mv->perchar[i].kernafter;
+  x = 10;
+  y = 10;
+  for (i = 0; i < cnt; ++i)
+    {
+      MVRefreshValues (mv, i);
+      sc = mv->glyphs[i].sc;
+      bdfc =
+        mv->bdf !=
+        NULL ? mv->bdf->glyphs[sc->orig_pos] : BDFPieceMealCheck (mv->show,
+                                                                  sc->orig_pos);
+      mv->perchar[i].dwidth = rint (iscale * bdfc->width);
+      mv->perchar[i].dx = x;
+      mv->perchar[i].xoff = rint (iscale * mv->glyphs[i].vr.xoff);
+      mv->perchar[i].yoff = rint (iscale * mv->glyphs[i].vr.yoff);
+      mv->perchar[i].kernafter = rint (iscale * mv->glyphs[i].vr.h_adv_off);
+      x += mv->perchar[i].dwidth + mv->perchar[i].kernafter;
 
-	mv->perchar[i].dheight = rint(sc->vwidth*scale);
-	mv->perchar[i].dy = y;
-	if ( mv->vertical ) {
-	    mv->perchar[i].kernafter = rint( iscale * mv->glyphs[i].vr.v_adv_off);
-	    y += mv->perchar[i].dheight + mv->perchar[i].kernafter;
-	}
+      mv->perchar[i].dheight = rint (sc->vwidth * scale);
+      mv->perchar[i].dy = y;
+      if (mv->vertical)
+        {
+          mv->perchar[i].kernafter = rint (iscale * mv->glyphs[i].vr.v_adv_off);
+          y += mv->perchar[i].dheight + mv->perchar[i].kernafter;
+        }
     }
-    MVSetVSb(mv);
-    MVSetSb(mv);
+  MVSetVSb (mv);
+  MVSetSb (mv);
 }
 
-void MVReKern(MetricsView *mv) {
-    MVRemetric(mv);
-    GDrawRequestExpose(mv->v,NULL,false);
+void
+MVReKern (MetricsView *mv)
+{
+  MVRemetric (mv);
+  GDrawRequestExpose (mv->v, NULL, false);
 }
 
-void MVRegenChar(MetricsView *mv, SplineChar *sc) {
-    int i;
+void
+MVRegenChar (MetricsView *mv, SplineChar *sc)
+{
+  int i;
 
-    if ( mv->bdf==NULL && sc->orig_pos<mv->show->glyphcnt ) {
-	BDFCharFree(mv->show->glyphs[sc->orig_pos]);
-	mv->show->glyphs[sc->orig_pos] = NULL;
+  if (mv->bdf == NULL && sc->orig_pos < mv->show->glyphcnt)
+    {
+      BDFCharFree (mv->show->glyphs[sc->orig_pos]);
+      mv->show->glyphs[sc->orig_pos] = NULL;
     }
-    for ( i=0; i<mv->glyphcnt; ++i ) {
-	if ( mv->glyphs[i].sc == sc )
-    break;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    {
+      if (mv->glyphs[i].sc == sc)
+        break;
     }
-    if ( i>=mv->glyphcnt )
-return;		/* Not displayed */
-    MVRemetric(mv);
-    GDrawRequestExpose(mv->v,NULL,false);
+  if (i >= mv->glyphcnt)
+    return;                     /* Not displayed */
+  MVRemetric (mv);
+  GDrawRequestExpose (mv->v, NULL, false);
 }
 
-static void MVChangeDisplayFont(MetricsView *mv, BDFFont *bdf) {
-    int i;
+static void
+MVChangeDisplayFont (MetricsView *mv, BDFFont *bdf)
+{
+  int i;
 
-    if ( mv->bdf==bdf )
-return;
-    if ( (mv->bdf==NULL) != (bdf==NULL) ) {
-	for ( i=0; i<mv->max; ++i ) if ( mv->perchar[i].width!=NULL ) {
-	    GGadgetSetEnabled(mv->perchar[i].width,bdf==NULL);
-	    GGadgetSetEnabled(mv->perchar[i].lbearing,bdf==NULL);
-	    GGadgetSetEnabled(mv->perchar[i].rbearing,bdf==NULL);
-	    if ( i!=0 )
-		GGadgetSetEnabled(mv->perchar[i].kern,bdf==NULL);
-	}
+  if (mv->bdf == bdf)
+    return;
+  if ((mv->bdf == NULL) != (bdf == NULL))
+    {
+      for (i = 0; i < mv->max; ++i)
+        if (mv->perchar[i].width != NULL)
+          {
+            GGadgetSetEnabled (mv->perchar[i].width, bdf == NULL);
+            GGadgetSetEnabled (mv->perchar[i].lbearing, bdf == NULL);
+            GGadgetSetEnabled (mv->perchar[i].rbearing, bdf == NULL);
+            if (i != 0)
+              GGadgetSetEnabled (mv->perchar[i].kern, bdf == NULL);
+          }
     }
-    if ( mv->bdf==NULL ) {
-	BDFFontFree(mv->show);
-	mv->show = NULL;
-    } else if ( bdf==NULL ) {
-	BDFFontFree(mv->show);
-	mv->show = SplineFontPieceMeal(mv->sf,mv->layer,mv->ptsize,mv->dpi,
-		mv->antialias?(pf_antialias|pf_ft_recontext):pf_ft_recontext,NULL);
+  if (mv->bdf == NULL)
+    {
+      BDFFontFree (mv->show);
+      mv->show = NULL;
     }
-    mv->bdf = bdf;
-    MVRemetric(mv);
+  else if (bdf == NULL)
+    {
+      BDFFontFree (mv->show);
+      mv->show = SplineFontPieceMeal (mv->sf, mv->layer, mv->ptsize, mv->dpi,
+                                      mv->antialias ? (pf_antialias |
+                                                       pf_ft_recontext) :
+                                      pf_ft_recontext, NULL);
+    }
+  mv->bdf = bdf;
+  MVRemetric (mv);
 }
 
-static int isValidInt(uint32_t *end) {
-    if ( *end && !(*end=='-' && end[1]=='\0'))
-	return 0;
-    return 1;
+static int
+isValidInt (uint32_t *end)
+{
+  if (*end && !(*end == '-' && end[1] == '\0'))
+    return 0;
+  return 1;
 }
 
 
-static int MV_WidthChanged(GGadget *g, GEvent *e) {
-    MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intptr_t) GGadgetGetUserData(g);
-    int i;
+static int
+MV_WidthChanged (GGadget *g, GEvent *e)
+{
+  MetricsView *mv = GDrawGetUserData (GGadgetGetWindow (g));
+  int which = (intptr_t) GGadgetGetUserData (g);
+  int i;
 
-    if ( e->type!=et_controlevent )
-return( true );
-    if ( which>=mv->glyphcnt )
-return( true );
-    if ( e->u.control.subtype == et_textchanged ) {
-	uint32_t *end;
-	int val = u32_strtol(_GGadgetGetTitle(g),&end,10);
-	SplineChar *sc = mv->glyphs[which].sc;
-	if (!isValidInt(end))
-	    GDrawBeep(NULL);
-	else if ( !mv->vertical && val!=sc->width ) {
-	    SCPreserveWidth(sc);
-	    SCSynchronizeWidth(sc,val,sc->width,NULL);
-	    SCCharChangedUpdate(sc,ly_none);
-	} else if ( mv->vertical && val!=sc->vwidth ) {
-	    SCPreserveVWidth(sc);
-	    sc->vwidth = val;
-	    SCCharChangedUpdate(sc,ly_none);
-	}
-    } else if ( e->u.control.subtype == et_textfocuschanged &&
-	    e->u.control.u.tf_focus.gained_focus ) {
-	for ( i=0 ; i<mv->glyphcnt; ++i )
-	    if ( i!=which && mv->perchar[i].selected )
-		MVDeselectChar(mv,i);
-	MVSelectChar(mv,which);
+  if (e->type != et_controlevent)
+    return (true);
+  if (which >= mv->glyphcnt)
+    return (true);
+  if (e->u.control.subtype == et_textchanged)
+    {
+      uint32_t *end;
+      int val = u32_strtol (_GGadgetGetTitle (g), &end, 10);
+      SplineChar *sc = mv->glyphs[which].sc;
+      if (!isValidInt (end))
+        GDrawBeep (NULL);
+      else if (!mv->vertical && val != sc->width)
+        {
+          SCPreserveWidth (sc);
+          SCSynchronizeWidth (sc, val, sc->width, NULL);
+          SCCharChangedUpdate (sc, ly_none);
+        }
+      else if (mv->vertical && val != sc->vwidth)
+        {
+          SCPreserveVWidth (sc);
+          sc->vwidth = val;
+          SCCharChangedUpdate (sc, ly_none);
+        }
     }
-return( true );
-}
-
-static int MV_LBearingChanged(GGadget *g, GEvent *e) {
-    MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intptr_t) GGadgetGetUserData(g);
-    int i;
-
-    if ( e->type!=et_controlevent )
-return( true );
-    if ( which>=mv->glyphcnt )
-return( true );
-    if ( e->u.control.subtype == et_textchanged ) {
-	uint32_t *end;
-	double val = u32_strtod(_GGadgetGetTitle(g),&end);
-	SplineChar *sc = mv->glyphs[which].sc;
-	DBounds bb;
-	SplineCharFindBounds(sc,&bb);
-	if (!isValidInt(end))
-	    GDrawBeep(NULL);
-	else if ( !mv->vertical && val!=bb.minx ) {
-	    
-	    real transform[6];
-	    transform[0] = transform[3] = 1.0;
-	    transform[1] = transform[2] = transform[5] = 0;
-	    transform[4] = val-bb.minx;
-	    FVTrans( (FontViewBase *)mv->fv,sc,transform,NULL,fvt_dontmovewidth);
-	} else if ( mv->vertical && val!=sc->parent->ascent-bb.maxy ) {
-	    real transform[6];
-	    transform[0] = transform[3] = 1.0;
-	    transform[1] = transform[2] = transform[4] = 0;
-	    transform[5] = sc->parent->ascent-bb.maxy-val;
-	    FVTrans( (FontViewBase *)mv->fv,sc,transform,NULL,fvt_dontmovewidth);
-	}
-    } else if ( e->u.control.subtype == et_textfocuschanged &&
-	    e->u.control.u.tf_focus.gained_focus ) {
-	for ( i=0 ; i<mv->glyphcnt; ++i )
-	    if ( i!=which && mv->perchar[i].selected )
-		MVDeselectChar(mv,i);
-	MVSelectChar(mv,which);
+  else if (e->u.control.subtype == et_textfocuschanged &&
+           e->u.control.u.tf_focus.gained_focus)
+    {
+      for (i = 0; i < mv->glyphcnt; ++i)
+        if (i != which && mv->perchar[i].selected)
+          MVDeselectChar (mv, i);
+      MVSelectChar (mv, which);
     }
-return( true );
+  return (true);
 }
 
-static int MV_RBearingChanged(GGadget *g, GEvent *e) {
-    MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intptr_t) GGadgetGetUserData(g);
-    int i;
+static int
+MV_LBearingChanged (GGadget *g, GEvent *e)
+{
+  MetricsView *mv = GDrawGetUserData (GGadgetGetWindow (g));
+  int which = (intptr_t) GGadgetGetUserData (g);
+  int i;
 
-    if ( e->type!=et_controlevent )
-return( true );
-    if ( which>=mv->glyphcnt )
-return( true );
-    if ( e->u.control.subtype == et_textchanged ) {
-	uint32_t *end;
-	int val = u32_strtod(_GGadgetGetTitle(g),&end);
-	SplineChar *sc = mv->glyphs[which].sc;
-	DBounds bb;
-	SplineCharFindBounds(sc,&bb);
-	if (!isValidInt(end))
-	    GDrawBeep(NULL);
-	else if ( !mv->vertical && rint(val+bb.maxx)!=sc->width ) {
-	    int newwidth = rint(bb.maxx+val);
-	    SCPreserveWidth(sc);
-	    /* Width is an integer. Adjust the lbearing so that the rbearing */
-	    /*  remains what was just typed in */
-	    if ( newwidth!=bb.maxx+val ) {
-		real transform[6];
-		transform[0] = transform[3] = 1.0;
-		transform[1] = transform[2] = transform[5] = 0;
-		transform[4] = newwidth-val-bb.maxx;
-		FVTrans( (FontViewBase *)mv->fv,sc,transform,NULL,fvt_dontmovewidth);
-	    }
-	    SCSynchronizeWidth(sc,newwidth,sc->width,NULL);
-	    SCCharChangedUpdate(sc,ly_none);
-	} else if ( mv->vertical && val!=sc->vwidth-(sc->parent->ascent-bb.miny) ) {
-	    double vw = val+(sc->parent->ascent-bb.miny);
-	    SCPreserveWidth(sc);
-	    sc->vwidth = rint(vw);
-	    /* Width is an integer. Adjust the lbearing so that the rbearing */
-	    /*  remains what was just typed in */
-	    if ( sc->width!=vw ) {
-		real transform[6];
-		transform[0] = transform[3] = 1.0;
-		transform[1] = transform[2] = transform[4] = 0;
-		transform[5] = vw-sc->vwidth;
-		FVTrans( (FontViewBase *)mv->fv,sc,transform,NULL,fvt_dontmovewidth);
-	    }
-	    SCCharChangedUpdate(sc,ly_none);
-	}
-    } else if ( e->u.control.subtype == et_textfocuschanged &&
-	    e->u.control.u.tf_focus.gained_focus ) {
-	for ( i=0 ; i<mv->glyphcnt; ++i )
-	    if ( i!=which && mv->perchar[i].selected )
-		MVDeselectChar(mv,i);
-	MVSelectChar(mv,which);
+  if (e->type != et_controlevent)
+    return (true);
+  if (which >= mv->glyphcnt)
+    return (true);
+  if (e->u.control.subtype == et_textchanged)
+    {
+      uint32_t *end;
+      double val = u32_strtod (_GGadgetGetTitle (g), &end);
+      SplineChar *sc = mv->glyphs[which].sc;
+      DBounds bb;
+      SplineCharFindBounds (sc, &bb);
+      if (!isValidInt (end))
+        GDrawBeep (NULL);
+      else if (!mv->vertical && val != bb.minx)
+        {
+
+          real transform[6];
+          transform[0] = transform[3] = 1.0;
+          transform[1] = transform[2] = transform[5] = 0;
+          transform[4] = val - bb.minx;
+          FVTrans ((FontViewBase *) mv->fv, sc, transform, NULL,
+                   fvt_dontmovewidth);
+        }
+      else if (mv->vertical && val != sc->parent->ascent - bb.maxy)
+        {
+          real transform[6];
+          transform[0] = transform[3] = 1.0;
+          transform[1] = transform[2] = transform[4] = 0;
+          transform[5] = sc->parent->ascent - bb.maxy - val;
+          FVTrans ((FontViewBase *) mv->fv, sc, transform, NULL,
+                   fvt_dontmovewidth);
+        }
     }
-return( true );
-}
-
-static int AskNewKernClassEntry(SplineChar *fsc,SplineChar *lsc,int first_is_0,int second_is_0) {
-    char *yesno[3];
-    yesno[0] = _("_Alter Class");
-    yesno[1] = _("_Create Pair");
-    yesno[2] = NULL;
-return( gwwv_ask(_("Use Kerning Class?"),(const char **) yesno,0,1,
-	_("This kerning pair (%.20s and %.20s) is currently part of a kerning class with a 0 offset for this combination. Would you like to alter this kerning class entry (or create a kerning pair for just these two glyphs)?"),
-	first_is_0  ? _("{Everything Else}") : fsc->name,
-	second_is_0 ? _("{Everything Else}") : lsc->name)==0 );
-}
-
-static int MV_ChangeKerning(MetricsView *mv, int which, int offset, int is_diff) {
-    SplineChar *sc = mv->glyphs[which].sc;
-    SplineChar *psc = mv->glyphs[which-1].sc;
-    KernPair *kp;
-    KernClass *kc; int index;
-    int i;
-    struct lookup_subtable *sub = GGadgetGetListItemSelected(mv->subtable_list)->userdata;
-    double iscale = mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
-
-    kp = mv->glyphs[which-1].kp;
-    kc = mv->glyphs[which-1].kc;
-    index = mv->glyphs[which-1].kc_index;
-    if ( kc!=NULL ) {
-	if ( index==-1 )
-	    kc = NULL;
-	else if ( kp != NULL && kp->off != 0 )
-	    kc=NULL;
-	else if ( (!is_diff && offset==kc->offsets[index]) ||
-		  ( is_diff && offset==0))
-return( true );		/* No change, don't bother user */
-	/* If there is already a kerning pair, then assume it takes the precedence over the kerning class */
-	else if ( kc->offsets[index]==0 && !AskNewKernClassEntry(psc,sc,mv->glyphs[which-1].prev_kc0,mv->glyphs[which-1].next_kc0))
-	    kc=NULL;
-	else
-	    offset = kc->offsets[index] = is_diff ? kc->offsets[index]+offset : offset;
+  else if (e->u.control.subtype == et_textfocuschanged &&
+           e->u.control.u.tf_focus.gained_focus)
+    {
+      for (i = 0; i < mv->glyphcnt; ++i)
+        if (i != which && mv->perchar[i].selected)
+          MVDeselectChar (mv, i);
+      MVSelectChar (mv, which);
     }
-    if ( kc==NULL ) {
-	if ( sub!=NULL && sub->kc!=NULL ) {
-	    /* If the subtable we were given contains a kern class, and for some reason */
-	    /*  we can't, or don't want to, use that kern class, then see */
-	    /*  if the lookup contains another subtable with no kern classes */
-	    /*  and use that */
-	    struct lookup_subtable *s;
-	    for ( s = sub->lookup->subtables; s!=NULL && s->kc!=NULL; s=s->next );
-	    sub = s;
-	}
-	if ( sub==NULL ) {
-	    struct subtable_data sd;
-	    memset(&sd,0,sizeof(sd));
-	    sd.flags = (mv->vertical ? sdf_verticalkern : sdf_horizontalkern ) |
-		    sdf_kernpair;
-	    sub = SFNewLookupSubtableOfType(psc->parent,gpos_pair,&sd,mv->layer);
-	    if ( sub==NULL )
-return( false );
-	    mv->cur_subtable = sub;
-	    MVSetSubtables(mv->sf);
-	    MVSetFeatures(mv);
-	}
-
-	/* If we change the kerning offset, then any pixel corrections*/
-	/*  will no longer apply (they only had meaning with the old  */
-	/*  offset) so free the device table, if any */
-	if ( kp != NULL && ((!is_diff && kp->off!=offset) || ( is_diff && offset!=0)) ) {
-	    DeviceTableFree(kp->adjust);
-	    kp->adjust = NULL;
-	}
-
-	offset = is_diff && kp != NULL ? kp->off+offset : offset;
-	/* If kern offset has been set to zero by user, then cleanup this kerning pair */
-	if ( kp != NULL && offset == 0 ) {
-	    KernPair *kpcur, *kpprev;
-	    KernPair **kphead = mv->vertical ? &psc->vkerns : &psc->kerns;
-	    if ( kp == *kphead ) {
-		*kphead = kp->next;
-	    } else {
-		kpprev = *kphead;
-		for ( kpcur=kpprev->next; kpcur != NULL; kpcur = kpcur->next ) {
-		    if ( kpcur == kp ) {
-			kpprev->next = kp->next;
-		break;
-		    }
-		    kpprev = kpcur;
-		}
-	    }
-	    free(kp);
-	    kp = mv->glyphs[which-1].kp = NULL;
-	} else if ( offset != 0 ) {
-	    if ( kp==NULL ) {
-		kp = (KernPair *) xzalloc(sizeof (KernPair));
-		kp->sc = sc;
-		if ( !mv->vertical ) {
-		    kp->next = psc->kerns;
-		    psc->kerns = kp;
-		} else {
-		    kp->next = psc->vkerns;
-		    psc->vkerns = kp;
-		}
-		mv->glyphs[which-1].kp = kp;
-	    }
-	    kp->off = offset;
-	    kp->subtable = sub;
-	    if ( !mv->vertical )
-		MMKern(sc->parent,psc,sc,is_diff?offset:offset-kp->off,sub,kp);
-	}
-    }
-    mv->perchar[which-1].kernafter = iscale * (offset*mv->pixelsize)/
-	    (mv->sf->ascent+mv->sf->descent);
-    if ( mv->vertical ) {
-	for ( i=which; i<mv->glyphcnt; ++i ) {
-	    mv->perchar[i].dy = mv->perchar[i-1].dy+mv->perchar[i-1].dheight +
-		    mv->perchar[i-1].kernafter ;
-	}
-    } else {
-	for ( i=which; i<mv->glyphcnt; ++i ) {
-	    mv->perchar[i].dx = mv->perchar[i-1].dx + mv->perchar[i-1].dwidth +
-		    mv->perchar[i-1].kernafter;
-	}
-    }
-    mv->sf->changed = true;
-    GDrawRequestExpose(mv->v,NULL,false);
-return( true );
+  return (true);
 }
 
-static int MV_KernChanged(GGadget *g, GEvent *e) {
-    MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intptr_t) GGadgetGetUserData(g);
-    int i;
+static int
+MV_RBearingChanged (GGadget *g, GEvent *e)
+{
+  MetricsView *mv = GDrawGetUserData (GGadgetGetWindow (g));
+  int which = (intptr_t) GGadgetGetUserData (g);
+  int i;
 
-    if ( e->type!=et_controlevent )
-return( true );
-    if ( which>mv->glyphcnt-1 || which==0 )
-return( true );
-    if ( e->u.control.subtype == et_textchanged ) {
-	uint32_t *end;
-	int val = u32_strtol(_GGadgetGetTitle(g),&end,10);
-
-	if ( *end && !(*end=='-' && end[1]=='\0'))
-	    GDrawBeep(NULL);
-	else {
-	    MV_ChangeKerning(mv,which,val, false);
-	}
-    } else if ( e->u.control.subtype == et_textfocuschanged &&
-	    e->u.control.u.tf_focus.gained_focus ) {
-	for ( i=0 ; i<mv->glyphcnt; ++i )
-	    if ( i!=which && mv->perchar[i].selected )
-		MVDeselectChar(mv,i);
-	MVSelectChar(mv,which);
+  if (e->type != et_controlevent)
+    return (true);
+  if (which >= mv->glyphcnt)
+    return (true);
+  if (e->u.control.subtype == et_textchanged)
+    {
+      uint32_t *end;
+      int val = u32_strtod (_GGadgetGetTitle (g), &end);
+      SplineChar *sc = mv->glyphs[which].sc;
+      DBounds bb;
+      SplineCharFindBounds (sc, &bb);
+      if (!isValidInt (end))
+        GDrawBeep (NULL);
+      else if (!mv->vertical && rint (val + bb.maxx) != sc->width)
+        {
+          int newwidth = rint (bb.maxx + val);
+          SCPreserveWidth (sc);
+          /* Width is an integer. Adjust the lbearing so that the rbearing */
+          /*  remains what was just typed in */
+          if (newwidth != bb.maxx + val)
+            {
+              real transform[6];
+              transform[0] = transform[3] = 1.0;
+              transform[1] = transform[2] = transform[5] = 0;
+              transform[4] = newwidth - val - bb.maxx;
+              FVTrans ((FontViewBase *) mv->fv, sc, transform, NULL,
+                       fvt_dontmovewidth);
+            }
+          SCSynchronizeWidth (sc, newwidth, sc->width, NULL);
+          SCCharChangedUpdate (sc, ly_none);
+        }
+      else if (mv->vertical
+               && val != sc->vwidth - (sc->parent->ascent - bb.miny))
+        {
+          double vw = val + (sc->parent->ascent - bb.miny);
+          SCPreserveWidth (sc);
+          sc->vwidth = rint (vw);
+          /* Width is an integer. Adjust the lbearing so that the rbearing */
+          /*  remains what was just typed in */
+          if (sc->width != vw)
+            {
+              real transform[6];
+              transform[0] = transform[3] = 1.0;
+              transform[1] = transform[2] = transform[4] = 0;
+              transform[5] = vw - sc->vwidth;
+              FVTrans ((FontViewBase *) mv->fv, sc, transform, NULL,
+                       fvt_dontmovewidth);
+            }
+          SCCharChangedUpdate (sc, ly_none);
+        }
     }
-return( true );
+  else if (e->u.control.subtype == et_textfocuschanged &&
+           e->u.control.u.tf_focus.gained_focus)
+    {
+      for (i = 0; i < mv->glyphcnt; ++i)
+        if (i != which && mv->perchar[i].selected)
+          MVDeselectChar (mv, i);
+      MVSelectChar (mv, which);
+    }
+  return (true);
 }
 
-static void MVToggleVertical(MetricsView *mv) {
-    int size;
+static int
+AskNewKernClassEntry (SplineChar *fsc, SplineChar *lsc, int first_is_0,
+                      int second_is_0)
+{
+  char *yesno[3];
+  yesno[0] = _("_Alter Class");
+  yesno[1] = _("_Create Pair");
+  yesno[2] = NULL;
+  return (gwwv_ask (_("Use Kerning Class?"), (const char **) yesno, 0, 1,
+                    _
+                    ("This kerning pair (%.20s and %.20s) is currently part of a kerning class with a 0 offset for this combination. Would you like to alter this kerning class entry (or create a kerning pair for just these two glyphs)?"),
+                    first_is_0 ? _("{Everything Else}") : fsc->name,
+                    second_is_0 ? _("{Everything Else}") : lsc->name) == 0);
+}
 
-    mv->vertical = !mv->vertical;
+static int
+MV_ChangeKerning (MetricsView *mv, int which, int offset, int is_diff)
+{
+  SplineChar *sc = mv->glyphs[which].sc;
+  SplineChar *psc = mv->glyphs[which - 1].sc;
+  KernPair *kp;
+  KernClass *kc;
+  int index;
+  int i;
+  struct lookup_subtable *sub =
+    GGadgetGetListItemSelected (mv->subtable_list)->userdata;
+  double iscale =
+    mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
 
-    GGadgetSetTitle8( mv->widthlab, mv->vertical ? "Height:" : "Width:" );
-    GGadgetSetTitle8( mv->lbearinglab, mv->vertical ? "TBearing:" : "LBearing:" );
-    GGadgetSetTitle8( mv->rbearinglab, mv->vertical ? "BBearing:" : "RBearing:" );
-    GGadgetSetTitle8( mv->kernlab, mv->vertical ? "VKern:" : "Kern:" );
+  kp = mv->glyphs[which - 1].kp;
+  kc = mv->glyphs[which - 1].kc;
+  index = mv->glyphs[which - 1].kc_index;
+  if (kc != NULL)
+    {
+      if (index == -1)
+        kc = NULL;
+      else if (kp != NULL && kp->off != 0)
+        kc = NULL;
+      else if ((!is_diff && offset == kc->offsets[index]) ||
+               (is_diff && offset == 0))
+        return (true);          /* No change, don't bother user */
+      /* If there is already a kerning pair, then assume it takes the precedence over the kerning class */
+      else if (kc->offsets[index] == 0
+               && !AskNewKernClassEntry (psc, sc,
+                                         mv->glyphs[which - 1].prev_kc0,
+                                         mv->glyphs[which - 1].next_kc0))
+        kc = NULL;
+      else
+        offset = kc->offsets[index] =
+          is_diff ? kc->offsets[index] + offset : offset;
+    }
+  if (kc == NULL)
+    {
+      if (sub != NULL && sub->kc != NULL)
+        {
+          /* If the subtable we were given contains a kern class, and for some reason */
+          /*  we can't, or don't want to, use that kern class, then see */
+          /*  if the lookup contains another subtable with no kern classes */
+          /*  and use that */
+          struct lookup_subtable *s;
+          for (s = sub->lookup->subtables; s != NULL && s->kc != NULL;
+               s = s->next);
+          sub = s;
+        }
+      if (sub == NULL)
+        {
+          struct subtable_data sd;
+          memset (&sd, 0, sizeof (sd));
+          sd.flags = (mv->vertical ? sdf_verticalkern : sdf_horizontalkern) |
+            sdf_kernpair;
+          sub =
+            SFNewLookupSubtableOfType (psc->parent, gpos_pair, &sd, mv->layer);
+          if (sub == NULL)
+            return (false);
+          mv->cur_subtable = sub;
+          MVSetSubtables (mv->sf);
+          MVSetFeatures (mv);
+        }
 
-    if ( mv->vertical )
-	if ( mv->scale_index<4 ) mv->scale_index = 4;
+      /* If we change the kerning offset, then any pixel corrections */
+      /*  will no longer apply (they only had meaning with the old  */
+      /*  offset) so free the device table, if any */
+      if (kp != NULL
+          && ((!is_diff && kp->off != offset) || (is_diff && offset != 0)))
+        {
+          DeviceTableFree (kp->adjust);
+          kp->adjust = NULL;
+        }
 
-    if ( mv->pixelsize_set_by_window ) {
-	size = (mv->displayend - mv->topend - 4);
-	if ( mv->dwidth-20<size )
-	    size = mv->dwidth-20;
-	size *= mv_scales[mv->scale_index];
-	if ( mv->pixelsize != size ) {
-	    mv->pixelsize = size;
-	    mv->dpi = 72;
-	    if ( mv->bdf==NULL ) {
-		BDFFontFree(mv->show);
-		mv->show = SplineFontPieceMeal(mv->sf,mv->layer,mv->pixelsize,72,mv->antialias?(pf_antialias|pf_ft_recontext):pf_ft_recontext,NULL);
-	    }
-	    MVRemetric(mv);
-	}
+      offset = is_diff && kp != NULL ? kp->off + offset : offset;
+      /* If kern offset has been set to zero by user, then cleanup this kerning pair */
+      if (kp != NULL && offset == 0)
+        {
+          KernPair *kpcur, *kpprev;
+          KernPair **kphead = mv->vertical ? &psc->vkerns : &psc->kerns;
+          if (kp == *kphead)
+            {
+              *kphead = kp->next;
+            }
+          else
+            {
+              kpprev = *kphead;
+              for (kpcur = kpprev->next; kpcur != NULL; kpcur = kpcur->next)
+                {
+                  if (kpcur == kp)
+                    {
+                      kpprev->next = kp->next;
+                      break;
+                    }
+                  kpprev = kpcur;
+                }
+            }
+          free (kp);
+          kp = mv->glyphs[which - 1].kp = NULL;
+        }
+      else if (offset != 0)
+        {
+          if (kp == NULL)
+            {
+              kp = (KernPair *) xzalloc (sizeof (KernPair));
+              kp->sc = sc;
+              if (!mv->vertical)
+                {
+                  kp->next = psc->kerns;
+                  psc->kerns = kp;
+                }
+              else
+                {
+                  kp->next = psc->vkerns;
+                  psc->vkerns = kp;
+                }
+              mv->glyphs[which - 1].kp = kp;
+            }
+          kp->off = offset;
+          kp->subtable = sub;
+          if (!mv->vertical)
+            MMKern (sc->parent, psc, sc, is_diff ? offset : offset - kp->off,
+                    sub, kp);
+        }
+    }
+  mv->perchar[which - 1].kernafter = iscale * (offset * mv->pixelsize) /
+    (mv->sf->ascent + mv->sf->descent);
+  if (mv->vertical)
+    {
+      for (i = which; i < mv->glyphcnt; ++i)
+        {
+          mv->perchar[i].dy =
+            mv->perchar[i - 1].dy + mv->perchar[i - 1].dheight + mv->perchar[i -
+                                                                             1].kernafter;
+        }
+    }
+  else
+    {
+      for (i = which; i < mv->glyphcnt; ++i)
+        {
+          mv->perchar[i].dx =
+            mv->perchar[i - 1].dx + mv->perchar[i - 1].dwidth + mv->perchar[i -
+                                                                            1].kernafter;
+        }
+    }
+  mv->sf->changed = true;
+  GDrawRequestExpose (mv->v, NULL, false);
+  return (true);
+}
+
+static int
+MV_KernChanged (GGadget *g, GEvent *e)
+{
+  MetricsView *mv = GDrawGetUserData (GGadgetGetWindow (g));
+  int which = (intptr_t) GGadgetGetUserData (g);
+  int i;
+
+  if (e->type != et_controlevent)
+    return (true);
+  if (which > mv->glyphcnt - 1 || which == 0)
+    return (true);
+  if (e->u.control.subtype == et_textchanged)
+    {
+      uint32_t *end;
+      int val = u32_strtol (_GGadgetGetTitle (g), &end, 10);
+
+      if (*end && !(*end == '-' && end[1] == '\0'))
+        GDrawBeep (NULL);
+      else
+        {
+          MV_ChangeKerning (mv, which, val, false);
+        }
+    }
+  else if (e->u.control.subtype == et_textfocuschanged &&
+           e->u.control.u.tf_focus.gained_focus)
+    {
+      for (i = 0; i < mv->glyphcnt; ++i)
+        if (i != which && mv->perchar[i].selected)
+          MVDeselectChar (mv, i);
+      MVSelectChar (mv, which);
+    }
+  return (true);
+}
+
+static void
+MVToggleVertical (MetricsView *mv)
+{
+  int size;
+
+  mv->vertical = !mv->vertical;
+
+  GGadgetSetTitle8 (mv->widthlab, mv->vertical ? "Height:" : "Width:");
+  GGadgetSetTitle8 (mv->lbearinglab, mv->vertical ? "TBearing:" : "LBearing:");
+  GGadgetSetTitle8 (mv->rbearinglab, mv->vertical ? "BBearing:" : "RBearing:");
+  GGadgetSetTitle8 (mv->kernlab, mv->vertical ? "VKern:" : "Kern:");
+
+  if (mv->vertical)
+    if (mv->scale_index < 4)
+      mv->scale_index = 4;
+
+  if (mv->pixelsize_set_by_window)
+    {
+      size = (mv->displayend - mv->topend - 4);
+      if (mv->dwidth - 20 < size)
+        size = mv->dwidth - 20;
+      size *= mv_scales[mv->scale_index];
+      if (mv->pixelsize != size)
+        {
+          mv->pixelsize = size;
+          mv->dpi = 72;
+          if (mv->bdf == NULL)
+            {
+              BDFFontFree (mv->show);
+              mv->show =
+                SplineFontPieceMeal (mv->sf, mv->layer, mv->pixelsize, 72,
+                                     mv->antialias ? (pf_antialias |
+                                                      pf_ft_recontext) :
+                                     pf_ft_recontext, NULL);
+            }
+          MVRemetric (mv);
+        }
     }
 }
 
-static SplineChar *MVSCFromUnicode(MetricsView *mv, SplineFont *sf, EncMap *map, int ch,BDFFont *bdf) {
-    int i;
-    SplineChar *sc;
+static SplineChar *
+MVSCFromUnicode (MetricsView *mv, SplineFont *sf, EncMap *map, int ch,
+                 BDFFont *bdf)
+{
+  int i;
+  SplineChar *sc;
 
-    if ( mv->fake_unicode_base && ch>=mv->fake_unicode_base &&
-	    ch<=mv->fake_unicode_base+mv->sf->glyphcnt )
-return( mv->sf->glyphs[ch-mv->fake_unicode_base] );
+  if (mv->fake_unicode_base && ch >= mv->fake_unicode_base &&
+      ch <= mv->fake_unicode_base + mv->sf->glyphcnt)
+    return (mv->sf->glyphs[ch - mv->fake_unicode_base]);
 
-    i = SFFindSlot(sf,map,ch,NULL);
-    if ( i==-1 )
-return( NULL );
-    else {
-	sc = SFMakeChar(sf,map,i);
-	if ( bdf!=NULL )
-	    BDFMakeChar(bdf,map,i);
+  i = SFFindSlot (sf, map, ch, NULL);
+  if (i == -1)
+    return (NULL);
+  else
+    {
+      sc = SFMakeChar (sf, map, i);
+      if (bdf != NULL)
+        BDFMakeChar (bdf, map, i);
     }
-return( sc );
+  return (sc);
 }
 
-static void MVMoveFieldsBy(MetricsView *mv,int diff) {
-    int i;
-    int y,x;
+static void
+MVMoveFieldsBy (MetricsView *mv, int diff)
+{
+  int i;
+  int y, x;
 
-    for ( i=0; i<mv->max && mv->perchar[i].width!=NULL; ++i ) {
-	y = mv->displayend+2;
-	x = mv->perchar[i].mx-diff;
-	if ( x<mv->mbase+mv->mwidth ) x = -2*mv->mwidth;
-	GGadgetMove(mv->perchar[i].name,x,y);
-	y += mv->fh+4;
-	GGadgetMove(mv->perchar[i].width,x,y);
-	y += mv->fh+4;
-	GGadgetMove(mv->perchar[i].lbearing,x,y);
-	y += mv->fh+4;
-	GGadgetMove(mv->perchar[i].rbearing,x,y);
-	y += mv->fh+4;
-	if ( i!=0 )
-	    GGadgetMove(mv->perchar[i].kern,x-mv->mwidth/2,y);
+  for (i = 0; i < mv->max && mv->perchar[i].width != NULL; ++i)
+    {
+      y = mv->displayend + 2;
+      x = mv->perchar[i].mx - diff;
+      if (x < mv->mbase + mv->mwidth)
+        x = -2 * mv->mwidth;
+      GGadgetMove (mv->perchar[i].name, x, y);
+      y += mv->fh + 4;
+      GGadgetMove (mv->perchar[i].width, x, y);
+      y += mv->fh + 4;
+      GGadgetMove (mv->perchar[i].lbearing, x, y);
+      y += mv->fh + 4;
+      GGadgetMove (mv->perchar[i].rbearing, x, y);
+      y += mv->fh + 4;
+      if (i != 0)
+        GGadgetMove (mv->perchar[i].kern, x - mv->mwidth / 2, y);
     }
 }
 
-static int MVDisplayedCnt(MetricsView *mv) {
-    int i, wid = mv->mbase;
+static int
+MVDisplayedCnt (MetricsView *mv)
+{
+  int i, wid = mv->mbase;
 
-    for ( i=mv->coff; i<mv->glyphcnt; ++i ) {
-	wid += mv->perchar[i].dwidth;
-	if ( wid>mv->dwidth )
-return( i-mv->coff );
+  for (i = mv->coff; i < mv->glyphcnt; ++i)
+    {
+      wid += mv->perchar[i].dwidth;
+      if (wid > mv->dwidth)
+        return (i - mv->coff);
     }
-return( i-mv->coff );		/* There's extra room. don't know exactly how much but allow for some */
+  return (i - mv->coff);        /* There's extra room. don't know exactly how much but allow for some */
 }
 
-static void MVSetSb(MetricsView *mv) {
-    int cnt = (mv->dwidth-mv->mbase-mv->mwidth)/mv->mwidth;
-    int dcnt = MVDisplayedCnt(mv);
+static void
+MVSetSb (MetricsView *mv)
+{
+  int cnt = (mv->dwidth - mv->mbase - mv->mwidth) / mv->mwidth;
+  int dcnt = MVDisplayedCnt (mv);
 
-    if ( cnt>dcnt ) cnt = dcnt;
-    if ( cnt==0 ) cnt = 1;
+  if (cnt > dcnt)
+    cnt = dcnt;
+  if (cnt == 0)
+    cnt = 1;
 
-    GScrollBarSetBounds(mv->hsb,0,mv->glyphcnt,cnt);
-    GScrollBarSetPos(mv->hsb,mv->coff);
+  GScrollBarSetBounds (mv->hsb, 0, mv->glyphcnt, cnt);
+  GScrollBarSetPos (mv->hsb, mv->coff);
 }
 
-static int MVSetVSb(MetricsView *mv) {
-    int max, min, ret, yoff;
-    int fudge;
+static int
+MVSetVSb (MetricsView *mv)
+{
+  int max, min, ret, yoff;
+  int fudge;
 
-    if ( mv->displayend==0 )
-return(0);		/* Setting the scroll bar is premature */
+  if (mv->displayend == 0)
+    return (0);                 /* Setting the scroll bar is premature */
 
-    if ( mv->vertical ) {
-	min = max = 0;
-	if ( mv->glyphcnt!=0 )
-	    max = mv->perchar[mv->glyphcnt-1].dy + mv->perchar[mv->glyphcnt-1].dheight;
-	fudge = 10;
-    } else {
-	SplineFont *sf = mv->sf;
-	int pixels = mv->pixelsize_set_by_window ? mv->vheight : mv->pixelsize;
-	fudge = pixels/4;
-	min = -(pixels*sf->descent)/(sf->ascent+sf->descent);
-	max = pixels + min;
-	min *= mv_scales[mv->scale_index];
-	max *= mv_scales[mv->scale_index];
+  if (mv->vertical)
+    {
+      min = max = 0;
+      if (mv->glyphcnt != 0)
+        max =
+          mv->perchar[mv->glyphcnt - 1].dy + mv->perchar[mv->glyphcnt -
+                                                         1].dheight;
+      fudge = 10;
     }
-    mv->ybaseline = max;
-    max += fudge*mv_scales[mv->scale_index] + mv->vheight;
-    min -= fudge*mv_scales[mv->scale_index];
-    GScrollBarSetBounds(mv->vsb,min,max,mv->vheight);
-    yoff = mv->yoff;
-    if ( yoff+mv->vheight > max )
-	yoff = max - mv->vheight;
-    if ( yoff<min ) yoff = min;
-    ret = yoff!=mv->yoff;
-    mv->yoff = yoff;
-    GScrollBarSetPos(mv->vsb,yoff);
-return( ret );
+  else
+    {
+      SplineFont *sf = mv->sf;
+      int pixels = mv->pixelsize_set_by_window ? mv->vheight : mv->pixelsize;
+      fudge = pixels / 4;
+      min = -(pixels * sf->descent) / (sf->ascent + sf->descent);
+      max = pixels + min;
+      min *= mv_scales[mv->scale_index];
+      max *= mv_scales[mv->scale_index];
+    }
+  mv->ybaseline = max;
+  max += fudge * mv_scales[mv->scale_index] + mv->vheight;
+  min -= fudge * mv_scales[mv->scale_index];
+  GScrollBarSetBounds (mv->vsb, min, max, mv->vheight);
+  yoff = mv->yoff;
+  if (yoff + mv->vheight > max)
+    yoff = max - mv->vheight;
+  if (yoff < min)
+    yoff = min;
+  ret = yoff != mv->yoff;
+  mv->yoff = yoff;
+  GScrollBarSetPos (mv->vsb, yoff);
+  return (ret);
 }
 
-static void MVHScroll(MetricsView *mv,struct sbevent *sb) {
-    int newpos = mv->coff;
-    int cnt = (mv->dwidth-mv->mbase-mv->mwidth)/mv->mwidth;
-    int dcnt = MVDisplayedCnt(mv);
+static void
+MVHScroll (MetricsView *mv, struct sbevent *sb)
+{
+  int newpos = mv->coff;
+  int cnt = (mv->dwidth - mv->mbase - mv->mwidth) / mv->mwidth;
+  int dcnt = MVDisplayedCnt (mv);
 
-    if ( cnt>dcnt ) cnt = dcnt;
-    if ( cnt==0 ) cnt = 1;
+  if (cnt > dcnt)
+    cnt = dcnt;
+  if (cnt == 0)
+    cnt = 1;
 
-    switch( sb->type ) {
-      case et_sb_top:
-        newpos = 0;
+  switch (sb->type)
+    {
+    case et_sb_top:
+      newpos = 0;
       break;
-      case et_sb_uppage:
-        newpos -= cnt;
+    case et_sb_uppage:
+      newpos -= cnt;
       break;
-      case et_sb_up:
-        --newpos;
+    case et_sb_up:
+      --newpos;
       break;
-      case et_sb_down:
-        ++newpos;
+    case et_sb_down:
+      ++newpos;
       break;
-      case et_sb_downpage:
-        newpos += cnt;
+    case et_sb_downpage:
+      newpos += cnt;
       break;
-      case et_sb_bottom:
-        newpos = mv->glyphcnt-cnt;
+    case et_sb_bottom:
+      newpos = mv->glyphcnt - cnt;
       break;
-      case et_sb_thumb:
-      case et_sb_thumbrelease:
-        newpos = sb->pos;
-      break;
-    }
-    if ( newpos>mv->glyphcnt-cnt )
-        newpos = mv->glyphcnt-cnt;
-    if ( newpos<0 ) newpos =0;
-    if ( newpos!=mv->coff ) {
-	int old = mv->coff;
-	int diff = newpos-mv->coff;
-	int charsize = mv->perchar[newpos].dx-mv->perchar[old].dx;
-	GRect fieldrect, charrect;
-
-	mv->coff = newpos;
-	charrect.x = 0; charrect.width = mv->vwidth;
-	charrect.y = 0; charrect.height = mv->vheight;
-	fieldrect.x = mv->mbase+mv->mwidth; fieldrect.width = mv->width-mv->mbase;
-	fieldrect.y = mv->displayend; fieldrect.height = mv->height-mv->sbh-mv->displayend;
-	GScrollBarSetBounds(mv->hsb,0,mv->glyphcnt,cnt);
-	GScrollBarSetPos(mv->hsb,mv->coff);
-	MVMoveFieldsBy(mv,newpos*mv->mwidth);
-	GDrawScroll(mv->gw,&fieldrect,-diff*mv->mwidth,0);
-	mv->xoff = mv->perchar[newpos].dx-mv->perchar[0].dx;
-	if ( mv->right_to_left ) {
-	    charsize = -charsize;
-	}
-	GDrawScroll(mv->v,&charrect,-charsize,0);
-    }
-}
-
-static void MVVScroll(MetricsView *mv,struct sbevent *sb) {
-    int newpos = mv->yoff;
-    int32_t min, max, page;
-
-    GScrollBarGetBounds(mv->vsb,&min,&max,&page);
-    switch( sb->type ) {
-      case et_sb_top:
-        newpos = 0;
-      break;
-      case et_sb_uppage:
-        newpos -= page;
-      break;
-      case et_sb_up:
-        newpos -= (page)/15;
-      break;
-      case et_sb_down:
-        newpos += (page)/15;
-      break;
-      case et_sb_downpage:
-        newpos += page;
-      break;
-      case et_sb_bottom:
-        newpos = max-page;
-      break;
-      case et_sb_thumb:
-      case et_sb_thumbrelease:
-        newpos = sb->pos;
+    case et_sb_thumb:
+    case et_sb_thumbrelease:
+      newpos = sb->pos;
       break;
     }
-    if ( newpos>max-page )
-        newpos = max-page;
-    if ( newpos<min ) newpos = min;
-    if ( newpos!=mv->yoff ) {
-	int diff = newpos-mv->yoff;
-	GRect charrect;
+  if (newpos > mv->glyphcnt - cnt)
+    newpos = mv->glyphcnt - cnt;
+  if (newpos < 0)
+    newpos = 0;
+  if (newpos != mv->coff)
+    {
+      int old = mv->coff;
+      int diff = newpos - mv->coff;
+      int charsize = mv->perchar[newpos].dx - mv->perchar[old].dx;
+      GRect fieldrect, charrect;
 
-	mv->yoff = newpos;
-	charrect.x = 0; charrect.width = mv->vwidth;
-	charrect.y = 0; charrect.height = mv->vheight;
-	GScrollBarSetPos(mv->vsb,mv->yoff);
-	GDrawScroll(mv->v,&charrect,0,diff);
+      mv->coff = newpos;
+      charrect.x = 0;
+      charrect.width = mv->vwidth;
+      charrect.y = 0;
+      charrect.height = mv->vheight;
+      fieldrect.x = mv->mbase + mv->mwidth;
+      fieldrect.width = mv->width - mv->mbase;
+      fieldrect.y = mv->displayend;
+      fieldrect.height = mv->height - mv->sbh - mv->displayend;
+      GScrollBarSetBounds (mv->hsb, 0, mv->glyphcnt, cnt);
+      GScrollBarSetPos (mv->hsb, mv->coff);
+      MVMoveFieldsBy (mv, newpos * mv->mwidth);
+      GDrawScroll (mv->gw, &fieldrect, -diff * mv->mwidth, 0);
+      mv->xoff = mv->perchar[newpos].dx - mv->perchar[0].dx;
+      if (mv->right_to_left)
+        {
+          charsize = -charsize;
+        }
+      GDrawScroll (mv->v, &charrect, -charsize, 0);
     }
 }
 
-static int MVFakeUnicodeOfSc(MetricsView *mv, SplineChar *sc) {
+static void
+MVVScroll (MetricsView *mv, struct sbevent *sb)
+{
+  int newpos = mv->yoff;
+  int32_t min, max, page;
 
-    if ( sc->unicodeenc!=-1 )
-return( sc->unicodeenc );
+  GScrollBarGetBounds (mv->vsb, &min, &max, &page);
+  switch (sb->type)
+    {
+    case et_sb_top:
+      newpos = 0;
+      break;
+    case et_sb_uppage:
+      newpos -= page;
+      break;
+    case et_sb_up:
+      newpos -= (page) / 15;
+      break;
+    case et_sb_down:
+      newpos += (page) / 15;
+      break;
+    case et_sb_downpage:
+      newpos += page;
+      break;
+    case et_sb_bottom:
+      newpos = max - page;
+      break;
+    case et_sb_thumb:
+    case et_sb_thumbrelease:
+      newpos = sb->pos;
+      break;
+    }
+  if (newpos > max - page)
+    newpos = max - page;
+  if (newpos < min)
+    newpos = min;
+  if (newpos != mv->yoff)
+    {
+      int diff = newpos - mv->yoff;
+      GRect charrect;
 
-    if ( mv->fake_unicode_base==0 ) {		/* Not set */
-	/* If they have nothing in Supplementary Private Use Area-A use it */
-	/* If they have nothing in Supplementary Private Use Area-B use it */
-	/* else just use 0xfffd */
-	int a, al, ah, b, bl, bh;
-	int gid,k,max;
-	SplineChar *test;
-	SplineFont *_sf, *sf;
-	sf = mv->sf;
-	if ( sf->cidmaster ) sf = sf->cidmaster;
-	k=0;
-	a = al = ah = b = bl = bh = 0;
-	max = 0;
-	do {
-	    _sf =  ( sf->subfontcnt==0 ) ? sf : sf->subfonts[k];
-	    for ( gid=0; gid<_sf->glyphcnt; ++gid ) if ( (test=_sf->glyphs[gid])!=NULL ) {
-		if ( test->unicodeenc>=0xf0000 && test->unicodeenc<=0xfffff ) {
-		    a = true;
-		    if ( test->unicodeenc<0xf8000 )
-			al = true;
-		    else
-			ah = true;
-		} else if ( test->unicodeenc>=0x100000 && test->unicodeenc<=0x10ffff ) {
-		    b = true;
-		    if ( test->unicodeenc<0x108000 )
-			bl = true;
-		    else
-			bh = true;
-		}
-	    }
-	    if ( gid>max ) max = gid;
-	    ++k;
-	} while ( k<sf->subfontcnt );
-	if ( !a )		/* Nothing in SPUA-A */
-	    mv->fake_unicode_base = 0xf0000;
-	else if ( !b )
-	    mv->fake_unicode_base = 0x100000;
-	else if ( max<0x8000 ) {
-	    if ( !al )
-		mv->fake_unicode_base = 0xf0000;
-	    else if ( !ah )
-		mv->fake_unicode_base = 0xf8000;
-	    else if ( !bl )
-		mv->fake_unicode_base = 0x100000;
-	    else if ( !bh )
-		mv->fake_unicode_base = 0x108000;
-	}
-	if ( mv->fake_unicode_base==0 )
-	    mv->fake_unicode_base = -1;
+      mv->yoff = newpos;
+      charrect.x = 0;
+      charrect.width = mv->vwidth;
+      charrect.y = 0;
+      charrect.height = mv->vheight;
+      GScrollBarSetPos (mv->vsb, mv->yoff);
+      GDrawScroll (mv->v, &charrect, 0, diff);
+    }
+}
+
+static int
+MVFakeUnicodeOfSc (MetricsView *mv, SplineChar *sc)
+{
+
+  if (sc->unicodeenc != -1)
+    return (sc->unicodeenc);
+
+  if (mv->fake_unicode_base == 0)
+    {                           /* Not set */
+      /* If they have nothing in Supplementary Private Use Area-A use it */
+      /* If they have nothing in Supplementary Private Use Area-B use it */
+      /* else just use 0xfffd */
+      int a, al, ah, b, bl, bh;
+      int gid, k, max;
+      SplineChar *test;
+      SplineFont *_sf, *sf;
+      sf = mv->sf;
+      if (sf->cidmaster)
+        sf = sf->cidmaster;
+      k = 0;
+      a = al = ah = b = bl = bh = 0;
+      max = 0;
+      do
+        {
+          _sf = (sf->subfontcnt == 0) ? sf : sf->subfonts[k];
+          for (gid = 0; gid < _sf->glyphcnt; ++gid)
+            if ((test = _sf->glyphs[gid]) != NULL)
+              {
+                if (test->unicodeenc >= 0xf0000 && test->unicodeenc <= 0xfffff)
+                  {
+                    a = true;
+                    if (test->unicodeenc < 0xf8000)
+                      al = true;
+                    else
+                      ah = true;
+                  }
+                else if (test->unicodeenc >= 0x100000
+                         && test->unicodeenc <= 0x10ffff)
+                  {
+                    b = true;
+                    if (test->unicodeenc < 0x108000)
+                      bl = true;
+                    else
+                      bh = true;
+                  }
+              }
+          if (gid > max)
+            max = gid;
+          ++k;
+        }
+      while (k < sf->subfontcnt);
+      if (!a)                   /* Nothing in SPUA-A */
+        mv->fake_unicode_base = 0xf0000;
+      else if (!b)
+        mv->fake_unicode_base = 0x100000;
+      else if (max < 0x8000)
+        {
+          if (!al)
+            mv->fake_unicode_base = 0xf0000;
+          else if (!ah)
+            mv->fake_unicode_base = 0xf8000;
+          else if (!bl)
+            mv->fake_unicode_base = 0x100000;
+          else if (!bh)
+            mv->fake_unicode_base = 0x108000;
+        }
+      if (mv->fake_unicode_base == 0)
+        mv->fake_unicode_base = -1;
     }
 
-    if ( mv->fake_unicode_base==-1 )
-return( 0xfffd );
+  if (mv->fake_unicode_base == -1)
+    return (0xfffd);
+  else
+    return (mv->fake_unicode_base + sc->orig_pos);
+}
+
+static int
+MVOddMatch (MetricsView *mv, int uni, SplineChar *sc)
+{
+  if (sc->unicodeenc != -1)
+    return (false);
+  else if (mv->fake_unicode_base <= 0)
+    return (uni == 0xfffd);
+  else
+    return (uni >= mv->fake_unicode_base
+            && sc->orig_pos == uni - mv->fake_unicode_base);
+}
+
+void
+MVSetSCs (MetricsView *mv, SplineChar **scs)
+{
+  /* set the list of characters being displayed to those in scs */
+  int len;
+  uint32_t *ustr;
+
+  for (len = 0; scs[len] != NULL; ++len);
+  if (len >= mv->cmax)
+    mv->chars =
+      realloc (mv->chars, (mv->cmax = len + 10) * sizeof (SplineChar *));
+  memcpy (mv->chars, scs, (len + 1) * sizeof (SplineChar *));
+  mv->clen = len;
+
+  ustr = xmalloc ((len + 1) * sizeof (uint32_t));
+  for (len = 0; scs[len] != NULL; ++len)
+    if (scs[len]->unicodeenc > 0)
+      ustr[len] = scs[len]->unicodeenc;
     else
-return( mv->fake_unicode_base+sc->orig_pos );
+      ustr[len] = MVFakeUnicodeOfSc (mv, scs[len]);
+  ustr[len] = 0;
+  GGadgetSetTitle (mv->text, ustr);
+  free (ustr);
+
+  MVRemetric (mv);
+
+  GDrawRequestExpose (mv->v, NULL, false);
 }
 
-static int MVOddMatch(MetricsView *mv,int uni,SplineChar *sc) {
-    if ( sc->unicodeenc!=-1 )
-return( false );
-    else if ( mv->fake_unicode_base<=0 )
-return( uni==0xfffd );
-    else
-return( uni>=mv->fake_unicode_base && sc->orig_pos == uni-mv->fake_unicode_base );
-}
+static void
+MVTextChanged (MetricsView *mv)
+{
+  const uint32_t *ret, *pt, *ept, *tpt;
+  int i, ei, j, start = 0, end = 0;
+  int missing;
+  int direction_change = false;
+  SplineChar **hold = NULL;
 
-void MVSetSCs(MetricsView *mv, SplineChar **scs) {
-    /* set the list of characters being displayed to those in scs */
-    int len;
-    uint32_t *ustr;
-
-    for ( len=0; scs[len]!=NULL; ++len );
-    if ( len>=mv->cmax )
-	mv->chars = realloc(mv->chars,(mv->cmax=len+10)*sizeof(SplineChar *));
-    memcpy(mv->chars,scs,(len+1)*sizeof(SplineChar *));
-    mv->clen = len;
-
-    ustr = xmalloc((len+1)*sizeof(uint32_t));
-    for ( len=0; scs[len]!=NULL; ++len )
-	if ( scs[len]->unicodeenc>0 )
-	    ustr[len] = scs[len]->unicodeenc;
-	else
-	    ustr[len] = MVFakeUnicodeOfSc(mv,scs[len]);
-    ustr[len] = 0;
-    GGadgetSetTitle(mv->text,ustr);
-    free(ustr);
-
-    MVRemetric(mv);
-
-    GDrawRequestExpose(mv->v,NULL,false);
-}
-
-static void MVTextChanged(MetricsView *mv) {
-    const uint32_t *ret, *pt, *ept, *tpt;
-    int i,ei, j, start=0, end=0;
-    int missing;
-    int direction_change = false;
-    SplineChar **hold = NULL;
-
-    ret = _GGadgetGetTitle(mv->text);
-    if (( ret[0]<0x10000 && isrighttoleft(ret[0]) && !mv->right_to_left ) ||
-	    ( ret[0]<0x10000 && !isrighttoleft(ret[0]) && mv->right_to_left )) {
-	direction_change = true;
-	mv->right_to_left = !mv->right_to_left;
+  ret = _GGadgetGetTitle (mv->text);
+  if ((ret[0] < 0x10000 && isrighttoleft (ret[0]) && !mv->right_to_left) ||
+      (ret[0] < 0x10000 && !isrighttoleft (ret[0]) && mv->right_to_left))
+    {
+      direction_change = true;
+      mv->right_to_left = !mv->right_to_left;
     }
-    for ( pt=ret, i=0; i<mv->clen && *pt!='\0'; ++i, ++pt )
-	if ( *pt!=mv->chars[i]->unicodeenc &&
-		!MVOddMatch(mv,*pt,mv->chars[i]))
-    break;
-    if ( i==mv->clen && *pt=='\0' )
-return;					/* Nothing changed */
-    for ( ept=ret+u32_strlen(ret)-1, ei=mv->clen-1; ; --ei, --ept )
-	if ( ei<0 || ept<ret || (*ept!=mv->chars[ei]->unicodeenc &&
-		!MVOddMatch(mv,*ept,mv->chars[ei]))) {
-	    ++ei; ++ept;
-    break;
-	} else if ( ei<i || ept<pt ) {
-	    ++ei; ++ept;
-    break;
-	}
-    if ( ei==i && ept==pt )
-	IError("No change when there should have been one in MV_TextChanged");
-    if ( u32_strlen(ret)>=mv->cmax ) {
-	int oldmax=mv->cmax;
-	mv->cmax = u32_strlen(ret)+10;
-	mv->chars = xrealloc(mv->chars,mv->cmax*sizeof(SplineChar *));
-	memset(mv->chars+oldmax,'\0',(mv->cmax-oldmax)*sizeof(SplineChar *));
+  for (pt = ret, i = 0; i < mv->clen && *pt != '\0'; ++i, ++pt)
+    if (*pt != mv->chars[i]->unicodeenc && !MVOddMatch (mv, *pt, mv->chars[i]))
+      break;
+  if (i == mv->clen && *pt == '\0')
+    return;                     /* Nothing changed */
+  for (ept = ret + u32_strlen (ret) - 1, ei = mv->clen - 1;; --ei, --ept)
+    if (ei < 0 || ept < ret || (*ept != mv->chars[ei]->unicodeenc &&
+                                !MVOddMatch (mv, *ept, mv->chars[ei])))
+      {
+        ++ei;
+        ++ept;
+        break;
+      }
+    else if (ei < i || ept < pt)
+      {
+        ++ei;
+        ++ept;
+        break;
+      }
+  if (ei == i && ept == pt)
+    IError ("No change when there should have been one in MV_TextChanged");
+  if (u32_strlen (ret) >= mv->cmax)
+    {
+      int oldmax = mv->cmax;
+      mv->cmax = u32_strlen (ret) + 10;
+      mv->chars = xrealloc (mv->chars, mv->cmax * sizeof (SplineChar *));
+      memset (mv->chars + oldmax, '\0',
+              (mv->cmax - oldmax) * sizeof (SplineChar *));
     }
 
-    missing = 0;
-    for ( tpt=pt; tpt<ept; ++tpt )
-	if ( mv->fake_unicode_base>0 && *tpt>=mv->fake_unicode_base &&
-		*tpt<=mv->fake_unicode_base+mv->sf->glyphcnt )
-	    /* That's ok */;
-	else if ( SFFindSlot(mv->sf,mv->fv->b.map,*tpt,NULL)==-1 )
-	    ++missing;
+  missing = 0;
+  for (tpt = pt; tpt < ept; ++tpt)
+    if (mv->fake_unicode_base > 0 && *tpt >= mv->fake_unicode_base &&
+        *tpt <= mv->fake_unicode_base + mv->sf->glyphcnt)
+      /* That's ok */ ;
+    else if (SFFindSlot (mv->sf, mv->fv->b.map, *tpt, NULL) == -1)
+      ++missing;
 
-    if ( ept-pt-missing > ei-i ) {
-	if ( i<mv->clen ) {
-	    int diff = (ept-pt-missing) - (ei-i);
-	    hold = xmalloc((mv->clen+diff+6)*sizeof(SplineChar *));
-	    for ( j=mv->clen-1; j>=ei; --j )
-		hold[j+diff] = mv->chars[j];
-	    start = ei+diff; end = mv->clen+diff;
-	}
-    } else if ( ept-pt-missing != ei-i ) {
-	int diff = (ept-pt-missing) - (ei-i);
-	for ( j=ei; j<mv->clen; ++j )
-	    if ( j+diff>=0 )
-		mv->chars[j+diff] = mv->chars[j];
+  if (ept - pt - missing > ei - i)
+    {
+      if (i < mv->clen)
+        {
+          int diff = (ept - pt - missing) - (ei - i);
+          hold = xmalloc ((mv->clen + diff + 6) * sizeof (SplineChar *));
+          for (j = mv->clen - 1; j >= ei; --j)
+            hold[j + diff] = mv->chars[j];
+          start = ei + diff;
+          end = mv->clen + diff;
+        }
     }
-    for ( j=i; pt<ept; ++pt ) {
-	SplineChar *sc;
-	sc = MVSCFromUnicode(mv,mv->sf,mv->fv->b.map,*pt,mv->bdf);
-	if ( sc!=NULL )
-	    mv->chars[j++] = sc;
+  else if (ept - pt - missing != ei - i)
+    {
+      int diff = (ept - pt - missing) - (ei - i);
+      for (j = ei; j < mv->clen; ++j)
+        if (j + diff >= 0)
+          mv->chars[j + diff] = mv->chars[j];
     }
-    if ( hold!=NULL ) {
-	/* We had to figure out what sc's there were before we wrote over them*/
-	/*  but we couldn't put them where they belonged until everything before*/
-	/*  them was set properly */
-	for ( j=start; j<end; ++j )
-	    mv->chars[j] = hold[j];
-	free(hold);
+  for (j = i; pt < ept; ++pt)
+    {
+      SplineChar *sc;
+      sc = MVSCFromUnicode (mv, mv->sf, mv->fv->b.map, *pt, mv->bdf);
+      if (sc != NULL)
+        mv->chars[j++] = sc;
     }
-    mv->clen = u32_strlen(ret)-missing;
-    mv->chars[mv->clen] = NULL;
-    MVRemetric(mv);
-    GDrawRequestExpose(mv->v,NULL,false);
+  if (hold != NULL)
+    {
+      /* We had to figure out what sc's there were before we wrote over them */
+      /*  but we couldn't put them where they belonged until everything before */
+      /*  them was set properly */
+      for (j = start; j < end; ++j)
+        mv->chars[j] = hold[j];
+      free (hold);
+    }
+  mv->clen = u32_strlen (ret) - missing;
+  mv->chars[mv->clen] = NULL;
+  MVRemetric (mv);
+  GDrawRequestExpose (mv->v, NULL, false);
 }
 
 GTextInfo mv_text_init[] = {
-    { (uint32_t *) "", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    GTEXTINFO_LINE,
-    { (uint32_t *) N_("Load Word List..."), NULL, 0, 0, (void *) -1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) N_("Load Glyph Name List..."), NULL, 0, 0, (void *) -2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    GTEXTINFO_EMPTY
+  {(uint32_t *) "", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+  GTEXTINFO_LINE,
+  {(uint32_t *) N_("Load Word List..."), NULL, 0, 0, (void *) -1, NULL, 0, 0, 0,
+   0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) N_("Load Glyph Name List..."), NULL, 0, 0, (void *) -2, NULL, 0,
+   0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  GTEXTINFO_EMPTY
 };
 
-static void MVFigureGlyphNames(MetricsView *mv,const uint32_t *names) {
-    char buffer[400], *pt, *start;
-    SplineChar *founds[40];
-    int i,cnt,ch;
-    uint32_t *newtext;
+static void
+MVFigureGlyphNames (MetricsView *mv, const uint32_t *names)
+{
+  char buffer[400], *pt, *start;
+  SplineChar *founds[40];
+  int i, cnt, ch;
+  uint32_t *newtext;
 
-    u2utf8_strcpy(buffer,names);
-    start = buffer;
-    for ( i=0; *start; ) {
-	while ( *start==' ' ) ++start;
-	if ( *start=='\0' )
-    break;
-	for ( pt=start; *pt && *pt!=' '; ++pt );
-	ch = *pt; *pt = '\0';
-	if ( i>=40 )
-    break;
-	if ( (founds[i]=SFGetChar(mv->sf,-1,start))!=NULL )
-	    ++i;
-	*pt = ch;
-	start = pt;
+  u2utf8_strcpy (buffer, names);
+  start = buffer;
+  for (i = 0; *start;)
+    {
+      while (*start == ' ')
+        ++start;
+      if (*start == '\0')
+        break;
+      for (pt = start; *pt && *pt != ' '; ++pt);
+      ch = *pt;
+      *pt = '\0';
+      if (i >= 40)
+        break;
+      if ((founds[i] = SFGetChar (mv->sf, -1, start)) != NULL)
+        ++i;
+      *pt = ch;
+      start = pt;
     }
-    cnt = i;
+  cnt = i;
 
-    if ( cnt>=mv->cmax ) {
-	mv->cmax = mv->clen+cnt+10;
-	mv->chars = xrealloc(mv->chars,mv->cmax*sizeof(SplineChar *));
+  if (cnt >= mv->cmax)
+    {
+      mv->cmax = mv->clen + cnt + 10;
+      mv->chars = xrealloc (mv->chars, mv->cmax * sizeof (SplineChar *));
     }
-    newtext = xmalloc((cnt+1)*sizeof(uint32_t));
-    for ( i=0; i<cnt; ++i ) {
-	newtext[i] = founds[i]->unicodeenc==-1 ?
-						MVFakeUnicodeOfSc(mv,founds[i]) :
-						founds[i]->unicodeenc;
-	mv->chars[i] = founds[i];
+  newtext = xmalloc ((cnt + 1) * sizeof (uint32_t));
+  for (i = 0; i < cnt; ++i)
+    {
+      newtext[i] = founds[i]->unicodeenc == -1 ?
+        MVFakeUnicodeOfSc (mv, founds[i]) : founds[i]->unicodeenc;
+      mv->chars[i] = founds[i];
     }
-    newtext[i] = 0;
-    mv->chars[i] = NULL;
-    mv->clen = cnt;
-    MVRemetric(mv);
+  newtext[i] = 0;
+  mv->chars[i] = NULL;
+  mv->clen = cnt;
+  MVRemetric (mv);
 
-    GGadgetSetTitle(mv->text,newtext);
-    free(newtext);
+  GGadgetSetTitle (mv->text, newtext);
+  free (newtext);
 
-    GDrawRequestExpose(mv->v,NULL,false);
+  GDrawRequestExpose (mv->v, NULL, false);
 }
 
-static void MVLoadWordList(MetricsView *mv,int type) {
-    GTextInfo **words;
-    int cnt;
-    char buffer[300], *pt;
-    int ch;
-    char *filename, *temp;
-    FILE *file;
+static void
+MVLoadWordList (MetricsView *mv, int type)
+{
+  GTextInfo **words;
+  int cnt;
+  char buffer[300], *pt;
+  int ch;
+  char *filename, *temp;
+  FILE *file;
 
-    filename = gwwv_open_filename(type==-1 ? "File of Kerning Words":"File of glyphname lists",NULL,"*.txt",NULL);
-    if ( filename==NULL ) {
-	GGadgetSetTitle8(mv->text,"");
-return;
+  filename =
+    gwwv_open_filename (type ==
+                        -1 ? "File of Kerning Words" :
+                        "File of glyphname lists", NULL, "*.txt", NULL);
+  if (filename == NULL)
+    {
+      GGadgetSetTitle8 (mv->text, "");
+      return;
     }
-    temp = utf82def_copy(filename);
-    file = fopen( temp,"r" );
-    free(temp);
-    if ( file==NULL ) {
-	ff_post_error("Could not open", "Could not open %s", filename );
-	GGadgetSetTitle8(mv->text,"");
-return;
+  temp = utf82def_copy (filename);
+  file = fopen (temp, "r");
+  free (temp);
+  if (file == NULL)
+    {
+      ff_post_error ("Could not open", "Could not open %s", filename);
+      GGadgetSetTitle8 (mv->text, "");
+      return;
     }
-    free(filename);
+  free (filename);
 
-    words = xmalloc(1002*sizeof(GTextInfo *));
+  words = xmalloc (1002 * sizeof (GTextInfo *));
 
-    cnt = 0;
-    if ( type==-1 ) {
-	ch = getc(file);
-	while ( ch!=EOF ) {
-	    while ( isspace(ch) && ch<0x80 ) ch=getc(file);
-	    for ( pt = buffer; ch!=EOF && !(isspace(ch) && ch<0x80) ; ch=getc(file))
-		if ( pt<buffer+sizeof(buffer)-2)
-		    *pt++=ch;
-	    *pt = '\0';
-	    if ( buffer[0]=='\0' )
-	break;
-	    if ( cnt>1000-3 )
-	break;
-	    words[cnt] = xcalloc(1,sizeof(GTextInfo));
-	    words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	    words[cnt]->text = (uint32_t *) utf82def_copy( buffer );
-	    words[cnt++]->text_is_1byte = true;
-	}
-    } else {
-	strcpy(buffer,"​");		/* Zero width space: 0x200b, I use as a flag */
-	while ( fgets(buffer+3,sizeof(buffer)-3,file)!=NULL ) {
-	    if ( buffer[3]=='\n' || buffer[3]=='#' )
-	continue;
-	    if ( cnt>1000-3 )
-	break;
-	    if ( buffer[strlen(buffer)-1]=='\n' )
-		buffer[strlen(buffer)-1] = '\0';
-	    words[cnt] = xcalloc(1,sizeof(GTextInfo));
-	    words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	    words[cnt]->text = (uint32_t *) xstrdup_or_null( buffer );
-	    words[cnt++]->text_is_1byte = true;
-	}
+  cnt = 0;
+  if (type == -1)
+    {
+      ch = getc (file);
+      while (ch != EOF)
+        {
+          while (isspace (ch) && ch < 0x80)
+            ch = getc (file);
+          for (pt = buffer; ch != EOF && !(isspace (ch) && ch < 0x80);
+               ch = getc (file))
+            if (pt < buffer + sizeof (buffer) - 2)
+              *pt++ = ch;
+          *pt = '\0';
+          if (buffer[0] == '\0')
+            break;
+          if (cnt > 1000 - 3)
+            break;
+          words[cnt] = xcalloc (1, sizeof (GTextInfo));
+          words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
+          words[cnt]->text = (uint32_t *) utf82def_copy (buffer);
+          words[cnt++]->text_is_1byte = true;
+        }
     }
-    fclose(file);
-    if ( cnt!=0 ) {
-	words[cnt] = xcalloc(1,sizeof(GTextInfo));
-	words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	words[cnt++]->line = true;
-	words[cnt] = xcalloc(1,sizeof(GTextInfo));
-	words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	words[cnt]->text = (uint32_t *) xstrdup_or_null( _("Load Word List...") );
-	words[cnt]->text_is_1byte = true;
-	words[cnt++]->userdata = (void *) -1;
-	words[cnt] = xcalloc(1,sizeof(GTextInfo));
-	words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	words[cnt]->text = (uint32_t *) xstrdup_or_null( _("Load Glyph Name List...") );
-	words[cnt]->text_is_1byte = true;
-	words[cnt++]->userdata = (void *) -2;
-	words[cnt] = xcalloc(1,sizeof(GTextInfo));
-	GGadgetSetList(mv->text,words,true);
-	GGadgetSetTitle8(mv->text,(char *) (words[0]->text));
-	if ( type==-2 )
-	    MVFigureGlyphNames(mv,_GGadgetGetTitle(mv->text)+1);
-	GTextInfoArrayFree(words);
-	mv->word_index = 0;
-    } else {
-	GGadgetSetTitle8(mv->text,"");
-	free(words);
+  else
+    {
+      strcpy (buffer, "​");   /* Zero width space: 0x200b, I use as a flag */
+      while (fgets (buffer + 3, sizeof (buffer) - 3, file) != NULL)
+        {
+          if (buffer[3] == '\n' || buffer[3] == '#')
+            continue;
+          if (cnt > 1000 - 3)
+            break;
+          if (buffer[strlen (buffer) - 1] == '\n')
+            buffer[strlen (buffer) - 1] = '\0';
+          words[cnt] = xcalloc (1, sizeof (GTextInfo));
+          words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
+          words[cnt]->text = (uint32_t *) xstrdup_or_null (buffer);
+          words[cnt++]->text_is_1byte = true;
+        }
     }
-}
-
-static int MV_TextChanged(GGadget *g, GEvent *e) {
-
-    if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	MetricsView *mv = GGadgetGetUserData(g);
-	int pos = e->u.control.u.tf_changed.from_pulldown;
-	if ( pos!=-1 ) {
-	    int32_t len;
-	    GTextInfo **ti = GGadgetGetList(g,&len);
-	    GTextInfo *cur = ti[pos];
-	    int type = (intptr_t) cur->userdata;
-	    if ( type < 0 )
-		MVLoadWordList(mv,type);
-	    else if ( cur->text!=NULL ) {
-		mv->word_index = pos;
-		if ( cur->text[0]==0x200b )	/* Zero width space, flag for glyph names */
-		    MVFigureGlyphNames(mv,cur->text+1);
-	    }
-	}
-	MVTextChanged(mv);
+  fclose (file);
+  if (cnt != 0)
+    {
+      words[cnt] = xcalloc (1, sizeof (GTextInfo));
+      words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
+      words[cnt++]->line = true;
+      words[cnt] = xcalloc (1, sizeof (GTextInfo));
+      words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
+      words[cnt]->text = (uint32_t *) xstrdup_or_null (_("Load Word List..."));
+      words[cnt]->text_is_1byte = true;
+      words[cnt++]->userdata = (void *) -1;
+      words[cnt] = xcalloc (1, sizeof (GTextInfo));
+      words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
+      words[cnt]->text =
+        (uint32_t *) xstrdup_or_null (_("Load Glyph Name List..."));
+      words[cnt]->text_is_1byte = true;
+      words[cnt++]->userdata = (void *) -2;
+      words[cnt] = xcalloc (1, sizeof (GTextInfo));
+      GGadgetSetList (mv->text, words, true);
+      GGadgetSetTitle8 (mv->text, (char *) (words[0]->text));
+      if (type == -2)
+        MVFigureGlyphNames (mv, _GGadgetGetTitle (mv->text) + 1);
+      GTextInfoArrayFree (words);
+      mv->word_index = 0;
     }
-return( true );
-}
-
-static int MV_ScriptLangChanged(GGadget *g, GEvent *e) {
-
-    if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	const uint32_t *sstr = _GGadgetGetTitle(g);
-	MetricsView *mv = GGadgetGetUserData(g);
-	if ( e->u.control.u.tf_changed.from_pulldown!=-1 ) {
-	    GGadgetSetTitle8(g,mv->scriptlangs[e->u.control.u.tf_changed.from_pulldown].userdata );
-	    sstr = _GGadgetGetTitle(g);
-	} else {
-	    if ( u32_strlen(sstr)<4 || !isalpha(sstr[0]) || !isalnum(sstr[1]) /*|| !isalnum(sstr[2]) || !isalnum(sstr[3])*/ )
-return( true );
-	    if ( u32_strlen(sstr)==4 )
-		/* No language, we'll use default */;
-	    else if ( u32_strlen(sstr)!=10 || sstr[4]!='{' || sstr[9]!='}' ||
-		    !isalpha(sstr[5]) || !isalpha(sstr[6]) || !isalpha(sstr[7])  )
-return( true );
-	}
-	MVSetFeatures(mv);
-	if ( mv->clen!=0 )/* if there are no chars, remetricking will set the script field to DFLT */
-	    MVRemetric(mv);
-	GDrawRequestExpose(mv->v,NULL,false);
-    }
-return( true );
-}
-
-static int MV_FeaturesChanged(GGadget *g, GEvent *e) {
-
-    if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
-	MetricsView *mv = GGadgetGetUserData(g);
-	MVRemetric(mv);
-	GDrawRequestExpose(mv->v,NULL,false);
-    }
-return( true );
-}
-
-void MV_FriendlyFeatures(GGadget *g, int pos) {
-    int32_t len;
-    GTextInfo **ti = GGadgetGetList(g,&len);
-
-    if ( pos<0 || pos>=len )
-	GGadgetEndPopup();
-    else {
-	const uint32_t *pt = ti[pos]->text;
-	uint32_t tag;
-	int i;
-	tag = (pt[0]<<24) | (pt[1]<<16) | (pt[2]<<8) | pt[3];
-	LookupUIInit();
-	for ( i=0; friendlies[i].friendlyname!=NULL; ++i )
-	    if ( friendlies[i].tag==tag )
-	break;
-	if ( friendlies[i].friendlyname!=NULL )
-	    GGadgetPreparePopup8(GGadgetGetWindow(g),friendlies[i].friendlyname);
+  else
+    {
+      GGadgetSetTitle8 (mv->text, "");
+      free (words);
     }
 }
 
-static int MV_SubtableChanged(GGadget *g, GEvent *e) {
+static int
+MV_TextChanged (GGadget *g, GEvent *e)
+{
 
-    if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
-	MetricsView *mv = GGadgetGetUserData(g);
-	int32_t len;
-	GTextInfo **ti = GGadgetGetList(g,&len);
-	int i;
-	KernPair *kp;
-	struct lookup_subtable *sub;
-	SplineFont *sf = mv->sf;
-
-	if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
-
-	if ( ti[len-1]->selected ) {/* New lookup subtable */
-	    struct subtable_data sd;
-	    memset(&sd,0,sizeof(sd));
-	    sd.flags = (mv->vertical ? sdf_verticalkern : sdf_horizontalkern ) |
-		    sdf_kernpair | sdf_dontedit;
-	    sub = SFNewLookupSubtableOfType(sf,gpos_pair,&sd,mv->layer);
-	    if ( sub==NULL )
-return( true );
-	    mv->cur_subtable = sub;
-	    MVSetSubtables(mv->sf);
-	    MVSetFeatures(mv);		/* Is this needed? */
-	} else if ( ti[len-2]->selected ) {	/* Idiots. They selected the line, can't have that */
-	    MVSetSubtables(mv->sf);
-	    sub = mv->cur_subtable;
-	} else
-	    mv->cur_subtable = GGadgetGetListItemSelected(mv->subtable_list)->userdata;
-
-	for ( i=0; i<mv->glyphcnt; ++i ) {
-	    if ( mv->perchar[i].selected )
-	break;
-	}
-	kp = mv->glyphs[i].kp;
-	if ( kp!=NULL )
-	    kp->subtable = mv->cur_subtable;
+  if (e->type == et_controlevent && e->u.control.subtype == et_textchanged)
+    {
+      MetricsView *mv = GGadgetGetUserData (g);
+      int pos = e->u.control.u.tf_changed.from_pulldown;
+      if (pos != -1)
+        {
+          int32_t len;
+          GTextInfo **ti = GGadgetGetList (g, &len);
+          GTextInfo *cur = ti[pos];
+          int type = (intptr_t) cur->userdata;
+          if (type < 0)
+            MVLoadWordList (mv, type);
+          else if (cur->text != NULL)
+            {
+              mv->word_index = pos;
+              if (cur->text[0] == 0x200b)       /* Zero width space, flag for glyph names */
+                MVFigureGlyphNames (mv, cur->text + 1);
+            }
+        }
+      MVTextChanged (mv);
     }
-return( true );
+  return (true);
+}
+
+static int
+MV_ScriptLangChanged (GGadget *g, GEvent *e)
+{
+
+  if (e->type == et_controlevent && e->u.control.subtype == et_textchanged)
+    {
+      const uint32_t *sstr = _GGadgetGetTitle (g);
+      MetricsView *mv = GGadgetGetUserData (g);
+      if (e->u.control.u.tf_changed.from_pulldown != -1)
+        {
+          GGadgetSetTitle8 (g,
+                            mv->scriptlangs[e->u.control.u.
+                                            tf_changed.from_pulldown].userdata);
+          sstr = _GGadgetGetTitle (g);
+        }
+      else
+        {
+          if (u32_strlen (sstr) < 4 || !isalpha (sstr[0]) || !isalnum (sstr[1])
+              /*|| !isalnum(sstr[2]) || !isalnum(sstr[3]) */ )
+            return (true);
+          if (u32_strlen (sstr) == 4)
+            /* No language, we'll use default */ ;
+          else if (u32_strlen (sstr) != 10 || sstr[4] != '{' || sstr[9] != '}'
+                   || !isalpha (sstr[5]) || !isalpha (sstr[6])
+                   || !isalpha (sstr[7]))
+            return (true);
+        }
+      MVSetFeatures (mv);
+      if (mv->clen != 0)        /* if there are no chars, remetricking will set the script field to DFLT */
+        MVRemetric (mv);
+      GDrawRequestExpose (mv->v, NULL, false);
+    }
+  return (true);
+}
+
+static int
+MV_FeaturesChanged (GGadget *g, GEvent *e)
+{
+
+  if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
+    {
+      MetricsView *mv = GGadgetGetUserData (g);
+      MVRemetric (mv);
+      GDrawRequestExpose (mv->v, NULL, false);
+    }
+  return (true);
+}
+
+void
+MV_FriendlyFeatures (GGadget *g, int pos)
+{
+  int32_t len;
+  GTextInfo **ti = GGadgetGetList (g, &len);
+
+  if (pos < 0 || pos >= len)
+    GGadgetEndPopup ();
+  else
+    {
+      const uint32_t *pt = ti[pos]->text;
+      uint32_t tag;
+      int i;
+      tag = (pt[0] << 24) | (pt[1] << 16) | (pt[2] << 8) | pt[3];
+      LookupUIInit ();
+      for (i = 0; friendlies[i].friendlyname != NULL; ++i)
+        if (friendlies[i].tag == tag)
+          break;
+      if (friendlies[i].friendlyname != NULL)
+        GGadgetPreparePopup8 (GGadgetGetWindow (g), friendlies[i].friendlyname);
+    }
+}
+
+static int
+MV_SubtableChanged (GGadget *g, GEvent *e)
+{
+
+  if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
+    {
+      MetricsView *mv = GGadgetGetUserData (g);
+      int32_t len;
+      GTextInfo **ti = GGadgetGetList (g, &len);
+      int i;
+      KernPair *kp;
+      struct lookup_subtable *sub;
+      SplineFont *sf = mv->sf;
+
+      if (sf->cidmaster != NULL)
+        sf = sf->cidmaster;
+
+      if (ti[len - 1]->selected)
+        {                       /* New lookup subtable */
+          struct subtable_data sd;
+          memset (&sd, 0, sizeof (sd));
+          sd.flags = (mv->vertical ? sdf_verticalkern : sdf_horizontalkern) |
+            sdf_kernpair | sdf_dontedit;
+          sub = SFNewLookupSubtableOfType (sf, gpos_pair, &sd, mv->layer);
+          if (sub == NULL)
+            return (true);
+          mv->cur_subtable = sub;
+          MVSetSubtables (mv->sf);
+          MVSetFeatures (mv);   /* Is this needed? */
+        }
+      else if (ti[len - 2]->selected)
+        {                       /* Idiots. They selected the line, can't have that */
+          MVSetSubtables (mv->sf);
+          sub = mv->cur_subtable;
+        }
+      else
+        mv->cur_subtable =
+          GGadgetGetListItemSelected (mv->subtable_list)->userdata;
+
+      for (i = 0; i < mv->glyphcnt; ++i)
+        {
+          if (mv->perchar[i].selected)
+            break;
+        }
+      kp = mv->glyphs[i].kp;
+      if (kp != NULL)
+        kp->subtable = mv->cur_subtable;
+    }
+  return (true);
 }
 
 #define MID_ZoomIn	2002
@@ -1938,1103 +2402,1375 @@ return( true );
 
 #define MID_Warnings	3000
 
-VISIBLE void MVMenuClose(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    GDrawDestroyWindow(gw);
+VISIBLE void
+MVMenuClose (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  GDrawDestroyWindow (gw);
 }
 
-VISIBLE void MVMenuOpenBitmap(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    EncMap *map;
-    int i;
+VISIBLE void
+MVMenuOpenBitmap (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  EncMap *map;
+  int i;
 
-    if ( mv->sf->bitmaps==NULL )
-return;
-    for ( i=0; i<mv->glyphcnt; ++i )
-        if ( mv->perchar[i].selected )
-    break;
-    map = mv->fv->b.map;
-    if ( i!=mv->glyphcnt )
-        BitmapViewCreatePick(map->backmap[mv->glyphs[i].sc->orig_pos],mv->fv);
+  if (mv->sf->bitmaps == NULL)
+    return;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->perchar[i].selected)
+      break;
+  map = mv->fv->b.map;
+  if (i != mv->glyphcnt)
+    BitmapViewCreatePick (map->backmap[mv->glyphs[i].sc->orig_pos], mv->fv);
 }
 
-VISIBLE void MVMenuMergeKern(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    MergeKernInfo(mv->sf,mv->fv->b.map);
+VISIBLE void
+MVMenuMergeKern (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  MergeKernInfo (mv->sf, mv->fv->b.map);
 }
 
-VISIBLE void MVMenuOpenOutline(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVMenuOpenOutline (GWindow gw, struct gmenuitem *UNUSED (mi),
+                   GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    for ( i=0; i<mv->glyphcnt; ++i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=mv->glyphcnt )
-        CharViewCreate(mv->glyphs[i].sc, mv->fv, -1);
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != mv->glyphcnt)
+    CharViewCreate (mv->glyphs[i].sc, mv->fv, -1);
 }
 
-VISIBLE void MVMenuSave(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _FVMenuSave(mv->fv);
+VISIBLE void
+MVMenuSave (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _FVMenuSave (mv->fv);
 }
 
-VISIBLE void MVMenuSaveAs(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _FVMenuSaveAs(mv->fv);
+VISIBLE void
+MVMenuSaveAs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _FVMenuSaveAs (mv->fv);
 }
 
-VISIBLE void MVMenuGenerate(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _FVMenuGenerate(mv->fv, false);
+VISIBLE void
+MVMenuGenerate (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _FVMenuGenerate (mv->fv, false);
 }
 
-VISIBLE void MVMenuGenerateFamily(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _FVMenuGenerate(mv->fv, gf_macfamily);
+VISIBLE void
+MVMenuGenerateFamily (GWindow gw, struct gmenuitem *UNUSED (mi),
+                      GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _FVMenuGenerate (mv->fv, gf_macfamily);
 }
 
-VISIBLE void MVMenuGenerateTTC(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _FVMenuGenerate(mv->fv, gf_ttc);
+VISIBLE void
+MVMenuGenerateTTC (GWindow gw, struct gmenuitem *UNUSED (mi),
+                   GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _FVMenuGenerate (mv->fv, gf_ttc);
 }
 
-VISIBLE void MVMenuPrint(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    PrintDlg(NULL, NULL, mv);
+VISIBLE void
+MVMenuPrint (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  PrintDlg (NULL, NULL, mv);
 }
 
-VISIBLE void MVUndo(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVUndo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    if ( GGadgetActiveGadgetEditCmd(mv->gw,ec_undo) )
-        /* MVTextChanged(mv) */ ;
-    else {
-        for ( i=mv->glyphcnt-1; i>=0; --i )
-            if ( mv->perchar[i].selected )
-        break;
-        if ( i==-1 )
-return;
-        if ( mv->glyphs[i].sc->layers[mv->layer].undoes!=NULL )
-            SCDoUndo(mv->glyphs[i].sc, mv->layer);
+  if (GGadgetActiveGadgetEditCmd (mv->gw, ec_undo))
+    /* MVTextChanged(mv) */ ;
+  else
+    {
+      for (i = mv->glyphcnt - 1; i >= 0; --i)
+        if (mv->perchar[i].selected)
+          break;
+      if (i == -1)
+        return;
+      if (mv->glyphs[i].sc->layers[mv->layer].undoes != NULL)
+        SCDoUndo (mv->glyphs[i].sc, mv->layer);
     }
 }
 
-VISIBLE void MVRedo(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVRedo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    if ( GGadgetActiveGadgetEditCmd(mv->gw,ec_redo) )
-        /* MVTextChanged(mv) */ ;
-    else {
-        for ( i=mv->glyphcnt-1; i>=0; --i )
-            if ( mv->perchar[i].selected )
-        break;
-        if ( i==-1 )
-return;
-        if ( mv->glyphs[i].sc->layers[mv->layer].redoes!=NULL )
-            SCDoRedo(mv->glyphs[i].sc, mv->layer);
+  if (GGadgetActiveGadgetEditCmd (mv->gw, ec_redo))
+    /* MVTextChanged(mv) */ ;
+  else
+    {
+      for (i = mv->glyphcnt - 1; i >= 0; --i)
+        if (mv->perchar[i].selected)
+          break;
+      if (i == -1)
+        return;
+      if (mv->glyphs[i].sc->layers[mv->layer].redoes != NULL)
+        SCDoRedo (mv->glyphs[i].sc, mv->layer);
     }
 }
 
-VISIBLE void MVClear(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-    SplineChar *sc;
-    BDFFont *bdf;
-    extern int onlycopydisplayed;
+VISIBLE void
+MVClear (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+  SplineChar *sc;
+  BDFFont *bdf;
+  extern int onlycopydisplayed;
 
-    if ( GGadgetActiveGadgetEditCmd(mv->gw, ec_clear) )
-        /* MVTextChanged(mv) */;
-    else {
-        for ( i=mv->glyphcnt-1; i>=0; --i )
-            if ( mv->perchar[i].selected )
-        break;
-        if ( i==-1 )
-return;
-        sc = mv->glyphs[i].sc;
-        if ( sc->dependents!=NULL ) {
-            int yes;
-            char *buts[4];
-            buts[1] = _("_Unlink");
-            buts[0] = _("_Yes");
-            buts[2] = _("_Cancel");
-            buts[3] = NULL;
-            yes = gwwv_ask(_("Bad Reference"), (const char **) buts, 1, 2, _("You are attempting to clear %.30s which is referred to by\nanother character. Are you sure you want to clear it?"), sc->name);
-            if ( yes==2 )
-return;
-            if ( yes==1 )
-                UnlinkThisReference(NULL, sc, mv->layer);
+  if (GGadgetActiveGadgetEditCmd (mv->gw, ec_clear))
+    /* MVTextChanged(mv) */ ;
+  else
+    {
+      for (i = mv->glyphcnt - 1; i >= 0; --i)
+        if (mv->perchar[i].selected)
+          break;
+      if (i == -1)
+        return;
+      sc = mv->glyphs[i].sc;
+      if (sc->dependents != NULL)
+        {
+          int yes;
+          char *buts[4];
+          buts[1] = _("_Unlink");
+          buts[0] = _("_Yes");
+          buts[2] = _("_Cancel");
+          buts[3] = NULL;
+          yes =
+            gwwv_ask (_("Bad Reference"), (const char **) buts, 1, 2,
+                      _
+                      ("You are attempting to clear %.30s which is referred to by\nanother character. Are you sure you want to clear it?"),
+                      sc->name);
+          if (yes == 2)
+            return;
+          if (yes == 1)
+            UnlinkThisReference (NULL, sc, mv->layer);
         }
 
-        if ( onlycopydisplayed && mv->bdf==NULL ) {
-            SCClearAll(sc, mv->layer);
-        } else if ( onlycopydisplayed ) {
-            BCClearAll(mv->bdf->glyphs[sc->orig_pos]);
-        } else {
-            SCClearAll(sc,mv->layer);
-            for ( bdf=mv->sf->bitmaps; bdf!=NULL; bdf = bdf->next )
-                BCClearAll(bdf->glyphs[sc->orig_pos]);
+      if (onlycopydisplayed && mv->bdf == NULL)
+        {
+          SCClearAll (sc, mv->layer);
+        }
+      else if (onlycopydisplayed)
+        {
+          BCClearAll (mv->bdf->glyphs[sc->orig_pos]);
+        }
+      else
+        {
+          SCClearAll (sc, mv->layer);
+          for (bdf = mv->sf->bitmaps; bdf != NULL; bdf = bdf->next)
+            BCClearAll (bdf->glyphs[sc->orig_pos]);
         }
     }
 }
 
-VISIBLE void MVCut(GWindow gw, struct gmenuitem *mi, GEvent *e) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVCut (GWindow gw, struct gmenuitem *mi, GEvent *e)
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    if ( GGadgetActiveGadgetEditCmd(mv->gw, ec_cut) )
-        /* MVTextChanged(mv) */ ;
-    else {
-        for ( i=mv->glyphcnt-1; i>=0; --i )
-            if ( mv->perchar[i].selected )
-        break;
-        if ( i==-1 )
-return;
-        MVCopyChar(&mv->fv->b,mv->bdf,mv->glyphs[i].sc,ct_fullcopy);
-        MVClear(gw, mi, e); /* mi & e are actually not used */
+  if (GGadgetActiveGadgetEditCmd (mv->gw, ec_cut))
+    /* MVTextChanged(mv) */ ;
+  else
+    {
+      for (i = mv->glyphcnt - 1; i >= 0; --i)
+        if (mv->perchar[i].selected)
+          break;
+      if (i == -1)
+        return;
+      MVCopyChar (&mv->fv->b, mv->bdf, mv->glyphs[i].sc, ct_fullcopy);
+      MVClear (gw, mi, e);      /* mi & e are actually not used */
     }
 }
 
-VISIBLE void MVCopy(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVCopy (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    if ( GGadgetActiveGadgetEditCmd(mv->gw, ec_copy) )
-        /* MVTextChanged(mv) */ ;
-    else {
-        for ( i=mv->glyphcnt-1; i>=0; --i )
-            if ( mv->perchar[i].selected )
-        break;
-        if ( i==-1 )
-return;
-        MVCopyChar(&mv->fv->b, mv->bdf, mv->glyphs[i].sc, ct_fullcopy);
+  if (GGadgetActiveGadgetEditCmd (mv->gw, ec_copy))
+    /* MVTextChanged(mv) */ ;
+  else
+    {
+      for (i = mv->glyphcnt - 1; i >= 0; --i)
+        if (mv->perchar[i].selected)
+          break;
+      if (i == -1)
+        return;
+      MVCopyChar (&mv->fv->b, mv->bdf, mv->glyphs[i].sc, ct_fullcopy);
     }
 }
 
-VISIBLE void MVMenuCopyRef(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVMenuCopyRef (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    if ( GWindowGetFocusGadgetOfWindow(gw)!=NULL )
-return;
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i==-1 )
-return;
-    MVCopyChar(&mv->fv->b, mv->bdf, mv->glyphs[i].sc, ct_reference);
-}
-
-VISIBLE void MVMenuCopyWidth(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-
-    if ( GWindowGetFocusGadgetOfWindow(gw)!=NULL )
-return;
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i==-1 )
-return;
-    SCCopyWidth(mv->glyphs[i].sc,
-		   mi->mid==MID_CopyWidth?ut_width:
-		   mi->mid==MID_CopyVWidth?ut_vwidth:
-		   mi->mid==MID_CopyLBearing?ut_lbearing:
-					 ut_rbearing);
-}
-
-VISIBLE void MVMenuJoin(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i, changed;
-    extern float joinsnap;
-
-    if ( GWindowGetFocusGadgetOfWindow(gw)!=NULL )
-return;
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i==-1 )
-return;
-    SCPreserveLayer(mv->glyphs[i].sc, mv->layer, false);
-    mv->glyphs[i].sc->layers[mv->layer].splines =
-        SplineSetJoin(mv->glyphs[i].sc->layers[mv->layer].splines, true, joinsnap, &changed);
-    if ( changed )
-        SCCharChangedUpdate(mv->glyphs[i].sc, mv->layer);
-}
-
-VISIBLE void MVPaste(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-
-    if ( GGadgetActiveGadgetEditCmd(mv->gw, ec_paste) )
-        /*MVTextChanged(mv)*/ ;         /* Should get an event now */
-    else {
-        for ( i=mv->glyphcnt-1; i>=0; --i )
-            if ( mv->perchar[i].selected )
-        break;
-        if ( i==-1 )
-return;
-        PasteIntoMV(&mv->fv->b, mv->bdf, mv->glyphs[i].sc, true);
-    }
-}
-
-VISIBLE void MVUnlinkRef(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-    SplineChar *sc;
-    RefChar *rf, *next;
-
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i==-1 )
-return;
-    sc = mv->glyphs[i].sc;
-    SCPreserveLayer(sc, mv->layer,false);
-    for ( rf=sc->layers[mv->layer].refs; rf!=NULL ; rf=next ) {
-        next = rf->next;
-        SCRefToSplines(sc, rf, mv->layer);
-    }
-    SCCharChangedUpdate(sc, mv->layer);
-}
-
-VISIBLE void MVSelectAll(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    GGadgetActiveGadgetEditCmd(mv->gw, ec_selectall);
-}
-
-VISIBLE void MVClearSelection(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-
-    GWindowClearFocusGadgetOfWindow(mv->gw);
-    for ( i=0; i<mv->glyphcnt; ++i )
-        if ( mv->perchar[i].selected )
-            MVDeselectChar(mv,i);
-}
-
-VISIBLE void MVMenuFontInfo(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    DelayEvent(FontMenuFontInfo, mv->fv);
-}
-
-VISIBLE void MVMenuCharInfo(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 )
-        SCCharInfo(mv->glyphs[i].sc, mv->layer, mv->fv->b.map, -1);
-}
-
-VISIBLE void MVMenuShowDependents(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 )
-return;
-    if ( mv->glyphs[i].sc->dependents==NULL )
-return;
-    SCRefBy(mv->glyphs[i].sc);
-}
-
-VISIBLE void MVMenuFindProblems(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 )
-        FindProblems(mv->fv, NULL, mv->glyphs[i].sc);
-}
-
-VISIBLE void MVMenuBitmaps(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-
-    for ( i=0; i<mv->glyphcnt; ++i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=mv->glyphcnt )
-        BitmapDlg(mv->fv, mv->glyphs[i].sc, mi->mid==MID_AvailBitmaps );
-    else if ( mi->mid==MID_AvailBitmaps )
-        BitmapDlg(mv->fv, NULL, true );
-}
-
-static int getorigin(void *d, BasePoint *base, int index) {
-    SplineChar *sc = (SplineChar *) d;
-    DBounds bb;
-
-    base->x = base->y = 0;
-    switch ( index ) {
-      case 0:		/* Character origin */
-	/* all done */
+  if (GWindowGetFocusGadgetOfWindow (gw) != NULL)
+    return;
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
       break;
-      case 1:		/* Center of selection */
-	SplineCharFindBounds(sc,&bb);
-	base->x = (bb.minx+bb.maxx)/2;
-	base->y = (bb.miny+bb.maxy)/2;
+  if (i == -1)
+    return;
+  MVCopyChar (&mv->fv->b, mv->bdf, mv->glyphs[i].sc, ct_reference);
+}
+
+VISIBLE void
+MVMenuCopyWidth (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  if (GWindowGetFocusGadgetOfWindow (gw) != NULL)
+    return;
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
       break;
-      default:
-return( false );
+  if (i == -1)
+    return;
+  SCCopyWidth (mv->glyphs[i].sc,
+               mi->mid == MID_CopyWidth ? ut_width :
+               mi->mid == MID_CopyVWidth ? ut_vwidth :
+               mi->mid == MID_CopyLBearing ? ut_lbearing : ut_rbearing);
+}
+
+VISIBLE void
+MVMenuJoin (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i, changed;
+  extern float joinsnap;
+
+  if (GWindowGetFocusGadgetOfWindow (gw) != NULL)
+    return;
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i == -1)
+    return;
+  SCPreserveLayer (mv->glyphs[i].sc, mv->layer, false);
+  mv->glyphs[i].sc->layers[mv->layer].splines =
+    SplineSetJoin (mv->glyphs[i].sc->layers[mv->layer].splines, true, joinsnap,
+                   &changed);
+  if (changed)
+    SCCharChangedUpdate (mv->glyphs[i].sc, mv->layer);
+}
+
+VISIBLE void
+MVPaste (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  if (GGadgetActiveGadgetEditCmd (mv->gw, ec_paste))
+    /*MVTextChanged(mv) */ ;
+  /* Should get an event now */
+  else
+    {
+      for (i = mv->glyphcnt - 1; i >= 0; --i)
+        if (mv->perchar[i].selected)
+          break;
+      if (i == -1)
+        return;
+      PasteIntoMV (&mv->fv->b, mv->bdf, mv->glyphs[i].sc, true);
     }
-return( true );
 }
 
-static void MVTransFunc(void *_sc, real transform[6], int UNUSED(otype),
-        BVTFunc *UNUSED(bvts), enum fvtrans_flags flags ) {
-    SplineChar *sc = _sc;
-    FVTrans( (FontViewBase *)sc->parent->fv, sc, transform, NULL, flags);
+VISIBLE void
+MVUnlinkRef (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+  SplineChar *sc;
+  RefChar *rf, *next;
+
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i == -1)
+    return;
+  sc = mv->glyphs[i].sc;
+  SCPreserveLayer (sc, mv->layer, false);
+  for (rf = sc->layers[mv->layer].refs; rf != NULL; rf = next)
+    {
+      next = rf->next;
+      SCRefToSplines (sc, rf, mv->layer);
+    }
+  SCCharChangedUpdate (sc, mv->layer);
 }
 
-VISIBLE void MVMenuTransform(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVSelectAll (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  GGadgetActiveGadgetEditCmd (mv->gw, ec_selectall);
+}
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 )
-        TransformDlgCreate( mv->glyphs[i].sc, MVTransFunc, getorigin, true, cvt_none );
+VISIBLE void
+MVClearSelection (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  GWindowClearFocusGadgetOfWindow (mv->gw);
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->perchar[i].selected)
+      MVDeselectChar (mv, i);
+}
+
+VISIBLE void
+MVMenuFontInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  DelayEvent (FontMenuFontInfo, mv->fv);
+}
+
+VISIBLE void
+MVMenuCharInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    SCCharInfo (mv->glyphs[i].sc, mv->layer, mv->fv->b.map, -1);
+}
+
+VISIBLE void
+MVMenuShowDependents (GWindow gw, struct gmenuitem *UNUSED (mi),
+                      GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    return;
+  if (mv->glyphs[i].sc->dependents == NULL)
+    return;
+  SCRefBy (mv->glyphs[i].sc);
+}
+
+VISIBLE void
+MVMenuFindProblems (GWindow gw, struct gmenuitem *UNUSED (mi),
+                    GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    FindProblems (mv->fv, NULL, mv->glyphs[i].sc);
+}
+
+VISIBLE void
+MVMenuBitmaps (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != mv->glyphcnt)
+    BitmapDlg (mv->fv, mv->glyphs[i].sc, mi->mid == MID_AvailBitmaps);
+  else if (mi->mid == MID_AvailBitmaps)
+    BitmapDlg (mv->fv, NULL, true);
+}
+
+static int
+getorigin (void *d, BasePoint *base, int index)
+{
+  SplineChar *sc = (SplineChar *) d;
+  DBounds bb;
+
+  base->x = base->y = 0;
+  switch (index)
+    {
+    case 0:                    /* Character origin */
+      /* all done */
+      break;
+    case 1:                    /* Center of selection */
+      SplineCharFindBounds (sc, &bb);
+      base->x = (bb.minx + bb.maxx) / 2;
+      base->y = (bb.miny + bb.maxy) / 2;
+      break;
+    default:
+      return (false);
+    }
+  return (true);
+}
+
+static void
+MVTransFunc (void *_sc, real transform[6], int UNUSED (otype),
+             BVTFunc *UNUSED (bvts), enum fvtrans_flags flags)
+{
+  SplineChar *sc = _sc;
+  FVTrans ((FontViewBase *) sc->parent->fv, sc, transform, NULL, flags);
+}
+
+VISIBLE void
+MVMenuTransform (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    TransformDlgCreate (mv->glyphs[i].sc, MVTransFunc, getorigin, true,
+                        cvt_none);
 }
 
 #ifdef FONTFORGE_CONFIG_TILEPATH
-VISIBLE void MVMenuTilePath(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVMenuTilePath (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 )
-        SCTile(mv->glyphs[i].sc, mv->layer);
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    SCTile (mv->glyphs[i].sc, mv->layer);
 }
 #endif
 
-static void _MVMenuOverlap(MetricsView *mv, enum overlap_type ot) {
-    int i;
+static void
+_MVMenuOverlap (MetricsView *mv, enum overlap_type ot)
+{
+  int i;
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 ) {
-	SplineChar *sc = mv->glyphs[i].sc;
-	if ( !SCRoundToCluster(sc, mv->layer, false, 0.03, 0.12))
-	    SCPreserveLayer(sc, mv->layer, false);
-	sc->layers[mv->layer].splines = SplineSetRemoveOverlap(sc, sc->layers[mv->layer].splines, ot);
-	SCCharChangedUpdate(sc, mv->layer);
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    {
+      SplineChar *sc = mv->glyphs[i].sc;
+      if (!SCRoundToCluster (sc, mv->layer, false, 0.03, 0.12))
+        SCPreserveLayer (sc, mv->layer, false);
+      sc->layers[mv->layer].splines =
+        SplineSetRemoveOverlap (sc, sc->layers[mv->layer].splines, ot);
+      SCCharChangedUpdate (sc, mv->layer);
     }
 }
 
-VISIBLE void MVMenuOverlap(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _MVMenuOverlap(mv, mi->mid==MID_RmOverlap ? over_remove :
-		       mi->mid==MID_Intersection ? over_intersect :
-			   over_findinter);
+VISIBLE void
+MVMenuOverlap (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _MVMenuOverlap (mv, mi->mid == MID_RmOverlap ? over_remove :
+                  mi->mid == MID_Intersection ? over_intersect :
+                  over_findinter);
 }
 
-VISIBLE void MVMenuInline(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    OutlineDlg(NULL, NULL, mv, true);
+VISIBLE void
+MVMenuInline (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  OutlineDlg (NULL, NULL, mv, true);
 }
 
-VISIBLE void MVMenuOutline(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    OutlineDlg(NULL, NULL, mv, false);
+VISIBLE void
+MVMenuOutline (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  OutlineDlg (NULL, NULL, mv, false);
 }
 
-VISIBLE void MVMenuShadow(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    ShadowDlg(NULL, NULL, mv, false);
+VISIBLE void
+MVMenuShadow (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  ShadowDlg (NULL, NULL, mv, false);
 }
 
-VISIBLE void MVMenuWireframe(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    ShadowDlg(NULL, NULL, mv, true);
+VISIBLE void
+MVMenuWireframe (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  ShadowDlg (NULL, NULL, mv, true);
 }
 
-static void MVSimplify( MetricsView *mv,int type ) {
-    int i;
-    static struct simplifyinfo smpls[] = {
-	    { sf_normal, 0, 0, 0, 0, 0, 0 },
-	    { sf_normal,.75,.05,0,-1, 0, 0 },
-	    { sf_normal,.75,.05,0,-1, 0, 0 }};
-    struct simplifyinfo *smpl = &smpls[type+1];
+static void
+MVSimplify (MetricsView *mv, int type)
+{
+  int i;
+  static struct simplifyinfo smpls[] = {
+    {sf_normal, 0, 0, 0, 0, 0, 0},
+    {sf_normal, .75, .05, 0, -1, 0, 0},
+    {sf_normal, .75, .05, 0, -1, 0, 0}
+  };
+  struct simplifyinfo *smpl = &smpls[type + 1];
 
-    if ( smpl->linelenmax==-1 ) {
-	smpl->err = (mv->sf->ascent+mv->sf->descent)/1000.;
-	smpl->linelenmax = (mv->sf->ascent+mv->sf->descent)/100.;
+  if (smpl->linelenmax == -1)
+    {
+      smpl->err = (mv->sf->ascent + mv->sf->descent) / 1000.;
+      smpl->linelenmax = (mv->sf->ascent + mv->sf->descent) / 100.;
     }
 
-    if ( type==1 ) {
-	if ( !SimplifyDlg(mv->sf,smpl))
-return;
-	if ( smpl->set_as_default )
-	    smpls[1] = *smpl;
+  if (type == 1)
+    {
+      if (!SimplifyDlg (mv->sf, smpl))
+        return;
+      if (smpl->set_as_default)
+        smpls[1] = *smpl;
     }
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 ) {
-	SplineChar *sc = mv->glyphs[i].sc;
-	SCPreserveLayer(sc,mv->layer,false);
-	sc->layers[mv->layer].splines = SplineCharSimplify(sc,sc->layers[mv->layer].splines,smpl);
-	SCCharChangedUpdate(sc,mv->layer);
-    }
-}
-
-VISIBLE void MVMenuSimplify(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    MVSimplify(mv, false);
-}
-
-VISIBLE void MVMenuSimplifyMore(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    MVSimplify(mv, true);
-}
-
-VISIBLE void MVMenuCleanup(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    MVSimplify(mv, -1);
-}
-
-VISIBLE void MVMenuAddExtrema(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-    SplineFont *sf = mv->sf;
-    int emsize = sf->ascent+sf->descent;
-
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 ) {
-        SplineChar *sc = mv->glyphs[i].sc;
-        SCPreserveLayer(sc, mv->layer, false);
-        SplineCharAddExtrema(sc, sc->layers[mv->layer].splines, ae_only_good, emsize);
-        SCCharChangedUpdate(sc, mv->layer);
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    {
+      SplineChar *sc = mv->glyphs[i].sc;
+      SCPreserveLayer (sc, mv->layer, false);
+      sc->layers[mv->layer].splines =
+        SplineCharSimplify (sc, sc->layers[mv->layer].splines, smpl);
+      SCCharChangedUpdate (sc, mv->layer);
     }
 }
 
-VISIBLE void MVMenuRound2Int(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVMenuSimplify (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  MVSimplify (mv, false);
+}
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 ) {
-        SCPreserveLayer(mv->glyphs[i].sc, mv->layer, false);
-        SCRound2Int( mv->glyphs[i].sc, mv->layer, 1.0);
+VISIBLE void
+MVMenuSimplifyMore (GWindow gw, struct gmenuitem *UNUSED (mi),
+                    GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  MVSimplify (mv, true);
+}
+
+VISIBLE void
+MVMenuCleanup (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  MVSimplify (mv, -1);
+}
+
+VISIBLE void
+MVMenuAddExtrema (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+  SplineFont *sf = mv->sf;
+  int emsize = sf->ascent + sf->descent;
+
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    {
+      SplineChar *sc = mv->glyphs[i].sc;
+      SCPreserveLayer (sc, mv->layer, false);
+      SplineCharAddExtrema (sc, sc->layers[mv->layer].splines, ae_only_good,
+                            emsize);
+      SCCharChangedUpdate (sc, mv->layer);
     }
 }
 
-VISIBLE void MVMenuAutotrace(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *e) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-    GCursor ct;
+VISIBLE void
+MVMenuRound2Int (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 ) {
-        ct = GDrawGetCursor(mv->gw);
-        GDrawSetCursor(mv->gw, ct_watch);
-        ff_progress_allow_events();
-        SCAutoTrace(mv->glyphs[i].sc, mv->layer, e!=NULL && (e->u.mouse.state&ksm_shift));
-        GDrawSetCursor(mv->gw, ct);
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    {
+      SCPreserveLayer (mv->glyphs[i].sc, mv->layer, false);
+      SCRound2Int (mv->glyphs[i].sc, mv->layer, 1.0);
     }
 }
 
-VISIBLE void MVMenuCorrectDir(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVMenuAutotrace (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+  GCursor ct;
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 ) {
-	SplineChar *sc = mv->glyphs[i].sc;
-	int changed = false, refchanged=false;
-	RefChar *ref;
-	int asked=-1;
-
-	for ( ref=sc->layers[mv->layer].refs; ref!=NULL; ref=ref->next ) {
-	    if ( ref->transform[0]*ref->transform[3]<0 ||
-		    (ref->transform[0]==0 && ref->transform[1]*ref->transform[2]>0)) {
-		if ( asked==-1 ) {
-		    char *buts[4];
-		    buts[0] = _("_Unlink");
-		    buts[1] = _("_No");
-		    buts[2] = _("_Cancel");
-		    buts[3] = NULL;
-		    asked = gwwv_ask(_("Flipped Reference"),(const char **) buts,0,2,_("%.50s contains a flipped reference. This cannot be corrected as is. Would you like me to unlink it and then correct it?"), sc->name );
-		    if ( asked==2 )
-return;
-		    else if ( asked==1 )
-	break;
-		}
-		if ( asked==0 ) {
-		    if ( !refchanged ) {
-			refchanged = true;
-			SCPreserveLayer(sc,mv->layer,false);
-		    }
-		    SCRefToSplines(sc,ref,mv->layer);
-		}
-	    }
-	}
-
-	if ( !refchanged )
-	    SCPreserveLayer(sc,mv->layer,false);
-	sc->layers[mv->layer].splines = SplineSetsCorrect(sc->layers[mv->layer].splines,&changed);
-	if ( changed || refchanged )
-	    SCCharChangedUpdate(sc,mv->layer);
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    {
+      ct = GDrawGetCursor (mv->gw);
+      GDrawSetCursor (mv->gw, ct_watch);
+      ff_progress_allow_events ();
+      SCAutoTrace (mv->glyphs[i].sc, mv->layer, e != NULL
+                   && (e->u.mouse.state & ksm_shift));
+      GDrawSetCursor (mv->gw, ct);
     }
 }
 
-static void _MVMenuBuildAccent(MetricsView *mv,int onlyaccents) {
-    int i;
-    extern int onlycopydisplayed;
+VISIBLE void
+MVMenuCorrectDir (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i!=-1 ) {
-	SplineChar *sc = mv->glyphs[i].sc;
-	if ( SFIsSomethingBuildable(mv->sf,sc,mv->layer,onlyaccents) )
-	    SCBuildComposit(mv->sf,sc,mv->layer,NULL,onlycopydisplayed);
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    {
+      SplineChar *sc = mv->glyphs[i].sc;
+      int changed = false, refchanged = false;
+      RefChar *ref;
+      int asked = -1;
+
+      for (ref = sc->layers[mv->layer].refs; ref != NULL; ref = ref->next)
+        {
+          if (ref->transform[0] * ref->transform[3] < 0 ||
+              (ref->transform[0] == 0
+               && ref->transform[1] * ref->transform[2] > 0))
+            {
+              if (asked == -1)
+                {
+                  char *buts[4];
+                  buts[0] = _("_Unlink");
+                  buts[1] = _("_No");
+                  buts[2] = _("_Cancel");
+                  buts[3] = NULL;
+                  asked =
+                    gwwv_ask (_("Flipped Reference"), (const char **) buts, 0,
+                              2,
+                              _
+                              ("%.50s contains a flipped reference. This cannot be corrected as is. Would you like me to unlink it and then correct it?"),
+                              sc->name);
+                  if (asked == 2)
+                    return;
+                  else if (asked == 1)
+                    break;
+                }
+              if (asked == 0)
+                {
+                  if (!refchanged)
+                    {
+                      refchanged = true;
+                      SCPreserveLayer (sc, mv->layer, false);
+                    }
+                  SCRefToSplines (sc, ref, mv->layer);
+                }
+            }
+        }
+
+      if (!refchanged)
+        SCPreserveLayer (sc, mv->layer, false);
+      sc->layers[mv->layer].splines =
+        SplineSetsCorrect (sc->layers[mv->layer].splines, &changed);
+      if (changed || refchanged)
+        SCCharChangedUpdate (sc, mv->layer);
     }
 }
 
-VISIBLE void MVMenuBuildAccent(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _MVMenuBuildAccent(mv, false);
-}
+static void
+_MVMenuBuildAccent (MetricsView *mv, int onlyaccents)
+{
+  int i;
+  extern int onlycopydisplayed;
 
-VISIBLE void MVMenuBuildComposite(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _MVMenuBuildAccent(mv, true);
-}
-
-static void MVResetText(MetricsView *mv) {
-    uint32_t *new, *pt;
-    int i;
-
-    new = xmalloc((mv->clen+1)*sizeof(uint32_t));
-    for ( pt=new, i=0; i<mv->clen; ++i ) {
-	if ( mv->chars[i]->unicodeenc==-1 )
-	    *pt++ = MVFakeUnicodeOfSc(mv,mv->chars[i]);
-	else
-	    *pt++ = mv->chars[i]->unicodeenc;
-    }
-    *pt = '\0';
-    GGadgetSetTitle(mv->text,new);
-    free(new );
-}
-
-VISIBLE void MVMenuLigatures(GWindow gw,struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SFShowLigatures(mv->sf, NULL);
-}
-
-VISIBLE void MVMenuKernPairs(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SFShowKernPairs(mv->sf, NULL, NULL, mv->layer);
-}
-
-VISIBLE void MVMenuAnchorPairs(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SFShowKernPairs(mv->sf, NULL, mi->ti.userdata, mv->layer);
-}
-
-static void _MVMenuScale( MetricsView *mv, int mid ) {
-
-    if ( mid==MID_ZoomIn ) {
-	if ( --mv->scale_index<0 ) mv->scale_index = 0;
-    } else {
-	if ( ++mv->scale_index >= sizeof(mv_scales)/sizeof(mv_scales[0]) )
-	    mv->scale_index = sizeof(mv_scales)/sizeof(mv_scales[0])-1;
-    }
-
-    if ( mv->pixelsize_set_by_window ) {
-	mv->pixelsize = mv_scales[mv->scale_index]*(mv->vheight - 2);
-	if ( mv->bdf==NULL ) {
-	    BDFFontFree(mv->show);
-	    mv->show = SplineFontPieceMeal(mv->sf,mv->layer,mv->pixelsize,72,mv->antialias?(pf_antialias|pf_ft_recontext):pf_ft_recontext,NULL);
-	} else
-	    mv->pixelsize_set_by_window = false;
-    }
-    MVReKern(mv);
-    MVSetVSb(mv);
-}
-
-VISIBLE void MVMenuScale(GWindow gw,struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    _MVMenuScale(mv, mi->mid);
-}
-
-VISIBLE void MVMenuInsertChar(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SplineFont *sf = mv->sf;
-    int i, j, pos = GotoChar(sf,mv->fv->b.map,NULL);
-
-    if ( pos==-1 || pos>=mv->fv->b.map->enccount )
-return;
-
-    for ( i=0; i<mv->glyphcnt; ++i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i!=mv->glyphcnt )	/* Something selected */
-	/* Ok... */;
-    else if ( mi->mid==MID_InsertCharA )
-	i = mv->glyphcnt;
-    else
-	i = 0;
-    if ( mi->mid==MID_InsertCharA ) {
-	if ( i!=mv->glyphcnt )
-	    ++i;
-    } else {
-	if ( i==mv->glyphcnt ) i = 0;
-    }
-    if ( i==mv->glyphcnt )
-	i = mv->clen;
-    else
-	i = mv->glyphs[i].orig_index;		/* Index in the string of chars, not glyphs */
-
-    if ( mv->clen+1>=mv->cmax ) {
-	int oldmax=mv->cmax;
-	mv->cmax = mv->clen+10;
-	mv->chars = xrealloc(mv->chars,mv->cmax*sizeof(SplineChar *));
-	memset(mv->chars+oldmax,'\0',(mv->cmax-oldmax)*sizeof(SplineChar *));
-    }
-    for ( j=mv->clen; j>i; --j )
-	mv->chars[j] = mv->chars[j-1];
-    mv->chars[i] = SFMakeChar(sf,mv->fv->b.map,pos);
-    ++mv->clen;
-    MVRemetric(mv);
-    for ( j=0; j<mv->glyphcnt; ++j )
-	if ( mv->glyphs[j].orig_index==i ) {
-	    MVDoSelect(mv,j);
-    break;
-	}
-    GDrawRequestExpose(mv->v,NULL,false);
-    MVResetText(mv);
-}
-
-VISIBLE void MVMenuChangeChar(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SplineFont *sf = mv->sf;
-    SplineChar *sc;
-    EncMap *map = mv->fv->b.map;
-    int i, pos, gid;
-
-    for ( i=0; i<mv->glyphcnt; ++i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i!=mv->glyphcnt ) {
-	pos = -1;
-	i = mv->glyphs[i].orig_index;
-	sc = mv->chars[ i ];
-	if ( mi->mid == MID_Next ) {
-	    pos = map->backmap[sc->orig_pos]+1;
-	} else if ( mi->mid==MID_Prev ) {
-	    pos = map->backmap[sc->orig_pos]-1;
-	} else if ( mi->mid==MID_NextDef ) {
-	    for ( pos = map->backmap[sc->orig_pos]+1;
-		    pos<map->enccount && ((gid=map->map[pos])==-1 || sf->glyphs[gid]==NULL); ++pos );
-	    if ( pos>=map->enccount )
-return;
-	} else if ( mi->mid==MID_PrevDef ) {
-	    for ( pos = map->backmap[sc->orig_pos]-1;
-		    pos<map->enccount && ((gid=map->map[pos])==-1 || sf->glyphs[gid]==NULL); --pos );
-	    if ( pos<0 )
-return;
-	} else if ( mi->mid==MID_ReplaceChar ) {
-	    pos = GotoChar(sf,mv->fv->b.map,NULL);
-	    if ( pos<0 || pos>=mv->fv->b.map->enccount)
-return;
-	}
-	if ( pos>=0 && pos<map->enccount ) {
-	    mv->chars[i] = SFMakeChar(sf,mv->fv->b.map,pos);
-	    MVRemetric(mv);
-	    MVResetText(mv);
-	    GDrawRequestExpose(mv->v,NULL,false);
-	}
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != -1)
+    {
+      SplineChar *sc = mv->glyphs[i].sc;
+      if (SFIsSomethingBuildable (mv->sf, sc, mv->layer, onlyaccents))
+        SCBuildComposit (mv->sf, sc, mv->layer, NULL, onlycopydisplayed);
     }
 }
 
-VISIBLE void MVMenuFindInFontView(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+MVMenuBuildAccent (GWindow gw, struct gmenuitem *UNUSED (mi),
+                   GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _MVMenuBuildAccent (mv, false);
+}
 
-    for ( i=0; i<mv->glyphcnt; ++i ) {
-        if ( mv->perchar[i].selected ) {
-            FVChangeChar(mv->fv, mv->fv->b.map->backmap[mv->glyphs[i].sc->orig_pos]);
-            GDrawSetVisible(mv->fv->gw, true);
-            GDrawRaise(mv->fv->gw);
-    break;
+VISIBLE void
+MVMenuBuildComposite (GWindow gw, struct gmenuitem *UNUSED (mi),
+                      GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _MVMenuBuildAccent (mv, true);
+}
+
+static void
+MVResetText (MetricsView *mv)
+{
+  uint32_t *new, *pt;
+  int i;
+
+  new = xmalloc ((mv->clen + 1) * sizeof (uint32_t));
+  for (pt = new, i = 0; i < mv->clen; ++i)
+    {
+      if (mv->chars[i]->unicodeenc == -1)
+        *pt++ = MVFakeUnicodeOfSc (mv, mv->chars[i]);
+      else
+        *pt++ = mv->chars[i]->unicodeenc;
+    }
+  *pt = '\0';
+  GGadgetSetTitle (mv->text, new);
+  free (new);
+}
+
+VISIBLE void
+MVMenuLigatures (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SFShowLigatures (mv->sf, NULL);
+}
+
+VISIBLE void
+MVMenuKernPairs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SFShowKernPairs (mv->sf, NULL, NULL, mv->layer);
+}
+
+VISIBLE void
+MVMenuAnchorPairs (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SFShowKernPairs (mv->sf, NULL, mi->ti.userdata, mv->layer);
+}
+
+static void
+_MVMenuScale (MetricsView *mv, int mid)
+{
+
+  if (mid == MID_ZoomIn)
+    {
+      if (--mv->scale_index < 0)
+        mv->scale_index = 0;
+    }
+  else
+    {
+      if (++mv->scale_index >= sizeof (mv_scales) / sizeof (mv_scales[0]))
+        mv->scale_index = sizeof (mv_scales) / sizeof (mv_scales[0]) - 1;
+    }
+
+  if (mv->pixelsize_set_by_window)
+    {
+      mv->pixelsize = mv_scales[mv->scale_index] * (mv->vheight - 2);
+      if (mv->bdf == NULL)
+        {
+          BDFFontFree (mv->show);
+          mv->show =
+            SplineFontPieceMeal (mv->sf, mv->layer, mv->pixelsize, 72,
+                                 mv->antialias ? (pf_antialias |
+                                                  pf_ft_recontext) :
+                                 pf_ft_recontext, NULL);
+        }
+      else
+        mv->pixelsize_set_by_window = false;
+    }
+  MVReKern (mv);
+  MVSetVSb (mv);
+}
+
+VISIBLE void
+MVMenuScale (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  _MVMenuScale (mv, mi->mid);
+}
+
+VISIBLE void
+MVMenuInsertChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SplineFont *sf = mv->sf;
+  int i, j, pos = GotoChar (sf, mv->fv->b.map, NULL);
+
+  if (pos == -1 || pos >= mv->fv->b.map->enccount)
+    return;
+
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != mv->glyphcnt)        /* Something selected */
+    /* Ok... */ ;
+  else if (mi->mid == MID_InsertCharA)
+    i = mv->glyphcnt;
+  else
+    i = 0;
+  if (mi->mid == MID_InsertCharA)
+    {
+      if (i != mv->glyphcnt)
+        ++i;
+    }
+  else
+    {
+      if (i == mv->glyphcnt)
+        i = 0;
+    }
+  if (i == mv->glyphcnt)
+    i = mv->clen;
+  else
+    i = mv->glyphs[i].orig_index;       /* Index in the string of chars, not glyphs */
+
+  if (mv->clen + 1 >= mv->cmax)
+    {
+      int oldmax = mv->cmax;
+      mv->cmax = mv->clen + 10;
+      mv->chars = xrealloc (mv->chars, mv->cmax * sizeof (SplineChar *));
+      memset (mv->chars + oldmax, '\0',
+              (mv->cmax - oldmax) * sizeof (SplineChar *));
+    }
+  for (j = mv->clen; j > i; --j)
+    mv->chars[j] = mv->chars[j - 1];
+  mv->chars[i] = SFMakeChar (sf, mv->fv->b.map, pos);
+  ++mv->clen;
+  MVRemetric (mv);
+  for (j = 0; j < mv->glyphcnt; ++j)
+    if (mv->glyphs[j].orig_index == i)
+      {
+        MVDoSelect (mv, j);
+        break;
+      }
+  GDrawRequestExpose (mv->v, NULL, false);
+  MVResetText (mv);
+}
+
+VISIBLE void
+MVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SplineFont *sf = mv->sf;
+  SplineChar *sc;
+  EncMap *map = mv->fv->b.map;
+  int i, pos, gid;
+
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != mv->glyphcnt)
+    {
+      pos = -1;
+      i = mv->glyphs[i].orig_index;
+      sc = mv->chars[i];
+      if (mi->mid == MID_Next)
+        {
+          pos = map->backmap[sc->orig_pos] + 1;
+        }
+      else if (mi->mid == MID_Prev)
+        {
+          pos = map->backmap[sc->orig_pos] - 1;
+        }
+      else if (mi->mid == MID_NextDef)
+        {
+          for (pos = map->backmap[sc->orig_pos] + 1;
+               pos < map->enccount && ((gid = map->map[pos]) == -1
+                                       || sf->glyphs[gid] == NULL); ++pos);
+          if (pos >= map->enccount)
+            return;
+        }
+      else if (mi->mid == MID_PrevDef)
+        {
+          for (pos = map->backmap[sc->orig_pos] - 1;
+               pos < map->enccount && ((gid = map->map[pos]) == -1
+                                       || sf->glyphs[gid] == NULL); --pos);
+          if (pos < 0)
+            return;
+        }
+      else if (mi->mid == MID_ReplaceChar)
+        {
+          pos = GotoChar (sf, mv->fv->b.map, NULL);
+          if (pos < 0 || pos >= mv->fv->b.map->enccount)
+            return;
+        }
+      if (pos >= 0 && pos < map->enccount)
+        {
+          mv->chars[i] = SFMakeChar (sf, mv->fv->b.map, pos);
+          MVRemetric (mv);
+          MVResetText (mv);
+          GDrawRequestExpose (mv->v, NULL, false);
         }
     }
 }
 
-VISIBLE void MVMenuShowGrid(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    if ( mi->mid == MID_ShowGrid )
-        mv->showgrid = mv_showgrid;
-    else if ( mi->mid == MID_HideGrid )
-        mv->showgrid = mv_hidegrid;
-    else if ( mi->mid == MID_PartialGrid )
-        mv->showgrid = mv_partialgrid;
-    else if ( mi->mid == MID_HideGridWhenMoving )
-        mv->showgrid = mv_hidemovinggrid;
-    mvshowgrid = mv->showgrid;
-    SavePrefs(true);
-    GDrawRequestExpose(mv->v, NULL, false);
-}
+VISIBLE void
+MVMenuFindInFontView (GWindow gw, struct gmenuitem *UNUSED (mi),
+                      GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-VISIBLE void MVMenuAA(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-
-    mv_antialias = mv->antialias = !mv->antialias;
-    mv->bdf = NULL;
-    BDFFontFree(mv->show);
-    mv->show = SplineFontPieceMeal(mv->sf, mv->layer, mv->ptsize, mv->dpi,
-                    mv->antialias ? (pf_antialias|pf_ft_recontext) : pf_ft_recontext,
-                    NULL);
-    GDrawRequestExpose(mv->v,NULL,false);
-}
-
-static void MVWindowTitle(char *buffer, int bufsize, MetricsView *mv) {
-
-    snprintf(buffer,bufsize,
-	    mv->type == mv_kernonly ?  _("Kerning Metrics For %.50s") :
-	    mv->type == mv_widthonly ? _("Advance Width Metrics For %.50s") :
-	                               _("Metrics For %.50s"),
-		  mv->sf->fontname);
-}
-
-VISIBLE void MVMenuWindowType(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    char buf[120];
-
-    mv_type = mv->type = mi->mid==MID_KernOnly  ? mv_kernonly :
-			 mi->mid==MID_WidthOnly ? mv_widthonly :
-			 mv_kernwidth;
-    MVWindowTitle(buf, sizeof(buf), mv);
-    GDrawSetWindowTitles8(mv->gw, buf, buf);
-    GDrawRequestExpose(mv->v, NULL, false);
-    GDrawRequestExpose(mv->gw, NULL, false);
-}
-
-VISIBLE void MVMenuVertical(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-
-    if ( !mv->sf->hasvmetrics ) {
-        if ( mv->vertical )
-            MVToggleVertical(mv);
-    } else
-        MVToggleVertical(mv);
-    GDrawRequestExpose(mv->gw, NULL, false);
-    GDrawRequestExpose(mv->v, NULL, false);
-}
-
-VISIBLE void MVMenuShowBitmap(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    BDFFont *bdf = mi->ti.userdata;
-
-    if ( mv->bdf!=bdf ) {
-        mv->pixelsize_set_by_window = bdf==NULL;
-        if ( bdf!=NULL ) {
-            mv->pixelsize = mv->ptsize = bdf->pixelsize;
-            mv->dpi = 72;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    {
+      if (mv->perchar[i].selected)
+        {
+          FVChangeChar (mv->fv,
+                        mv->fv->b.map->backmap[mv->glyphs[i].sc->orig_pos]);
+          GDrawSetVisible (mv->fv->gw, true);
+          GDrawRaise (mv->fv->gw);
+          break;
         }
-        MVChangeDisplayFont(mv, bdf);
-        GDrawRequestExpose(mv->v, NULL, false);
+    }
+}
+
+VISIBLE void
+MVMenuShowGrid (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  if (mi->mid == MID_ShowGrid)
+    mv->showgrid = mv_showgrid;
+  else if (mi->mid == MID_HideGrid)
+    mv->showgrid = mv_hidegrid;
+  else if (mi->mid == MID_PartialGrid)
+    mv->showgrid = mv_partialgrid;
+  else if (mi->mid == MID_HideGridWhenMoving)
+    mv->showgrid = mv_hidemovinggrid;
+  mvshowgrid = mv->showgrid;
+  SavePrefs (true);
+  GDrawRequestExpose (mv->v, NULL, false);
+}
+
+VISIBLE void
+MVMenuAA (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+
+  mv_antialias = mv->antialias = !mv->antialias;
+  mv->bdf = NULL;
+  BDFFontFree (mv->show);
+  mv->show = SplineFontPieceMeal (mv->sf, mv->layer, mv->ptsize, mv->dpi,
+                                  mv->antialias ? (pf_antialias |
+                                                   pf_ft_recontext) :
+                                  pf_ft_recontext, NULL);
+  GDrawRequestExpose (mv->v, NULL, false);
+}
+
+static void
+MVWindowTitle (char *buffer, int bufsize, MetricsView *mv)
+{
+
+  snprintf (buffer, bufsize,
+            mv->type == mv_kernonly ? _("Kerning Metrics For %.50s") :
+            mv->type == mv_widthonly ? _("Advance Width Metrics For %.50s") :
+            _("Metrics For %.50s"), mv->sf->fontname);
+}
+
+VISIBLE void
+MVMenuWindowType (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  char buf[120];
+
+  mv_type = mv->type = mi->mid == MID_KernOnly ? mv_kernonly :
+    mi->mid == MID_WidthOnly ? mv_widthonly : mv_kernwidth;
+  MVWindowTitle (buf, sizeof (buf), mv);
+  GDrawSetWindowTitles8 (mv->gw, buf, buf);
+  GDrawRequestExpose (mv->v, NULL, false);
+  GDrawRequestExpose (mv->gw, NULL, false);
+}
+
+VISIBLE void
+MVMenuVertical (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+
+  if (!mv->sf->hasvmetrics)
+    {
+      if (mv->vertical)
+        MVToggleVertical (mv);
+    }
+  else
+    MVToggleVertical (mv);
+  GDrawRequestExpose (mv->gw, NULL, false);
+  GDrawRequestExpose (mv->v, NULL, false);
+}
+
+VISIBLE void
+MVMenuShowBitmap (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  BDFFont *bdf = mi->ti.userdata;
+
+  if (mv->bdf != bdf)
+    {
+      mv->pixelsize_set_by_window = bdf == NULL;
+      if (bdf != NULL)
+        {
+          mv->pixelsize = mv->ptsize = bdf->pixelsize;
+          mv->dpi = 72;
+        }
+      MVChangeDisplayFont (mv, bdf);
+      GDrawRequestExpose (mv->v, NULL, false);
     }
 }
 
 #define CID_DPI		1002
 #define CID_Size	1003
 
-struct pxsz {
-    MetricsView *mv;
-    GWindow gw;
-    int done;
+struct pxsz
+{
+  MetricsView *mv;
+  GWindow gw;
+  int done;
 };
 
-static int PXSZ_OK(GGadget *g, GEvent *e) {
+static int
+PXSZ_OK (GGadget *g, GEvent *e)
+{
 
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	struct pxsz *pxsz = GDrawGetUserData(GGadgetGetWindow(g));
-	MetricsView *mv = pxsz->mv;
-	int ptsize, dpi, err=0;
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      struct pxsz *pxsz = GDrawGetUserData (GGadgetGetWindow (g));
+      MetricsView *mv = pxsz->mv;
+      int ptsize, dpi, err = 0;
 
-	ptsize = GetInt8( pxsz->gw, CID_Size, _("Point Size"), &err );
-	dpi = GetInt8( pxsz->gw, CID_DPI, _("DPI"), &err );
-	if ( err )
-return(true);
-	if ( ptsize<3 || ptsize>300 || dpi<10 || dpi > 2000 ) {
-	    ff_post_error(_("Number out of range"),_("Number out of range"));
-return( true );
-	}
-	mv->pixelsize_set_by_window = false;
-	mv->ptsize = ptsize;
-	mv->dpi = dpi;
-	mv->pixelsize = rint( (ptsize*dpi)/72.0 );
-	if ( mv->bdf==NULL )
-	    BDFFontFree(mv->show);
-	mv->bdf = NULL;
-	mv->show = SplineFontPieceMeal(mv->sf,mv->layer,mv->ptsize,mv->dpi,
-		mv->antialias?(pf_antialias|pf_ft_recontext):pf_ft_recontext,NULL);
+      ptsize = GetInt8 (pxsz->gw, CID_Size, _("Point Size"), &err);
+      dpi = GetInt8 (pxsz->gw, CID_DPI, _("DPI"), &err);
+      if (err)
+        return (true);
+      if (ptsize < 3 || ptsize > 300 || dpi < 10 || dpi > 2000)
+        {
+          ff_post_error (_("Number out of range"), _("Number out of range"));
+          return (true);
+        }
+      mv->pixelsize_set_by_window = false;
+      mv->ptsize = ptsize;
+      mv->dpi = dpi;
+      mv->pixelsize = rint ((ptsize * dpi) / 72.0);
+      if (mv->bdf == NULL)
+        BDFFontFree (mv->show);
+      mv->bdf = NULL;
+      mv->show = SplineFontPieceMeal (mv->sf, mv->layer, mv->ptsize, mv->dpi,
+                                      mv->antialias ? (pf_antialias |
+                                                       pf_ft_recontext) :
+                                      pf_ft_recontext, NULL);
 
-	MVReKern(mv);
-	MVSetVSb(mv);
-	pxsz->done = 2;
+      MVReKern (mv);
+      MVSetVSb (mv);
+      pxsz->done = 2;
     }
-return( true );
+  return (true);
 }
 
-static int PXSZ_Cancel(GGadget *g, GEvent *e) {
+static int
+PXSZ_Cancel (GGadget *g, GEvent *e)
+{
 
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	struct pxsz *pxsz = GDrawGetUserData(GGadgetGetWindow(g));
-	pxsz->done = true;
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      struct pxsz *pxsz = GDrawGetUserData (GGadgetGetWindow (g));
+      pxsz->done = true;
     }
-return( true );
+  return (true);
 }
 
-static int pxsz_e_h(GWindow gw, GEvent *event) {
-    struct pxsz *pxsz = GDrawGetUserData(gw);
+static int
+pxsz_e_h (GWindow gw, GEvent *event)
+{
+  struct pxsz *pxsz = GDrawGetUserData (gw);
 
-    switch ( event->type ) {
-      case et_char:
-return( false );
-      case et_close:
-	pxsz->done = true;
+  switch (event->type)
+    {
+    case et_char:
+      return (false);
+    case et_close:
+      pxsz->done = true;
       break;
     }
-return( true );
+  return (true);
 }
 
-VISIBLE void MVMenuPointSize(GWindow mgw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(mgw);
-    struct pxsz pxsz;
-    GRect pos;
-    GWindow gw;
-    GWindowAttrs wattrs;
-    GGadgetCreateData gcd[7], *hvarray[5][3], *barray[8], boxes[3];
-    GTextInfo label[7];
-    int i,k;
-    double iscale = mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
-    char buffer[20], dbuffer[20];
+VISIBLE void
+MVMenuPointSize (GWindow mgw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (mgw);
+  struct pxsz pxsz;
+  GRect pos;
+  GWindow gw;
+  GWindowAttrs wattrs;
+  GGadgetCreateData gcd[7], *hvarray[5][3], *barray[8], boxes[3];
+  GTextInfo label[7];
+  int i, k;
+  double iscale =
+    mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
+  char buffer[20], dbuffer[20];
 
-    memset(&pxsz,0,sizeof(pxsz));
-    pxsz.mv = mv;
+  memset (&pxsz, 0, sizeof (pxsz));
+  pxsz.mv = mv;
 
-    memset(&wattrs,0,sizeof(wattrs));
-    memset(&gcd,0,sizeof(gcd));
-    memset(&label,0,sizeof(label));
-    memset(&boxes,0,sizeof(boxes));
+  memset (&wattrs, 0, sizeof (wattrs));
+  memset (&gcd, 0, sizeof (gcd));
+  memset (&label, 0, sizeof (label));
+  memset (&boxes, 0, sizeof (boxes));
 
-    wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_isdlg|wam_restrict;
-    wattrs.event_masks = ~(1<<et_charup);
-    wattrs.restrict_input_to_me = true;
-    wattrs.undercursor = 1;
-    wattrs.cursor = ct_pointer;
-    wattrs.utf8_window_title = _("Set Point Size");
-    wattrs.is_dlg = true;
-    pos.x = pos.y = 0;
-    pos.width = 100;
-    pos.height = 100;
-    pxsz.gw = gw = GDrawCreateTopWindow(NULL,&pos,pxsz_e_h,&pxsz,&wattrs);
+  wattrs.mask =
+    wam_events | wam_cursor | wam_utf8_wtitle | wam_undercursor | wam_isdlg |
+    wam_restrict;
+  wattrs.event_masks = ~(1 << et_charup);
+  wattrs.restrict_input_to_me = true;
+  wattrs.undercursor = 1;
+  wattrs.cursor = ct_pointer;
+  wattrs.utf8_window_title = _("Set Point Size");
+  wattrs.is_dlg = true;
+  pos.x = pos.y = 0;
+  pos.width = 100;
+  pos.height = 100;
+  pxsz.gw = gw = GDrawCreateTopWindow (NULL, &pos, pxsz_e_h, &pxsz, &wattrs);
 
-    k = i = 0;
+  k = i = 0;
 
-    label[k].text = (uint32_t *) _("Point Size:");
-    label[k].text_is_1byte = true;
-    gcd[k].gd.label = &label[k];
-    gcd[k].gd.flags = gg_visible|gg_enabled ;
-    /*gcd[k].gd.handle_controlevent = SS_ScriptChanged;*/
-    gcd[k++].creator = GLabelCreate;
-    hvarray[i][0] = &gcd[k-1];
+  label[k].text = (uint32_t *) _("Point Size:");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  /*gcd[k].gd.handle_controlevent = SS_ScriptChanged; */
+  gcd[k++].creator = GLabelCreate;
+  hvarray[i][0] = &gcd[k - 1];
 
-    sprintf( buffer, "%d", (int) rint( mv->ptsize/iscale ));
-    label[k].text = (uint32_t *) buffer;
-    label[k].text_is_1byte = true;
-    gcd[k].gd.label = &label[k];
-    gcd[k].gd.flags = gg_visible|gg_enabled;
-    gcd[k].gd.cid = CID_Size;
-    gcd[k++].creator = GTextFieldCreate;
-    hvarray[i][1] = &gcd[k-1]; hvarray[i++][2] = NULL;
+  sprintf (buffer, "%d", (int) rint (mv->ptsize / iscale));
+  label[k].text = (uint32_t *) buffer;
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k].gd.cid = CID_Size;
+  gcd[k++].creator = GTextFieldCreate;
+  hvarray[i][1] = &gcd[k - 1];
+  hvarray[i++][2] = NULL;
 
-    label[k].text = (uint32_t *) _("DPI:");
-    label[k].text_is_1byte = true;
-    gcd[k].gd.label = &label[k];
-    gcd[k].gd.flags = gg_visible|gg_enabled ;
-    /*gcd[k].gd.handle_controlevent = SS_ScriptChanged;*/
-    gcd[k++].creator = GLabelCreate;
-    hvarray[i][0] = &gcd[k-1];
+  label[k].text = (uint32_t *) _("DPI:");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  /*gcd[k].gd.handle_controlevent = SS_ScriptChanged; */
+  gcd[k++].creator = GLabelCreate;
+  hvarray[i][0] = &gcd[k - 1];
 
-    sprintf( dbuffer, "%d", mv->dpi );
-    label[k].text = (uint32_t *) dbuffer;
-    label[k].text_is_1byte = true;
-    gcd[k].gd.label = &label[k];
-    gcd[k].gd.flags = gg_visible|gg_enabled;
-    gcd[k].gd.cid = CID_DPI;
-    gcd[k++].creator = GTextFieldCreate;
-    hvarray[i][1] = &gcd[k-1]; hvarray[i++][2] = NULL;
+  sprintf (dbuffer, "%d", mv->dpi);
+  label[k].text = (uint32_t *) dbuffer;
+  label[k].text_is_1byte = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.flags = gg_visible | gg_enabled;
+  gcd[k].gd.cid = CID_DPI;
+  gcd[k++].creator = GTextFieldCreate;
+  hvarray[i][1] = &gcd[k - 1];
+  hvarray[i++][2] = NULL;
 
-    label[k].text = (uint32_t *) _("_OK");
-    label[k].text_is_1byte = true;
-    label[k].text_has_mnemonic = true;
-    gcd[k].gd.label = &label[k];
-    gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_default;
-    gcd[k].gd.handle_controlevent = PXSZ_OK;
-    gcd[k++].creator = GButtonCreate;
+  label[k].text = (uint32_t *) _("_OK");
+  label[k].text_is_1byte = true;
+  label[k].text_has_mnemonic = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
+  gcd[k].gd.handle_controlevent = PXSZ_OK;
+  gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (uint32_t *) _("_Cancel");
-    label[k].text_is_1byte = true;
-    label[k].text_has_mnemonic = true;
-    gcd[k].gd.label = &label[k];
-    gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_cancel;
-    gcd[k].gd.handle_controlevent = PXSZ_Cancel;
-    gcd[k++].creator = GButtonCreate;
+  label[k].text = (uint32_t *) _("_Cancel");
+  label[k].text_is_1byte = true;
+  label[k].text_has_mnemonic = true;
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
+  gcd[k].gd.handle_controlevent = PXSZ_Cancel;
+  gcd[k++].creator = GButtonCreate;
 
-    barray[0] = barray[2] = barray[3] = barray[4] = barray[6] = GCD_Glue; barray[7] = NULL;
-    barray[1] = &gcd[k-2]; barray[5] = &gcd[k-1];
-    hvarray[i][0] = &boxes[2]; hvarray[i][1] = GCD_ColSpan; hvarray[i++][2] = NULL;
-    hvarray[i][0] = NULL;
+  barray[0] = barray[2] = barray[3] = barray[4] = barray[6] = GCD_Glue;
+  barray[7] = NULL;
+  barray[1] = &gcd[k - 2];
+  barray[5] = &gcd[k - 1];
+  hvarray[i][0] = &boxes[2];
+  hvarray[i][1] = GCD_ColSpan;
+  hvarray[i++][2] = NULL;
+  hvarray[i][0] = NULL;
 
-    memset(boxes,0,sizeof(boxes));
-    boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
-    boxes[0].gd.flags = gg_enabled|gg_visible;
-    boxes[0].gd.u.boxelements = hvarray[0];
-    boxes[0].creator = GHVGroupCreate;
+  memset (boxes, 0, sizeof (boxes));
+  boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
+  boxes[0].gd.flags = gg_enabled | gg_visible;
+  boxes[0].gd.u.boxelements = hvarray[0];
+  boxes[0].creator = GHVGroupCreate;
 
-    boxes[2].gd.flags = gg_enabled|gg_visible;
-    boxes[2].gd.u.boxelements = barray;
-    boxes[2].creator = GHBoxCreate;
+  boxes[2].gd.flags = gg_enabled | gg_visible;
+  boxes[2].gd.u.boxelements = barray;
+  boxes[2].creator = GHBoxCreate;
 
-    GGadgetsCreate(gw,boxes);
-    GHVBoxSetExpandableCol(boxes[2].ret,gb_expandgluesame);
-    GHVBoxSetExpandableRow(boxes[0].ret,gb_expandglue);
+  GGadgetsCreate (gw, boxes);
+  GHVBoxSetExpandableCol (boxes[2].ret, gb_expandgluesame);
+  GHVBoxSetExpandableRow (boxes[0].ret, gb_expandglue);
 
-    GHVBoxFitWindow(boxes[0].ret);
+  GHVBoxFitWindow (boxes[0].ret);
 
-    GDrawSetVisible(gw,true);
-    while ( !pxsz.done )
-        GDrawProcessOneEvent(NULL);
-    GDrawDestroyWindow(gw);
+  GDrawSetVisible (gw, true);
+  while (!pxsz.done)
+    GDrawProcessOneEvent (NULL);
+  GDrawDestroyWindow (gw);
 }
 
-VISIBLE void MVMenuSizeWindow(GWindow mgw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(mgw);
-    mv->pixelsize_set_by_window = true;
-    mv->pixelsize = mv_scales[mv->scale_index]*(mv->vheight - 2);
-    mv->dpi = 72;
-    mv->ptsize = mv->pixelsize;
-    if ( mv->bdf==NULL ) {
-        BDFFontFree(mv->show);
-        mv->show = SplineFontPieceMeal(
-                        mv->sf, mv->layer, mv->pixelsize, 72,
-                        mv->antialias ? (pf_antialias|pf_ft_recontext) : pf_ft_recontext,
-                        NULL);
+VISIBLE void
+MVMenuSizeWindow (GWindow mgw, struct gmenuitem *UNUSED (mi),
+                  GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (mgw);
+  mv->pixelsize_set_by_window = true;
+  mv->pixelsize = mv_scales[mv->scale_index] * (mv->vheight - 2);
+  mv->dpi = 72;
+  mv->ptsize = mv->pixelsize;
+  if (mv->bdf == NULL)
+    {
+      BDFFontFree (mv->show);
+      mv->show = SplineFontPieceMeal (mv->sf, mv->layer, mv->pixelsize, 72,
+                                      mv->antialias ? (pf_antialias |
+                                                       pf_ft_recontext) :
+                                      pf_ft_recontext, NULL);
     }
-    MVReKern(mv);
-    MVSetVSb(mv);
+  MVReKern (mv);
+  MVSetVSb (mv);
 }
 
-VISIBLE void MVMenuChangePointSize(GWindow mgw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(mgw);
+VISIBLE void
+MVMenuChangePointSize (GWindow mgw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (mgw);
 
-    if ( mv->pixelsize_set_by_window )
-return;
-    if ( mi->mid==MID_Bigger )
-        ++(mv->ptsize);
-    else
-        --(mv->ptsize);
-    mv->pixelsize = rint( (mv->ptsize*mv->dpi)/72.0 );
-    if ( mv->bdf==NULL )
-        BDFFontFree(mv->show);
-    mv->bdf = NULL;
-    mv->show = SplineFontPieceMeal(mv->sf, mv->layer, mv->ptsize, mv->dpi,
-                    mv->antialias ? (pf_antialias|pf_ft_recontext) : pf_ft_recontext, NULL);
+  if (mv->pixelsize_set_by_window)
+    return;
+  if (mi->mid == MID_Bigger)
+    ++(mv->ptsize);
+  else
+    --(mv->ptsize);
+  mv->pixelsize = rint ((mv->ptsize * mv->dpi) / 72.0);
+  if (mv->bdf == NULL)
+    BDFFontFree (mv->show);
+  mv->bdf = NULL;
+  mv->show = SplineFontPieceMeal (mv->sf, mv->layer, mv->ptsize, mv->dpi,
+                                  mv->antialias ? (pf_antialias |
+                                                   pf_ft_recontext) :
+                                  pf_ft_recontext, NULL);
 
-    MVReKern(mv);
-    MVSetVSb(mv);
+  MVReKern (mv);
+  MVSetVSb (mv);
 }
 
-VISIBLE void MVMenuChangeLayer(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
+VISIBLE void
+MVMenuChangeLayer (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
 
-    mv->layer = mi->mid;
-    BDFFontFree(mv->show);
-    mv->show = SplineFontPieceMeal(mv->sf, mv->layer, mv->ptsize, mv->dpi,
-                mv->antialias ? (pf_antialias|pf_ft_recontext) : pf_ft_recontext, NULL);
-    MVRemetric(mv);
-    GDrawRequestExpose(mv->v,NULL,false);
+  mv->layer = mi->mid;
+  BDFFontFree (mv->show);
+  mv->show = SplineFontPieceMeal (mv->sf, mv->layer, mv->ptsize, mv->dpi,
+                                  mv->antialias ? (pf_antialias |
+                                                   pf_ft_recontext) :
+                                  pf_ft_recontext, NULL);
+  MVRemetric (mv);
+  GDrawRequestExpose (mv->v, NULL, false);
 }
 
-VISIBLE void MVMenuCenter(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-    DBounds bb;
-    real transform[6];
-    SplineChar *sc;
+VISIBLE void
+MVMenuCenter (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+  DBounds bb;
+  real transform[6];
+  SplineChar *sc;
 
-    for ( i=0; i<mv->glyphcnt; ++i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i!=mv->glyphcnt ) {
-	sc = mv->glyphs[i].sc;
-	transform[0] = transform[3] = 1.0;
-	transform[1] = transform[2] = transform[5] = 0.0;
-	SplineCharFindBounds(sc,&bb);
-	if ( mi->mid==MID_Center )
-	    transform[4] = (sc->width-(bb.maxx-bb.minx))/2 - bb.minx;
-	else
-	    transform[4] = (sc->width-(bb.maxx-bb.minx))/3 - bb.minx;
-	if ( transform[4]!=0 )
-	    FVTrans( (FontViewBase *)mv->fv,sc,transform,NULL,fvt_dontmovewidth);
+  for (i = 0; i < mv->glyphcnt; ++i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i != mv->glyphcnt)
+    {
+      sc = mv->glyphs[i].sc;
+      transform[0] = transform[3] = 1.0;
+      transform[1] = transform[2] = transform[5] = 0.0;
+      SplineCharFindBounds (sc, &bb);
+      if (mi->mid == MID_Center)
+        transform[4] = (sc->width - (bb.maxx - bb.minx)) / 2 - bb.minx;
+      else
+        transform[4] = (sc->width - (bb.maxx - bb.minx)) / 3 - bb.minx;
+      if (transform[4] != 0)
+        FVTrans ((FontViewBase *) mv->fv, sc, transform, NULL,
+                 fvt_dontmovewidth);
     }
 }
 
-VISIBLE void MVMenuKernByClasses(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    ShowKernClasses(mv->sf, mv, mv->layer, false);
+VISIBLE void
+MVMenuKernByClasses (GWindow gw, struct gmenuitem *UNUSED (mi),
+                     GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  ShowKernClasses (mv->sf, mv, mv->layer, false);
 }
 
-VISIBLE void MVMenuVKernByClasses(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    ShowKernClasses(mv->sf, mv, mv->layer, true);
+VISIBLE void
+MVMenuVKernByClasses (GWindow gw, struct gmenuitem *UNUSED (mi),
+                      GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  ShowKernClasses (mv->sf, mv, mv->layer, true);
 }
 
-VISIBLE void MVMenuVKernFromHKern(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    FVVKernFromHKern((FontViewBase *) mv->fv);
+VISIBLE void
+MVMenuVKernFromHKern (GWindow gw, struct gmenuitem *UNUSED (mi),
+                      GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  FVVKernFromHKern ((FontViewBase *) mv->fv);
 }
 
-VISIBLE void MVMenuKPCloseup(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SplineChar *sc1=NULL, *sc2=NULL;
-    int i;
+VISIBLE void
+MVMenuKPCloseup (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SplineChar *sc1 = NULL, *sc2 = NULL;
+  int i;
 
-    for ( i=0; i<mv->glyphcnt; ++i ) {
-        if ( mv->perchar[i].selected ) {
-            sc1 = mv->glyphs[i].sc;
-            if ( i+1<mv->glyphcnt )
-                sc2 = mv->glyphs[i+1].sc;
-    break;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    {
+      if (mv->perchar[i].selected)
+        {
+          sc1 = mv->glyphs[i].sc;
+          if (i + 1 < mv->glyphcnt)
+            sc2 = mv->glyphs[i + 1].sc;
+          break;
         }
     }
-    KernPairD(mv->sf,sc1,sc2,mv->layer,mv->vertical);
+  KernPairD (mv->sf, sc1, sc2, mv->layer, mv->vertical);
 }
 
 // *INDENT-OFF*
@@ -3101,33 +3837,36 @@ static GMenuItem wnmenu[] = {
 
 // *INDENT-ON*
 
-VISIBLE void MVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-    SplineChar *sc;
-    struct gmenuitem *wmi;
+VISIBLE void
+MVWindowMenuBuild (GWindow gw, struct gmenuitem *mi, GEvent *e)
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+  SplineChar *sc;
+  struct gmenuitem *wmi;
 
-    WindowMenuBuild(gw,mi,e);
+  WindowMenuBuild (gw, mi, e);
 
-    i = mv->glyphcnt - 1;
-    while (0 <= i && !mv->perchar[i].selected)
-      i--;
-    sc = (i == -1) ? NULL : mv->glyphs[i].sc;
+  i = mv->glyphcnt - 1;
+  while (0 <= i && !mv->perchar[i].selected)
+    i--;
+  sc = (i == -1) ? NULL : mv->glyphs[i].sc;
 
-    for ( wmi = mi->sub; (wmi->ti.text!=NULL || wmi->ti.line) ; ++wmi )
-      {
-	switch ( wmi->mid ) {
-	case MID_OpenOutline:
-	  wmi->ti.disabled = (sc == NULL);
-	  break;
-	case MID_OpenBitmap:
-	  wmi->ti.disabled = (mv->sf->bitmaps == NULL || sc == NULL);
-	  break;
-	case MID_Warnings:
-	  wmi->ti.disabled = ErrorWindowExists();
-	  break;
-	}
-      }
+  for (wmi = mi->sub; (wmi->ti.text != NULL || wmi->ti.line); ++wmi)
+    {
+      switch (wmi->mid)
+        {
+        case MID_OpenOutline:
+          wmi->ti.disabled = (sc == NULL);
+          break;
+        case MID_OpenBitmap:
+          wmi->ti.disabled = (mv->sf->bitmaps == NULL || sc == NULL);
+          break;
+        case MID_Warnings:
+          wmi->ti.disabled = ErrorWindowExists ();
+          break;
+        }
+    }
 }
 
 // *INDENT-OFF*
@@ -3761,23 +4500,32 @@ static GMenuItem balist[] = {
 
 // *INDENT-ON*
 
-VISIBLE void balistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
-    SplineChar *sc;
+VISIBLE void
+balistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
+  SplineChar *sc;
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-        if ( mv->perchar[i].selected )
-    break;
-    if ( i==-1 ) sc = NULL; else sc = mv->glyphs[i].sc;
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i == -1)
+    sc = NULL;
+  else
+    sc = mv->glyphs[i].sc;
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-        switch ( mi->mid ) {
-          case MID_BuildAccent:
-            mi->ti.disabled = sc==NULL || !SFIsSomethingBuildable(sc->parent, sc, mv->layer, true);
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_BuildAccent:
+          mi->ti.disabled = sc == NULL
+            || !SFIsSomethingBuildable (sc->parent, sc, mv->layer, true);
           break;
-          case MID_BuildComposite:
-            mi->ti.disabled = sc==NULL || !SFIsSomethingBuildable(sc->parent, sc, mv->layer, false);
+        case MID_BuildComposite:
+          mi->ti.disabled = sc == NULL
+            || !SFIsSomethingBuildable (sc->parent, sc, mv->layer, false);
           break;
         }
     }
@@ -4040,13 +4788,15 @@ static GMenuItem dummyall[] = {
 // *INDENT-ON*
 
 /* Builds up a menu containing all the anchor classes */
-VISIBLE void aplistbuild_mv(GWindow base, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(base);
+VISIBLE void
+aplistbuild_mv (GWindow base, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (base);
 
-    GMenuItemArrayFree(mi->sub);
-    mi->sub = NULL;
+  GMenuItemArrayFree (mi->sub);
+  mi->sub = NULL;
 
-    _aplistbuild(mi, mv->sf, MVMenuAnchorPairs);
+  _aplistbuild (mi, mv->sf, MVMenuAnchorPairs);
 }
 
 // *INDENT-OFF*
@@ -4098,39 +4848,49 @@ static GMenuItem cblist[] = {
 
 // *INDENT-ON*
 
-VISIBLE void cblistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SplineFont *sf = mv->sf;
-    int i, anyligs=0, anykerns=0;
-    PST *pst;
+VISIBLE void
+cblistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SplineFont *sf = mv->sf;
+  int i, anyligs = 0, anykerns = 0;
+  PST *pst;
 
-    for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
-	for ( pst=sf->glyphs[i]->possub; pst!=NULL; pst=pst->next ) {
-	    if ( pst->type==pst_ligature ) {
-		anyligs = true;
-		if ( anykerns )
-    break;
-	    }
-	}
-	if ( (mv->vertical ? sf->glyphs[i]->vkerns : sf->glyphs[i]->kerns)!=NULL ) {
-	    anykerns = true;
-	    if ( anyligs )
-    break;
-	}
-    }
+  for (i = 0; i < sf->glyphcnt; ++i)
+    if (sf->glyphs[i] != NULL)
+      {
+        for (pst = sf->glyphs[i]->possub; pst != NULL; pst = pst->next)
+          {
+            if (pst->type == pst_ligature)
+              {
+                anyligs = true;
+                if (anykerns)
+                  break;
+              }
+          }
+        if ((mv->vertical ? sf->glyphs[i]->vkerns : sf->glyphs[i]->kerns) !=
+            NULL)
+          {
+            anykerns = true;
+            if (anyligs)
+              break;
+          }
+      }
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-	switch ( mi->mid ) {
-	  case MID_Ligatures:
-	    mi->ti.disabled = !anyligs;
-	  break;
-	  case MID_KernPairs:
-	    mi->ti.disabled = !anykerns;
-	  break;
-	  case MID_AnchorPairs:
-	    mi->ti.disabled = sf->anchor==NULL;
-	  break;
-	}
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_Ligatures:
+          mi->ti.disabled = !anyligs;
+          break;
+        case MID_KernPairs:
+          mi->ti.disabled = !anykerns;
+          break;
+        case MID_AnchorPairs:
+          mi->ti.disabled = sf->anchor == NULL;
+          break;
+        }
     }
 }
 
@@ -4158,23 +4918,26 @@ static GMenuItem lylist[] = {
 
 // *INDENT-ON*
 
-VISIBLE void lylistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SplineFont *sf = mv->fv->b.sf;
-    int ly;
-    GMenuItem *sub;
+VISIBLE void
+lylistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SplineFont *sf = mv->fv->b.sf;
+  int ly;
+  GMenuItem *sub;
 
-    sub = xcalloc(sf->layer_cnt+1,sizeof(GMenuItem));
-    for ( ly=ly_fore; ly<sf->layer_cnt; ++ly ) {
-	sub[ly-1].ti.text = utf82u_copy(sf->layers[ly].name);
-	sub[ly-1].ti.checkable = true;
-	sub[ly-1].ti.checked = ly == mv->layer;
-	sub[ly-1].invoke = MVMenuChangeLayer;
-	sub[ly-1].mid = ly;
-	sub[ly-1].ti.fg = sub[ly-1].ti.bg = COLOR_DEFAULT;
+  sub = xcalloc (sf->layer_cnt + 1, sizeof (GMenuItem));
+  for (ly = ly_fore; ly < sf->layer_cnt; ++ly)
+    {
+      sub[ly - 1].ti.text = utf82u_copy (sf->layers[ly].name);
+      sub[ly - 1].ti.checkable = true;
+      sub[ly - 1].ti.checked = ly == mv->layer;
+      sub[ly - 1].invoke = MVMenuChangeLayer;
+      sub[ly - 1].mid = ly;
+      sub[ly - 1].ti.fg = sub[ly - 1].ti.bg = COLOR_DEFAULT;
     }
-    GMenuItemArrayFree(mi->sub);
-    mi->sub = sub;
+  GMenuItemArrayFree (mi->sub);
+  mi->sub = sub;
 }
 
 // *INDENT-OFF*
@@ -4241,24 +5004,28 @@ static GMenuItem gdlist[] = {
 
 // *INDENT-ON*
 
-VISIBLE void gdlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
+VISIBLE void
+gdlistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-	switch ( mi->mid ) {
-	  case MID_ShowGrid:
-	    mi->ti.checked = mv->showgrid == mv_showgrid;
-	  break;
-	  case MID_HideGrid:
-	    mi->ti.checked = mv->showgrid == mv_hidegrid;
-	  break;
-	  case MID_PartialGrid:
-	    mi->ti.checked = mv->showgrid == mv_partialgrid;
-	  break;
-	  case MID_HideGridWhenMoving:
-	    mi->ti.checked = mv->showgrid == mv_hidemovinggrid;
-	  break;
-	}
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_ShowGrid:
+          mi->ti.checked = mv->showgrid == mv_showgrid;
+          break;
+        case MID_HideGrid:
+          mi->ti.checked = mv->showgrid == mv_hidegrid;
+          break;
+        case MID_PartialGrid:
+          mi->ti.checked = mv->showgrid == mv_partialgrid;
+          break;
+        case MID_HideGridWhenMoving:
+          mi->ti.checked = mv->showgrid == mv_hidemovinggrid;
+          break;
+        }
     }
 }
 
@@ -4583,8 +5350,11 @@ static GMenuItem vwlist[] = {
 
 // *INDENT-ON*
 
-static void MVMenuContextualHelp(GWindow UNUSED(base), struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    help("metricsview.html");
+static void
+MVMenuContextualHelp (GWindow UNUSED (base), struct gmenuitem *UNUSED (mi),
+                      GEvent *UNUSED (e))
+{
+  help ("metricsview.html");
 }
 
 // *INDENT-OFF*
@@ -4637,21 +5407,25 @@ static GMenuItem tylist[] = {
 
 // *INDENT-ON*
 
-VISIBLE void tylistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
+VISIBLE void
+tylistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-	switch ( mi->mid ) {
-	  case MID_KernOnly:
-	    mi->ti.checked = mv->type == mv_kernonly;
-	  break;
-	  case MID_WidthOnly:
-	    mi->ti.checked = mv->type == mv_widthonly;
-	  break;
-	  case MID_BothKernWidth:
-	    mi->ti.checked = mv->type == mv_kernwidth;
-	  break;
-	}
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_KernOnly:
+          mi->ti.checked = mv->type == mv_kernonly;
+          break;
+        case MID_WidthOnly:
+          mi->ti.checked = mv->type == mv_widthonly;
+          break;
+        case MID_BothKernWidth:
+          mi->ti.checked = mv->type == mv_kernwidth;
+          break;
+        }
     }
 }
 
@@ -4759,218 +5533,255 @@ static GMenuItem mtlist[] = {
 
 // *INDENT-ON*
 
-VISIBLE void fllistcheck_mv(GWindow UNUSED(gw), struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    /*MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);*/
+VISIBLE void
+fllistcheck_mv (GWindow UNUSED (gw), struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  /*MetricsView *mv = (MetricsView *) GDrawGetUserData(gw); */
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-	switch ( mi->mid ) {
-	  case MID_Recent:
-	    mi->ti.disabled = !RecentFilesAny();
-	  break;
-	}
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_Recent:
+          mi->ti.disabled = !RecentFilesAny ();
+          break;
+        }
     }
 }
 
-VISIBLE void edlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i;
+VISIBLE void
+edlistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i;
 
-    if ( GWindowGetFocusGadgetOfWindow(gw)!=NULL )
-	i = -1;
-    else
-	for ( i=mv->glyphcnt-1; i>=0; --i )
-	    if ( mv->perchar[i].selected )
-	break;
+  if (GWindowGetFocusGadgetOfWindow (gw) != NULL)
+    i = -1;
+  else
+    for (i = mv->glyphcnt - 1; i >= 0; --i)
+      if (mv->perchar[i].selected)
+        break;
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-	switch ( mi->mid ) {
-	  case MID_Cut: case MID_Copy:
-#if 0	/* Copy/Cut should always be enabled so textfields will get the event */
-	    mi->ti.disabled = i==-1;
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_Cut:
+        case MID_Copy:
+#if 0                           /* Copy/Cut should always be enabled so textfields will get the event */
+          mi->ti.disabled = i == -1;
 #endif
-	  break;
-	  case MID_Join:
-	  case MID_CopyRef: case MID_CopyWidth:
-	  case MID_CopyLBearing: case MID_CopyRBearing:
-	  case MID_Clear:
-	    mi->ti.disabled = i==-1;
-	  break;
-	  case MID_CopyVWidth:
-	    mi->ti.disabled = i==-1 || !mv->sf->hasvmetrics;
-	  break;
-#if 0	/* Undo/Redo should always be enabled so textfields will get the event */
-	  case MID_Undo:
-	    mi->ti.disabled = i==-1 || mv->glyphs[i].sc->layers[mv->layer].undoes==NULL;
-	  break;
-	  case MID_Redo:
-	    mi->ti.disabled = i==-1 || mv->glyphs[i].sc->layers[mv->layer].redoes==NULL;
-	  break;
+          break;
+        case MID_Join:
+        case MID_CopyRef:
+        case MID_CopyWidth:
+        case MID_CopyLBearing:
+        case MID_CopyRBearing:
+        case MID_Clear:
+          mi->ti.disabled = i == -1;
+          break;
+        case MID_CopyVWidth:
+          mi->ti.disabled = i == -1 || !mv->sf->hasvmetrics;
+          break;
+#if 0                           /* Undo/Redo should always be enabled so textfields will get the event */
+        case MID_Undo:
+          mi->ti.disabled = i == -1
+            || mv->glyphs[i].sc->layers[mv->layer].undoes == NULL;
+          break;
+        case MID_Redo:
+          mi->ti.disabled = i == -1
+            || mv->glyphs[i].sc->layers[mv->layer].redoes == NULL;
+          break;
 #endif
-	  case MID_UnlinkRef:
-	    mi->ti.disabled = i==-1 || mv->glyphs[i].sc->layers[mv->layer].refs==NULL;
-	  break;
-	  case MID_Paste:
-#if 0	/* Paste should always be enabled so textfields will get the event */
-	    mi->ti.disabled = i==-1 ||
-		(!CopyContainsSomething() &&
-		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/png") &&
-		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg+xml") &&
-		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg-xml") &&
-		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg") &&
-		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/bmp") &&
-		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/ps") &&
-		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/eps"));
+        case MID_UnlinkRef:
+          mi->ti.disabled = i == -1
+            || mv->glyphs[i].sc->layers[mv->layer].refs == NULL;
+          break;
+        case MID_Paste:
+#if 0                           /* Paste should always be enabled so textfields will get the event */
+          mi->ti.disabled = i == -1 ||
+            (!CopyContainsSomething () &&
+             !GDrawSelectionHasType (mv->gw, sn_clipboard, "image/png") &&
+             !GDrawSelectionHasType (mv->gw, sn_clipboard, "image/svg+xml") &&
+             !GDrawSelectionHasType (mv->gw, sn_clipboard, "image/svg-xml") &&
+             !GDrawSelectionHasType (mv->gw, sn_clipboard, "image/svg") &&
+             !GDrawSelectionHasType (mv->gw, sn_clipboard, "image/bmp") &&
+             !GDrawSelectionHasType (mv->gw, sn_clipboard, "image/ps") &&
+             !GDrawSelectionHasType (mv->gw, sn_clipboard, "image/eps"));
 #endif
-	  break;
-	}
+          break;
+        }
     }
 }
 
-VISIBLE void ellistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i, anybuildable;
-    SplineChar *sc;
-    int order2 = mv->sf->layers[mv->layer].order2;
+VISIBLE void
+ellistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i, anybuildable;
+  SplineChar *sc;
+  int order2 = mv->sf->layers[mv->layer].order2;
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i==-1 ) sc = NULL; else sc = mv->glyphs[i].sc;
+  for (i = mv->glyphcnt - 1; i >= 0; --i)
+    if (mv->perchar[i].selected)
+      break;
+  if (i == -1)
+    sc = NULL;
+  else
+    sc = mv->glyphs[i].sc;
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-	switch ( mi->mid ) {
-	  case MID_RegenBitmaps:
-	    mi->ti.disabled = mv->sf->bitmaps==NULL;
-	  break;
-	  case MID_CharInfo:
-	    mi->ti.disabled = sc==NULL /*|| mv->fv->b.cidmaster!=NULL*/;
-	  break;
-	  case MID_ShowDependents:
-	    mi->ti.disabled = sc==NULL || sc->dependents == NULL;
-	  break;
-	  case MID_FindProblems:
-	  case MID_Transform:
-	    mi->ti.disabled = sc==NULL;
-	  break;
-	  case MID_Effects:
-	    mi->ti.disabled = sc==NULL || mv->sf->onlybitmaps || order2;
-	  break;
-	  case MID_RmOverlap: case MID_Stroke:
-	    mi->ti.disabled = sc==NULL || mv->sf->onlybitmaps;
-	  break;
-	  case MID_AddExtrema:
-	  case MID_Round: case MID_Correct:
-	    mi->ti.disabled = sc==NULL || mv->sf->onlybitmaps;
-	  break;
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_RegenBitmaps:
+          mi->ti.disabled = mv->sf->bitmaps == NULL;
+          break;
+        case MID_CharInfo:
+          mi->ti.disabled = sc == NULL /*|| mv->fv->b.cidmaster!=NULL */ ;
+          break;
+        case MID_ShowDependents:
+          mi->ti.disabled = sc == NULL || sc->dependents == NULL;
+          break;
+        case MID_FindProblems:
+        case MID_Transform:
+          mi->ti.disabled = sc == NULL;
+          break;
+        case MID_Effects:
+          mi->ti.disabled = sc == NULL || mv->sf->onlybitmaps || order2;
+          break;
+        case MID_RmOverlap:
+        case MID_Stroke:
+          mi->ti.disabled = sc == NULL || mv->sf->onlybitmaps;
+          break;
+        case MID_AddExtrema:
+        case MID_Round:
+        case MID_Correct:
+          mi->ti.disabled = sc == NULL || mv->sf->onlybitmaps;
+          break;
 #ifdef FONTFORGE_CONFIG_TILEPATH
-	  case MID_TilePath:
-	    mi->ti.disabled = sc==NULL || mv->sf->onlybitmaps || ClipBoardToSplineSet()==NULL || order2;
-	  break;
+        case MID_TilePath:
+          mi->ti.disabled = sc == NULL || mv->sf->onlybitmaps
+            || ClipBoardToSplineSet () == NULL || order2;
+          break;
 #endif
-	  case MID_Simplify:
-	    mi->ti.disabled = sc==NULL || mv->sf->onlybitmaps;
-	  break;
-	  case MID_BuildAccent:
-	    anybuildable = false;
-	    if ( sc!=NULL && SFIsSomethingBuildable(mv->sf,sc,mv->layer,false) )
-		anybuildable = true;
-	    mi->ti.disabled = !anybuildable;
-	  break;
-	  case MID_Autotrace:
-	    mi->ti.disabled = !(FindAutoTraceName()!=NULL && sc!=NULL &&
-		    sc->layers[ly_back].images!=NULL );
-	  break;
-	}
+        case MID_Simplify:
+          mi->ti.disabled = sc == NULL || mv->sf->onlybitmaps;
+          break;
+        case MID_BuildAccent:
+          anybuildable = false;
+          if (sc != NULL
+              && SFIsSomethingBuildable (mv->sf, sc, mv->layer, false))
+            anybuildable = true;
+          mi->ti.disabled = !anybuildable;
+          break;
+        case MID_Autotrace:
+          mi->ti.disabled = !(FindAutoTraceName () != NULL && sc != NULL &&
+                              sc->layers[ly_back].images != NULL);
+          break;
+        }
     }
 }
 
-VISIBLE void vwlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    int i, j, base, aselection;
-    BDFFont *bdf;
-    char buffer[60];
+VISIBLE void
+vwlistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  int i, j, base, aselection;
+  BDFFont *bdf;
+  char buffer[60];
 
-    aselection = false;
-    for ( j=0; j<mv->glyphcnt; ++j )
-	if ( mv->perchar[j].selected ) {
-	    aselection = true;
-    break;
-	}
+  aselection = false;
+  for (j = 0; j < mv->glyphcnt; ++j)
+    if (mv->perchar[j].selected)
+      {
+        aselection = true;
+        break;
+      }
 
-    for ( i=0; vwlist[i].mid!=MID_Outline; ++i )
-	switch ( vwlist[i].mid ) {
-	  case MID_ZoomIn:
-	    vwlist[i].ti.disabled = mv->scale_index==0;
-	  break;
-	  case MID_ZoomOut:
-	    vwlist[i].ti.disabled = mv->scale_index>=sizeof(mv_scales)/sizeof(mv_scales[0])-1;
-	  break;
-	  case MID_AntiAlias:
-	    vwlist[i].ti.checked = mv->antialias;
-	    vwlist[i].ti.disabled = mv->bdf!=NULL;
-	  break;
-	  case MID_SizeWindow:
-	    vwlist[i].ti.disabled = mv->pixelsize_set_by_window;
-	    vwlist[i].ti.checked = mv->pixelsize_set_by_window;
-	  break;
-	  case MID_Bigger:
-	  case MID_Smaller:
-	    vwlist[i].ti.disabled = mv->pixelsize_set_by_window;
-	  break;
-	  case MID_ReplaceChar:
-	  case MID_FindInFontView:
-	  case MID_Next:
-	  case MID_Prev:
-	  case MID_NextDef:
-	  case MID_PrevDef:
-	    vwlist[i].ti.disabled = !aselection;
-	  break;
-	  case MID_Vertical:
-	    vwlist[i].ti.checked = mv->vertical;
-	    vwlist[i].ti.disabled = !mv->sf->hasvmetrics;
-	  break;
-	  case MID_Layers:
-	    vwlist[i].ti.disabled = mv->sf->layer_cnt<=2 || mv->sf->multilayer;
-	  break;
-	}
-    vwlist[i].ti.checked = mv->bdf==NULL;
-    base = i+1;
-    for ( i=base; vwlist[i].ti.text!=NULL || vwlist[i].ti.line; ++i ) {
-	free( vwlist[i].ti.text);
-	vwlist[i].ti.text = NULL;
+  for (i = 0; vwlist[i].mid != MID_Outline; ++i)
+    switch (vwlist[i].mid)
+      {
+      case MID_ZoomIn:
+        vwlist[i].ti.disabled = mv->scale_index == 0;
+        break;
+      case MID_ZoomOut:
+        vwlist[i].ti.disabled =
+          mv->scale_index >= sizeof (mv_scales) / sizeof (mv_scales[0]) - 1;
+        break;
+      case MID_AntiAlias:
+        vwlist[i].ti.checked = mv->antialias;
+        vwlist[i].ti.disabled = mv->bdf != NULL;
+        break;
+      case MID_SizeWindow:
+        vwlist[i].ti.disabled = mv->pixelsize_set_by_window;
+        vwlist[i].ti.checked = mv->pixelsize_set_by_window;
+        break;
+      case MID_Bigger:
+      case MID_Smaller:
+        vwlist[i].ti.disabled = mv->pixelsize_set_by_window;
+        break;
+      case MID_ReplaceChar:
+      case MID_FindInFontView:
+      case MID_Next:
+      case MID_Prev:
+      case MID_NextDef:
+      case MID_PrevDef:
+        vwlist[i].ti.disabled = !aselection;
+        break;
+      case MID_Vertical:
+        vwlist[i].ti.checked = mv->vertical;
+        vwlist[i].ti.disabled = !mv->sf->hasvmetrics;
+        break;
+      case MID_Layers:
+        vwlist[i].ti.disabled = mv->sf->layer_cnt <= 2 || mv->sf->multilayer;
+        break;
+      }
+  vwlist[i].ti.checked = mv->bdf == NULL;
+  base = i + 1;
+  for (i = base; vwlist[i].ti.text != NULL || vwlist[i].ti.line; ++i)
+    {
+      free (vwlist[i].ti.text);
+      vwlist[i].ti.text = NULL;
     }
 
-    if ( mv->sf->bitmaps!=NULL ) {
-	for ( bdf = mv->sf->bitmaps, i=base;
-		i<sizeof(vwlist)/sizeof(vwlist[0])-1 && bdf!=NULL;
-		++i, bdf = bdf->next ) {
-	    if ( BDFDepth(bdf)==1 )
-		sprintf( buffer, _("%d pixel bitmap"), bdf->pixelsize );
-	    else
-		sprintf( buffer, _("%d@%d pixel bitmap"),
-			bdf->pixelsize, BDFDepth(bdf) );
-	    vwlist[i].ti.text = utf82u_copy(buffer);
-	    vwlist[i].ti.checkable = true;
-	    vwlist[i].ti.checked = bdf==mv->bdf;
-	    vwlist[i].ti.userdata = bdf;
-	    vwlist[i].invoke = MVMenuShowBitmap;
-	    vwlist[i].ti.fg = vwlist[i].ti.bg = COLOR_DEFAULT;
-	}
+  if (mv->sf->bitmaps != NULL)
+    {
+      for (bdf = mv->sf->bitmaps, i = base;
+           i < sizeof (vwlist) / sizeof (vwlist[0]) - 1 && bdf != NULL;
+           ++i, bdf = bdf->next)
+        {
+          if (BDFDepth (bdf) == 1)
+            sprintf (buffer, _("%d pixel bitmap"), bdf->pixelsize);
+          else
+            sprintf (buffer, _("%d@%d pixel bitmap"),
+                     bdf->pixelsize, BDFDepth (bdf));
+          vwlist[i].ti.text = utf82u_copy (buffer);
+          vwlist[i].ti.checkable = true;
+          vwlist[i].ti.checked = bdf == mv->bdf;
+          vwlist[i].ti.userdata = bdf;
+          vwlist[i].invoke = MVMenuShowBitmap;
+          vwlist[i].ti.fg = vwlist[i].ti.bg = COLOR_DEFAULT;
+        }
     }
-    GMenuItemArrayFree(mi->sub);
-    mi->sub = GMenuItemArrayCopy(vwlist,NULL);
+  GMenuItemArrayFree (mi->sub);
+  mi->sub = GMenuItemArrayCopy (vwlist, NULL);
 }
 
-VISIBLE void mtlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
+VISIBLE void
+mtlistcheck_mv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
 
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-        switch ( mi->mid ) {
-	  case MID_VKernClass:
-	  case MID_VKernFromHKern:
-	    mi->ti.disabled = !mv->sf->hasvmetrics;
-	  break;
-	}
+  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
+    {
+      switch (mi->mid)
+        {
+        case MID_VKernClass:
+        case MID_VKernFromHKern:
+          mi->ti.disabled = !mv->sf->hasvmetrics;
+          break;
+        }
     }
 }
 
@@ -5072,1292 +5883,1668 @@ static GMenuItem mblist[] = {
 
 // *INDENT-ON*
 
-static void MVResize(MetricsView *mv) {
-    GRect pos, wsize;
-    int i;
-    int size;
+static void
+MVResize (MetricsView *mv)
+{
+  GRect pos, wsize;
+  int i;
+  int size;
 
-    GDrawGetSize(mv->gw,&wsize);
-    if ( wsize.height < mv->topend+20 + mv->height-mv->displayend ||
-	    wsize.width < 30 ) {
-	int width= wsize.width < 30 ? 30 : wsize.width;
-	int height;
+  GDrawGetSize (mv->gw, &wsize);
+  if (wsize.height < mv->topend + 20 + mv->height - mv->displayend ||
+      wsize.width < 30)
+    {
+      int width = wsize.width < 30 ? 30 : wsize.width;
+      int height;
 
-	if ( wsize.height < mv->topend+20 + mv->height-mv->displayend )
-	    height = mv->topend+20 + mv->height-mv->displayend;
-	else
-	    height = wsize.height;
-	GDrawResize(mv->gw,width,height);
-return;
+      if (wsize.height < mv->topend + 20 + mv->height - mv->displayend)
+        height = mv->topend + 20 + mv->height - mv->displayend;
+      else
+        height = wsize.height;
+      GDrawResize (mv->gw, width, height);
+      return;
     }
 
-    mv->width = wsize.width;
-    mv->displayend = wsize.height - (mv->height-mv->displayend);
-    mv->height = wsize.height;
+  mv->width = wsize.width;
+  mv->displayend = wsize.height - (mv->height - mv->displayend);
+  mv->height = wsize.height;
 
-    mv_width = wsize.width; mv_height = wsize.height;
-    SavePrefs(true);
+  mv_width = wsize.width;
+  mv_height = wsize.height;
+  SavePrefs (true);
 
-    pos.width = wsize.width;
-    pos.height = mv->sbh;
-    pos.y = wsize.height - pos.height; pos.x = 0;
-    GGadgetResize(mv->hsb,pos.width,pos.height);
-    GGadgetMove(mv->hsb,pos.x,pos.y);
+  pos.width = wsize.width;
+  pos.height = mv->sbh;
+  pos.y = wsize.height - pos.height;
+  pos.x = 0;
+  GGadgetResize (mv->hsb, pos.width, pos.height);
+  GGadgetMove (mv->hsb, pos.x, pos.y);
 
-    mv->dwidth = mv->width - mv->sbh;
-    GGadgetResize(mv->vsb,mv->sbh,mv->displayend-mv->topend);
-    GGadgetMove(mv->vsb,wsize.width-mv->sbh,mv->topend);
+  mv->dwidth = mv->width - mv->sbh;
+  GGadgetResize (mv->vsb, mv->sbh, mv->displayend - mv->topend);
+  GGadgetMove (mv->vsb, wsize.width - mv->sbh, mv->topend);
 
-    GGadgetResize(mv->features,mv->xstart,mv->displayend - mv->topend);
+  GGadgetResize (mv->features, mv->xstart, mv->displayend - mv->topend);
 
-    size = (mv->displayend - mv->topend - 4);
-    if ( mv->dwidth-20<size )
-	size = mv->dwidth-20;
-    if ( mv->pixelsize_set_by_window ) {
-	mv->ptsize = mv->pixelsize = mv_scales[mv->scale_index]*size;
-	mv->dpi = 72;
-	if ( mv->bdf==NULL ) {
-	    BDFFontFree(mv->show);
-	    mv->show = SplineFontPieceMeal(mv->sf,mv->layer,mv->ptsize,mv->dpi,
-		    mv->antialias?(pf_antialias|pf_ft_recontext):pf_ft_recontext,NULL);
-	}
+  size = (mv->displayend - mv->topend - 4);
+  if (mv->dwidth - 20 < size)
+    size = mv->dwidth - 20;
+  if (mv->pixelsize_set_by_window)
+    {
+      mv->ptsize = mv->pixelsize = mv_scales[mv->scale_index] * size;
+      mv->dpi = 72;
+      if (mv->bdf == NULL)
+        {
+          BDFFontFree (mv->show);
+          mv->show =
+            SplineFontPieceMeal (mv->sf, mv->layer, mv->ptsize, mv->dpi,
+                                 mv->antialias ? (pf_antialias |
+                                                  pf_ft_recontext) :
+                                 pf_ft_recontext, NULL);
+        }
     }
 
-    for ( i=0; i<mv->max; ++i ) if ( mv->perchar[i].width!=NULL ) {
-	GGadgetMove(mv->perchar[i].name,mv->perchar[i].mx,mv->displayend+2);
-	GGadgetMove(mv->perchar[i].width,mv->perchar[i].mx,mv->displayend+2+mv->fh+4);
-	GGadgetMove(mv->perchar[i].lbearing,mv->perchar[i].mx,mv->displayend+2+2*(mv->fh+4));
-	GGadgetMove(mv->perchar[i].rbearing,mv->perchar[i].mx,mv->displayend+2+3*(mv->fh+4));
-	if ( mv->perchar[i].kern!=NULL )
-	    GGadgetMove(mv->perchar[i].kern,mv->perchar[i].mx-mv->perchar[i].mwidth/2,mv->displayend+2+4*(mv->fh+4));
-    }
-    GGadgetMove(mv->namelab,2,mv->displayend+2);
-    GGadgetMove(mv->widthlab,2,mv->displayend+2+mv->fh+4);
-    GGadgetMove(mv->lbearinglab,2,mv->displayend+2+2*(mv->fh+4));
-    GGadgetMove(mv->rbearinglab,2,mv->displayend+2+3*(mv->fh+4));
-    GGadgetMove(mv->kernlab,2,mv->displayend+2+4*(mv->fh+4));
+  for (i = 0; i < mv->max; ++i)
+    if (mv->perchar[i].width != NULL)
+      {
+        GGadgetMove (mv->perchar[i].name, mv->perchar[i].mx,
+                     mv->displayend + 2);
+        GGadgetMove (mv->perchar[i].width, mv->perchar[i].mx,
+                     mv->displayend + 2 + mv->fh + 4);
+        GGadgetMove (mv->perchar[i].lbearing, mv->perchar[i].mx,
+                     mv->displayend + 2 + 2 * (mv->fh + 4));
+        GGadgetMove (mv->perchar[i].rbearing, mv->perchar[i].mx,
+                     mv->displayend + 2 + 3 * (mv->fh + 4));
+        if (mv->perchar[i].kern != NULL)
+          GGadgetMove (mv->perchar[i].kern,
+                       mv->perchar[i].mx - mv->perchar[i].mwidth / 2,
+                       mv->displayend + 2 + 4 * (mv->fh + 4));
+      }
+  GGadgetMove (mv->namelab, 2, mv->displayend + 2);
+  GGadgetMove (mv->widthlab, 2, mv->displayend + 2 + mv->fh + 4);
+  GGadgetMove (mv->lbearinglab, 2, mv->displayend + 2 + 2 * (mv->fh + 4));
+  GGadgetMove (mv->rbearinglab, 2, mv->displayend + 2 + 3 * (mv->fh + 4));
+  GGadgetMove (mv->kernlab, 2, mv->displayend + 2 + 4 * (mv->fh + 4));
 
-    mv->vwidth = mv->dwidth-mv->xstart;
-    mv->vheight = mv->displayend-mv->topend-2;
-    GDrawResize(mv->v,mv->vwidth, mv->vheight);
-    MVRemetric(mv);
-    GDrawRequestExpose(mv->gw,NULL,true);
-    GDrawRequestExpose(mv->v,NULL,true);
+  mv->vwidth = mv->dwidth - mv->xstart;
+  mv->vheight = mv->displayend - mv->topend - 2;
+  GDrawResize (mv->v, mv->vwidth, mv->vheight);
+  MVRemetric (mv);
+  GDrawRequestExpose (mv->gw, NULL, true);
+  GDrawRequestExpose (mv->v, NULL, true);
 }
 
-static void MVChar(MetricsView *mv,GEvent *event) {
-    if ( event->u.chr.keysym=='s' &&
-	    (event->u.chr.state&ksm_control) &&
-	    (event->u.chr.state&ksm_meta) )
-	MenuSaveAll(NULL,NULL,NULL);
-    else if ( event->u.chr.keysym=='I' &&
-	    (event->u.chr.state&ksm_shift) &&
-	    (event->u.chr.state&ksm_meta) )
-	MVMenuCharInfo(mv->gw,NULL,NULL);
-    else if ( event->u.chr.keysym == GK_Help ) {
-	MenuHelp(NULL,NULL,NULL);	/* Menu does F1 */
+static void
+MVChar (MetricsView *mv, GEvent *event)
+{
+  if (event->u.chr.keysym == 's' &&
+      (event->u.chr.state & ksm_control) && (event->u.chr.state & ksm_meta))
+    MenuSaveAll (NULL, NULL, NULL);
+  else if (event->u.chr.keysym == 'I' &&
+           (event->u.chr.state & ksm_shift) && (event->u.chr.state & ksm_meta))
+    MVMenuCharInfo (mv->gw, NULL, NULL);
+  else if (event->u.chr.keysym == GK_Help)
+    {
+      MenuHelp (NULL, NULL, NULL);      /* Menu does F1 */
     }
-    if ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up
-	 || event->u.chr.keysym == GK_Down || event->u.chr.keysym==GK_KP_Down
-	 || event->u.chr.keysym == GK_Left || event->u.chr.keysym==GK_KP_Left
-	 || event->u.chr.keysym == GK_Right || event->u.chr.keysym==GK_KP_Right ) {
-	if( event->u.chr.state&ksm_meta ) {
-	    int dir = ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up ) ? -1
-		: ( ( event->u.chr.keysym == GK_Down || event->u.chr.keysym==GK_KP_Down ) ? 1 : 0);
-	    GGadget *active = GWindowGetFocusGadgetOfWindow(mv->gw);
-	    GGadget *toSelect = 0;
+  if (event->u.chr.keysym == GK_Up || event->u.chr.keysym == GK_KP_Up
+      || event->u.chr.keysym == GK_Down || event->u.chr.keysym == GK_KP_Down
+      || event->u.chr.keysym == GK_Left || event->u.chr.keysym == GK_KP_Left
+      || event->u.chr.keysym == GK_Right || event->u.chr.keysym == GK_KP_Right)
+    {
+      if (event->u.chr.state & ksm_meta)
+        {
+          int dir = (event->u.chr.keysym == GK_Up
+                     || event->u.chr.keysym ==
+                     GK_KP_Up) ? -1 : ((event->u.chr.keysym == GK_Down
+                                        || event->u.chr.keysym ==
+                                        GK_KP_Down) ? 1 : 0);
+          GGadget *active = GWindowGetFocusGadgetOfWindow (mv->gw);
+          GGadget *toSelect = 0;
 
-	    if( active ) {
-		int i=0, j=0;
-		for ( i=0; i<mv->glyphcnt; ++i ) {
-		    // remember here that j=0 is NULL because updownkparray is NULL terminated
-		    // at both ends.
-		    for ( j=1; j<10 && mv->perchar[i].updownkparray[j]; ++j ) {
-			if ( active == mv->perchar[i].updownkparray[j] ) {
-			    if( dir != 0 ) {
-				toSelect =  mv->perchar[i].updownkparray[j+dir];
-			    } else {
-				int newidx = i;
-				if( event->u.chr.keysym == GK_Left || event->u.chr.keysym==GK_KP_Left ) 
-				    newidx--;
-				if( event->u.chr.keysym == GK_Right || event->u.chr.keysym==GK_KP_Right )
-				    newidx++;
-				if( newidx < 0 || newidx >= mv->glyphcnt )
-				    return;
-				toSelect =  mv->perchar[newidx].updownkparray[j];
-			    }
-			}
-		    }
-		}
-	    } 
-	    if( toSelect ) {
-		GWidgetIndicateFocusGadget(toSelect);
-	    }
-	    return;
-	}
+          if (active)
+            {
+              int i = 0, j = 0;
+              for (i = 0; i < mv->glyphcnt; ++i)
+                {
+                  // remember here that j=0 is NULL because updownkparray is NULL terminated
+                  // at both ends.
+                  for (j = 1; j < 10 && mv->perchar[i].updownkparray[j]; ++j)
+                    {
+                      if (active == mv->perchar[i].updownkparray[j])
+                        {
+                          if (dir != 0)
+                            {
+                              toSelect = mv->perchar[i].updownkparray[j + dir];
+                            }
+                          else
+                            {
+                              int newidx = i;
+                              if (event->u.chr.keysym == GK_Left
+                                  || event->u.chr.keysym == GK_KP_Left)
+                                newidx--;
+                              if (event->u.chr.keysym == GK_Right
+                                  || event->u.chr.keysym == GK_KP_Right)
+                                newidx++;
+                              if (newidx < 0 || newidx >= mv->glyphcnt)
+                                return;
+                              toSelect = mv->perchar[newidx].updownkparray[j];
+                            }
+                        }
+                    }
+                }
+            }
+          if (toSelect)
+            {
+              GWidgetIndicateFocusGadget (toSelect);
+            }
+          return;
+        }
     }
-    if ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up ||
-	    event->u.chr.keysym == GK_Down || event->u.chr.keysym==GK_KP_Down ) {
-	    GGadget *active = GWindowGetFocusGadgetOfWindow(mv->gw);
-	    uint32_t *end;
-	    double val = u32_strtod(_GGadgetGetTitle(active),&end);
-	    if (isValidInt(end)) {
-		int dir = ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up ) ? 1 : -1;
-		if( event->u.chr.state&ksm_control && event->u.chr.state&ksm_shift ) {
-		    dir *= pref_mv_control_shift_and_arrow_skip;
-		}
-		else if( event->u.chr.state&ksm_shift ) {
-		    dir *= pref_mv_shift_and_arrow_skip;
-		}
-		val += dir;
-		char buf[100];
-		snprintf(buf,99,"%.0f",val);
-		GGadgetSetTitle8(active, buf);
+  if (event->u.chr.keysym == GK_Up || event->u.chr.keysym == GK_KP_Up ||
+      event->u.chr.keysym == GK_Down || event->u.chr.keysym == GK_KP_Down)
+    {
+      GGadget *active = GWindowGetFocusGadgetOfWindow (mv->gw);
+      uint32_t *end;
+      double val = u32_strtod (_GGadgetGetTitle (active), &end);
+      if (isValidInt (end))
+        {
+          int dir = (event->u.chr.keysym == GK_Up
+                     || event->u.chr.keysym == GK_KP_Up) ? 1 : -1;
+          if (event->u.chr.state & ksm_control
+              && event->u.chr.state & ksm_shift)
+            {
+              dir *= pref_mv_control_shift_and_arrow_skip;
+            }
+          else if (event->u.chr.state & ksm_shift)
+            {
+              dir *= pref_mv_shift_and_arrow_skip;
+            }
+          val += dir;
+          char buf[100];
+          snprintf (buf, 99, "%.0f", val);
+          GGadgetSetTitle8 (active, buf);
 
-		event->type=et_controlevent;
-		event->u.control.subtype = et_textchanged;
-		GGadgetDispatchEvent(active,event);
-	    }
+          event->type = et_controlevent;
+          event->u.control.subtype = et_textchanged;
+          GGadgetDispatchEvent (active, event);
+        }
     }
-    if ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up ||
-	 event->u.chr.keysym == GK_Down || event->u.chr.keysym==GK_KP_Down ) {
-	int dir = ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up ) ? -1 : 1;
-	if ( mv->word_index!=-1 ) {
-	    int32_t len;
-	    GTextInfo **ti = GGadgetGetList(mv->text,&len);
-	    /* We subtract 3 because: There are two lines saying "load * list" */
-	    /*  and then a line with a rule on it which we don't want access to */
-	    if ( mv->word_index+dir >=0 && mv->word_index+dir<len-3 ) {
-		const uint32_t *tit;
-		mv->word_index += dir;
-		GGadgetSelectOneListItem(mv->text,mv->word_index);
-		tit = _GGadgetGetTitle(mv->text);
-		if ( tit!=NULL && tit[0]==0x200b )
-		    MVFigureGlyphNames(mv,tit+1);
-		else
-		    MVTextChanged(mv);
-		ti = NULL;
-	    }
-	}
+  if (event->u.chr.keysym == GK_Up || event->u.chr.keysym == GK_KP_Up ||
+      event->u.chr.keysym == GK_Down || event->u.chr.keysym == GK_KP_Down)
+    {
+      int dir = (event->u.chr.keysym == GK_Up
+                 || event->u.chr.keysym == GK_KP_Up) ? -1 : 1;
+      if (mv->word_index != -1)
+        {
+          int32_t len;
+          GTextInfo **ti = GGadgetGetList (mv->text, &len);
+          /* We subtract 3 because: There are two lines saying "load * list" */
+          /*  and then a line with a rule on it which we don't want access to */
+          if (mv->word_index + dir >= 0 && mv->word_index + dir < len - 3)
+            {
+              const uint32_t *tit;
+              mv->word_index += dir;
+              GGadgetSelectOneListItem (mv->text, mv->word_index);
+              tit = _GGadgetGetTitle (mv->text);
+              if (tit != NULL && tit[0] == 0x200b)
+                MVFigureGlyphNames (mv, tit + 1);
+              else
+                MVTextChanged (mv);
+              ti = NULL;
+            }
+        }
     }
 }
 
-static int hitsbit(BDFChar *bc, int x, int y) {
-    if ( bc->byte_data )
-return( bc->bitmap[y*bc->bytes_per_line+x] );
-    else
-return( bc->bitmap[y*bc->bytes_per_line+(x>>3)]&(1<<(7-(x&7))) );
+static int
+hitsbit (BDFChar *bc, int x, int y)
+{
+  if (bc->byte_data)
+    return (bc->bitmap[y * bc->bytes_per_line + x]);
+  else
+    return (bc->bitmap[y * bc->bytes_per_line + (x >> 3)] &
+            (1 << (7 - (x & 7))));
 }
 
-static void _MVSubVMouse(MetricsView *mv,GEvent *event) {
-    int i, x, y, j, within, xbase;
-    SplineChar *sc;
-    int diff;
-    int onwidth, onkern;
-    SplineFont *sf = mv->sf;
-    double iscale = mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
-    double scale = iscale*mv->pixelsize/(double) (sf->ascent+sf->descent);
-    int as = rint(sf->ascent*scale);
+static void
+_MVSubVMouse (MetricsView *mv, GEvent *event)
+{
+  int i, x, y, j, within, xbase;
+  SplineChar *sc;
+  int diff;
+  int onwidth, onkern;
+  SplineFont *sf = mv->sf;
+  double iscale =
+    mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
+  double scale = iscale * mv->pixelsize / (double) (sf->ascent + sf->descent);
+  int as = rint (sf->ascent * scale);
 
-    xbase = mv->vwidth/2;
-    within = -1;
-    for ( i=0; i<mv->glyphcnt; ++i ) {
-	y = mv->perchar[i].dy + mv->perchar[i].yoff;
-	x = xbase - mv->pixelsize*iscale/2 - mv->perchar[i].xoff;
-	if ( mv->bdf==NULL ) {
-	    BDFChar *bdfc = BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos);
-	    if ( event->u.mouse.x >= x+bdfc->xmin &&
-		event->u.mouse.x <= x+bdfc->xmax &&
-		event->u.mouse.y <= (y+as)-bdfc->ymin &&
-		event->u.mouse.y >= (y+as)-bdfc->ymax &&
-		hitsbit(bdfc,rint(iscale*(event->u.mouse.x-x-bdfc->xmin)),
-			rint(iscale*(event->u.mouse.y-(y+as-bdfc->ymax)))) )
-    break;
-	}
-	y += -mv->perchar[i].yoff;
-	if ( event->u.mouse.y >= y && event->u.mouse.y < y+mv->perchar[i].dheight+ mv->perchar[i].kernafter )
-	    within = i;
+  xbase = mv->vwidth / 2;
+  within = -1;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    {
+      y = mv->perchar[i].dy + mv->perchar[i].yoff;
+      x = xbase - mv->pixelsize * iscale / 2 - mv->perchar[i].xoff;
+      if (mv->bdf == NULL)
+        {
+          BDFChar *bdfc =
+            BDFPieceMealCheck (mv->show, mv->glyphs[i].sc->orig_pos);
+          if (event->u.mouse.x >= x + bdfc->xmin
+              && event->u.mouse.x <= x + bdfc->xmax
+              && event->u.mouse.y <= (y + as) - bdfc->ymin
+              && event->u.mouse.y >= (y + as) - bdfc->ymax
+              && hitsbit (bdfc,
+                          rint (iscale * (event->u.mouse.x - x - bdfc->xmin)),
+                          rint (iscale *
+                                (event->u.mouse.y - (y + as - bdfc->ymax)))))
+            break;
+        }
+      y += -mv->perchar[i].yoff;
+      if (event->u.mouse.y >= y
+          && event->u.mouse.y <
+          y + mv->perchar[i].dheight + mv->perchar[i].kernafter)
+        within = i;
     }
-    if ( i==mv->glyphcnt )
-	sc = NULL;
-    else
-	sc = mv->glyphs[i].sc;
+  if (i == mv->glyphcnt)
+    sc = NULL;
+  else
+    sc = mv->glyphs[i].sc;
 
-    diff = event->u.mouse.y-mv->pressed_y;
-    onwidth = onkern = false;
-    if ( sc==NULL ) {
-	if ( mv->type == mv_kernonly ) {
-	    if ( within!=-1 && within+1<mv->glyphcnt &&
-		    event->u.mouse.y>mv->perchar[within+1].dy-3 ) {
-		onkern = true;			/* subsequent char */
-		++within;
-	    } else if ( within>0 &&
-		    event->u.mouse.y<mv->perchar[within].dy+3 )
-		onkern = true;
-	} else if ( mv->type == mv_widthonly ) {
-	    if ( within!=-1 && within+1<mv->glyphcnt &&
-		    event->u.mouse.y>mv->perchar[within+1].dy-3 )
-		onwidth = true;			/* subsequent char */
-	    else if ( within>=0 &&
-		    event->u.mouse.y>mv->perchar[within].dy+mv->perchar[within].dheight+mv->perchar[within].kernafter-3 ) {
-		onwidth = true;
-	    }
-	} else {
-	    if ( within>0 && mv->perchar[within-1].selected &&
-		    event->u.mouse.y<mv->perchar[within].dy+3 )
-		onwidth = true;		/* previous char */
-	    else if ( within!=-1 && within+1<mv->glyphcnt &&
-		    mv->perchar[within+1].selected &&
-		    event->u.mouse.y>mv->perchar[within+1].dy-3 ) {
-		onkern = true;			/* subsequent char */
-		++within;
-	    } else if ( within>0 && mv->perchar[within].selected &&
-		    event->u.mouse.y<mv->perchar[within].dy+3 )
-		onkern = true;
-	    else if ( within>=0 &&
-		    event->u.mouse.y>mv->perchar[within].dy+mv->perchar[within].dheight+mv->perchar[within].kernafter-3 ) {
-		onwidth = true;
-	    }
-	}
+  diff = event->u.mouse.y - mv->pressed_y;
+  onwidth = onkern = false;
+  if (sc == NULL)
+    {
+      if (mv->type == mv_kernonly)
+        {
+          if (within != -1 && within + 1 < mv->glyphcnt &&
+              event->u.mouse.y > mv->perchar[within + 1].dy - 3)
+            {
+              onkern = true;    /* subsequent char */
+              ++within;
+            }
+          else if (within > 0 && event->u.mouse.y < mv->perchar[within].dy + 3)
+            onkern = true;
+        }
+      else if (mv->type == mv_widthonly)
+        {
+          if (within != -1 && within + 1 < mv->glyphcnt &&
+              event->u.mouse.y > mv->perchar[within + 1].dy - 3)
+            onwidth = true;     /* subsequent char */
+          else if (within >= 0 &&
+                   event->u.mouse.y >
+                   mv->perchar[within].dy + mv->perchar[within].dheight +
+                   mv->perchar[within].kernafter - 3)
+            {
+              onwidth = true;
+            }
+        }
+      else
+        {
+          if (within > 0 && mv->perchar[within - 1].selected &&
+              event->u.mouse.y < mv->perchar[within].dy + 3)
+            onwidth = true;     /* previous char */
+          else if (within != -1 && within + 1 < mv->glyphcnt &&
+                   mv->perchar[within + 1].selected &&
+                   event->u.mouse.y > mv->perchar[within + 1].dy - 3)
+            {
+              onkern = true;    /* subsequent char */
+              ++within;
+            }
+          else if (within > 0 && mv->perchar[within].selected &&
+                   event->u.mouse.y < mv->perchar[within].dy + 3)
+            onkern = true;
+          else if (within >= 0 &&
+                   event->u.mouse.y >
+                   mv->perchar[within].dy + mv->perchar[within].dheight +
+                   mv->perchar[within].kernafter - 3)
+            {
+              onwidth = true;
+            }
+        }
     }
 
-    if ( event->type != et_mousemove || !mv->pressed ) {
-	int ct = -1;
-	if ( mv->bdf!=NULL ||
-		( mv->type==mv_kernonly && !onkern ) ||
-		( mv->type==mv_widthonly && !onwidth )) {
-	    if ( mv->cursor!=ct_pointer )
-		ct = ct_pointer;
-	} else if ( sc!=NULL ) {
-	    if ( mv->cursor!=ct_lbearing )
-		ct = ct_lbearing;
-	} else if ( onwidth ) {
-	    if ( mv->cursor!=ct_rbearing )
-		ct = ct_rbearing;
-	} else if ( onkern ) {
-	    if ( mv->cursor!=ct_kerning )
-		ct = ct_kerning;
-	} else {
-	    if ( mv->cursor!=ct_pointer )
-		ct = ct_pointer;
-	}
-	if ( ct!=-1 ) {
-	    GDrawSetCursor(mv->gw,ct);
-	    mv->cursor = ct;
-	}
+  if (event->type != et_mousemove || !mv->pressed)
+    {
+      int ct = -1;
+      if (mv->bdf != NULL ||
+          (mv->type == mv_kernonly && !onkern) ||
+          (mv->type == mv_widthonly && !onwidth))
+        {
+          if (mv->cursor != ct_pointer)
+            ct = ct_pointer;
+        }
+      else if (sc != NULL)
+        {
+          if (mv->cursor != ct_lbearing)
+            ct = ct_lbearing;
+        }
+      else if (onwidth)
+        {
+          if (mv->cursor != ct_rbearing)
+            ct = ct_rbearing;
+        }
+      else if (onkern)
+        {
+          if (mv->cursor != ct_kerning)
+            ct = ct_kerning;
+        }
+      else
+        {
+          if (mv->cursor != ct_pointer)
+            ct = ct_pointer;
+        }
+      if (ct != -1)
+        {
+          GDrawSetCursor (mv->gw, ct);
+          mv->cursor = ct;
+        }
     }
 
-    if ( event->type == et_mousemove && !mv->pressed ) {
-	if ( sc==NULL && within!=-1 )
-	    sc = mv->glyphs[within].sc;
-	if ( sc!=NULL )
-	    SCPreparePopup(mv->gw,sc,mv->fv->b.map->remap,mv->fv->b.map->backmap[sc->orig_pos],sc->unicodeenc);
+  if (event->type == et_mousemove && !mv->pressed)
+    {
+      if (sc == NULL && within != -1)
+        sc = mv->glyphs[within].sc;
+      if (sc != NULL)
+        SCPreparePopup (mv->gw, sc, mv->fv->b.map->remap,
+                        mv->fv->b.map->backmap[sc->orig_pos], sc->unicodeenc);
 /* Don't allow any editing when displaying a bitmap font */
-    } else if ( event->type == et_mousedown && mv->bdf==NULL ) {
-	CVPaletteDeactivate();
-	if ( sc!=NULL ) {
-	    for ( j=0; j<mv->glyphcnt; ++j )
-		if ( j!=i && mv->perchar[j].selected )
-		    MVDeselectChar(mv,j);
-	    MVSelectChar(mv,i);
-	    GWindowClearFocusGadgetOfWindow(mv->gw);
-	    mv->pressed = true;
-	} else if ( within!=-1 ) {
-	    mv->pressedwidth = onwidth;
-	    mv->pressedkern = onkern;
-	    if ( mv->pressedwidth || mv->pressedkern ) {
-		mv->pressed = true;
-		if ( !mv->perchar[within].selected ) {
-		    MVDoSelect(mv,within);
-		}
-	    }
+    }
+  else if (event->type == et_mousedown && mv->bdf == NULL)
+    {
+      CVPaletteDeactivate ();
+      if (sc != NULL)
+        {
+          for (j = 0; j < mv->glyphcnt; ++j)
+            if (j != i && mv->perchar[j].selected)
+              MVDeselectChar (mv, j);
+          MVSelectChar (mv, i);
+          GWindowClearFocusGadgetOfWindow (mv->gw);
+          mv->pressed = true;
+        }
+      else if (within != -1)
+        {
+          mv->pressedwidth = onwidth;
+          mv->pressedkern = onkern;
+          if (mv->pressedwidth || mv->pressedkern)
+            {
+              mv->pressed = true;
+              if (!mv->perchar[within].selected)
+                {
+                  MVDoSelect (mv, within);
+                }
+            }
 #if 0
-	} else if ( event->u.mouse.y<mv->perchar[mv->glyphcnt-1].dy+
-				    mv->perchar[mv->glyphcnt-1].dheight+
-			            mv->perchar[mv->glyphcnt-1].kernafter+3 &&
-			            mv->type!=mv_kernonly ) {
-	    mv->pressed = mv->pressedwidth = true;
-	    GDrawSetCursor(mv->gw,ct_rbearing);
-	    mv->cursor = ct_rbearing;
-	    if ( !mv->perchar[mv->glyphcnt-1].selected )
-		    MVDoSelect(mv,mv->glyphcnt-1);
+        }
+      else if (event->u.mouse.y < mv->perchar[mv->glyphcnt - 1].dy +
+               mv->perchar[mv->glyphcnt - 1].dheight +
+               mv->perchar[mv->glyphcnt - 1].kernafter + 3 &&
+               mv->type != mv_kernonly)
+        {
+          mv->pressed = mv->pressedwidth = true;
+          GDrawSetCursor (mv->gw, ct_rbearing);
+          mv->cursor = ct_rbearing;
+          if (!mv->perchar[mv->glyphcnt - 1].selected)
+            MVDoSelect (mv, mv->glyphcnt - 1);
 #endif
-	}
-	mv->pressed_y = event->u.mouse.y;
-    } else if ( event->type == et_mousemove && mv->pressed ) {
-	for ( i=0; i<mv->glyphcnt && !mv->perchar[i].selected; ++i );
-	if ( mv->pressedwidth ) {
-	    int ow = mv->perchar[i].dwidth;
-	    mv->perchar[i].dwidth = rint(mv->glyphs[i].sc->vwidth*scale) + diff;
-	    if ( ow!=mv->perchar[i].dwidth ) {
-		for ( j=i+1; j<mv->glyphcnt; ++j )
-		    mv->perchar[j].dy = mv->perchar[j-1].dy+mv->perchar[j-1].dheight+
-			    mv->perchar[j-1].kernafter;
-		GDrawRequestExpose(mv->v,NULL,false);
-	    }
-	} else if ( mv->pressedkern ) {
-	    int ow = mv->perchar[i-1].kernafter;
-	    KernPair *kp;
-	    int kpoff;
-	    KernClass *kc;
-	    kp = mv->glyphs[i-1].kp;
-	    if ( kp!=NULL )
-		kpoff = kp->off;
-	    else if ((kc=mv->glyphs[i-1].kc)!=NULL )
-		kpoff = kc->offsets[mv->glyphs[i-1].kc_index];
-	    else
-		kpoff = 0;
-	    kpoff = kpoff * mv->pixelsize*iscale /
-			(mv->sf->descent+mv->sf->ascent);
-	    mv->perchar[i-1].kernafter = kpoff + diff;
-	    if ( ow!=mv->perchar[i-1].kernafter ) {
-		for ( j=i; j<mv->glyphcnt; ++j )
-		    mv->perchar[j].dy = mv->perchar[j-1].dy+mv->perchar[j-1].dheight+
-			    mv->perchar[j-1].kernafter;
-		GDrawRequestExpose(mv->v,NULL,false);
-	    }
-	} else if ( mv->type!=mv_kernonly ) {
-	    int olda = mv->activeoff;
-	    BDFChar *bdfc = BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos);
-	    mv->activeoff = diff;
-	    MVRedrawI(mv,i,bdfc->xmin+olda,bdfc->xmax+olda);
-	}
-    } else if ( event->type == et_mouseup && event->u.mouse.clicks>1 &&
-	    (within!=-1 || sc!=NULL)) {
-	mv->pressed = false; mv->activeoff = 0;
-	mv->pressedwidth = mv->pressedkern = false;
-	if ( within==-1 ) within = i;
-	if ( mv->bdf==NULL )
-	    CharViewCreate(mv->glyphs[within].sc,mv->fv,-1);
-	else
-	    BitmapViewCreate(mv->bdf->glyphs[mv->glyphs[within].sc->orig_pos],mv->bdf,mv->fv,-1);
-	if ( mv->showgrid==mv_hidemovinggrid )
-	    GDrawRequestExpose(mv->v,NULL,false);
-    } else if ( event->type == et_mouseup && mv->pressed ) {
-	for ( i=0; i<mv->glyphcnt && !mv->perchar[i].selected; ++i );
-	mv->pressed = false;
-	mv->activeoff = 0;
-	sc = mv->glyphs[i].sc;
-	if ( mv->pressedwidth ) {
-	    mv->pressedwidth = false;
-	    diff = diff*(mv->sf->ascent+mv->sf->descent)/(mv->pixelsize*iscale);
-	    if ( diff!=0 ) {
-		SCPreserveWidth(sc);
-		sc->vwidth += diff;
-		SCCharChangedUpdate(sc,ly_none);
-		for ( ; i<mv->glyphcnt; ++i )
-		    mv->perchar[i].dy = mv->perchar[i-1].dy+mv->perchar[i-1].dheight +
-			    mv->perchar[i-1].kernafter ;
-		GDrawRequestExpose(mv->v,NULL,false);
-	    } else if ( mv->showgrid==mv_hidemovinggrid )
-		GDrawRequestExpose(mv->v,NULL,false);
-	} else if ( mv->pressedkern ) {
-	    mv->pressedkern = false;
-	    diff = diff*(mv->sf->ascent+mv->sf->descent)/(mv->pixelsize*iscale);
-	    if ( diff!=0 )
-		MV_ChangeKerning(mv, i, diff, true);
-	    MVRefreshValues(mv,i-1);
-	} else if ( mv->type!=mv_kernonly ) {
-	    real transform[6];
-	    DBounds bb;
-	    SplineCharFindBounds(sc,&bb);
-	    transform[0] = transform[3] = 1.0;
-	    transform[1] = transform[2] = transform[4] = 0;
-	    transform[5] = -diff*
-		    (mv->sf->ascent+mv->sf->descent)/(mv->pixelsize*iscale);
-	    if ( transform[5]!=0 )
-		FVTrans( (FontViewBase *)mv->fv,sc,transform,NULL,false);
-	}
-	mv->pressedwidth = false;
-	mv->pressedkern = false;
-    } else if ( event->type == et_mouseup && mv->bdf!=NULL && within!=-1 ) {
-	for ( j=0; j<mv->glyphcnt; ++j )
-	    if ( j!=within && mv->perchar[j].selected )
-		MVDeselectChar(mv,j);
-	MVSelectChar(mv,within);
-	if ( mv->showgrid==mv_hidemovinggrid )
-	    GDrawRequestExpose(mv->v,NULL,false);
+        }
+      mv->pressed_y = event->u.mouse.y;
+    }
+  else if (event->type == et_mousemove && mv->pressed)
+    {
+      for (i = 0; i < mv->glyphcnt && !mv->perchar[i].selected; ++i);
+      if (mv->pressedwidth)
+        {
+          int ow = mv->perchar[i].dwidth;
+          mv->perchar[i].dwidth =
+            rint (mv->glyphs[i].sc->vwidth * scale) + diff;
+          if (ow != mv->perchar[i].dwidth)
+            {
+              for (j = i + 1; j < mv->glyphcnt; ++j)
+                mv->perchar[j].dy =
+                  mv->perchar[j - 1].dy + mv->perchar[j - 1].dheight +
+                  mv->perchar[j - 1].kernafter;
+              GDrawRequestExpose (mv->v, NULL, false);
+            }
+        }
+      else if (mv->pressedkern)
+        {
+          int ow = mv->perchar[i - 1].kernafter;
+          KernPair *kp;
+          int kpoff;
+          KernClass *kc;
+          kp = mv->glyphs[i - 1].kp;
+          if (kp != NULL)
+            kpoff = kp->off;
+          else if ((kc = mv->glyphs[i - 1].kc) != NULL)
+            kpoff = kc->offsets[mv->glyphs[i - 1].kc_index];
+          else
+            kpoff = 0;
+          kpoff = kpoff * mv->pixelsize * iscale /
+            (mv->sf->descent + mv->sf->ascent);
+          mv->perchar[i - 1].kernafter = kpoff + diff;
+          if (ow != mv->perchar[i - 1].kernafter)
+            {
+              for (j = i; j < mv->glyphcnt; ++j)
+                mv->perchar[j].dy =
+                  mv->perchar[j - 1].dy + mv->perchar[j - 1].dheight +
+                  mv->perchar[j - 1].kernafter;
+              GDrawRequestExpose (mv->v, NULL, false);
+            }
+        }
+      else if (mv->type != mv_kernonly)
+        {
+          int olda = mv->activeoff;
+          BDFChar *bdfc =
+            BDFPieceMealCheck (mv->show, mv->glyphs[i].sc->orig_pos);
+          mv->activeoff = diff;
+          MVRedrawI (mv, i, bdfc->xmin + olda, bdfc->xmax + olda);
+        }
+    }
+  else if (event->type == et_mouseup && event->u.mouse.clicks > 1 &&
+           (within != -1 || sc != NULL))
+    {
+      mv->pressed = false;
+      mv->activeoff = 0;
+      mv->pressedwidth = mv->pressedkern = false;
+      if (within == -1)
+        within = i;
+      if (mv->bdf == NULL)
+        CharViewCreate (mv->glyphs[within].sc, mv->fv, -1);
+      else
+        BitmapViewCreate (mv->bdf->glyphs[mv->glyphs[within].sc->orig_pos],
+                          mv->bdf, mv->fv, -1);
+      if (mv->showgrid == mv_hidemovinggrid)
+        GDrawRequestExpose (mv->v, NULL, false);
+    }
+  else if (event->type == et_mouseup && mv->pressed)
+    {
+      for (i = 0; i < mv->glyphcnt && !mv->perchar[i].selected; ++i);
+      mv->pressed = false;
+      mv->activeoff = 0;
+      sc = mv->glyphs[i].sc;
+      if (mv->pressedwidth)
+        {
+          mv->pressedwidth = false;
+          diff =
+            diff * (mv->sf->ascent +
+                    mv->sf->descent) / (mv->pixelsize * iscale);
+          if (diff != 0)
+            {
+              SCPreserveWidth (sc);
+              sc->vwidth += diff;
+              SCCharChangedUpdate (sc, ly_none);
+              for (; i < mv->glyphcnt; ++i)
+                mv->perchar[i].dy =
+                  mv->perchar[i - 1].dy + mv->perchar[i - 1].dheight +
+                  mv->perchar[i - 1].kernafter;
+              GDrawRequestExpose (mv->v, NULL, false);
+            }
+          else if (mv->showgrid == mv_hidemovinggrid)
+            GDrawRequestExpose (mv->v, NULL, false);
+        }
+      else if (mv->pressedkern)
+        {
+          mv->pressedkern = false;
+          diff =
+            diff * (mv->sf->ascent +
+                    mv->sf->descent) / (mv->pixelsize * iscale);
+          if (diff != 0)
+            MV_ChangeKerning (mv, i, diff, true);
+          MVRefreshValues (mv, i - 1);
+        }
+      else if (mv->type != mv_kernonly)
+        {
+          real transform[6];
+          DBounds bb;
+          SplineCharFindBounds (sc, &bb);
+          transform[0] = transform[3] = 1.0;
+          transform[1] = transform[2] = transform[4] = 0;
+          transform[5] = -diff *
+            (mv->sf->ascent + mv->sf->descent) / (mv->pixelsize * iscale);
+          if (transform[5] != 0)
+            FVTrans ((FontViewBase *) mv->fv, sc, transform, NULL, false);
+        }
+      mv->pressedwidth = false;
+      mv->pressedkern = false;
+    }
+  else if (event->type == et_mouseup && mv->bdf != NULL && within != -1)
+    {
+      for (j = 0; j < mv->glyphcnt; ++j)
+        if (j != within && mv->perchar[j].selected)
+          MVDeselectChar (mv, j);
+      MVSelectChar (mv, within);
+      if (mv->showgrid == mv_hidemovinggrid)
+        GDrawRequestExpose (mv->v, NULL, false);
     }
 }
 
-static void MVSubMouse(MetricsView *mv,GEvent *event) {
-    int i, x, y, j, within, ybase;
-    SplineChar *sc;
-    int diff;
-    int onwidth, onkern;
-    BDFChar *bdfc;
-    double iscale = mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
+static void
+MVSubMouse (MetricsView *mv, GEvent *event)
+{
+  int i, x, y, j, within, ybase;
+  SplineChar *sc;
+  int diff;
+  int onwidth, onkern;
+  BDFChar *bdfc;
+  double iscale =
+    mv->pixelsize_set_by_window ? 1.0 : mv_scales[mv->scale_index];
 
-    GGadgetEndPopup();
+  GGadgetEndPopup ();
 
-    if ( event->type==et_mouseup ) {
-	event->type = et_mousemove;
-	MVSubMouse(mv,event);
-	event->u.mouse.x -= mv->xoff;
-	event->u.mouse.y -= mv->yoff;
-	event->type = et_mouseup;
+  if (event->type == et_mouseup)
+    {
+      event->type = et_mousemove;
+      MVSubMouse (mv, event);
+      event->u.mouse.x -= mv->xoff;
+      event->u.mouse.y -= mv->yoff;
+      event->type = et_mouseup;
     }
 
-    event->u.mouse.x += mv->xoff;
-    event->u.mouse.y += mv->yoff;
-    if ( mv->vertical ) {
-	_MVSubVMouse(mv,event);
-return;
+  event->u.mouse.x += mv->xoff;
+  event->u.mouse.y += mv->yoff;
+  if (mv->vertical)
+    {
+      _MVSubVMouse (mv, event);
+      return;
     }
 
-    ybase = mv->ybaseline - mv->yoff;
-    within = -1;
-    for ( i=0; i<mv->glyphcnt; ++i ) {
-	x = mv->perchar[i].dx + mv->perchar[i].xoff;
-	if ( mv->right_to_left )
-	    x = mv->vwidth - x - mv->perchar[i].dwidth - mv->perchar[i].kernafter;
-	y = ybase - mv->perchar[i].yoff;
-	if ( mv->bdf==NULL ) {
-	    bdfc = BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos);
-	    if ( event->u.mouse.x >= x+bdfc->xmin &&
-		event->u.mouse.x <= x+bdfc->xmax &&
-		event->u.mouse.y <= y-bdfc->ymin &&
-		event->u.mouse.y >= y-bdfc->ymax &&
-		hitsbit(bdfc,rint(iscale*(event->u.mouse.x-x-bdfc->xmin)),
-			rint(iscale*(bdfc->ymax-(y-event->u.mouse.y)))) )
-    break;
-	}
-	x += mv->right_to_left ? mv->perchar[i].xoff : -mv->perchar[i].xoff;
-	if ( event->u.mouse.x >= x && event->u.mouse.x < x+mv->perchar[i].dwidth+ mv->perchar[i].kernafter )
-	    within = i;
+  ybase = mv->ybaseline - mv->yoff;
+  within = -1;
+  for (i = 0; i < mv->glyphcnt; ++i)
+    {
+      x = mv->perchar[i].dx + mv->perchar[i].xoff;
+      if (mv->right_to_left)
+        x = mv->vwidth - x - mv->perchar[i].dwidth - mv->perchar[i].kernafter;
+      y = ybase - mv->perchar[i].yoff;
+      if (mv->bdf == NULL)
+        {
+          bdfc = BDFPieceMealCheck (mv->show, mv->glyphs[i].sc->orig_pos);
+          if (event->u.mouse.x >= x + bdfc->xmin &&
+              event->u.mouse.x <= x + bdfc->xmax &&
+              event->u.mouse.y <= y - bdfc->ymin &&
+              event->u.mouse.y >= y - bdfc->ymax &&
+              hitsbit (bdfc,
+                       rint (iscale * (event->u.mouse.x - x - bdfc->xmin)),
+                       rint (iscale * (bdfc->ymax - (y - event->u.mouse.y)))))
+            break;
+        }
+      x += mv->right_to_left ? mv->perchar[i].xoff : -mv->perchar[i].xoff;
+      if (event->u.mouse.x >= x
+          && event->u.mouse.x <
+          x + mv->perchar[i].dwidth + mv->perchar[i].kernafter)
+        within = i;
     }
-    if ( i==mv->glyphcnt )
-	sc = NULL;
-    else
-	sc = mv->glyphs[i].sc;
+  if (i == mv->glyphcnt)
+    sc = NULL;
+  else
+    sc = mv->glyphs[i].sc;
 
-    diff = event->u.mouse.x-mv->pressed_x;
-    /*if ( mv->right_to_left ) diff = -diff;*/
-    onwidth = onkern = false;
-    if ( sc==NULL ) {
-	if ( !mv->right_to_left ) {
-	    if ( mv->type == mv_kernonly ) {
-		if ( within>=0 && within+1<mv->glyphcnt &&
-			event->u.mouse.x>mv->perchar[within+1].dx-3 ) {
-		    onkern = true;			/* subsequent char */
-		    ++within;
-		} else if ( within>0 &&
-			event->u.mouse.x<mv->perchar[within].dx+3 )
-		    onkern = true;
-	    } else if ( mv->type == mv_widthonly ) {
-		if ( within>=0 && within+1<mv->glyphcnt &&
-			event->u.mouse.x>mv->perchar[within+1].dx-3 )
-		    onwidth = true;			/* subsequent char */
-		else if ( within>=0 &&
-			event->u.mouse.x>mv->perchar[within].dx+mv->perchar[within].dwidth+mv->perchar[within].kernafter-3 ) {
-		    onwidth = true;
-		}
-	    } else {
-		if ( within>0 && mv->perchar[within-1].selected &&
-			event->u.mouse.x<mv->perchar[within].dx+3 )
-		    onwidth = true;		/* previous char */
-		else if ( within!=-1 && within+1<mv->glyphcnt &&
-			mv->perchar[within+1].selected &&
-			event->u.mouse.x>mv->perchar[within+1].dx-3 ) {
-		    onkern = true;			/* subsequent char */
-		    ++within;
-		} else if ( within>0 && mv->perchar[within].selected &&
-			event->u.mouse.x<mv->perchar[within].dx+3 )
-		    onkern = true;
-		else if ( within>=0 &&
-			event->u.mouse.x>mv->perchar[within].dx+mv->perchar[within].dwidth+mv->perchar[within].kernafter-3 ) {
-		    onwidth = true;
-		}
-	    }
-	} else {
-	    if ( mv->type == mv_kernonly ) {
-		if ( within>=0 && within+1<mv->glyphcnt &&
-			event->u.mouse.x<mv->dwidth-(mv->perchar[within+1].dx-3) ) {
-		    onkern = true;			/* subsequent char */
-		    ++within;
-		} else if ( within>0 &&
-			event->u.mouse.x>mv->dwidth-(mv->perchar[within].dx+3) )
-		    onkern = true;
-	    } else if ( mv->type == mv_widthonly ) {
-		if ( within>=0 && within+1<mv->glyphcnt &&
-			event->u.mouse.x<mv->dwidth-(mv->perchar[within+1].dx-3) )
-		    onwidth = true;			/* subsequent char */
-		else if ( within>=0 &&
-			event->u.mouse.x<mv->dwidth-(mv->perchar[within].dx+mv->perchar[within].dwidth+mv->perchar[within].kernafter-3) ) {
-		    onwidth = true;
-		}
-	    } else {
-		if ( within>0 && mv->perchar[within-1].selected &&
-			event->u.mouse.x>mv->dwidth-(mv->perchar[within].dx+3) )
-		    onwidth = true;		/* previous char */
-		else if ( within!=-1 && within+1<mv->glyphcnt &&
-			mv->perchar[within+1].selected &&
-			event->u.mouse.x<mv->dwidth-(mv->perchar[within+1].dx-3) ) {
-		    onkern = true;			/* subsequent char */
-		    ++within;
-		} else if ( within>0 && mv->perchar[within].selected &&
-			event->u.mouse.x>mv->dwidth-(mv->perchar[within].dx+3) )
-		    onkern = true;
-		else if ( within>=0 &&
-			event->u.mouse.x<mv->dwidth-(mv->perchar[within].dx+mv->perchar[within].dwidth+mv->perchar[within].kernafter-3) ) {
-		    onwidth = true;
-		}
-	    }
-	}
+  diff = event->u.mouse.x - mv->pressed_x;
+  /*if ( mv->right_to_left ) diff = -diff; */
+  onwidth = onkern = false;
+  if (sc == NULL)
+    {
+      if (!mv->right_to_left)
+        {
+          if (mv->type == mv_kernonly)
+            {
+              if (within >= 0 && within + 1 < mv->glyphcnt &&
+                  event->u.mouse.x > mv->perchar[within + 1].dx - 3)
+                {
+                  onkern = true;        /* subsequent char */
+                  ++within;
+                }
+              else if (within > 0 &&
+                       event->u.mouse.x < mv->perchar[within].dx + 3)
+                onkern = true;
+            }
+          else if (mv->type == mv_widthonly)
+            {
+              if (within >= 0 && within + 1 < mv->glyphcnt &&
+                  event->u.mouse.x > mv->perchar[within + 1].dx - 3)
+                onwidth = true; /* subsequent char */
+              else if (within >= 0 &&
+                       event->u.mouse.x >
+                       mv->perchar[within].dx + mv->perchar[within].dwidth +
+                       mv->perchar[within].kernafter - 3)
+                {
+                  onwidth = true;
+                }
+            }
+          else
+            {
+              if (within > 0 && mv->perchar[within - 1].selected &&
+                  event->u.mouse.x < mv->perchar[within].dx + 3)
+                onwidth = true; /* previous char */
+              else if (within != -1 && within + 1 < mv->glyphcnt &&
+                       mv->perchar[within + 1].selected &&
+                       event->u.mouse.x > mv->perchar[within + 1].dx - 3)
+                {
+                  onkern = true;        /* subsequent char */
+                  ++within;
+                }
+              else if (within > 0 && mv->perchar[within].selected &&
+                       event->u.mouse.x < mv->perchar[within].dx + 3)
+                onkern = true;
+              else if (within >= 0 &&
+                       event->u.mouse.x >
+                       mv->perchar[within].dx + mv->perchar[within].dwidth +
+                       mv->perchar[within].kernafter - 3)
+                {
+                  onwidth = true;
+                }
+            }
+        }
+      else
+        {
+          if (mv->type == mv_kernonly)
+            {
+              if (within >= 0 && within + 1 < mv->glyphcnt &&
+                  event->u.mouse.x <
+                  mv->dwidth - (mv->perchar[within + 1].dx - 3))
+                {
+                  onkern = true;        /* subsequent char */
+                  ++within;
+                }
+              else if (within > 0 &&
+                       event->u.mouse.x >
+                       mv->dwidth - (mv->perchar[within].dx + 3))
+                onkern = true;
+            }
+          else if (mv->type == mv_widthonly)
+            {
+              if (within >= 0 && within + 1 < mv->glyphcnt &&
+                  event->u.mouse.x <
+                  mv->dwidth - (mv->perchar[within + 1].dx - 3))
+                onwidth = true; /* subsequent char */
+              else if (within >= 0 &&
+                       event->u.mouse.x <
+                       mv->dwidth - (mv->perchar[within].dx +
+                                     mv->perchar[within].dwidth +
+                                     mv->perchar[within].kernafter - 3))
+                {
+                  onwidth = true;
+                }
+            }
+          else
+            {
+              if (within > 0 && mv->perchar[within - 1].selected &&
+                  event->u.mouse.x > mv->dwidth - (mv->perchar[within].dx + 3))
+                onwidth = true; /* previous char */
+              else if (within != -1 && within + 1 < mv->glyphcnt &&
+                       mv->perchar[within + 1].selected &&
+                       event->u.mouse.x <
+                       mv->dwidth - (mv->perchar[within + 1].dx - 3))
+                {
+                  onkern = true;        /* subsequent char */
+                  ++within;
+                }
+              else if (within > 0 && mv->perchar[within].selected &&
+                       event->u.mouse.x >
+                       mv->dwidth - (mv->perchar[within].dx + 3))
+                onkern = true;
+              else if (within >= 0 &&
+                       event->u.mouse.x <
+                       mv->dwidth - (mv->perchar[within].dx +
+                                     mv->perchar[within].dwidth +
+                                     mv->perchar[within].kernafter - 3))
+                {
+                  onwidth = true;
+                }
+            }
+        }
     }
 
-    if ( event->type != et_mousemove || !mv->pressed ) {
-	int ct = -1;
-	if ( mv->bdf!=NULL ||
-		( mv->type==mv_kernonly && !onkern ) ||
-		( mv->type==mv_widthonly && !onwidth )) {
-	    if ( mv->cursor!=ct_pointer )
-		ct = ct_pointer;
-	} else if ( sc!=NULL ) {
-	    if ( mv->cursor!=ct_lbearing )
-		ct = ct_lbearing;
-	} else if ( onwidth ) {
-	    if ( mv->cursor!=ct_rbearing )
-		ct = ct_rbearing;
-	} else if ( onkern ) {
-	    if ( mv->cursor!=ct_kerning )
-		ct = ct_kerning;
-	} else {
-	    if ( mv->cursor!=ct_pointer )
-		ct = ct_pointer;
-	}
-	if ( ct!=-1 ) {
-	    GDrawSetCursor(mv->gw,ct);
-	    mv->cursor = ct;
-	}
+  if (event->type != et_mousemove || !mv->pressed)
+    {
+      int ct = -1;
+      if (mv->bdf != NULL ||
+          (mv->type == mv_kernonly && !onkern) ||
+          (mv->type == mv_widthonly && !onwidth))
+        {
+          if (mv->cursor != ct_pointer)
+            ct = ct_pointer;
+        }
+      else if (sc != NULL)
+        {
+          if (mv->cursor != ct_lbearing)
+            ct = ct_lbearing;
+        }
+      else if (onwidth)
+        {
+          if (mv->cursor != ct_rbearing)
+            ct = ct_rbearing;
+        }
+      else if (onkern)
+        {
+          if (mv->cursor != ct_kerning)
+            ct = ct_kerning;
+        }
+      else
+        {
+          if (mv->cursor != ct_pointer)
+            ct = ct_pointer;
+        }
+      if (ct != -1)
+        {
+          GDrawSetCursor (mv->gw, ct);
+          mv->cursor = ct;
+        }
     }
 
-    if ( event->type == et_mousemove && !mv->pressed ) {
-	if ( sc==NULL && within!=-1 )
-	    sc = mv->glyphs[within].sc;
-	if ( sc!=NULL )
-	    SCPreparePopup(mv->gw,sc,mv->fv->b.map->remap,mv->fv->b.map->backmap[sc->orig_pos],sc->unicodeenc);
+  if (event->type == et_mousemove && !mv->pressed)
+    {
+      if (sc == NULL && within != -1)
+        sc = mv->glyphs[within].sc;
+      if (sc != NULL)
+        SCPreparePopup (mv->gw, sc, mv->fv->b.map->remap,
+                        mv->fv->b.map->backmap[sc->orig_pos], sc->unicodeenc);
 /* Don't allow any editing when displaying a bitmap font */
-    } else if ( event->type == et_mousedown && mv->bdf==NULL ) {
-	CVPaletteDeactivate();
-	if ( sc!=NULL ) {
-	    for ( j=0; j<mv->glyphcnt; ++j )
-		if ( j!=i && mv->perchar[j].selected )
-		    MVDeselectChar(mv,j);
-	    MVSelectChar(mv,i);
-	    GWindowClearFocusGadgetOfWindow(mv->gw);
-	    mv->pressed = true;
-	} else if ( within!=-1 ) {
-	    mv->pressedwidth = onwidth;
-	    mv->pressedkern = onkern;
-	    if ( mv->pressedwidth || mv->pressedkern ) {
-		mv->pressed = true;
-		if ( !mv->perchar[within].selected ) {
-		    MVDoSelect(mv,within);
-		}
-	    }
+    }
+  else if (event->type == et_mousedown && mv->bdf == NULL)
+    {
+      CVPaletteDeactivate ();
+      if (sc != NULL)
+        {
+          for (j = 0; j < mv->glyphcnt; ++j)
+            if (j != i && mv->perchar[j].selected)
+              MVDeselectChar (mv, j);
+          MVSelectChar (mv, i);
+          GWindowClearFocusGadgetOfWindow (mv->gw);
+          mv->pressed = true;
+        }
+      else if (within != -1)
+        {
+          mv->pressedwidth = onwidth;
+          mv->pressedkern = onkern;
+          if (mv->pressedwidth || mv->pressedkern)
+            {
+              mv->pressed = true;
+              if (!mv->perchar[within].selected)
+                {
+                  MVDoSelect (mv, within);
+                }
+            }
 #if 0
-	} else if ( !mv->right_to_left && mv->glyphcnt>=1 &&
-		event->u.mouse.x<mv->perchar[mv->glyphcnt-1].dx+mv->perchar[mv->glyphcnt-1].dwidth+mv->perchar[mv->glyphcnt-1].kernafter+3 &&
-		mv->type!=mv_kernonly ) {
-	    mv->pressed = mv->pressedwidth = true;
-	    GDrawSetCursor(mv->gw,ct_rbearing);
-	    mv->cursor = ct_rbearing;
-	    if ( !mv->perchar[mv->glyphcnt-1].selected )
-		    MVDoSelect(mv,mv->glyphcnt-1);
-	} else if ( mv->right_to_left && mv->glyphcnt>=1 &&
-		event->u.mouse.x>mv->dwidth - (mv->perchar[mv->glyphcnt-1].dx+mv->perchar[mv->glyphcnt-1].dwidth+mv->perchar[mv->glyphcnt-1].kernafter+3) &&
-		mv->type!=mv_kernonly ) {
-	    mv->pressed = mv->pressedwidth = true;
-	    GDrawSetCursor(mv->gw,ct_rbearing);
-	    mv->cursor = ct_rbearing;
-	    if ( !mv->perchar[mv->glyphcnt-1].selected )
-		    MVDoSelect(mv,mv->glyphcnt-1);
+        }
+      else if (!mv->right_to_left && mv->glyphcnt >= 1 &&
+               event->u.mouse.x <
+               mv->perchar[mv->glyphcnt - 1].dx + mv->perchar[mv->glyphcnt -
+                                                              1].dwidth +
+               mv->perchar[mv->glyphcnt - 1].kernafter + 3
+               && mv->type != mv_kernonly)
+        {
+          mv->pressed = mv->pressedwidth = true;
+          GDrawSetCursor (mv->gw, ct_rbearing);
+          mv->cursor = ct_rbearing;
+          if (!mv->perchar[mv->glyphcnt - 1].selected)
+            MVDoSelect (mv, mv->glyphcnt - 1);
+        }
+      else if (mv->right_to_left && mv->glyphcnt >= 1 &&
+               event->u.mouse.x >
+               mv->dwidth - (mv->perchar[mv->glyphcnt - 1].dx +
+                             mv->perchar[mv->glyphcnt - 1].dwidth +
+                             mv->perchar[mv->glyphcnt - 1].kernafter + 3)
+               && mv->type != mv_kernonly)
+        {
+          mv->pressed = mv->pressedwidth = true;
+          GDrawSetCursor (mv->gw, ct_rbearing);
+          mv->cursor = ct_rbearing;
+          if (!mv->perchar[mv->glyphcnt - 1].selected)
+            MVDoSelect (mv, mv->glyphcnt - 1);
 #endif
-	}
-	mv->pressed_x = event->u.mouse.x;
-    } else if ( event->type == et_mousemove && mv->pressed ) {
-	for ( i=0; i<mv->glyphcnt && !mv->perchar[i].selected; ++i );
-	if ( mv->pressedwidth ) {
-	    int ow = mv->perchar[i].dwidth;
-	    if ( mv->right_to_left ) diff = -diff;
-	    bdfc = BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos);
-	    mv->perchar[i].dwidth = bdfc->width + diff;
-	    if ( ow!=mv->perchar[i].dwidth ) {
-		for ( j=i+1; j<mv->glyphcnt; ++j )
-		    mv->perchar[j].dx = mv->perchar[j-1].dx+mv->perchar[j-1].dwidth+ mv->perchar[j-1].kernafter;
-		GDrawRequestExpose(mv->v,NULL,false);
-	    }
-	} else if ( mv->pressedkern ) {
-	    int ow = mv->perchar[i-1].kernafter;
-	    KernPair *kp;
-	    int kpoff;
-	    KernClass *kc;
-	    int index;
-	    for ( kp = mv->glyphs[i-1].sc->kerns; kp!=NULL && kp->sc!=mv->glyphs[i].sc; kp = kp->next );
-	    if ( kp!=NULL )
-		kpoff = kp->off;
-	    else if ((kc=SFFindKernClass(mv->sf,mv->glyphs[i-1].sc,mv->glyphs[i].sc,&index,false))!=NULL )
-		kpoff = kc->offsets[index];
-	    else
-		kpoff = 0;
-	    kpoff = kpoff * mv->pixelsize*iscale /
-			(mv->sf->descent+mv->sf->ascent);
-	    if ( mv->right_to_left ) diff = -diff;
-	    mv->perchar[i-1].kernafter = kpoff + diff;
-	    if ( ow!=mv->perchar[i-1].kernafter ) {
-		for ( j=i; j<mv->glyphcnt; ++j )
-		    mv->perchar[j].dx = mv->perchar[j-1].dx+mv->perchar[j-1].dwidth+ mv->perchar[j-1].kernafter;
-		GDrawRequestExpose(mv->v,NULL,false);
-	    }
-	} else if ( mv->type!=mv_kernonly ) {
-	    int olda = mv->activeoff;
-	    bdfc = BDFPieceMealCheck(mv->show,mv->glyphs[i].sc->orig_pos);
-	    mv->activeoff = diff;
-	    MVRedrawI(mv,i,bdfc->xmin+olda,bdfc->xmax+olda);
-	}
-    } else if ( event->type == et_mouseup && event->u.mouse.clicks>1 &&
-	    (within!=-1 || sc!=NULL)) {
-	mv->pressed = false; mv->activeoff = 0;
-	mv->pressedwidth = mv->pressedkern = false;
-	if ( within==-1 ) within = i;
-	if ( mv->bdf==NULL )
-	    CharViewCreate(mv->glyphs[within].sc,mv->fv,-1);
-	else
-	    BitmapViewCreate(mv->bdf->glyphs[mv->glyphs[within].sc->orig_pos],mv->bdf,mv->fv,-1);
-	if ( mv->showgrid==mv_hidemovinggrid )
-	    GDrawRequestExpose(mv->v,NULL,false);
-    } else if ( event->type == et_mouseup && mv->pressed ) {
-	for ( i=0; i<mv->glyphcnt && !mv->perchar[i].selected; ++i );
-	mv->pressed = false;
-	mv->activeoff = 0;
-	sc = mv->glyphs[i].sc;
-	if ( mv->pressedwidth ) {
-	    mv->pressedwidth = false;
-	    if ( mv->right_to_left ) diff = -diff;
-	    diff = diff*(mv->sf->ascent+mv->sf->descent)/(mv->pixelsize*iscale);
-	    if ( diff!=0 ) {
-		SCPreserveWidth(sc);
-		SCSynchronizeWidth(sc,sc->width+diff,sc->width,NULL);
-		SCCharChangedUpdate(sc,ly_none);
-	    }
-	} else if ( mv->pressedkern ) {
-	    mv->pressedkern = false;
-	    diff = diff*(mv->sf->ascent+mv->sf->descent)/(mv->pixelsize*iscale);
-	    if ( diff!=0 ) {
-		if ( mv->right_to_left ) diff = -diff;
-		MV_ChangeKerning(mv, i, diff, true);
-		MVRefreshValues(mv,i-1);
-	    }
-	} else if ( mv->type!=mv_kernonly ) {
-	    real transform[6];
-	    transform[0] = transform[3] = 1.0;
-	    transform[1] = transform[2] = transform[5] = 0;
-	    transform[4] = diff*
-		    (mv->sf->ascent+mv->sf->descent)/(mv->pixelsize*iscale);
-	    if ( transform[4]!=0 )
-		FVTrans( (FontViewBase *)mv->fv,sc,transform,NULL,false);
-	}
-	mv->pressedwidth = false;
-	mv->pressedkern = false;
-	if ( mv->showgrid==mv_hidemovinggrid )
-	    GDrawRequestExpose(mv->v,NULL,false);
-    } else if ( event->type == et_mouseup && mv->bdf!=NULL && within!=-1 ) {
-	for ( j=0; j<mv->glyphcnt; ++j )
-	    if ( j!=within && mv->perchar[j].selected )
-		MVDeselectChar(mv,j);
-	MVSelectChar(mv,within);
-	if ( mv->showgrid==mv_hidemovinggrid )
-	    GDrawRequestExpose(mv->v,NULL,false);
+        }
+      mv->pressed_x = event->u.mouse.x;
+    }
+  else if (event->type == et_mousemove && mv->pressed)
+    {
+      for (i = 0; i < mv->glyphcnt && !mv->perchar[i].selected; ++i);
+      if (mv->pressedwidth)
+        {
+          int ow = mv->perchar[i].dwidth;
+          if (mv->right_to_left)
+            diff = -diff;
+          bdfc = BDFPieceMealCheck (mv->show, mv->glyphs[i].sc->orig_pos);
+          mv->perchar[i].dwidth = bdfc->width + diff;
+          if (ow != mv->perchar[i].dwidth)
+            {
+              for (j = i + 1; j < mv->glyphcnt; ++j)
+                mv->perchar[j].dx =
+                  mv->perchar[j - 1].dx + mv->perchar[j - 1].dwidth +
+                  mv->perchar[j - 1].kernafter;
+              GDrawRequestExpose (mv->v, NULL, false);
+            }
+        }
+      else if (mv->pressedkern)
+        {
+          int ow = mv->perchar[i - 1].kernafter;
+          KernPair *kp;
+          int kpoff;
+          KernClass *kc;
+          int index;
+          for (kp = mv->glyphs[i - 1].sc->kerns;
+               kp != NULL && kp->sc != mv->glyphs[i].sc; kp = kp->next);
+          if (kp != NULL)
+            kpoff = kp->off;
+          else
+            if ((kc =
+                 SFFindKernClass (mv->sf, mv->glyphs[i - 1].sc,
+                                  mv->glyphs[i].sc, &index, false)) != NULL)
+            kpoff = kc->offsets[index];
+          else
+            kpoff = 0;
+          kpoff = kpoff * mv->pixelsize * iscale /
+            (mv->sf->descent + mv->sf->ascent);
+          if (mv->right_to_left)
+            diff = -diff;
+          mv->perchar[i - 1].kernafter = kpoff + diff;
+          if (ow != mv->perchar[i - 1].kernafter)
+            {
+              for (j = i; j < mv->glyphcnt; ++j)
+                mv->perchar[j].dx =
+                  mv->perchar[j - 1].dx + mv->perchar[j - 1].dwidth +
+                  mv->perchar[j - 1].kernafter;
+              GDrawRequestExpose (mv->v, NULL, false);
+            }
+        }
+      else if (mv->type != mv_kernonly)
+        {
+          int olda = mv->activeoff;
+          bdfc = BDFPieceMealCheck (mv->show, mv->glyphs[i].sc->orig_pos);
+          mv->activeoff = diff;
+          MVRedrawI (mv, i, bdfc->xmin + olda, bdfc->xmax + olda);
+        }
+    }
+  else if (event->type == et_mouseup && event->u.mouse.clicks > 1 &&
+           (within != -1 || sc != NULL))
+    {
+      mv->pressed = false;
+      mv->activeoff = 0;
+      mv->pressedwidth = mv->pressedkern = false;
+      if (within == -1)
+        within = i;
+      if (mv->bdf == NULL)
+        CharViewCreate (mv->glyphs[within].sc, mv->fv, -1);
+      else
+        BitmapViewCreate (mv->bdf->glyphs[mv->glyphs[within].sc->orig_pos],
+                          mv->bdf, mv->fv, -1);
+      if (mv->showgrid == mv_hidemovinggrid)
+        GDrawRequestExpose (mv->v, NULL, false);
+    }
+  else if (event->type == et_mouseup && mv->pressed)
+    {
+      for (i = 0; i < mv->glyphcnt && !mv->perchar[i].selected; ++i);
+      mv->pressed = false;
+      mv->activeoff = 0;
+      sc = mv->glyphs[i].sc;
+      if (mv->pressedwidth)
+        {
+          mv->pressedwidth = false;
+          if (mv->right_to_left)
+            diff = -diff;
+          diff =
+            diff * (mv->sf->ascent +
+                    mv->sf->descent) / (mv->pixelsize * iscale);
+          if (diff != 0)
+            {
+              SCPreserveWidth (sc);
+              SCSynchronizeWidth (sc, sc->width + diff, sc->width, NULL);
+              SCCharChangedUpdate (sc, ly_none);
+            }
+        }
+      else if (mv->pressedkern)
+        {
+          mv->pressedkern = false;
+          diff =
+            diff * (mv->sf->ascent +
+                    mv->sf->descent) / (mv->pixelsize * iscale);
+          if (diff != 0)
+            {
+              if (mv->right_to_left)
+                diff = -diff;
+              MV_ChangeKerning (mv, i, diff, true);
+              MVRefreshValues (mv, i - 1);
+            }
+        }
+      else if (mv->type != mv_kernonly)
+        {
+          real transform[6];
+          transform[0] = transform[3] = 1.0;
+          transform[1] = transform[2] = transform[5] = 0;
+          transform[4] = diff *
+            (mv->sf->ascent + mv->sf->descent) / (mv->pixelsize * iscale);
+          if (transform[4] != 0)
+            FVTrans ((FontViewBase *) mv->fv, sc, transform, NULL, false);
+        }
+      mv->pressedwidth = false;
+      mv->pressedkern = false;
+      if (mv->showgrid == mv_hidemovinggrid)
+        GDrawRequestExpose (mv->v, NULL, false);
+    }
+  else if (event->type == et_mouseup && mv->bdf != NULL && within != -1)
+    {
+      for (j = 0; j < mv->glyphcnt; ++j)
+        if (j != within && mv->perchar[j].selected)
+          MVDeselectChar (mv, j);
+      MVSelectChar (mv, within);
+      if (mv->showgrid == mv_hidemovinggrid)
+        GDrawRequestExpose (mv->v, NULL, false);
     }
 }
 
-static void MVMouse(MetricsView *mv,GEvent *event) {
-    int i;
+static void
+MVMouse (MetricsView *mv, GEvent *event)
+{
+  int i;
 
-    if ( event->u.mouse.y< mv->topend || event->u.mouse.y >= mv->displayend ) {
-	if ( event->u.mouse.y >= mv->displayend &&
-		event->u.mouse.y<mv->height-mv->sbh ) {
-	    event->u.mouse.x += (mv->coff*mv->mwidth);
-	    for ( i=0; i<mv->glyphcnt; ++i ) {
-		if ( event->u.mouse.x >= mv->perchar[i].mx &&
-			event->u.mouse.x < mv->perchar[i].mx+mv->perchar[i].mwidth )
-	    break;
-	    }
-	    if ( i<mv->glyphcnt )
-		SCPreparePopup(mv->gw,mv->glyphs[i].sc,mv->fv->b.map->remap,
-			mv->fv->b.map->backmap[mv->glyphs[i].sc->orig_pos],
-			mv->glyphs[i].sc->unicodeenc);
-	}
-	if ( mv->cursor!=ct_pointer ) {
-	    GDrawSetCursor(mv->gw,ct_pointer);
-	    mv->cursor = ct_pointer;
-	}
-return;
+  if (event->u.mouse.y < mv->topend || event->u.mouse.y >= mv->displayend)
+    {
+      if (event->u.mouse.y >= mv->displayend &&
+          event->u.mouse.y < mv->height - mv->sbh)
+        {
+          event->u.mouse.x += (mv->coff * mv->mwidth);
+          for (i = 0; i < mv->glyphcnt; ++i)
+            {
+              if (event->u.mouse.x >= mv->perchar[i].mx &&
+                  event->u.mouse.x < mv->perchar[i].mx + mv->perchar[i].mwidth)
+                break;
+            }
+          if (i < mv->glyphcnt)
+            SCPreparePopup (mv->gw, mv->glyphs[i].sc, mv->fv->b.map->remap,
+                            mv->fv->b.map->backmap[mv->glyphs[i].sc->orig_pos],
+                            mv->glyphs[i].sc->unicodeenc);
+        }
+      if (mv->cursor != ct_pointer)
+        {
+          GDrawSetCursor (mv->gw, ct_pointer);
+          mv->cursor = ct_pointer;
+        }
+      return;
     }
 }
 
-static void MVDrop(MetricsView *mv,GEvent *event) {
-    int x,ex = event->u.drag_drop.x + mv->xoff;
-    int y,ey = event->u.drag_drop.y + mv->yoff;
-    int within, i, cnt, ch;
-    int32_t len;
-    char *cnames, *start, *pt;
-    uint32_t *newtext;
-    const uint32_t *oldtext;
-    SplineChar **founds;
-    /* We should get a list of character names. Add them before the character */
-    /*  on which they are dropped */
+static void
+MVDrop (MetricsView *mv, GEvent *event)
+{
+  int x, ex = event->u.drag_drop.x + mv->xoff;
+  int y, ey = event->u.drag_drop.y + mv->yoff;
+  int within, i, cnt, ch;
+  int32_t len;
+  char *cnames, *start, *pt;
+  uint32_t *newtext;
+  const uint32_t *oldtext;
+  SplineChar **founds;
+  /* We should get a list of character names. Add them before the character */
+  /*  on which they are dropped */
 
-    if ( !GDrawSelectionHasType(mv->gw,sn_drag_and_drop,"STRING"))
-return;
-    cnames = GDrawRequestSelection(mv->gw,sn_drag_and_drop,"STRING",&len);
-    if ( cnames==NULL )
-return;
+  if (!GDrawSelectionHasType (mv->gw, sn_drag_and_drop, "STRING"))
+    return;
+  cnames = GDrawRequestSelection (mv->gw, sn_drag_and_drop, "STRING", &len);
+  if (cnames == NULL)
+    return;
 
-    within = mv->glyphcnt;
-    if ( !mv->vertical ) {
-	for ( i=0; i<mv->glyphcnt; ++i ) {
-	    x = mv->perchar[i].dx;
-	    if ( mv->right_to_left )
-		x = mv->dwidth - x - mv->perchar[i].dwidth - mv->perchar[i].kernafter ;
-	    if ( ex >= x && ex < x+mv->perchar[i].dwidth+ mv->perchar[i].kernafter ) {
-		within = i;
-	break;
-	    }
-	}
-    } else {
-	for ( i=0; i<mv->glyphcnt; ++i ) {
-	    y = mv->perchar[i].dy;
-	    if ( ey >= y && ey < y+mv->perchar[i].dheight+
-		    mv->perchar[i].kernafter ) {
-		within = i;
-	break;
-	    }
-	}
+  within = mv->glyphcnt;
+  if (!mv->vertical)
+    {
+      for (i = 0; i < mv->glyphcnt; ++i)
+        {
+          x = mv->perchar[i].dx;
+          if (mv->right_to_left)
+            x =
+              mv->dwidth - x - mv->perchar[i].dwidth - mv->perchar[i].kernafter;
+          if (ex >= x
+              && ex < x + mv->perchar[i].dwidth + mv->perchar[i].kernafter)
+            {
+              within = i;
+              break;
+            }
+        }
+    }
+  else
+    {
+      for (i = 0; i < mv->glyphcnt; ++i)
+        {
+          y = mv->perchar[i].dy;
+          if (ey >= y && ey < y + mv->perchar[i].dheight +
+              mv->perchar[i].kernafter)
+            {
+              within = i;
+              break;
+            }
+        }
     }
 
-    founds = xmalloc(len*sizeof(SplineChar *));	/* Will be a vast over-estimate */
-    start = cnames;
-    for ( i=0; *start; ) {
-	while ( *start==' ' ) ++start;
-	if ( *start=='\0' )
-    break;
-	for ( pt=start; *pt && *pt!=' '; ++pt );
-	ch = *pt; *pt = '\0';
-	if ( (founds[i]=SFGetChar(mv->sf,-1,start))!=NULL )
-	    ++i;
-	*pt = ch;
-	start = pt;
+  founds = xmalloc (len * sizeof (SplineChar *));       /* Will be a vast over-estimate */
+  start = cnames;
+  for (i = 0; *start;)
+    {
+      while (*start == ' ')
+        ++start;
+      if (*start == '\0')
+        break;
+      for (pt = start; *pt && *pt != ' '; ++pt);
+      ch = *pt;
+      *pt = '\0';
+      if ((founds[i] = SFGetChar (mv->sf, -1, start)) != NULL)
+        ++i;
+      *pt = ch;
+      start = pt;
     }
-    cnt = i;
-    free( cnames );
-    if ( cnt==0 )
-return;
-    if ( within<mv->glyphcnt )
-	within = mv->glyphs[within].orig_index;
-    else
-	within = mv->clen;
+  cnt = i;
+  free (cnames);
+  if (cnt == 0)
+    return;
+  if (within < mv->glyphcnt)
+    within = mv->glyphs[within].orig_index;
+  else
+    within = mv->clen;
 
-    if ( mv->clen+cnt+1>=mv->cmax ) {
-	mv->cmax = mv->clen+cnt+10;
-	mv->chars = xrealloc(mv->chars,mv->cmax*sizeof(SplineChar *));
+  if (mv->clen + cnt + 1 >= mv->cmax)
+    {
+      mv->cmax = mv->clen + cnt + 10;
+      mv->chars = xrealloc (mv->chars, mv->cmax * sizeof (SplineChar *));
     }
-    oldtext = _GGadgetGetTitle(mv->text);
-    newtext = xmalloc((mv->clen+cnt+1)*sizeof(uint32_t));
-    u32_strcpy(newtext,oldtext);
-    newtext[mv->clen+cnt]='\0';
-    for ( i=mv->clen+cnt; i>=within+cnt; --i ) {
-	newtext[i] = newtext[i-cnt];
-	mv->chars[i] = mv->chars[i-cnt];
+  oldtext = _GGadgetGetTitle (mv->text);
+  newtext = xmalloc ((mv->clen + cnt + 1) * sizeof (uint32_t));
+  u32_strcpy (newtext, oldtext);
+  newtext[mv->clen + cnt] = '\0';
+  for (i = mv->clen + cnt; i >= within + cnt; --i)
+    {
+      newtext[i] = newtext[i - cnt];
+      mv->chars[i] = mv->chars[i - cnt];
     }
-    for ( i=within; i<within+cnt; ++i ) {
-	mv->chars[i] = founds[i-within];
-	newtext[i] = founds[i-within]->unicodeenc>=0 ?
-		founds[i-within]->unicodeenc : MVFakeUnicodeOfSc(mv,founds[i-within]);
+  for (i = within; i < within + cnt; ++i)
+    {
+      mv->chars[i] = founds[i - within];
+      newtext[i] = founds[i - within]->unicodeenc >= 0 ?
+        founds[i - within]->unicodeenc : MVFakeUnicodeOfSc (mv,
+                                                            founds[i - within]);
     }
-    mv->clen += cnt;
-    MVRemetric(mv);
-    free(founds);
+  mv->clen += cnt;
+  MVRemetric (mv);
+  free (founds);
 
-    GGadgetSetTitle(mv->text,newtext);
-    free(newtext);
+  GGadgetSetTitle (mv->text, newtext);
+  free (newtext);
 
-    GDrawRequestExpose(mv->v,NULL,false);
+  GDrawRequestExpose (mv->v, NULL, false);
 }
 
-static int mv_v_e_h(GWindow gw, GEvent *event) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
+static int
+mv_v_e_h (GWindow gw, GEvent *event)
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
 
-    switch ( event->type ) {
-      case et_expose:
-	GDrawSetLineWidth(gw,0);
-	MVSubExpose(mv,gw,event);
+  switch (event->type)
+    {
+    case et_expose:
+      GDrawSetLineWidth (gw, 0);
+      MVSubExpose (mv, gw, event);
       break;
-      case et_char:
-	MVChar(mv,event);
+    case et_char:
+      MVChar (mv, event);
       break;
-      case et_charup:
-	  if ( event->u.chr.keysym == GK_Left || event->u.chr.keysym==GK_KP_Left
-	       || event->u.chr.keysym == GK_Right || event->u.chr.keysym==GK_KP_Right ) {
-	      if( event->u.chr.state&ksm_meta ) {
-		  MVChar(mv,event);
-	      }
-	  }
+    case et_charup:
+      if (event->u.chr.keysym == GK_Left || event->u.chr.keysym == GK_KP_Left
+          || event->u.chr.keysym == GK_Right
+          || event->u.chr.keysym == GK_KP_Right)
+        {
+          if (event->u.chr.state & ksm_meta)
+            {
+              MVChar (mv, event);
+            }
+        }
       break;
-      case et_mouseup: case et_mousemove: case et_mousedown:
-	if (( event->type==et_mouseup || event->type==et_mousedown ) &&
-		(event->u.mouse.button>=4 && event->u.mouse.button<=7) ) {
-	    int ish = event->u.mouse.button>5;
-	    if ( event->u.mouse.state&ksm_shift ) ish = !ish;
-	    if ( event->u.mouse.state&ksm_control ) {	/* bind control to magnify/minify */
-		if ( event->type==et_mousedown ) {
-		    if ( event->u.mouse.button==4 || event->u.mouse.button==6 )
-			_MVMenuScale(mv,MID_ZoomIn);
-		    else
-			_MVMenuScale(mv,MID_ZoomOut);
-		}
-	    } else if ( ish ) {		/* bind shift to horizontal scroll */
-return( GGadgetDispatchEvent(mv->hsb,event));
-	    } else {
-return( GGadgetDispatchEvent(mv->vsb,event));
-	    }
-return( true );
-	}
-	if ( mv->gwgic!=NULL && event->type==et_mousedown)
-	    GDrawSetGIC(mv->gw,mv->gwgic,0,20);
-	MVSubMouse(mv,event);
+    case et_mouseup:
+    case et_mousemove:
+    case et_mousedown:
+      if ((event->type == et_mouseup || event->type == et_mousedown) &&
+          (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
+        {
+          int ish = event->u.mouse.button > 5;
+          if (event->u.mouse.state & ksm_shift)
+            ish = !ish;
+          if (event->u.mouse.state & ksm_control)
+            {                   /* bind control to magnify/minify */
+              if (event->type == et_mousedown)
+                {
+                  if (event->u.mouse.button == 4 || event->u.mouse.button == 6)
+                    _MVMenuScale (mv, MID_ZoomIn);
+                  else
+                    _MVMenuScale (mv, MID_ZoomOut);
+                }
+            }
+          else if (ish)
+            {                   /* bind shift to horizontal scroll */
+              return (GGadgetDispatchEvent (mv->hsb, event));
+            }
+          else
+            {
+              return (GGadgetDispatchEvent (mv->vsb, event));
+            }
+          return (true);
+        }
+      if (mv->gwgic != NULL && event->type == et_mousedown)
+        GDrawSetGIC (mv->gw, mv->gwgic, 0, 20);
+      MVSubMouse (mv, event);
       break;
-      case et_drop:
-	MVDrop(mv,event);
+    case et_drop:
+      MVDrop (mv, event);
       break;
     }
-return( true );
+  return (true);
 }
 
-static int mv_e_h(GWindow gw, GEvent *event) {
-    MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
-    SplineFont *sf;
-    
-    switch ( event->type ) {
-      case et_selclear:
-	ClipboardClear();
+static int
+mv_e_h (GWindow gw, GEvent *event)
+{
+  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
+  SplineFont *sf;
+
+  switch (event->type)
+    {
+    case et_selclear:
+      ClipboardClear ();
       break;
-      case et_expose:
-	GDrawSetLineWidth(gw,0);
-	MVExpose(mv,gw,event);
+    case et_expose:
+      GDrawSetLineWidth (gw, 0);
+      MVExpose (mv, gw, event);
       break;
-      case et_resize:
-	if ( event->u.resize.sized )
-	    MVResize(mv);
+    case et_resize:
+      if (event->u.resize.sized)
+        MVResize (mv);
       break;
-      case et_char:
-	MVChar(mv,event);
+    case et_char:
+      MVChar (mv, event);
       break;
-      case et_charup:
-	  if ( event->u.chr.keysym == GK_Left || event->u.chr.keysym==GK_KP_Left
-	       || event->u.chr.keysym == GK_Right || event->u.chr.keysym==GK_KP_Right ) {
-	      if( event->u.chr.state&ksm_meta ) {
-		  MVChar(mv,event);
-	      }
-	  }
+    case et_charup:
+      if (event->u.chr.keysym == GK_Left || event->u.chr.keysym == GK_KP_Left
+          || event->u.chr.keysym == GK_Right
+          || event->u.chr.keysym == GK_KP_Right)
+        {
+          if (event->u.chr.state & ksm_meta)
+            {
+              MVChar (mv, event);
+            }
+        }
       break;
-      case et_mouseup: case et_mousemove: case et_mousedown:
-	if (( event->type==et_mouseup || event->type==et_mousedown ) &&
-		(event->u.mouse.button>=4 && event->u.mouse.button<=7) ) {
-	    int ish = event->u.mouse.button>5;
-	    if ( event->u.mouse.state&ksm_shift ) ish = !ish;
-	    if ( event->u.mouse.state&ksm_control ) {	/* bind control to magnify/minify */
-		if ( event->type==et_mousedown ) {
-		    if ( event->u.mouse.button==4 || event->u.mouse.button==6 )
-			_MVMenuScale(mv,MID_ZoomIn);
-		    else
-			_MVMenuScale(mv,MID_ZoomOut);
-		}
-	    } else if ( ish ) {	/* bind shift to horizontal scroll */
-return( GGadgetDispatchEvent(mv->hsb,event));
-	    } else {
-return( GGadgetDispatchEvent(mv->vsb,event));
-	    }
-return( true );
-	}
-	if ( mv->gwgic!=NULL && event->type==et_mousedown)
-	    GDrawSetGIC(mv->gw,mv->gwgic,0,20);
-	MVMouse(mv,event);
+    case et_mouseup:
+    case et_mousemove:
+    case et_mousedown:
+      if ((event->type == et_mouseup || event->type == et_mousedown) &&
+          (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
+        {
+          int ish = event->u.mouse.button > 5;
+          if (event->u.mouse.state & ksm_shift)
+            ish = !ish;
+          if (event->u.mouse.state & ksm_control)
+            {                   /* bind control to magnify/minify */
+              if (event->type == et_mousedown)
+                {
+                  if (event->u.mouse.button == 4 || event->u.mouse.button == 6)
+                    _MVMenuScale (mv, MID_ZoomIn);
+                  else
+                    _MVMenuScale (mv, MID_ZoomOut);
+                }
+            }
+          else if (ish)
+            {                   /* bind shift to horizontal scroll */
+              return (GGadgetDispatchEvent (mv->hsb, event));
+            }
+          else
+            {
+              return (GGadgetDispatchEvent (mv->vsb, event));
+            }
+          return (true);
+        }
+      if (mv->gwgic != NULL && event->type == et_mousedown)
+        GDrawSetGIC (mv->gw, mv->gwgic, 0, 20);
+      MVMouse (mv, event);
       break;
-      case et_drop:
-	MVDrop(mv,event);
+    case et_drop:
+      MVDrop (mv, event);
       break;
-      case et_controlevent:
-	switch ( event->u.control.subtype ) {
-	  case et_scrollbarchange:
-	    if ( event->u.control.g==mv->hsb )
-		MVHScroll(mv,&event->u.control.u.sb);
-	    else
-		MVVScroll(mv,&event->u.control.u.sb);
-	  break;
-	}
+    case et_controlevent:
+      switch (event->u.control.subtype)
+        {
+        case et_scrollbarchange:
+          if (event->u.control.g == mv->hsb)
+            MVHScroll (mv, &event->u.control.u.sb);
+          else
+            MVVScroll (mv, &event->u.control.u.sb);
+          break;
+        }
       break;
-      case et_close:
-	MVMenuClose(gw,NULL,NULL);
+    case et_close:
+      MVMenuClose (gw, NULL, NULL);
       break;
-      case et_destroy:
-	sf = mv->sf;
-	if ( sf->cidmaster ) sf = sf->cidmaster;
-	if ( sf->metrics==mv )
-	    sf->metrics = mv->next;
-	else {
-	    MetricsView *n;
-	    for ( n=sf->metrics; n->next!=mv; n=n->next );
-	    n->next = mv->next;
-	}
-	KCLD_MvDetach(sf->kcld,mv);
-	MetricsViewFree(mv);
+    case et_destroy:
+      sf = mv->sf;
+      if (sf->cidmaster)
+        sf = sf->cidmaster;
+      if (sf->metrics == mv)
+        sf->metrics = mv->next;
+      else
+        {
+          MetricsView *n;
+          for (n = sf->metrics; n->next != mv; n = n->next);
+          n->next = mv->next;
+        }
+      KCLD_MvDetach (sf->kcld, mv);
+      MetricsViewFree (mv);
       break;
-      case et_focus:
+    case et_focus:
 #if 0
-	if ( event->u.focus.gained_focus )
-	    CVPaletteDeactivate();
+      if (event->u.focus.gained_focus)
+        CVPaletteDeactivate ();
 #endif
       break;
     }
-return( true );
+  return (true);
 }
 
-GTextInfo *SLOfFont(SplineFont *sf) {
-    uint32_t *scripttags, *langtags;
-    int s, l, i, k, cnt;
-    extern GTextInfo scripts[], languages[];
-    GTextInfo *ret = NULL;
-    char *sname, *lname, *temp;
-    char sbuf[8], lbuf[8];
+GTextInfo *
+SLOfFont (SplineFont *sf)
+{
+  uint32_t *scripttags, *langtags;
+  int s, l, i, k, cnt;
+  extern GTextInfo scripts[], languages[];
+  GTextInfo *ret = NULL;
+  char *sname, *lname, *temp;
+  char sbuf[8], lbuf[8];
 
-    LookupUIInit();
-    scripttags = SFScriptsInLookups(sf,-1);
-    if ( scripttags==NULL )
-return( NULL );
+  LookupUIInit ();
+  scripttags = SFScriptsInLookups (sf, -1);
+  if (scripttags == NULL)
+    return (NULL);
 
-    for ( k=0; k<2; ++k ) {
-	cnt = 0;
-	for ( s=0; scripttags[s]!=0; ++s ) {
-	    if ( k ) {
-		for ( i=0; scripts[i].text!=NULL; ++i )
-		    if ( scripttags[s] == (intptr_t) (scripts[i].userdata))
-		break;
-		sname = (char *) (scripts[i].text);
-		sbuf[0] = scripttags[s]>>24;
-		sbuf[1] = scripttags[s]>>16;
-		sbuf[2] = scripttags[s]>>8;
-		sbuf[3] = scripttags[s];
-		sbuf[4] = 0;
-		if ( sname==NULL )
-		    sname = sbuf;
-	    }
-	    langtags = SFLangsInScript(sf,-1,scripttags[s]);
-	    /* This one can't be NULL */
-	    for ( l=0; langtags[l]!=0; ++l ) {
-		if ( k ) {
-		    for ( i=0; languages[i].text!=NULL; ++i )
-			if ( langtags[l] == (intptr_t) (languages[i].userdata))
-		    break;
-		    lname = (char *) (languages[i].text);
-		    lbuf[0] = langtags[l]>>24;
-		    lbuf[1] = langtags[l]>>16;
-		    lbuf[2] = langtags[l]>>8;
-		    lbuf[3] = langtags[l];
-		    lbuf[4] = 0;
-		    if ( lname==NULL )
-			lname = lbuf;
-		    temp = xmalloc(strlen(sname)+strlen(lname)+3);
-		    strcpy(temp,sname); strcat(temp,"{"); strcat(temp,lname); strcat(temp,"}");
-		    ret[cnt].text = (uint32_t *) temp;
-		    ret[cnt].text_is_1byte = true;
-		    temp = xmalloc(11);
-		    strcpy(temp,sbuf); temp[4] = '{'; strcpy(temp+5,lbuf); temp[9]='}'; temp[10] = 0;
-		    ret[cnt].userdata = temp;
-		}
-		++cnt;
-	    }
-	    free(langtags);
-	}
-	if ( !k )
-	    ret = xcalloc((cnt+1),sizeof(GTextInfo));
+  for (k = 0; k < 2; ++k)
+    {
+      cnt = 0;
+      for (s = 0; scripttags[s] != 0; ++s)
+        {
+          if (k)
+            {
+              for (i = 0; scripts[i].text != NULL; ++i)
+                if (scripttags[s] == (intptr_t) (scripts[i].userdata))
+                  break;
+              sname = (char *) (scripts[i].text);
+              sbuf[0] = scripttags[s] >> 24;
+              sbuf[1] = scripttags[s] >> 16;
+              sbuf[2] = scripttags[s] >> 8;
+              sbuf[3] = scripttags[s];
+              sbuf[4] = 0;
+              if (sname == NULL)
+                sname = sbuf;
+            }
+          langtags = SFLangsInScript (sf, -1, scripttags[s]);
+          /* This one can't be NULL */
+          for (l = 0; langtags[l] != 0; ++l)
+            {
+              if (k)
+                {
+                  for (i = 0; languages[i].text != NULL; ++i)
+                    if (langtags[l] == (intptr_t) (languages[i].userdata))
+                      break;
+                  lname = (char *) (languages[i].text);
+                  lbuf[0] = langtags[l] >> 24;
+                  lbuf[1] = langtags[l] >> 16;
+                  lbuf[2] = langtags[l] >> 8;
+                  lbuf[3] = langtags[l];
+                  lbuf[4] = 0;
+                  if (lname == NULL)
+                    lname = lbuf;
+                  temp = xmalloc (strlen (sname) + strlen (lname) + 3);
+                  strcpy (temp, sname);
+                  strcat (temp, "{");
+                  strcat (temp, lname);
+                  strcat (temp, "}");
+                  ret[cnt].text = (uint32_t *) temp;
+                  ret[cnt].text_is_1byte = true;
+                  temp = xmalloc (11);
+                  strcpy (temp, sbuf);
+                  temp[4] = '{';
+                  strcpy (temp + 5, lbuf);
+                  temp[9] = '}';
+                  temp[10] = 0;
+                  ret[cnt].userdata = temp;
+                }
+              ++cnt;
+            }
+          free (langtags);
+        }
+      if (!k)
+        ret = xcalloc ((cnt + 1), sizeof (GTextInfo));
     }
-    free(scripttags);
-return( ret );
+  free (scripttags);
+  return (ret);
 }
 
 #define metricsicon_width 16
 #define metricsicon_height 16
 static unsigned char metricsicon_bits[] = {
-   0x04, 0x10, 0xf0, 0x03, 0x24, 0x12, 0x20, 0x00, 0x24, 0x10, 0xe0, 0x00,
-   0x24, 0x10, 0x20, 0x00, 0x24, 0x10, 0x20, 0x00, 0x74, 0x10, 0x00, 0x00,
-   0x55, 0x55, 0x00, 0x00, 0x04, 0x10, 0x00, 0x00};
+  0x04, 0x10, 0xf0, 0x03, 0x24, 0x12, 0x20, 0x00, 0x24, 0x10, 0xe0, 0x00,
+  0x24, 0x10, 0x20, 0x00, 0x24, 0x10, 0x20, 0x00, 0x74, 0x10, 0x00, 0x00,
+  0x55, 0x55, 0x00, 0x00, 0x04, 0x10, 0x00, 0x00
+};
 
-static void MetricsViewInit(void ) {
-    static int inited = false;
+static void
+MetricsViewInit (void)
+{
+  static int inited = false;
 
-    if ( !inited ) {
-	mv_text_init[2].text = (uint32_t *) _((char *) mv_text_init[2].text);
-	mb2DoGetText(mblist);
-	MVColInit();
+  if (!inited)
+    {
+      mv_text_init[2].text = (uint32_t *) _((char *) mv_text_init[2].text);
+      mb2DoGetText (mblist);
+      MVColInit ();
     }
 }
 
-MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
-    GRect pos;
-    GWindow gw;
-    GWindowAttrs wattrs;
-    GGadgetData gd;
-    GRect gsize;
-    MetricsView *mv = xcalloc(1,sizeof(MetricsView));
-    static GWindow icon = NULL;
-    extern int _GScrollBar_Width;
-    char buf[120], *pt;
-    GTextInfo label;
-    int i,j,cnt;
-    int as,ds,ld;
-    static GFont *mvfont=NULL;
-    SplineFont *master = fv->b.sf->cidmaster ? fv->b.sf->cidmaster : fv->b.sf;
+MetricsView *
+MetricsViewCreate (FontView *fv, SplineChar *sc, BDFFont *bdf)
+{
+  GRect pos;
+  GWindow gw;
+  GWindowAttrs wattrs;
+  GGadgetData gd;
+  GRect gsize;
+  MetricsView *mv = xcalloc (1, sizeof (MetricsView));
+  static GWindow icon = NULL;
+  extern int _GScrollBar_Width;
+  char buf[120], *pt;
+  GTextInfo label;
+  int i, j, cnt;
+  int as, ds, ld;
+  static GFont *mvfont = NULL;
+  SplineFont *master = fv->b.sf->cidmaster ? fv->b.sf->cidmaster : fv->b.sf;
 
-    MetricsViewInit();
+  MetricsViewInit ();
 
-    if ( icon==NULL )
-	icon = GDrawCreateBitmap(NULL,metricsicon_width,metricsicon_height,metricsicon_bits);
+  if (icon == NULL)
+    icon =
+      GDrawCreateBitmap (NULL, metricsicon_width, metricsicon_height,
+                         metricsicon_bits);
 
-    mv->fv = fv;
-    mv->sf = fv->b.sf;
-    mv->bdf = bdf;
-    mv->showgrid = mvshowgrid;
-    mv->antialias = mv_antialias;
-    mv->scale_index = SCALE_INDEX_NORMAL;
-    mv->next = master->metrics;
-    master->metrics = mv;
-    mv->layer = fv->b.active_layer;
-    mv->type = mv_type;
-    mv->pixelsize_set_by_window = true;
-    mv->dpi = 72;
+  mv->fv = fv;
+  mv->sf = fv->b.sf;
+  mv->bdf = bdf;
+  mv->showgrid = mvshowgrid;
+  mv->antialias = mv_antialias;
+  mv->scale_index = SCALE_INDEX_NORMAL;
+  mv->next = master->metrics;
+  master->metrics = mv;
+  mv->layer = fv->b.active_layer;
+  mv->type = mv_type;
+  mv->pixelsize_set_by_window = true;
+  mv->dpi = 72;
 
-    memset(&wattrs,0,sizeof(wattrs));
-    wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_icon;
-    wattrs.event_masks = ~(0);
-    wattrs.cursor = ct_pointer;
-    MVWindowTitle(buf,sizeof(buf),mv);
-    wattrs.utf8_window_title = buf;
-    wattrs.icon = icon;
-    pos.x = pos.y = 0;
-    pos.width = mv_width;
-    pos.height = mv_height;
-    mv->gw = gw = GDrawCreateTopWindow(NULL,&pos,mv_e_h,mv,&wattrs);
-    mv->width = pos.width; mv->height = pos.height;
-    mv->gwgic = GDrawCreateInputContext(mv->gw,gic_root|gic_orlesser);
-    GDrawSetGIC(gw,mv->gwgic,0,20);
+  memset (&wattrs, 0, sizeof (wattrs));
+  wattrs.mask = wam_events | wam_cursor | wam_utf8_wtitle | wam_icon;
+  wattrs.event_masks = ~(0);
+  wattrs.cursor = ct_pointer;
+  MVWindowTitle (buf, sizeof (buf), mv);
+  wattrs.utf8_window_title = buf;
+  wattrs.icon = icon;
+  pos.x = pos.y = 0;
+  pos.width = mv_width;
+  pos.height = mv_height;
+  mv->gw = gw = GDrawCreateTopWindow (NULL, &pos, mv_e_h, mv, &wattrs);
+  mv->width = pos.width;
+  mv->height = pos.height;
+  mv->gwgic = GDrawCreateInputContext (mv->gw, gic_root | gic_orlesser);
+  GDrawSetGIC (gw, mv->gwgic, 0, 20);
 
-    memset(&gd,0,sizeof(gd));
-    gd.flags = gg_visible | gg_enabled;
-    helplist[0].invoke = MVMenuContextualHelp;
-    gd.u.menu2 = mblist;
-    mv->mb = GMenu2BarCreate( gw, &gd, NULL);
-    GGadgetGetSize(mv->mb,&gsize);
-    mv->mbh = gsize.height;
+  memset (&gd, 0, sizeof (gd));
+  gd.flags = gg_visible | gg_enabled;
+  helplist[0].invoke = MVMenuContextualHelp;
+  gd.u.menu2 = mblist;
+  mv->mb = GMenu2BarCreate (gw, &gd, NULL);
+  GGadgetGetSize (mv->mb, &gsize);
+  mv->mbh = gsize.height;
 
-    gd.pos.height = GDrawPointsToPixels(gw,_GScrollBar_Width);
-    gd.pos.y = pos.height-gd.pos.height;
-    gd.pos.x = 0; gd.pos.width = pos.width;
-    gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels;
-    mv->hsb = GScrollBarCreate(gw,&gd,mv);
-    GGadgetGetSize(mv->hsb,&gsize);
-    mv->sbh = gsize.height;
-    mv->dwidth = mv->width-mv->sbh;
+  gd.pos.height = GDrawPointsToPixels (gw, _GScrollBar_Width);
+  gd.pos.y = pos.height - gd.pos.height;
+  gd.pos.x = 0;
+  gd.pos.width = pos.width;
+  gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels;
+  mv->hsb = GScrollBarCreate (gw, &gd, mv);
+  GGadgetGetSize (mv->hsb, &gsize);
+  mv->sbh = gsize.height;
+  mv->dwidth = mv->width - mv->sbh;
 
-    gd.pos.width = mv->sbh;
-    gd.pos.y = 0; gd.pos.height = pos.height;	/* we'll fix these later */
-    gd.pos.x = pos.width-gd.pos.width;
-    gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_sb_vert;
-    mv->vsb = GScrollBarCreate(gw,&gd,mv);
+  gd.pos.width = mv->sbh;
+  gd.pos.y = 0;
+  gd.pos.height = pos.height;   /* we'll fix these later */
+  gd.pos.x = pos.width - gd.pos.width;
+  gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_sb_vert;
+  mv->vsb = GScrollBarCreate (gw, &gd, mv);
 
-    if ( mvfont==NULL ) {
-	mvfont = GDrawNewFont(gw, "sans-serif", -12, 400, fs_none);
-	mvfont = GResourceFindFont("MetricsView.Font",mvfont);
+  if (mvfont == NULL)
+    {
+      mvfont = GDrawNewFont (gw, "sans-serif", -12, 400, fs_none);
+      mvfont = GResourceFindFont ("MetricsView.Font", mvfont);
     }
-    mv->font = mvfont;
-    GDrawGetFontMetrics(gw,mv->font,&as,&ds,&ld);
-    mv->fh = as+ds; mv->as = as;
+  mv->font = mvfont;
+  GDrawGetFontMetrics (gw, mv->font, &as, &ds, &ld);
+  mv->fh = as + ds;
+  mv->as = as;
 
-    pt = buf;
-    mv->chars = xcalloc(mv->cmax=20,sizeof(SplineChar *));
-    if ( sc!=NULL ) {
-	mv->chars[mv->clen++] = sc;
-    } else {
-	EncMap *map = fv->b.map;
-	for ( j=1; (j<=fv->sel_index || j<1) && mv->clen<15; ++j ) {
-	    for ( i=0; i<map->enccount && mv->clen<15; ++i ) {
-		int gid = map->map[i];
-		if ( gid!=-1 && fv->b.selected[i]==j && fv->b.sf->glyphs[gid]!=NULL ) {
-		    mv->chars[mv->clen++] = fv->b.sf->glyphs[gid];
-		}
-	    }
-	}
+  pt = buf;
+  mv->chars = xcalloc (mv->cmax = 20, sizeof (SplineChar *));
+  if (sc != NULL)
+    {
+      mv->chars[mv->clen++] = sc;
     }
-    mv->chars[mv->clen] = NULL;
+  else
+    {
+      EncMap *map = fv->b.map;
+      for (j = 1; (j <= fv->sel_index || j < 1) && mv->clen < 15; ++j)
+        {
+          for (i = 0; i < map->enccount && mv->clen < 15; ++i)
+            {
+              int gid = map->map[i];
+              if (gid != -1 && fv->b.selected[i] == j
+                  && fv->b.sf->glyphs[gid] != NULL)
+                {
+                  mv->chars[mv->clen++] = fv->b.sf->glyphs[gid];
+                }
+            }
+        }
+    }
+  mv->chars[mv->clen] = NULL;
 
-    for ( cnt=0; cnt<mv->clen; ++cnt )
-	pt = utf8_idpb(pt,
-		mv->chars[cnt]->unicodeenc==-1?
-		MVFakeUnicodeOfSc(mv,mv->chars[cnt]): mv->chars[cnt]->unicodeenc);
-    *pt = '\0';
+  for (cnt = 0; cnt < mv->clen; ++cnt)
+    pt = utf8_idpb (pt,
+                    mv->chars[cnt]->unicodeenc == -1 ?
+                    MVFakeUnicodeOfSc (mv,
+                                       mv->chars[cnt]) : mv->
+                    chars[cnt]->unicodeenc);
+  *pt = '\0';
 
-    memset(&gd,0,sizeof(gd));
-    memset(&label,0,sizeof(label));
-    gd.pos.y = mv->mbh+2; gd.pos.x = 10;
-    gd.pos.width = GDrawPointsToPixels(mv->gw,100);
-    gd.label = &label;
-    label.text = (uint32_t *) "DFLT{dflt}";
-    label.text_is_1byte = true;
-    gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels;
-    gd.u.list = mv->scriptlangs = SLOfFont(mv->sf);
-    gd.handle_controlevent = MV_ScriptLangChanged;
-    mv->script = GListFieldCreate(gw,&gd,mv);
-    GGadgetGetSize(mv->script,&gsize);
-    mv->topend = gsize.y + gsize.height + 2;
+  memset (&gd, 0, sizeof (gd));
+  memset (&label, 0, sizeof (label));
+  gd.pos.y = mv->mbh + 2;
+  gd.pos.x = 10;
+  gd.pos.width = GDrawPointsToPixels (mv->gw, 100);
+  gd.label = &label;
+  label.text = (uint32_t *) "DFLT{dflt}";
+  label.text_is_1byte = true;
+  gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels;
+  gd.u.list = mv->scriptlangs = SLOfFont (mv->sf);
+  gd.handle_controlevent = MV_ScriptLangChanged;
+  mv->script = GListFieldCreate (gw, &gd, mv);
+  GGadgetGetSize (mv->script, &gsize);
+  mv->topend = gsize.y + gsize.height + 2;
 
-    gd.pos.x = gd.pos.x+gd.pos.width+10;
-    gd.pos.width = GDrawPointsToPixels(mv->gw,200);
-    gd.pos.height = gsize.height;
-    label.text = (uint32_t *) buf;
-    gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels;
-    gd.handle_controlevent = MV_TextChanged;
-    gd.u.list = mv_text_init;
-    mv->text = GListFieldCreate(gw,&gd,mv);
+  gd.pos.x = gd.pos.x + gd.pos.width + 10;
+  gd.pos.width = GDrawPointsToPixels (mv->gw, 200);
+  gd.pos.height = gsize.height;
+  label.text = (uint32_t *) buf;
+  gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels;
+  gd.handle_controlevent = MV_TextChanged;
+  gd.u.list = mv_text_init;
+  mv->text = GListFieldCreate (gw, &gd, mv);
 
-    gd.pos.x = gd.pos.x+gd.pos.width+10; --gd.pos.y;
-    gd.pos.width += 30;
-    gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels;
-    gd.handle_controlevent = MV_SubtableChanged;
-    gd.label = NULL;
-    gd.u.list = NULL;
-    mv->subtable_list = GListButtonCreate(gw,&gd,mv);
-    MVSetSubtables(master);
+  gd.pos.x = gd.pos.x + gd.pos.width + 10;
+  --gd.pos.y;
+  gd.pos.width += 30;
+  gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels;
+  gd.handle_controlevent = MV_SubtableChanged;
+  gd.label = NULL;
+  gd.u.list = NULL;
+  mv->subtable_list = GListButtonCreate (gw, &gd, mv);
+  MVSetSubtables (master);
 
-    gd.pos.y = mv->topend; gd.pos.x = 0;
-    gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_pos_use0|gg_list_multiplesel|gg_list_alphabetic;
-    gd.pos.width = GDrawPointsToPixels(mv->gw,50);
-    gd.handle_controlevent = MV_FeaturesChanged;
-    mv->features = GListCreate(gw,&gd,mv);
-    GListSetSBAlwaysVisible(mv->features,true);
-    GListSetPopupCallback(mv->features,MV_FriendlyFeatures);
-    mv->xstart = gd.pos.width;
+  gd.pos.y = mv->topend;
+  gd.pos.x = 0;
+  gd.flags =
+    gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0 |
+    gg_list_multiplesel | gg_list_alphabetic;
+  gd.pos.width = GDrawPointsToPixels (mv->gw, 50);
+  gd.handle_controlevent = MV_FeaturesChanged;
+  mv->features = GListCreate (gw, &gd, mv);
+  GListSetSBAlwaysVisible (mv->features, true);
+  GListSetPopupCallback (mv->features, MV_FriendlyFeatures);
+  mv->xstart = gd.pos.width;
 
-    pos.x = mv->xstart; pos.width = mv->dwidth - mv->xstart;
-    pos.y = mv->topend+2; pos.height = mv->displayend - mv->topend - 2;
-    memset(&wattrs,0,sizeof(wattrs));
-    wattrs.mask = wam_events|wam_backcol;
-    wattrs.background_color = view_bgcol;
-    wattrs.event_masks = -1;
-    wattrs.cursor = ct_pointer;
-    mv->v = GWidgetCreateSubWindow(mv->gw,&pos,mv_v_e_h,mv,&wattrs);
-    MVSetFeatures(mv);
-    MVMakeLabels(mv);
-    MVResize(mv);
+  pos.x = mv->xstart;
+  pos.width = mv->dwidth - mv->xstart;
+  pos.y = mv->topend + 2;
+  pos.height = mv->displayend - mv->topend - 2;
+  memset (&wattrs, 0, sizeof (wattrs));
+  wattrs.mask = wam_events | wam_backcol;
+  wattrs.background_color = view_bgcol;
+  wattrs.event_masks = -1;
+  wattrs.cursor = ct_pointer;
+  mv->v = GWidgetCreateSubWindow (mv->gw, &pos, mv_v_e_h, mv, &wattrs);
+  MVSetFeatures (mv);
+  MVMakeLabels (mv);
+  MVResize (mv);
 
-    GDrawSetVisible(mv->v,true);
-    GDrawSetVisible(gw,true);
-return( mv );
+  GDrawSetVisible (mv->v, true);
+  GDrawSetVisible (gw, true);
+  return (mv);
 }
 
-void MetricsViewFree(MetricsView *mv) {
+void
+MetricsViewFree (MetricsView *mv)
+{
 
-    if ( mv->scriptlangs!=NULL ) {
-	int i;
-	for ( i=0; mv->scriptlangs[i].text!=NULL ; ++i )
-	    free(mv->scriptlangs[i].userdata );
-	GTextInfoListFree(mv->scriptlangs);
+  if (mv->scriptlangs != NULL)
+    {
+      int i;
+      for (i = 0; mv->scriptlangs[i].text != NULL; ++i)
+        free (mv->scriptlangs[i].userdata);
+      GTextInfoListFree (mv->scriptlangs);
     }
-    BDFFontFree(mv->show);
-    /* the fields will free themselves */
-    free(mv->chars);
-    free(mv->glyphs);
-    free(mv->perchar);
-    free(mv);
+  BDFFontFree (mv->show);
+  /* the fields will free themselves */
+  free (mv->chars);
+  free (mv->glyphs);
+  free (mv->perchar);
+  free (mv);
 }
 
-void MVRefreshAll(MetricsView *mv) {
+void
+MVRefreshAll (MetricsView *mv)
+{
 
-    if ( mv!=NULL ) {
-	MVRemetric(mv);
-	GDrawRequestExpose(mv->v,NULL,false);
+  if (mv != NULL)
+    {
+      MVRemetric (mv);
+      GDrawRequestExpose (mv->v, NULL, false);
     }
 }
 
 /******************************************************************************/
-static int MV_GlyphCnt(struct metricsview *mv) {
-return( mv->glyphcnt );
+static int
+MV_GlyphCnt (struct metricsview *mv)
+{
+  return (mv->glyphcnt);
 }
 
-static SplineChar *MV_Glyph(struct metricsview *mv,int i) {
-    if ( i<0 || i>=mv->glyphcnt )
-return( NULL );
+static SplineChar *
+MV_Glyph (struct metricsview *mv, int i)
+{
+  if (i < 0 || i >= mv->glyphcnt)
+    return (NULL);
 
-return( mv->glyphs[i].sc );
+  return (mv->glyphs[i].sc);
 }
 
-static void MV_ReKernAll(struct splinefont *sf) {
-    MetricsView *mv;
+static void
+MV_ReKernAll (struct splinefont *sf)
+{
+  MetricsView *mv;
 
-    for ( mv=sf->metrics; mv!=NULL; mv=mv->next )
-	MVReKern(mv);
+  for (mv = sf->metrics; mv != NULL; mv = mv->next)
+    MVReKern (mv);
 }
 
-static void MV_ReFeatureAll(struct splinefont *sf) {
-    MetricsView *mv;
+static void
+MV_ReFeatureAll (struct splinefont *sf)
+{
+  MetricsView *mv;
 
-    MVSetSubtables(sf);
-    for ( mv=sf->metrics; mv!=NULL; mv=mv->next )
-	MVSetFeatures(mv);
+  MVSetSubtables (sf);
+  for (mv = sf->metrics; mv != NULL; mv = mv->next)
+    MVSetFeatures (mv);
 }
 
-static void MV_CloseAll(struct splinefont *sf) {
-    MetricsView *mv, *mvnext;
-    for ( mv=sf->metrics; mv!=NULL; mv=mvnext ) {
-	mvnext = mv->next;
-	GDrawDestroyWindow(mv->gw);
+static void
+MV_CloseAll (struct splinefont *sf)
+{
+  MetricsView *mv, *mvnext;
+  for (mv = sf->metrics; mv != NULL; mv = mvnext)
+    {
+      mvnext = mv->next;
+      GDrawDestroyWindow (mv->gw);
     }
-    GDrawSync(NULL);
-    GDrawProcessPendingEvents(NULL);
+  GDrawSync (NULL);
+  GDrawProcessPendingEvents (NULL);
 }
 
 struct mv_interface gdraw_mv_interface = {
-    MV_GlyphCnt,
-    MV_Glyph,
-    MV_ReKernAll,
-    MV_ReFeatureAll,
-    MV_CloseAll
+  MV_GlyphCnt,
+  MV_Glyph,
+  MV_ReKernAll,
+  MV_ReFeatureAll,
+  MV_CloseAll
 };
 
 static struct resed metricsview_re[] = {
-    {N_("Advance Width Col"), "AdvanceWidthColor", rt_color, &widthcol, N_("Color used to draw the advance width line of a glyph"), NULL, { 0 }, 0, 0 },
-    {N_("Italic Advance Col"), "ItalicAdvanceColor", rt_color, &widthcol, N_("Color used to draw the italic advance width line of a glyph"), NULL, { 0 }, 0, 0 },
-    {N_("Kern Line Color"), "KernLineColor", rt_color, &kernlinecol, N_("Color used to draw the kerning line"), NULL, { 0 }, 0, 0 },
-    {N_("Side Bearing Color"), "SideBearingLineColor", rt_color, &rbearinglinecol, N_("Color used to draw the left side bearing"), NULL, { 0 }, 0, 0 },
-    {N_("Selected Glyph Col"), "SelectedGlyphColor", rt_color, &selglyphcol, N_("Color used to mark the selected glyph"), NULL, { 0 }, 0, 0 },
-    RESED_EMPTY
+  {N_("Advance Width Col"), "AdvanceWidthColor", rt_color, &widthcol,
+   N_("Color used to draw the advance width line of a glyph"), NULL, {0}, 0, 0},
+  {N_("Italic Advance Col"), "ItalicAdvanceColor", rt_color, &widthcol,
+   N_("Color used to draw the italic advance width line of a glyph"), NULL, {0},
+   0, 0},
+  {N_("Kern Line Color"), "KernLineColor", rt_color, &kernlinecol,
+   N_("Color used to draw the kerning line"), NULL, {0}, 0, 0},
+  {N_("Side Bearing Color"), "SideBearingLineColor", rt_color, &rbearinglinecol,
+   N_("Color used to draw the left side bearing"), NULL, {0}, 0, 0},
+  {N_("Selected Glyph Col"), "SelectedGlyphColor", rt_color, &selglyphcol,
+   N_("Color used to mark the selected glyph"), NULL, {0}, 0, 0},
+  RESED_EMPTY
 };
+
 extern GResInfo view_ri;
 GResInfo metricsview_ri = {
-    &view_ri, NULL,NULL, NULL,
-    NULL,
-    NULL,
-    NULL,
-    metricsview_re,
-    N_("MetricsView"),
-    N_("This window displays metrics information about a font"),
-    "MetricsView",
-    "FontForge",
-    false,
-    0,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
+  &view_ri, NULL, NULL, NULL,
+  NULL,
+  NULL,
+  NULL,
+  metricsview_re,
+  N_("MetricsView"),
+  N_("This window displays metrics information about a font"),
+  "MetricsView",
+  "FontForge",
+  false,
+  0,
+  NULL,
+  GBOX_EMPTY,
+  NULL,
+  NULL,
+  NULL
 };
