@@ -305,7 +305,7 @@ ApplyChanges (WidthInfo * wi)
 
   for (i = 0; i < wi->real_rcnt; ++i)
     {
-      int gid = map->map[wi->right[i]->sc->orig_pos];
+      int gid = enc_to_gid (map, wi->right[i]->sc->orig_pos);
       if (gid != -1)
         rsel[gid] = true;
     }
@@ -1897,7 +1897,7 @@ autowidthBuildCharList (FontViewBase *fv, SplineFont *sf,
     {
       for (i = cnt = 0; i < map->enccount && cnt < 300; ++i)
         {
-          if (fv->selected[i] && (gid = map->map[i]) != -1
+          if (fv->selected[i] && (gid = enc_to_gid (map,i)) != -1
               && SCWorthOutputting (sf->glyphs[gid]))
             {
               if (doit)

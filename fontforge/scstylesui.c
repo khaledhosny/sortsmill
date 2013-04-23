@@ -2782,7 +2782,7 @@ ObliqueDlg (FontView *fv, CharView *cv)
 
       for (i = 0; i < fv->b.map->enccount; ++i)
         if (fv->b.selected[i] &&
-            (gid = fv->b.map->map[i]) != -1
+            (gid = enc_to_gid (fv->b.map, i)) != -1
             && (sc = fv->b.sf->glyphs[gid]) != NULL)
           {
             FVTrans ((FontViewBase *) fv, sc, transform, NULL,

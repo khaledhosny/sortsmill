@@ -887,10 +887,10 @@ static int Group_ToSelection(GGadget *g, GEvent *e) {
 		int gid; SplineChar *sc;
 
 		for ( pos=0; pos<fv->b.map->enccount; ++pos )
-		    if ( (gid=fv->b.map->map[pos])!=-1 && 
-			    (sc = sf->glyphs[gid])!=NULL &&
-			    sc->color == col )
-			fv->b.selected[pos] = true;
+                  if ( (gid=enc_to_gid (fv->b.map, pos))!=-1 && 
+                       (sc = sf->glyphs[gid])!=NULL &&
+                       sc->color == col )
+                    fv->b.selected[pos] = true;
 	    } else {
 		if (( pos = SFFindSlot(sf,fv->b.map,-1,nm))!=-1 ) {
 		    if ( found==-1 ) found = pos;
@@ -920,7 +920,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 
 	if ( GGadgetIsChecked(grp->idname) ) {
 	    for ( i=len=max=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i]) {
-		gid = fv->b.map->map[i];
+		gid = enc_to_gid (fv->b.map, i);
 		if ( gid!=-1 && sf->glyphs[gid]!=NULL )
 		    sc = sf->glyphs[gid];
 		else
@@ -931,7 +931,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 	    pt = vals = xmalloc((len+1)*sizeof(uint32_t));
 	    *pt = '\0';
 	    for ( i=len=max=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i]) {
-		gid = fv->b.map->map[i];
+		gid = enc_to_gid (fv->b.map, i);
 		if ( gid!=-1 && sf->glyphs[gid]!=NULL )
 		    sc = sf->glyphs[gid];
 		else
@@ -947,7 +947,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 		int last=-2, start=-2;
 		len = 0;
 		for ( i=len=max=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i]) {
-		    gid = fv->b.map->map[i];
+		    gid = enc_to_gid (fv->b.map, i);
 		    if ( gid!=-1 && sf->glyphs[gid]!=NULL )
 			sc = sf->glyphs[gid];
 		    else
@@ -1363,8 +1363,8 @@ return;
     if ( gid!=-1 && map->backmap[gid]==-1 )
 	map->backmap[gid] = map->enccount;
     if ( map->enccount>=map->encmax )
-	map->map = xrealloc(map->map,(map->encmax+=100)*sizeof(int));
-    map->map[map->enccount++] = gid;
+      map->_map_array = xrealloc(map->_map_array,(map->encmax+=100)*sizeof(int));
+    map->_map_array[map->enccount++] = gid;
     if ( !compacted ) {
 	Encoding *enc = map->enc;
 	if ( enc->char_cnt>=enc->char_max ) {

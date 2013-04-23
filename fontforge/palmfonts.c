@@ -154,7 +154,7 @@ PalmReadBitmaps (SplineFont *sf, FILE *file, int imagepos,
   for (index = fn->first; index <= fn->last + 1; ++index)
     {
       int enc = index == fn->last + 1 ? 256 : index;
-      if ((gid = map->map[enc]) != -1 && fn->chars[index].width != -1)
+      if ((gid = enc_to_gid (map, enc)) != -1 && fn->chars[index].width != -1)
         {
           BDFChar *bdfc;
           int i, j, bits, bite, bit;
@@ -534,7 +534,7 @@ ValidMetrics (BDFFont *test, BDFFont *base, EncMap *map, int den)
                     ("Only the first 256 glyphs in the encoding will be used"));
 
   for (i = 0; i < map->enccount && i < 256; ++i)
-    if ((gid = map->map[i]) != -1
+    if ((gid = enc_to_gid (map, i)) != -1
         && (test->glyphs[gid] != NULL || base->glyphs[gid] != NULL))
       {
         if (base->glyphs[gid] == NULL || test->glyphs[gid] == NULL)
@@ -595,9 +595,9 @@ PalmAddChar (uint16_t *image, int rw, int rbits,
           int bipos = bi * bc->bytes_per_line;
           for (j = bc->xmin <= 0 ? 0 : bc->xmin; j < width && j <= bc->xmax;
                ++j)
-            if (bc->
-                bitmap[bipos +
-                       ((j - bc->xmin) >> 3)] & (0x80 >> ((j - bc->xmin) & 7)))
+            if (bc->bitmap[bipos +
+                           ((j - bc->xmin) >> 3)] & (0x80 >> ((j -
+                                                               bc->xmin) & 7)))
               image[ipos + ((rbits + j) >> 4)] |=
                 (0x8000 >> ((rbits + j) & 0xf));
         }
@@ -618,14 +618,14 @@ BDF2Image (struct FontTag *fn, BDFFont *bdf, int **offsets,
   if (bdf == NULL)
     return (NULL);
   for (i = 0; i < map->enccount; i++)
-    if ((gid = map->map[i]) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
+    if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCPrepareForOutput (bdfc, true);
 
   den = bdf->pixelsize / fn->fRectHeight;
 
   rbits = 0;
   for (i = fn->firstChar; i <= fn->lastChar; ++i)
-    if ((gid = map->map[i]) != -1 && gid != notdefpos
+    if ((gid = enc_to_gid (map, i)) != -1 && gid != notdefpos
         && base->glyphs[gid] != NULL)
       rbits += base->glyphs[gid]->width;
   if (notdefpos != -1)
@@ -646,7 +646,7 @@ BDF2Image (struct FontTag *fn, BDFFont *bdf, int **offsets,
     {
       if (offsets != NULL)
         (*offsets)[i - fn->firstChar] = rbits;
-      if ((gid = map->map[i]) != -1 && gid != notdefpos
+      if ((gid = enc_to_gid (map, i)) != -1 && gid != notdefpos
           && base->glyphs[gid] != NULL)
         {
           if (widths != NULL)
@@ -694,7 +694,7 @@ BDF2Image (struct FontTag *fn, BDFFont *bdf, int **offsets,
   if (offsets != NULL)
     (*offsets)[i + 1 - fn->firstChar] = rbits;
   for (i = 0; i < map->enccount; i++)
-    if ((gid = map->map[i]) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
+    if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
   return (image);
 }
@@ -779,7 +779,7 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
   fn.descent = base->descent;
   for (i = 0; i < map->enccount && i < 256; ++i)
     {
-      gid = map->map[i];
+      gid = enc_to_gid (map, i);
       if (gid != -1 && base->glyphs[gid] != NULL)
         {
           if (strcmp (sf->glyphs[gid]->name, ".notdef") != 0)
@@ -857,7 +857,7 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
         fseek (file, owpos, SEEK_SET);
         for (i = fn.firstChar; i <= fn.lastChar; ++i)
           {
-            if ((gid = map->map[i]) == -1 || base->glyphs[gid] == NULL)
+            if ((gid = enc_to_gid (map, i)) == -1 || base->glyphs[gid] == NULL)
               {
                 putc (-1, file);
                 putc (-1, file);

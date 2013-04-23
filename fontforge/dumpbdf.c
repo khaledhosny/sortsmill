@@ -483,7 +483,7 @@ BDFDumpHeader (FILE *file, BDFFont *font, EncMap *map,
     int i, cnt = 0;
     for (i = 0; i < map->enccount; ++i)
       {
-        int gid = map->map[i];
+        int gid = enc_to_gid (map, i);
         if (gid != -1 && !IsntBDFChar (font->glyphs[gid]))
           ++cnt;
       }
@@ -512,7 +512,7 @@ BDFFontDump (char *filename, BDFFont *font, EncMap *map, int res)
   BDFChar *bdfc;
 
   for (i = 0; i < map->enccount; i++)
-    if ((gid = map->map[i]) != -1 && (bdfc = font->glyphs[gid]) != NULL)
+    if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCPrepareForOutput (bdfc, true);
   if (filename == NULL)
     {
@@ -528,7 +528,7 @@ BDFFontDump (char *filename, BDFFont *font, EncMap *map, int res)
       BDFDumpHeader (file, font, map, res, &defs);
       for (i = 0; i < map->enccount; ++i)
         {
-          gid = map->map[i];
+          gid = enc_to_gid (map, i);
           if (gid != -1 && !IsntBDFChar (font->glyphs[gid]))
             {
               enc = i;
@@ -546,7 +546,7 @@ BDFFontDump (char *filename, BDFFont *font, EncMap *map, int res)
       fclose (file);
     }
   for (i = 0; i < map->enccount; i++)
-    if ((gid = map->map[i]) != -1 && (bdfc = font->glyphs[gid]) != NULL)
+    if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
   return (ret);
 }

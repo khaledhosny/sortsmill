@@ -3778,7 +3778,7 @@ DoProbs (struct problems *p)
         if (p->fv->b.selected[i])
           {
             sc = NULL;
-            if ((gid = p->fv->b.map->map[i]) != -1
+            if ((gid = enc_to_gid (p->fv->b.map, i)) != -1
                 && (sc = p->fv->b.sf->glyphs[gid]) != NULL)
               {
                 if (SCProblems (NULL, sc, p))
@@ -6223,7 +6223,7 @@ VWMenuGotoGlyph (GWindow gw, struct gmenuitem *mi, GEvent *e)
 
   if (enc == -1)
     return;
-  gid = fv->b.map->map[enc];
+  gid = enc_to_gid (fv->b.map, enc);
   if (gid == -1 || (sc = vw->sf->glyphs[gid]) == NULL)
     {
       ff_post_error (_("Glyph not in font"), _("Glyph not in font"));
@@ -6276,7 +6276,7 @@ VWMenuSelect (GWindow gw, struct gmenuitem *mi, GEvent *e)
   for (i = 0; i < map->enccount; ++i)
     {
       fv->b.selected[i] = false;
-      gid = map->map[i];
+      gid = enc_to_gid (map, i);
       if (gid != -1 && (sc = vw->sf->glyphs[gid]) != NULL &&
           (SCValidate (sc, vw->layer, true) & mask))
         fv->b.selected[i] = true;

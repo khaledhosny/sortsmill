@@ -1042,7 +1042,8 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
     if (fv->selected[i])
       {
         SplineChar *sc =
-          fv->map->map[i] == -1 ? NULL : sf->glyphs[fv->map->map[i]];
+          (enc_to_gid (fv->map, i) == -1) ?
+          NULL : sf->glyphs[enc_to_gid (fv->map, i)];
 
         if (sc == NULL)
           {

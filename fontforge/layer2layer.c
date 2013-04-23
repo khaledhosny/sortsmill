@@ -98,7 +98,7 @@ _DoFVCopy (FontView *fv, int from, int to, int clear)
       }
   for (enc = 0; enc < fv->b.map->enccount; ++enc)
     {
-      if (fv->b.selected[enc] && (gid = fv->b.map->map[enc]) != -1 &&
+      if (fv->b.selected[enc] && (gid = enc_to_gid (fv->b.map, enc)) != -1 &&
           (sc = sf->glyphs[gid]) != NULL && !sc->ticked)
         {
           SCCopyLayerToLayer (sc, from, to, clear);
@@ -134,7 +134,8 @@ _DoFVCompare (FontView *fv, int from, int to, double errbound)
 
   for (enc = 0; enc < fv->b.map->enccount; ++enc)
     {
-      if ( /*fv->b.selected[enc] && */ (gid = fv->b.map->map[enc]) != -1 &&
+      if ( /*fv->b.selected[enc] && */ (gid = enc_to_gid (fv->b.map, enc)) != -1
+          &&
           (sc = sf->glyphs[gid]) != NULL && !sc->ticked)
         {
           if (!LayersSimilar (&sc->layers[from], &sc->layers[to], errbound))

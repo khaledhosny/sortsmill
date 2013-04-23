@@ -80,7 +80,7 @@ HistFindBlues (SplineFont *sf, int layer, uint8_t *selected, EncMap *map)
 
   for (i = 0; i < (selected == NULL ? sf->glyphcnt : map->enccount); ++i)
     {
-      gid = selected == NULL ? i : map->map[i];
+      gid = selected == NULL ? i : enc_to_gid (map, i);
       if (gid != -1 && (sc = sf->glyphs[gid]) != NULL &&
           sc->layers[ly_fore].splines != NULL &&
           sc->layers[ly_fore].refs == NULL && (selected == NULL || selected[i]))
@@ -182,7 +182,7 @@ HistFindStemWidths (SplineFont *sf, int layer, uint8_t *selected, EncMap *map,
 
   for (i = 0; i < (selected == NULL ? sf->glyphcnt : map->enccount); ++i)
     {
-      gid = selected == NULL ? i : map->map[i];
+      gid = selected == NULL ? i : enc_to_gid (map, i);
       if (gid != -1 && (sc = sf->glyphs[gid]) != NULL &&
           sc->layers[ly_fore].splines != NULL &&
           sc->layers[ly_fore].refs == NULL && (selected == NULL || selected[i]))
@@ -923,7 +923,7 @@ CheckSmallSelection (uint8_t *selected, EncMap *map, SplineFont *sf)
 
   for (i = cnt = tot = 0; i < map->enccount; ++i)
     {
-      int gid = map->map[i];
+      int gid = enc_to_gid (map, i);
       if (gid != -1 && sf->glyphs[gid] != NULL)
         {
           ++tot;

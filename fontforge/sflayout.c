@@ -134,8 +134,8 @@ LI_FDDrawChar (void *data,
     {
       bdfc =
         fd->fonttype ==
-        sftf_bitmap ? BDFGetMergedChar (fd->bdf->glyphs[gid]) : fd->
-        bdf->glyphs[gid];
+        sftf_bitmap ? BDFGetMergedChar (fd->bdf->glyphs[gid]) : fd->bdf->
+        glyphs[gid];
       if (col != -1)
         {
           if (!fd->antialias)
@@ -195,7 +195,7 @@ _FDMap (FontData * fd, int uenc)
 
   if (uenc >= fd->sfmap->map->enccount)
     return (-1);
-  gid = fd->sfmap->map->map[uenc];
+  gid = enc_to_gid (fd->sfmap->map, uenc);
   if (gid == -1 || fd->sf->glyphs[gid] == NULL)
     return (-1);
 
@@ -1571,8 +1571,8 @@ FontImage (SplineFont *sf, char *filename, Array *arr, int width, int height)
       p = li->lineheights[i].p;
       if (li->paras[p].para[0] != NULL
           &&
-          ScriptIsRightToLeft (((struct fontlist *) (li->paras[p].
-                                                     para[0]->fl))->script))
+          ScriptIsRightToLeft (((struct fontlist *) (li->paras[p].para[0]->
+                                                     fl))->script))
         x = li->xmax - li->lineheights[i].linelen;
       else
         x = 0;

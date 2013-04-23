@@ -618,7 +618,7 @@ static void StrokeInit(StrokeDlg *sd) {
     sd->dummy_fv.magnify = 1;
 
     sd->dummy_fv.b.map = &sd->dummy_map;
-    sd->dummy_map.map = sd->map;
+    sd->dummy_map._map_array = sd->map;
     sd->dummy_map.backmap = sd->backmap;
     sd->dummy_map.enccount = sd->dummy_map.encmax = sd->dummy_map.backmax = 1;
     sd->dummy_map.enc = &custom;
@@ -1557,7 +1557,7 @@ static void GDDInit(GradientDlg *gdd,SplineFont *sf,Layer *ly,struct gradient *g
     gdd->dummy_fv.magnify = 1;
 
     gdd->dummy_fv.b.map = &gdd->dummy_map;
-    gdd->dummy_map.map = gdd->map;
+    gdd->dummy_map._map_array = gdd->map;
     gdd->dummy_map.backmap = gdd->backmap;
     gdd->dummy_map.enccount = gdd->dummy_map.encmax = gdd->dummy_map.backmax = 1;
     gdd->dummy_map.enc = &custom;

@@ -129,8 +129,8 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
           for (isgpos = 0; isgpos < 2; ++isgpos)
             {
               for (otl =
-                   isgpos ? mc->sf_from->gpos_lookups : mc->sf_from->
-                   gsub_lookups; otl != NULL; otl = otl->next)
+                   isgpos ? mc->sf_from->gpos_lookups : mc->
+                   sf_from->gsub_lookups; otl != NULL; otl = otl->next)
                 {
                   if (doit)
                     {
@@ -839,15 +839,15 @@ SFFindSlot (SplineFont *sf, EncMap *map, int unienc, const char *name)
             map->enc->is_original) && unienc != -1)
     {
       /* Just on the off-chance that it is unicode after all */
-      if (unienc < map->enccount && map->map[unienc] != -1 &&
-          sf->glyphs[map->map[unienc]] != NULL &&
-          sf->glyphs[map->map[unienc]]->unicodeenc == unienc)
+      if (unienc < map->enccount && enc_to_gid (map, unienc) != -1 &&
+          sf->glyphs[enc_to_gid (map, unienc)] != NULL &&
+          sf->glyphs[enc_to_gid (map, unienc)]->unicodeenc == unienc)
         index = unienc;
       else
         for (index = map->enccount - 1; index >= 0; --index)
           {
-            if ((pos = map->map[index]) != -1 && sf->glyphs[pos] != NULL &&
-                SCUniMatch (sf->glyphs[pos], unienc))
+            if ((pos = enc_to_gid (map, index)) != -1 && sf->glyphs[pos] != NULL
+                && SCUniMatch (sf->glyphs[pos], unienc))
               break;
           }
     }
@@ -863,8 +863,8 @@ SFFindSlot (SplineFont *sf, EncMap *map, int unienc, const char *name)
       if (index < 0 || index >= map->enccount)
         {
           for (index = map->enc->char_cnt; index < map->enccount; ++index)
-            if ((pos = map->map[index]) != -1 && sf->glyphs[pos] != NULL &&
-                SCUniMatch (sf->glyphs[pos], unienc))
+            if ((pos = enc_to_gid (map, index)) != -1 && sf->glyphs[pos] != NULL
+                && SCUniMatch (sf->glyphs[pos], unienc))
               break;
           if (index >= map->enccount)
             index = -1;
@@ -1171,9 +1171,8 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
       for (i = 0; i < o_sf->glyphcnt; ++i)
         if (mapping[i] >= emptypos)
           {
-            int index =
-              SFFindSlot (into, map, o_sf->glyphs[i]->unicodeenc,
-                          o_sf->glyphs[i]->name);
+            int index = SFFindSlot (into, map, o_sf->glyphs[i]->unicodeenc,
+                                    o_sf->glyphs[i]->name);
             if (!doit)
               {
                 if (index == -1)
@@ -1183,7 +1182,7 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
               {
                 if (index == -1)
                   index = base + extras++;
-                map->map[index] = mapping[i];
+                map->_map_array[index] = mapping[i];
                 map->backmap[mapping[i]] = index;
               }
           }
@@ -1198,11 +1197,12 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
           memset (map->backmap + into->glyphcnt, -1, cnt * sizeof (int));
           if (map->enccount + extras > map->encmax)
             {
-              map->map =
-                xrealloc (map->map, (map->enccount + extras) * sizeof (int));
+              map->_map_array =
+                xrealloc (map->_map_array,
+                          (map->enccount + extras) * sizeof (int));
               map->encmax = map->enccount + extras;
             }
-          memset (map->map + map->enccount, -1, extras * sizeof (int));
+          memset (map->_map_array + map->enccount, -1, extras * sizeof (int));
           map->enccount += extras;
         }
     }

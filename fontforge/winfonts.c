@@ -268,9 +268,9 @@ FNT_Load (FILE *fnt, SplineFont *sf)
   if (fntheader.version == 0x300)
     {
       fntheader.flags = lgetlong (fnt);
-      if (fntheader.
-          flags & (FNT_FLAGS_ABCFIXED | FNT_FLAGS_ABCPROP | FNT_FLAGS_16COLOR |
-                   FNT_FLAGS_256COLOR | FNT_FLAGS_RGBCOLOR))
+      if (fntheader.flags &
+          (FNT_FLAGS_ABCFIXED | FNT_FLAGS_ABCPROP | FNT_FLAGS_16COLOR |
+           FNT_FLAGS_256COLOR | FNT_FLAGS_RGBCOLOR))
         return (false);
       fntheader.aspace = lgetushort (fnt);
       fntheader.bspace = lgetushort (fnt);
@@ -547,7 +547,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
     return (false);
 
   for (i = 0; i < map->enccount; i++)
-    if ((gid = map->map[i]) != -1 && (bdfc = font->glyphs[gid]) != NULL)
+    if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCPrepareForOutput (bdfc, true);
   avgwid = widbytes = maxwid = maxy = last = cnt = 0;
   miny = first = 999999;
@@ -555,7 +555,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   badch = -1;
   defch = -1;
   for (i = 0; i < map->enccount && i < 256; ++i)
-    if ((gid = map->map[i]) != -1 && font->glyphs[gid] != NULL
+    if ((gid = enc_to_gid (map, i)) != -1 && font->glyphs[gid] != NULL
         && font->glyphs[gid]->width > 0)
       {
         if (i == 0 || (i == 0x80 && defch != 0))
@@ -584,7 +584,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
       }
   if ((spacesize = font->pixelsize / 4) == 0)
     spacesize = 1;
-  gid = map->map[' '];
+  gid = enc_to_gid (map, ' ');
   if (gid != -1 && font->glyphs[gid] != NULL && font->glyphs[gid]->sc != NULL &&
       font->glyphs[gid]->sc->unicodeenc == ' ')
     spacesize = font->glyphs[gid]->width;
@@ -596,7 +596,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   widbytes = avgwid + spacesize;
   if (cnt != 0)
     avgwid = rint (avgwid / (bigreal) cnt);
-  gid = map->map['X'];
+  gid = enc_to_gid (map, 'X');
   if (font->glyphs[gid] != NULL && font->glyphs[gid]->sc != NULL &&
       font->glyphs[gid]->sc->unicodeenc == 'X')
     avgwid = font->glyphs[gid]->width;
@@ -672,7 +672,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   widbytes = 0;
   for (i = first; i <= last; ++i)
     {
-      if ((gid = map->map[i]) != -1 && font->glyphs[gid] != NULL
+      if ((gid = enc_to_gid (map, i)) != -1 && font->glyphs[gid] != NULL
           && font->glyphs[gid]->width > 0)
         lputshort (file, font->glyphs[gid]->width);
       else
@@ -700,7 +700,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   widbytes = 0;
   for (i = first; i <= last; ++i)
     {
-      int gid = map->map[i];
+      int gid = enc_to_gid (map, i);
       BDFChar *bdfc = gid == -1 ? NULL : font->glyphs[gid];
       if (bdfc != NULL && bdfc->width > 0)
         {
@@ -717,13 +717,13 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
                       for (l = 0; l < 8; ++l)
                         {
                           if (k + l >= bdfc->xmin && k + l <= bdfc->xmax &&
-                              (bdfc->
-                               bitmap[(bdfc->ymax - j) * bdfc->bytes_per_line +
-                                      ((k + l -
-                                        bdfc->xmin) >> 3)] & (0x80 >> ((k + l -
-                                                                        bdfc->
-                                                                        xmin) &
-                                                                       7))))
+                              (bdfc->bitmap
+                               [(bdfc->ymax - j) * bdfc->bytes_per_line +
+                                ((k + l - bdfc->xmin) >> 3)] & (0x80 >> ((k +
+                                                                          l -
+                                                                          bdfc->
+                                                                          xmin)
+                                                                         & 7))))
                             ch |= (0x80 >> l);
                         }
                       putc (ch, file);
@@ -755,7 +755,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   lputlong (file, namepos);
   fseek (file, endpos, SEEK_SET);
   for (i = 0; i < map->enccount; i++)
-    if ((gid = map->map[i]) != -1 && (bdfc = font->glyphs[gid]) != NULL)
+    if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
   return (true);
 }
@@ -918,21 +918,21 @@ struct _fnt_header
 
 static const BYTE MZ_hdr[] =
   { 'M', 'Z', 0x0d, 0x01, 0x01, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xff,
-0xff, 0x00, 0x00,
+  0xff, 0x00, 0x00,
   0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
-    0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00,
   0x0e, 0x1f, 0xba, 0x0e, 0x00, 0xb4, 0x09, 0xcd, 0x21, 0xb8, 0x01, 0x4c, 0xcd,
-    0x21, 'T', 'h',
+  0x21, 'T', 'h',
   'i', 's', ' ', 'P', 'r', 'o', 'g', 'r', 'a', 'm', ' ', 'c', 'a', 'n', 'n',
-    'o',
+  'o',
   't', ' ', 'b', 'e', ' ', 'r', 'u', 'n', ' ', 'i', 'n', ' ', 'D', 'O', 'S',
-    ' ',
+  ' ',
   'm', 'o', 'd', 'e', 0x0d, 0x0a, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00
+  0x00, 0x00, 0x00
 };
 
 

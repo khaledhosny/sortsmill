@@ -3303,7 +3303,7 @@ MVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       else if (mi->mid == MID_NextDef)
         {
           for (pos = map->backmap[sc->orig_pos] + 1;
-               pos < map->enccount && ((gid = map->map[pos]) == -1
+               pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
                                        || sf->glyphs[gid] == NULL); ++pos);
           if (pos >= map->enccount)
             return;
@@ -3311,7 +3311,7 @@ MVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       else if (mi->mid == MID_PrevDef)
         {
           for (pos = map->backmap[sc->orig_pos] - 1;
-               pos < map->enccount && ((gid = map->map[pos]) == -1
+               pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
                                        || sf->glyphs[gid] == NULL); --pos);
           if (pos < 0)
             return;
@@ -7344,7 +7344,7 @@ MetricsViewCreate (FontView *fv, SplineChar *sc, BDFFont *bdf)
         {
           for (i = 0; i < map->enccount && mv->clen < 15; ++i)
             {
-              int gid = map->map[i];
+              int gid = enc_to_gid (map, i);
               if (gid != -1 && fv->b.selected[i] == j
                   && fv->b.sf->glyphs[gid] != NULL)
                 {

@@ -864,8 +864,8 @@ _KCD_DisplaySizeChanged (KernClassDlg * kcd)
         {
           sprintf (buffer, "%d",
                    kcd->active_adjust.corrections[pixelsize -
-                                                  kcd->active_adjust.
-                                                  first_pixel_size]);
+                                                  kcd->
+                                                  active_adjust.first_pixel_size]);
           u32_strcpy (ubuf, x_gc_u8_to_u32 (buffer));
         }
       GGadgetSetTitle (GWidgetGetControl (kcd->gw, CID_Correction), ubuf);
@@ -1082,8 +1082,8 @@ KCD_SetDevTab (KernClassDlg * kcd)
         {
           sprintf (buffer, "%d",
                    kcd->active_adjust.corrections[kcd->pixelsize -
-                                                  kcd->active_adjust.
-                                                  first_pixel_size]);
+                                                  kcd->
+                                                  active_adjust.first_pixel_size]);
           u32_strcpy (ubuf, x_gc_u8_to_u32 (buffer));
         }
     }
@@ -1987,9 +1987,8 @@ KCD_Expose (KernClassDlg * kcd, GWindow pixmap, GEvent *event)
                      0x808080);
       if (i + kcd->offtop < kcd->first_cnt)
         {
-          int err =
-            KCD_NameClass (kcd->sf, buf, sizeof (buf),
-                           fclasses[i + kcd->offtop].u.md_str);
+          int err = KCD_NameClass (kcd->sf, buf, sizeof (buf),
+                                   fclasses[i + kcd->offtop].u.md_str);
           int fg = err ? 0xff0000 : 0x006080;
           len = GDrawGetText8Width (pixmap, buf, -1);
           if (len <= kcd->kernw)
@@ -2017,9 +2016,8 @@ KCD_Expose (KernClassDlg * kcd, GWindow pixmap, GEvent *event)
                      0x808080);
       if (i + kcd->offleft < kcd->second_cnt)
         {
-          int err =
-            KCD_NameClass (kcd->sf, buf, sizeof (buf),
-                           sclasses[i + kcd->offleft].u.md_str);
+          int err = KCD_NameClass (kcd->sf, buf, sizeof (buf),
+                                   sclasses[i + kcd->offleft].u.md_str);
           int fg = err ? 0xff0000 : 0x006080;
           len = GDrawGetText8Width (pixmap, buf, -1);
           if (len <= kcd->kernw)
@@ -4063,26 +4061,29 @@ KernPairD (SplineFont *sf, SplineChar *sc1, SplineChar *sc2, int layer, int isv)
         start + fv->rowcnt * fv->colcnt;
       int i;
       for (i = start; i < end && i < fv->b.map->enccount; ++i)
-        if ((gid = fv->b.map->map[i]) != -1 && sf->glyphs[gid] != NULL &&
-            (isv ? sf->glyphs[gid]->vkerns : sf->glyphs[gid]->kerns) != NULL)
+        if ((gid = enc_to_gid (fv->b.map, i)) != -1 && sf->glyphs[gid] != NULL
+            && (isv ? sf->glyphs[gid]->vkerns : sf->glyphs[gid]->kerns) != NULL)
           break;
       if (i == end || i == fv->b.map->enccount)
         {
           for (i = 0; i < fv->b.map->enccount; ++i)
-            if ((gid = fv->b.map->map[i]) != -1 && sf->glyphs[gid] != NULL &&
-                (isv ? sf->glyphs[gid]->vkerns : sf->glyphs[gid]->kerns) !=
+            if ((gid = enc_to_gid (fv->b.map, i)) != -1
+                && sf->glyphs[gid] != NULL
+                && (isv ? sf->glyphs[gid]->vkerns : sf->glyphs[gid]->kerns) !=
                 NULL)
               break;
         }
       if (i == fv->b.map->enccount)
         {
           for (i = start; i < end && i < fv->b.map->enccount; ++i)
-            if ((gid = fv->b.map->map[i]) != -1 && sf->glyphs[gid] != NULL)
+            if ((gid = enc_to_gid (fv->b.map, i)) != -1
+                && sf->glyphs[gid] != NULL)
               break;
           if (i == end || i == fv->b.map->enccount)
             {
               for (i = 0; i < fv->b.map->enccount; ++i)
-                if ((gid = fv->b.map->map[i]) != -1 && sf->glyphs[gid] != NULL)
+                if ((gid = enc_to_gid (fv->b.map, i)) != -1
+                    && sf->glyphs[gid] != NULL)
                   break;
             }
         }

@@ -183,7 +183,7 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
   if (enc >= map->enccount)
     gid = -1;
   else
-    gid = map->map[enc];
+    gid = enc_to_gid (map, enc);
   if (sf->subfontcnt != 0 && gid != -1)
     {
       ssf = NULL;
@@ -213,7 +213,7 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
               /* if necessary, create the real unicode code point */
               /*  and then make us be a duplicate of it */
               sc = _SFMakeChar (sf, map, real_uni);
-              map->map[enc] = gid = sc->orig_pos;
+              map->_map_array[enc] = gid = sc->orig_pos;
               SCCharChangedUpdate (sc, ly_all);
               return sc;
             }
@@ -228,7 +228,7 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
       if (map->enc->psnames != NULL &&
           (sc = SFGetChar (sf, dummy.unicodeenc, dummy.name)) != NULL)
         {
-          map->map[enc] = sc->orig_pos;
+          map->_map_array[enc] = sc->orig_pos;
           AltUniAdd (sc, dummy.unicodeenc);
           return sc;
         }
@@ -258,7 +258,7 @@ SFMakeChar (SplineFont *sf, EncMap *map, int enc)
   if (enc >= map->enccount)
     gid = -1;
   else
-    gid = map->map[enc];
+    gid = enc_to_gid (map, enc);
   if (sf->mm != NULL && (gid == -1 || sf->glyphs[gid] == NULL))
     {
       int j;
@@ -396,7 +396,7 @@ SFRemoveUndoes (SplineFont *sf, uint8_t *selected, EncMap *map)
             break;
           if (!selected[i])
             continue;
-          gid = map->map[i];
+          gid = enc_to_gid (map, i);
           if (gid == -1)
             continue;
         }

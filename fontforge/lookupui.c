@@ -4828,14 +4828,14 @@ PSTKD_AutoKernSelected (GGadget *g, GEvent *e)
 
       for (enc = 0, cnt = 0; enc < fv->map->enccount; ++enc)
         {
-          if (fv->selected[enc] && (gid = fv->map->map[enc]) != -1
+          if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1
               && SCWorthOutputting (sc = sf->glyphs[gid]))
             ++cnt;
         }
       list = xmalloc ((cnt + 1) * sizeof (SplineChar *));
       for (enc = 0, cnt = 0; enc < fv->map->enccount; ++enc)
         {
-          if (fv->selected[enc] && (gid = fv->map->map[enc]) != -1
+          if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1
               && SCWorthOutputting (sc = sf->glyphs[gid]))
             list[cnt++] = sc;
         }
@@ -6724,7 +6724,7 @@ SelectedGlyphs (FontView *_fv)
   selcnt = 0;
   for (enc = 0; enc < map->enccount; ++enc)
     {
-      if (fv->selected[enc] && (gid = map->map[enc]) != -1
+      if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sf->glyphs[gid]))
         ++selcnt;
     }
@@ -6740,7 +6740,7 @@ SelectedGlyphs (FontView *_fv)
   selcnt = 0;
   for (enc = 0; enc < map->enccount; ++enc)
     {
-      if (fv->selected[enc] && (gid = map->map[enc]) != -1
+      if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sc = sf->glyphs[gid]))
         glyphlist[selcnt++] = sc;
     }

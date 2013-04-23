@@ -10992,7 +10992,7 @@ PyFFSelection_Changed (PyObject *self, PyObject *UNUSED (args))
 
   for (i = 0; i < fv->map->enccount; ++i)
     {
-      if ((gid = fv->map->map[i]) != -1 && fv->sf->glyphs[gid] != NULL)
+      if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->sf->glyphs[gid] != NULL)
         fv->selected[i] = fv->sf->glyphs[gid]->changed;
       else
         fv->selected[i] = false;
@@ -12455,7 +12455,7 @@ fontiter_iternextkey (fontiterobject * di)
           int enccount = fv->map->enccount;
           while (di->pos < enccount)
             {
-              if (fv->selected[di->pos] && (gid = fv->map->map[di->pos]) != -1
+              if (fv->selected[di->pos] && (gid = enc_to_gid (fv->map, di->pos)) != -1
                   && SCWorthOutputting (fv->sf->glyphs[gid]))
                 {
                   ++di->pos;
@@ -12486,7 +12486,7 @@ fontiter_iternextkey (fontiterobject * di)
           int enccount = fv->map->enccount;
           while (di->pos < enccount)
             {
-              if ((gid = fv->map->map[di->pos]) != -1
+              if ((gid = enc_to_gid (fv->map, di->pos)) != -1
                   && SCWorthOutputting (fv->sf->glyphs[gid]))
                 {
                   ++di->pos;
@@ -14862,13 +14862,17 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
       free (self->fv->selected);
       self->fv->selected = xcalloc (sf->glyphcnt, sizeof (char));
       if (sf->glyphcnt > map->encmax)
-        map->map =
-          xrealloc (map->map, (map->encmax = sf->glyphcnt) * sizeof (int));
+        map->_map_array =
+          xrealloc (map->_map_array,
+                    (map->encmax = sf->glyphcnt) * sizeof (int));
       if (sf->glyphcnt > map->backmax)
         map->backmap =
           xrealloc (map->backmap, (map->backmax = sf->glyphcnt) * sizeof (int));
       for (i = 0; i < sf->glyphcnt; ++i)
-        map->map[i] = map->backmap[i] = i;
+        {
+          map->_map_array[i] = i;
+          map->backmap[i] = i;
+        }
       map->enccount = sf->glyphcnt;
     }
   self->fv->sf = sf;
@@ -16631,7 +16635,7 @@ GlyphsFromSelection (FontViewBase *fv)
   selcnt = 0;
   for (enc = 0; enc < map->enccount; ++enc)
     {
-      if (fv->selected[enc] && (gid = map->map[enc]) != -1
+      if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sf->glyphs[gid]))
         ++selcnt;
     }
@@ -16646,7 +16650,7 @@ GlyphsFromSelection (FontViewBase *fv)
   selcnt = 0;
   for (enc = 0; enc < map->enccount; ++enc)
     {
-      if (fv->selected[enc] && (gid = map->map[enc]) != -1
+      if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sc = sf->glyphs[gid]))
         glyphlist[selcnt++] = sc;
     }
@@ -19575,7 +19579,7 @@ PyFFFont_canonicalContours (PyFF_Font *self, PyObject *UNUSED (args))
   sf = fv->sf;
   map = fv->map;
   for (i = 0; i < map->enccount; ++i)
-    if ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
+    if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       CanonicalContours (sf->glyphs[gid], fv->active_layer);
 
   Py_RETURN (self);
@@ -19595,7 +19599,7 @@ PyFFFont_canonicalStart (PyFF_Font *self, PyObject *UNUSED (args))
   sf = fv->sf;
   map = fv->map;
   for (i = 0; i < map->enccount; ++i)
-    if ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
+    if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       SPLsStartToLeftmost (sf->glyphs[gid], fv->active_layer);
 
   Py_RETURN (self);
@@ -20339,7 +20343,7 @@ PyFFFont_Round (PyFF_Font *self, PyObject *args)
   if (!PyArg_ParseTuple (args, "|d", &factor))
     return (NULL);
   for (i = 0; i < map->enccount; ++i)
-    if ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
+    if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       {
         SplineChar *sc = sf->glyphs[gid];
         SCRound2Int (sc, fv->active_layer, factor);
@@ -20365,7 +20369,7 @@ PyFFFont_Cluster (PyFF_Font *self, PyObject *args)
     return (NULL);
 
   for (i = 0; i < map->enccount; ++i)
-    if ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
+    if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       {
         SplineChar *sc = sf->glyphs[gid];
         SCRoundToCluster (sc, ly_all, false, within, max);
@@ -20419,7 +20423,7 @@ PyFFFont_correctDirection (PyFF_Font *self, PyObject *UNUSED (args))
   sf = fv->sf;
   map = fv->map;
   for (i = 0; i < map->enccount; ++i)
-    if ((gid = map->map[i]) != -1 && (sc = sf->glyphs[gid]) != NULL
+    if ((gid = enc_to_gid (map, i)) != -1 && (sc = sf->glyphs[gid]) != NULL
         && fv->selected[i])
       {
         changed = refchanged = false;
@@ -20795,7 +20799,7 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
           PyErr_Format (PyExc_TypeError, "Index out of bounds");
           return (NULL);
         }
-      gid = fv->map->map[pos];
+      gid = enc_to_gid (fv->map, pos);
       sc = gid == -1 ? NULL : sf->glyphs[gid];
     }
   else
@@ -20852,7 +20856,7 @@ PyFF_FontContains (PyObject *object, PyObject *index)
         {
           return (0);
         }
-      gid = fv->map->map[pos];
+      gid = enc_to_gid (fv->map, pos);
       sc = gid == -1 ? NULL : sf->glyphs[gid];
     }
   else

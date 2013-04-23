@@ -35,7 +35,7 @@
 static struct builtins
 {
   char *name;
-  enum operator    op;
+  enum operator     op;
 } builtins[] =
 {
   {
@@ -222,7 +222,7 @@ gettoken (struct context *c, real *val)
 }
 
 static void
-backup (struct context *c, enum operator    op, real val)
+backup (struct context *c, enum operator     op, real val)
 {
   if (c->backed_token != op_base)
     {
@@ -240,7 +240,7 @@ static struct expr *
 gete0 (struct context *c)
 {
   real val = 0;
-  enum operator    op = gettoken (c, &val);
+  enum operator     op = gettoken (c, &val);
   struct expr *ret;
 
   switch (op)
@@ -329,7 +329,7 @@ static struct expr *
 gete1 (struct context *c)
 {
   real val = 0;
-  enum operator    op;
+  enum operator     op;
   struct expr *ret, *op1;
 
   op1 = gete0 (c);
@@ -351,7 +351,7 @@ static struct expr *
 gete2 (struct context *c)
 {
   real val = 0;
-  enum operator    op;
+  enum operator     op;
   struct expr *ret, *op1;
 
   op1 = gete1 (c);
@@ -373,7 +373,7 @@ static struct expr *
 gete3 (struct context *c)
 {
   real val = 0;
-  enum operator    op;
+  enum operator     op;
   struct expr *ret, *op1;
 
   op1 = gete2 (c);
@@ -395,7 +395,7 @@ static struct expr *
 gete4 (struct context *c)
 {
   real val = 0;
-  enum operator    op;
+  enum operator     op;
   struct expr *ret, *op1;
 
   op1 = gete3 (c);
@@ -418,7 +418,7 @@ static struct expr *
 gete5 (struct context *c)
 {
   real val = 0;
-  enum operator    op;
+  enum operator     op;
   struct expr *ret, *op1;
 
   op1 = gete4 (c);
@@ -440,7 +440,7 @@ static struct expr *
 getexpr (struct context *c)
 {
   real val = 0;
-  enum operator    op;
+  enum operator     op;
   struct expr *ret, *op1;
 
   op1 = gete5 (c);
@@ -853,14 +853,14 @@ _SFNLTrans (FontViewBase *fv, struct context *c)
   SFUntickAll (fv->sf);
 
   for (i = 0; i < fv->map->enccount; ++i)
-    if (fv->selected[i] && (gid = fv->map->map[i]) != -1 &&
+    if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         (sc = fv->sf->glyphs[gid]) != NULL && !sc->ticked)
       {
         _SCNLTrans (sc, c, fv->active_layer);
         sc->ticked = true;
       }
   for (i = 0; i < fv->map->enccount; ++i)
-    if (fv->selected[i] && (gid = fv->map->map[i]) != -1 &&
+    if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         (sc = fv->sf->glyphs[gid]) != NULL &&
         (sc->layers[layer].splines != NULL || sc->layers[layer].refs != NULL))
       {
@@ -1056,7 +1056,7 @@ FVPointOfView (FontViewBase *fv, struct pov_data *pov)
   SplineChar *sc;
 
   for (i = 0; i < fv->map->enccount; ++i)
-    if ((gid = fv->map->map[i]) != -1 && fv->sf->glyphs[gid] != NULL &&
+    if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->sf->glyphs[gid] != NULL &&
         fv->selected[i])
       ++cnt;
   ff_progress_start_indicator (10, _("Projecting..."), _("Projecting..."), 0,
@@ -1065,7 +1065,7 @@ FVPointOfView (FontViewBase *fv, struct pov_data *pov)
   SFUntickAll (fv->sf);
   for (i = 0; i < fv->map->enccount; ++i)
     {
-      if ((gid = fv->map->map[i]) != -1 && fv->selected[i] &&
+      if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->selected[i] &&
           (sc = fv->sf->glyphs[gid]) != NULL && !sc->ticked)
         {
           sc->ticked = true;

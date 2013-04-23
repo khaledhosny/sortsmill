@@ -211,10 +211,10 @@ figure_fontdesc (PI * pi, int sfid, struct fontdesc *fd, int fonttype,
                 break;
               }
         }
-      else if (map->map[i] == -1)
+      else if (enc_to_gid (map, i) == -1)
         sc = NULL;
       else
-        sc = sf->glyphs[map->map[i]];
+        sc = sf->glyphs[enc_to_gid (map, i)];
       if (SCWorthOutputting (sc))
         {
           int uni = sc->unicodeenc;
@@ -363,7 +363,7 @@ dump_pfb_encoding (PI * pi, int sfid, int base, int font_d_ref)
 
   for (i = base; i < base + 256 && i < map->enccount; ++i)
     {
-      gid = map->map[i];
+      gid = enc_to_gid (map, i);
       if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
         {
           if (first == -1)
@@ -396,7 +396,8 @@ dump_pfb_encoding (PI * pi, int sfid, int base, int font_d_ref)
   pdf_addobject (pi);
   fprintf (pi->out, "  [\n");
   for (i = base + first; i <= base + last; ++i)
-    if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
+    if ((gid = enc_to_gid (map, i)) != -1
+        && SCWorthOutputting (sf->glyphs[gid]))
       fprintf (pi->out, "    %g\n",
                sf->glyphs[gid]->width * 1000.0 / (sf->ascent + sf->descent));
     else
@@ -410,7 +411,8 @@ dump_pfb_encoding (PI * pi, int sfid, int base, int font_d_ref)
     fprintf (pi->out, "    /Type /Encoding\n");
     fprintf (pi->out, "    /Differences [ %d\n", first);
     for (i = base + first; i <= base + last; ++i)
-      if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
+      if ((gid = enc_to_gid (map, i)) != -1
+          && SCWorthOutputting (sf->glyphs[gid]))
         fprintf (pi->out, "\t/%s\n", sf->glyphs[gid]->name);
       else
         fprintf (pi->out, "\t/.notdef\n");
@@ -1097,7 +1099,7 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
   int respos, resobj;
 
   for (i = base; i < base + 256 && i < map->enccount; ++i)
-    if ((gid = map->map[i]) != -1)
+    if ((gid = enc_to_gid (map, i)) != -1)
       {
         if (SCWorthOutputting (sf->glyphs[gid])
             && strcmp (sf->glyphs[gid]->name, ".notdef") != 0)
@@ -1112,7 +1114,7 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
 
   memset (charprocs, 0, sizeof (charprocs));
   for (i = base; i < base + 256 && i < map->enccount; ++i)
-    if ((gid = map->map[i]) != -1)
+    if ((gid = enc_to_gid (map, i)) != -1)
       {
         if (SCWorthOutputting (sf->glyphs[gid])
             && strcmp (sf->glyphs[gid]->name, ".notdef") != 0)
@@ -1146,7 +1148,8 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
   pdf_addobject (pi);
   fprintf (pi->out, "  [\n");
   for (i = base + first; i <= base + last; ++i)
-    if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
+    if ((gid = enc_to_gid (map, i)) != -1
+        && SCWorthOutputting (sf->glyphs[gid]))
       fprintf (pi->out, "    %d\n", sf->glyphs[gid]->width);
     else
       fprintf (pi->out, "    0\n");
@@ -1159,7 +1162,8 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
   fprintf (pi->out, "    /Type /Encoding\n");
   fprintf (pi->out, "    /Differences [ %d\n", first);
   for (i = base + first; i <= base + last; ++i)
-    if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
+    if ((gid = enc_to_gid (map, i)) != -1
+        && SCWorthOutputting (sf->glyphs[gid]))
       fprintf (pi->out, "\t/%s\n", sf->glyphs[gid]->name);
     else
       fprintf (pi->out, "\t/.notdef\n");
@@ -1172,7 +1176,8 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
   fprintf (pi->out, "  <<\n");
   fprintf (pi->out, "\t/.notdef %d 0 R\n", notdefproc);
   for (i = base + first; i <= base + last; ++i)
-    if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
+    if ((gid = enc_to_gid (map, i)) != -1
+        && SCWorthOutputting (sf->glyphs[gid]))
       fprintf (pi->out, "\t/%s %d 0 R\n", sf->glyphs[gid]->name,
                charprocs[i - base]);
   fprintf (pi->out, "  >>\n");
@@ -1725,7 +1730,7 @@ dump_prologue (PI * pi)
                 i = 256;
               for (; i < sfbit->map->enccount; ++i)
                 {
-                  int gid = sfbit->map->map[i];
+                  int gid = enc_to_gid (sfbit->map, i);
                   if (gid != -1 && SCWorthOutputting (sfbit->sf->glyphs[gid]))
                     {
                       base = i & ~0xff;
@@ -1744,7 +1749,7 @@ dump_prologue (PI * pi)
                       for (j = 0;
                            j < 0x100 && base + j < sfbit->map->enccount; ++j)
                         {
-                          int gid2 = sfbit->map->map[base + j];
+                          int gid2 = enc_to_gid (sfbit->map, base + j);
                           if (gid2 != -1
                               && SCWorthOutputting (sfbit->sf->glyphs[gid2]))
                             fprintf (pi->out, "\t/%s\n",
@@ -1824,9 +1829,9 @@ PIDownloadFont (PI * pi, SplineFont *sf, EncMap *map)
         (sfbit->fontfile, sf,
          pi->printtype ==
          pt_pdf ? ff_pfb : sf->multilayer ? ff_ptype3 : is_mm ? ff_mma :
-         sfbit->istype42cid ? ff_type42cid : sfbit->iscid ? ff_cid : sfbit->
-         twobyte ? ff_ptype0 : ff_pfa, ps_flag_identitycidmap, map, NULL,
-         ly_fore))
+         sfbit->istype42cid ? ff_type42cid : sfbit->
+         iscid ? ff_cid : sfbit->twobyte ? ff_ptype0 : ff_pfa,
+         ps_flag_identitycidmap, map, NULL, ly_fore))
     error = true;
 
   ff_progress_end_indicator ();
@@ -1936,7 +1941,7 @@ DumpLine (PI * pi)
       for (line = pi->chline; line < sfbit->map->enccount; line += pi->max)
         {
           for (i = 0; i < pi->max && line + i < sfbit->map->enccount; ++i)
-            if ((gid = sfbit->map->map[line + i]) != -1)
+            if ((gid = enc_to_gid (sfbit->map, line + i)) != -1)
               if (SCWorthOutputting (sfbit->sf->glyphs[gid]))
                 break;
           if (i != pi->max)
@@ -2027,7 +2032,7 @@ DumpLine (PI * pi)
               ((sfbit->iscid && !sfbit->istype42cid
                 && CIDWorthOutputting (sfbit->sf, i + pi->chline) != -1)
                || ((!sfbit->iscid || sfbit->istype42cid)
-                   && (gid = sfbit->map->map[i + pi->chline]) != -1
+                   && (gid = enc_to_gid (sfbit->map, i + pi->chline)) != -1
                    && SCWorthOutputting (sfbit->sf->glyphs[gid]))))
             {
               /*int x = 58 + i*(pi->pointsize+pi->extrahspace); */
@@ -2039,7 +2044,7 @@ DumpLine (PI * pi)
                 }
               if (sfbit->istype42cid)
                 {
-                  int gid = sfbit->map->map[pi->chline + i];
+                  int gid = enc_to_gid (sfbit->map, pi->chline + i);
                   SplineChar *sc = gid == -1 ? NULL : sfbit->sf->glyphs[gid];
                   fprintf (pi->out, "  <%04x> Tj\n",
                            sc == NULL ? 0 : sc->ttf_glyph);
@@ -2070,13 +2075,13 @@ DumpLine (PI * pi)
               ((sfbit->iscid && !sfbit->istype42cid
                 && CIDWorthOutputting (sfbit->sf, i + pi->chline) != -1)
                || ((!sfbit->iscid || sfbit->istype42cid)
-                   && (gid = sfbit->map->map[i + pi->chline]) != -1
+                   && (gid = enc_to_gid (sfbit->map, i + pi->chline)) != -1
                    && SCWorthOutputting (sfbit->sf->glyphs[gid]))))
             {
               int x = 58 + i * (pi->pointsize + pi->extrahspace);
               if (sfbit->istype42cid)
                 {
-                  int gid = sfbit->map->map[pi->chline + i];
+                  int gid = enc_to_gid (sfbit->map, pi->chline + i);
                   if (gid != -1)
                     gid = sfbit->sf->glyphs[gid]->ttf_glyph;
                   fprintf (pi->out, "<%04x> %d %d n_show\n",
@@ -2304,7 +2309,7 @@ PIChars (PI * pi)
   if (pi->fv != NULL)
     for (i = 0; i < pi->mainmap->enccount; ++i)
       {
-        if (pi->fv->selected[i] && (gid = pi->mainmap->map[i]) != -1
+        if (pi->fv->selected[i] && (gid = enc_to_gid (pi->mainmap, i)) != -1
             && SCWorthOutputting (pi->mainsf->glyphs[gid]))
           SCPrintPage (pi, pi->mainsf->glyphs[gid]);
       }
@@ -2614,7 +2619,7 @@ PIMultiSize (PI * pi)
   if (pi->fv != NULL)
     {
       for (i = 0; i < sfbit->map->enccount; ++i)
-        if (pi->fv->selected[i] && (gid = sfbit->map->map[i]) != -1
+        if (pi->fv->selected[i] && (gid = enc_to_gid (sfbit->map, i)) != -1
             && SCWorthOutputting (sfbit->sf->glyphs[gid]))
           SCPrintSizes (pi, sfbit->sf->glyphs[gid]);
     }
@@ -2812,7 +2817,7 @@ static char *_antigone[] = {
   NULL
 };
 
-                                                                                                                                                 /* Hebrew *//* Seder */
+                                                                                                                                                             /* Hebrew *//* Seder */
 static char *_hebrew[] = {
   "וְאָתָא מַלְאַךְ הַמָּוֶת, וְשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
   "וְאָתָא הַקָּדוֹשׁ כָּדוּךְ הוּא, וְשָׁחַט לְמַלְאַךְ הַמָּוֶת, רְּשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
@@ -3069,13 +3074,13 @@ static char *_swahilijohn[] = {
   NULL
 };
 
-                                                                                                                              /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
+                                                                                                                                        /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
 static char *_thaijohn[] = {
   "๏ ในทีเดิมนะนพวุํลอโฆเปนอยู่ แลเปนอยู่ดว้ยกันกับ พวุํเฆ้า",
   NULL
 };
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
 static char *_mayanPopolWuj[] = {
   "Are u xe' ojer tzij waral, C'i Che' u bi'. Waral xchikatz'ibaj-wi, xchikatiquiba-wi ojer tzij, u ticaribal, u xe'nabal puch ronojel xban pa tinamit C'i Che', ramak C'i Che' winak.",
   NULL

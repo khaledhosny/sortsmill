@@ -4780,13 +4780,13 @@ SFDSetEncMap (SplineFont *sf, int orig_pos, int enc)
     {
       int old = map->encmax;
       map->encmax = enc + 10;
-      map->map = xrealloc (map->map, map->encmax * sizeof (int));
-      memset (map->map + old, -1, (map->encmax - old) * sizeof (int));
+      map->_map_array = xrealloc (map->_map_array, map->encmax * sizeof (int));
+      memset (map->_map_array + old, -1, (map->encmax - old) * sizeof (int));
     }
   if (enc >= map->enccount)
     map->enccount = enc + 1;
   if (enc != -1)
-    map->map[enc] = orig_pos;
+    map->_map_array[enc] = orig_pos;
 }
 
 static void
@@ -5877,7 +5877,7 @@ SFDGetBitmapChar (FILE *sfd, BDFFont *bdf)
       xmin = width;
       width = enc;
       enc = orig;
-      orig = map->map[enc];
+      orig = enc_to_gid (map, enc);
     }
   else
     {
@@ -6229,8 +6229,8 @@ SFDFixupRefs (SplineFont *sf)
                     if (refs->encoded)
                       {         /* Old sfd format */
                         if (refs->orig_pos < map->encmax
-                            && map->map[refs->orig_pos] != -1)
-                          refs->orig_pos = map->map[refs->orig_pos];
+                            && enc_to_gid (map, refs->orig_pos) != -1)
+                          refs->orig_pos = enc_to_gid (map, refs->orig_pos);
                         else
                           refs->orig_pos = sf->glyphcnt;
                         refs->encoded = false;
@@ -6278,10 +6278,11 @@ SFDFixupRefs (SplineFont *sf)
                     next = kp->next;
                     if (!kp->kcid)
                       {         /* It's encoded (old sfds), else orig */
-                        if (index >= map->encmax || map->map[index] == -1)
+                        if (index >= map->encmax
+                            || enc_to_gid (map, index) == -1)
                           index = sf->glyphcnt;
                         else
-                          index = map->map[index];
+                          index = enc_to_gid (map, index);
                       }
                     kp->kcid = false;
                     ksf = sf;
@@ -6325,7 +6326,7 @@ SFDFixupRefs (SplineFont *sf)
                 SplineCharFree (sc);
                 sf->glyphs[i] = NULL;
                 sf->map->backmap[orig] = -1;
-                sf->map->map[enc] = base->orig_pos;
+                sf->map->_map_array[enc] = base->orig_pos;
                 AltUniAdd (base, uni);
               }
           }
@@ -6884,8 +6885,8 @@ SFDSizeMap (EncMap * map, int glyphcnt, int enccnt)
     }
   if (enccnt > map->encmax)
     {
-      map->map = xrealloc (map->map, enccnt * sizeof (int));
-      memset (map->map + map->backmax, -1,
+      map->_map_array = xrealloc (map->_map_array, enccnt * sizeof (int));
+      memset (map->_map_array + map->backmax, -1,
               (enccnt - map->encmax) * sizeof (int));
       map->encmax = map->enccount = enccnt;
     }

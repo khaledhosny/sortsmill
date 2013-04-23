@@ -416,8 +416,8 @@ tfmDoLigKern (SplineFont *sf, int enc, int lk_index,
   SplineChar *sc1, *sc2, *sc3;
   real off;
 
-  if (enc >= map->enccount || map->map[enc] == -1
-      || (sc1 = sf->glyphs[map->map[enc]]) == NULL)
+  if (enc >= map->enccount || enc_to_gid (map, enc) == -1
+      || (sc1 = sf->glyphs[enc_to_gid (map, enc)]) == NULL)
     return;
   if (enc < tfmd->first || enc > tfmd->last)
     return;
@@ -434,9 +434,9 @@ tfmDoLigKern (SplineFont *sf, int enc, int lk_index,
       if (lk_index >= tfmd->ligkern_size)
         return;
       enc2 = tfmd->ligkerntab[lk_index * 4 + 1];
-      if (enc2 >= map->enccount || map->map[enc2] == -1
-          || (sc2 = sf->glyphs[map->map[enc2]]) == NULL || enc2 < tfmd->first
-          || enc2 > tfmd->last)
+      if (enc2 >= map->enccount || enc_to_gid (map, enc2) == -1
+          || (sc2 = sf->glyphs[enc_to_gid (map, enc2)]) == NULL
+          || enc2 < tfmd->first || enc2 > tfmd->last)
         /* Not much we can do. can't kern to a non-existant char */ ;
       else if (tfmd->ligkerntab[lk_index * 4 + 2] >= 128)
         {
@@ -457,10 +457,10 @@ tfmDoLigKern (SplineFont *sf, int enc, int lk_index,
                tfmd->ligkerntab[lk_index * 4 + 3] < map->enccount &&
                tfmd->ligkerntab[lk_index * 4 + 3] >= tfmd->first &&
                tfmd->ligkerntab[lk_index * 4 + 3] <= tfmd->last &&
-               map->map[tfmd->ligkerntab[lk_index * 4 + 3]] != -1 &&
-               (sc3 =
-                sf->glyphs[map->map[tfmd->ligkerntab[lk_index * 4 + 3]]]) !=
-               NULL)
+               enc_to_gid (map, tfmd->ligkerntab[lk_index * 4 + 3]) != -1 &&
+               (sc3 = sf->glyphs[enc_to_gid
+                                 (map, tfmd->ligkerntab[lk_index * 4 + 3])])
+               != NULL)
         {
           LigatureNew (sc3, sc1, sc2);
         }
@@ -484,20 +484,21 @@ tfmDoCharList (SplineFont *sf, int i, struct tfmdata *tfmd, EncMap *map)
   SplineChar *sc;
   struct glyphvariants **gvbase;
 
-  if (i >= map->enccount || map->map[i] == -1 || sf->glyphs[map->map[i]] == NULL
-      || i < tfmd->first || i > tfmd->last)
+  if (i >= map->enccount || enc_to_gid (map, i) == -1
+      || sf->glyphs[enc_to_gid (map, i)] == NULL || i < tfmd->first
+      || i > tfmd->last)
     return;
 
   ucnt = 0, len = 0;
   while (i != -1)
     {
-      if (i < map->enccount && map->map[i] != -1
-          && sf->glyphs[map->map[i]] != NULL && i >= tfmd->first
+      if (i < map->enccount && enc_to_gid (map, i) != -1
+          && sf->glyphs[enc_to_gid (map, i)] != NULL && i >= tfmd->first
           && i <= tfmd->last)
         {
-          used[ucnt++] = map->map[i];
-          len += strlen (sf->glyphs[map->map[i]]->name) + 1;
-          /*sf->glyphs[map->map[i]]->is_extended_shape = true; *//* MS does not do this in their fonts */
+          used[ucnt++] = enc_to_gid (map, i);
+          len += strlen (sf->glyphs[enc_to_gid (map, i)]->name) + 1;
+          /*sf->glyphs[enc_to_gid (map, i)]->is_extended_shape = true; *//* MS does not do this in their fonts */
         }
       was = i;
       i = tfmd->charlist[i];
@@ -534,7 +535,7 @@ tfmDoExten (SplineFont *sf, int i, struct tfmdata *tfmd, int left, EncMap *map)
   struct glyphvariants **gvbase;
   int is_horiz;
 
-  if (i >= map->enccount || (gid = map->map[i]) == -1
+  if (i >= map->enccount || (gid = enc_to_gid (map, i)) == -1
       || sf->glyphs[gid] == NULL)
     return;
   if (left >= tfmd->esize)
@@ -554,7 +555,7 @@ tfmDoExten (SplineFont *sf, int i, struct tfmdata *tfmd, int left, EncMap *map)
   for (j = 0; j < 4; ++j)
     {
       k = ext[j];
-      if (k != 0 && k < map->enccount && (gid2 = map->map[k]) != -1
+      if (k != 0 && k < map->enccount && (gid2 = enc_to_gid (map, k)) != -1
           && sf->glyphs[gid2] != NULL)
         {
           bits[j] = sf->glyphs[gid2];
@@ -679,9 +680,9 @@ LoadKerningDataFromTfm (SplineFont *sf, char *filename, EncMap *map)
         charlist[i] = left;
       else if (tag == 3)
         tfmDoExten (sf, i, &tfmd, left, map);
-      if (map->map[i] != -1 && sf->glyphs[map->map[i]] != NULL)
+      if (enc_to_gid (map, i) != -1 && sf->glyphs[enc_to_gid (map, i)] != NULL)
         {
-          SplineChar *sc = sf->glyphs[map->map[i]];
+          SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
 /* TFtoPL says very clearly: The actual width of a character is */
 /*  width[width_index], in design-size units. It is not in design units */
 /*  it is stored as a fraction of the design size in a fixed word */
@@ -727,8 +728,8 @@ ofmDoLigKern (SplineFont *sf, int enc, int lk_index,
   SplineChar *sc1, *sc2, *sc3;
   real off;
 
-  if (enc >= map->enccount || map->map[enc] == -1
-      || (sc1 = sf->glyphs[map->map[enc]]) == NULL)
+  if (enc >= map->enccount || enc_to_gid (map, enc) == -1
+      || (sc1 = sf->glyphs[enc_to_gid (map, enc)]) == NULL)
     return;
   if (enc < tfmd->first || enc > tfmd->last)
     return;
@@ -743,9 +744,9 @@ ofmDoLigKern (SplineFont *sf, int enc, int lk_index,
       if (lk_index >= 2 * tfmd->ligkern_size)
         return;
       enc2 = LKShort (lk_index, 1);
-      if (enc2 >= map->enccount || map->map[enc2] == -1
-          || (sc2 = sf->glyphs[map->map[enc2]]) == NULL || enc2 < tfmd->first
-          || enc2 > tfmd->last)
+      if (enc2 >= map->enccount || enc_to_gid (map, enc2) == -1
+          || (sc2 = sf->glyphs[enc_to_gid (map, enc2)]) == NULL
+          || enc2 < tfmd->first || enc2 > tfmd->last)
         /* Not much we can do. can't kern to a non-existant char */ ;
       else if (LKShort (lk_index, 2) >= 128)
         {
@@ -766,8 +767,9 @@ ofmDoLigKern (SplineFont *sf, int enc, int lk_index,
                LKShort (lk_index, 3) < map->enccount &&
                LKShort (lk_index, 3) >= tfmd->first &&
                LKShort (lk_index, 3) <= tfmd->last &&
-               map->map[LKShort (lk_index, 3)] != -1 &&
-               (sc3 = sf->glyphs[map->map[LKShort (lk_index, 3)]]) != NULL)
+               enc_to_gid (map, LKShort (lk_index, 3)) != -1 &&
+               (sc3 = sf->glyphs[enc_to_gid (map, LKShort (lk_index, 3))])
+               != NULL)
         {
           LigatureNew (sc3, sc1, sc2);
         }
@@ -793,7 +795,7 @@ ofmDoExten (SplineFont *sf, int i, struct tfmdata *tfmd, int left, EncMap *map)
   struct glyphvariants **gvbase;
   int is_horiz;
 
-  if (i >= map->enccount || (gid = map->map[i]) == -1
+  if (i >= map->enccount || (gid = enc_to_gid (map, i)) == -1
       || sf->glyphs[gid] == NULL)
     return;
   if (left >= 2 * tfmd->esize)
@@ -813,7 +815,7 @@ ofmDoExten (SplineFont *sf, int i, struct tfmdata *tfmd, int left, EncMap *map)
   for (j = 0; j < 4; ++j)
     {
       k = ExtShort (j);
-      if (k != 0 && k < map->enccount && (gid2 = map->map[k]) != -1
+      if (k != 0 && k < map->enccount && (gid2 = enc_to_gid (map, k)) != -1
           && sf->glyphs[gid2] != NULL)
         {
           bits[j] = sf->glyphs[gid2];
@@ -981,9 +983,9 @@ LoadKerningDataFromOfm (SplineFont *sf, char *filename, EncMap *map)
         tfmd.charlist[i] = left;
       else if (tag == 3)
         ofmDoExten (sf, i, &tfmd, left, map);
-      if (map->map[i] != -1 && sf->glyphs[map->map[i]] != NULL)
+      if (enc_to_gid (map, i) != -1 && sf->glyphs[enc_to_gid (map, i)] != NULL)
         {
-          SplineChar *sc = sf->glyphs[map->map[i]];
+          SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
 /* TFtoPL says very clearly: The actual width of a character is */
 /*  width[width_index], in design-size units. It is not in design units */
 /*  it is stored as a fraction of the design size in a fixed word */
@@ -1286,7 +1288,7 @@ SCWorthOutputting (SplineChar *sc)
 {
   return (sc != NULL && (SCDrawsSomething (sc) || sc->widthset || sc->anchor != NULL || sc->dependents != NULL  /*||
                                                                                                                    sc->width!=sc->parent->ascent+sc->parent->descent */
-                         ));
+          ));
 }
 
 int
@@ -1299,8 +1301,8 @@ CIDWorthOutputting (SplineFont *cidmaster, int enc)
 
   if (cidmaster->subfontcnt == 0)
     return (enc >=
-            cidmaster->glyphcnt ? -1 : SCWorthOutputting (cidmaster->
-                                                          glyphs[enc]) ? 0 :
+            cidmaster->
+            glyphcnt ? -1 : SCWorthOutputting (cidmaster->glyphs[enc]) ? 0 :
             -1);
 
   for (i = 0; i < cidmaster->subfontcnt; ++i)
@@ -1900,7 +1902,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
   cnt = 0;
   for (i = 0; i < map->enccount; ++i)
     {
-      int gid = map->map[i];
+      int gid = enc_to_gid (map, i);
       if (gid == -1)
         continue;
       sc = NULL;
@@ -1925,7 +1927,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
     {
       for (i = 0x2700; i < map->enccount && i < encmax && i <= 0x27ff; ++i)
         {
-          int gid = map->map[i];
+          int gid = enc_to_gid (map, i);
           if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
             anyzapf = true;
         }
@@ -1940,7 +1942,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
     {
       for (i = 0; i < map->enccount; ++i)
         {
-          int gid = map->map[i];
+          int gid = enc_to_gid (map, i);
           if (gid == -1)
             continue;
           sc = NULL;
@@ -1959,7 +1961,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
     {
       for (i = 0; i < map->enccount && i < encmax && i < 0x2700; ++i)
         {
-          int gid = map->map[i];
+          int gid = enc_to_gid (map, i);
           if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
             {
               AfmSplineCharX (afm, sf->glyphs[gid], i, layer);
@@ -1974,7 +1976,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
         }
       for (; i < map->enccount && i < encmax; ++i)
         {
-          int gid = map->map[i];
+          int gid = enc_to_gid (map, i);
           if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
             {
               AfmSplineCharX (afm, sf->glyphs[gid], i, layer);
@@ -1985,7 +1987,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
     {
       for (i = 0; i < map->enccount && i < encmax; ++i)
         {
-          int gid = map->map[i];
+          int gid = enc_to_gid (map, i);
           if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
             {
               AfmSplineCharX (afm, sf->glyphs[gid], i, layer);
@@ -1996,7 +1998,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
     {
       for (i = 0; i < map->enccount && i < encmax; ++i)
         {
-          int gid = map->map[i];
+          int gid = enc_to_gid (map, i);
           if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
             {
               AfmSplineChar (afm, sf->glyphs[gid], i, layer);
@@ -2005,7 +2007,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
     }
   for (; i < map->enccount; ++i)
     {
-      int gid = map->map[i];
+      int gid = enc_to_gid (map, i);
       if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
         {
           AfmSplineChar (afm, sf->glyphs[gid], -1, layer);
@@ -2023,7 +2025,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
           fprintf (afm, "StartKernPairs%s %d\n", vcnt == 0 ? "" : "0", cnt);
           for (i = 0; i < map->enccount; ++i)
             {
-              int gid = map->map[i];
+              int gid = enc_to_gid (map, i);
               if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
                 {
                   AfmKernPairs (afm, sf->glyphs[gid], false);
@@ -2036,7 +2038,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
           fprintf (afm, "StartKernPairs1 %d\n", vcnt);
           for (i = 0; i < map->enccount; ++i)
             {
-              int gid = map->map[i];
+              int gid = enc_to_gid (map, i);
               if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
                 {
                   AfmKernPairs (afm, sf->glyphs[gid], true);
@@ -3021,7 +3023,7 @@ LoadKerningDataFromPfm (SplineFont *sf, char *filename, EncMap *map)
       else
         {
           for (i = 0; i < 256 && i < map->enccount; ++i)
-            winmap[i] = map->map[i];
+            winmap[i] = enc_to_gid (map, i);
           for (i = 0; i < 256; ++i)
             winmap[i] = -1;
         }
@@ -3151,9 +3153,10 @@ FindCharlists (SplineFont *sf, int *charlistindex, EncMap *map, int maxc)
 
   memset (charlistindex, -1, (maxc + 1) * sizeof (int));
   for (i = 0; i < maxc && i < map->enccount; ++i)
-    if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+    if (enc_to_gid (map, i) != -1
+        && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
       {
-        SplineChar *sc = sf->glyphs[map->map[i]];
+        SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
 
         variants = NULL;
         if (sc->vert_variants != NULL && sc->vert_variants->variants != NULL)
@@ -3197,9 +3200,10 @@ FindExtensions (SplineFont *sf, struct extension *extensions, int *extenindex,
 
   memset (extenindex, -1, (maxc + 1) * sizeof (int));
   for (i = 0; i < maxc && i < map->enccount; ++i)
-    if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+    if (enc_to_gid (map, i) != -1
+        && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
       {
-        SplineChar *sc = sf->glyphs[map->map[i]];
+        SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
         struct glyphvariants *gv;
 
         gv = NULL;
@@ -3626,7 +3630,8 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
   else
     strcpy (header.family + 1, familyname);
   for (i = 128; i < map->enccount && i < maxc; ++i)
-    if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+    if (enc_to_gid (map, i) != -1
+        && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
       break;
   if (i >= map->enccount || i >= maxc)
     header.seven_bit_safe_flag = true;
@@ -3659,9 +3664,10 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
   /*  fields to mean different things */
   anyITLC = false;
   for (i = 0; i < maxc && i < map->enccount; ++i)
-    if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+    if (enc_to_gid (map, i) != -1
+        && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
       {
-        if (sf->glyphs[map->map[i]]->italic_correction != TEX_UNDEF)
+        if (sf->glyphs[enc_to_gid (map, i)]->italic_correction != TEX_UNDEF)
           {
             anyITLC = true;
             break;
@@ -3669,9 +3675,10 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
       }
   for (i = 0; i < maxc && i < map->enccount; ++i)
     {
-      if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+      if (enc_to_gid (map, i) != -1
+          && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
         {
-          SplineChar *sc = sf->glyphs[map->map[i]];
+          SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
           if (sc->tex_height == TEX_UNDEF || sc->tex_depth == TEX_UNDEF ||
               sc->italic_correction == TEX_UNDEF)
             {
@@ -3747,9 +3754,10 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
   kcnt = 0;
   for (i = 0; i < maxc && i < map->enccount; ++i)
     {
-      if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+      if (enc_to_gid (map, i) != -1
+          && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
         {
-          SplineChar *sc = sf->glyphs[map->map[i]];
+          SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
           for (kp = sc->kerns; kp != NULL; kp = kp->next)
             if (kp->sc->orig_pos < sf->glyphcnt &&      /* Can happen when saving multiple pfbs */
                 map->backmap[kp->sc->orig_pos] < maxc)
@@ -3763,9 +3771,10 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
   memset (ligkerns, 0, maxc * sizeof (struct ligkern *));
   for (i = 0; i < maxc && i < map->enccount; ++i)
     {
-      if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+      if (enc_to_gid (map, i) != -1
+          && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
         {
-          SplineChar *sc = sf->glyphs[map->map[i]];
+          SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
           for (kp = sc->kerns; kp != NULL; kp = kp->next)
             if (kp->sc->orig_pos < sf->glyphcnt &&      /* Can happen when saving multiple pfbs */
                 map->backmap[kp->sc->orig_pos] < maxc)
@@ -3994,7 +4003,8 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
   /* per-glyph data */
   for (i = first; i <= last; ++i)
     {
-      if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+      if (enc_to_gid (map, i) != -1
+          && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
         {
           if (maxc == 256)
             {

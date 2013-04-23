@@ -56,9 +56,11 @@ char *generatefont_extensions[] =
   ".ttf", ".ttf", ".suit", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
   ".otf.dfont", ".svg", ".ufo", ".woff", NULL
 };
+
 char *bitmapextensions[] =
   { "-*.bdf", ".ttf", ".dfont", ".ttf", ".otb", ".bmap", ".dfont", ".fon",
-"-*.fnt", ".pdb", "-*.pt3", ".none", NULL };
+  "-*.fnt", ".pdb", "-*.pt3", ".none", NULL
+};
 #else
 char *generatefont_extensions[] =
   { ".pfa", ".pfb", ".bin", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
@@ -67,9 +69,11 @@ char *generatefont_extensions[] =
   ".ttf", ".ttf", ".ttf.bin", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
   ".otf.dfont", ".svg", ".ufo", ".woff", NULL
 };
+
 char *bitmapextensions[] =
   { "-*.bdf", ".ttf", ".dfont", ".ttf", ".otb", ".bmap.bin", ".fon", "-*.fnt",
-".pdb", "-*.pt3", ".none", NULL };
+  ".pdb", "-*.pt3", ".none", NULL
+};
 #endif
 
 static int
@@ -212,10 +216,11 @@ WriteTfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
     fprintf (enc, "/%s [\n", encname);
   for (i = 0; i < map->enccount && i < 256; ++i)
     {
-      if (map->map[i] == -1 || !SCWorthOutputting (sf->glyphs[map->map[i]]))
+      if (enc_to_gid (map, i) == -1
+          || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
         fprintf (enc, " /.notdef");
       else
-        fprintf (enc, " /%s", sf->glyphs[map->map[i]]->name);
+        fprintf (enc, " /%s", sf->glyphs[enc_to_gid (map, i)]->name);
       if ((i & 0xf) == 0)
         fprintf (enc, "\t\t%% 0x%02x", i);
       putc ('\n', enc);
@@ -246,7 +251,8 @@ WriteOfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
   char *encname;
   char *texparamnames[] =
     { "SLANT", "SPACE", "STRETCH", "SHRINK", "XHEIGHT", "QUAD", "EXTRASPACE",
-NULL };
+    NULL
+  };
 
   strcpy (buf, filename);
   pt = strrchr (buf, '.');
@@ -289,8 +295,9 @@ NULL };
 
   for (i = 0; i < map->enccount && i < 65536; ++i)
     {
-      if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
-        fprintf (enc, "%04X N %s\n", i, sf->glyphs[map->map[i]]->name);
+      if (enc_to_gid (map, i) != -1
+          && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
+        fprintf (enc, "%04X N %s\n", i, sf->glyphs[enc_to_gid (map, i)]->name);
     }
 
   if (fclose (enc) == -1)
@@ -566,7 +573,7 @@ ParseWernerSFDFile (char *wernerfilename, SplineFont *sf, int *max,
                     }
                 }
               if (modi < map->enccount)
-                modi = map->map[modi];
+                modi = enc_to_gid (map, modi);
               else if (sf->subfontcnt != 0)
                 modi = modi;
               else
@@ -625,7 +632,7 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
 
   memset (&encmap, 0, sizeof (encmap));
   encmap.enccount = encmap.encmax = encmap.backmax = 256;
-  encmap.map = _mapping;
+  encmap._map_array = _mapping;
   encmap.backmap = _backmap;
   memset (_mapping, -1, sizeof (_mapping));
   memset (_backmap, -1, sizeof (_backmap));
@@ -1138,8 +1145,7 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
     }
   else
     if ((oldbitmapstate == bf_nfntmacbin /*|| oldbitmapstate==bf_nfntdfont */ )
-        &&
-        !err)
+        && !err)
     {
       if (!WriteMacBitmaps
           (newname, sf, sizes, false /*oldbitmapstate==bf_nfntdfont */ , map))
@@ -1248,7 +1254,8 @@ GenerateScript (SplineFont *sf, char *filename, char *bitmaptype, int fmflags,
   int i;
   static char *bitmaps[] =
     { "bdf", "ttf", "dfont", "ttf", "otb", "bin", "fon", "fnt", "pdb", "pt3",
-NULL };
+    NULL
+  };
   int32_t *sizes = NULL;
   char *end = filename + strlen (filename);
   struct sflist *sfi;

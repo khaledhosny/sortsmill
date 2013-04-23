@@ -131,7 +131,7 @@ FV_ToggleCharChanged (SplineChar *sc)
                                                    scripts. */
         continue;
       for (pos = 0; pos < fv->b.map->enccount; ++pos)
-        if (fv->b.map->map[pos] == sc->orig_pos)
+        if (enc_to_gid (fv->b.map, pos) == sc->orig_pos)
           {
             i = pos / fv->colcnt;
             j = pos - i * fv->colcnt;
@@ -177,7 +177,7 @@ FVMarkHintsOutOfDate (SplineChar *sc)
                                                    scripts. */
         continue;
       for (pos = 0; pos < fv->b.map->enccount; ++pos)
-        if (fv->b.map->map[pos] == sc->orig_pos)
+        if (enc_to_gid (fv->b.map, pos) == sc->orig_pos)
           {
             i = pos / fv->colcnt;
             j = pos - i * fv->colcnt;
@@ -218,7 +218,7 @@ FeatureTrans (FontView *fv, int enc)
   int gid;
 
   if (enc < 0 || enc >= fv->b.map->enccount
-      || (gid = fv->b.map->map[enc]) == -1)
+      || (gid = enc_to_gid (fv->b.map, enc)) == -1)
     return (-1);
   if (fv->cur_subtable == NULL)
     return (gid);
@@ -2649,7 +2649,7 @@ FVSelectByScript (FontView *fv, int merge)
   tag = (tagbuf[0] << 24) | (tagbuf[1] << 16) | (tagbuf[2] << 8) | tagbuf[3];
 
   for (j = 0; j < map->enccount; ++j)
-    if ((gid = map->map[j]) != -1 && (sc = sf->glyphs[gid]) != NULL)
+    if ((gid = enc_to_gid (map, j)) != -1 && (sc = sf->glyphs[gid]) != NULL)
       {
         doit = (SCScriptFromUnicode (sc) == tag);
         if (doit)
@@ -2689,7 +2689,7 @@ FVSelectColor (FontView *fv, uint32_t col, int merge)
 
   for (i = 0; i < fv->b.map->enccount; ++i)
     {
-      int gid = fv->b.map->map[i];
+      int gid = enc_to_gid (fv->b.map, i);
       sccol = (gid == -1
                || glyphs[gid] == NULL) ? COLOR_DEFAULT : glyphs[gid]->color;
       doit = sccol == col;
@@ -2750,7 +2750,7 @@ FVSelectByName (FontView *fv, char *ret, int merge)
           return (false);
         }
       for (j = 0; j < map->enccount; ++j)
-        if ((gid = map->map[j]) != -1 && (sc = sf->glyphs[gid]) != NULL)
+        if ((gid = enc_to_gid (map, j)) != -1 && (sc = sf->glyphs[gid]) != NULL)
           {
             if (vs == -2)
               {
@@ -2774,7 +2774,7 @@ FVSelectByName (FontView *fv, char *ret, int merge)
   else
     {
       for (j = 0; j < map->enccount; ++j)
-        if ((gid = map->map[j]) != -1 && (sc = sf->glyphs[gid]) != NULL)
+        if ((gid = enc_to_gid (map, j)) != -1 && (sc = sf->glyphs[gid]) != NULL)
           {
             doit = WildMatch (ret, sc->name, false);
             fv->b.selected[j] =
@@ -2968,7 +2968,7 @@ FVMenuSelectWorthOutputting (GWindow gw, struct gmenuitem *UNUSED (mi),
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
               && SCWorthOutputting (sf->glyphs[gid]));
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
     }
@@ -2987,7 +2987,7 @@ FVMenuGlyphsRefs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
               && sf->glyphs[gid]->layers[layer].refs != NULL
               && sf->glyphs[gid]->layers[layer].splines == NULL);
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
@@ -3007,7 +3007,7 @@ FVMenuGlyphsSplines (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
               && sf->glyphs[gid]->layers[layer].refs == NULL
               && sf->glyphs[gid]->layers[layer].splines != NULL);
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
@@ -3027,7 +3027,7 @@ FVMenuGlyphsBoth (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
               && sf->glyphs[gid]->layers[layer].refs != NULL
               && sf->glyphs[gid]->layers[layer].splines != NULL);
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
@@ -3047,7 +3047,7 @@ FVMenuGlyphsWhite (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
               && sf->glyphs[gid]->layers[layer].refs == NULL
               && sf->glyphs[gid]->layers[layer].splines == NULL);
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
@@ -3066,7 +3066,7 @@ FVMenuSelectChanged (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
               && sf->glyphs[gid]->changed);
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
     }
@@ -3086,7 +3086,7 @@ FVMenuSelectHintingNeeded (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
               && ((!order2 && sf->glyphs[gid]->changedsincelasthinted)
                   || (order2
                       && sf->glyphs[gid]->layers[fv->b.active_layer].splines !=
@@ -3112,7 +3112,7 @@ FVMenuSelectAutohintable (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 
   for (i = 0; i < map->enccount; ++i)
     {
-      doit = (gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL
+      doit = (gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
         && !sf->glyphs[gid]->manualhints;
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
     }
@@ -3162,8 +3162,8 @@ FVMenuCharInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   if (pos < 0)
     return;
   if (fv->b.cidmaster != NULL
-      && (fv->b.map->map[pos] == -1
-          || fv->b.sf->glyphs[fv->b.map->map[pos]] == NULL))
+      && (enc_to_gid (fv->b.map, pos) == -1
+          || fv->b.sf->glyphs[enc_to_gid (fv->b.map, pos)] == NULL))
     return;
   SCCharInfo (SFMakeChar (fv->b.sf, fv->b.map, pos), fv->b.active_layer,
               fv->b.map, pos);
@@ -3257,9 +3257,9 @@ FVMenuShowDependentRefs (GWindow gw, struct gmenuitem *UNUSED (mi),
   int pos = FVAnyCharSelected (fv);
   SplineChar *sc;
 
-  if (pos < 0 || fv->b.map->map[pos] == -1)
+  if (pos < 0 || enc_to_gid (fv->b.map, pos) == -1)
     return;
-  sc = fv->b.sf->glyphs[fv->b.map->map[pos]];
+  sc = fv->b.sf->glyphs[enc_to_gid (fv->b.map, pos)];
   if (sc == NULL || sc->dependents == NULL)
     return;
   SCRefBy (sc);
@@ -3273,9 +3273,9 @@ FVMenuShowDependentSubs (GWindow gw, struct gmenuitem *UNUSED (mi),
   int pos = FVAnyCharSelected (fv);
   SplineChar *sc;
 
-  if (pos < 0 || fv->b.map->map[pos] == -1)
+  if (pos < 0 || enc_to_gid (fv->b.map, pos) == -1)
     return;
-  sc = fv->b.sf->glyphs[fv->b.map->map[pos]];
+  sc = fv->b.sf->glyphs[enc_to_gid (fv->b.map, pos)];
   if (sc == NULL)
     return;
   SCSubBy (sc);
@@ -3656,10 +3656,10 @@ _FVMenuChangeChar (FontView *fv, int mid)
         {
           for (++pos;
                pos < map->enccount
-               && (map->map[pos] == -1
-                   || !SCWorthOutputting (sf->glyphs[map->map[pos]])
+               && (enc_to_gid (map, pos) == -1
+                   || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)])
                    || (fv->show != fv->filled
-                       && fv->show->glyphs[map->map[pos]] == NULL)); ++pos);
+                       && fv->show->glyphs[enc_to_gid (map, pos)] == NULL)); ++pos);
           if (pos >= map->enccount)
             {
               int selpos = FVAnyCharSelected (fv);
@@ -3715,10 +3715,10 @@ _FVMenuChangeChar (FontView *fv, int mid)
       else if (mid == MID_PrevDef)
         {
           for (--pos;
-               pos >= 0 && (map->map[pos] == -1
-                            || !SCWorthOutputting (sf->glyphs[map->map[pos]])
+               pos >= 0 && (enc_to_gid (map, pos) == -1
+                            || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)])
                             || (fv->show != fv->filled
-                                && fv->show->glyphs[map->map[pos]] == NULL));
+                                && fv->show->glyphs[enc_to_gid (map, pos)] == NULL));
                --pos);
           if (pos < 0)
             return;
@@ -4486,8 +4486,8 @@ FVMenuKPCloseup (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
     if (fv->b.selected[i])
       break;
   KernPairD (fv->b.sf,
-             i == fv->b.map->enccount ? NULL : fv->b.map->map[i] ==
-             -1 ? NULL : fv->b.sf->glyphs[fv->b.map->map[i]], NULL,
+             i == fv->b.map->enccount ? NULL : enc_to_gid (fv->b.map, i) ==
+             -1 ? NULL : fv->b.sf->glyphs[enc_to_gid (fv->b.map, i)], NULL,
              fv->b.active_layer, false);
 }
 
@@ -4997,7 +4997,7 @@ FVFindACharInDisplay (FontView *fv)
   end = start + fv->rowcnt * fv->colcnt;
   for (enc = start; enc < end && enc < map->enccount; ++enc)
     {
-      if ((gid = map->map[enc]) != -1 && (sc = sf->glyphs[gid]) != NULL)
+      if ((gid = enc_to_gid (map, enc)) != -1 && (sc = sf->glyphs[gid]) != NULL)
         return (sc);
     }
   return (NULL);
@@ -5345,7 +5345,7 @@ edlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           if (pos != -1 && !(onlycopydisplayed && fv->filled != fv->show))
             {
               for (i = 0; i < fv->b.map->enccount; ++i)
-                if (fv->b.selected[i] && (gid = fv->b.map->map[i]) != -1
+                if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1
                     && fv->b.sf->glyphs[gid] != NULL)
                   if (fv->b.sf->glyphs[gid]->layers[ly_back].images != NULL
                       || fv->b.sf->glyphs[gid]->layers[ly_back].splines != NULL)
@@ -5357,7 +5357,7 @@ edlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           break;
         case MID_Undo:
           for (i = 0; i < fv->b.map->enccount; ++i)
-            if (fv->b.selected[i] && (gid = fv->b.map->map[i]) != -1
+            if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1
                 && fv->b.sf->glyphs[gid] != NULL)
               if (fv->b.sf->glyphs[gid]->layers[fv->b.active_layer].undoes !=
                   NULL)
@@ -5366,7 +5366,7 @@ edlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           break;
         case MID_Redo:
           for (i = 0; i < fv->b.map->enccount; ++i)
-            if (fv->b.selected[i] && (gid = fv->b.map->map[i]) != -1
+            if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1
                 && fv->b.sf->glyphs[gid] != NULL)
               if (fv->b.sf->glyphs[gid]->layers[fv->b.active_layer].redoes !=
                   NULL)
@@ -5435,7 +5435,7 @@ ellistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           break;
         case MID_CharInfo:
           mi->ti.disabled = anychars < 0
-            || (gid = fv->b.map->map[anychars]) == -1
+            || (gid = enc_to_gid (fv->b.map, anychars)) == -1
             || (fv->b.cidmaster != NULL && fv->b.sf->glyphs[gid] == NULL)
             || in_modal;
           break;
@@ -5480,7 +5480,7 @@ ellistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
                 if (fv->b.selected[i])
                   {
                     SplineChar *sc = NULL, dummy;
-                    gid = fv->b.map->map[i];
+                    gid = enc_to_gid (fv->b.map, i);
                     if (gid != -1)
                       sc = fv->b.sf->glyphs[gid];
                     if (sc == NULL)
@@ -5502,7 +5502,7 @@ ellistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
             {
               int i;
               for (i = 0; i < fv->b.map->enccount; ++i)
-                if (fv->b.selected[i] && (gid = fv->b.map->map[i]) != -1
+                if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1
                     && fv->b.sf->glyphs[gid] != NULL
                     && fv->b.sf->glyphs[gid]->layers[ly_back].images != NULL)
                   {
@@ -5571,7 +5571,7 @@ balistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
             if (fv->b.selected[i])
               {
                 SplineChar *sc = NULL, dummy;
-                if ((gid = fv->b.map->map[i]) != -1)
+                if ((gid = enc_to_gid (fv->b.map, i)) != -1)
                   sc = fv->b.sf->glyphs[gid];
                 if (sc == NULL)
                   sc = SCBuildDummy (&dummy, fv->b.sf, fv->b.map, i);
@@ -5592,7 +5592,7 @@ balistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
             if (fv->b.selected[i])
               {
                 SplineChar *sc = NULL, dummy;
-                if ((gid = fv->b.map->map[i]) != -1)
+                if ((gid = enc_to_gid (fv->b.map, i)) != -1)
                   sc = fv->b.sf->glyphs[gid];
                 if (sc == NULL)
                   sc = SCBuildDummy (&dummy, fv->b.sf, fv->b.map, i);
@@ -5612,7 +5612,7 @@ delistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   int i = FVAnyCharSelected (fv);
-  int gid = i < 0 ? -1 : fv->b.map->map[i];
+  int gid = i < 0 ? -1 : enc_to_gid (fv->b.map, i);
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
     {
@@ -8073,7 +8073,7 @@ cblistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   if (sf->kerns)
     anykerns = true;
   for (i = 0; i < fv->b.map->enccount; ++i)
-    if ((gid = fv->b.map->map[i]) != -1 && sf->glyphs[gid] != NULL)
+    if ((gid = enc_to_gid (fv->b.map, i)) != -1 && sf->glyphs[gid] != NULL)
       {
         for (pst = sf->glyphs[gid]->possub; pst != NULL; pst = pst->next)
           {
@@ -8531,9 +8531,9 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                 {
                   EncMap *map = fvs->b.map;
                   if (map->enccount + 1 >= map->encmax)
-                    map->map =
-                      xrealloc (map->map, (map->encmax += 20) * sizeof (int));
-                  map->map[map->enccount] = -1;
+                    map->_map_array =
+                      xrealloc (map->_map_array, (map->encmax += 20) * sizeof (int));
+                  map->_map_array[map->enccount] = -1;
                   fvs->b.selected =
                     xrealloc (fvs->b.selected, (map->enccount + 1));
                   memset (fvs->b.selected + map->enccount, 0, 1);
@@ -8546,7 +8546,7 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                       sc->comment = xstrdup (".");      /* Mark as something for sfd file */
                       /*SCLigDefault(sc); */
                     }
-                  map->map[map->enccount - 1] = sc->orig_pos;
+                  map->_map_array[map->enccount - 1] = sc->orig_pos;
                   map->backmap[sc->orig_pos] = map->enccount - 1;
                 }
               pt = buffer;
@@ -8812,7 +8812,7 @@ enlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   int anyglyphs = false;
 
   for (i = map->enccount - 1; i >= 0; --i)
-    if (fv->b.selected[i] && (gid = map->map[i]) != -1)
+    if (fv->b.selected[i] && (gid = enc_to_gid (map, i)) != -1)
       anyglyphs = true;
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
@@ -8836,7 +8836,7 @@ enlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           mi->ti.disabled = !anyglyphs;
           break;
         case MID_RemoveUnused:
-          gid = map->enccount > 0 ? map->map[map->enccount - 1] : -1;
+          gid = map->enccount > 0 ? enc_to_gid (map, map->enccount - 1) : -1;
           mi->ti.disabled = gid != -1 && SCWorthOutputting (sf->glyphs[gid]);
           break;
         case MID_MakeFromFont:
@@ -9347,18 +9347,17 @@ vwlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           if (anychars < 0)
             pos = map->enccount;
           for (;
-               pos < map->enccount && (map->map[pos] == -1
-                                       ||
-                                       !SCWorthOutputting (sf->glyphs
-                                                           [map->map[pos]]));
+               pos < map->enccount
+                 && (enc_to_gid (map, pos) == -1
+                     || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)]));
                ++pos);
           mi->ti.disabled = pos == map->enccount;
           break;
         case MID_PrevDef:
           for (pos = anychars - 1;
-               pos >= 0 && (map->map[pos] == -1
-                            ||
-                            !SCWorthOutputting (sf->glyphs[map->map[pos]]));
+               pos >= 0
+                 && (enc_to_gid (map, pos) == -1
+                     || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)]));
                --pos);
           mi->ti.disabled = pos < 0;
           break;
@@ -11247,7 +11246,7 @@ FVRefreshChar (FontView *fv, int gid)
         bdfc = BDFPieceMeal (fv->show, gid);
       /* A glyph may be encoded in several places, all need updating */
       for (enc = 0; enc < fv->b.map->enccount; ++enc)
-        if (fv->b.map->map[enc] == gid)
+        if (enc_to_gid (fv->b.map, enc) == gid)
           {
             i = enc / fv->colcnt;
             j = enc - i * fv->colcnt;
@@ -11488,8 +11487,8 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
             extern const int amspua[];
             int uni;
             struct cidmap *cidmap = NULL;
-            sc = (gid =
-                  fv->b.map->map[index]) != -1 ? fv->b.sf->glyphs[gid] : NULL;
+            sc = (gid = enc_to_gid (fv->b.map, index)) != -1 ?
+              fv->b.sf->glyphs[gid] : NULL;
 
             if (fv->b.cidmaster != NULL)
               cidmap =
@@ -11838,7 +11837,8 @@ FVDrawInfo (FontView *fv, GWindow pixmap, GEvent *event)
     sprintf (buffer, "%-3d (0x%02x) ", fv->end_pos, fv->end_pos);
   else
     sprintf (buffer, "%-5d (0x%04x) ", fv->end_pos, fv->end_pos);
-  sc = (gid = fv->b.map->map[fv->end_pos]) != -1 ? sf->glyphs[gid] : NULL;
+  sc = (gid = enc_to_gid (fv->b.map, fv->end_pos)) != -1 ?
+    sf->glyphs[gid] : NULL;
   if (fv->b.cidmaster == NULL || fv->b.normal == NULL || sc == NULL)
     SCBuildDummy (&dummy, sf, fv->b.map, fv->end_pos);
   else
@@ -11985,7 +11985,7 @@ FVChar (FontView *fv, GEvent *event)
                 pos = fv->b.map->enccount - 1;
             }
           while (pos != end_pos
-                 && ((gid = fv->b.map->map[pos]) == -1
+                 && ((gid = enc_to_gid (fv->b.map, pos)) == -1
                      || !SCWorthOutputting (fv->b.sf->glyphs[gid])));
           if (pos == end_pos)
             ++pos;
@@ -12002,7 +12002,7 @@ FVChar (FontView *fv, GEvent *event)
                 pos = fv->b.map->enccount - 1;
             }
           while (pos != end_pos
-                 && ((gid = fv->b.map->map[pos]) == -1
+                 && ((gid = enc_to_gid (fv->b.map, pos)) == -1
                      || !SCWorthOutputting (fv->b.sf->glyphs[gid])));
           if (pos == end_pos)
             --pos;
@@ -12255,7 +12255,7 @@ ddgencharlist (void *_fv, int32_t *len)
   char *data;
 
   for (i = cnt = 0; i < map->enccount; ++i)
-    if (fv->b.selected[i] && (gid = map->map[i]) != -1
+    if (fv->b.selected[i] && (gid = enc_to_gid (map, i)) != -1
         && sf->glyphs[gid] != NULL)
       cnt += strlen (sf->glyphs[gid]->name) + 1;
   data = xmalloc (cnt + 1);
@@ -12263,7 +12263,7 @@ ddgencharlist (void *_fv, int32_t *len)
   for (cnt = 0, j = 1; j <= fv->sel_index; ++j)
     {
       for (i = cnt = 0; i < map->enccount; ++i)
-        if (fv->b.selected[i] && (gid = map->map[i]) != -1
+        if (fv->b.selected[i] && (gid = enc_to_gid (map, i)) != -1
             && sf->glyphs[gid] != NULL)
           {
             strcpy (data + cnt, sf->glyphs[gid]->name);
@@ -12303,7 +12303,7 @@ FVMouse (FontView *fv, GEvent *event)
       dopopup = false;
     }
 
-  sc = (gid = fv->b.map->map[pos]) != -1 ? fv->b.sf->glyphs[gid] : NULL;
+  sc = (gid = enc_to_gid (fv->b.map, pos)) != -1 ? fv->b.sf->glyphs[gid] : NULL;
   if (sc == NULL)
     sc = SCBuildDummy (&dummy, fv->b.sf, fv->b.map, pos);
   if (event->type == et_mouseup && event->u.mouse.clicks == 2)
@@ -12323,7 +12323,7 @@ FVMouse (FontView *fv, GEvent *event)
       if (sc == &dummy)
         {
           sc = SFMakeChar (fv->b.sf, fv->b.map, pos);
-          gid = fv->b.map->map[pos];
+          gid = enc_to_gid (fv->b.map, pos);
         }
       if (fv->show == fv->filled)
         {
@@ -12496,8 +12496,8 @@ FVResize (FontView *fv, GEvent *event)
       if (topchar == -1)
         {
           for (topchar = 0; topchar < fv->b.map->enccount; ++topchar)
-            if (fv->b.map->map[topchar] != -1
-                && fv->b.sf->glyphs[fv->b.map->map[topchar]] != NULL)
+            if (enc_to_gid (fv->b.map, topchar) != -1
+                && fv->b.sf->glyphs[enc_to_gid (fv->b.map, topchar)] != NULL)
               break;
           if (topchar == fv->b.map->enccount)
             topchar = 0;
@@ -13865,7 +13865,7 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
           for (enc = 0; enc < gs.fv->b.map->enccount; ++enc)
             {
               if (gs.fv->b.selected[enc]
-                  && (gid = gs.fv->b.map->map[enc]) != -1
+                  && (gid = enc_to_gid (gs.fv->b.map, enc)) != -1
                   && (sc = sf->glyphs[gid]) != NULL)
                 {
                   char *repr = SCNameUniStr (sc);

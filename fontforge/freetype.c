@@ -199,9 +199,10 @@ __FreeTypeFontContext (FT_Library context,
             TransitiveClosureAdd (new, old, sc, layer);
           else
             for (i = 0; i < map->enccount; ++i)
-              if (selected[i] && map->map[i] != -1 &&
-                  SCWorthOutputting (old[map->map[i]]))
-                TransitiveClosureAdd (new, old, old[map->map[i]], layer);
+              if (selected[i] && enc_to_gid (map, i) != -1 &&
+                  SCWorthOutputting (old[enc_to_gid (map, i)]))
+                TransitiveClosureAdd (new, old, old[enc_to_gid (map, i)],
+                                      layer);
           /* Add these guys so we'll get reasonable blue values */
           /* we won't rasterize them */
           if (PSDictHasEntry (sf->private, "BlueValues") == NULL)

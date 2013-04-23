@@ -1488,7 +1488,7 @@ _DoFindAll (SearchData *sv)
   for (i = 0; i < sv->fv->map->enccount; ++i)
     {
       if ((!sv->onlyselected || sv->fv->selected[i])
-          && (gid = sv->fv->map->map[i]) != -1
+          && (gid = enc_to_gid (sv->fv->map, i)) != -1
           && sv->fv->sf->glyphs[gid] != NULL)
         {
           SCSplinePointsUntick (sv->fv->sf->glyphs[gid], sv->fv->active_layer);
@@ -1640,14 +1640,15 @@ FVBReplaceOutlineWithReference (FontViewBase *fv, double fudge)
 
   selcnt = 0;
   for (i = 0; i < fv->map->enccount; ++i)
-    if (selected[i] && (gid = fv->map->map[i]) != -1 && sf->glyphs[gid] != NULL)
+    if (selected[i] && (gid = enc_to_gid (fv->map, i)) != -1
+        && sf->glyphs[gid] != NULL)
       ++selcnt;
   ff_progress_start_indicator (10, _("Replace with Reference"),
                                _("Replace Outline with Reference"), 0, selcnt,
                                1, true);
 
   for (i = 0; i < fv->map->enccount; ++i)
-    if (selected[i] && (gid = fv->map->map[i]) != -1 &&
+    if (selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         (checksc = sf->glyphs[gid]) != NULL)
       {
         if (IsASingleReferenceOrEmpty (sf->glyphs[gid], fv->active_layer))
@@ -1861,7 +1862,7 @@ FVCorrectReferences (FontViewBase *fv)
   cnt = 0;
   for (enc = 0; enc < fv->map->enccount; ++enc)
     {
-      if ((gid = fv->map->map[enc]) != -1 && fv->selected[enc]
+      if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
         ++cnt;
     }
@@ -1871,7 +1872,7 @@ FVCorrectReferences (FontViewBase *fv)
                                NULL, cnt, 1, true);
   for (enc = 0; enc < fv->map->enccount; ++enc)
     {
-      if ((gid = fv->map->map[enc]) != -1 && fv->selected[enc]
+      if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
         {
           index = 1;

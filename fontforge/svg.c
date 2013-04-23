@@ -4501,10 +4501,13 @@ SVGParseFont (xmlNodePtr font)
   map = (EncMap *) xzalloc (sizeof (EncMap));
   map->enccount = map->encmax = map->backmax = sf->glyphcnt;
   map->enc = FindOrMakeEncoding ("Original");
-  map->map = xmalloc (sf->glyphcnt * sizeof (int));
+  map->_map_array = xmalloc (sf->glyphcnt * sizeof (int));
   map->backmap = xmalloc (sf->glyphcnt * sizeof (int));
   for (i = 0; i < sf->glyphcnt; ++i)
-    map->map[i] = map->backmap[i] = i;
+    {
+      map->_map_array[i] = i;
+      map->backmap[i] = i;
+    }
   sf->map = map;
 
   return (sf);

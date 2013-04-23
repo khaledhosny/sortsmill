@@ -142,10 +142,9 @@ gettoken (FILE *bdf, char *tokbuf, int size)
   int ch;
 
   while (isspace (ch = getc (bdf)));
-  while (ch != EOF
-         && !isspace (ch)
+  while (ch != EOF && !isspace (ch)
          /* && ch!='[' && ch!=']' && ch!='{' && ch!='}' && ch!='<' && ch!='%' */
-         )
+    )
     {
       if (pt < end)
         *pt++ = ch;
@@ -168,8 +167,9 @@ ExtendSF (SplineFont *sf, EncMap *map, int enc, int set)
     {
       int n = enc;
       if (enc >= map->encmax)
-        map->map = xrealloc (map->map, (map->encmax = n + 100) * sizeof (int));
-      memset (map->map + map->enccount, -1,
+        map->_map_array =
+          xrealloc (map->_map_array, (map->encmax = n + 100) * sizeof (int));
+      memset (map->_map_array + map->enccount, -1,
               (enc - map->enccount + 1) * sizeof (int));
       map->enccount = n + 1;
       if (sf->fv != NULL)
@@ -210,7 +210,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
 
   if (strcmp (name, ".notdef") == 0)
     {
-      gid = (enc >= map->enccount || enc < 0) ? -1 : map->map[enc];
+      gid = (enc >= map->enccount || enc < 0) ? -1 : enc_to_gid (map, enc);
       if (gid == -1 || sf->glyphs[gid] == NULL
           || strcmp (sf->glyphs[gid]->name, name) != 0)
         {
@@ -239,7 +239,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
           if ((i = SFFindSlot (sf, map, -1, name)) == -1)
             i = map->enccount;
         }
-      if (i >= map->enccount || map->map[i] == -1)
+      if (i >= map->enccount || enc_to_gid (map, i) == -1)
         MakeEncChar (sf, map, i, name);
     }
   else
@@ -271,7 +271,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
       int j;
       int encmax = map->enc->char_cnt;
       for (j = map->enccount - 1; j >= encmax &&
-           ((gid = map->map[j]) == -1 || sf->glyphs[gid] == NULL); --j);
+           ((gid = enc_to_gid (map, j)) == -1 || sf->glyphs[gid] == NULL); --j);
       ++j;
       if (i < j)
         i = j;
@@ -279,7 +279,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
     }
 
   if (i != -1 && i < map->enccount
-      && ((gid = map->map[i]) == -1 || sf->glyphs[gid] == NULL))
+      && ((gid = enc_to_gid (map, i)) == -1 || sf->glyphs[gid] == NULL))
     {
       SplineChar *sc = SFMakeChar (sf, map, i);
       if (sf->onlybitmaps
@@ -289,7 +289,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
           sc->name = cleancopy (name);
         }
     }
-  if (i != -1 && swidth != -1 && (gid = map->map[i]) != -1 &&
+  if (i != -1 && swidth != -1 && (gid = enc_to_gid (map, i)) != -1 &&
       ((sf->onlybitmaps
         && ((sf->bitmaps == b && b->next == NULL) || sf->bitmaps == NULL))
        || (sf->glyphs[gid] != NULL
@@ -302,7 +302,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
       if (swidth1 != -1)
         sf->glyphs[gid]->vwidth = swidth1;
     }
-  if (i != -1 && (gid = map->map[i]) != -1)
+  if (i != -1 && (gid = enc_to_gid (map, i)) != -1)
     {
       if (gid >= b->glyphcnt)
         {
@@ -387,7 +387,7 @@ AddBDFChar (FILE *bdf, SplineFont *sf, BDFFont *b, EncMap *map, int depth,
   i = figureProperEncoding (sf, map, b, enc, name, swidth, swidth1, encname);
   if (i != -1)
     {
-      int gid = map->map[i];
+      int gid = enc_to_gid (map, i);
       if ((bc = b->glyphs[gid]) != NULL)
         {
           free (bc->bitmap);
@@ -918,14 +918,14 @@ SFGrowTo (SplineFont *sf, BDFFont *b, int cc, EncMap *map)
           int new = ((map->enccount + 256) >> 8) << 8;
           if (new < cc + 1)
             new = cc + 1;
-          map->map = xrealloc (map->map, new * sizeof (int));
+          map->_map_array = xrealloc (map->_map_array, new * sizeof (int));
           map->encmax = new;
         }
-      memset (map->map + map->enccount, -1,
+      memset (map->_map_array + map->enccount, -1,
               (cc + 1 - map->enccount) * sizeof (int));
       map->enccount = cc + 1;
     }
-  if ((gid = map->map[cc]) == -1 || sf->glyphs[gid] == NULL)
+  if ((gid = enc_to_gid (map, cc)) == -1 || sf->glyphs[gid] == NULL)
     gid = SFMakeChar (sf, map, cc)->orig_pos;
   if (sf->onlybitmaps
       && ((sf->bitmaps == b && b->next == NULL) || sf->bitmaps == NULL))
@@ -1158,7 +1158,7 @@ gf_char (FILE *gf, SplineFont *sf, BDFFont *b, EncMap *map)
     return (false);
 
   bc = SFGrowTo (sf, b, enc, map);
-  gid = map->map[enc];
+  gid = enc_to_gid (map, enc);
   if (charname[0] != '\0' && sf->onlybitmaps && (sf->bitmaps == NULL ||
                                                  (sf->bitmaps == b
                                                   && b->next == NULL)))
@@ -1481,7 +1481,7 @@ pk_char (FILE *pk, SplineFont *sf, BDFFont *b, EncMap *map)
   /* dy is the advance height for vertical text? */
 
   bc = SFGrowTo (sf, b, cc, map);
-  gid = map->map[cc];
+  gid = enc_to_gid (map, cc);
 
   bc->xmin = -hoff;
   bc->ymax = voff;
@@ -2181,7 +2181,7 @@ PcfReadEncodingsNames (FILE *file, struct toc *toc, SplineFont *sf,
         figureProperEncoding (sf, map, b, encs[i], name, -1, -1, encname);
       if (encs[i] != -1)
         {
-          int gid = map->map[encs[i]];
+          int gid = enc_to_gid (map, encs[i]);
           if (gid != -1)
             {
               b->glyphs[i]->sc = sf->glyphs[gid];

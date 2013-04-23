@@ -325,8 +325,8 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
                   if (usefreetype && freetypecontext == NULL)
                     freetypecontext =
                       FreeTypeFontContext (sf, NULL, selfv, bd->layer);
-                  ReplaceBDFC (sf, sizes, fv->map->map[i], freetypecontext,
-                               usefreetype, bd->layer);
+                  ReplaceBDFC (sf, sizes, enc_to_gid (fv->map, i),
+                               freetypecontext, usefreetype, bd->layer);
                 }
             }
           if (freetypecontext)
@@ -389,7 +389,8 @@ FVRemoveBitmaps (CreateBitmapData * bd, int32_t *sizes)
               else
                 {
                   for (j = 0; j < fv->map->enccount; ++j)
-                    if (fv->selected[j] && (gid = fv->map->map[j]) != -1)
+                    if (fv->selected[j]
+                        && (gid = enc_to_gid (fv->map, j)) != -1)
                       BDFClearGlyph (bdf, gid, pass);
                 }
             }

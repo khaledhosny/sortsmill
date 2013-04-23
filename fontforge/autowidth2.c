@@ -567,7 +567,7 @@ AutoWidth2 (FontViewBase *fv, int separation, int min_side, int max_side,
     }
   for (enc = 0; enc < fv->map->enccount; ++enc)
     {
-      if (fv->selected[enc] && (gid = fv->map->map[enc]) != -1 &&
+      if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1 &&
           (sc = sf->glyphs[gid]) != NULL && !sc->ticked &&
           HasUseMyMetrics (sc, fv->active_layer) == NULL)
         {

@@ -398,9 +398,8 @@ BVChar (BitmapView *bv, GEvent *event)
         }
     }
   else
-    if ((event->u.chr.
-         state & ((GMenuMask () | navigation_mask) &
-                  ~(ksm_shift | ksm_capslock))) == navigation_mask
+    if ((event->u.chr.state & ((GMenuMask () | navigation_mask) &
+                               ~(ksm_shift | ksm_capslock))) == navigation_mask
         && event->type == et_char && event->u.chr.keysym != 0
         && (event->u.chr.keysym <
             GK_Special /*|| event->u.chr.keysym>=0x10000 */ ))
@@ -502,40 +501,41 @@ BVDrawRefBorder (BitmapView *bv, BDFChar *bc, GWindow pixmap,
           ty = bv->height - bv->yoff - (bc->ymax + yoff - i) * bv->scale;
 
           isblack = (!bc->byte_data &&
-                     (bc->
-                      bitmap[i * bc->bytes_per_line +
-                             (j >> 3)] & (1 << (7 - (j & 7)))))
+                     (bc->bitmap[i * bc->bytes_per_line +
+                                 (j >> 3)] & (1 << (7 - (j & 7)))))
             || (bc->byte_data && bc->bitmap[i * bc->bytes_per_line + j] != 0);
           if (!isblack)
             continue;
           lw = (j == 0 || (!bc->byte_data &&
-                           !(bc->
-                             bitmap[i * bc->bytes_per_line +
-                                    ((j - 1) >> 3)] & (1 << (7 -
-                                                             ((j - 1) & 7)))))
+                           !(bc->bitmap[i * bc->bytes_per_line +
+                                        ((j - 1) >> 3)] & (1 << (7 -
+                                                                 ((j -
+                                                                   1) & 7)))))
                 || (bc->byte_data
                     && bc->bitmap[i * bc->bytes_per_line + j - 1] == 0));
           rw = (j == bc->xmax - bc->xmin
                 || (!bc->byte_data
-                    && !(bc->
-                         bitmap[i * bc->bytes_per_line +
-                                ((j + 1) >> 3)] & (1 << (7 - ((j + 1) & 7)))))
-                || (bc->byte_data
-                    && bc->bitmap[i * bc->bytes_per_line + j + 1] == 0));
+                    && !(bc->bitmap[i * bc->bytes_per_line + ((j + 1) >> 3)] &
+                         (1 << (7 - ((j + 1) & 7))))) || (bc->byte_data
+                                                          && bc->bitmap[i *
+                                                                        bc->bytes_per_line
+                                                                        + j +
+                                                                        1] ==
+                                                          0));
           tw = (i == bc->ymax - bc->ymin
                 || (!bc->byte_data
-                    && !(bc->
-                         bitmap[(i + 1) * bc->bytes_per_line +
-                                (j >> 3)] & (1 << (7 - (j & 7)))))
-                || (bc->byte_data
-                    && bc->bitmap[(i + 1) * bc->bytes_per_line + j] == 0));
+                    && !(bc->bitmap[(i + 1) * bc->bytes_per_line + (j >> 3)] &
+                         (1 << (7 - (j & 7))))) || (bc->byte_data
+                                                    && bc->bitmap[(i + 1) *
+                                                                  bc->bytes_per_line
+                                                                  + j] == 0));
           bw = (i == 0
                 || (!bc->byte_data
-                    && !(bc->
-                         bitmap[(i - 1) * bc->bytes_per_line +
-                                (j >> 3)] & (1 << (7 - (j & 7)))))
-                || (bc->byte_data
-                    && bc->bitmap[(i - 1) * bc->bytes_per_line + j] == 0));
+                    && !(bc->bitmap[(i - 1) * bc->bytes_per_line + (j >> 3)] &
+                         (1 << (7 - (j & 7))))) || (bc->byte_data
+                                                    && bc->bitmap[(i - 1) *
+                                                                  bc->bytes_per_line
+                                                                  + j] == 0));
 
           if (lw)
             GDrawDrawLine (pixmap, tx + 1, ty, tx + 1, ty - bv->scale,
@@ -571,9 +571,8 @@ BVDrawSelection (BitmapView *bv, void *pixmap)
           pixel.y = bv->height - bv->yoff - (sel->ymax - i + 1) * bv->scale;
           if (clut == NULL)
             {
-              if (sel->
-                  bitmap[i * sel->bytes_per_line +
-                         (j >> 3)] & (1 << (7 - (j & 7))))
+              if (sel->bitmap[i * sel->bytes_per_line +
+                              (j >> 3)] & (1 << (7 - (j & 7))))
                 {
                   GDrawFillRect (pixmap, &pixel, 0x808080);
                 }
@@ -869,9 +868,8 @@ BVDrawGlyph (BitmapView *bv, BDFChar *bc, GWindow pixmap, GRect *pixel,
             bv->height - bv->yoff - (bc->ymax + yoff - i + 1) * bv->scale;
           if (bdf->clut == NULL)
             {
-              if (bc->
-                  bitmap[i * bc->bytes_per_line +
-                         (j >> 3)] & (1 << (7 - (j & 7))))
+              if (bc->bitmap[i * bc->bytes_per_line +
+                             (j >> 3)] & (1 << (7 - (j & 7))))
                 {
                   GDrawFillRect (pixmap, pixel, color);
                   if (selected)
@@ -2152,7 +2150,8 @@ BVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *g)
   else if (mi->mid == MID_NextDef)
     {
       for (pos = BVCurEnc (bv) + 1; pos < map->enccount &&
-           ((gid = map->map[pos]) == -1 || !SCWorthOutputting (sf->glyphs[gid])
+           ((gid = enc_to_gid (map, pos)) == -1
+            || !SCWorthOutputting (sf->glyphs[gid])
             || bv->bdf->glyphs[gid] == NULL); ++pos);
       if (pos == map->enccount)
         return;
@@ -2160,7 +2159,8 @@ BVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *g)
   else if (mi->mid == MID_PrevDef)
     {
       for (pos = BVCurEnc (bv) - 1; pos >= 0 &&
-           ((gid = map->map[pos]) == -1 || !SCWorthOutputting (sf->glyphs[gid])
+           ((gid = enc_to_gid (map, pos)) == -1
+            || !SCWorthOutputting (sf->glyphs[gid])
             || bv->bdf->glyphs[gid] == NULL); --pos);
       if (pos < 0)
         return;

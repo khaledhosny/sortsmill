@@ -46,6 +46,7 @@
 
 #include "basics.h"
 #include <iconv.h>
+#include <libguile.h>
 
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
 typedef double real;
@@ -1148,7 +1149,12 @@ struct remap
 
 typedef struct encmap
 {                               /* A per-font map of encoding to glyph id */
-  int32_t *map;                 /* Map from encoding to glyphid */
+
+  /* FIXME: _map_array probably will be replaced with a different data
+     structure. Here it is given a name that is easy to find with
+     grep-like tools. */
+  int32_t *_map_array;          /* Map from encoding to glyphid */
+
   int32_t *backmap;             /* Map from glyphid to encoding */
   int enccount;                 /* used size of the map array */
   /*  strictly speaking this might include */
@@ -1160,6 +1166,12 @@ typedef struct encmap
   Encoding *enc;
   bool ticked;
 } EncMap;
+
+static inline ssize_t
+enc_to_gid (EncMap *map, ssize_t enc)
+{
+  return (0 <= enc && enc < map->enccount) ? map->_map_array[enc] : -1;
+}
 
 enum property_type
 {

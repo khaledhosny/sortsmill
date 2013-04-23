@@ -861,7 +861,7 @@ Default_Properties (BDFFont *bdf, EncMap *map, char *onlyme)
     {
       x_h = bdf->glyphs[gid]->ymax;
     }
-  if ('X' < map->enccount && (gid = map->map['X']) != -1
+  if ('X' < map->enccount && (gid = enc_to_gid (map, 'X')) != -1
       && bdf->glyphs[gid] != NULL)
     {
       cap_h = bdf->glyphs[gid]->ymax;
@@ -869,7 +869,10 @@ Default_Properties (BDFFont *bdf, EncMap *map, char *onlyme)
   def_ch = SFFindNotdef (bdf->sf, -2);
   if (def_ch != -1)
     {
-      def_ch = map->map[def_ch];        /* BDF works on the encoding, not on gids, so the default char must be encoded to be useful */
+      def_ch = enc_to_gid (map, def_ch);        /* BDF works on the encoding,
+                                                   not on gids, so the
+                                                   default char must be
+                                                   encoded to be useful. */
       if (def_ch >= map->enc->char_cnt)
         def_ch = -1;
     }
@@ -1165,7 +1168,7 @@ BDFMakeChar (BDFFont *bdf, EncMap *map, int enc)
       sf = sf->subfonts[j];
     }
   SFMakeChar (sf, map, enc);
-  return (BDFMakeGID (bdf, map->map[enc]));
+  return (BDFMakeGID (bdf, enc_to_gid (map, enc)));
 }
 
 void

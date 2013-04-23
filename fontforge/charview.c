@@ -3749,7 +3749,7 @@ CVChangeChar (CharView *cv, int i)
   SplineChar *sc;
   SplineFont *sf = cv->b.sc->parent;
   EncMap *map = ((FontView *) (cv->b.fv))->b.map;
-  int gid = i < 0 || i >= map->enccount ? -2 : map->map[i];
+  int gid = i < 0 || i >= map->enccount ? -2 : enc_to_gid (map, i);
 
   if (sf->cidmaster != NULL && !map->enc->is_compact)
     {
@@ -7668,8 +7668,9 @@ _CVMenuChangeChar (CharView *cv, int mid)
   else if (mid == MID_NextDef)
     {
       for (pos = CVCurEnc (cv) + 1;
-           pos < map->enccount && ((gid = map->map[pos]) == -1
-                                   || !SCWorthOutputting (sf->glyphs[gid]));
+           pos < map->enccount &&
+             ((gid = enc_to_gid (map, pos)) == -1
+              || !SCWorthOutputting (sf->glyphs[gid]));
            ++pos);
       if (pos >= map->enccount)
         {
@@ -7706,7 +7707,7 @@ _CVMenuChangeChar (CharView *cv, int mid)
   else if (mid == MID_PrevDef)
     {
       for (pos = CVCurEnc (cv) - 1;
-           pos >= 0 && ((gid = map->map[pos]) == -1
+           pos >= 0 && ((gid = enc_to_gid (map, pos)) == -1
                         || !SCWorthOutputting (sf->glyphs[gid])); --pos);
       if (pos < 0)
         return;
@@ -11876,7 +11877,7 @@ cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
           if (cv->b.container == NULL)
             {
               for (pos = CVCurEnc (cv) + 1;
-                   pos < map->enccount && ((gid = map->map[pos]) == -1
+                   pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
                                            ||
                                            !SCWorthOutputting (sf->glyphs
                                                                [gid]));
@@ -11892,7 +11893,7 @@ cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
           if (cv->b.container == NULL)
             {
               for (pos = CVCurEnc (cv) - 1;
-                   pos >= 0 && ((gid = map->map[pos]) == -1
+                   pos >= 0 && ((gid = enc_to_gid (map, pos)) == -1
                                 || !SCWorthOutputting (sf->glyphs[gid]));
                    --pos);
               mi->ti.disabled = pos < 0 || cv->b.container != NULL;

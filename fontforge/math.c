@@ -2165,8 +2165,8 @@ MKD_Do_Navigate (struct cvcontainer *cvc, enum nav_type type)
     {
       SplineFont *sf = mkd->cursc->parent;
       int enc = GotoChar (sf, sf->fv->map, NULL);
-      if (enc == -1 || sf->fv->map->map[enc] == -1
-          || (sc = sf->glyphs[sf->fv->map->map[enc]]) == NULL)
+      if (enc == -1 || enc_to_gid (sf->fv->map, enc) == -1
+          || (sc = sf->glyphs[enc_to_gid (sf->fv->map, enc)]) == NULL)
         return;
       if (sc->mathkern == NULL)
         MKD_SetGlyphList (mkd, sc);
@@ -2270,7 +2270,7 @@ MKDInit (MathKernDlg *mkd, SplineChar *sc)
   mkd->dummy_fv.magnify = 1;
 
   mkd->dummy_fv.b.map = &mkd->dummy_map;
-  mkd->dummy_map.map = mkd->map;
+  mkd->dummy_map._map_array = mkd->map;
   mkd->dummy_map.backmap = mkd->backmap;
   mkd->dummy_map.enccount = mkd->dummy_map.encmax = mkd->dummy_map.backmax = 4;
   mkd->dummy_map.enc = &custom;

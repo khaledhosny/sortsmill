@@ -2547,8 +2547,9 @@ dumprequiredfontinfo (void (*dumpchar) (int ch, void *data), void *data,
     }
 
   for (i = 0; i < 256 && i < map->enccount; ++i)
-    if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
-      encoding[i] = sf->glyphs[map->map[i]]->name;
+    if (enc_to_gid (map, i) != -1
+        && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
+      encoding[i] = sf->glyphs[enc_to_gid (map, i)]->name;
     else
       encoding[i] = ".notdef";
   for (; i < 256; ++i)
@@ -2764,7 +2765,7 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
       /*  Perhaps others do too? */
       fprintf (out, "   0 1 255 { 1 index exch /.notdef put} for\n");
       for (i = 0; i < 256 && i < map->enccount; ++i)
-        if ((gid = map->map[i]) != -1)
+        if ((gid = enc_to_gid (map, i)) != -1)
           if (SCWorthOutputting (sf->glyphs[gid]))
             fprintf (out, "    dup %d/%s put\n", i, sf->glyphs[gid]->name);
       fprintf (out, "  readonly def\n");
@@ -2838,7 +2839,7 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
           if (map->enc->is_unicodebmp || map->enc->is_unicodefull)
             {
               for (i = 0; i < map->enccount && i < 0x10000; ++i)
-                if ((gid = map->map[i]) != -1)
+                if ((gid = enc_to_gid (map, i)) != -1)
                   {
                     if (SCWorthOutputting (sf->glyphs[gid]))
                       fprintf (out, "    %d %d def\n", i,
@@ -2961,7 +2962,8 @@ somecharsused (SplineFont *sf, int bottom, int top, EncMap *map)
 
   for (i = bottom; i <= top && i < map->enccount; ++i)
     {
-      if (map->map[i] != -1 && SCWorthOutputting (sf->glyphs[map->map[i]]))
+      if (enc_to_gid (map, i) != -1
+          && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
         return (true);
     }
   return (false);
@@ -2983,9 +2985,11 @@ dumptype0stuff (FILE *out, SplineFont *sf, EncMap *map)
         {
           fprintf (out, "/%sBase /%s%d [\n", sf->fontname, sf->fontname, i);
           for (j = 0; j < 256 && (i << 8) + j < map->enccount; ++j)
-            if (map->map[(i << 8) + j] != -1
-                && SCWorthOutputting (sf->glyphs[map->map[(i << 8) + j]]))
-              fprintf (out, " /%s\n", sf->glyphs[map->map[(i << 8) + j]]->name);
+            if (enc_to_gid (map, (i << 8) + j) != -1
+                && SCWorthOutputting (sf->
+                                      glyphs[enc_to_gid (map, (i << 8) + j)]))
+              fprintf (out, " /%s\n",
+                       sf->glyphs[enc_to_gid (map, (i << 8) + j)]->name);
             else
               fprintf (out, "/%s\n", notdefname);
           for (; j < 256; ++j)

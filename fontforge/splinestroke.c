@@ -3433,10 +3433,10 @@ PointJoint (SplinePoint *base, SplinePoint *other, bigreal resolution)
   /*  of the two slopes */
   if (!IntersectLines (&inter,
                        &hasnext->me,
-                       hasnext->nonextcp ? &hasnext->next->to->me : &hasnext->
-                       nextcp, &hasprev->me,
-                       hasprev->noprevcp ? &hasprev->prev->from->me : &hasprev->
-                       prevcp))
+                       hasnext->nonextcp ? &hasnext->next->to->
+                       me : &hasnext->nextcp, &hasprev->me,
+                       hasprev->noprevcp ? &hasprev->prev->from->
+                       me : &hasprev->prevcp))
     {
       bad = true;
     }
@@ -4796,7 +4796,7 @@ FVStrokeItScript (void *_fv, StrokeInfo *si, int pointless_argument)
   SplineChar *sc;
 
   for (i = 0; i < fv->map->enccount; ++i)
-    if ((gid = fv->map->map[i]) != -1 && fv->sf->glyphs[gid] != NULL
+    if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->sf->glyphs[gid] != NULL
         && fv->selected[i])
       ++cnt;
   ff_progress_start_indicator (10, _("Stroking..."), _("Stroking..."), 0, cnt,
@@ -4805,8 +4805,9 @@ FVStrokeItScript (void *_fv, StrokeInfo *si, int pointless_argument)
   SFUntickAll (fv->sf);
   for (i = 0; i < fv->map->enccount; ++i)
     {
-      if ((gid = fv->map->map[i]) != -1 && (sc = fv->sf->glyphs[gid]) != NULL &&
-          !sc->ticked && fv->selected[i])
+      if ((gid = enc_to_gid (fv->map, i)) != -1
+          && (sc = fv->sf->glyphs[gid]) != NULL && !sc->ticked
+          && fv->selected[i])
         {
           sc->ticked = true;
           glyphname = sc->name;

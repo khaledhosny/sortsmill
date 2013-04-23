@@ -1218,7 +1218,7 @@ enum pstoks
 { pt_eof = -1, pt_moveto, pt_lineto, pt_curveto, pt_vcurveto,
   pt_ycurveto, pt_closepath, pt_rect,
   pt_gsave, pt_grestore, pt_concat, pt_setlinewidth, pt_setlinecap,
-    pt_setlinejoin,
+  pt_setlinejoin,
   pt_setmiterlimit, pt_setdash,
   pt_stroke, pt_closestroke, pt_fillnz, pt_filleo, pt_fillstrokenz,
   pt_fillstrokeeo, pt_closefillstrokenz, pt_closefillstrokeeo, pt_paintnoop,
@@ -2000,7 +2000,7 @@ add_mapping (SplineFont *basesf, long *mappings, int *uvals, int nuni, int gid,
   /* If such a mapping is present, then GIDs used in the ToUnicode Cmap array will correspond */
   /* to "Unicode" values it specifies rather than to the real order in which the glyphs are */
   /* stored in the file */
-  pos = cmap_from_cid || sf->map == NULL ? gid : sf->map->map[gid];
+  pos = cmap_from_cid || sf->map == NULL ? gid : enc_to_gid (sf->map, gid);
   sc = sf->glyphs[pos];
 
   if (pos >= 0 && pos < sf->glyphcnt

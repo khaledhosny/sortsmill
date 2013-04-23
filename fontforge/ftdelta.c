@@ -265,7 +265,7 @@ TopFindQuestionablePoints (struct qg_data *data)
               for (enc = 0; enc < data->fv->map->enccount; ++enc)
                 {
                   if (data->fv->selected[enc]
-                      && (gid = data->fv->map->map[enc]) != -1
+                      && (gid = enc_to_gid (data->fv->map, enc)) != -1
                       && (data->sc = data->fv->sf->glyphs[gid]) != NULL)
                     SCFindQuestionablePoints (data);
                 }

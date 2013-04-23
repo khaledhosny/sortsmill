@@ -147,7 +147,8 @@ DoFindOne (SearchView *sv, int startafter)
       else
         {
           for (i = 0; i < sv->sd.fv->map->enccount; ++i)
-            if (sv->sd.fv->selected[i] && (gid = sv->sd.fv->map->map[i]) != -1
+            if (sv->sd.fv->selected[i]
+                && (gid = enc_to_gid (sv->sd.fv->map, i)) != -1
                 && sv->sd.fv->sf->glyphs[gid] != NULL)
               break;
         }
@@ -156,7 +157,7 @@ DoFindOne (SearchView *sv, int startafter)
   for (; i < sv->sd.fv->map->enccount; ++i)
     {
       if ((!sv->sd.onlyselected || sv->sd.fv->selected[i])
-          && (gid = sv->sd.fv->map->map[i]) != -1
+          && (gid = enc_to_gid (sv->sd.fv->map, i)) != -1
           && sv->sd.fv->sf->glyphs[gid] != NULL)
         {
           SCSplinePointsUntick (sv->sd.fv->sf->glyphs[gid],
@@ -169,8 +170,7 @@ DoFindOne (SearchView *sv, int startafter)
   if (i >= sv->sd.fv->map->enccount)
     {
       ff_post_notice (_("Not Found"),
-                      sv->
-                      showsfindnext ?
+                      sv->showsfindnext ?
                       _
                       ("The search pattern was not found again in the font %.100s")
                       :
@@ -378,8 +378,8 @@ static int
 SV_Cancel (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    SV_DoClose (((CharViewBase *) GDrawGetUserData (GGadgetGetWindow (g)))->
-                container);
+    SV_DoClose (((CharViewBase *)
+                 GDrawGetUserData (GGadgetGetWindow (g)))->container);
   return (true);
 }
 
@@ -592,8 +592,8 @@ sv_e_h (GWindow gw, GEvent *event)
       if (event->u.map.is_visible)
         CVPaletteActivate (sv->cv_srch.inactive ? &sv->cv_rpl : &sv->cv_srch);
       else
-        CVPalettesHideIfMine (sv->cv_srch.inactive ? &sv->cv_rpl : &sv->
-                              cv_srch);
+        CVPalettesHideIfMine (sv->cv_srch.inactive ? &sv->
+                              cv_rpl : &sv->cv_srch);
       sv->isvisible = event->u.map.is_visible;
       break;
     }
@@ -654,7 +654,7 @@ SVAttachFV (FontView *fv, int ask_if_difficult)
                             r->sc->name);
               gid = -1;
               if (pos != -1)
-                gid = fv->b.map->map[pos];
+                gid = enc_to_gid (fv->b.map, pos);
               if ((gid == -1 || fv->b.sf->glyphs[gid] != NULL) && !doit)
                 {
                   char *buttons[3];
@@ -802,7 +802,7 @@ SVFillup (SearchView *sv, FontView *fv)
   sv->cv_rpl.b.container = (struct cvcontainer *) sv;
 
   sv->dummy_fv.b.map = &sv->dummy_map;
-  sv->dummy_map.map = sv->map;
+  sv->dummy_map._map_array = sv->map;
   sv->dummy_map.backmap = sv->backmap;
   sv->dummy_map.enccount = sv->dummy_map.encmax = sv->dummy_map.backmax = 2;
   sv->dummy_map.enc = &custom;
