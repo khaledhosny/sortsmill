@@ -2355,10 +2355,10 @@ FindCharacter (SplineFont *into, SplineFont *from, RefChar *rf,
 
   if (rf->orig_pos < into->glyphcnt && into->glyphs[rf->orig_pos] != NULL &&
       ((into->glyphs[rf->orig_pos]->unicodeenc == rf->unicode_enc
-        && rf->unicode_enc != -1) || (rf->unicode_enc == -1 && fromname != NULL
-                                      && strcmp (into->
-                                                 glyphs[rf->orig_pos]->name,
-                                                 fromname) == 0)))
+        && rf->unicode_enc != -1)
+       || (rf->unicode_enc == -1
+           && fromname != NULL
+           && strcmp (into->glyphs[rf->orig_pos]->name, fromname) == 0)))
     return (into->glyphs[rf->orig_pos]);
 
   return (SFGetChar (into, rf->unicode_enc, fromname));
@@ -2960,10 +2960,9 @@ _PasteToSC (SplineChar *sc, Undoes *paster, FontViewBase *fv, int pasteinto,
                   if (sc->views->container->funcs->type == cvc_searcher ||
                       sc->views->container->funcs->type == cvc_multiplepattern)
                     rsc =
-                      FindCharacter ((sc->views->container->
-                                      funcs->sf_of_container) (sc->views->
-                                                               container),
-                                     paster->copied_from, refs, NULL);
+                      FindCharacter
+                      ((sc->views->container->funcs->sf_of_container)
+                       (sc->views->container), paster->copied_from, refs, NULL);
                   else
                     {
                       ff_post_error (_("Please don't do that"),
@@ -3688,8 +3687,8 @@ _PasteToCV (CharViewBase *cv, SplineChar *cvsc, Undoes *paster)
           /* Can't paste images to foreground layer (unless type3 font) */
           ImageList *new_, *cimg;
           int ly = cvsc->parent->multilayer
-            || cv->layerheads[cv->
-                              drawmode]->background ? CVLayer (cv) : ly_back;
+            || cv->layerheads[cv->drawmode]->background ?
+            CVLayer (cv) : ly_back;
           if (ly == ly_grid)
             ly = ly_back;
           for (cimg = paster->u.state.images; cimg != NULL; cimg = cimg->next)
@@ -3751,8 +3750,8 @@ _PasteToCV (CharViewBase *cv, SplineChar *cvsc, Undoes *paster)
               else if (cv->container->funcs->type == cvc_searcher ||
                        cv->container->funcs->type == cvc_multiplepattern)
                 sc =
-                  FindCharacter ((cv->container->funcs->
-                                  sf_of_container) (cv->container),
+                  FindCharacter ((cv->container->funcs->sf_of_container)
+                                 (cv->container),
                                  paster->copied_from, refs, NULL);
               else
                 sc = (SplineChar *) -1;
@@ -3794,8 +3793,8 @@ _PasteToCV (CharViewBase *cv, SplineChar *cvsc, Undoes *paster)
               else if (cv->container->funcs->type == cvc_searcher
                        || cv->container->funcs->type == cvc_multiplepattern)
                 sc =
-                  FindCharacter ((cv->container->funcs->
-                                  sf_of_container) (cv->container),
+                  FindCharacter ((cv->container->funcs->sf_of_container)
+                                 (cv->container),
                                  paster->copied_from, refs, NULL);
               else
                 sc = NULL;
