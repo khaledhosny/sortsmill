@@ -806,10 +806,8 @@ SVFillup (SearchView *sv, FontView *fv)
   make_enc_to_gid (&sv->dummy_map);
   for (ssize_t k = 0; k < 2; k++)
     set_enc_to_gid (&sv->dummy_map, k, sv->map[k]);
-  //sv->dummy_map._map_array = sv->map;
   sv->dummy_map.backmap = sv->backmap;
   sv->dummy_map.enccount = 2;
-  //sv->dummy_map.encmax = 2;
   sv->dummy_map.backmax = 2;
   sv->dummy_map.enc = &custom;
 

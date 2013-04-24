@@ -8531,19 +8531,10 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                 {
                   EncMap *map = fvs->b.map;
 
-//                  if (map->enccount + 1 >= map->encmax)
-//                    {
-//                      map->encmax += 20;
-//                      map->_map_array =
-//                        xrealloc (map->_map_array, map->encmax * sizeof (int));
-//                    }
-
                   // FIXME: It is unlikely this actually needs to be
                   // done, because such an entry should have been
                   // removed already:
                   set_enc_to_gid (map, map->enccount, -1);
-
-                  //map->_map_array[map->enccount] = -1;
 
                   fvs->b.selected =
                     xrealloc (fvs->b.selected, (map->enccount + 1));
@@ -8561,7 +8552,6 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                     }
 
                   set_enc_to_gid (map, map->enccount - 1, sc->orig_pos);
-                  //map->_map_array[map->enccount - 1] = sc->orig_pos;
                   map->backmap[sc->orig_pos] = map->enccount - 1;
                 }
               pt = buffer;

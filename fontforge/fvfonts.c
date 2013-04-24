@@ -1183,7 +1183,6 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
                 if (index == -1)
                   index = base + extras++;
                 set_enc_to_gid (map, index, mapping[i]);
-                //map->_map_array[index] = mapping[i];
                 map->backmap[mapping[i]] = index;
               }
           }
@@ -1196,20 +1195,11 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
               map->backmax = into->glyphcnt + cnt;
             }
           memset (map->backmap + into->glyphcnt, -1, cnt * sizeof (int));
-//          if (map->enccount + extras > map->encmax)
-//            {
-//              map->_map_array =
-//                xrealloc (map->_map_array,
-//                          (map->enccount + extras) * sizeof (int));
-//              map->encmax = map->enccount + extras;
-//            }
 
           // FIXME: It is unlikely this actually needs to be done,
           // because such entries should have been removed already:
           for (ssize_t k = map->enccount; k < map->enccount + extras; k++)
             set_enc_to_gid (map, k, -1);
-
-          //memset (map->_map_array + map->enccount, -1, extras * sizeof (int));
 
           map->enccount += extras;
         }

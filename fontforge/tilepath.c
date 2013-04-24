@@ -1314,10 +1314,8 @@ TPDInit (TilePathDlg *tpd, SplineFont *sf)
   make_enc_to_gid (&tpd->dummy_map);
   for (ssize_t k = 0; k < 4; k++)
     set_enc_to_gid (&tpd->dummy_map, k, tpd->map[k]);
-  //tpd->dummy_map._map_array = tpd->map;
   tpd->dummy_map.backmap = tpd->backmap;
   tpd->dummy_map.enccount = 4;
-  //  tpd->dummy_map.encmax = 4;
   tpd->dummy_map.backmax = 4;
   tpd->dummy_map.enc = &custom;
 }
@@ -2146,10 +2144,8 @@ PTDInit (TilePathDlg *ptd, SplineFont *sf)
   make_enc_to_gid (&ptd->dummy_map);
   for (ssize_t k = 0; k < 1; k++)
     set_enc_to_gid (&ptd->dummy_map, k, ptd->map[k]);
-  //ptd->dummy_map._map_array = ptd->map;
   ptd->dummy_map.backmap = ptd->backmap;
   ptd->dummy_map.enccount = 1;
-  //  ptd->dummy_map.encmax = 1;
   ptd->dummy_map.backmax = 1;
   ptd->dummy_map.enc = &custom;
 }

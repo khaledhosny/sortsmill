@@ -14861,17 +14861,12 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
     {
       free (self->fv->selected);
       self->fv->selected = xcalloc (sf->glyphcnt, sizeof (char));
-//      if (sf->glyphcnt > map->encmax)
-//        map->_map_array =
-//          xrealloc (map->_map_array,
-//                    (map->encmax = sf->glyphcnt) * sizeof (int));
       if (sf->glyphcnt > map->backmax)
         map->backmap =
           xrealloc (map->backmap, (map->backmax = sf->glyphcnt) * sizeof (int));
       for (i = 0; i < sf->glyphcnt; ++i)
         {
           set_enc_to_gid (map, i, i);
-          //map->_map_array[i] = i;
           map->backmap[i] = i;
         }
       map->enccount = sf->glyphcnt;

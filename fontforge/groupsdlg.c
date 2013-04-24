@@ -1652,11 +1652,7 @@ MapEncAddGid (EncMap *map, SplineFont *sf, int compacted,
 
   if (gid != -1 && map->backmap[gid] == -1)
     map->backmap[gid] = map->enccount;
-//  if (map->enccount >= map->encmax)
-//    map->_map_array =
-//      xrealloc (map->_map_array, (map->encmax += 100) * sizeof (int));
   set_enc_to_gid (map, map->enccount, gid);
-  //map->_map_array[map->enccount] = gid;
   map->enccount++;
   if (!compacted)
     {

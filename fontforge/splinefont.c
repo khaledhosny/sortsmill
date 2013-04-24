@@ -215,7 +215,6 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
               sc = _SFMakeChar (sf, map, real_uni);
               gid = sc->orig_pos;
               set_enc_to_gid (map, enc, gid);
-              //map->_map_array[enc] = gid;
               SCCharChangedUpdate (sc, ly_all);
               return sc;
             }
@@ -231,7 +230,6 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
           (sc = SFGetChar (sf, dummy.unicodeenc, dummy.name)) != NULL)
         {
           set_enc_to_gid (map, enc, sc->orig_pos);
-          //map->_map_array[enc] = sc->orig_pos;
           AltUniAdd (sc, dummy.unicodeenc);
           return sc;
         }
