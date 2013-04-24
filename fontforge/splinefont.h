@@ -1156,8 +1156,8 @@ typedef struct encmap
   int enccount;           /* One more than the highest encoding value.
                              Strictly speaking, this might include
                              glyphs that are not encoded, but which
-                             are displayed after the proper
-                             encoding */
+                             are displayed after the encoding
+                             proper. */
 
   /* FIXME: This is destined to be changed to a Guile structure,
      presumably to be called _gid_to_enc. */
