@@ -6412,7 +6412,7 @@ fea_ParseLookupDef (struct parseState *tok, int could_be_stat)
   struct feat_item *item, *first_after_mark;
   enum otlookup_type lookuptype;
   int ret;
-  int has_single, has_multiple;
+  bool has_single, has_multiple;
 
   /* keywords are allowed in lookup names */
   fea_ParseTokWithKeywords (tok, false);
@@ -6820,7 +6820,7 @@ fea_ParseFeatureDef (struct parseState *tok)
   uint32_t feat_tag;
   struct feat_item *item, *size_item = NULL;
   int type, ret;
-  int has_single, has_multiple;
+  bool has_single, has_multiple;
 
   fea_ParseTag (tok);
   if (tok->type != tk_name || !tok->could_be_tag)
@@ -6997,7 +6997,7 @@ fea_ParseFeatureDef (struct parseState *tok)
   /*  multiples */
   /* Another approach would be to make two lookups, but this is easier... */
   has_single = has_multiple = false;
-  for (item = tok->sofar; item != NULL && item->type != ft_lookup_start;
+  for (item = tok->sofar; item != NULL && item->type != ft_feat_start;
        item = item->next)
     {
       enum otlookup_type cur = fea_LookupTypeFromItem (item);
@@ -7008,7 +7008,7 @@ fea_ParseFeatureDef (struct parseState *tok)
     }
   if (has_multiple && has_single)
     {
-      for (item = tok->sofar; item != NULL && item->type != ft_lookup_start;
+      for (item = tok->sofar; item != NULL && item->type != ft_feat_start;
            item = item->next)
         {
           enum otlookup_type cur = fea_LookupTypeFromItem (item);
