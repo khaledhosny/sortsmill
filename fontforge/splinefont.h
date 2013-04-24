@@ -1172,25 +1172,27 @@ typedef struct encmap
   bool ticked;
 } EncMap;
 
-// FIXME: This really, really does not need to be `static inline'.
-static inline void
+inline void make_enc_to_gid (EncMap *map);
+inline void clear_enc_to_gid (EncMap *map);
+inline void set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid);
+inline ssize_t enc_to_gid (EncMap *map, ssize_t enc);
+
+inline void
 make_enc_to_gid (EncMap *map)
 {
   map->_enc_to_gid = scm_make_hash_table (scm_from_int (257));
 }
 
-// FIXME: This really, really does not need to be `static inline'.
-static inline void
+inline void
 clear_enc_to_gid (EncMap *map)
 {
   // FIXME: Consider making this just an alias for make_enc_to_gid, to
-  // start again with a smaller table rather than clear a table while
+  // start again with a smaller table, rather than clear a table while
   // retaining its size.
   scm_hash_clear_x (map->_enc_to_gid);
 }
 
-// FIXME: Should this really be `static inline'?
-static inline void
+inline void
 set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid)
 {
   SCM key = scm_from_ssize_t (enc);
@@ -1200,11 +1202,9 @@ set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid)
     scm_hashv_set_x (map->_enc_to_gid, key, scm_from_ssize_t (gid));
 }
 
-// FIXME: Maybe make this not `static'.
-static inline ssize_t
+inline ssize_t
 enc_to_gid (EncMap *map, ssize_t enc)
 {
-  // FIXME: Precompute negative one.
   return
     scm_to_ssize_t (scm_hashv_ref
                     (map->_enc_to_gid, scm_from_ssize_t (enc),
