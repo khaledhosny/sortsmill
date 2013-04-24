@@ -770,7 +770,8 @@ SVFillup (SearchView *sv, FontView *fv)
   sv->chars[0] = &sv->sd.sc_srch;
   sv->chars[1] = &sv->sd.sc_rpl;
   sv->dummy_sf.glyphs = sv->chars;
-  sv->dummy_sf.glyphcnt = sv->dummy_sf.glyphmax = 2;
+  sv->dummy_sf.glyphcnt = 2;
+  sv->dummy_sf.glyphmax = 2;
   sv->dummy_sf.pfminfo.fstype = -1;
   sv->dummy_sf.fontname = sv->dummy_sf.fullname = sv->dummy_sf.familyname =
     "dummy";
@@ -802,9 +803,14 @@ SVFillup (SearchView *sv, FontView *fv)
   sv->cv_rpl.b.container = (struct cvcontainer *) sv;
 
   sv->dummy_fv.b.map = &sv->dummy_map;
-  sv->dummy_map._map_array = sv->map;
+  make_enc_to_gid (&sv->dummy_map);
+  for (ssize_t k = 0; k < 2; k++)
+    set_enc_to_gid (&sv->dummy_map, k, sv->map[k]);
+  //sv->dummy_map._map_array = sv->map;
   sv->dummy_map.backmap = sv->backmap;
-  sv->dummy_map.enccount = sv->dummy_map.encmax = sv->dummy_map.backmax = 2;
+  sv->dummy_map.enccount = 2;
+  //sv->dummy_map.encmax = 2;
+  sv->dummy_map.backmax = 2;
   sv->dummy_map.enc = &custom;
 
   sv->sd.fv = (FontViewBase *) fv;

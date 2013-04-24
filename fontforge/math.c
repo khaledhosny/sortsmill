@@ -2245,10 +2245,12 @@ MKDInit (MathKernDlg *mkd, SplineChar *sc)
       mcv->inactive = i != 0;
     }
   mkd->dummy_sf.glyphs = mkd->chars;
-  mkd->dummy_sf.glyphcnt = mkd->dummy_sf.glyphmax = 4;
+  mkd->dummy_sf.glyphcnt = 4;
+  mkd->dummy_sf.glyphmax = 4;
   mkd->dummy_sf.pfminfo.fstype = -1;
-  mkd->dummy_sf.fontname = mkd->dummy_sf.fullname = mkd->dummy_sf.familyname =
-    "dummy";
+  mkd->dummy_sf.fontname = "dummy";
+  mkd->dummy_sf.fullname = "dummy";
+  mkd->dummy_sf.familyname = "dummy";
   mkd->dummy_sf.weight = "Medium";
   mkd->dummy_sf.origname = "dummy";
   mkd->dummy_sf.ascent = sc->parent->ascent;
@@ -2270,9 +2272,14 @@ MKDInit (MathKernDlg *mkd, SplineChar *sc)
   mkd->dummy_fv.magnify = 1;
 
   mkd->dummy_fv.b.map = &mkd->dummy_map;
-  mkd->dummy_map._map_array = mkd->map;
+  make_enc_to_gid (&mkd->dummy_map);
+  for (ssize_t k = 0; k < 4; k++)
+    set_enc_to_gid (&mkd->dummy_map, k, mkd->map[k]);
+  //mkd->dummy_map._map_array = mkd->map;
   mkd->dummy_map.backmap = mkd->backmap;
-  mkd->dummy_map.enccount = mkd->dummy_map.encmax = mkd->dummy_map.backmax = 4;
+  mkd->dummy_map.enccount = 4;
+  //  mkd->dummy_map.encmax = 4;
+  mkd->dummy_map.backmax = 4;
   mkd->dummy_map.enc = &custom;
 }
 

@@ -171,9 +171,10 @@
 (struct EncMap
          (fields
           ;;(* _map_array encoding_to_gid) <-- obsolescent; don’t use.
-          (* backmap gid_to_enc)
+          (SCM _enc_to_gid encoding_to_gid)
+          (* backmap gid_to_encoding)
           (int enccount encoding_to_gid_count)
-          (int encmax encoding_to_gid_max)
+          ;;(int encmax encoding_to_gid_max)
           (int backmax gid_to_encoding_max)
           (* remap)
           ((* Encoding) enc encoding)

@@ -8530,14 +8530,27 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                    fvs = (FontView *) (fvs->b.nextsame))
                 {
                   EncMap *map = fvs->b.map;
-                  if (map->enccount + 1 >= map->encmax)
-                    map->_map_array =
-                      xrealloc (map->_map_array, (map->encmax += 20) * sizeof (int));
-                  map->_map_array[map->enccount] = -1;
+
+//                  if (map->enccount + 1 >= map->encmax)
+//                    {
+//                      map->encmax += 20;
+//                      map->_map_array =
+//                        xrealloc (map->_map_array, map->encmax * sizeof (int));
+//                    }
+
+                  // FIXME: It is unlikely this actually needs to be
+                  // done, because such an entry should have been
+                  // removed already:
+                  set_enc_to_gid (map, map->enccount, -1);
+
+                  //map->_map_array[map->enccount] = -1;
+
                   fvs->b.selected =
                     xrealloc (fvs->b.selected, (map->enccount + 1));
                   memset (fvs->b.selected + map->enccount, 0, 1);
+
                   ++map->enccount;
+
                   if (sc == NULL)
                     {
                       sc = SFMakeChar (fv->b.sf, map, map->enccount - 1);
@@ -8546,7 +8559,9 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                       sc->comment = xstrdup (".");      /* Mark as something for sfd file */
                       /*SCLigDefault(sc); */
                     }
-                  map->_map_array[map->enccount - 1] = sc->orig_pos;
+
+                  set_enc_to_gid (map, map->enccount - 1, sc->orig_pos);
+                  //map->_map_array[map->enccount - 1] = sc->orig_pos;
                   map->backmap[sc->orig_pos] = map->enccount - 1;
                 }
               pt = buffer;

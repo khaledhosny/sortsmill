@@ -1,4 +1,4 @@
-#include <config.h>
+#include <config.h>             // -*- coding: utf-8 -*-
 
 /* Copyright (C) 2000-2012 by George Williams */
 /*
@@ -26,8 +26,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include <config.h>
 
 #include <stdbool.h>
 #include "fontforge.h"
@@ -4034,7 +4032,10 @@ readcffenc (FILE *ttf, struct topdicts *dict, struct ttfinfo *info,
             if (strcmp (info->chars[i]->name, enc[pos]) == 0)
               break;
           if (pos < 256)
-            map->_map_array[pos] = i;
+            {
+              set_enc_to_gid (map, pos, i);
+              //map->_map_array[pos] = i;
+            }
         }
     }
   else
@@ -4048,7 +4049,10 @@ readcffenc (FILE *ttf, struct topdicts *dict, struct ttfinfo *info,
             {
               ssize_t cc = getc (ttf);
               if (0 <= cc && cc < map->enccount)
-                map->_map_array[cc] = i;
+                {
+                  set_enc_to_gid (map, cc, i);
+                  //map->_map_array[cc] = i;
+                }
             }
         }
       else if ((format & 0x7f) == 1)
@@ -4062,7 +4066,10 @@ readcffenc (FILE *ttf, struct topdicts *dict, struct ttfinfo *info,
               while (first <= last && first < 256)
                 {
                   if (pos < info->glyph_cnt)
-                    map->_map_array[first] = pos;
+                    {
+                      set_enc_to_gid (map, first, pos);
+                      //map->_map_array[first] = pos;
+                    }
                   ++pos;
                   ++first;
                 }
@@ -4088,7 +4095,10 @@ readcffenc (FILE *ttf, struct topdicts *dict, struct ttfinfo *info,
                 if (strcmp (name, info->chars[j]->name) == 0)
                   break;
               if (j != info->glyph_cnt)
-                map->_map_array[dupenc] = j;
+                {
+                  set_enc_to_gid (map, dupenc, j);
+                  //map->_map_array[dupenc] = j;
+                }
             }
         }
     }
@@ -5696,10 +5706,30 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
         {
           if (justinuse == git_normal && map != NULL && map->enccount < 256)
             {
-              map->_map_array = xrealloc (map->_map_array, 256 * sizeof (int));
-              memset (map->_map_array, -1,
-                      (256 - map->enccount) * sizeof (int));
-              map->enccount = map->encmax = 256;
+              //map->_map_array = xrealloc (map->_map_array, 256 * sizeof (int));
+
+              // FIXME FIXME FIXME FIXME: This is what was here:
+              //
+              //memset (map->_map_array, -1,
+              //        (256 - map->enccount) * sizeof (int));
+              //
+              // That looked silly, so I changed it to this:
+              //
+              //memset (map->_map_array + map->enccount, -1,
+              //        (256 - map->enccount) * sizeof (int));
+              //
+              // But I do not know how to test it. — Barry S.,
+              // 23-April-2013.
+              //
+              // What follows is the equivalent for the new data
+              // structure.  It is unlikely this actually needs to be
+              // done, because such entries should have been removed
+              // already. — Barry S., 23-April-2013.
+              for (ssize_t k = map->enccount; k < 256; k++)
+                set_enc_to_gid (map, k, -1);
+
+              map->enccount = 256;
+              //map->encmax = 256;
             }
           for (i = 0; i < len - 6; ++i)
             table[i] = getc (ttf);
@@ -5712,7 +5742,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                 if (table[i] < info->glyph_cnt && info->chars[table[i]] != NULL)
                   {
                     if (map != NULL)
-                      map->_map_array[i] = table[i];
+                      {
+                        set_enc_to_gid (map, i, table[i]);
+                        //map->_map_array[i] = table[i];
+                      }
                     if (dounicode && trans != NULL)
                       info->chars[table[i]]->unicodeenc = trans[i];
                   }
@@ -5802,8 +5835,12 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                                     info->chars[kk]->unicodeenc = uenc;
                                 }
                               if (map != NULL && lenc < map->enccount)
-                                map->_map_array[lenc] =
-                                  (uint16_t) (j + delta[i]);
+                                {
+                                  set_enc_to_gid (map, lenc,
+                                                  (uint16_t) (j + delta[i]));
+                                  //map->_map_array[lenc] =
+                                  //  (uint16_t) (j + delta[i]);
+                                }
                             }
                         }
                     }
@@ -5879,7 +5916,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                                       && info->chars[index]->unicodeenc == -1)
                                     info->chars[index]->unicodeenc = uenc;
                                   if (map != NULL && lenc < map->enccount)
-                                    map->_map_array[lenc] = index;
+                                    {
+                                      set_enc_to_gid (map, lenc, index);
+                                      //map->_map_array[lenc] = index;
+                                    }
                                 }
                             }
                         }
@@ -5923,7 +5963,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                     info->chars[gid]->unicodeenc =
                       trans != NULL ? trans[first + 1] : first + i;
                   if (map != NULL && first + i < map->enccount)
-                    map->_map_array[first + i] = gid;
+                    {
+                      set_enc_to_gid (map, first + i, gid);
+                      //map->_map_array[first + i] = gid;
+                    }
                 }
             }
         }
@@ -5995,7 +6038,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                           if (dounicode && info->chars[index]->unicodeenc == -1)
                             info->chars[index]->unicodeenc = i;
                           if (map != NULL && lenc < map->enccount)
-                            map->_map_array[lenc] = index;
+                            {
+                              set_enc_to_gid (map, lenc, index);
+                              //map->_map_array[lenc] = index;
+                            }
                         }
                     }
                 }
@@ -6024,7 +6070,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                                 info->chars[index]->unicodeenc =
                                   umodenc (enc, mod, info);
                               if (map != NULL && lenc < map->enccount)
-                                map->_map_array[lenc] = index;
+                                {
+                                  set_enc_to_gid (map, lenc, index);
+                                  //map->_map_array[lenc] = index;
+                                }
                             }
                         }
                     }
@@ -6066,7 +6115,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                     if (dounicode && sc->unicodeenc == -1)
                       sc->unicodeenc = uenc;
                     if (map != NULL && sc->unicodeenc < map->enccount)
-                      map->_map_array[uenc] = startglyph + i - start;
+                      {
+                        set_enc_to_gid (map, uenc, startglyph + i - start);
+                        //map->_map_array[uenc] = startglyph + i - start;
+                      }
                   }
             }
         }
@@ -6092,7 +6144,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                 if (dounicode)
                   info->chars[gid]->unicodeenc = first + i;
                 if (map != NULL && first + i < map->enccount)
-                  map->_map_array[first + i] = gid;
+                  {
+                    set_enc_to_gid (map, first + i, gid);
+                    //map->_map_array[first + i] = gid;
+                  }
               }
         }
       else if (format == 12)
@@ -6133,7 +6188,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                         if (dounicode)
                           info->chars[startglyph + i - start]->unicodeenc = i;
                         if (map != NULL && i < map->enccount)
-                          map->_map_array[i] = startglyph + i - start;
+                          {
+                            set_enc_to_gid (map, i, startglyph + i - start);
+                            //map->_map_array[i] = startglyph + i - start;
+                          }
                       }
                   }
             }
@@ -6384,7 +6442,10 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
                 UniFromName (chars->keys[i], info->uni_interp, info->map->enc);
               if (map != NULL && info->chars[gid]->unicodeenc != -1
                   && info->chars[gid]->unicodeenc < map->enccount)
-                map->_map_array[info->chars[gid]->unicodeenc] = gid;
+                {
+                  set_enc_to_gid (map, info->chars[gid]->unicodeenc, gid);
+                  //map->_map_array[info->chars[gid]->unicodeenc] = gid;
+                }
               chars->keys[i] = NULL;
               chars->values[i] = NULL;
             }
@@ -6880,8 +6941,10 @@ SymbolFixup (struct ttfinfo *info)
         continue;
       if (i >= 0xf000 && i <= 0xf0ff)
         {
-          map->_map_array[i - 0xf000] = enc_to_gid (map, i);
-          map->_map_array[i] = -1;
+          set_enc_to_gid (map, i - 0xf000, enc_to_gid (map, i));
+          set_enc_to_gid (map, i, -1);
+          //map->_map_array[i - 0xf000] = enc_to_gid (map, i);
+          //map->_map_array[i] = -1;
           continue;
         }
       if (i > max)
@@ -7086,19 +7149,36 @@ PsuedoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
         base = 17 * 65536;
       else
         base = map->enccount;
-      if (base + extras > map->encmax)
-        {
-          map->_map_array =
-            xrealloc (map->_map_array, (base + extras) * sizeof (int));
-          memset (map->_map_array + map->enccount, -1,
-                  (base + extras - map->enccount) * sizeof (int));
-          map->encmax = base + extras;
-        }
+
+      // FIXME: It is unlikely this actually needs to be done, because
+      // such entries should have been removed already:
+      for (ssize_t k = map->enccount; k < base + extras; k++)
+        set_enc_to_gid (map, k, -1);
+
+//      if (base + extras > map->encmax)
+//        {
+//          map->_map_array =
+//            xrealloc (map->_map_array, (base + extras) * sizeof (int));
+//
+//          // FIXME: It is unlikely this actually needs to be done,
+//          // because such entries should have been removed already:
+//          for (ssize_t k = map->enccount; k < base + extras; k++)
+//            set_enc_to_gid (map, k, -1);
+//
+//          memset (map->_map_array + map->enccount, -1,
+//                  (base + extras - map->enccount) * sizeof (int));
+//          map->encmax = base + extras;
+//        }
+
       map->enccount = base + extras;
       extras = 0;
       for (i = 0; i < info->glyph_cnt; ++i)
         if (info->chars[i] != NULL && !info->chars[i]->ticked)
-          map->_map_array[base + extras++] = i;
+          {
+            set_enc_to_gid (map, base + extras, i);
+            //map->_map_array[base + extras] = i;
+            extras++;
+          }
     }
 }
 

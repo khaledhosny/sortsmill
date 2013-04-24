@@ -3090,7 +3090,8 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
         }
       if (k == -1)
         k = notdefpos;
-      map->_map_array[i] = k;
+      set_enc_to_gid (map, i, k);
+      //map->_map_array[i] = k;
       if (k != -1 && map->backmap[k] == -1)
         map->backmap[k] = i;
     }
@@ -3107,7 +3108,8 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
                   break;
               if (j == 256)
                 {
-                  map->_map_array[i] = k;
+                  set_enc_to_gid (map, i, k);
+                  //map->_map_array[i] = k;
                   if (map->backmap[k] == -1)
                     map->backmap[k] = i;
                   ++i;
@@ -3125,7 +3127,8 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
                   break;
               if (j == 256)
                 {
-                  map->_map_array[i] = k;
+                  set_enc_to_gid (map, i, k);
+                  //map->_map_array[i] = k;
                   if (map->backmap[k] == -1)
                     map->backmap[k] = i;
                   ++i;
@@ -3135,7 +3138,10 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
     }
   for (i = 0; i < map->enccount; ++i)
     if (enc_to_gid (map, i) == -1)
-      map->_map_array[i] = notdefpos;
+      {
+        set_enc_to_gid (map, i, notdefpos);
+        //map->_map_array[i] = notdefpos;
+      }
 
   for (i = 0; i < sf->glyphcnt; ++i)
     {
@@ -7737,10 +7743,12 @@ EncMapNew (int enccount, int backmax, Encoding *enc)
 {
   EncMap *map = (EncMap *) xzalloc (sizeof (EncMap));
 
-  map->enccount = map->encmax = enccount;
+  map->enccount = enccount;
+  //map->encmax = enccount;
   map->backmax = backmax;
-  map->_map_array = xmalloc (enccount * sizeof (int));
-  memset (map->_map_array, -1, enccount * sizeof (int));
+  make_enc_to_gid (map);
+  //map->_map_array = xmalloc (enccount * sizeof (int));
+  //memset (map->_map_array, -1, enccount * sizeof (int));
   map->backmap = xmalloc (backmax * sizeof (int));
   memset (map->backmap, -1, backmax * sizeof (int));
   map->enc = enc;
@@ -7754,11 +7762,18 @@ EncMap1to1 (int enccount)
   /* Used for CID fonts where CID is same as orig_pos */
   int i;
 
-  map->enccount = map->encmax = map->backmax = enccount;
-  map->_map_array = xmalloc (enccount * sizeof (int));
+  map->enccount = enccount;
+  //map->encmax = enccount;
+  map->backmax = enccount;
+  make_enc_to_gid (map);
+  //map->_map_array = xmalloc (enccount * sizeof (int));
   map->backmap = xmalloc (enccount * sizeof (int));
   for (i = 0; i < enccount; ++i)
-    map->_map_array[i] = map->backmap[i] = i;
+    {
+      set_enc_to_gid (map, i, i);
+      //map->_map_array[i] = i;
+      map->backmap[i] = i;
+    }
   map->enc = &custom;
   return (map);
 }
@@ -7789,7 +7804,7 @@ EncMapFree (EncMap *map)
 
   if (map->enc->is_temporary)
     EncodingFree (map->enc);
-  free (map->_map_array);
+  //free (map->_map_array);
   free (map->backmap);
   free (map->remap);
   free (map);
@@ -7802,9 +7817,12 @@ EncMapCopy (EncMap *map)
 
   new = (EncMap *) xzalloc (sizeof (EncMap));
   *new = *map;
-  new->_map_array = xmalloc (new->encmax * sizeof (int));
+  make_enc_to_gid (new);
+  //new->_map_array = xmalloc (new->encmax * sizeof (int));
   new->backmap = xmalloc (new->backmax * sizeof (int));
-  memcpy (new->_map_array, map->_map_array, new->enccount * sizeof (int));
+  for (ssize_t k = 0; k < new->enccount; k++)
+    set_enc_to_gid (new, k, enc_to_gid (map, k));
+  //memcpy (new->_map_array, map->_map_array, new->enccount * sizeof (int));
   memcpy (new->backmap, map->backmap, new->backmax * sizeof (int));
   if (map->remap)
     {

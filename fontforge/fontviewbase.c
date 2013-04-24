@@ -426,7 +426,8 @@ LinkEncToGid (FontViewBase *fv, int enc, int gid)
             SFRemoveGlyph (sf, sf->glyphs[old_gid], &flags);
         }
     }
-  map->_map_array[enc] = gid;
+  set_enc_to_gid (map, enc, gid);
+  //  map->_map_array[enc] = gid;
   if (map->backmap[gid] == -1)
     map->backmap[gid] = enc;
   if (map->enc != &custom)
@@ -1543,16 +1544,23 @@ CIDSetEncMap (FontViewBase *fv, SplineFont *new)
   if (fv->cidmaster != NULL && gcnt != fv->sf->glyphcnt)
     {
       int i;
-      if (fv->map->encmax < gcnt)
+      if (fv->map->backmax < gcnt)
         {
-          fv->map->_map_array =
-            xrealloc (fv->map->_map_array, gcnt * sizeof (int));
           fv->map->backmap = xrealloc (fv->map->backmap, gcnt * sizeof (int));
-          fv->map->backmax = fv->map->encmax = gcnt;
+          fv->map->backmax = gcnt;
         }
+//      if (fv->map->encmax < gcnt)
+//        {
+//          fv->map->_map_array =
+//            xrealloc (fv->map->_map_array, gcnt * sizeof (int));
+//          fv->map->backmap = xrealloc (fv->map->backmap, gcnt * sizeof (int));
+//          fv->map->backmax = gcnt;
+//          fv->map->encmax = gcnt;
+//        }
       for (i = 0; i < gcnt; ++i)
         {
-          fv->map->_map_array[i] = i;
+          set_enc_to_gid (fv->map, i, i);
+          //fv->map->_map_array[i] = i;
           fv->map->backmap[i] = i;
         }
       if (gcnt < fv->map->enccount)
@@ -1881,17 +1889,18 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
       for (fvs = sf->fv; fvs != NULL; fvs = fvs->nextsame)
         {
           EncMap *map = fvs->map;
-          if (map->enccount + cnt >= map->encmax)
-            map->_map_array =
-              xrealloc (map->_map_array,
-                        (map->encmax += cnt + 10) * sizeof (int));
+//          if (map->enccount + cnt >= map->encmax)
+//            map->_map_array =
+//              xrealloc (map->_map_array,
+//                        (map->encmax += cnt + 10) * sizeof (int));
           if (sf->glyphcnt + cnt >= map->backmax)
             map->backmap =
               xrealloc (map->backmap,
                         (map->backmax += cnt + 10) * sizeof (int));
           for (i = map->enccount; i < map->enccount + cnt; ++i)
             {
-              map->_map_array[i] = i;
+              set_enc_to_gid (map, i, i);
+              //map->_map_array[i] = i;
               map->backmap[i] = i;
             }
           fvs->selected = xrealloc (fvs->selected, (map->enccount + cnt));
@@ -1903,11 +1912,17 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
     }
   else
     {
-      if (map->enccount + cnt >= map->encmax)
-        map->_map_array =
-          xrealloc (map->_map_array, (map->encmax += cnt + 10) * sizeof (int));
+//      if (map->enccount + cnt >= map->encmax)
+//        map->_map_array =
+//          xrealloc (map->_map_array, (map->encmax += cnt + 10) * sizeof (int));
       for (i = map->enccount; i < map->enccount + cnt; ++i)
-        map->_map_array[i] = -1;
+        {
+          // FIXME: It is unlikely this actually needs to be done,
+          // because such entries should have been removed already:
+          set_enc_to_gid (map, i, -1);
+
+          //map->_map_array[i] = -1;
+        }
       fv->selected = xrealloc (fv->selected, (map->enccount + cnt));
       memset (fv->selected + map->enccount, 0, cnt);
       map->enccount += cnt;
@@ -1976,7 +1991,8 @@ FVDetachGlyphs (FontViewBase *fv)
     if (fv->selected[i] && (gid = enc_to_gid (map, i)) != -1)
       {
         altered = true;
-        map->_map_array[i] = -1;
+        set_enc_to_gid (map, i, -1);
+        //map->_map_array[i] = -1;
         if (map->backmap[gid] == i)
           {
             for (j = map->enccount - 1; j >= 0 && enc_to_gid (map, j) != gid;
@@ -2005,7 +2021,8 @@ FVDetachAndRemoveGlyphs (FontViewBase *fv)
     if (fv->selected[i] && (gid = enc_to_gid (map, i)) != -1)
       {
         altered = true;
-        map->_map_array[i] = -1;
+        set_enc_to_gid (map, i, -1);
+        //map->_map_array[i] = -1;
         if (map->backmap[gid] == i)
           {
             for (j = map->enccount - 1; j >= 0 && enc_to_gid (map, j) != gid;
@@ -2658,7 +2675,13 @@ FVB_ReattachCVs (SplineFont *old, SplineFont *new)
 static void
 FVB_DeselectAll (FontViewBase *fv)
 {
-  memset (fv->selected, 0, fv->map->encmax);
+  // FIXME: This is what was here originally. It seems incorrect, and,
+  // in any case, we are getting rid of encmax.
+  //
+  //  memset (fv->selected, 0, fv->map->encmax);
+
+  // FIXME: Here is the new code:
+  memset (fv->selected, 0, fv->map->enccount);
 }
 
 static void

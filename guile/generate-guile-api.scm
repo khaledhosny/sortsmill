@@ -50,6 +50,7 @@
                  (export ,@exports)
                  (import (sortsmill alloc alloc-base)
                          (sortsmill pkg-info package)
+                         (sortsmill machine)
                          (rnrs)
                          (system foreign)
                          (ice-9 format))

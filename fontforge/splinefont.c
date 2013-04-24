@@ -213,7 +213,9 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
               /* if necessary, create the real unicode code point */
               /*  and then make us be a duplicate of it */
               sc = _SFMakeChar (sf, map, real_uni);
-              map->_map_array[enc] = gid = sc->orig_pos;
+              gid = sc->orig_pos;
+              set_enc_to_gid (map, enc, gid);
+              //map->_map_array[enc] = gid;
               SCCharChangedUpdate (sc, ly_all);
               return sc;
             }
@@ -228,7 +230,8 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
       if (map->enc->psnames != NULL &&
           (sc = SFGetChar (sf, dummy.unicodeenc, dummy.name)) != NULL)
         {
-          map->_map_array[enc] = sc->orig_pos;
+          set_enc_to_gid (map, enc, sc->orig_pos);
+          //map->_map_array[enc] = sc->orig_pos;
           AltUniAdd (sc, dummy.unicodeenc);
           return sc;
         }

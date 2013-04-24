@@ -1148,29 +1148,67 @@ struct remap
 };
 
 typedef struct encmap
-{                               /* A per-font map of encoding to glyph id */
+{
+  /* A per-font map of encoding to glyph id. */
 
-  /* FIXME: _map_array probably will be replaced with a different data
-     structure. Here it is given a name that is easy to find with
-     grep-like tools. */
-  int32_t *_map_array;          /* Map from encoding to glyphid */
+  SCM _enc_to_gid;      /* Hash table mapping encoding to glyph ID. */
 
-  int32_t *backmap;             /* Map from glyphid to encoding */
-  int enccount;                 /* used size of the map array */
-  /*  strictly speaking this might include */
-  /*  glyphs that are not encoded, but which */
-  /*  are displayed after the proper encoding */
-  int encmax;                   /* allocated size of the map array */
-  int backmax;                  /* allocated size of the backmap array */
+  int enccount;           /* One more than the highest encoding value.
+                             Strictly speaking, this might include
+                             glyphs that are not encoded, but which
+                             are displayed after the proper
+                             encoding */
+
+  /* FIXME: This is destined to be changed to a Guile structure,
+     presumably to be called _gid_to_enc. */
+  int32_t *backmap;         /* Map from glyphid to encoding. */
+  int backmax;              /* Allocated size of the backmap array. */
+
+  /* FIXME: We also need a SplineChar-to-GID mapping, or replace the
+     GIDs with SplineChars themselves. */
+
   struct remap *remap;
   Encoding *enc;
   bool ticked;
 } EncMap;
 
+// FIXME: This really, really does not need to be `static inline'.
+static inline void
+make_enc_to_gid (EncMap *map)
+{
+  map->_enc_to_gid = scm_make_hash_table (scm_from_int (257));
+}
+
+// FIXME: This really, really does not need to be `static inline'.
+static inline void
+clear_enc_to_gid (EncMap *map)
+{
+  // FIXME: Consider making this just an alias for make_enc_to_gid, to
+  // start again with a smaller table rather than clear a table while
+  // retaining its size.
+  scm_hash_clear_x (map->_enc_to_gid);
+}
+
+// FIXME: Should this really be `static inline'?
+static inline void
+set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid)
+{
+  SCM key = scm_from_ssize_t (enc);
+  if (gid == -1)
+    scm_hashv_remove_x (map->_enc_to_gid, key);
+  else
+    scm_hashv_set_x (map->_enc_to_gid, key, scm_from_ssize_t (gid));
+}
+
+// FIXME: Maybe make this not `static'.
 static inline ssize_t
 enc_to_gid (EncMap *map, ssize_t enc)
 {
-  return (0 <= enc && enc < map->enccount) ? map->_map_array[enc] : -1;
+  // FIXME: Precompute negative one.
+  return
+    scm_to_ssize_t (scm_hashv_ref
+                    (map->_enc_to_gid, scm_from_ssize_t (enc),
+                     scm_from_int (-1)));
 }
 
 enum property_type

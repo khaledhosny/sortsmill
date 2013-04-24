@@ -4776,17 +4776,32 @@ SFDSetEncMap (SplineFont *sf, int orig_pos, int enc)
     }
   if (map->backmap[orig_pos] == -1)     /* backmap will not be unique if multiple encodings come from same glyph */
     map->backmap[orig_pos] = enc;
-  if (enc >= map->encmax)
-    {
-      int old = map->encmax;
-      map->encmax = enc + 10;
-      map->_map_array = xrealloc (map->_map_array, map->encmax * sizeof (int));
-      memset (map->_map_array + old, -1, (map->encmax - old) * sizeof (int));
-    }
+//  if (enc >= map->encmax)
+//    {
+//      int old = map->encmax;
+//      map->encmax = enc + 10;
+//      map->_map_array = xrealloc (map->_map_array, map->encmax * sizeof (int));
+//
+//      // FIXME: It is unlikely this actually needs to be done, because
+//      // such entries should have been removed already:
+//      for (ssize_t k = old; k < map->encmax; k++)
+//        set_enc_to_gid (map, k, -1);
+//
+//      memset (map->_map_array + old, -1, (map->encmax - old) * sizeof (int));
+//    }
+
+  // FIXME: It is unlikely this actually needs to be done, because
+  // such entries should have been removed already:
+  for (ssize_t k = map->enccount; k < enc; k++)
+    set_enc_to_gid (map, k, -1);
+
   if (enc >= map->enccount)
     map->enccount = enc + 1;
   if (enc != -1)
-    map->_map_array[enc] = orig_pos;
+    {
+      set_enc_to_gid (map, enc, orig_pos);
+      //map->_map_array[enc] = orig_pos;
+    }
 }
 
 static void
@@ -6228,8 +6243,12 @@ SFDFixupRefs (SplineFont *sf)
                     rnext = refs->next;
                     if (refs->encoded)
                       {         /* Old sfd format */
-                        if (refs->orig_pos < map->encmax
-                            && enc_to_gid (map, refs->orig_pos) != -1)
+//                        if (refs->orig_pos < map->encmax
+//                            && enc_to_gid (map, refs->orig_pos) != -1)
+//                          refs->orig_pos = enc_to_gid (map, refs->orig_pos);
+//                        else
+//                          refs->orig_pos = sf->glyphcnt;
+                        if (enc_to_gid (map, refs->orig_pos) != -1)
                           refs->orig_pos = enc_to_gid (map, refs->orig_pos);
                         else
                           refs->orig_pos = sf->glyphcnt;
@@ -6278,8 +6297,12 @@ SFDFixupRefs (SplineFont *sf)
                     next = kp->next;
                     if (!kp->kcid)
                       {         /* It's encoded (old sfds), else orig */
-                        if (index >= map->encmax
-                            || enc_to_gid (map, index) == -1)
+//                        if (index >= map->encmax
+//                            || enc_to_gid (map, index) == -1)
+//                          index = sf->glyphcnt;
+//                        else
+//                          index = enc_to_gid (map, index);
+                        if (enc_to_gid (map, index) == -1)
                           index = sf->glyphcnt;
                         else
                           index = enc_to_gid (map, index);
@@ -6326,7 +6349,8 @@ SFDFixupRefs (SplineFont *sf)
                 SplineCharFree (sc);
                 sf->glyphs[i] = NULL;
                 sf->map->backmap[orig] = -1;
-                sf->map->_map_array[enc] = base->orig_pos;
+                set_enc_to_gid (map, enc, base->orig_pos);
+                //sf->map->_map_array[enc] = base->orig_pos;
                 AltUniAdd (base, uni);
               }
           }
@@ -6874,7 +6898,7 @@ SFDParseMMSubroutine (FILE *sfd)
 }
 
 static void
-SFDSizeMap (EncMap * map, int glyphcnt, int enccnt)
+SFDSizeMap (EncMap *map, int glyphcnt, int enccnt)
 {
   if (glyphcnt > map->backmax)
     {
@@ -6883,13 +6907,28 @@ SFDSizeMap (EncMap * map, int glyphcnt, int enccnt)
               (glyphcnt - map->backmax) * sizeof (int));
       map->backmax = glyphcnt;
     }
-  if (enccnt > map->encmax)
-    {
-      map->_map_array = xrealloc (map->_map_array, enccnt * sizeof (int));
-      memset (map->_map_array + map->backmax, -1,
-              (enccnt - map->encmax) * sizeof (int));
-      map->encmax = map->enccount = enccnt;
-    }
+
+//  if (enccnt > map->encmax)
+//    {
+//      map->_map_array = xrealloc (map->_map_array, enccnt * sizeof (int));
+//
+//      // FIXME: It is unlikely this actually needs to be done, because
+//      // such entries should have been removed already:
+//      for (ssize_t k = map->encmax; k < enccnt; k++)
+//        set_enc_to_gid (map, k, -1);
+//
+//      memset (map->_map_array + map->encmax, -1,
+//              (enccnt - map->encmax) * sizeof (int));
+//
+//      map->encmax = enccnt;
+//      map->enccount = enccnt;
+//    }
+
+  // Remove any excess entries.
+  for (ssize_t k = enccnt; k < map->enccount; k++)
+    set_enc_to_gid (map, k, -1);
+
+  map->enccount = enccnt;
 }
 
 static SplineFont *SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok,

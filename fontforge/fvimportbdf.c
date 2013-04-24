@@ -166,11 +166,19 @@ ExtendSF (SplineFont *sf, EncMap *map, int enc, int set)
   if (enc >= map->enccount)
     {
       int n = enc;
-      if (enc >= map->encmax)
-        map->_map_array =
-          xrealloc (map->_map_array, (map->encmax = n + 100) * sizeof (int));
-      memset (map->_map_array + map->enccount, -1,
-              (enc - map->enccount + 1) * sizeof (int));
+
+//      if (enc >= map->encmax)
+//        map->_map_array =
+//          xrealloc (map->_map_array, (map->encmax = n + 100) * sizeof (int));
+
+      // FIXME: It is unlikely this actually needs to be done, because
+      // such entries should have been removed already:
+      for (ssize_t k = map->enccount; k < map->enccount + n + 1; k++)
+        set_enc_to_gid (map, k, -1);
+
+      //memset (map->_map_array + map->enccount, -1,
+      //        (enc - map->enccount + 1) * sizeof (int));
+
       map->enccount = n + 1;
       if (sf->fv != NULL)
         {
@@ -913,16 +921,23 @@ SFGrowTo (SplineFont *sf, BDFFont *b, int cc, EncMap *map)
 
   if (cc >= map->enccount)
     {
-      if (cc >= map->encmax)
-        {
-          int new = ((map->enccount + 256) >> 8) << 8;
-          if (new < cc + 1)
-            new = cc + 1;
-          map->_map_array = xrealloc (map->_map_array, new * sizeof (int));
-          map->encmax = new;
-        }
-      memset (map->_map_array + map->enccount, -1,
-              (cc + 1 - map->enccount) * sizeof (int));
+//      if (cc >= map->encmax)
+//        {
+//          int new = ((map->enccount + 256) >> 8) << 8;
+//          if (new < cc + 1)
+//            new = cc + 1;
+//          map->_map_array = xrealloc (map->_map_array, new * sizeof (int));
+//          map->encmax = new;
+//        }
+
+      // FIXME: It is unlikely this actually needs to be done, because
+      // such entries should have been removed already:
+      for (ssize_t k = map->enccount; k < map->enccount + cc + 1; k++)
+        set_enc_to_gid (map, k, -1);
+
+      //      memset (map->_map_array + map->enccount, -1,
+      //              (cc + 1 - map->enccount) * sizeof (int));
+
       map->enccount = cc + 1;
     }
   if ((gid = enc_to_gid (map, cc)) == -1 || sf->glyphs[gid] == NULL)

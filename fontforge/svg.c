@@ -4499,13 +4499,17 @@ SVGParseFont (xmlNodePtr font)
     }
 
   map = (EncMap *) xzalloc (sizeof (EncMap));
-  map->enccount = map->encmax = map->backmax = sf->glyphcnt;
+  map->enccount = sf->glyphcnt;
+  //map->encmax = sf->glyphcnt;
+  map->backmax = sf->glyphcnt;
   map->enc = FindOrMakeEncoding ("Original");
-  map->_map_array = xmalloc (sf->glyphcnt * sizeof (int));
+  make_enc_to_gid (map);
+  //map->_map_array = xmalloc (sf->glyphcnt * sizeof (int));
   map->backmap = xmalloc (sf->glyphcnt * sizeof (int));
   for (i = 0; i < sf->glyphcnt; ++i)
     {
-      map->_map_array[i] = i;
+      set_enc_to_gid (map, i, i);
+      //map->_map_array[i] = i;
       map->backmap[i] = i;
     }
   sf->map = map;
