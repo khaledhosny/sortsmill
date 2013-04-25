@@ -1861,8 +1861,13 @@ SFFlattenByCMap (SplineFont *sf, char *cmapname)
           if (!j)
             {
               map->enccount = max + extras;
+<<<<<<< local
               clear_enc_to_gid (map);
               memset (map->__backmap, -1, sf->glyphcnt * sizeof (int));
+=======
+              make_enc_to_gid (map);
+              memset (map->backmap, -1, sf->glyphcnt * sizeof (int));
+>>>>>>> other
               map->remap = cmap->remap;
               cmap->remap = NULL;
             }

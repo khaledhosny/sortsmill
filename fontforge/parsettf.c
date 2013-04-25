@@ -5704,7 +5704,11 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
             {
               for (ssize_t k = map->enccount; k < 256; k++)
                 {
+<<<<<<< local
                   remove_enc_to_gid (map, k);
+=======
+                  set_enc_to_gid (map, k, -1);
+>>>>>>> other
                 }
 
               map->enccount = 256;
@@ -7120,7 +7124,11 @@ PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
       // such entries should have been removed already:
       for (ssize_t k = map->enccount; k < base + extras; k++)
         {
+<<<<<<< local
           remove_enc_to_gid (map, k);
+=======
+          set_enc_to_gid (map, k, -1);
+>>>>>>> other
         }
 
       map->enccount = base + extras;
