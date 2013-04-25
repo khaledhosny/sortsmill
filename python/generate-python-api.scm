@@ -220,7 +220,7 @@
     [('* . 2) "__set_ptr16"]
     [('* . 4) "__set_ptr32"]
     [('* . 8) "__set_ptr64"]
-    [('SCM . 8) "__set_SCM"]
+    [('SCM . _) "__set_SCM"]
     [('struct . _) (error "NOT YET IMPLEMENTED")]
     [('array . _) (error "NOT YET IMPLEMENTED")] ))
 
