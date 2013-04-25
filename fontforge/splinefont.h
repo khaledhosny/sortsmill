@@ -1151,13 +1151,8 @@ typedef struct encmap
 {
   /* A per-font map of encoding to glyph id. */
 
-<<<<<<< local
   SCM _enc_to_gid; /* Hash table mapping encoding point to glyph ID. */
-=======
-  SCM _enc_to_gid;              /* Hash table mapping encoding to glyph ID. */
->>>>>>> other
 
-<<<<<<< local
   /* FIXME: _gid_to_enc is not used yet, but soon will be. Also, we
      might want to use some other data structure, such as a vector or
      vlist. FIXME: Give this the ability to return multiple code
@@ -1171,26 +1166,12 @@ typedef struct encmap
                              glyphs that are not encoded, but which
                              are displayed after the encoding
                              proper. */
-=======
-  int enccount;                 /* One more than the highest encoding value.
-                                   Strictly speaking, this might include
-                                   glyphs that are not encoded, but which
-                                   are displayed after the encoding
-                                   proper. */
->>>>>>> other
 
-<<<<<<< local
   /* FIXME: This is destined to be replaced by _gid_to_enc. */
   //int32_t *backmap;         /* Map from glyphid to encoding. */
   //int backmax;              /* Allocated size of the backmap array. */
   int32_t *__backmap;       /* Map from glyphid to encoding. */
   int __backmax;            /* Allocated size of the backmap array. */
-=======
-  /* FIXME: This is destined to be changed to a Guile structure,
-     presumably to be called _gid_to_enc. */
-  int32_t *backmap;             /* Map from glyphid to encoding. */
-  int backmax;                  /* Allocated size of the backmap array. */
->>>>>>> other
 
   /* FIXME: We also need a SplineChar-to-GID mapping, or replace the
      GIDs with SplineChars themselves. */
