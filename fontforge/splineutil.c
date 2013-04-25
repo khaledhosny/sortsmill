@@ -7794,6 +7794,7 @@ EncMapFree (EncMap *map)
 
   if (map->enc->is_temporary)
     EncodingFree (map->enc);
+  release_enc_to_gid (map);
   free (map->backmap);
   free (map->remap);
   free (map);

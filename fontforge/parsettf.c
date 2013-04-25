@@ -5703,7 +5703,9 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
           if (justinuse == git_normal && map != NULL && map->enccount < 256)
             {
               for (ssize_t k = map->enccount; k < 256; k++)
-                set_enc_to_gid (map, k, -1);
+                {
+                  set_enc_to_gid (map, k, -1);
+                }
 
               map->enccount = 256;
             }
@@ -7087,23 +7089,24 @@ UseGivenEncoding (SplineFont *sf, struct ttfinfo *info)
 }
 
 static void
-PsuedoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
+PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
 {
-  int extras, base;
-  int i;
-
-  for (i = 0; i < info->glyph_cnt; ++i)
+  for (int i = 0; i < info->glyph_cnt; ++i)
     if (info->chars[i] != NULL)
       info->chars[i]->ticked = false;
-  for (i = 0; i < map->enccount; ++i)
+
+  for (int i = 0; i < map->enccount; ++i)
     if (enc_to_gid (map, i) != -1)
       info->chars[enc_to_gid (map, i)]->ticked = true;
-  extras = 0;
-  for (i = 0; i < info->glyph_cnt; ++i)
+
+  int extras = 0;
+  for (int i = 0; i < info->glyph_cnt; ++i)
     if (info->chars[i] != NULL && !info->chars[i]->ticked)
       ++extras;
+
   if (extras != 0)
     {
+      int base;
       if (map->enccount <= 256)
         base = 256;
       else if (map->enccount <= 65536)
@@ -7116,11 +7119,14 @@ PsuedoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
       for (ssize_t k = map->enccount; k < base + extras; k++)
-        set_enc_to_gid (map, k, -1);
+        {
+          set_enc_to_gid (map, k, -1);
+        }
 
       map->enccount = base + extras;
+
       extras = 0;
-      for (i = 0; i < info->glyph_cnt; ++i)
+      for (int i = 0; i < info->glyph_cnt; ++i)
         if (info->chars[i] != NULL && !info->chars[i]->ticked)
           {
             set_enc_to_gid (map, base + extras, i);
@@ -7397,7 +7403,7 @@ SFFillFromTTF (struct ttfinfo *info)
   if (info->map == NULL && info->subfonts == NULL)      /* Can happen when reading a ttf from a pdf */
     info->map = EncMapFromEncoding (sf, FindOrMakeEncoding ("original"));
   if (info->subfontcnt == 0)
-    PsuedoEncodeUnencoded (info->map, info);
+    PseudoEncodeUnencoded (info->map, info);
   MapDoBack (info->map, info);
   sf->map = info->map;
   sf->cidregistry = info->cidregistry;

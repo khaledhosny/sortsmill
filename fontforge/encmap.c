@@ -19,6 +19,7 @@
 
 // Generate instances of these inline functions.
 VISIBLE void make_enc_to_gid (EncMap *map);
+VISIBLE void release_enc_to_gid (EncMap *map);
 VISIBLE void clear_enc_to_gid (EncMap *map);
 VISIBLE void set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid);
 VISIBLE ssize_t enc_to_gid (EncMap *map, ssize_t enc);

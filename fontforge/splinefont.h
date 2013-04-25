@@ -1151,18 +1151,18 @@ typedef struct encmap
 {
   /* A per-font map of encoding to glyph id. */
 
-  SCM _enc_to_gid;      /* Hash table mapping encoding to glyph ID. */
+  SCM _enc_to_gid;              /* Hash table mapping encoding to glyph ID. */
 
-  int enccount;           /* One more than the highest encoding value.
-                             Strictly speaking, this might include
-                             glyphs that are not encoded, but which
-                             are displayed after the encoding
-                             proper. */
+  int enccount;                 /* One more than the highest encoding value.
+                                   Strictly speaking, this might include
+                                   glyphs that are not encoded, but which
+                                   are displayed after the encoding
+                                   proper. */
 
   /* FIXME: This is destined to be changed to a Guile structure,
      presumably to be called _gid_to_enc. */
-  int32_t *backmap;         /* Map from glyphid to encoding. */
-  int backmax;              /* Allocated size of the backmap array. */
+  int32_t *backmap;             /* Map from glyphid to encoding. */
+  int backmax;                  /* Allocated size of the backmap array. */
 
   /* FIXME: We also need a SplineChar-to-GID mapping, or replace the
      GIDs with SplineChars themselves. */
@@ -1173,6 +1173,7 @@ typedef struct encmap
 } EncMap;
 
 inline void make_enc_to_gid (EncMap *map);
+inline void release_enc_to_gid (EncMap *map);
 inline void clear_enc_to_gid (EncMap *map);
 inline void set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid);
 inline ssize_t enc_to_gid (EncMap *map, ssize_t enc);
@@ -1180,15 +1181,19 @@ inline ssize_t enc_to_gid (EncMap *map, ssize_t enc);
 inline void
 make_enc_to_gid (EncMap *map)
 {
-  map->_enc_to_gid = scm_make_hash_table (scm_from_int (257));
+  map->_enc_to_gid =
+    scm_gc_protect_object (scm_make_hash_table (scm_from_int (257)));
+}
+
+inline void
+release_enc_to_gid (EncMap *map)
+{
+  scm_gc_unprotect_object (map->_enc_to_gid);
 }
 
 inline void
 clear_enc_to_gid (EncMap *map)
 {
-  // FIXME: Consider making this just an alias for make_enc_to_gid, to
-  // start again with a smaller table, rather than clear a table while
-  // retaining its size.
   scm_hash_clear_x (map->_enc_to_gid);
 }
 
