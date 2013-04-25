@@ -316,7 +316,7 @@ NameToEncoding (SplineFont *sf, EncMap *map, const char *name)
       if (*end != '\0')
         orig = -1;
       if (orig != -1)
-        enc = map->backmap[orig];
+        enc = gid_to_enc (map, orig);
     }
   else if (isdigit (*name))
     {

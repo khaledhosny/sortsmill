@@ -3528,7 +3528,7 @@ CVCurEnc (CharView *cv)
   if (cv->map_of_enc == ((FontView *) (cv->b.fv))->b.map && cv->enc != -1)
     return (cv->enc);
 
-  return (((FontView *) (cv->b.fv))->b.map->backmap[cv->b.sc->orig_pos]);
+  return gid_to_enc (((FontView *) (cv->b.fv))->b.map, cv->b.sc->orig_pos);
 }
 
 static char *
@@ -3821,7 +3821,8 @@ CVChangeToFormer (GGadget *g, GEvent *e)
       if (gid < 0)
         return (true);
       CVChangeSC (cv, sf->glyphs[gid]);
-      cv->enc = ((FontView *) (cv->b.fv))->b.map->backmap[cv->b.sc->orig_pos];
+      cv->enc = gid_to_enc (((FontView *) (cv->b.fv))->b.map,
+                            cv->b.sc->orig_pos);
     }
   return (true);
 }
@@ -7722,7 +7723,7 @@ _CVMenuChangeChar (CharView *cv, int mid)
           break;
       if (gid < 0)
         return;
-      pos = map->backmap[gid];
+      pos = gid_to_enc (map, gid);
     }
   /* Werner doesn't think it should wrap */
   if (pos < 0)                  /* pos = map->enccount-1; */

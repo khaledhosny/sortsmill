@@ -2422,7 +2422,7 @@ MVMenuOpenBitmap (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
       break;
   map = mv->fv->b.map;
   if (i != mv->glyphcnt)
-    BitmapViewCreatePick (map->backmap[mv->glyphs[i].sc->orig_pos], mv->fv);
+    BitmapViewCreatePick (gid_to_enc (map, mv->glyphs[i].sc->orig_pos), mv->fv);
 }
 
 VISIBLE void
@@ -3294,15 +3294,15 @@ MVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       sc = mv->chars[i];
       if (mi->mid == MID_Next)
         {
-          pos = map->backmap[sc->orig_pos] + 1;
+          pos = gid_to_enc (map, sc->orig_pos) + 1;
         }
       else if (mi->mid == MID_Prev)
         {
-          pos = map->backmap[sc->orig_pos] - 1;
+          pos = gid_to_enc (map, sc->orig_pos) - 1;
         }
       else if (mi->mid == MID_NextDef)
         {
-          for (pos = map->backmap[sc->orig_pos] + 1;
+          for (pos = gid_to_enc (map, sc->orig_pos) + 1;
                pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
                                        || sf->glyphs[gid] == NULL); ++pos);
           if (pos >= map->enccount)
@@ -3310,7 +3310,7 @@ MVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         }
       else if (mi->mid == MID_PrevDef)
         {
-          for (pos = map->backmap[sc->orig_pos] - 1;
+          for (pos = gid_to_enc (map, sc->orig_pos) - 1;
                pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
                                        || sf->glyphs[gid] == NULL); --pos);
           if (pos < 0)
@@ -3344,7 +3344,7 @@ MVMenuFindInFontView (GWindow gw, struct gmenuitem *UNUSED (mi),
       if (mv->perchar[i].selected)
         {
           FVChangeChar (mv->fv,
-                        mv->fv->b.map->backmap[mv->glyphs[i].sc->orig_pos]);
+                        gid_to_enc (mv->fv->b.map, mv->glyphs[i].sc->orig_pos));
           GDrawSetVisible (mv->fv->gw, true);
           GDrawRaise (mv->fv->gw);
           break;
@@ -6247,7 +6247,8 @@ _MVSubVMouse (MetricsView *mv, GEvent *event)
         sc = mv->glyphs[within].sc;
       if (sc != NULL)
         SCPreparePopup (mv->gw, sc, mv->fv->b.map->remap,
-                        mv->fv->b.map->backmap[sc->orig_pos], sc->unicodeenc);
+                        gid_to_enc (mv->fv->b.map, sc->orig_pos),
+                        sc->unicodeenc);
 /* Don't allow any editing when displaying a bitmap font */
     }
   else if (event->type == et_mousedown && mv->bdf == NULL)
@@ -6639,7 +6640,8 @@ MVSubMouse (MetricsView *mv, GEvent *event)
         sc = mv->glyphs[within].sc;
       if (sc != NULL)
         SCPreparePopup (mv->gw, sc, mv->fv->b.map->remap,
-                        mv->fv->b.map->backmap[sc->orig_pos], sc->unicodeenc);
+                        gid_to_enc (mv->fv->b.map, sc->orig_pos),
+                        sc->unicodeenc);
 /* Don't allow any editing when displaying a bitmap font */
     }
   else if (event->type == et_mousedown && mv->bdf == NULL)
@@ -6852,7 +6854,8 @@ MVMouse (MetricsView *mv, GEvent *event)
             }
           if (i < mv->glyphcnt)
             SCPreparePopup (mv->gw, mv->glyphs[i].sc, mv->fv->b.map->remap,
-                            mv->fv->b.map->backmap[mv->glyphs[i].sc->orig_pos],
+                            gid_to_enc (mv->fv->b.map,
+                                        mv->glyphs[i].sc->orig_pos),
                             mv->glyphs[i].sc->unicodeenc);
         }
       if (mv->cursor != ct_pointer)

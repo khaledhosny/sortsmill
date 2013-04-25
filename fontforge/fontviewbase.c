@@ -58,7 +58,7 @@ SCUnselectedDependents (FontViewBase *fv, SplineChar *sc)
 
   for (dep = sc->dependents; dep != NULL; dep = dep->next)
     {
-      if (!fv->selected[fv->map->backmap[dep->sc->orig_pos]])
+      if (!fv->selected[gid_to_enc (fv->map, dep->sc->orig_pos)])
         return true;
       if (SCUnselectedDependents (fv, dep->sc))
         return true;
@@ -76,7 +76,7 @@ BCUnselectedDependents (FontViewBase *fv, BDFChar *bc)
 
   for (dep = bc->dependents; dep != NULL; dep = dep->next)
     {
-      if (!fv->selected[fv->map->backmap[dep->bc->orig_pos]])
+      if (!fv->selected[gid_to_enc (fv->map, dep->bc->orig_pos)])
         return true;
       if (BCUnselectedDependents (fv, dep->bc))
         return true;
@@ -116,12 +116,14 @@ FVClear (FontViewBase *fv)
   BDFFont *bdf;
   int refstate = 0;
   char *buts[6];
-  int yes, unsel, gid;
+  int yes, unsel;
   /* refstate==0 => ask, refstate==1 => clearall, refstate==-1 => skip all */
 
   for (i = 0; i < fv->map->enccount; ++i)
-    if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1)
+    if (fv->selected[i] && enc_to_gid_is_set (fv->map, i))
       {
+        ssize_t gid = enc_to_gid (fv->map, i);
+
         /* If we are messing with the outline character, check for dependencies */
         if (refstate <= 0 && (unsel = UnselectedDependents (fv, gid)))
           {
@@ -427,8 +429,7 @@ LinkEncToGid (FontViewBase *fv, int enc, int gid)
         }
     }
   set_enc_to_gid (map, enc, gid);
-  if (map->backmap[gid] == -1)
-    map->backmap[gid] = enc;
+  add_gid_to_enc (map, gid, enc);
   if (map->enc != &custom)
     {
       int uni = UniFromEnc (enc, map->enc);
@@ -795,7 +796,7 @@ SCTransLayer (FontViewBase *fv, SplineChar *sc, int flags, int i,
   SplinePointListTransform (sc->layers[i].splines, transform, tpt_AllPoints);
   for (refs = sc->layers[i].refs; refs != NULL; refs = refs->next)
     {
-      if ((sel != NULL && sel[fv->map->backmap[refs->sc->orig_pos]]) ||
+      if ((sel != NULL && sel[gid_to_enc (fv->map, refs->sc->orig_pos)]) ||
           (flags & fvt_partialreftrans))
         {
           /* if the character referred to is selected then it's going to */
@@ -1187,21 +1188,23 @@ FVAddExtrema (FontViewBase *fv, int force_adding)
 void
 FVCanonicalStart (FontViewBase *fv)
 {
-  int i, gid;
-
-  for (i = 0; i < fv->map->enccount; ++i)
-    if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1)
-      SPLsStartToLeftmost (fv->sf->glyphs[gid], fv->active_layer);
+  for (ssize_t i = 0; i < fv->map->enccount; ++i)
+    if (fv->selected[i] && enc_to_gid_is_set (fv->map, i))
+      {
+        ssize_t gid = enc_to_gid (fv->map, i);
+        SPLsStartToLeftmost (fv->sf->glyphs[gid], fv->active_layer);
+      }
 }
 
 void
 FVCanonicalContours (FontViewBase *fv)
 {
-  int i, gid;
-
-  for (i = 0; i < fv->map->enccount; ++i)
-    if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1)
-      CanonicalContours (fv->sf->glyphs[gid], fv->active_layer);
+  for (ssize_t i = 0; i < fv->map->enccount; ++i)
+    if (fv->selected[i] && enc_to_gid_is_set (fv->map, i))
+      {
+        ssize_t gid = enc_to_gid (fv->map, i);
+        CanonicalContours (fv->sf->glyphs[gid], fv->active_layer);
+      }
 }
 
 void
@@ -1543,15 +1546,15 @@ CIDSetEncMap (FontViewBase *fv, SplineFont *new)
   if (fv->cidmaster != NULL && gcnt != fv->sf->glyphcnt)
     {
       int i;
-      if (fv->map->backmax < gcnt)
+      if (fv->map->__backmax < gcnt)
         {
-          fv->map->backmap = xrealloc (fv->map->backmap, gcnt * sizeof (int));
-          fv->map->backmax = gcnt;
+          fv->map->__backmap = xrealloc (fv->map->__backmap, gcnt * sizeof (int));
+          fv->map->__backmax = gcnt;
         }
       for (i = 0; i < gcnt; ++i)
         {
           set_enc_to_gid (fv->map, i, i);
-          fv->map->backmap[i] = i;
+          set_gid_to_enc (fv->map, i, i);
         }
       if (gcnt < fv->map->enccount)
         memset (fv->selected + gcnt, 0, fv->map->enccount - gcnt);
@@ -1879,14 +1882,14 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
       for (fvs = sf->fv; fvs != NULL; fvs = fvs->nextsame)
         {
           EncMap *map = fvs->map;
-          if (sf->glyphcnt + cnt >= map->backmax)
-            map->backmap =
-              xrealloc (map->backmap,
-                        (map->backmax += cnt + 10) * sizeof (int));
+          if (sf->glyphcnt + cnt >= map->__backmax)
+            map->__backmap =
+              xrealloc (map->__backmap,
+                        (map->__backmax += cnt + 10) * sizeof (int));
           for (i = map->enccount; i < map->enccount + cnt; ++i)
             {
               set_enc_to_gid (map, i, i);
-              map->backmap[i] = i;
+              set_gid_to_enc (map, i, i);
             }
           fvs->selected = xrealloc (fvs->selected, (map->enccount + cnt));
           memset (fvs->selected + map->enccount, 0, cnt);
@@ -1901,7 +1904,7 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
         {
           // FIXME: It is unlikely this actually needs to be done,
           // because such entries should have been removed already:
-          set_enc_to_gid (map, i, -1);
+          remove_enc_to_gid (map, i);
         }
       fv->selected = xrealloc (fv->selected, (map->enccount + cnt));
       memset (fv->selected + map->enccount, 0, cnt);
@@ -1962,22 +1965,18 @@ FVCompact (FontViewBase *fv)
 void
 FVDetachGlyphs (FontViewBase *fv)
 {
-  int i, j, gid;
+  int i;
   EncMap *map = fv->map;
   int altered = false;
   SplineFont *sf = fv->sf;
 
   for (i = 0; i < map->enccount; ++i)
-    if (fv->selected[i] && (gid = enc_to_gid (map, i)) != -1)
+    if (fv->selected[i] && enc_to_gid_is_set (map, i))
       {
+        ssize_t gid = enc_to_gid (map, i);
         altered = true;
-        set_enc_to_gid (map, i, -1);
-        if (map->backmap[gid] == i)
-          {
-            for (j = map->enccount - 1; j >= 0 && enc_to_gid (map, j) != gid;
-                 --j);
-            map->backmap[gid] = j;
-          }
+        remove_enc_to_gid (map, i);
+        remove_gid_to_enc (map, gid, i);
         if (sf->glyphs[gid] != NULL && sf->glyphs[gid]->altuni != NULL
             && map->enc != &custom)
           AltUniRemove (sf->glyphs[gid], UniFromEnc (i, map->enc));
@@ -1989,7 +1988,7 @@ FVDetachGlyphs (FontViewBase *fv)
 void
 FVDetachAndRemoveGlyphs (FontViewBase *fv)
 {
-  int i, j, gid;
+  int i;
   EncMap *map = fv->map;
   SplineFont *sf = fv->sf;
   int flags = -1;
@@ -1997,24 +1996,20 @@ FVDetachAndRemoveGlyphs (FontViewBase *fv)
   FontViewBase *fvs;
 
   for (i = 0; i < map->enccount; ++i)
-    if (fv->selected[i] && (gid = enc_to_gid (map, i)) != -1)
+    if (fv->selected[i] && enc_to_gid_is_set (map, i))
       {
+        ssize_t gid = enc_to_gid (map, i);
         altered = true;
-        set_enc_to_gid (map, i, -1);
-        if (map->backmap[gid] == i)
+        remove_enc_to_gid (map, i);
+        remove_gid_to_enc (map, gid, i);
+        if (!gid_to_enc_is_set (map, gid))
           {
-            for (j = map->enccount - 1; j >= 0 && enc_to_gid (map, j) != gid;
-                 --j);
-            map->backmap[gid] = j;
-            if (j == -1)
-              {
-                SFRemoveGlyph (sf, sf->glyphs[gid], &flags);
-                changed = true;
-              }
-            else if (sf->glyphs[gid] != NULL && sf->glyphs[gid]->altuni != NULL
-                     && map->enc != &custom)
-              AltUniRemove (sf->glyphs[gid], UniFromEnc (i, map->enc));
+            SFRemoveGlyph (sf, sf->glyphs[gid], &flags);
+            changed = true;
           }
+        else if (sf->glyphs[gid] != NULL && sf->glyphs[gid]->altuni != NULL
+                 && map->enc != &custom)
+          AltUniRemove (sf->glyphs[gid], UniFromEnc (i, map->enc));
       }
   if (changed && !fv->sf->changed)
     {

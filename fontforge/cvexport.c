@@ -715,7 +715,8 @@ MakeExportName (char *buffer, int blen, char *format_spec,
 {
   char *end = buffer + blen - 3;
   char *pt, *bend;
-  char unicode[8];
+  const size_t unicode_size = 20;
+  char unicode[unicode_size];
   int ch;
 
   while (*format_spec && buffer < end)
@@ -760,7 +761,8 @@ MakeExportName (char *buffer, int blen, char *format_spec,
             }
           else if (ch == 'e')
             {
-              sprintf (unicode, "%d", (int) map->backmap[sc->orig_pos]);
+              snprintf (unicode, unicode_size, "%zd",
+                        (ssize_t) gid_to_enc (map, sc->orig_pos));
               for (pt = unicode; *pt != '\0' && buffer < bend;)
                 *buffer++ = *pt++;
             }

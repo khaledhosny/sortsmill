@@ -4500,14 +4500,14 @@ SVGParseFont (xmlNodePtr font)
 
   map = (EncMap *) xzalloc (sizeof (EncMap));
   map->enccount = sf->glyphcnt;
-  map->backmax = sf->glyphcnt;
+  map->__backmax = sf->glyphcnt;
   map->enc = FindOrMakeEncoding ("Original");
   make_enc_to_gid (map);
-  map->backmap = xmalloc (sf->glyphcnt * sizeof (int));
+  map->__backmap = xmalloc (sf->glyphcnt * sizeof (int));
   for (i = 0; i < sf->glyphcnt; ++i)
     {
       set_enc_to_gid (map, i, i);
-      map->backmap[i] = i;
+      set_gid_to_enc (map, i, i);
     }
   sf->map = map;
 

@@ -6189,7 +6189,7 @@ VWReuseCV (struct val_data *vw, SplineChar *sc)
   if (cv == NULL)
     cv =
       CharViewCreate (sc, (FontView *) (vw->sf->fv),
-                      vw->sf->fv->map->backmap[sc->orig_pos]);
+                      gid_to_enc (vw->sf->fv->map, sc->orig_pos));
   else
     {
       CVChangeSC (cv, sc);

@@ -1599,7 +1599,7 @@ DoGenerate (struct gfc_data *d, uint32_t *path)
           (_("Notdef name"), (const char **) buts, 0, 1,
            _
            ("The glyph at encoding %d is named \".notdef\" but contains an outline. Because it is called \".notdef\" it will not be included in the generated font. You may give it a new name using Element->Glyph Info. Do you wish to continue font generation (and omit this character)?"),
-           d->map->backmap[i]) == 1)
+           gid_to_enc (d->map, i)) == 1)
         return;
     }
 

@@ -542,9 +542,8 @@ BDFFloatConvert (BDFFloat * sel, int todepth, int fromdepth)
         {
           for (j = 0; j <= sel->xmax - sel->xmin; ++j)
             {
-              if (sel->
-                  bitmap[i * sel->bytes_per_line +
-                         (j >> 3)] & (0x80 >> (j & 7)))
+              if (sel->bitmap[i * sel->bytes_per_line +
+                              (j >> 3)] & (0x80 >> (j & 7)))
                 new->bitmap[i * new->bytes_per_line + j] = tdiv;
             }
         }
@@ -877,8 +876,8 @@ BDFCharFindBounds (BDFChar *bc, IBounds * bb)
         {
           for (c = 0; c <= bc->xmax - bc->xmin; ++c)
             {
-              if (bc->
-                  bitmap[r * bc->bytes_per_line + (c >> 3)] & (0x80 >> (c & 7)))
+              if (bc->bitmap[r * bc->bytes_per_line + (c >> 3)] &
+                  (0x80 >> (c & 7)))
                 {
                   if (first)
                     {
@@ -1069,7 +1068,7 @@ BCUnlinkThisReference (struct fontviewbase *fv, BDFChar *bc)
   for (dep = bc->dependents; dep != NULL; dep = dnext)
     {
       dnext = dep->next;
-      if (fv == NULL || !fv->selected[fv->map->backmap[dep->bc->orig_pos]])
+      if (fv == NULL || !fv->selected[gid_to_enc (fv->map, dep->bc->orig_pos)])
         {
           bsc = dep->bc;
           /* May be more than one reference to us, colon has two refs to period */
@@ -1156,9 +1155,8 @@ BCScale (BDFChar *old, int from, int to)
               yscale = 1 - (oyend - (y + 1) * from / dto);
             for (ox = oxs; ox < oxend && ox <= old->xmax - old->xmin; ++ox)
               {
-                if (old->
-                    bitmap[oy * old->bytes_per_line +
-                           (ox >> 3)] & (1 << (7 - (ox & 7))))
+                if (old->bitmap[oy * old->bytes_per_line +
+                                (ox >> 3)] & (1 << (7 - (ox & 7))))
                   {
                     xscale = 1;
                     if (ox == oxs && ox == oxend - 1)

@@ -2683,7 +2683,7 @@ PfmSplineFont (FILE *pfm, SplineFont *sf, int type0, EncMap *map, int layer)
     {
       memset (winmap, -1, sizeof (winmap));
       for (i = 0; i < sf->glyphcnt; ++i)
-        if ((ii = map->backmap[i]) != -1 && ii < 256)
+        if ((ii = gid_to_enc (map, i)) != -1 && ii < 256)
           winmap[ii] = i;
     }
 
@@ -3100,7 +3100,7 @@ TfmAddKern (KernPair *kp, struct ligkern *last, double *kerns,
   struct ligkern *new = xcalloc (1, sizeof (struct ligkern));
   int i;
 
-  new->other_char = map->backmap[kp->sc->orig_pos];
+  new->other_char = gid_to_enc (map, kp->sc->orig_pos);
   for (i = *_kcnt - 1; i >= 0; --i)
     if (kerns[i] == kp->off)
       break;
@@ -3131,14 +3131,15 @@ TfmAddLiga (LigList * l, struct ligkern *last, EncMap *map,
 
   if (!l->lig->subtable->lookup->store_in_afm)
     return (last);
-  if (map->backmap[l->lig->u.lig.lig->orig_pos] >= maxc)
+  if (gid_to_enc (map, l->lig->u.lig.lig->orig_pos) >= maxc)
     return (last);
-  if (l->components == NULL || map->backmap[l->components->sc->orig_pos] >= maxc
+  if (l->components == NULL
+      || gid_to_enc (map, l->components->sc->orig_pos) >= maxc
       || l->components->next != NULL)
     return (last);
   new = xcalloc (1, sizeof (struct ligkern));
-  new->other_char = map->backmap[l->components->sc->orig_pos];
-  new->remainder = map->backmap[l->lig->u.lig.lig->orig_pos];
+  new->other_char = gid_to_enc (map, l->components->sc->orig_pos);
+  new->remainder = gid_to_enc (map, l->lig->u.lig.lig->orig_pos);
   new->next = last;
   new->op = 0 * 4 + 0 * 2 + 0;
   /* delete next char, delete current char, start over and check the resultant ligature for more ligs */
@@ -3178,10 +3179,10 @@ FindCharlists (SplineFont *sf, int *charlistindex, EncMap *map, int maxc)
                 *end = ch;
                 while (*end == ' ')
                   ++end;
-                if (sc != NULL && map->backmap[sc->orig_pos] < maxc)
+                if (sc != NULL && gid_to_enc (map, sc->orig_pos) < maxc)
                   {
-                    charlistindex[last] = map->backmap[sc->orig_pos];
-                    last = map->backmap[sc->orig_pos];
+                    charlistindex[last] = gid_to_enc (map, sc->orig_pos);
+                    last = gid_to_enc (map, sc->orig_pos);
                   }
               }
           }
@@ -3253,11 +3254,14 @@ FindExtensions (SplineFont *sf, struct extension *extensions, int *extenindex,
                   sc = SFGetChar (sf, -1, foundnames[j]);
                   if (sc == NULL)
                     k = 4;
-                  else if (map->backmap[sc->orig_pos] < maxc &&
-                           map->backmap[sc->orig_pos] != -1)
-                    founds[j] = map->backmap[sc->orig_pos];
                   else
-                    k = 4;
+                    {
+                      ssize_t enc = gid_to_enc (map, sc->orig_pos);
+                      if (enc < maxc && enc != -1)
+                        founds[j] = enc;
+                      else
+                        k = 4;
+                    }
                 }
             if (k != 4)
               {
@@ -3760,7 +3764,7 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
           SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
           for (kp = sc->kerns; kp != NULL; kp = kp->next)
             if (kp->sc->orig_pos < sf->glyphcnt &&      /* Can happen when saving multiple pfbs */
-                map->backmap[kp->sc->orig_pos] < maxc)
+                gid_to_enc (map, kp->sc->orig_pos) < maxc)
               ++kcnt;
         }
     }
@@ -3777,7 +3781,7 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
           SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
           for (kp = sc->kerns; kp != NULL; kp = kp->next)
             if (kp->sc->orig_pos < sf->glyphcnt &&      /* Can happen when saving multiple pfbs */
-                map->backmap[kp->sc->orig_pos] < maxc)
+                gid_to_enc (map, kp->sc->orig_pos) < maxc)
               ligkerns[i] =
                 TfmAddKern (kp, ligkerns[i], kerns, &kcnt, map, maxc);
           for (l = sc->ligofme; l != NULL; l = l->next)

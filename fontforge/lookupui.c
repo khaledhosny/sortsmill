@@ -4545,7 +4545,6 @@ PSTKD_DoPopulate (PSTKernDlg * pstkd, char *suffix, enum pop_type pt)
   int pos;
   int gid, k;
   SplineChar *sc, *alt;
-  int enc;
   SplineFont *sf = pstkd->sf;
   FontView *fv = (FontView *) sf->fv;
   EncMap *map = fv->b.map;
@@ -4570,8 +4569,8 @@ PSTKD_DoPopulate (PSTKernDlg * pstkd, char *suffix, enum pop_type pt)
                   (SCScriptFromUnicode (sc), features))
               && (pt != pt_selected
                   || (gid < fv->b.sf->glyphcnt
-                      && (enc = map->backmap[gid]) != -1
-                      && fv->b.selected[enc]))
+                      && gid_to_enc_is_set (map, gid)
+                      && fv->b.selected[gid_to_enc (map, gid)]))
               && (pos = SCNameUnused (sc->name, old, old_rows, cols)) != -1
               && (pstkd->sub->lookup->lookup_type != gsub_ligature
                   || SCIsLigature (sc)))

@@ -874,7 +874,7 @@ SFFindSlot (SplineFont *sf, EncMap *map, int unienc, const char *name)
     {
       SplineChar *sc = SFHashName (sf, name);
       if (sc != NULL)
-        index = map->backmap[sc->orig_pos];
+        index = gid_to_enc (map, sc->orig_pos);
       if (index == -1)
         {
           unienc = UniFromName (name, sf->uni_interp, map->enc);
@@ -1183,23 +1183,23 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
                 if (index == -1)
                   index = base + extras++;
                 set_enc_to_gid (map, index, mapping[i]);
-                map->backmap[mapping[i]] = index;
+                set_gid_to_enc (map, mapping[i], index);
               }
           }
       if (!doit)
         {
-          if (into->glyphcnt + cnt > map->backmax)
+          if (into->glyphcnt + cnt > map->__backmax)
             {
-              map->backmap =
-                xrealloc (map->backmap, (into->glyphcnt + cnt) * sizeof (int));
-              map->backmax = into->glyphcnt + cnt;
+              map->__backmap =
+                xrealloc (map->__backmap, (into->glyphcnt + cnt) * sizeof (int));
+              map->__backmax = into->glyphcnt + cnt;
             }
-          memset (map->backmap + into->glyphcnt, -1, cnt * sizeof (int));
+          memset (map->__backmap + into->glyphcnt, -1, cnt * sizeof (int));
 
           // FIXME: It is unlikely this actually needs to be done,
           // because such entries should have been removed already:
           for (ssize_t k = map->enccount; k < map->enccount + extras; k++)
-            set_enc_to_gid (map, k, -1);
+            remove_enc_to_gid (map, k);
 
           map->enccount += extras;
         }

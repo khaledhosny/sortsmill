@@ -1941,7 +1941,7 @@ fv_all_selected (FontViewBase *fvb)
       if (SCWorthOutputting (fvb->sf->glyphs[i]))
         {
           something_is_worth_outputting = true;
-          if (!fvb->selected[fvb->map->backmap[i]])
+          if (!fvb->selected[gid_to_enc (fvb->map, i)])
             one_is_not_selected = true;
         }
       i++;
@@ -3630,13 +3630,13 @@ FVScrollToChar (FontView *fv, int i)
 static void
 FVScrollToGID (FontView *fv, int gid)
 {
-  FVScrollToChar (fv, fv->b.map->backmap[gid]);
+  FVScrollToChar (fv, gid_to_enc (fv->b.map, gid));
 }
 
 static void
 FV_ChangeGID (FontView *fv, int gid)
 {
-  FVChangeChar (fv, fv->b.map->backmap[gid]);
+  FVChangeChar (fv, gid_to_enc (fv->b.map, gid));
 }
 
 static void
@@ -5020,7 +5020,7 @@ FVMenuReencode (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   FVReencode ((FontViewBase *) fv, enc);
   if (sc != NULL)
     {
-      int enc = fv->b.map->backmap[sc->orig_pos];
+      int enc = gid_to_enc (fv->b.map, sc->orig_pos);
       if (enc != -1)
         FVScrollToChar (fv, enc);
     }
@@ -5294,7 +5294,7 @@ edlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         && !GDrawSelectionHasType (fv->gw, sn_clipboard, "image/eps")
         && !GDrawSelectionHasType (fv->gw, sn_clipboard, "image/ps"));
   RefChar *base = CopyContainsRef (fv->b.sf);
-  int base_enc = base != NULL ? fv->b.map->backmap[base->orig_pos] : -1;
+  int base_enc = (base != NULL) ? gid_to_enc (fv->b.map, base->orig_pos) : -1;
 
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
@@ -8246,7 +8246,7 @@ FVMenuCompact (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   FVCompact ((FontViewBase *) fv);
   if (sc != NULL)
     {
-      int enc = fv->b.map->backmap[sc->orig_pos];
+      int enc = gid_to_enc (fv->b.map, sc->orig_pos);
       if (enc != -1)
         FVScrollToChar (fv, enc);
     }
@@ -8534,7 +8534,7 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                   // FIXME: It is unlikely this actually needs to be
                   // done, because such an entry should have been
                   // removed already:
-                  set_enc_to_gid (map, map->enccount, -1);
+                  remove_enc_to_gid (map, map->enccount);
 
                   fvs->b.selected =
                     xrealloc (fvs->b.selected, (map->enccount + 1));
@@ -8552,7 +8552,7 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
                     }
 
                   set_enc_to_gid (map, map->enccount - 1, sc->orig_pos);
-                  map->backmap[sc->orig_pos] = map->enccount - 1;
+                  set_gid_to_enc (map, sc->orig_pos, map->enccount - 1);
                 }
               pt = buffer;
             }
@@ -12130,7 +12130,7 @@ FVChar (FontView *fv, GEvent *event)
                   break;
             }
           if (i != -1)
-            enc = fv->b.map->backmap[i];
+            enc = gid_to_enc (fv->b.map, i);
         }
       if (enc < fv->b.map->enccount && enc != -1)
         FVChangeChar (fv, enc);
@@ -12323,7 +12323,7 @@ FVMouse (FontView *fv, GEvent *event)
       if (fv->cur_subtable != NULL)
         {
           sc = FVMakeChar (fv, pos);
-          pos = fv->b.map->backmap[sc->orig_pos];
+          pos = gid_to_enc (fv->b.map, sc->orig_pos);
         }
       if (sc == &dummy)
         {
@@ -13696,7 +13696,7 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
   GGadgetCreateData gcd[5], boxes[3];
   GGadgetCreateData *varray[21], *buttonarray[8];
   GTextInfo label[5];
-  int i, j, k, guts_row, gid, enc, len;
+  int i, j, k, guts_row, gid, len;
   char *ret, *rpt;
   SplineChar *sc;
   GGadget *drawable;
@@ -13821,7 +13821,11 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
   GDrawSetUserData (dw, gs.fv);
   FVCopyInnards (gs.fv, &pos, infoh, fvorig, dw, def_layer,
                  (struct fvcontainer *) &gs);
-  pos.height = 4 * gs.fv->cbh + 1;      /* We don't know the real fv->cbh until after creating the innards. The size of the last window is probably wrong, we'll fix later */
+  pos.height = 4 * gs.fv->cbh + 1; /* We don't know the real fv->cbh
+                                      until after creating the
+                                      innards. The size of the last
+                                      window is probably wrong, we'll
+                                      fix later */
   memset (gs.fv->b.selected, 0, gs.fv->b.map->enccount);
   if (current != NULL && strcmp (current, _("{Everything Else}")) != 0)
     {
@@ -13834,8 +13838,9 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
           *pt = '\0';
           sc = SFGetChar (sf, -1, start);
           *pt = ch;
-          if (sc != NULL && (enc = gs.fv->b.map->backmap[sc->orig_pos]) != -1)
+          if (sc != NULL && gid_to_enc_is_set (gs.fv->b.map, sc->orig_pos))
             {
+              ssize_t enc = gid_to_enc (gs.fv->b.map, sc->orig_pos);
               gs.fv->b.selected[enc] = true;
               if (first)
                 {
@@ -13864,24 +13869,31 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
   ret = rpt = NULL;
   if (gs.good)
     {
-      for (k = 0; k < 2; ++k)
+      for (k = 0; k < 2; ++k)   /* FIXME: Get rid of this goofball
+                                   k-loop. */
         {
           len = 0;
-          for (enc = 0; enc < gs.fv->b.map->enccount; ++enc)
+          for (ssize_t enc = 0; enc < gs.fv->b.map->enccount; ++enc)
             {
-              if (gs.fv->b.selected[enc]
-                  && (gid = enc_to_gid (gs.fv->b.map, enc)) != -1
-                  && (sc = sf->glyphs[gid]) != NULL)
+              if (gs.fv->b.selected[enc])
                 {
-                  char *repr = SCNameUniStr (sc);
-                  if (ret == NULL)
-                    len += strlen (repr) + 2;
-                  else
+                  if (enc_to_gid_is_set (gs.fv->b.map, enc))
                     {
-                      strcpy (rpt, repr);
-                      rpt += strlen (repr);
-                      free (repr);
-                      *rpt++ = ' ';
+                      gid = enc_to_gid (gs.fv->b.map, enc);
+                      if (sf->glyphs[gid] != NULL)
+                        {
+                          sc = sf->glyphs[gid];
+                          char *repr = SCNameUniStr (sc);
+                          if (ret == NULL)
+                            len += strlen (repr) + 2;
+                          else
+                            {
+                              strcpy (rpt, repr);
+                              rpt += strlen (repr);
+                              free (repr);
+                              *rpt++ = ' ';
+                            }
+                        }
                     }
                 }
             }

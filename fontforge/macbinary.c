@@ -308,7 +308,7 @@ SFMacAnyKerns (SplineFont *sf, EncMap *map)
       if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL)
         {
           for (kp = sf->glyphs[gid]->kerns; kp != NULL; kp = kp->next)
-            if (map->backmap[kp->sc->orig_pos] < 256)
+            if (gid_to_enc (map, kp->sc->orig_pos) < 256)
               ++cnt;
         }
     }
@@ -991,10 +991,10 @@ SFToFOND (FILE *res, SplineFont *sf, uint32_t id, int dottf,
           if ((gid = enc_to_gid (map, k)) != -1 && sf->glyphs[gid] != NULL)
             {
               for (kp = sf->glyphs[gid]->kerns; kp != NULL; kp = kp->next)
-                if (map->backmap[kp->sc->orig_pos] < 256)
+                if (gid_to_enc (map, kp->sc->orig_pos) < 256)
                   {
                     putc (k, res);
-                    putc (map->backmap[kp->sc->orig_pos], res);
+                    putc (gid_to_enc (map, kp->sc->orig_pos), res);
                     putshort (res,
                               kp->off * (1 << 12) / (sf->ascent + sf->descent));
                   }
@@ -1411,10 +1411,11 @@ SFsToFOND (FILE *res, struct sflist *sfs, uint32_t id, int format, int bf)
                   {
                     for (kp = faces[i]->sf->glyphs[gid]->kerns; kp != NULL;
                          kp = kp->next)
-                      if (faces[i]->map->backmap[kp->sc->orig_pos] < 256)
+                      if (gid_to_enc (faces[i]->map, kp->sc->orig_pos) < 256)
                         {
                           putc (k, res);
-                          putc (faces[i]->map->backmap[kp->sc->orig_pos], res);
+                          putc (gid_to_enc (faces[i]->map, kp->sc->orig_pos),
+                                res);
                           putshort (res,
                                     kp->off * (1 << 12) / (sf->ascent +
                                                            sf->descent));

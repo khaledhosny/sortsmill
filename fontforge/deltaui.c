@@ -1087,7 +1087,7 @@ QGMouse (QGData * qg, GEvent *e)
               qg->inprocess = true;
               cv = qg->cv =
                 CharViewCreate (q->sc, (FontView *) (qg->fv),
-                                qg->fv->map->backmap[q->sc->orig_pos]);
+                                gid_to_enc (qg->fv->map, q->sc->orig_pos));
               if (qg->layer == ly_fore)
                 {
                   cv->b.drawmode = dm_fore;

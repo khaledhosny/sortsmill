@@ -763,7 +763,7 @@ MMReblend (FontViewBase *fv, MMSet *mm)
         olderr = (char *) -1;
       if (fv != NULL)
         {
-          int enc = fv->map->backmap[i];
+          int enc = gid_to_enc (fv->map, i);
           if (enc != -1)
             fv->selected[enc] = true;
         }

@@ -8397,7 +8397,7 @@ SCMakeItalic (SplineChar *sc, int layer, ItalicInfo * ii)
 static int
 IsSelected (FontViewBase *fv, SplineChar *sc)
 {
-  int enc = fv->map->backmap[sc->orig_pos];
+  int enc = gid_to_enc (fv->map, sc->orig_pos);
   if (enc == -1)
     return (false);
 

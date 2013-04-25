@@ -5442,7 +5442,7 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
   ci->map = map;
   ci->last = 0xffffff;
   if (enc == -1)
-    enc = map->backmap[sc->orig_pos];
+    enc = gid_to_enc (map, sc->orig_pos);
   ci->enc = enc;
 
   memset (&wattrs, 0, sizeof (wattrs));

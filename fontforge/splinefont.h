@@ -1151,21 +1151,33 @@ typedef struct encmap
 {
   /* A per-font map of encoding to glyph id. */
 
-  SCM _enc_to_gid;      /* Hash table mapping encoding to glyph ID. */
+  SCM _enc_to_gid; /* Hash table mapping encoding point to glyph ID. */
 
-  int enccount;           /* One more than the highest encoding value.
+  /* FIXME: _gid_to_enc is not used yet, but soon will be. Also, we
+     might want to use some other data structure, such as a vector or
+     vlist. FIXME: Give this the ability to return multiple code
+     points for multiply encoded glyphs. */
+  SCM _gid_to_enc; /* Hash table mapping glyph ID to encoding point. */
+
+  /* FIXME: Consider changing the name of `enccount' to something like
+     `enc_limit'. */
+  int enccount;           /* One more than the highest encoding point.
                              Strictly speaking, this might include
                              glyphs that are not encoded, but which
                              are displayed after the encoding
                              proper. */
 
-  /* FIXME: This is destined to be changed to a Guile structure,
-     presumably to be called _gid_to_enc. */
-  int32_t *backmap;         /* Map from glyphid to encoding. */
-  int backmax;              /* Allocated size of the backmap array. */
+  /* FIXME: This is destined to be replaced by _gid_to_enc. */
+  //int32_t *backmap;         /* Map from glyphid to encoding. */
+  //int backmax;              /* Allocated size of the backmap array. */
+  int32_t *__backmap;       /* Map from glyphid to encoding. */
+  int __backmax;            /* Allocated size of the backmap array. */
 
   /* FIXME: We also need a SplineChar-to-GID mapping, or replace the
      GIDs with SplineChars themselves. */
+
+  /* FIXME: Replace loops-up-to-enccount with loops over _enc_to_gid
+     entries. */
 
   struct remap *remap;
   Encoding *enc;
@@ -1173,22 +1185,36 @@ typedef struct encmap
 } EncMap;
 
 inline void make_enc_to_gid (EncMap *map);
+inline void release_enc_to_gid (EncMap *map);
 inline void clear_enc_to_gid (EncMap *map);
 inline void set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid);
+inline void remove_enc_to_gid (EncMap *map, ssize_t enc);
 inline ssize_t enc_to_gid (EncMap *map, ssize_t enc);
+inline bool enc_to_gid_is_set (EncMap *map, ssize_t enc);
+
+inline void set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
+inline void add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
+void remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
+inline void remove_all_gid_to_enc (EncMap *map, ssize_t gid);
+inline ssize_t gid_to_enc (EncMap *map, ssize_t gid);
+inline bool gid_to_enc_is_set (EncMap *map, ssize_t gid);
 
 inline void
 make_enc_to_gid (EncMap *map)
 {
-  map->_enc_to_gid = scm_make_hash_table (scm_from_int (257));
+  map->_enc_to_gid =
+    scm_gc_protect_object (scm_make_hash_table (scm_from_int (257)));
+}
+
+inline void
+release_enc_to_gid (EncMap *map)
+{
+  scm_gc_unprotect_object (map->_enc_to_gid);
 }
 
 inline void
 clear_enc_to_gid (EncMap *map)
 {
-  // FIXME: Consider making this just an alias for make_enc_to_gid, to
-  // start again with a smaller table, rather than clear a table while
-  // retaining its size.
   scm_hash_clear_x (map->_enc_to_gid);
 }
 
@@ -1202,6 +1228,12 @@ set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid)
     scm_hashv_set_x (map->_enc_to_gid, key, scm_from_ssize_t (gid));
 }
 
+inline void
+remove_enc_to_gid (EncMap *map, ssize_t enc)
+{
+  scm_hashv_remove_x (map->_enc_to_gid, scm_from_ssize_t (enc));
+}
+
 inline ssize_t
 enc_to_gid (EncMap *map, ssize_t enc)
 {
@@ -1209,6 +1241,52 @@ enc_to_gid (EncMap *map, ssize_t enc)
     scm_to_ssize_t (scm_hashv_ref
                     (map->_enc_to_gid, scm_from_ssize_t (enc),
                      scm_from_int (-1)));
+}
+
+inline bool
+enc_to_gid_is_set (EncMap *map, ssize_t enc)
+{
+  return (enc_to_gid (map, enc) != -1);
+}
+
+inline void
+set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
+{
+  // FIXME: This is a temporary definition using the older data
+  // structure.
+  map->__backmap[gid] = enc;
+}
+
+inline void
+remove_all_gid_to_enc (EncMap *map, ssize_t gid)
+{
+  // FIXME: This is a temporary definition using the older data
+  // structure.
+  map->__backmap[gid] = -1;
+}
+
+inline ssize_t
+gid_to_enc (EncMap *map, ssize_t gid)
+{
+  // FIXME: This is a temporary definition using the older data
+  // structure.
+  return map->__backmap[gid];
+}
+
+inline bool
+gid_to_enc_is_set (EncMap *map, ssize_t gid)
+{
+  return (gid_to_enc (map, gid) != -1);
+}
+
+inline void
+add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
+{
+  // FIXME: In the future this will be able to list multiple code
+  // points. Currently it just ignores additional code points if one
+  // already is set.
+  if (!gid_to_enc_is_set (map, gid))
+    set_gid_to_enc (map, gid, enc);
 }
 
 enum property_type

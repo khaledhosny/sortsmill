@@ -4705,7 +4705,7 @@ PasteIntoMV (FontViewBase *fv, BDFFont *mvbdf, SplineChar *sc, int doclear)
     case ut_bitmap:
       if (onlycopydisplayed && mvbdf != NULL)
         _PasteToBC (BDFMakeChar
-                    (mvbdf, fv->map, fv->map->backmap[sc->orig_pos]),
+                    (mvbdf, fv->map, gid_to_enc (fv->map, sc->orig_pos)),
                     mvbdf->pixelsize, BDFDepth (mvbdf), cur, doclear);
       else
         {
@@ -4722,7 +4722,7 @@ PasteIntoMV (FontViewBase *fv, BDFFont *mvbdf, SplineChar *sc, int doclear)
             }
           if (bdf != NULL)
             _PasteToBC (BDFMakeChar
-                        (bdf, fv->map, fv->map->backmap[sc->orig_pos]),
+                        (bdf, fv->map, gid_to_enc (fv->map, sc->orig_pos)),
                         bdf->pixelsize, BDFDepth (bdf), cur, doclear);
         }
       break;
@@ -4742,7 +4742,7 @@ PasteIntoMV (FontViewBase *fv, BDFFont *mvbdf, SplineChar *sc, int doclear)
                                  bmp->u.bmpstate.depth);
           if (bdf != NULL)
             _PasteToBC (BDFMakeChar
-                        (bdf, fv->map, fv->map->backmap[sc->orig_pos]),
+                        (bdf, fv->map, gid_to_enc (fv->map, sc->orig_pos)),
                         bdf->pixelsize, BDFDepth (bdf), bmp, doclear);
         }
       first = false;

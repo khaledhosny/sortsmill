@@ -1685,14 +1685,14 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
           free (fvs->selected);
           fvs->selected = xcalloc (new->glyphcnt, sizeof (char));
           fvs->map->enccount = new->glyphcnt;
-          if (fvs->map->backmax < new->glyphcnt)
-            fvs->map->backmap =
-              xrealloc (fvs->map->backmap,
-                        (fvs->map->backmax = new->glyphcnt) * sizeof (int));
+          if (fvs->map->__backmax < new->glyphcnt)
+            fvs->map->__backmap =
+              xrealloc (fvs->map->__backmap,
+                        (fvs->map->__backmax = new->glyphcnt) * sizeof (int));
           for (j = 0; j < new->glyphcnt; ++j)
             {
               set_enc_to_gid (fvs->map, j, j);
-              fvs->map->backmap[j] = j;
+              set_gid_to_enc (fvs->map, j, j);
             }
         }
       fvs->sf = new;
@@ -1834,7 +1834,7 @@ SFFlattenByCMap (SplineFont *sf, char *cmapname)
                       if (j)
                         {
                           set_enc_to_gid (map, max + extras, sc->orig_pos);
-                          map->backmap[sc->orig_pos] = max + extras;
+                          set_gid_to_enc (map, sc->orig_pos, max + extras);
                         }
                       ++extras;
                     }
@@ -1846,7 +1846,7 @@ SFFlattenByCMap (SplineFont *sf, char *cmapname)
                             cmap->groups[cmt_cid].ranges[found[0]].first + i -
                             cmap->groups[cmt_cid].ranges[found[0]].cid;
                           set_enc_to_gid (map, p, sc->orig_pos);
-                          map->backmap[sc->orig_pos] = p;
+                          set_gid_to_enc (map, sc->orig_pos, p);
                           for (l = 1; l < m; ++l)
                             {
                               int pos =
@@ -1862,7 +1862,7 @@ SFFlattenByCMap (SplineFont *sf, char *cmapname)
             {
               map->enccount = max + extras;
               clear_enc_to_gid (map);
-              memset (map->backmap, -1, sf->glyphcnt * sizeof (int));
+              memset (map->__backmap, -1, sf->glyphcnt * sizeof (int));
               map->remap = cmap->remap;
               cmap->remap = NULL;
             }
@@ -1906,11 +1906,11 @@ SFEncodeToCMap (SplineFont *cidmaster, SplineFont *sf, EncMap *oldmap,
       {
         if (strcmp (sc->name, ".notdef") == 0)
           sc->orig_pos = 0;
-        else if (oldmap->backmap[i] == -1)
+        else if (!gid_to_enc_is_set (oldmap, i))
           sc->orig_pos = -1;
         else
           {
-            sc->orig_pos = Enc2CMap (cmap, oldmap->backmap[i]);
+            sc->orig_pos = Enc2CMap (cmap, gid_to_enc (oldmap, i));
             if (sc->orig_pos == 0)
               {
                 if (GID0 == NULL)
@@ -2210,17 +2210,16 @@ _SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
                   ssize_t pos = sf->glyphs[enc_to_gid (map, i)]->orig_pos;
                   set_enc_to_gid (map, i, pos);
                 }
-            if (enc_cnt > map->backmax)
+            if (enc_cnt > map->__backmax)
               {
-                free (map->backmap);
-                map->backmax = enc_cnt;
-                map->backmap = xmalloc (enc_cnt * sizeof (int));
+                free (map->__backmap);
+                map->__backmax = enc_cnt;
+                map->__backmap = xmalloc (enc_cnt * sizeof (int));
               }
-            memset (map->backmap, -1, enc_cnt * sizeof (int));
+            memset (map->__backmap, -1, enc_cnt * sizeof (int));
             for (i = 0; i < map->enccount; ++i)
               if (enc_to_gid (map, i) != -1)
-                if (map->backmap[enc_to_gid (map, i)] == -1)
-                  map->backmap[enc_to_gid (map, i)] = i;
+                add_gid_to_enc (map, enc_to_gid (map, i), i);
             map->ticked = true;
           }
       if (!old->ticked)
@@ -2246,7 +2245,7 @@ _SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
       for (ssize_t k = old->enccount; k < enc_cnt; k++)
-        set_enc_to_gid (old, k, -1);
+        remove_enc_to_gid (old, k);
 
       old->enccount = enc_cnt;
     }
@@ -2409,12 +2408,20 @@ EncMapFromEncoding (SplineFont *sf, Encoding *enc)
     set_enc_to_gid (map, k, encoded[k]);
   for (ssize_t k = 0; k < extras; k++)
     set_enc_to_gid (map, base + k, unencoded[k]);
-  map->backmax = sf->glyphcnt;
-  map->backmap = xmalloc (sf->glyphcnt * sizeof (int));
-  memset (map->backmap, -1, sf->glyphcnt * sizeof (int));       /* Just in case there are some unencoded glyphs (duplicates perhaps) */
+  map->__backmax = sf->glyphcnt;
+  map->__backmap = xmalloc (sf->glyphcnt * sizeof (int));
+  memset (map->__backmap, -1, sf->glyphcnt * sizeof (int)); /* Just in
+                                                               case
+                                                               there
+                                                               are
+                                                               some
+                                                               unencoded
+                                                               glyphs
+                                                               (duplicates
+                                                               perhaps) */
   for (i = map->enccount - 1; i >= 0; --i)
     if (enc_to_gid (map, i) != -1)
-      map->backmap[enc_to_gid (map, i)] = i;
+      set_gid_to_enc (map, enc_to_gid (map, i), i);
   map->enc = enc;
 
   free (encoded);
@@ -2443,7 +2450,7 @@ CompactEncMap (EncMap *map, SplineFont *sf)
       if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
         {
           set_enc_to_gid (map, inuse, gid);
-          set_enc_to_gid (map, i, -1);
+          remove_enc_to_gid (map, i);
           inuse++;
         }
     }
@@ -2452,10 +2459,13 @@ CompactEncMap (EncMap *map, SplineFont *sf)
 
   map->enc = &custom;
 
-  memset (map->backmap, -1, sf->glyphcnt * sizeof (int));
+  memset (map->__backmap, -1, sf->glyphcnt * sizeof (int));
   for (i = inuse - 1; i >= 0; --i)
-    if ((gid = enc_to_gid (map, i)) != -1)
-      map->backmap[gid] = i;
+    if (enc_to_gid_is_set (map, i))
+      {
+        ssize_t gid = enc_to_gid (map, i);
+        set_gid_to_enc (map, gid, i);
+      }
 
   return (map);
 }
@@ -2628,9 +2638,10 @@ SFRemoveGlyph (SplineFont *sf, SplineChar *sc, int *flags)
 static int
 MapAddEncodingSlot (EncMap *map, int gid)
 {
-  int enc = map->enccount++;
+  const int enc = map->enccount;
+  map->enccount++;
   set_enc_to_gid (map, enc, gid);
-  map->backmap[gid] = enc;
+  set_gid_to_enc (map, gid, enc);
   return (enc);
 }
 
@@ -2662,11 +2673,11 @@ MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap *basemap, EncMap *map,
   bool any = false;
   int enc;
 
-  if (gid >= map->backmax)
+  if (gid >= map->__backmax)
     {
-      map->backmap =
-        xrealloc (map->backmap, (map->backmax += 10) * sizeof (int));
-      memset (map->backmap + map->backmax - 10, -1, 10 * sizeof (int));
+      map->__backmap =
+        xrealloc (map->__backmap, (map->__backmax += 10) * sizeof (int));
+      memset (map->__backmap + map->__backmax - 10, -1, 10 * sizeof (int));
     }
   if (map->enc->psnames != NULL)
     {
@@ -2678,9 +2689,11 @@ MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap *basemap, EncMap *map,
             {
               if (!any)
                 {
-                  map->backmap[gid] = enc;
+                  set_gid_to_enc (map, gid, enc);
                   any = true;
                 }
+              else
+                add_gid_to_enc (map, gid, enc);
               set_enc_to_gid (map, enc, gid);
             }
         }
@@ -2691,7 +2704,7 @@ MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap *basemap, EncMap *map,
       if (enc != -1)
         {
           set_enc_to_gid (map, enc, gid);
-          map->backmap[gid] = enc;
+          set_gid_to_enc (map, gid, enc);
           any = true;
         }
     }
@@ -2707,8 +2720,7 @@ MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap *basemap, EncMap *map,
       else
         {
           set_enc_to_gid (map, baseenc, gid);
-          if (map->backmap[gid] == -1)
-            map->backmap[gid] = baseenc;
+          add_gid_to_enc (map, gid, baseenc);
         }
       any = true;
     }
@@ -2746,10 +2758,11 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
       for (fv = sf->fv; fv != NULL; fv = fv->nextsame)
         {
           EncMap *map = fv->map;
-          if (gid >= map->backmax)
-            map->backmap =
-              xrealloc (map->backmap, (map->backmax = gid + 10) * sizeof (int));
-          map->backmap[gid] = -1;
+          if (gid >= map->__backmax)
+            map->__backmap =
+              xrealloc (map->__backmap,
+                        (map->__backmax = gid + 10) * sizeof (int));
+          remove_all_gid_to_enc (map, gid);
         }
     }
   else
@@ -2782,11 +2795,11 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
             if (fv->sf == sf)
               {
                 EncMap *map = fv->map;
-                if (gid >= map->backmax)
-                  map->backmap =
-                    xrealloc (map->backmap,
-                              (map->backmax = gid + 10) * sizeof (int));
-                map->backmap[gid] = -1;
+                if (gid >= map->__backmax)
+                  map->__backmap =
+                    xrealloc (map->__backmap,
+                              (map->__backmax = gid + 10) * sizeof (int));
+                remove_all_gid_to_enc (map, gid);
               }
         }
     }
@@ -3128,12 +3141,12 @@ SFExpandGlyphCount (SplineFont *sf, int newcnt)
           if (fv->normal != NULL)
             continue;           /* If compacted then we haven't added any glyphs so haven't changed anything */
           /* Don't display any of these guys, so not mapped. */
-          /*  No change to selection, or to map->map, but change to backmap */
-          if (newcnt > fv->map->backmax)
-            fv->map->backmap =
-              xrealloc (fv->map->backmap,
-                        (fv->map->backmax = newcnt + 5) * sizeof (int32_t));
-          memset (fv->map->backmap + old, -1,
+          /*  No change to selection, or to map->map, but change to __backmap */
+          if (newcnt > fv->map->__backmax)
+            fv->map->__backmap =
+              xrealloc (fv->map->__backmap,
+                        (fv->map->__backmax = newcnt + 5) * sizeof (int32_t));
+          memset (fv->map->__backmap + old, -1,
                   (newcnt - old) * sizeof (int32_t));
         }
     }

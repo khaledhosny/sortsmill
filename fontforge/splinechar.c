@@ -135,7 +135,7 @@ SCSynchronizeWidth (SplineChar *sc, real newwidth, real oldwidth,
         continue;
       if (dlist->sc->width == oldwidth &&
           (metrics != NULL || flagfv == NULL ||
-           !flagfv->selected[flagfv->map->backmap[dlist->sc->orig_pos]]))
+           !flagfv->selected[gid_to_enc (flagfv->map, dlist->sc->orig_pos)]))
         {
           SCSynchronizeWidth (dlist->sc, newwidth, oldwidth, flagfv);
           if (!dlist->sc->changed)
@@ -1165,7 +1165,7 @@ UnlinkThisReference (FontViewBase *fv, SplineChar *sc, int layer)
   for (dep = sc->dependents; dep != NULL; dep = dnext)
     {
       dnext = dep->next;
-      if (fv == NULL || !fv->selected[fv->map->backmap[dep->sc->orig_pos]])
+      if (fv == NULL || !fv->selected[gid_to_enc (fv->map, dep->sc->orig_pos)])
         {
           SplineChar *dsc = dep->sc;
           RefChar *rf, *rnext;
@@ -1319,7 +1319,7 @@ SCSetMetaData (SplineChar *sc, char *name, int unienc, const char *comment)
       FontViewBase *fvs;
       for (fvs = sf->fv; fvs != NULL; fvs = fvs->nextsame)
         {
-          int enc = fvs->map->backmap[sc->orig_pos];
+          int enc = gid_to_enc (fvs->map, sc->orig_pos);
           if (enc != -1 && ((fvs->map->enc->only_1byte && enc < 256) ||
                             (fvs->map->enc->has_2byte && enc < 65535)))
             {

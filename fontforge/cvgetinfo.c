@@ -427,7 +427,7 @@ RefGetInfo (CharView *cv, RefChar *ref)
 
   snprintf (namebuf, sizeof (namebuf),
             _("Reference to character %1$.20s at %2$d"),
-            ref->sc->name, (int) cv->b.fv->map->backmap[ref->sc->orig_pos]);
+            ref->sc->name, (int) gid_to_enc (cv->b.fv->map, ref->sc->orig_pos));
   label[0].text = (uint32_t *) namebuf;
   label[0].text_is_1byte = true;
   gcd[0].gd.label = &label[0];

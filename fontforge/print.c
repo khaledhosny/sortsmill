@@ -2398,7 +2398,7 @@ outputchar (PI * pi, int sfid, SplineChar *sc)
     }
   else
     {
-      enc = pi->sfbits[sfid].map->backmap[sc->orig_pos];
+      enc = gid_to_enc (pi->sfbits[sfid].map, sc->orig_pos);
       if (enc == -1)
         return;
       if (pi->sfbits[sfid].iscid)
@@ -2425,7 +2425,7 @@ outputotchar (PI * pi, struct opentype_str *osc, int x, int baseline)
   int sfid = sfmap->sfbit_id;
   struct sfbits *sfbit = &pi->sfbits[sfid];
   SplineChar *sc = osc->sc;
-  int enc = sfbit->map->backmap[sc->orig_pos];
+  int enc = gid_to_enc (sfbit->map, sc->orig_pos);
 
   if (pi->printtype == pt_pdf)
     {
@@ -2561,7 +2561,7 @@ SCPrintSizes (PI * pi, SplineChar *sc)
 
   if (!SCWorthOutputting (sc))
     return;
-  enc = sfbit->map->backmap[sc->orig_pos];
+  enc = gid_to_enc (sfbit->map, sc->orig_pos);
   if (pi->ypos - pi->pointsize < -(pi->pageheight - 90) && pi->ypos != -30)
     {
       samplestartpage (pi);

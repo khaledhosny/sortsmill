@@ -423,7 +423,7 @@ BVCurEnc (BitmapView *bv)
   if (bv->map_of_enc == bv->fv->b.map && bv->enc != -1)
     return (bv->enc);
 
-  return (bv->fv->b.map->backmap[bv->bc->orig_pos]);
+  return (gid_to_enc (bv->fv->b.map, bv->bc->orig_pos));
 }
 
 static void

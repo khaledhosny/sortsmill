@@ -327,7 +327,7 @@ SFRestoreNearTop (SplineFont *sf)
       {
         /* Note: For CID keyed fonts, we don't care if sc is in the currently */
         /*  displayed font, all we care about is the CID */
-        int enc = fv->b.map->backmap[fv->sc_near_top->orig_pos];
+        int enc = gid_to_enc (fv->b.map, fv->sc_near_top->orig_pos);
         if (enc != -1)
           {
             fv->rowoff = enc / fv->colcnt;

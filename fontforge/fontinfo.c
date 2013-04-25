@@ -7663,7 +7663,7 @@ GFI_UnicodeRangeChange (GGadget *g, GEvent *e)
       for (gid = 0; gid < sf->glyphcnt; ++gid)
         if (sf->glyphs[gid] != NULL)
           {
-            enc = map->backmap[gid];
+            enc = gid_to_enc (map, gid);
             if (sf->glyphs[gid]->unicodeenc >= r->first
                 && sf->glyphs[gid]->unicodeenc <= r->last && enc != -1)
               {

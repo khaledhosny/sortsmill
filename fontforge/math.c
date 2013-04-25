@@ -2275,9 +2275,9 @@ MKDInit (MathKernDlg *mkd, SplineChar *sc)
   make_enc_to_gid (&mkd->dummy_map);
   for (ssize_t k = 0; k < 4; k++)
     set_enc_to_gid (&mkd->dummy_map, k, mkd->map[k]);
-  mkd->dummy_map.backmap = mkd->backmap;
+  mkd->dummy_map.__backmap = mkd->backmap;
   mkd->dummy_map.enccount = 4;
-  mkd->dummy_map.backmax = 4;
+  mkd->dummy_map.__backmax = 4;
   mkd->dummy_map.enc = &custom;
 }
 

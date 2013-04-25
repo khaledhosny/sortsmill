@@ -584,8 +584,8 @@ BuildFPSTRule (struct node *node, struct att_dlg *att)
                         }
                       else
                         GrowBufferAddStr (&gb,
-                                          fpst->bclassnames[r->u.
-                                                            class.bclasses[j]]);
+                                          fpst->bclassnames[r->u.class.
+                                                            bclasses[j]]);
                     }
                   lines[len].label = xstrdup_or_null ((const char *) gb.base);
                   lines[len].parent = node;
@@ -606,8 +606,8 @@ BuildFPSTRule (struct node *node, struct att_dlg *att)
                     }
                   else
                     GrowBufferAddStr (&gb,
-                                      fpst->nclassnames[r->u.
-                                                        class.nclasses[j]]);
+                                      fpst->nclassnames[r->u.class.
+                                                        nclasses[j]]);
                 }
               lines[len].label = xstrdup_or_null ((const char *) gb.base);
               lines[len].parent = node;
@@ -631,8 +631,8 @@ BuildFPSTRule (struct node *node, struct att_dlg *att)
                         }
                       else
                         GrowBufferAddStr (&gb,
-                                          fpst->fclassnames[r->u.
-                                                            class.fclasses[j]]);
+                                          fpst->fclassnames[r->u.class.
+                                                            fclasses[j]]);
                     }
                   lines[len].label = xstrdup_or_null ((const char *) gb.base);
                   lines[len].parent = node;
@@ -2502,18 +2502,20 @@ FontCompActivate (struct att_dlg *att, struct node *node)
       if (bdf1 != NULL && sc1 != NULL && sc1->orig_pos < bdf1->glyphcnt
           && bdf1->glyphs[sc1->orig_pos] != NULL)
         BitmapViewCreate (bdf1->glyphs[sc1->orig_pos], bdf1, att->fv1,
-                          att->fv1->b.map->backmap[sc1->orig_pos]);
+                          gid_to_enc (att->fv1->b.map, sc1->orig_pos));
       if (bdf2 != NULL && sc2 != NULL && sc2->orig_pos < bdf2->glyphcnt
           && bdf2->glyphs[sc2->orig_pos] != NULL)
         BitmapViewCreate (bdf2->glyphs[sc2->orig_pos], bdf2, att->fv2,
-                          att->fv2->b.map->backmap[sc2->orig_pos]);
+                          gid_to_enc (att->fv2->b.map, sc2->orig_pos));
     }
   else
     {
       if (sc1 != NULL)
-        CharViewCreate (sc1, att->fv1, att->fv1->b.map->backmap[sc1->orig_pos]);
+        CharViewCreate (sc1, att->fv1,
+                        gid_to_enc (att->fv1->b.map, sc1->orig_pos));
       if (sc2 != NULL)
-        CharViewCreate (sc2, att->fv2, att->fv2->b.map->backmap[sc2->orig_pos]);
+        CharViewCreate (sc2, att->fv2,
+                        gid_to_enc (att->fv2->b.map, sc2->orig_pos));
     }
 }
 

@@ -1563,7 +1563,7 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
       SFDDumpUTF7Str (sfd, sc->name);
       putc ('\n', sfd);
     }
-  if ((enc = map->backmap[sc->orig_pos]) >= map->enccount)
+  if ((enc = gid_to_enc (map, sc->orig_pos)) >= map->enccount)
     {
       if (sc->parent->cidmaster == NULL)
         IError ("Bad reverse encoding");
@@ -1572,7 +1572,7 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
   if (sc->unicodeenc != -1
       && ((map->enc->is_unicodebmp && sc->unicodeenc < 0x10000)
           || (map->enc->is_unicodefull && sc->unicodeenc < unicode4_size)))
-    /* If we have altunis, then the backmap may not give the primary */
+    /* If we have altunis, then the __backmap may not give the primary */
     /*  unicode code point, which is what we need here */
     fprintf (sfd, "Encoding: %d %d %d\n", sc->unicodeenc, sc->unicodeenc,
              newgids != NULL ? newgids[sc->orig_pos] : sc->orig_pos);
@@ -1927,7 +1927,7 @@ SFDDumpBitmapFont (FILE *sfd, BDFFont *bdf, EncMap * encm, int *newgids,
               gsfd = fopen (glyphfile, "w");
               if (gsfd != NULL)
                 {
-                  SFDDumpBitmapChar (gsfd, bdf->glyphs[i], encm->backmap[i],
+                  SFDDumpBitmapChar (gsfd, bdf->glyphs[i], gid_to_enc (encm, i),
                                      newgids);
                   if (ferror (gsfd))
                     err = true;
@@ -1939,7 +1939,7 @@ SFDDumpBitmapFont (FILE *sfd, BDFFont *bdf, EncMap * encm, int *newgids,
               free (glyphfile);
             }
           else
-            SFDDumpBitmapChar (sfd, bdf->glyphs[i], encm->backmap[i],
+            SFDDumpBitmapChar (sfd, bdf->glyphs[i], gid_to_enc (encm, i),
                                newgids);
         }
       ff_progress_next ();
@@ -4767,20 +4767,20 @@ SFDSetEncMap (SplineFont *sf, int orig_pos, int enc)
   if (map == NULL)
     return;
 
-  if (orig_pos >= map->backmax)
+  if (orig_pos >= map->__backmax)
     {
-      int old = map->backmax;
-      map->backmax = orig_pos + 10;
-      map->backmap = xrealloc (map->backmap, map->backmax * sizeof (int));
-      memset (map->backmap + old, -1, (map->backmax - old) * sizeof (int));
+      int old = map->__backmax;
+      map->__backmax = orig_pos + 10;
+      map->__backmap = xrealloc (map->__backmap, map->__backmax * sizeof (int));
+      memset (map->__backmap + old, -1, (map->__backmax - old) * sizeof (int));
     }
-  if (map->backmap[orig_pos] == -1)     /* backmap will not be unique if multiple encodings come from same glyph */
-    map->backmap[orig_pos] = enc;
+
+  add_gid_to_enc (map, orig_pos, enc);
 
   // FIXME: It is unlikely this actually needs to be done, because
   // such entries should have been removed already:
   for (ssize_t k = map->enccount; k < enc; k++)
-    set_enc_to_gid (map, k, -1);
+    remove_enc_to_gid (map, k);
 
   if (enc >= map->enccount)
     map->enccount = enc + 1;
@@ -6320,11 +6320,12 @@ SFDFixupRefs (SplineFont *sf)
             if (SCDuplicate (sc) != sc)
               {
                 SplineChar *base = SCDuplicate (sc);
-                int orig = sc->orig_pos, enc = sf->map->backmap[orig], uni =
-                  sc->unicodeenc;
+                int orig = sc->orig_pos;
+                int enc = gid_to_enc (sf->map, orig);
+                int uni = sc->unicodeenc;
                 SplineCharFree (sc);
                 sf->glyphs[i] = NULL;
-                sf->map->backmap[orig] = -1;
+                set_gid_to_enc (sf->map, orig, -1);
                 set_enc_to_gid (map, enc, base->orig_pos);
                 AltUniAdd (base, uni);
               }
@@ -6875,17 +6876,17 @@ SFDParseMMSubroutine (FILE *sfd)
 static void
 SFDSizeMap (EncMap *map, int glyphcnt, int enccnt)
 {
-  if (glyphcnt > map->backmax)
+  if (glyphcnt > map->__backmax)
     {
-      map->backmap = xrealloc (map->backmap, glyphcnt * sizeof (int));
-      memset (map->backmap + map->backmax, -1,
-              (glyphcnt - map->backmax) * sizeof (int));
-      map->backmax = glyphcnt;
+      map->__backmap = xrealloc (map->__backmap, glyphcnt * sizeof (int));
+      memset (map->__backmap + map->__backmax, -1,
+              (glyphcnt - map->__backmax) * sizeof (int));
+      map->__backmax = glyphcnt;
     }
 
   // Remove any excess entries.
   for (ssize_t k = enccnt; k < map->enccount; k++)
-    set_enc_to_gid (map, k, -1);
+    remove_enc_to_gid (map, k);
 
   map->enccount = enccnt;
 }

@@ -632,9 +632,9 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
 
   memset (&encmap, 0, sizeof (encmap));
   encmap.enccount = 256;
-  encmap.backmax = 256;
+  encmap.__backmax = 256;
   make_enc_to_gid (&encmap);
-  encmap.backmap = _backmap;
+  encmap.__backmap = _backmap;
   memset (_backmap, -1, sizeof (_backmap));
   encmap.enc = &custom;
 
@@ -670,7 +670,7 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
                     _sf->glyphs[i]->orig_pos = temp.glyphcnt;
                     chars[temp.glyphcnt] = _sf->glyphs[i];
                     set_enc_to_gid (&encmap, mapping[i] & 0xff, temp.glyphcnt);
-                    _backmap[temp.glyphcnt] = mapping[i] & 0xff;
+                    set_gid_to_enc (&encmap, temp.glyphcnt, mapping[i] & 0xff);
                     ++temp.glyphcnt;
                     ++used;
                   }

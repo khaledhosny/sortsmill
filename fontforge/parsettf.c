@@ -5703,7 +5703,9 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
           if (justinuse == git_normal && map != NULL && map->enccount < 256)
             {
               for (ssize_t k = map->enccount; k < 256; k++)
-                set_enc_to_gid (map, k, -1);
+                {
+                  remove_enc_to_gid (map, k);
+                }
 
               map->enccount = 256;
             }
@@ -6503,9 +6505,9 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
         continue;
       if (info->ordering != NULL)
         sprintf (buffer, "%.20s-%d", info->ordering, i);
-      else if (info->map != NULL && info->map->backmap[i] != -1)
-        sprintf (buffer, "nounicode.%d.%d.%x", info->platform, info->specific,
-                 (int) info->map->backmap[i]);
+      else if (info->map != NULL && gid_to_enc (info->map, i) != -1)
+        sprintf (buffer, "nounicode.%d.%d.%zx", info->platform, info->specific,
+                 (size_t) gid_to_enc (info->map, i));
       else
         sprintf (buffer, "glyph%d", i);
       info->chars[i]->name = xstrdup_or_null (buffer);
@@ -6907,7 +6909,7 @@ SymbolFixup (struct ttfinfo *info)
       if (i >= 0xf000 && i <= 0xf0ff)
         {
           set_enc_to_gid (map, i - 0xf000, enc_to_gid (map, i));
-          set_enc_to_gid (map, i, -1);
+          remove_enc_to_gid (map, i);
           continue;
         }
       if (i > max)
@@ -7087,23 +7089,24 @@ UseGivenEncoding (SplineFont *sf, struct ttfinfo *info)
 }
 
 static void
-PsuedoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
+PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
 {
-  int extras, base;
-  int i;
-
-  for (i = 0; i < info->glyph_cnt; ++i)
+  for (int i = 0; i < info->glyph_cnt; ++i)
     if (info->chars[i] != NULL)
       info->chars[i]->ticked = false;
-  for (i = 0; i < map->enccount; ++i)
+
+  for (int i = 0; i < map->enccount; ++i)
     if (enc_to_gid (map, i) != -1)
       info->chars[enc_to_gid (map, i)]->ticked = true;
-  extras = 0;
-  for (i = 0; i < info->glyph_cnt; ++i)
+
+  int extras = 0;
+  for (int i = 0; i < info->glyph_cnt; ++i)
     if (info->chars[i] != NULL && !info->chars[i]->ticked)
       ++extras;
+
   if (extras != 0)
     {
+      int base;
       if (map->enccount <= 256)
         base = 256;
       else if (map->enccount <= 65536)
@@ -7116,11 +7119,14 @@ PsuedoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
       for (ssize_t k = map->enccount; k < base + extras; k++)
-        set_enc_to_gid (map, k, -1);
+        {
+          remove_enc_to_gid (map, k);
+        }
 
       map->enccount = base + extras;
+
       extras = 0;
-      for (i = 0; i < info->glyph_cnt; ++i)
+      for (int i = 0; i < info->glyph_cnt; ++i)
         if (info->chars[i] != NULL && !info->chars[i]->ticked)
           {
             set_enc_to_gid (map, base + extras, i);
@@ -7136,14 +7142,14 @@ MapDoBack (EncMap *map, struct ttfinfo *info)
 
   if (map == NULL)              /* CID fonts */
     return;
-  free (map->backmap);          /* CFF files have this */
-  map->backmax = info->glyph_cnt;
-  map->backmap = xmalloc (info->glyph_cnt * sizeof (int));
-  memset (map->backmap, -1, info->glyph_cnt * sizeof (int));
+  free (map->__backmap);          /* CFF files have this */
+  map->__backmax = info->glyph_cnt;
+  map->__backmap = xmalloc (info->glyph_cnt * sizeof (int));
+  memset (map->__backmap, -1, info->glyph_cnt * sizeof (int));
   for (i = map->enccount - 1; i >= 0; --i)
     if (enc_to_gid (map, i) >= 0 && enc_to_gid (map, i) < info->glyph_cnt)
-      if (map->backmap[enc_to_gid (map, i)] == -1)
-        map->backmap[enc_to_gid (map, i)] = i;
+      if (gid_to_enc (map, enc_to_gid (map, i)) == -1)
+        set_gid_to_enc (map, enc_to_gid (map, i), i);
 }
 
 void
@@ -7397,7 +7403,7 @@ SFFillFromTTF (struct ttfinfo *info)
   if (info->map == NULL && info->subfonts == NULL)      /* Can happen when reading a ttf from a pdf */
     info->map = EncMapFromEncoding (sf, FindOrMakeEncoding ("original"));
   if (info->subfontcnt == 0)
-    PsuedoEncodeUnencoded (info->map, info);
+    PseudoEncodeUnencoded (info->map, info);
   MapDoBack (info->map, info);
   sf->map = info->map;
   sf->cidregistry = info->cidregistry;

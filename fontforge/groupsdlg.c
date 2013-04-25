@@ -1646,33 +1646,36 @@ static void
 MapEncAddGid (EncMap *map, SplineFont *sf, int compacted,
               int gid, int uni, char *name)
 {
-
-  if (compacted && gid == -1)
-    return;
-
-  if (gid != -1 && map->backmap[gid] == -1)
-    map->backmap[gid] = map->enccount;
-  set_enc_to_gid (map, map->enccount, gid);
-  map->enccount++;
-  if (!compacted)
+  if (!compacted || gid != -1)
     {
-      Encoding *enc = map->enc;
-      if (enc->char_cnt >= enc->char_max)
+      if (gid == -1)
+        remove_enc_to_gid (map, map->enccount);
+      else
         {
-          enc->unicode =
-            xrealloc (enc->unicode, (enc->char_max += 256) * sizeof (int));
-          enc->psnames =
-            xrealloc (enc->psnames, enc->char_max * sizeof (char *));
+          add_gid_to_enc (map, gid, map->enccount);
+          set_enc_to_gid (map, map->enccount, gid);
         }
-      if (uni == -1 && name != NULL)
+      map->enccount++;
+      if (!compacted)
         {
-          if (gid != -1 && sf->glyphs[gid] != NULL)
-            uni = sf->glyphs[gid]->unicodeenc;
-          else
-            uni = UniFromName (name, ui_none, &custom);
+          Encoding *enc = map->enc;
+          if (enc->char_cnt >= enc->char_max)
+            {
+              enc->unicode =
+                xrealloc (enc->unicode, (enc->char_max += 256) * sizeof (int));
+              enc->psnames =
+                xrealloc (enc->psnames, enc->char_max * sizeof (char *));
+            }
+          if (uni == -1 && name != NULL)
+            {
+              if (gid != -1 && sf->glyphs[gid] != NULL)
+                uni = sf->glyphs[gid]->unicodeenc;
+              else
+                uni = UniFromName (name, ui_none, &custom);
+            }
+          enc->unicode[enc->char_cnt] = uni;
+          enc->psnames[enc->char_cnt++] = xstrdup_or_null (name);
         }
-      enc->unicode[enc->char_cnt] = uni;
-      enc->psnames[enc->char_cnt++] = xstrdup_or_null (name);
     }
 }
 

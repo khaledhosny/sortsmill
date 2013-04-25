@@ -138,7 +138,7 @@ DoFindOne (SearchView *sv, int startafter)
     startafter = false;
 
   if (sv->showsfindnext && sv->sd.curchar != NULL)
-    i = sv->sd.fv->map->backmap[sv->sd.curchar->orig_pos] + 1 - startafter;
+    i = gid_to_enc (sv->sd.fv->map, sv->sd.curchar->orig_pos) + 1 - startafter;
   else
     {
       startafter = false;
@@ -806,9 +806,9 @@ SVFillup (SearchView *sv, FontView *fv)
   make_enc_to_gid (&sv->dummy_map);
   for (ssize_t k = 0; k < 2; k++)
     set_enc_to_gid (&sv->dummy_map, k, sv->map[k]);
-  sv->dummy_map.backmap = sv->backmap;
+  sv->dummy_map.__backmap = sv->backmap;
   sv->dummy_map.enccount = 2;
-  sv->dummy_map.backmax = 2;
+  sv->dummy_map.__backmax = 2;
   sv->dummy_map.enc = &custom;
 
   sv->sd.fv = (FontViewBase *) fv;

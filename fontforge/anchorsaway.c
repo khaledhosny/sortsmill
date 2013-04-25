@@ -346,15 +346,15 @@ AnchorD_FindComplements (AnchorDlg *a)
 
   if (hasFreeType () && _sf->subfontcnt == 0)
     {
-      int enc = map->backmap[a->sc->orig_pos];
-      if (enc != -1)
+      if (gid_to_enc_is_set (map, a->sc->orig_pos))
         {
+          size_t enc = gid_to_enc (map, a->sc->orig_pos);
           sel = xcalloc (map->enccount, 1);
           sel[enc] = true;
           for (i = 0; i < sf->glyphcnt; ++i)
             if (sf->glyphs[i] != NULL)
               {
-                enc = map->backmap[i];
+                enc = gid_to_enc (map, i);
                 if (enc != -1)
                   {
                     for (ap = sf->glyphs[i]->anchor; ap != NULL; ap = ap->next)

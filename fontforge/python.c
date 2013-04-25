@@ -6912,7 +6912,7 @@ PyFF_Glyph_get_encoding (PyFF_Glyph *self, void *UNUSED (closure))
   SplineChar *sc = self->sc;
   EncMap *map = sc->parent->fv->map;
 
-  return (Py_BuildValue ("i", map->backmap[sc->orig_pos]));
+  return (Py_BuildValue ("i", gid_to_enc (map, sc->orig_pos)));
 }
 
 static PyObject *
@@ -11031,7 +11031,7 @@ SelIndex (PyObject *arg, FontViewBase *fv, int ints_as_unicode)
     {
       SplineChar *sc = ((PyFF_Glyph *) arg)->sc;
       if (sc->parent == fv->sf)
-        enc = fv->map->backmap[sc->orig_pos];
+        enc = gid_to_enc (fv->map, sc->orig_pos);
       else
         enc = SFFindSlot (fv->sf, fv->map, sc->unicodeenc, sc->name);
     }
@@ -14861,13 +14861,14 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
     {
       free (self->fv->selected);
       self->fv->selected = xcalloc (sf->glyphcnt, sizeof (char));
-      if (sf->glyphcnt > map->backmax)
-        map->backmap =
-          xrealloc (map->backmap, (map->backmax = sf->glyphcnt) * sizeof (int));
+      if (sf->glyphcnt > map->__backmax)
+        map->__backmap =
+          xrealloc (map->__backmap,
+                    (map->__backmax = sf->glyphcnt) * sizeof (int));
       for (i = 0; i < sf->glyphcnt; ++i)
         {
           set_enc_to_gid (map, i, i);
-          map->backmap[i] = i;
+          set_gid_to_enc (map, i, i);
         }
       map->enccount = sf->glyphcnt;
     }

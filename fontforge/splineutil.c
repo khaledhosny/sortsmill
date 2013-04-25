@@ -3067,7 +3067,7 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
     }
   else
     map = sf->map;
-  sf->glyphs = xcalloc (map->backmax, sizeof (SplineChar *));
+  sf->glyphs = xcalloc (map->__backmax, sizeof (SplineChar *));
   if (istype3)                  /* We read a type3 */
     sf->multilayer = true;
   if (istype3)
@@ -3091,8 +3091,8 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
       if (k == -1)
         k = notdefpos;
       set_enc_to_gid (map, i, k);
-      if (k != -1 && map->backmap[k] == -1)
-        map->backmap[k] = i;
+      if (k != -1)
+        add_gid_to_enc (map, k, i);
     }
   if (map->enccount > 256)
     {
@@ -3108,8 +3108,7 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
               if (j == 256)
                 {
                   set_enc_to_gid (map, i, k);
-                  if (map->backmap[k] == -1)
-                    map->backmap[k] = i;
+                  add_gid_to_enc (map, k, i);
                   ++i;
                 }
             }
@@ -3126,8 +3125,7 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
               if (j == 256)
                 {
                   set_enc_to_gid (map, i, k);
-                  if (map->backmap[k] == -1)
-                    map->backmap[k] = i;
+                  add_gid_to_enc (map, k, i);
                   ++i;
                 }
             }
@@ -7740,10 +7738,10 @@ EncMapNew (int enccount, int backmax, Encoding *enc)
   EncMap *map = (EncMap *) xzalloc (sizeof (EncMap));
 
   map->enccount = enccount;
-  map->backmax = backmax;
+  map->__backmax = backmax;
   make_enc_to_gid (map);
-  map->backmap = xmalloc (backmax * sizeof (int));
-  memset (map->backmap, -1, backmax * sizeof (int));
+  map->__backmap = xmalloc (backmax * sizeof (int));
+  memset (map->__backmap, -1, backmax * sizeof (int));
   map->enc = enc;
   return (map);
 }
@@ -7756,13 +7754,13 @@ EncMap1to1 (int enccount)
   int i;
 
   map->enccount = enccount;
-  map->backmax = enccount;
+  map->__backmax = enccount;
   make_enc_to_gid (map);
-  map->backmap = xmalloc (enccount * sizeof (int));
+  map->__backmap = xmalloc (enccount * sizeof (int));
   for (i = 0; i < enccount; ++i)
     {
       set_enc_to_gid (map, i, i);
-      map->backmap[i] = i;
+      set_gid_to_enc (map, i, i);
     }
   map->enc = &custom;
   return (map);
@@ -7794,7 +7792,8 @@ EncMapFree (EncMap *map)
 
   if (map->enc->is_temporary)
     EncodingFree (map->enc);
-  free (map->backmap);
+  release_enc_to_gid (map);
+  free (map->__backmap);
   free (map->remap);
   free (map);
 }
@@ -7807,10 +7806,10 @@ EncMapCopy (EncMap *map)
   new = (EncMap *) xzalloc (sizeof (EncMap));
   *new = *map;
   make_enc_to_gid (new);
-  new->backmap = xmalloc (new->backmax * sizeof (int));
+  new->__backmap = xmalloc (new->__backmax * sizeof (int));
   for (ssize_t k = 0; k < new->enccount; k++)
     set_enc_to_gid (new, k, enc_to_gid (map, k));
-  memcpy (new->backmap, map->backmap, new->backmax * sizeof (int));
+  memcpy (new->__backmap, map->__backmap, new->__backmax * sizeof (int));
   if (map->remap)
     {
       int n;

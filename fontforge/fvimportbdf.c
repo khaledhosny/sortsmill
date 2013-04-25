@@ -170,7 +170,7 @@ ExtendSF (SplineFont *sf, EncMap *map, int enc, int set)
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
       for (ssize_t k = map->enccount; k < map->enccount + n + 1; k++)
-        set_enc_to_gid (map, k, -1);
+        remove_enc_to_gid (map, k);
 
       map->enccount = n + 1;
       if (sf->fv != NULL)
@@ -917,7 +917,7 @@ SFGrowTo (SplineFont *sf, BDFFont *b, int cc, EncMap *map)
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
       for (ssize_t k = map->enccount; k < map->enccount + cc + 1; k++)
-        set_enc_to_gid (map, k, -1);
+        remove_enc_to_gid (map, k);
 
       map->enccount = cc + 1;
     }
