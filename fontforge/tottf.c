@@ -1552,7 +1552,7 @@ AssignTTFGlyph (struct glyphinfo *gi, SplineFont *sf, EncMap *map, int iscff)
   AssignNotdefNull (sf, bygid, iscff);
 
   j = iscff ? 1 : 3;
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1)
       {
         SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
@@ -1603,7 +1603,7 @@ AssignTTFBitGlyph (struct glyphinfo *gi, SplineFont *sf, EncMap *map,
     }
 
   j = 3;
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1)
       {
         SplineChar *sc = sf->glyphs[enc_to_gid (map, i)];
@@ -2184,7 +2184,7 @@ dumpcffencoding (SplineFont *sf, struct alltabs *at)
 
   cnt = 0;
   anydups = 0;
-  for (i = 0; i < 256 && i < map->enccount; ++i)
+  for (i = 0; i < 256 && i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1
         && (sc = sf->glyphs[enc_to_gid (map, i)]) != NULL)
       {
@@ -2214,7 +2214,7 @@ dumpcffencoding (SplineFont *sf, struct alltabs *at)
       for (i = 0; i < sf->glyphcnt; ++i)
         if (sf->glyphs[i] != NULL)
           sf->glyphs[i]->ticked = false;
-      for (i = 0; i < 256 && i < map->enccount; ++i)
+      for (i = 0; i < 256 && i < map->enc_limit; ++i)
         if (enc_to_gid (map, i) != -1
             && (sc = sf->glyphs[enc_to_gid (map, i)]) != NULL)
           {
@@ -2734,7 +2734,7 @@ isStdEncoding (SplineFont *sf, EncMap *map)
 {
   int i;
 
-  for (i = 0; i < 256 && i < map->enccount; ++i)
+  for (i = 0; i < 256 && i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1 && sf->glyphs[enc_to_gid (map, i)] != NULL)
       if (sf->glyphs[enc_to_gid (map, i)]->unicodeenc != -1)
         if (sf->glyphs[enc_to_gid (map, i)]->unicodeenc !=
@@ -3745,7 +3745,7 @@ AlreadyMSSymbolArea (SplineFont *sf, EncMap *map)
   int i;
   int acnt = 0, pcnt = 0;
 
-  for (i = 0; i < map->enccount && i < 0xffff; ++i)
+  for (i = 0; i < map->enc_limit && i < 0xffff; ++i)
     {
       if (enc_to_gid (map, i) != -1 && sf->glyphs[enc_to_gid (map, i)] != NULL
           && sf->glyphs[enc_to_gid (map, i)]->ttf_glyph != -1)
@@ -4172,7 +4172,7 @@ docs are wrong.
         {
           first = 0xf0ff;
           last = 0;
-          for (i = 0xf020; i < map->enccount && i <= 0xf0ff; ++i)
+          for (i = 0xf020; i < map->enc_limit && i <= 0xf0ff; ++i)
             if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL &&
                 sf->glyphs[gid]->ttf_glyph != -1)
               {
@@ -4181,7 +4181,7 @@ docs are wrong.
                 if (i > last)
                   last = i;
               }
-          for (i = 0; i < map->enccount && i <= 255; ++i)
+          for (i = 0; i < map->enc_limit && i <= 255; ++i)
             if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL &&
                 sf->glyphs[gid]->ttf_glyph != -1)
               {
@@ -4197,7 +4197,7 @@ docs are wrong.
         {
           first = 255;
           last = 0;
-          for (i = 0; i < map->enccount && i <= 255; ++i)
+          for (i = 0; i < map->enc_limit && i <= 255; ++i)
             if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL &&
                 sf->glyphs[gid]->ttf_glyph != -1)
               {
@@ -4206,7 +4206,7 @@ docs are wrong.
                 if (i > last)
                   last = i;
               }
-          for (i = 0xf020; i < map->enccount && i <= 0xf0ff; ++i)
+          for (i = 0xf020; i < map->enc_limit && i <= 0xf0ff; ++i)
             if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL &&
                 sf->glyphs[gid]->ttf_glyph != -1)
               {
@@ -5082,7 +5082,7 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
       /* SJIS supports "user defined characters" between 0xf040 and 0xfcfc */
       /*  there probably won't be any, but allow space for them if there are */
       for (base2bound = 0xfc00; base2bound > 0xefff; --base2bound)
-        if (base2bound < map->enccount && enc_to_gid (map, base2bound) != -1 &&
+        if (base2bound < map->enc_limit && enc_to_gid (map, base2bound) != -1 &&
             SCWorthOutputting (sf->glyphs[enc_to_gid (map, base2bound)]))
           break;
       base2bound >>= 8;
@@ -5097,17 +5097,17 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
   i = 0;
   if (base2 != -1)
     {
-      for (i = basebound; i < base2 && i < map->enccount; ++i)
+      for (i = basebound; i < base2 && i < map->enc_limit; ++i)
         if (enc_to_gid (map, i) == -1)
           continue;
         else if (SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
           break;
-      if (i == base2 || i == map->enccount)
+      if (i == base2 || i == map->enc_limit)
         i = 0;
     }
   if (i == 0)
     {
-      for (i = 0; i < base && i < map->enccount; ++i)
+      for (i = 0; i < base && i < map->enc_limit; ++i)
         if (enc_to_gid (map, i) == -1)
           continue;
         else if (SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
@@ -5122,7 +5122,7 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
 
   if (base2 != -1)
     {
-      for (i = base; i <= basebound && i < map->enccount; ++i)
+      for (i = base; i <= basebound && i < map->enc_limit; ++i)
         if (enc_to_gid (map, i) != -1
             && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
           {
@@ -5133,7 +5133,7 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
             break;
           }
       if (i == basebound + 1)
-        for (i = base2; i < 256 && i < map->enccount; ++i)
+        for (i = base2; i < 256 && i < map->enc_limit; ++i)
           if (enc_to_gid (map, i) != -1
               && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
             {
@@ -5146,7 +5146,7 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
     }
   else
     {
-      for (i = base; i <= 256 && i < map->enccount; ++i)
+      for (i = base; i <= 256 && i < map->enc_limit; ++i)
         if (enc_to_gid (map, i) != -1
             && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
           {
@@ -5157,7 +5157,7 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
             break;
           }
     }
-  for (i = 256; i < (base << 8) && i < map->enccount; ++i)
+  for (i = 256; i < (base << 8) && i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1
         && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
       {
@@ -5167,7 +5167,7 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
         break;
       }
   if (i == (base << 8) && base2 == -1)
-    for (i = ((basebound + 1) << 8); i < 0x10000 && i < map->enccount; ++i)
+    for (i = ((basebound + 1) << 8); i < 0x10000 && i < map->enc_limit; ++i)
       if (enc_to_gid (map, i) != -1
           && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
         {
@@ -5192,7 +5192,7 @@ _Gen816Enc (SplineFont *sf, int *tlen, EncMap *map)
     }
   glyphs = xcalloc (subheadcnt * planesize + plane0size, sizeof (uint16_t));
   subheads[0].rangeoff = 0;
-  for (i = 0; i < plane0size && i < map->enccount; ++i)
+  for (i = 0; i < plane0size && i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1 && sf->glyphs[enc_to_gid (map, i)] != NULL &&
         sf->glyphs[enc_to_gid (map, i)]->ttf_glyph != -1)
       glyphs[i] = sf->glyphs[enc_to_gid (map, i)]->ttf_glyph;
@@ -5400,7 +5400,7 @@ NeedsUCS4Table (SplineFont *sf, int *ucs4len, EncMap *map)
     i = 0;
   else
     i = map->enc->char_cnt;
-  for (; i < map->enccount; ++i)
+  for (; i < map->enc_limit; ++i)
     {
       if (enc_to_gid (map, i) != -1
           && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
@@ -5415,7 +5415,7 @@ NeedsUCS4Table (SplineFont *sf, int *ucs4len, EncMap *map)
         }
     }
 
-  if (i >= map->enccount)
+  if (i >= map->enc_limit)
     return NULL;
 
   if (!map->enc->is_unicodefull)
@@ -5432,13 +5432,13 @@ NeedsUCS4Table (SplineFont *sf, int *ucs4len, EncMap *map)
   putlong (format12, 0);        /* Number of groups, we'll come back to this */
 
   group = 0;
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1
         && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)])
         && sf->glyphs[enc_to_gid (map, i)]->unicodeenc != -1)
       {
         sc = sf->glyphs[enc_to_gid (map, i)];
-        for (j = i + 1; j < map->enccount && enc_to_gid (map, j) != -1 &&
+        for (j = i + 1; j < map->enc_limit && enc_to_gid (map, j) != -1 &&
              SCWorthOutputting (sf->glyphs[enc_to_gid (map, j)]) &&
              sf->glyphs[enc_to_gid (map, j)]->unicodeenc != -1 &&
              sf->glyphs[enc_to_gid (map, j)]->ttf_glyph ==
@@ -5484,7 +5484,7 @@ NeedsUCS2Table (SplineFont *sf, int *ucs2len, EncMap *map, int issymbol)
   if (map->enc->is_unicodebmp || map->enc->is_unicodefull)
     {
       int gid;
-      for (i = 0; i < 65536 && i < map->enccount; ++i)
+      for (i = 0; i < 65536 && i < map->enc_limit; ++i)
         if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
             && sf->glyphs[gid]->ttf_glyph != -1)
           {
@@ -5848,7 +5848,7 @@ dumpcmap (struct alltabs *at, SplineFont *sf, enum fontformat format)
         }
       if (!alreadyprivate)
         {
-          for (i = 0; i < map->enccount && i < 256; ++i)
+          for (i = 0; i < map->enc_limit && i < 256; ++i)
             {
               if (enc_to_gid (map, i) != -1
                   && (sc = sf->glyphs[enc_to_gid (map, i)]) != NULL
@@ -5872,7 +5872,7 @@ dumpcmap (struct alltabs *at, SplineFont *sf, enum fontformat format)
                   && sc->ttf_glyph != -1)
                 table[i - 0xf000] = sc->ttf_glyph;
             }
-          for (i = 0; i < map->enccount && i < 256; ++i)
+          for (i = 0; i < map->enc_limit && i < 256; ++i)
             {
               if (enc_to_gid (map, i) != -1
                   && (sc = sf->glyphs[enc_to_gid (map, i)]) != NULL
@@ -5885,7 +5885,7 @@ dumpcmap (struct alltabs *at, SplineFont *sf, enum fontformat format)
       /*  The alreadyprivate flag should detect this case */
       if (!alreadyprivate)
         {
-          for (i = 0; i < map->enccount && i < 256; ++i)
+          for (i = 0; i < map->enc_limit && i < 256; ++i)
             {
               if (enc_to_gid (map, i) != -1
                   && (sc = sf->glyphs[enc_to_gid (map, i)]) != NULL)
@@ -5894,7 +5894,7 @@ dumpcmap (struct alltabs *at, SplineFont *sf, enum fontformat format)
                   sc->unicodeenc = 0xf000 + i;
                 }
             }
-          for (; i < map->enccount; ++i)
+          for (; i < map->enc_limit; ++i)
             {
               if (enc_to_gid (map, i) != -1
                   && (sc = sf->glyphs[enc_to_gid (map, i)]) != NULL)
@@ -7266,7 +7266,7 @@ _WriteTTFFont (FILE *ttf, SplineFont *sf, enum fontformat format,
         {
           if (i < 0 && anyglyphs)
             {
-              if (map->enccount <= 256)
+              if (map->enc_limit <= 256)
                 {
                   char *buts[3];
                   buts[0] = _("_Yes");

@@ -96,7 +96,7 @@ _DoFVCopy (FontView *fv, int from, int to, int clear)
       {
         sc->ticked = sc->ticked2 = false;
       }
-  for (enc = 0; enc < fv->b.map->enccount; ++enc)
+  for (enc = 0; enc < fv->b.map->enc_limit; ++enc)
     {
       if (fv->b.selected[enc] && (gid = enc_to_gid (fv->b.map, enc)) != -1 &&
           (sc = sf->glyphs[gid]) != NULL && !sc->ticked)
@@ -130,9 +130,9 @@ _DoFVCompare (FontView *fv, int from, int to, double errbound)
   SplineChar *sc;
   int first = -1;
 
-  memset (fv->b.selected, 0, fv->b.map->enccount);
+  memset (fv->b.selected, 0, fv->b.map->enc_limit);
 
-  for (enc = 0; enc < fv->b.map->enccount; ++enc)
+  for (enc = 0; enc < fv->b.map->enc_limit; ++enc)
     {
       if ( /*fv->b.selected[enc] && */ (gid = enc_to_gid (fv->b.map, enc)) != -1
           &&

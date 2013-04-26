@@ -349,7 +349,7 @@ AnchorD_FindComplements (AnchorDlg *a)
       if (gid_to_enc_is_set (map, a->sc->orig_pos))
         {
           size_t enc = gid_to_enc (map, a->sc->orig_pos);
-          sel = xcalloc (map->enccount, 1);
+          sel = xcalloc (map->enc_limit, 1);
           sel[enc] = true;
           for (i = 0; i < sf->glyphcnt; ++i)
             if (sf->glyphs[i] != NULL)

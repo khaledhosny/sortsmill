@@ -49,7 +49,7 @@ remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
       // @code{i == -1} if no match is found, which turns out to be,
       // by mere coincidence, the ‘code point’ for deleting an entry.
 
-      ssize_t i = map->enccount - 1;
+      ssize_t i = map->enc_limit - 1;
       while (0 <= i && enc_to_gid (map, i) != gid)
         i--;
       set_gid_to_enc (map, gid, i);

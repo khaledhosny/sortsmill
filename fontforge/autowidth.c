@@ -297,7 +297,7 @@ static void
 ApplyChanges (WidthInfo * wi)
 {
   EncMap *map = wi->fv->map;
-  uint8_t *rsel = xcalloc (map->enccount, sizeof (char));
+  uint8_t *rsel = xcalloc (map->enc_limit, sizeof (char));
   int i, width;
   real transform[6];
   struct charone *ch;
@@ -1895,7 +1895,7 @@ autowidthBuildCharList (FontViewBase *fv, SplineFont *sf,
 
   for (doit = 0; doit < 2; ++doit)
     {
-      for (i = cnt = 0; i < map->enccount && cnt < 300; ++i)
+      for (i = cnt = 0; i < map->enc_limit && cnt < 300; ++i)
         {
           if (fv->selected[i] && (gid = enc_to_gid (map,i)) != -1
               && SCWorthOutputting (sf->glyphs[gid]))

@@ -318,7 +318,7 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
         }
       else
         {
-          for (i = 0; i < fv->map->enccount; ++i)
+          for (i = 0; i < fv->map->enc_limit; ++i)
             {
               if (fv->selected[i] || bd->which == bd_all)
                 {
@@ -388,7 +388,7 @@ FVRemoveBitmaps (CreateBitmapData * bd, int32_t *sizes)
                 }
               else
                 {
-                  for (j = 0; j < fv->map->enccount; ++j)
+                  for (j = 0; j < fv->map->enc_limit; ++j)
                     if (fv->selected[j]
                         && (gid = enc_to_gid (fv->map, j)) != -1)
                       BDFClearGlyph (bdf, gid, pass);

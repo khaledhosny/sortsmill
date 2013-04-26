@@ -173,7 +173,7 @@
           (SCM _enc_to_gid encoding_to_gid)
           (SCM _gid_to_enc gid_to_encoding)
           ;;(* backmap gid_to_encoding)         <-- obsolescent; don’t use.
-          (int enccount encoding_limit)
+          (int enc_limit encoding_limit)
           ;;(int backmax gid_to_encoding_max)         <-- obsolescent; don’t use.
           (* remap)
           ((* Encoding) enc encoding)

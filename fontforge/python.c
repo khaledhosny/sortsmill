@@ -10968,7 +10968,7 @@ PyFFSelection_All (PyObject *self, PyObject *UNUSED (args))
   FontViewBase *fv = ((PyFF_Selection *) self)->fv;
   int i;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     fv->selected[i] = true;
   Py_RETURN (self);
 }
@@ -10979,7 +10979,7 @@ PyFFSelection_None (PyObject *self, PyObject *UNUSED (args))
   FontViewBase *fv = ((PyFF_Selection *) self)->fv;
   int i;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     fv->selected[i] = false;
   Py_RETURN (self);
 }
@@ -10990,7 +10990,7 @@ PyFFSelection_Changed (PyObject *self, PyObject *UNUSED (args))
   FontViewBase *fv = ((PyFF_Selection *) self)->fv;
   int i, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     {
       if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->sf->glyphs[gid] != NULL)
         fv->selected[i] = fv->sf->glyphs[gid]->changed;
@@ -11006,7 +11006,7 @@ PyFFSelection_Invert (PyObject *self, PyObject *UNUSED (args))
   FontViewBase *fv = ((PyFF_Selection *) self)->fv;
   int i;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     fv->selected[i] = !fv->selected[i];
   Py_RETURN (self);
 }
@@ -11040,7 +11040,7 @@ SelIndex (PyObject *arg, FontViewBase *fv, int ints_as_unicode)
       PyErr_Format (PyExc_TypeError, "Unexpected argument type");
       return (-1);
     }
-  if (enc < 0 || enc >= fv->map->enccount)
+  if (enc < 0 || enc >= fv->map->enc_limit)
     {
       PyErr_Format (PyExc_ValueError, "Encoding is out of range");
       return (-1);
@@ -11051,7 +11051,7 @@ SelIndex (PyObject *arg, FontViewBase *fv, int ints_as_unicode)
 static void
 FVBDeselectAll (FontViewBase *fv)
 {
-  memset (fv->selected, 0, fv->map->enccount);
+  memset (fv->selected, 0, fv->map->enc_limit);
 }
 
 static PyObject *
@@ -11165,7 +11165,7 @@ static PyGetSetDef PyFFSelection_getset[] = {
 static Py_ssize_t
 PyFFSelection_Length (PyObject *self)
 {
-  return (((PyFF_Selection *) self)->fv->map->enccount);
+  return (((PyFF_Selection *) self)->fv->map->enc_limit);
 }
 
 static PyObject *
@@ -12439,8 +12439,8 @@ fontiter_iternextkey (fontiterobject * di)
       case 1:
         {                       /* Encodings of selected glyphs (in encoding order) */
           FontViewBase *fv = di->fv;
-          int enccount = fv->map->enccount;
-          while (di->pos < enccount)
+          int enc_limit = fv->map->enc_limit;
+          while (di->pos < enc_limit)
             {
               if (fv->selected[di->pos])
                 return (Py_BuildValue ("i", di->pos++));
@@ -12452,8 +12452,8 @@ fontiter_iternextkey (fontiterobject * di)
         {                       /* Selected glyphs in encoding order */
           int gid;
           FontViewBase *fv = di->fv;
-          int enccount = fv->map->enccount;
-          while (di->pos < enccount)
+          int enc_limit = fv->map->enc_limit;
+          while (di->pos < enc_limit)
             {
               if (fv->selected[di->pos] && (gid = enc_to_gid (fv->map, di->pos)) != -1
                   && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -12483,8 +12483,8 @@ fontiter_iternextkey (fontiterobject * di)
         {                       /* All glyphs in encoding order */
           int gid;
           FontViewBase *fv = di->fv;
-          int enccount = fv->map->enccount;
-          while (di->pos < enccount)
+          int enc_limit = fv->map->enc_limit;
+          while (di->pos < enc_limit)
             {
               if ((gid = enc_to_gid (fv->map, di->pos)) != -1
                   && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -13257,7 +13257,7 @@ PyFF_Font_set_selection (PyFF_Font *self, PyObject *value,
       return (-1);
     }
 
-  if (len2 >= fv->map->enccount)
+  if (len2 >= fv->map->enc_limit)
     {
       PyErr_Format (PyExc_TypeError, "Too much data");
       return (-1);
@@ -14870,7 +14870,7 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
           set_enc_to_gid (map, i, i);
           set_gid_to_enc (map, i, i);
         }
-      map->enccount = sf->glyphcnt;
+      map->enc_limit = sf->glyphcnt;
     }
   self->fv->sf = sf;
   if (!no_windowing_ui)
@@ -15012,7 +15012,7 @@ PyFF_Font_set_encoding (PyFF_Font *self, PyObject *value,
       SFReplaceEncodingBDFProps (fv->sf, fv->map);
     }
   free (fv->selected);
-  fv->selected = xcalloc (fv->map->enccount, sizeof (char));
+  fv->selected = xcalloc (fv->map->enc_limit, sizeof (char));
   if (!no_windowing_ui)
     FontViewReformatAll (fv->sf);
 
@@ -16630,7 +16630,7 @@ GlyphsFromSelection (FontViewBase *fv)
   map = fv->map;
   sf = fv->sf;
   selcnt = 0;
-  for (enc = 0; enc < map->enccount; ++enc)
+  for (enc = 0; enc < map->enc_limit; ++enc)
     {
       if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sf->glyphs[gid]))
@@ -16645,7 +16645,7 @@ GlyphsFromSelection (FontViewBase *fv)
 
   glyphlist = xmalloc ((selcnt + 1) * sizeof (SplineChar *));
   selcnt = 0;
-  for (enc = 0; enc < map->enccount; ++enc)
+  for (enc = 0; enc < map->enc_limit; ++enc)
     {
       if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sc = sf->glyphs[gid]))
@@ -19127,7 +19127,7 @@ PyFFFont_CreateMappedChar (PyFF_Font *self, PyObject *args)
       PyErr_Clear ();
       if (!PyArg_ParseTuple (args, "i", &enc))
         return (NULL);
-      if (enc < 0 || enc > fv->map->enccount)
+      if (enc < 0 || enc > fv->map->enc_limit)
         {
           PyErr_Format (PyExc_ValueError, "Encoding is out of range");
           return (NULL);
@@ -19235,7 +19235,7 @@ PyFFFont_CreateInterpolatedGlyph (PyFF_Font *self, PyObject *args)
 
   baseenc = EncFromUni (sc->unicodeenc, fv->map->enc);
   if (baseenc == -1)
-    baseenc = fv->map->enccount + 1;
+    baseenc = fv->map->enc_limit + 1;
 
   SFAddGlyphAndEncode (sf, sc, fv->map, baseenc);
   return (PySC_From_SC_I (sc));
@@ -19575,7 +19575,7 @@ PyFFFont_canonicalContours (PyFF_Font *self, PyObject *UNUSED (args))
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       CanonicalContours (sf->glyphs[gid], fv->active_layer);
 
@@ -19595,7 +19595,7 @@ PyFFFont_canonicalStart (PyFF_Font *self, PyObject *UNUSED (args))
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       SPLsStartToLeftmost (sf->glyphs[gid], fv->active_layer);
 
@@ -20339,7 +20339,7 @@ PyFFFont_Round (PyFF_Font *self, PyObject *args)
   map = fv->map;
   if (!PyArg_ParseTuple (args, "|d", &factor))
     return (NULL);
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       {
         SplineChar *sc = sf->glyphs[gid];
@@ -20365,7 +20365,7 @@ PyFFFont_Cluster (PyFF_Font *self, PyObject *args)
   if (!PyArg_ParseTuple (args, "|dd", &within, &max))
     return (NULL);
 
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       {
         SplineChar *sc = sf->glyphs[gid];
@@ -20419,7 +20419,7 @@ PyFFFont_correctDirection (PyFF_Font *self, PyObject *UNUSED (args))
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && (sc = sf->glyphs[gid]) != NULL
         && fv->selected[i])
       {
@@ -20758,7 +20758,7 @@ PyFF_FontLength (PyObject *object)
   PyFF_Font *self = (PyFF_Font *) object;
   if (CheckIfFontClosed (self))
     return (-1);
-  return (self->fv->map->enccount);
+  return (self->fv->map->enc_limit);
 }
 
 static PyObject *
@@ -20791,7 +20791,7 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
   else if (PyInt_Check (index))
     {
       int pos = PyInt_AsLong (index), gid;
-      if (pos < 0 || pos >= fv->map->enccount)
+      if (pos < 0 || pos >= fv->map->enc_limit)
         {
           PyErr_Format (PyExc_TypeError, "Index out of bounds");
           return (NULL);
@@ -20849,7 +20849,7 @@ PyFF_FontContains (PyObject *object, PyObject *index)
   else if (PyInt_Check (index))
     {
       int pos = PyInt_AsLong (index), gid;
-      if (pos < 0 || pos >= fv->map->enccount)
+      if (pos < 0 || pos >= fv->map->enc_limit)
         {
           return (0);
         }

@@ -1159,24 +1159,20 @@ typedef struct encmap
      points for multiply encoded glyphs. */
   SCM _gid_to_enc; /* Hash table mapping glyph ID to encoding point. */
 
-  /* FIXME: Consider changing the name of `enccount' to something like
-     `enc_limit'. */
-  int enccount;           /* One more than the highest encoding point.
+  int enc_limit;           /* One more than the highest encoding point.
                              Strictly speaking, this might include
                              glyphs that are not encoded, but which
                              are displayed after the encoding
                              proper. */
 
   /* FIXME: This is destined to be replaced by _gid_to_enc. */
-  //int32_t *backmap;         /* Map from glyphid to encoding. */
-  //int backmax;              /* Allocated size of the backmap array. */
   int32_t *__backmap;       /* Map from glyphid to encoding. */
   int __backmax;            /* Allocated size of the backmap array. */
 
   /* FIXME: We also need a SplineChar-to-GID mapping, or replace the
      GIDs with SplineChars themselves. */
 
-  /* FIXME: Replace loops-up-to-enccount with loops over _enc_to_gid
+  /* FIXME: Replace loops-up-to-enc_limit with loops over _enc_to_gid
      entries. */
 
   struct remap *remap;
@@ -2778,7 +2774,7 @@ VISIBLE void EncMapFree (EncMap *map);
 VISIBLE EncMap *EncMapFromEncoding (SplineFont *sf, Encoding *enc);
 VISIBLE EncMap *CompactEncMap (EncMap *map, SplineFont *sf);
 VISIBLE EncMap *EncMapNew (int encmax, int backmax, Encoding *enc);
-VISIBLE EncMap *EncMap1to1 (int enccount);
+VISIBLE EncMap *EncMap1to1 (int enc_limit);
 VISIBLE EncMap *EncMapCopy (EncMap *map);
 void SFExpandGlyphCount (SplineFont *sf, int newcnt);
 void ScriptLangListFree (struct scriptlanglist *sl);

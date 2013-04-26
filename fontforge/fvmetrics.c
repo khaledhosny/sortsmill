@@ -184,7 +184,7 @@ void FVDoit(CreateWidthData *wd) {
 	wd->increment *= scale;
     }
     bc = NULL;
-    for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] ) {
+    for ( i=0; i<fv->map->enc_limit; ++i ) if ( fv->selected[i] ) {
 	SplineChar *sc;
 
 	sc = SFMakeChar(fv->sf,fv->map,i);

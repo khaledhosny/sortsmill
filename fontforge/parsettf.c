@@ -4047,7 +4047,7 @@ readcffenc (FILE *ttf, struct topdicts *dict, struct ttfinfo *info,
           for (i = 1; i <= cnt && i < info->glyph_cnt; ++i)
             {
               ssize_t cc = getc (ttf);
-              if (0 <= cc && cc < map->enccount)
+              if (0 <= cc && cc < map->enc_limit)
                 {
                   set_enc_to_gid (map, cc, i);
                 }
@@ -4617,14 +4617,14 @@ cidfigure (struct ttfinfo *info, struct topdicts *dict,
       cid = dict->charset[i];
       if (cid >= sf->glyphcnt)
         sf->glyphcnt = sf->glyphmax = cid + 1;
-      /*if ( cid>=encmap->enccount ) encmap->enccount = cid+1; */
+      /*if ( cid>=encmap->enc_limit ) encmap->enc_limit = cid+1; */
     }
   for (j = 0; subdicts[j] != NULL; ++j)
     info->subfonts[j]->glyphs =
       xcalloc (info->subfonts[j]->glyphcnt, sizeof (SplineChar *));
-  /*encmap->encmax = encmap->enccount; */
-  /*encmap->map = xmalloc(encmap->enccount*sizeof(int)); */
-  /*memset(encmap->map,-1,encmap->enccount*sizeof(int)); */
+  /*encmap->encmax = encmap->enc_limit; */
+  /*encmap->map = xmalloc(encmap->enc_limit*sizeof(int)); */
+  /*memset(encmap->map,-1,encmap->enc_limit*sizeof(int)); */
 
   info->chars = xcalloc (info->glyph_cnt, sizeof (SplineChar *));
 
@@ -5700,14 +5700,14 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
 
       if (format == 0)
         {
-          if (justinuse == git_normal && map != NULL && map->enccount < 256)
+          if (justinuse == git_normal && map != NULL && map->enc_limit < 256)
             {
-              for (ssize_t k = map->enccount; k < 256; k++)
+              for (ssize_t k = map->enc_limit; k < 256; k++)
                 {
                   remove_enc_to_gid (map, k);
                 }
 
-              map->enccount = 256;
+              map->enc_limit = 256;
             }
           for (i = 0; i < len - 6; ++i)
             table[i] = getc (ttf);
@@ -5811,7 +5811,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                                   if (info->chars[kk]->unicodeenc == -1)
                                     info->chars[kk]->unicodeenc = uenc;
                                 }
-                              if (map != NULL && lenc < map->enccount)
+                              if (map != NULL && lenc < map->enc_limit)
                                 {
                                   set_enc_to_gid (map, lenc,
                                                   (uint16_t) (j + delta[i]));
@@ -5890,7 +5890,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                                   if (dounicode
                                       && info->chars[index]->unicodeenc == -1)
                                     info->chars[index]->unicodeenc = uenc;
-                                  if (map != NULL && lenc < map->enccount)
+                                  if (map != NULL && lenc < map->enc_limit)
                                     {
                                       set_enc_to_gid (map, lenc, index);
                                     }
@@ -5936,7 +5936,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                   if (dounicode)
                     info->chars[gid]->unicodeenc =
                       trans != NULL ? trans[first + 1] : first + i;
-                  if (map != NULL && first + i < map->enccount)
+                  if (map != NULL && first + i < map->enc_limit)
                     {
                       set_enc_to_gid (map, first + i, gid);
                     }
@@ -6010,7 +6010,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                           int lenc = modenc (i, mod);
                           if (dounicode && info->chars[index]->unicodeenc == -1)
                             info->chars[index]->unicodeenc = i;
-                          if (map != NULL && lenc < map->enccount)
+                          if (map != NULL && lenc < map->enc_limit)
                             {
                               set_enc_to_gid (map, lenc, index);
                             }
@@ -6041,7 +6041,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                                   && info->chars[index]->unicodeenc == -1)
                                 info->chars[index]->unicodeenc =
                                   umodenc (enc, mod, info);
-                              if (map != NULL && lenc < map->enccount)
+                              if (map != NULL && lenc < map->enc_limit)
                                 {
                                   set_enc_to_gid (map, lenc, index);
                                 }
@@ -6085,7 +6085,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                     sc = info->chars[startglyph + i - start];
                     if (dounicode && sc->unicodeenc == -1)
                       sc->unicodeenc = uenc;
-                    if (map != NULL && sc->unicodeenc < map->enccount)
+                    if (map != NULL && sc->unicodeenc < map->enc_limit)
                       {
                         set_enc_to_gid (map, uenc, startglyph + i - start);
                       }
@@ -6113,7 +6113,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                 int gid = getushort (ttf);
                 if (dounicode)
                   info->chars[gid]->unicodeenc = first + i;
-                if (map != NULL && first + i < map->enccount)
+                if (map != NULL && first + i < map->enc_limit)
                   {
                     set_enc_to_gid (map, first + i, gid);
                   }
@@ -6156,7 +6156,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
                       {
                         if (dounicode)
                           info->chars[startglyph + i - start]->unicodeenc = i;
-                        if (map != NULL && i < map->enccount)
+                        if (map != NULL && i < map->enc_limit)
                           {
                             set_enc_to_gid (map, i, startglyph + i - start);
                           }
@@ -6409,7 +6409,7 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
               info->chars[gid]->unicodeenc =
                 UniFromName (chars->keys[i], info->uni_interp, info->map->enc);
               if (map != NULL && info->chars[gid]->unicodeenc != -1
-                  && info->chars[gid]->unicodeenc < map->enccount)
+                  && info->chars[gid]->unicodeenc < map->enc_limit)
                 {
                   set_enc_to_gid (map, info->chars[gid]->unicodeenc, gid);
                 }
@@ -6902,7 +6902,7 @@ SymbolFixup (struct ttfinfo *info)
   EncMap *map = info->map;
 
   max = -1;
-  for (i = map->enccount - 1; i >= 0; --i)
+  for (i = map->enc_limit - 1; i >= 0; --i)
     {
       if (enc_to_gid (map, i) == -1)
         continue;
@@ -6915,7 +6915,7 @@ SymbolFixup (struct ttfinfo *info)
       if (i > max)
         max = i;
     }
-  map->enccount = max;
+  map->enc_limit = max;
 }
 
 void
@@ -6925,7 +6925,7 @@ AltUniFigure (SplineFont *sf, EncMap *map, int check_dups)
 
   if (map->enc != &custom)
     {
-      for (i = 0; i < map->enccount; ++i)
+      for (i = 0; i < map->enc_limit; ++i)
         if ((gid = enc_to_gid (map, i)) != -1)
           {
             int uni = UniFromEnc (i, map->enc);
@@ -7095,7 +7095,7 @@ PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
     if (info->chars[i] != NULL)
       info->chars[i]->ticked = false;
 
-  for (int i = 0; i < map->enccount; ++i)
+  for (int i = 0; i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1)
       info->chars[enc_to_gid (map, i)]->ticked = true;
 
@@ -7107,23 +7107,23 @@ PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
   if (extras != 0)
     {
       int base;
-      if (map->enccount <= 256)
+      if (map->enc_limit <= 256)
         base = 256;
-      else if (map->enccount <= 65536)
+      else if (map->enc_limit <= 65536)
         base = 65536;
-      else if (map->enccount <= 17 * 65536)
+      else if (map->enc_limit <= 17 * 65536)
         base = 17 * 65536;
       else
-        base = map->enccount;
+        base = map->enc_limit;
 
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
-      for (ssize_t k = map->enccount; k < base + extras; k++)
+      for (ssize_t k = map->enc_limit; k < base + extras; k++)
         {
           remove_enc_to_gid (map, k);
         }
 
-      map->enccount = base + extras;
+      map->enc_limit = base + extras;
 
       extras = 0;
       for (int i = 0; i < info->glyph_cnt; ++i)
@@ -7146,7 +7146,7 @@ MapDoBack (EncMap *map, struct ttfinfo *info)
   map->__backmax = info->glyph_cnt;
   map->__backmap = xmalloc (info->glyph_cnt * sizeof (int));
   memset (map->__backmap, -1, info->glyph_cnt * sizeof (int));
-  for (i = map->enccount - 1; i >= 0; --i)
+  for (i = map->enc_limit - 1; i >= 0; --i)
     if (enc_to_gid (map, i) >= 0 && enc_to_gid (map, i) < info->glyph_cnt)
       if (gid_to_enc (map, enc_to_gid (map, i)) == -1)
         set_gid_to_enc (map, enc_to_gid (map, i), i);

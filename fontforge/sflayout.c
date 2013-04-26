@@ -193,7 +193,7 @@ _FDMap (FontData * fd, int uenc)
   /* given a unicode code point, find the encoding in this font */
   int gid;
 
-  if (uenc >= fd->sfmap->map->enccount)
+  if (uenc >= fd->sfmap->map->enc_limit)
     return (-1);
   gid = enc_to_gid (fd->sfmap->map, uenc);
   if (gid == -1 || fd->sf->glyphs[gid] == NULL)

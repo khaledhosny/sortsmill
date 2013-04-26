@@ -175,7 +175,7 @@ HashToId (char *fontname, SplineFont *sf, EncMap *map)
       high = 0x73ff;
     }
   else
-    for (i = 0; i < map->enccount && i < 256; ++i)
+    for (i = 0; i < map->enc_limit && i < 256; ++i)
       if ((gid = enc_to_gid (map, i)) != -1 && (sc = sf->glyphs[gid]) != NULL)
         {
           /* Japanese between     0x4000 and 0x41ff */
@@ -248,7 +248,7 @@ IsMacMonospaced (SplineFont *sf, EncMap *map)
   int i;
   double width = 0x80000000;
 
-  for (i = 0; i < 256 && i < map->enccount; ++i)
+  for (i = 0; i < 256 && i < map->enc_limit; ++i)
     {
       int gid = enc_to_gid (map, i);
       if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
@@ -267,7 +267,7 @@ SFFindExistingCharMac (SplineFont *sf, EncMap *map, int unienc)
 {
   int i, gid;
 
-  for (i = 0; i < map->enccount && i < 256; ++i)
+  for (i = 0; i < map->enc_limit && i < 256; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
         && sf->glyphs[gid]->unicodeenc == unienc)
       return (sf->glyphs[gid]);
@@ -281,7 +281,7 @@ SFMacWidthMax (SplineFont *sf, EncMap *map)
   int i, gid;
   double width = -1;
 
-  for (i = 0; i < 256 && i < map->enccount; ++i)
+  for (i = 0; i < 256 && i < map->enc_limit; ++i)
     {
       if ((gid = enc_to_gid (map, i)) != -1
           && SCWorthOutputting (sf->glyphs[gid]))
@@ -303,7 +303,7 @@ SFMacAnyKerns (SplineFont *sf, EncMap *map)
   int i, cnt = 0, gid;
   KernPair *kp;
 
-  for (i = 0; i < 256 && i < map->enccount; ++i)
+  for (i = 0; i < 256 && i < map->enc_limit; ++i)
     {
       if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL)
         {
@@ -454,11 +454,11 @@ BDFToNFNT (FILE *res, BDFFont *bdf, EncMap *map)
   int gid;
   BDFChar *bdfc;
 
-  for (i = 0; i < map->enccount; i++)
+  for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCPrepareForOutput (bdfc, true);
 
-  for (i = width = 0; i < 256 && i < map->enccount; ++i)
+  for (i = width = 0; i < 256 && i < map->enc_limit; ++i)
     {
       if ((gid = enc_to_gid (map, i)) != -1 && gid < bdf->glyphcnt
           && bdf->glyphs[gid] != NULL)
@@ -482,7 +482,7 @@ BDFToNFNT (FILE *res, BDFFont *bdf, EncMap *map)
   for (i = width = 0; i < 256; ++i)
     {
       locs[i] = width;
-      if (i >= map->enccount || (gid = enc_to_gid (map, i)) == -1
+      if (i >= map->enc_limit || (gid = enc_to_gid (map, i)) == -1
           || gid >= bdf->glyphcnt || bdf->glyphs[gid] == NULL
           || !SCWorthOutputting (bdf->glyphs[gid]->sc))
         {
@@ -517,7 +517,7 @@ BDFToNFNT (FILE *res, BDFFont *bdf, EncMap *map)
   lbearings['\t'] = 0;
   widths['\t'] = 6;
 
-  for (i = 0; i < map->enccount; i++)
+  for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
 
@@ -582,7 +582,7 @@ DummyNFNT (FILE *res, BDFFont *bdf, EncMap *map)
   uint32_t rlenpos = ftell (res);
   int gid;
 
-  for (i = width = 0; i < 256 && i < map->enccount; ++i)
+  for (i = width = 0; i < 256 && i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && gid < bdf->glyphcnt
         && bdf->glyphs[gid] != NULL)
       {
@@ -970,7 +970,7 @@ SFToFOND (FILE *res, SplineFont *sf, uint32_t id, int dottf,
   putshort (res, stylecode);
   for (k = 0; k <= 256; ++k)
     {
-      if (k >= map->enccount || k == 256 || (gid = enc_to_gid (map, k)) == -1
+      if (k >= map->enc_limit || k == 256 || (gid = enc_to_gid (map, k)) == -1
           || sf->glyphs[gid] == NULL)
         putshort (res, 1 << 12);        /* 1 em is default size */
       else
@@ -986,7 +986,7 @@ SFToFOND (FILE *res, SplineFont *sf, uint32_t id, int dottf,
       putshort (res, 1 - 1);    /* One style in the width table too */
       putshort (res, stylecode);        /* style */
       putshort (res, cnt);      /* Count of kerning pairs */
-      for (k = 0; k < 256 && k < map->enccount; ++k)
+      for (k = 0; k < 256 && k < map->enc_limit; ++k)
         {
           if ((gid = enc_to_gid (map, k)) != -1 && sf->glyphs[gid] != NULL)
             {
@@ -1382,7 +1382,7 @@ SFsToFOND (FILE *res, struct sflist *sfs, uint32_t id, int format, int bf)
         putshort (res, i);
         for (k = 0; k <= 257; ++k)
           {
-            if (k >= faces[i]->map->enccount || k >= 256 ||
+            if (k >= faces[i]->map->enc_limit || k >= 256 ||
                 (gid = enc_to_gid (faces[i]->map, k)) == -1
                 || faces[i]->sf->glyphs[gid] == NULL)
               putshort (res, 1 << 12);  /* 1 em is default size */
@@ -1404,7 +1404,7 @@ SFsToFOND (FILE *res, struct sflist *sfs, uint32_t id, int format, int bf)
           {
             putshort (res, i);  /* style */
             putshort (res, cnt);        /* Count of kerning pairs */
-            for (k = 0; k < 256 && k < faces[i]->map->enccount; ++k)
+            for (k = 0; k < 256 && k < faces[i]->map->enc_limit; ++k)
               {
                 if ((gid = enc_to_gid (faces[i]->map, k)) != -1
                     && faces[i]->sf->glyphs[gid] != NULL)

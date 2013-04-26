@@ -274,7 +274,7 @@ BVChangeChar (BitmapView *bv, int i, int fitit)
     }
   else
     {
-      if (i < 0 || i >= map->enccount)
+      if (i < 0 || i >= map->enc_limit)
         return;
       bc = BDFMakeChar (bdf, map, i);
     }
@@ -2149,11 +2149,11 @@ BVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *g)
     }
   else if (mi->mid == MID_NextDef)
     {
-      for (pos = BVCurEnc (bv) + 1; pos < map->enccount &&
+      for (pos = BVCurEnc (bv) + 1; pos < map->enc_limit &&
            ((gid = enc_to_gid (map, pos)) == -1
             || !SCWorthOutputting (sf->glyphs[gid])
             || bv->bdf->glyphs[gid] == NULL); ++pos);
-      if (pos == map->enccount)
+      if (pos == map->enc_limit)
         return;
     }
   else if (mi->mid == MID_PrevDef)
@@ -2165,7 +2165,7 @@ BVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *g)
       if (pos < 0)
         return;
     }
-  if (pos >= 0 && pos < map->enccount)
+  if (pos >= 0 && pos < map->enc_limit)
     BVChangeChar (bv, pos, false);
 }
 

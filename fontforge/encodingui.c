@@ -225,9 +225,9 @@ MakeEncoding (SplineFont *sf, EncMap * map)
   item = xcalloc (1, sizeof (Encoding));
   item->enc_name = name;
   item->only_1byte = item->has_1byte = true;
-  item->char_cnt = map->enccount;
-  item->unicode = xcalloc (map->enccount, sizeof (int32_t));
-  for (i = 0; i < map->enccount; ++i)
+  item->char_cnt = map->enc_limit;
+  item->unicode = xcalloc (map->enc_limit, sizeof (int32_t));
+  for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && (sc = sf->glyphs[gid]) != NULL)
       {
         if (sc->unicodeenc != -1)
@@ -235,7 +235,7 @@ MakeEncoding (SplineFont *sf, EncMap * map)
         else if (strcmp (sc->name, ".notdef") != 0)
           {
             if (item->psnames == NULL)
-              item->psnames = xcalloc (map->enccount, sizeof (uint32_t *));
+              item->psnames = xcalloc (map->enc_limit, sizeof (uint32_t *));
             item->psnames[i] = xstrdup_or_null (sc->name);
           }
       }
@@ -286,7 +286,7 @@ SFFindNearTop (SplineFont *sf)
           map = fv->b.map;
           fv->sc_near_top = NULL;
           for (i = fv->rowoff * fv->colcnt;
-               i < map->enccount
+               i < map->enc_limit
                && i < (fv->rowoff + fv->rowcnt) * fv->colcnt; ++i)
             if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL)
               {
@@ -303,7 +303,7 @@ SFFindNearTop (SplineFont *sf)
           map = fv->b.map;
           fv->sc_near_top = NULL;
           for (i = fv->rowoff * fv->colcnt;
-               i < map->enccount
+               i < map->enc_limit
                && i < (fv->rowoff + fv->rowcnt) * fv->colcnt; ++i)
             {
               for (k = 0; k < sf->subfontcnt; ++k)

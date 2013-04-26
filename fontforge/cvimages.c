@@ -953,7 +953,7 @@ int FVImportImages(FontViewBase *fv,char *path,int format,int toback, int flags)
     SplineChar *sc;
 
     tot = 0;
-    for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i]) {
+    for ( i=0; i<fv->map->enc_limit; ++i ) if ( fv->selected[i]) {
 	sc = SFMakeChar(fv->sf,fv->map,i);
 	endpath = strchr(start,';');
 	if ( endpath!=NULL ) *endpath = '\0';
@@ -1054,7 +1054,7 @@ return( false );
 	    }
 	    sc = SFMakeChar(fv->sf,fv->map,i);
 	} else {
-	    if ( val<fv->map->enccount ) {
+	    if ( val<fv->map->enc_limit ) {
 		/* It's there */;
 	    } else {
 		ff_post_error(_("Encoding value not in font"),_("Encoding value (%x) not in font, ignored"),val);

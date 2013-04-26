@@ -3722,7 +3722,7 @@ fea_glyphname_get (struct parseState *tok, char *name)
 
 /* Not in the encoding, so add it */
 #if 1
-  enc = map->enccount;
+  enc = map->enc_limit;
   sc = SFMakeChar (sf, map, enc);
   if (sc != NULL)
     {

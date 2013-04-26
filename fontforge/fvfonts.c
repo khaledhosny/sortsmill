@@ -839,12 +839,12 @@ SFFindSlot (SplineFont *sf, EncMap *map, int unienc, const char *name)
             map->enc->is_original) && unienc != -1)
     {
       /* Just on the off-chance that it is unicode after all */
-      if (unienc < map->enccount && enc_to_gid (map, unienc) != -1 &&
+      if (unienc < map->enc_limit && enc_to_gid (map, unienc) != -1 &&
           sf->glyphs[enc_to_gid (map, unienc)] != NULL &&
           sf->glyphs[enc_to_gid (map, unienc)]->unicodeenc == unienc)
         index = unienc;
       else
-        for (index = map->enccount - 1; index >= 0; --index)
+        for (index = map->enc_limit - 1; index >= 0; --index)
           {
             if ((pos = enc_to_gid (map, index)) != -1 && sf->glyphs[pos] != NULL
                 && SCUniMatch (sf->glyphs[pos], unienc))
@@ -860,13 +860,13 @@ SFFindSlot (SplineFont *sf, EncMap *map, int unienc, const char *name)
   else if (unienc != -1)
     {
       index = EncFromUni (unienc, map->enc);
-      if (index < 0 || index >= map->enccount)
+      if (index < 0 || index >= map->enc_limit)
         {
-          for (index = map->enc->char_cnt; index < map->enccount; ++index)
+          for (index = map->enc->char_cnt; index < map->enc_limit; ++index)
             if ((pos = enc_to_gid (map, index)) != -1 && sf->glyphs[pos] != NULL
                 && SCUniMatch (sf->glyphs[pos], unienc))
               break;
-          if (index >= map->enccount)
+          if (index >= map->enc_limit)
             index = -1;
         }
     }
@@ -1161,9 +1161,9 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
 {
   int extras, doit, i;
   EncMap *map = fv->map;
-  int base = map->enccount;
+  int base = map->enc_limit;
 
-  base = map->enccount;
+  base = map->enc_limit;
 
   for (doit = 0; doit < 2; ++doit)
     {
@@ -1198,16 +1198,16 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
 
           // FIXME: It is unlikely this actually needs to be done,
           // because such entries should have been removed already:
-          for (ssize_t k = map->enccount; k < map->enccount + extras; k++)
+          for (ssize_t k = map->enc_limit; k < map->enc_limit + extras; k++)
             remove_enc_to_gid (map, k);
 
-          map->enccount += extras;
+          map->enc_limit += extras;
         }
     }
   if (extras != 0)
     {
-      fv->selected = xrealloc (fv->selected, map->enccount);
-      memset (fv->selected + map->enccount - extras, 0, extras);
+      fv->selected = xrealloc (fv->selected, map->enc_limit);
+      memset (fv->selected + map->enc_limit - extras, 0, extras);
     }
 }
 

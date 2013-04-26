@@ -667,7 +667,7 @@ FVAutoTrace (FontViewBase *fv, int ask)
   args = AutoTraceArgs (ask);
   if (args == (char **) -1)
     return;
-  for (i = cnt = 0; i < fv->map->enccount; ++i)
+  for (i = cnt = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         fv->sf->glyphs[gid] != NULL &&
         fv->sf->glyphs[gid]->layers[ly_back].images)
@@ -677,7 +677,7 @@ FVAutoTrace (FontViewBase *fv, int ask)
                                cnt, 1, true);
 
   SFUntickAll (fv->sf);
-  for (i = cnt = 0; i < fv->map->enccount; ++i)
+  for (i = cnt = 0; i < fv->map->enc_limit; ++i)
     {
       if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
           fv->sf->glyphs[gid] != NULL &&

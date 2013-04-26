@@ -533,7 +533,7 @@ ValidMetrics (BDFFont *test, BDFFont *base, EncMap *map, int den)
                     _
                     ("Only the first 256 glyphs in the encoding will be used"));
 
-  for (i = 0; i < map->enccount && i < 256; ++i)
+  for (i = 0; i < map->enc_limit && i < 256; ++i)
     if ((gid = enc_to_gid (map, i)) != -1
         && (test->glyphs[gid] != NULL || base->glyphs[gid] != NULL))
       {
@@ -617,7 +617,7 @@ BDF2Image (struct FontTag *fn, BDFFont *bdf, int **offsets,
 
   if (bdf == NULL)
     return (NULL);
-  for (i = 0; i < map->enccount; i++)
+  for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCPrepareForOutput (bdfc, true);
 
@@ -693,7 +693,7 @@ BDF2Image (struct FontTag *fn, BDFFont *bdf, int **offsets,
     }
   if (offsets != NULL)
     (*offsets)[i + 1 - fn->firstChar] = rbits;
-  for (i = 0; i < map->enccount; i++)
+  for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
   return (image);
@@ -777,7 +777,7 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
   fn.fRectHeight = base->pixelsize;
   fn.ascent = base->ascent;
   fn.descent = base->descent;
-  for (i = 0; i < map->enccount && i < 256; ++i)
+  for (i = 0; i < map->enc_limit && i < 256; ++i)
     {
       gid = enc_to_gid (map, i);
       if (gid != -1 && base->glyphs[gid] != NULL)

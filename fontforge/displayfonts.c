@@ -535,7 +535,7 @@ return( pi->pi.printtype!=pt_unknown );
 /* Slightly different from one in fontview */
 static int FVSelCount(FontView *fv) {
     int i, cnt=0, gid;
-    for ( i=0; i<fv->b.map->enccount; ++i )
+    for ( i=0; i<fv->b.map->enc_limit; ++i )
       if ( fv->b.selected[i] && (gid=enc_to_gid (fv->b.map, i))!=-1 &&
 		SCWorthOutputting(fv->b.sf->glyphs[gid]))
 	    ++cnt;

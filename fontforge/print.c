@@ -196,7 +196,7 @@ figure_fontdesc (PI * pi, int sfid, struct fontdesc *fd, int fonttype,
           cidmax = sf->subfonts[i]->glyphcnt;
     }
   else
-    cidmax = map->enccount;
+    cidmax = map->enc_limit;
 
   for (i = 0; i < cidmax; ++i)
     {
@@ -361,7 +361,7 @@ dump_pfb_encoding (PI * pi, int sfid, int base, int font_d_ref)
   SplineFont *sf = sfbit->sf;
   EncMap *map = sfbit->map;
 
-  for (i = base; i < base + 256 && i < map->enccount; ++i)
+  for (i = base; i < base + 256 && i < map->enc_limit; ++i)
     {
       gid = enc_to_gid (map, i);
       if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
@@ -466,9 +466,9 @@ pdf_dump_type1 (PI * pi, int sfid)
   fd_obj = figure_fontdesc (pi, sfid, &fd, 1, font_stream);
 
   sfbit->our_font_objs =
-    xmalloc ((sfbit->map->enccount / 256 + 1) * sizeof (int *));
-  sfbit->fonts = xmalloc ((sfbit->map->enccount / 256 + 1) * sizeof (int *));
-  for (i = 0; i < sfbit->map->enccount; i += 256)
+    xmalloc ((sfbit->map->enc_limit / 256 + 1) * sizeof (int *));
+  sfbit->fonts = xmalloc ((sfbit->map->enc_limit / 256 + 1) * sizeof (int *));
+  for (i = 0; i < sfbit->map->enc_limit; i += 256)
     {
       sfbit->fonts[i / 256] = -1;
       dump_pfb_encoding (pi, sfid, i, fd_obj);
@@ -1098,7 +1098,7 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
   EncMap *map = sfbit->map;
   int respos, resobj;
 
-  for (i = base; i < base + 256 && i < map->enccount; ++i)
+  for (i = base; i < base + 256 && i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1)
       {
         if (SCWorthOutputting (sf->glyphs[gid])
@@ -1113,7 +1113,7 @@ dump_pdf3_encoding (PI * pi, int sfid, int base, DBounds *bb, int notdefproc)
     return;                     /* Nothing in this range */
 
   memset (charprocs, 0, sizeof (charprocs));
-  for (i = base; i < base + 256 && i < map->enccount; ++i)
+  for (i = base; i < base + 256 && i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1)
       {
         if (SCWorthOutputting (sf->glyphs[gid])
@@ -1217,9 +1217,9 @@ pdf_gen_type3 (PI * pi, int sfid)
     }
 
   SplineFontFindBounds (sf, &bb);
-  sfbit->our_font_objs = xmalloc ((map->enccount / 256 + 1) * sizeof (int *));
-  sfbit->fonts = xmalloc ((map->enccount / 256 + 1) * sizeof (int *));
-  for (i = 0; i < map->enccount; i += 256)
+  sfbit->our_font_objs = xmalloc ((map->enc_limit / 256 + 1) * sizeof (int *));
+  sfbit->fonts = xmalloc ((map->enc_limit / 256 + 1) * sizeof (int *));
+  for (i = 0; i < map->enc_limit; i += 256)
     {
       sfbit->fonts[i / 256] = -1;
       dump_pdf3_encoding (pi, sfid, i, &bb, notdefproc);
@@ -1536,7 +1536,7 @@ DumpIdentCMap (PI * pi, int sfid)
   master = sf->subfontcnt != 0 ? sf : sf->cidmaster;
   max = 0;
   if (sfbit->istype42cid)
-    max = sfbit->map->enccount;
+    max = sfbit->map->enc_limit;
   else
     {
       for (i = 0; i < sf->subfontcnt; ++i)
@@ -1728,7 +1728,7 @@ dump_prologue (PI * pi)
                 i = 65536;
               else
                 i = 256;
-              for (; i < sfbit->map->enccount; ++i)
+              for (; i < sfbit->map->enc_limit; ++i)
                 {
                   int gid = enc_to_gid (sfbit->map, i);
                   if (gid != -1 && SCWorthOutputting (sfbit->sf->glyphs[gid]))
@@ -1747,7 +1747,7 @@ dump_prologue (PI * pi)
                                  sfbit->sf->fontname,
                                  sfbit->twobyte ? "Base" : "");
                       for (j = 0;
-                           j < 0x100 && base + j < sfbit->map->enccount; ++j)
+                           j < 0x100 && base + j < sfbit->map->enc_limit; ++j)
                         {
                           int gid2 = enc_to_gid (sfbit->map, base + j);
                           if (gid2 != -1
@@ -1938,9 +1938,9 @@ DumpLine (PI * pi)
   /* First find the next line with stuff on it */
   if (!sfbit->iscid || sfbit->istype42cid)
     {
-      for (line = pi->chline; line < sfbit->map->enccount; line += pi->max)
+      for (line = pi->chline; line < sfbit->map->enc_limit; line += pi->max)
         {
-          for (i = 0; i < pi->max && line + i < sfbit->map->enccount; ++i)
+          for (i = 0; i < pi->max && line + i < sfbit->map->enc_limit; ++i)
             if ((gid = enc_to_gid (sfbit->map, line + i)) != -1)
               if (SCWorthOutputting (sfbit->sf->glyphs[gid]))
                 break;
@@ -2119,7 +2119,7 @@ PIFontDisplay (PI * pi)
   pi->extravspace = pi->pointsize / 6;
   pi->extrahspace = pi->pointsize / 3;
   pi->max = (pi->pagewidth - 100) / (pi->extrahspace + pi->pointsize);
-  pi->sfbits[0].cidcnt = pi->sfbits[0].map->enccount;
+  pi->sfbits[0].cidcnt = pi->sfbits[0].map->enc_limit;
   if (sf->subfontcnt != 0 && pi->sfbits[0].iscid)
     {
       int i, max = 0;
@@ -2307,7 +2307,7 @@ PIChars (PI * pi)
 
   dump_prologue (pi);
   if (pi->fv != NULL)
-    for (i = 0; i < pi->mainmap->enccount; ++i)
+    for (i = 0; i < pi->mainmap->enc_limit; ++i)
       {
         if (pi->fv->selected[i] && (gid = enc_to_gid (pi->mainmap, i)) != -1
             && SCWorthOutputting (pi->mainsf->glyphs[gid]))
@@ -2618,7 +2618,7 @@ PIMultiSize (PI * pi)
 
   if (pi->fv != NULL)
     {
-      for (i = 0; i < sfbit->map->enccount; ++i)
+      for (i = 0; i < sfbit->map->enc_limit; ++i)
         if (pi->fv->selected[i] && (gid = enc_to_gid (sfbit->map, i)) != -1
             && SCWorthOutputting (sfbit->sf->glyphs[gid]))
           SCPrintSizes (pi, sfbit->sf->glyphs[gid]);

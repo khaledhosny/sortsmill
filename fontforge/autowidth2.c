@@ -140,7 +140,7 @@ aw2_figure_all_sidebearing (AW_Data * all)
   AW_Glyph *me, *other;
   real transform[6], half;
   int width, changed;
-  uint8_t *rsel = xcalloc (all->fv->map->enccount, sizeof (char));
+  uint8_t *rsel = xcalloc (all->fv->map->enc_limit, sizeof (char));
   real denom = (all->sf->ascent + all->sf->descent) / DENOM_FACTOR_OF_EMSIZE;
   int ldiff, rdiff;
 
@@ -565,7 +565,7 @@ AutoWidth2 (FontViewBase *fv, int separation, int min_side, int max_side,
       if ((sc = sf->glyphs[gid]) != NULL)
         sc->ticked = false;
     }
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1 &&
           (sc = sf->glyphs[gid]) != NULL && !sc->ticked &&

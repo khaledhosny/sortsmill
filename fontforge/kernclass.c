@@ -4060,34 +4060,34 @@ KernPairD (SplineFont *sf, SplineChar *sc1, SplineChar *sc2, int layer, int isv)
       int start = fv->rowoff * fv->colcnt, end =
         start + fv->rowcnt * fv->colcnt;
       int i;
-      for (i = start; i < end && i < fv->b.map->enccount; ++i)
+      for (i = start; i < end && i < fv->b.map->enc_limit; ++i)
         if ((gid = enc_to_gid (fv->b.map, i)) != -1 && sf->glyphs[gid] != NULL
             && (isv ? sf->glyphs[gid]->vkerns : sf->glyphs[gid]->kerns) != NULL)
           break;
-      if (i == end || i == fv->b.map->enccount)
+      if (i == end || i == fv->b.map->enc_limit)
         {
-          for (i = 0; i < fv->b.map->enccount; ++i)
+          for (i = 0; i < fv->b.map->enc_limit; ++i)
             if ((gid = enc_to_gid (fv->b.map, i)) != -1
                 && sf->glyphs[gid] != NULL
                 && (isv ? sf->glyphs[gid]->vkerns : sf->glyphs[gid]->kerns) !=
                 NULL)
               break;
         }
-      if (i == fv->b.map->enccount)
+      if (i == fv->b.map->enc_limit)
         {
-          for (i = start; i < end && i < fv->b.map->enccount; ++i)
+          for (i = start; i < end && i < fv->b.map->enc_limit; ++i)
             if ((gid = enc_to_gid (fv->b.map, i)) != -1
                 && sf->glyphs[gid] != NULL)
               break;
-          if (i == end || i == fv->b.map->enccount)
+          if (i == end || i == fv->b.map->enc_limit)
             {
-              for (i = 0; i < fv->b.map->enccount; ++i)
+              for (i = 0; i < fv->b.map->enc_limit; ++i)
                 if ((gid = enc_to_gid (fv->b.map, i)) != -1
                     && sf->glyphs[gid] != NULL)
                   break;
             }
         }
-      if (i != fv->b.map->enccount)
+      if (i != fv->b.map->enc_limit)
         sc1 = sf->glyphs[gid];
     }
   if (sc2 == NULL && sc1 != NULL && (isv ? sc1->vkerns : sc1->kerns) != NULL)

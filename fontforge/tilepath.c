@@ -1315,7 +1315,7 @@ TPDInit (TilePathDlg *tpd, SplineFont *sf)
   for (ssize_t k = 0; k < 4; k++)
     set_enc_to_gid (&tpd->dummy_map, k, tpd->map[k]);
   tpd->dummy_map.__backmap = tpd->backmap;
-  tpd->dummy_map.enccount = 4;
+  tpd->dummy_map.enc_limit = 4;
   tpd->dummy_map.__backmax = 4;
   tpd->dummy_map.enc = &custom;
 }
@@ -1649,19 +1649,19 @@ FVTile (FontView *fv)
   int i, gid;
   int layer = fv->b.active_layer;
 
-  for (i = 0; i < fv->b.map->enccount; ++i)
+  for (i = 0; i < fv->b.map->enc_limit; ++i)
     if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1 &&
         (sc = fv->b.sf->glyphs[gid]) != NULL
         && sc->layers[ly_fore].splines != NULL)
       break;
-  if (i == fv->b.map->enccount)
+  if (i == fv->b.map->enc_limit)
     return;
 
   if (!TileAsk (&td, fv->b.sf))
     return;
 
   SFUntickAll (fv->b.sf);
-  for (i = 0; i < fv->b.map->enccount; ++i)
+  for (i = 0; i < fv->b.map->enc_limit; ++i)
     if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1 &&
         (sc = fv->b.sf->glyphs[gid]) != NULL && !sc->ticked &&
         sc->layers[layer].splines != NULL)
@@ -2145,7 +2145,7 @@ PTDInit (TilePathDlg *ptd, SplineFont *sf)
   for (ssize_t k = 0; k < 1; k++)
     set_enc_to_gid (&ptd->dummy_map, k, ptd->map[k]);
   ptd->dummy_map.__backmap = ptd->backmap;
-  ptd->dummy_map.enccount = 1;
+  ptd->dummy_map.enc_limit = 1;
   ptd->dummy_map.__backmax = 1;
   ptd->dummy_map.enc = &custom;
 }
@@ -2409,18 +2409,18 @@ FVPatternTile (FontView *fv)
   int i, gid;
   int layer = fv->b.active_layer;
 
-  for (i = 0; i < fv->b.map->enccount; ++i)
+  for (i = 0; i < fv->b.map->enc_limit; ++i)
     if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1 &&
         (sc = fv->b.sf->glyphs[gid]) != NULL)
       break;
-  if (i == fv->b.map->enccount)
+  if (i == fv->b.map->enc_limit)
     return;
 
   if (!TilePatternAsk (&td, fv->b.sf))
     return;
 
   SFUntickAll (fv->b.sf);
-  for (i = 0; i < fv->b.map->enccount; ++i)
+  for (i = 0; i < fv->b.map->enc_limit; ++i)
     if (fv->b.selected[i] && (gid = enc_to_gid (fv->b.map, i)) != -1 &&
         (sc = fv->b.sf->glyphs[gid]) != NULL && !sc->ticked)
       {

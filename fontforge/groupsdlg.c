@@ -1047,7 +1047,7 @@ Group_ToSelection (GGadget *g, GEvent *e)
 
       GDrawSetVisible (fv->gw, true);
       GDrawRaise (fv->gw);
-      memset (fv->b.selected, 0, fv->b.map->enccount);
+      memset (fv->b.selected, 0, fv->b.map->enc_limit);
       while (*ret)
         {
           end = u32_strchr (ret, ' ');
@@ -1082,7 +1082,7 @@ Group_ToSelection (GGadget *g, GEvent *e)
               int gid;
               SplineChar *sc;
 
-              for (pos = 0; pos < fv->b.map->enccount; ++pos)
+              for (pos = 0; pos < fv->b.map->enc_limit; ++pos)
                 if ((gid = enc_to_gid (fv->b.map, pos)) != -1 &&
                     (sc = sf->glyphs[gid]) != NULL && sc->color == col)
                   fv->b.selected[pos] = true;
@@ -1122,7 +1122,7 @@ Group_FromSelection (GGadget *g, GEvent *e)
 
       if (GGadgetIsChecked (grp->idname))
         {
-          for (i = len = max = 0; i < fv->b.map->enccount; ++i)
+          for (i = len = max = 0; i < fv->b.map->enc_limit; ++i)
             if (fv->b.selected[i])
               {
                 gid = enc_to_gid (fv->b.map, i);
@@ -1136,7 +1136,7 @@ Group_FromSelection (GGadget *g, GEvent *e)
               }
           pt = vals = xmalloc ((len + 1) * sizeof (uint32_t));
           *pt = '\0';
-          for (i = len = max = 0; i < fv->b.map->enccount; ++i)
+          for (i = len = max = 0; i < fv->b.map->enc_limit; ++i)
             if (fv->b.selected[i])
               {
                 gid = enc_to_gid (fv->b.map, i);
@@ -1158,7 +1158,7 @@ Group_FromSelection (GGadget *g, GEvent *e)
             {
               int last = -2, start = -2;
               len = 0;
-              for (i = len = max = 0; i < fv->b.map->enccount; ++i)
+              for (i = len = max = 0; i < fv->b.map->enc_limit; ++i)
                 if (fv->b.selected[i])
                   {
                     gid = enc_to_gid (fv->b.map, i);
@@ -1649,13 +1649,13 @@ MapEncAddGid (EncMap *map, SplineFont *sf, int compacted,
   if (!compacted || gid != -1)
     {
       if (gid == -1)
-        remove_enc_to_gid (map, map->enccount);
+        remove_enc_to_gid (map, map->enc_limit);
       else
         {
-          add_gid_to_enc (map, gid, map->enccount);
-          set_enc_to_gid (map, map->enccount, gid);
+          add_gid_to_enc (map, gid, map->enc_limit);
+          set_enc_to_gid (map, map->enc_limit, gid);
         }
-      map->enccount++;
+      map->enc_limit++;
       if (!compacted)
         {
           Encoding *enc = map->enc;
@@ -1826,7 +1826,7 @@ EncodeToGroups (FontView *fv, Group * group, int compacted)
       ff_post_error (_("Nothing Selected"), _("Nothing Selected"));
       EncMapFree (map);
     }
-  else if (map->enccount == 0)
+  else if (map->enc_limit == 0)
     {
       ff_post_error (_("Nothing Selected"),
                      _
@@ -1835,8 +1835,8 @@ EncodeToGroups (FontView *fv, Group * group, int compacted)
     }
   else
     {
-      fv->b.selected = xrealloc (fv->b.selected, map->enccount);
-      memset (fv->b.selected, 0, map->enccount);
+      fv->b.selected = xrealloc (fv->b.selected, map->enc_limit);
+      memset (fv->b.selected, 0, map->enc_limit);
       EncMapFree (fv->b.map);
       fv->b.map = map;
       FVSetTitle ((FontViewBase *) fv);

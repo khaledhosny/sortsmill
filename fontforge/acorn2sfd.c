@@ -638,7 +638,7 @@ return;
     prev = NULL;
     for ( rf = sc->layers[ly_fore].refs; rf!=NULL; rf=next ) {
 	next = rf->next;
-	if ( rf->orig_pos<0 || rf->orig_pos>=map->enccount ||
+	if ( rf->orig_pos<0 || rf->orig_pos>=map->enc_limit ||
 		(gid = map->map[rf->orig_pos])==-1 ||
 		sf->glyphs[gid]==NULL ) {
 	    fprintf( stderr, "%s contains a reference to a character at index %d which does not exist.\n",
@@ -814,7 +814,7 @@ return( NULL );
     outline.sf->glyphs = xcalloc(outline.sf->glyphmax,sizeof(SplineChar *));
     outline.sf->map = xcalloc(1,sizeof(EncMap));
     outline.sf->map->enc = &custom;
-    outline.sf->map->encmax = outline.sf->map->enccount = outline.sf->map->backmax = outline.sf->glyphmax;
+    outline.sf->map->encmax = outline.sf->map->enc_limit = outline.sf->map->backmax = outline.sf->glyphmax;
     outline.sf->map->map = xmalloc(outline.sf->glyphmax*sizeof(int32_t));
     outline.sf->map->backmap = xmalloc(outline.sf->glyphmax*sizeof(int32_t));
     memset(outline.sf->map->map,-1,outline.sf->glyphmax*sizeof(int32_t));

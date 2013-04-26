@@ -2679,7 +2679,7 @@ MakeSmallCapGlyphSlot (SplineFont *sf, SplineChar *cap_sc,
     }
   enc = SFFindSlot (sf, fv->map, -1, buffer);
   if (enc == -1)
-    enc = fv->map->enccount;
+    enc = fv->map->enc_limit;
   sc_sc = SFMakeChar (sf, fv->map, enc);
   free (sc_sc->name);
   sc_sc->name = xstrdup_or_null (buffer);
@@ -3365,7 +3365,7 @@ FVAddSmallCaps (FontViewBase *fv, struct genericchange *genchange)
   memset (c2sc, 0, sizeof (c2sc));
   memset (smcp, 0, sizeof (smcp));
 
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
@@ -3402,7 +3402,7 @@ FVAddSmallCaps (FontViewBase *fv, struct genericchange *genchange)
   ff_progress_start_indicator (10, _("Small Capitals"),
                                _("Building small capitals"), NULL, cnt, 1,
                                true);
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
@@ -3453,7 +3453,7 @@ FVAddSmallCaps (FontViewBase *fv, struct genericchange *genchange)
     }
   /* OK. Here we have done all the base glyphs we are going to do. Now let's */
   /*  look at things which depend on references */
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
@@ -3628,7 +3628,7 @@ MakeSubSupGlyphSlot (SplineFont *sf, SplineChar *sc,
     }
   enc = SFFindSlot (sf, fv->map, -1, buffer);
   if (enc == -1)
-    enc = fv->map->enccount;
+    enc = fv->map->enc_limit;
   sc_sc = SFMakeChar (sf, fv->map, enc);
   free (sc_sc->name);
   sc_sc->name = xstrdup_or_null (buffer);
@@ -3668,7 +3668,7 @@ FVGenericChange (FontViewBase *fv, struct genericchange *genchange)
       sc->ticked = false;
 
   cnt = 0;
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
@@ -3687,7 +3687,7 @@ FVGenericChange (FontViewBase *fv, struct genericchange *genchange)
     {
       uint32_t *scripts = xmalloc (cnt * sizeof (uint32_t));
       int scnt = 0;
-      for (enc = 0; enc < fv->map->enccount; ++enc)
+      for (enc = 0; enc < fv->map->enc_limit; ++enc)
         {
           if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
               && (sc = sf->glyphs[gid]) != NULL)
@@ -3716,7 +3716,7 @@ FVGenericChange (FontViewBase *fv, struct genericchange *genchange)
     ff_progress_start_indicator (10, _("Generic change"),
                                  _("Changing glyphs"), NULL, cnt, 1, true);
 
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
@@ -3756,7 +3756,7 @@ FVGenericChange (FontViewBase *fv, struct genericchange *genchange)
   /* This is only relevant if we've got an extension, else we just use the */
   /*  same old refs */
   if (genchange->glyph_extension != NULL)
-    for (enc = 0; enc < fv->map->enccount; ++enc)
+    for (enc = 0; enc < fv->map->enc_limit; ++enc)
       {
         if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
             && (sc = sf->glyphs[gid]) != NULL)
@@ -3822,7 +3822,7 @@ FVGenericChange (FontViewBase *fv, struct genericchange *genchange)
           }
       }
   else
-    for (enc = 0; enc < fv->map->enccount; ++enc)
+    for (enc = 0; enc < fv->map->enc_limit; ++enc)
       {
         if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
             && (sc = sf->glyphs[gid]) != NULL)
@@ -4403,7 +4403,7 @@ FVCondenseExtend (FontViewBase *fv, struct counterinfo *ci)
   int i, gid;
   SplineChar *sc;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL)
@@ -5463,7 +5463,7 @@ FVEmbolden (FontViewBase *fv, enum embolden_type type, struct lcg_zones *zones)
 
   LCG_ZoneInit (fv->sf, fv->active_layer, zones, type);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL)
@@ -8581,7 +8581,7 @@ MakeItalic (FontViewBase *fv, CharViewBase *cv, ItalicInfo * ii)
     {
       cnt = 0;
 
-      for (enc = 0; enc < fv->map->enccount; ++enc)
+      for (enc = 0; enc < fv->map->enc_limit; ++enc)
         {
           if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
               && (sc = sf->glyphs[gid]) != NULL)
@@ -8596,7 +8596,7 @@ MakeItalic (FontViewBase *fv, CharViewBase *cv, ItalicInfo * ii)
                                        _("Italic Conversion"), NULL, cnt, 1,
                                        true);
 
-          for (enc = 0; enc < fv->map->enccount; ++enc)
+          for (enc = 0; enc < fv->map->enc_limit; ++enc)
             {
               if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
                   && (sc = sf->glyphs[gid]) != NULL && !sc->ticked)
@@ -8717,7 +8717,7 @@ ChangeXHeight (FontViewBase *fv, CharViewBase *cv, struct xheightinfo *xi)
     {
       cnt = 0;
 
-      for (enc = 0; enc < fv->map->enccount; ++enc)
+      for (enc = 0; enc < fv->map->enc_limit; ++enc)
         {
           if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
               && (sc = sf->glyphs[gid]) != NULL)
@@ -8732,7 +8732,7 @@ ChangeXHeight (FontViewBase *fv, CharViewBase *cv, struct xheightinfo *xi)
                                        _("Change X-Height"), NULL, cnt, 1,
                                        true);
 
-          for (enc = 0; enc < fv->map->enccount; ++enc)
+          for (enc = 0; enc < fv->map->enc_limit; ++enc)
             {
               if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
                   && (sc = sf->glyphs[gid]) != NULL && !sc->ticked)

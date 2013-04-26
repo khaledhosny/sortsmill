@@ -4795,7 +4795,7 @@ FVStrokeItScript (void *_fv, StrokeInfo *si, int pointless_argument)
   int i, cnt = 0, gid;
   SplineChar *sc;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->sf->glyphs[gid] != NULL
         && fv->selected[i])
       ++cnt;
@@ -4803,7 +4803,7 @@ FVStrokeItScript (void *_fv, StrokeInfo *si, int pointless_argument)
                                1, true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     {
       if ((gid = enc_to_gid (fv->map, i)) != -1
           && (sc = fv->sf->glyphs[gid]) != NULL && !sc->ticked

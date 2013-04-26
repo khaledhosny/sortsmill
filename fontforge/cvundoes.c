@@ -4154,7 +4154,7 @@ FVCopyWidth (FontViewBase *fv, enum undotype ut)
 
   CopyBufferFreeGrab ();
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         any = true;
@@ -4205,7 +4205,7 @@ FVCopyAnchors (FontViewBase *fv)
 
   CopyBufferFreeGrab ();
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         any = true;
@@ -4248,7 +4248,7 @@ FVCopy (FontViewBase *fv, enum fvcopy_type fullcopy)
   /* If fullcopy==ct_unlinkrefs copy the glyph, but unlink any references it contains */
   /*  so we end up with no references and a bunch of splines */
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         any = true;
@@ -4446,7 +4446,7 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
   mc.sf_from = copybuffer.copied_from;
 
   cur = &copybuffer;
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       ++cnt;
   if (cnt == 0)
@@ -4472,7 +4472,7 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
       j = -1;
       while (true)
         {
-          for (i = 0; i < fv->map->enccount; ++i)
+          for (i = 0; i < fv->map->enc_limit; ++i)
             if (fv->selected[i])
               SCCheckXClipboard (SFMakeChar (sf, fv->map, i), ly_fore,
                                  !pasteinto);
@@ -4495,10 +4495,10 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
       int j;
       for (cnt = 0, tot = cur->u.multiple.mult; tot != NULL;
            ++cnt, tot = tot->next);
-      fv->selected = xmalloc (fv->map->enccount);
-      memcpy (fv->selected, oldsel, fv->map->enccount);
-      for (i = 0; i < fv->map->enccount && !fv->selected[i]; ++i);
-      for (j = 0; j < cnt && i + j < fv->map->enccount; ++j)
+      fv->selected = xmalloc (fv->map->enc_limit);
+      memcpy (fv->selected, oldsel, fv->map->enc_limit);
+      for (i = 0; i < fv->map->enc_limit && !fv->selected[i]; ++i);
+      for (j = 0; j < cnt && i + j < fv->map->enc_limit; ++j)
         fv->selected[i + j] = 1;
       cnt = j;
     }
@@ -4517,7 +4517,7 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
       || cur->undotype == ut_statename || (cur->undotype == ut_composit
                                            && cur->u.composit.state != NULL))
     {
-      for (i = 0; i < fv->map->enccount; ++i)
+      for (i = 0; i < fv->map->enc_limit; ++i)
         if (fv->selected[i]
             && ((gid = enc_to_gid (fv->map, i)) == -1
                 || sf->glyphs[gid] == NULL))
@@ -4525,7 +4525,7 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
     }
   cur = NULL;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         j = -1;
@@ -4629,7 +4629,7 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
   /*  the width of the original referred character, then we should make sure */
   /*  that the new width of the glyph is the same as the current width of   */
   /*  the referred char. We can't do this earlier because of foreward refs.  */
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         SplineChar *sc = SFMakeChar (sf, fv->map, i);

@@ -214,7 +214,7 @@ WriteTfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
     fprintf (enc, "/%s-Enc [\n", sf->fontname);
   else
     fprintf (enc, "/%s [\n", encname);
-  for (i = 0; i < map->enccount && i < 256; ++i)
+  for (i = 0; i < map->enc_limit && i < 256; ++i)
     {
       if (enc_to_gid (map, i) == -1
           || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
@@ -293,7 +293,7 @@ WriteOfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
     fprintf (enc, "%s %g\n", texparamnames[i],
              sf->texdata.params[i] / (double) (1 << 20));
 
-  for (i = 0; i < map->enccount && i < 65536; ++i)
+  for (i = 0; i < map->enc_limit && i < 65536; ++i)
     {
       if (enc_to_gid (map, i) != -1
           && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
@@ -572,7 +572,7 @@ ParseWernerSFDFile (char *wernerfilename, SplineFont *sf, int *max,
                         }
                     }
                 }
-              if (modi < map->enccount)
+              if (modi < map->enc_limit)
                 modi = enc_to_gid (map, modi);
               else if (sf->subfontcnt != 0)
                 modi = modi;
@@ -631,7 +631,7 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
   int32_t _backmap[256];
 
   memset (&encmap, 0, sizeof (encmap));
-  encmap.enccount = 256;
+  encmap.enc_limit = 256;
   encmap.__backmax = 256;
   make_enc_to_gid (&encmap);
   encmap.__backmap = _backmap;

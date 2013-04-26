@@ -332,14 +332,14 @@ void FVSetWidth(FontView *fv,enum widthtype wtype) {
 
     if ( !fv->b.sf->onlybitmaps || fv->b.sf->bitmaps==NULL ) {
 	sprintf(buffer,"%d",wtype==wt_width?6*em/10:wtype==wt_vwidth?em: em/10 );
-	for ( i=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i] && (gid=enc_to_gid (fv->b.map, i))!=-1 && fv->b.sf->glyphs[gid]!=NULL ) {
+	for ( i=0; i<fv->b.map->enc_limit; ++i ) if ( fv->b.selected[i] && (gid=enc_to_gid (fv->b.map, i))!=-1 && fv->b.sf->glyphs[gid]!=NULL ) {
 	    SCDefWidthVal(buffer,fv->b.sf->glyphs[gid],wtype);
 	break;
 	}
     } else {
 	int size = fv->show->pixelsize;
 	sprintf(buffer,"%d",wtype==wt_width?6*size/10:wtype==wt_vwidth?size: size/10 );
-	for ( i=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i] && (gid=enc_to_gid (fv->b.map, i))!=-1 && fv->show->glyphs[gid]!=NULL ) {
+	for ( i=0; i<fv->b.map->enc_limit; ++i ) if ( fv->b.selected[i] && (gid=enc_to_gid (fv->b.map, i))!=-1 && fv->show->glyphs[gid]!=NULL ) {
 	    BCDefWidthVal(buffer,fv->show->glyphs[gid],fv,wtype);
 	break;
 	}

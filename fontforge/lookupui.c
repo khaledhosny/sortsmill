@@ -4825,14 +4825,14 @@ PSTKD_AutoKernSelected (GGadget *g, GEvent *e)
       pstkd->psts = MDCopy (old, rows, cols);
       pstkd->rows_at_start = pstkd->rows = pstkd->next_row = rows;
 
-      for (enc = 0, cnt = 0; enc < fv->map->enccount; ++enc)
+      for (enc = 0, cnt = 0; enc < fv->map->enc_limit; ++enc)
         {
           if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1
               && SCWorthOutputting (sc = sf->glyphs[gid]))
             ++cnt;
         }
       list = xmalloc ((cnt + 1) * sizeof (SplineChar *));
-      for (enc = 0, cnt = 0; enc < fv->map->enccount; ++enc)
+      for (enc = 0, cnt = 0; enc < fv->map->enc_limit; ++enc)
         {
           if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1
               && SCWorthOutputting (sc = sf->glyphs[gid]))
@@ -6574,7 +6574,7 @@ kf_FVSetSize (struct kf_dlg *kf, FontView *fv, int width, int height, int y,
   fv->rowcnt = rc;
   fv->width = subsize.width;
   fv->height = subsize.height;
-  fv->rowltot = (fv->b.map->enccount + fv->colcnt - 1) / fv->colcnt;
+  fv->rowltot = (fv->b.map->enc_limit + fv->colcnt - 1) / fv->colcnt;
   GScrollBarSetBounds (fv->vsb, 0, fv->rowltot, fv->rowcnt);
   fv->rowoff = topchar / fv->colcnt;
   if (fv->rowoff >= fv->rowltot - fv->rowcnt)
@@ -6721,7 +6721,7 @@ SelectedGlyphs (FontView *_fv)
   map = fv->map;
   sf = fv->sf;
   selcnt = 0;
-  for (enc = 0; enc < map->enccount; ++enc)
+  for (enc = 0; enc < map->enc_limit; ++enc)
     {
       if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sf->glyphs[gid]))
@@ -6737,7 +6737,7 @@ SelectedGlyphs (FontView *_fv)
 
   glyphlist = xmalloc ((selcnt + 1) * sizeof (SplineChar *));
   selcnt = 0;
-  for (enc = 0; enc < map->enccount; ++enc)
+  for (enc = 0; enc < map->enc_limit; ++enc)
     {
       if (fv->selected[enc] && (gid = enc_to_gid (map, enc)) != -1
           && SCWorthOutputting (sc = sf->glyphs[gid]))
@@ -7729,7 +7729,7 @@ MRD_OK (GGadget *g, GEvent *e)
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
       MassRenameDlg *mrd = GDrawGetUserData (GGadgetGetWindow (g));
-      int sel_cnt, enc, enc_max = mrd->fv->b.map->enccount;
+      int sel_cnt, enc, enc_max = mrd->fv->b.map->enc_limit;
       char *start_name, *suffix, *pt;
       int enc_start;
       SplineChar *sc, *sourcesc;

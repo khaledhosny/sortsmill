@@ -3225,7 +3225,7 @@ MVMenuInsertChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   SplineFont *sf = mv->sf;
   int i, j, pos = GotoChar (sf, mv->fv->b.map, NULL);
 
-  if (pos == -1 || pos >= mv->fv->b.map->enccount)
+  if (pos == -1 || pos >= mv->fv->b.map->enc_limit)
     return;
 
   for (i = 0; i < mv->glyphcnt; ++i)
@@ -3303,15 +3303,15 @@ MVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       else if (mi->mid == MID_NextDef)
         {
           for (pos = gid_to_enc (map, sc->orig_pos) + 1;
-               pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
+               pos < map->enc_limit && ((gid = enc_to_gid (map, pos)) == -1
                                        || sf->glyphs[gid] == NULL); ++pos);
-          if (pos >= map->enccount)
+          if (pos >= map->enc_limit)
             return;
         }
       else if (mi->mid == MID_PrevDef)
         {
           for (pos = gid_to_enc (map, sc->orig_pos) - 1;
-               pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
+               pos < map->enc_limit && ((gid = enc_to_gid (map, pos)) == -1
                                        || sf->glyphs[gid] == NULL); --pos);
           if (pos < 0)
             return;
@@ -3319,10 +3319,10 @@ MVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       else if (mi->mid == MID_ReplaceChar)
         {
           pos = GotoChar (sf, mv->fv->b.map, NULL);
-          if (pos < 0 || pos >= mv->fv->b.map->enccount)
+          if (pos < 0 || pos >= mv->fv->b.map->enc_limit)
             return;
         }
-      if (pos >= 0 && pos < map->enccount)
+      if (pos >= 0 && pos < map->enc_limit)
         {
           mv->chars[i] = SFMakeChar (sf, mv->fv->b.map, pos);
           MVRemetric (mv);
@@ -7345,7 +7345,7 @@ MetricsViewCreate (FontView *fv, SplineChar *sc, BDFFont *bdf)
       EncMap *map = fv->b.map;
       for (j = 1; (j <= fv->sel_index || j < 1) && mv->clen < 15; ++j)
         {
-          for (i = 0; i < map->enccount && mv->clen < 15; ++i)
+          for (i = 0; i < map->enc_limit && mv->clen < 15; ++i)
             {
               int gid = enc_to_gid (map, i);
               if (gid != -1 && fv->b.selected[i] == j

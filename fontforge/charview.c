@@ -3749,7 +3749,7 @@ CVChangeChar (CharView *cv, int i)
   SplineChar *sc;
   SplineFont *sf = cv->b.sc->parent;
   EncMap *map = ((FontView *) (cv->b.fv))->b.map;
-  int gid = i < 0 || i >= map->enccount ? -2 : enc_to_gid (map, i);
+  int gid = i < 0 || i >= map->enc_limit ? -2 : enc_to_gid (map, i);
 
   if (sf->cidmaster != NULL && !map->enc->is_compact)
     {
@@ -7669,11 +7669,11 @@ _CVMenuChangeChar (CharView *cv, int mid)
   else if (mid == MID_NextDef)
     {
       for (pos = CVCurEnc (cv) + 1;
-           pos < map->enccount &&
+           pos < map->enc_limit &&
              ((gid = enc_to_gid (map, pos)) == -1
               || !SCWorthOutputting (sf->glyphs[gid]));
            ++pos);
-      if (pos >= map->enccount)
+      if (pos >= map->enc_limit)
         {
           if (enc->is_tradchinese)
             {
@@ -7701,7 +7701,7 @@ _CVMenuChangeChar (CharView *cv, int mid)
           else if (CVCurEnc (cv) < 0xe040
                    && strcasestr (enc->enc_name, "sjis") != NULL)
             pos = 0xe040;
-          if (pos >= map->enccount)
+          if (pos >= map->enc_limit)
             return;
         }
     }
@@ -7726,11 +7726,11 @@ _CVMenuChangeChar (CharView *cv, int mid)
       pos = gid_to_enc (map, gid);
     }
   /* Werner doesn't think it should wrap */
-  if (pos < 0)                  /* pos = map->enccount-1; */
+  if (pos < 0)                  /* pos = map->enc_limit-1; */
     return;
-  else if (pos >= map->enccount)        /* pos = 0; */
+  else if (pos >= map->enc_limit)        /* pos = 0; */
     return;
-  if (pos >= 0 && pos < map->enccount)
+  if (pos >= 0 && pos < map->enc_limit)
     CVChangeChar (cv, pos);
 }
 
@@ -11878,12 +11878,12 @@ cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
           if (cv->b.container == NULL)
             {
               for (pos = CVCurEnc (cv) + 1;
-                   pos < map->enccount && ((gid = enc_to_gid (map, pos)) == -1
+                   pos < map->enc_limit && ((gid = enc_to_gid (map, pos)) == -1
                                            ||
                                            !SCWorthOutputting (sf->glyphs
                                                                [gid]));
                    ++pos);
-              mi->ti.disabled = pos == map->enccount;
+              mi->ti.disabled = pos == map->enc_limit;
             }
           else
             mi->ti.disabled =
@@ -11907,7 +11907,7 @@ cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
         case MID_Next:
           mi->ti.disabled =
             cv->b.container == NULL ? CVCurEnc (cv) ==
-            map->enccount -
+            map->enc_limit -
             1 : !(cv->b.container->funcs->canNavigate) (cv->b.container,
                                                         nt_nextdef);
           break;

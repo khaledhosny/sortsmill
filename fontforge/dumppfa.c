@@ -2546,7 +2546,7 @@ dumprequiredfontinfo (void (*dumpchar) (int ch, void *data), void *data,
         }
     }
 
-  for (i = 0; i < 256 && i < map->enccount; ++i)
+  for (i = 0; i < 256 && i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1
         && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
       encoding[i] = sf->glyphs[enc_to_gid (map, i)]->name;
@@ -2764,7 +2764,7 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
       /* older versions of dvipdfm assume the following line is present. */
       /*  Perhaps others do too? */
       fprintf (out, "   0 1 255 { 1 index exch /.notdef put} for\n");
-      for (i = 0; i < 256 && i < map->enccount; ++i)
+      for (i = 0; i < 256 && i < map->enc_limit; ++i)
         if ((gid = enc_to_gid (map, i)) != -1)
           if (SCWorthOutputting (sf->glyphs[gid]))
             fprintf (out, "    dup %d/%s put\n", i, sf->glyphs[gid]->name);
@@ -2838,7 +2838,7 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
           fprintf (out, "    0 0 def\n");       /* .notdef doesn't have a unicode enc, will be missed. Needed */
           if (map->enc->is_unicodebmp || map->enc->is_unicodefull)
             {
-              for (i = 0; i < map->enccount && i < 0x10000; ++i)
+              for (i = 0; i < map->enc_limit && i < 0x10000; ++i)
                 if ((gid = enc_to_gid (map, i)) != -1)
                   {
                     if (SCWorthOutputting (sf->glyphs[gid]))
@@ -2960,7 +2960,7 @@ somecharsused (SplineFont *sf, int bottom, int top, EncMap *map)
 {
   int i;
 
-  for (i = bottom; i <= top && i < map->enccount; ++i)
+  for (i = bottom; i <= top && i < map->enc_limit; ++i)
     {
       if (enc_to_gid (map, i) != -1
           && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
@@ -2984,7 +2984,7 @@ dumptype0stuff (FILE *out, SplineFont *sf, EncMap *map)
       if (somecharsused (sf, i << 8, (i << 8) + 0xff, map))
         {
           fprintf (out, "/%sBase /%s%d [\n", sf->fontname, sf->fontname, i);
-          for (j = 0; j < 256 && (i << 8) + j < map->enccount; ++j)
+          for (j = 0; j < 256 && (i << 8) + j < map->enc_limit; ++j)
             if (enc_to_gid (map, (i << 8) + j) != -1
                 && SCWorthOutputting (sf->
                                       glyphs[enc_to_gid (map, (i << 8) + j)]))

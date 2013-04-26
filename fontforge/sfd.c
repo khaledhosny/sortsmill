@@ -1563,7 +1563,7 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
       SFDDumpUTF7Str (sfd, sc->name);
       putc ('\n', sfd);
     }
-  if ((enc = gid_to_enc (map, sc->orig_pos)) >= map->enccount)
+  if ((enc = gid_to_enc (map, sc->orig_pos)) >= map->enc_limit)
     {
       if (sc->parent->cidmaster == NULL)
         IError ("Bad reverse encoding");
@@ -2768,11 +2768,11 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
     }
   else
     {
-      int enccount = map->enccount;
+      int enc_limit = map->enc_limit;
       if (sf->cidmaster != NULL)
         {
           realcnt = -1;
-          enccount = sf->glyphcnt;
+          enc_limit = sf->glyphcnt;
         }
       else
         {
@@ -2792,7 +2792,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
             }
         }
       if (!todir)
-        fprintf (sfd, "BeginChars: %d %d\n", enccount, realcnt);
+        fprintf (sfd, "BeginChars: %d %d\n", enc_limit, realcnt);
       for (i = 0; i < sf->glyphcnt; ++i)
         {
           if (!SFDOmit (sf->glyphs[i]))
@@ -2827,7 +2827,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
         {
           fprintf (sfd, "EndChars\n");
 #if 0
-          for (i = 0; i < map->enccount; ++i)
+          for (i = 0; i < map->enc_limit; ++i)
             {
               if (map->map[i] != -1 && map->backmap[map->map[i]] != i
                   && !SFDOmit (sf->glyphs[map->map[i]]))
@@ -4779,11 +4779,11 @@ SFDSetEncMap (SplineFont *sf, int orig_pos, int enc)
 
   // FIXME: It is unlikely this actually needs to be done, because
   // such entries should have been removed already:
-  for (ssize_t k = map->enccount; k < enc; k++)
+  for (ssize_t k = map->enc_limit; k < enc; k++)
     remove_enc_to_gid (map, k);
 
-  if (enc >= map->enccount)
-    map->enccount = enc + 1;
+  if (enc >= map->enc_limit)
+    map->enc_limit = enc + 1;
   if (enc != -1)
     {
       set_enc_to_gid (map, enc, orig_pos);
@@ -6026,13 +6026,13 @@ SFDGetBitmapFont (FILE *sfd, SplineFont *sf, int fromdir, char *dirname)
   BDFFont *bdf, *prev;
   char tok[200];
   int pixelsize, ascent, descent, depth = 1;
-  int ch, enccount;
+  int ch, enc_limit;
 
   bdf = xcalloc (1, sizeof (BDFFont));
 
   if (getint (sfd, &pixelsize) != 1 || pixelsize <= 0)
     return (0);
-  if (getint (sfd, &enccount) != 1 || enccount < 0)
+  if (getint (sfd, &enc_limit) != 1 || enc_limit < 0)
     return (0);
   if (getint (sfd, &ascent) != 1 || ascent < 0)
     return (0);
@@ -6885,10 +6885,10 @@ SFDSizeMap (EncMap *map, int glyphcnt, int enccnt)
     }
 
   // Remove any excess entries.
-  for (ssize_t k = enccnt; k < map->enccount; k++)
+  for (ssize_t k = enccnt; k < map->enc_limit; k++)
     remove_enc_to_gid (map, k);
 
-  map->enccount = enccnt;
+  map->enc_limit = enccnt;
 }
 
 static SplineFont *SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok,

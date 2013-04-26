@@ -807,7 +807,7 @@ StrokeInit (StrokeDlg *sd)
   for (ssize_t k = 0; k < 1; k++)
     set_enc_to_gid (&sd->dummy_map, k, sd->map[k]);
   sd->dummy_map.__backmap = sd->backmap;
-  sd->dummy_map.enccount = 1;
+  sd->dummy_map.enc_limit = 1;
   sd->dummy_map.__backmax = 1;
   sd->dummy_map.enc = &custom;
 
@@ -1954,7 +1954,7 @@ GDDInit (GradientDlg *gdd, SplineFont *sf, Layer *ly, struct gradient *grad)
   gdd->dummy_fv.b.map = &gdd->dummy_map;
   make_enc_to_gid (&gdd->dummy_map);
   gdd->dummy_map.__backmap = gdd->backmap;
-  gdd->dummy_map.enccount = 1;
+  gdd->dummy_map.enc_limit = 1;
   gdd->dummy_map.__backmax = 1;
   gdd->dummy_map.enc = &custom;
 

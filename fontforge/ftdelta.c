@@ -262,7 +262,7 @@ TopFindQuestionablePoints (struct qg_data *data)
           if (data->fv != NULL)
             {
               int enc, gid;
-              for (enc = 0; enc < data->fv->map->enccount; ++enc)
+              for (enc = 0; enc < data->fv->map->enc_limit; ++enc)
                 {
                   if (data->fv->selected[enc]
                       && (gid = enc_to_gid (data->fv->map, enc)) != -1

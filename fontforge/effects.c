@@ -42,7 +42,7 @@ FVOutline (FontViewBase *fv, real width)
   SplineChar *sc;
   int layer = fv->active_layer;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
         && sc->layers[layer].splines)
@@ -56,7 +56,7 @@ FVOutline (FontViewBase *fv, real width)
   /*si.removeoverlapifneeded = true; */
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
         && sc->layers[layer].splines && !sc->ticked)
@@ -86,7 +86,7 @@ FVInline (FontViewBase *fv, real width, real inset)
   SplineChar *sc;
   int layer = fv->active_layer;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
         && sc->layers[layer].splines)
@@ -99,7 +99,7 @@ FVInline (FontViewBase *fv, real width, real inset)
   /*si.removeoverlapifneeded = true; */
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
         && sc->layers[layer].splines && !sc->ticked)
@@ -965,7 +965,7 @@ FVShadow (FontViewBase *fv, real angle, real outline_width,
   SplineChar *sc;
   int layer = fv->active_layer;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
         && sc->layers[layer].splines)
@@ -974,7 +974,7 @@ FVShadow (FontViewBase *fv, real angle, real outline_width,
                                0, cnt, 1, true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
         && sc->layers[layer].splines && !sc->ticked)

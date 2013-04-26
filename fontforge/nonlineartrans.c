@@ -852,14 +852,14 @@ _SFNLTrans (FontViewBase *fv, struct context *c)
 
   SFUntickAll (fv->sf);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         (sc = fv->sf->glyphs[gid]) != NULL && !sc->ticked)
       {
         _SCNLTrans (sc, c, fv->active_layer);
         sc->ticked = true;
       }
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         (sc = fv->sf->glyphs[gid]) != NULL &&
         (sc->layers[layer].splines != NULL || sc->layers[layer].refs != NULL))
@@ -1055,7 +1055,7 @@ FVPointOfView (FontViewBase *fv, struct pov_data *pov)
   BasePoint origin;
   SplineChar *sc;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->sf->glyphs[gid] != NULL &&
         fv->selected[i])
       ++cnt;
@@ -1063,7 +1063,7 @@ FVPointOfView (FontViewBase *fv, struct pov_data *pov)
                                cnt, 1, true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     {
       if ((gid = enc_to_gid (fv->map, i)) != -1 && fv->selected[i] &&
           (sc = fv->sf->glyphs[gid]) != NULL && !sc->ticked)

@@ -3774,7 +3774,7 @@ DoProbs (struct problems *p)
     }
   else
     {
-      for (i = 0; i < p->fv->b.map->enccount && !p->finish; ++i)
+      for (i = 0; i < p->fv->b.map->enc_limit && !p->finish; ++i)
         if (p->fv->b.selected[i])
           {
             sc = NULL;
@@ -6273,7 +6273,7 @@ VWMenuSelect (GWindow gw, struct gmenuitem *mi, GEvent *e)
   int i, gid;
   SplineChar *sc;
 
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     {
       fv->b.selected[i] = false;
       gid = enc_to_gid (map, i);

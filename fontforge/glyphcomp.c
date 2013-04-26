@@ -1019,7 +1019,7 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
   int ret = 0;
   const Undoes *cur, *bmp;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       ++cnt;
   if (cnt == 0)
@@ -1038,7 +1038,7 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
   if (cur->undotype == ut_multiple)
     cur = cur->u.multiple.mult;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         SplineChar *sc =
@@ -1501,7 +1501,7 @@ FDAddMissingGlyph (struct font_diff *fd, SplineChar *sc2)
 
   enc = SFFindSlot (fd->sf1, fd->map1, sc2->unicodeenc, sc2->name);
   if (enc == -1)
-    enc = fd->map1->enccount;
+    enc = fd->map1->enc_limit;
   sc = SFMakeChar (fd->sf1, fd->map1, enc);
   sc->width = sc2->width;
   sc->vwidth = sc2->vwidth;

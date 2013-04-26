@@ -1485,7 +1485,7 @@ _DoFindAll (SearchData *sv)
   int i, any = 0, gid;
   SplineChar *startcur = sv->curchar;
 
-  for (i = 0; i < sv->fv->map->enccount; ++i)
+  for (i = 0; i < sv->fv->map->enc_limit; ++i)
     {
       if ((!sv->onlyselected || sv->fv->selected[i])
           && (gid = enc_to_gid (sv->fv->map, i)) != -1
@@ -1634,12 +1634,12 @@ FVBReplaceOutlineWithReference (FontViewBase *fv, double fudge)
   sv->replaceall = true;
   sv->replacewithref = true;
 
-  selected = xmalloc (fv->map->enccount);
-  memcpy (selected, fv->selected, fv->map->enccount);
-  changed = xcalloc (fv->map->enccount, 1);
+  selected = xmalloc (fv->map->enc_limit);
+  memcpy (selected, fv->selected, fv->map->enc_limit);
+  changed = xcalloc (fv->map->enc_limit, 1);
 
   selcnt = 0;
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (selected[i] && (gid = enc_to_gid (fv->map, i)) != -1
         && sf->glyphs[gid] != NULL)
       ++selcnt;
@@ -1647,13 +1647,13 @@ FVBReplaceOutlineWithReference (FontViewBase *fv, double fudge)
                                _("Replace Outline with Reference"), 0, selcnt,
                                1, true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         (checksc = sf->glyphs[gid]) != NULL)
       {
         if (IsASingleReferenceOrEmpty (sf->glyphs[gid], fv->active_layer))
           continue;             /* No point in replacing something which is itself a ref with a ref to a ref */
-        memset (fv->selected, 0, fv->map->enccount);
+        memset (fv->selected, 0, fv->map->enc_limit);
         SDCopyToSC (checksc, &sv->sc_srch, ct_fullcopy);
         SDCopyToSC (checksc, &sv->sc_rpl, ct_reference);
         sv->sc_srch.changed_since_autosave = sv->sc_rpl.changed_since_autosave =
@@ -1664,7 +1664,7 @@ FVBReplaceOutlineWithReference (FontViewBase *fv, double fudge)
                           _
                           ("The outlines of glyph %2$.30s were not found in the font %1$.60s"),
                           sf->fontname, sf->glyphs[gid]->name);
-        for (j = 0; j < fv->map->enccount; ++j)
+        for (j = 0; j < fv->map->enc_limit; ++j)
           if (fv->selected[j])
             changed[j] = 1;
         if (!ff_progress_next ())
@@ -1676,7 +1676,7 @@ FVBReplaceOutlineWithReference (FontViewBase *fv, double fudge)
   free (sv);
 
   free (selected);
-  memcpy (fv->selected, changed, fv->map->enccount);
+  memcpy (fv->selected, changed, fv->map->enc_limit);
   free (changed);
 }
 
@@ -1789,7 +1789,7 @@ RC_MakeNewGlyph (FontViewBase *fv, SplineChar *base, int index,
 
   enc = SFFindSlot (sf, fv->map, -1, namebuf);
   if (enc == -1)
-    enc = fv->map->enccount;
+    enc = fv->map->enc_limit;
   ret = SFMakeChar (sf, fv->map, enc);
   free (ret->name);
   ret->name = namebuf;
@@ -1860,7 +1860,7 @@ FVCorrectReferences (FontViewBase *fv)
   int index;
 
   cnt = 0;
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)
@@ -1870,7 +1870,7 @@ FVCorrectReferences (FontViewBase *fv)
                                _
                                ("Adding new glyphs and referring to them when a glyph contains a bad truetype reference"),
                                NULL, cnt, 1, true);
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
           && (sc = sf->glyphs[gid]) != NULL)

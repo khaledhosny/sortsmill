@@ -4499,7 +4499,7 @@ SVGParseFont (xmlNodePtr font)
     }
 
   map = (EncMap *) xzalloc (sizeof (EncMap));
-  map->enccount = sf->glyphcnt;
+  map->enc_limit = sf->glyphcnt;
   map->__backmax = sf->glyphcnt;
   map->enc = FindOrMakeEncoding ("Original");
   make_enc_to_gid (map);

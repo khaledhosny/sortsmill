@@ -180,7 +180,7 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
   int j, real_uni, gid;
   extern const int cns14pua[], amspua[];
 
-  if (enc >= map->enccount)
+  if (enc >= map->enc_limit)
     gid = -1;
   else
     gid = enc_to_gid (map, enc);
@@ -207,7 +207,7 @@ _SFMakeChar (SplineFont *sf, EncMap *map, int enc)
           (real_uni =
            (sf->uni_interp == ui_ams ? amspua : cns14pua)[enc - 0xe000]) != 0)
         {
-          if (real_uni < map->enccount)
+          if (real_uni < map->enc_limit)
             {
               SplineChar *sc;
               /* if necessary, create the real unicode code point */
@@ -256,7 +256,7 @@ SFMakeChar (SplineFont *sf, EncMap *map, int enc)
 
   if (enc == -1)
     return NULL;
-  if (enc >= map->enccount)
+  if (enc >= map->enc_limit)
     gid = -1;
   else
     gid = enc_to_gid (map, enc);
@@ -355,7 +355,7 @@ NameToEncoding (SplineFont *sf, EncMap *map, const char *name)
             uni = name[0];
         }
     }
-  if (enc >= map->enccount || enc < 0)
+  if (enc >= map->enc_limit || enc < 0)
     enc = -1;
   if (enc == -1 && uni != -1)
     enc = SFFindSlot (sf, map, uni, NULL);
@@ -393,7 +393,7 @@ SFRemoveUndoes (SplineFont *sf, uint8_t *selected, EncMap *map)
         }
       else
         {
-          if (i >= map->enccount)
+          if (i >= map->enc_limit)
             break;
           if (!selected[i])
             continue;
@@ -687,8 +687,8 @@ SFScaleToEm (SplineFont *sf, int as, int des)
   transform[0] = transform[3] = scale;
   transform[1] = transform[2] = transform[4] = transform[5] = 0;
   bvts.func = bvt_none;
-  sf->fv->selected = xmalloc (sf->fv->map->enccount);
-  memset (sf->fv->selected, 1, sf->fv->map->enccount);
+  sf->fv->selected = xmalloc (sf->fv->map->enc_limit);
+  memset (sf->fv->selected, 1, sf->fv->map->enc_limit);
 
   sf->ascent = as;
   sf->descent = des;

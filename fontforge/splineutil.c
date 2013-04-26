@@ -3094,7 +3094,7 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
       if (k != -1)
         add_gid_to_enc (map, k, i);
     }
-  if (map->enccount > 256)
+  if (map->enc_limit > 256)
     {
       int k, j;
       for (k = 0; k < fd->chars->cnt; ++k)
@@ -3131,7 +3131,7 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
             }
         }
     }
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) == -1)
       {
         set_enc_to_gid (map, i, notdefpos);
@@ -7733,11 +7733,11 @@ OtfFeatNameListFree (struct otffeatname *fn)
 }
 
 EncMap *
-EncMapNew (int enccount, int backmax, Encoding *enc)
+EncMapNew (int enc_limit, int backmax, Encoding *enc)
 {
   EncMap *map = (EncMap *) xzalloc (sizeof (EncMap));
 
-  map->enccount = enccount;
+  map->enc_limit = enc_limit;
   map->__backmax = backmax;
   make_enc_to_gid (map);
   map->__backmap = xmalloc (backmax * sizeof (int));
@@ -7747,17 +7747,17 @@ EncMapNew (int enccount, int backmax, Encoding *enc)
 }
 
 EncMap *
-EncMap1to1 (int enccount)
+EncMap1to1 (int enc_limit)
 {
   EncMap *map = (EncMap *) xzalloc (sizeof (EncMap));
   /* Used for CID fonts where CID is same as orig_pos */
   int i;
 
-  map->enccount = enccount;
-  map->__backmax = enccount;
+  map->enc_limit = enc_limit;
+  map->__backmax = enc_limit;
   make_enc_to_gid (map);
-  map->__backmap = xmalloc (enccount * sizeof (int));
-  for (i = 0; i < enccount; ++i)
+  map->__backmap = xmalloc (enc_limit * sizeof (int));
+  for (i = 0; i < enc_limit; ++i)
     {
       set_enc_to_gid (map, i, i);
       set_gid_to_enc (map, i, i);
@@ -7807,7 +7807,7 @@ EncMapCopy (EncMap *map)
   *new = *map;
   make_enc_to_gid (new);
   new->__backmap = xmalloc (new->__backmax * sizeof (int));
-  for (ssize_t k = 0; k < new->enccount; k++)
+  for (ssize_t k = 0; k < new->enc_limit; k++)
     set_enc_to_gid (new, k, enc_to_gid (map, k));
   memcpy (new->__backmap, map->__backmap, new->__backmax * sizeof (int));
   if (map->remap)

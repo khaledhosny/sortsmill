@@ -546,7 +546,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   if (font->clut != NULL)
     return (false);
 
-  for (i = 0; i < map->enccount; i++)
+  for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCPrepareForOutput (bdfc, true);
   avgwid = widbytes = maxwid = maxy = last = cnt = 0;
@@ -554,7 +554,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   samewid = -1;
   badch = -1;
   defch = -1;
-  for (i = 0; i < map->enccount && i < 256; ++i)
+  for (i = 0; i < map->enc_limit && i < 256; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && font->glyphs[gid] != NULL
         && font->glyphs[gid]->width > 0)
       {
@@ -754,7 +754,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   fseek (file, namelocpos, SEEK_SET);
   lputlong (file, namepos);
   fseek (file, endpos, SEEK_SET);
-  for (i = 0; i < map->enccount; i++)
+  for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
   return (true);

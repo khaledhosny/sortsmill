@@ -2780,7 +2780,7 @@ ObliqueDlg (FontView *fv, CharView *cv)
       int i, gid;
       SplineChar *sc;
 
-      for (i = 0; i < fv->b.map->enccount; ++i)
+      for (i = 0; i < fv->b.map->enc_limit; ++i)
         if (fv->b.selected[i] &&
             (gid = enc_to_gid (fv->b.map, i)) != -1
             && (sc = fv->b.sf->glyphs[gid]) != NULL)

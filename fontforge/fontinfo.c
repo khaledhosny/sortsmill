@@ -7655,7 +7655,7 @@ GFI_UnicodeRangeChange (GGadget *g, GEvent *e)
 
   r = ti->userdata;
 
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     fv->b.selected[i] = 0;
 
   if (e->u.control.subtype == et_listselected)

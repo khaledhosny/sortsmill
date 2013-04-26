@@ -163,22 +163,22 @@ ExtendSF (SplineFont *sf, EncMap *map, int enc, int set)
 {
   FontViewBase *fvs;
 
-  if (enc >= map->enccount)
+  if (enc >= map->enc_limit)
     {
       int n = enc;
 
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
-      for (ssize_t k = map->enccount; k < map->enccount + n + 1; k++)
+      for (ssize_t k = map->enc_limit; k < map->enc_limit + n + 1; k++)
         remove_enc_to_gid (map, k);
 
-      map->enccount = n + 1;
+      map->enc_limit = n + 1;
       if (sf->fv != NULL)
         {
           for (fvs = sf->fv; fvs != NULL; fvs = fvs->nextsame)
             {
               free (fvs->selected);
-              fvs->selected = xcalloc (map->enccount, 1);
+              fvs->selected = xcalloc (map->enc_limit, 1);
             }
           FontViewReformatAll (sf);
         }
@@ -211,7 +211,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
 
   if (strcmp (name, ".notdef") == 0)
     {
-      gid = (enc >= map->enccount || enc < 0) ? -1 : enc_to_gid (map, enc);
+      gid = (enc >= map->enc_limit || enc < 0) ? -1 : enc_to_gid (map, enc);
       if (gid == -1 || sf->glyphs[gid] == NULL
           || strcmp (sf->glyphs[gid]->name, name) != 0)
         {
@@ -219,7 +219,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
           if (enc == -1)
             {
               if ((enc = SFFindSlot (sf, map, -1, name)) == -1)
-                enc = map->enccount;
+                enc = map->enc_limit;
             }
           MakeEncChar (sf, map, enc, name);
           sc = SFMakeChar (sf, map, enc);
@@ -238,9 +238,9 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
       if (i == -1)
         {
           if ((i = SFFindSlot (sf, map, -1, name)) == -1)
-            i = map->enccount;
+            i = map->enc_limit;
         }
-      if (i >= map->enccount || enc_to_gid (map, i) == -1)
+      if (i >= map->enc_limit || enc_to_gid (map, i) == -1)
         MakeEncChar (sf, map, i, name);
     }
   else
@@ -266,12 +266,12 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
             }
         }
     }
-  if (i == -1 || i >= map->enccount)
+  if (i == -1 || i >= map->enc_limit)
     {
       /* try adding it to the end of the font */
       int j;
       int encmax = map->enc->char_cnt;
-      for (j = map->enccount - 1; j >= encmax &&
+      for (j = map->enc_limit - 1; j >= encmax &&
            ((gid = enc_to_gid (map, j)) == -1 || sf->glyphs[gid] == NULL); --j);
       ++j;
       if (i < j)
@@ -279,7 +279,7 @@ figureProperEncoding (SplineFont *sf, EncMap *map, BDFFont *b, int enc,
       MakeEncChar (sf, map, i, name);
     }
 
-  if (i != -1 && i < map->enccount
+  if (i != -1 && i < map->enc_limit
       && ((gid = enc_to_gid (map, i)) == -1 || sf->glyphs[gid] == NULL))
     {
       SplineChar *sc = SFMakeChar (sf, map, i);
@@ -912,14 +912,14 @@ SFGrowTo (SplineFont *sf, BDFFont *b, int cc, EncMap *map)
   int gid;
   BDFChar *bc;
 
-  if (cc >= map->enccount)
+  if (cc >= map->enc_limit)
     {
       // FIXME: It is unlikely this actually needs to be done, because
       // such entries should have been removed already:
-      for (ssize_t k = map->enccount; k < map->enccount + cc + 1; k++)
+      for (ssize_t k = map->enc_limit; k < map->enc_limit + cc + 1; k++)
         remove_enc_to_gid (map, k);
 
-      map->enccount = cc + 1;
+      map->enc_limit = cc + 1;
     }
   if ((gid = enc_to_gid (map, cc)) == -1 || sf->glyphs[gid] == NULL)
     gid = SFMakeChar (sf, map, cc)->orig_pos;
@@ -2811,7 +2811,7 @@ SFSetupBitmap (SplineFont *sf, BDFFont *strike, EncMap *map)
                 EncFromName (strike->glyphs[i]->sc->name, sf->uni_interp,
                              map->enc);
             if (enc == -1)
-              enc = map->enccount;
+              enc = map->enc_limit;
             sc = MakeEncChar (sf, map, enc, strike->glyphs[i]->sc->name);
             strike->glyphs[i]->sc = sc;
           }
@@ -2875,7 +2875,7 @@ FVImportBDF (FontViewBase *fv, char *filename, int ispk, int toback)
   char buf[300];
   char *eod, *fpt, *file, *full;
   int fcnt, any = 0;
-  int oldenccnt = fv->map->enccount;
+  int oldenccnt = fv->map->enc_limit;
 
   eod = strrchr (filename, '/');
   *eod = '\0';
@@ -2917,13 +2917,13 @@ FVImportBDF (FontViewBase *fv, char *filename, int ispk, int toback)
     }
   while (fpt != NULL);
   ff_progress_end_indicator ();
-  if (oldenccnt != fv->map->enccount)
+  if (oldenccnt != fv->map->enc_limit)
     {
       FontViewBase *fvs;
       for (fvs = fv->sf->fv; fvs != NULL; fvs = fvs->nextsame)
         {
           free (fvs->selected);
-          fvs->selected = xcalloc (fvs->map->enccount, sizeof (char));
+          fvs->selected = xcalloc (fvs->map->enc_limit, sizeof (char));
         }
       FontViewReformatAll (fv->sf);
     }

@@ -861,7 +861,7 @@ Default_Properties (BDFFont *bdf, EncMap *map, char *onlyme)
     {
       x_h = bdf->glyphs[gid]->ymax;
     }
-  if ('X' < map->enccount && (gid = enc_to_gid (map, 'X')) != -1
+  if ('X' < map->enc_limit && (gid = enc_to_gid (map, 'X')) != -1
       && bdf->glyphs[gid] != NULL)
     {
       cap_h = bdf->glyphs[gid]->ymax;

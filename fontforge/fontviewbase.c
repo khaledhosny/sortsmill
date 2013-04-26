@@ -119,7 +119,7 @@ FVClear (FontViewBase *fv)
   int yes, unsel;
   /* refstate==0 => ask, refstate==1 => clearall, refstate==-1 => skip all */
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && enc_to_gid_is_set (fv->map, i))
       {
         ssize_t gid = enc_to_gid (fv->map, i);
@@ -199,7 +199,7 @@ FVClearBackground (FontViewBase *fv)
   if (onlycopydisplayed && fv->active_bitmap != NULL)
     return;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1 && sf->glyphs[gid] != NULL)
       {
@@ -212,7 +212,7 @@ FVCopyFgtoBg (FontViewBase *fv)
 {
   int i, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         fv->sf->glyphs[gid] != NULL)
       SCCopyLayerToLayer (fv->sf->glyphs[gid], fv->active_layer, ly_back, true);
@@ -228,7 +228,7 @@ FVUnlinkRef (FontViewBase *fv)
   BDFChar *bdfc;
   BDFRefChar *head, *cur;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && (sc = fv->sf->glyphs[gid]) != NULL)
@@ -287,7 +287,7 @@ FVUndo (FontViewBase *fv)
   BDFChar *bdfc;
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         fv->sf->glyphs[gid] != NULL && !fv->sf->glyphs[gid]->ticked)
       {
@@ -337,7 +337,7 @@ FVRedo (FontViewBase *fv)
   BDFChar *bdfc;
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         fv->sf->glyphs[gid] != NULL && !fv->sf->glyphs[gid]->ticked)
       {
@@ -387,7 +387,7 @@ FVJoin (FontViewBase *fv)
   if (onlycopydisplayed && fv->active_bitmap != NULL)
     return;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1 && sf->glyphs[gid] != NULL)
       {
@@ -412,12 +412,12 @@ LinkEncToGid (FontViewBase *fv, int enc, int gid)
     {
       SplineFont *sf = fv->sf;
       old_gid = enc_to_gid (map, enc);
-      for (j = 0; j < map->enccount; ++j)
+      for (j = 0; j < map->enc_limit; ++j)
         if (j != enc && enc_to_gid (map, j) == old_gid)
           break;
       /* If the glyph is used elsewhere in the encoding then reusing this */
       /* slot causes no problems */
-      if (j == map->enccount)
+      if (j == map->enc_limit)
         {
           /* However if this is the only use and the glyph is interesting */
           /*  then add it to the unencoded area. If it is uninteresting we */
@@ -447,7 +447,7 @@ FVSameGlyphAs (FontViewBase *fv)
 
   if (base == NULL || fv->cidmaster != NULL)
     return;
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (fv->selected[i])
       {
         LinkEncToGid (fv, i, base->orig_pos);
@@ -465,14 +465,14 @@ FVBuildDuplicate (FontViewBase *fv)
   SplineChar dummy;
   const uint32_t *pt;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       ++cnt;
   ff_progress_start_indicator (10, _("Building duplicate encodings"),
                                _("Building duplicate encodings"), NULL, cnt, 1,
                                true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         SplineChar *sc;
@@ -1006,7 +1006,7 @@ FVTransFunc (void *_fv, real transform[6], int otype, BVTFunc *bvts,
   int i, cnt = 0, gid;
   BDFFont *bdf;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
@@ -1016,7 +1016,7 @@ FVTransFunc (void *_fv, real transform[6], int otype, BVTFunc *bvts,
                                0, cnt, 1, true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]) && !fv->sf->glyphs[gid]->ticked)
@@ -1083,8 +1083,8 @@ FVReencode (FontViewBase *fv, Encoding *enc)
   else
     {
       map = EncMapFromEncoding (fv->sf, enc);
-      fv->selected = xrealloc (fv->selected, map->enccount);
-      memset (fv->selected, 0, map->enccount);
+      fv->selected = xrealloc (fv->selected, map->enc_limit);
+      memset (fv->selected, 0, map->enc_limit);
       EncMapFree (fv->map);
       fv->map = map;
     }
@@ -1108,7 +1108,7 @@ FVOverlap (FontViewBase *fv, enum overlap_type ot)
   /*  than anywhere else, so let's save the current state against a crash */
   DoAutoSaves ();
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
@@ -1117,7 +1117,7 @@ FVOverlap (FontViewBase *fv, enum overlap_type ot)
                                _("Removing overlaps..."), 0, cnt, 1, true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting ((sc = fv->sf->glyphs[gid])) && !sc->ticked)
@@ -1150,7 +1150,7 @@ FVAddExtrema (FontViewBase *fv, int force_adding)
   SplineFont *sf = fv->sf;
   int emsize = sf->ascent + sf->descent;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
@@ -1159,7 +1159,7 @@ FVAddExtrema (FontViewBase *fv, int force_adding)
                                true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting ((sc = fv->sf->glyphs[gid])) && !sc->ticked)
@@ -1188,7 +1188,7 @@ FVAddExtrema (FontViewBase *fv, int force_adding)
 void
 FVCanonicalStart (FontViewBase *fv)
 {
-  for (ssize_t i = 0; i < fv->map->enccount; ++i)
+  for (ssize_t i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && enc_to_gid_is_set (fv->map, i))
       {
         ssize_t gid = enc_to_gid (fv->map, i);
@@ -1199,7 +1199,7 @@ FVCanonicalStart (FontViewBase *fv)
 void
 FVCanonicalContours (FontViewBase *fv)
 {
-  for (ssize_t i = 0; i < fv->map->enccount; ++i)
+  for (ssize_t i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && enc_to_gid_is_set (fv->map, i))
       {
         ssize_t gid = enc_to_gid (fv->map, i);
@@ -1212,14 +1212,14 @@ FVRound2Int (FontViewBase *fv, real factor)
 {
   int i, cnt = 0, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
   ff_progress_start_indicator (10, _("Rounding to integer..."),
                                _("Rounding to integer..."), 0, cnt, 1, true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1239,14 +1239,14 @@ FVCluster (FontViewBase *fv)
 {
   int i, cnt = 0, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
   ff_progress_start_indicator (10, _("Rounding to integer..."),
                                _("Rounding to integer..."), 0, cnt, 1, true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1266,7 +1266,7 @@ FVCorrectDir (FontViewBase *fv)
   RefChar *ref, *next;
   SplineChar *sc;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
@@ -1274,7 +1274,7 @@ FVCorrectDir (FontViewBase *fv)
                                _("Correcting Direction..."), 0, cnt, 1, true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting ((sc = fv->sf->glyphs[gid])) && !sc->ticked)
@@ -1352,7 +1352,7 @@ _FVSimplify (FontViewBase *fv, struct simplifyinfo *smpl)
   int i, cnt = 0, layer, first, last, gid;
   SplineChar *sc;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
@@ -1360,7 +1360,7 @@ _FVSimplify (FontViewBase *fv, struct simplifyinfo *smpl)
                                cnt, 1, true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting ((sc = fv->sf->glyphs[gid])) && fv->selected[i]
         && !sc->ticked)
@@ -1402,7 +1402,7 @@ FVAutoHint (FontViewBase *fv)
     if ((sc = fv->sf->glyphs[gid]) != NULL)
       sc->ticked = true;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (sc = fv->sf->glyphs[gid]))
       {
@@ -1412,7 +1412,7 @@ FVAutoHint (FontViewBase *fv)
   ff_progress_start_indicator (10, _("Auto Hinting Font..."),
                                _("Auto Hinting Font..."), 0, cnt, 1, true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1433,7 +1433,7 @@ FVAutoHintSubs (FontViewBase *fv)
 {
   int i, cnt = 0, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
@@ -1441,7 +1441,7 @@ FVAutoHintSubs (FontViewBase *fv)
                                _("Finding Substitution Points..."), 0, cnt, 1,
                                true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1460,14 +1460,14 @@ FVAutoCounter (FontViewBase *fv)
 {
   int i, cnt = 0, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
   ff_progress_start_indicator (10, _("Finding Counter Masks..."),
                                _("Finding Counter Masks..."), 0, cnt, 1, true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1485,7 +1485,7 @@ FVDontAutoHint (FontViewBase *fv)
 {
   int i, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1506,7 +1506,7 @@ AllGlyphsSelected (FontViewBase *fv)
     if ((sc = sf->glyphs[gid]) != NULL)
       sc->ticked = false;
 
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1 &&
           (sc = sf->glyphs[gid]) != NULL)
@@ -1527,7 +1527,7 @@ AnySelectedHints (FontViewBase *fv)
   int gid, enc;
   SplineChar *sc;
 
-  for (enc = 0; enc < fv->map->enccount; ++enc)
+  for (enc = 0; enc < fv->map->enc_limit; ++enc)
     {
       if (fv->selected[enc] && (gid = enc_to_gid (fv->map, enc)) != -1 &&
           (sc = sf->glyphs[gid]) != NULL &&
@@ -1556,14 +1556,14 @@ CIDSetEncMap (FontViewBase *fv, SplineFont *new)
           set_enc_to_gid (fv->map, i, i);
           set_gid_to_enc (fv->map, i, i);
         }
-      if (gcnt < fv->map->enccount)
-        memset (fv->selected + gcnt, 0, fv->map->enccount - gcnt);
+      if (gcnt < fv->map->enc_limit)
+        memset (fv->selected + gcnt, 0, fv->map->enc_limit - gcnt);
       else
         {
           free (fv->selected);
           fv->selected = xcalloc (gcnt, sizeof (char));
         }
-      fv->map->enccount = gcnt;
+      fv->map->enc_limit = gcnt;
     }
   fv->sf = new;
   new->fv = fv;
@@ -1645,14 +1645,14 @@ FVAutoInstr (FontViewBase *fv)
 
   InitGlobalInstrCt (&gic, fv->sf, fv->active_layer, &bd);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
   ff_progress_start_indicator (10, _("Auto Instructing Font..."),
                                _("Auto Instructing Font..."), 0, cnt, 1, true);
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1677,7 +1677,7 @@ FVClearInstrs (FontViewBase *fv)
   if (!SFCloseAllInstrs (fv->sf))
     return;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting ((sc = fv->sf->glyphs[gid])))
@@ -1699,7 +1699,7 @@ FVClearHints (FontViewBase *fv)
 {
   int i, gid;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] &&
         (gid = enc_to_gid (fv->map, i)) != -1
         && SCWorthOutputting (fv->sf->glyphs[gid]))
@@ -1762,7 +1762,7 @@ FVBParseSelectByPST (FontViewBase *fv, struct lookup_subtable *sub,
   first = -1;
   if (search_type == 1)
     {                           /* Select results */
-      for (i = 0; i < fv->map->enccount; ++i)
+      for (i = 0; i < fv->map->enc_limit; ++i)
         {
           gid = enc_to_gid (fv->map, i);
           if ((fv->selected[i] =
@@ -1772,7 +1772,7 @@ FVBParseSelectByPST (FontViewBase *fv, struct lookup_subtable *sub,
     }
   else if (search_type == 2)
     {                           /* merge results */
-      for (i = 0; i < fv->map->enccount; ++i)
+      for (i = 0; i < fv->map->enc_limit; ++i)
         if (!fv->selected[i])
           {
             gid = enc_to_gid (fv->map, i);
@@ -1784,7 +1784,7 @@ FVBParseSelectByPST (FontViewBase *fv, struct lookup_subtable *sub,
     }
   else
     {                           /* restrict selection */
-      for (i = 0; i < fv->map->enccount; ++i)
+      for (i = 0; i < fv->map->enc_limit; ++i)
         if (fv->selected[i])
           {
             gid = enc_to_gid (fv->map, i);
@@ -1804,7 +1804,7 @@ FVBuildAccent (FontViewBase *fv, int onlyaccents)
   SplineChar dummy;
   SplineChar *sc;
 
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
         SCWorthOutputting (fv->sf->glyphs[gid]))
       ++cnt;
@@ -1813,7 +1813,7 @@ FVBuildAccent (FontViewBase *fv, int onlyaccents)
                                true);
 
   SFUntickAll (fv->sf);
-  for (i = 0; i < fv->map->enccount; ++i)
+  for (i = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i])
       {
         gid = enc_to_gid (fv->map, i);
@@ -1886,31 +1886,31 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
             map->__backmap =
               xrealloc (map->__backmap,
                         (map->__backmax += cnt + 10) * sizeof (int));
-          for (i = map->enccount; i < map->enccount + cnt; ++i)
+          for (i = map->enc_limit; i < map->enc_limit + cnt; ++i)
             {
               set_enc_to_gid (map, i, i);
               set_gid_to_enc (map, i, i);
             }
-          fvs->selected = xrealloc (fvs->selected, (map->enccount + cnt));
-          memset (fvs->selected + map->enccount, 0, cnt);
-          map->enccount += cnt;
+          fvs->selected = xrealloc (fvs->selected, (map->enc_limit + cnt));
+          memset (fvs->selected + map->enc_limit, 0, cnt);
+          map->enc_limit += cnt;
         }
       sf->glyphcnt += cnt;
       FontViewReformatAll (fv->sf);
     }
   else
     {
-      for (i = map->enccount; i < map->enccount + cnt; ++i)
+      for (i = map->enc_limit; i < map->enc_limit + cnt; ++i)
         {
           // FIXME: It is unlikely this actually needs to be done,
           // because such entries should have been removed already:
           remove_enc_to_gid (map, i);
         }
-      fv->selected = xrealloc (fv->selected, (map->enccount + cnt));
-      memset (fv->selected + map->enccount, 0, cnt);
-      map->enccount += cnt;
+      fv->selected = xrealloc (fv->selected, (map->enc_limit + cnt));
+      memset (fv->selected + map->enc_limit, 0, cnt);
+      map->enc_limit += cnt;
       FontViewReformatOne (fv);
-      FVDisplayEnc (fv, map->enccount - cnt);
+      FVDisplayEnc (fv, map->enc_limit - cnt);
     }
 }
 
@@ -1919,36 +1919,36 @@ FVRemoveUnused (FontViewBase *fv)
 {
   SplineFont *sf = fv->sf;
   EncMap *map = fv->map;
-  int oldcount = map->enccount;
+  int oldcount = map->enc_limit;
   int gid, i;
   int flags = -1;
 
-  for (i = map->enccount - 1;
+  for (i = map->enc_limit - 1;
        i >= 0 && ((gid = enc_to_gid (map, i)) == -1
                   || !SCWorthOutputting (sf->glyphs[gid])); --i)
     {
       if (gid != -1)
         SFRemoveGlyph (sf, sf->glyphs[gid], &flags);
-      map->enccount = i;
+      map->enc_limit = i;
     }
   /* We reduced the encoding, so don't really need to reallocate the selection */
   /*  array. It's just bigger than it needs to be. */
-  if (oldcount != map->enccount)
+  if (oldcount != map->enc_limit)
     FontViewReformatOne (fv);
 }
 
 void
 FVCompact (FontViewBase *fv)
 {
-  int oldcount = fv->map->enccount;
+  int oldcount = fv->map->enc_limit;
 
   if (fv->normal != NULL)
     {
       EncMapFree (fv->map);
       fv->map = fv->normal;
       fv->normal = NULL;
-      fv->selected = xrealloc (fv->selected, fv->map->enccount);
-      memset (fv->selected, 0, fv->map->enccount);
+      fv->selected = xrealloc (fv->selected, fv->map->enc_limit);
+      memset (fv->selected, 0, fv->map->enc_limit);
     }
   else
     {
@@ -1957,7 +1957,7 @@ FVCompact (FontViewBase *fv)
       fv->normal = EncMapCopy (fv->map);
       CompactEncMap (fv->map, fv->sf);
     }
-  if (oldcount != fv->map->enccount)
+  if (oldcount != fv->map->enc_limit)
     FontViewReformatOne (fv);
   FVSetTitle (fv);
 }
@@ -1970,7 +1970,7 @@ FVDetachGlyphs (FontViewBase *fv)
   int altered = false;
   SplineFont *sf = fv->sf;
 
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (fv->selected[i] && enc_to_gid_is_set (map, i))
       {
         ssize_t gid = enc_to_gid (map, i);
@@ -1995,7 +1995,7 @@ FVDetachAndRemoveGlyphs (FontViewBase *fv)
   int changed = false, altered = false;
   FontViewBase *fvs;
 
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (fv->selected[i] && enc_to_gid_is_set (map, i))
       {
         ssize_t gid = enc_to_gid (map, i);
@@ -2042,7 +2042,7 @@ FVMetricsCenter (FontViewBase *fv, int docenter)
   bvts[0].y = 0;
   if (!fv->sf->onlybitmaps)
     {
-      for (i = 0; i < fv->map->enccount; ++i)
+      for (i = 0; i < fv->map->enc_limit; ++i)
         {
           if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
               (sc = fv->sf->glyphs[gid]) != NULL)
@@ -2080,7 +2080,7 @@ FVMetricsCenter (FontViewBase *fv, int docenter)
       double scale =
         (fv->sf->ascent +
          fv->sf->descent) / (double) (fv->active_bitmap->pixelsize);
-      for (i = 0; i < fv->map->enccount; ++i)
+      for (i = 0; i < fv->map->enc_limit; ++i)
         {
           if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
               fv->sf->glyphs[gid] != NULL)
@@ -2225,11 +2225,11 @@ _FVRevert (FontViewBase *fv, int tobackup)
         map = temp->map;
       else
         map = EncMapFromEncoding (fv->sf, fv->map->enc);
-      if (map->enccount > fvs->map->enccount)
+      if (map->enc_limit > fvs->map->enc_limit)
         {
-          fvs->selected = xrealloc (fvs->selected, map->enccount);
-          memset (fvs->selected + fvs->map->enccount, 0,
-                  map->enccount - fvs->map->enccount);
+          fvs->selected = xrealloc (fvs->selected, map->enc_limit);
+          memset (fvs->selected + fvs->map->enc_limit, 0,
+                  map->enc_limit - fvs->map->enc_limit);
         }
       EncMapFree (fv->map);
       fv->map = map;
@@ -2280,7 +2280,7 @@ FVRevertGlyph (FontViewBase *fv)
                    _
                    ("This font comes from an old format sfd file. Not all aspects of it can be reverted successfully."));
 
-  for (i = 0; i < map->enccount; ++i)
+  for (i = 0; i < map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (map, i)) != -1
         && sf->glyphs[gid] != NULL)
       {
@@ -2459,7 +2459,7 @@ _FontViewBaseCreate (SplineFont *sf)
         EncMapFree (sf->map);
       fv->map = EncMap1to1 (sf->glyphcnt);
     }
-  fv->selected = xcalloc (fv->map->enccount, sizeof (char));
+  fv->selected = xcalloc (fv->map->enc_limit, sizeof (char));
 
 #ifndef _NO_PYTHON
   PyFF_InitFontHook (fv);
@@ -2654,7 +2654,7 @@ FVB_DeselectAll (FontViewBase *fv)
   //  memset (fv->selected, 0, fv->map->encmax);
 
   // FIXME: Here is the new code:
-  memset (fv->selected, 0, fv->map->enccount);
+  memset (fv->selected, 0, fv->map->enc_limit);
 }
 
 static void
