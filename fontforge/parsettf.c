@@ -5360,20 +5360,20 @@ amscheck (struct ttfinfo *info, EncMap *map)
   if (map == NULL)
     return (ui_none);
 
-  if (0xe668 < map->enccount && enc_to_gid (map, 0xe668) != -1 &&
-      info->chars[enc_to_gid (map, 0xe668)]->unicodeenc == 'b')
+  if (enc_to_gid_is_set (map, 0xe668)
+      && info->chars[enc_to_gid (map, 0xe668)]->unicodeenc == 'b')
     ++cnt;
-  if (0xe3c8 < map->enccount && enc_to_gid (map, 0xe626) != -1 &&
-      info->chars[enc_to_gid (map, 0xe626)]->unicodeenc == 0xe626)
+  if (enc_to_gid_is_set (map, 0xe626)
+      && info->chars[enc_to_gid (map, 0xe626)]->unicodeenc == 0xe626)
     ++cnt;
-  if (0xe3c8 < map->enccount && enc_to_gid (map, 0xe3c8) != -1 &&
-      info->chars[enc_to_gid (map, 0xe3c8)]->unicodeenc == 0x29e1)
+  if (enc_to_gid_is_set (map, 0xe3c8)
+      && info->chars[enc_to_gid (map, 0xe3c8)]->unicodeenc == 0x29e1)
     ++cnt;
-  if (0x2A7C < map->enccount && enc_to_gid (map, 0x2A7C) != -1 &&
-      info->chars[enc_to_gid (map, 0x2A7C)]->unicodeenc == 0xE32A)
+  if (enc_to_gid_is_set (map, 0x2A7C)
+      && info->chars[enc_to_gid (map, 0x2A7C)]->unicodeenc == 0xE32A)
     ++cnt;
-  if (0x2920 < map->enccount && enc_to_gid (map, 0x2920) != -1 &&
-      info->chars[enc_to_gid (map, 0x2920)]->unicodeenc == 0xE221)
+  if (enc_to_gid_is_set (map, 0x2920)
+      && info->chars[enc_to_gid (map, 0x2920)]->unicodeenc == 0xE221)
     ++cnt;
   return (cnt >= 2 ? ui_ams : ui_none);
 }
