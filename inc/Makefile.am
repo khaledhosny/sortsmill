@@ -157,6 +157,9 @@ nobase_include_HEADERS += sortsmill/guile/fonts.h
 nobase_include_HEADERS += sortsmill/guile/format.h
 nobase_include_HEADERS += sortsmill/guile/wrap.h
 
+nobase_include_HEADERS += sortsmill/guile/containers.h
+nobase_include_HEADERS += sortsmill/guile/containers/rbmap.h
+
 nobase_include_HEADERS += sortsmill/guile/editor.h
 nobase_include_HEADERS += sortsmill/guile/editor/main_loop.h
 
@@ -181,8 +184,6 @@ nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 
 nobase_include_HEADERS += sortsmill/guile/strings.h
 nobase_include_HEADERS += sortsmill/guile/strings/gc.h
-
-nobase_include_HEADERS += sortsmill/guile/rbmap.h
 
 nobase_include_HEADERS += sortsmill/guile/symbols.h
 

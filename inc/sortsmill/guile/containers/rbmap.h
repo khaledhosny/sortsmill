@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_RBMAP_H
-#define _SORTSMILL_GUILE_RBMAP_H
+#ifndef _SORTSMILL_GUILE_CONTAINERS_RBMAP_H
+#define _SORTSMILL_GUILE_CONTAINERS_RBMAP_H
 
 #include <libguile.h>
 #include <stdint.h>
@@ -55,6 +55,10 @@ SCM scm_rbmapi_delete_x (SCM map, SCM key);
 SCM scm_rbmapi_ref (SCM map, SCM key, SCM default_value);
 SCM scm_rbmapi_fold_left (SCM proc, SCM init, SCM map, SCM start_key);
 SCM scm_rbmapi_fold_right (SCM proc, SCM init, SCM map, SCM start_key);
+SCM scm_alist_to_rbmapi (SCM alist);
+SCM scm_rbmapi_to_alist (SCM map);
+SCM scm_rbmapi_map_to_list (SCM proc, SCM map);
+SCM scm_rbmapi_for_each (SCM proc, SCM map);
 SCM scm_rbmapi_count (SCM pred, SCM map);
 SCM scm_rbmapi_size (SCM map);
 
@@ -83,4 +87,4 @@ scm_rbmapi_iter_set_value (scm_t_rbmapi_iter iter, SCM value)
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_RBMAP_H */
+#endif /* _SORTSMILL_GUILE_CONTAINERS_RBMAP_H */

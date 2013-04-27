@@ -4,6 +4,7 @@ sortsmill/__internals__/lookups.go: sortsmill/dynlink.go
 sortsmill/alloc/alloc-die.go: sortsmill/dynlink.go
 sortsmill/argv.go: sortsmill/machine.go sortsmill/kwargs.go
 sortsmill/arrays.go: sortsmill/dynlink.go
+sortsmill/containers/rbmap.go: sortsmill/dynlink.go
 sortsmill/editor/main.go: sortsmill/dynlink.go sortsmill/argv.go
 sortsmill/editor/main-loop.go: sortsmill/editor/finalization.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
@@ -43,7 +44,6 @@ sortsmill/options.go: sortsmill/dynlink.go sortsmill/kwargs.go sortsmill/pkg-inf
 sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go
 sortsmill/pure.go: sortsmill/i18n.go sortsmill/dynlink.go sortsmill/editor/finalization.go sortsmill/strings.go sortsmill/argv.go
 sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.go sortsmill/ffcompat.go sortsmill/editor/finalization.go sortsmill/strings.go
-sortsmill/rbmap.go: sortsmill/dynlink.go
 sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/iconv.go
 sortsmill/strings/grabbed-strings.go: sortsmill/alloc.go
 sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
@@ -51,10 +51,10 @@ sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmi
 sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/rbmap.go sortsmill/strings.go
+sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/strings.go
 sortsmill/__internals__.go: sortsmill/__internals__/anchors.go sortsmill/__internals__/glyphs.go sortsmill/__internals__/lookups.go
 sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
-sortsmill/containers.go: sortsmill/containers/rnrs-hashtable.go
+sortsmill/containers.go: sortsmill/containers/rbmap.go sortsmill/containers/rnrs-hashtable.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go sortsmill/machine.go
 sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/glyphs.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/psmat.go sortsmill/fonts/views.go

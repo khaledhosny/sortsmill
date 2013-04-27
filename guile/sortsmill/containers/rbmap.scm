@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill rbmap)
+(library (sortsmill containers rbmap)
 
   (export make-rbmapi
           rbmapi?
@@ -24,6 +24,10 @@
           rbmapi-ref
           rbmapi-fold-left
           rbmapi-fold-right
+          alist->rbmapi
+          rbmapi->alist ;; rbmapi->alist preserves the order.
+          rbmapi-map->list ;; rbmapi-map->list preserves the order.
+          rbmapi-for-each
           rbmapi-count
           rbmapi-size)
 

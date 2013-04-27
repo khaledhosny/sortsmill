@@ -46,7 +46,7 @@
 
 #include "basics.h"
 #include <iconv.h>
-#include <sortsmill/guile/rbmap.h>
+#include <sortsmill/guile/containers.h>
 
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
 typedef double real;

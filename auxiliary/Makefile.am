@@ -128,7 +128,7 @@ dist_libsortsmill_aux_la_SOURCES += guile_python.c
 endif HAVE_PYTHON_API
 
 # Maps of Guile SCM objects, implemented with <sortsmill/rb.h>.
-dist_libsortsmill_aux_la_SOURCES += guile_rbmap.c
+dist_libsortsmill_aux_la_SOURCES += guile_containers_rbmap.c
 
 # Miscellaneous C interface to Guile and Guile extensions.
 dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c

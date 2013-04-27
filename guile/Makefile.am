@@ -269,6 +269,13 @@ sortsmill/containers.scm: $(CONTAINERS_REEXPORTED_SCM_FILES)
 	$(AM_V_at)mv $@-tmp $@
 
 
+# (sortsmill containers rbmap)
+
+DIST_SCM_FILES += sortsmill/containers/rbmap.scm
+GO_FILES += sortsmill/containers/rbmap.go
+CONTAINERS_REEXPORTED_SCM_FILES += sortsmill/containers/rbmap.scm
+
+
 # (sortsmill containers rnrs-hashtable)
 
 DIST_SCM_FILES += sortsmill/containers/rnrs-hashtable.scm
@@ -760,14 +767,6 @@ DIST_SCM_FILES += sortsmill/python.scm
 GO_FILES += sortsmill/python.go
 
 endif HAVE_PYTHON_API
-
-#--------------------------------------------------------------------------
-#
-# (sortsmill rbmap)
-
-DIST_SCM_FILES += sortsmill/rbmap.scm
-GO_FILES += sortsmill/rbmap.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/rbmap.scm
 
 #--------------------------------------------------------------------------
 #

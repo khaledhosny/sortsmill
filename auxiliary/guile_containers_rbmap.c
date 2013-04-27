@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/guile/rbmap.h>
+#include <sortsmill/guile.h>
 #include <sortsmill/rb.h>
 #include <sortsmill/initialized_global_constants.h>
 #include <sortsmill/attributes.h>
@@ -223,6 +223,59 @@ scm_rbmapi_fold_right (SCM proc, SCM init, SCM map, SCM start_key)
 }
 
 VISIBLE SCM
+scm_alist_to_rbmapi (SCM alist)
+{
+  SCM map = scm_make_rbmapi ();
+  for (SCM p = alist; !scm_is_null (p); p = SCM_CDR (p))
+    {
+      scm_c_assert_can_be_list_link ("scm_alist_to_rbmapi", alist, p);
+      scm_rbmapi_set_x (map, SCM_CAAR (p), SCM_CDAR (p));
+    }
+  return map;
+}
+
+VISIBLE SCM
+scm_rbmapi_to_alist (SCM map)
+{
+  SCM alist = SCM_EOL;
+
+  // Go backwards, so consing preserves the order.
+  for (scm_t_rbmapi_iter p = scm_c_rbmapi_last (map); p != NULL;
+       p = scm_c_rbmapi_prev (map, p))
+    alist = scm_acons (scm_from_intmax (scm_rbmapi_iter_key (p)),
+                       scm_rbmapi_iter_value (p), alist);
+
+  return alist;
+}
+
+VISIBLE SCM
+scm_rbmapi_map_to_list (SCM proc, SCM map)
+{
+  SCM lst = SCM_EOL;
+
+  // Go backwards, so consing preserves the order.
+  for (scm_t_rbmapi_iter p = scm_c_rbmapi_last (map); p != NULL;
+       p = scm_c_rbmapi_prev (map, p))
+    {
+      SCM element = scm_call_2 (proc, scm_from_intmax (scm_rbmapi_iter_key (p)),
+                                scm_rbmapi_iter_value (p));
+      lst = scm_cons (element, lst);
+    }
+
+  return lst;
+}
+
+VISIBLE SCM
+scm_rbmapi_for_each (SCM proc, SCM map)
+{
+  for (scm_t_rbmapi_iter p = scm_c_rbmapi_last (map); p != NULL;
+       p = scm_c_rbmapi_prev (map, p))
+    scm_call_2 (proc, scm_from_intmax (scm_rbmapi_iter_key (p)),
+                scm_rbmapi_iter_value (p));
+  return SCM_UNSPECIFIED;
+}
+
+VISIBLE SCM
 scm_rbmapi_count (SCM pred, SCM map)
 {
   SCM count = scm_from_int (0);
@@ -258,6 +311,10 @@ init_sortsmill_guile_rbmap (void)
   scm_c_define_gsubr ("rbmapi-ref", 2, 1, 0, scm_rbmapi_ref);
   scm_c_define_gsubr ("rbmapi-fold-left", 3, 1, 0, scm_rbmapi_fold_left);
   scm_c_define_gsubr ("rbmapi-fold-right", 3, 1, 0, scm_rbmapi_fold_right);
+  scm_c_define_gsubr ("alist->rbmapi", 1, 0, 0, scm_alist_to_rbmapi);
+  scm_c_define_gsubr ("rbmapi->alist", 1, 0, 0, scm_rbmapi_to_alist);
+  scm_c_define_gsubr ("rbmapi-map->list", 2, 0, 0, scm_rbmapi_map_to_list);
+  scm_c_define_gsubr ("rbmapi-for-each", 2, 0, 0, scm_rbmapi_for_each);
   scm_c_define_gsubr ("rbmapi-count", 2, 0, 0, scm_rbmapi_count);
   scm_c_define_gsubr ("rbmapi-size", 1, 0, 0, scm_rbmapi_size);
 }
