@@ -193,44 +193,36 @@ void
 FVClearBackground (FontViewBase *fv)
 {
   SplineFont *sf = fv->sf;
-  int i, gid;
 
-  if (onlycopydisplayed && fv->active_bitmap != NULL)
-    return;
-
-  for (i = 0; i < fv->map->enc_limit; ++i)
-    if (fv->selected[i] &&
-        (gid = enc_to_gid (fv->map, i)) != -1 && sf->glyphs[gid] != NULL)
-      {
-        SCClearBackground (sf->glyphs[gid]);
-      }
+  if (!onlycopydisplayed || fv->active_bitmap == NULL)
+    {
+      for (enc_iter_t p = enc_iter (fv->map); !enc_done (p); p = enc_next (p))
+        if (fv->selected[enc_enc (p)] && sf->glyphs[enc_gid (p)] != NULL)
+          SCClearBackground (sf->glyphs[enc_gid (p)]);
+    }
 }
 
 void
 FVCopyFgtoBg (FontViewBase *fv)
 {
-  int i, gid;
-
-  for (i = 0; i < fv->map->enc_limit; ++i)
-    if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
-        fv->sf->glyphs[gid] != NULL)
-      SCCopyLayerToLayer (fv->sf->glyphs[gid], fv->active_layer, ly_back, true);
+  for (enc_iter_t p = enc_iter (fv->map); !enc_done (p); p = enc_next (p))
+    if (fv->selected[enc_enc (p)] && fv->sf->glyphs[enc_gid (p)] != NULL)
+      SCCopyLayerToLayer (fv->sf->glyphs[enc_gid (p)], fv->active_layer,
+                          ly_back, true);
 }
 
 void
 FVUnlinkRef (FontViewBase *fv)
 {
-  int i, layer, first, last, gid;
+  int layer, first, last;
   SplineChar *sc;
   RefChar *rf, *next;
   BDFFont *bdf;
   BDFChar *bdfc;
   BDFRefChar *head, *cur;
 
-  for (i = 0; i < fv->map->enc_limit; ++i)
-    if (fv->selected[i] &&
-        (gid = enc_to_gid (fv->map, i)) != -1
-        && (sc = fv->sf->glyphs[gid]) != NULL)
+  for (enc_iter_t p = enc_iter (fv->map); !enc_done (p); p = enc_next (p))
+    if (fv->selected[enc_enc (p)] && (sc = fv->sf->glyphs[enc_gid (p)]) != NULL)
       {
         if ((fv->active_bitmap == NULL || !onlycopydisplayed) &&
             sc->layers[fv->active_layer].refs != NULL)
@@ -259,7 +251,8 @@ FVUnlinkRef (FontViewBase *fv)
             if (bdf != fv->active_bitmap && onlycopydisplayed)
               continue;
 
-            bdfc = gid == -1 || gid >= bdf->glyphcnt ? NULL : bdf->glyphs[gid];
+            bdfc =
+              (bdf->glyphcnt <= enc_gid (p)) ? NULL : bdf->glyphs[enc_gid (p)];
             if (bdfc != NULL && bdfc->refs != NULL)
               {
                 BCMergeReferences (bdfc, bdfc, 0, 0);
