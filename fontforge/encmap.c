@@ -17,7 +17,10 @@
 
 #include <splinefont.h>
 
-// Generate instances of these inline functions.
+//-------------------------------------------------------------------------
+//
+// Generate instances of inline functions.
+
 VISIBLE void make_enc_to_gid (EncMap *map);
 VISIBLE void release_enc_to_gid (EncMap *map);
 VISIBLE void clear_enc_to_gid (EncMap *map);
@@ -26,12 +29,19 @@ VISIBLE void remove_enc_to_gid (EncMap *map, ssize_t enc);
 VISIBLE ssize_t enc_to_gid (EncMap *map, ssize_t enc);
 VISIBLE bool enc_to_gid_is_set (EncMap *map, ssize_t enc);
 
-// Generate instances of these inline functions.
+VISIBLE enc_iter_t enc_iter (EncMap *map);
+VISIBLE bool enc_done (enc_iter_t iter);
+VISIBLE enc_iter_t enc_next (enc_iter_t iter);
+VISIBLE ssize_t enc_enc (enc_iter_t iter);
+VISIBLE ssize_t enc_gid (enc_iter_t iter);
+
 VISIBLE void set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 VISIBLE void add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 VISIBLE void remove_all_gid_to_enc (EncMap *map, ssize_t gid);
 VISIBLE ssize_t gid_to_enc (EncMap *map, ssize_t gid);
 VISIBLE bool gid_to_enc_is_set (EncMap *map, ssize_t gid);
+
+//-------------------------------------------------------------------------
 
 VISIBLE void
 remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
@@ -55,3 +65,5 @@ remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
       set_gid_to_enc (map, gid, i);
     }
 }
+
+//-------------------------------------------------------------------------

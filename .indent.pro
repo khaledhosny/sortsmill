@@ -61,12 +61,13 @@
 -T _scm_evaluator_and_spline_t
 -T gdraw_sync_thread_t
 -T scm_t_rbmapi_node_data
--T scm_t_rbmapi_iter
+-T scm_t_rbmapi_iterk
 -T rbmapi_t
 -T rbmapi_node_t
 
 -T real
 -T bigreal
+-T enc_iter_t
 -T extended
 -T menu_info
 -T spiro_cp

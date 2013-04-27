@@ -1180,6 +1180,12 @@ typedef struct encmap
   bool ticked;
 } EncMap;
 
+typedef struct
+{
+  SCM _enc_to_gid;
+  scm_t_rbmapi_iter _iter;
+} enc_iter_t;
+
 inline void make_enc_to_gid (EncMap *map);
 inline void release_enc_to_gid (EncMap *map);
 inline void clear_enc_to_gid (EncMap *map);
@@ -1187,6 +1193,12 @@ inline void set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid);
 inline void remove_enc_to_gid (EncMap *map, ssize_t enc);
 inline ssize_t enc_to_gid (EncMap *map, ssize_t enc);
 inline bool enc_to_gid_is_set (EncMap *map, ssize_t enc);
+
+inline enc_iter_t enc_iter (EncMap *map);
+inline bool enc_done (enc_iter_t iter);
+inline enc_iter_t enc_next (enc_iter_t iter);
+inline ssize_t enc_enc (enc_iter_t iter);
+inline ssize_t enc_gid (enc_iter_t iter);
 
 inline void set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 inline void add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
@@ -1243,6 +1255,41 @@ inline bool
 enc_to_gid_is_set (EncMap *map, ssize_t enc)
 {
   return (enc_to_gid (map, enc) != -1);
+}
+
+inline enc_iter_t
+enc_iter (EncMap *map)
+{
+  enc_iter_t iter = {
+    ._enc_to_gid = map->_enc_to_gid,
+    ._iter = scm_c_rbmapi_first (map->_enc_to_gid)
+  };
+  return iter;
+}
+
+inline bool
+enc_done (enc_iter_t iter)
+{
+  return (iter._iter == NULL);
+}
+
+inline enc_iter_t
+enc_next (enc_iter_t iter)
+{
+  iter._iter = scm_c_rbmapi_next (iter._enc_to_gid, iter._iter);
+  return iter;
+}
+
+inline ssize_t
+enc_enc (enc_iter_t iter)
+{
+  return (ssize_t) scm_rbmapi_iter_key (iter._iter);
+}
+
+inline ssize_t
+enc_gid (enc_iter_t iter)
+{
+  return scm_to_ssize_t (scm_rbmapi_iter_value (iter._iter));
 }
 
 inline void

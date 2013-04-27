@@ -112,17 +112,16 @@ UnselectedDependents (FontViewBase *fv, int gid)
 void
 FVClear (FontViewBase *fv)
 {
-  int i;
   BDFFont *bdf;
   int refstate = 0;
   char *buts[6];
   int yes, unsel;
   /* refstate==0 => ask, refstate==1 => clearall, refstate==-1 => skip all */
 
-  for (i = 0; i < fv->map->enc_limit; ++i)
-    if (fv->selected[i] && enc_to_gid_is_set (fv->map, i))
+  for (enc_iter_t p = enc_iter (fv->map); !enc_done (p); p = enc_next (p))
+    if (fv->selected[enc_enc (p)])
       {
-        ssize_t gid = enc_to_gid (fv->map, i);
+        ssize_t gid = enc_gid (p);
 
         /* If we are messing with the outline character, check for dependencies */
         if (refstate <= 0 && (unsel = UnselectedDependents (fv, gid)))
@@ -1548,7 +1547,8 @@ CIDSetEncMap (FontViewBase *fv, SplineFont *new)
       int i;
       if (fv->map->__backmax < gcnt)
         {
-          fv->map->__backmap = xrealloc (fv->map->__backmap, gcnt * sizeof (int));
+          fv->map->__backmap =
+            xrealloc (fv->map->__backmap, gcnt * sizeof (int));
           fv->map->__backmax = gcnt;
         }
       for (i = 0; i < gcnt; ++i)
