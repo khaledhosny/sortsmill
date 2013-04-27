@@ -126,6 +126,14 @@
 #endif
 #endif
 
+#if !defined _FF_MAYBE_UNUSED
+#if _FF_GNUC_VERSION_AT_LEAST (2, 7)
+#define _FF_MAYBE_UNUSED __attribute__ ((__unused__))
+#else
+#define _FF_MAYBE_UNUSED
+#endif
+#endif
+
 #if !defined _FF_UNUSED
 #if _FF_GNUC_VERSION_AT_LEAST (2, 7)
 #define _FF_UNUSED(x) x __attribute__ ((__unused__))

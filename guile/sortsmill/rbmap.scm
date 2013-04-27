@@ -1,6 +1,6 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
-;; Copyright (C) 2012, 2013 Barry Schwartz
+;; Copyright (C) 2013 Barry Schwartz
 ;; 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,14 +15,31 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(library (sortsmill iconv)
+(library (sortsmill rbmap)
 
-  (export embedded-utf7->string)
+  (export make-rbmapi
+          rbmapi?
+          rbmapi-set!
+          rbmapi-delete!
+          rbmapi-ref
+          rbmapi-fold-left
+          rbmapi-fold-right
+          rbmapi-count
+          rbmapi-size)
 
   (import (sortsmill dynlink)
-          (only (guile) eval-when))
+          (rnrs)
+          (except (guile) error)
+          (system foreign)
+          (ice-9 format))
+
+  (define-wrapped-pointer-type rbmapi
+    rbmapi? pointer->rbmapi rbmapi->pointer
+    [lambda (obj port)
+      (format port "#<rbmapi 0x~x>"
+              (pointer-address (rbmapi->pointer obj)))] )
 
   (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_sortsmill_iconv"))
+    (sortsmill-dynlink-load-extension "init_sortsmill_guile_rbmap"))
 
   ) ;; end of library.

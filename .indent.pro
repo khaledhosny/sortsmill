@@ -60,6 +60,10 @@
 -T _scm_evaluator_t
 -T _scm_evaluator_and_spline_t
 -T gdraw_sync_thread_t
+-T scm_t_rbmapi_node_data
+-T scm_t_rbmapi_iter
+-T rbmapi_t
+-T rbmapi_node_t
 
 -T real
 -T bigreal

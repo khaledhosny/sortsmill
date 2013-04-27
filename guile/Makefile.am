@@ -763,6 +763,14 @@ endif HAVE_PYTHON_API
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill rbmap)
+
+DIST_SCM_FILES += sortsmill/rbmap.scm
+GO_FILES += sortsmill/rbmap.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/rbmap.scm
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill sfd-to-sxml)    FIXME: Implement this for real, eventually.
 
 DIST_SCM_FILES += sortsmill/sfd-to-sxml.scm

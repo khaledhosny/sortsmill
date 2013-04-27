@@ -96,6 +96,9 @@ nobase_include_HEADERS += sortsmill/rexp.h
 # Parsing of PostScript-style numerals.
 nobase_include_HEADERS += sortsmill/ps_number.h
 
+# Left-leaning 2-3 red-black trees.
+nobase_include_HEADERS += sortsmill/rb.h
+
 #--------------------------------------------------------------------------
 #
 # Mathematical hierarchy.
@@ -178,6 +181,8 @@ nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 
 nobase_include_HEADERS += sortsmill/guile/strings.h
 nobase_include_HEADERS += sortsmill/guile/strings/gc.h
+
+nobase_include_HEADERS += sortsmill/guile/rbmap.h
 
 nobase_include_HEADERS += sortsmill/guile/symbols.h
 

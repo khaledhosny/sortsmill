@@ -25,6 +25,7 @@
 #include <sortsmill/guile/iconv.h>
 #include <sortsmill/guile/math.h>
 #include <sortsmill/guile/notices.h>
+#include <sortsmill/guile/rbmap.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/strings.h>
 #include <sortsmill/guile/symbols.h>
