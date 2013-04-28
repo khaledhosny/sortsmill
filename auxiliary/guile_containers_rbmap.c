@@ -24,11 +24,11 @@
 
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _pointer_to_rbmapi,
                       scm_c_initialize_from_eval_string,
-                      "(@@ (sortsmill rbmap) pointer->rbmapi)");
+                      "(@@ (sortsmill containers rbmap) pointer->rbmapi)");
 
 INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _rbmapi_to_pointer,
                       scm_c_initialize_from_eval_string,
-                      "(@@ (sortsmill rbmap) rbmapi->pointer)");
+                      "(@@ (sortsmill containers rbmap) rbmapi->pointer)");
 
 //-------------------------------------------------------------------------
 //
