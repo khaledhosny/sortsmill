@@ -201,7 +201,8 @@ GlyphsToNames (struct ttfinfo *info, uint16_t *glyphs, int make_uniq)
         {
           if (!info->bad_ot)
             {
-              LogError (_("GID out of range.\n"));
+              LogError (_("Glyph %d out of range [0, %d)"),
+                        glyphs[i], info->glyph_cnt);
               info->bad_ot = true;
             }
           return xstrdup ("");
@@ -296,7 +297,7 @@ getCoverageTable (FILE *ttf, int coverage_offset, struct ttfinfo *info)
             }
           if (glyphs[i] >= info->glyph_cnt)
             {
-              LogError (_("Bad coverage table. Glyph %d out of range [0,%d)\n"),
+              LogError (_("Bad coverage table. Glyph %d out of range [0, %d)"),
                         glyphs[i], info->glyph_cnt);
               info->bad_ot = true;
               glyphs[i] = 0;
@@ -330,8 +331,8 @@ getCoverageTable (FILE *ttf, int coverage_offset, struct ttfinfo *info)
             }
           if (start > end || end >= info->glyph_cnt)
             {
-              LogError (_
-                        ("Bad coverage table. Glyph range %d-%d out of range [0,%d)\n"),
+              LogError (_("Bad coverage table. "
+                          "Glyph range %d-%d out of range [0, %d)"),
                         start, end, info->glyph_cnt);
               info->bad_ot = true;
               start = end = 0;
@@ -422,8 +423,8 @@ getClassDefTable (FILE *ttf, int classdef_offset, struct ttfinfo *info)
           end = getushort (ttf);
           if (start > end || end >= cnt)
             {
-              LogError (_
-                        ("Bad class def table. Glyph range %d-%d out of range [0,%d)\n"),
+              LogError (_("Bad class def table. "
+                          "Glyph range %d-%d out of range [0, %d)"),
                         start, end, cnt);
               info->bad_ot = true;
             }
@@ -1308,8 +1309,8 @@ g___ContextSubTable1 (FILE *ttf, int stoffset,
               if (rules[i].subrules[j].glyphs[k] >= info->glyph_cnt)
                 {
                   if (!warned)
-                    LogError (_
-                              ("Bad contextual or chaining sub table. Glyph %d out of range [0,%d)\n"),
+                    LogError (_("Bad contextual or chaining sub table. "
+                                "Glyph %d out of range [0, %d)"),
                               rules[i].subrules[j].glyphs[k], info->glyph_cnt);
                   info->bad_ot = true;
                   warned = true;
@@ -1488,8 +1489,8 @@ g___ChainingSubTable1 (FILE *ttf, int stoffset,
                       info->glyph_cnt)
                     {
                       if (!warned)
-                        LogError (_
-                                  ("Bad contextual or chaining sub table. Glyph %d out of range [0,%d)\n"),
+                        LogError (_("Bad contextual or chaining sub table. "
+                                    "Glyph %d out of range [0, %d)"),
                                   (&rules[i].subrules[j].glyphs)[which][k],
                                   info->glyph_cnt);
                       info->bad_ot = true;
@@ -2253,7 +2254,7 @@ gsubSimpleSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
   if (glyphs == NULL)
     {
       free (glyph2s);
-      LogError (_(" Bad simple substitution table, ignored\n"));
+      LogError (_("Bad simple substitution table, ignored\n"));
       return;
     }
   if (justinuse == git_findnames)
@@ -2319,8 +2320,8 @@ gsubSimpleSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
             which = format == 1 ? (uint16_t) (glyphs[i] + delta) : glyph2s[i];
             if (which >= info->glyph_cnt)
               {
-                LogError (_
-                          ("Bad substitution glyph: GID %d not less than %d\n"),
+                LogError (_("Bad substitution table. "
+                            "Glyph %d out of range [0, %d)"),
                           which, info->glyph_cnt);
                 info->bad_ot = true;
                 which = 0;
@@ -2378,7 +2379,7 @@ gsubMultipleSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
   if (glyphs == NULL)
     {
       free (offsets);
-      LogError (_(" Bad multiple substitution table, ignored\n"));
+      LogError (_("Bad multiple substitution table, ignored\n"));
       return;
     }
   for (i = 0; glyphs[i] != 0xffff; ++i);
@@ -2424,8 +2425,8 @@ gsubMultipleSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
           if (glyph2s[j] >= info->glyph_cnt)
             {
               if (!justinuse)
-                LogError (_
-                          ("Bad Multiple/Alternate substitution glyph. GID %d not less than %d\n"),
+                LogError (_("Bad Multiple/Alternate substitution glyph. "
+                            "Glyph %d out of range [0, %d)"),
                           glyph2s[j], info->glyph_cnt);
               info->bad_ot = true;
               if (++badcnt > 20)
@@ -2497,7 +2498,7 @@ gsubLigatureSubTable (FILE *ttf, int stoffset,
   glyphs = getCoverageTable (ttf, stoffset + coverage, info);
   if (glyphs == NULL)
     {
-      LogError (_(" Bad ligature table, ignored\n"));
+      LogError (_("Bad ligature table, ignored\n"));
       return;
     }
   for (i = 0; i < cnt; ++i)
@@ -2525,7 +2526,7 @@ gsubLigatureSubTable (FILE *ttf, int stoffset,
           lig = getushort (ttf);
           if (lig >= info->glyph_cnt)
             {
-              LogError (_("Bad ligature glyph. GID %d not less than %d\n"),
+              LogError (_("Bad ligature glyph. Glyph %d out of range [0, %d)"),
                         lig, info->glyph_cnt);
               info->bad_ot = true;
               lig = 0;
@@ -2533,8 +2534,9 @@ gsubLigatureSubTable (FILE *ttf, int stoffset,
           cc = getushort (ttf);
           if (cc < 0 || cc > 100)
             {
-              LogError (_
-                        ("Unlikely count of ligature components (%d), I suspect this ligature sub-\n table is garbage, I'm giving up on it.\n"),
+              LogError (_("Unlikely count of ligature components (%d), "
+                          "I suspect this ligature sub-\n"
+                          "table is garbage, I'm giving up on it."),
                         cc);
               info->bad_ot = true;
               free (glyphs);
@@ -2549,8 +2551,9 @@ gsubLigatureSubTable (FILE *ttf, int stoffset,
               if (lig_glyphs[k] >= info->glyph_cnt)
                 {
                   if (justinuse == git_normal)
-                    LogError (_
-                              ("Bad ligature component glyph. GID %d not less than %d (in ligature %d)\n"),
+                    LogError (_("Bad ligature component glyph. "
+                                "Glyph %d out of range [0, %d) "
+                                "(in ligature %d)"),
                               lig_glyphs[k], info->glyph_cnt, lig);
                   info->bad_ot = true;
                   lig_glyphs[k] = 0;
@@ -2727,8 +2730,8 @@ gsubReverseChainSubTable (FILE *ttf, int stoffset,
   for (i = 0; i < scnt; ++i)
     if ((sglyphs[i] = getushort (ttf)) >= info->glyph_cnt)
       {
-        LogError (_
-                  ("Bad reverse contextual chaining substitution glyph: %d is not less than %d\n"),
+        LogError (_("Bad reverse contextual chaining substitution table. "
+                    "Glyph %d out of range [0, %d)"),
                   sglyphs[i], info->glyph_cnt);
         info->bad_ot = true;
         sglyphs[i] = 0;
