@@ -7111,13 +7111,6 @@ PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
       else
         base = map->enc_limit;
 
-      // FIXME: It is unlikely this actually needs to be done, because
-      // such entries should have been removed already:
-      for (ssize_t k = map->enc_limit; k < base + extras; k++)
-        {
-          remove_enc_to_gid (map, k);
-        }
-
       map->enc_limit = base + extras;
 
       extras = 0;
@@ -7135,12 +7128,6 @@ MapDoBack (EncMap *map, struct ttfinfo *info)
 {
   if (map != NULL)             // @var{map} may be NULL for CID fonts.
     rebuild_gid_to_enc (map);
-
-//  if (map != NULL)             // @var{map} may be NULL for CID fonts.
-//    for (ssize_t i = map->enc_limit - 1; i >= 0; --i)
-//      if (enc_to_gid (map, i) >= 0 && enc_to_gid (map, i) < info->glyph_cnt)
-//        if (gid_to_enc (map, enc_to_gid (map, i)) == -1)
-//          set_gid_to_enc (map, enc_to_gid (map, i), i);
 }
 
 void

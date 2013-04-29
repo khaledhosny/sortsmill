@@ -1537,14 +1537,7 @@ CIDSetEncMap (FontViewBase *fv, SplineFont *new)
 
   if (fv->cidmaster != NULL && gcnt != fv->sf->glyphcnt)
     {
-      int i;
-//      if (fv->map->__backmax < gcnt)
-//        {
-//          fv->map->__backmap =
-//            xrealloc (fv->map->__backmap, gcnt * sizeof (int));
-//          fv->map->__backmax = gcnt;
-//        }
-      for (i = 0; i < gcnt; ++i)
+      for (int i = 0; i < gcnt; ++i)
         {
           set_enc_to_gid (fv->map, i, i);
           set_gid_to_enc (fv->map, i, i);
@@ -1849,7 +1842,6 @@ FVBuildAccent (FontViewBase *fv, int onlyaccents)
 void
 FVAddUnencoded (FontViewBase *fv, int cnt)
 {
-  int i;
   EncMap *map = fv->map;
 
   if (fv->normal != NULL)
@@ -1875,11 +1867,7 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
       for (fvs = sf->fv; fvs != NULL; fvs = fvs->nextsame)
         {
           EncMap *map = fvs->map;
-//          if (sf->glyphcnt + cnt >= map->__backmax)
-//            map->__backmap =
-//              xrealloc (map->__backmap,
-//                        (map->__backmax += cnt + 10) * sizeof (int));
-          for (i = map->enc_limit; i < map->enc_limit + cnt; ++i)
+          for (size_t i = map->enc_limit; i < map->enc_limit + cnt; i++)
             {
               set_enc_to_gid (map, i, i);
               set_gid_to_enc (map, i, i);
@@ -1893,12 +1881,6 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
     }
   else
     {
-      for (i = map->enc_limit; i < map->enc_limit + cnt; ++i)
-        {
-          // FIXME: It is unlikely this actually needs to be done,
-          // because such entries should have been removed already:
-          remove_enc_to_gid (map, i);
-        }
       fv->selected = xrealloc (fv->selected, (map->enc_limit + cnt));
       memset (fv->selected + map->enc_limit, 0, cnt);
       map->enc_limit += cnt;

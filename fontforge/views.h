@@ -512,7 +512,6 @@ typedef struct searchview
   LayerInfo layerinfo[2];
   SplineChar *chars[2];
   EncMap dummy_map;
-  int32_t map[2], backmap[2];
   uint8_t sel[2];
   CharView cv_srch, cv_rpl;
   CharView *lastcv;
@@ -543,7 +542,6 @@ typedef struct mathkernview
   SplineChar sc_topright, sc_topleft, sc_bottomright, sc_bottomleft;
   SplineChar *chars[4];
   EncMap dummy_map;
-  int32_t map[4], backmap[4];
   uint8_t sel[4];
   CharView cv_topright, cv_topleft, cv_bottomright, cv_bottomleft;
   CharView *lastcv;
@@ -577,7 +575,6 @@ typedef struct tilepathdlg
   SplineChar sc_first, sc_medial, sc_final, sc_isolated;
   SplineChar *chars[4];
   EncMap dummy_map;
-  int32_t map[4], backmap[4];
   uint8_t sel[4];
   CharView cv_first, cv_medial, cv_final, cv_isolated;
   CharView *lastcv;
@@ -610,7 +607,6 @@ typedef struct gradientdlg
   SplineChar sc_grad;
   SplineChar *chars[1];
   EncMap dummy_map;
-  int32_t map[1], backmap[1];
   uint8_t sel[1];
   CharView cv_grad;
 /* ****** */
@@ -637,7 +633,6 @@ typedef struct strokedlg
   SplineChar sc_stroke;
   SplineChar *chars[1];
   EncMap dummy_map;
-  //  int32_t map[1], backmap[1];
   uint8_t sel[1];
   CharView cv_stroke;
   int cv_width, cv_height;

@@ -804,17 +804,9 @@ StrokeInit (StrokeDlg *sd)
   sd->dummy_fv.magnify = 1;
 
   sd->dummy_fv.b.map = &sd->dummy_map;
-
   make_enc_to_gid (&sd->dummy_map);
-//  for (ssize_t k = 0; k < 1; k++)
-//    set_enc_to_gid (&sd->dummy_map, k, sd->map[k]);
-
   make_gid_to_enc (&sd->dummy_map);
-//  for (ssize_t k = 0; k < 1; k++)
-//    set_gid_to_enc (&sd->dummy_map, k, sd->backmap[k]);
-
   sd->dummy_map.enc_limit = 1;
-
   sd->dummy_map.enc = &custom;
 
   /* Default poly to a 50x50 square */

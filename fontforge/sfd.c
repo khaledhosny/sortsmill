@@ -4763,31 +4763,13 @@ LigaCreateFromOldStyleMultiple (PST1 * liga)
 static void
 SFDSetEncMap (SplineFont *sf, int orig_pos, int enc)
 {
-  EncMap *map = sf->map;
-
-  if (map == NULL)
-    return;
-
-//  if (orig_pos >= map->__backmax)
-//    {
-//      int old = map->__backmax;
-//      map->__backmax = orig_pos + 10;
-//      map->__backmap = xrealloc (map->__backmap, map->__backmax * sizeof (int));
-//      memset (map->__backmap + old, -1, (map->__backmax - old) * sizeof (int));
-//    }
-
-  add_gid_to_enc (map, orig_pos, enc);
-
-  // FIXME: It is unlikely this actually needs to be done, because
-  // such entries should have been removed already:
-  for (ssize_t k = map->enc_limit; k < enc; k++)
-    remove_enc_to_gid (map, k);
-
-  if (enc >= map->enc_limit)
-    map->enc_limit = enc + 1;
-  if (enc != -1)
+  if (sf->map != NULL)
     {
-      set_enc_to_gid (map, enc, orig_pos);
+      add_gid_to_enc (sf->map, orig_pos, enc);
+      if (enc >= sf->map->enc_limit)
+        sf->map->enc_limit = enc + 1;
+      if (enc != -1)
+        set_enc_to_gid (sf->map, enc, orig_pos);
     }
 }
 
@@ -6877,14 +6859,6 @@ SFDParseMMSubroutine (FILE *sfd)
 static void
 SFDSizeMap (EncMap *map, int glyphcnt, int enccnt)
 {
-//  if (glyphcnt > map->__backmax)
-//    {
-//      map->__backmap = xrealloc (map->__backmap, glyphcnt * sizeof (int));
-//      memset (map->__backmap + map->__backmax, -1,
-//              (glyphcnt - map->__backmax) * sizeof (int));
-//      map->__backmax = glyphcnt;
-//    }
-
   // Remove any excess entries.
   for (ssize_t k = enccnt; k < map->enc_limit; k++)
     remove_enc_to_gid (map, k);

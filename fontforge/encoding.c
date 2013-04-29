@@ -1685,10 +1685,6 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
           free (fvs->selected);
           fvs->selected = xcalloc (new->glyphcnt, sizeof (char));
           fvs->map->enc_limit = new->glyphcnt;
-//          if (fvs->map->__backmax < new->glyphcnt)
-//            fvs->map->__backmap =
-//              xrealloc (fvs->map->__backmap,
-//                        (fvs->map->__backmax = new->glyphcnt) * sizeof (int));
           for (j = 0; j < new->glyphcnt; ++j)
             {
               set_enc_to_gid (fvs->map, j, j);
@@ -2238,16 +2234,9 @@ _SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
     }
 
   enc_cnt = new_enc->char_cnt;
-
   if (old->enc_limit < enc_cnt)
-    {
-      // FIXME: It is unlikely this actually needs to be done, because
-      // such entries should have been removed already:
-      for (ssize_t k = old->enc_limit; k < enc_cnt; k++)
-        remove_enc_to_gid (old, k);
+    old->enc_limit = enc_cnt;
 
-      old->enc_limit = enc_cnt;
-    }
   old->enc = new_enc;
   for (i = 0; i < old->enc_limit && i < enc_cnt; ++i)
     if (enc_to_gid (old, i) != -1 && sf->glyphs[enc_to_gid (old, i)] != NULL)
@@ -2656,12 +2645,6 @@ MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap *basemap, EncMap *map,
   bool any = false;
   int enc;
 
-//  if (gid >= map->__backmax)
-//    {
-//      map->__backmap =
-//        xrealloc (map->__backmap, (map->__backmax += 10) * sizeof (int));
-//      memset (map->__backmap + map->__backmax - 10, -1, 10 * sizeof (int));
-//    }
   if (map->enc->psnames != NULL)
     {
       /* Check for multiple encodings */
@@ -2741,10 +2724,6 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
       for (fv = sf->fv; fv != NULL; fv = fv->nextsame)
         {
           EncMap *map = fv->map;
-//          if (gid >= map->__backmax)
-//            map->__backmap =
-//              xrealloc (map->__backmap,
-//                        (map->__backmax = gid + 10) * sizeof (int));
           remove_all_gid_to_enc (map, gid);
         }
     }
@@ -2778,10 +2757,6 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
             if (fv->sf == sf)
               {
                 EncMap *map = fv->map;
-//                if (gid >= map->__backmax)
-//                  map->__backmap =
-//                    xrealloc (map->__backmap,
-//                              (map->__backmax = gid + 10) * sizeof (int));
                 remove_all_gid_to_enc (map, gid);
               }
         }
@@ -3091,7 +3066,8 @@ EncFromName (const char *name, enum uni_interp interp, Encoding *encname)
   i = UniFromName (name, interp, encname);
   if (i == -1 && strlen (name) == 4)
     {
-      /* MS says use this kind of name, Adobe says use the one above */
+      /* MS says use this kind of name; Adobe says use the one
+         above. */
       char *end;
       i = strtol (name, &end, 16);
       if (i < 0 || i > 0xffff || *end != '\0')
@@ -3106,31 +3082,15 @@ SFExpandGlyphCount (SplineFont *sf, int newcnt)
   int old = sf->glyphcnt;
   FontViewBase *fv;
 
-  if (old >= newcnt)
-    return;
-  if (sf->glyphmax < newcnt)
+  if (old < newcnt) 
     {
-      sf->glyphs = xrealloc (sf->glyphs, newcnt * sizeof (SplineChar *));
-      sf->glyphmax = newcnt;
-    }
-  memset (sf->glyphs + sf->glyphcnt, 0,
-          (newcnt - sf->glyphcnt) * sizeof (SplineChar *));
-  sf->glyphcnt = newcnt;
-
-  for (fv = sf->fv; fv != NULL; fv = fv->nextsame)
-    {
-      if (fv->sf == sf)
-        {                       /* Beware of cid keyed fonts which might look at a different subfont */
-          if (fv->normal != NULL)
-            continue;           /* If compacted then we haven't added any glyphs so haven't changed anything */
-          /* Don't display any of these guys, so not mapped. */
-//          /*  No change to selection, or to map->map, but change to __backmap */
-//          if (newcnt > fv->map->__backmax)
-//            fv->map->__backmap =
-//              xrealloc (fv->map->__backmap,
-//                        (fv->map->__backmax = newcnt + 5) * sizeof (int32_t));
-//          memset (fv->map->__backmap + old, -1,
-//                  (newcnt - old) * sizeof (int32_t));
+      if (sf->glyphmax < newcnt)
+        {
+          sf->glyphs = xrealloc (sf->glyphs, newcnt * sizeof (SplineChar *));
+          sf->glyphmax = newcnt;
         }
+      memset (sf->glyphs + sf->glyphcnt, 0,
+              (newcnt - sf->glyphcnt) * sizeof (SplineChar *));
+      sf->glyphcnt = newcnt;
     }
 }

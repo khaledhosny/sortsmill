@@ -1152,27 +1152,17 @@ typedef struct encmap
   /* A per-font map of encoding to glyph id. */
 
   SCM _enc_to_gid;        /* A map from encoding point to glyph ID. */
-
-  /*  FIXME: Give _gid_to_enc the ability to return multiple code
-     points for multiply encoded glyphs. */
   SCM _gid_to_enc;        /* A map from glyph ID to encoding point. */
 
-  int enc_limit;                /* One more than the highest encoding point.
-                                   Strictly speaking, this might include
-                                   glyphs that are not encoded, but which
-                                   are displayed after the encoding
-                                   proper. */
-
-  /* FIXME: This is destined to be replaced by _gid_to_enc. */
-  //  int32_t *__backmap;           /* Map from glyphid to encoding. */
-  //  int __backmax;                /* Allocated size of the backmap array. */
+  int enc_limit;          /* One more than the highest encoding point.
+                             Strictly speaking, this might include
+                             glyphs that are not encoded, but which
+                             are displayed after the encoding
+                             proper. */
 
   /* FIXME: We also need a SplineChar-to-GID mapping (which would NOT
      be part of EncMap), or replace the GIDs with SplineChars
      themselves. */
-
-  /* FIXME: Replace loops-up-to-enc_limit with loops over _enc_to_gid
-     entries. */
 
   struct remap *remap;
   Encoding *enc;

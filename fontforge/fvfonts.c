@@ -1187,22 +1187,7 @@ FVMergeRefigureMapSel (FontViewBase *fv, SplineFont *into, SplineFont *o_sf,
               }
           }
       if (!doit)
-        {
-//          if (into->glyphcnt + cnt > map->__backmax)
-//            {
-//              map->__backmap =
-//                xrealloc (map->__backmap, (into->glyphcnt + cnt) * sizeof (int));
-//              map->__backmax = into->glyphcnt + cnt;
-//            }
-//          memset (map->__backmap + into->glyphcnt, -1, cnt * sizeof (int));
-
-//          // FIXME: It is unlikely this actually needs to be done,
-//          // because such entries should have been removed already:
-//          for (ssize_t k = map->enc_limit; k < map->enc_limit + extras; k++)
-//            remove_enc_to_gid (map, k);
-
-          map->enc_limit += extras;
-        }
+        map->enc_limit += extras;
     }
   if (extras != 0)
     {
