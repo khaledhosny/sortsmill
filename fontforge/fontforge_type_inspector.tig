@@ -1,4 +1,4 @@
-;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 (<baseviews.h>
  <fontforge.h>)
@@ -168,14 +168,13 @@
                  (int char_max)
                  ((* Encoding) next)))
 
-(struct EncMap
-         (fields
-          (SCM _enc_to_gid encoding_to_gid)
-          (SCM _gid_to_enc gid_to_encoding)
-          (int enc_limit encoding_limit)
-          (* remap)
-          ((* Encoding) enc encoding)
-          (bool ticked)))
+ (struct EncMap
+         (fields (SCM _enc_to_gid encoding_to_gid)
+                 (SCM _gid_to_enc gid_to_encoding)
+                 (int enc_limit encoding_limit)
+                 (* remap)
+                 ((* Encoding) enc encoding)
+                 (bool ticked)))
 
  (struct ViewBase
          (fields (int tag)))
@@ -204,7 +203,7 @@
                  (* container)
                  (int active_layer)))
 
-  (struct SplineChar
+ (struct SplineChar
          (fields
 
           ;; FIXME: Include special support for null-terminated
