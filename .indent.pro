@@ -88,6 +88,7 @@
 -T CharView
 -T CharViewBase
 -T Encoding
+-T FontDict
 -T FontView
 -T FontViewBase
 -T DeviceTable

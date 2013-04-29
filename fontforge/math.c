@@ -2273,11 +2273,12 @@ MKDInit (MathKernDlg *mkd, SplineChar *sc)
 
   mkd->dummy_fv.b.map = &mkd->dummy_map;
   make_enc_to_gid (&mkd->dummy_map);
-  for (ssize_t k = 0; k < 4; k++)
-    set_enc_to_gid (&mkd->dummy_map, k, mkd->map[k]);
-  mkd->dummy_map.__backmap = mkd->backmap;
+  make_gid_to_enc (&mkd->dummy_map);
+  //  for (ssize_t k = 0; k < 4; k++)
+  //    set_enc_to_gid (&mkd->dummy_map, k, mkd->map[k]);
+  ///////  mkd->dummy_map.__backmap = mkd->backmap;
   mkd->dummy_map.enc_limit = 4;
-  mkd->dummy_map.__backmax = 4;
+  //////  mkd->dummy_map.__backmax = 4;
   mkd->dummy_map.enc = &custom;
 }
 
@@ -2454,4 +2455,7 @@ MathKernDialog (SplineChar *sc, int def_layer)
       CVPalettesHideIfMine (cv);
     }
   GDrawDestroyWindow (mkd.gw);
+
+  release_enc_to_gid (&mkd.dummy_map);
+  release_gid_to_enc (&mkd.dummy_map);
 }

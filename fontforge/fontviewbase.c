@@ -1538,12 +1538,12 @@ CIDSetEncMap (FontViewBase *fv, SplineFont *new)
   if (fv->cidmaster != NULL && gcnt != fv->sf->glyphcnt)
     {
       int i;
-      if (fv->map->__backmax < gcnt)
-        {
-          fv->map->__backmap =
-            xrealloc (fv->map->__backmap, gcnt * sizeof (int));
-          fv->map->__backmax = gcnt;
-        }
+//      if (fv->map->__backmax < gcnt)
+//        {
+//          fv->map->__backmap =
+//            xrealloc (fv->map->__backmap, gcnt * sizeof (int));
+//          fv->map->__backmax = gcnt;
+//        }
       for (i = 0; i < gcnt; ++i)
         {
           set_enc_to_gid (fv->map, i, i);
@@ -1875,10 +1875,10 @@ FVAddUnencoded (FontViewBase *fv, int cnt)
       for (fvs = sf->fv; fvs != NULL; fvs = fvs->nextsame)
         {
           EncMap *map = fvs->map;
-          if (sf->glyphcnt + cnt >= map->__backmax)
-            map->__backmap =
-              xrealloc (map->__backmap,
-                        (map->__backmax += cnt + 10) * sizeof (int));
+//          if (sf->glyphcnt + cnt >= map->__backmax)
+//            map->__backmap =
+//              xrealloc (map->__backmap,
+//                        (map->__backmax += cnt + 10) * sizeof (int));
           for (i = map->enc_limit; i < map->enc_limit + cnt; ++i)
             {
               set_enc_to_gid (map, i, i);

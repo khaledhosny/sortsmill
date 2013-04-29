@@ -592,7 +592,8 @@ typedef struct tilepathdlg
 /* ****** */
   struct tiledata *td;
   SplineFont *base_sf;
-  uint8_t done, oked;
+  uint8_t done;
+  uint8_t oked;
 } TilePathDlg;
 
 void TPDCharViewInits (TilePathDlg *tpd, int cid);
@@ -636,7 +637,7 @@ typedef struct strokedlg
   SplineChar sc_stroke;
   SplineChar *chars[1];
   EncMap dummy_map;
-  int32_t map[1], backmap[1];
+  //  int32_t map[1], backmap[1];
   uint8_t sel[1];
   CharView cv_stroke;
   int cv_width, cv_height;

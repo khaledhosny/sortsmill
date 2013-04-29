@@ -804,11 +804,12 @@ SVFillup (SearchView *sv, FontView *fv)
 
   sv->dummy_fv.b.map = &sv->dummy_map;
   make_enc_to_gid (&sv->dummy_map);
-  for (ssize_t k = 0; k < 2; k++)
-    set_enc_to_gid (&sv->dummy_map, k, sv->map[k]);
-  sv->dummy_map.__backmap = sv->backmap;
+  make_gid_to_enc (&sv->dummy_map);
+  //  for (ssize_t k = 0; k < 2; k++)
+  //    set_enc_to_gid (&sv->dummy_map, k, sv->map[k]);
+  ///  sv->dummy_map.__backmap = sv->backmap;
   sv->dummy_map.enc_limit = 2;
-  sv->dummy_map.__backmax = 2;
+  ///  sv->dummy_map.__backmax = 2;
   sv->dummy_map.enc = &custom;
 
   sv->sd.fv = (FontViewBase *) fv;
@@ -1127,11 +1128,13 @@ void
 SVDestroy (SearchView *sv)
 {
 
-  if (sv == NULL)
-    return;
-
-  SDDestroy (&sv->sd);
-  free (sv);
+  if (sv != NULL) 
+    {
+      release_enc_to_gid (&sv->dummy_map);
+      release_gid_to_enc (&sv->dummy_map);
+      SDDestroy (&sv->sd);
+      free (sv);
+    }
 }
 
 void

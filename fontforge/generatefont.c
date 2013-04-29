@@ -628,14 +628,11 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
   int err = 0;
   enum fontformat subtype = strstr (newname, ".pfa") != NULL ? ff_pfa : ff_pfb;
   EncMap encmap;
-  int32_t _backmap[256];
 
   memset (&encmap, 0, sizeof (encmap));
   encmap.enc_limit = 256;
-  encmap.__backmax = 256;
   make_enc_to_gid (&encmap);
-  encmap.__backmap = _backmap;
-  memset (_backmap, -1, sizeof (_backmap));
+  make_gid_to_enc (&encmap);
   encmap.enc = &custom;
 
   temp = *sf;
@@ -821,6 +818,9 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
           }
     }
   while (k < sf->subfontcnt);
+
+  release_enc_to_gid (&encmap);
+  release_gid_to_enc (&encmap);
 
   return (err);
 }

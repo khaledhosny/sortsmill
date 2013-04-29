@@ -647,12 +647,13 @@ static void
 Stroke_MakeActive (StrokeDlg *sd, CharView *cv)
 {
 
-  if (sd == NULL)
-    return;
-  cv->inactive = false;
-  GDrawSetUserData (sd->gw, cv);
-  GDrawRequestExpose (cv->v, NULL, false);
-  GDrawRequestExpose (sd->gw, NULL, false);
+  if (sd != NULL)
+    {
+      cv->inactive = false;
+      GDrawSetUserData (sd->gw, cv);
+      GDrawRequestExpose (cv->v, NULL, false);
+      GDrawRequestExpose (sd->gw, NULL, false);
+    }
 }
 
 static void
@@ -803,12 +804,17 @@ StrokeInit (StrokeDlg *sd)
   sd->dummy_fv.magnify = 1;
 
   sd->dummy_fv.b.map = &sd->dummy_map;
+
   make_enc_to_gid (&sd->dummy_map);
-  for (ssize_t k = 0; k < 1; k++)
-    set_enc_to_gid (&sd->dummy_map, k, sd->map[k]);
-  sd->dummy_map.__backmap = sd->backmap;
+//  for (ssize_t k = 0; k < 1; k++)
+//    set_enc_to_gid (&sd->dummy_map, k, sd->map[k]);
+
+  make_gid_to_enc (&sd->dummy_map);
+//  for (ssize_t k = 0; k < 1; k++)
+//    set_gid_to_enc (&sd->dummy_map, k, sd->backmap[k]);
+
   sd->dummy_map.enc_limit = 1;
-  sd->dummy_map.__backmax = 1;
+
   sd->dummy_map.enc = &custom;
 
   /* Default poly to a 50x50 square */
@@ -912,7 +918,8 @@ MakeStrokeDlg (void *cv, void (*strokeit) (void *, StrokeInfo *, int),
                StrokeInfo *si)
 {
   static StrokeDlg strokedlg;
-  StrokeDlg *sd, freehand_dlg;
+  StrokeDlg freehand_dlg;
+  StrokeDlg *sd;
   GRect pos;
   GWindow gw;
   GWindowAttrs wattrs;
@@ -942,10 +949,13 @@ MakeStrokeDlg (void *cv, void (*strokeit) (void *, StrokeInfo *, int),
   StrokeInfo *def = si ? si : &defaults;
   char anglebuf[20], widthbuf[20], axisbuf[20];
 
+  bool release_required = false;
+
   if (strokeit != NULL)
     sd = &strokedlg;
   else
     {
+      release_required = true;
       sd = &freehand_dlg;
       memset (&freehand_dlg, 0, sizeof (freehand_dlg));
       sd->si = si;
@@ -1488,6 +1498,12 @@ MakeStrokeDlg (void *cv, void (*strokeit) (void *, StrokeInfo *, int),
     GDrawSetVisible (sd->gw, false);
   else
     GDrawDestroyWindow (sd->gw);
+
+  if (release_required)
+    {
+      release_enc_to_gid (&sd->dummy_map);
+      release_gid_to_enc (&sd->dummy_map);
+    }
 }
 
 void
@@ -1952,10 +1968,11 @@ GDDInit (GradientDlg *gdd, SplineFont *sf, Layer *ly, struct gradient *grad)
   gdd->dummy_fv.magnify = 1;
 
   gdd->dummy_fv.b.map = &gdd->dummy_map;
+
   make_enc_to_gid (&gdd->dummy_map);
-  gdd->dummy_map.__backmap = gdd->backmap;
+  make_gid_to_enc (&gdd->dummy_map);
+
   gdd->dummy_map.enc_limit = 1;
-  gdd->dummy_map.__backmax = 1;
   gdd->dummy_map.enc = &custom;
 
   if (grad != NULL)
@@ -2308,6 +2325,10 @@ GradientEdit (struct layer_dlg *ld, struct gradient *active)
   GDrawProcessPendingEvents (NULL);
   GDrawSync (NULL);
   GDrawProcessPendingEvents (NULL);
+
+  release_enc_to_gid (&gdd.dummy_map);
+  release_gid_to_enc (&gdd.dummy_map);
+
   return (gdd.active);
 }
 

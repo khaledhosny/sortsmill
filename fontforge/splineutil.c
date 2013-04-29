@@ -3058,16 +3058,15 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
   if (istype2)
     fd->private->subrs->bias = fd->private->subrs->cnt < 1240 ? 107 :
       fd->private->subrs->cnt < 33900 ? 1131 : 32768;
-  sf->glyphmax = sf->glyphcnt = istype3 ? fd->charprocs->next : fd->chars->next;
+  sf->glyphcnt = (istype3) ? fd->charprocs->next : fd->chars->next;
+  sf->glyphmax = sf->glyphcnt;
   if (sf->map == NULL)
-    {
-      sf->map = map =
-        EncMapNew (256 + CharsNotInEncoding (fd), sf->glyphcnt,
-                   fd->encoding_name);
-    }
-  else
-    map = sf->map;
-  sf->glyphs = xcalloc (map->__backmax, sizeof (SplineChar *));
+    sf->map = EncMapNew (256 + CharsNotInEncoding (fd), sf->glyphcnt,
+                         fd->encoding_name);
+  map = sf->map;
+
+  sf->glyphs = xcalloc (sf->glyphcnt, sizeof (SplineChar *));
+
   if (istype3)                  /* We read a type3 */
     sf->multilayer = true;
   if (istype3)
@@ -3079,15 +3078,10 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
     {
       int k;
       if (istype3)
-        {
-          k =
-            LookupCharString (fd->encoding[i],
+        k = LookupCharString (fd->encoding[i],
                               (struct pschars *) (fd->charprocs));
-        }
       else
-        {
-          k = LookupCharString (fd->encoding[i], fd->chars);
-        }
+        k = LookupCharString (fd->encoding[i], fd->chars);
       if (k == -1)
         k = notdefpos;
       set_enc_to_gid (map, i, k);
@@ -3131,11 +3125,10 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
             }
         }
     }
+
   for (i = 0; i < map->enc_limit; ++i)
-    if (enc_to_gid (map, i) == -1)
-      {
-        set_enc_to_gid (map, i, notdefpos);
-      }
+    if (!enc_to_gid_is_set (map, i))
+      set_enc_to_gid (map, i, notdefpos);
 
   for (i = 0; i < sf->glyphcnt; ++i)
     {
@@ -3189,15 +3182,17 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
               SCRefToSplines (sf->glyphs[i], refs, ly_fore);
             }
         }
+
   /* sometimes (some apple oblique fonts) the fontmatrix is not just a */
   /*  formality, it acutally contains a skew. So be ready */
   if (fd->fontmatrix[0] != 0)
     TransByFontMatrix (sf, fd->fontmatrix);
+
   AltUniFigure (sf, sf->map, true);
 }
 
 static void
-SplineFontFromType1 (SplineFont *sf, FontDict * fd, struct pscontext *pscontext)
+SplineFontFromType1 (SplineFont *sf, FontDict *fd, struct pscontext *pscontext)
 {
   int i;
   SplineChar *sc;
@@ -3218,7 +3213,7 @@ SplineFontFromType1 (SplineFont *sf, FontDict * fd, struct pscontext *pscontext)
 }
 
 static SplineFont *
-SplineFontFromMMType1 (SplineFont *sf, FontDict * fd,
+SplineFontFromMMType1 (SplineFont *sf, FontDict *fd,
                        struct pscontext *pscontext)
 {
   char *pt, *end, *origweight;
@@ -7732,16 +7727,16 @@ OtfFeatNameListFree (struct otffeatname *fn)
     }
 }
 
+// The @var{backmax} parameter is here for historical reasons. FIXME:
+// Go through the code and eliminate the need for this unused
+// parameter.
 EncMap *
-EncMapNew (int enc_limit, int backmax, Encoding *enc)
+EncMapNew (int enc_limit, int UNUSED (backmax), Encoding *enc)
 {
   EncMap *map = (EncMap *) xzalloc (sizeof (EncMap));
-
   map->enc_limit = enc_limit;
-  map->__backmax = backmax;
   make_enc_to_gid (map);
-  map->__backmap = xmalloc (backmax * sizeof (int));
-  memset (map->__backmap, -1, backmax * sizeof (int));
+  make_gid_to_enc (map);
   map->enc = enc;
   return (map);
 }
@@ -7754,9 +7749,8 @@ EncMap1to1 (int enc_limit)
   int i;
 
   map->enc_limit = enc_limit;
-  map->__backmax = enc_limit;
   make_enc_to_gid (map);
-  map->__backmap = xmalloc (enc_limit * sizeof (int));
+  make_gid_to_enc (map);
   for (i = 0; i < enc_limit; ++i)
     {
       set_enc_to_gid (map, i, i);
@@ -7793,7 +7787,7 @@ EncMapFree (EncMap *map)
   if (map->enc->is_temporary)
     EncodingFree (map->enc);
   release_enc_to_gid (map);
-  free (map->__backmap);
+  release_gid_to_enc (map);
   free (map->remap);
   free (map);
 }
@@ -7805,11 +7799,13 @@ EncMapCopy (EncMap *map)
 
   new = (EncMap *) xzalloc (sizeof (EncMap));
   *new = *map;
+
   make_enc_to_gid (new);
-  new->__backmap = xmalloc (new->__backmax * sizeof (int));
-  for (ssize_t k = 0; k < new->enc_limit; k++)
-    set_enc_to_gid (new, k, enc_to_gid (map, k));
-  memcpy (new->__backmap, map->__backmap, new->__backmax * sizeof (int));
+  copy_enc_to_gid_contents (new, map);
+
+  make_gid_to_enc (new);
+  copy_gid_to_enc_contents (new, map);
+
   if (map->remap)
     {
       int n;
@@ -7817,7 +7813,8 @@ EncMapCopy (EncMap *map)
       new->remap = xmalloc (n * sizeof (struct remap));
       memcpy (new->remap, map->remap, n * sizeof (struct remap));
     }
-  return (new);
+
+  return new;
 }
 
 void

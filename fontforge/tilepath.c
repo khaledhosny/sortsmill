@@ -1312,11 +1312,12 @@ TPDInit (TilePathDlg *tpd, SplineFont *sf)
 
   tpd->dummy_fv.b.map = &tpd->dummy_map;
   make_enc_to_gid (&tpd->dummy_map);
-  for (ssize_t k = 0; k < 4; k++)
-    set_enc_to_gid (&tpd->dummy_map, k, tpd->map[k]);
-  tpd->dummy_map.__backmap = tpd->backmap;
+  make_gid_to_enc (&tpd->dummy_map);
+  //  for (ssize_t k = 0; k < 4; k++)
+  //    set_enc_to_gid (&tpd->dummy_map, k, tpd->map[k]);
+  //  tpd->dummy_map.__backmap = tpd->backmap;
   tpd->dummy_map.enc_limit = 4;
-  tpd->dummy_map.__backmax = 4;
+  //  tpd->dummy_map.__backmax = 4;
   tpd->dummy_map.enc = &custom;
 }
 
@@ -1586,6 +1587,10 @@ TileAsk (struct tiledata *td, SplineFont *sf)
       CVPalettesHideIfMine (cv);
     }
   GDrawDestroyWindow (tpd.gw);
+
+  release_enc_to_gid (&tpd.dummy_map);
+  release_gid_to_enc (&tpd.dummy_map);
+
   return (tpd.oked);
 }
 
@@ -2142,11 +2147,12 @@ PTDInit (TilePathDlg *ptd, SplineFont *sf)
 
   ptd->dummy_fv.b.map = &ptd->dummy_map;
   make_enc_to_gid (&ptd->dummy_map);
-  for (ssize_t k = 0; k < 1; k++)
-    set_enc_to_gid (&ptd->dummy_map, k, ptd->map[k]);
-  ptd->dummy_map.__backmap = ptd->backmap;
+  make_gid_to_enc (&ptd->dummy_map);
+  //  for (ssize_t k = 0; k < 1; k++)
+  //    set_enc_to_gid (&ptd->dummy_map, k, ptd->map[k]);
+  //  ptd->dummy_map.__backmap = ptd->backmap;
   ptd->dummy_map.enc_limit = 1;
-  ptd->dummy_map.__backmax = 1;
+  //  ptd->dummy_map.__backmax = 1;
   ptd->dummy_map.enc = &custom;
 }
 
@@ -2358,6 +2364,10 @@ TilePatternAsk (struct tiledata *td, SplineFont *sf)
     CVPalettesHideIfMine (cv);
   }
   GDrawDestroyWindow (ptd.gw);
+
+  release_enc_to_gid (&ptd.dummy_map);
+  release_gid_to_enc (&ptd.dummy_map);
+
   return (ptd.oked);
 }
 

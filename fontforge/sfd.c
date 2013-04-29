@@ -1572,8 +1572,9 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
   if (sc->unicodeenc != -1
       && ((map->enc->is_unicodebmp && sc->unicodeenc < 0x10000)
           || (map->enc->is_unicodefull && sc->unicodeenc < unicode4_size)))
-    /* If we have altunis, then the __backmap may not give the primary */
-    /*  unicode code point, which is what we need here */
+    /* If we have altunis, then the head of the _gid_to_enc may not
+       give the primary unicode code point, which is what we need
+       here. */
     fprintf (sfd, "Encoding: %d %d %d\n", sc->unicodeenc, sc->unicodeenc,
              newgids != NULL ? newgids[sc->orig_pos] : sc->orig_pos);
   else
@@ -4767,13 +4768,13 @@ SFDSetEncMap (SplineFont *sf, int orig_pos, int enc)
   if (map == NULL)
     return;
 
-  if (orig_pos >= map->__backmax)
-    {
-      int old = map->__backmax;
-      map->__backmax = orig_pos + 10;
-      map->__backmap = xrealloc (map->__backmap, map->__backmax * sizeof (int));
-      memset (map->__backmap + old, -1, (map->__backmax - old) * sizeof (int));
-    }
+//  if (orig_pos >= map->__backmax)
+//    {
+//      int old = map->__backmax;
+//      map->__backmax = orig_pos + 10;
+//      map->__backmap = xrealloc (map->__backmap, map->__backmax * sizeof (int));
+//      memset (map->__backmap + old, -1, (map->__backmax - old) * sizeof (int));
+//    }
 
   add_gid_to_enc (map, orig_pos, enc);
 
@@ -6876,13 +6877,13 @@ SFDParseMMSubroutine (FILE *sfd)
 static void
 SFDSizeMap (EncMap *map, int glyphcnt, int enccnt)
 {
-  if (glyphcnt > map->__backmax)
-    {
-      map->__backmap = xrealloc (map->__backmap, glyphcnt * sizeof (int));
-      memset (map->__backmap + map->__backmax, -1,
-              (glyphcnt - map->__backmax) * sizeof (int));
-      map->__backmax = glyphcnt;
-    }
+//  if (glyphcnt > map->__backmax)
+//    {
+//      map->__backmap = xrealloc (map->__backmap, glyphcnt * sizeof (int));
+//      memset (map->__backmap + map->__backmax, -1,
+//              (glyphcnt - map->__backmax) * sizeof (int));
+//      map->__backmax = glyphcnt;
+//    }
 
   // Remove any excess entries.
   for (ssize_t k = enccnt; k < map->enc_limit; k++)

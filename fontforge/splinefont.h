@@ -1151,13 +1151,11 @@ typedef struct encmap
 {
   /* A per-font map of encoding to glyph id. */
 
-  SCM _enc_to_gid;              /* A map from encoding point to glyph ID. */
+  SCM _enc_to_gid;        /* A map from encoding point to glyph ID. */
 
-  /* FIXME: _gid_to_enc is not used yet, but soon will be. FIXME: Give
-     this the ability to return multiple code points for multiply
-     encoded glyphs. */
-  SCM _gid_to_enc;              /* <Mystery structure> mapping glyph ID to encoding
-                                   point. */
+  /*  FIXME: Give _gid_to_enc the ability to return multiple code
+     points for multiply encoded glyphs. */
+  SCM _gid_to_enc;        /* A map from glyph ID to encoding point. */
 
   int enc_limit;                /* One more than the highest encoding point.
                                    Strictly speaking, this might include
@@ -1166,11 +1164,12 @@ typedef struct encmap
                                    proper. */
 
   /* FIXME: This is destined to be replaced by _gid_to_enc. */
-  int32_t *__backmap;           /* Map from glyphid to encoding. */
-  int __backmax;                /* Allocated size of the backmap array. */
+  //  int32_t *__backmap;           /* Map from glyphid to encoding. */
+  //  int __backmax;                /* Allocated size of the backmap array. */
 
-  /* FIXME: We also need a SplineChar-to-GID mapping, or replace the
-     GIDs with SplineChars themselves. */
+  /* FIXME: We also need a SplineChar-to-GID mapping (which would NOT
+     be part of EncMap), or replace the GIDs with SplineChars
+     themselves. */
 
   /* FIXME: Replace loops-up-to-enc_limit with loops over _enc_to_gid
      entries. */
@@ -1186,6 +1185,12 @@ typedef struct
   scm_t_rbmapi_iter _iter;
 } enc_iter_t;
 
+typedef struct
+{
+  SCM _gid_to_enc;
+  scm_t_rbmapi_iter _iter;
+} gid_iter_t;
+
 inline void make_enc_to_gid (EncMap *map);
 inline void release_enc_to_gid (EncMap *map);
 inline void clear_enc_to_gid (EncMap *map);
@@ -1193,23 +1198,47 @@ inline void set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid);
 inline void remove_enc_to_gid (EncMap *map, ssize_t enc);
 inline ssize_t enc_to_gid (EncMap *map, ssize_t enc);
 inline bool enc_to_gid_is_set (EncMap *map, ssize_t enc);
+void copy_enc_to_gid_contents (EncMap *new, EncMap *old);
 
 inline enc_iter_t enc_iter (EncMap *map);
+inline enc_iter_t enc_iter_last (EncMap *map);
 inline bool enc_done (enc_iter_t iter);
 inline enc_iter_t enc_next (enc_iter_t iter);
+inline enc_iter_t enc_prev (enc_iter_t iter);
 inline ssize_t enc_enc (enc_iter_t iter);
 inline ssize_t enc_gid (enc_iter_t iter);
 
+inline void make_gid_to_enc (EncMap *map);
+inline void release_gid_to_enc (EncMap *map);
+inline void clear_gid_to_enc (EncMap *map);
+void build_gid_to_enc (EncMap *map);
+void rebuild_gid_to_enc (EncMap *map);
 inline void set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
-inline void add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
+void add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 void remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 inline void remove_all_gid_to_enc (EncMap *map, ssize_t gid);
-inline ssize_t gid_to_enc (EncMap *map, ssize_t gid);
+inline ssize_t gid_to_enc (EncMap *map, ssize_t gid); /* Returns the
+                                                         first code
+                                                         point. */
+// FIXME: Add a function for returning a list of _all_ the code
+// points.
 inline bool gid_to_enc_is_set (EncMap *map, ssize_t gid);
+void copy_gid_to_enc_contents (EncMap *new, EncMap *old);
+
+inline gid_iter_t gid_iter (EncMap *map);
+inline gid_iter_t gid_iter_last (EncMap *map);
+inline bool gid_done (gid_iter_t iter);
+inline gid_iter_t gid_next (gid_iter_t iter);
+inline gid_iter_t gid_prev (gid_iter_t iter);
+inline ssize_t gid_gid (gid_iter_t iter);
+inline ssize_t gid_enc (gid_iter_t iter);
 
 inline void
 make_enc_to_gid (EncMap *map)
 {
+  // FIXME: Eliminate the need to protect these objects, or at least
+  // keep track of the protected objects for release when we leave the
+  // GUI, etc. Likely there are minor memory leaks.
   map->_enc_to_gid = scm_gc_protect_object (scm_make_rbmapi ());
 }
 
@@ -1267,6 +1296,16 @@ enc_iter (EncMap *map)
   return iter;
 }
 
+inline enc_iter_t
+enc_iter_last (EncMap *map)
+{
+  enc_iter_t iter = {
+    ._enc_to_gid = map->_enc_to_gid,
+    ._iter = scm_c_rbmapi_last (map->_enc_to_gid)
+  };
+  return iter;
+}
+
 inline bool
 enc_done (enc_iter_t iter)
 {
@@ -1277,6 +1316,13 @@ inline enc_iter_t
 enc_next (enc_iter_t iter)
 {
   iter._iter = scm_c_rbmapi_next (iter._enc_to_gid, iter._iter);
+  return iter;
+}
+
+inline enc_iter_t
+enc_prev (enc_iter_t iter)
+{
+  iter._iter = scm_c_rbmapi_prev (iter._enc_to_gid, iter._iter);
   return iter;
 }
 
@@ -1293,43 +1339,109 @@ enc_gid (enc_iter_t iter)
 }
 
 inline void
+make_gid_to_enc (EncMap *map)
+{
+  // FIXME: Eliminate the need to protect these objects, or at least
+  // keep track of the protected objects for release when we leave the
+  // GUI, etc. Likely there are minor memory leaks.
+  map->_gid_to_enc = scm_gc_protect_object (scm_make_rbmapi ());
+}
+
+inline void
+release_gid_to_enc (EncMap *map)
+{
+  scm_gc_unprotect_object (map->_gid_to_enc);
+}
+
+inline void
+clear_gid_to_enc (EncMap *map)
+{
+  release_gid_to_enc (map);
+  make_gid_to_enc (map);
+}
+
+inline void
 set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
 {
-  // FIXME: This is a temporary definition using the older data
-  // structure.
-  map->__backmap[gid] = enc;
+  SCM key = scm_from_ssize_t (gid);
+  if (enc == -1)
+    scm_rbmapi_delete_x (map->_gid_to_enc, key);
+  else
+    scm_rbmapi_set_x (map->_gid_to_enc, key, scm_from_ssize_t (enc));
 }
 
 inline void
 remove_all_gid_to_enc (EncMap *map, ssize_t gid)
 {
-  // FIXME: This is a temporary definition using the older data
-  // structure.
-  map->__backmap[gid] = -1;
+  scm_rbmapi_delete_x (map->_gid_to_enc, scm_from_ssize_t (gid));
 }
 
 inline ssize_t
 gid_to_enc (EncMap *map, ssize_t gid)
 {
-  // FIXME: This is a temporary definition using the older data
-  // structure.
-  return map->__backmap[gid];
+  SCM value = scm_rbmapi_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
+                              scm_from_int (-1));
+  return scm_to_ssize_t ((scm_is_pair (value)) ? SCM_CAR (value) : value);
 }
 
 inline bool
 gid_to_enc_is_set (EncMap *map, ssize_t gid)
 {
-  return (gid_to_enc (map, gid) != -1);
+  SCM value = scm_rbmapi_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
+                              SCM_BOOL_F);
+  return (scm_is_true (value));
 }
 
-inline void
-add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
+inline gid_iter_t
+gid_iter (EncMap *map)
 {
-  // FIXME: In the future this will be able to list multiple code
-  // points. Currently it just ignores additional code points if one
-  // already is set.
-  if (!gid_to_enc_is_set (map, gid))
-    set_gid_to_enc (map, gid, enc);
+  gid_iter_t iter = {
+    ._gid_to_enc = map->_gid_to_enc,
+    ._iter = scm_c_rbmapi_first (map->_gid_to_enc)
+  };
+  return iter;
+}
+
+inline gid_iter_t
+gid_iter_last (EncMap *map)
+{
+  gid_iter_t iter = {
+    ._gid_to_enc = map->_gid_to_enc,
+    ._iter = scm_c_rbmapi_last (map->_gid_to_enc)
+  };
+  return iter;
+}
+
+inline bool
+gid_done (gid_iter_t iter)
+{
+  return (iter._iter == NULL);
+}
+
+inline gid_iter_t
+gid_next (gid_iter_t iter)
+{
+  iter._iter = scm_c_rbmapi_next (iter._gid_to_enc, iter._iter);
+  return iter;
+}
+
+inline gid_iter_t
+gid_prev (gid_iter_t iter)
+{
+  iter._iter = scm_c_rbmapi_prev (iter._gid_to_enc, iter._iter);
+  return iter;
+}
+
+inline ssize_t
+gid_gid (gid_iter_t iter)
+{
+  return (ssize_t) scm_rbmapi_iter_key (iter._iter);
+}
+
+inline ssize_t
+gid_enc (gid_iter_t iter)
+{
+  return scm_to_ssize_t (scm_rbmapi_iter_value (iter._iter));
 }
 
 enum property_type

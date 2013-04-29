@@ -4048,9 +4048,7 @@ readcffenc (FILE *ttf, struct topdicts *dict, struct ttfinfo *info,
             {
               ssize_t cc = getc (ttf);
               if (0 <= cc && cc < map->enc_limit)
-                {
-                  set_enc_to_gid (map, cc, i);
-                }
+                set_enc_to_gid (map, cc, i);
             }
         }
       else if ((format & 0x7f) == 1)
@@ -6921,19 +6919,16 @@ SymbolFixup (struct ttfinfo *info)
 void
 AltUniFigure (SplineFont *sf, EncMap *map, int check_dups)
 {
-  int i, gid;
-
   if (map->enc != &custom)
     {
-      for (i = 0; i < map->enc_limit; ++i)
-        if ((gid = enc_to_gid (map, i)) != -1)
-          {
-            int uni = UniFromEnc (i, map->enc);
-            if (check_dups)
-              AltUniAdd (sf->glyphs[gid], uni);
-            else
-              AltUniAdd_DontCheckDups (sf->glyphs[gid], uni);
-          }
+      for (enc_iter_t p = enc_iter (map); !enc_done (p); p = enc_next (p))
+        {
+          int uni = UniFromEnc (enc_enc (p), map->enc);
+          if (check_dups)
+            AltUniAdd (sf->glyphs[enc_gid (p)], uni);
+          else
+            AltUniAdd_DontCheckDups (sf->glyphs[enc_gid (p)], uni);
+        }
     }
 }
 
@@ -7138,18 +7133,14 @@ PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
 static void
 MapDoBack (EncMap *map, struct ttfinfo *info)
 {
-  int i;
+  if (map != NULL)             // @var{map} may be NULL for CID fonts.
+    rebuild_gid_to_enc (map);
 
-  if (map == NULL)              /* CID fonts */
-    return;
-  free (map->__backmap);          /* CFF files have this */
-  map->__backmax = info->glyph_cnt;
-  map->__backmap = xmalloc (info->glyph_cnt * sizeof (int));
-  memset (map->__backmap, -1, info->glyph_cnt * sizeof (int));
-  for (i = map->enc_limit - 1; i >= 0; --i)
-    if (enc_to_gid (map, i) >= 0 && enc_to_gid (map, i) < info->glyph_cnt)
-      if (gid_to_enc (map, enc_to_gid (map, i)) == -1)
-        set_gid_to_enc (map, enc_to_gid (map, i), i);
+//  if (map != NULL)             // @var{map} may be NULL for CID fonts.
+//    for (ssize_t i = map->enc_limit - 1; i >= 0; --i)
+//      if (enc_to_gid (map, i) >= 0 && enc_to_gid (map, i) < info->glyph_cnt)
+//        if (gid_to_enc (map, enc_to_gid (map, i)) == -1)
+//          set_gid_to_enc (map, enc_to_gid (map, i), i);
 }
 
 void
