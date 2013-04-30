@@ -1301,7 +1301,7 @@ SFApplyOrdering (SplineFont *sf, int glyphcnt)
   /* Remove references to characters which aren't in the new map (if any) */
   /* Don't need to fix up dependencies, because we throw the char away */
   for (i = 0; i < sf->glyphcnt; ++i)
-    if ((sc = sf->glyphs[i]) != NULL)
+    if ((sc = sfglyph (sf, i)) != NULL)
       {
         for (rprev = NULL, refs = sc->layers[ly_fore].refs; refs != NULL;
              refs = rnext)
@@ -1330,7 +1330,7 @@ SFApplyOrdering (SplineFont *sf, int glyphcnt)
 
   glyphs = xcalloc (glyphcnt + 1, sizeof (SplineChar *));
   for (i = 0; i < sf->glyphcnt; ++i)
-    if ((sc = sf->glyphs[i]) != NULL)
+    if ((sc = sfglyph (sf, i)) != NULL)
       {
         if (sc->orig_pos == -1)
           SplineCharFree (sc);
@@ -1338,9 +1338,10 @@ SFApplyOrdering (SplineFont *sf, int glyphcnt)
           glyphs[sc->orig_pos] = sc;
       }
 
-  free (sf->glyphs);
-  sf->glyphcnt = sf->glyphmax = glyphcnt;
-  sf->glyphs = glyphs;
+  free (sf->__glyphs);
+  sf->glyphcnt = glyphcnt;
+  sf->glyphmax = glyphcnt;
+  sf->__glyphs = glyphs;
 }
 
 /* Convert a normal font to a cid font, rearranging glyphs into cid order */
@@ -1351,7 +1352,7 @@ SFEncodeToMap (SplineFont *sf, struct cidmap *map)
   int i, max = 0, anyextras = 0;
 
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (SCWorthOutputting (sc = sf->glyphs[i]))
+    if (SCWorthOutputting (sc = sfglyph (sf, i)))
       {
         sc->orig_pos = NameUni2CID (map, sc->unicodeenc, sc->name);
         if (sc->orig_pos > max)
@@ -1378,7 +1379,7 @@ SFEncodeToMap (SplineFont *sf, struct cidmap *map)
             max = map->cidmax;
           anyextras = 0;
           for (i = 0; i < sf->glyphcnt; ++i)
-            if (SCWorthOutputting (sc = sf->glyphs[i]))
+            if (SCWorthOutputting (sc = sfglyph (sf, i)))
               {
                 if (sc->orig_pos == -1)
                   sc->orig_pos = max + anyextras++;
@@ -1669,13 +1670,14 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
   new->display_size = cidmaster->display_size;
   /* Don't copy private */
   new->xuid = xstrdup_or_null (cidmaster->xuid);
-  new->glyphs = glyphs;
-  new->glyphcnt = new->glyphmax = charcnt;
+  new->__glyphs = glyphs;
+  new->glyphcnt = charcnt;
+  new->glyphmax = charcnt;
   for (j = 0; j < charcnt; ++j)
-    if (glyphs[j] != NULL)
+    if (sfglyph (new, j) != NULL)
       {
-        glyphs[j]->parent = new;
-        glyphs[j]->orig_pos = j;
+        sfglyph (new, j)->parent = new;
+        sfglyph (new, j)->orig_pos = j;
       }
   for (fvs = new->fv; fvs != NULL; fvs = fvs->nextsame)
     {
@@ -1722,10 +1724,10 @@ SFFlatten (SplineFont *cidmaster)
       for (i = 0; i < cidmaster->subfontcnt; ++i)
         {
           if (j < cidmaster->subfonts[i]->glyphcnt
-              && cidmaster->subfonts[i]->glyphs[j] != NULL)
+              && sfglyph (cidmaster->subfonts[i], j) != NULL)
             {
-              glyphs[j] = cidmaster->subfonts[i]->glyphs[j];
-              cidmaster->subfonts[i]->glyphs[j] = NULL;
+              glyphs[j] = sfglyph (cidmaster->subfonts[i], j);
+              set_sfglyph (cidmaster->subfonts[i], j, NULL);
               break;
             }
         }
@@ -1779,10 +1781,11 @@ SFFlattenByCMap (SplineFont *sf, char *cmapname)
   for (i = 0; i < curmax; ++i)
     {
       for (k = 0; k < sf->subfontcnt; ++k)
-        if (i < sf->subfonts[k]->glyphcnt && sf->subfonts[k]->glyphs[i] != NULL)
+        if (i < sf->subfonts[k]->glyphcnt
+            && sfglyph (sf->subfonts[k], i) != NULL)
           {
-            glyphs[i] = sf->subfonts[k]->glyphs[i];
-            sf->subfonts[k]->glyphs[i] = NULL;
+            glyphs[i] = sfglyph (sf->subfonts[k], i);
+            set_sfglyph (sf->subfonts[k], i, NULL);
             break;
           }
     }
@@ -1898,7 +1901,7 @@ SFEncodeToCMap (SplineFont *cidmaster, SplineFont *sf, EncMap *oldmap,
   cidmaster->supplement = cmap->supplement;
 
   for (i = 0; i < sf->glyphcnt; ++i)
-    if ((sc = sf->glyphs[i]) != NULL)
+    if ((sc = sfglyph (sf, i)) != NULL)
       {
         if (strcmp (sc->name, ".notdef") == 0)
           sc->orig_pos = 0;
@@ -1939,7 +1942,7 @@ SFEncodeToCMap (SplineFont *cidmaster, SplineFont *sf, EncMap *oldmap,
             max = cmap->total;
           anyextras = 0;
           for (i = 0; i < sf->glyphcnt; ++i)
-            if ((sc = sf->glyphs[i]) != NULL)
+            if ((sc = sfglyph (sf, i)) != NULL)
               {
                 if (sc->orig_pos == -1)
                   sc->orig_pos = max + anyextras++;
@@ -1969,7 +1972,7 @@ CIDMasterAsDes (SplineFont *sf)
     {
       sf = cidmaster->subfonts[i];
       for (cid = cnt = 0; cid < sf->glyphcnt; ++cid)
-        if (sf->glyphs[cid] != NULL)
+        if (sfglyph (sf, cid) != NULL)
           ++cnt;
       if (cnt > bcnt)
         {
@@ -2134,11 +2137,11 @@ BDFOrigFixup (BDFFont *bdf, int orig_cnt, SplineFont *sf)
 
   glyphs = xcalloc (orig_cnt, sizeof (BDFChar *));
   for (i = 0; i < bdf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
+    if (sfglyph (sf, i) != NULL)
       {
-        glyphs[sf->glyphs[i]->orig_pos] = bdf->glyphs[i];
+        glyphs[sfglyph (sf, i)->orig_pos] = bdf->glyphs[i];
         if (bdf->glyphs[i] != NULL)     /* Not all glyphs exist in a piecemeal font */
-          bdf->glyphs[i]->orig_pos = sf->glyphs[i]->orig_pos;
+          bdf->glyphs[i]->orig_pos = sfglyph (sf, i)->orig_pos;
       }
   free (bdf->glyphs);
   bdf->glyphs = glyphs;
@@ -2166,24 +2169,26 @@ _SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
     {
       SplineChar **glyphs;
       for (i = 0; i < sf->glyphcnt; ++i)
-        if (sf->glyphs[i] != NULL)
-          sf->glyphs[i]->orig_pos = -1;
+        if (sfglyph (sf, i) != NULL)
+          sfglyph (sf, i)->orig_pos = -1;
       for (i = enc_cnt = 0; i < old->enc_limit; ++i)
-        if (enc_to_gid (old, i) != -1 && sf->glyphs[enc_to_gid (old, i)] != NULL
-            && sf->glyphs[enc_to_gid (old, i)]->orig_pos == -1)
-          sf->glyphs[enc_to_gid (old, i)]->orig_pos = enc_cnt++;
+        if (enc_to_gid (old, i) != -1
+            && sfglyph (sf, enc_to_gid (old, i)) != NULL
+            && sfglyph (sf, enc_to_gid (old, i))->orig_pos == -1)
+          sfglyph (sf, enc_to_gid (old, i))->orig_pos = enc_cnt++;
       for (i = 0; i < sf->glyphcnt; ++i)
-        if (sf->glyphs[i] != NULL)
-          if (sf->glyphs[i]->orig_pos == -1)
-            sf->glyphs[i]->orig_pos = enc_cnt++;
+        if (sfglyph (sf, i) != NULL)
+          if (sfglyph (sf, i)->orig_pos == -1)
+            sfglyph (sf, i)->orig_pos = enc_cnt++;
       for (i = 0; i < sf->glyphcnt; ++i)
-        if (sf->glyphs[i] != NULL)
+        if (sfglyph (sf, i) != NULL)
           {
             struct splinecharlist *scl;
             int layer;
             RefChar *ref;
 
-            for (scl = sf->glyphs[i]->dependents; scl != NULL; scl = scl->next)
+            for (scl = sfglyph (sf, i)->dependents; scl != NULL;
+                 scl = scl->next)
               {
                 for (layer = 0; layer < scl->sc->layer_cnt; ++layer)
                   for (ref = scl->sc->layers[layer].refs; ref != NULL;
@@ -2205,7 +2210,7 @@ _SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
 
             for (enc_iter_t p = enc_iter (map); !enc_done (p); p = enc_next (p))
               {
-                ssize_t pos = sf->glyphs[enc_gid (p)]->orig_pos;
+                ssize_t pos = sfglyph (sf, enc_gid (p))->orig_pos;
                 set_enc_to_gid (map, enc_enc (p), pos);
               }
 
@@ -2225,11 +2230,12 @@ _SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
         FVBiggerGlyphCache (fvs, enc_cnt);
       glyphs = xcalloc (enc_cnt, sizeof (SplineChar *));
       for (i = 0; i < sf->glyphcnt; ++i)
-        if (sf->glyphs[i] != NULL)
-          glyphs[sf->glyphs[i]->orig_pos] = sf->glyphs[i];
-      free (sf->glyphs);
-      sf->glyphs = glyphs;
-      sf->glyphcnt = sf->glyphmax = enc_cnt;
+        if (sfglyph (sf, i) != NULL)
+          glyphs[sfglyph (sf, i)->orig_pos] = sfglyph (sf, i);
+      free (sf->__glyphs);
+      sf->__glyphs = glyphs;
+      sf->glyphcnt = enc_cnt;
+      sf->glyphmax = enc_cnt;
       return (true);
     }
 
@@ -2239,25 +2245,25 @@ _SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_enc)
 
   old->enc = new_enc;
   for (i = 0; i < old->enc_limit && i < enc_cnt; ++i)
-    if (enc_to_gid (old, i) != -1 && sf->glyphs[enc_to_gid (old, i)] != NULL)
+    if (enc_to_gid (old, i) != -1 && sfglyph (sf, enc_to_gid (old, i)) != NULL)
       {
         SplineChar dummy;
         int j = enc_to_gid (old, i);
         SCBuildDummy (&dummy, sf, old, i);
-        sf->glyphs[j]->unicodeenc = dummy.unicodeenc;
-        free (sf->glyphs[j]->name);
-        sf->glyphs[j]->name = xstrdup_or_null (dummy.name);
+        sfglyph (sf, j)->unicodeenc = dummy.unicodeenc;
+        free (sfglyph (sf, j)->name);
+        sfglyph (sf, j)->name = xstrdup_or_null (dummy.name);
       }
   /* We just changed the unicode values for most glyphs */
   /* but any references to them will have the old values, and that's bad, so fix 'em up */
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
+    if (sfglyph (sf, i) != NULL)
       {
         struct splinecharlist *scl;
         int layer;
         RefChar *ref;
 
-        for (scl = sf->glyphs[i]->dependents; scl != NULL; scl = scl->next)
+        for (scl = sfglyph (sf, i)->dependents; scl != NULL; scl = scl->next)
           {
             for (layer = 0; layer < scl->sc->layer_cnt; ++layer)
               for (ref = scl->sc->layers[layer].refs; ref != NULL;
@@ -2311,7 +2317,7 @@ EncMapFromEncoding (SplineFont *sf, Encoding *enc)
   unmax = sf->glyphcnt;
 
   for (i = extras = 0; i < sf->glyphcnt; ++i)
-    if ((sc = sf->glyphs[i]) != NULL)
+    if ((sc = sfglyph (sf, i)) != NULL)
       {
         found = false;
         if (enc->psnames != NULL)
@@ -2381,10 +2387,11 @@ EncMapFromEncoding (SplineFont *sf, Encoding *enc)
       for (j = 0; j < enc->char_cnt; ++j)
         {
           if (encoded[j] != -1 && enc->psnames[j] != NULL &&
-              strcmp (sf->glyphs[encoded[j]]->name, enc->psnames[j]) != 0)
+              strcmp (sfglyph (sf, encoded[j])->name, enc->psnames[j]) != 0)
             {
-              free (sf->glyphs[encoded[j]]->name);
-              sf->glyphs[encoded[j]]->name = xstrdup_or_null (enc->psnames[j]);
+              free (sfglyph (sf, encoded[j])->name);
+              sfglyph (sf, encoded[j])->name =
+                xstrdup_or_null (enc->psnames[j]);
             }
         }
     }
@@ -2418,7 +2425,7 @@ CompactEncMap (EncMap *map, SplineFont *sf)
   for (i = 0; i < map->enc_limit; i++)
     {
       gid = enc_to_gid (map, i);
-      if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
+      if (gid != -1 && SCWorthOutputting (sfglyph (sf, gid)))
         inuse++;
     }
 
@@ -2426,7 +2433,7 @@ CompactEncMap (EncMap *map, SplineFont *sf)
   for (i = 0; i < map->enc_limit; i++)
     {
       gid = enc_to_gid (map, i);
-      if (gid != -1 && SCWorthOutputting (sf->glyphs[gid]))
+      if (gid != -1 && SCWorthOutputting (sfglyph (sf, gid)))
         {
           set_enc_to_gid (map, inuse, gid);
           remove_enc_to_gid (map, i);
@@ -2527,15 +2534,15 @@ SFRemoveGlyph (SplineFont *sf, SplineChar *sc, int *flags)
 
   /* Remove any kerning pairs that look at this character */
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
+    if (sfglyph (sf, i) != NULL)
       {
-        for (kprev = NULL, kp = sf->glyphs[i]->kerns; kp != NULL;
+        for (kprev = NULL, kp = sfglyph (sf, i)->kerns; kp != NULL;
              kprev = kp, kp = kp->next)
           {
             if (kp->sc == sc)
               {
                 if (kprev == NULL)
-                  sf->glyphs[i]->kerns = kp->next;
+                  sfglyph (sf, i)->kerns = kp->next;
                 else
                   kprev->next = kp->next;
                 kp->next = NULL;
@@ -2545,7 +2552,7 @@ SFRemoveGlyph (SplineFont *sf, SplineChar *sc, int *flags)
           }
       }
 
-  sf->glyphs[sc->orig_pos] = NULL;
+  set_sfglyph (sf, sc->orig_pos, NULL);
 
   for (bdf = sf->bitmaps; bdf != NULL; bdf = bdf->next)
     {
@@ -2705,8 +2712,8 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
   if (sf->cidmaster == NULL)
     {
       if (sf->glyphcnt + 1 >= sf->glyphmax)
-        sf->glyphs =
-          xrealloc (sf->glyphs, (sf->glyphmax += 10) * sizeof (SplineChar *));
+        sf->__glyphs =
+          xrealloc (sf->__glyphs, (sf->glyphmax += 10) * sizeof (SplineChar *));
       gid = sf->glyphcnt++;
       for (bdf = sf->bitmaps; bdf != NULL; bdf = bdf->next)
         {
@@ -2731,12 +2738,12 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
     {
       gid = baseenc;
       if (baseenc + 1 >= sf->glyphmax)
-        sf->glyphs =
-          xrealloc (sf->glyphs,
+        sf->__glyphs =
+          xrealloc (sf->__glyphs,
                     (sf->glyphmax = baseenc + 10) * sizeof (SplineChar *));
       if (baseenc >= sf->glyphcnt)
         {
-          memset (sf->glyphs + sf->glyphcnt, 0,
+          memset (sf->__glyphs + sf->glyphcnt, 0,
                   (baseenc + 1 - sf->glyphcnt) * sizeof (SplineChar *));
           sf->glyphcnt = baseenc + 1;
           for (bdf = sf->cidmaster->bitmaps; bdf != NULL; bdf = bdf->next)
@@ -2761,7 +2768,7 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
               }
         }
     }
-  sf->glyphs[gid] = NULL;
+  set_sfglyph (sf, gid, NULL);
   for (fv = sf->fv; fv != NULL; fv = fv->nextsame)
     {
       EncMap *map = fv->map;
@@ -2780,7 +2787,7 @@ SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap *basemap,
     }
   if (!mapfound && basemap != NULL)
     MapAddEnc (sf, sc, basemap, basemap, baseenc, gid, fv);
-  sf->glyphs[gid] = sc;
+  set_sfglyph (sf, gid, sc);
   sc->orig_pos = gid;
   sc->parent = sf;
   SFHashGlyph (sf, sc);
@@ -2810,18 +2817,18 @@ SFMatchGlyphs (SplineFont *sf, SplineFont *target, int addempties)
   BDFFont *bdf;
 
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
-      sf->glyphs[i]->ticked = false;
+    if (sfglyph (sf, i) != NULL)
+      sfglyph (sf, i)->ticked = false;
   if ((cnt = target->glyphcnt) < sf->glyphcnt)
     cnt = sf->glyphcnt;
   glyphs = xcalloc (cnt, sizeof (SplineChar *));
   for (i = 0; i < target->glyphcnt; ++i)
-    if (target->glyphs[i] != NULL)
+    if (sfglyph (target, i) != NULL)
       {
-        SplineChar *sc = SFGetChar (sf, target->glyphs[i]->unicodeenc,
-                                    target->glyphs[i]->name);
+        SplineChar *sc = SFGetChar (sf, sfglyph (target, i)->unicodeenc,
+                                    sfglyph (target, i)->name);
         if (sc == NULL && addempties)
-          sc = SplineCharMatch (sf, target->glyphs[i]);
+          sc = SplineCharMatch (sf, sfglyph (target, i));
         if (sc != NULL)
           {
             glyphs[i] = sc;
@@ -2829,7 +2836,7 @@ SFMatchGlyphs (SplineFont *sf, SplineFont *target, int addempties)
           }
       }
   for (i = cnt2 = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL && !sf->glyphs[i]->ticked)
+    if (sfglyph (sf, i) != NULL && !sfglyph (sf, i)->ticked)
       ++cnt2;
   if (target->glyphcnt + cnt2 > cnt)
     {
@@ -2841,14 +2848,15 @@ SFMatchGlyphs (SplineFont *sf, SplineFont *target, int addempties)
     }
   j = target->glyphcnt;
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL && !sf->glyphs[i]->ticked)
-      glyphs[j++] = sf->glyphs[i];
-  free (sf->glyphs);
-  sf->glyphs = glyphs;
-  sf->glyphcnt = sf->glyphmax = cnt;
+    if (sfglyph (sf, i) != NULL && !sfglyph (sf, i)->ticked)
+      glyphs[j++] = sfglyph (sf, i);
+  free (sf->__glyphs);
+  sf->__glyphs = glyphs;
+  sf->glyphcnt = cnt;
+  sf->glyphmax = cnt;
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
-      sf->glyphs[i]->orig_pos = i;
+    if (sfglyph (sf, i) != NULL)
+      sfglyph (sf, i)->orig_pos = i;
   for (bdf = sf->bitmaps; bdf != NULL; bdf = bdf->next)
     {
       BDFChar **glyphs;
@@ -2887,11 +2895,11 @@ MMMatchGlyphs (MMSet *mm)
     if ((sf = mm->instances[i]) != NULL && sf != NULL)
       {
         for (j = 0; j < sf->glyphcnt; ++j)
-          if ((sc = sf->glyphs[j]) != NULL)
+          if ((sc = sfglyph (sf, j)) != NULL)
             {
-              if (j < base->glyphcnt && base->glyphs[j] != NULL &&
-                  base->glyphs[j]->unicodeenc == sc->unicodeenc &&
-                  strcmp (base->glyphs[j]->name, sc->name) == 0)
+              if (j < base->glyphcnt && sfglyph (base, j) != NULL &&
+                  sfglyph (base, j)->unicodeenc == sc->unicodeenc &&
+                  strcmp (sfglyph (base, j)->name, sc->name) == 0)
                 continue;       /* It's good, and in the same place */
               else if ((sc2 = SFGetChar (base, sc->unicodeenc, sc->name)) !=
                        NULL && sc2->unicodeenc == sc->unicodeenc
@@ -2900,23 +2908,24 @@ MMMatchGlyphs (MMSet *mm)
               else
                 {
                   /* We need to add it */
-                  if (j < base->glyphcnt && base->glyphs[j] == NULL)
+                  if (j < base->glyphcnt && sfglyph (base, j) == NULL)
                     index = j;
                   else
                     {
                       for (++lasthole;
                            lasthole < base->glyphcnt
-                           && base->glyphs[lasthole] != NULL; ++lasthole);
+                           && sfglyph (base, lasthole) != NULL; ++lasthole);
                       index = lasthole;
                       if (lasthole >= base->glyphmax)
-                        base->glyphs =
-                          xrealloc (base->glyphs,
+                        base->__glyphs =
+                          xrealloc (base->__glyphs,
                                     (base->glyphmax +=
                                      20) * sizeof (SplineChar *));
                       if (lasthole >= base->glyphcnt)
                         base->glyphcnt = lasthole + 1;
                     }
-                  base->glyphs[index] = scnew = SplineCharMatch (base, sc);
+                  scnew = SplineCharMatch (base, sc);
+                  set_sfglyph (base, index, scnew);
                   scnew->orig_pos = index;
                 }
             }
@@ -3080,16 +3089,16 @@ void
 SFExpandGlyphCount (SplineFont *sf, int newcnt)
 {
   int old = sf->glyphcnt;
-  FontViewBase *fv;
 
-  if (old < newcnt) 
+  if (old < newcnt)
     {
       if (sf->glyphmax < newcnt)
         {
-          sf->glyphs = xrealloc (sf->glyphs, newcnt * sizeof (SplineChar *));
+          sf->__glyphs =
+            xrealloc (sf->__glyphs, newcnt * sizeof (SplineChar *));
           sf->glyphmax = newcnt;
         }
-      memset (sf->glyphs + sf->glyphcnt, 0,
+      memset (sf->__glyphs + sf->glyphcnt, 0,
               (newcnt - sf->glyphcnt) * sizeof (SplineChar *));
       sf->glyphcnt = newcnt;
     }

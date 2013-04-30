@@ -778,7 +778,7 @@ ScriptExport (SplineFont *sf, BDFFont *bdf, int format, int gid,
               char *format_spec, EncMap *map)
 {
   char buffer[100];
-  SplineChar *sc = sf->glyphs[gid];
+  SplineChar *sc = sfglyph (sf, gid);
   BDFChar *bc = bdf != NULL ? bdf->glyphs[gid] : NULL;
   int good = true;
 

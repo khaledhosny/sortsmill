@@ -669,8 +669,8 @@ FVAutoTrace (FontViewBase *fv, int ask)
     return;
   for (i = cnt = 0; i < fv->map->enc_limit; ++i)
     if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
-        fv->sf->glyphs[gid] != NULL &&
-        fv->sf->glyphs[gid]->layers[ly_back].images)
+        sfglyph (fv->sf, gid) != NULL &&
+        sfglyph (fv->sf, gid)->layers[ly_back].images)
       ++cnt;
 
   ff_progress_start_indicator (10, _("Autotracing..."), _("Autotracing..."), 0,
@@ -680,11 +680,11 @@ FVAutoTrace (FontViewBase *fv, int ask)
   for (i = cnt = 0; i < fv->map->enc_limit; ++i)
     {
       if (fv->selected[i] && (gid = enc_to_gid (fv->map, i)) != -1 &&
-          fv->sf->glyphs[gid] != NULL &&
-          fv->sf->glyphs[gid]->layers[ly_back].images &&
-          !fv->sf->glyphs[gid]->ticked)
+          sfglyph (fv->sf, gid) != NULL &&
+          sfglyph (fv->sf, gid)->layers[ly_back].images &&
+          !sfglyph (fv->sf, gid)->ticked)
         {
-          _SCAutoTrace (fv->sf->glyphs[gid], fv->active_layer, args);
+          _SCAutoTrace (sfglyph (fv->sf, gid), fv->active_layer, args);
           if (!ff_progress_next ())
             break;
         }
@@ -982,7 +982,7 @@ SFFromMF (char *filename)
                   ff_progress_change_total (sf->glyphcnt);
                   for (i = 0; i < sf->glyphcnt; ++i)
                     {
-                      if ((sc = sf->glyphs[i]) != NULL
+                      if ((sc = sfglyph (sf, i)) != NULL
                           && sc->layers[ly_back].images)
                         {
                           _SCAutoTrace (sc, ly_fore, args);

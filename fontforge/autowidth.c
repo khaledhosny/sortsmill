@@ -784,9 +784,9 @@ AW_FindFontParameters (WidthInfo * wi)
   for (i = 0; caps[i] != '\0' && cnt < 5; i += 2)
     for (j = caps[i]; j <= caps[i + 1] && cnt < 5; ++j)
       if ((si = SFFindExistingSlot (sf, j, NULL)) != -1
-          && sf->glyphs[si] != NULL)
+          && sfglyph (sf, si) != NULL)
         {
-          SplineCharQuickBounds (sf->glyphs[si], &bb);
+          SplineCharQuickBounds (sfglyph (sf, si), &bb);
           caph += bb.maxy;
           ++cnt;
         }
@@ -797,11 +797,11 @@ AW_FindFontParameters (WidthInfo * wi)
 
   for (i = 0; descent[i] != '\0'; ++i)
     if ((si = SFFindExistingSlot (sf, descent[i], NULL)) != -1
-        && sf->glyphs[si] != NULL)
+        && sfglyph (sf, si) != NULL)
       break;
   if (descent[i] != '\0')
     {
-      SplineCharQuickBounds (sf->glyphs[si], &bb);
+      SplineCharQuickBounds (sfglyph (sf, si), &bb);
       ds = bb.miny;
     }
   else
@@ -811,9 +811,9 @@ AW_FindFontParameters (WidthInfo * wi)
   xh = 0;
   for (i = 0; xheight[i] != '\0' && cnt < 5; ++i)
     if ((si = SFFindExistingSlot (sf, xheight[i], NULL)) != -1
-        && sf->glyphs[si] != NULL)
+        && sfglyph (sf, si) != NULL)
       {
-        SplineCharQuickBounds (sf->glyphs[si], &bb);
+        SplineCharQuickBounds (sfglyph (sf, si), &bb);
         xh += bb.maxy;
         ++cnt;
       }
@@ -824,18 +824,18 @@ AW_FindFontParameters (WidthInfo * wi)
 
   for (i = 0; easyserif[i] != '\0'; ++i)
     if ((si = SFFindExistingSlot (sf, easyserif[i], NULL)) != -1
-        && sf->glyphs[si] != NULL)
+        && sfglyph (sf, si) != NULL)
       break;
   if (si != -1)
     {
-      topx = SCFindMinXAtY (sf->glyphs[si], wi->layer, 2 * caph / 3);
-      bottomx = SCFindMinXAtY (sf->glyphs[si], wi->layer, caph / 3);
+      topx = SCFindMinXAtY (sfglyph (sf, si), wi->layer, 2 * caph / 3);
+      bottomx = SCFindMinXAtY (sfglyph (sf, si), wi->layer, caph / 3);
       /* Some fonts don't sit on the baseline... */
-      SplineCharQuickBounds (sf->glyphs[si], &bb);
+      SplineCharQuickBounds (sfglyph (sf, si), &bb);
       /* beware of slanted (italic, oblique) fonts */
       ytop = caph / 2;
       ybottom = bb.miny;
-      stemx = SCFindMinXAtY (sf->glyphs[si], wi->layer, ytop);
+      stemx = SCFindMinXAtY (sfglyph (sf, si), wi->layer, ytop);
       if (topx == bottomx)
         {
           ca = 0;
@@ -843,7 +843,7 @@ AW_FindFontParameters (WidthInfo * wi)
           while (ytop - ybottom >= .5)
             {
               y = (ytop + ybottom) / 2;
-              testx = SCFindMinXAtY (sf->glyphs[si], wi->layer, y);
+              testx = SCFindMinXAtY (sfglyph (sf, si), wi->layer, y);
               if (testx + 1 >= stemx)
                 ytop = y;
               else
@@ -858,7 +858,7 @@ AW_FindFontParameters (WidthInfo * wi)
           while (ytop - ybottom >= .5)
             {
               y = (ytop + ybottom) / 2;
-              testx = SCFindMinXAtY (sf->glyphs[si], wi->layer, y) +
+              testx = SCFindMinXAtY (sfglyph (sf, si), wi->layer, y) +
                 (yorig - y) * ca;
               if (testx + 4 >= stemx)   /* the +4 is to counteract rounding */
                 ytop = y;
@@ -869,7 +869,7 @@ AW_FindFontParameters (WidthInfo * wi)
       /* If "I" has a curved stem then it's probably in a script style and */
       /*  serifs don't really make sense (or not the simplistic ones I deal with) */
       if (ytop <= bb.miny + .5
-          || SCIsMinXAtYCurved (sf->glyphs[si], wi->layer, caph / 2))
+          || SCIsMinXAtYCurved (sfglyph (sf, si), wi->layer, caph / 2))
         serifsize = 0;
       else if (ytop > caph / 4)
         serifsize = /*.06*(sf->ascent+sf->descent) */ 0;
@@ -879,7 +879,7 @@ AW_FindFontParameters (WidthInfo * wi)
       if (serifsize != 0)
         {
           y = serifsize / 4 + bb.miny;
-          testx = SCFindMinXAtY (sf->glyphs[si], wi->layer, y);
+          testx = SCFindMinXAtY (sfglyph (sf, si), wi->layer, y);
           if (testx == NOTREACHED)
             serifsize = 0;
           else
@@ -900,9 +900,10 @@ AW_FindFontParameters (WidthInfo * wi)
       serifsize = 0;
     }
 
-  if ((si = SFFindExistingSlot (sf, 'n', "n")) != -1 && sf->glyphs[si] != NULL)
+  if ((si = SFFindExistingSlot (sf, 'n', "n")) != -1
+      && sfglyph (sf, si) != NULL)
     {
-      SplineChar *sc = sf->glyphs[si];
+      SplineChar *sc = sfglyph (sf, si);
       if (sc->changedsincelasthinted && !sc->manualhints)
         SplineCharAutoHint (sc, wi->layer, NULL);
       SplineCharQuickBounds (sc, &bb);
@@ -924,13 +925,14 @@ AW_FindFontParameters (WidthInfo * wi)
             wi->n_stem_exterior_width / 4;
         }
     }
-  if (((si = SFFindExistingSlot (sf, 'I', "I")) != -1 && sf->glyphs[si] != NULL)
+  if (((si = SFFindExistingSlot (sf, 'I', "I")) != -1
+       && sfglyph (sf, si) != NULL)
       || ((si = SFFindExistingSlot (sf, 0x399, "Iota")) != -1
-          && sf->glyphs[si] != NULL)
+          && sfglyph (sf, si) != NULL)
       || ((si = SFFindExistingSlot (sf, 0x406, "afii10055")) != -1
-          && sf->glyphs[si] != NULL))
+          && sfglyph (sf, si) != NULL))
     {
-      SplineChar *sc = sf->glyphs[si];
+      SplineChar *sc = sfglyph (sf, si);
       SplineCharQuickBounds (sc, &bb);
       wi->current_I_spacing = sc->width - (bb.maxx - bb.minx);
     }
@@ -984,16 +986,16 @@ SFGuessItalicAngle (SplineFont *sf)
 
   for (i = 0; easyserif[i] != '\0'; ++i)
     if ((si = SFFindExistingSlot (sf, easyserif[i], NULL)) != -1
-        && sf->glyphs[si] != NULL)
+        && sfglyph (sf, si) != NULL)
       break;
   if (easyserif[i] == '\0')     /* can't guess */
     return (0);
 
-  SplineCharFindBounds (sf->glyphs[si], &bb);
+  SplineCharFindBounds (sfglyph (sf, si), &bb);
   as = bb.maxy - bb.miny;
 
-  topx = SCFindMinXAtY (sf->glyphs[si], ly_fore, 2 * as / 3 + bb.miny);
-  bottomx = SCFindMinXAtY (sf->glyphs[si], ly_fore, as / 3 + bb.miny);
+  topx = SCFindMinXAtY (sfglyph (sf, si), ly_fore, 2 * as / 3 + bb.miny);
+  bottomx = SCFindMinXAtY (sfglyph (sf, si), ly_fore, as / 3 + bb.miny);
   if (topx == bottomx)
     return (0);
 
@@ -1019,20 +1021,20 @@ SFHasSerifs (SplineFont *sf, int layer)
 
   for (i = 0; easyserif[i] != '\0'; ++i)
     if ((si = SFFindExistingSlot (sf, easyserif[i], NULL)) != -1
-        && sf->glyphs[si] != NULL)
+        && sfglyph (sf, si) != NULL)
       break;
   if (easyserif[i] == '\0')     /* Can't guess */
     return;
 
   sf->serifcheck = true;
 
-  SplineCharLayerFindBounds (sf->glyphs[si], layer, &bb);
+  SplineCharLayerFindBounds (sfglyph (sf, si), layer, &bb);
   as = bb.maxy - bb.miny;
 
-  topx = SCFindMinXAtY (sf->glyphs[si], layer, 2 * as / 3 + bb.miny);
-  bottomx = SCFindMinXAtY (sf->glyphs[si], layer, as / 3 + bb.miny);
-  serifbottomx = SCFindMinXAtY (sf->glyphs[si], layer, 1 + bb.miny);
-  seriftopx = SCFindMinXAtY (sf->glyphs[si], layer, bb.maxy - 1);
+  topx = SCFindMinXAtY (sfglyph (sf, si), layer, 2 * as / 3 + bb.miny);
+  bottomx = SCFindMinXAtY (sfglyph (sf, si), layer, as / 3 + bb.miny);
+  serifbottomx = SCFindMinXAtY (sfglyph (sf, si), layer, 1 + bb.miny);
+  seriftopx = SCFindMinXAtY (sfglyph (sf, si), layer, bb.maxy - 1);
   if (RealNear (topx, bottomx))
     {
       if (RealNear (serifbottomx, bottomx) && RealNear (seriftopx, topx))
@@ -1130,9 +1132,9 @@ KernThreshold (SplineFont *sf, int cnt)
   totals = xcalloc (high + 1, sizeof (int));
   tot = 0;
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
+    if (sfglyph (sf, i) != NULL)
       {
-        for (kp = sf->glyphs[i]->kerns; kp != NULL; kp = kp->next)
+        for (kp = sfglyph (sf, i)->kerns; kp != NULL; kp = kp->next)
           {
             val = kp->off;
             if (val != 0)
@@ -1168,10 +1170,10 @@ AW_KernRemoveBelowThreshold (SplineFont *sf, int threshold)
     return;
 
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (sf->glyphs[i] != NULL)
+    if (sfglyph (sf, i) != NULL)
       {
         prev = NULL;
-        for (kp = sf->glyphs[i]->kerns; kp != NULL; kp = next)
+        for (kp = sfglyph (sf, i)->kerns; kp != NULL; kp = next)
           {
             next = kp->next;
             if (kp->off >= threshold || kp->off <= -threshold)
@@ -1179,7 +1181,7 @@ AW_KernRemoveBelowThreshold (SplineFont *sf, int threshold)
             else
               {
                 if (prev == NULL)
-                  sf->glyphs[i]->kerns = next;
+                  sfglyph (sf, i)->kerns = next;
                 else
                   prev->next = next;
                 free (kp);
@@ -1380,10 +1382,10 @@ figurekernsets (WidthInfo * wi, struct kernsets *ks)
   for (i = cnt = 0; i < ks->cur; ++i)
     {
       j = SFFindExistingSlot (sf, ks->ch1[i], NULL);
-      if (j != -1 && sf->glyphs[j] != NULL &&
-          (sf->glyphs[j]->layers[wi->layer].splines != NULL
-           || sf->glyphs[j]->layers[wi->layer].refs != NULL))
-        wi->left[cnt++] = AW_MakeCharOne (sf->glyphs[j]);
+      if (j != -1 && sfglyph (sf, j) != NULL &&
+          (sfglyph (sf, j)->layers[wi->layer].splines != NULL
+           || sfglyph (sf, j)->layers[wi->layer].refs != NULL))
+        wi->left[cnt++] = AW_MakeCharOne (sfglyph (sf, j));
       else
         ks->ch1[i] = '\0';
     }
@@ -1420,10 +1422,10 @@ figurekernsets (WidthInfo * wi, struct kernsets *ks)
   for (cnt = 0, cpt = ch2s; *cpt; ++cpt)
     {
       j = SFFindExistingSlot (sf, *cpt, NULL);
-      if (j != -1 && sf->glyphs[j] != NULL &&
-          (sf->glyphs[j]->layers[wi->layer].splines != NULL
-           || sf->glyphs[j]->layers[wi->layer].refs != NULL))
-        wi->right[cnt++] = AW_MakeCharOne (sf->glyphs[j]);
+      if (j != -1 && sfglyph (sf, j) != NULL &&
+          (sfglyph (sf, j)->layers[wi->layer].splines != NULL
+           || sfglyph (sf, j)->layers[wi->layer].refs != NULL))
+        wi->right[cnt++] = AW_MakeCharOne (sfglyph (sf, j));
     }
   wi->rcnt = cnt;
   wi->right[cnt] = NULL;
@@ -1790,9 +1792,9 @@ FVVKernFromHKern (FontViewBase *fv)
 
   for (i = 0; i < sf->glyphcnt; ++i)
     {
-      if ((sc1 = SCHasVertVariant (sf->glyphs[i])) != NULL)
+      if ((sc1 = SCHasVertVariant (sfglyph (sf, i))) != NULL)
         {
-          for (kp = sf->glyphs[i]->kerns; kp != NULL; kp = kp->next)
+          for (kp = sfglyph (sf, i)->kerns; kp != NULL; kp = kp->next)
             {
               if ((sc2 = SCHasVertVariant (kp->sc)) != NULL)
                 {
@@ -1897,11 +1899,11 @@ autowidthBuildCharList (FontViewBase *fv, SplineFont *sf,
     {
       for (i = cnt = 0; i < map->enc_limit && cnt < 300; ++i)
         {
-          if (fv->selected[i] && (gid = enc_to_gid (map,i)) != -1
-              && SCWorthOutputting (sf->glyphs[gid]))
+          if (fv->selected[i] && (gid = enc_to_gid (map, i)) != -1
+              && SCWorthOutputting (sfglyph (sf, gid)))
             {
               if (doit)
-                ret[cnt++] = AW_MakeCharOne (sf->glyphs[gid]);
+                ret[cnt++] = AW_MakeCharOne (sfglyph (sf, gid));
               else
                 ++cnt;
             }
@@ -1926,7 +1928,7 @@ autowidthBuildCharList (FontViewBase *fv, SplineFont *sf,
                 {
                   i = SFFindExistingSlot (sf, 'I', NULL);
                   if (i != -1)
-                    ret[cnt++] = AW_MakeCharOne (sf->glyphs[i]);
+                    ret[cnt++] = AW_MakeCharOne (sfglyph (sf, i));
                   else
                     s = -1;
                 }

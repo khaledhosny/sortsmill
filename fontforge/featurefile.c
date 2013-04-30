@@ -300,7 +300,7 @@ dump_fpst_everythingelse (FILE *out, SplineFont *sf, char **classes,
   if (sf->subfontcnt == 0)
     {
       for (gid = 0; gid < sf->glyphcnt; ++gid)
-        if ((sc = sf->glyphs[gid]) != NULL)
+        if ((sc = sfglyph (sf, gid)) != NULL)
           sc->ticked = false;
     }
   else
@@ -309,7 +309,7 @@ dump_fpst_everythingelse (FILE *out, SplineFont *sf, char **classes,
         {
           sub = sf->subfonts[k];
           for (gid = 0; gid < sub->glyphcnt; ++gid)
-            if ((sc = sub->glyphs[gid]) != NULL)
+            if ((sc = sfglyph (sub, gid)) != NULL)
               sc->ticked = false;
         }
     }
@@ -337,7 +337,7 @@ dump_fpst_everythingelse (FILE *out, SplineFont *sf, char **classes,
   if (sf->subfontcnt == 0)
     {
       for (gid = 0; gid < sf->glyphcnt; ++gid)
-        if ((sc = sf->glyphs[gid]) != NULL && !sc->ticked)
+        if ((sc = sfglyph (sf, gid)) != NULL && !sc->ticked)
           {
             if (otl != NULL)
               {
@@ -375,7 +375,7 @@ dump_fpst_everythingelse (FILE *out, SplineFont *sf, char **classes,
         {
           sub = sf->subfonts[k];
           for (gid = 0; gid < sub->glyphcnt; ++gid)
-            if ((sc = sub->glyphs[gid]) != NULL && !sc->ticked)
+            if ((sc = sfglyph (sub, gid)) != NULL && !sc->ticked)
               {
                 if (otl != NULL)
                   {
@@ -637,7 +637,7 @@ pst_from_ligature (SplineFont *sf, OTLookup *otl, char *components)
     {
       _sf = sf->subfontcnt == 0 ? sf : sf->subfonts[k];
       for (gid = 0; gid < _sf->glyphcnt; ++gid)
-        if ((sc = _sf->glyphs[gid]) != NULL)
+        if ((sc = sfglyph (_sf, gid)) != NULL)
           {
             for (pst = sc->possub; pst != NULL; pst = pst->next)
               {
@@ -668,7 +668,7 @@ pst_any_from_otl (SplineFont *sf, OTLookup *otl)
     {
       _sf = sf->subfontcnt == 0 ? sf : sf->subfonts[k];
       for (gid = 0; gid < _sf->glyphcnt; ++gid)
-        if ((sc = _sf->glyphs[gid]) != NULL)
+        if ((sc = sfglyph (_sf, gid)) != NULL)
           {
             for (pst = sc->possub; pst != NULL; pst = pst->next)
               {
@@ -1367,7 +1367,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
               {
                 _sf = k < sf->subfontcnt ? sf->subfonts[k] : sf;
                 for (i = 0; i < _sf->glyphcnt; ++i)
-                  if ((sc = _sf->glyphs[i]) != NULL)
+                  if ((sc = sfglyph (_sf, i)) != NULL)
                     {
                       ap_entry = ap_exit = NULL;
                       for (ap = sc->anchor; ap != NULL; ap = ap->next)
@@ -1409,7 +1409,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
               {
                 _sf = k < sf->subfontcnt ? sf->subfonts[k] : sf;
                 for (i = 0; i < _sf->glyphcnt; ++i)
-                  if ((sc = _sf->glyphs[i]) != NULL)
+                  if ((sc = sfglyph (_sf, i)) != NULL)
                     {
                       for (ap = sc->anchor; ap != NULL; ap = ap->next)
                         {
@@ -1474,7 +1474,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
     {
       _sf = k < sf->subfontcnt ? sf->subfonts[k] : sf;
       for (i = 0; i < _sf->glyphcnt; ++i)
-        if ((sc = _sf->glyphs[i]) != NULL)
+        if ((sc = sfglyph (_sf, i)) != NULL)
           {
             sc->ticked = false;
           }
@@ -1487,7 +1487,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
       _sf = k < sf->subfontcnt ? sf->subfonts[k] : sf;
       for (i = 0; i < _sf->glyphcnt; ++i)
         {
-          if ((sc = _sf->glyphs[i]) != NULL && !sc->ticked
+          if ((sc = sfglyph (_sf, i)) != NULL && !sc->ticked
               && HasBaseAP (sc, sub))
             {
               fprintf (out, "  pos %s ",
@@ -1500,7 +1500,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                   for (j = i; j < _sf->glyphcnt; ++j)
                     {
                       SplineChar *osc;
-                      if ((osc = _sf->glyphs[j]) != NULL && !osc->ticked
+                      if ((osc = sfglyph (_sf, j)) != NULL && !osc->ticked
                           && SameBaseAP (osc, sc, sub))
                         {
                           osc->ticked = true;
@@ -1610,7 +1610,7 @@ fea_bad_contextual_nestedlookup (SplineFont *sf, FPST *fpst, OTLookup *nested)
   switch (nested->lookup_type)
     {
     case gsub_single:
-      return false;           /* This is the one thing that can always be expressed */
+      return false;             /* This is the one thing that can always be expressed */
     case gsub_multiple:
     case gsub_alternate:
     case gsub_context:
@@ -1621,7 +1621,7 @@ fea_bad_contextual_nestedlookup (SplineFont *sf, FPST *fpst, OTLookup *nested)
     case gpos_mark2mark:
     case gpos_contextchain:
     case gpos_context:
-      return true;            /* These can never be expressed */
+      return true;              /* These can never be expressed */
     case gpos_cursive:
     case gpos_pair:
       return (fpst->format !=
@@ -1641,7 +1641,7 @@ fea_bad_contextual_nestedlookup (SplineFont *sf, FPST *fpst, OTLookup *nested)
         {
           _sf = sf->subfontcnt == 0 ? sf : sf->subfonts[k];
           for (gid = 0; gid < _sf->glyphcnt; ++gid)
-            if ((sc = _sf->glyphs[gid]) != NULL)
+            if ((sc = sfglyph (_sf, gid)) != NULL)
               {
                 for (pst = sc->possub; pst != NULL; pst = pst->next)
                   {
@@ -1654,7 +1654,7 @@ fea_bad_contextual_nestedlookup (SplineFont *sf, FPST *fpst, OTLookup *nested)
                             break;
                           }
                         else if (nested->lookup_type == gsub_ligature)
-                          return true;        /* Different glyphs */
+                          return true;  /* Different glyphs */
                         else if (found->u.pos.xoff != pst->u.pos.xoff ||
                                  found->u.pos.yoff != pst->u.pos.yoff ||
                                  found->u.pos.h_adv_off != pst->u.pos.h_adv_off
@@ -1744,7 +1744,8 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
   struct lookup_subtable *sub;
   static char *flagnames[] =
     { "RightToLeft", "IgnoreBaseGlyphs", "IgnoreLigatures", "IgnoreMarks",
-NULL };
+    NULL
+  };
   int i, k, first;
   SplineFont *_sf;
   SplineChar *sc;
@@ -1821,7 +1822,7 @@ NULL };
             {
               _sf = k < sf->subfontcnt ? sf->subfonts[k] : sf;
               for (i = 0; i < _sf->glyphcnt; ++i)
-                if ((sc = _sf->glyphs[i]) != NULL)
+                if ((sc = sfglyph (_sf, i)) != NULL)
                   {
                     for (pst = sc->possub; pst != NULL; pst = pst->next)
                       if (pst->subtable == sub)
@@ -2049,7 +2050,7 @@ dump_gdef (FILE *out, SplineFont *sf)
         {
           _sf = sf->subfontcnt == 0 ? sf : _sf;
           for (gid = 0; gid < _sf->glyphcnt; ++gid)
-            if ((sc = _sf->glyphs[gid]) != NULL)
+            if ((sc = sfglyph (_sf, gid)) != NULL)
               {
                 if (l == 0)
                   {
@@ -2123,7 +2124,7 @@ dump_gdef (FILE *out, SplineFont *sf)
                 {
                   _sf = sf->subfontcnt == 0 ? sf : _sf;
                   for (gid = 0; gid < _sf->glyphcnt; ++gid)
-                    if ((sc = _sf->glyphs[gid]) != NULL)
+                    if ((sc = sfglyph (_sf, gid)) != NULL)
                       {
                         if (sc->glyph_class == i + 2
                             || (sc->glyph_class == 0
@@ -2280,8 +2281,8 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
         {
           uint32_t *scripts = SFScriptsInLookups (sf, isgpos);
           fprintf (out, "\n# %s \n\n", isgpos ? "GPOS" : "GSUB");
-          note_nested_lookups_used_twice (isgpos ? sf->gpos_lookups : sf->
-                                          gsub_lookups);
+          note_nested_lookups_used_twice (isgpos ? sf->
+                                          gpos_lookups : sf->gsub_lookups);
           for (otl = isgpos ? sf->gpos_lookups : sf->gsub_lookups; otl != NULL;
                otl = otl->next)
             if (otl->features != NULL && !otl->unused)  /* Nested lookups will be output with the lookups which invoke them */
@@ -2357,8 +2358,9 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
                                           {
                                             uint32_t lang =
                                               subl <
-                                              MAX_LANG ? sl->langs[subl] : sl->
-                                              morelangs[subl - MAX_LANG];
+                                              MAX_LANG ? sl->
+                                              langs[subl] : sl->morelangs[subl -
+                                                                          MAX_LANG];
                                             if (lang == langs[l])
                                               goto found;
                                           }
@@ -3651,8 +3653,8 @@ fea_cid_validate (struct parseState *tok, int cid)
   for (i = 0; i < tok->sf->subfontcnt; ++i)
     {
       SplineFont *sub = tok->sf->subfonts[i];
-      if (cid < sub->glyphcnt && sub->glyphs[cid] != NULL)
-        return sub->glyphs[cid]->name;
+      if (cid < sub->glyphcnt && sfglyph (sub, cid) != NULL)
+        return sfglyph (sub, cid)->name;
       if (sub->glyphcnt > max)
         {
           max = sub->glyphcnt;
@@ -3714,7 +3716,7 @@ fea_glyphname_get (struct parseState *tok, char *name)
     }
 
   for (gid = sf->glyphcnt - 1; gid >= 0; --gid)
-    if ((sc = sf->glyphs[gid]) != NULL)
+    if ((sc = sfglyph (sf, gid)) != NULL)
       {
         if (strcmp (sc->name, name) == 0)
           return sc;
@@ -4015,8 +4017,10 @@ fea_ParseMarkAttachClass (struct parseState *tok, int is_set)
   else
     tok->gdef_mark[is_set][tok->gm_cnt[is_set]].index = tok->gm_pos[is_set]++;
   if (is_set)
-    return ((tok->gdef_mark[is_set][tok->gm_cnt[is_set]++].
-             index << 16) | pst_usemarkfilteringset);
+    return ((tok->
+             gdef_mark[is_set][tok->
+                               gm_cnt[is_set]++].index << 16) |
+            pst_usemarkfilteringset);
   else
     return tok->gdef_mark[is_set][tok->gm_cnt[is_set]++].index << 8;
 }
@@ -4477,8 +4481,7 @@ fea_findLookup (struct parseState *tok, char *name)
         {
           ff_post_notice (_("Refers to Font"),
                           _("Reference to a lookup which is not in the feature "
-                            "file but which is in the font, %.50s"),
-                          name);
+                            "file but which is in the font, %.50s"), name);
           tok->lookup_in_sf_warned = true;
         }
       return true;
@@ -6302,7 +6305,7 @@ fea_LookupTypeFromItem (struct feat_item *item)
         case pst_ligature:
           return gsub_ligature;
         default:
-          return ot_undef;    /* Can't happen */
+          return ot_undef;      /* Can't happen */
         }
       break;
     case ft_ap:
@@ -6312,7 +6315,7 @@ fea_LookupTypeFromItem (struct feat_item *item)
         case at_cexit:
           return gpos_cursive;
         case at_mark:
-          return ot_undef;    /* Can be used in three different lookups. Not enough info */
+          return ot_undef;      /* Can be used in three different lookups. Not enough info */
         case at_basechar:
           return gpos_mark2base;
         case at_baselig:
@@ -6320,7 +6323,7 @@ fea_LookupTypeFromItem (struct feat_item *item)
         case at_basemark:
           return gpos_mark2mark;
         default:
-          return ot_undef;    /* Can't happen */
+          return ot_undef;      /* Can't happen */
         }
       break;
     case ft_fpst:
@@ -6333,11 +6336,11 @@ fea_LookupTypeFromItem (struct feat_item *item)
         case pst_reversesub:
           return gsub_reversecchain;
         default:
-          return ot_undef;    /* Can't happen */
+          return ot_undef;      /* Can't happen */
         }
       break;
     default:
-      return ot_undef;        /* Can happen */
+      return ot_undef;          /* Can happen */
     }
 }
 
@@ -8635,7 +8638,7 @@ fea_TableByKeywords (SplineFont *sf, struct feat_item *f)
       cur = &offsets[tv->index];
       if (cur->offset == -1)
         /* We don't support this guy, whatever he may be, but we did parse it */
-          ;
+        ;
       else if (cur->cnt == 1)
         {
           if (cur->size == 4)

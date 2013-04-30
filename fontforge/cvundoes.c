@@ -1678,7 +1678,8 @@ copybuffer2svgmult (void *_copybuffer, int32_t *len)
   sf->glyphcnt = cnt;
   for (i = 0, c = cur; c != NULL; c = c->next, ++i)
     {
-      sf->glyphs[i] = sc = SFSplineCharCreate (sf);
+      sc = SFSplineCharCreate (sf);
+      set_sfglyph (sf, i, sc);
       sc->orig_pos = i;
       ly = sc->layers;
       if ((c2 = c)->undotype == ut_composit)
@@ -1703,7 +1704,7 @@ copybuffer2svgmult (void *_copybuffer, int32_t *len)
 
   for (i = 0, c = cur; c != NULL; c = c->next, ++i)
     {
-      sc = sf->glyphs[i];
+      sc = sfglyph (sf, i);
       sc->layers[ly_fore].splines = NULL;
       sc->layers[ly_fore].refs = NULL;
       sc->name = NULL;
@@ -2338,28 +2339,28 @@ FindCharacter (SplineFont *into, SplineFont *from, RefChar *rf,
   /*  else */
   /* Should be fixed now. We clear copied_from when we close a font */
   if (from != NULL
-      && (rf->orig_pos >= from->glyphcnt || from->glyphs[rf->orig_pos] == NULL
-          || from->glyphs[rf->orig_pos]->unicodeenc != rf->unicode_enc))
+      && (rf->orig_pos >= from->glyphcnt || sfglyph (from, rf->orig_pos) == NULL
+          || sfglyph (from, rf->orig_pos)->unicodeenc != rf->unicode_enc))
     from = NULL;
 
   if (fromsc != NULL)
     *fromsc = NULL;
 
   if (from != NULL && rf->orig_pos < from->glyphcnt
-      && from->glyphs[rf->orig_pos] != NULL)
+      && sfglyph (from, rf->orig_pos) != NULL)
     {
-      fromname = from->glyphs[rf->orig_pos]->name;
+      fromname = sfglyph (from, rf->orig_pos)->name;
       if (fromsc != NULL)
-        *fromsc = from->glyphs[rf->orig_pos];
+        *fromsc = sfglyph (from, rf->orig_pos);
     }
 
-  if (rf->orig_pos < into->glyphcnt && into->glyphs[rf->orig_pos] != NULL &&
-      ((into->glyphs[rf->orig_pos]->unicodeenc == rf->unicode_enc
+  if (rf->orig_pos < into->glyphcnt && sfglyph (into, rf->orig_pos) != NULL &&
+      ((sfglyph (into, rf->orig_pos)->unicodeenc == rf->unicode_enc
         && rf->unicode_enc != -1)
        || (rf->unicode_enc == -1
            && fromname != NULL
-           && strcmp (into->glyphs[rf->orig_pos]->name, fromname) == 0)))
-    return (into->glyphs[rf->orig_pos]);
+           && strcmp (sfglyph (into, rf->orig_pos)->name, fromname) == 0)))
+    return (sfglyph (into, rf->orig_pos));
 
   return (SFGetChar (into, rf->unicode_enc, fromname));
 }
@@ -2552,7 +2553,7 @@ XClipFontToFFClip (void)
   if (sf == NULL)
     return;
   for (i = 0; i < sf->glyphcnt; ++i)
-    if ((sc = sf->glyphs[i]) != NULL)
+    if ((sc = sfglyph (sf, i)) != NULL)
       {
         if (strcmp (sc->name, ".notdef") == 0)
           continue;
@@ -3369,7 +3370,7 @@ SCPasteLookups (SplineChar *sc, SplineChar *fromsc, int pasteinto,
         continue;
       fromsf = fromsc->parent;
       for (gid = fromsf->glyphcnt - 1; gid >= 0; --gid)
-        if ((test = fromsf->glyphs[gid]) != NULL)
+        if ((test = sfglyph (fromsf, gid)) != NULL)
           {
             for (fromkp = isv ? test->vkerns : test->kerns; fromkp != NULL;
                  fromkp = fromkp->next)
@@ -3896,7 +3897,7 @@ PasteToCV (CharViewBase *cv)
       int j, gid = cv->sc->orig_pos;
       MMSet *mm = cv->sc->parent->mm;
       for (j = 0; j < mm->instance_count; ++j)
-        _PasteToCV (cv, mm->instances[j]->glyphs[gid], &copybuffer);
+        _PasteToCV (cv, sfglyph (mm->instances[j], gid), &copybuffer);
     }
 }
 
@@ -4161,7 +4162,7 @@ FVCopyWidth (FontViewBase *fv, enum undotype ut)
         cur = (Undoes *) xzalloc (sizeof (Undoes));
         cur->undotype = ut;
         if ((gid = enc_to_gid (fv->map, i)) != -1
-            && (sc = fv->sf->glyphs[gid]) != NULL)
+            && (sc = sfglyph (fv->sf, gid)) != NULL)
           {
             switch (ut)
               {
@@ -4211,7 +4212,7 @@ FVCopyAnchors (FontViewBase *fv)
         any = true;
         cur = (Undoes *) xzalloc (sizeof (Undoes));
         if ((gid = enc_to_gid (fv->map, i)) != -1
-            && (sc = fv->sf->glyphs[gid]) != NULL)
+            && (sc = sfglyph (fv->sf, gid)) != NULL)
           {
             cur->undotype = ut_anchors;
             cur->u.state.anchor = AnchorPointsCopy (sc->anchor);
@@ -4252,7 +4253,8 @@ FVCopy (FontViewBase *fv, enum fvcopy_type fullcopy)
     if (fv->selected[i])
       {
         any = true;
-        sc = (gid = enc_to_gid (fv->map, i)) == -1 ? NULL : fv->sf->glyphs[gid];
+        gid = enc_to_gid (fv->map, i);
+        sc = (gid == -1) ? NULL : sfglyph (fv->sf, gid);
         if ((onlycopydisplayed && fv->active_bitmap == NULL)
             || fullcopy == ct_lookups)
           {
@@ -4520,7 +4522,7 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
       for (i = 0; i < fv->map->enc_limit; ++i)
         if (fv->selected[i]
             && ((gid = enc_to_gid (fv->map, i)) == -1
-                || sf->glyphs[gid] == NULL))
+                || sfglyph (sf, gid) == NULL))
           SFMakeChar (sf, fv->map, i);
     }
   cur = NULL;

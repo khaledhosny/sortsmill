@@ -213,7 +213,7 @@ ReplaceBDFC (SplineFont *sf, int32_t *sizes, int gid,
   BDFChar *bdfc, temp;
   int i;
 
-  if (gid == -1 || gid >= sf->glyphcnt || sf->glyphs[gid] == NULL)
+  if (gid == -1 || gid >= sf->glyphcnt || sfglyph (sf, gid) == NULL)
     return;
 
   for (bdf = sf->bitmaps; bdf != NULL; bdf = bdf->next)
@@ -230,17 +230,17 @@ ReplaceBDFC (SplineFont *sf, int32_t *sizes, int gid,
                                            72, BDFDepth (bdf));
           else if (usefreetype)
             bdfc =
-              SplineCharFreeTypeRasterizeNoHints (sf->glyphs[gid], layer,
+              SplineCharFreeTypeRasterizeNoHints (sfglyph (sf, gid), layer,
                                                   bdf->pixelsize, 72,
                                                   BDFDepth (bdf));
           if (bdfc == NULL)
             {
               if (autohint_before_generate &&
-                  sf->glyphs[gid]->changedsincelasthinted &&
-                  !sf->glyphs[gid]->manualhints)
-                SplineCharAutoHint (sf->glyphs[gid], layer, NULL);
+                  sfglyph (sf, gid)->changedsincelasthinted &&
+                  !sfglyph (sf, gid)->manualhints)
+                SplineCharAutoHint (sfglyph (sf, gid), layer, NULL);
               bdfc =
-                SplineCharAntiAlias (sf->glyphs[gid], layer, bdf->pixelsize,
+                SplineCharAntiAlias (sfglyph (sf, gid), layer, bdf->pixelsize,
                                      (1 << (BDFDepth (bdf) / 2)));
             }
           if (bdf->glyphs[gid] == NULL)
@@ -302,7 +302,7 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
               subsf = bdfsf->subfonts[j];
               for (i = 0; i < subsf->glyphcnt; ++i)
                 {
-                  if (SCWorthOutputting (subsf->glyphs[i]))
+                  if (SCWorthOutputting (sfglyph (subsf, i)))
                     {
                       if (usefreetype && freetypecontext == NULL)
                         freetypecontext =

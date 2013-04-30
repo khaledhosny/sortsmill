@@ -1550,9 +1550,9 @@ dumpcharprocs (void (*dumpchar) (int ch, void *data), void *data,
   cnt = 0;
   notdefpos = SFFindNotdef (sf, -2);
   for (i = 0; i < sf->glyphcnt; ++i)
-    if (SCWorthOutputting (sf->glyphs[i]))
+    if (SCWorthOutputting (sfglyph (sf, i)))
       {
-        if (strcmp (sf->glyphs[i]->name, ".notdef") != 0)
+        if (strcmp (sfglyph (sf, i)->name, ".notdef") != 0)
           ++cnt;
       }
   ++cnt;                        /* one notdef entry */
@@ -1560,20 +1560,21 @@ dumpcharprocs (void (*dumpchar) (int ch, void *data), void *data,
   dumpf (dumpchar, data, "/CharProcs %d dict def\nCharProcs begin\n", cnt);
   i = 0;
   if (notdefpos != -1)
-    dumpproc (dumpchar, data, sf->glyphs[notdefpos]);
+    dumpproc (dumpchar, data, sfglyph (sf, notdefpos));
   else
     {
       dumpf (dumpchar, data,
              "  /.notdef { %d 0 0 0 0 0 setcachedevice } bind def\n",
              sf->ascent + sf->descent);
-      if (sf->glyphs[0] != NULL && strcmp (sf->glyphs[0]->name, ".notdef") == 0)
+      if (sfglyph (sf, 0) != NULL
+          && strcmp (sfglyph (sf, 0)->name, ".notdef") == 0)
         ++i;
     }
   for (; i < sf->glyphcnt; ++i)
     if (i != notdefpos)
       {
-        if (SCWorthOutputting (sf->glyphs[i]))
-          dumpproc (dumpchar, data, sf->glyphs[i]);
+        if (SCWorthOutputting (sfglyph (sf, i)))
+          dumpproc (dumpchar, data, sfglyph (sf, i));
         if (!ff_progress_next ())
           return (false);
       }
@@ -2327,7 +2328,7 @@ dumpfontcomments (void (*dumpchar) (int ch, void *data), void *data,
       SplineChar *sc;
       int had_pat = 0, had_grad = 0;
       for (gid = 0; gid < sf->glyphcnt; ++gid)
-        if ((sc = sf->glyphs[gid]) != NULL)
+        if ((sc = sfglyph (sf, gid)) != NULL)
           {
             for (ly = ly_fore; ly < sc->layer_cnt; ++ly)
               {
@@ -2548,8 +2549,8 @@ dumprequiredfontinfo (void (*dumpchar) (int ch, void *data), void *data,
 
   for (i = 0; i < 256 && i < map->enc_limit; ++i)
     if (enc_to_gid (map, i) != -1
-        && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
-      encoding[i] = sf->glyphs[enc_to_gid (map, i)]->name;
+        && SCWorthOutputting (sfglyph (sf, enc_to_gid (map, i))))
+      encoding[i] = sfglyph (sf, enc_to_gid (map, i))->name;
     else
       encoding[i] = ".notdef";
   for (; i < 256; ++i)
@@ -2766,8 +2767,8 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
       fprintf (out, "   0 1 255 { 1 index exch /.notdef put} for\n");
       for (i = 0; i < 256 && i < map->enc_limit; ++i)
         if ((gid = enc_to_gid (map, i)) != -1)
-          if (SCWorthOutputting (sf->glyphs[gid]))
-            fprintf (out, "    dup %d/%s put\n", i, sf->glyphs[gid]->name);
+          if (SCWorthOutputting (sfglyph (sf, gid)))
+            fprintf (out, "    dup %d/%s put\n", i, sfglyph (sf, gid)->name);
       fprintf (out, "  readonly def\n");
     }
   fprintf (out, "  /sfnts [\n");
@@ -2778,10 +2779,10 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
       hasnotdef = false;
       for (i = cnt = 0; i < sf->glyphcnt; ++i)
         {
-          if (sf->glyphs[i] != NULL && SCWorthOutputting (sf->glyphs[i]))
+          if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i)))
             {
               ++cnt;
-              if (strcmp (sf->glyphs[i]->name, ".notdef") == 0)
+              if (strcmp (sfglyph (sf, i)->name, ".notdef") == 0)
                 hasnotdef = true;
             }
         }
@@ -2792,9 +2793,9 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
       if (!hasnotdef)
         fprintf (out, "    /.notdef 0 def\n");
       for (i = 0; i < sf->glyphcnt; ++i)
-        if (sf->glyphs[i] != NULL && SCWorthOutputting (sf->glyphs[i]))
-          fprintf (out, "    /%s %d def\n", sf->glyphs[i]->name,
-                   sf->glyphs[i]->ttf_glyph);
+        if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i)))
+          fprintf (out, "    /%s %d def\n", sfglyph (sf, i)->name,
+                   sfglyph (sf, i)->ttf_glyph);
       fprintf (out, "  end readonly def\n");
       fprintf (out, "FontName currentdict end definefont pop\n");
     }
@@ -2803,12 +2804,12 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
       if (cidmaster != NULL)
         {
           for (i = cnt = 0; i < sf->glyphcnt; ++i)
-            if (sf->glyphs[i] != NULL && SCWorthOutputting (sf->glyphs[i]))
+            if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i)))
               ++cnt;
           fprintf (out, "  /CIDMap %d dict dup begin\n", cnt);
           for (i = 0; i < sf->glyphcnt; ++i)
-            if (sf->glyphs[i] != NULL && SCWorthOutputting (sf->glyphs[i]))
-              fprintf (out, "    %d %d def\n", i, sf->glyphs[i]->ttf_glyph);
+            if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i)))
+              fprintf (out, "    %d %d def\n", i, sfglyph (sf, i)->ttf_glyph);
           fprintf (out, "  end readonly def\n");
           fprintf (out, "  /CIDCount %d def\n", sf->glyphcnt);
           fprintf (out, "  /GDBytes %d def\n", sf->glyphcnt > 65535 ? 3 : 2);
@@ -2816,8 +2817,8 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
       else if (flags & ps_flag_identitycidmap)
         {
           for (i = cnt = 0; i < sf->glyphcnt; ++i)
-            if (sf->glyphs[i] != NULL && cnt < sf->glyphs[i]->ttf_glyph)
-              cnt = sf->glyphs[i]->ttf_glyph;
+            if (sfglyph (sf, i) != NULL && cnt < sfglyph (sf, i)->ttf_glyph)
+              cnt = sfglyph (sf, i)->ttf_glyph;
           fprintf (out, "  /CIDCount %d def\n", cnt + 1);
           fprintf (out, "  /GDBytes %d def\n", cnt + 1 > 65535 ? 3 : 2);
           fprintf (out, "  /CIDMap 0 def\n");
@@ -2826,13 +2827,13 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
         {                       /* Use unicode */
           int maxu = 0;
           for (i = cnt = 0; i < sf->glyphcnt; ++i)
-            if (sf->glyphs[i] != NULL && SCWorthOutputting (sf->glyphs[i]) &&
-                sf->glyphs[i]->unicodeenc != -1
-                && sf->glyphs[i]->unicodeenc < 0x10000)
+            if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i))
+                && sfglyph (sf, i)->unicodeenc != -1
+                && sfglyph (sf, i)->unicodeenc < 0x10000)
               {
                 ++cnt;
-                if (sf->glyphs[i]->unicodeenc > maxu)
-                  maxu = sf->glyphs[i]->unicodeenc;
+                if (sfglyph (sf, i)->unicodeenc > maxu)
+                  maxu = sfglyph (sf, i)->unicodeenc;
               }
           fprintf (out, "  /CIDMap %d dict dup begin\n", cnt);
           fprintf (out, "    0 0 def\n");       /* .notdef doesn't have a unicode enc, will be missed. Needed */
@@ -2841,19 +2842,20 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
               for (i = 0; i < map->enc_limit && i < 0x10000; ++i)
                 if ((gid = enc_to_gid (map, i)) != -1)
                   {
-                    if (SCWorthOutputting (sf->glyphs[gid]))
+                    if (SCWorthOutputting (sfglyph (sf, gid)))
                       fprintf (out, "    %d %d def\n", i,
-                               sf->glyphs[gid]->ttf_glyph);
+                               sfglyph (sf, gid)->ttf_glyph);
                   }
             }
           else
             {
               for (i = 0; i < sf->glyphcnt; ++i)
-                if (sf->glyphs[i] != NULL && SCWorthOutputting (sf->glyphs[i])
-                    && sf->glyphs[i]->unicodeenc != -1
-                    && sf->glyphs[i]->unicodeenc < 0x10000)
-                  fprintf (out, "    %d %d def\n", sf->glyphs[i]->unicodeenc,
-                           sf->glyphs[i]->ttf_glyph);
+                if (sfglyph (sf, i) != NULL
+                    && SCWorthOutputting (sfglyph (sf, i))
+                    && sfglyph (sf, i)->unicodeenc != -1
+                    && sfglyph (sf, i)->unicodeenc < 0x10000)
+                  fprintf (out, "    %d %d def\n", sfglyph (sf, i)->unicodeenc,
+                           sfglyph (sf, i)->ttf_glyph);
             }
           fprintf (out, "  end readonly def\n");
           fprintf (out, "  /GDBytes %d def\n", maxu > 65535 ? 3 : 2);
@@ -2963,7 +2965,7 @@ somecharsused (SplineFont *sf, int bottom, int top, EncMap *map)
   for (i = bottom; i <= top && i < map->enc_limit; ++i)
     {
       if (enc_to_gid (map, i) != -1
-          && SCWorthOutputting (sf->glyphs[enc_to_gid (map, i)]))
+          && SCWorthOutputting (sfglyph (sf, enc_to_gid (map, i))))
         return (true);
     }
   return (false);
@@ -2985,11 +2987,11 @@ dumptype0stuff (FILE *out, SplineFont *sf, EncMap *map)
         {
           fprintf (out, "/%sBase /%s%d [\n", sf->fontname, sf->fontname, i);
           for (j = 0; j < 256 && (i << 8) + j < map->enc_limit; ++j)
-            if (enc_to_gid (map, (i << 8) + j) != -1
-                && SCWorthOutputting (sf->
-                                      glyphs[enc_to_gid (map, (i << 8) + j)]))
+            if (enc_to_gid (map, (i << 8) + j) != -1 &&
+                SCWorthOutputting (sfglyph
+                                   (sf, enc_to_gid (map, (i << 8) + j))))
               fprintf (out, " /%s\n",
-                       sf->glyphs[enc_to_gid (map, (i << 8) + j)]->name);
+                       sfglyph (sf, enc_to_gid (map, (i << 8) + j))->name);
             else
               fprintf (out, "/%s\n", notdefname);
           for (; j < 256; ++j)

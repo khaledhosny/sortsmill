@@ -44,7 +44,7 @@ FVOutline (FontViewBase *fv, real width)
 
   for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
-        && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
+        && (sc = sfglyph (fv->sf, gid)) != NULL && fv->selected[i]
         && sc->layers[layer].splines)
       ++cnt;
   ff_progress_start_indicator (10, _("Outlining glyphs"), _("Outlining glyphs"),
@@ -58,7 +58,7 @@ FVOutline (FontViewBase *fv, real width)
   SFUntickAll (fv->sf);
   for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
-        && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
+        && (sc = sfglyph (fv->sf, gid)) != NULL && fv->selected[i]
         && sc->layers[layer].splines && !sc->ticked)
       {
         sc->ticked = true;
@@ -88,7 +88,7 @@ FVInline (FontViewBase *fv, real width, real inset)
 
   for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
-        && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
+        && (sc = sfglyph (fv->sf, gid)) != NULL && fv->selected[i]
         && sc->layers[layer].splines)
       ++cnt;
   ff_progress_start_indicator (10, _("Inlining glyphs"), _("Inlining glyphs"),
@@ -101,7 +101,7 @@ FVInline (FontViewBase *fv, real width, real inset)
   SFUntickAll (fv->sf);
   for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
-        && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
+        && (sc = sfglyph (fv->sf, gid)) != NULL && fv->selected[i]
         && sc->layers[layer].splines && !sc->ticked)
       {
         sc->ticked = true;
@@ -967,7 +967,7 @@ FVShadow (FontViewBase *fv, real angle, real outline_width,
 
   for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
-        && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
+        && (sc = sfglyph (fv->sf, gid)) != NULL && fv->selected[i]
         && sc->layers[layer].splines)
       ++cnt;
   ff_progress_start_indicator (10, _("Shadowing glyphs"), _("Shadowing glyphs"),
@@ -976,7 +976,7 @@ FVShadow (FontViewBase *fv, real angle, real outline_width,
   SFUntickAll (fv->sf);
   for (i = 0; i < fv->map->enc_limit; ++i)
     if ((gid = enc_to_gid (fv->map, i)) != -1
-        && (sc = fv->sf->glyphs[gid]) != NULL && fv->selected[i]
+        && (sc = sfglyph (fv->sf, gid)) != NULL && fv->selected[i]
         && sc->layers[layer].splines && !sc->ticked)
       {
         sc->ticked = true;

@@ -816,10 +816,10 @@ GenerateGlyphRanges (BDFFont *font)
   pt = buffer;
   end = pt + sizeof (buffer);
   for (i = 0; i < font->glyphcnt && i < max; ++i)
-    if (!IsntBDFChar (font->glyphs[i]))
+    if (!IsntBDFChar (sfglyph (font, i)))
       {
         for (j = i + 1;
-             j < font->glyphcnt && j < max && !IsntBDFChar (font->glyphs[j]);
+             j < font->glyphcnt && j < max && !IsntBDFChar (sfglyph (font, j));
              ++j);
         --j;
         if (j == i)
@@ -1106,7 +1106,7 @@ BDFMakeGID (BDFFont *bdf, int gid)
         }
       sf = sf->subfonts[j];
     }
-  if ((sc = sf->glyphs[gid]) == NULL)
+  if ((sc = sfglyph (sf, gid)) == NULL)
     return (NULL);
 
   if (gid >= bdf->glyphcnt)
