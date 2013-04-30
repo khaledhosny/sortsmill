@@ -127,6 +127,7 @@ libsortsmill_fontforge_la_SOURCES += fvfonts.c
 libsortsmill_fontforge_la_SOURCES += fvimportbdf.c
 libsortsmill_fontforge_la_SOURCES += fvmetrics.c
 libsortsmill_fontforge_la_SOURCES += glyphcomp.c
+libsortsmill_fontforge_la_SOURCES += glyphs.c
 libsortsmill_fontforge_la_SOURCES += http.c
 libsortsmill_fontforge_la_SOURCES += ikarus.c
 libsortsmill_fontforge_la_SOURCES += lookups.c

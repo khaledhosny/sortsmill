@@ -47,6 +47,7 @@
 #include "basics.h"
 #include <iconv.h>
 #include <sortsmill/guile/containers.h>
+#include <assert.h>
 
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
 typedef double real;
@@ -2289,6 +2290,11 @@ struct gasp
   uint16_t flags;
 };
 
+// FIXME FIXME FIXME: This is a temporary macro for sometime use
+// during the transition to a new implementation of
+// SplineFont::glyphs.
+#define __glyphs glyphs
+
 typedef struct splinefont
 {
   char *fontname;
@@ -2307,7 +2313,7 @@ typedef struct splinefont
   int uniqueid;                 /* Not copied when reading in!!!! */
   int glyphcnt;
   int glyphmax;                 /* allocated size of glyphs array */
-  SplineChar **glyphs;
+  SplineChar **__glyphs;
   bool changed;
   bool changed_since_autosave;
   bool changed_since_xuidchanged;
@@ -2446,6 +2452,27 @@ typedef struct splinefont
   real ufo_ascent, ufo_descent; /* I don't know what these mean, they don't seem to correspond to any other ascent/descent pair, but retain them so round-trip ufo input/output leaves them unchanged */
   /* ufo_descent is negative */
 } SplineFont;
+
+inline SplineChar *sfglyph (SplineFont *sf, ssize_t i);
+inline void set_sfglyph (SplineFont *sf, ssize_t i, SplineChar *sc);
+
+// FIXME: Reimplement as a SCM data structure.
+inline SplineChar *
+sfglyph (SplineFont *sf, ssize_t i)
+{
+  return (0 <= i && i < sf->glyphcnt) ? sf->__glyphs[i] : NULL;
+}
+
+// FIXME: Reimplement as a SCM data structure.
+inline void
+set_sfglyph (SplineFont *sf, ssize_t i, SplineChar *sc)
+{
+  void resize_sfglyph_array (SplineFont *sf, size_t min_size);
+  assert (0 <= i);
+  if (sf->glyphmax <= i)
+    resize_sfglyph_array (sf, i);
+  sf->__glyphs[i] = sc;
+}
 
 struct axismap
 {
