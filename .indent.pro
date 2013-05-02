@@ -75,6 +75,7 @@
 -T bezctx
 -T bandmat
 -T ui_interface_t
+-T xmlChar
 -T ImageList
 -T ASM
 -T AnchorClass

@@ -47,6 +47,14 @@
 /* ****************************    SVG Output    **************************** */
 /* ************************************************************************** */
 
+static char *
+skip_spaces (char *p)
+{
+  while (*p == ' ')
+    p++;
+  return p;
+}
+
 static void
 latin1ToUtf8Out (FILE *file, char *str)
 {
@@ -1450,13 +1458,13 @@ FindSVGFontNodes (xmlDocPtr doc)
   int cnt;
 
   fonts = xcalloc (100, sizeof (xmlNodePtr));   // If the file has
-						// more than 100 fonts
-						// in it then it's
-						// foolish to expect
-						// the user to pick
-						// out one, so let's
-						// limit ourselves to
-						// 100
+  // more than 100 fonts
+  // in it then it's
+  // foolish to expect
+  // the user to pick
+  // out one, so let's
+  // limit ourselves to
+  // 100
   cnt = _FindSVGFontNodes (xmlDocGetRootElement (doc), fonts, 0, 100, "svg");
   if (cnt == 0)
     {
@@ -1587,7 +1595,7 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
       factor = rx * rx * ry * ry - rx * rx * y1p * y1p - ry * ry * x1p * x1p;
       if (RealNear (factor, 0))
         factor = 0;             // Avoid rounding errors that lead to
-				// small negative values.
+      // small negative values.
       else
         factor = sqrt (factor / (rx * rx * y1p * y1p + ry * ry * x1p * x1p));
       if (large_arc == sweep)
@@ -1747,23 +1755,34 @@ SVGTraceArc (SplineSet *cur, BasePoint *current,
 }
 
 static SplineSet *
-SVGParsePath (xmlChar * path)
+SVGParsePath (xmlChar *path)
 {
   BasePoint current;
-  SplineSet *head = NULL, *last = NULL, *cur = NULL;
+  SplineSet *head = NULL;
+  SplineSet *last = NULL;
+  SplineSet *cur = NULL;
   SplinePoint *sp;
   int type = 'M';
-  double x1, x2, x, y1, y2, y, rx, ry, axisrot;
-  int large_arc, sweep;
+  double x1;
+  double x2;
+  double x;
+  double y1;
+  double y2;
+  double y;
+  double rx;
+  double ry;
+  double axisrot;
+  int large_arc;
+  int sweep;
   int order2 = 0;
   char *end;
 
-  current.x = current.y = 0;
+  current.x = 0;
+  current.y = 0;
 
   while (*path)
     {
-      while (*path == ' ')
-        ++path;
+      path = skip_spaces (path);
       while (isalpha (*path))
         type = *path++;
       if (*path == '\0' && type != 'z' && type != 'Z')
@@ -1864,7 +1883,7 @@ SVGParsePath (xmlChar * path)
               x = strtod ((char *) path, &end);
               y = current.y;
               if (type == 'h')
-		x += current.x;
+                x += current.x;
               sp = SplinePointCreate (x, y);
               current = sp->me;
               SplineMake (cur->last, sp, order2);
@@ -1875,7 +1894,7 @@ SVGParsePath (xmlChar * path)
               x = current.x;
               y = strtod ((char *) path, &end);
               if (type == 'v')
-		y += current.y;
+                y += current.y;
               sp = SplinePointCreate (x, y);
               current = sp->me;
               SplineMake (cur->last, sp, order2);
@@ -2032,7 +2051,7 @@ SVGParsePath (xmlChar * path)
 
 #if 0
 static SplineSet *
-SVGAddSpiros (xmlChar * path, SplineSet *base)
+SVGAddSpiros (xmlChar *path, SplineSet *base)
 {
   BasePoint current;
   SplineSet *cur = NULL;
@@ -2044,8 +2063,7 @@ SVGAddSpiros (xmlChar * path, SplineSet *base)
 
   while (*path)
     {
-      while (*path == ' ')
-        ++path;
+      path = skip_spaces (path);
       while (isalpha (*path))
         type = *path++;
       if (*path == '\0' && type != 'z' && type != 'Z')
@@ -2149,8 +2167,9 @@ SVGAddSpiros (xmlChar * path, SplineSet *base)
 static SplineSet *
 SVGParseExtendedPath (xmlNodePtr svg, xmlNodePtr top)
 {
-  /* Inkscape exends paths by allowing a sprio representation */
-  /* But their representation looks nothing like spiros and I can't guess at it */
+  /* Inkscape exends paths by allowing a spiro representation; but
+     their representation looks nothing like spiros and I can't guess
+     at it. */
   xmlChar *outline /*, *effect, *spirooutline */ ;
   SplineSet *head = NULL;
 
@@ -2709,7 +2728,7 @@ SVGuseTransform (struct svg_state *st, xmlNodePtr use, xmlNodePtr symbol)
 }
 
 static real
-parseGCoord (xmlChar * prop, int bb_units, real bb_low, real bb_high)
+parseGCoord (xmlChar *prop, int bb_units, real bb_low, real bb_high)
 {
   char *end;
   double val = strtod ((char *) prop, &end);
@@ -2722,7 +2741,7 @@ parseGCoord (xmlChar * prop, int bb_units, real bb_low, real bb_high)
   return (val);
 }
 
-static int xmlParseColor (xmlChar * name, uint32_t *color, char **url,
+static int xmlParseColor (xmlChar *name, uint32_t *color, char **url,
                           struct svg_state *st);
 
 static void
@@ -3014,8 +3033,7 @@ xmlApplyColourSources (xmlNodePtr top, Entity * head,
 }
 
 static int
-xmlParseColor (xmlChar * name, uint32_t *color, char **url,
-               struct svg_state *st)
+xmlParseColor (xmlChar *name, uint32_t *color, char **url, struct svg_state *st)
 {
   int doit, i;
   static struct
@@ -4006,7 +4024,7 @@ SVGLigatureFixupCheck (SplineChar *sc, xmlNodePtr glyph)
 }
 
 static char *
-SVGGetNames (SplineFont *sf, xmlChar * g, xmlChar * utf8, SplineChar **sc)
+SVGGetNames (SplineFont *sf, xmlChar *g, xmlChar *utf8, SplineChar **sc)
 {
   uint32_t *u = NULL;
   char *names;

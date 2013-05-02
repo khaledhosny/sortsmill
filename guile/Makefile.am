@@ -807,11 +807,25 @@ DIST_SCM_FILES += sortsmill/strings/hash-guillemet.scm
 GO_FILES += sortsmill/strings/hash-guillemet.go
 STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/hash-guillemet.scm
 
+# (sortsmill strings rexp)
+
+DIST_SCM_FILES += sortsmill/strings/rexp.scm
+GO_FILES += sortsmill/strings/rexp.go
+STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/rexp.scm
+
 # (sortsmill strings text-embedding)
 
 DIST_SCM_FILES += sortsmill/strings/text-embedding.scm
 GO_FILES += sortsmill/strings/text-embedding.go
 STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/text-embedding.scm
+
+#--------------------------------------------------------------------------
+#
+# (sortsmill svg)
+
+DIST_SCM_FILES += sortsmill/svg.scm
+GO_FILES += sortsmill/svg.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/svg.scm
 
 #--------------------------------------------------------------------------
 #

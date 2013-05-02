@@ -184,6 +184,7 @@ nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 
 nobase_include_HEADERS += sortsmill/guile/strings.h
 nobase_include_HEADERS += sortsmill/guile/strings/gc.h
+nobase_include_HEADERS += sortsmill/guile/strings/rexp.h
 
 nobase_include_HEADERS += sortsmill/guile/symbols.h
 
