@@ -29,6 +29,7 @@
           rexp:compile-once rexp:compile-once-study rexp:compile-once-jit
 
           rexp:match rexp:search
+          rexp:number-of-subexpressions
           rexp:interval rexp:substring)
 
   (import (sortsmill dynlink)

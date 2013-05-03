@@ -154,6 +154,14 @@ scm_rexp_search (SCM re, SCM string)
 }
 
 VISIBLE SCM
+scm_rexp_number_of_subexpressions (SCM match)
+{
+  return (scm_is_true (match)) ?
+    scm_from_size_t (rexp_num_subexpr (scm_to_rexp_match_t (match))) :
+    scm_from_int (0);
+}
+
+VISIBLE SCM
 scm_rexp_interval (SCM match, SCM subexpression)
 {
   rexp_interval_t interv = rexp_interval (scm_to_rexp_match_t (match),
@@ -191,6 +199,8 @@ init_sortsmill_guile_strings_rexp (void)
                       scm_rexp_compile_once_jit);
   scm_c_define_gsubr ("rexp:match", 2, 0, 0, scm_rexp_match);
   scm_c_define_gsubr ("rexp:search", 2, 0, 0, scm_rexp_search);
+  scm_c_define_gsubr ("rexp:number-of-subexpressions", 1, 0, 0,
+                      scm_rexp_number_of_subexpressions);
   scm_c_define_gsubr ("rexp:interval", 2, 0, 0, scm_rexp_interval);
   scm_c_define_gsubr ("rexp:substring", 3, 0, 0, scm_rexp_substring);
 }
