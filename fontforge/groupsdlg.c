@@ -1809,7 +1809,7 @@ EncodeToGroups (FontView *fv, Group * group, int compacted)
   SplineFont *sf = fv->b.sf;
   EncMap *map;
   if (compacted)
-    map = EncMapNew (0, sf->glyphcnt, &custom);
+    map = EncMapNew (0, &custom);
   else
     {
       Encoding *enc = xcalloc (1, sizeof (Encoding));
@@ -1818,7 +1818,7 @@ EncodeToGroups (FontView *fv, Group * group, int compacted)
       enc->char_max = 256;
       enc->unicode = xmalloc (256 * sizeof (int32_t));
       enc->psnames = xmalloc (256 * sizeof (char *));
-      map = EncMapNew (0, sf->glyphcnt, enc);
+      map = EncMapNew (0, enc);
     }
 
   if (MapAddSelectedGroups (map, sf, group, compacted) == 0)

@@ -4015,7 +4015,7 @@ readcffenc (FILE *ttf, struct topdicts *dict, struct ttfinfo *info,
           UniFromName (info->chars[i]->name, ui_none, &custom);
     }
 
-  map = EncMapNew (256, 256, &custom);
+  map = EncMapNew (256, &custom);
   if (dict->encodingoff == 0 || dict->encodingoff == 1)
     {
       /* Standard Encodings */
@@ -4599,7 +4599,7 @@ cidfigure (struct ttfinfo *info, struct topdicts *dict,
   cffinfofillup (info, dict, strings, scnt);
 
   /* We'll set the encmap later */
-  /*info->map = encmap = EncMapNew(info->glyph_cnt,info->glyph_cnt,&custom); */
+  /*info->map = encmap = EncMapNew(info->glyph_cnt, &custom); */
 
   for (j = 0; subdicts[j] != NULL; ++j);
   info->subfontcnt = j;
@@ -5676,7 +5676,7 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
       if (dc == 0 && justinuse == git_normal)
         {
           interp = interp_from_encoding (enc, ui_none);
-          info->map = map = EncMapNew (enc->char_cnt, info->glyph_cnt, enc);
+          info->map = map = EncMapNew (enc->char_cnt, enc);
           info->uni_interp = interp;
         }
 
@@ -6395,7 +6395,7 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
       struct pschars *chars = info->fd->chars;
       if (info->map == NULL)
         info->map = map =
-          EncMapNew (65536, 65536, FindOrMakeEncoding ("UnicodeBmp"));
+          EncMapNew (65536, FindOrMakeEncoding ("UnicodeBmp"));
       /* In type42 fonts the names are stored in a postscript /CharStrings dictionary */
       for (i = 0; i < chars->next; ++i)
         {

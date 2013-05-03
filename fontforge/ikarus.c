@@ -691,7 +691,7 @@ return( NULL );
     sf->ascent = 12000; sf->descent = 3000;	/* Ikarus fonts live in a 15,000 em world */
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL )
 	sf->glyphs[i]->width = sf->glyphs[i]->vwidth = 15000;
-    sf->map = EncMapNew(numchars,numchars,&custom);
+    sf->map = EncMapNew(numchars, &custom);
 
     for ( i=0; i<numchars; ++i ) {
 	fseek(file,offsets[i],SEEK_SET);

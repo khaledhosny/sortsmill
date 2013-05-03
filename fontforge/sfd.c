@@ -6917,7 +6917,7 @@ SFD_FigureDirType (SplineFont *sf, char *tok, char *dirname, Encoding * enc,
       else
         {
           sf->map =
-            EncMapNew (enc->char_cnt > gc ? enc->char_cnt : gc, gc, enc);
+            EncMapNew (enc->char_cnt > gc ? enc->char_cnt : gc, enc);
           sf->map->remap = remap;
         }
       SFDSizeMap (sf->map, sf->glyphcnt,
@@ -8751,7 +8751,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             }
           else
             {
-              sf->map = EncMapNew (charcnt, realcnt, enc);
+              sf->map = EncMapNew (charcnt, enc);
               sf->map->remap = remap;
             }
           SFDSizeMap (sf->map, sf->glyphcnt, charcnt);

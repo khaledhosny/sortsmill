@@ -3279,7 +3279,7 @@ SearchBitmapResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
   free (sf->comments);
   sf->comments = NULL;
 
-  sf->map = EncMapNew (257, 257, FindOrMakeEncoding ("mac"));
+  sf->map = EncMapNew (257, FindOrMakeEncoding ("mac"));
 
   for (i = 0; i < fond->stylewidthcnt; ++i)
     {

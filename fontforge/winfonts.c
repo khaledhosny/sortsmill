@@ -443,7 +443,7 @@ SFReadWinFON (char *filename, int toback)
       return (NULL);
     }
   sf = SplineFontBlank (256);
-  sf->map = EncMapNew (256, 256, FindOrMakeEncoding ("win"));
+  sf->map = EncMapNew (256, FindOrMakeEncoding ("win"));
 
   if (magic == 0x200 || magic == 0x300)
     FNT_Load (fon, sf);

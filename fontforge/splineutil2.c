@@ -5337,7 +5337,7 @@ SplineFontNew (void)
   sf->layers[ly_fore].order2 = new_fonts_are_order2;
   sf->grid.order2 = new_fonts_are_order2;
 
-  sf->map = EncMapNew (enclen, enclen, default_encoding);
+  sf->map = EncMapNew (enclen, default_encoding);
   return (sf);
 }
 

@@ -2949,7 +2949,7 @@ VISIBLE void SplineCharFree (SplineChar *sc);
 VISIBLE void EncMapFree (EncMap *map);
 VISIBLE EncMap *EncMapFromEncoding (SplineFont *sf, Encoding *enc);
 VISIBLE EncMap *CompactEncMap (EncMap *map, SplineFont *sf);
-VISIBLE EncMap *EncMapNew (int encmax, int backmax, Encoding *enc);
+VISIBLE EncMap *EncMapNew (int encmax, Encoding *enc);
 VISIBLE EncMap *EncMap1to1 (int enc_limit);
 VISIBLE EncMap *EncMapCopy (EncMap *map);
 void SFExpandGlyphCount (SplineFont *sf, int newcnt);
