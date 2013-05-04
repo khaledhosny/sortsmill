@@ -89,7 +89,7 @@ MakeContainer (struct font *fn, char *family, char *style)
   free (sf->copyright);
   sf->copyright = NULL;
 
-  sf->map = map = EncMapNew (257, 257, FindOrMakeEncoding ("win"));
+  sf->map = map = EncMapNew (257, FindOrMakeEncoding ("win"));
 
   em = sf->ascent + sf->descent;
   sf->ascent = fn->ascent * em / fn->frectheight;

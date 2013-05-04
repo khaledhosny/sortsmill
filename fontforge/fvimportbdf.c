@@ -3038,7 +3038,7 @@ SplineFont *
 SFFromBDF (char *filename, int ispk, int toback)
 {
   SplineFont *sf = SplineFontBlank (256);
-  EncMap *map = EncMapNew (256, 256, &custom);
+  EncMap *map = EncMapNew (256, &custom);
   BDFFont *bdf;
 
   sf->onlybitmaps = true;

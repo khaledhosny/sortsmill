@@ -3061,8 +3061,7 @@ _SplineFontFromType1 (SplineFont *sf, FontDict * fd,
   sf->glyphcnt = (istype3) ? fd->charprocs->next : fd->chars->next;
   sf->glyphmax = sf->glyphcnt;
   if (sf->map == NULL)
-    sf->map = EncMapNew (256 + CharsNotInEncoding (fd), sf->glyphcnt,
-                         fd->encoding_name);
+    sf->map = EncMapNew (256 + CharsNotInEncoding (fd), fd->encoding_name);
   map = sf->map;
 
   sf->glyphs = xcalloc (sf->glyphcnt, sizeof (SplineChar *));
@@ -7727,11 +7726,8 @@ OtfFeatNameListFree (struct otffeatname *fn)
     }
 }
 
-// The @var{backmax} parameter is here for historical reasons. FIXME:
-// Go through the code and eliminate the need for this unused
-// parameter.
 EncMap *
-EncMapNew (int enc_limit, int UNUSED (backmax), Encoding *enc)
+EncMapNew (int enc_limit, Encoding *enc)
 {
   EncMap *map = (EncMap *) xzalloc (sizeof (EncMap));
   map->enc_limit = enc_limit;
