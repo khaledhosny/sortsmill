@@ -133,24 +133,40 @@ scm_rexp_compile_once_jit (SCM pattern)
   return scm_rexp_general_compile_once (u8_rexp_compile_jit, pattern);
 }
 
-VISIBLE SCM
-scm_rexp_match (SCM re, SCM string)
+static SCM
+scm_rexp_match_or_search (rexp_match_t match_or_search (rexp_t re,
+                                                        const uint8_t *s),
+                          SCM re, SCM string, SCM start)
 {
+  const int _start = (SCM_UNBNDP (start)) ? 0 : scm_to_int (start);
   uint8_t *_string = (uint8_t *) scm_to_utf8_stringn (string, NULL);
   rexp_t _re = scm_to_rexp_t (re);
-  rexp_match_t _match = u8_rexp_match (_re, _string);
+  rexp_match_t _match = match_or_search (_re, &_string[_start]);
   free (_string);
-  return (_match == NULL) ? SCM_BOOL_F : scm_from_rexp_match_t (_match);
+  SCM result = SCM_BOOL_F;
+  if (_match != NULL)
+    {
+      if (_start != 0)
+        for (size_t k = 0; k <= _match->capture_count; k++)
+          {
+            _match->ovector[2 * k] += _start;
+            _match->ovector[2 * k + 1] += _start;
+          }
+      result = scm_from_rexp_match_t (_match);
+    }
+  return result;
 }
 
 VISIBLE SCM
-scm_rexp_search (SCM re, SCM string)
+scm_rexp_match (SCM re, SCM string, SCM start)
 {
-  uint8_t *_string = (uint8_t *) scm_to_utf8_stringn (string, NULL);
-  rexp_t _re = scm_to_rexp_t (re);
-  rexp_match_t _match = u8_rexp_search (_re, _string);
-  free (_string);
-  return (_match == NULL) ? SCM_BOOL_F : scm_from_rexp_match_t (_match);
+  return scm_rexp_match_or_search (u8_rexp_match, re, string, start);
+}
+
+VISIBLE SCM
+scm_rexp_search (SCM re, SCM string, SCM start)
+{
+  return scm_rexp_match_or_search (u8_rexp_search, re, string, start);
 }
 
 VISIBLE SCM
@@ -197,8 +213,8 @@ init_sortsmill_guile_strings_rexp (void)
                       scm_rexp_compile_once_study);
   scm_c_define_gsubr ("rexp:compile-once-jit", 1, 0, 0,
                       scm_rexp_compile_once_jit);
-  scm_c_define_gsubr ("rexp:match", 2, 0, 0, scm_rexp_match);
-  scm_c_define_gsubr ("rexp:search", 2, 0, 0, scm_rexp_search);
+  scm_c_define_gsubr ("rexp:match", 2, 1, 0, scm_rexp_match);
+  scm_c_define_gsubr ("rexp:search", 2, 1, 0, scm_rexp_search);
   scm_c_define_gsubr ("rexp:number-of-subexpressions", 1, 0, 0,
                       scm_rexp_number_of_subexpressions);
   scm_c_define_gsubr ("rexp:interval", 2, 0, 0, scm_rexp_interval);
