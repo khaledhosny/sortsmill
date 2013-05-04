@@ -149,6 +149,7 @@ scm_rexp_match_or_search (rexp_match_t match_or_search (rexp_t re,
       if (_start != 0)
         for (size_t k = 0; k <= _match->capture_count; k++)
           {
+            // FIXME: Catch overflow.
             _match->ovector[2 * k] += _start;
             _match->ovector[2 * k + 1] += _start;
           }
