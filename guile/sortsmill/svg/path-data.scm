@@ -17,25 +17,28 @@
 
 (library (sortsmill svg path-data)
 
-  ;; A top-down parser for SVG path data attributes, based closely on
-  ;; the grammar given in section 8.3.9 of the SVG 1.1
-  ;; specification. Outputs a list of simple commands (commands
-  ;; without argument sequences). For instance:
-  ;;
-  ;;   "m 1000,500 c 0,276.14237 -223.85763,500 -500,500
-  ;;      C 223.85763,1000 0,776.14237 0,500 0,223.85763 223.85763,0 500,0
-  ;;      c 276.14237,0 500,223.85763 500,500 z"
-  ;;
-  ;; yields
-  ;;
-  ;;   ((#\m "1000" "500")
-  ;;    (#\c ("0" "276.14237") ("-223.85763" "500") ("-500" "500"))
-  ;;    (#\C ("223.85763" "1000") ("0" "776.14237") ("0" "500"))
-  ;;    (#\C ("0" "223.85763") ("223.85763" "0") ("500" "0"))
-  ;;    (#\c ("276.14237" "0") ("500" "223.85763") ("500" "500"))
-  ;;    (#\z))
-
-  (export svg:parse-path-data)
+  (export
+   ;; (svg:parse-path-data string) → list
+   ;;
+   ;; A top-down parser for SVG path data attributes, based closely on
+   ;; the grammar given in section 8.3.9 of the SVG 1.1
+   ;; specification. Outputs a list of simple commands (commands
+   ;; without argument sequences). For instance:
+   ;;
+   ;;   "m 1000,500 c 0,276.14237 -223.85763,500 -500,500
+   ;;      C 223.85763,1000 0,776.14237 0,500 0,223.85763 223.85763,0 500,0
+   ;;      c 276.14237,0 500,223.85763 500,500 z"
+   ;;
+   ;; yields (to within roundoff)
+   ;;
+   ;;   ((#\m 1000 500)
+   ;;    (#\c (0 276.14237) (-223.85763 500) (-500 500))
+   ;;    (#\C (223.85763 1000) (0 776.14237) (0 500))
+   ;;    (#\C (0 223.85763) (223.85763 0) (500 0))
+   ;;    (#\c (276.14237 0) (500 223.85763) (500 500))
+   ;;    (#\z))
+   svg:parse-path-data
+   )
 
   (import (rnrs)
           (except (guile) error)
@@ -137,20 +140,20 @@
   (define (match<nonnegative-number> s i)
     (let ([j1 (match<floating-point-constant> s i)])
       (if j1
-          (values j1 (substring s i j1))
+          (values j1 (string->number (substring s i j1)))
           (let ([j2 (match<integer-constant> s i)])
             (if j2
-                (values j2 (substring s i j2))
+                (values j2 (string->number (substring s i j2)))
                 (values #f #f))))))
 
   (define (match<number> s i)
     (let ([i1 (match<sign?> s i)])
       (let ([j1 (match<floating-point-constant> s i1)])
         (if j1
-            (values j1 (substring s i j1))
+            (values j1 (string->number (substring s i j1)))
             (let ([j2 (match<integer-constant> s i1)])
               (if j2
-                  (values j2 (substring s i j2))
+                  (values j2 (string->number (substring s i j2)))
                   (values #f #f)))))))
 
   (define match<coordinate> match<number>)
