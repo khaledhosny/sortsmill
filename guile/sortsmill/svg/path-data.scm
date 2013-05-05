@@ -219,9 +219,14 @@
     (match-sequence match<coordinate-triple-pair> s i))
 
   (define (expand-command operation arguments)
-    (reverse
-     (fold-left (lambda (prior arg) (acons operation arg prior))
-                '() arguments)))
+    (let ([continuation-op (match operation
+                             [#\M #\L]
+                             [#\m #\l]
+                             [other other])])
+      (reverse
+       (fold-left (lambda (prior arg) (acons continuation-op arg prior))
+                  `((,operation . ,(car arguments)))
+                  (cdr arguments)))))
 
   (define (command-matcher cs match-arguments)
     (lambda (s i)
@@ -346,9 +351,9 @@
               (values j3 v2))
             (values j1 '())))))
 
-  #|
-  (let-values ([(i v) (match<svg-path> "      M 1 2 A12354.2e222 32.,-40   1 0 40,40 12354.2e222 32.,-40 1 0 40,40 C50 60 2e222-32.,30 40 50 60 2e222-32.,30 40 ZM 1 2 A12354.2e222 32.,-40 1 0 40,40 12354.2e222 32.,-40 1 0 40,40 C50 60 2e222-32.,30 40 50 60 2e222-32.,30 40 Z     " 0)])
-  (write (list i v)))
-  |#
+  #||#
+  (let-values ([(i v) (match<svg-path> "      m 1 2 3 4 5 6 A12354.2e222 32.,-40   1 0 40,40 12354.2e222 32.,-40 1 0 40,40 C50 60 2e222-32.,30 40 50 60 2e222-32.,30 40 ZM 1 2 A12354.2e222 32.,-40 1 0 40,40 12354.2e222 32.,-40 1 0 40,40 C50 60 2e222-32.,30 40 50 60 2e222-32.,30 40 Z     " 0)])
+    (write (list i v)))
+  #||#
 
   ) ;; end of library.
