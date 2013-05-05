@@ -823,9 +823,22 @@ STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/text-embedding.scm
 #
 # (sortsmill svg)
 
-DIST_SCM_FILES += sortsmill/svg.scm
+MAKEFILE_GENERATED_SCM_FILES += sortsmill/svg.scm
 GO_FILES += sortsmill/svg.go
+SVG_REEXPORTED_SCM_FILES =
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/svg.scm
+
+sortsmill/svg.scm: $(SVG_REEXPORTED_SCM_FILES)
+	$(AM_V_REEXPORT)
+	$(AM_V_at)$(call generate_reexporter, (sortsmill svg), #t, $(^:%="%")) > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+
+# (sortsmill svg path-data)
+
+DIST_SCM_FILES += sortsmill/svg/path-data.scm
+GO_FILES += sortsmill/svg/path-data.go
+SVG_REEXPORTED_SCM_FILES += sortsmill/svg/path-data.scm
 
 #--------------------------------------------------------------------------
 #
