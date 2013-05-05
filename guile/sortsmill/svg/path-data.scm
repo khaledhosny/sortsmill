@@ -17,7 +17,25 @@
 
 (library (sortsmill svg path-data)
 
-  (export )
+  ;; A top-down parser for SVG path data attributes, based closely on
+  ;; the grammar given in section 8.3.9 of the SVG 1.1
+  ;; specification. Outputs a list of simple commands (commands
+  ;; without argument sequences). For instance:
+  ;;
+  ;;   "m 1000,500 c 0,276.14237 -223.85763,500 -500,500
+  ;;      C 223.85763,1000 0,776.14237 0,500 0,223.85763 223.85763,0 500,0
+  ;;      c 276.14237,0 500,223.85763 500,500 z"
+  ;;
+  ;; yields
+  ;;
+  ;;   ((#\m "1000" "500")
+  ;;    (#\c ("0" "276.14237") ("-223.85763" "500") ("-500" "500"))
+  ;;    (#\C ("223.85763" "1000") ("0" "776.14237") ("0" "500"))
+  ;;    (#\C ("0" "223.85763") ("223.85763" "0") ("500" "0"))
+  ;;    (#\c ("276.14237" "0") ("500" "223.85763") ("500" "500"))
+  ;;    (#\z))
+
+  (export svg:parse-path-data)
 
   (import (rnrs)
           (except (guile) error)
@@ -351,9 +369,11 @@
               (values j3 v2))
             (values j1 '())))))
 
-  #||#
-  (let-values ([(i v) (match<svg-path> "      m 1 2 3 4 5 6 A12354.2e222 32.,-40   1 0 40,40 12354.2e222 32.,-40 1 0 40,40 C50 60 2e222-32.,30 40 50 60 2e222-32.,30 40 ZM 1 2 A12354.2e222 32.,-40 1 0 40,40 12354.2e222 32.,-40 1 0 40,40 C50 60 2e222-32.,30 40 50 60 2e222-32.,30 40 Z     " 0)])
-    (write (list i v)))
-  #||#
+  (define (svg:parse-path-data s)
+    (let-values ([(j v) (match<svg-path> s 0)])
+      (if (and j (= j (string-length s)))
+          v
+          #f ;; FIXME: Log an error message or raise an exception if this happens.
+          )))
 
   ) ;; end of library.
