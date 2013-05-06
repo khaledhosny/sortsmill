@@ -18,7 +18,7 @@
 (library (sortsmill svg path-data)
 
   (export
-   ;; (svg:parse-path-data string) → list
+   ;; (svg:parse-path-data string #:stage 'parse-only) → list
    ;;
    ;; A top-down parser for SVG path data attributes, based closely on
    ;; the grammar given in section 8.3.9 of the SVG 1.1
@@ -37,15 +37,32 @@
    ;;    (#\C (0 223.85763) (223.85763 0) (500 0))
    ;;    (#\c (276.14237 0) (500 223.85763) (500 500))
    ;;    (#\z))
+   ;;
+   ;; FIXME: Document these ----------------
+   ;; (svg:parse-path-data string #:stage 'parse-only) → list
+   ;; (svg:parse-path-data string #:stage 'subpath-lists) → list
+   ;; (svg:parse-path-data string #:stage 'subpath-vectors) → vector
+   ;; (svg:parse-path-data string #:stage 'absolute-coords) → vector
+   ;;
+   ;; (svg:parse-path-data string) → vector  [equiv. to #:stage 'absolute-coords]
+   ;;
    svg:parse-path-data
 
-   ;; (svg:path-data-subpaths list) → list
+   ;; (svg:path-data-subpaths list) → list-of-lists
    ;;
    ;; Break the output of svg:parse-path-data into subpaths.
    svg:path-data-subpaths
+
+   ;; (svg:subpaths->vectors list-or-vector) → vector-of-vectors
+   ;; (svg:subpaths->lists list-or-vector) → list-of-lists
+   svg:subpaths->vectors
+   svg:subpaths->lists
+
+   svg:make-subpath-vectors-absolute!
    )
 
-  (import (rnrs)
+  (import (sortsmill kwargs)
+          (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
           (ice-9 match))
@@ -379,12 +396,26 @@
               (values j3 v2))
             (values j1 '())))))
 
-  (define (svg:parse-path-data s)
+  (define (parse-path-data s)
     (let-values ([(j v) (match<svg-path> s 0)])
       (if (and j (= j (string-length s)))
           v
           #f ;; FIXME: Log an error message or raise an exception if this happens.
           )))
+
+  (define/kwargs (svg:parse-path-data path-data-string [stage 'absolute-coords])
+    (match stage
+      ['parse-only (parse-path-data path-data-string)]
+      ['subpath-lists (svg:path-data-subpaths
+                       (svg:parse-path-data path-data-string 'parse-only))]
+      ['subpath-vectors (svg:subpaths->vectors
+                         (svg:parse-path-data path-data-string 'subpath-lists))]
+      ['absolute-coords (svg:make-subpath-vectors-absolute!
+                         (svg:parse-path-data path-data-string 'subpath-vectors))]
+      [_ (assertion-violation
+          'svg:parse-path-data
+          "expected 'parse-only, 'subpath-lists, 'subpath-vectors, or 'absolute-coords"
+          stage)] ))
 
   ;;-------------------------------------------------------------------------
 
@@ -417,6 +448,70 @@
 
   (define (svg:path-data-subpaths commands)
     (split-into-subpaths commands))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (svg:subpaths->vectors subpaths)
+    (if (vector? subpaths)
+        (vector-map (lambda (subpath) (if (vector? subpath) subpath (list->vector subpath)))
+                    subpaths)
+        (list->vector
+         (map (lambda (subpath) (if (vector? subpath) subpath (list->vector subpath)))
+              subpaths))))
+
+  (define (svg:subpaths->lists subpaths)
+    (if (vector? subpaths)
+        (vector->list
+         (vector-map (lambda (subpath) (if (vector? subpath) (vector->list subpath) subpath))
+                     subpaths))
+        (map (lambda (subpath) (if (vector? subpath) (vector->list subpath) subpath))
+             subpaths)))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (final-point vec i)
+    (match (vector-ref vec i)
+      [((or #\M #\L #\T) . coords) coords]
+      [((or #\Q #\S) . (_ coords)) coords]
+      [((or #\C) . (_ _ coords))   coords]
+      [(#\A . (_ _ _ _ _ coords))  coords]
+      [(#\Z) (final-point vec 0)]))
+
+  (define (make-command-absolute vec i current-point)
+    (let ([x0 (car current-point)]
+          [y0 (cadr current-point)])
+      (match (vector-ref vec i)
+        [(#\m x y) `(#\M ,(+ x0 x) ,(+ y0 y))]
+        [(#\l x y) `(#\L ,(+ x0 x) ,(+ y0 y))]
+        [(#\t x y) `(#\T ,(+ x0 x) ,(+ y0 y))]
+        [(#\q (x1 y1) (x2 y2))
+         `(#\Q (,(+ x0 x1) ,(+ y0 y1)) (,(+ x0 x2) ,(+ y0 y2)))]
+        [(#\s (x1 y1) (x2 y2))
+         `(#\S (,(+ x0 x1) ,(+ y0 y1)) (,(+ x0 x2) ,(+ y0 y2)))]
+        [(#\c (x1 y1) (x2 y2) (x3 y3))
+         `(#\C (,(+ x0 x1) ,(+ y0 y1)) (,(+ x0 x2) ,(+ y0 y2)) (,(+ x0 x3) ,(+ y0 y3)))]
+        [(#\a rx ry rotation flag1 flag2 (x y))
+         `(#\A ,rx ,ry ,rotation ,flag1 ,flag2 (,(+ x0 x) ,(+ y0 y)))]
+        [(#\h . x) `(#\L ,(+ x0 x) ,y0)]
+        [(#\v . y) `(#\L ,x0 ,(+ y0 y))]
+        [(#\H . x) `(#\L ,x ,y0)]
+        [(#\V . y) `(#\L ,x0 ,y)]
+        [other other])))
+
+  (define (make-subpath-vector-absolute! vec current-point)
+    (vector-set! vec 0 (make-command-absolute vec 0 current-point))
+    (do ([i 1 (+ i 1)]) ([= i (vector-length vec)])
+      (let ([point (final-point vec (- i 1))])
+        (vector-set! vec i (make-command-absolute vec i point))))
+    (final-point vec (- (vector-length vec) 1)))
+
+  (define (svg:make-subpath-vectors-absolute! subpath-vectors)
+    (let ([current-point '(0 0)])
+      (do ([i 0 (+ i 1)]) ([= i (vector-length subpath-vectors)])
+        (let ([new-point (make-subpath-vector-absolute!
+                          (vector-ref subpath-vectors i) current-point)])
+          (set! current-point new-point)))
+      (values subpath-vectors current-point)))
 
   ;;-------------------------------------------------------------------------
 

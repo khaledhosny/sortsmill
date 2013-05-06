@@ -47,6 +47,7 @@ sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.g
 sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/iconv.go
 sortsmill/strings/grabbed-strings.go: sortsmill/alloc.go
 sortsmill/strings/rexp.go: sortsmill/dynlink.go
+sortsmill/svg/path-data.go: sortsmill/kwargs.go
 sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
 sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/fonts/views.go sortsmill/editor/finalization.go sortsmill/strings/hash-guillemet.go
 sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
