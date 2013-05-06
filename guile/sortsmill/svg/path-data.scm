@@ -38,12 +38,19 @@
    ;;    (#\c (276.14237 0) (500 223.85763) (500 500))
    ;;    (#\z))
    svg:parse-path-data
+
+   ;; (svg:path-data-subpaths list) → list
+   ;;
+   ;; Break the output of svg:parse-path-data into subpaths.
+   svg:path-data-subpaths
    )
 
   (import (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
           (ice-9 match))
+
+  ;;-------------------------------------------------------------------------
 
   (define (match-char-set cs s i)
     (if (< i (string-length s))
@@ -378,5 +385,39 @@
           v
           #f ;; FIXME: Log an error message or raise an exception if this happens.
           )))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (split-after-subpath commands)
+    (letrec ([up-to-closepath
+              (lambda (prior cmds)
+                (match cmds
+                  [()
+                   (values (reverse prior) '())]
+                  [(((or #\Z #\z)) . t)
+                   (values (reverse (cons '(#\Z) prior)) t)]
+                  [(((or #\M #\m) . _) . t)
+                   (values (reverse prior) cmds)]
+                  [(h . t)
+                   (up-to-closepath (cons h prior) t)]))])
+      (match commands
+        [(((or #\M #\m) . _) . t)
+         (up-to-closepath (list (car commands)) (cdr commands))]
+        [_ (up-to-closepath '() commands)] )))
+
+  (define (split-into-subpaths commands)
+    (letrec ([split
+              (lambda (prior cmds)
+                (if (null? cmds)
+                    (reverse prior)
+                    (let-values ([(subpath more-subpaths)
+                                  (split-after-subpath cmds)])
+                      (split (cons subpath prior) more-subpaths))))])
+      (split '() commands)))
+
+  (define (svg:path-data-subpaths commands)
+    (split-into-subpaths commands))
+
+  ;;-------------------------------------------------------------------------
 
   ) ;; end of library.
