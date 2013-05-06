@@ -75,4 +75,16 @@
 #define _FF_CAST_TYPEOF(x) (typeof (x))
 #endif
 
+#if !defined HAVE_PCRE_FREE_STUDY
+// Older versions of PCRE do not have a special free function for the
+// results of studying.
+#define pcre_free_study(p) pcre_free (p)
+#endif
+
+#if !defined HAVE_PCRE_STUDY_JIT_COMPILE
+// Older versions of PCRE do not support JIT compilation. Make them do
+// ordinary studying whenever JIT is requested.
+#define PCRE_STUDY_JIT_COMPILE 0
+#endif
+
 #endif // _CONFIG_EXTRA_H

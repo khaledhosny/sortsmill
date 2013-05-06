@@ -162,9 +162,16 @@ main (int argc, char **argv)
   if (exit_status == 0)
     {
       ulc_fprintf (stderr, "study: %s\n", (re->extra != NULL ? "yes" : "no"));
+#ifdef PCRE_INFO_JIT
       int jit;
       pcre_fullinfo (re->pcre_ptr, re->extra, PCRE_INFO_JIT, &jit);
       ulc_fprintf (stderr, "jit:   %s\n", (jit ? "yes" : "no"));
+#else
+      // We are using a PCRE version that does not support JIT. Fake
+      // the test for JIT.
+      ulc_fprintf (stderr, "jit:   %s\n",
+                   ((strstr (study, "jit") != 0) ? "yes" : "no"));
+#endif
     }
 
   GC_gcollect ();

@@ -177,7 +177,8 @@ LDADD = $(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/gutils/libsortsmill_gutils.la				\
 	$(top_builddir)/auxiliary/libsortsmill_aux.la				\
 	$(top_builddir)/lib/libgnu.la
-AM_LDFLAGS = -export-dynamic -avoid-version
+AM_LDFLAGS = -export-dynamic -avoid-version $(MY_CFLAGS) $(MY_LIBS)	\
+	$(GNULIB_LD_FLAGS)
 
 EXTRA_DIST += main_with_guile.x
 
