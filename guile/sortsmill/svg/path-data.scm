@@ -403,7 +403,7 @@
       (match commands
         [(((or #\M #\m) . _) . t)
          (up-to-closepath (list (car commands)) (cdr commands))]
-        [_ (up-to-closepath '() commands)] )))
+        [_ (up-to-closepath '((#\m 0 0)) commands)] )))
 
   (define (split-into-subpaths commands)
     (letrec ([split
