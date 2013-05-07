@@ -219,9 +219,7 @@ scm_deriv_f64_spline (const char *who,
   const size_t degree = dim - 1;
   const size_t deriv_degree = (degree == 0) ? (size_t) 0 : degree - 1;
 
-  SCM bounds =
-    scm_list_1 (scm_list_2
-                (scm_from_uint (1), scm_from_size_t (deriv_degree + 1)));
+  SCM bounds = scm_list_1 (scm_from_size_t (deriv_degree + 1));
   SCM result =
     scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED, bounds);
 
@@ -287,9 +285,7 @@ scm_deriv_scm_spline (const char *who,
   const size_t degree = dim - 1;
   const size_t deriv_degree = (degree == 0) ? (size_t) 0 : degree - 1;
 
-  SCM bounds =
-    scm_list_1 (scm_list_2
-                (scm_from_uint (1), scm_from_size_t (deriv_degree + 1)));
+  SCM bounds = scm_list_1 (scm_from_size_t (deriv_degree + 1));
   SCM result = scm_make_array (SCM_UNSPECIFIED, bounds);
   scm_array_get_handle (result, &handle1);
   scm_dynwind_array_handle_release (&handle1);
