@@ -59,9 +59,12 @@
    svg:subpaths->lists
 
    svg:make-subpath-vectors-absolute!
+
+   svg:subpaths-quadratic->cubic!
    )
 
   (import (sortsmill kwargs)
+          (only (sortsmill math polyspline) poly:elev-scm-bern)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
@@ -540,6 +543,37 @@
                           (vector-ref subpath-vectors i) current-point)])
           (set! current-point new-point)))
       (values subpath-vectors current-point)))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (quadratic-curveto->cubic! vec i)
+    (match (vector-ref vec i)
+      [(#\Q (x1 y1) (x2 y2))
+       (let* ([curpt (final-point vec (- i 1))]
+              [x0 (car curpt)]
+              [y0 (cadr curpt)]
+              [quad-xvec (list->vector `(,x0 ,x1 ,x2))]
+              [quad-yvec (list->vector `(,y0 ,y1 ,y2))]
+              [cubic-xvec (poly:elev-scm-bern 3 quad-xvec)]
+              [cubic-yvec (poly:elev-scm-bern 3 quad-yvec)])
+         (write cubic-xvec)
+         (write cubic-yvec)
+         (vector-set! vec i
+                      (match cubic-xvec
+                        [#(_ cx1 cx2 _)
+                         (match cubic-yvec
+                           [#(_ cy1 cy2 _)
+                            `(#\C (,cx1 ,cy1) (,cx2 ,cy2) (,x2 ,y2))])])))]
+      [_ *unspecified*] ))
+
+  (define (vector-quadratic->cubic! vec)
+    (do ([i 1 (+ i 1)]) ([= i (vector-length vec)])
+      (quadratic-curveto->cubic! vec i)))
+
+  (define (svg:subpaths-quadratic->cubic! subpath-vectors)
+    (do ([i 0 (+ i 1)]) ([= i (vector-length subpath-vectors)])
+      (vector-quadratic->cubic! (vector-ref subpath-vectors i)))
+    subpath-vectors)
 
   ;;-------------------------------------------------------------------------
 
