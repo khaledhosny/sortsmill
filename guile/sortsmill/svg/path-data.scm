@@ -556,8 +556,6 @@
               [quad-yvec (list->vector `(,y0 ,y1 ,y2))]
               [cubic-xvec (poly:elev-scm-bern 3 quad-xvec)]
               [cubic-yvec (poly:elev-scm-bern 3 quad-yvec)])
-         (write cubic-xvec)
-         (write cubic-yvec)
          (vector-set! vec i
                       (match cubic-xvec
                         [#(_ cx1 cx2 _)
