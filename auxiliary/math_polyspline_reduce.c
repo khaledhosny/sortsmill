@@ -273,8 +273,7 @@ scm_c_reduce_degree_f64 (const char *who,
         rnrs_make_irritants_condition
         (scm_list_2 (poly, scm_from_size_t (new_degree)))));
 
-  SCM bounds = scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                       scm_from_size_t (new_degree + 1)));
+  SCM bounds = scm_list_1 (scm_from_size_t (new_degree + 1));
   SCM result =
     scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED, bounds);
   scm_array_get_handle (result, &handle1);
@@ -320,8 +319,7 @@ scm_c_reduce_degree_scm (const char *who,
         rnrs_make_irritants_condition
         (scm_list_2 (poly, scm_from_size_t (new_degree)))));
 
-  SCM bounds = scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                       scm_from_size_t (new_degree + 1)));
+  SCM bounds = scm_list_1 (scm_from_size_t (new_degree + 1));
   SCM result = scm_make_array (SCM_UNSPECIFIED, bounds);
   scm_array_get_handle (result, &handle1);
   scm_dynwind_array_handle_release (&handle1);
