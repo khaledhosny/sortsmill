@@ -113,7 +113,7 @@
   (define match<digit+> (char-set<+>-matcher char-set::digit))
 
   (define (match<flag> s i)
-    ;; Accept numbers other than 0 and 1, as suggested in SVG 1.1
+    ;; Accept numbers other than 0 and 1, as suggested in SVG 1.1,
     ;; appendix F.6.2.
     (let-values ([(j v) (match<number> s i)])
       (if j
@@ -165,13 +165,12 @@
             (if j2 (match<exponent> s j2) #f)))))
 
   (define (match<nonnegative-number> s i)
-    (let ([j1 (match<floating-point-constant> s i)])
-      (if j1
-          (values j1 (string->number (substring s i j1)))
-          (let ([j2 (match<integer-constant> s i)])
-            (if j2
-                (values j2 (string->number (substring s i j2)))
-                (values #f #f))))))
+    ;; Accept negative number, but drop the sign, as suggested in SVG
+    ;; 1.1, appendix F.6.2.
+    (let-values ([(j v) (match<number> s i)])
+      (if j
+          (values j (abs v))
+          (values #f #f))))
 
   (define (match<number> s i)
     (let ([i1 (match<sign?> s i)])
