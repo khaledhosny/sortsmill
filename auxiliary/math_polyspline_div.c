@@ -326,20 +326,16 @@ scm_div_f64_spline (const char *who,
         rnrs_make_irritants_condition (scm_list_2 (spline1, spline2))));
 
   SCM quotient = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                       scm_list_1 (scm_list_2
-                                                   (scm_from_uint (1),
-                                                    scm_from_size_t
-                                                    (deg_q + 1))));
+                                       scm_list_1 (scm_from_size_t
+                                                   (deg_q + 1)));
   scm_array_get_handle (quotient, &handle_q);
   scm_dynwind_array_handle_release (&handle_q);
   double *_quotient = scm_array_handle_f64_writable_elements (&handle_q);
   memcpy (_quotient, q, (deg_q + 1) * sizeof (double));
 
   SCM remainder = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                        scm_list_1 (scm_list_2
-                                                    (scm_from_uint (1),
-                                                     scm_from_size_t
-                                                     (deg_r + 1))));
+                                        scm_list_1 (scm_from_size_t
+                                                    (deg_r + 1)));
   scm_array_get_handle (remainder, &handle_r);
   scm_dynwind_array_handle_release (&handle_r);
   double *_remainder = scm_array_handle_f64_writable_elements (&handle_r);
@@ -411,16 +407,14 @@ scm_div_scm_spline (const char *who,
         rnrs_c_make_message_condition (_("polynomial division by zero")),
         rnrs_make_irritants_condition (scm_list_2 (spline1, spline2))));
 
-  SCM quotient_bounds =
-    scm_list_1 (scm_list_2 (scm_from_uint (1), scm_from_size_t (deg_q + 1)));
+  SCM quotient_bounds = scm_list_1 (scm_from_size_t (deg_q + 1));
   SCM quotient = scm_make_array (SCM_UNSPECIFIED, quotient_bounds);
   scm_array_get_handle (quotient, &handle_q);
   scm_dynwind_array_handle_release (&handle_q);
   SCM *_quotient = scm_array_handle_writable_elements (&handle_q);
   memcpy (_quotient, q, (deg_q + 1) * sizeof (SCM));
 
-  SCM remainder_bounds =
-    scm_list_1 (scm_list_2 (scm_from_uint (1), scm_from_size_t (deg_r + 1)));
+  SCM remainder_bounds = scm_list_1 (scm_from_size_t (deg_r + 1));
   SCM remainder = scm_make_array (SCM_UNSPECIFIED, remainder_bounds);
   scm_array_get_handle (remainder, &handle_r);
   scm_dynwind_array_handle_release (&handle_r);
@@ -480,9 +474,7 @@ scm_gcd_f64_spline (const char *who,
        gcd_poly);
 
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                     scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                             scm_from_size_t
-                                                             (deg + 1))));
+                                     scm_list_1 (scm_from_size_t (deg + 1)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   double *_result = scm_array_handle_f64_writable_elements (&handle);
@@ -540,9 +532,7 @@ scm_gcd_scm_spline (const char *who,
        gcd_poly);
 
   SCM result = scm_make_array (SCM_UNSPECIFIED,
-                               scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                       scm_from_size_t
-                                                       (deg + 1))));
+                               scm_list_1 (scm_from_size_t (deg + 1)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   SCM *_result = scm_array_handle_writable_elements (&handle);
