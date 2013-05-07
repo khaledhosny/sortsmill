@@ -556,9 +556,7 @@ scm_op_f64_splines (const char *who,
     splines_nonconformable (who, spline1, spline2);
 
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                     scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                             scm_from_size_t
-                                                             (dim1))));
+                                     scm_list_1 (scm_from_size_t (dim1)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   double *_result = scm_array_handle_f64_writable_elements (&handle);
@@ -628,9 +626,7 @@ scm_op_scm_splines (const char *who,
     splines_nonconformable (who, spline1, spline2);
 
   SCM result = scm_make_array (SCM_UNSPECIFIED,
-                               scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                       scm_from_size_t
-                                                       (dim1))));
+                               scm_list_1 (scm_from_size_t (dim1)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   SCM *_result = scm_array_handle_writable_elements (&handle);
@@ -695,9 +691,7 @@ scm_op_f64 (const char *who,
 
   const size_t dim = max_size (dim1, dim2);
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                     scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                             scm_from_size_t
-                                                             (dim))));
+                                     scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   double *_result = scm_array_handle_f64_writable_elements (&handle);
@@ -794,8 +788,7 @@ scm_op_scm (const char *who,
 
   const size_t dim = max_size (dim1, dim2);
   SCM result = scm_make_array (SCM_UNSPECIFIED,
-                               scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                       scm_from_size_t (dim))));
+                               scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (result, &handle);
   scm_dynwind_array_handle_release (&handle);
   SCM *_result = scm_array_handle_writable_elements (&handle);
