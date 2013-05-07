@@ -400,7 +400,7 @@
     (let-values ([(j v) (match<svg-path> s 0)])
       (if (and j (= j (string-length s)))
           v
-          #f ;; FIXME: Log an error message or raise an exception if this happens.
+          v ;; FIXME: Log an error message or raise an exception if this happens.
           )))
 
   (define/kwargs (svg:parse-path-data path-data-string [stage 'absolute-coords])
@@ -498,11 +498,39 @@
         [(#\V . y) `(#\L ,x0 ,y)]
         [other other])))
 
+  (define (reflect-control-point! vec i)
+    ;; Convert #\S commands to #\C and #\T commands to #\Q.
+    (match (vector-ref vec i)
+      [(#\S (x2 y2) (x3 y3))
+       (vector-set! vec i
+                    (match (vector-ref vec (- i 1))
+                      [(#\C (_ _) (x2^ y2^) (x3^ y3^))
+                       (let ([x1 (- (+ x3^ x3^) x2^)]
+                             [y1 (- (+ y3^ y3^) y2^)])
+                         `(#\C (,x1 ,y1) (,x2 ,y2) (,x3 ,y3)))]
+                      [_ (let* ([curpt (final-point vec (- i 1))]
+                                [x0 (car curpt)]
+                                [y0 (cadr curpt)])
+                           `(#\C (,x0 ,y0) (,x2 ,y2) (,x3 ,y3)))] ))]
+      [(#\T x2 y2)
+       (vector-set! vec i
+                    (match (vector-ref vec (- i 1))
+                      [(#\Q (x1^ y1^) (x2^ y2^))
+                       (let ([x1 (- (+ x2^ x2^) x1^)]
+                             [y1 (- (+ y2^ y2^) y1^)])
+                         `(#\Q (,x1 ,y1) (,x2 ,y2)))]
+                      [_ (let* ([curpt (final-point vec (- i 1))]
+                                [x0 (car curpt)]
+                                [y0 (cadr curpt)])
+                           `(#\Q (,x0 ,y0) (,x2 ,y2)))] ))]
+      [_ *unspecified*]))
+
   (define (make-subpath-vector-absolute! vec current-point)
     (vector-set! vec 0 (make-command-absolute vec 0 current-point))
     (do ([i 1 (+ i 1)]) ([= i (vector-length vec)])
       (let ([point (final-point vec (- i 1))])
-        (vector-set! vec i (make-command-absolute vec i point))))
+        (vector-set! vec i (make-command-absolute vec i point))
+        (reflect-control-point! vec i)))
     (final-point vec (- (vector-length vec) 1)))
 
   (define (svg:make-subpath-vectors-absolute! subpath-vectors)
