@@ -381,17 +381,13 @@ scm_subdiv_f64_spline (const char *who,
   SCM values[2];
 
   values[0] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                    scm_list_1 (scm_list_2
-                                                (scm_from_uint (1),
-                                                 scm_from_size_t (dim))));
+                                    scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (values[0], &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
   double *a = scm_array_handle_f64_writable_elements (&handle_a);
 
   values[1] = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                    scm_list_1 (scm_list_2
-                                                (scm_from_uint (1),
-                                                 scm_from_size_t (dim))));
+                                    scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (values[1], &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
   double *b = scm_array_handle_f64_writable_elements (&handle_b);
@@ -461,17 +457,13 @@ scm_subdiv_scm_spline (const char *who,
   SCM values[2];
 
   values[0] = scm_make_array (SCM_UNSPECIFIED,
-                              scm_list_1 (scm_list_2
-                                          (scm_from_uint (1),
-                                           scm_from_size_t (dim))));
+                              scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (values[0], &handle_a);
   scm_dynwind_array_handle_release (&handle_a);
   SCM *a = scm_array_handle_writable_elements (&handle_a);
 
   values[1] = scm_make_array (SCM_UNSPECIFIED,
-                              scm_list_1 (scm_list_2
-                                          (scm_from_uint (1),
-                                           scm_from_size_t (dim))));
+                              scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (values[1], &handle_b);
   scm_dynwind_array_handle_release (&handle_b);
   SCM *b = scm_array_handle_writable_elements (&handle_b);
@@ -537,9 +529,7 @@ scm_portion_f64_spline (const char *who,
   const double *spline = scm_array_handle_f64_elements (&handle);
 
   SCM result = scm_make_typed_array (scm_symbol_f64 (), SCM_UNSPECIFIED,
-                                     scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                             scm_from_size_t
-                                                             (dim))));
+                                     scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (result, &handle1);
   scm_dynwind_array_handle_release (&handle1);
   double *_result = scm_array_handle_f64_writable_elements (&handle1);
@@ -621,8 +611,7 @@ scm_portion_scm_spline (const char *who,
   const SCM *spline = scm_array_handle_elements (&handle);
 
   SCM result = scm_make_array (SCM_UNSPECIFIED,
-                               scm_list_1 (scm_list_2 (scm_from_uint (1),
-                                                       scm_from_size_t (dim))));
+                               scm_list_1 (scm_from_size_t (dim)));
   scm_array_get_handle (result, &handle1);
   scm_dynwind_array_handle_release (&handle1);
   SCM *_result = scm_array_handle_writable_elements (&handle1);
