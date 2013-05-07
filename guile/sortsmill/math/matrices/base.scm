@@ -302,7 +302,8 @@
    matrix-block     ; (matrix-block A i j m n) → matrix
    matrix-transpose ; (matrix-transpose A) → matrix  (preserves index bases of rank-2 arrays)
    matrix-diagonal  ; (matrix-transpose A) → vector
-   matrix-as-rank2-array ; (matrix-as-rank2-array vector-or-array-matrix) → array matrix
+   matrix-as-rank2-array ; (matrix-as-rank2-array vector-or-array-matrix) → array-matrix
+   matrix-as-min-rank-array ; (matrix-as-min-rank-array vector-or-array-matrix) → vector-or-array-matrix
    row-matrix->vector ; (row-matrix->vector vector-or-array-matrix) → vector
 
    ;; Predicates. These accept both typed and untyped arrays

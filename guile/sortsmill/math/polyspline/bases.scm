@@ -92,21 +92,18 @@
     "Shared array views of the symmetric halves of s-power splines. If
 the spline degree is even, then both halves will contain the middle
 coefficient as their last (highest degree) coefficient."
-    (let* ([coefs (matrix-as-rank2-array (matrix-1based coefs))]
+    (let* ([coefs (matrix-as-rank2-array (matrix-0based coefs))]
            [dims (matrix-dimensions coefs)]
            [row-count (car dims)]
            [column-count (cadr dims)]
            [degree (- column-count 1)]
            [quot (div degree 2)])
-      (let ([left-half (make-shared-array coefs list
-                                          `(1 ,row-count)
-                                          `(1 ,(+ quot 1)))]
+      (let ([left-half (make-shared-array coefs list row-count (+ quot 1))]
             [right-half (make-shared-array coefs
                                            (lambda (i j)
-                                             `(,i  ,(- column-count j -1)))
-                                           `(1 ,row-count)
-                                           `(1 ,(+ quot 1)))])
-            (values left-half right-half))))
+                                             `(,i  ,(- column-count j 1)))
+                                           row-count (+ quot 1))])
+        (values left-half right-half))))
 
   ;;------------------------------------------------------------------------
 

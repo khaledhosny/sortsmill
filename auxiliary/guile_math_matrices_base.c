@@ -1098,6 +1098,12 @@ scm_matrix_as_rank2_array (SCM v)
 }
 
 VISIBLE SCM
+scm_matrix_as_min_rank_array (SCM A)
+{
+  return (scm_c_matrix_row_count (A) == 1) ? scm_c_matrix_1row (A, 1) : A;
+}
+
+VISIBLE SCM
 scm_row_matrix_to_vector (SCM A)
 {
   if (scm_c_matrix_row_count (A) != 1)
@@ -3094,6 +3100,8 @@ init_guile_sortsmill_math_matrices_base (void)
   scm_c_define_gsubr ("matrix-column", 2, 0, 0, scm_matrix_column);
   scm_c_define_gsubr ("matrix-as-rank2-array", 1, 0, 0,
                       scm_matrix_as_rank2_array);
+  scm_c_define_gsubr ("matrix-as-min-rank-array", 1, 0, 0,
+                      scm_matrix_as_min_rank_array);
   scm_c_define_gsubr ("row-matrix->vector", 1, 0, 0, scm_row_matrix_to_vector);
   scm_c_define_gsubr ("matrix-transpose", 1, 0, 0, scm_matrix_transpose);
   scm_c_define_gsubr ("matrix-diagonal", 1, 0, 0, scm_matrix_diagonal);

@@ -147,6 +147,7 @@ SCM scm_matrix_block (SCM A, SCM i, SCM j, SCM m, SCM n);
 SCM scm_matrix_transpose (SCM A);
 SCM scm_matrix_diagonal (SCM A);
 SCM scm_matrix_as_rank2_array (SCM v);
+SCM scm_matrix_as_min_rank_array (SCM A);
 SCM scm_row_matrix_to_vector (SCM A);
 
 SCM scm_matrix_1x1_to_scalar (SCM A);
