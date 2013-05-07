@@ -112,13 +112,13 @@
   (define match<digit*> (char-set<*>-matcher char-set::digit))
   (define match<digit+> (char-set<+>-matcher char-set::digit))
 
-  (define match<flag>
-    (let ([char-set::flag (char-set #\0 #\1)])
-      (lambda (s i)
-        (let ([j (match-char-set char-set::flag s i)])
-          (if j
-              (values j (char=? #\1 (string-ref s i)))
-              (values #f #f))))))
+  (define (match<flag> s i)
+    ;; Accept numbers other than 0 and 1, as suggested in SVG 1.1
+    ;; appendix F.6.2.
+    (let-values ([(j v) (match<number> s i)])
+      (if j
+          (values j (not (zero? v)))
+          (values #f #f))))
 
   (define (match<comma-wsp> s i)
     (let ([j1 (match<wsp+> s i)])
