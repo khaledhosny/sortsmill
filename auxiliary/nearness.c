@@ -273,11 +273,14 @@ void init_guile_sortsmill_nearness (void);
 VISIBLE void
 init_guile_sortsmill_nearness (void)
 {
- scm_c_define_gsubr ("Within4RoundingErrors?", 2, 0, 0, scm_Within4RoundingErrors_p);
- scm_c_define_gsubr ("Within16RoundingErrors?", 2, 0, 0, scm_Within16RoundingErrors_p);
- scm_c_define_gsubr ("Within64RoundingErrors?", 2, 0, 0, scm_Within64RoundingErrors_p);
+  scm_c_define_gsubr ("Within4RoundingErrors?", 2, 0, 0,
+                      scm_Within4RoundingErrors_p);
+  scm_c_define_gsubr ("Within16RoundingErrors?", 2, 0, 0,
+                      scm_Within16RoundingErrors_p);
+  scm_c_define_gsubr ("Within64RoundingErrors?", 2, 0, 0,
+                      scm_Within64RoundingErrors_p);
 
- scm_c_define_gsubr ("RealNear?", 2, 0, 0, scm_RealNear_p);
+  scm_c_define_gsubr ("RealNear?", 2, 0, 0, scm_RealNear_p);
   scm_c_define_gsubr ("RealNearish?", 2, 0, 0, scm_RealNearish_p);
   scm_c_define_gsubr ("RealApprox?", 2, 0, 0, scm_RealApprox_p);
   scm_c_define_gsubr ("RealWithin?", 3, 0, 0, scm_RealWithin_p);
