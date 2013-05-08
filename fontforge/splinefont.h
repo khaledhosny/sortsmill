@@ -44,23 +44,12 @@
 
 #include <config.h>
 
-#include "basics.h"
+#include <basics.h>
+#include <real_types.h>
 #include <iconv.h>
+#include <sortsmill/nearness.h>
 #include <sortsmill/guile/containers.h>
 #include <assert.h>
-
-#ifdef FONTFORGE_CONFIG_USE_DOUBLE
-typedef double real;
-typedef double bigreal;
-#else
-typedef float real;
-typedef double bigreal;
-#endif
-
-typedef double extended;
-
-/* Solaris wants to define extended to be unsigned [3] unless we do this*/
-#define _EXTENDED
 
 #define CHR(ch1,ch2,ch3,ch4) (((ch1)<<24)|((ch2)<<16)|((ch3)<<8)|(ch4))
 
@@ -2788,15 +2777,6 @@ void SFSetFontName (SplineFont *sf, char *family, char *mods, char *full);
 void ttfdumpbitmap (SplineFont *sf, struct alltabs *at, int32_t *sizes);
 void ttfdumpbitmapscaling (SplineFont *sf, struct alltabs *at, int32_t *sizes);
 VISIBLE void SplineFontSetUnChanged (SplineFont *sf);
-
-int Within4RoundingErrors (bigreal v1, bigreal v2);
-int Within16RoundingErrors (bigreal v1, bigreal v2);
-int Within64RoundingErrors (bigreal v1, bigreal v2);
-VISIBLE int RealNear (real a, real b);
-VISIBLE int RealNearish (real a, real b);
-VISIBLE int RealApprox (real a, real b);
-VISIBLE int RealWithin (real a, real b, real fudge);
-int RealRatio (real a, real b, real fudge);
 
 VISIBLE int PointsDiagonalable (SplineFont *sf, BasePoint **bp,
                                 BasePoint *unit);

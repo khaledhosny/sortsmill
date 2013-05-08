@@ -605,6 +605,47 @@
 
   ;;-------------------------------------------------------------------------
 
+  (define (elliptic-arc-primed-parameters x₁ y₁ x₂ y₂ fA fS rx ry cosφ sinφ)
+    (let* ([x₁^ (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2)]
+           [y₁^ (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2)]
+           [rx² (* rx rx)]
+           [ry² (* ry ry)]
+           [rx²y₁^²+ry²x₁^² (+ (* rx² y₁^ y₁^) (* ry² x₁^ x₁^))]
+           [sign (if (eq? fA fS) -1 1)]
+           [factor (* sign (sqrt (/ (- (* rx² ry²) rx²y₁^²+ry²x₁^²) rx²y₁^²+ry²x₁^²)))]
+           [cx^ (/ (* factor rx y₁^) ry)]
+           [cy^ (/ (* factor ry x₁^) rx)])
+      (values x₁^ y₁^ cx^ cy^)))
+
+    #|
+    (match (vector-ref vec i)
+      [(\#A rx ry rotation fA fS point)
+       (if (or (zero? rx) (zero? ry))
+
+           ;; If either axis is zero, just draw a straight line.
+           (vector-set! vec i `(#\L . ,point))
+
+           ;; If the axes are too small, increase their size just
+           ;; enough.
+           (let* ([curpt (final-point vec (- i 1))]
+                  [x₁ (car curpt)]
+                  [y₁ (cadr curpt)]
+                  [x₂ (car point)]
+                  [y₂ (cadr point)]
+                  [φ (/ (* pi rotation) 180)]
+                  [cosφ (cos φ)]
+                  [sinφ (sin φ)]
+                  [x₁^ (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2)]
+                  [y₁^ (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2)]
+                  [Λ (+ (/ (* x₁^ x₁^) (* rx rx)) (/ (* y₁^ y₁^) (* ry ry)))])
+             (when (< 1 Λ)
+               (let ([sqrtΛ (sqrt Λ)])
+                 (vector-set! vec i `[#\A ,(* sqrtΛ rx) ,(* sqrtΛ ry)
+                                      ,rotation ,fA ,fS ,point] ))) ))]
+
+      [_ *unspecified*]))
+    |#
+
   #|
   (define (elliptic-arc->cubics z₁ z₂ fA fS rx ry cis-phi)
     (let* ([fA (not (not fA))]

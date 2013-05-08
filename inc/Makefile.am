@@ -60,6 +60,7 @@ noinst_HEADERS += contour_interface.h
 noinst_HEADERS += moveto_funcs.h
 noinst_HEADERS += invoke_funcs.h
 noinst_HEADERS += libguile_sortsmill_aux.h
+noinst_HEADERS += real_types.h
 
 # C entry point for Sorts Mill Editor.
 nobase_include_HEADERS += sortsmill/fontforge_main.h
@@ -98,6 +99,10 @@ nobase_include_HEADERS += sortsmill/ps_number.h
 
 # Left-leaning 2-3 red-black trees.
 nobase_include_HEADERS += sortsmill/rb.h
+
+# Different kinds of approximate equality, mostly inherited from
+# FontForge.
+nobase_include_HEADERS += sortsmill/nearness.h
 
 #--------------------------------------------------------------------------
 #
@@ -168,6 +173,8 @@ nobase_include_HEADERS += sortsmill/guile/fonts/contours.h
 nobase_include_HEADERS += sortsmill/guile/fonts/glyphs.h
 nobase_include_HEADERS += sortsmill/guile/fonts/peg_spacing.h
 nobase_include_HEADERS += sortsmill/guile/fonts/views.h
+
+nobase_include_HEADERS += sortsmill/guile/nearness.h
 
 nobase_include_HEADERS += sortsmill/guile/math.h
 nobase_include_HEADERS += sortsmill/guile/math/brentroot.h

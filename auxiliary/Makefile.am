@@ -50,6 +50,10 @@ dist_libsortsmill_aux_la_SOURCES += ustring.c
 dist_libsortsmill_aux_la_SOURCES += utype.c
 dist_libsortsmill_aux_la_SOURCES += combiners.h
 
+# Approximate equality routines moved here from FontForge’s
+# splineutil2.c.
+dist_libsortsmill_aux_la_SOURCES += nearness.c
+
 # Recognition of numbers written in PostScript’s notation.
 dist_libsortsmill_aux_la_SOURCES += ps_number.c
 

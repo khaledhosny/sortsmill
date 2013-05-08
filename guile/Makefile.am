@@ -687,6 +687,14 @@ MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/subdiv.scm
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill nearness)
+
+DIST_SCM_FILES += sortsmill/nearness.scm
+GO_FILES += sortsmill/nearness.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/nearness.scm
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill notices)
 
 # FIXME: Maybe put this in the (sortsmill editor) category or some

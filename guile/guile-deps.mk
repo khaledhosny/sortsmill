@@ -39,6 +39,7 @@ sortsmill/math/polyspline/mul.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/reduce.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/roots.go: sortsmill/math/polyspline/bases.go sortsmill/math/polyspline/div.go sortsmill/math/polyspline/subdiv.go sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/kwargs.go sortsmill/i18n.go
 sortsmill/math/polyspline/subdiv.go: sortsmill/dynlink.go
+sortsmill/nearness.go: sortsmill/dynlink.go
 sortsmill/notices.go: sortsmill/dynlink.go
 sortsmill/options.go: sortsmill/dynlink.go sortsmill/kwargs.go sortsmill/pkg-info.go sortsmill/api-syntax.go sortsmill/strings.go sortsmill/argv.go sortsmill/alloc.go sortsmill/machine.go
 sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go
@@ -47,13 +48,13 @@ sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.g
 sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/iconv.go
 sortsmill/strings/grabbed-strings.go: sortsmill/alloc.go
 sortsmill/strings/rexp.go: sortsmill/dynlink.go
-sortsmill/svg/path-data.go: sortsmill/kwargs.go
+sortsmill/svg/path-data.go: sortsmill/kwargs.go sortsmill/math/polyspline.go sortsmill/math/math-constants.go
 sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
 sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/fonts/views.go sortsmill/editor/finalization.go sortsmill/strings/hash-guillemet.go
 sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/strings.go sortsmill/svg.go
+sortsmill.go: sortsmill/alloc.go sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/machine.go sortsmill/math.go sortsmill/nearness.go sortsmill/notices.go sortsmill/pkg-info.go sortsmill/strings.go sortsmill/svg.go
 sortsmill/__internals__.go: sortsmill/__internals__/anchors.go sortsmill/__internals__/glyphs.go sortsmill/__internals__/lookups.go
 sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/containers.go: sortsmill/containers/rbmap.go sortsmill/containers/rnrs-hashtable.go
