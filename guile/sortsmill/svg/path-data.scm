@@ -529,7 +529,7 @@
       [_ *unspecified*]))
 
   (define (adjust-elliptic-arc-radii! vec i)
-    ;; See SVG 1.1 specification, appendix F.6.
+    ;; See SVG 1.1 specification, appendix F.6.6.
     (match (vector-ref vec i)
       [(\#A rx ry rotation fA fS point)
        (if (or (zero? rx) (zero? ry))
