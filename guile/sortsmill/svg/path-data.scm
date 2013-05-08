@@ -232,7 +232,7 @@
                                           (let ([j10 (match<comma-wsp?> s j9)])
                                             (let-values ([(j11 v11) (match<coordinate-pair> s j10)])
                                               (if j11
-                                                  (values j11 (list v1 v3 v5 v7 v9 v11))
+                                                  (values j11 (list v1 v3 (mod360 v5) v7 v9 v11))
                                                   (values #f #f))))
                                           (values #f #f))))
                                   (values #f #f))))
@@ -571,6 +571,14 @@
     (do ([i 0 (+ i 1)]) ([= i (vector-length subpath-vectors)])
       (vector-quadratic->cubic! (vector-ref subpath-vectors i)))
     subpath-vectors)
+
+  ;;-------------------------------------------------------------------------
+
+  (define (real-mod a b)
+    (- a (* b (floor (/ a b)))))
+
+  (define (mod360 phi)
+    (real-mod phi 360))
 
   ;;-------------------------------------------------------------------------
 
