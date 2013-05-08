@@ -65,6 +65,7 @@
 
   (import (sortsmill kwargs)
           (only (sortsmill math polyspline) poly:elev-scm-bern)
+          (sortsmill math math-constants)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
@@ -527,12 +528,42 @@
                            `(#\Q (,x0 ,y0) (,x2 ,y2)))] ))]
       [_ *unspecified*]))
 
+  (define (adjust-elliptic-arc-radii! vec i)
+    ;; See SVG 1.1 specification, appendix F.6.
+    (match (vector-ref vec i)
+      [(\#A rx ry rotation fA fS point)
+       (if (or (zero? rx) (zero? ry))
+
+           ;; If either axis is zero, just draw a straight line.
+           (vector-set! vec i `(#\L . ,point))
+
+           ;; If the axes are too small, increase their size just
+           ;; enough.
+           (let* ([curpt (final-point vec (- i 1))]
+                  [x₁ (car curpt)]
+                  [y₁ (cadr curpt)]
+                  [x₂ (car point)]
+                  [y₂ (cadr point)]
+                  [φ (/ (* pi rotation) 180)]
+                  [cosφ (cos φ)]
+                  [sinφ (sin φ)]
+                  [x₁^ (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2)]
+                  [y₁^ (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2)]
+                  [Λ (+ (/ (* x₁^ x₁^) (* rx rx)) (/ (* y₁^ y₁^) (* ry ry)))])
+             (when (< 1 Λ)
+               (let ([sqrtΛ (sqrt Λ)])
+                 (vector-set! vec i `[#\A ,(* sqrtΛ rx) ,(* sqrtΛ ry)
+                                      ,rotation ,fA ,fS ,point] ))) ))]
+
+      [_ *unspecified*]))
+
   (define (make-subpath-vector-absolute! vec current-point)
     (vector-set! vec 0 (make-command-absolute vec 0 current-point))
     (do ([i 1 (+ i 1)]) ([= i (vector-length vec)])
       (let ([point (final-point vec (- i 1))])
         (vector-set! vec i (make-command-absolute vec i point))
-        (reflect-control-point! vec i)))
+        (reflect-control-point! vec i)
+        (adjust-elliptic-arc-radii! vec i)))
     (final-point vec (- (vector-length vec) 1)))
 
   (define (svg:make-subpath-vectors-absolute! subpath-vectors)
@@ -574,11 +605,41 @@
 
   ;;-------------------------------------------------------------------------
 
+  #|
+  (define (elliptic-arc->cubics z₁ z₂ fA fS rx ry cis-phi)
+    (let* ([fA (not (not fA))]
+           [fS (not (not fS))]
+           [zmid (/ (+ z₁ z₂) 2)]
+           [z₁^ (* (complex-conjugate cis-phi) (- z₁ zmid))]
+           [x₁^ (real-part z₁^)]
+           [y₁^ (imag-part z₁^)]
+           [rx² (* rx rx)]
+           [ry² (* ry ry)]
+           [rx²y₁^²+ry²x₁^² (+ (* rx² y₁^ y₁^) (* ry² x₁^ x₁^))]
+           [sign (if (eq? fA fS) -1 1)]
+           [factor (* sign (sqrt (/ (- (* rx² ry²) rx²y₁^²+ry²x₁^²) rx²y₁^²+ry²x₁^²)))]
+           [zc^ (* factor (make-rectangular (/ (* rx y₁^) ry) (/ (* ry x₁^) rx)))])
+      3))
+    (define (make-to-primed-coords z₁ z₂ cis-phi)
+    (let ([conj-cis-phi (complex-conjugate cis-phi)]
+          [zmid (/ (+ z₁ z₂) 2)])
+      (lambda (z)
+        (* conj-cis-phi (- z zmid)))))
+  |#
+
+  ;;-------------------------------------------------------------------------
+
   (define (real-mod a b)
     (- a (* b (floor (/ a b)))))
 
   (define (mod360 phi)
     (real-mod phi 360))
+
+  (define (angle-from x1 y1 x2 y2)
+    "Return the angle from the vector (x1,y1) to the vector (x2,y2)."
+    (let ([z1 (make-rectangular x1 y1)]
+          [z2 (make-rectangular x2 y2)])
+      (- (angle z2) (angle z1))))
 
   ;;-------------------------------------------------------------------------
 
