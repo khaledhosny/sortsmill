@@ -48,6 +48,12 @@
 
 //-------------------------------------------------------------------------
 
+static inline bool
+nondecreasing3 (double a, double b, double c)
+{
+  return (a <= b && b <= c);
+}
+
 #if defined( FONTFORGE_CONFIG_USE_DOUBLE )
 #define RE_NearZero	.00000001
 #define RE_Factor	(1024.0*1024.0*1024.0*1024.0*1024.0*2.0)        /* 52 bits => divide by 2^51 */
@@ -111,31 +117,21 @@ RealNear (double a, double b)
   const real denom = 1024.0 * 64.0;
 #endif
 
-  bool real_near;
+  bool result;
 
   if (a == 0)
-    real_near = (-eps < b && b < eps);
+    result = (fabs (b) < eps);
   else if (b == 0)
-    real_near = (-eps < a && a < eps);
+    result = (fabs (a) < eps);
   else
-    {
-      const real d = a / denom;
-      const real diff = a - b;
-
-      if (d < 0)
-        real_near = (d < diff && diff < -d);
-      else
-        real_near = (-d < diff && diff < d);
-    }
-
-  return real_near;
+    result = (fabs (a - b) < fabs (a / denom));
+  return result;
 }
 
 VISIBLE bool
 RealNearish (double a, double b)
 {
-  a -= b;
-  return (-.001 < a && a < .001);
+  return (fabs (a - b) < .001);
 }
 
 VISIBLE bool
@@ -143,21 +139,18 @@ RealApprox (double a, double b)
 {
   bool result = false;
   if (a == 0)
-    result = (-.0001 < b && b < .0001);
+    result = (fabs (b) < .0001);
   else if (b == 0)
-    result = (-.0001 < a && a < .0001);
+    result = (fabs (a) < .0001);
   else
-    {
-      const double x = a / b;
-      result = (.95 <= x && x <= 1.05);
-    }
+    result = nondecreasing3 (0.95, a / b, 1.05);
   return result;
 }
 
 VISIBLE bool
 RealWithin (double a, double b, double fudge)
 {
-  return (a - fudge <= b && b <= a + fudge);
+  return (nondecreasing3 (a - fudge, b, a + fudge));
 }
 
 VISIBLE bool
