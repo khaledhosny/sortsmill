@@ -64,7 +64,9 @@
    )
 
   (import (sortsmill kwargs)
-          (only (sortsmill math polyspline) poly:elev-scm-bern)
+          (sortsmill math polyspline)
+          (sortsmill math matrices)
+          (sortsmill math geometry)
           (sortsmill math math-constants)
           (rnrs)
           (except (guile) error)
@@ -547,8 +549,8 @@
                   [φ (/ (* pi rotation) 180)]
                   [cosφ (cos φ)]
                   [sinφ (sin φ)]
-                  [x₁^ (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2)]
-                  [y₁^ (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2)]
+                  [x₁^ (transformed-x₁ x₁ x₂)]
+                  [y₁^ (transformed-y₁ y₁ y₂)]
                   [Λ (+ (/ (* x₁^ x₁^) (* rx rx)) (/ (* y₁^ y₁^) (* ry ry)))])
              (when (< 1 Λ)
                (let ([sqrtΛ (sqrt Λ)])
@@ -605,67 +607,93 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define (elliptic-arc-primed-parameters x₁ y₁ x₂ y₂ fA fS rx ry cosφ sinφ)
-    (let* ([x₁^ (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2)]
-           [y₁^ (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2)]
-           [rx² (* rx rx)]
+  (define (transformed-x₁ x₁ x₂)
+    (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2))
+
+  (define (transformed-y₁ y₁ y₂)
+    (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2))
+
+  (define (transformed-start-point x₁ y₁ x₂ y₂)
+    (let ([x₁^ (transformed-x₁ x₁ x₂)]
+          [y₁^ (transformed-y₁ y₁ y₂)])
+      (values x₁^ y₁^)))
+
+  (define (center-of-transformed-ellipse x₁^ y₁^ fA fS rx ry cosφ sinφ)
+    (let* ([rx² (* rx rx)]
            [ry² (* ry ry)]
            [rx²y₁^²+ry²x₁^² (+ (* rx² y₁^ y₁^) (* ry² x₁^ x₁^))]
            [sign (if (eq? fA fS) -1 1)]
-           [factor (* sign (sqrt (/ (- (* rx² ry²) rx²y₁^²+ry²x₁^²) rx²y₁^²+ry²x₁^²)))]
+
+           ;; The @code{(max 0 ...)} below is to ensure that roundoff
+           ;; does not result in a complex radical. (I do not know if
+           ;; this actually happens, but a comment in the old
+           ;; FontForge code suggests it might. The treatment there
+           ;; was to snap values near zero to zero exactly, rather
+           ;; than what we have done here.)
+           [factor (* sign
+                      (sqrt
+                       (max 0 (/ (- (* rx² ry²) rx²y₁^²+ry²x₁^²) rx²y₁^²+ry²x₁^²))))]
+
            [cx^ (/ (* factor rx y₁^) ry)]
            [cy^ (/ (* factor ry x₁^) rx)])
-      (values x₁^ y₁^ cx^ cy^)))
+      (values cx^ cy^)))
 
-    #|
-    (match (vector-ref vec i)
-      [(\#A rx ry rotation fA fS point)
-       (if (or (zero? rx) (zero? ry))
+  
 
-           ;; If either axis is zero, just draw a straight line.
-           (vector-set! vec i `(#\L . ,point))
 
-           ;; If the axes are too small, increase their size just
-           ;; enough.
-           (let* ([curpt (final-point vec (- i 1))]
-                  [x₁ (car curpt)]
-                  [y₁ (cadr curpt)]
-                  [x₂ (car point)]
-                  [y₂ (cadr point)]
-                  [φ (/ (* pi rotation) 180)]
-                  [cosφ (cos φ)]
-                  [sinφ (sin φ)]
-                  [x₁^ (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2)]
-                  [y₁^ (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2)]
-                  [Λ (+ (/ (* x₁^ x₁^) (* rx rx)) (/ (* y₁^ y₁^) (* ry ry)))])
-             (when (< 1 Λ)
-               (let ([sqrtΛ (sqrt Λ)])
-                 (vector-set! vec i `[#\A ,(* sqrtΛ rx) ,(* sqrtΛ ry)
-                                      ,rotation ,fA ,fS ,point] ))) ))]
 
-      [_ *unspecified*]))
-    |#
+
 
   #|
-  (define (elliptic-arc->cubics z₁ z₂ fA fS rx ry cis-phi)
-    (let* ([fA (not (not fA))]
-           [fS (not (not fS))]
-           [zmid (/ (+ z₁ z₂) 2)]
-           [z₁^ (* (complex-conjugate cis-phi) (- z₁ zmid))]
-           [x₁^ (real-part z₁^)]
-           [y₁^ (imag-part z₁^)]
-           [rx² (* rx rx)]
-           [ry² (* ry ry)]
-           [rx²y₁^²+ry²x₁^² (+ (* rx² y₁^ y₁^) (* ry² x₁^ x₁^))]
-           [sign (if (eq? fA fS) -1 1)]
-           [factor (* sign (sqrt (/ (- (* rx² ry²) rx²y₁^²+ry²x₁^²) rx²y₁^²+ry²x₁^²)))]
-           [zc^ (* factor (make-rectangular (/ (* rx y₁^) ry) (/ (* ry x₁^) rx)))])
-      3))
-    (define (make-to-primed-coords z₁ z₂ cis-phi)
-    (let ([conj-cis-phi (complex-conjugate cis-phi)]
-          [zmid (/ (+ z₁ z₂) 2)])
-      (lambda (z)
-        (* conj-cis-phi (- z zmid)))))
+  
+  ;; See http://www.tinaja.com/glib/ellipse4.pdf
+  (define magic-number (- 0.55228475 0.00045))
+
+  ;; FIXME: When we have more complete, reusable support for
+  ;; parametric splines, use that instead of the impromptu coding that
+  ;; appears below.
+
+  (define (approximate-ellipse-in-cubic-bernstein cx cy rx ry)
+    (let ([cx-rx (- cx rx)]
+          [cx+rx (+ cx rx)]
+          [cx-magic (- cx magic-number)]
+          [cx+magic (+ cx magic-number)]
+          [cy-ry (- cy ry)]
+          [cy+ry (+ cy ry)]
+          [cy-magic (- cy magic-number)]
+          [cy+magic (+ cy magic-number)])
+      ;; Start with the leftmost point of the ellipse, then go around
+      ;; clockwise.
+      `([(,cx-rx ,cy) (,cx-rx ,cy+magic) (,cx-magic ,cy+ry) (,cx ,cy+ry)]
+        [(,cx ,cy+ry) (,cx+magic ,cy+ry) (,cx+rx ,cy+magic) (,cx+rx ,cy)]
+        [(,cx+rx ,cy) (,cx+rx ,cy-magic) (,cx+magic ,cy-ry) (,cx ,cy-ry)]
+        [(,cx ,cy-ry) (,cx-magic ,cy-ry) (,cx-rx ,cy-magic) (,cx-rx ,cy)])))
+
+  (define (inverse-transform parametric-splines cosφ sinφ x₀ y₀)
+    (map (lambda (spline)
+           (vector (match-lambda
+                    [(x y) (list (+ (- (* cosφ cx) (* sinφ cy)) x₀)
+                                 (+ (+ (* cosφ cy) (* sinφ cx)) y₀))])
+                   spline))
+         parametric-splines))
+
+  (define (intersect-spline-with-line implicit-eq xmono ymono)
+    (let ([xmono (matrix-inexact->exact xmono)]
+          [ymono (matrix-inexact->exact ymono)])
+      (match implicit-eq
+        [(C A B)
+         (let ([plugged-in-eq
+                (poly:add-scm-mono
+                 `#(,C) (poly:add-scm-mono
+                         (poly:mul-scm-mono `#(,A) xspline)
+                         (poly:mul-scm-mono `#(,B) yspline)))])
+           
+  #|
+  (define (intersect-spline-with-line x₁ y₁ x₂ y₂ xspline yspline)
+    (match (line:implicit-equation #:x0 x₁ #:y0 y₁ #:x1 x₂ #:y1 y₂)
+      [(C A B)
+  |#
+
   |#
 
   ;;-------------------------------------------------------------------------
