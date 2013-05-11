@@ -48,6 +48,8 @@
 -T gsl_matrix
 -T gsl_permutation
 
+-T elliptic_arc_t
+-T elliptic_struct_t
 -T rexp_buffer_t
 -T rexp_t
 -T rexp_match_buffer_t

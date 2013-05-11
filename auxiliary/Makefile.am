@@ -98,6 +98,7 @@ dist_libsortsmill_aux_la_SOURCES += math_polyspline_compose.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_deriv.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_div.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_elev.c
+dist_libsortsmill_aux_la_SOURCES += math_polyspline_ellipses.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_eval.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_implicit.c
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_mul.c
