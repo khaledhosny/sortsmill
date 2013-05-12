@@ -549,8 +549,8 @@
                   [φ (/ (* pi rotation) 180)]
                   [cosφ (cos φ)]
                   [sinφ (sin φ)]
-                  [x₁^ (transformed-x₁ x₁ x₂)]
-                  [y₁^ (transformed-y₁ y₁ y₂)]
+                  [x₁^ (transformed-x₁ x₁ y₁ x₂ y₂ cosφ sinφ)]
+                  [y₁^ (transformed-y₁ x₁ y₁ x₂ y₂ cosφ sinφ)]
                   [Λ (+ (/ (* x₁^ x₁^) (* rx rx)) (/ (* y₁^ y₁^) (* ry ry)))])
              (when (< 1 Λ)
                (let ([sqrtΛ (sqrt Λ)])
@@ -607,15 +607,15 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define (transformed-x₁ x₁ x₂)
+  (define (transformed-x₁ x₁ y₁ x₂ y₂ cosφ sinφ)
     (/ (+ (* cosφ (- x₁ x₂)) (* sinφ (- y₁ y₂))) 2))
 
-  (define (transformed-y₁ y₁ y₂)
+  (define (transformed-y₁ x₁ y₁ x₂ y₂ cosφ sinφ)
     (/ (- (* cosφ (- y₁ y₂)) (* sinφ (- x₁ x₂))) 2))
 
-  (define (transformed-start-point x₁ y₁ x₂ y₂)
-    (let ([x₁^ (transformed-x₁ x₁ x₂)]
-          [y₁^ (transformed-y₁ y₁ y₂)])
+  (define (transformed-start-point x₁ y₁ x₂ y₂ cosφ sinφ)
+    (let ([x₁^ (transformed-x₁ x₁ y₁ x₂ y₂ cosφ sinφ)]
+          [y₁^ (transformed-y₁ x₁ y₁ x₂ y₂ cosφ sinφ)])
       (values x₁^ y₁^)))
 
   (define (center-of-transformed-ellipse x₁^ y₁^ fA fS rx ry cosφ sinφ)
