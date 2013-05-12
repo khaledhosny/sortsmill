@@ -40,7 +40,7 @@ VISIBLE C_WRAP_SCM_CALL_1 (scm_glyphlayer_update_changed, my_module,
 VISIBLE C_WRAP_SCM_CALL_1 (scm_view_active_layer, my_module,
                            "view:active-layer");
 
-VISIBLE C_WRAP_SCM_CALL_1 (scm_view_active_layer_set_x, my_module,
+VISIBLE C_WRAP_SCM_CALL_2 (scm_view_active_layer_set_x, my_module,
                            "view:active-layer-set!");
 
 //-------------------------------------------------------------------------
