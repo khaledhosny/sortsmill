@@ -2452,11 +2452,12 @@ sfglyph (SplineFont *sf, ssize_t i)
   return (0 <= i && i < sf->glyphcnt) ? sf->__glyphs[i] : NULL;
 }
 
+void resize_sfglyph_array (SplineFont *sf, size_t min_size);
+
 // FIXME: Reimplement as a SCM data structure.
 inline void
 set_sfglyph (SplineFont *sf, ssize_t i, SplineChar *sc)
 {
-  void resize_sfglyph_array (SplineFont *sf, size_t min_size);
   assert (0 <= i);
   if (sf->glyphmax <= i)
     resize_sfglyph_array (sf, i);
