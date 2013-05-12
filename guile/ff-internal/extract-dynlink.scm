@@ -120,6 +120,8 @@
     (format port "\n")
     (format port "VISIBLE volatile char _init_guile_sortsmill_dynlink_buffer[2];\n")
     (format port "\n")
+    (format port "void init_guile_sortsmill_dynlink (void);\n")
+    (format port "\n")
     (format port "VISIBLE void\n")
     (format port "init_guile_sortsmill_dynlink (void)\n")
     (format port "{\n")
