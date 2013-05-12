@@ -18,6 +18,7 @@
 #include <libguile.h>
 #include <xalloc.h>
 #include <sortsmill/xgc.h>
+#include <libguile_sortsmill_aux.h>
 
 static SCM
 scm_czalloc (SCM size)
