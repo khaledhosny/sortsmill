@@ -37,10 +37,10 @@ SCM scm_view_update_layer_palette (SCM view);
 SCM scm_glyph_view_transform_by_psmat (SCM gv, SCM ps_matrix, SCM flags);
 
 SCM scm_view_active_layer (SCM view);
-SCM scm_view_active_layer_set_p (SCM view, SCM layer);
+SCM scm_view_active_layer_set_x (SCM view, SCM layer);
 
 SCM scm_glyph_view_editable_layer (SCM gv);
-SCM scm_glyph_view_editable_layer_set_p (SCM gv, SCM layer);
+SCM scm_glyph_view_editable_layer_set_x (SCM gv, SCM layer);
 
 SCM scm_view_layer_names (SCM view);
 
