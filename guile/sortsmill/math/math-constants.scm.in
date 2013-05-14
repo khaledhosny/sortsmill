@@ -22,6 +22,7 @@
           c:flt-epsilon-exact ; FLT_EPSILON as an ‘exact’ number.
           c:dbl-epsilon-exact ; DBL_EPSILON as an ‘exact’ number.
           pi                  ; Circumference over diameter of a circle.
+          pi/2                ; Half of pi.
           )
 
   (import (rnrs)
@@ -50,5 +51,6 @@
          (expt (list-ref data 2) (list-ref data 3)))))
 
   (define pi (* 4 (atan 1)))
+  (define pi/2 (* 2 (atan 1)))
 
   ) ;; end of library.

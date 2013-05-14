@@ -61,6 +61,7 @@
    svg:make-subpath-vectors-absolute!
 
    svg:subpaths-quadratic->cubic!
+   svg:expand-elliptic-arcs!
    )
 
   (import (sortsmill kwargs)
@@ -70,6 +71,7 @@
           (sortsmill math math-constants)
           (rnrs)
           (except (guile) error)
+          (only (srfi :1) iota)
           (only (srfi :26) cut)
           (ice-9 match))
 
@@ -495,8 +497,8 @@
          `(#\S (,(+ x0 x1) ,(+ y0 y1)) (,(+ x0 x2) ,(+ y0 y2)))]
         [(#\c (x1 y1) (x2 y2) (x3 y3))
          `(#\C (,(+ x0 x1) ,(+ y0 y1)) (,(+ x0 x2) ,(+ y0 y2)) (,(+ x0 x3) ,(+ y0 y3)))]
-        [(#\a rx ry rotation flag1 flag2 (x y))
-         `(#\A ,rx ,ry ,rotation ,flag1 ,flag2 (,(+ x0 x) ,(+ y0 y)))]
+        [(#\a rx ry rotation fA fS (x y))
+         `(#\A ,rx ,ry ,rotation ,fA ,fS (,(+ x0 x) ,(+ y0 y)))]
         [(#\h . x) `(#\L ,(+ x0 x) ,y0)]
         [(#\v . y) `(#\L ,x0 ,(+ y0 y))]
         [(#\H . x) `(#\L ,x ,y0)]
@@ -638,77 +640,111 @@
            [cy^ (/ (* factor ry x₁^) rx)])
       (values cx^ cy^)))
 
-  
-
-
-
-
+  (define (center-of-ellipse cx^ cy^ x₁ y₁ x₂ y₂ cosφ sinφ)
+    (values (+ (- (* cosφ cx^) (* sinφ cy^)) (/ (+ x₁ x₂) 2))
+            (+ (+ (* cosφ cy^) (* sinφ cx^)) (/ (+ y₁ y₂) 2))))
 
   #|
-  
-  ;; See http://www.tinaja.com/glib/ellipse4.pdf
-  (define magic-number (- 0.55228475 0.00045))
-
-  ;; FIXME: When we have more complete, reusable support for
-  ;; parametric splines, use that instead of the impromptu coding that
-  ;; appears below.
-
-  (define (approximate-ellipse-in-cubic-bernstein cx cy rx ry)
-    (let ([cx-rx (- cx rx)]
-          [cx+rx (+ cx rx)]
-          [cx-magic (- cx magic-number)]
-          [cx+magic (+ cx magic-number)]
-          [cy-ry (- cy ry)]
-          [cy+ry (+ cy ry)]
-          [cy-magic (- cy magic-number)]
-          [cy+magic (+ cy magic-number)])
-      ;; Start with the leftmost point of the ellipse, then go around
-      ;; clockwise.
-      `([(,cx-rx ,cy) (,cx-rx ,cy+magic) (,cx-magic ,cy+ry) (,cx ,cy+ry)]
-        [(,cx ,cy+ry) (,cx+magic ,cy+ry) (,cx+rx ,cy+magic) (,cx+rx ,cy)]
-        [(,cx+rx ,cy) (,cx+rx ,cy-magic) (,cx+magic ,cy-ry) (,cx ,cy-ry)]
-        [(,cx ,cy-ry) (,cx-magic ,cy-ry) (,cx-rx ,cy-magic) (,cx-rx ,cy)])))
-
-  (define (inverse-transform parametric-splines cosφ sinφ x₀ y₀)
-    (map (lambda (spline)
-           (vector (match-lambda
-                    [(x y) (list (+ (- (* cosφ cx) (* sinφ cy)) x₀)
-                                 (+ (+ (* cosφ cy) (* sinφ cx)) y₀))])
-                   spline))
-         parametric-splines))
-
-  (define (intersect-spline-with-line implicit-eq xmono ymono)
-    (let ([xmono (matrix-inexact->exact xmono)]
-          [ymono (matrix-inexact->exact ymono)])
-      (match implicit-eq
-        [(C A B)
-         (let ([plugged-in-eq
-                (poly:add-scm-mono
-                 `#(,C) (poly:add-scm-mono
-                         (poly:mul-scm-mono `#(,A) xspline)
-                         (poly:mul-scm-mono `#(,B) yspline)))])
-           
-  #|
-  (define (intersect-spline-with-line x₁ y₁ x₂ y₂ xspline yspline)
-    (match (line:implicit-equation #:x0 x₁ #:y0 y₁ #:x1 x₂ #:y1 y₂)
-      [(C A B)
+  (define (start-and-sweep-angles x₁^ y₁^ cx^ cy^ fS rx ry)
+    (let* ([z₁ (make-rectangular (/ (- x₁^ cx^) rx) (/ (- y₁^ cy^) ry))]
+           [z₂ (make-rectangular (/ (- (+ x₁^ cx^) rx)) (/ (- (+ y₁^ cy^)) ry))]
+           [θ₁ (angle z₁)]
+           [θ₂ (angle z₂)]
+           [Δθₜ (- θ₂ θ₁)]
+           [Δθ (if fS
+                   (if (negative? Δθₜ) (+ Δθₜ pi pi) Δθₜ)
+                   (if (positive? Δθₜ) (- Δθₜ pi pi) Δθₜ))])
+      (format #t "theta1 theta2 Dthetat Dtheta = ~a ~a ~a ~a\n" θ₁ θ₂ Δθₜ Δθ);;?????????????????????????????????????????
+      (values θ₁ Δθ)))
   |#
 
-  |#
+  (define (endpoint-angles x₁ y₁ x₂ y₂ cx cy fS)
+    (let* ([z₁ (make-rectangular (- x₁ cx) (- y₁ cy))]
+           [z₂ (make-rectangular (- x₂ cx) (- y₂ cy))]
+           [θ₁ (angle z₁)]
+           [θ₂ₜ (angle z₂)]
+           [θ₂ (if fS
+                   (if (< θ₁ θ₂ₜ) (- θ₂ₜ pi pi) θ₂ₜ)
+                   (if (< θ₂ₜ θ₁) (+ θ₂ₜ pi pi) θ₂ₜ))])
+      (values θ₁ θ₂)))
+
+  (define (make-arc x₁ y₁ x₂ y₂ fA fS rx ry rotation)
+    (assert (positive? rx))
+    (assert (positive? ry))
+    (format #t "x1 y1 phi = ~a ~a ~a[~a]\n" x₁ y₁ (- rotation) (deg->rad (- rotation)));;;;;;;;;???????????????????????
+    (let*-values
+
+        ;; Modify the problem so instead of the original @var{rx} and
+        ;; @var{ry} we are working with @var{a}, the semi-major axis,
+        ;; and @var{b}, the semi-minor axis. Use the following
+        ;; trigonometric identities:
+        ;;
+        ;;    cos(θ + π/2) = − sin θ
+        ;;    sin(θ + π/2) = + cos θ
+        ;;
+        ([(φ) (deg->rad (- rotation))]
+         [(a b cosφₐ sinφₐ) (if (<= ry rx)
+                                (values rx ry (cos φ) (sin φ))
+                                (values ry rx (- (sin φ)) (cos φ)))]
+         [(x₁^ y₁^) (transformed-start-point x₁ y₁ x₂ y₂ cosφₐ sinφₐ)]
+         [(cx^ cy^) (center-of-transformed-ellipse
+                     x₁^ y₁^ fA fS a b cosφₐ sinφₐ)]
+         [(cx cy) (center-of-ellipse cx^ cy^ x₁ y₁ x₂ y₂ cosφₐ sinφₐ)]
+;;;;;         [(λ₁ Δλ) (start-and-sweep-angles x₁^ y₁^ cx^ cy^ fS a b)])
+         [(λ₁ λ₂) (endpoint-angles x₁ y₁ x₂ y₂ cx cy fS)])
+
+      (format #t "rx ry a b cos sin = ~a ~a ~a ~a ~a ~a\n" rx ry a b cosφₐ sinφₐ);;?????????????????????????????????
+      (format #t "x1^ y1^ cx^ cy^ cx cy = ~a ~a ~a ~a ~a ~a\n" x₁^ y₁^ cx^ cy^ cx cy);;??????????????????????????????
+;;;;;      (format #t "theta1 Dtheta = ~a ~a\n" λ₁ Δλ);;??????????????????????????????????????????????????????????????????
+
+;;;;;;      (make-elliptic-arc cx cy a b φ λ₁ (+ λ₁ Δλ))))
+      (make-elliptic-arc cx cy a b φ λ₁ λ₂)))
+
+  (define* (expand-elliptic-arc degree vec i #:optional [threshold #f])
+    (match (vector-ref vec i)
+      [(#\A rx ry rotation fA fS (x y))
+       (let* ([curpt (final-point vec (- i 1))]
+              [x0 (car curpt)]
+              [y0 (cadr curpt)]
+              [arc (make-arc x0 y0 x y fA fS rx ry rotation)]
+              [thresh (if threshold threshold
+                          (let ([z0 (make-rectangular x0 y0)]
+                                [z  (make-rectangular x y)])
+                            ;; FIXME: What should we really do here?
+                            ;; At least make the constant a fluid.
+                            (* 0.001 (magnitude (- z z0)))))])
+         (elliptic-arc-bezier-path arc degree thresh))]
+      [other (list other)]))
+
+  (define* (expand-elliptic-arcs degree vec #:optional [threshold #f])
+    (reverse
+     (fold-left
+      (lambda (prior i)
+        (let ([expansion (expand-elliptic-arc degree vec i threshold)])
+          (append (reverse expansion) prior)))
+      (list (vector-ref vec 0))
+      (iota (- (vector-length vec) 1) 1))))
+
+  (define/kwargs (svg:expand-elliptic-arcs! subpath-vectors degree [threshold #f])
+    (do ([i 0 (+ i 1)]) ([= i (vector-length subpath-vectors)])
+      (vector-set! subpath-vectors i
+                   (list->vector
+                    (expand-elliptic-arcs degree
+                                          (vector-ref subpath-vectors i)
+                                          threshold))))
+    subpath-vectors)
 
   ;;-------------------------------------------------------------------------
 
   (define (real-mod a b)
     (- a (* b (floor (/ a b)))))
 
-  (define (mod360 phi)
-    (real-mod phi 360))
+  (define (mod360 φ)
+    (real-mod φ 360))
 
-  (define (angle-from x1 y1 x2 y2)
-    "Return the angle from the vector (x1,y1) to the vector (x2,y2)."
-    (let ([z1 (make-rectangular x1 y1)]
-          [z2 (make-rectangular x2 y2)])
-      (- (angle z2) (angle z1))))
+  (define deg->rad
+    (let ([factor (/ pi 180)])
+      (lambda (φ) (* factor φ))))
 
   ;;-------------------------------------------------------------------------
 

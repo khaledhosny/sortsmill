@@ -16,6 +16,7 @@ auxiliary/guile_math_multivariate_polynomials.c
 auxiliary/math_polyspline_add.c
 auxiliary/math_polyspline_div.c
 auxiliary/math_polyspline_elev.c
+auxiliary/math_polyspline_ellipses.c
 auxiliary/math_polyspline_reduce.c
 
 auxiliary/guile_python.c

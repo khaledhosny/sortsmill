@@ -337,6 +337,7 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
          -Wno-unused-but-set-variable -Wno-unused-result
          -Wstrict-aliasing
          -Wcast-align
+         -Wsizeof-pointer-memaccess
          -Werror=pointer-arith
          -Werror=missing-prototypes
          -Werror=implicit])

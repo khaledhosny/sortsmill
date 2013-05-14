@@ -630,6 +630,13 @@ GO_FILES += sortsmill/math/polyspline/elev.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/elev.scm
 
 
+# (sortsmill math polyspline ellipses)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/ellipses.scm
+GO_FILES += sortsmill/math/polyspline/ellipses.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/ellipses.scm
+
+
 # (sortsmill math polyspline eval)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/eval.scm

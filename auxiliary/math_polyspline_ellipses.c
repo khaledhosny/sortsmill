@@ -56,10 +56,42 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include <sortsmill/math/polyspline/ellipses.h>
+#include <sortsmill/guile.h>
 #include <sortsmill/xgc.h>
+#include <sortsmill/initialized_global_constants.h>
+#include <intl.h>
 #include <math.h>
+#include <assert.h>
 
 #define TWO_PI (2 * M_PI)
+
+//-------------------------------------------------------------------------
+
+#define _ELLIPSES_MODULE_NAME "sortsmill math polyspline ellipses"
+
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _pointer_to_elliptic_arc,
+                      scm_c_initialize_from_eval_string,
+                      "(@ (" _ELLIPSES_MODULE_NAME ") pointer->elliptic-arc)");
+
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, _elliptic_arc_to_pointer,
+                      scm_c_initialize_from_eval_string,
+                      "(@ (" _ELLIPSES_MODULE_NAME ") elliptic-arc->pointer)");
+
+VISIBLE SCM
+scm_from_elliptic_arc_t (elliptic_arc_t _arc)
+{
+  return scm_call_1 (_pointer_to_elliptic_arc (),
+                     scm_from_pointer (_arc, NULL));
+}
+
+VISIBLE elliptic_arc_t
+scm_to_elliptic_arc_t (SCM arc)
+{
+  return (elliptic_arc_t)
+    scm_to_pointer (scm_call_1 (_elliptic_arc_to_pointer (), arc));
+}
+
+//-------------------------------------------------------------------------
 
 // *INDENT-OFF*
 
@@ -148,6 +180,80 @@ static double safety3[4] = {
 };
 
 // *INDENT-ON*
+
+// Compute the value at x of the rational function
+//
+//    (c[0]x² + c[1]x + c[2]) / (x + c[3])
+//
+static double
+rational_function (double x, const double c[4])
+{
+  return (x * (x * c[0] + c[1]) + c[2]) / (x + c[3]);
+}
+
+static inline const double *
+rational_coefs (double coef_array[][4][4], size_t i, size_t j)
+{
+  return ((double (*)[4][4]) coef_array)[i][j];
+}
+
+static inline const double *
+coefs_2_low (size_t i, size_t j)
+{
+  return rational_coefs (coeffs2Low, i, j);
+}
+
+static inline const double *
+coefs_2_high (size_t i, size_t j)
+{
+  return rational_coefs (coeffs2High, i, j);
+}
+
+static inline const double *
+coefs_3_low (size_t i, size_t j)
+{
+  return rational_coefs (coeffs3Low, i, j);
+}
+
+static inline const double *
+coefs_3_high (size_t i, size_t j)
+{
+  return rational_coefs (coeffs3High, i, j);
+}
+
+typedef const double *_rational_coefs_func_t (size_t i, size_t j);
+
+static _rational_coefs_func_t *
+rational_coefs_func (int degree, double semimajor, double semiminor)
+{
+  assert (degree == 2 || degree == 3);
+  assert (0 < semimajor);
+  assert (0 < semiminor);
+
+  _rational_coefs_func_t *func;
+
+  switch (degree)
+    {
+    case 2:
+      func = (4 * semiminor < semimajor) ? coefs_2_low : coefs_2_high;
+      break;
+    case 3:
+      func = (4 * semiminor < semimajor) ? coefs_3_low : coefs_3_high;
+      break;
+    }
+
+  return func;
+}
+
+static const double *
+safety_coefs (int degree)
+{
+  assert (degree == 2 || degree == 3);
+
+  return (degree == 2) ? safety2 : safety3;
+}
+
+//-------------------------------------------------------------------------
 
 typedef struct elliptic_arc_struct_t
 {
@@ -345,6 +451,9 @@ make_unit_circle_at_origin (void)
 {
   elliptic_arc_t arc = x_gc_malloc_atomic (sizeof (elliptic_arc_struct_t));
 
+  // FIXME: Consider making this go clockwise starting at 180 degrees,
+  // which is more of a FontForge way of doing things. OTOH maybe we
+  // should just get rid of it. Let’s think about it.
   arc->cx = 0;
   arc->cy = 0;
   arc->a = 1;
@@ -433,6 +542,9 @@ make_ellipse (double cx, double cy, double a, double b, double theta)
   arc->theta = theta;
   arc->isPieSlice = false;
 
+  // FIXME: Consider making this go clockwise starting at 180 degrees,
+  // which is more of a FontForge way of doing things. OTOH maybe we
+  // should just get rid of it. Let’s think about it.
   arc->eta1 = 0;
   arc->eta2 = TWO_PI;
   arc->cosTheta = cos (theta);
@@ -448,97 +560,90 @@ make_ellipse (double cx, double cy, double a, double b, double theta)
   return arc;
 }
 
-/** Compute the value of a rational function.
- * This method handles rational functions where the numerator is
- * quadratic and the denominator is linear
- * @param x abscissa for which the value should be computed
- * @param c coefficients array of the rational function
- */
 static double
-rationalFunction (double x, double c[])
+error_estimate_for_linear (double semimajor, double semiminor,
+                           double xcenter, double ycenter,
+                           double cos_theta, double sin_theta,
+                           double etaA, double etaB)
 {
-  return (x * (x * c[0] + c[1]) + c[2]) / (x + c[3]);
+  // start point
+  const double aCosEtaA = semimajor * cos (etaA);
+  const double bSinEtaA = semiminor * sin (etaA);
+  const double xA = xcenter + aCosEtaA * cos_theta - bSinEtaA * sin_theta;
+  const double yA = ycenter + aCosEtaA * sin_theta + bSinEtaA * cos_theta;
+
+  // end point
+  const double aCosEtaB = semimajor * cos (etaB);
+  const double bSinEtaB = semiminor * sin (etaB);
+  const double xB = xcenter + aCosEtaB * cos_theta - bSinEtaB * sin_theta;
+  const double yB = ycenter + aCosEtaB * sin_theta + bSinEtaB * cos_theta;
+
+  // maximal error point
+  const double eta = 0.5 * (etaA + etaB);
+  const double aCosEta = semimajor * cos (eta);
+  const double bSinEta = semiminor * sin (eta);
+  const double x = xcenter + aCosEta * cos_theta - bSinEta * sin_theta;
+  const double y = ycenter + aCosEta * sin_theta + bSinEta * cos_theta;
+
+  const double dx = xB - xA;
+  const double dy = yB - yA;
+
+  return fabs (x * dy - y * dx + xB * yA - xA * yB) / sqrt (dx * dx + dy * dy);
 }
 
-
-/** Estimate the approximation error for a sub-arc of the instance.
- * @param degree degree of the Bézier curve to use (1, 2 or 3)
- * @param tA start angle of the sub-arc
- * @param tB end angle of the sub-arc
- * @return upper bound of the approximation error between the Bézier
- * curve and the real ellipse
- */
 static double
-estimateError (elliptic_arc_t arc, int degree, double etaA, double etaB)
+error_estimate_for_quadratic_or_cubic (int degree,
+                                       double semimajor, double semiminor,
+                                       double etaA, double etaB)
 {
-  double result;
+  assert (degree == 2 || degree == 3);
+
+  _rational_coefs_func_t *coefs =
+    rational_coefs_func (degree, semimajor, semiminor);
+
+  const double x = semiminor / semimajor;
 
   const double eta = 0.5 * (etaA + etaB);
+  const double cos2 = cos (2 * eta);
+  const double cos4 = cos (4 * eta);
+  const double cos6 = cos (6 * eta);
 
-  if (degree < 2)
-    {
-      // start point
-      double aCosEtaA = arc->a * cos (etaA);
-      double bSinEtaA = arc->b * sin (etaA);
-      double xA = arc->cx + aCosEtaA * arc->cosTheta - bSinEtaA * arc->sinTheta;
-      double yA = arc->cy + aCosEtaA * arc->sinTheta + bSinEtaA * arc->cosTheta;
+  double c0 = rational_function (x, coefs (0, 0))
+    + cos2 * rational_function (x, coefs (0, 1))
+    + cos4 * rational_function (x, coefs (0, 2))
+    + cos6 * rational_function (x, coefs (0, 3));
 
-      // end point
-      double aCosEtaB = arc->a * cos (etaB);
-      double bSinEtaB = arc->b * sin (etaB);
-      double xB = arc->cx + aCosEtaB * arc->cosTheta - bSinEtaB * arc->sinTheta;
-      double yB = arc->cy + aCosEtaB * arc->sinTheta + bSinEtaB * arc->cosTheta;
+  double c1 = rational_function (x, coefs (1, 0))
+    + cos2 * rational_function (x, coefs (1, 1))
+    + cos4 * rational_function (x, coefs (1, 2))
+    + cos6 * rational_function (x, coefs (1, 3));
 
-      // maximal error point
-      double aCosEta = arc->a * cos (eta);
-      double bSinEta = arc->b * sin (eta);
-      double x = arc->cx + aCosEta * arc->cosTheta - bSinEta * arc->sinTheta;
-      double y = arc->cy + aCosEta * arc->sinTheta + bSinEta * arc->cosTheta;
+  const double *safety = safety_coefs (degree);
 
-      double dx = xB - xA;
-      double dy = yB - yA;
+  return
+    rational_function (x, safety) * semimajor * exp (c0 + c1 * (etaB - etaA));
+}
 
-      result =
-        fabs (x * dy - y * dx + xB * yA - xA * yB) / sqrt (dx * dx + dy * dy);
+// Estimate the approximation error for a sub-arc of the instance.
+//
+//    @var{etaA} = start angle of the sub-arc.
+//    @var{etaB} = end angle of the sub-arc.
+//
+// Returns an upper bound of the approximation error between the
+// Bézier curve and the actual ellipse.
+static double
+error_estimate (int degree,
+                double semimajor, double semiminor,
+                double xcenter, double ycenter,
+                double cos_theta, double sin_theta, double etaA, double etaB)
+{
+  assert (degree == 1 || degree == 2 || degree == 3);
 
-    }
-  else
-    {
-
-      double x = arc->b / arc->a;
-      double dEta = etaB - etaA;
-      double cos2 = cos (2 * eta);
-      double cos4 = cos (4 * eta);
-      double cos6 = cos (6 * eta);
-
-      // select the right coefficients set according to degree and b/a
-      double *coeffs;
-      double *safety;
-      if (degree == 2)
-        {
-          coeffs = (x < 0.25) ? &coeffs2Low[0][0][0] : &coeffs2High[0][0][0];
-          safety = safety2;
-        }
-      else
-        {
-          coeffs = (x < 0.25) ? &coeffs3Low[0][0][0] : &coeffs3High[0][0][0];
-          safety = safety3;
-        }
-
-      double c0 = rationalFunction (x, ((double (*)[4][4]) coeffs)[0][0])
-        + cos2 * rationalFunction (x, ((double (*)[4][4]) coeffs)[0][1])
-        + cos4 * rationalFunction (x, ((double (*)[4][4]) coeffs)[0][2])
-        + cos6 * rationalFunction (x, ((double (*)[4][4]) coeffs)[0][3]);
-
-      double c1 = rationalFunction (x, ((double (*)[4][4]) coeffs)[1][0])
-        + cos2 * rationalFunction (x, ((double (*)[4][4]) coeffs)[1][1])
-        + cos4 * rationalFunction (x, ((double (*)[4][4]) coeffs)[1][2])
-        + cos6 * rationalFunction (x, ((double (*)[4][4]) coeffs)[1][3]);
-
-      result = rationalFunction (x, safety) * arc->a * exp (c0 + c1 * dEta);
-    }
-
-  return result;
+  return (degree == 1) ?
+    error_estimate_for_linear (semimajor, semiminor, xcenter, ycenter,
+                               cos_theta, sin_theta, etaA, etaB) :
+    error_estimate_for_quadratic_or_cubic (degree, semimajor, semiminor,
+                                           etaA, etaB);
 }
 
 /** Get the elliptical arc point for a given angular parameter.
@@ -781,29 +886,46 @@ elliptic_arc_get_bounds (elliptic_arc_t arc, double *x, double *y,
   *h = arc->height;
 }
 
+VISIBLE size_t
+elliptic_arc_spline_count (int degree, size_t max_count, double threshold,
+                           double semimajor, double semiminor,
+                           double xcenter, double ycenter,
+                           double cos_theta, double sin_theta,
+                           double eta1, double eta2)
+{
+  bool found = false;
+  size_t spline_count = 1;
+  while (!found && spline_count < max_count)
+    {
+      double dEta = (eta2 - eta1) / spline_count;
+      if (dEta <= M_PI_2)
+        {
+          double etaB = eta1;
+          found = true;
+          for (size_t i = 0; found && i < spline_count; i++)
+            {
+              const double etaA = etaB;
+              etaB += dEta;
+              const double error = error_estimate (degree, semimajor, semiminor,
+                                                   xcenter, ycenter, cos_theta,
+                                                   sin_theta,
+                                                   etaA, etaB);
+              found = (error <= threshold);
+            }
+        }
+      spline_count *= 2;
+    }
+  return spline_count;
+}
+
 // find the number of Bézier curves needed
 static size_t
 spline_count (elliptic_arc_t arc, int degree, double threshold)
 {
-  bool found = false;
-  size_t n = 1;
-  while ((!found) && (n < 1024))
-    {
-      double dEta = (arc->eta2 - arc->eta1) / n;
-      if (dEta <= M_PI_2)
-        {
-          double etaB = arc->eta1;
-          found = true;
-          for (size_t i = 0; found && (i < n); ++i)
-            {
-              double etaA = etaB;
-              etaB += dEta;
-              found = (estimateError (arc, degree, etaA, etaB) <= threshold);
-            }
-        }
-      n = n << 1;
-    }
-  return n;
+  return elliptic_arc_spline_count (degree, 1024, threshold,
+                                    arc->a, arc->b, arc->cx, arc->cy,
+                                    arc->cosTheta, arc->sinTheta,
+                                    arc->eta1, arc->eta2);
 }
 
 /** Build an approximation of the instance outline.
@@ -814,10 +936,10 @@ spline_count (elliptic_arc_t arc, int degree, double threshold)
 VISIBLE SCM
 elliptic_arc_bezier_path (elliptic_arc_t arc, int degree, double threshold)
 {
-  SCM moveto = scm_from_latin1_symbol ("M");
-  SCM lineto = scm_from_latin1_symbol ("L");
-  SCM quadto = scm_from_latin1_symbol ("Q");
-  SCM cubicto = scm_from_latin1_symbol ("C");
+  SCM moveto = scm_integer_to_char (scm_from_uint ((unsigned int) 'M'));
+  SCM lineto = scm_integer_to_char (scm_from_uint ((unsigned int) 'L'));
+  SCM quadto = scm_integer_to_char (scm_from_uint ((unsigned int) 'Q'));
+  SCM cubicto = scm_integer_to_char (scm_from_uint ((unsigned int) 'C'));
 
   size_t n = spline_count (arc, degree, threshold);
 
@@ -918,6 +1040,198 @@ elliptic_arc_bezier_path (elliptic_arc_t arc, int degree, double threshold)
   return scm_reverse (path);
 }
 
+VISIBLE void
+elliptic_arc_piecewise_bezier (int degree, size_t spline_count,
+                               double semimajor, double semiminor,
+                               double xcenter, double ycenter,
+                               double cos_theta, double sin_theta,
+                               double eta1, double eta2,
+                               double xsplines[spline_count][degree + 1],
+                               double ysplines[spline_count][degree + 1])
+{
+  assert (degree == 1 || degree == 2 || degree == 3);
+
+  double etaB = eta1;
+  double cosEtaB = cos (etaB);
+  double sinEtaB = sin (etaB);
+  double aCosEtaB = semimajor * cosEtaB;
+  double bSinEtaB = semiminor * sinEtaB;
+  double aSinEtaB = semimajor * sinEtaB;
+  double bCosEtaB = semiminor * cosEtaB;
+  double xB = xcenter + aCosEtaB * cos_theta - bSinEtaB * sin_theta;
+  double yB = ycenter + aCosEtaB * sin_theta + bSinEtaB * cos_theta;
+  double xBDot = -aSinEtaB * cos_theta - bCosEtaB * sin_theta;
+  double yBDot = -aSinEtaB * sin_theta + bCosEtaB * cos_theta;
+
+  for (size_t i = 0; i < spline_count; i++)
+    {
+      double xA = xB;
+      double yA = yB;
+      double xADot = xBDot;
+      double yADot = yBDot;
+
+      etaB = eta1 + (i + 1) * (eta2 - eta1) / spline_count;
+      cosEtaB = cos (etaB);
+      sinEtaB = sin (etaB);
+      aCosEtaB = semimajor * cosEtaB;
+      bSinEtaB = semiminor * sinEtaB;
+      aSinEtaB = semimajor * sinEtaB;
+      bCosEtaB = semiminor * cosEtaB;
+      xB = xcenter + aCosEtaB * cos_theta - bSinEtaB * sin_theta;
+      yB = ycenter + aCosEtaB * sin_theta + bSinEtaB * cos_theta;
+      xBDot = -aSinEtaB * cos_theta - bCosEtaB * sin_theta;
+      yBDot = -aSinEtaB * sin_theta + bCosEtaB * cos_theta;
+
+      switch (degree)
+        {
+        case 1:
+          xsplines[i][0] = xA;
+          xsplines[i][1] = xB;
+
+          ysplines[i][0] = yA;
+          ysplines[i][1] = yB;
+          break;
+
+        case 2:
+          {
+            double k =
+              (yBDot * (xB - xA) - xBDot * (yB - yA)) / (xADot * yBDot -
+                                                         yADot * xBDot);
+
+            xsplines[i][0] = xA;
+            xsplines[i][1] = xA + k * xADot;
+            xsplines[i][2] = xB;
+
+            ysplines[i][0] = yA;
+            ysplines[i][1] = yA + k * yADot;
+            ysplines[i][2] = yB;
+          }
+          break;
+
+        case 3:
+          {
+            const double t = tan (0.5 * (eta2 - eta1) / spline_count);
+            const double alpha =
+              sin ((eta2 - eta1) / spline_count) *
+              (sqrt (4 + 3 * t * t) - 1) / 3;
+
+            xsplines[i][0] = xA;
+            xsplines[i][1] = xA + alpha * xADot;
+            xsplines[i][2] = xB - alpha * xBDot;
+            xsplines[i][3] = xB;
+
+            ysplines[i][0] = yA;
+            ysplines[i][1] = yA + alpha * yADot;
+            ysplines[i][2] = yB - alpha * yBDot;
+            ysplines[i][3] = yB;
+          }
+        }
+    }
+}
+
+// FIXME: This could be made reusable.
+INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, something_by_n_mapfunc,
+                      scm_c_initialize_from_eval_string,
+                      "(lambda (n) (lambda (i j) `[,(+ (* i n) j)]))");
+
+VISIBLE SCM
+scm_c_elliptic_arc_piecewise_bezier (int degree, size_t max_count,
+                                     double threshold,
+                                     double semimajor, double semiminor,
+                                     double xcenter, double ycenter,
+                                     double cos_theta, double sin_theta,
+                                     double eta1, double eta2)
+{
+  const char *who = "scm_c_elliptic_arc_piecewise_bezier";
+
+  if (degree < 1 || 3 < degree)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("degree 1, 2, or 3 expected")),
+        rnrs_make_irritants_condition (scm_list_1 (scm_from_int (degree)))));
+
+  if (semimajor < semiminor || semiminor <= 0)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("expected semimajor >= "
+                                         "semiminor > 0")),
+        rnrs_make_irritants_condition (scm_list_2
+                                       (scm_from_double (semimajor),
+                                        scm_from_double (semiminor)))));
+
+  if (eta2 < eta1)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("expected eta1 <= eta2")),
+        rnrs_make_irritants_condition (scm_list_2 (scm_from_double (eta1),
+                                                   scm_from_double (eta2)))));
+
+  size_t spline_count = elliptic_arc_spline_count (degree, max_count, threshold,
+                                                   semimajor, semiminor,
+                                                   xcenter, ycenter,
+                                                   cos_theta, sin_theta,
+                                                   eta1, eta2);
+
+  double *xsplines =
+    (double *) scm_malloc (spline_count * (degree + 1) * sizeof (double));
+  double *ysplines =
+    (double *) scm_malloc (spline_count * (degree + 1) * sizeof (double));
+
+  elliptic_arc_piecewise_bezier (degree, spline_count, semimajor, semiminor,
+                                 xcenter, ycenter, cos_theta, sin_theta,
+                                 eta1, eta2,
+                                 (double (*)[degree + 1]) xsplines,
+                                 (double (*)[degree + 1]) ysplines);
+
+  SCM xvec = scm_take_f64vector (xsplines, spline_count * (degree + 1));
+  SCM yvec = scm_take_f64vector (ysplines, spline_count * (degree + 1));
+  SCM mapfunc = scm_call_1 (something_by_n_mapfunc (),
+                            scm_from_int (degree + 1));
+  SCM bounds = scm_list_2 (scm_from_size_t (spline_count),
+                           scm_from_int (degree + 1));
+  SCM xmat = scm_make_shared_array (xvec, mapfunc, bounds);
+  SCM ymat = scm_make_shared_array (yvec, mapfunc, bounds);
+
+  SCM results[2] = {
+    [0] = xmat,
+    [1] = ymat
+  };
+  return scm_c_values (results, 2);
+}
+
+VISIBLE SCM
+scm_elliptic_arc_piecewise_bezier (SCM degree, SCM max_count, SCM threshold,
+                                   SCM semimajor, SCM semiminor,
+                                   SCM xcenter, SCM ycenter, SCM theta,
+                                   SCM eta1, SCM eta2)
+{
+  const int _degree = scm_to_int (degree);
+  const size_t _max_count = scm_to_size_t (max_count);
+  const double _threshold = scm_to_double (threshold);
+  const double _semimajor = scm_to_double (semimajor);
+  const double _semiminor = scm_to_double (semiminor);
+  const double _xcenter = scm_to_double (xcenter);
+  const double _ycenter = scm_to_double (ycenter);
+  const double _theta = scm_to_double (theta);
+  const double _eta1 = scm_to_double (eta1);
+  const double _eta2 = scm_to_double (eta2);
+
+  const double cos_theta = cos (_theta);
+  const double sin_theta = sin (_theta);
+
+  return scm_c_elliptic_arc_piecewise_bezier (_degree, _max_count, _threshold,
+                                              _semimajor, _semiminor,
+                                              _xcenter, _ycenter,
+                                              cos_theta, sin_theta,
+                                              _eta1, _eta2);
+}
+
 /** Tests if the interior of the Shape intersects the interior of a
  * specified rectangular area.
  */
@@ -936,3 +1250,83 @@ elliptic_arc_and_rectangle_interiors_intersect (elliptic_arc_t arc, double x,
     || intersectOutline (arc, xPlusW, yPlusH, x, yPlusH)
     || intersectOutline (arc, x, yPlusH, x, y);
 }
+
+//-------------------------------------------------------------------------
+
+VISIBLE SCM
+scm_make_unit_circle_at_origin (void)
+{
+  return scm_from_elliptic_arc_t (make_unit_circle_at_origin ());
+}
+
+VISIBLE SCM
+scm_make_elliptic_arc (SCM cx, SCM cy, SCM a, SCM b,
+                       SCM theta, SCM lambda1, SCM lambda2, SCM isPieSlice)
+{
+  isPieSlice = (SCM_UNBNDP (isPieSlice)) ? SCM_BOOL_F : isPieSlice;
+  elliptic_arc_t _arc =
+    make_elliptic_arc (scm_to_double (cx), scm_to_double (cy),
+                       scm_to_double (a), scm_to_double (b),
+                       scm_to_double (theta), scm_to_double (lambda1),
+                       scm_to_double (lambda2), scm_is_true (isPieSlice));
+  return scm_from_elliptic_arc_t (_arc);
+}
+
+VISIBLE SCM
+scm_make_ellipse (SCM cx, SCM cy, SCM a, SCM b, SCM theta)
+{
+  elliptic_arc_t _arc = make_ellipse (scm_to_double (cx), scm_to_double (cy),
+                                      scm_to_double (a), scm_to_double (b),
+                                      scm_to_double (theta));
+  return scm_from_elliptic_arc_t (_arc);
+}
+
+VISIBLE SCM
+scm_elliptic_arc_bezier_path (SCM arc, SCM degree, SCM threshold)
+{
+  const char *who = "scm_elliptic_arc_bezier_path";
+
+  elliptic_arc_t _arc = scm_to_elliptic_arc_t (arc);
+  int _degree = scm_to_int (degree);
+  double _threshold = scm_to_double (threshold);
+
+  switch (_degree)
+    {
+    case 1:
+    case 2:
+    case 3:
+      break;
+
+    default:
+      rnrs_raise_condition
+        (scm_list_4
+         (rnrs_make_assertion_violation (),
+          rnrs_c_make_who_condition (who),
+          rnrs_c_make_message_condition (_("degree 1, 2, or 3 expected")),
+          rnrs_make_irritants_condition (scm_list_1 (degree))));
+    }
+
+  return elliptic_arc_bezier_path (_arc, _degree, _threshold);
+}
+
+//-------------------------------------------------------------------------
+
+void init_math_polyspline_ellipses (void);
+
+VISIBLE void
+init_math_polyspline_ellipses (void)
+{
+  //?????????????????????????????????????????????????????????????????????????????????????????????????????????
+  scm_c_define_gsubr ("make-unit-circle-at-origin", 0, 0, 0,
+                      scm_make_unit_circle_at_origin);
+  scm_c_define_gsubr ("make-elliptic-arc", 7, 1, 0, scm_make_elliptic_arc);
+  scm_c_define_gsubr ("make-ellipse", 5, 0, 0, scm_make_ellipse);
+  scm_c_define_gsubr ("elliptic-arc-bezier-path", 3, 0, 0,
+                      scm_elliptic_arc_bezier_path);
+  //?????????????????????????????????????????????????????????????????????????????????????????????????????????
+
+  scm_c_define_gsubr ("elliptic-arc-piecewise-bezier", 10, 0, 0,
+                      scm_elliptic_arc_piecewise_bezier);
+}
+
+//-------------------------------------------------------------------------

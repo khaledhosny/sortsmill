@@ -19,6 +19,7 @@
 #define _SORTSMILL_GUILE_MATH_POLYSPLINE_H
 
 #include <libguile.h>
+#include <sortsmill/guile/math/polyspline/ellipses.h>
 
 #ifdef __cplusplus
 extern "C"

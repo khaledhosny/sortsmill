@@ -76,6 +76,7 @@ extern "C"
 }
 #endif
 
+//????????????????????????????????????????????????????????????????????????????????????????????????
 typedef struct elliptic_arc_struct_t *elliptic_arc_t;
 
 elliptic_arc_t make_unit_circle_at_origin (void);
@@ -98,6 +99,35 @@ void elliptic_arc_get_int_bounds (elliptic_arc_t arc, int *x, int *y, int *w,
 void elliptic_arc_get_bounds (elliptic_arc_t arc, double *x, double *y,
                               double *w, double *h);
 SCM elliptic_arc_bezier_path (elliptic_arc_t arc, int degree, double threshold);
+//????????????????????????????????????????????????????????????????????????????????????????????????
+
+/* FIXME: Consider providing a `spline count' function for piecewise
+   linear that requires fewer arguments. */
+size_t elliptic_arc_spline_count (int degree, size_t max_count,
+                                  double threshold, double semimajor,
+                                  double semiminor, double xcenter,
+                                  double ycenter, double cos_theta,
+                                  double sin_theta, double eta1, double eta2);
+
+void elliptic_arc_piecewise_bezier (int degree, size_t spline_count,
+                                    double semimajor, double semiminor,
+                                    double xcenter, double ycenter,
+                                    double cos_theta, double sin_theta,
+                                    double eta1, double eta2,
+                                    double xsplines[spline_count][degree + 1],
+                                    double ysplines[spline_count][degree + 1]);
+
+SCM scm_c_elliptic_arc_piecewise_bezier (int degree, size_t max_count,
+                                         double threshold,
+                                         double semimajor, double semiminor,
+                                         double xcenter, double ycenter,
+                                         double cos_theta, double sin_theta,
+                                         double eta1, double eta2);
+
+SCM scm_elliptic_arc_piecewise_bezier (SCM degree, SCM max_count, SCM threshold,
+                                       SCM semimajor, SCM semiminor,
+                                       SCM xcenter, SCM ycenter, SCM theta,
+                                       SCM eta1, SCM eta2);
 
 #if 0
 {

@@ -189,6 +189,7 @@ nobase_include_HEADERS += sortsmill/guile/math/matrices.h
 nobase_include_HEADERS += sortsmill/guile/math/matrices/base.h
 nobase_include_HEADERS += sortsmill/guile/math/multivariate_polynomials.h
 nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
+nobase_include_HEADERS += sortsmill/guile/math/polyspline/ellipses.h
 
 nobase_include_HEADERS += sortsmill/guile/strings.h
 nobase_include_HEADERS += sortsmill/guile/strings/gc.h
