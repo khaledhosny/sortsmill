@@ -112,6 +112,7 @@ nobase_include_HEADERS += sortsmill/math.h
 
 # Mathematical functions.
 nobase_include_HEADERS += sortsmill/math/bincoef.h
+nobase_include_HEADERS += sortsmill/math/floor_mod.h
 
 # Pre-computed constants for GNU MP.
 nobase_include_HEADERS += sortsmill/math/gmp_constants.h

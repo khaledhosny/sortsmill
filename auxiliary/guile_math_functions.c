@@ -17,6 +17,7 @@
 
 #include <sortsmill/guile.h>
 #include <sortsmill/math/bincoef.h>
+#include <sortsmill/math/floor_mod.h>
 #include <stdint.h>
 #include <intl.h>
 

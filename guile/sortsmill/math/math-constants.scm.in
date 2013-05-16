@@ -23,6 +23,7 @@
           c:dbl-epsilon-exact ; DBL_EPSILON as an ‘exact’ number.
           pi                  ; Circumference over diameter of a circle.
           pi/2                ; Half of pi.
+          pi/4                ; One quarter of pi.
           )
 
   (import (rnrs)
@@ -52,5 +53,6 @@
 
   (define pi (* 4 (atan 1)))
   (define pi/2 (* 2 (atan 1)))
+  (define pi/4 (atan 1))
 
   ) ;; end of library.

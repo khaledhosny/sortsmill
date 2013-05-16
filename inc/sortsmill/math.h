@@ -20,6 +20,7 @@
 
 #include <sortsmill/math/bincoef.h>
 #include <sortsmill/math/brentroot.h>
+#include <sortsmill/math/floor_mod.h>
 #include <sortsmill/math/gmp_constants.h>
 #include <sortsmill/math/polyspline.h>  /* FIXME: Make polyspline.h
                                            hierarchical. */

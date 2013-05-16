@@ -87,6 +87,7 @@ dist_libsortsmill_aux_la_SOURCES += xunistr_strjoin.c
 
 # Mathematical functions.
 dist_libsortsmill_aux_la_SOURCES += bincoef.c
+dist_libsortsmill_aux_la_SOURCES += floor_mod.c
 
 # Moving data around, taking into account non-unit strides.
 dist_libsortsmill_aux_la_SOURCES += copy_with_strides.c

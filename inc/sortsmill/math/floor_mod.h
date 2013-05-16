@@ -15,9 +15,9 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_MATH_POLYSPLINE_ELLIPSES_H
-#define _SORTSMILL_GUILE_MATH_POLYSPLINE_ELLIPSES_H
+#ifndef _SORTSMILL_MATH_FLOOR_MOD_H
+#define _SORTSMILL_MATH_FLOOR_MOD_H
 
-#include <sortsmill/math/polyspline/ellipses.h>
+double floor_mod (double, double);
 
-#endif /* _SORTSMILL_GUILE_MATH_POLYSPLINE_ELLIPSES_H */
+#endif /* _SORTSMILL_MATH_FLOOR_MOD_H */

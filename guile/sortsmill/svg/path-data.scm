@@ -60,6 +60,11 @@
 
    svg:make-subpath-vectors-absolute!
 
+   svg:elliptic-arc-quadratic-spline-count-max
+   svg:elliptic-arc-cubic-spline-count-max
+   svg:elliptic-arc-quadratic-error-threshold
+   svg:elliptic-arc-cubic-error-threshold
+
    svg:subpaths-quadratic->cubic!
    svg:expand-elliptic-arcs!
    )
@@ -237,7 +242,7 @@
                                           (let ([j10 (match<comma-wsp?> s j9)])
                                             (let-values ([(j11 v11) (match<coordinate-pair> s j10)])
                                               (if j11
-                                                  (values j11 (list v1 v3 (mod360 v5) v7 v9 v11))
+                                                  (values j11 (list v1 v3 (mod v5 360) v7 v9 v11))
                                                   (values #f #f))))
                                           (values #f #f))))
                                   (values #f #f))))
@@ -644,20 +649,6 @@
     (values (+ (- (* cosφ cx^) (* sinφ cy^)) (/ (+ x₁ x₂) 2))
             (+ (+ (* cosφ cy^) (* sinφ cx^)) (/ (+ y₁ y₂) 2))))
 
-  #|
-  (define (start-and-sweep-angles x₁^ y₁^ cx^ cy^ fS rx ry)
-    (let* ([z₁ (make-rectangular (/ (- x₁^ cx^) rx) (/ (- y₁^ cy^) ry))]
-           [z₂ (make-rectangular (/ (- (+ x₁^ cx^) rx)) (/ (- (+ y₁^ cy^)) ry))]
-           [θ₁ (angle z₁)]
-           [θ₂ (angle z₂)]
-           [Δθₜ (- θ₂ θ₁)]
-           [Δθ (if fS
-                   (if (negative? Δθₜ) (+ Δθₜ pi pi) Δθₜ)
-                   (if (positive? Δθₜ) (- Δθₜ pi pi) Δθₜ))])
-      (format #t "theta1 theta2 Dthetat Dtheta = ~a ~a ~a ~a\n" θ₁ θ₂ Δθₜ Δθ);;?????????????????????????????????????????
-      (values θ₁ Δθ)))
-  |#
-
   (define (endpoint-angles x₁ y₁ x₂ y₂ cx cy fS)
     (let* ([z₁ (make-rectangular (- x₁ cx) (- y₁ cy))]
            [z₂ (make-rectangular (- x₂ cx) (- y₂ cy))]
@@ -668,83 +659,107 @@
                    (if (< θ₂ₜ θ₁) (+ θ₂ₜ pi pi) θ₂ₜ))])
       (values θ₁ θ₂)))
 
-  (define (make-arc x₁ y₁ x₂ y₂ fA fS rx ry rotation)
+  (define svg:elliptic-arc-quadratic-spline-count-max (make-fluid 128))
+  (define svg:elliptic-arc-cubic-spline-count-max (make-fluid 128))
+
+  (define svg:elliptic-arc-quadratic-error-threshold (make-fluid 1/100))
+  (define svg:elliptic-arc-cubic-error-threshold (make-fluid 1/100))
+
+  (define/kwargs (expand-arc x₁ y₁ x₂ y₂ fA fS rx ry rotation degree
+                             [spline-count-max #f]
+                             [error-threshold #f])
     (assert (positive? rx))
     (assert (positive? ry))
-    (format #t "x1 y1 phi = ~a ~a ~a[~a]\n" x₁ y₁ (- rotation) (deg->rad (- rotation)));;;;;;;;;???????????????????????
-    (let*-values
+    (assert (<= 2 degree 3))
+    (let ([spline-count-max
+           (if spline-count-max spline-count-max
+               (case degree
+                 [(2) (fluid-ref svg:elliptic-arc-quadratic-spline-count-max)]
+                 [(3) (fluid-ref svg:elliptic-arc-cubic-spline-count-max)]))]
+          [error-threshold
+           (if error-threshold error-threshold
+               (case degree
+                 [(2) (fluid-ref svg:elliptic-arc-quadratic-error-threshold)]
+                 [(3) (fluid-ref svg:elliptic-arc-cubic-error-threshold)]))])
+      (let*-values
+          ;; Modify the problem so instead of the original @var{rx} and
+          ;; @var{ry} we are working with the semi-major and semi-minor
+          ;; axes, and @var{φ}, the (possibly negative)
+          ;; counterclockwise rotation with respect to the semi-major
+          ;; axis.
+          ([(semimajor semiminor φ)
+            (if (<= ry rx)
+                (values rx ry (/ (* pi (mod rotation 360)) -180))
+                (values ry rx (/ (* pi (mod (+ 90 rotation) 360)) -180)))]
+           [(cosφ sinφ) (values (cos φ) (sin φ))]
+           [(x₁^ y₁^) (transformed-start-point x₁ y₁ x₂ y₂ cosφ sinφ)]
+           [(cx^ cy^) (center-of-transformed-ellipse
+                       x₁^ y₁^ fA fS semimajor semiminor cosφ sinφ)]
+           [(cx cy) (center-of-ellipse cx^ cy^ x₁ y₁ x₂ y₂ cosφ sinφ)]
+           [(λ₁ λ₂) (endpoint-angles x₁ y₁ x₂ y₂ cx cy fS)]
+           [(xsplines ysplines)
+            (elliptic-arc-piecewise-bezier degree spline-count-max error-threshold
+                                           semimajor semiminor cx cy φ λ₁ λ₂)])
 
-        ;; Modify the problem so instead of the original @var{rx} and
-        ;; @var{ry} we are working with @var{a}, the semi-major axis,
-        ;; and @var{b}, the semi-minor axis. Use the following
-        ;; trigonometric identities:
-        ;;
-        ;;    cos(θ + π/2) = − sin θ
-        ;;    sin(θ + π/2) = + cos θ
-        ;;
-        ([(φ) (deg->rad (- rotation))]
-         [(a b cosφₐ sinφₐ) (if (<= ry rx)
-                                (values rx ry (cos φ) (sin φ))
-                                (values ry rx (- (sin φ)) (cos φ)))]
-         [(x₁^ y₁^) (transformed-start-point x₁ y₁ x₂ y₂ cosφₐ sinφₐ)]
-         [(cx^ cy^) (center-of-transformed-ellipse
-                     x₁^ y₁^ fA fS a b cosφₐ sinφₐ)]
-         [(cx cy) (center-of-ellipse cx^ cy^ x₁ y₁ x₂ y₂ cosφₐ sinφₐ)]
-;;;;;         [(λ₁ Δλ) (start-and-sweep-angles x₁^ y₁^ cx^ cy^ fS a b)])
-         [(λ₁ λ₂) (endpoint-angles x₁ y₁ x₂ y₂ cx cy fS)])
+        ;; Store the exact endpoints.
+        (matrix-1set! xsplines 1 1 x₁)
+        (matrix-1set! ysplines 1 1 y₁)
+        (matrix-1set! xsplines
+                      (matrix-row-count xsplines)
+                      (matrix-column-count xsplines)
+                      x₂)
+        (matrix-1set! ysplines
+                      (matrix-row-count ysplines)
+                      (matrix-column-count ysplines)
+                      y₂)
 
-      (format #t "rx ry a b cos sin = ~a ~a ~a ~a ~a ~a\n" rx ry a b cosφₐ sinφₐ);;?????????????????????????????????
-      (format #t "x1^ y1^ cx^ cy^ cx cy = ~a ~a ~a ~a ~a ~a\n" x₁^ y₁^ cx^ cy^ cx cy);;??????????????????????????????
-;;;;;      (format #t "theta1 Dtheta = ~a ~a\n" λ₁ Δλ);;??????????????????????????????????????????????????????????????????
+        (values xsplines ysplines))))
 
-;;;;;;      (make-elliptic-arc cx cy a b φ λ₁ (+ λ₁ Δλ))))
-      (make-elliptic-arc cx cy a b φ λ₁ λ₂)))
+  (define (spline->command xspline yspline)
+    (case (row-matrix-size xspline)
+      [(3) `(#\Q
+             (,(matrix-1ref xspline 1 2) ,(matrix-1ref yspline 1 2))
+             (,(matrix-1ref xspline 1 3) ,(matrix-1ref yspline 1 3)))]
+      [(4) `(#\C
+             (,(matrix-1ref xspline 1 2) ,(matrix-1ref yspline 1 2))
+             (,(matrix-1ref xspline 1 3) ,(matrix-1ref yspline 1 3))
+             (,(matrix-1ref xspline 1 4) ,(matrix-1ref yspline 1 4)))]))
 
-  (define* (expand-elliptic-arc degree vec i #:optional [threshold #f])
+  (define (splines->commands xsplines ysplines)
+    (assert (equal? (matrix-dimensions xsplines) (matrix-dimensions ysplines)))
+    (assert (<= 3 (matrix-column-count xsplines) 4))
+    (map
+     (lambda (i)
+       (spline->command (matrix-0row xsplines i) (matrix-0row ysplines i)))
+     (iota (matrix-row-count xsplines))))
+
+  (define (expand-elliptic-arc degree vec i)
     (match (vector-ref vec i)
       [(#\A rx ry rotation fA fS (x y))
        (let* ([curpt (final-point vec (- i 1))]
               [x0 (car curpt)]
-              [y0 (cadr curpt)]
-              [arc (make-arc x0 y0 x y fA fS rx ry rotation)]
-              [thresh (if threshold threshold
-                          (let ([z0 (make-rectangular x0 y0)]
-                                [z  (make-rectangular x y)])
-                            ;; FIXME: What should we really do here?
-                            ;; At least make the constant a fluid.
-                            (* 0.001 (magnitude (- z z0)))))])
-         (elliptic-arc-bezier-path arc degree thresh))]
+              [y0 (cadr curpt)])
+         (let-values ([(xsplines ysplines)
+                       (expand-arc x0 y0 x y fA fS rx ry rotation degree)])
+           (splines->commands xsplines ysplines)))]
       [other (list other)]))
 
-  (define* (expand-elliptic-arcs degree vec #:optional [threshold #f])
+  (define (expand-elliptic-arcs degree vec)
     (reverse
      (fold-left
       (lambda (prior i)
-        (let ([expansion (expand-elliptic-arc degree vec i threshold)])
+        (let ([expansion (expand-elliptic-arc degree vec i)])
           (append (reverse expansion) prior)))
       (list (vector-ref vec 0))
       (iota (- (vector-length vec) 1) 1))))
 
-  (define/kwargs (svg:expand-elliptic-arcs! subpath-vectors degree [threshold #f])
+  (define/kwargs (svg:expand-elliptic-arcs! subpath-vectors degree)
     (do ([i 0 (+ i 1)]) ([= i (vector-length subpath-vectors)])
       (vector-set! subpath-vectors i
                    (list->vector
                     (expand-elliptic-arcs degree
-                                          (vector-ref subpath-vectors i)
-                                          threshold))))
+                                          (vector-ref subpath-vectors i)))))
     subpath-vectors)
-
-  ;;-------------------------------------------------------------------------
-
-  (define (real-mod a b)
-    (- a (* b (floor (/ a b)))))
-
-  (define (mod360 φ)
-    (real-mod φ 360))
-
-  (define deg->rad
-    (let ([factor (/ pi 180)])
-      (lambda (φ) (* factor φ))))
 
   ;;-------------------------------------------------------------------------
 

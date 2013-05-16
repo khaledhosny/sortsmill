@@ -17,27 +17,12 @@
 
 (library (sortsmill math polyspline ellipses)
 
-  (export elliptic-arc? pointer->elliptic-arc elliptic-arc->pointer
-          make-unit-circle-at-origin
-          make-elliptic-arc
-          make-ellipse
-          elliptic-arc-bezier-path
-
-          elliptic-arc-piecewise-bezier)
+  (export elliptic-arc-piecewise-bezier)
 
   (import (sortsmill dynlink)
-          (rnrs)
-          (except (guile) error)
-          (system foreign)
-          (ice-9 format))
+          (only (guile) eval-when))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_math_polyspline_ellipses"))
-
-  (define-wrapped-pointer-type elliptic-arc
-    elliptic-arc? pointer->elliptic-arc elliptic-arc->pointer
-    [lambda (obj port)
-      (format port "#<elliptic-arc 0x~x>"
-              (pointer-address (elliptic-arc->pointer obj)))] )
 
   ) ;; end of library.
