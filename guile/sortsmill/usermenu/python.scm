@@ -90,7 +90,9 @@ always a boolean."
                             shortcut
                             (borrowed-pointer->pyobject shortcut))])
         (let ([window-®    (string->symbol (string-downcase (pystring->string window^)))]
-              [menu-path-® (map pystring->string (pysequence->list menu-path^))]
+              [menu-path-® (if (pystring? menu-path^)
+                               (list (pystring->string menu-path^))
+                               (map pystring->string (pysequence->list menu-path^)))]
               [action-®    (python-menu-entry-callable->procedure action^)]
               [enabled-®   (if (not (pynone? enabled^))
                                (python-menu-entry-callable->procedure enabled^)
