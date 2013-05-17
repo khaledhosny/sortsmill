@@ -4595,7 +4595,23 @@ fea_ParseMarkClass (struct parseState *tok)
   struct gpos_mark *gm, *ngm;
 
   fea_ParseTok (tok);
-  glyphs = fea_ParseGlyphClass (tok);
+  if (tok->type == tk_name)
+    glyphs = fea_glyphname_validate (tok, tok->tokbuf);
+  else if (tok->type == tk_cid)
+    glyphs = fea_cid_validate (tok, tok->value);
+  else if (tok->type == tk_class
+           || (tok->type == tk_char && tok->tokbuf[0] == '['))
+    glyphs = fea_ParseGlyphClassGuarded (tok);
+  else
+    {
+      LogError (_("Expected name or class on line %d of %s"),
+                tok->line[tok->inc_depth],
+                tok->filename[tok->inc_depth]);
+      ++tok->err_count;
+      fea_skip_to_semi (tok);
+	  return;
+    }
+
   fea_ParseTok (tok);
   if (tok->type != tk_char || tok->tokbuf[0] != '<')
     {
