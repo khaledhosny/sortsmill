@@ -4609,7 +4609,7 @@ fea_ParseMarkClass (struct parseState *tok)
                 tok->filename[tok->inc_depth]);
       ++tok->err_count;
       fea_skip_to_semi (tok);
-	  return;
+      return;
     }
 
   fea_ParseTok (tok);
