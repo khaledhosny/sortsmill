@@ -158,10 +158,21 @@ cdef public object __c_py_wrap_function (void *func):
 cdef public object __apply_python_callable (object func, object args, object keyword_args):
   assert (func is not None)
   assert (args is not None)
-  if keyword_args is None:
-    retval = func (*args)
-  else:
-    retval = func (*args, **keyword_args)
+  retval = None
+  try:
+    if keyword_args is None:
+      retval = func (*args)
+    else:
+      retval = func (*args, **keyword_args)
+  except BaseException as e:
+    pass
+  
+    # FIXME: Instead maybe write this message to an editor window, and
+    # log it.
+    sys.stderr.write (str (e))
+    sys.stderr.write ('\n')
+    sys.stderr.flush ()
+
   return retval
 
 cdef public object __python_module (object module_name):

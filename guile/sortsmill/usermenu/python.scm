@@ -139,19 +139,20 @@ always a boolean."
     (assert (view? v))
     (cond [(glyph-view? v)
            (let* ([cvb   (glyph-view->CharViewBase v)]
-                  [sc    (CharViewBase:sc-dref cvb)]
-                  [layer (CVLayer (CharViewBase->pointer cvb))])
+                  [sc    (glyph-view->SplineChar v)]
+                  [layer (CVLayer (CharViewBase->pointer cvb))]
+                  [fvb   (view->FontViewBase v)])
 
              ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
              (set-pointer! sc-active-in-ui (SplineChar->pointer sc))
              (bytevector-sint-set! layer-active-in-ui 0 layer
                                    (native-endianness) (sizeof int))
+             (set-pointer! fv-active-in-ui (FontViewBase->pointer fvb))
 
-             (borrowed-pointer->pyobject
-              (SC->PySC (SplineChar->pointer sc))))]
+             (borrowed-pointer->pyobject (SC->PySC (SplineChar->pointer sc))))]
 
           [(font-view? v)
-           (let* ([fvb   (font-view->FontViewBase v)]
+           (let* ([fvb   (view->FontViewBase v)]
                   [layer (FontViewBase:active-layer-ref fvb)])
 
              ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
@@ -167,7 +168,8 @@ always a boolean."
     (cond [(glyph-view? v)
            (set-pointer! sc-active-in-ui %null-pointer)
            (bytevector-sint-set! layer-active-in-ui 0 ly-fore
-                                 (native-endianness) (sizeof int))]
+                                 (native-endianness) (sizeof int))
+           (set-pointer! fv-active-in-ui %null-pointer)]
           [(font-view? v)
            (set-pointer! fv-active-in-ui %null-pointer)]))
 

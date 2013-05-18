@@ -415,10 +415,12 @@
         [else
          (unless (pycallable? func)
            (assertion-violation 'pyapply (_ "expected a Python callable") func))
-         (pointer->pyobject (__apply_python_callable
-                             (pyobject->pointer func)
-                             (pyobject->pointer args) 
-                             (pyobject->pointer keyword-args)))] )] ))
+         (let ([retval
+                (__apply_python_callable (pyobject->pointer func)
+                                         (pyobject->pointer args) 
+                                         (pyobject->pointer keyword-args))])
+           (assert (not (null-pointer? retval)))
+           (pointer->pyobject retval))] )] ))
 
   (define (scm->pyguile obj)
     (pointer->pyobject (__c_pyguile_make (scm->pointer obj))))
