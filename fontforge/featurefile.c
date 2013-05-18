@@ -1,32 +1,45 @@
 #include <config.h>
 
-/* Copyright (C) 2000-2012 by George Williams */
-/* Copyright (C) 2012 by Khaled Hosny */
-/*
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+// Copyright (C) 2012-2013 Khaled Hosny
+// 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see <http://www.gnu.org/licenses/>.
 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
-
- * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
-
- * The name of the author may not be used to endorse or promote products
- * derived from this software without specific prior written permission.
-
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// Copyright (C) 2000-2012 by George Williams
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// Redistributions of source code must retain the above copyright notice, this
+// list of conditions and the following disclaimer.
+//
+// Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+//
+// The name of the author may not be used to endorse or promote products
+// derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+// EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "fontforgevw.h"
 #include "ttf.h"
@@ -34,12 +47,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#ifdef __need_size_t
-/* This is a bug on the mac, someone defines this and leaves it defined */
-/*  that means when I load stddef.h it only defines size_t and doesn't */
-/*  do offset_of, which is what I need */
-#undef __need_size_t
-#endif
 #include <stddef.h>
 #include <string.h>
 #include <utype.h>
@@ -2161,11 +2168,11 @@ dump_gdef (FILE *out, SplineFont *sf)
   for (i = 0; i < lcnt; ++i)
     {
       PST *pst = glyphs[i].pst;
-      fprintf (out, "  LigatureCaret ");
+      fprintf (out, "  LigatureCaretByPos ");
       dump_glyphname (out, glyphs[i].sc);
       for (k = 0; k < pst->u.lcaret.cnt; ++k)
         {
-          fprintf (out, " <caret %d>", pst->u.lcaret.carets[k]);
+          fprintf (out, " %d", pst->u.lcaret.carets[k]);
         }
       fprintf (out, ";\n");
     }
@@ -2778,7 +2785,7 @@ enum toktype
 { tk_name, tk_class, tk_int, tk_char, tk_cid, tk_eof,
 /* keywords */
   tk_firstkey,
-  tk_anchor = tk_firstkey, tk_anonymous, tk_by, tk_caret, tk_cursive, tk_device,
+  tk_anchor = tk_firstkey, tk_anonymous, tk_by, tk_cursive, tk_device,
   tk_enumerate, tk_excludeDFLT, tk_exclude_dflt, tk_feature, tk_from,
   tk_ignore, tk_ignoreDFLT, tk_ignoredflt, tk_IgnoreBaseGlyphs,
   tk_IgnoreLigatures, tk_IgnoreMarks, tk_include, tk_includeDFLT,
@@ -2890,8 +2897,6 @@ static struct keywords
   "anonymous", tk_anonymous},
   {
   "by", tk_by},
-  {
-  "caret", tk_caret},
   {
   "cursive", tk_cursive},
   {
@@ -4299,33 +4304,6 @@ fea_ParseDeviceTable (struct parseState *tok, DeviceTable *adjust)
     }
 }
 
-static void
-fea_ParseCaret (struct parseState *tok)
-{
-  int val = 0;
-
-  fea_TokenMustBe (tok, tk_caret, '\0');
-  if (tok->type != tk_caret)
-    return;
-  fea_ParseTok (tok);
-  if (tok->type != tk_int)
-    {
-      LogError (_("Expected integer in caret on line %d of %s"),
-                tok->line[tok->inc_depth], tok->filename[tok->inc_depth]);
-      ++tok->err_count;
-    }
-  else
-    val = tok->value;
-  fea_ParseTok (tok);
-  if (tok->type != tk_char || tok->tokbuf[0] != '>')
-    {
-      LogError (_("Expected '>' in caret on line %d of %s"),
-                tok->line[tok->inc_depth], tok->filename[tok->inc_depth]);
-      ++tok->err_count;
-    }
-  tok->value = val;
-}
-
 static AnchorPoint *
 fea_ParseAnchor (struct parseState *tok)
 {
@@ -4617,7 +4595,23 @@ fea_ParseMarkClass (struct parseState *tok)
   struct gpos_mark *gm, *ngm;
 
   fea_ParseTok (tok);
-  glyphs = fea_ParseGlyphClass (tok);
+  if (tok->type == tk_name)
+    glyphs = fea_glyphname_validate (tok, tok->tokbuf);
+  else if (tok->type == tk_cid)
+    glyphs = fea_cid_validate (tok, tok->value);
+  else if (tok->type == tk_class
+           || (tok->type == tk_char && tok->tokbuf[0] == '['))
+    glyphs = fea_ParseGlyphClassGuarded (tok);
+  else
+    {
+      LogError (_("Expected name or class on line %d of %s"),
+                tok->line[tok->inc_depth],
+                tok->filename[tok->inc_depth]);
+      ++tok->err_count;
+      fea_skip_to_semi (tok);
+      return;
+    }
+
   fea_ParseTok (tok);
   if (tok->type != tk_char || tok->tokbuf[0] != '<')
     {
@@ -7220,8 +7214,9 @@ static void
 fea_ParseGDEFTable (struct parseState *tok)
 {
   /* GlyphClassDef <base> <lig> <mark> <component>; */
-  /* Attach <glyph>|<glyph class> <number>+; *//* parse & ignore */
-  /* LigatureCaret <glyph>|<glyph class> <caret value>+ */
+  /* Attach <glyph>|<glyph class> <number>+;  parse & ignore */
+  /* LigatureCaretByPos <glyph>|<glyph class> <number>+; */
+  /* LigatureCaretByIndex <glyph>|<glyph class> <number>+; parse & ignore */
   int i;
   struct feat_item *item;
   int16_t *carets = NULL;
@@ -7234,6 +7229,7 @@ fea_ParseGDEFTable (struct parseState *tok)
         break;
       if (strcmp (tok->tokbuf, "Attach") == 0)
         {
+          // Unsupported, will be parsed and ignored.
           fea_ParseTok (tok);
           /* Bug. Not parsing inline classes */
           if (tok->type != tk_class && tok->type != tk_name)
@@ -7254,8 +7250,9 @@ fea_ParseGDEFTable (struct parseState *tok)
                 }
             }
         }
-      else if (strcmp (tok->tokbuf, "LigatureCaret") == 0)
+      else if (strcmp (tok->tokbuf, "LigatureCaretByPos") == 0)
         {
+          // Ligature carets by single coordinate (format 1).
           carets = NULL;
           len = 0;
           item = (struct feat_item *) xzalloc (sizeof (struct feat_item));
@@ -7283,11 +7280,7 @@ fea_ParseGDEFTable (struct parseState *tok)
           while (true)
             {
               fea_ParseTok (tok);
-              if (tok->type == tk_int)
-                /* Not strictly cricket, but I'll accept it */ ;
-              else if (tok->type == tk_char && tok->tokbuf[0] == '<')
-                fea_ParseCaret (tok);
-              else
+              if (tok->type != tk_int)
                 break;
               carets = xrealloc (carets, (max += 10) * sizeof (int16_t));
               carets[len++] = tok->value;
@@ -7303,6 +7296,30 @@ fea_ParseGDEFTable (struct parseState *tok)
           item->u2.lcaret = xmalloc ((len + 1) * sizeof (int16_t));
           memcpy (item->u2.lcaret, carets, len * sizeof (int16_t));
           item->u2.lcaret[len] = 0;
+        }
+      else if (strcmp (tok->tokbuf, "LigatureCaretByIndex") == 0)
+        {
+          // Ligature carets by contour point index (format 2).
+          // Unsupported, will be parsed and ignored.
+          fea_ParseTok (tok);
+          if (tok->type != tk_class && tok->type != tk_name && tok->type != tk_cid)
+            {
+              LogError (_("Expected name or class on line %d of %s"),
+                        tok->line[tok->inc_depth],
+                        tok->filename[tok->inc_depth]);
+              ++tok->err_count;
+              fea_skip_to_semi (tok);
+              continue;
+            }
+          else
+            {
+              while (true)
+                {
+                  fea_ParseTok (tok);
+                  if (tok->type != tk_int)
+                    break;
+                }
+            }
         }
       else if (strcmp (tok->tokbuf, "GlyphClassDef") == 0)
         {
