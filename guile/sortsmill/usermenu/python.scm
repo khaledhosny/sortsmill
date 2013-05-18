@@ -133,6 +133,11 @@ always a boolean."
                         (sortsmill-dynlink-func "CVLayer")
                         '(*)))
 
+  (define prepare-python-fv-object
+    (pointer->procedure void
+                        (sortsmill-dynlink-func "prepare_python_fv_object")
+                        '(*)))
+
   (define ly-fore 1)
   
   (define (view->legacy-python-view! v)
@@ -147,6 +152,7 @@ always a boolean."
              (set-pointer! sc-active-in-ui (SplineChar->pointer sc))
              (bytevector-sint-set! layer-active-in-ui 0 layer
                                    (native-endianness) (sizeof int))
+             (prepare-python-fv-object (FontViewBase->pointer fvb))
              (set-pointer! fv-active-in-ui (FontViewBase->pointer fvb))
 
              (borrowed-pointer->pyobject (SC->PySC (SplineChar->pointer sc))))]
@@ -156,6 +162,7 @@ always a boolean."
                   [layer (FontViewBase:active-layer-ref fvb)])
 
              ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
+             (prepare-python-fv-object (FontViewBase->pointer fvb))
              (set-pointer! fv-active-in-ui (FontViewBase->pointer fvb))
              (bytevector-sint-set! layer-active-in-ui 0 layer
                                    (native-endianness) (sizeof int))
@@ -233,18 +240,20 @@ always a boolean."
            (registerMenuItem action enabled data
                              (borrowed-pointer->pyobject windows)
                              shortcut menu-path)]))
-  
+
+  (define (user-config-directory)
+    (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
+           [home (getenv "HOME")])
+      (cond [xdg-config-home]
+            [home (string-append (getenv "HOME") "/.config")]
+            [else #f] )))
+
   (define (load-user_init.py)
     ;;
     ;; Load user_init.py, which typically is in
     ;; ${HOME}/.config/sortsmill-tools/
     ;;
-    (let* ([xdg-config-home (getenv "XDG_CONFIG_HOME")]
-           [home (getenv "HOME")]
-           [user-config-dir
-            (cond [xdg-config-home]
-                  [home (string-append (getenv "HOME") "/.config")]
-                  [else #f] )])
+    (let ([user-config-dir (user-config-directory)])
       (if user-config-dir
           (let ([user-init (format #f "~a/~a/user_init.py"
                                    user-config-dir pkg-info:package)])
@@ -252,5 +261,22 @@ always a boolean."
                 (fontforge-call-with-error-handling
                  "user_init.py"
                  (lambda () (pyexec-file-name-in-main user-init))))))))
+
+  #|
+  (define python-scripts-subdirectory
+    (make-fluid
+     (lambda ()
+       (let ([user-config-dir (user-config-directory)])
+         (if user-config-dir
+             (let ([scripts-dir (format #f "~a/python" user-config-dir)])
+               
+
+  (define (load-python-scripts-subdirectory)
+    ;;
+    ;; Load the scripts in the python scripts subdirectory, which
+    ;; typically is ${HOME}/.config/sortsmill-tools/python
+    ;;
+    3)
+  |#
 
   ) ;; end of library.

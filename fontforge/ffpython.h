@@ -110,6 +110,7 @@ PyObject *PySC_From_SC (SplineChar *sc);
 PyObject *PyFV_From_FV (FontViewBase *fv);
 PyObject *PySC_From_SC_I (SplineChar *sc);
 PyObject *PyFV_From_FV_I (FontViewBase *fv);
+void prepare_python_fv_object (FontViewBase *fv);
 int FlagsFromTuple (PyObject *tuple, struct flaglist *flags,
                     const char *flagkind);
 void PyFF_Glyph_Set_Layer (SplineChar *sc, int layer);

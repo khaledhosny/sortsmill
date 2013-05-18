@@ -472,17 +472,23 @@ PyFF_ValToObject (Val *val)
   return (NULL);
 }
 
-VISIBLE PyObject *
-PyFV_From_FV (FontViewBase *fv)
+VISIBLE void
+prepare_python_fv_object (FontViewBase *fv)
 {
-  if (fv == NULL)
-    Py_RETURN_NONE;
   if (fv->python_fv_object == NULL)
     {
       fv->python_fv_object = PyFF_FontType.tp_alloc (&PyFF_FontType, 0);
       ((PyFF_Font *) (fv->python_fv_object))->fv = fv;
       Py_INCREF ((PyObject *) (fv->python_fv_object));  /* for the pointer in my fv */
     }
+}
+
+VISIBLE PyObject *
+PyFV_From_FV (FontViewBase *fv)
+{
+  if (fv == NULL)
+    Py_RETURN_NONE;
+  prepare_python_fv_object (fv);
   return (fv->python_fv_object);
 }
 
