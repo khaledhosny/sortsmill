@@ -1,31 +1,45 @@
 #include <config.h>
 
-/* Copyright (C) 2000-2012 by George Williams */
-/*
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+// Copyright (C) 2012-2013 Khaled Hosny
+// 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see <http://www.gnu.org/licenses/>.
 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
-
- * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
-
- * The name of the author may not be used to endorse or promote products
- * derived from this software without specific prior written permission.
-
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// Copyright (C) 2000-2012 by George Williams
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// Redistributions of source code must retain the above copyright notice, this
+// list of conditions and the following disclaimer.
+//
+// Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+//
+// The name of the author may not be used to endorse or promote products
+// derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+// EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef _NO_PYTHON
 #include <Python.h>
@@ -2097,65 +2111,65 @@ CVDrawAnchorPoints (CharView *cv, GWindow pixmap)
   int x, y, len, sel;
   Color col = anchorcol;
   AnchorPoint *ap;
-  char *name, ubuf[40];
   GRect r;
 
-  if (cv->b.drawmode != dm_fore || cv->b.sc->anchor == NULL
-      || !cv->showanchor)
+  if (cv->b.drawmode != dm_fore || cv->b.sc->anchor == NULL || !cv->showanchor)
     return;
   GDrawSetFont (pixmap, cv->normal);
 
   for (sel = 0; sel < 2; ++sel)
     {
       for (ap = cv->b.sc->anchor; ap != NULL; ap = ap->next)
-        if (ap->selected == sel)
-          {
-            x = cv->xoff + rint (ap->me.x * cv->scale);
-            y = -cv->yoff + cv->height - rint (ap->me.y * cv->scale);
-            if (x < -400 || y < -40 || x > cv->width + 400 || y > cv->height)
-              continue;
+        {
+          if (ap->selected == sel)
+            {
+              char *name = NULL;
 
-            DrawAnchorPoint (pixmap, x, y, ap->selected);
-            if (AnchorClass_lookup_type (ap->anchor) == gpos_mark2mark)
-              {
-                strncpy (ubuf, ap->anchor->name, 20);
-                strcat (ubuf, " ");
-                strcat (ubuf,
-                        ap->type == at_basemark ? _("Base") : _("Mark"));
-                name = ubuf;
-              }
-            else if (ap->type == at_basechar || ap->type == at_mark
-                     || ap->type == at_basemark)
-              {
-                name = ap->anchor->name;
-              }
-            else if (ap->type == at_centry || ap->type == at_cexit)
-              {
-                strncpy (ubuf, ap->anchor->name, 20);
-                strcat (ubuf, ap->type == at_centry ? _("Entry") : _("Exit"));
-                name = ubuf;
-              }
-            else if (ap->type == at_baselig)
-              {
-                strncpy (ubuf, ap->anchor->name, 20);
-                sprintf (ubuf + strlen (ubuf), "#%d", ap->lig_index);
-                name = ubuf;
-              }
-            else
-              name = NULL;      /* Should never happen */
+              x = cv->xoff + rint (ap->me.x * cv->scale);
+              y = -cv->yoff + cv->height - rint (ap->me.y * cv->scale);
+              if (x < -400 || y < -40 || x > cv->width + 400 || y > cv->height)
+                continue;
 
-            GRect size;
-            GDrawLayoutInit (pixmap, name, -1, NULL);
-            GDrawLayoutExtents (pixmap, &size);
-            len = size.width;
+              DrawAnchorPoint (pixmap, x, y, ap->selected);
+              if (AnchorClass_lookup_type (ap->anchor) == gpos_mark2mark)
+                {
+                  name = x_gc_strjoin (ap->anchor->name, " ",
+                                       ap->type ==
+                                       at_basemark ? _("(Base)") : _("(Mark)"),
+                                       NULL);
+                }
+              else if (ap->type == at_basechar || ap->type == at_mark
+                       || ap->type == at_basemark)
+                {
+                  name = ap->anchor->name;
+                }
+              else if (ap->type == at_centry || ap->type == at_cexit)
+                {
+                  name = x_gc_strjoin (ap->anchor->name, " ",
+                                       ap->type ==
+                                       at_centry ? _("(Entry)") : _("(Exit)"),
+                                       NULL);
+                }
+              else if (ap->type == at_baselig)
+                {
+                  char buf[40];
+                  sprintf (buf, "(#%d)", ap->lig_index);
+                  name = x_gc_strjoin (ap->anchor->name, " ", buf, NULL);
+                }
 
-            r.x = x - len / 2;
-            r.width = len;
-            r.y = y + 7;
-            r.height = cv->nfh;
-            GDrawFillRect (pixmap, &r, view_bgcol);
-            GDrawLayoutDraw (pixmap, x - len / 2, y + 7 + cv->nas, col);
-          }
+              GRect size;
+              GDrawLayoutInit (pixmap, name, -1, NULL);
+              GDrawLayoutExtents (pixmap, &size);
+              len = size.width;
+
+              r.x = x - len / 2;
+              r.width = len;
+              r.y = y + 7;
+              r.height = cv->nfh;
+              GDrawFillRect (pixmap, &r, view_bgcol);
+              GDrawLayoutDraw (pixmap, x - len / 2, y + 7 + cv->nas, col);
+            }
+        }
     }
 }
 
