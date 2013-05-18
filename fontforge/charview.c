@@ -2120,54 +2120,56 @@ CVDrawAnchorPoints (CharView *cv, GWindow pixmap)
   for (sel = 0; sel < 2; ++sel)
     {
       for (ap = cv->b.sc->anchor; ap != NULL; ap = ap->next)
-        if (ap->selected == sel)
-          {
-            char *name = NULL;
+        {
+          if (ap->selected == sel)
+            {
+              char *name = NULL;
 
-            x = cv->xoff + rint (ap->me.x * cv->scale);
-            y = -cv->yoff + cv->height - rint (ap->me.y * cv->scale);
-            if (x < -400 || y < -40 || x > cv->width + 400 || y > cv->height)
-              continue;
+              x = cv->xoff + rint (ap->me.x * cv->scale);
+              y = -cv->yoff + cv->height - rint (ap->me.y * cv->scale);
+              if (x < -400 || y < -40 || x > cv->width + 400 || y > cv->height)
+                continue;
 
-            DrawAnchorPoint (pixmap, x, y, ap->selected);
-            if (AnchorClass_lookup_type (ap->anchor) == gpos_mark2mark)
-              {
-                name = x_gc_strjoin (ap->anchor->name, " ",
-                                     ap->type ==
-                                     at_basemark ? _("(Base)") : _("(Mark)"),
-                                     NULL);
-              }
-            else if (ap->type == at_basechar || ap->type == at_mark
-                     || ap->type == at_basemark)
-              {
-                name = ap->anchor->name;
-              }
-            else if (ap->type == at_centry || ap->type == at_cexit)
-              {
-                name = x_gc_strjoin (ap->anchor->name, " ",
-                                     ap->type ==
-                                     at_centry ? _("(Entry)") : _("(Exit)"),
-                                     NULL);
-              }
-            else if (ap->type == at_baselig)
-              {
-                char buf[40];
-                sprintf (buf, "(#%d)", ap->lig_index);
-                name = x_gc_strjoin (ap->anchor->name, " ", buf, NULL);
-              }
+              DrawAnchorPoint (pixmap, x, y, ap->selected);
+              if (AnchorClass_lookup_type (ap->anchor) == gpos_mark2mark)
+                {
+                  name = x_gc_strjoin (ap->anchor->name, " ",
+                                       ap->type ==
+                                       at_basemark ? _("(Base)") : _("(Mark)"),
+                                       NULL);
+                }
+              else if (ap->type == at_basechar || ap->type == at_mark
+                       || ap->type == at_basemark)
+                {
+                  name = ap->anchor->name;
+                }
+              else if (ap->type == at_centry || ap->type == at_cexit)
+                {
+                  name = x_gc_strjoin (ap->anchor->name, " ",
+                                       ap->type ==
+                                       at_centry ? _("(Entry)") : _("(Exit)"),
+                                       NULL);
+                }
+              else if (ap->type == at_baselig)
+                {
+                  char buf[40];
+                  sprintf (buf, "(#%d)", ap->lig_index);
+                  name = x_gc_strjoin (ap->anchor->name, " ", buf, NULL);
+                }
 
-            GRect size;
-            GDrawLayoutInit (pixmap, name, -1, NULL);
-            GDrawLayoutExtents (pixmap, &size);
-            len = size.width;
+              GRect size;
+              GDrawLayoutInit (pixmap, name, -1, NULL);
+              GDrawLayoutExtents (pixmap, &size);
+              len = size.width;
 
-            r.x = x - len / 2;
-            r.width = len;
-            r.y = y + 7;
-            r.height = cv->nfh;
-            GDrawFillRect (pixmap, &r, view_bgcol);
-            GDrawLayoutDraw (pixmap, x - len / 2, y + 7 + cv->nas, col);
-          }
+              r.x = x - len / 2;
+              r.width = len;
+              r.y = y + 7;
+              r.height = cv->nfh;
+              GDrawFillRect (pixmap, &r, view_bgcol);
+              GDrawLayoutDraw (pixmap, x - len / 2, y + 7 + cv->nas, col);
+            }
+        }
     }
 }
 
