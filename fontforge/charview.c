@@ -189,8 +189,7 @@ static struct resed charview_re[] = {
    ("The color used to draw markers for splines which are almost, but not quite horizontal or vertical at their end-points"),
    NULL, {0}, 0, 0},
   {N_("Next CP Color"), "NextCPColor", rt_color, &nextcpcol,
-   N_
-   ("The color used to draw the \"next\" control point of an on-curve point"),
+   N_("The color used to draw the \"next\" control point of an on-curve point"),
    NULL, {0}, 0, 0},
   {N_("Prev CP Color"), "PrevCPColor", rt_color, &prevcpcol,
    N_
@@ -479,11 +478,9 @@ CVDrawRubberLine (GWindow pixmap, CharView *cv)
                   || (prev_rect.y - 10) > rect.y))
             {
               real xoff =
-                cv->ruler_intersections[i].x
-                - cv->ruler_intersections[i - 1].x;
+                cv->ruler_intersections[i].x - cv->ruler_intersections[i - 1].x;
               real yoff =
-                cv->ruler_intersections[i].y
-                - cv->ruler_intersections[i - 1].y;
+                cv->ruler_intersections[i].y - cv->ruler_intersections[i - 1].y;
               real len = sqrt (xoff * xoff + yoff * yoff);
               char buf[40];
               uint32_t ubuf[40];
@@ -617,8 +614,7 @@ DrawPoint (CharView *cv, GWindow pixmap, SplinePoint *sp, SplineSet *spl,
 
   x = cv->xoff + rint (sp->me.x * cv->scale);
   y = -cv->yoff + cv->height - rint (sp->me.y * cv->scale);
-  if (x < -4000 || y < -4000 || x > cv->width + 4000
-      || y >= cv->height + 4000)
+  if (x < -4000 || y < -4000 || x > cv->width + 4000 || y >= cv->height + 4000)
     return;
 
   /* draw the control points if it's selected */
@@ -631,8 +627,7 @@ DrawPoint (CharView *cv, GWindow pixmap, SplinePoint *sp, SplineSet *spl,
           cy = -cv->yoff + cv->height - rint (sp->nextcp.y * cv->scale);
           if (cx < -100)
             {                   /* Clip */
-              cy =
-                cx == x ? x : (cy - y) * (double) (-100 - x) / (cx - x) + y;
+              cy = cx == x ? x : (cy - y) * (double) (-100 - x) / (cx - x) + y;
               cx = -100;
             }
           else if (cx > cv->width + 100)
@@ -853,8 +848,7 @@ DrawPoint (CharView *cv, GWindow pixmap, SplinePoint *sp, SplineSet *spl,
           r.x = x - 5;
           r.y = y - 5;
           r.width = r.height = 11;
-          GDrawDrawElipse (pixmap, &r,
-                           sp->flexx ? hflexhintcol : vflexhintcol);
+          GDrawDrawElipse (pixmap, &r, sp->flexx ? hflexhintcol : vflexhintcol);
         }
     }
 }
@@ -1039,8 +1033,7 @@ DrawDirection (CharView *cv, GWindow pixmap, SplinePoint *sp)
 }
 
 static void
-CVMarkInterestingLocations (CharView *cv, GWindow pixmap,
-                            SplinePointList *spl)
+CVMarkInterestingLocations (CharView *cv, GWindow pixmap, SplinePointList *spl)
 {
   Spline *s, *first;
   extended interesting[6];
@@ -1165,8 +1158,7 @@ CVMarkAlmostHV (CharView *cv, GWindow pixmap, SplinePointList *spl)
           else if (dx < cv->hvoffset || dy < cv->hvoffset)
             {
               x2 = x1 = cv->xoff + rint (s->to->me.x * cv->scale);
-              y2 = y1 =
-                -cv->yoff + cv->height - rint (s->to->me.y * cv->scale);
+              y2 = y1 = -cv->yoff + cv->height - rint (s->to->me.y * cv->scale);
               if (dx < cv->hvoffset)
                 {
                   if (s->to->me.y < s->to->prevcp.y)
@@ -1188,8 +1180,7 @@ CVMarkAlmostHV (CharView *cv, GWindow pixmap, SplinePointList *spl)
 }
 
 static void
-CVDrawContourName (CharView *cv, GWindow pixmap, SplinePointList *ss,
-                   Color fg)
+CVDrawContourName (CharView *cv, GWindow pixmap, SplinePointList *ss, Color fg)
 {
   SplinePoint *sp, *topright;
   GPoint tr;
@@ -1264,8 +1255,7 @@ CVDrawContourName (CharView *cv, GWindow pixmap, SplinePointList *ss,
             {
               tr.x =
                 cv->width - cv->nfh - GDrawGetText8Width (pixmap,
-                                                          ss->contour_name,
-                                                          -1);
+                                                          ss->contour_name, -1);
               tr.y = yinter;
             }
         }
@@ -1284,8 +1274,7 @@ void
 CVDrawSplineSet (CharView *cv, GWindow pixmap, SplinePointList *set, Color fg,
                  int dopoints, DRect *clip)
 {
-  CVDrawSplineSetSpecialized (cv, pixmap, set, fg, dopoints, clip,
-                              sfm_stroke);
+  CVDrawSplineSetSpecialized (cv, pixmap, set, fg, dopoints, clip, sfm_stroke);
 }
 
 void
@@ -1362,8 +1351,7 @@ CVDrawSplineSetOutlineOnly (CharView *cv, GWindow pixmap,
                 spline->to->me.y * cv->scale;
               cx2 = cv->xoff + spline->to->prevcp.x * cv->scale + dx;
               cy2 =
-                -cv->yoff + cv->height - spline->to->prevcp.y * cv->scale -
-                dy;
+                -cv->yoff + cv->height - spline->to->prevcp.y * cv->scale - dy;
               cairo_curve_to (cr, cx1 + .5, cy1 + .5, cx2 + .5, cy2 + .5,
                               x + .5, y + .5);
             }
@@ -1377,8 +1365,7 @@ CVDrawSplineSetOutlineOnly (CharView *cv, GWindow pixmap,
         {
         case sfm_stroke:
           GDrawPathStroke (pixmap,
-                           (spl->is_clip_path ? clippathcol : fg) |
-                           0xff000000);
+                           (spl->is_clip_path ? clippathcol : fg) | 0xff000000);
           break;
         case sfm_fill:
         case sfm_nothing:
@@ -1448,8 +1435,7 @@ CVDrawSplineSetSpecialized (CharView *cv, GWindow pixmap,
           else
             {
               for (spline = spl->first->next;
-                   spline != NULL && spline != first;
-                   spline = spline->to->next)
+                   spline != NULL && spline != first; spline = spline->to->next)
                 {
                   DrawPoint (cv, pixmap, spline->from, spl, dopoints < 0,
                              truetype_markup);
@@ -1596,8 +1582,7 @@ CVShowDHintInstance (CharView *cv, GWindow pixmap, BasePoint *bp)
         }
       else if (ip2[i].x >= cv->width && ip2[last].x >= cv->width)
         {
-          if (j == 0 || ip[j - 1].x != cv->width - 1
-              || ip[j - 1].y != ip2[i].y)
+          if (j == 0 || ip[j - 1].x != cv->width - 1 || ip[j - 1].y != ip2[i].y)
             {
               ip[j].x = cv->width - 1;
               ip[j++].y = ip2[i].y;
@@ -1987,8 +1972,7 @@ CVShowHints (CharView *cv, GWindow pixmap)
               dtos (buf, hint->start);
               len = GDrawGetText8Width (pixmap, buf, -1);
               r.x += (hint->width > 0) ? 3 : -len - 3;
-              GDrawDrawText8 (pixmap, r.x, cv->sas + 3, buf, -1,
-                              hintlabelcol);
+              GDrawDrawText8 (pixmap, r.x, cv->sas + 3, buf, -1, hintlabelcol);
             }
           r.x = cv->xoff + rint ((hint->start + hint->width) * cv->scale);
           if (r.x > -60 && r.x < cv->width + 20)
@@ -2042,11 +2026,11 @@ CVShowHints (CharView *cv, GWindow pixmap)
                         GDrawDrawLine (pixmap, x, y, x, end, vflexhintcol);
                       }
                   }
-                if (sp->next == NULL) /* This can happen if we get an
-					 internal error inside of
-					 RemoveOverlap when the
-					 pointlist is not in good
-					 shape */
+                if (sp->next == NULL)   /* This can happen if we get an
+                                           internal error inside of
+                                           RemoveOverlap when the
+                                           pointlist is not in good
+                                           shape */
                   break;
                 sp = sp->next->to;
                 if (sp == spl->first)
@@ -2189,8 +2173,7 @@ DrawImageList (CharView *cv, GWindow pixmap, ImageList *backimages)
 
       temp = size;
       x = (int) (cv->xoff + rint (backimages->xoff * cv->scale));
-      y =
-        (int) (-cv->yoff + cv->height - rint (backimages->yoff * cv->scale));
+      y = (int) (-cv->yoff + cv->height - rint (backimages->yoff * cv->scale));
       temp.x -= x;
       temp.y -= y;
       temp.width += x;
@@ -2258,8 +2241,7 @@ DrawVLine (CharView *cv, GWindow pixmap, real pos, Color fg, int flags,
         {
           dtos (buf, pos);
           GDrawSetFont (pixmap, cv->small);
-          GDrawDrawText8 (pixmap, x + 5, cv->sas + 3, buf, -1,
-                          metricslabelcol);
+          GDrawDrawText8 (pixmap, x + 5, cv->sas + 3, buf, -1, metricslabelcol);
           if (lock != NULL)
             GDrawDrawImage (pixmap, lock, NULL, x + 5, 3 + cv->sfh);
         }
@@ -2318,7 +2300,7 @@ CVDrawGridRaster (CharView *cv, GWindow pixmap, DRect *clip)
   if (cv->showgrids)
     {
       /* Draw ppem grid, and the raster for truetype debugging, grid
-	 fit */
+         fit */
       GRect pixel;
       real ygrid_spacing =
         (cv->b.sc->parent->ascent +
@@ -2597,12 +2579,12 @@ FindQuickBounds (SplineSet *ss, BasePoint **bounds)
   for (; ss != NULL; ss = ss->next)
     {
       sp = ss->first;
-      if (sp->next == NULL || sp->next->to == sp) /* Ignore contours
-						     with one
-						     point. Often tt
-						     points for moving
-						     references or
-						     anchors */
+      if (sp->next == NULL || sp->next->to == sp)       /* Ignore contours
+                                                           with one
+                                                           point. Often tt
+                                                           points for moving
+                                                           references or
+                                                           anchors */
         continue;
       while (true)
         {
@@ -2640,12 +2622,12 @@ SSFindItalicBounds (SplineSet *ss, double t, SplinePoint **left,
   for (; ss != NULL; ss = ss->next)
     {
       sp = ss->first;
-      if (sp->next == NULL || sp->next->to == sp) /* Ignore contours
-						     with one
-						     point. Often tt
-						     points for moving
-						     references or
-						     anchors */
+      if (sp->next == NULL || sp->next->to == sp)       /* Ignore contours
+                                                           with one
+                                                           point. Often tt
+                                                           points for moving
+                                                           references or
+                                                           anchors */
         continue;
       while (true)
         {
@@ -2759,16 +2741,13 @@ CVSideBearings (GWindow pixmap, CharView *cv)
                 {
                   x = rint (leftmost->me.y * t * cv->scale) + cv->xoff;
                   x2 = rint (leftmost->me.x * cv->scale) + cv->xoff;
-                  y =
-                    cv->height - cv->yoff - rint (leftmost->me.y * cv->scale);
+                  y = cv->height - cv->yoff - rint (leftmost->me.y * cv->scale);
                   DrawPLine (cv, pixmap, x, y, x2, y, italiccoordcol);
                   /* arrow heads */
                   DrawPLine (cv, pixmap, x, y, x + 4, y + 4, italiccoordcol);
                   DrawPLine (cv, pixmap, x, y, x + 4, y - 4, italiccoordcol);
-                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y - 4,
-                             italiccoordcol);
-                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y + 4,
-                             italiccoordcol);
+                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y - 4, italiccoordcol);
+                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y + 4, italiccoordcol);
                   dtos (buf, leftmost->me.x - leftmost->me.y * t);
                   x = x + (x2 - x - GDrawGetText8Width (pixmap, buf, -1)) / 2;
                   GDrawDrawText8 (pixmap, x, y + 12, buf, -1, italiccoordcol);
@@ -2777,8 +2756,7 @@ CVSideBearings (GWindow pixmap, CharView *cv)
                 {
                   x = rint (rightmost->me.x * cv->scale) + cv->xoff;
                   y =
-                    cv->height - cv->yoff -
-                    rint (rightmost->me.y * cv->scale);
+                    cv->height - cv->yoff - rint (rightmost->me.y * cv->scale);
                   x2 =
                     rint ((sc->width + rightmost->me.y * t) * cv->scale) +
                     cv->xoff;
@@ -2786,12 +2764,9 @@ CVSideBearings (GWindow pixmap, CharView *cv)
                   /* arrow heads */
                   DrawPLine (cv, pixmap, x, y, x + 4, y + 4, italiccoordcol);
                   DrawPLine (cv, pixmap, x, y, x + 4, y - 4, italiccoordcol);
-                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y - 4,
-                             italiccoordcol);
-                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y + 4,
-                             italiccoordcol);
-                  dtos (buf,
-                        sc->width + rightmost->me.y * t - rightmost->me.x);
+                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y - 4, italiccoordcol);
+                  DrawPLine (cv, pixmap, x2, y, x2 - 4, y + 4, italiccoordcol);
+                  dtos (buf, sc->width + rightmost->me.y * t - rightmost->me.x);
                   x = x + (x2 - x - GDrawGetText8Width (pixmap, buf, -1)) / 2;
                   GDrawDrawText8 (pixmap, x, y + 12, buf, -1, italiccoordcol);
                 }
@@ -2848,8 +2823,7 @@ CVExposeGlyphFill (CharView *cv, GWindow pixmap, GEvent *event, DRect *clip)
       if (layer >= 0)
         {
           CVDrawLayerSplineSet (cv, pixmap, &cv->b.sc->layers[layer],
-                                foreoutlinecol, cv->showpoints, clip,
-                                sfm_fill);
+                                foreoutlinecol, cv->showpoints, clip, sfm_fill);
           filled = 1;
         }
     }
@@ -2924,8 +2898,7 @@ CVExpose (CharView *cv, GWindow pixmap, GEvent *event)
         {
           DrawVLine (cv, pixmap, 0, coordcol, false, NULL, NULL);
           DrawLine (cv, pixmap, -8096, 0, 8096, 0, coordcol);
-          DrawLine (cv, pixmap, -8096, sf->ascent, 8096, sf->ascent,
-                    coordcol);
+          DrawLine (cv, pixmap, -8096, sf->ascent, 8096, sf->ascent, coordcol);
           DrawLine (cv, pixmap, -8096, -sf->descent, 8096, -sf->descent,
                     coordcol);
         }
@@ -2950,8 +2923,7 @@ CVExpose (CharView *cv, GWindow pixmap, GEvent *event)
 
   if (cv->b.layerheads[cv->b.drawmode]->undoes != NULL
       && cv->b.layerheads[cv->b.drawmode]->undoes->undotype == ut_tstate)
-    DrawOldState (cv, pixmap, cv->b.layerheads[cv->b.drawmode]->undoes,
-                  &clip);
+    DrawOldState (cv, pixmap, cv->b.layerheads[cv->b.drawmode]->undoes, &clip);
 
   if (cv->showfore)
     cv->showback[0] |= (1 << ly_fore);
@@ -3565,8 +3537,7 @@ CVMakeTitles (CharView *cv, char *buf)
   title = xstrdup_or_null (buf);
   uniname =
     (sc->unicodeenc != -1) ? uninm_name (names_db,
-                                         sc->unicodeenc) : (const char *)
-    NULL;
+                                         sc->unicodeenc) : (const char *) NULL;
   if (uniname != NULL)
     {
       strcat (buf, " ");
@@ -3893,8 +3864,7 @@ static void
 CVCharUp (CharView *cv, GEvent *event)
 {
 
-  if (!event->u.chr.autorepeat && !HaveModifiers
-      && event->u.chr.keysym == ' ')
+  if (!event->u.chr.autorepeat && !HaveModifiers && event->u.chr.keysym == ' ')
     {
       update_spacebar_hand_tool (cv);
     }
@@ -3955,8 +3925,7 @@ CVCharUp (CharView *cv, GEvent *event)
       || event->u.chr.keysym == GK_Alt_L || event->u.chr.keysym == GK_Alt_R
       || event->u.chr.keysym == GK_Super_L
       || event->u.chr.keysym == GK_Super_R
-      || event->u.chr.keysym == GK_Hyper_L
-      || event->u.chr.keysym == GK_Hyper_R)
+      || event->u.chr.keysym == GK_Hyper_L || event->u.chr.keysym == GK_Hyper_R)
     {
       if (cv->autorpt != NULL)
         {
@@ -4056,8 +4025,7 @@ CVInfoDrawText (CharView *cv, GWindow pixmap)
       int idx = CVLayer ((CharViewBase *) cv);
       if (idx >= 0 && idx < cv->b.sc->parent->layer_cnt)
         {
-          strncpy (layername, cv->b.sc->parent->layers[idx].name,
-                   layernamesz);
+          strncpy (layername, cv->b.sc->parent->layers[idx].name, layernamesz);
         }
     }
   snprintf (buffer, buffersz, _("Active Layer: %s (%s)"),
@@ -4120,8 +4088,7 @@ CVInfoDrawText (CharView *cv, GWindow pixmap)
       if (selx >= 1000 || selx <= -1000 || sely >= 1000 || sely <= -1000)
         sprintf (buffer, "%d%s%d", (int) selx, coord_sep, (int) sely);
       else
-        sprintf (buffer, "%.4g%s%.4g", (double) selx, coord_sep,
-                 (double) sely);
+        sprintf (buffer, "%.4g%s%.4g", (double) selx, coord_sep, (double) sely);
       buffer[11] = '\0';
       GDrawDrawText8 (pixmap, SPT_DATA, ybase, buffer, -1, fg);
     }
@@ -4211,8 +4178,7 @@ static int
 CheckSpiroPoint (FindSel *fs, spiro_cp *cp, SplineSet *spl, int index)
 {
 
-  if (fs->xl <= cp->x && fs->xh >= cp->x && fs->yl <= cp->y
-      && fs->yh >= cp->y)
+  if (fs->xl <= cp->x && fs->xh >= cp->x && fs->yl <= cp->y && fs->yh >= cp->y)
     {
       fs->p->spiro = cp;
       fs->p->spline = NULL;
@@ -4292,7 +4258,7 @@ CheckPoint (FindSel *fs, SplinePoint *sp, SplineSet *spl)
 }
 
 static int
-CheckSpline (FindSel *fs, Spline * spline, SplineSet *spl)
+CheckSpline (FindSel *fs, Spline *spline, SplineSet *spl)
 {
 
   /* Anything else is better than a spline */
@@ -4628,8 +4594,7 @@ _CVTestSelectFromEvent (CharView *cv, FindSel *fs)
       for (rf = cv->b.layerheads[cv->b.drawmode]->refs; rf != NULL;
            rf = rf->next)
         {
-          if (InSplineSet
-              (fs, rf->layers[0].splines, cv->b.sc->inspiro))
+          if (InSplineSet (fs, rf->layers[0].splines, cv->b.sc->inspiro))
             {
               cv->p.ref = rf;
               cv->p.anysel = true;
@@ -5120,18 +5085,15 @@ CVMouseMove (CharView *cv, GEvent *event)
           real len =
             (cv->p.cp.x - cv->p.constrain.x) * (cv->p.cp.x -
                                                 cv->p.constrain.x) +
-            (cv->p.cp.y - cv->p.constrain.y) * (cv->p.cp.y -
-                                                cv->p.constrain.y);
+            (cv->p.cp.y - cv->p.constrain.y) * (cv->p.cp.y - cv->p.constrain.y);
           if (len != 0)
             {
               dot /= len;
               /* constrain control point to same angle with respect to base point */
               if (dot < 0)
                 dot = 0;
-              p.cx =
-                cv->p.constrain.x + dot * (cv->p.cp.x - cv->p.constrain.x);
-              p.cy =
-                cv->p.constrain.y + dot * (cv->p.cp.y - cv->p.constrain.y);
+              p.cx = cv->p.constrain.x + dot * (cv->p.cp.x - cv->p.constrain.x);
+              p.cy = cv->p.constrain.y + dot * (cv->p.cp.y - cv->p.constrain.y);
               p.x = fake.u.mouse.x = cv->xoff + rint (p.cx * cv->scale);
               p.y = fake.u.mouse.y =
                 -cv->yoff + cv->height - rint (p.cy * cv->scale);
@@ -5159,14 +5121,12 @@ CVMouseMove (CharView *cv, GEvent *event)
           if (cv->p.img != NULL && cv->p.img->bb.minx != cv->p.img->bb.maxx)
             aspect =
               (cv->p.img->bb.maxy -
-               cv->p.img->bb.miny) / (cv->p.img->bb.maxx -
-                                      cv->p.img->bb.minx);
+               cv->p.img->bb.miny) / (cv->p.img->bb.maxx - cv->p.img->bb.minx);
           else if (cv->p.ref != NULL
                    && cv->p.ref->bb.minx != cv->p.ref->bb.maxx)
             aspect =
               (cv->p.ref->bb.maxy -
-               cv->p.ref->bb.miny) / (cv->p.ref->bb.maxx -
-                                      cv->p.ref->bb.minx);
+               cv->p.ref->bb.miny) / (cv->p.ref->bb.maxx - cv->p.ref->bb.minx);
           if (dy >= 2 * dx)
             {
               p.x = fake.u.mouse.x = basex;
@@ -5181,8 +5141,7 @@ CVMouseMove (CharView *cv, GEvent *event)
                       && (event->u.mouse.x - basex < 0) != (off < 0))
                     {
                       p.cx -= off;
-                      p.x = fake.u.mouse.x =
-                        cv->xoff + rint (p.cx * cv->scale);
+                      p.x = fake.u.mouse.x = cv->xoff + rint (p.cx * cv->scale);
                     }
                 }
             }
@@ -5196,16 +5155,14 @@ CVMouseMove (CharView *cv, GEvent *event)
               p.x = fake.u.mouse.x =
                 basex + sign * (event->u.mouse.y - basey) / aspect;
               p.cx =
-                cv->p.constrain.x - sign * (p.cy -
-                                            cv->p.constrain.y) / aspect;
+                cv->p.constrain.x - sign * (p.cy - cv->p.constrain.y) / aspect;
             }
           else
             {
               p.y = fake.u.mouse.y =
                 basey + sign * (event->u.mouse.x - basex) * aspect;
               p.cy =
-                cv->p.constrain.y - sign * (p.cx -
-                                            cv->p.constrain.x) * aspect;
+                cv->p.constrain.y - sign * (p.cx - cv->p.constrain.x) * aspect;
             }
         }
       event = &fake;
@@ -5215,12 +5172,12 @@ CVMouseMove (CharView *cv, GEvent *event)
   /*  snap to the original location, otherwise we'll keep snapping to the */
   /*  current point as it moves across the screen (jerkily) */
   if (cv->active_tool == cvt_hand || cv->active_tool == cvt_freehand)
-     ;				/* Don't snap to points */
+    ;                           /* Don't snap to points */
   else if (!cv->joinvalid
-	   || (!cv->b.sc->inspiro
-	       && !CheckPoint (&fs, &cv->joinpos, NULL))
-	   || (cv->b.sc->inspiro
-	       && !CheckSpiroPoint (&fs, &cv->joincp, NULL, 0)))
+           || (!cv->b.sc->inspiro
+               && !CheckPoint (&fs, &cv->joinpos, NULL))
+           || (cv->b.sc->inspiro
+               && !CheckSpiroPoint (&fs, &cv->joincp, NULL, 0)))
     {
       SplinePointList *spl;
       spl = cv->b.layerheads[cv->b.drawmode]->splines;
@@ -5232,8 +5189,7 @@ CVMouseMove (CharView *cv, GEvent *event)
         spl = cv->b.layerheads[cv->b.drawmode]->undoes->u.state.splines;
       if (cv->active_tool != cvt_knife && cv->active_tool != cvt_ruler)
         {
-          if (cv->active_tool == cvt_pointer
-              && (cv->p.nextcp || cv->p.prevcp))
+          if (cv->active_tool == cvt_pointer && (cv->p.nextcp || cv->p.prevcp))
             fs.select_controls = true;
           NearSplineSetPoints (&fs, spl, cv->b.sc->inspiro);
         }
@@ -5489,8 +5445,7 @@ CVMouseUp (CharView *cv, GEvent *event)
     case cvt_magnify:
     case cvt_minify:
       if (cv->p.x >= event->u.mouse.x - 6 && cv->p.x <= event->u.mouse.x + 6
-          && cv->p.y >= event->u.mouse.y - 6
-          && cv->p.y <= event->u.mouse.y + 6)
+          && cv->p.y >= event->u.mouse.y - 6 && cv->p.y <= event->u.mouse.y + 6)
         {
           real cx, cy;
           cx = (event->u.mouse.x - cv->xoff) / cv->scale;
@@ -5882,8 +5837,7 @@ CVExposeRulers (CharView *cv, GWindow pixmap)
     {
       CVDrawVNum (cv, pixmap, 1, ybase + cv->rulerh + cv->height + cv->sas,
                   "%.3f", ymin, 0);
-      CVDrawVNum (cv, pixmap, 1, ybase + cv->rulerh + cv->sas, "%.3f", ymax,
-                  2);
+      CVDrawVNum (cv, pixmap, 1, ybase + cv->rulerh + cv->sas, "%.3f", ymax, 2);
     }
   if (fabs (xmin / units) < 1e5 && fabs (ymin / units) < 1e5
       && fabs (xmax / units) < 1e5 && fabs (ymax / units) < 1e5)
@@ -6023,8 +5977,7 @@ CVResize (CharView *cv)
     /*CVFit(cv); */ CVNewScale (cv);
     CVPalettesRaise (cv);
     if (cv->b.container == NULL
-        && (default_cv_width != size.width
-            || default_cv_height != size.height))
+        && (default_cv_width != size.width || default_cv_height != size.height))
       {
         default_cv_width = size.width;
         default_cv_height = size.height;
@@ -6221,8 +6174,7 @@ CVLogoExpose (CharView *cv, GWindow pixmap, GEvent *event)
   r.y = cv->height + cv->mbh + cv->infoh + rh;
   LogoExpose (pixmap, event, &r,
               cv->b.drawmode ==
-              dm_grid ? dm_grid : cv->b.layerheads[cv->b.
-                                                   drawmode]->background ?
+              dm_grid ? dm_grid : cv->b.layerheads[cv->b.drawmode]->background ?
               dm_back : dm_fore);
 }
 
@@ -6685,8 +6637,7 @@ CVMenuCloseTab (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVMenuOpenBitmap (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuOpenBitmap (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   if (cv->b.fv->sf->bitmaps == NULL)
@@ -6932,10 +6883,9 @@ fllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
         case MID_Recent:
           mi->ti.disabled = !RecentFilesAny () || (cv->b.container != NULL
-                                                   && !(cv->b.
-                                                        container->funcs->
-                                                        canOpen)
-                                                   (cv->b.container));
+                                                   && !(cv->b.container->
+                                                        funcs->canOpen) (cv->b.
+                                                                         container));
           break;
 
         case MID_Close:
@@ -7035,8 +6985,7 @@ CVMenuShadow (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVMenuWireframe (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuWireframe (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   ShadowDlg (NULL, cv, NULL, true);
@@ -7141,8 +7090,7 @@ CVMenuShowAlmostHVCurves (GWindow gw, struct gmenuitem *UNUSED (mi),
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
 
-  CVShows.showalmosthvcurves = cv->showalmosthvcurves =
-    !cv->showalmosthvcurves;
+  CVShows.showalmosthvcurves = cv->showalmosthvcurves = !cv->showalmosthvcurves;
   SavePrefs (true);
   GDrawRequestExpose (cv->v, NULL, false);
 }
@@ -7180,8 +7128,7 @@ CVMenuDefineAlmost (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-CVMenuShowCPInfo (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuShowCPInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
 
@@ -7490,8 +7437,7 @@ CVMenuChangePointSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVMenuEditInstrs (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuEditInstrs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   SCEditInstructions (cv->b.sc);
@@ -7536,8 +7482,7 @@ CVMenuClearInstrs (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-CVMenuKernPairs (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuKernPairs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   SFShowKernPairs (cv->b.sc->parent, cv->b.sc, NULL,
@@ -7545,8 +7490,7 @@ CVMenuKernPairs (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-CVMenuLigatures (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuLigatures (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   SFShowLigatures (cv->b.fv->sf, cv->b.sc);
@@ -7684,9 +7628,8 @@ _CVMenuChangeChar (CharView *cv, int mid)
     {
       for (pos = CVCurEnc (cv) + 1;
            pos < map->enc_limit &&
-             ((gid = enc_to_gid (map, pos)) == -1
-              || !SCWorthOutputting (sf->glyphs[gid]));
-           ++pos);
+           ((gid = enc_to_gid (map, pos)) == -1
+            || !SCWorthOutputting (sf->glyphs[gid])); ++pos);
       if (pos >= map->enc_limit)
         {
           if (enc->is_tradchinese)
@@ -7706,8 +7649,8 @@ _CVMenuChangeChar (CharView *cv, int mid)
                    && strcasestr (enc->enc_name, "johab") != NULL)
             pos = 0x8431;
           else if (CVCurEnc (cv) < 0xa1a1
-                   && strcasestr (enc->iconv_name ? enc->
-                                  iconv_name : enc->enc_name, "EUC") != NULL)
+                   && strcasestr (enc->iconv_name ? enc->iconv_name : enc->
+                                  enc_name, "EUC") != NULL)
             pos = 0xa1a1;
           else if (CVCurEnc (cv) < 0x8140
                    && strcasestr (enc->enc_name, "sjis") != NULL)
@@ -7742,7 +7685,7 @@ _CVMenuChangeChar (CharView *cv, int mid)
   /* Werner doesn't think it should wrap */
   if (pos < 0)                  /* pos = map->enc_limit-1; */
     return;
-  else if (pos >= map->enc_limit)        /* pos = 0; */
+  else if (pos >= map->enc_limit)       /* pos = 0; */
     return;
   if (pos >= 0 && pos < map->enc_limit)
     CVChangeChar (cv, pos);
@@ -7851,8 +7794,7 @@ CVChar (CharView *cv, GEvent *event)
            && (event->u.chr.state & ksm_control))
     {
       /* European keyboards need a funky modifier to get [] */
-      _CVMenuChangeChar (cv,
-                         event->u.chr.keysym == '[' ? MID_Prev : MID_Next);
+      _CVMenuChangeChar (cv, event->u.chr.keysym == '[' ? MID_Prev : MID_Next);
     }
   else if ((event->u.chr.keysym == '{' || event->u.chr.keysym == '}')
            && (event->u.chr.state & ksm_control))
@@ -8014,8 +7956,7 @@ CVShowPoint (CharView *cv, BasePoint *me)
   /* Make sure the point is visible and has some context around it */
   x = cv->xoff + rint (me->x * cv->scale);
   y = -cv->yoff + cv->height - rint (me->y * cv->scale);
-  if (x < fudge || y < fudge || x > cv->width - fudge
-      || y > cv->height - fudge)
+  if (x < fudge || y < fudge || x > cv->width - fudge || y > cv->height - fudge)
     CVMagnify (cv, me->x, me->y, 0, 0);
 }
 
@@ -8422,8 +8363,7 @@ CVCopy (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVCopyLookupData (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVCopyLookupData (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   SCCopyLookupData (cv->b.sc);
@@ -8653,8 +8593,7 @@ CVMenuCopyL2L (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVMenuCompareL2L (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuCompareL2L (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   CVCompareLayerToLayer (cv);
@@ -8871,8 +8810,7 @@ cv_edlistcheck_cv (CharView *cv, struct gmenuitem *mi)
         case MID_Cut:          /*case MID_Copy: */
           /* If nothing is selected, copy copies everything */
           /* In spiro mode copy will copy all contours with at least (spiro) one point selected */
-          mi->ti.disabled = !anypoints && !anyrefs && !anyimages
-            && !anyanchor;
+          mi->ti.disabled = !anypoints && !anyrefs && !anyimages && !anyanchor;
           break;
         case MID_CopyLBearing:
         case MID_CopyRBearing:
@@ -9087,8 +9025,7 @@ cv_ptlistcheck_cv (CharView *cv, struct gmenuitem *mi)
     {
       GMenuItemArrayFree (mi->sub);
       mi->sub = GMenuItemArrayCopy (((cv->b.sc->inspiro) ?
-				     spiroptlist : ptlist),
-				    &junk);
+                                     spiroptlist : ptlist), &junk);
       cv->showing_spiro_pt_menu = cv->b.sc->inspiro;
     }
   for (spl = cv->b.layerheads[cv->b.drawmode]->splines; spl != NULL;
@@ -9323,8 +9260,7 @@ CVMenuDir (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVMenuCheckSelf (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuCheckSelf (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   CVShows.checkselfintersects = cv->checkselfintersects =
@@ -9440,8 +9376,7 @@ TransRef (RefChar *ref, real transform[6], enum fvtrans_flags flags)
   real t[6];
 
   for (j = 0; j < ref->layer_cnt; ++j)
-    SplinePointListTransform (ref->layers[j].splines, transform,
-                              tpt_AllPoints);
+    SplinePointListTransform (ref->layers[j].splines, transform, tpt_AllPoints);
   t[0] = ref->transform[0] * transform[0] + ref->transform[1] * transform[2];
   t[1] = ref->transform[0] * transform[1] + ref->transform[1] * transform[3];
   t[2] = ref->transform[2] * transform[0] + ref->transform[3] * transform[2];
@@ -9551,8 +9486,7 @@ CVTransFunc (CharView *cv, real transform[6], enum fvtrans_flags flags)
       for (l = 0; l < cv->b.sc->layer_cnt; ++l)
         if (l != cvlayer)
           {
-            for (img = cv->b.sc->layers[l].images; img != NULL;
-                 img = img->next)
+            for (img = cv->b.sc->layers[l].images; img != NULL; img = img->next)
               BackgroundImageTransform (cv->b.sc, img, transform);
             SplinePointListTransform (cv->b.sc->layers[l].splines, transform,
                                       tpt_AllPoints);
@@ -9601,8 +9535,7 @@ CVDoTransform (CharView *cv, enum cvtools cvt)
 }
 
 VISIBLE void
-CVMenuTransform (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuTransform (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   CVDoTransform (cv, cvt_none);
@@ -9678,8 +9611,7 @@ _CVMenuRound2Int (CharView *cv, double factor)
 }
 
 VISIBLE void
-CVMenuRound2Int (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuRound2Int (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   _CVMenuRound2Int (cv, 1.0);
@@ -9979,8 +9911,7 @@ _CVMenuAddExtrema (CharView *cv)
 }
 
 VISIBLE void
-CVMenuAddExtrema (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuAddExtrema (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   _CVMenuAddExtrema (cv);
@@ -10142,8 +10073,7 @@ _CVMenuMakeFirst (CharView *cv)
 }
 
 VISIBLE void
-CVMenuMakeFirst (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuMakeFirst (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   _CVMenuMakeFirst (cv);
@@ -10376,8 +10306,7 @@ IOSA_Cancel (GGadget *g, GEvent *e)
 static int
 IOSA_FocusChange (GGadget *g, GEvent *e)
 {
-  if (e->type == et_controlevent
-      && e->u.control.subtype == et_textfocuschanged)
+  if (e->type == et_controlevent && e->u.control.subtype == et_textfocuschanged)
     {
       struct insertonsplineat *iosa = GDrawGetUserData (GGadgetGetWindow (g));
       int cid = (intptr_t) GGadgetGetUserData (g);
@@ -10737,8 +10666,7 @@ CVAddAnchor (CharView *cv)
 }
 
 VISIBLE void
-CVMenuAddAnchor (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuAddAnchor (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   CVAddAnchor (cv);
@@ -10791,8 +10719,7 @@ CVMenuBuildComposite (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-CVMenuReverseDir (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuReverseDir (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   int changed = false;
@@ -10815,8 +10742,7 @@ CVMenuReverseDir (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-CVMenuCorrectDir (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuCorrectDir (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   int changed = false, refchanged = false;
@@ -10869,8 +10795,7 @@ CVMenuCorrectDir (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-CVMenuInsertText (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuInsertText (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   InsertTextDlg (cv);
@@ -10912,8 +10837,7 @@ CVMenuBitmaps (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   BitmapDlg ((FontView *) (cv->b.fv), cv->b.sc,
-             mi->mid == MID_RemoveBitmaps ? -1 : (mi->mid ==
-                                                  MID_AvailBitmaps));
+             mi->mid == MID_RemoveBitmaps ? -1 : (mi->mid == MID_AvailBitmaps));
 }
 
 static void
@@ -11050,8 +10974,7 @@ cv_ellistcheck_cv (CharView *cv, struct gmenuitem *mi)
     if (ref->selected)
       badsel = true;
 
-  for (il = cv->b.layerheads[cv->b.drawmode]->images; il != NULL;
-       il = il->next)
+  for (il = cv->b.layerheads[cv->b.drawmode]->images; il != NULL; il = il->next)
     if (il->selected)
       badsel = true;
 #endif
@@ -11488,8 +11411,7 @@ htlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       switch (mi->mid)
         {
         case MID_AutoHint:
-          mi->ti.disabled = (CVLayer ((CharViewBase *) cv) == -1)
-            || multilayer;
+          mi->ti.disabled = (CVLayer ((CharViewBase *) cv) == -1) || multilayer;
           break;
         case MID_HintSubsPt:
           mi->ti.disabled = cv->b.layerheads[cv->b.drawmode]->order2
@@ -11530,8 +11452,7 @@ htlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           break;
         case MID_AddDHint:
           mi->ti.disabled = num != 4
-            || !PointsDiagonalable (cv->b.sc->parent, bp, &unit)
-            || multilayer;
+            || !PointsDiagonalable (cv->b.sc->parent, bp, &unit) || multilayer;
           break;
         case MID_ReviewHints:
           mi->ti.disabled = (cv->b.sc->hstem == NULL
@@ -11618,8 +11539,7 @@ cv_sllistcheck_cv (CharView *cv, struct gmenuitem *mi)
           break;
         case MID_SelectWidth:
           mi->ti.disabled = !cv->showhmetrics;
-          if (HasUseMyMetrics (cv->b.sc, CVLayer ((CharViewBase *) cv)) !=
-              NULL)
+          if (HasUseMyMetrics (cv->b.sc, CVLayer ((CharViewBase *) cv)) != NULL)
             mi->ti.disabled = true;
           if (!mi->ti.disabled)
             {
@@ -11629,10 +11549,8 @@ cv_sllistcheck_cv (CharView *cv, struct gmenuitem *mi)
             }
           break;
         case MID_SelectVWidth:
-          mi->ti.disabled = !cv->showvmetrics
-            || !cv->b.sc->parent->hasvmetrics;
-          if (HasUseMyMetrics (cv->b.sc, CVLayer ((CharViewBase *) cv)) !=
-              NULL)
+          mi->ti.disabled = !cv->showvmetrics || !cv->b.sc->parent->hasvmetrics;
+          if (HasUseMyMetrics (cv->b.sc, CVLayer ((CharViewBase *) cv)) != NULL)
             mi->ti.disabled = true;
           if (!mi->ti.disabled)
             {
@@ -11706,8 +11624,7 @@ cv_cblistcheck_cv (CharView *cv, struct gmenuitem *mi)
           for (i = 0; i < sf->glyphcnt; ++i)
             if (sf->glyphs[i] != NULL)
               {
-                for (pst = sf->glyphs[i]->possub; pst != NULL;
-                     pst = pst->next)
+                for (pst = sf->glyphs[i]->possub; pst != NULL; pst = pst->next)
                   {
                     if (pst->type == pst_ligature
                         && PSTContains (pst->u.lig.components, name))
@@ -11892,11 +11809,9 @@ cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
           if (cv->b.container == NULL)
             {
               for (pos = CVCurEnc (cv) + 1;
-                   pos < map->enc_limit && ((gid = enc_to_gid (map, pos)) == -1
-                                           ||
-                                           !SCWorthOutputting (sf->glyphs
-                                                               [gid]));
-                   ++pos);
+                   pos < map->enc_limit
+                   && ((gid = enc_to_gid (map, pos)) == -1
+                       || !SCWorthOutputting (sf->glyphs[gid])); ++pos);
               mi->ti.disabled = pos == map->enc_limit;
             }
           else
@@ -11920,16 +11835,16 @@ cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
           break;
         case MID_Next:
           mi->ti.disabled =
-            cv->b.container == NULL ? CVCurEnc (cv) ==
-            map->enc_limit -
-            1 : !(cv->b.container->funcs->canNavigate) (cv->b.container,
-                                                        nt_nextdef);
+            ((cv->b.container == NULL) ?
+             (CVCurEnc (cv) == map->enc_limit - 1) :
+             !(cv->b.container->funcs->canNavigate) (cv->b.container,
+                                                     nt_nextdef));
           break;
         case MID_Prev:
           mi->ti.disabled =
-            cv->b.container == NULL ? CVCurEnc (cv) ==
-            0 : !(cv->b.container->funcs->canNavigate) (cv->b.container,
-                                                        nt_nextdef);
+            ((cv->b.container == NULL) ? (CVCurEnc (cv) == 0) :
+             !(cv->b.container->funcs->canNavigate) (cv->b.container,
+                                                     nt_nextdef));
           break;
         case MID_Former:
           if (cv->former_cnt <= 1)
@@ -12033,8 +11948,7 @@ CVMenuSetWidth (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVMenuRemoveKern (GWindow gw, struct gmenuitem *UNUSED (mi),
-                  GEvent *UNUSED (e))
+CVMenuRemoveKern (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
 
@@ -12065,8 +11979,7 @@ CVMenuRemoveVKern (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-CVMenuKPCloseup (GWindow gw, struct gmenuitem *UNUSED (mi),
-                 GEvent *UNUSED (e))
+CVMenuKPCloseup (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   KernPairD (cv->b.sc->parent, cv->b.sc, NULL, CVLayer ((CharViewBase *) cv),
@@ -17072,14 +16985,12 @@ SVCharViewInits (SearchView *sv)
   wattrs.event_masks = -1;
   wattrs.cursor = ct_pointer;
   sv->cv_rpl.gw =
-    GWidgetCreateSubWindow (sv->gw, &pos, nested_cv_e_h, &sv->cv_rpl,
-                            &wattrs);
+    GWidgetCreateSubWindow (sv->gw, &pos, nested_cv_e_h, &sv->cv_rpl, &wattrs);
   _CharViewCreate (&sv->cv_rpl, &sv->sd.sc_rpl, &sv->dummy_fv, 1);
 
   pos.x = 10;
   sv->cv_srch.gw =
-    GWidgetCreateSubWindow (sv->gw, &pos, nested_cv_e_h, &sv->cv_srch,
-                            &wattrs);
+    GWidgetCreateSubWindow (sv->gw, &pos, nested_cv_e_h, &sv->cv_srch, &wattrs);
   _CharViewCreate (&sv->cv_srch, &sv->sd.sc_srch, &sv->dummy_fv, 0);
 }
 

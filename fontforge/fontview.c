@@ -316,9 +316,8 @@ FVDrawGlyph (GWindow pixmap, FontView *fv, int index, int forcebg)
              temporary copy of the glyph merging all such elements
              into a single bitmap. */
           bdfc =
-            fv->show->piecemeal ? fv->
-            show->glyphs[feat_gid] : BDFGetMergedChar (fv->show->
-                                                       glyphs[feat_gid]);
+            fv->show->piecemeal ? fv->show->
+            glyphs[feat_gid] : BDFGetMergedChar (fv->show->glyphs[feat_gid]);
 
           memset (&gi, '\0', sizeof (gi));
           memset (&base, '\0', sizeof (base));
@@ -2944,8 +2943,8 @@ FVMenuSelectByName (GWindow _gw, struct gmenuitem *UNUSED (mi), GEvent *e)
         {
           char *str = GGadgetGetTitle8 (gcd[1].ret);
           int merge =
-            GGadgetIsChecked (gcd[2].
-                              ret) ? mt_set : GGadgetIsChecked (gcd[3].ret) ?
+            GGadgetIsChecked (gcd[2].ret) ? mt_set : GGadgetIsChecked (gcd[3].
+                                                                       ret) ?
             mt_merge : GGadgetIsChecked (gcd[4].ret) ? mt_restrict : mt_and;
           int ret = FVSelectByName (fv, str, merge);
           free (str);
@@ -3092,10 +3091,8 @@ FVMenuSelectHintingNeeded (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
                       && sf->glyphs[gid]->layers[fv->b.active_layer].splines !=
                       NULL && sf->glyphs[gid]->ttf_instrs_len <= 0) || (order2
                                                                         &&
-                                                                        sf->
-                                                                        glyphs
-                                                                        [gid]->
-                                                                        instructions_out_of_date)));
+                                                                        sf->glyphs
+                                                                        [gid]->instructions_out_of_date)));
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
     }
   GDrawRequestExpose (fv->v, NULL, false);
@@ -3659,7 +3656,8 @@ _FVMenuChangeChar (FontView *fv, int mid)
                && (enc_to_gid (map, pos) == -1
                    || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)])
                    || (fv->show != fv->filled
-                       && fv->show->glyphs[enc_to_gid (map, pos)] == NULL)); ++pos);
+                       && fv->show->glyphs[enc_to_gid (map, pos)] == NULL));
+               ++pos);
           if (pos >= map->enc_limit)
             {
               int selpos = FVAnyCharSelected (fv);
@@ -3716,10 +3714,12 @@ _FVMenuChangeChar (FontView *fv, int mid)
         {
           for (--pos;
                pos >= 0 && (enc_to_gid (map, pos) == -1
-                            || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)])
+                            || !SCWorthOutputting (sf->
+                                                   glyphs[enc_to_gid
+                                                          (map, pos)])
                             || (fv->show != fv->filled
-                                && fv->show->glyphs[enc_to_gid (map, pos)] == NULL));
-               --pos);
+                                && fv->show->glyphs[enc_to_gid (map, pos)] ==
+                                NULL)); --pos);
           if (pos < 0)
             return;
         }
@@ -9353,16 +9353,16 @@ vwlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
             pos = map->enc_limit;
           for (;
                pos < map->enc_limit
-                 && (enc_to_gid (map, pos) == -1
-                     || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)]));
+               && (enc_to_gid (map, pos) == -1
+                   || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)]));
                ++pos);
           mi->ti.disabled = pos == map->enc_limit;
           break;
         case MID_PrevDef:
           for (pos = anychars - 1;
                pos >= 0
-                 && (enc_to_gid (map, pos) == -1
-                     || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)]));
+               && (enc_to_gid (map, pos) == -1
+                   || !SCWorthOutputting (sf->glyphs[enc_to_gid (map, pos)]));
                --pos);
           mi->ti.disabled = pos < 0;
           break;
@@ -11217,7 +11217,7 @@ void
 FVRefreshChar (FontView *fv, int gid)
 {
   BDFChar *bdfc;
-  int i, j, enc;
+  int i, j;
   MetricsView *mv;
 
   /* Can happen in scripts *//* Can happen if we do an AutoHint when generating a tiny font for freetype context */
@@ -11249,10 +11249,12 @@ FVRefreshChar (FontView *fv, int gid)
         bdfc = fv->show->glyphs[gid];
       if (bdfc == NULL)
         bdfc = BDFPieceMeal (fv->show, gid);
+
       /* A glyph may be encoded in several places, all need updating */
-      for (enc = 0; enc < fv->b.map->enc_limit; ++enc)
-        if (enc_to_gid (fv->b.map, enc) == gid)
+      for (enc_iter_t p = enc_iter (fv->b.map); !enc_done (p); p = enc_next (p))
+        if (enc_gid (p) == gid)
           {
+            const ssize_t enc = enc_enc (p);
             i = enc / fv->colcnt;
             j = enc - i * fv->colcnt;
             i -= fv->rowoff;
@@ -11324,20 +11326,16 @@ FVMakeChar (FontView *fv, int enc)
           uni =
             fl->featuretag == CHR ('i', 'n', 'i',
                                    't') ? ArabicForms[base_sc->unicodeenc -
-                                                      0x600].
-            initial : fl->featuretag == CHR ('m', 'e', 'd',
-                                             'i') ? ArabicForms[base_sc->
-                                                                unicodeenc -
-                                                                0x600].
-            medial : fl->featuretag == CHR ('f', 'i', 'n',
-                                            'a') ? ArabicForms[base_sc->
-                                                               unicodeenc -
-                                                               0x600].
-            final : fl->featuretag == CHR ('i', 's', 'o',
-                                           'l') ? ArabicForms[base_sc->
-                                                              unicodeenc -
-                                                              0x600].
-            isolated : -1;
+                                                      0x600].initial : fl->
+            featuretag == CHR ('m', 'e', 'd',
+                               'i') ? ArabicForms[base_sc->unicodeenc -
+                                                  0x600].medial : fl->
+            featuretag == CHR ('f', 'i', 'n',
+                               'a') ? ArabicForms[base_sc->unicodeenc -
+                                                  0x600].final : fl->
+            featuretag == CHR ('i', 's', 'o',
+                               'l') ? ArabicForms[base_sc->unicodeenc -
+                                                  0x600].isolated : -1;
           feat_sc = SFGetChar (sf, uni, NULL);
           if (feat_sc != NULL)
             return (feat_sc);
@@ -12373,8 +12371,9 @@ FVMouse (FontView *fv, GEvent *event)
       if (dopopup)
         SCPreparePopup (fv->v, sc, fv->b.map->remap, pos,
                         sc == &dummy ? dummy.unicodeenc : UniFromEnc (pos,
-                                                                      fv->
-                                                                      b.map->enc));
+                                                                      fv->b.
+                                                                      map->
+                                                                      enc));
     }
   if (event->type == et_mousedown)
     {
@@ -12477,8 +12476,8 @@ FVMouse (FontView *fv, GEvent *event)
   if (event->type == et_mouseup && dopopup)
     SCPreparePopup (fv->v, sc, fv->b.map->remap, pos,
                     sc == &dummy ? dummy.unicodeenc : UniFromEnc (pos,
-                                                                  fv->b.
-                                                                  map->enc));
+                                                                  fv->b.map->
+                                                                  enc));
   if (event->type == et_mouseup)
     SVAttachFV (fv, 2);
 }
@@ -13821,11 +13820,11 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
   GDrawSetUserData (dw, gs.fv);
   FVCopyInnards (gs.fv, &pos, infoh, fvorig, dw, def_layer,
                  (struct fvcontainer *) &gs);
-  pos.height = 4 * gs.fv->cbh + 1; /* We don't know the real fv->cbh
-                                      until after creating the
-                                      innards. The size of the last
-                                      window is probably wrong, we'll
-                                      fix later */
+  pos.height = 4 * gs.fv->cbh + 1;      /* We don't know the real fv->cbh
+                                           until after creating the
+                                           innards. The size of the last
+                                           window is probably wrong, we'll
+                                           fix later */
   memset (gs.fv->b.selected, 0, gs.fv->b.map->enc_limit);
   if (current != NULL && strcmp (current, _("{Everything Else}")) != 0)
     {

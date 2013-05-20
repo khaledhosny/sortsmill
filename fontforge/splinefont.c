@@ -50,9 +50,7 @@
 void
 SFUntickAll (SplineFont *sf)
 {
-  int i;
-
-  for (i = 0; i < sf->glyphcnt; ++i)
+  for (size_t i = 0; i < sf->glyphcnt; ++i)
     if (sf->glyphs[i] != NULL)
       sf->glyphs[i]->ticked = false;
 }
