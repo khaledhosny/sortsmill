@@ -55,7 +55,7 @@
 
 /* Adobe's opentype feature file */
 /* Which suffers incompatible changes according to Adobe's whim */
-/* Currently trying to support the version of december 2008, Version 1.8. */
+/* Currently trying to support the version 1.8 and above. */
 
 /* Ambiguities */
 /* In section 4.d we are told that MarkAttachmentType/UseMarkFilteringSet */
@@ -214,7 +214,7 @@ MarkNeeded (uint8_t *needed, uint8_t *setsneeded, OTLookup *otl)
 }
 
 static void
-gdef_markclasscheck (FILE *out, SplineFont *sf, OTLookup *otl)
+gdef_markclass_check (FILE *out, SplineFont *sf, OTLookup *otl)
 {
   uint8_t *needed;
   uint8_t *setsneeded;
@@ -434,7 +434,7 @@ lookupname (OTLookup *otl)
 }
 
 static void
-dumpdevice (FILE *out, DeviceTable *devtab)
+dump_device (FILE *out, DeviceTable *devtab)
 {
   int i, any = false;
 
@@ -466,13 +466,13 @@ dump_valuerecord (FILE *out, struct vr *vr)
   if (vr->adjust != NULL)
     {
       putc (' ', out);
-      dumpdevice (out, &vr->adjust->xadjust);
+      dump_device (out, &vr->adjust->xadjust);
       putc (' ', out);
-      dumpdevice (out, &vr->adjust->yadjust);
+      dump_device (out, &vr->adjust->yadjust);
       putc (' ', out);
-      dumpdevice (out, &vr->adjust->xadv);
+      dump_device (out, &vr->adjust->xadv);
       putc (' ', out);
-      dumpdevice (out, &vr->adjust->yadv);
+      dump_device (out, &vr->adjust->yadv);
     }
   putc ('>', out);
 }
@@ -493,9 +493,9 @@ dump_anchorpoint (FILE *out, AnchorPoint *ap)
   else if (ap->xadjust.corrections != NULL || ap->yadjust.corrections != NULL)
     {
       putc (' ', out);
-      dumpdevice (out, &ap->xadjust);
+      dump_device (out, &ap->xadjust);
       putc (' ', out);
-      dumpdevice (out, &ap->yadjust);
+      dump_device (out, &ap->yadjust);
     }
   putc ('>', out);
 }
@@ -1902,7 +1902,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                                       fprintf (out,
                                                " < 0 0 0 %d <device NULL> <device NULL> <device NULL> ",
                                                kp->off);
-                                      dumpdevice (out, kp->adjust);
+                                      dump_device (out, kp->adjust);
                                       fprintf (out, " > ");
                                       dump_glyphname (out, kp->sc);
                                       fprintf (out, " < 0 0 0 0 >;\n");
@@ -1914,7 +1914,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                                       fprintf (out,
                                                " < 0 0 %d 0 <device NULL> <device NULL> ",
                                                kp->off);
-                                      dumpdevice (out, kp->adjust);
+                                      dump_device (out, kp->adjust);
                                       fprintf (out, " <device NULL>>;\n");
                                     }
                                   else
@@ -1922,7 +1922,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                                       fprintf (out,
                                                " < 0 0 %d 0 <device NULL> <device NULL> ",
                                                kp->off);
-                                      dumpdevice (out, kp->adjust);
+                                      dump_device (out, kp->adjust);
                                       fprintf (out, " <device NULL>> ");
                                       dump_glyphname (out, kp->sc);
                                       fprintf (out, " < 0 0 0 0 >;\n");
@@ -2003,7 +2003,7 @@ FeatDumpOneLookup (FILE *out, SplineFont *sf, OTLookup *otl)
   int l;
 
   untick_lookups (sf);
-  gdef_markclasscheck (out, sf, otl);
+  gdef_markclass_check (out, sf, otl);
 
   dump_lookup (out, sf, otl);
 
@@ -2414,7 +2414,7 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
 /*  first 31 characters. So provide a fall-back mechanism if we get a name */
 /*  collision */
 static void
-preparenames (SplineFont *sf)
+prepare_names (SplineFont *sf)
 {
   int isgpos, cnt, try, i;
   OTLookup *otl;
@@ -2497,7 +2497,7 @@ preparenames (SplineFont *sf)
 }
 
 static void
-cleanupnames (SplineFont *sf)
+cleanup_names (SplineFont *sf)
 {
   int isgpos;
   OTLookup *otl;
@@ -2525,12 +2525,12 @@ FeatDumpFontLookups (FILE *out, SplineFont *sf)
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
   untick_lookups (sf);
-  preparenames (sf);
-  gdef_markclasscheck (out, sf, NULL);
+  prepare_names (sf);
+  gdef_markclass_check (out, sf, NULL);
   dump_gsubgpos (out, sf);
   dump_gdef (out, sf);
   dump_base (out, sf);
-  cleanupnames (sf);
+  cleanup_names (sf);
   setlocale (LC_NUMERIC, oldloc);
 }
 
@@ -2793,7 +2793,6 @@ enum toktype
   tk_lookupflag, tk_mark, tk_nameid, tk_NULL, tk_parameters, tk_position,
   tk_required, tk_RightToLeft, tk_script, tk_substitute, tk_subtable,
   tk_table, tk_useExtension,
-/* Additional keywords in the 2008 draft */
   tk_anchorDef, tk_valueRecordDef, tk_contourpoint,
   tk_MarkAttachmentType, tk_UseMarkFilteringSet,
   tk_markClass, tk_reversesub, tk_base, tk_ligature, tk_ligComponent,
@@ -2957,7 +2956,6 @@ static struct keywords
   "table", tk_table},
   {
   "useExtension", tk_useExtension},
-/* Additional keywords in the 2008 draft */
   {
   "anchorDef", tk_anchorDef},
   {
