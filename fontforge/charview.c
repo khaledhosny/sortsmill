@@ -6883,9 +6883,9 @@ fllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
         case MID_Recent:
           mi->ti.disabled = !RecentFilesAny () || (cv->b.container != NULL
-                                                   && !(cv->b.container->
-                                                        funcs->canOpen) (cv->b.
-                                                                         container));
+                                                   && !(cv->b.container->funcs->
+                                                        canOpen) (cv->
+                                                                  b.container));
           break;
 
         case MID_Close:
@@ -7649,8 +7649,8 @@ _CVMenuChangeChar (CharView *cv, int mid)
                    && strcasestr (enc->enc_name, "johab") != NULL)
             pos = 0x8431;
           else if (CVCurEnc (cv) < 0xa1a1
-                   && strcasestr (enc->iconv_name ? enc->iconv_name : enc->
-                                  enc_name, "EUC") != NULL)
+                   && strcasestr (enc->iconv_name ? enc->
+                                  iconv_name : enc->enc_name, "EUC") != NULL)
             pos = 0xa1a1;
           else if (CVCurEnc (cv) < 0x8140
                    && strcasestr (enc->enc_name, "sjis") != NULL)

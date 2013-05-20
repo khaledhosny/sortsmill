@@ -1200,8 +1200,7 @@ inline void remove_all_gid_to_enc (EncMap *map, ssize_t gid);
 inline ssize_t gid_to_enc (EncMap *map, ssize_t gid); /* Returns the
                                                          first code
                                                          point. */
-// FIXME: Add a function for returning a list of _all_ the code
-// points.
+inline SCM gid_to_enc_list (EncMap *map, ssize_t gid);
 inline bool gid_to_enc_is_set (EncMap *map, ssize_t gid);
 void copy_gid_to_enc_contents (EncMap *new, EncMap *old);
 
@@ -1362,6 +1361,21 @@ gid_to_enc (EncMap *map, ssize_t gid)
   SCM value = scm_rbmapi_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
                               scm_from_int (-1));
   return scm_to_ssize_t ((scm_is_pair (value)) ? SCM_CAR (value) : value);
+}
+
+inline SCM
+gid_to_enc_list (EncMap *map, ssize_t gid)
+{
+  SCM value = scm_rbmapi_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
+                              scm_from_int (-1));
+  SCM lst;
+  if (scm_is_pair (value))
+    lst = value;
+  else if (scm_to_ssize_t (value) != -1)
+    lst = scm_list_1 (value);
+  else
+    lst = SCM_EOL;
+  return lst;
 }
 
 inline bool

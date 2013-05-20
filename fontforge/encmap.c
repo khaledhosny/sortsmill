@@ -50,6 +50,7 @@ VISIBLE void set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 VISIBLE void add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 VISIBLE void remove_all_gid_to_enc (EncMap *map, ssize_t gid);
 VISIBLE ssize_t gid_to_enc (EncMap *map, ssize_t gid);
+VISIBLE SCM gid_to_enc_list (EncMap *map, ssize_t gid);
 VISIBLE bool gid_to_enc_is_set (EncMap *map, ssize_t gid);
 
 VISIBLE gid_iter_t gid_iter (EncMap *map);
