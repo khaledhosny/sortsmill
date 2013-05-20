@@ -1,5 +1,20 @@
 #include <config.h>
 
+// Copyright (C) 2013 Barry Schwartz
+// 
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see <http://www.gnu.org/licenses/>.
+
 /* Copyright (C) 2000-2012 by George Williams */
 /* Copyright (C) 2013 by Barry Schwartz */
 /*
@@ -316,8 +331,9 @@ FVDrawGlyph (GWindow pixmap, FontView *fv, int index, int forcebg)
              temporary copy of the glyph merging all such elements
              into a single bitmap. */
           bdfc =
-            fv->show->piecemeal ? fv->show->
-            glyphs[feat_gid] : BDFGetMergedChar (fv->show->glyphs[feat_gid]);
+            fv->show->piecemeal ? fv->
+            show->glyphs[feat_gid] : BDFGetMergedChar (fv->show->
+                                                       glyphs[feat_gid]);
 
           memset (&gi, '\0', sizeof (gi));
           memset (&base, '\0', sizeof (base));
@@ -2943,8 +2959,8 @@ FVMenuSelectByName (GWindow _gw, struct gmenuitem *UNUSED (mi), GEvent *e)
         {
           char *str = GGadgetGetTitle8 (gcd[1].ret);
           int merge =
-            GGadgetIsChecked (gcd[2].ret) ? mt_set : GGadgetIsChecked (gcd[3].
-                                                                       ret) ?
+            GGadgetIsChecked (gcd[2].
+                              ret) ? mt_set : GGadgetIsChecked (gcd[3].ret) ?
             mt_merge : GGadgetIsChecked (gcd[4].ret) ? mt_restrict : mt_and;
           int ret = FVSelectByName (fv, str, merge);
           free (str);
@@ -3091,8 +3107,10 @@ FVMenuSelectHintingNeeded (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
                       && sf->glyphs[gid]->layers[fv->b.active_layer].splines !=
                       NULL && sf->glyphs[gid]->ttf_instrs_len <= 0) || (order2
                                                                         &&
-                                                                        sf->glyphs
-                                                                        [gid]->instructions_out_of_date)));
+                                                                        sf->
+                                                                        glyphs
+                                                                        [gid]->
+                                                                        instructions_out_of_date)));
       fv->b.selected[i] = mergefunc[merge + (fv->b.selected[i] ? 2 : 0) + doit];
     }
   GDrawRequestExpose (fv->v, NULL, false);
@@ -3714,9 +3732,8 @@ _FVMenuChangeChar (FontView *fv, int mid)
         {
           for (--pos;
                pos >= 0 && (enc_to_gid (map, pos) == -1
-                            || !SCWorthOutputting (sf->
-                                                   glyphs[enc_to_gid
-                                                          (map, pos)])
+                            || !SCWorthOutputting (sf->glyphs[enc_to_gid
+                                                              (map, pos)])
                             || (fv->show != fv->filled
                                 && fv->show->glyphs[enc_to_gid (map, pos)] ==
                                 NULL)); --pos);
@@ -11251,16 +11268,16 @@ FVRefreshChar (FontView *fv, int gid)
         bdfc = BDFPieceMeal (fv->show, gid);
 
       /* A glyph may be encoded in several places, all need updating */
-      for (enc_iter_t p = enc_iter (fv->b.map); !enc_done (p); p = enc_next (p))
-        if (enc_gid (p) == gid)
-          {
-            const ssize_t enc = enc_enc (p);
-            i = enc / fv->colcnt;
-            j = enc - i * fv->colcnt;
-            i -= fv->rowoff;
-            if (i >= 0 && i < fv->rowcnt)
-              FVDrawGlyph (fv->v, fv, enc, true);
-          }
+      SCM enc_list = gid_to_enc_list (fv->b.map, gid);
+      for (SCM *p = enc_list; !scm_is_null (p); p = SCM_CDR (p))
+        {
+          const ssize_t enc = scm_to_ssize_t (SCM_CAR (p));
+          i = enc / fv->colcnt;
+          j = enc - i * fv->colcnt;
+          i -= fv->rowoff;
+          if (i >= 0 && i < fv->rowcnt)
+            FVDrawGlyph (fv->v, fv, enc, true);
+        }
     }
 }
 
@@ -11326,16 +11343,20 @@ FVMakeChar (FontView *fv, int enc)
           uni =
             fl->featuretag == CHR ('i', 'n', 'i',
                                    't') ? ArabicForms[base_sc->unicodeenc -
-                                                      0x600].initial : fl->
-            featuretag == CHR ('m', 'e', 'd',
-                               'i') ? ArabicForms[base_sc->unicodeenc -
-                                                  0x600].medial : fl->
-            featuretag == CHR ('f', 'i', 'n',
-                               'a') ? ArabicForms[base_sc->unicodeenc -
-                                                  0x600].final : fl->
-            featuretag == CHR ('i', 's', 'o',
-                               'l') ? ArabicForms[base_sc->unicodeenc -
-                                                  0x600].isolated : -1;
+                                                      0x600].
+            initial : fl->featuretag == CHR ('m', 'e', 'd',
+                                             'i') ? ArabicForms[base_sc->
+                                                                unicodeenc -
+                                                                0x600].
+            medial : fl->featuretag == CHR ('f', 'i', 'n',
+                                            'a') ? ArabicForms[base_sc->
+                                                               unicodeenc -
+                                                               0x600].
+            final : fl->featuretag == CHR ('i', 's', 'o',
+                                           'l') ? ArabicForms[base_sc->
+                                                              unicodeenc -
+                                                              0x600].
+            isolated : -1;
           feat_sc = SFGetChar (sf, uni, NULL);
           if (feat_sc != NULL)
             return (feat_sc);
@@ -12371,9 +12392,8 @@ FVMouse (FontView *fv, GEvent *event)
       if (dopopup)
         SCPreparePopup (fv->v, sc, fv->b.map->remap, pos,
                         sc == &dummy ? dummy.unicodeenc : UniFromEnc (pos,
-                                                                      fv->b.
-                                                                      map->
-                                                                      enc));
+                                                                      fv->
+                                                                      b.map->enc));
     }
   if (event->type == et_mousedown)
     {
@@ -12476,8 +12496,8 @@ FVMouse (FontView *fv, GEvent *event)
   if (event->type == et_mouseup && dopopup)
     SCPreparePopup (fv->v, sc, fv->b.map->remap, pos,
                     sc == &dummy ? dummy.unicodeenc : UniFromEnc (pos,
-                                                                  fv->b.map->
-                                                                  enc));
+                                                                  fv->b.
+                                                                  map->enc));
   if (event->type == et_mouseup)
     SVAttachFV (fv, 2);
 }
