@@ -57,13 +57,13 @@ LDADD = $(LIBADD) $(GUILIBADD)
 
 noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	flaglist.h namelist_data.h autowidth2.h fontforge.h psfont.h		\
-	stemdb.h autowidth.h delta.h fontforgevw.h lookups.h generatefont.h		\
-	ttf.h baseviews.h fvmetrics.h mm.h ttfinstrs.h edgelist2.h			\
-	namehash.h uiinterface.h bezctx_ff.h edgelist.h groups.h			\
-	nonlineartrans.h sd.h unicoderange.h bitmapcontrol.h encoding.h		\
-	ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h		\
-	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
-	fontimage.h activeinui.h bezctx.h bezctx_intf.h spiro.h				\
+	stemdb.h autowidth.h delta.h fontforgevw.h lookups.h				\
+	generatefont.h ttf.h baseviews.h fvmetrics.h mm.h ttfinstrs.h		\
+	edgelist2.h namehash.h uiinterface.h bezctx_ff.h edgelist.h			\
+	groups.h nonlineartrans.h sd.h unicoderange.h bitmapcontrol.h		\
+	encoding.h ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h		\
+	ffpython.h sflayoutP.h print.h splinefont.h annotations.h			\
+	compare.h fontimage.h activeinui.h bezctx.h bezctx_intf.h spiro.h	\
 	spiroentrypoints.h zmisc.h
 
 nobase_nodist_include_HEADERS = sortsmill/fontforge_api.h
