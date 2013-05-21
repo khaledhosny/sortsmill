@@ -11270,7 +11270,7 @@ FVRefreshChar (FontView *fv, int gid)
 
       /* A glyph may be encoded in several places, all need updating */
       SCM enc_list = gid_to_enc_list (fv->b.map, gid);
-      for (SCM *p = enc_list; !scm_is_null (p); p = SCM_CDR (p))
+      for (SCM p = enc_list; !scm_is_null (p); p = SCM_CDR (p))
         {
           const ssize_t enc = scm_to_ssize_t (SCM_CAR (p));
           i = enc / fv->colcnt;
