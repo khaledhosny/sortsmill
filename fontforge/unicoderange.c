@@ -1,8 +1,21 @@
-#include <config.h>
+#include <config.h>   /* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
+// This file is part of the Sorts Mill Tools.
+// 
+// Sorts Mill Tools is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3 of the License, or
+// (at your option) any later version.
+// 
+// Sorts Mill Tools is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see <http://www.gnu.org/licenses/>.
+
 /* Copyright (C) 2006-2012 by George Williams */
-/* 2012nov14, table updates, fixes added, Jose Da Silva */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,6 +41,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/* 2012nov14, table updates, fixes added, Jose Da Silva */
 
 #include "fontforge.h"
 #include "unicoderange.h"

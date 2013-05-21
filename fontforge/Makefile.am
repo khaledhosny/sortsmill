@@ -179,7 +179,6 @@ libsortsmill_fontforge_la_SOURCES += ttfinstrs.c
 libsortsmill_fontforge_la_SOURCES += ttfspecial.c
 libsortsmill_fontforge_la_SOURCES += ufo.c
 libsortsmill_fontforge_la_SOURCES += unicoderange.c
-libsortsmill_fontforge_la_SOURCES += utils.c
 libsortsmill_fontforge_la_SOURCES += winfonts.c
 libsortsmill_fontforge_la_SOURCES += zapfnomen.c
 libsortsmill_fontforge_la_SOURCES += groups.c
