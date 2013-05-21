@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright (C) 2012, 2013 by Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 # This file is part of the Sorts Mill Tools.
 # 
 # Sorts Mill Tools is free software; you can redistribute it and/or modify
