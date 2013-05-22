@@ -79,7 +79,7 @@ copy_gid_to_enc_contents (EncMap *new, EncMap *old)
     {
       SCM enc_list = gid_enc_list (p);
       for (SCM q = enc_list; !scm_is_null (q); q = SCM_CDR (q))
-        add_gid_to_enc (new, gid_gid (p), SCM_CAR (q));
+        add_gid_to_enc (new, gid_gid (p), scm_to_ssize_t (SCM_CAR (q)));
     }
 }
 
