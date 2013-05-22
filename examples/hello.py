@@ -1,5 +1,5 @@
 #! /bin/env python
-#| -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*- |#
+#| -*- mode: scheme; coding: utf-8 -*- |#
 
 #|                                          |#
 #| A simple Python script written in Guile. |#
