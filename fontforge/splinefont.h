@@ -1,4 +1,4 @@
-// Copyright (C) 2013 Barry Schwartz
+// Copyright (C) 2013 Khaled Hosny and Barry Schwartz
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
