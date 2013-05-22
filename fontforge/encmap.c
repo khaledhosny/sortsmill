@@ -61,6 +61,7 @@ VISIBLE gid_iter_t gid_next (gid_iter_t iter);
 VISIBLE gid_iter_t gid_prev (gid_iter_t iter);
 VISIBLE ssize_t gid_gid (gid_iter_t iter);
 VISIBLE ssize_t gid_enc (gid_iter_t iter);
+VISIBLE SCM gid_enc_list (gid_iter_t iter);
 
 //-------------------------------------------------------------------------
 
@@ -75,7 +76,11 @@ VISIBLE void
 copy_gid_to_enc_contents (EncMap *new, EncMap *old)
 {
   for (gid_iter_t p = gid_iter (old); !gid_done (p); p = gid_next (p))
-    set_gid_to_enc (new, gid_gid (p), gid_enc (p));
+    {
+      SCM enc_list = gid_enc_list (p);
+      for (SCM q = enc_list; !scm_is_null (q); q = SCM_CDR (q))
+        add_gid_to_enc (new, gid_gid (p), SCM_CAR (q));
+    }
 }
 
 VISIBLE void

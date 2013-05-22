@@ -1212,6 +1212,7 @@ inline gid_iter_t gid_next (gid_iter_t iter);
 inline gid_iter_t gid_prev (gid_iter_t iter);
 inline ssize_t gid_gid (gid_iter_t iter);
 inline ssize_t gid_enc (gid_iter_t iter);
+inline SCM gid_enc_list (gid_iter_t iter);
 
 inline void
 make_enc_to_gid (EncMap *map)
@@ -1437,6 +1438,20 @@ inline ssize_t
 gid_enc (gid_iter_t iter)
 {
   return scm_to_ssize_t (scm_rbmapi_iter_value (iter._iter));
+}
+
+inline SCM
+gid_enc_list (gid_iter_t iter)
+{
+  SCM value = scm_rbmapi_iter_value (iter._iter);
+  SCM lst;
+  if (scm_is_pair (value))
+    lst = value;
+  else if (scm_to_ssize_t (value) != -1)
+    lst = scm_list_1 (value);
+  else
+    lst = SCM_EOL;
+  return lst;
 }
 
 enum property_type
