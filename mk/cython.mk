@@ -18,7 +18,7 @@
 
 AM_V_CYTHON = $(AM_V_CYTHON_$(V))
 AM_V_CYTHON_ = $(AM_V_CYTHON_$(AM_DEFAULT_VERBOSITY))
-AM_V_CYTHON_0 = @echo "  CYTHON" $@;
+AM_V_CYTHON_0 = @echo "  CYTHON  " $@;
 
 %.c: %.pyx
 	$(AM_V_CYTHON)
