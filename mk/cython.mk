@@ -16,8 +16,12 @@
 
 #--------------------------------------------------------------------------
 
+AM_V_CYTHON = $(AM_V_CYTHON_$(V))
+AM_V_CYTHON_ = $(AM_V_CYTHON_$(AM_DEFAULT_VERBOSITY))
+AM_V_CYTHON_0 = @echo "  CYTHON" $@;
+
 %.c: %.pyx
-	$(AM_V_GEN)
+	$(AM_V_CYTHON)
 	$(AM_V_at)$(CYTHON) $(AM_CYTHONFLAGS) $(CYTHONFLAGS) --force -o $@-tmp $<
 	$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
 		s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
@@ -31,7 +35,7 @@
 # produces C code that is compatible with both CPython 2.7 and
 # CPython 3.x.
 %.c: %.py
-	$(AM_V_GEN)
+	$(AM_V_CYTHON)
 	$(AM_V_at)$(CYTHON) $(AM_CYTHONFLAGS) $(CYTHONFLAGS) --force -o $@-tmp $<
 	$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
 		s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
