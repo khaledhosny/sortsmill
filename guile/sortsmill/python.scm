@@ -1,4 +1,4 @@
-;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 ;; This file is part of the Sorts Mill Tools.
