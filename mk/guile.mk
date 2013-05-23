@@ -51,7 +51,7 @@ GUILE_COMPILE = $(GUILE_ENV) $(GUILE_TOOLS) compile $(GUILE_WARNINGS)	\
 # Borrowed from am/guilec of the Guile sources.
 AM_V_GUILEC = $(AM_V_GUILEC_$(V))
 AM_V_GUILEC_ = $(AM_V_GUILEC_$(AM_DEFAULT_VERBOSITY))
-AM_V_GUILEC_0 = @echo "  GUILEC" $@;
+AM_V_GUILEC_0 = @echo "  GUILEC  " $@;
 
 %.go: %.scm
 	$(AM_V_GUILEC)$(GUILE_COMPILE) $< -o $@
