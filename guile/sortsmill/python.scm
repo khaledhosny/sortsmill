@@ -23,6 +23,7 @@
 ;;;                  (sortsmill usermenu python))
 ;;;     (use-python-api)
 ;;;     (load-user_init.py)
+;;;     (load-python-scripts-directory)
 ;;;
 ;;; in your user-init.scm.
 ;;;

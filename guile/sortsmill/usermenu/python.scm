@@ -18,7 +18,12 @@
 
 (library (sortsmill usermenu python)
 
-  (export load-user_init.py
+  (export load-user_init.py            ; Load the user_init.py script.
+
+          ;; Loading Python scripts from what I (Barry) like to call a
+          ;; ‘silo’.
+          python-scripts-directory      ; A fluid containing a thunk.
+          load-python-scripts-directory ; The loader.
 
           python-menu-entry-callable->procedure
 
@@ -40,7 +45,8 @@
           (sortsmill notices)
           (rnrs)
           (except (guile) error)
-          (system foreign))
+          (system foreign)
+          (only (ice-9 ftw) scandir))
 
   (sortsmill-dynlink-declarations "#include <activeinui.h>")
   (sortsmill-dynlink-declarations "#include <ffpython.h>")
@@ -263,21 +269,34 @@ always a boolean."
                  "user_init.py"
                  (lambda () (pyexec-file-name-in-main user-init))))))))
 
-  #|
-  (define python-scripts-subdirectory
+  (define python-scripts-directory
     (make-fluid
      (lambda ()
        (let ([user-config-dir (user-config-directory)])
          (if user-config-dir
-             (let ([scripts-dir (format #f "~a/python" user-config-dir)])
-               
+             (let ([scripts-dir (format #f "~a/~a/python"
+                                        user-config-dir pkg-info:package)])
+               scripts-dir)
+             #f)))))
 
-  (define (load-python-scripts-subdirectory)
+  (define (python-scripts-in-directory dir)
+    (scandir dir (lambda (s) (string-suffix-ci? ".py" s))))
+
+  (define (load-python-scripts-directory)
     ;;
     ;; Load the scripts in the python scripts subdirectory, which
     ;; typically is ${HOME}/.config/sortsmill-tools/python
     ;;
-    3)
-  |#
+    (let ([dir-func (fluid-ref python-scripts-directory)])
+      (when dir-func
+        (let ([dir (dir-func)])
+          (when dir
+            (let ([scripts (python-scripts-in-directory dir)])
+              (when scripts
+                (for-each
+                 (lambda (basename)
+                   (pyexec-file-name-in-main
+                    (format #f "~a/~a" dir basename)))
+                 scripts))))))))
 
   ) ;; end of library.
