@@ -16,7 +16,11 @@
 
 include $(top_srcdir)/mk/guile.mk
 
+AM_V_TIG = $(AM_V_TIG_$(V))
+AM_V_TIG_ = $(AM_V_TIG_$(AM_DEFAULT_VERBOSITY))
+AM_V_TIG_0 = @echo "  TIG     " $@;
+
 %.c: %.tig $(top_srcdir)/guile/tig.scm
-	$(AM_V_GEN)
+	$(AM_V_TIG)
 	$(AM_V_at)$(GUILE_INTERPRET) $(top_srcdir)/guile/tig.scm < $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
