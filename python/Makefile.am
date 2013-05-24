@@ -183,11 +183,15 @@ PXI_FILES = $(cythonsrcinc)/gmpy.pxi
 
 PXI_IN_FILES = $(cythonbuildinc)/config.pxi
 
+AM_V_PYAPI = $(AM_V_PYAPI_$(V))
+AM_V_PYAPI_ = $(AM_V_PYAPI_$(AM_DEFAULT_VERBOSITY))
+AM_V_PYAPI_0 = @echo "  GENPYAPI" $@;
+
 sortsmill/fontforge_api.pyx:								\
 		$(top_builddir)/fontforge/fontforge.types.apii		\
 		$(srcdir)/generate-python-api.scm					\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
-	$(AM_V_GEN)
+	$(AM_V_PYAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-python-api.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 

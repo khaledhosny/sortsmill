@@ -25,10 +25,14 @@ nodist_libsortsmill_fortran_api_la_SOURCES = fontforge_api.f90
 
 FORTRAN_MODULES = sortsmill_fontforge_api
 
+AM_V_FAPI = $(AM_V_FAPI_$(V))
+AM_V_FAPI_ = $(AM_V_FAPI_$(AM_DEFAULT_VERBOSITY))
+AM_V_FAPI_0 = @echo "  GENFAPI " $@;
+
 fontforge_api.f90: $(top_builddir)/fontforge/fontforge.types.apii	\
 		$(srcdir)/generate-fortran-api.scm							\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
-	$(AM_V_GEN)
+	$(AM_V_FAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-fortran-api.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 

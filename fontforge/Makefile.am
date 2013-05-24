@@ -85,10 +85,14 @@ nobase_nodist_include_HEADERS = sortsmill/fontforge_api.h
 
 CLEANFILES += $(nobase_nodist_include_HEADERS)
 
+AM_V_HAPI = $(AM_V_HAPI_$(V))
+AM_V_HAPI_ = $(AM_V_HAPI_$(AM_DEFAULT_VERBOSITY))
+AM_V_HAPI_0 = @echo "  GENHAPI " $@;
+
 sortsmill/fontforge_api.h: fontforge.types.apii			\
 		$(srcdir)/generate-c-api.h.scm						\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
-	$(AM_V_GEN)
+	$(AM_V_HAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.h.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
@@ -237,10 +241,14 @@ libsortsmill_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
 
 EXTRA_SCRIPTS += generate_codepoint_selector.py
 
+AM_V_CAPI = $(AM_V_CAPI_$(V))
+AM_V_CAPI_ = $(AM_V_CAPI_$(AM_DEFAULT_VERBOSITY))
+AM_V_CAPI_0 = @echo "  GENCAPI " $@;
+
 fontforge_api.c: fontforge.types.apii sortsmill/fontforge_api.h	\
 		$(srcdir)/generate-c-api.c.scm							\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
-	$(AM_V_GEN)
+	$(AM_V_CAPI)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.c.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 

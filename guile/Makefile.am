@@ -921,8 +921,12 @@ libguile_sortsmill_symbols.c:										\
 	ff-internal/extract-dynlink.scm sortsmill/pkg-info/python.scm	\
 	sortsmill/strings/hash-guillemet.scm
 
+AM_V_GENSYM = $(AM_V_GENSYM_$(V))
+AM_V_GENSYM_ = $(AM_V_GENSYM_$(AM_DEFAULT_VERBOSITY))
+AM_V_GENSYM_0 = @echo "  GENSYM  " $@;
+
 libguile_sortsmill_symbols.c: $(SCM_SYMBOL_FILES)
-	$(AM_V_GEN)
+	$(AM_V_GENSYM)
 	$(AM_V_at)$(GUILE_INTERPRET)										\
 		$(srcdir)/generate-libguile-sortsmill_symbols.scm $^ > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
