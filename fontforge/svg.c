@@ -1403,8 +1403,8 @@ XmlFindID (xmlNodePtr xml, char *name)
   xmlChar *id;
   xmlNodePtr child, ret;
 
-  id = xmlGetProp (xml, (xmlChar *) "id");
-  if (id != NULL && xmlStrcmp (id, (xmlChar *) name) == 0)
+  id = xmlGetProp (xml, "id");
+  if (id != NULL && xmlStrcmp (id, name) == 0)
     {
       xmlFree (id);
       return (xml);
@@ -1445,7 +1445,7 @@ static int
 _FindSVGFontNodes (xmlNodePtr node, xmlNodePtr * fonts, int cnt, int max,
                    char *nodename)
 {
-  if (xmlStrcmp (node->name, (const xmlChar *) nodename) == 0)
+  if (xmlStrcmp (node->name, nodename) == 0)
     {
       if (strcmp (nodename, "svg") == 0)
         nodename = "font";
@@ -1502,7 +1502,7 @@ SVGPickFont (xmlNodePtr * fonts, char *filename)
   names = xmalloc ((cnt + 1) * sizeof (char *));
   for (cnt = 0; fonts[cnt] != NULL; ++cnt)
     {
-      name = xmlGetProp (fonts[cnt], (xmlChar *) "id");
+      name = xmlGetProp (fonts[cnt], "id");
       if (name == NULL)
         {
           names[cnt] = xstrdup ("nameless-font");
@@ -2059,7 +2059,7 @@ SVGParsePath (xmlChar *path)
               break;
             }
         }
-      path = (xmlChar *) skipcomma (end);
+      path = skipcomma (end);
     }
   return (head);
 }
@@ -2173,7 +2173,7 @@ SVGAddSpiros (xmlChar *path, SplineSet *base)
           current.x = cp.x;
           current.y = cp.y;
         }
-      path = (xmlChar *) skipcomma (end);
+      path = skipcomma (end);
     }
   return (base);
 }
@@ -2188,7 +2188,7 @@ SVGParseExtendedPath (xmlNodePtr svg, xmlNodePtr top)
   xmlChar *outline /*, *effect, *spirooutline */ ;
   SplineSet *head = NULL;
 
-  outline = xmlGetProp (svg, (xmlChar *) "d");
+  outline = xmlGetProp (svg, "d");
   if (outline != NULL)
     {
       head = SVGParsePath (outline);
@@ -2196,16 +2196,16 @@ SVGParseExtendedPath (xmlNodePtr svg, xmlNodePtr top)
     }
 #if 0
   effect =
-    xmlGetProp (svg, (xmlChar *) "path-effect" /*, (xmlChar *) "inkscape:" */ );
+    xmlGetProp (svg, "path-effect" /*, "inkscape:" */ );
   spirooutline =
-    xmlGetProp (svg, (xmlChar *) "original-d" /*, (xmlChar *) "inkscape:" */ );
+    xmlGetProp (svg, "original-d" /*, "inkscape:" */ );
   if (effect != NULL && spirooutline != NULL && *effect == '#')
     {
       xmlNodePtr effect_type = XmlFindID (top, effect + 1);
       xmlChar *type = NULL;
       if (effect_type != NULL &&
           (type = xmlGetProp (effect_type, "effect")) != NULL &&
-          xmlStrcmp (type, (xmlChar *) "spiro") == 0)
+          xmlStrcmp (type, "spiro") == 0)
         SVGAddSpiros (spirooutline, head);
       if (type != NULL)
         xmlFree (type);
@@ -2227,7 +2227,7 @@ SVGParseRect (xmlNodePtr rect)
   SplinePoint *sp;
   SplineSet *cur;
 
-  num = (char *) xmlGetProp (rect, (xmlChar *) "x");
+  num = (char *) xmlGetProp (rect, "x");
   if (num != NULL)
     {
       x = strtod ((char *) num, NULL);
@@ -2235,7 +2235,7 @@ SVGParseRect (xmlNodePtr rect)
     }
   else
     x = 0;
-  num = (char *) xmlGetProp (rect, (xmlChar *) "width");
+  num = (char *) xmlGetProp (rect, "width");
   if (num != NULL)
     {
       width = strtod ((char *) num, NULL);
@@ -2243,7 +2243,7 @@ SVGParseRect (xmlNodePtr rect)
     }
   else
     return (NULL);
-  num = (char *) xmlGetProp (rect, (xmlChar *) "y");
+  num = (char *) xmlGetProp (rect, "y");
   if (num != NULL)
     {
       y = strtod ((char *) num, NULL);
@@ -2251,7 +2251,7 @@ SVGParseRect (xmlNodePtr rect)
     }
   else
     y = 0;
-  num = (char *) xmlGetProp (rect, (xmlChar *) "height");
+  num = (char *) xmlGetProp (rect, "height");
   if (num != NULL)
     {
       height = strtod ((char *) num, NULL);
@@ -2261,13 +2261,13 @@ SVGParseRect (xmlNodePtr rect)
     return (NULL);
 
   rx = ry = 0;
-  num = (char *) xmlGetProp (rect, (xmlChar *) "rx");
+  num = (char *) xmlGetProp (rect, "rx");
   if (num != NULL)
     {
       ry = rx = strtod ((char *) num, NULL);
       xmlFree (num);
     }
-  num = (char *) xmlGetProp (rect, (xmlChar *) "ry");
+  num = (char *) xmlGetProp (rect, "ry");
   if (num != NULL)
     {
       ry = strtod ((char *) num, NULL);
@@ -2368,7 +2368,7 @@ SVGParseLine (xmlNodePtr line)
   SplinePoint *sp1, *sp2;
   SplineSet *cur;
 
-  num = (char *) xmlGetProp (line, (xmlChar *) "x1");
+  num = (char *) xmlGetProp (line, "x1");
   if (num != NULL)
     {
       x = strtod ((char *) num, NULL);
@@ -2376,7 +2376,7 @@ SVGParseLine (xmlNodePtr line)
     }
   else
     x = 0;
-  num = (char *) xmlGetProp (line, (xmlChar *) "x2");
+  num = (char *) xmlGetProp (line, "x2");
   if (num != NULL)
     {
       x2 = strtod ((char *) num, NULL);
@@ -2384,7 +2384,7 @@ SVGParseLine (xmlNodePtr line)
     }
   else
     x2 = 0;
-  num = (char *) xmlGetProp (line, (xmlChar *) "y1");
+  num = (char *) xmlGetProp (line, "y1");
   if (num != NULL)
     {
       y = strtod ((char *) num, NULL);
@@ -2392,7 +2392,7 @@ SVGParseLine (xmlNodePtr line)
     }
   else
     y = 0;
-  num = (char *) xmlGetProp (line, (xmlChar *) "y2");
+  num = (char *) xmlGetProp (line, "y2");
   if (num != NULL)
     {
       y2 = strtod ((char *) num, NULL);
@@ -2418,7 +2418,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
   double rx;
   double ry;
 
-  char *num = (char *) xmlGetProp (ellipse, (xmlChar *) "cx");
+  char *num = (char *) xmlGetProp (ellipse, "cx");
   if (num != NULL)
     {
       cx = strtod ((char *) num, NULL);
@@ -2426,7 +2426,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
     }
   else
     cx = 0;
-  num = (char *) xmlGetProp (ellipse, (xmlChar *) "cy");
+  num = (char *) xmlGetProp (ellipse, "cy");
   if (num != NULL)
     {
       cy = strtod ((char *) num, NULL);
@@ -2436,7 +2436,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
     cy = 0;
   if (iscircle)
     {
-      num = (char *) xmlGetProp (ellipse, (xmlChar *) "r");
+      num = (char *) xmlGetProp (ellipse, "r");
       if (num != NULL)
         {
           rx = strtod ((char *) num, NULL);
@@ -2448,7 +2448,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
     }
   else
     {
-      num = (char *) xmlGetProp (ellipse, (xmlChar *) "rx");
+      num = (char *) xmlGetProp (ellipse, "rx");
       if (num != NULL)
         {
           rx = strtod ((char *) num, NULL);
@@ -2456,7 +2456,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
         }
       else
         return (NULL);
-      num = (char *) xmlGetProp (ellipse, (xmlChar *) "ry");
+      num = (char *) xmlGetProp (ellipse, "ry");
       if (num != NULL)
         {
           ry = strtod ((char *) num, NULL);
@@ -2514,7 +2514,7 @@ SVGParsePoly (xmlNodePtr poly, int isgon)
   SplinePoint *sp;
   SplineSet *cur;
 
-  pts = (char *) xmlGetProp (poly, (xmlChar *) "points");
+  pts = (char *) xmlGetProp (poly, "points");
   if (pts == NULL)
     return (NULL);
 
@@ -2679,7 +2679,7 @@ SVGuseTransform (struct svg_state *st, xmlNodePtr use, xmlNodePtr symbol)
   char *num, *end;
   real trans[6];
 
-  num = (char *) xmlGetProp (use, (xmlChar *) "x");
+  num = (char *) xmlGetProp (use, "x");
   if (num != NULL)
     {
       x = strtod ((char *) num, NULL);
@@ -2687,7 +2687,7 @@ SVGuseTransform (struct svg_state *st, xmlNodePtr use, xmlNodePtr symbol)
     }
   else
     x = 0;
-  num = (char *) xmlGetProp (use, (xmlChar *) "y");
+  num = (char *) xmlGetProp (use, "y");
   if (num != NULL)
     {
       y = strtod ((char *) num, NULL);
@@ -2703,7 +2703,7 @@ SVGuseTransform (struct svg_state *st, xmlNodePtr use, xmlNodePtr symbol)
       trans[5] = y;
       MatMultiply (trans, st->transform, st->transform);
     }
-  num = (char *) xmlGetProp (use, (xmlChar *) "width");
+  num = (char *) xmlGetProp (use, "width");
   if (num != NULL)
     {
       uwid = strtod ((char *) num, NULL);
@@ -2711,7 +2711,7 @@ SVGuseTransform (struct svg_state *st, xmlNodePtr use, xmlNodePtr symbol)
     }
   else
     uwid = 0;
-  num = (char *) xmlGetProp (use, (xmlChar *) "height");
+  num = (char *) xmlGetProp (use, "height");
   if (num != NULL)
     {
       uheight = strtod ((char *) num, NULL);
@@ -2719,7 +2719,7 @@ SVGuseTransform (struct svg_state *st, xmlNodePtr use, xmlNodePtr symbol)
     }
   else
     uheight = 0;
-  num = (char *) xmlGetProp (symbol, (xmlChar *) "viewBox");
+  num = (char *) xmlGetProp (symbol, "viewBox");
   if (num != NULL)
     {
       x = strtod ((char *) num, &end);
@@ -2776,35 +2776,35 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
     LogError (_("Could not find Color Source with id %s."), name);
   else
     if ((islinear =
-         xmlStrcmp (colour_source->name, (xmlChar *) "linearGradient") == 0)
-        || xmlStrcmp (colour_source->name, (xmlChar *) "radialGradient") == 0)
+         xmlStrcmp (colour_source->name, "linearGradient") == 0)
+        || xmlStrcmp (colour_source->name, "radialGradient") == 0)
     {
       struct gradient *grad =
         (struct gradient *) xzalloc (sizeof (struct gradient));
       int bbox_units;
       *_grad = grad;
 
-      prop = xmlGetProp (colour_source, (xmlChar *) "gradientUnits");
+      prop = xmlGetProp (colour_source, "gradientUnits");
       if (prop != NULL)
         {
-          bbox_units = xmlStrcmp (prop, (xmlChar *) "userSpaceOnUse") != 0;
+          bbox_units = xmlStrcmp (prop, "userSpaceOnUse") != 0;
           xmlFree (prop);
         }
       else
         bbox_units = true;
 
-      prop = xmlGetProp (colour_source, (xmlChar *) "gradientTransform");
+      prop = xmlGetProp (colour_source, "gradientTransform");
       /* I don't support this currently */
       if (prop != NULL)
         xmlFree (prop);
 
       grad->sm = sm_pad;
-      prop = xmlGetProp (colour_source, (xmlChar *) "spreadMethod");
+      prop = xmlGetProp (colour_source, "spreadMethod");
       if (prop != NULL)
         {
-          if (xmlStrcmp (prop, (xmlChar *) "reflect") == 0)
+          if (xmlStrcmp (prop, "reflect") == 0)
             grad->sm = sm_reflect;
-          else if (xmlStrcmp (prop, (xmlChar *) "repeat") == 0)
+          else if (xmlStrcmp (prop, "repeat") == 0)
             grad->sm = sm_repeat;
           xmlFree (prop);
         }
@@ -2816,7 +2816,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
           grad->stop.x = bbox->maxx;
           grad->stop.y = bbox->maxy;
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "x1");
+          prop = xmlGetProp (colour_source, "x1");
           if (prop != NULL)
             {
               grad->start.x =
@@ -2824,7 +2824,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
               xmlFree (prop);
             }
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "x2");
+          prop = xmlGetProp (colour_source, "x2");
           if (prop != NULL)
             {
               grad->stop.x =
@@ -2832,7 +2832,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
               xmlFree (prop);
             }
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "y1");
+          prop = xmlGetProp (colour_source, "y1");
           if (prop != NULL)
             {
               grad->start.y =
@@ -2840,7 +2840,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
               xmlFree (prop);
             }
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "y2");
+          prop = xmlGetProp (colour_source, "y2");
           if (prop != NULL)
             {
               grad->stop.y =
@@ -2858,7 +2858,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
           grad->stop.y = (bbox->minx + bbox->maxy) / 2;
           grad->radius = sqrt (offx * offx + offy * offy);
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "cx");
+          prop = xmlGetProp (colour_source, "cx");
           if (prop != NULL)
             {
               grad->stop.x =
@@ -2866,7 +2866,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
               xmlFree (prop);
             }
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "cy");
+          prop = xmlGetProp (colour_source, "cy");
           if (prop != NULL)
             {
               grad->stop.y =
@@ -2874,7 +2874,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
               xmlFree (prop);
             }
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "radius");
+          prop = xmlGetProp (colour_source, "radius");
           if (prop != NULL)
             {
               grad->radius =
@@ -2884,7 +2884,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
             }
 
           grad->start = grad->stop;
-          prop = xmlGetProp (colour_source, (xmlChar *) "fx");
+          prop = xmlGetProp (colour_source, "fx");
           if (prop != NULL)
             {
               grad->start.x =
@@ -2892,7 +2892,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
               xmlFree (prop);
             }
 
-          prop = xmlGetProp (colour_source, (xmlChar *) "fy");
+          prop = xmlGetProp (colour_source, "fy");
           if (prop != NULL)
             {
               grad->start.y =
@@ -2903,7 +2903,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
 
       scnt = 0;
       for (kid = colour_source->children; kid != NULL; kid = kid->next)
-        if (xmlStrcmp (kid->name, (xmlChar *) "stop") == 0)
+        if (xmlStrcmp (kid->name, "stop") == 0)
           ++scnt;
 
       if (scnt == 0)
@@ -2923,12 +2923,12 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
           grad->grad_stops = xcalloc (scnt, sizeof (struct grad_stops));
           scnt = 0;
           for (kid = colour_source->children; kid != NULL; kid = kid->next)
-            if (xmlStrcmp (kid->name, (xmlChar *) "stop") == 0)
+            if (xmlStrcmp (kid->name, "stop") == 0)
               {
                 grad->grad_stops[scnt].col = st->stopColor;
                 grad->grad_stops[scnt].opacity = st->stopOpacity;
 
-                prop = xmlGetProp (kid, (xmlChar *) "offset");
+                prop = xmlGetProp (kid, "offset");
                 if (prop != NULL)
                   {
                     grad->grad_stops[scnt].offset =
@@ -2936,14 +2936,14 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
                     xmlFree (prop);
                   }
 
-                prop = xmlGetProp (kid, (xmlChar *) "stop-color");
+                prop = xmlGetProp (kid, "stop-color");
                 if (prop != NULL)
                   {
                     xmlParseColor (prop, &grad->grad_stops[scnt].col, NULL, st);
                     xmlFree (prop);
                   }
 
-                prop = xmlGetProp (kid, (xmlChar *) "stop-opacity");
+                prop = xmlGetProp (kid, "stop-opacity");
                 if (prop != NULL)
                   {
                     grad->grad_stops[scnt].opacity =
@@ -2957,7 +2957,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
               }
         }
     }
-  else if (xmlStrcmp (colour_source->name, (xmlChar *) "pattern") == 0)
+  else if (xmlStrcmp (colour_source->name, "pattern") == 0)
     {
       LogError (_
                 ("FontForge does not currently parse pattern Color Sources (%s)."),
@@ -3085,15 +3085,15 @@ xmlParseColor (xmlChar *name, uint32_t *color, char **url, struct svg_state *st)
     // *INDENT-ON*
   };
 
-  doit = xmlStrcmp (name, (xmlChar *) "none") != 0;
+  doit = xmlStrcmp (name, "none") != 0;
   if (doit)
     {
       for (i = 0; stdcols[i].name != NULL; ++i)
-        if (xmlStrcmp (name, (xmlChar *) stdcols[i].name) == 0)
+        if (xmlStrcmp (name, stdcols[i].name) == 0)
           break;
       if (stdcols[i].name != NULL)
         *color = stdcols[i].col;
-      else if (xmlStrcmp (name, (xmlChar *) "currentColor") == 0)
+      else if (xmlStrcmp (name, "currentColor") == 0)
         *color = st->currentColor;
       else if (name[0] == '#')
         {
@@ -3291,33 +3291,33 @@ SVGParseImage (xmlNodePtr svg)
   Entity *ent;
   xmlChar *val;
 
-  val = xmlGetProp (svg, (xmlChar *) "x");
+  val = xmlGetProp (svg, "x");
   if (val != NULL)
     {
       x = strtod ((char *) val, NULL);
       free (val);
     }
-  val = xmlGetProp (svg, (xmlChar *) "y");
+  val = xmlGetProp (svg, "y");
   if (val != NULL)
     {
       y = strtod ((char *) val, NULL);
       free (val);
     }
 
-  val = xmlGetProp (svg, (xmlChar *) "width");
+  val = xmlGetProp (svg, "width");
   if (val != NULL)
     {
       width = strtod ((char *) val, NULL);
       free (val);
     }
-  val = xmlGetProp (svg, (xmlChar *) "height");
+  val = xmlGetProp (svg, "height");
   if (val != NULL)
     {
       height = strtod ((char *) val, NULL);
       free (val);
     }
 
-  val = xmlGetProp (svg, (xmlChar *) /*"xlink:href" */ "href");
+  val = xmlGetProp (svg, /*"xlink:href" */ "href");
   if (val == NULL)
     return (NULL);
   if (strncmp ((char *) val, "data:", 5) != 0)
@@ -3425,10 +3425,10 @@ SVGFigureStyle (struct svg_state *st, char *name,
             ++name;
 
           if (strcmp (namebuf, "color") == 0)
-            xmlParseColor ((xmlChar *) propbuf, &st->currentColor, NULL, st);
+            xmlParseColor (propbuf, &st->currentColor, NULL, st);
           else if (strcmp (namebuf, "fill") == 0)
             st->dofill =
-              xmlParseColor ((xmlChar *) propbuf, &st->fillcol,
+              xmlParseColor (propbuf, &st->fillcol,
                              fill_colour_source, st);
           else if (strcmp (namebuf, "visibility") == 0)
             st->isvisible = strcmp (propbuf, "hidden") != 0 &&
@@ -3437,7 +3437,7 @@ SVGFigureStyle (struct svg_state *st, char *name,
             st->fillopacity = strtod (propbuf, NULL);
           else if (strcmp (namebuf, "stroke") == 0)
             st->dostroke =
-              xmlParseColor ((xmlChar *) propbuf, &st->strokecol,
+              xmlParseColor (propbuf, &st->strokecol,
                              stroke_colour_source, st);
           else if (strcmp (namebuf, "stroke-opacity") == 0)
             st->strokeopacity = strtod ((char *) propbuf, NULL);
@@ -3476,7 +3476,7 @@ SVGFigureStyle (struct svg_state *st, char *name,
                 }
             }
           else if (strcmp (namebuf, "stop-color") == 0)
-            xmlParseColor ((xmlChar *) propbuf, &st->stopColor, NULL, st);
+            xmlParseColor (propbuf, &st->stopColor, NULL, st);
           else if (strcmp (namebuf, "stop-opacity") == 0)
             st->stopOpacity = strtod (propbuf, NULL);
           else
@@ -3512,75 +3512,75 @@ _SVGParseSVG (xmlNodePtr svg, xmlNodePtr top, struct svg_state *inherit)
   st = *inherit;
   st.free_clip = false;
 tail_recurse:
-  name = xmlGetProp (svg, (xmlChar *) "display");
+  name = xmlGetProp (svg, "display");
   if (name != NULL)
     {
-      int hide = xmlStrcmp (name, (xmlChar *) "none") == 0;
+      int hide = xmlStrcmp (name, "none") == 0;
       xmlFree (name);
       if (hide)
         return (NULL);
     }
-  name = xmlGetProp (svg, (xmlChar *) "visibility");
+  name = xmlGetProp (svg, "visibility");
   if (name != NULL)
     {
-      st.isvisible = xmlStrcmp (name, (xmlChar *) "hidden") != 0 &&
-        xmlStrcmp (name, (xmlChar *) "colapse") != 0;
+      st.isvisible = xmlStrcmp (name, "hidden") != 0 &&
+        xmlStrcmp (name, "colapse") != 0;
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "fill");
+  name = xmlGetProp (svg, "fill");
   if (name != NULL)
     {
       st.dofill = xmlParseColor (name, &st.fillcol, &fill_colour_source, &st);
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "fill-opacity");
+  name = xmlGetProp (svg, "fill-opacity");
   if (name != NULL)
     {
       st.fillopacity = strtod ((char *) name, NULL);
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "stroke");
+  name = xmlGetProp (svg, "stroke");
   if (name != NULL)
     {
       st.dostroke =
         xmlParseColor (name, &st.strokecol, &stroke_colour_source, &st);
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "stroke-opacity");
+  name = xmlGetProp (svg, "stroke-opacity");
   if (name != NULL)
     {
       st.strokeopacity = strtod ((char *) name, NULL);
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "stroke-width");
+  name = xmlGetProp (svg, "stroke-width");
   if (name != NULL)
     {
       st.linewidth = strtod ((char *) name, NULL);
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "stroke-linecap");
+  name = xmlGetProp (svg, "stroke-linecap");
   if (name != NULL)
     {
-      st.lc = xmlStrcmp (name, (xmlChar *) "butt") ? lc_butt :
-        xmlStrcmp (name, (xmlChar *) "round") ? lc_round : lc_square;
+      st.lc = xmlStrcmp (name, "butt") ? lc_butt :
+        xmlStrcmp (name, "round") ? lc_round : lc_square;
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "stroke-linejoin");
+  name = xmlGetProp (svg, "stroke-linejoin");
   if (name != NULL)
     {
-      st.lj = xmlStrcmp (name, (xmlChar *) "miter") ? lj_miter :
-        xmlStrcmp (name, (xmlChar *) "round") ? lj_round : lj_bevel;
+      st.lj = xmlStrcmp (name, "miter") ? lj_miter :
+        xmlStrcmp (name, "round") ? lj_round : lj_bevel;
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "stroke-dasharray");
+  name = xmlGetProp (svg, "stroke-dasharray");
   if (name != NULL)
     {
-      if (xmlStrcmp (name, (xmlChar *) "inherit"))
+      if (xmlStrcmp (name, "inherit"))
         {
           st.dashes[0] = 0;
           st.dashes[1] = DASH_INHERITED;
         }
-      else if (xmlStrcmp (name, (xmlChar *) "none"))
+      else if (xmlStrcmp (name, "none"))
         {
           st.dashes[0] = 0;
           st.dashes[1] = 0;
@@ -3600,31 +3600,31 @@ tail_recurse:
         }
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "style");
+  name = xmlGetProp (svg, "style");
   if (name != NULL)
     {
       SVGFigureStyle (&st, (char *) name, &fill_colour_source,
                       &stroke_colour_source);
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "transform");
+  name = xmlGetProp (svg, "transform");
   if (name != NULL)
     {
       SVGFigureTransform (&st, (char *) name);
       xmlFree (name);
     }
-  name = xmlGetProp (svg, (xmlChar *) "clip-path");
+  name = xmlGetProp (svg, "clip-path");
   if (name != NULL)
     {
       xmlNodePtr clip = XmlFindURI (top, (char *) name);
-      if (clip != NULL && xmlStrcmp (clip->name, (xmlChar *) "clipPath") == 0)
+      if (clip != NULL && xmlStrcmp (clip->name, "clipPath") == 0)
         {
           const xmlChar *temp = clip->name;
           struct svg_state null_state;
           memset (&null_state, 0, sizeof (null_state));
           null_state.isvisible = true;
           null_state.transform[0] = null_state.transform[3] = 1;
-          clip->name = (xmlChar *) "g";
+          clip->name = "g";
           eret = _SVGParseSVG (clip, top, &null_state);
           clip->name = temp;
           if (eret != NULL && eret->type == et_splines)
@@ -3639,11 +3639,11 @@ tail_recurse:
       xmlFree (name);
     }
 
-  if ((treat_symbol_as_g && xmlStrcmp (svg->name, (xmlChar *) "symbol") == 0) ||
-      xmlStrcmp (svg->name, (xmlChar *) "svg") == 0 ||
-      xmlStrcmp (svg->name, (xmlChar *) "glyph") == 0 ||
-      xmlStrcmp (svg->name, (xmlChar *) "pattern") == 0 ||
-      xmlStrcmp (svg->name, (xmlChar *) "g") == 0)
+  if ((treat_symbol_as_g && xmlStrcmp (svg->name, "symbol") == 0) ||
+      xmlStrcmp (svg->name, "svg") == 0 ||
+      xmlStrcmp (svg->name, "glyph") == 0 ||
+      xmlStrcmp (svg->name, "pattern") == 0 ||
+      xmlStrcmp (svg->name, "g") == 0)
     {
       ehead = elast = NULL;
       for (kid = svg->children; kid != NULL; kid = kid->next)
@@ -3666,9 +3666,9 @@ tail_recurse:
                                stroke_colour_source);
       return (ehead);
     }
-  else if (xmlStrcmp (svg->name, (xmlChar *) "use") == 0)
+  else if (xmlStrcmp (svg->name, "use") == 0)
     {
-      name = xmlGetProp (svg, (xmlChar *) "href");
+      name = xmlGetProp (svg, "href");
       kid = NULL;
       if (name != NULL && *name == '#')
         {                       /* Within this file */
@@ -3693,21 +3693,21 @@ tail_recurse:
 
   /* basic shapes */
   head = NULL;
-  if (xmlStrcmp (svg->name, (xmlChar *) "path") == 0)
+  if (xmlStrcmp (svg->name, "path") == 0)
     head = SVGParseExtendedPath (svg, top);
-  else if (xmlStrcmp (svg->name, (xmlChar *) "rect") == 0)
+  else if (xmlStrcmp (svg->name, "rect") == 0)
     head = SVGParseRect (svg);  /* x,y,width,height,rx,ry */
-  else if (xmlStrcmp (svg->name, (xmlChar *) "circle") == 0)
+  else if (xmlStrcmp (svg->name, "circle") == 0)
     head = SVGParseEllipse (svg, true); /* cx,cy, r */
-  else if (xmlStrcmp (svg->name, (xmlChar *) "ellipse") == 0)
+  else if (xmlStrcmp (svg->name, "ellipse") == 0)
     head = SVGParseEllipse (svg, false);        /* cx,cy, rx,ry */
-  else if (xmlStrcmp (svg->name, (xmlChar *) "line") == 0)
+  else if (xmlStrcmp (svg->name, "line") == 0)
     head = SVGParseLine (svg);  /* x1,y1, x2,y2 */
-  else if (xmlStrcmp (svg->name, (xmlChar *) "polyline") == 0)
+  else if (xmlStrcmp (svg->name, "polyline") == 0)
     head = SVGParsePoly (svg, 0);       /* points */
-  else if (xmlStrcmp (svg->name, (xmlChar *) "polygon") == 0)
+  else if (xmlStrcmp (svg->name, "polygon") == 0)
     head = SVGParsePoly (svg, 1);       /* points */
-  else if (xmlStrcmp (svg->name, (xmlChar *) "image") == 0)
+  else if (xmlStrcmp (svg->name, "image") == 0)
     {
       eret = SVGParseImage (svg);
       if (eret != NULL)
@@ -3753,13 +3753,13 @@ SVGParseSVG (xmlNodePtr svg, int em_size, int ascent)
   st.transform[5] = ascent;
   st.strokeopacity = st.fillopacity = 1.0;
 
-  num = (char *) xmlGetProp (svg, (xmlChar *) "width");
+  num = (char *) xmlGetProp (svg, "width");
   if (num != NULL)
     {
       width = strtod (num, NULL);
       xmlFree (num);
     }
-  num = (char *) xmlGetProp (svg, (xmlChar *) "height");
+  num = (char *) xmlGetProp (svg, "height");
   if (num != NULL)
     {
       height = strtod (num, NULL);
@@ -3769,7 +3769,7 @@ SVGParseSVG (xmlNodePtr svg, int em_size, int ascent)
     height = 1;
   if (width <= 0)
     width = 1;
-  num = (char *) xmlGetProp (svg, (xmlChar *) "viewBox");
+  num = (char *) xmlGetProp (svg, "viewBox");
   if (num != NULL)
     {
       x = strtod ((char *) num, &end);
@@ -3802,7 +3802,7 @@ SVGParseGlyphBody (SplineChar *sc, xmlNodePtr glyph, int *flags)
 {
   xmlChar *path;
 
-  path = xmlGetProp (glyph, (xmlChar *) "d");
+  path = xmlGetProp (glyph, "d");
   if (path != NULL)
     {
       sc->layers[ly_fore].splines = SVGParseExtendedPath (glyph, glyph);
@@ -3832,7 +3832,7 @@ SVGParseGlyphArgs (xmlNodePtr glyph, int defh, int defv, SplineFont *sf)
   uint32_t *u;
   char buffer[100];
 
-  name = xmlGetProp (glyph, (xmlChar *) "horiz-adv-x");
+  name = xmlGetProp (glyph, "horiz-adv-x");
   if (name != NULL)
     {
       sc->width = strtod ((char *) name, NULL);
@@ -3840,7 +3840,7 @@ SVGParseGlyphArgs (xmlNodePtr glyph, int defh, int defv, SplineFont *sf)
     }
   else
     sc->width = defh;
-  name = xmlGetProp (glyph, (xmlChar *) "vert-adv-y");
+  name = xmlGetProp (glyph, "vert-adv-y");
   if (name != NULL)
     {
       sc->vwidth = strtod ((char *) name, NULL);
@@ -3848,7 +3848,7 @@ SVGParseGlyphArgs (xmlNodePtr glyph, int defh, int defv, SplineFont *sf)
     }
   else
     sc->vwidth = defv;
-  name = xmlGetProp (glyph, (xmlChar *) "vert-adv-y");
+  name = xmlGetProp (glyph, "vert-adv-y");
   if (name != NULL)
     {
       sc->vwidth = strtod ((char *) name, NULL);
@@ -3857,10 +3857,10 @@ SVGParseGlyphArgs (xmlNodePtr glyph, int defh, int defv, SplineFont *sf)
   else
     sc->vwidth = defv;
 
-  form = xmlGetProp (glyph, (xmlChar *) "arabic-form");
-  unicode = xmlGetProp (glyph, (xmlChar *) "unicode");
-  glyphname = xmlGetProp (glyph, (xmlChar *) "glyph-name");
-  orientation = xmlGetProp (glyph, (xmlChar *) "orientation");
+  form = xmlGetProp (glyph, "arabic-form");
+  unicode = xmlGetProp (glyph, "unicode");
+  glyphname = xmlGetProp (glyph, "glyph-name");
+  orientation = xmlGetProp (glyph, "orientation");
   if (unicode != NULL)
     {
 
@@ -3871,13 +3871,13 @@ SVGParseGlyphArgs (xmlNodePtr glyph, int defh, int defv, SplineFont *sf)
           sc->unicodeenc = u[0];
           if (form != NULL && u[0] >= 0x600 && u[0] <= 0x6ff)
             {
-              if (xmlStrcmp (form, (xmlChar *) "initial") == 0)
+              if (xmlStrcmp (form, "initial") == 0)
                 sc->unicodeenc = ArabicForms[u[0] - 0x600].initial;
-              else if (xmlStrcmp (form, (xmlChar *) "medial") == 0)
+              else if (xmlStrcmp (form, "medial") == 0)
                 sc->unicodeenc = ArabicForms[u[0] - 0x600].medial;
-              else if (xmlStrcmp (form, (xmlChar *) "final") == 0)
+              else if (xmlStrcmp (form, "final") == 0)
                 sc->unicodeenc = ArabicForms[u[0] - 0x600].final;
-              else if (xmlStrcmp (form, (xmlChar *) "isolated") == 0)
+              else if (xmlStrcmp (form, "isolated") == 0)
                 sc->unicodeenc = ArabicForms[u[0] - 0x600].isolated;
             }
         }
@@ -3950,7 +3950,7 @@ SVGLigatureFixupCheck (SplineChar *sc, xmlNodePtr glyph)
   SplineChar **chars, *any = NULL;
   char *comp, *pt;
 
-  unicode = xmlGetProp (glyph, (xmlChar *) "unicode");
+  unicode = xmlGetProp (glyph, "unicode");
   if (unicode != NULL)
     {
       u = utf82u_copy ((char *) unicode);
@@ -4120,7 +4120,7 @@ SVGParseKern (SplineFont *sf, xmlNodePtr kern, int isv)
   uint32_t script;
   struct lookup_subtable *subtable;
 
-  k = xmlGetProp (kern, (xmlChar *) "k");
+  k = xmlGetProp (kern, "k");
   if (k == NULL)
     return;
   off = -strtod ((char *) k, NULL);
@@ -4128,8 +4128,8 @@ SVGParseKern (SplineFont *sf, xmlNodePtr kern, int isv)
   if (off == 0)
     return;
 
-  g1 = xmlGetProp (kern, (xmlChar *) "g1");
-  u1 = xmlGetProp (kern, (xmlChar *) "u1");
+  g1 = xmlGetProp (kern, "g1");
+  u1 = xmlGetProp (kern, "u1");
   if (g1 == NULL && u1 == NULL)
     return;
   c1 = SVGGetNames (sf, g1, u1, &sc1);
@@ -4138,8 +4138,8 @@ SVGParseKern (SplineFont *sf, xmlNodePtr kern, int isv)
   if (u1 != NULL)
     xmlFree (u1);
 
-  g2 = xmlGetProp (kern, (xmlChar *) "g2");
-  u2 = xmlGetProp (kern, (xmlChar *) "u2");
+  g2 = xmlGetProp (kern, "g2");
+  u2 = xmlGetProp (kern, "u2");
   if (g2 == NULL && u2 == NULL)
     {
       free (c1);
@@ -4231,20 +4231,20 @@ SVGParseFont (xmlNodePtr font)
   int i;
 
   sf = SplineFontEmpty ();
-  name = xmlGetProp (font, (xmlChar *) "horiz-adv-x");
+  name = xmlGetProp (font, "horiz-adv-x");
   if (name != NULL)
     {
       defh = strtod ((char *) name, NULL);
       xmlFree (name);
     }
-  name = xmlGetProp (font, (xmlChar *) "vert-adv-y");
+  name = xmlGetProp (font, "vert-adv-y");
   if (name != NULL)
     {
       defv = strtod ((char *) name, NULL);
       xmlFree (name);
       sf->hasvmetrics = true;
     }
-  name = xmlGetProp (font, (xmlChar *) "id");
+  name = xmlGetProp (font, "id");
   if (name != NULL)
     {
       sf->fontname = xstrdup_or_null ((char *) name);
@@ -4255,9 +4255,9 @@ SVGParseFont (xmlNodePtr font)
   for (kids = font->children; kids != NULL; kids = kids->next)
     {
       int ascent = 0, descent = 0;
-      if (xmlStrcmp (kids->name, (const xmlChar *) "font-face") == 0)
+      if (xmlStrcmp (kids->name, "font-face") == 0)
         {
-          name = xmlGetProp (kids, (xmlChar *) "units-per-em");
+          name = xmlGetProp (kids, "units-per-em");
           if (name != NULL)
             {
               int val = rint (strtod ((char *) name, NULL));
@@ -4278,7 +4278,7 @@ SVGParseFont (xmlNodePtr font)
               SplineFontFree (sf);
               return (NULL);
             }
-          name = xmlGetProp (kids, (xmlChar *) "font-family");
+          name = xmlGetProp (kids, "font-family");
           if (name != NULL)
             {
               if (strchr ((char *) name, ',') != NULL)
@@ -4286,7 +4286,7 @@ SVGParseFont (xmlNodePtr font)
               sf->familyname = xstrdup_or_null ((char *) name);
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "font-weight");
+          name = xmlGetProp (kids, "font-weight");
           if (name != NULL)
             {
               if (strncasecmp ((char *) name, "normal", 6) == 0)
@@ -4354,7 +4354,7 @@ SVGParseFont (xmlNodePtr font)
               sf->pfminfo.pfmset = true;
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "font-stretch");
+          name = xmlGetProp (kids, "font-stretch");
           if (name != NULL)
             {
               if (strncasecmp ((char *) name, "normal", 6) == 0)
@@ -4406,7 +4406,7 @@ SVGParseFont (xmlNodePtr font)
               sf->pfminfo.pfmset = true;
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "panose-1");
+          name = xmlGetProp (kids, "panose-1");
           if (name != NULL)
             {
               char *pt, *end;
@@ -4418,31 +4418,31 @@ SVGParseFont (xmlNodePtr font)
               sf->pfminfo.panose_set = true;
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "slope");
+          name = xmlGetProp (kids, "slope");
           if (name != NULL)
             {
               sf->italicangle = strtod ((char *) name, NULL);
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "underline-position");
+          name = xmlGetProp (kids, "underline-position");
           if (name != NULL)
             {
               sf->upos = strtod ((char *) name, NULL);
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "underline-thickness");
+          name = xmlGetProp (kids, "underline-thickness");
           if (name != NULL)
             {
               sf->uwidth = strtod ((char *) name, NULL);
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "ascent");
+          name = xmlGetProp (kids, "ascent");
           if (name != NULL)
             {
               ascent = strtod ((char *) name, NULL);
               xmlFree (name);
             }
-          name = xmlGetProp (kids, (xmlChar *) "descent");
+          name = xmlGetProp (kids, "descent");
           if (name != NULL)
             {
               descent = strtod ((char *) name, NULL);
@@ -4455,8 +4455,8 @@ SVGParseFont (xmlNodePtr font)
             }
           sf->pfminfo.pfmset = true;
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "glyph") == 0 ||
-               xmlStrcmp (kids->name, (const xmlChar *) "missing-glyph") == 0)
+      else if (xmlStrcmp (kids->name, "glyph") == 0 ||
+               xmlStrcmp (kids->name, "missing-glyph") == 0)
         ++cnt;
     }
   if (sf->descent == 0)
@@ -4489,7 +4489,7 @@ SVGParseFont (xmlNodePtr font)
   cnt = 0;
   for (kids = font->children; kids != NULL; kids = kids->next)
     {
-      if (xmlStrcmp (kids->name, (const xmlChar *) "missing-glyph") == 0)
+      if (xmlStrcmp (kids->name, "missing-glyph") == 0)
         {
           sf->glyphs[cnt] = SVGParseMissing (sf, kids, defh, defv, cnt, &flags);
           if (sf->glyphs[cnt] != NULL)
@@ -4499,7 +4499,7 @@ SVGParseFont (xmlNodePtr font)
             }
           ff_progress_next ();
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "glyph") == 0)
+      else if (xmlStrcmp (kids->name, "glyph") == 0)
         {
           sf->glyphs[cnt] = SVGParseGlyph (sf, kids, defh, defv, cnt, &flags);
           if (sf->glyphs[cnt] != NULL)
@@ -4513,19 +4513,19 @@ SVGParseFont (xmlNodePtr font)
   cnt = 0;
   for (kids = font->children; kids != NULL; kids = kids->next)
     {
-      if (xmlStrcmp (kids->name, (const xmlChar *) "hkern") == 0)
+      if (xmlStrcmp (kids->name, "hkern") == 0)
         {
           SVGParseKern (sf, kids, false);
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "vkern") == 0)
+      else if (xmlStrcmp (kids->name, "vkern") == 0)
         {
           SVGParseKern (sf, kids, true);
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "glyph") == 0)
+      else if (xmlStrcmp (kids->name, "glyph") == 0)
         {
           SVGLigatureFixupCheck (sf->glyphs[cnt++], kids);
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "missing-glyph") == 0)
+      else if (xmlStrcmp (kids->name, "missing-glyph") == 0)
         {
           ++cnt;
         }
@@ -4708,7 +4708,7 @@ _SFReadSVG (xmlDocPtr doc, char *filename)
     {
       xmlChar *name;
       font = SVGPickFont (fonts, filename);
-      name = xmlGetProp (font, (xmlChar *) "id");
+      name = xmlGetProp (font, "id");
       if (name != NULL)
         {
           chosenname =
@@ -4807,7 +4807,7 @@ NamesReadSVG (char *filename)
   ret = xmalloc ((cnt + 1) * sizeof (char *));
   for (cnt = 0; fonts[cnt] != NULL; ++cnt)
     {
-      name = xmlGetProp (fonts[cnt], (xmlChar *) "id");
+      name = xmlGetProp (fonts[cnt], "id");
       if (name == NULL)
         {
           ret[cnt] = xstrdup ("nameless-font");
@@ -4847,7 +4847,7 @@ EntityInterpretSVG (char *filename, char *memory, int memlen, int em_size,
     }
 
   top = xmlDocGetRootElement (doc);
-  if (xmlStrcmp (top->name, (xmlChar *) "svg") != 0)
+  if (xmlStrcmp (top->name, "svg") != 0)
     {
       LogError (_("%s does not contain an <svg> element at the top\n"),
                 filename);

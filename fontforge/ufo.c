@@ -1048,7 +1048,7 @@ FindNode (xmlNodePtr kids, char *name)
 {
   while (kids != NULL)
     {
-      if (xmlStrcmp (kids->name, (const xmlChar *) name) == 0)
+      if (xmlStrcmp (kids->name, name) == 0)
         return kids;
       kids = kids->next;
     }
@@ -1067,13 +1067,13 @@ LibToPython (xmlDocPtr doc, xmlNodePtr dict)
 
   for (keys = dict->children; keys != NULL; keys = keys->next)
     {
-      if (xmlStrcmp (keys->name, (const xmlChar *) "key") == 0)
+      if (xmlStrcmp (keys->name, "key") == 0)
         {
           char *keyname =
             (char *) xmlNodeListGetString (doc, keys->children, true);
           for (temp = keys->next; temp != NULL; temp = temp->next)
             {
-              if (xmlStrcmp (temp->name, (const xmlChar *) "text") != 0)
+              if (xmlStrcmp (temp->name, "text") != 0)
                 break;
             }
           item = XMLEntryToPython (doc, temp);
@@ -1081,7 +1081,7 @@ LibToPython (xmlDocPtr doc, xmlNodePtr dict)
             PyDict_SetItemString (pydict, keyname, item);
           if (temp == NULL)
             break;
-          else if (xmlStrcmp (temp->name, (const xmlChar *) "key") != 0)
+          else if (xmlStrcmp (temp->name, "key") != 0)
             keys = temp->next;
           free (keyname);
         }
@@ -1094,23 +1094,23 @@ XMLEntryToPython (xmlDocPtr doc, xmlNodePtr entry)
 {
   char *contents;
 
-  if (xmlStrcmp (entry->name, (const xmlChar *) "true") == 0)
+  if (xmlStrcmp (entry->name, "true") == 0)
     {
       return PyBool_FromLong (true);
     }
-  if (xmlStrcmp (entry->name, (const xmlChar *) "false") == 0)
+  if (xmlStrcmp (entry->name, "false") == 0)
     {
       return PyBool_FromLong (false);
     }
-  if (xmlStrcmp (entry->name, (const xmlChar *) "none") == 0)
+  if (xmlStrcmp (entry->name, "none") == 0)
     {
       Py_INCREF (Py_None);
       return Py_None;
     }
 
-  if (xmlStrcmp (entry->name, (const xmlChar *) "dict") == 0)
+  if (xmlStrcmp (entry->name, "dict") == 0)
     return LibToPython (doc, entry);
-  if (xmlStrcmp (entry->name, (const xmlChar *) "array") == 0)
+  if (xmlStrcmp (entry->name, "array") == 0)
     {
       xmlNodePtr sub;
       int cnt;
@@ -1121,14 +1121,14 @@ XMLEntryToPython (xmlDocPtr doc, xmlNodePtr entry)
 
       for (cnt = 0, sub = entry->children; sub != NULL; sub = sub->next)
         {
-          if (xmlStrcmp (sub->name, (const xmlChar *) "text") == 0)
+          if (xmlStrcmp (sub->name, "text") == 0)
             continue;
           ++cnt;
         }
       ret = PyTuple_New (cnt);
       for (cnt = 0, sub = entry->children; sub != NULL; sub = sub->next)
         {
-          if (xmlStrcmp (sub->name, (const xmlChar *) "text") == 0)
+          if (xmlStrcmp (sub->name, "text") == 0)
             continue;
           item = XMLEntryToPython (doc, sub);
           if (item == NULL)
@@ -1143,19 +1143,19 @@ XMLEntryToPython (xmlDocPtr doc, xmlNodePtr entry)
     }
 
   contents = (char *) xmlNodeListGetString (doc, entry->children, true);
-  if (xmlStrcmp (entry->name, (const xmlChar *) "integer") == 0)
+  if (xmlStrcmp (entry->name, "integer") == 0)
     {
       long val = strtol (contents, NULL, 0);
       free (contents);
       return Py_BuildValue ("i", val);
     }
-  if (xmlStrcmp (entry->name, (const xmlChar *) "real") == 0)
+  if (xmlStrcmp (entry->name, "real") == 0)
     {
       double val = strtod (contents, NULL);
       free (contents);
       return Py_BuildValue ("d", val);
     }
-  if (xmlStrcmp (entry->name, (const xmlChar *) "string") == 0)
+  if (xmlStrcmp (entry->name, "string") == 0)
     {
       PyObject *ret = Py_BuildValue ("s", contents);
       free (contents);
@@ -1177,7 +1177,7 @@ GlifParseHints (xmlDocPtr doc, xmlNodePtr dict, char *hinttype)
 
   for (keys = dict->children; keys != NULL; keys = keys->next)
     {
-      if (xmlStrcmp (keys->name, (const xmlChar *) "key") == 0)
+      if (xmlStrcmp (keys->name, "key") == 0)
         {
           char *keyname =
             (char *) xmlNodeListGetString (doc, keys->children, true);
@@ -1187,14 +1187,14 @@ GlifParseHints (xmlDocPtr doc, xmlNodePtr dict, char *hinttype)
             {
               for (array = keys->next; array != NULL; array = array->next)
                 {
-                  if (xmlStrcmp (array->name, (const xmlChar *) "array") == 0)
+                  if (xmlStrcmp (array->name, "array") == 0)
                     break;
                 }
               if (array != NULL)
                 {
                   for (kids = array->children; kids != NULL; kids = kids->next)
                     {
-                      if (xmlStrcmp (kids->name, (const xmlChar *) "dict") == 0)
+                      if (xmlStrcmp (kids->name, "dict") == 0)
                         {
                           pos = -88888888;
                           width = 0;
@@ -1203,7 +1203,7 @@ GlifParseHints (xmlDocPtr doc, xmlNodePtr dict, char *hinttype)
                             {
                               if (xmlStrcmp
                                   (poswidth->name,
-                                   (const xmlChar *) "key") == 0)
+                                   "key") == 0)
                                 {
                                   char *keyname2 =
                                     (char *) xmlNodeListGetString (doc,
@@ -1220,7 +1220,7 @@ GlifParseHints (xmlDocPtr doc, xmlNodePtr dict, char *hinttype)
                                     {
                                       if (xmlStrcmp
                                           (temp->name,
-                                           (const xmlChar *) "text") != 0)
+                                           "text") != 0)
                                         break;
                                     }
                                   if (temp != NULL)
@@ -1232,12 +1232,12 @@ GlifParseHints (xmlDocPtr doc, xmlNodePtr dict, char *hinttype)
                                                                        true);
                                       if (xmlStrcmp
                                           (temp->name,
-                                           (const xmlChar *) "integer") == 0)
+                                           "integer") == 0)
                                         value = strtol (valname, NULL, 10);
                                       else
                                         if (xmlStrcmp
                                             (temp->name,
-                                             (const xmlChar *) "real") == 0)
+                                             "real") == 0)
                                         value = strtod (valname, NULL);
                                       else
                                         ispos = iswidth = false;
@@ -1287,16 +1287,16 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
   SplineSet *last = NULL;
 
   glyph = xmlDocGetRootElement (doc);
-  format = xmlGetProp (glyph, (xmlChar *) "format");
-  if (xmlStrcmp (glyph->name, (const xmlChar *) "glyph") != 0 ||
-      (format != NULL && xmlStrcmp (format, (xmlChar *) "1") != 0))
+  format = xmlGetProp (glyph, "format");
+  if (xmlStrcmp (glyph->name, "glyph") != 0 ||
+      (format != NULL && xmlStrcmp (format, "1") != 0))
     {
       LogError (_("Expected glyph file with format==1"));
       xmlFreeDoc (doc);
       free (format);
       return NULL;
     }
-  name = (char *) xmlGetProp (glyph, (xmlChar *) "name");
+  name = (char *) xmlGetProp (glyph, "name");
   if (name == NULL && glifname != NULL)
     {
       char *pt = strrchr (glifname, '/');
@@ -1318,10 +1318,10 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
 
   for (kids = glyph->children; kids != NULL; kids = kids->next)
     {
-      if (xmlStrcmp (kids->name, (const xmlChar *) "advance") == 0)
+      if (xmlStrcmp (kids->name, "advance") == 0)
         {
-          width = xmlGetProp (kids, (xmlChar *) "width");
-          height = xmlGetProp (kids, (xmlChar *) "height");
+          width = xmlGetProp (kids, "width");
+          height = xmlGetProp (kids, "height");
           if (width != NULL)
             sc->width = strtol ((char *) width, NULL, 10);
           if (height != NULL)
@@ -1330,30 +1330,29 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
           free (width);
           free (height);
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "unicode") == 0)
+      else if (xmlStrcmp (kids->name, "unicode") == 0)
         {
-          u = xmlGetProp (kids, (xmlChar *) "hex");
+          u = xmlGetProp (kids, "hex");
           uni = strtol ((char *) u, NULL, 16);
           if (sc->unicodeenc == -1)
             sc->unicodeenc = uni;
           else
             AltUniAdd (sc, uni);
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "outline") == 0)
+      else if (xmlStrcmp (kids->name, "outline") == 0)
         {
           for (contour = kids->children; contour != NULL;
                contour = contour->next)
             {
-              if (xmlStrcmp (contour->name, (const xmlChar *) "component") == 0)
+              if (xmlStrcmp (contour->name, "component") == 0)
                 {
-                  char *base =
-                    (char *) xmlGetProp (contour, (xmlChar *) "base"), *xs =
-                    (char *) xmlGetProp (contour, (xmlChar *) "xScale"), *ys =
-                    (char *) xmlGetProp (contour, (xmlChar *) "yScale"), *xys =
-                    (char *) xmlGetProp (contour, (xmlChar *) "xyScale"), *yxs =
-                    (char *) xmlGetProp (contour, (xmlChar *) "yxScale"), *xo =
-                    (char *) xmlGetProp (contour, (xmlChar *) "xOffset"), *yo =
-                    (char *) xmlGetProp (contour, (xmlChar *) "yOffset");
+                  char *base = xmlGetProp (contour, "base");
+                  char *xs = xmlGetProp (contour, "xScale");
+                  char *ys = xmlGetProp (contour, "yScale");
+                  char *xys = xmlGetProp (contour, "xyScale");
+                  char *yxs = xmlGetProp (contour, "yxScale");
+                  char *xo = xmlGetProp (contour, "xOffset");
+                  char *yo = xmlGetProp (contour, "yOffset");
                   RefChar *r;
                   if (base == NULL)
                     LogError (_("component with no base glyph"));
@@ -1384,7 +1383,7 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
                   free (xo);
                   free (yo);
                 }
-              else if (xmlStrcmp (contour->name, (const xmlChar *) "contour") ==
+              else if (xmlStrcmp (contour->name, "contour") ==
                        0)
                 {
                   SplineSet *ss;
@@ -1398,12 +1397,12 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
                     {
                       char *xs, *ys, *type;
                       double x, y;
-                      if (xmlStrcmp (points->name, (const xmlChar *) "point") !=
+                      if (xmlStrcmp (points->name, "point") !=
                           0)
                         continue;
-                      xs = (char *) xmlGetProp (points, (xmlChar *) "x");
-                      ys = (char *) xmlGetProp (points, (xmlChar *) "y");
-                      type = (char *) xmlGetProp (points, (xmlChar *) "type");
+                      xs = (char *) xmlGetProp (points, "x");
+                      ys = (char *) xmlGetProp (points, "y");
+                      type = (char *) xmlGetProp (points, "type");
                       if (xs == NULL || ys == NULL)
                         continue;
                       x = strtod (xs, NULL);
@@ -1591,14 +1590,14 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
                 }
             }
         }
-      else if (xmlStrcmp (kids->name, (const xmlChar *) "lib") == 0)
+      else if (xmlStrcmp (kids->name, "lib") == 0)
         {
           xmlNodePtr keys, temp, dict = FindNode (kids->children, "dict");
           if (dict != NULL)
             {
               for (keys = dict->children; keys != NULL; keys = keys->next)
                 {
-                  if (xmlStrcmp (keys->name, (const xmlChar *) "key") == 0)
+                  if (xmlStrcmp (keys->name, "key") == 0)
                     {
                       char *keyname =
                         (char *) xmlNodeListGetString (doc, keys->children,
@@ -1611,7 +1610,7 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
                                temp = temp->next)
                             {
                               if (xmlStrcmp
-                                  (temp->name, (const xmlChar *) "dict") == 0)
+                                  (temp->name, "dict") == 0)
                                 break;
                             }
                           if (temp != NULL)
@@ -1706,7 +1705,7 @@ UFOLoadGlyphs (SplineFont *sf, char *glyphdir)
     }
   plist = xmlDocGetRootElement (doc);
   dict = FindNode (plist->children, "dict");
-  if (xmlStrcmp (plist->name, (const xmlChar *) "plist") != 0 || dict == NULL)
+  if (xmlStrcmp (plist->name, "plist") != 0 || dict == NULL)
     {
       LogError (_("Expected property list file"));
       xmlFreeDoc (doc);
@@ -1714,7 +1713,7 @@ UFOLoadGlyphs (SplineFont *sf, char *glyphdir)
     }
   for (tot = 0, keys = dict->children; keys != NULL; keys = keys->next)
     {
-      if (xmlStrcmp (keys->name, (const xmlChar *) "key") == 0)
+      if (xmlStrcmp (keys->name, "key") == 0)
         ++tot;
     }
   ff_progress_change_total (tot);
@@ -1722,11 +1721,11 @@ UFOLoadGlyphs (SplineFont *sf, char *glyphdir)
     {
       for (value = keys->next;
            value != NULL
-           && xmlStrcmp (value->name, (const xmlChar *) "text") == 0;
+           && xmlStrcmp (value->name, "text") == 0;
            value = value->next);
       if (value == NULL)
         break;
-      if (xmlStrcmp (keys->name, (const xmlChar *) "key") == 0)
+      if (xmlStrcmp (keys->name, "key") == 0)
         {
           valname = (char *) xmlNodeListGetString (doc, value->children, true);
           glyphfname = buildname (glyphdir, valname);
@@ -1774,7 +1773,7 @@ UFOHandleKern (SplineFont *sf, char *basedir, int isv)
 
   plist = xmlDocGetRootElement (doc);
   dict = FindNode (plist->children, "dict");
-  if (xmlStrcmp (plist->name, (const xmlChar *) "plist") != 0 || dict == NULL)
+  if (xmlStrcmp (plist->name, "plist") != 0 || dict == NULL)
     {
       LogError (_("Expected property list file"));
       xmlFreeDoc (doc);
@@ -1784,11 +1783,11 @@ UFOHandleKern (SplineFont *sf, char *basedir, int isv)
     {
       for (value = keys->next;
            value != NULL
-           && xmlStrcmp (value->name, (const xmlChar *) "text") == 0;
+           && xmlStrcmp (value->name, "text") == 0;
            value = value->next);
       if (value == NULL)
         break;
-      if (xmlStrcmp (keys->name, (const xmlChar *) "key") == 0)
+      if (xmlStrcmp (keys->name, "key") == 0)
         {
           keyname = (char *) xmlNodeListGetString (doc, keys->children, true);
           sc = SFGetChar (sf, -1, keyname);
@@ -1801,11 +1800,11 @@ UFOHandleKern (SplineFont *sf, char *basedir, int isv)
             {
               for (value = subkeys->next;
                    value != NULL
-                   && xmlStrcmp (value->name, (const xmlChar *) "text") == 0;
+                   && xmlStrcmp (value->name, "text") == 0;
                    value = value->next);
               if (value == NULL)
                 break;
-              if (xmlStrcmp (subkeys->name, (const xmlChar *) "key") == 0)
+              if (xmlStrcmp (subkeys->name, "key") == 0)
                 {
                   keyname =
                     (char *) xmlNodeListGetString (doc, subkeys->children,
@@ -1892,15 +1891,15 @@ UFOAddPrivateArray (SplineFont *sf, char *key, xmlDocPtr doc, xmlNodePtr value)
   char space[400], *pt, *end;
   xmlNodePtr kid;
 
-  if (xmlStrcmp (value->name, (const xmlChar *) "array") != 0)
+  if (xmlStrcmp (value->name, "array") != 0)
     return;
   pt = space;
   end = pt + sizeof (space) - 10;
   *pt++ = '[';
   for (kid = value->children; kid != NULL; kid = kid->next)
     {
-      if (xmlStrcmp (kid->name, (const xmlChar *) "integer") == 0 ||
-          xmlStrcmp (kid->name, (const xmlChar *) "real") == 0)
+      if (xmlStrcmp (kid->name, "integer") == 0 ||
+          xmlStrcmp (kid->name, "real") == 0)
         {
           char *valName =
             (char *) xmlNodeListGetString (doc, kid->children, true);
@@ -1930,12 +1929,12 @@ UFOGetByteArray (char *array, int cnt, xmlDocPtr doc, xmlNodePtr value)
 
   memset (array, 0, cnt);
 
-  if (xmlStrcmp (value->name, (const xmlChar *) "array") != 0)
+  if (xmlStrcmp (value->name, "array") != 0)
     return;
   i = 0;
   for (kid = value->children; kid != NULL; kid = kid->next)
     {
-      if (xmlStrcmp (kid->name, (const xmlChar *) "integer") == 0)
+      if (xmlStrcmp (kid->name, "integer") == 0)
         {
           char *valName =
             (char *) xmlNodeListGetString (doc, kid->children, true);
@@ -1952,11 +1951,11 @@ UFOGetBits (xmlDocPtr doc, xmlNodePtr value)
   xmlNodePtr kid;
   long mask = 0;
 
-  if (xmlStrcmp (value->name, (const xmlChar *) "array") != 0)
+  if (xmlStrcmp (value->name, "array") != 0)
     return 0;
   for (kid = value->children; kid != NULL; kid = kid->next)
     {
-      if (xmlStrcmp (kid->name, (const xmlChar *) "integer") == 0)
+      if (xmlStrcmp (kid->name, "integer") == 0)
         {
           char *valName =
             (char *) xmlNodeListGetString (doc, kid->children, true);
@@ -1973,11 +1972,11 @@ UFOGetBitArray (xmlDocPtr doc, xmlNodePtr value, uint32_t *res, int len)
   xmlNodePtr kid;
   int index;
 
-  if (xmlStrcmp (value->name, (const xmlChar *) "array") != 0)
+  if (xmlStrcmp (value->name, "array") != 0)
     return;
   for (kid = value->children; kid != NULL; kid = kid->next)
     {
-      if (xmlStrcmp (kid->name, (const xmlChar *) "integer") == 0)
+      if (xmlStrcmp (kid->name, "integer") == 0)
         {
           char *valName =
             (char *) xmlNodeListGetString (doc, kid->children, true);
@@ -2021,7 +2020,7 @@ SFReadUFO (char *basedir, int flags)
     }
   plist = xmlDocGetRootElement (doc);
   dict = FindNode (plist->children, "dict");
-  if (xmlStrcmp (plist->name, (const xmlChar *) "plist") != 0 || dict == NULL)
+  if (xmlStrcmp (plist->name, "plist") != 0 || dict == NULL)
     {
       LogError (_("Expected property list file"));
       xmlFreeDoc (doc);
@@ -2035,74 +2034,74 @@ SFReadUFO (char *basedir, int flags)
     {
       for (value = keys->next;
            value != NULL
-           && xmlStrcmp (value->name, (const xmlChar *) "text") == 0;
+           && xmlStrcmp (value->name, "text") == 0;
            value = value->next);
       if (value == NULL)
         break;
-      if (xmlStrcmp (keys->name, (const xmlChar *) "key") == 0)
+      if (xmlStrcmp (keys->name, "key") == 0)
         {
           keyname = xmlNodeListGetString (doc, keys->children, true);
           valname = xmlNodeListGetString (doc, value->children, true);
           keys = value;
-          if (xmlStrcmp (keyname, (xmlChar *) "familyName") == 0)
+          if (xmlStrcmp (keyname, "familyName") == 0)
             sf->familyname = (char *) valname;
-          else if (xmlStrcmp (keyname, (xmlChar *) "styleName") == 0)
+          else if (xmlStrcmp (keyname, "styleName") == 0)
             stylename = (char *) valname;
-          else if (xmlStrcmp (keyname, (xmlChar *) "fullName") == 0 ||
-                   xmlStrcmp (keyname, (xmlChar *) "postscriptFullName") == 0)
+          else if (xmlStrcmp (keyname, "fullName") == 0 ||
+                   xmlStrcmp (keyname, "postscriptFullName") == 0)
             sf->fullname = (char *) valname;
-          else if (xmlStrcmp (keyname, (xmlChar *) "fontName") == 0 ||
-                   xmlStrcmp (keyname, (xmlChar *) "postscriptFontName") == 0)
+          else if (xmlStrcmp (keyname, "fontName") == 0 ||
+                   xmlStrcmp (keyname, "postscriptFontName") == 0)
             sf->fontname = (char *) valname;
-          else if (xmlStrcmp (keyname, (xmlChar *) "weightName") == 0 ||
-                   xmlStrcmp (keyname, (xmlChar *) "postscriptWeightName") == 0)
+          else if (xmlStrcmp (keyname, "weightName") == 0 ||
+                   xmlStrcmp (keyname, "postscriptWeightName") == 0)
             sf->weight = (char *) valname;
-          else if (xmlStrcmp (keyname, (xmlChar *) "note") == 0)
+          else if (xmlStrcmp (keyname, "note") == 0)
             sf->comments = (char *) valname;
-          else if (xmlStrcmp (keyname, (xmlChar *) "copyright") == 0)
+          else if (xmlStrcmp (keyname, "copyright") == 0)
             sf->copyright = (char *) valname;
-          else if (xmlStrcmp (keyname, (xmlChar *) "trademark") == 0)
+          else if (xmlStrcmp (keyname, "trademark") == 0)
             UFOAddName (sf, (char *) valname, ttf_trademark);
           else if (strncmp ((char *) keyname, "openTypeName", 12) == 0)
             {
-              if (xmlStrcmp (keyname + 12, (xmlChar *) "Designer") == 0)
+              if (xmlStrcmp (keyname + 12, "Designer") == 0)
                 UFOAddName (sf, (char *) valname, ttf_designer);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "DesignerURL") == 0)
+              else if (xmlStrcmp (keyname + 12, "DesignerURL") == 0)
                 UFOAddName (sf, (char *) valname, ttf_designerurl);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "Manufacturer") ==
+              else if (xmlStrcmp (keyname + 12, "Manufacturer") ==
                        0)
                 UFOAddName (sf, (char *) valname, ttf_manufacturer);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "ManufacturerURL")
+              else if (xmlStrcmp (keyname + 12, "ManufacturerURL")
                        == 0)
                 UFOAddName (sf, (char *) valname, ttf_venderurl);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "License") == 0)
+              else if (xmlStrcmp (keyname + 12, "License") == 0)
                 UFOAddName (sf, (char *) valname, ttf_license);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "LicenseURL") == 0)
+              else if (xmlStrcmp (keyname + 12, "LicenseURL") == 0)
                 UFOAddName (sf, (char *) valname, ttf_licenseurl);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "Version") == 0)
+              else if (xmlStrcmp (keyname + 12, "Version") == 0)
                 UFOAddName (sf, (char *) valname, ttf_version);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "UniqueID") == 0)
+              else if (xmlStrcmp (keyname + 12, "UniqueID") == 0)
                 UFOAddName (sf, (char *) valname, ttf_uniqueid);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "Description") == 0)
+              else if (xmlStrcmp (keyname + 12, "Description") == 0)
                 UFOAddName (sf, (char *) valname, ttf_descriptor);
               else
-                if (xmlStrcmp (keyname + 12, (xmlChar *) "PreferedFamilyName")
+                if (xmlStrcmp (keyname + 12, "PreferedFamilyName")
                     == 0)
                 UFOAddName (sf, (char *) valname, ttf_preffamilyname);
               else
                 if (xmlStrcmp
-                    (keyname + 12, (xmlChar *) "PreferedSubfamilyName") == 0)
+                    (keyname + 12, "PreferedSubfamilyName") == 0)
                 UFOAddName (sf, (char *) valname, ttf_prefmodifiers);
               else
-                if (xmlStrcmp (keyname + 12, (xmlChar *) "CompatibleFullName")
+                if (xmlStrcmp (keyname + 12, "CompatibleFullName")
                     == 0)
                 UFOAddName (sf, (char *) valname, ttf_compatfull);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "SampleText") == 0)
+              else if (xmlStrcmp (keyname + 12, "SampleText") == 0)
                 UFOAddName (sf, (char *) valname, ttf_sampletext);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "WWSFamilyName") ==
+              else if (xmlStrcmp (keyname + 12, "WWSFamilyName") ==
                        0)
                 UFOAddName (sf, (char *) valname, ttf_wwsfamily);
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "WWSSubfamilyName")
+              else if (xmlStrcmp (keyname + 12, "WWSSubfamilyName")
                        == 0)
                 UFOAddName (sf, (char *) valname, ttf_wwssubfamily);
               else
@@ -2110,26 +2109,26 @@ SFReadUFO (char *basedir, int flags)
             }
           else if (strncmp ((char *) keyname, "openTypeHhea", 12) == 0)
             {
-              if (xmlStrcmp (keyname + 12, (xmlChar *) "Ascender") == 0)
+              if (xmlStrcmp (keyname + 12, "Ascender") == 0)
                 {
                   sf->pfminfo.hhead_ascent =
                     strtol ((char *) valname, &end, 10);
                   sf->pfminfo.hheadascent_add = false;
                 }
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "Descender") == 0)
+              else if (xmlStrcmp (keyname + 12, "Descender") == 0)
                 {
                   sf->pfminfo.hhead_descent =
                     strtol ((char *) valname, &end, 10);
                   sf->pfminfo.hheaddescent_add = false;
                 }
-              else if (xmlStrcmp (keyname + 12, (xmlChar *) "LineGap") == 0)
+              else if (xmlStrcmp (keyname + 12, "LineGap") == 0)
                 sf->pfminfo.linegap = strtol ((char *) valname, &end, 10);
               free (valname);
               sf->pfminfo.hheadset = true;
             }
           else if (strncmp ((char *) keyname, "openTypeVhea", 12) == 0)
             {
-              if (xmlStrcmp (keyname + 12, (xmlChar *) "LineGap") == 0)
+              if (xmlStrcmp (keyname + 12, "LineGap") == 0)
                 sf->pfminfo.vlinegap = strtol ((char *) valname, &end, 10);
               sf->pfminfo.vheadset = true;
               free (valname);
@@ -2137,13 +2136,13 @@ SFReadUFO (char *basedir, int flags)
           else if (strncmp ((char *) keyname, "openTypeOS2", 11) == 0)
             {
               sf->pfminfo.pfmset = true;
-              if (xmlStrcmp (keyname + 11, (xmlChar *) "Panose") == 0)
+              if (xmlStrcmp (keyname + 11, "Panose") == 0)
                 {
                   UFOGetByteArray (sf->pfminfo.panose,
                                    sizeof (sf->pfminfo.panose), doc, value);
                   sf->pfminfo.panose_set = true;
                 }
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "Type") == 0)
+              else if (xmlStrcmp (keyname + 11, "Type") == 0)
                 {
                   sf->pfminfo.fstype = UFOGetBits (doc, value);
                   if (sf->pfminfo.fstype < 0) {
@@ -2155,17 +2154,17 @@ SFReadUFO (char *basedir, int flags)
                     sf->pfminfo.fstype = 0;
                   }
                 }
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "FamilyClass") == 0)
+              else if (xmlStrcmp (keyname + 11, "FamilyClass") == 0)
                 {
                   char fc[2];
                   UFOGetByteArray (fc, sizeof (fc), doc, value);
                   sf->pfminfo.os2_family_class = (fc[0] << 8) | fc[1];
                 }
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "WidthClass") == 0)
+              else if (xmlStrcmp (keyname + 11, "WidthClass") == 0)
                 sf->pfminfo.width = strtol ((char *) valname, &end, 10);
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "WeightClass") == 0)
+              else if (xmlStrcmp (keyname + 11, "WeightClass") == 0)
                 sf->pfminfo.weight = strtol ((char *) valname, &end, 10);
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "VendorID") == 0)
+              else if (xmlStrcmp (keyname + 11, "VendorID") == 0)
                 {
                   if (valname != NULL)
                     strncpy (sf->pfminfo.os2_vendor, (const char *) valname, 4);
@@ -2173,30 +2172,30 @@ SFReadUFO (char *basedir, int flags)
                     /* set to a space padded with nulls, otherwise PfEd will be used */
                     strncpy (sf->pfminfo.os2_vendor, " ", 4);
                 }
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "TypoAscender") ==
+              else if (xmlStrcmp (keyname + 11, "TypoAscender") ==
                        0)
                 {
                   sf->pfminfo.typoascent_add = false;
                   sf->pfminfo.os2_typoascent =
                     strtol ((char *) valname, &end, 10);
                 }
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "TypoDescender") ==
+              else if (xmlStrcmp (keyname + 11, "TypoDescender") ==
                        0)
                 {
                   sf->pfminfo.typodescent_add = false;
                   sf->pfminfo.os2_typodescent =
                     strtol ((char *) valname, &end, 10);
                 }
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "TypoLineGap") == 0)
+              else if (xmlStrcmp (keyname + 11, "TypoLineGap") == 0)
                 sf->pfminfo.os2_typolinegap =
                   strtol ((char *) valname, &end, 10);
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "WinAscent") == 0)
+              else if (xmlStrcmp (keyname + 11, "WinAscent") == 0)
                 {
                   sf->pfminfo.winascent_add = false;
                   sf->pfminfo.os2_winascent =
                     strtol ((char *) valname, &end, 10);
                 }
-              else if (xmlStrcmp (keyname + 11, (xmlChar *) "WinDescent") == 0)
+              else if (xmlStrcmp (keyname + 11, "WinDescent") == 0)
                 {
                   sf->pfminfo.windescent_add = false;
                   sf->pfminfo.os2_windescent =
@@ -2205,42 +2204,42 @@ SFReadUFO (char *basedir, int flags)
               else if (strncmp ((char *) keyname + 11, "Subscript", 9) == 0)
                 {
                   sf->pfminfo.subsuper_set = true;
-                  if (xmlStrcmp (keyname + 20, (xmlChar *) "XSize") == 0)
+                  if (xmlStrcmp (keyname + 20, "XSize") == 0)
                     sf->pfminfo.os2_subxsize =
                       strtol ((char *) valname, &end, 10);
-                  else if (xmlStrcmp (keyname + 20, (xmlChar *) "YSize") == 0)
+                  else if (xmlStrcmp (keyname + 20, "YSize") == 0)
                     sf->pfminfo.os2_subysize =
                       strtol ((char *) valname, &end, 10);
-                  else if (xmlStrcmp (keyname + 20, (xmlChar *) "XOffset") == 0)
+                  else if (xmlStrcmp (keyname + 20, "XOffset") == 0)
                     sf->pfminfo.os2_subxoff =
                       strtol ((char *) valname, &end, 10);
-                  else if (xmlStrcmp (keyname + 20, (xmlChar *) "YOffset") == 0)
+                  else if (xmlStrcmp (keyname + 20, "YOffset") == 0)
                     sf->pfminfo.os2_subyoff =
                       strtol ((char *) valname, &end, 10);
                 }
               else if (strncmp ((char *) keyname + 11, "Superscript", 11) == 0)
                 {
                   sf->pfminfo.subsuper_set = true;
-                  if (xmlStrcmp (keyname + 22, (xmlChar *) "XSize") == 0)
+                  if (xmlStrcmp (keyname + 22, "XSize") == 0)
                     sf->pfminfo.os2_supxsize =
                       strtol ((char *) valname, &end, 10);
-                  else if (xmlStrcmp (keyname + 22, (xmlChar *) "YSize") == 0)
+                  else if (xmlStrcmp (keyname + 22, "YSize") == 0)
                     sf->pfminfo.os2_supysize =
                       strtol ((char *) valname, &end, 10);
-                  else if (xmlStrcmp (keyname + 22, (xmlChar *) "XOffset") == 0)
+                  else if (xmlStrcmp (keyname + 22, "XOffset") == 0)
                     sf->pfminfo.os2_supxoff =
                       strtol ((char *) valname, &end, 10);
-                  else if (xmlStrcmp (keyname + 22, (xmlChar *) "YOffset") == 0)
+                  else if (xmlStrcmp (keyname + 22, "YOffset") == 0)
                     sf->pfminfo.os2_supyoff =
                       strtol ((char *) valname, &end, 10);
                 }
               else if (strncmp ((char *) keyname + 11, "Strikeout", 9) == 0)
                 {
                   sf->pfminfo.subsuper_set = true;
-                  if (xmlStrcmp (keyname + 20, (xmlChar *) "Size") == 0)
+                  if (xmlStrcmp (keyname + 20, "Size") == 0)
                     sf->pfminfo.os2_strikeysize =
                       strtol ((char *) valname, &end, 10);
-                  else if (xmlStrcmp (keyname + 20, (xmlChar *) "Position") ==
+                  else if (xmlStrcmp (keyname + 20, "Position") ==
                            0)
                     sf->pfminfo.os2_strikeypos =
                       strtol ((char *) valname, &end, 10);
@@ -2261,51 +2260,51 @@ SFReadUFO (char *basedir, int flags)
             }
           else if (strncmp ((char *) keyname, "postscript", 10) == 0)
             {
-              if (xmlStrcmp (keyname + 10, (xmlChar *) "UnderlineThickness") ==
+              if (xmlStrcmp (keyname + 10, "UnderlineThickness") ==
                   0)
                 sf->uwidth = strtol ((char *) valname, &end, 10);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "UnderlinePosition")
+              else if (xmlStrcmp (keyname + 10, "UnderlinePosition")
                        == 0)
                 sf->upos = strtol ((char *) valname, &end, 10);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "BlueFuzz") == 0)
+              else if (xmlStrcmp (keyname + 10, "BlueFuzz") == 0)
                 UFOAddPrivate (sf, "BlueFuzz", (char *) valname);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "BlueScale") == 0)
+              else if (xmlStrcmp (keyname + 10, "BlueScale") == 0)
                 UFOAddPrivate (sf, "BlueScale", (char *) valname);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "BlueShift") == 0)
+              else if (xmlStrcmp (keyname + 10, "BlueShift") == 0)
                 UFOAddPrivate (sf, "BlueShift", (char *) valname);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "BlueValues") == 0)
+              else if (xmlStrcmp (keyname + 10, "BlueValues") == 0)
                 UFOAddPrivateArray (sf, "BlueValues", doc, value);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "OtherBlues") == 0)
+              else if (xmlStrcmp (keyname + 10, "OtherBlues") == 0)
                 UFOAddPrivateArray (sf, "OtherBlues", doc, value);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "FamilyBlues") == 0)
+              else if (xmlStrcmp (keyname + 10, "FamilyBlues") == 0)
                 UFOAddPrivateArray (sf, "FamilyBlues", doc, value);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "FamilyOtherBlues")
+              else if (xmlStrcmp (keyname + 10, "FamilyOtherBlues")
                        == 0)
                 UFOAddPrivateArray (sf, "FamilyOtherBlues", doc, value);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "StemSnapH") == 0)
+              else if (xmlStrcmp (keyname + 10, "StemSnapH") == 0)
                 UFOAddPrivateArray (sf, "StemSnapH", doc, value);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "StemSnapV") == 0)
+              else if (xmlStrcmp (keyname + 10, "StemSnapV") == 0)
                 UFOAddPrivateArray (sf, "StemSnapV", doc, value);
-              else if (xmlStrcmp (keyname + 10, (xmlChar *) "ForceBold") == 0)
+              else if (xmlStrcmp (keyname + 10, "ForceBold") == 0)
                 UFOAddPrivate (sf, "ForceBold", (char *) value->name);
               /* value->name is either true or false */
               free (valname);
             }
           else if (strncmp ((char *) keyname, "macintosh", 9) == 0)
             {
-              if (xmlStrcmp (keyname + 9, (xmlChar *) "FONDName") == 0)
+              if (xmlStrcmp (keyname + 9, "FONDName") == 0)
                 sf->fondname = (char *) valname;
               else
                 free (valname);
             }
-          else if (xmlStrcmp (keyname, (xmlChar *) "unitsPerEm") == 0)
+          else if (xmlStrcmp (keyname, "unitsPerEm") == 0)
             {
               em = strtol ((char *) valname, &end, 10);
               if (*end != '\0')
                 em = -1;
               free (valname);
             }
-          else if (xmlStrcmp (keyname, (xmlChar *) "ascender") == 0)
+          else if (xmlStrcmp (keyname, "ascender") == 0)
             {
               as = strtod ((char *) valname, &end);
               if (*end != '\0')
@@ -2314,7 +2313,7 @@ SFReadUFO (char *basedir, int flags)
                 sf->ufo_ascent = as;
               free (valname);
             }
-          else if (xmlStrcmp (keyname, (xmlChar *) "descender") == 0)
+          else if (xmlStrcmp (keyname, "descender") == 0)
             {
               ds = -strtod ((char *) valname, &end);
               if (*end != '\0')
@@ -2323,15 +2322,15 @@ SFReadUFO (char *basedir, int flags)
                 sf->ufo_descent = -ds;
               free (valname);
             }
-          else if (xmlStrcmp (keyname, (xmlChar *) "italicAngle") == 0 ||
-                   xmlStrcmp (keyname, (xmlChar *) "postscriptSlantAngle") == 0)
+          else if (xmlStrcmp (keyname, "italicAngle") == 0 ||
+                   xmlStrcmp (keyname, "postscriptSlantAngle") == 0)
             {
               sf->italicangle = strtod ((char *) valname, &end);
               if (*end != '\0')
                 sf->italicangle = 0;
               free (valname);
             }
-          else if (xmlStrcmp (keyname, (xmlChar *) "descender") == 0)
+          else if (xmlStrcmp (keyname, "descender") == 0)
             {
               ds = -strtol ((char *) valname, &end, 10);
               if (*end != '\0')
@@ -2423,7 +2422,7 @@ SFReadUFO (char *basedir, int flags)
       if (plist != NULL)
         dict = FindNode (plist->children, "dict");
       if (plist == NULL ||
-          xmlStrcmp (plist->name, (const xmlChar *) "plist") != 0 ||
+          xmlStrcmp (plist->name, "plist") != 0 ||
           dict == NULL)
         {
           LogError (_("Expected property list file"));
