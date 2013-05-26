@@ -8085,30 +8085,35 @@ cblistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   SplineFont *sf = fv->b.sf;
-  int i, anyligs = 0, anykerns = 0, gid;
+  bool anyligs = false;
+  bool anykerns = false;
   PST *pst;
 
   if (sf->kerns)
     anykerns = true;
-  for (i = 0; i < fv->b.map->enc_limit; ++i)
-    if ((gid = enc_to_gid (fv->b.map, i)) != -1 && sf->glyphs[gid] != NULL)
-      {
-        for (pst = sf->glyphs[gid]->possub; pst != NULL; pst = pst->next)
-          {
-            if (pst->type == pst_ligature)
-              {
-                anyligs = true;
-                if (anykerns)
-                  break;
-              }
-          }
-        if (sf->glyphs[gid]->kerns != NULL)
-          {
-            anykerns = true;
-            if (anyligs)
-              break;
-          }
-      }
+
+  for (enc_iter_t p = enc_iter (fv->b.map); !enc_done (p); p = enc_next (p))
+    {
+      int gid = enc_gid (p);
+      if (gid != -1 && sf->glyphs[gid] != NULL)
+        {
+          for (pst = sf->glyphs[gid]->possub; pst != NULL; pst = pst->next)
+            {
+              if (pst->type == pst_ligature)
+                {
+                  anyligs = true;
+                  if (anykerns)
+                    break;
+                }
+            }
+          if (sf->glyphs[gid]->kerns != NULL)
+            {
+              anykerns = true;
+              if (anyligs)
+                break;
+            }
+        }
+    }
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
     {
@@ -8829,13 +8834,13 @@ VISIBLE void
 enlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
-  int i, gid;
+  int gid;
   SplineFont *sf = fv->b.sf;
   EncMap *map = fv->b.map;
-  int anyglyphs = false;
+  bool anyglyphs = false;
 
-  for (i = map->enc_limit - 1; i >= 0; --i)
-    if (fv->b.selected[i] && (gid = enc_to_gid (map, i)) != -1)
+  for (enc_iter_t p = enc_iter (map); !enc_done (p); p = enc_next (p))
+    if (enc_gid (p) != -1 && fv->b.selected[enc_enc (p)])
       anyglyphs = true;
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
