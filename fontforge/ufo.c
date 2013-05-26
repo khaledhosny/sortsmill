@@ -2397,12 +2397,6 @@ SFReadUFO (char *basedir, int flags)
 
   sf->map = EncMapFromEncoding (sf, FindOrMakeEncoding ("Unicode"));
 
-  // make sure the spline font has a font view before applying feature file
-  if (no_windowing_ui)
-    FVAppend (_FontViewCreate (sf));
-  else
-    FontViewCreate (sf, flags & of_hidewindow);
-
   /* Might as well check for feature files even if version 1 */
   temp = buildname (basedir, "feature.fea");
   if (GFileExists (temp))
