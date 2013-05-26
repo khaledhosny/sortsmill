@@ -174,7 +174,7 @@ PalmReadBitmaps (SplineFont *sf, FILE *file, int imagepos,
           BDFChar *bdfc;
           int i, j, bits, bite, bit;
 
-          bdfc = (BDFChar *) xzalloc (sizeof (BDFChar));
+          bdfc = xzalloc (sizeof (BDFChar));
           memset (bdfc, '\0', sizeof (BDFChar));
           bdfc->xmin = 0;
           bdfc->xmax =

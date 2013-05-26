@@ -119,7 +119,7 @@ return;
     if ( skiplast )
 	new = cv->freehand.last;
     else {
-	new = (TraceData *) xzalloc(sizeof (TraceData));
+	new = xzalloc(sizeof (TraceData));
 
 	if ( cv->freehand.head==NULL )
 	    cv->freehand.head = cv->freehand.last = new;
@@ -620,7 +620,7 @@ static SplineSet *TraceCurve(CharView *cv) {
     }
 
     /* Splice things together */
-    spl = (SplineSet *) xzalloc(sizeof (SplineSet));
+    spl = xzalloc(sizeof (SplineSet));
     spl->first = last = SplinePointCreate(rint(head->here.x),rint(head->here.y));
     last->ptindex = 0;
 
@@ -705,7 +705,7 @@ static void TraceDataClose(CharView *cv,GEvent *event) {
 return; /* Eh? No points? How did that happen? */
     if ( cv->freehand.head->here.x!=cv->freehand.last->here.x ||
 	     cv->freehand.head->here.y!=cv->freehand.last->here.y ) {
-	new = (TraceData *) xzalloc(sizeof (TraceData));
+	new = xzalloc(sizeof (TraceData));
 	*new = *cv->freehand.head;
 	new->time = event->u.mouse.time;
 #if 0	/* nope. Have to bring it completely back to start values */
@@ -874,7 +874,7 @@ void CVMouseDownFreeHand(CharView *cv, GEvent *event) {
     cv->freehand.current_trace = NULL;
     TraceDataFromEvent(cv,event);
 
-    cv->freehand.current_trace = (SplinePointList *) xzalloc(sizeof (SplinePointList));
+    cv->freehand.current_trace = xzalloc(sizeof (SplinePointList));
     cv->freehand.current_trace->first = cv->freehand.current_trace->last =
 	    SplinePointCreate(rint(cv->freehand.head->here.x),rint(cv->freehand.head->here.y));
 }

@@ -2951,7 +2951,7 @@ NFNTCvtBitmap (struct MacFontRec *font, int index, SplineFont *sf, int gid)
   BDFChar *bdfc;
   int i, j, bits, bite, bit;
 
-  bdfc = (BDFChar *) xzalloc (sizeof (BDFChar));
+  bdfc = xzalloc (sizeof (BDFChar));
   memset (bdfc, '\0', sizeof (BDFChar));
   bdfc->xmin = (font->offsetWidths[index] >> 8) + font->kernMax;
   bdfc->xmax = bdfc->xmin + font->locs[index + 1] - font->locs[index] - 1;
@@ -3380,7 +3380,7 @@ FindFamilyStyleKerns (SplineFont *into, EncMap *map, FOND * fondlist,
       if (kp == NULL)
         {
           uint32_t script;
-          kp = (KernPair *) xzalloc (sizeof (KernPair));
+          kp = xzalloc (sizeof (KernPair));
           kp->sc = sc2;
           kp->next = sc1->kerns;
           sc1->kerns = kp;

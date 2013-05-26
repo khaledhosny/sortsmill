@@ -5020,7 +5020,7 @@ SSFromContour (PyFF_Contour * c, int *tt_start)
   i = 0;
   next = start;
 
-  ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+  ss = xzalloc (sizeof (SplineSet));
   if (c->spiro_cnt != 0)
     {
       ss->spiro_cnt = ss->spiro_max = c->spiro_cnt;
@@ -5431,7 +5431,7 @@ PyFFGlyphPen_moveTo (PyObject *self, PyObject *args)
     }
   if (((PyFF_GlyphPen *) self)->replace)
     GlyphClear (self);
-  ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+  ss = xzalloc (sizeof (SplineSet));
   ss->next = sc->layers[layer].splines;
   sc->layers[layer].splines = ss;
   ss->first = ss->last = SplinePointCreate (x, y);
@@ -5565,7 +5565,7 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
       if (!PyArg_ParseTuple (pt_tuple, "dd", &x0, &y0))
         return (NULL);
 
-      ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+      ss = xzalloc (sizeof (SplineSet));
       ss->next = sc->layers[layer].splines;
       sc->layers[layer].splines = ss;
 
@@ -6513,7 +6513,7 @@ PyFF_MathKern_set_kerns (PyFF_MathKern * self, PyObject *value, void *closure)
       if (value == Py_None)
         return (0);
       self->sc->mathkern =
-        (struct mathkern *) xzalloc (sizeof (struct mathkern));
+        xzalloc (sizeof (struct mathkern));
     }
   mkv = &self->sc->mathkern->top_right + (int) (intptr_t) closure;
   if (value == Py_None)
@@ -7027,7 +7027,7 @@ PyFF_Glyph_set_altuni (PyFF_Glyph *self, PyObject *value,
             uni = PyInt_AsLong (obj);
           else if (!PyArg_ParseTuple (obj, "i|ii", &uni, &vs, &fid))
             return (-1);
-          cur = (struct altuni *) xzalloc (sizeof (struct altuni));
+          cur = xzalloc (sizeof (struct altuni));
           if (vs == 0)
             vs = -1;            /* convention used in charinfo */
           cur->unienc = uni;
@@ -7373,7 +7373,7 @@ PyFF_Glyph_set_lcarets (PyFF_Glyph *self, PyObject *value,
 
   if (lcar == NULL && cnt > 0)
     {
-      lcar = (PST *) xzalloc (sizeof (PST));
+      lcar = xzalloc (sizeof (PST));
       lcar->type = pst_lcaret;
       lcar->next = sc->possub;
       sc->possub = lcar;
@@ -7614,7 +7614,7 @@ PyFF_Glyph_set_hints (PyFF_Glyph *self, int is_v, PyObject *value)
       if (!PyArg_ParseTuple
           (PySequence_GetItem (value, i), "dd", &start, &width))
         return (-1);
-      cur = (StemInfo *) xzalloc (sizeof (StemInfo));
+      cur = xzalloc (sizeof (StemInfo));
       if (width == -20 || width == -21)
         cur->ghost = true;
       if (width < 0)
@@ -7716,7 +7716,7 @@ PyFF_Glyph_set_dhints (PyFF_Glyph *self, PyObject *value,
                     ("Use the \'hhint\' property to specify a horizontal hint.\n"));
           continue;
         }
-      cur = (DStemInfo *) xzalloc (sizeof (DStemInfo));
+      cur = xzalloc (sizeof (DStemInfo));
       len = sqrt (pow (ux, 2) + pow (uy, 2));
       ux /= len;
       uy /= len;
@@ -7986,7 +7986,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
       return (NULL);
     }
 
-  ap = (AnchorPoint *) xzalloc (sizeof (AnchorPoint));
+  ap = xzalloc (sizeof (AnchorPoint));
   ap->anchor = ac;
   ap->type = aptype;
   ap->me.x = x;
@@ -8235,7 +8235,7 @@ PyFF_Glyph_set_horizontalCIC (PyFF_Glyph *self, PyObject *value,
     return (-1);
   if (self->sc->horiz_variants == NULL)
     self->sc->horiz_variants =
-      (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+      xzalloc (sizeof (struct glyphvariants));
   self->sc->horiz_variants->italic_correction = val;
   return (0);
 }
@@ -8260,7 +8260,7 @@ PyFF_Glyph_set_verticalCIC (PyFF_Glyph *self, PyObject *value,
     return (-1);
   if (self->sc->vert_variants == NULL)
     self->sc->vert_variants =
-      (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+      xzalloc (sizeof (struct glyphvariants));
   self->sc->vert_variants->italic_correction = val;
   return (0);
 }
@@ -8296,7 +8296,7 @@ PyFF_Glyph_set_verticalVariants (PyFF_Glyph *self, PyObject *value,
         return (-1);
       if (self->sc->vert_variants == NULL)
         self->sc->vert_variants =
-          (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+          xzalloc (sizeof (struct glyphvariants));
       self->sc->vert_variants->variants = xstrdup_or_null (str);
     }
   return (0);
@@ -8333,7 +8333,7 @@ PyFF_Glyph_set_horizontalVariants (PyFF_Glyph *self, PyObject *value,
         return (-1);
       if (self->sc->horiz_variants == NULL)
         self->sc->horiz_variants =
-          (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+          xzalloc (sizeof (struct glyphvariants));
       self->sc->horiz_variants->variants = xstrdup_or_null (str);
     }
   return (0);
@@ -8370,7 +8370,7 @@ PyFF_Glyph_set_horizontalComponents (PyFF_Glyph *self, PyObject *value,
       FreeGVParts (self->sc->horiz_variants);
       if (self->sc->horiz_variants == NULL)
         self->sc->horiz_variants =
-          (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+          xzalloc (sizeof (struct glyphvariants));
       self->sc->horiz_variants->part_cnt = cnt;
       self->sc->horiz_variants->parts = parts;
     }
@@ -8408,7 +8408,7 @@ PyFF_Glyph_set_verticalComponents (PyFF_Glyph *self, PyObject *value,
       FreeGVParts (self->sc->vert_variants);
       if (self->sc->vert_variants == NULL)
         self->sc->vert_variants =
-          (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+          xzalloc (sizeof (struct glyphvariants));
       self->sc->vert_variants->part_cnt = cnt;
       self->sc->vert_variants->parts = parts;
     }
@@ -8979,7 +8979,7 @@ PyFFGlyph_addHint (PyObject *self, PyObject *args)
   if (!PyArg_ParseTuple (args, "idd", &is_v, &start, &width))
     return (NULL);
 
-  h = (StemInfo *) xzalloc (sizeof (StemInfo));
+  h = xzalloc (sizeof (StemInfo));
   if (width == -20 || width == -21)
     h->ghost = true;
   if (width < 0)
@@ -9815,7 +9815,7 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
     {
       int off = 0x7fffffff;
       temp.type = pst_pair;
-      temp.u.pair.vr = (struct vr *) xzalloc (sizeof (struct vr[2]));
+      temp.u.pair.vr = xzalloc (sizeof (struct vr[2]));
       if (PyArg_ParseTuple (args, "ssi", &subname, &other, &off))
         /* Good */ ;
       else
@@ -9863,7 +9863,7 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
           else
             {
               free (temp.u.pair.vr);
-              kp = (KernPair *) xzalloc (sizeof (KernPair));
+              kp = xzalloc (sizeof (KernPair));
               if (sub->vertical_kerning)
                 {
                   kp->next = sc->vkerns;
@@ -9953,7 +9953,7 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
     }
   else
     {
-      pst = (PST *) xzalloc (sizeof (PST));
+      pst = xzalloc (sizeof (PST));
       *pst = temp;
       pst->next = sc->possub;
       sc->possub = pst;
@@ -10561,7 +10561,7 @@ BuildCvt (SplineFont *sf, int initial_size)
 {
   struct ttf_table *cvt;
 
-  cvt = (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
+  cvt = xzalloc (sizeof (struct ttf_table));
   cvt->next = sf->ttf_tables;
   sf->ttf_tables = cvt;
   cvt->tag = CHR ('c', 'v', 't', ' ');
@@ -12832,7 +12832,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
 
   if (names == NULL)
     {
-      names = (struct ttflangname *) xzalloc (sizeof (struct ttflangname));
+      names = xzalloc (sizeof (struct ttflangname));
       names->lang = lang;
       names->next = sf->names;
       sf->names = names;
@@ -14246,7 +14246,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
       if (basecnt < 0)
         return (-1);
     }
-  base = (struct Base *) xzalloc (sizeof (struct Base));
+  base = xzalloc (sizeof (struct Base));
   base->baseline_cnt = basecnt;
   base->baseline_tags = xmalloc (basecnt * sizeof (uint32_t));
   base->scripts = NULL;
@@ -14287,7 +14287,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           BaseFree (base);
           return (-1);
         }
-      bs = (struct basescript *) xzalloc (sizeof (struct basescript));
+      bs = xzalloc (sizeof (struct basescript));
       if (lastbs == NULL)
         base->scripts = bs;
       else
@@ -14375,7 +14375,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
               return (-1);
             }
           ln =
-            (struct baselangextent *) xzalloc (sizeof (struct baselangextent));
+            xzalloc (sizeof (struct baselangextent));
           if (lastln == NULL)
             bs->langs = ln;
           else
@@ -14768,7 +14768,7 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
           OtfNameListFree (head);
           return (-1);
         }
-      cur = (struct otfname *) xzalloc (sizeof (struct otfname));
+      cur = xzalloc (sizeof (struct otfname));
       cur->name = xstrdup_or_null (string);
       cur->lang = lang;
       cur->next = NULL;
@@ -15289,7 +15289,7 @@ PyFF_Font_SetMaxpValue (PyFF_Font *self, PyObject *value, char *str)
   tab = SFFindTable (sf, CHR ('m', 'a', 'x', 'p'));
   if (tab == NULL)
     {
-      tab = (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
+      tab = xzalloc (sizeof (struct ttf_table));
       tab->next = sf->ttf_tables;
       sf->ttf_tables = tab;
       tab->tag = CHR ('m', 'a', 'x', 'p');
@@ -15961,7 +15961,7 @@ TableAddInstrs (SplineFont *sf, uint32_t tag, int replace, uint8_t *instrs,
     return;
   if (tab == NULL)
     {
-      tab = (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
+      tab = xzalloc (sizeof (struct ttf_table));
       tab->tag = tag;
       if (tag == CHR ('p', 'r', 'e', 'p') || tag == CHR ('f', 'p', 'g', 'm')
           || tag == CHR ('c', 'v', 't', ' ') || tag == CHR ('m', 'a', 'x', 'p'))
@@ -16456,7 +16456,7 @@ addLookupSubtable (SplineFont *sf, char *lookup, char *new_subtable,
       return (NULL);
     }
 
-  sub = (struct lookup_subtable *) xzalloc (sizeof (struct lookup_subtable));
+  sub = xzalloc (sizeof (struct lookup_subtable));
   sub->lookup = otl;
   sub->subtable_name = xstrdup_or_null (new_subtable);
   if (after != NULL)
@@ -16552,7 +16552,7 @@ PyFFFont_addAnchorClass (PyFF_Font *self, PyObject *args)
                     "An anchor class named %s already exists", anchor_name);
       return (NULL);
     }
-  ac = (AnchorClass *) xzalloc (sizeof (AnchorClass));
+  ac = xzalloc (sizeof (AnchorClass));
   ac->name = xstrdup_or_null (anchor_name);
   ac->subtable = sub;
   ac->next = sf->anchor;
@@ -16895,7 +16895,7 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
       sub->onlyCloser = only_closer;
       sub->dontautokern = !autokern;
     }
-  sub->kc = (KernClass *) xzalloc (sizeof (KernClass));
+  sub->kc = xzalloc (sizeof (KernClass));
   sub->kc->subtable = sub;
   if (class1s != NULL)
     {
@@ -17515,7 +17515,7 @@ PyParseFeatureList (PyObject *tuple)
           FeatureScriptLangListFree (flhead);
           return (BAD_FEATURE_LIST);
         }
-      fl = (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+      fl = xzalloc (sizeof (FeatureScriptLangList));
       fl->featuretag =
         StrToTag (PyBytes_AsString (PySequence_GetItem (subs, 0)));
       if (fl->featuretag == BAD_TAG)
@@ -17571,7 +17571,7 @@ PyParseFeatureList (PyObject *tuple)
               return (BAD_FEATURE_LIST);
             }
           sl =
-            (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+            xzalloc (sizeof (struct scriptlanglist));
           sl->script =
             StrToTag (PyBytes_AsString (PySequence_GetItem (scriptsubs, 0)));
           if (sl->script == BAD_TAG)
@@ -17695,7 +17695,7 @@ PyFFFont_addLookup (PyFF_Font *self, PyObject *args)
   if (sf->cidmaster)
     sf = sf->cidmaster;
 
-  otl = (OTLookup *) xzalloc (sizeof (OTLookup));
+  otl = xzalloc (sizeof (OTLookup));
   if (after != NULL)
     {
       otl->next = after->next;
@@ -18210,7 +18210,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
   new_subtable = addLookupSubtable (sf, lookup, subtable, after_str);
   if (new_subtable == NULL)
     return (NULL);
-  fpst = (FPST *) xzalloc (sizeof (FPST));
+  fpst = xzalloc (sizeof (FPST));
   fpst->subtable = new_subtable;
   new_subtable->fpst = fpst;
   fpst->format = format;
@@ -18811,7 +18811,7 @@ makesflist (PyFF_Font *font, enum bitmapformat bf)
   if (CheckIfFontClosed (font))
     return (NULL);
 
-  ret = (struct sflist *) xzalloc (sizeof (struct sflist));
+  ret = xzalloc (sizeof (struct sflist));
   ret->sf = font->fv->sf;
   ret->map = font->fv->map;
 

@@ -1686,14 +1686,14 @@ _InterpretPdf (FILE *in, struct pdfcontext *pc, EntityChar * ec)
               current.x = stack[sp - 2].u.val;
               current.y = stack[sp - 1].u.val;
               sp -= 2;
-              pt = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+              pt = xzalloc (sizeof (SplinePoint));
               Transform (&pt->me, &current, transform);
               pt->noprevcp = true;
               pt->nonextcp = true;
               if (tok == pt_moveto)
                 {
                   SplinePointList *spl =
-                    (SplinePointList *) xzalloc (sizeof (SplinePointList));
+                    xzalloc (sizeof (SplinePointList));
                   spl->first = spl->last = pt;
                   if (cur != NULL)
                     cur->next = spl;
@@ -1747,7 +1747,7 @@ _InterpretPdf (FILE *in, struct pdfcontext *pc, EntityChar * ec)
                 {
                   Transform (&cur->last->nextcp, &ncp, transform);
                   cur->last->nonextcp = false;
-                  pt = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+                  pt = xzalloc (sizeof (SplinePoint));
                   Transform (&pt->prevcp, &pcp, transform);
                   Transform (&pt->me, &current, transform);
                   pt->nonextcp = true;
@@ -1761,7 +1761,7 @@ _InterpretPdf (FILE *in, struct pdfcontext *pc, EntityChar * ec)
           if (sp >= 4)
             {
               SplinePointList *spl =
-                (SplinePointList *) xzalloc (sizeof (SplinePointList));
+                xzalloc (sizeof (SplinePointList));
               SplinePoint *first, *second, *third, *fourth;
               BasePoint temp1, temp2;
               spl->first = spl->last = pt;

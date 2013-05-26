@@ -11320,7 +11320,7 @@ AddSubPST (SplineChar *sc, struct lookup_subtable *sub, char *variant)
 {
   PST *pst;
 
-  pst = (PST *) xzalloc (sizeof (PST));
+  pst = xzalloc (sizeof (PST));
   pst->type = pst_substitution;
   pst->subtable = sub;
   pst->u.alt.components = xstrdup_or_null (variant);
@@ -12947,7 +12947,7 @@ __FontViewCreate (SplineFont *sf)
 {
   int i;
 
-  FontView *fv = (FontView *) xzalloc (sizeof (FontView));
+  FontView *fv = xzalloc (sizeof (FontView));
   fv->b.tag = FF_FONT_WINDOW;
 
   int ps =

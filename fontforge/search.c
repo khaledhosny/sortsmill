@@ -997,7 +997,7 @@ static SplinePoint *
 RplInsertSP (SplinePoint *after, SplinePoint *nrpl, SplinePoint *rpl,
              SearchData *s, BasePoint *fudge)
 {
-  SplinePoint *new = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+  SplinePoint *new = xzalloc (sizeof (SplinePoint));
   real transform[6];
 
   SVBuildTrans (s, transform);

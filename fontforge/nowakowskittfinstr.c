@@ -300,7 +300,7 @@ int TTF__getcvtval(SplineFont *sf,int val) {
     struct ttf_table *cvt_tab = SFFindTable(sf,CHR('c','v','t',' '));
 
     if ( cvt_tab==NULL ) {
-        cvt_tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
+        cvt_tab = xzalloc(sizeof (struct ttf_table));
         cvt_tab->tag = CHR('c','v','t',' ');
         cvt_tab->maxlen = 200;
         cvt_tab->data = xmalloc(100*sizeof(short));
@@ -743,7 +743,7 @@ static void init_cvt(GlobalInstrCt *gic) {
     tab = SFFindTable(gic->sf, CHR('c','v','t',' '));
 
     if ( tab==NULL ) {
-	tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
+	tab = xzalloc(sizeof (struct ttf_table));
 	tab->next = gic->sf->ttf_tables;
 	gic->sf->ttf_tables = tab;
 	tab->tag = CHR('c','v','t',' ');
@@ -813,7 +813,7 @@ static void init_maxp(GlobalInstrCt *gic) {
     uint16_t zones, twpts, store, fdefs, stack;
 
     if ( tab==NULL ) {
-        tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
+        tab = xzalloc(sizeof (struct ttf_table));
         tab->next = gic->sf->ttf_tables;
         gic->sf->ttf_tables = tab;
         tab->tag = CHR('m','a','x','p');
@@ -1624,7 +1624,7 @@ static void init_fpgm(GlobalInstrCt *gic) {
 
     if ( tab==NULL ) {
         /* We have to create such table. */
-        tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
+        tab = xzalloc(sizeof (struct ttf_table));
         tab->next = gic->sf->ttf_tables;
         gic->sf->ttf_tables = tab;
         tab->tag = CHR('f','p','g','m');
@@ -1942,7 +1942,7 @@ static void init_prep(GlobalInstrCt *gic) {
 
     if ( tab==NULL ) {
         /* We have to create such table. */
-        tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
+        tab = xzalloc(sizeof (struct ttf_table));
         tab->next = gic->sf->ttf_tables;
         gic->sf->ttf_tables = tab;
         tab->tag = CHR('p','r','e','p');

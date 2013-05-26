@@ -1037,7 +1037,7 @@ KPD_FinishKP (KernClassDlg * kcd)
         }
       if (kp == NULL)
         {
-          kp = (KernPair *) xzalloc (sizeof (KernPair));
+          kp = xzalloc (sizeof (KernPair));
           kp->next = kcd->isv ? kcd->scf->vkerns : kcd->scf->kerns;
           kp->sc = kcd->scs;
           if (kcd->isv)
@@ -1054,7 +1054,7 @@ KPD_FinishKP (KernClassDlg * kcd)
         }
       else if (kcd->active_adjust.corrections != NULL)
         {
-          kp->adjust = (DeviceTable *) xzalloc (sizeof (DeviceTable));
+          kp->adjust = xzalloc (sizeof (DeviceTable));
           *kp->adjust = kcd->active_adjust;
         }
       else if (kp->adjust != NULL)

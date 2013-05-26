@@ -7638,7 +7638,7 @@ hashglyphadd (SplineChar *sc, UHash * uhash, NHash * nhash)
   if (sc->unicodeenc == -1 && sc->altuni == NULL)
     {
       hash = hashname (sc->name);
-      test = (struct splinecharlist *) xzalloc (sizeof (struct splinecharlist));
+      test = xzalloc (sizeof (struct splinecharlist));
       test->sc = sc;
       test->next = (*nhash)[hash];
       (*nhash)[hash] = test;
@@ -7646,7 +7646,7 @@ hashglyphadd (SplineChar *sc, UHash * uhash, NHash * nhash)
   else if (sc->unicodeenc != -1)
     {
       hash = sc->unicodeenc & 0xffff;
-      test = (struct splinecharlist *) xzalloc (sizeof (struct splinecharlist));
+      test = xzalloc (sizeof (struct splinecharlist));
       test->sc = sc;
       test->next = (*uhash)[hash];
       (*uhash)[hash] = test;
@@ -7654,7 +7654,7 @@ hashglyphadd (SplineChar *sc, UHash * uhash, NHash * nhash)
   for (alt = sc->altuni; alt != NULL; alt = alt->next)
     {
       hash = alt->unienc & 0xffff;
-      test = (struct splinecharlist *) xzalloc (sizeof (struct splinecharlist));
+      test = xzalloc (sizeof (struct splinecharlist));
       test->sc = sc;
       test->next = (*uhash)[hash];
       (*uhash)[hash] = test;

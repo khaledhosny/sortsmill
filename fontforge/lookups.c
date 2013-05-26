@@ -1577,7 +1577,7 @@ FListAppendScriptLang (FeatureScriptLangList *fl, uint32_t script_tag,
   for (sl = fl->scripts; sl != NULL && sl->script != script_tag; sl = sl->next);
   if (sl == NULL)
     {
-      sl = (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+      sl = xzalloc (sizeof (struct scriptlanglist));
       sl->script = script_tag;
       sl->next = fl->scripts;
       fl->scripts = sl;
@@ -2253,7 +2253,7 @@ SLCopy (struct scriptlanglist *sl)
 {
   struct scriptlanglist *newsl;
 
-  newsl = (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+  newsl = xzalloc (sizeof (struct scriptlanglist));
   *newsl = *sl;
   newsl->next = NULL;
 
@@ -2292,7 +2292,7 @@ FeatureListCopy (FeatureScriptLangList *fl)
   if (fl == NULL)
     return NULL;
 
-  newfl = (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+  newfl = xzalloc (sizeof (FeatureScriptLangList));
   *newfl = *fl;
   newfl->next = NULL;
 
@@ -2613,7 +2613,7 @@ SF_AddKernClass (struct sfmergecontext *mc, KernClass *kc,
 {
   KernClass *newkc;
 
-  newkc = (KernClass *) xzalloc (sizeof (KernClass));
+  newkc = xzalloc (sizeof (KernClass));
   *newkc = *kc;
   newkc->subtable = sub;
   if (sub->vertical_kerning)
@@ -2642,7 +2642,7 @@ SF_AddFPST (struct sfmergecontext *mc, FPST *fpst, struct lookup_subtable *sub)
   FPST *newfpst;
   int i, k, cur;
 
-  newfpst = (FPST *) xzalloc (sizeof (FPST));
+  newfpst = xzalloc (sizeof (FPST));
   *newfpst = *fpst;
   newfpst->subtable = sub;
   newfpst->next = mc->sf_to->possub;
@@ -2735,7 +2735,7 @@ SF_SCAddAP (SplineChar *tosc, AnchorPoint *ap, AnchorClass * newac)
 {
   AnchorPoint *newap;
 
-  newap = (AnchorPoint *) xzalloc (sizeof (AnchorPoint));
+  newap = xzalloc (sizeof (AnchorPoint));
   *newap = *ap;
   newap->anchor = newac;
   newap->next = tosc->anchor;
@@ -2756,7 +2756,7 @@ SF_AddAnchorClasses (struct sfmergecontext *mc,
   for (ac = mc->sf_from->anchor; ac != NULL; ac = ac->next)
     if (ac->subtable == from_sub)
       {
-        nac = (AnchorClass *) xzalloc (sizeof (AnchorClass));
+        nac = xzalloc (sizeof (AnchorClass));
         *nac = *ac;
         nac->subtable = sub;
         nac->name = strconcat (mc->prefix, nac->name);
@@ -2794,7 +2794,7 @@ SF_SCAddPST (SplineChar *tosc, PST *pst, struct lookup_subtable *sub)
 {
   PST *newpst;
 
-  newpst = (PST *) xzalloc (sizeof (PST));
+  newpst = xzalloc (sizeof (PST));
   *newpst = *pst;
   newpst->subtable = sub;
   newpst->next = tosc->possub;
@@ -2804,7 +2804,7 @@ SF_SCAddPST (SplineChar *tosc, PST *pst, struct lookup_subtable *sub)
     {
     case pst_pair:
       newpst->u.pair.paired = xstrdup_or_null (pst->u.pair.paired);
-      newpst->u.pair.vr = (struct vr *) xzalloc (sizeof (struct vr[2]));
+      newpst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
       memcpy (newpst->u.pair.vr, pst->u.pair.vr, sizeof (struct vr[2]));
       break;
     case pst_ligature:
@@ -2830,7 +2830,7 @@ SF_SCAddKP (SplineChar *tosc, KernPair *kp, struct lookup_subtable *sub,
   if (tosecond == NULL)
     return false;
 
-  newkp = (KernPair *) xzalloc (sizeof (KernPair));
+  newkp = xzalloc (sizeof (KernPair));
   *newkp = *kp;
   newkp->subtable = sub;
   newkp->sc = tosecond;
@@ -3126,7 +3126,7 @@ _OTLookupCopyInto (struct sfmergecontext *mc,
 
   if (l >= mc->lcnt)
     {
-      otl = (OTLookup *) xzalloc (sizeof (OTLookup));
+      otl = xzalloc (sizeof (OTLookup));
       *otl = *from_otl;
       memset (&mc->lks[l], 0, sizeof (mc->lks[l]));
       mc->lks[l].from = from_otl;
@@ -3151,7 +3151,7 @@ _OTLookupCopyInto (struct sfmergecontext *mc,
        from_sub = from_sub->next)
     {
       sub =
-        (struct lookup_subtable *) xzalloc (sizeof (struct lookup_subtable));
+        xzalloc (sizeof (struct lookup_subtable));
       *sub = *from_sub;
       sub->lookup = otl;
       sub->subtable_name = strconcat (mc->prefix, from_sub->subtable_name);
@@ -4704,13 +4704,13 @@ SFSubTableFindOrMake (SplineFont *sf, uint32_t tag, uint32_t script,
 
   if (found == NULL)
     {
-      found = (OTLookup *) xzalloc (sizeof (OTLookup));
+      found = xzalloc (sizeof (OTLookup));
       found->lookup_type = lookup_type;
       found->features =
-        (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+        xzalloc (sizeof (FeatureScriptLangList));
       found->features->featuretag = tag;
       found->features->scripts =
-        (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+        xzalloc (sizeof (struct scriptlanglist));
       found->features->scripts->script = script;
       found->features->scripts->langs[0] = DEFAULT_LANG;
       found->features->scripts->lang_cnt = 1;
@@ -4719,7 +4719,7 @@ SFSubTableFindOrMake (SplineFont *sf, uint32_t tag, uint32_t script,
       isnew = true;
     }
 
-  sub = (struct lookup_subtable *) xzalloc (sizeof (struct lookup_subtable));
+  sub = xzalloc (sizeof (struct lookup_subtable));
   sub->next = found->subtables;
   found->subtables = sub;
   sub->lookup = found;
@@ -4752,13 +4752,13 @@ SFSubTableMake (SplineFont *sf, uint32_t tag, uint32_t script, int lookup_type)
 
   if (found == NULL)
     {
-      found = (OTLookup *) xzalloc (sizeof (OTLookup));
+      found = xzalloc (sizeof (OTLookup));
       found->lookup_type = lookup_type;
       found->features =
-        (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+        xzalloc (sizeof (FeatureScriptLangList));
       found->features->featuretag = tag;
       found->features->scripts =
-        (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+        xzalloc (sizeof (struct scriptlanglist));
       found->features->scripts->script = script;
       found->features->scripts->langs[0] = DEFAULT_LANG;
       found->features->scripts->lang_cnt = 1;
@@ -4767,7 +4767,7 @@ SFSubTableMake (SplineFont *sf, uint32_t tag, uint32_t script, int lookup_type)
       isnew = true;
     }
 
-  sub = (struct lookup_subtable *) xzalloc (sizeof (struct lookup_subtable));
+  sub = xzalloc (sizeof (struct lookup_subtable));
   sub->next = found->subtables;
   found->subtables = sub;
   sub->lookup = found;
@@ -5027,11 +5027,11 @@ NewAALTLookup (SplineFont *sf, struct sllk *sllk, int sllk_cnt, int i)
   SplineChar *sc;
 
   /* Make the new lookup (and all its supporting data structures) */
-  otl = (OTLookup *) xzalloc (sizeof (OTLookup));
+  otl = xzalloc (sizeof (OTLookup));
   otl->lookup_type = gsub_alternate;
   otl->lookup_flags = sllk[i].lookups[0]->lookup_flags & pst_r2l;
   otl->features = fl =
-    (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+    xzalloc (sizeof (FeatureScriptLangList));
   fl->featuretag = CHR ('a', 'a', 'l', 't');
   /* Any other scripts with the same lookup set? */
   for (j = i; j < sllk_cnt; ++j)
@@ -5039,7 +5039,7 @@ NewAALTLookup (SplineFont *sf, struct sllk *sllk, int sllk_cnt, int i)
       if (i == j || SllkMatch (sllk, i, j))
         {
           sl =
-            (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+            xzalloc (sizeof (struct scriptlanglist));
           sl->next = fl->scripts;
           fl->scripts = sl;
           sl->script = sllk[j].script;
@@ -5057,7 +5057,7 @@ NewAALTLookup (SplineFont *sf, struct sllk *sllk, int sllk_cnt, int i)
         }
     }
   otl->subtables = sub =
-    (struct lookup_subtable *) xzalloc (sizeof (struct lookup_subtable));
+    xzalloc (sizeof (struct lookup_subtable));
   sub->lookup = otl;
   sub->per_glyph_pst_or_kern = true;
 
@@ -5091,7 +5091,7 @@ NewAALTLookup (SplineFont *sf, struct sllk *sllk, int sllk_cnt, int i)
               }
             if (pcnt == 0)
               continue;
-            pst = (PST *) xzalloc (sizeof (PST));
+            pst = xzalloc (sizeof (PST));
             pst->subtable = sub;
             pst->type = pst_alternate;
             pst->next = sc->possub;
@@ -5738,7 +5738,7 @@ FPSTRule_From_Str (SplineFont *sf, FPST *fpst, struct fpst_rule *rule,
               return ret;
             }
           *lpt++ = '>';
-          ll = (LookupList *) xzalloc (sizeof (LookupList));
+          ll = xzalloc (sizeof (LookupList));
           ll->lookup = lookup;
           /* Lookup order is important */
           if (parsed[cnt - 1].lookups == NULL)

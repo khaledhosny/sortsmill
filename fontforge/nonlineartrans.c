@@ -734,7 +734,7 @@ SplineSetNLTrans (SplineSet *ss, struct context *c, int everything)
   /*  curves, curves may become higher order curves (which we still approx */
   /*  imate with cubics) */
 
-  first = last = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+  first = last = xzalloc (sizeof (SplinePoint));
   *first = *ss->first;
   first->hintmask = NULL;
   first->next = first->prev = NULL;
@@ -745,7 +745,7 @@ SplineSetNLTrans (SplineSet *ss, struct context *c, int everything)
     {
       for (sp = ss->first->next->to; sp != NULL;)
         {
-          next = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+          next = xzalloc (sizeof (SplinePoint));
           *next = *sp;
           next->hintmask = NULL;
           if (everything || next->selected)

@@ -64,7 +64,7 @@ return( NULL );
     if ( n==0 )
 return( NULL );
     if ( n==1 ) {
-	ss = (SplineSet *) xzalloc(sizeof (SplineSet));
+	ss = xzalloc(sizeof (SplineSet));
 	ss->first = ss->last = SplinePointCreate(spiros[0].x,spiros[0].y);
     } else {
 	bezctx *bc = new_bezctx_ff();

@@ -3944,7 +3944,7 @@ SFDGetTtfTable (FILE *sfd, SplineFont *sf, struct ttf_table *lasttab[2])
   int which;
   struct enc85 dec;
   struct ttf_table *tab =
-    (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
+    xzalloc (sizeof (struct ttf_table));
 
   memset (&dec, '\0', sizeof (dec));
   dec.pos = -1;
@@ -3985,7 +3985,7 @@ SFDGetShortTable (FILE *sfd, SplineFont *sf, struct ttf_table *lasttab[2])
   uint8_t *pt;
   int which, iscvt, started;
   struct ttf_table *tab =
-    (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
+    xzalloc (sizeof (struct ttf_table));
 
   tab->tag = gettag (sfd);
 
@@ -4044,7 +4044,7 @@ SFDGetTtTable (FILE *sfd, SplineFont *sf, struct ttf_table *lasttab[2])
   int ch;
   int which;
   struct ttf_table *tab =
-    (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
+    xzalloc (sizeof (struct ttf_table));
   char *buf = NULL, *pt = buf, *end = buf;
   int backlen = strlen (end_tt_instrs);
 
@@ -4243,14 +4243,14 @@ SFDGetSplineSet (SplineFont *sf, FILE *sfd, int order2)
               current.x = stack[sp - 2];
               current.y = stack[sp - 1];
               sp -= 2;
-              pt = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+              pt = xzalloc (sizeof (SplinePoint));
               pt->me = current;
               pt->noprevcp = true;
               pt->nonextcp = true;
               if (ch == 'm')
                 {
                   SplinePointList *spl =
-                    (SplinePointList *) xzalloc (sizeof (SplinePointList));
+                    xzalloc (sizeof (SplinePointList));
                   spl->first = spl->last = pt;
                   if (cur != NULL)
                     {
@@ -4290,7 +4290,7 @@ SFDGetSplineSet (SplineFont *sf, FILE *sfd, int order2)
                   cur->last->nextcp.x = stack[sp - 6];
                   cur->last->nextcp.y = stack[sp - 5];
                   cur->last->nonextcp = false;
-                  pt = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+                  pt = xzalloc (sizeof (SplinePoint));
                   pt->prevcp.x = stack[sp - 4];
                   pt->prevcp.y = stack[sp - 3];
                   pt->me = current;
@@ -4330,7 +4330,7 @@ SFDGetSplineSet (SplineFont *sf, FILE *sfd, int order2)
           ch = nlgetc (sfd);
           if (ch == 'x')
             {
-              pt->hintmask = (HintMask *) xzalloc (sizeof (HintMask));
+              pt->hintmask = xzalloc (sizeof (HintMask));
               SFDGetHintMask (sfd, pt->hintmask);
             }
           else if (ch != ',')
@@ -4450,7 +4450,7 @@ SFDReadHintInstances (FILE *sfd, StemInfo * stem)
     }
   while (getreal (sfd, &begin) == 1 && getreal (sfd, &end))
     {
-      cur = (HintInstance *) xzalloc (sizeof (HintInstance));
+      cur = xzalloc (sizeof (HintInstance));
       cur->begin = begin;
       cur->end = end;
       if (head == NULL)
@@ -4473,7 +4473,7 @@ SFDReadHints (FILE *sfd)
 
   while (getreal (sfd, &start) == 1 && getreal (sfd, &width))
     {
-      cur = (StemInfo *) xzalloc (sizeof (StemInfo));
+      cur = xzalloc (sizeof (StemInfo));
       cur->start = start;
       cur->width = width;
       cur->where = SFDReadHintInstances (sfd, cur);
@@ -4509,14 +4509,14 @@ SFDReadDHints (SplineFont *sf, FILE *sfd, int old)
           /* form a diagonal line */
           if (PointsDiagonalable (sf, bpref, &unit))
             {
-              cur = (DStemInfo *) xzalloc (sizeof (DStemInfo));
+              cur = xzalloc (sizeof (DStemInfo));
               cur->left = *bpref[0];
               cur->right = *bpref[1];
               cur->unit = unit;
               /* Generate a temporary hint instance, so that the hint can */
               /* be visible in charview even if subsequent rebuilding instances */
               /* fails (e. g. for composite characters) */
-              cur->where = (HintInstance *) xzalloc (sizeof (HintInstance));
+              cur->where = xzalloc (sizeof (HintInstance));
               rstartoff =
                 (cur->right.x - cur->left.x) * cur->unit.x + (cur->right.y -
                                                               cur->left.y) *
@@ -4541,7 +4541,7 @@ SFDReadDHints (SplineFont *sf, FILE *sfd, int old)
              && getreal (sfd, &right.x) && getreal (sfd, &right.y)
              && getreal (sfd, &unit.x) && getreal (sfd, &unit.y))
         {
-          cur = (DStemInfo *) xzalloc (sizeof (DStemInfo));
+          cur = xzalloc (sizeof (DStemInfo));
           cur->left = left;
           cur->right = right;
           cur->unit = unit;
@@ -4570,7 +4570,7 @@ SFDReadDeviceTable (FILE *sfd, DeviceTable * adjust)
       else
         ungetc (ch, sfd);
       if (adjust == NULL)
-        adjust = (DeviceTable *) xzalloc (sizeof (DeviceTable));
+        adjust = xzalloc (sizeof (DeviceTable));
       getint (sfd, &first);
       ch = nlgetc (sfd);        /* Should be '-' */
       getint (sfd, &last);
@@ -4638,7 +4638,7 @@ SFDReadValDevTab (FILE *sfd)
       if (vdt.xadjust.corrections != NULL || vdt.yadjust.corrections != NULL
           || vdt.xadv.corrections != NULL || vdt.yadv.corrections != NULL)
         {
-          ValDevTab *v = (ValDevTab *) xzalloc (sizeof (ValDevTab));
+          ValDevTab *v = xzalloc (sizeof (ValDevTab));
           *v = vdt;
           return (v);
         }
@@ -4651,7 +4651,7 @@ SFDReadValDevTab (FILE *sfd)
 static AnchorPoint *
 SFDReadAnchorPoints (FILE *sfd, SplineChar *sc, AnchorPoint *lastap)
 {
-  AnchorPoint *ap = (AnchorPoint *) xzalloc (sizeof (AnchorPoint));
+  AnchorPoint *ap = xzalloc (sizeof (AnchorPoint));
   AnchorClass *an;
   char *name;
   char tok[200];
@@ -4765,7 +4765,7 @@ LigaCreateFromOldStyleMultiple (PST1 * liga)
   PST1 *new, *last = liga;
   while ((pt = strrchr (liga->pst.u.lig.components, ';')) != NULL)
     {
-      new = (PST1 *) xzalloc (sizeof (PST1));
+      new = xzalloc (sizeof (PST1));
       *new = *liga;
       new->pst.u.lig.components = xstrdup_or_null (pt + 1);
       last->pst.next = (PST *) new;
@@ -4827,7 +4827,7 @@ SFDParseGlyphComposition (FILE *sfd, struct glyphvariants *gv, char *tok)
   int i;
 
   if (gv == NULL)
-    gv = (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+    gv = xzalloc (sizeof (struct glyphvariants));
   getint (sfd, &gv->part_cnt);
   gv->parts = xcalloc (gv->part_cnt, sizeof (struct gv_part));
   for (i = 0; i < gv->part_cnt; ++i)
@@ -4882,7 +4882,7 @@ static struct gradient *
 SFDParseGradient (FILE *sfd, char *tok)
 {
   struct gradient *grad =
-    (struct gradient *) xzalloc (sizeof (struct gradient));
+    xzalloc (sizeof (struct gradient));
   int ch, i;
 
   getreal (sfd, &grad->start.x);
@@ -4927,7 +4927,7 @@ SFDParseGradient (FILE *sfd, char *tok)
 static struct pattern *
 SFDParsePattern (FILE *sfd, char *tok)
 {
-  struct pattern *pat = (struct pattern *) xzalloc (sizeof (struct pattern));
+  struct pattern *pat = xzalloc (sizeof (struct pattern));
   int ch;
 
   copy_to_tok (tok, getname (sfd));
@@ -5054,7 +5054,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           int uni;
           while (getint (sfd, &uni) == 1)
             {
-              altuni = (struct altuni *) xzalloc (sizeof (struct altuni));
+              altuni = xzalloc (sizeof (struct altuni));
               altuni->unienc = uni;
               altuni->vs = -1;
               altuni->fid = 0;
@@ -5067,7 +5067,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           uint32_t uni[3];
           while (gethexints (sfd, uni, 3))
             {
-              altuni = (struct altuni *) xzalloc (sizeof (struct altuni));
+              altuni = xzalloc (sizeof (struct altuni));
               altuni->unienc = uni[0];
               altuni->vs = uni[1];
               altuni->fid = uni[2];
@@ -5224,28 +5224,28 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
-              (struct mathkern *) xzalloc (sizeof (struct mathkern));
+              xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->top_right);
         }
       else if (strcasecmp (tok, "TopLeftVertex:") == 0)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
-              (struct mathkern *) xzalloc (sizeof (struct mathkern));
+              xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->top_left);
         }
       else if (strcasecmp (tok, "BottomRightVertex:") == 0)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
-              (struct mathkern *) xzalloc (sizeof (struct mathkern));
+              xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->bottom_right);
         }
       else if (strcasecmp (tok, "BottomLeftVertex:") == 0)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
-              (struct mathkern *) xzalloc (sizeof (struct mathkern));
+              xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->bottom_left);
         }
       else if (strcasecmp (tok, "HStem:") == 0)
@@ -5481,7 +5481,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                   LogError (_("KernPair with no subtable name.\n"));
                   break;
                 }
-              kp = (KernPair *) xzalloc (sizeof (KernPair1));
+              kp = xzalloc (sizeof (KernPair1));
               kp->sc = (SplineChar *) (intptr_t) index;
               kp->kcid = true;
               kp->off = off;
@@ -5491,7 +5491,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               ungetc (ch, sfd);
               if (ch == '{')
                 {
-                  kp->adjust = (DeviceTable *) xzalloc (sizeof (DeviceTable));
+                  kp->adjust = xzalloc (sizeof (DeviceTable));
                   SFDReadDeviceTable (sfd, kp->adjust);
                 }
               if (last != NULL)
@@ -5558,7 +5558,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                                                   DEFAULT_LANG);
                   complained = true;
                 }
-              kp = (KernPair1 *) xzalloc (sizeof (KernPair1));
+              kp = xzalloc (sizeof (KernPair1));
               kp->kp.sc = (SplineChar *) (intptr_t) index;
               kp->kp.kcid = has_orig;
               kp->kp.off = off;
@@ -5570,7 +5570,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               if (ch == '{')
                 {
                   kp->kp.adjust =
-                    (DeviceTable *) xzalloc (sizeof (DeviceTable));
+                    xzalloc (sizeof (DeviceTable));
                   SFDReadDeviceTable (sfd, kp->kp.adjust);
                 }
               if (last != NULL)
@@ -5606,7 +5606,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           if (strchr (tok, '2') != NULL)
             {
               old = false;
-              pst = (PST *) xzalloc (sizeof (PST));
+              pst = xzalloc (sizeof (PST));
               if (type != pst_lcaret)
                 pst->subtable =
                   SFFindLookupSubtableAndFreeName (sf, SFDReadUTF7Str (sfd));
@@ -5614,7 +5614,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           else
             {
               old = true;
-              pst = (PST *) xzalloc (sizeof (PST1));
+              pst = xzalloc (sizeof (PST1));
               ((PST1 *) pst)->tag = CHR ('l', 'i', 'g', 'a');
               ((PST1 *) pst)->script_lang_index = 0xffff;
               while ((ch = nlgetc (sfd)) == ' ' || ch == '\t');
@@ -5714,7 +5714,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             {
               copy_to_tok (tok, getname (sfd));
               pst->u.pair.paired = xstrdup_or_null (tok);
-              pst->u.pair.vr = (struct vr *) xzalloc (sizeof (struct vr[2]));
+              pst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
               fscanf (sfd, " dx=%hd dy=%hd dh=%hd dv=%hd",
                       &pst->u.pair.vr[0].xoff, &pst->u.pair.vr[0].yoff,
                       &pst->u.pair.vr[0].h_adv_off,
@@ -5849,7 +5849,7 @@ SFDGetBitmapChar (FILE *sfd, BDFFont *bdf)
   EncMap *map;
   int ch;
 
-  bfc = (BDFChar *) xzalloc (sizeof (BDFChar));
+  bfc = xzalloc (sizeof (BDFChar));
   memset (bfc, '\0', sizeof (BDFChar));
   map = bdf->sf->map;
 
@@ -6438,7 +6438,7 @@ static struct ttflangname *
 SFDGetLangName (FILE *sfd, struct ttflangname *old)
 {
   struct ttflangname *cur =
-    (struct ttflangname *) xzalloc (sizeof (struct ttflangname)), *prev;
+    xzalloc (sizeof (struct ttflangname)), *prev;
   int i;
 
   getint (sfd, &cur->lang);
@@ -6489,7 +6489,7 @@ SFDGetDesignSize (FILE *sfd, SplineFont *sf)
           ungetc (ch, sfd);
           if (!isdigit (ch))
             break;
-          cur = (struct otfname *) xzalloc (sizeof (struct otfname));
+          cur = xzalloc (sizeof (struct otfname));
           cur->next = sf->fontstyle_name;
           sf->fontstyle_name = cur;
           getsint (sfd, (int16_t *) &cur->lang);
@@ -6505,7 +6505,7 @@ SFDGetOtfFeatName (FILE *sfd, SplineFont *sf)
   struct otfname *cur;
   struct otffeatname *fn;
 
-  fn = (struct otffeatname *) xzalloc (sizeof (struct otffeatname));
+  fn = xzalloc (sizeof (struct otffeatname));
   fn->tag = gettag (sfd);
   while (true)
     {
@@ -6513,7 +6513,7 @@ SFDGetOtfFeatName (FILE *sfd, SplineFont *sf)
       ungetc (ch, sfd);
       if (!isdigit (ch))
         break;
-      cur = (struct otfname *) xzalloc (sizeof (struct otfname));
+      cur = xzalloc (sizeof (struct otfname));
       cur->next = fn->names;
       fn->names = cur;
       getsint (sfd, (int16_t *) &cur->lang);
@@ -7201,7 +7201,7 @@ SFDParseLookup (FILE *sfd, SplineFont *sf, OTLookup * otl)
               break;
             }
 
-          fl = (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+          fl = xzalloc (sizeof (FeatureScriptLangList));
           if (lastfl == NULL)
             otl->features = fl;
           else
@@ -7317,7 +7317,7 @@ ParseBaseLang (FILE *sfd)
   while ((ch = nlgetc (sfd)) == ' ');
   if (ch == '{')
     {
-      bl = (struct baselangextent *) xzalloc (sizeof (struct baselangextent));
+      bl = xzalloc (sizeof (struct baselangextent));
       while ((ch = nlgetc (sfd)) == ' ');
       ungetc (ch, sfd);
       if (ch == '\'')
@@ -7354,7 +7354,7 @@ SFDParseBaseScript (FILE *sfd, struct Base *base, char *tok)
   if (base == NULL)
     return (NULL);
 
-  bs = (struct basescript *) xzalloc (sizeof (struct basescript));
+  bs = xzalloc (sizeof (struct basescript));
 
   bs->script = gettag (sfd);
   getint (sfd, &bs->def_baseline);
@@ -7383,7 +7383,7 @@ SFDParseBaseScript (FILE *sfd, struct Base *base, char *tok)
 static struct Base *
 SFDParseBase (FILE *sfd)
 {
-  struct Base *base = (struct Base *) xzalloc (sizeof (struct Base));
+  struct Base *base = xzalloc (sizeof (struct Base));
   int i;
 
   getint (sfd, &base->baseline_cnt);
@@ -7446,7 +7446,7 @@ SFDParseJustify (FILE *sfd, SplineFont *sf, char *tok)
 
   while (strcmp (tok, "Justify:") == 0)
     {
-      cur = (Justify *) xzalloc (sizeof (Justify));
+      cur = xzalloc (sizeof (Justify));
       if (last == NULL)
         sf->justify = cur;
       else
@@ -7469,7 +7469,7 @@ SFDParseJustify (FILE *sfd, SplineFont *sf, char *tok)
           else if (strcmp (tok, "JstfLang:") == 0)
             {
               jlang =
-                (struct jstf_lang *) xzalloc (sizeof (struct jstf_lang));
+                xzalloc (sizeof (struct jstf_lang));
               if (llast == NULL)
                 cur->langs = jlang;
               else
@@ -8245,7 +8245,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               IError ("Lookups should not happen in version 1 sfd files.");
               exit (1);
             }
-          otl = (OTLookup *) xzalloc (sizeof (OTLookup));
+          otl = xzalloc (sizeof (OTLookup));
           getint (sfd, &temp);
           otl->lookup_type = temp;
           getint (sfd, &temp);
@@ -8327,7 +8327,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               exit (1);
             }
           kc =
-            (KernClass *) xzalloc (old ? sizeof (KernClass1) :
+            xzalloc (old ? sizeof (KernClass1) :
                                    sizeof (KernClass));
           getint (sfd, &kc->first_cnt);
           ch = nlgetc (sfd);
@@ -8428,12 +8428,12 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           if (strchr (tok, '2') != NULL)
             {
               old = false;
-              fpst = (FPST *) xzalloc (sizeof (FPST));
+              fpst = xzalloc (sizeof (FPST));
             }
           else
             {
               old = true;
-              fpst = (FPST *) xzalloc (sizeof (FPST1));
+              fpst = xzalloc (sizeof (FPST1));
             }
           if ((sf->sfd_version < 2) != old)
             {
@@ -8490,7 +8490,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           while ((name = SFDReadUTF7Str (sfd)) != NULL)
             {
               an =
-                (AnchorClass *) xzalloc (old ? sizeof (AnchorClass1) :
+                xzalloc (old ? sizeof (AnchorClass1) :
                                          sizeof (AnchorClass));
               an->name = name;
               if (old)
@@ -8645,7 +8645,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
         }
       else if (strcasecmp (tok, "MMCounts:") == 0)
         {
-          MMSet *mm = sf->mm = (MMSet *) xzalloc (sizeof (MMSet));
+          MMSet *mm = sf->mm = xzalloc (sizeof (MMSet));
           getint (sfd, &mm->instance_count);
           getint (sfd, &mm->axis_count);
           ch = nlgetc (sfd);

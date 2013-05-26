@@ -562,7 +562,7 @@ readValDevTab (FILE *ttf, struct valuerecord *vr, uint32_t base,
   if (vr->offXplaceDev == 0 && vr->offYplaceDev == 0 &&
       vr->offXadvanceDev == 0 && vr->offYadvanceDev == 0)
     return NULL;
-  ret = (ValDevTab *) xzalloc (sizeof (ValDevTab));
+  ret = xzalloc (sizeof (ValDevTab));
   if (vr->offXplaceDev != 0)
     ReadDeviceTable (ttf, &ret->xadjust, base + vr->offXplaceDev, info);
   if (vr->offYplaceDev != 0)
@@ -584,12 +584,12 @@ addPairPos (struct ttfinfo *info, int glyph1, int glyph2,
   if (glyph1 < info->glyph_cnt && glyph2 < info->glyph_cnt &&
       info->chars[glyph1] != NULL && info->chars[glyph2] != NULL)
     {
-      PST *pos = (PST *) xzalloc (sizeof (PST));
+      PST *pos = xzalloc (sizeof (PST));
       pos->type = pst_pair;
       pos->subtable = subtable;
       pos->next = info->chars[glyph1]->possub;
       info->chars[glyph1]->possub = pos;
-      pos->u.pair.vr = (struct vr *) xzalloc (sizeof (struct vr[2]));
+      pos->u.pair.vr = xzalloc (sizeof (struct vr[2]));
       pos->u.pair.paired = xstrdup_or_null (info->chars[glyph2]->name);
       pos->u.pair.vr[0].xoff = vr1->xplacement;
       pos->u.pair.vr[0].yoff = vr1->yplacement;
@@ -627,13 +627,13 @@ addKernPair (struct ttfinfo *info, int glyph1, int glyph2,
         }
       if (kp == NULL)
         {
-          kp = (KernPair *) xzalloc (sizeof (KernPair));
+          kp = xzalloc (sizeof (KernPair));
           kp->sc = info->chars[glyph2];
           kp->off = offset;
           kp->subtable = subtable;
           if (devtab != 0)
             {
-              kp->adjust = (DeviceTable *) xzalloc (sizeof (DeviceTable));
+              kp->adjust = xzalloc (sizeof (DeviceTable));
               ReadDeviceTable (ttf, kp->adjust, devtab, info);
             }
           if (isv)
@@ -780,19 +780,19 @@ gposKernSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
           if (isv)
             {
               if (info->vkhead == NULL)
-                info->vkhead = kc = (KernClass *) xzalloc (sizeof (KernClass));
+                info->vkhead = kc = xzalloc (sizeof (KernClass));
               else
                 kc = info->vklast->next =
-                  (KernClass *) xzalloc (sizeof (KernClass));
+                  xzalloc (sizeof (KernClass));
               info->vklast = kc;
             }
           else
             {
               if (info->khead == NULL)
-                info->khead = kc = (KernClass *) xzalloc (sizeof (KernClass));
+                info->khead = kc = xzalloc (sizeof (KernClass));
               else
                 kc = info->klast->next =
-                  (KernClass *) xzalloc (sizeof (KernClass));
+                  xzalloc (sizeof (KernClass));
               info->klast = kc;
             }
           subtable->vertical_kerning = isv;
@@ -879,7 +879,7 @@ readAnchorPoint (FILE *ttf, uint32_t base, AnchorClass * class,
 
   fseek (ttf, base, SEEK_SET);
 
-  ap = (AnchorPoint *) xzalloc (sizeof (AnchorPoint));
+  ap = xzalloc (sizeof (AnchorPoint));
   ap->anchor = class;
   /* All anchor types have the same initial 3 entries, format */
   /*  x,y pos. format 2 contains a truetype positioning point, and */
@@ -943,7 +943,7 @@ gposCursiveSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
       return;
     }
 
-  class = (AnchorClass *) xzalloc (sizeof (AnchorClass));
+  class = xzalloc (sizeof (AnchorClass));
   snprintf (buf, sizeof (buf), _("Cursive-%d"), info->anchor_class_cnt++);
   class->name = xstrdup_or_null (buf);
   subtable->anchor_classes = true;
@@ -990,7 +990,7 @@ MarkGlyphsProcessMarks (FILE *ttf, int markoffset,
   for (i = 0; i < classcnt; ++i)
     {
       snprintf (buf, sizeof (buf), _("Anchor-%d"), info->anchor_class_cnt + i);
-      classes[i] = ac = (AnchorClass *) xzalloc (sizeof (AnchorClass));
+      classes[i] = ac = xzalloc (sizeof (AnchorClass));
       ac->name = xstrdup_or_null (buf);
       subtable->anchor_classes = true;
       ac->subtable = subtable;
@@ -1226,7 +1226,7 @@ gposSimplePos (FILE *ttf, int stoffset, struct ttfinfo *info,
   for (i = 0; glyphs[i] != 0xffff; ++i)
     if (glyphs[i] < info->glyph_cnt && info->chars[glyphs[i]] != NULL)
       {
-        PST *pos = (PST *) xzalloc (sizeof (PST));
+        PST *pos = xzalloc (sizeof (PST));
         pos->type = pst_position;
         pos->subtable = subtable;
         pos->next = info->chars[glyphs[i]]->possub;
@@ -1362,7 +1362,7 @@ g___ContextSubTable1 (FILE *ttf, int stoffset,
     }
   else
     {
-      fpst = (FPST *) xzalloc (sizeof (FPST));
+      fpst = xzalloc (sizeof (FPST));
       fpst->type = gpos ? pst_contextpos : pst_contextsub;
       fpst->format = pst_glyphs;
       fpst->subtable = subtable;
@@ -1552,7 +1552,7 @@ g___ChainingSubTable1 (FILE *ttf, int stoffset,
     }
   else
     {
-      fpst = (FPST *) xzalloc (sizeof (FPST));
+      fpst = xzalloc (sizeof (FPST));
       fpst->type = gpos ? pst_chainpos : pst_chainsub;
       fpst->format = pst_glyphs;
       fpst->subtable = subtable;
@@ -1701,7 +1701,7 @@ g___ContextSubTable2 (FILE *ttf, int stoffset,
     }
   else
     {
-      fpst = (FPST *) xzalloc (sizeof (FPST));
+      fpst = xzalloc (sizeof (FPST));
       fpst->type = gpos ? pst_contextpos : pst_contextsub;
       fpst->format = pst_class;
       fpst->subtable = subtable;
@@ -1892,7 +1892,7 @@ g___ChainingSubTable2 (FILE *ttf, int stoffset,
     }
   else
     {
-      fpst = (FPST *) xzalloc (sizeof (FPST));
+      fpst = xzalloc (sizeof (FPST));
       fpst->type = gpos ? pst_chainpos : pst_chainsub;
       fpst->format = pst_class;
       fpst->subtable = subtable;
@@ -2022,7 +2022,7 @@ g___ContextSubTable3 (FILE *ttf, int stoffset,
     }
   else
     {
-      fpst = (FPST *) xzalloc (sizeof (FPST));
+      fpst = xzalloc (sizeof (FPST));
       fpst->type = gpos ? pst_contextpos : pst_contextsub;
       fpst->format = pst_coverage;
       fpst->subtable = subtable;
@@ -2122,7 +2122,7 @@ g___ChainingSubTable3 (FILE *ttf, int stoffset,
     }
   else
     {
-      fpst = (FPST *) xzalloc (sizeof (FPST));
+      fpst = xzalloc (sizeof (FPST));
       fpst->type = gpos ? pst_chainpos : pst_chainsub;
       fpst->format = pst_coverage;
       fpst->subtable = subtable;
@@ -2344,7 +2344,7 @@ gsubSimpleSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
             if (info->chars[which] != NULL && info->chars[glyphs[i]] != NULL)
               {
                 /* Might be in a ttc file */
-                PST *pos = (PST *) xzalloc (sizeof (PST));
+                PST *pos = xzalloc (sizeof (PST));
                 pos->type = pst_substitution;
                 pos->subtable = subtable;
                 pos->next = info->chars[glyphs[i]]->possub;
@@ -2463,7 +2463,7 @@ gsubMultipleSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
         }
       else if (info->chars[glyphs[i]] != NULL && !bad)
         {
-          alt = (PST *) xzalloc (sizeof (PST));
+          alt = xzalloc (sizeof (PST));
           alt->type =
             l->otlookup->lookup_type ==
             gsub_multiple ? pst_multiple : pst_alternate;
@@ -2633,7 +2633,7 @@ gsubLigatureSubTable (FILE *ttf, int stoffset,
                   err = true;
               if (!err)
                 {
-                  liga = (PST *) xzalloc (sizeof (PST));
+                  liga = xzalloc (sizeof (PST));
                   liga->type = pst_ligature;
                   liga->subtable = subtable;
                   liga->next = info->chars[lig]->possub;
@@ -2760,7 +2760,7 @@ gsubReverseChainSubTable (FILE *ttf, int stoffset,
     }
   else
     {
-      fpst = (FPST *) xzalloc (sizeof (FPST));
+      fpst = xzalloc (sizeof (FPST));
       fpst->type = pst_reversesub;
       fpst->format = pst_reversecoverage;
       fpst->subtable = subtable;
@@ -2933,7 +2933,7 @@ readttffeatnameparameters (FILE *ttf, int32_t pos, uint32_t tag,
       return;
     }
 
-  fn = (struct otffeatname *) xzalloc (sizeof (*fn));
+  fn = xzalloc (sizeof (*fn));
   fn->tag = tag;
   fn->nid = nid;
   fn->next = info->feat_names;
@@ -3156,7 +3156,7 @@ readttflookups (FILE *ttf, int32_t pos, struct ttfinfo *info, int isgpos)
       if (lookups[i].flags & pst_usemarkfilteringset)
         lookups[i].flags |= (getushort (ttf) << 16);
 
-      lookups[i].otlookup = otlookup = (OTLookup *) xzalloc (sizeof (OTLookup));
+      lookups[i].otlookup = otlookup = xzalloc (sizeof (OTLookup));
       otlookup->lookup_index = i;
       if (last == NULL)
         info->cur_lookups = otlookup;
@@ -3753,7 +3753,7 @@ readttfgdef (FILE *ttf, struct ttfinfo *info)
                  pst = pst->next);
             if (pst == NULL)
               {
-                pst = (PST *) xzalloc (sizeof (PST));
+                pst = xzalloc (sizeof (PST));
                 pst->next = sc->possub;
                 sc->possub = pst;
                 pst->type = pst_lcaret;
@@ -3934,7 +3934,7 @@ readttfkerns (FILE *ttf, struct ttfinfo *info)
       otl = NULL;
       if (flags_good)
         {
-          otl = (OTLookup *) xzalloc (sizeof (OTLookup));
+          otl = xzalloc (sizeof (OTLookup));
           otl->lookup_type = gpos_pair;
           otl->subtables =
             (struct lookup_subtable *)
@@ -3943,7 +3943,7 @@ readttfkerns (FILE *ttf, struct ttfinfo *info)
           otl->subtables->per_glyph_pst_or_kern = true;
           otl->subtables->vertical_kerning = isv;
           otl->features =
-            (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+            xzalloc (sizeof (FeatureScriptLangList));
           if (isv)
             otl->features->featuretag = CHR ('v', 'k', 'r', 'n');
           else
@@ -3994,7 +3994,7 @@ readttfkerns (FILE *ttf, struct ttfinfo *info)
                 }
               else
                 {
-                  kp = (KernPair *) xzalloc (sizeof (KernPair));
+                  kp = xzalloc (sizeof (KernPair));
                   kp->sc = info->chars[right];
                   kp->off = offset;
                   kp->subtable = otl->subtables;
@@ -4031,9 +4031,9 @@ readttfkerns (FILE *ttf, struct ttfinfo *info)
               klast = &info->klast;
             }
           if (*khead == NULL)
-            *khead = kc = (KernClass *) xzalloc (sizeof (KernClass));
+            *khead = kc = xzalloc (sizeof (KernClass));
           else
-            kc = (*klast)->next = (KernClass *) xzalloc (sizeof (KernClass));
+            kc = xzalloc (sizeof (KernClass));
           *klast = kc;
           if (format == 2)
             {
@@ -4163,7 +4163,7 @@ ttf_math_read_constants (FILE *ttf, struct ttfinfo *info, uint32_t start)
           off = getushort (ttf);
           if (off != 0)
             {
-              *devtab = (DeviceTable *) xzalloc (sizeof (DeviceTable));
+              *devtab = xzalloc (sizeof (DeviceTable));
               ReadDeviceTable (ttf, *devtab, start + off, info);
             }
         }
@@ -4196,7 +4196,7 @@ ttf_math_read_icta (FILE *ttf, struct ttfinfo *info, uint32_t start, int is_ic)
             info->chars[glyphs[i]]->top_accent_horiz = val;
           if (offset != 0)
             {
-              DeviceTable *dv = (DeviceTable *) xzalloc (sizeof (DeviceTable));
+              DeviceTable *dv = xzalloc (sizeof (DeviceTable));
               ReadDeviceTable (ttf, dv, start + offset, info);
               if (is_ic)
                 info->chars[glyphs[i]]->italic_adjusts = dv;
@@ -4255,14 +4255,14 @@ ttf_math_read_mathkernv (FILE *ttf, uint32_t start, struct mathkernvertex *mkv,
         {
           offset = start + (intptr_t) mkv->mkd[i].height_adjusts;
           mkv->mkd[i].height_adjusts = dv =
-            (DeviceTable *) xzalloc (sizeof (DeviceTable));
+            xzalloc (sizeof (DeviceTable));
           ReadDeviceTable (ttf, dv, offset, info);
         }
       if (mkv->mkd[i].kern_adjusts != NULL)
         {
           offset = start + (intptr_t) mkv->mkd[i].kern_adjusts;
           mkv->mkd[i].kern_adjusts = dv =
-            (DeviceTable *) xzalloc (sizeof (DeviceTable));
+            xzalloc (sizeof (DeviceTable));
           ReadDeviceTable (ttf, dv, offset, info);
         }
     }
@@ -4316,7 +4316,7 @@ ttf_math_read_mathkern (FILE *ttf, struct ttfinfo *info, uint32_t start)
     if (glyphs[i] < info->glyph_cnt && info->chars[glyphs[i]] != NULL)
       {
         SplineChar *sc = info->chars[glyphs[i]];
-        sc->mathkern = (struct mathkern *) xzalloc (sizeof (struct mathkern));
+        sc->mathkern = xzalloc (sizeof (struct mathkern));
         if (koff[i].tr != 0)
           ttf_math_read_mathkernv (ttf, start + koff[i].tr,
                                    &sc->mathkern->top_right, sc, true, info);
@@ -4362,7 +4362,7 @@ ttf_math_read_gvtable (FILE *ttf, struct ttfinfo *info, uint32_t start,
                        int isv)
 {
   struct glyphvariants *gv =
-    (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+    xzalloc (sizeof (struct glyphvariants));
   int ga_offset;
   int vcnt;
   uint16_t *glyphs;
@@ -4501,7 +4501,7 @@ ttf_math_read_gvtable (FILE *ttf, struct ttfinfo *info, uint32_t start,
       gv->part_cnt = j;
       if (ic_offset != 0 && justinuse == git_normal)
         {
-          gv->italic_adjusts = (DeviceTable *) xzalloc (sizeof (DeviceTable));
+          gv->italic_adjusts = xzalloc (sizeof (DeviceTable));
           ReadDeviceTable (ttf, gv->italic_adjusts, start + ic_offset, info);
         }
     }
@@ -4645,7 +4645,7 @@ readttfbaseminmax (FILE *ttf, uint32_t offset, struct ttfinfo *info,
   struct baselangextent *lang, *cur, *last;
 
   fseek (ttf, offset, SEEK_SET);
-  lang = (struct baselangextent *) xzalloc (sizeof (struct baselangextent));
+  lang = xzalloc (sizeof (struct baselangextent));
   lang->lang = lang_tag;
   lang->descent = (short) getushort (ttf);
   lang->ascent = (short) getushort (ttf);
@@ -4654,7 +4654,7 @@ readttfbaseminmax (FILE *ttf, uint32_t offset, struct ttfinfo *info,
   last = NULL;
   for (j = 0; j < feat_cnt; ++j)
     {
-      cur = (struct baselangextent *) xzalloc (sizeof (struct baselangextent));
+      cur = xzalloc (sizeof (struct baselangextent));
       if (last == NULL)
         lang->features = cur;
       else
@@ -4699,7 +4699,7 @@ readttfbase (FILE *ttf, struct ttfinfo *info)
       if (axes[axis] == 0)
         continue;
       fseek (ttf, info->base_start + axes[axis], SEEK_SET);
-      curBase = (struct Base *) xzalloc (sizeof (struct Base));
+      curBase = xzalloc (sizeof (struct Base));
       if (axis == 0)
         info->horiz_base = curBase;
       else
@@ -4750,7 +4750,7 @@ readttfbase (FILE *ttf, struct ttfinfo *info)
                     ls[j].offset = getushort (ttf);
                   }
                 curScript =
-                  (struct basescript *) xzalloc (sizeof (struct basescript));
+                  xzalloc (sizeof (struct basescript));
                 if (last == NULL)
                   curBase->scripts = curScript;
                 else
@@ -5085,7 +5085,7 @@ jstf_lang (FILE *ttf, uint32_t base,
   if (cnt == 0)
     return NULL;
 
-  ret = (struct jstf_lang *) xzalloc (sizeof (struct jstf_lang));
+  ret = xzalloc (sizeof (struct jstf_lang));
   ret->lang = info->jstf_lang = tag;
   ret->cnt = cnt;
   ret->prios = xcalloc (cnt, sizeof (struct jstf_prio));
@@ -5207,7 +5207,7 @@ readttfjstf (FILE *ttf, struct ttfinfo *info)
             }
         }
 
-      cur = (Justify *) xzalloc (sizeof (Justify));
+      cur = xzalloc (sizeof (Justify));
       cur->script = info->jstf_script = soff[i].tag;
       if (last == NULL)
         info->justify = cur;

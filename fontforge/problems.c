@@ -7312,7 +7312,7 @@ SFValidationWindow (SplineFont *sf, int layer, enum fontformat format)
         }
     }
 
-  valwin = (struct val_data *) xzalloc (sizeof (struct val_data));
+  valwin = xzalloc (sizeof (struct val_data));
   valwin->sf = sf;
   valwin->mask = mask;
   valwin->needs_blue = needs_blue;

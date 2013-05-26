@@ -1102,7 +1102,7 @@ AltUniAdd (SplineChar *sc, int uni)
            altuni = altuni->next);
       if (altuni == NULL)
         {
-          altuni = (struct altuni *) xzalloc (sizeof (struct altuni));
+          altuni = xzalloc (sizeof (struct altuni));
           altuni->next = sc->altuni;
           sc->altuni = altuni;
           altuni->unienc = uni;
@@ -1119,7 +1119,7 @@ AltUniAdd_DontCheckDups (SplineChar *sc, int uni)
 
   if (sc != NULL && uni != -1 && uni != sc->unicodeenc)
     {
-      altuni = (struct altuni *) xzalloc (sizeof (struct altuni));
+      altuni = xzalloc (sizeof (struct altuni));
       altuni->next = sc->altuni;
       sc->altuni = altuni;
       altuni->unienc = uni;
@@ -2367,7 +2367,7 @@ UnitCircle (int clockwise)
   SplinePoint *sps[5];
   int i;
 
-  spl = (SplineSet *) xzalloc (sizeof (SplineSet));
+  spl = xzalloc (sizeof (SplineSet));
   for (i = 0; i < 4; ++i)
     sps[i] = CirclePoint (i & 3);
   sps[4] = sps[0];
@@ -2542,7 +2542,7 @@ EllipseClockwise (SplinePoint *sp1, SplinePoint *sp2, BasePoint *slope1,
   e2->prevcp.x = e2->me.x - len * slope2->x;
   e2->prevcp.y = e2->me.y - len * slope2->y;
   SplineMake3 (e1, e2);
-  ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+  ss = xzalloc (sizeof (SplineSet));
   ss->first = ss->last = e1;
   ret = SplinePointListIsClockwise (ss);
   SplinePointListFree (ss);

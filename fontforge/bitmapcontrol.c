@@ -70,7 +70,7 @@ RemoveBDFWindows (BDFFont *bdf)
 static BDFFont *
 BDFNew (SplineFont *sf, int pixel_size, int depth)
 {
-  BDFFont *new = (BDFFont *) xzalloc (sizeof (BDFFont));
+  BDFFont *new = xzalloc (sizeof (BDFFont));
   int linear_scale = 1 << (depth / 2);
 
   new->sf = sf;

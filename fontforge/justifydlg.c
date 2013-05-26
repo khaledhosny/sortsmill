@@ -775,7 +775,7 @@ JSTF_Language_OK (GGadget *g, GEvent *e)
                   (strings[j * cols + 0].u.md_str,
                    strings[i * cols + 0].u.md_str) == 0)
                 ++cnt;
-            cur = (struct jstf_lang *) xzalloc (sizeof (struct jstf_lang));
+            cur = xzalloc (sizeof (struct jstf_lang));
             if (head == NULL)
               head = cur;
             else
@@ -1030,7 +1030,7 @@ JSTF_Script_OK (GGadget *g, GEvent *e)
 
       for (i = 0; i < rows; ++i)
         {
-          cur = (Justify *) xzalloc (sizeof (Justify));
+          cur = xzalloc (sizeof (Justify));
           cur->script = Str2Tag (strings[cols * i + 0].u.md_str);
           cur->extenders = xstrdup_or_null (strings[cols * i + 1].u.md_str);
           cur->langs = strings[cols * i + 3].u.md_addr;

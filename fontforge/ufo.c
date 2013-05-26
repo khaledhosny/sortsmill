@@ -1252,7 +1252,7 @@ GlifParseHints (xmlDocPtr doc, xmlNodePtr dict, char *hinttype)
                             }
                           if (pos != -88888888 && width != 0)
                             {
-                              h = (StemInfo *) xzalloc (sizeof (StemInfo));
+                              h = xzalloc (sizeof (StemInfo));
                               h->start = pos;
                               h->width = width;
                               if (width == -20 || width == -21)
@@ -1391,7 +1391,7 @@ _UFOLoadGlyph (xmlDocPtr doc, char *glifname)
                   BasePoint pre[2], init[4];
                   int precnt = 0, initcnt = 0, open = 0;
 
-                  ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+                  ss = xzalloc (sizeof (SplineSet));
                   for (points = contour->children; points != NULL;
                        points = points->next)
                     {
@@ -1819,7 +1819,7 @@ UFOHandleKern (SplineFont *sf, char *basedir, int isv)
                   offset = strtol (valname, &end, 10);
                   if (*end == '\0')
                     {
-                      kp = (KernPair *) xzalloc (sizeof (KernPair));
+                      kp = xzalloc (sizeof (KernPair));
                       kp->off = offset;
                       kp->sc = ssc;
                       if (isv)
@@ -1862,7 +1862,7 @@ UFOAddName (SplineFont *sf, char *value, int strid)
        names = names->next);
   if (names == NULL)
     {
-      names = (struct ttflangname *) xzalloc (sizeof (struct ttflangname));
+      names = xzalloc (sizeof (struct ttflangname));
       names->next = sf->names;
       names->lang = 0x409;
       sf->names = names;
@@ -1876,7 +1876,7 @@ UFOAddPrivate (SplineFont *sf, char *key, char *value)
   char *pt;
 
   if (sf->private == NULL)
-    sf->private = (struct psdict *) xzalloc (sizeof (struct psdict));
+    sf->private = xzalloc (sizeof (struct psdict));
   for (pt = value; *pt != '\0'; ++pt)
     {                           /* Value might contain white space. turn into spaces */
       if (*pt == '\n' || *pt == '\r' || *pt == '\t')

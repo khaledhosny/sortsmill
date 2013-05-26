@@ -1454,7 +1454,7 @@ MV_ChangeKerning (MetricsView *mv, int which, int offset, int is_diff)
         {
           if (kp == NULL)
             {
-              kp = (KernPair *) xzalloc (sizeof (KernPair));
+              kp = xzalloc (sizeof (KernPair));
               kp->sc = sc;
               if (!mv->vertical)
                 {

@@ -1962,7 +1962,7 @@ TTFAddLangStr (FILE *ttf, struct ttfinfo *info, int id,
        prev = cur, cur = cur->next);
   if (cur == NULL)
     {
-      cur = (struct ttflangname *) xzalloc (sizeof (struct ttflangname));
+      cur = xzalloc (sizeof (struct ttflangname));
       cur->lang = language;
       if (prev == NULL)
         info->names = cur;
@@ -2122,7 +2122,7 @@ FindAllLangEntries (FILE *ttf, struct ttfinfo *info, int id)
                                 specific, language);
               if (temp != NULL)
                 {
-                  cur = (struct otfname *) xzalloc (sizeof (struct otfname));
+                  cur = xzalloc (sizeof (struct otfname));
                   cur->next = head;
                   head = cur;
                   cur->lang = language;
@@ -2283,7 +2283,7 @@ ttfbuildcontours (int path_cnt, uint16_t *endpt, char *flags,
     {
       if (endpt[path] < i)      /* Sigh. Yes there are fonts with bad endpt info */
         continue;
-      cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+      cur = xzalloc (sizeof (SplineSet));
       if (head == NULL)
         head = cur;
       else
@@ -2296,7 +2296,7 @@ ttfbuildcontours (int path_cnt, uint16_t *endpt, char *flags,
         {
           if (flags[i] & _On_Curve)
             {
-              sp = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+              sp = xzalloc (sizeof (SplinePoint));
               sp->me = sp->nextcp = sp->prevcp = pts[i];
               sp->nonextcp = sp->noprevcp = true;
               sp->ttfindex = i;
@@ -2309,7 +2309,7 @@ ttfbuildcontours (int path_cnt, uint16_t *endpt, char *flags,
             {
               /* two off curve points get a third on curve point created */
               /* half-way between them. Now isn't that special */
-              sp = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+              sp = xzalloc (sizeof (SplinePoint));
               sp->me.x = (pts[i].x + pts[i - 1].x) / 2;
               sp->me.y = (pts[i].y + pts[i - 1].y) / 2;
               sp->nextcp = sp->prevcp = sp->me;
@@ -2344,7 +2344,7 @@ ttfbuildcontours (int path_cnt, uint16_t *endpt, char *flags,
           /* Oh. I see. It's used to possition marks and such */
           if (cur->first == NULL)
             {
-              sp = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+              sp = xzalloc (sizeof (SplinePoint));
               sp->me.x = pts[start].x;
               sp->me.y = pts[start].y;
               sp->nextcp = sp->prevcp = sp->me;
@@ -2356,7 +2356,7 @@ ttfbuildcontours (int path_cnt, uint16_t *endpt, char *flags,
         }
       else if (!(flags[start] & _On_Curve) && !(flags[i - 1] & _On_Curve))
         {
-          sp = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+          sp = xzalloc (sizeof (SplinePoint));
           sp->me.x = (pts[start].x + pts[i - 1].x) / 2;
           sp->me.y = (pts[start].y + pts[i - 1].y) / 2;
           sp->nextcp = sp->prevcp = sp->me;
@@ -5304,7 +5304,7 @@ ApplyVariationSequenceSubtable (FILE *ttf, uint32_t vs_map,
                   else
                     {
                       altuni =
-                        (struct altuni *) xzalloc (sizeof (struct altuni));
+                        xzalloc (sizeof (struct altuni));
                       altuni->unienc = uni;
                       altuni->vs = vs_data[i].vs;
                       altuni->fid = 0;
@@ -5351,7 +5351,7 @@ ApplyVariationSequenceSubtable (FILE *ttf, uint32_t vs_map,
                     {
                       SplineChar *sc = info->chars[curgid];
                       struct altuni *altuni =
-                        (struct altuni *) xzalloc (sizeof (struct altuni));
+                        xzalloc (sizeof (struct altuni));
                       altuni->unienc = uni;
                       altuni->vs = vs_data[i].vs;
                       altuni->fid = 0;
@@ -6717,7 +6717,7 @@ TtfCopyTableBlindly (struct ttfinfo *info, FILE *ttf,
       return;
     }
 
-  tab = (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
+  tab = xzalloc (sizeof (struct ttf_table));
   tab->tag = tag;
   tab->len = len;
   tab->data = xmalloc (len);

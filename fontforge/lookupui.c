@@ -1875,7 +1875,7 @@ LK_ParseFL (struct matrix_data *strings, int rows)
   fhead = flast = NULL;
   for (i = 0; i < rows; ++i)
     {
-      fl = (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
+      fl = xzalloc (sizeof (FeatureScriptLangList));
       memset (foo, ' ', sizeof (foo));
       for (j = 0, pt = strings[2 * i + 0].u.md_str; j < 4 && *pt;
            foo[j++] = *pt++);
@@ -1893,7 +1893,7 @@ LK_ParseFL (struct matrix_data *strings, int rows)
           for (j = 0, pt = start; *pt != '{' && *pt != '\0'; ++pt)
             foo[j++] = *pt;
           sl =
-            (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+            xzalloc (sizeof (struct scriptlanglist));
           sl->script = (foo[0] << 24) | (foo[1] << 16) | (foo[2] << 8) | foo[3];
           if (slast == NULL)
             fl->scripts = sl;
@@ -2861,7 +2861,7 @@ CreateAndSortNewLookupOfType (SplineFont *sf, int lookup_type)
   OTLookup *newotl;
   int isgpos = lookup_type >= gpos_start;
 
-  newotl = (OTLookup *) xzalloc (sizeof (OTLookup));
+  newotl = xzalloc (sizeof (OTLookup));
   newotl->lookup_type = lookup_type;
   if (!EditLookup (newotl, isgpos, sf))
     {
@@ -2931,7 +2931,7 @@ SFAddAnchorClass (SplineFont *sf, struct lookup_subtable *sub, char *name)
   assert (sub != NULL);
   assert (name != NULL);
 
-  AnchorClass *ac = (AnchorClass *) xzalloc (sizeof (AnchorClass));
+  AnchorClass *ac = xzalloc (sizeof (AnchorClass));
   ac->name = xstrdup (name);
   ac->subtable = sub;
   ac->next = sf->anchor;
@@ -5127,7 +5127,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
                 }
               if (pst == NULL)
                 {
-                  pst = (PST *) xzalloc (sizeof (PST));
+                  pst = xzalloc (sizeof (PST));
                   pst->type = _t;
                   pst->subtable = pstkd->sub;
                   pst->next = sc->possub;
@@ -6274,7 +6274,7 @@ NewSubtable (OTLookup *otl, int isgpos, SplineFont *sf,
   struct lookup_subtable *sub, *last;
   int i, j;
 
-  sub = (struct lookup_subtable *) xzalloc (sizeof (struct lookup_subtable));
+  sub = xzalloc (sizeof (struct lookup_subtable));
   sub->lookup = otl;
   sub->separation = 15 * (sf->ascent + sf->descent) / 100;
   sub->minkern = sub->separation / 10;
@@ -7212,7 +7212,7 @@ _LookupSubtableContents (SplineFont *sf, struct lookup_subtable *sub,
        || lookup_type == gsub_reversecchain || lookup_type == gpos_context
        || lookup_type == gpos_contextchain) && sub->fpst == NULL)
     {
-      sub->fpst = (FPST *) xzalloc (sizeof (FPST));
+      sub->fpst = xzalloc (sizeof (FPST));
       sub->fpst->type =
         lookup_type == gsub_context ? pst_contextsub : lookup_type ==
         gsub_contextchain ? pst_chainsub : lookup_type ==
@@ -7287,7 +7287,7 @@ _LookupSubtableContents (SplineFont *sf, struct lookup_subtable *sub,
         }
       else
         {
-          sub->kc = (KernClass *) xzalloc (sizeof (KernClass));
+          sub->kc = xzalloc (sizeof (KernClass));
           if (sub->vertical_kerning)
             {
               sub->kc->next = sf->vkerns;
@@ -7856,7 +7856,7 @@ MRD_OK (GGadget *g, GEvent *e)
                      pst != NULL && pst->subtable != sub; pst = pst->next);
                 if (pst == NULL)
                   {
-                    pst = (PST *) xzalloc (sizeof (PST));
+                    pst = xzalloc (sizeof (PST));
                     pst->next = sourcesc->possub;
                     sourcesc->possub = pst;
                     pst->subtable = sub;

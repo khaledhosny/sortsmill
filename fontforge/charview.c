@@ -6224,7 +6224,7 @@ CVAddGuide (CharView *cv, int is_v, int guide_pos)
       sp2 = SplinePointCreate (2 * emsize, y);
     }
   SplineMake (sp1, sp2, sf->grid.order2);
-  ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+  ss = xzalloc (sizeof (SplineSet));
   ss->first = sp1;
   ss->last = sp2;
   ss->next = sf->grid.splines;
@@ -11310,7 +11310,7 @@ CVMenuAddHint (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     {
       if (bp[0]->y == bp[1]->y)
         return;
-      h = (StemInfo *) xzalloc (sizeof (StemInfo));
+      h = xzalloc (sizeof (StemInfo));
       if (bp[1]->y > bp[0]->y)
         {
           h->start = bp[0]->y;
@@ -11328,7 +11328,7 @@ CVMenuAddHint (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     {
       if (bp[0]->x == bp[1]->x)
         return;
-      h = (StemInfo *) xzalloc (sizeof (StemInfo));
+      h = xzalloc (sizeof (StemInfo));
       if (bp[1]->x > bp[0]->x)
         {
           h->start = bp[0]->x;
@@ -11348,7 +11348,7 @@ CVMenuAddHint (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         return;
       /* No additional tests, as the points should have already been */
       /* reordered by PointsDiagonalable */
-      d = (DStemInfo *) xzalloc (sizeof (DStemInfo));
+      d = xzalloc (sizeof (DStemInfo));
       d->where = NULL;
       d->left = *bp[0];
       d->right = *bp[1];

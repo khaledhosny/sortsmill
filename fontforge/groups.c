@@ -70,7 +70,7 @@ Group *GroupCopy(Group *g) {
     if ( g==NULL )
 return( NULL );
 
-    gp = (Group *) xzalloc(sizeof (Group));
+    gp = xzalloc(sizeof (Group));
     gp->name = xstrdup_or_null(g->name);
     gp->glyphs = xstrdup_or_null(g->glyphs);
     if ( g->kid_cnt!=0 ) {
@@ -203,7 +203,7 @@ return( NULL );
     n = loadString(file,gc);
     if ( n==NULL )
 return( NULL );
-    g = (Group *) xzalloc(sizeof (Group));
+    g = xzalloc(sizeof (Group));
     g->parent = parent;
     g->name = n;
     if ( (ch = getc(file))==':' )

@@ -86,7 +86,7 @@ return;
 		    4*sizeof(real));
 	    sc->layers[pos].splines = e->u.splines.splines;
 	} else if ( e->type == et_image ) {
-	    ImageList *ilist = (ImageList *) xzalloc(sizeof (ImageList));
+	    ImageList *ilist = xzalloc(sizeof (ImageList));
 	    struct _GImage *base = e->u.image.image->list_len==0?
 		    e->u.image.image->u.image:e->u.image.image->u.images[0];
 	    sc->layers[pos].images = ilist;
@@ -449,7 +449,7 @@ static SplineSet * slurparc(FILE *fig,SplineChar *sc, SplineSet *sofar) {
     sa = atan2(sy-cy,sx-cx);
     ea = atan2(ey-cy,ex-cx);
 
-    spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
+    spl = xzalloc(sizeof (SplinePointList));
     spl->next = sofar;
     spl->first = sp = SplinePointCreate(sx,sy);
     spl->last = ep = SplinePointCreate(ex,ey);
@@ -497,24 +497,24 @@ static SplineSet * slurpelipse(FILE *fig,SplineChar *sc, SplineSet *sofar) {
     dcx = cx*scale; dcy = (ascent-cy)*scale;
     drx = rx*scale; dry = ry*scale;
 
-    spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
+    spl = xzalloc(sizeof (SplinePointList));
     spl->next = sofar;
-    spl->first = sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
+    spl->first = sp = xzalloc(sizeof (SplinePoint));
     sp->me.x = dcx; sp->me.y = dcy+dry;
 	sp->nextcp.x = sp->me.x + .552*drx; sp->nextcp.y = sp->me.y;
 	sp->prevcp.x = sp->me.x - .552*drx; sp->prevcp.y = sp->me.y;
-    spl->last = sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
+    spl->last = sp = xzalloc(sizeof (SplinePoint));
     sp->me.x = dcx+drx; sp->me.y = dcy;
 	sp->nextcp.x = sp->me.x; sp->nextcp.y = sp->me.y - .552*dry;
 	sp->prevcp.x = sp->me.x; sp->prevcp.y = sp->me.y + .552*dry;
     SplineMake3(spl->first,sp);
-    sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
+    sp = xzalloc(sizeof (SplinePoint));
     sp->me.x = dcx; sp->me.y = dcy-dry;
 	sp->nextcp.x = sp->me.x - .552*drx; sp->nextcp.y = sp->me.y;
 	sp->prevcp.x = sp->me.x + .552*drx; sp->prevcp.y = sp->me.y;
     SplineMake3(spl->last,sp);
     spl->last = sp;
-    sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
+    sp = xzalloc(sizeof (SplinePoint));
     sp->me.x = dcx-drx; sp->me.y = dcy;
 	sp->nextcp.x = sp->me.x; sp->nextcp.y = sp->me.y + .552*dry;
 	sp->prevcp.x = sp->me.x; sp->prevcp.y = sp->me.y - .552*dry;
@@ -548,7 +548,7 @@ static SplineSet * slurppolyline(FILE *fig,SplineChar *sc, SplineSet *sofar) {
     else {
 	if ( sub!=1 && bps[cnt-1].x==bps[0].x && bps[cnt-1].y==bps[0].y )
 	    --cnt;
-	spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
+	spl = xzalloc(sizeof (SplinePointList));
 	if ( cnt==4 && sub==4/*arc-box*/ && radius!=0 ) {
 	    SplineFont *sf = sc->parent;
 	    real scale = sf->ascent/(8.5*80.0), r = radius*scale;	/* radii are scaled differently */
@@ -591,7 +591,7 @@ static SplineSet * slurppolyline(FILE *fig,SplineChar *sc, SplineSet *sofar) {
 	    SplineMake3(spl->last,sp); spl->last = sp;
 	} else {
 	    for ( i=0; i<cnt; ++i ) {
-		sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
+		sp = xzalloc(sizeof (SplinePoint));
 		sp->me = sp->nextcp = sp->prevcp = bps[i];
 		sp->nonextcp = sp->noprevcp = true;
 		sp->pointtype = pt_corner;
@@ -723,17 +723,17 @@ static SplineSet *ApproximateXSpline(struct xspline *xs,int order2) {
     int i, j;
     real t;
     TPoint mids[7];
-    SplineSet *spl = (SplineSet *) xzalloc(sizeof (SplineSet));
+    SplineSet *spl = xzalloc(sizeof (SplineSet));
     SplinePoint *sp;
 
-    spl->first = spl->last = (SplinePoint *) xzalloc(sizeof (SplinePoint));
+    spl->first = spl->last = xzalloc(sizeof (SplinePoint));
     xsplineeval(&spl->first->me,0,xs);
     spl->first->pointtype = ( xs->s[0]==0 )?pt_corner:pt_curve;
     for ( i=0; i<xs->n-1; ++i ) {
 	if ( i==xs->n-2 && xs->closed )
 	    sp = spl->first;
 	else {
-	    sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
+	    sp = xzalloc(sizeof (SplinePoint));
 	    sp->pointtype = ( xs->s[i+1]==0 )?pt_corner:pt_curve;
 	    xsplineeval(&sp->me,i+1,xs);
 	}

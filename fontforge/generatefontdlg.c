@@ -1790,7 +1790,7 @@ DoGenerate (struct gfc_data *d, uint32_t *path)
 
   if (d->family)
     {
-      cur = (struct sflist *) xzalloc (sizeof (struct sflist));
+      cur = xzalloc (sizeof (struct sflist));
       cur->next = NULL;
       sfs = last = cur;
       cur->sf = d->sf;
@@ -1801,7 +1801,7 @@ DoGenerate (struct gfc_data *d, uint32_t *path)
           if (GGadgetIsChecked
               (GWidgetGetControl (d->gw, CID_Family + 10 * i)))
             {
-              cur = (struct sflist *) xzalloc (sizeof (struct sflist));
+              cur = xzalloc (sizeof (struct sflist));
               last->next = cur;
               last = cur;
               cur->sf =

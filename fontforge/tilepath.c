@@ -438,7 +438,7 @@ SplinePointListTruncateAtY (SplineSet *spl, real y)
               else
                 {
                   /* Split into two splinesets and remove all between */
-                  ns = (SplineSet *) xzalloc (sizeof (SplineSet));
+                  ns = xzalloc (sizeof (SplineSet));
                   ns->first = next->from;
                   ns->last = spl->last;
                   spl->last = spline->from;
@@ -797,7 +797,7 @@ TDMakePoint (TD * td, Spline *old, real t)
   SplinePoint *new;
 
   AdjustPoint (td, old, t, &tp);
-  new = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+  new = xzalloc (sizeof (SplinePoint));
   new->me.x = tp.x;
   new->me.y = tp.y;
   new->nextcp = new->me;
@@ -836,7 +836,7 @@ AdjustSplineSet (TD * td, int order2)
 
   for (spl = td->tileset; spl != NULL; spl = spl->next)
     {
-      new = (SplineSet *) xzalloc (sizeof (SplineSet));
+      new = xzalloc (sizeof (SplineSet));
       if (last == NULL)
         td->result = new;
       else
@@ -1985,14 +1985,14 @@ PTD_RefigureBackground (GGadget *g, GEvent *e)
       sp1 = SplinePointCreate (-1000, vsize);
       sp2 = SplinePointCreate (2000, vsize);
       SplineMake (sp1, sp2, ptd->sc_first.layers[ly_back].order2);
-      ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+      ss = xzalloc (sizeof (SplineSet));
       ss->first = sp1;
       ss->last = sp2;
       ptd->sc_first.layers[ly_back].splines = ss;
       sp1 = SplinePointCreate (hsize, -1000);
       sp2 = SplinePointCreate (hsize, 2000);
       SplineMake (sp1, sp2, ptd->sc_first.layers[ly_back].order2);
-      ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+      ss = xzalloc (sizeof (SplineSet));
       ss->first = sp1;
       ss->last = sp2;
       ptd->sc_first.layers[ly_back].splines->next = ss;

@@ -1509,7 +1509,7 @@ SVGPickFont (xmlNodePtr * fonts, char *filename)
         }
       else
         {
-          names[cnt] = xstrdup_or_null ((char *) name);
+          names[cnt] = xstrdup_or_null (name);
           xmlFree (name);
         }
     }
@@ -1829,7 +1829,7 @@ SVGParsePath (xmlChar *path)
             }
           sp = SplinePointCreate (x, y);
           current = sp->me;
-          cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+          cur = xzalloc (sizeof (SplineSet));
           if (head == NULL)
             head = cur;
           else
@@ -1868,7 +1868,7 @@ SVGParsePath (xmlChar *path)
           if (cur == NULL)
             {
               sp = SplinePointCreate (current.x, current.y);
-              cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+              cur = xzalloc (sizeof (SplineSet));
               if (head == NULL)
                 head = cur;
               else
@@ -2281,7 +2281,7 @@ SVGParseRect (xmlNodePtr rect)
   if (2 * ry > height)
     ry = height / 2;
 
-  cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+  cur = xzalloc (sizeof (SplineSet));
   if (rx == 0)
     {
       cur->first = SplinePointCreate (x, y + height);
@@ -2404,7 +2404,7 @@ SVGParseLine (xmlNodePtr line)
   sp1 = SplinePointCreate (x, y);
   sp2 = SplinePointCreate (x2, y2);
   SplineMake (sp1, sp2, false);
-  cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+  cur = xzalloc (sizeof (SplineSet));
   cur->first = sp1;
   cur->last = sp2;
   return (cur);
@@ -2525,7 +2525,7 @@ SVGParsePoly (xmlNodePtr poly, int isgon)
   while (isspace (*end))
     ++end;
 
-  cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+  cur = xzalloc (sizeof (SplineSet));
   cur->first = cur->last = SplinePointCreate (x, y);
   while (*end)
     {
@@ -2779,8 +2779,7 @@ xmlParseColorSource (xmlNodePtr top, char *name, DBounds *bbox,
          xmlStrcmp (colour_source->name, "linearGradient") == 0)
         || xmlStrcmp (colour_source->name, "radialGradient") == 0)
     {
-      struct gradient *grad =
-        (struct gradient *) xzalloc (sizeof (struct gradient));
+      struct gradient *grad = xzalloc (sizeof (struct gradient));
       int bbox_units;
       *_grad = grad;
 
@@ -3332,7 +3331,7 @@ SVGParseImage (xmlNodePtr svg)
     return (NULL);
   base = img->list_len == 0 ? img->u.image : img->u.images[0];
 
-  ent = (Entity *) xzalloc (sizeof (Entity));
+  ent = xzalloc (sizeof (Entity));
   ent->type = et_image;
   ent->u.image.image = img;
   ent->u.image.transform[1] = ent->u.image.transform[2] = 0;
@@ -3963,8 +3962,7 @@ SVGLigatureFixupCheck (SplineChar *sc, xmlNodePtr glyph)
           /* Probably a variant glyph marked with a variation selector */
           /* ... not a true ligature at all */
           /* http://babelstone.blogspot.com/2007/06/secret-life-of-variation-selectors.html */
-          struct altuni *altuni =
-            (struct altuni *) xzalloc (sizeof (struct altuni));
+          struct altuni *altuni = xzalloc (sizeof (struct altuni));
           altuni->unienc = u[0];
           altuni->vs = u[1];
           altuni->fid = 0;
@@ -4190,7 +4188,7 @@ SVGParseKern (SplineFont *sf, xmlNodePtr kern, int isv)
             sc2 = SFGetChar (sf, -1, pt2);
             if (sc2 != NULL)
               {
-                KernPair *kp = (KernPair *) xzalloc (sizeof (KernPair));
+                KernPair *kp = xzalloc (sizeof (KernPair));
                 kp->sc = sc2;
                 kp->off = off;
                 if (isv)
@@ -4531,7 +4529,7 @@ SVGParseFont (xmlNodePtr font)
         }
     }
 
-  map = (EncMap *) xzalloc (sizeof (EncMap));
+  map = xzalloc (sizeof (EncMap));
   map->enc_limit = sf->glyphcnt;
   map->enc = FindOrMakeEncoding ("Original");
   make_enc_to_gid (map);

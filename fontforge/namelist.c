@@ -683,7 +683,7 @@ LoadNamelist (char *filename)
   if (!psnamesinited)
     psinitnames ();
 
-  nl = (NameList *) xzalloc (sizeof (NameList));
+  nl = xzalloc (sizeof (NameList));
   pt = strrchr (filename, '/');
   if (pt == NULL)
     pt = filename;

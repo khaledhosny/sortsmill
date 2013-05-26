@@ -224,13 +224,13 @@ static FeatureScriptLangList *FeaturesFromTagSli(uint32_t tag,int sli,SplineFont
     struct scriptlanglist *cur, *last;
     int i;
 
-    fl = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
+    fl = xzalloc(sizeof (FeatureScriptLangList));
     fl->featuretag = tag;
     if ( sli==SLI_NESTED || sli<0 || sli>=sf->sli_cnt )
 return( fl );
     last = NULL;
     for ( sr = sf->script_lang[sli]; sr->script!=0; ++sr ) {
-	cur = (struct scriptlanglist *) xzalloc(sizeof (struct scriptlanglist));
+	cur = xzalloc(sizeof (struct scriptlanglist));
 	cur->script = sr->script;
 	for ( i=0; sr->langs[i]!=0; ++i );
 	cur->lang_cnt = i;
@@ -253,7 +253,7 @@ return( fl );
 
 static OTLookup *CreateLookup(SplineFont1 *sf,uint32_t tag, int sli,
 	int flags,enum possub_type type) {
-    OTLookup *otl = (OTLookup *) xzalloc(sizeof (OTLookup));
+    OTLookup *otl = xzalloc(sizeof (OTLookup));
 
     otl->lookup_type =
 	    type == pst_position ? gpos_single :
@@ -285,7 +285,7 @@ return( otl );
 }
 
 static OTLookup *CreateACLookup(SplineFont1 *sf, AnchorClass1 *ac) {
-    OTLookup *otl = (OTLookup *) xzalloc(sizeof (OTLookup));
+    OTLookup *otl = xzalloc(sizeof (OTLookup));
 
     otl->lookup_type =
       ((ac->type == ac1t_mark) ? gpos_mark2base :
@@ -309,7 +309,7 @@ return( otl );
 static struct lookup_subtable *CreateSubtable(OTLookup *otl,SplineFont1 *sf) {
     struct lookup_subtable *cur, *prev;
 
-    cur = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
+    cur = xzalloc(sizeof (struct lookup_subtable));
     if ( otl->subtables==NULL )
 	otl->subtables = cur;
     else {
@@ -409,7 +409,7 @@ static void ACDisassociateLigatures(SplineFont1 *sf,AnchorClass1 *ac) {
     AnchorClass1 *lac;
     char *format;
 
-    lac = (AnchorClass1 *) xzalloc(sizeof (AnchorClass1));
+    lac = xzalloc(sizeof (AnchorClass1));
     *lac = *ac;
     lac->type = ac1t_mklg;
     ac->ac.next = (AnchorClass *) lac;
@@ -429,7 +429,7 @@ static void ACDisassociateLigatures(SplineFont1 *sf,AnchorClass1 *ac) {
 		if ( ap->anchor!=(AnchorClass *) ac )
 	    continue;
 		if ( ap->type==at_mark ) {
-		    lap = (AnchorPoint *) xzalloc(sizeof (AnchorPoint));
+		    lap = xzalloc(sizeof (AnchorPoint));
 		    *lap = *ap;
 		    ap->next = lap;
 		    lap->anchor = (AnchorClass *) lac;

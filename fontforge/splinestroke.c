@@ -2673,7 +2673,7 @@ UnitShape (int n)
   int i;
   BasePoint origin;
 
-  ret = (SplineSet *) xzalloc (sizeof (SplineSet));
+  ret = xzalloc (sizeof (SplineSet));
   if (n >= 3 || n <= -3)
     {
       /* Regular n-gon with n sides */
@@ -2741,7 +2741,7 @@ SinglePointStroke (SplinePoint *sp, struct strokecontext *c)
   SplinePoint *sp1, *sp2;
   int i;
 
-  ret = (SplineSet *) xzalloc (sizeof (SplineSet));
+  ret = xzalloc (sizeof (SplineSet));
 
   if (c->pentype == pt_circle && c->cap == lc_butt)
     {
@@ -3752,12 +3752,12 @@ EdgeEffects (SplineSet *fragments, StrokeContext * c)
               if (t != -1)
                 {
                   SplinePoint *sp = SplineBisect (s, t), *sp2;
-                  sp2 = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+                  sp2 = xzalloc (sizeof (SplinePoint));
                   *sp2 = *sp;
                   sp->next = NULL;
                   sp2->prev = NULL;
                   sp2->next->from = sp2;
-                  next = (SplineSet *) xzalloc (sizeof (SplineSet));
+                  next = xzalloc (sizeof (SplineSet));
                   *next = *cur;
                   cur->last = sp;
                   next->first = sp2;
@@ -3774,12 +3774,12 @@ EdgeEffects (SplineSet *fragments, StrokeContext * c)
                   if (t != -1)
                     {
                       SplinePoint *sp = SplineBisect (s, t), *sp2;
-                      sp2 = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+                      sp2 = xzalloc (sizeof (SplinePoint));
                       *sp2 = *sp;
                       sp->prev = NULL;
                       sp2->next = NULL;
                       sp2->prev->to = sp2;
-                      next = (SplineSet *) xzalloc (sizeof (SplineSet));
+                      next = xzalloc (sizeof (SplineSet));
                       *next = *cur;
                       cur->first = sp;
                       next->last = sp2;
@@ -4037,7 +4037,7 @@ RemoveBackForthLine (SplineSet *ss)
                   }
                 SplineFree (first1->next);
                 SplineFree (first2->next);
-                other = (SplineSet *) xzalloc (sizeof (SplineSet));
+                other = xzalloc (sizeof (SplineSet));
                 other->first = other->last = second1;
                 second1->prev = first2->prev;
                 second1->prevcp = first2->prevcp;
@@ -4401,7 +4401,7 @@ ApproximateStrokeContours (StrokeContext * c)
             }
           if (first != NULL)
             {
-              ret = (SplineSet *) xzalloc (sizeof (SplineSet));
+              ret = xzalloc (sizeof (SplineSet));
               ret->first = first;
               ret->last = last;
               ret->next = lfragments;
@@ -4505,7 +4505,7 @@ ApproximateStrokeContours (StrokeContext * c)
             }
           if (first != NULL)
             {
-              ret = (SplineSet *) xzalloc (sizeof (SplineSet));
+              ret = xzalloc (sizeof (SplineSet));
               ret->first = first;
               ret->last = last;
               ret->next = rfragments;

@@ -283,7 +283,7 @@ GV_FromString (struct glyphvariants *gv, char *str)
   if (pcnt <= 0)
     return (gv);
   if (gv == NULL)
-    gv = (struct glyphvariants *) xzalloc (sizeof (struct glyphvariants));
+    gv = xzalloc (sizeof (struct glyphvariants));
   gv->part_cnt = pcnt;
   gv->parts = xcalloc (pcnt, sizeof (struct gv_part));
   pcnt = 0;
@@ -1780,7 +1780,7 @@ MKDFillup (MathKernDlg *mkd, SplineChar *sc)
             {
               for (j = 0; j < mkv->cnt; ++j)
                 {
-                  cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+                  cur = xzalloc (sizeof (SplineSet));
                   cur->first = cur->last = SplinePointCreate (mkv->mkd[j].kern +
                                                               ((i & 1) ? 0 :
                                                                sc->width) +
@@ -1895,7 +1895,7 @@ MKD_Parse (MathKernDlg *mkd)
 
   if (mkd->cursc->mathkern == NULL)
     mkd->cursc->mathkern =
-      (struct mathkern *) xzalloc (sizeof (struct mathkern));
+      xzalloc (sizeof (struct mathkern));
 
   if (mkd->last_aspect == 0)
     {                           /* Graphical view is current */

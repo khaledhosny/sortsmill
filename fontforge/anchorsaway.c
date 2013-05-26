@@ -1210,7 +1210,7 @@ AnchorD_ChangeGlyph (AnchorDlg *a, SplineChar *sc, AnchorPoint *ap)
   /*  but otherwise we must store the current state */
   if (old == NULL)
     {
-      old = (struct state *) xzalloc (sizeof (struct state));
+      old = xzalloc (sizeof (struct state));
       old->sc = a->sc;
       old->changed = a->sc->changed;
       old->ap_pt = a->ap;
@@ -1301,7 +1301,7 @@ AddAnchor (AnchorDlg *a, SplineFont *sf, AnchorClass *ac, int ismarklike)
         }
     }
 
-  ap = (AnchorPoint *) xzalloc (sizeof (AnchorPoint));
+  ap = xzalloc (sizeof (AnchorPoint));
   ap->anchor = ac;
   ap->me.x = 0;
   ap->me.y = 0;

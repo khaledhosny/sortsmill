@@ -411,7 +411,7 @@ AddBDFChar (FILE *bdf, SplineFont *sf, BDFFont *b, EncMap *map, int depth,
         }
       else
         {
-          b->glyphs[gid] = bc = (BDFChar *) xzalloc (sizeof (BDFChar));
+          b->glyphs[gid] = bc = xzalloc (sizeof (BDFChar));
           memset (bc, '\0', sizeof (BDFChar));
           bc->sc = sf->glyphs[gid];
           bc->orig_pos = gid;
@@ -963,7 +963,7 @@ SFGrowTo (SplineFont *sf, BDFFont *b, int cc, EncMap *map)
     }
   else
     {
-      b->glyphs[gid] = bc = (BDFChar *) xzalloc (sizeof (BDFChar));
+      b->glyphs[gid] = bc = xzalloc (sizeof (BDFChar));
       memset (bc, '\0', sizeof (BDFChar));
       bc->sc = sf->glyphs[gid];
       bc->orig_pos = gid;
@@ -2249,7 +2249,7 @@ PcfParse (FILE *file, struct toc *toc, SplineFont *sf, EncMap *map, BDFFont *b,
   b->glyphs = xcalloc (mcnt, sizeof (BDFChar *));
   for (i = 0; i < mcnt; ++i)
     {
-      BDFChar *bc = b->glyphs[i] = (BDFChar *) xzalloc (sizeof (BDFChar));
+      BDFChar *bc = b->glyphs[i] = xzalloc (sizeof (BDFChar));
       memset (bc, '\0', sizeof (BDFChar));
       bc->xmin = metrics[i].lsb;
       bc->xmax = metrics[i].rsb - 1;
@@ -3120,7 +3120,7 @@ SFCheckPSBitmap (SplineFont *sf)
      and all images have the same scale
    */
 
-  bdf = (BDFFont *) xzalloc (sizeof (BDFFont));
+  bdf = xzalloc (sizeof (BDFFont));
   bdf->sf = sf;
   sf->bitmaps = bdf;
   bdf->pixelsize = (sf->ascent + sf->descent) / scale;
@@ -3133,7 +3133,7 @@ SFCheckPSBitmap (SplineFont *sf)
   for (i = 0; i < sf->glyphcnt; ++i)
     if ((sc = sf->glyphs[i]) != NULL)
       {
-        bdf->glyphs[i] = bdfc = (BDFChar *) xzalloc (sizeof (BDFChar));
+        bdf->glyphs[i] = bdfc = xzalloc (sizeof (BDFChar));
         memset (bdfc, '\0', sizeof (BDFChar));
         bdfc->sc = sc;
         bdfc->orig_pos = i;

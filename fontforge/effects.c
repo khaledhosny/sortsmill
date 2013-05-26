@@ -153,7 +153,7 @@ SpMove (SplinePoint *sp, real offset,
   SplineSet *line;
   BasePoint test;
 
-  new = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+  new = xzalloc (sizeof (SplinePoint));
   *new = *sp;
   new->hintmask = NULL;
   new->me.x += offset;
@@ -173,7 +173,7 @@ SpMove (SplinePoint *sp, real offset,
   ++test.x;
   if (!SSPointWithin (spl, &test))
     {
-      line = (SplineSet *) xzalloc (sizeof (SplineSet));
+      line = xzalloc (sizeof (SplineSet));
       line->first = SplinePointCreate (sp->me.x, sp->me.y);
       line->last = SplinePointCreate (new->me.x, new->me.y);
       SplineMake (line->first, line->last, sp->next->order2);
@@ -335,7 +335,7 @@ AddVerticalExtremaAndMove (SplineSet *base, real shadow_length,
                   }
                 else if (sp->next->rightedge || sp->prev->rightedge)
                   {
-                    new = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+                    new = xzalloc (sizeof (SplinePoint));
                     *new = *sp;
                     new->hintmask = NULL;
                     new->ticked = false;
@@ -388,7 +388,7 @@ AddVerticalExtremaAndMove (SplineSet *base, real shadow_length,
                   }
                 else if (sp->next->rightedge)
                   {
-                    cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+                    cur = xzalloc (sizeof (SplineSet));
                     if (last == NULL)
                       head = cur;
                     else
@@ -792,7 +792,7 @@ ClipBottomTo3D (SplineSet *bottom, SplineSet *lines, SplineSet *spl,
         {
           if (LineAtPointCompletes (lines, &s->from->me) && cur == NULL)
             {
-              cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+              cur = xzalloc (sizeof (SplineSet));
               cur->first = cur->last =
                 SplinePointCreate (s->from->me.x, s->from->me.y);
               if (head == NULL)
@@ -832,7 +832,7 @@ ClipBottomTo3D (SplineSet *bottom, SplineSet *lines, SplineSet *spl,
                   if (MidLineCompetes
                       (s, (ts[i] + tend) / 2, shadow_length, spl))
                     {
-                      cur = (SplineSet *) xzalloc (sizeof (SplineSet));
+                      cur = xzalloc (sizeof (SplineSet));
                       cur->first = cur->last = SplinePointMidCreate (s, ts[i]);
                       if (head == NULL)
                         head = cur;

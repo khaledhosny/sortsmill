@@ -493,7 +493,7 @@ _FindOrMakeEncoding (const char *name, int make_it)
   if (!make_it)
     return (NULL);
 
-  enc = (Encoding *) xzalloc (sizeof (Encoding));
+  enc = xzalloc (sizeof (Encoding));
   *enc = temp;
   enc->enc_name = xstrdup_or_null (name);
   if (iconv_name != name)
@@ -933,7 +933,7 @@ CIDSetAltUnis (struct cidmap *map, int cid)
     {
       if (alts->cid == cid)
         {
-          alt = (struct altuni *) xzalloc (sizeof (struct altuni));
+          alt = xzalloc (sizeof (struct altuni));
           alt->next = sofar;
           sofar = alt;
           alt->unienc = alts->uni;
@@ -2411,7 +2411,7 @@ EncMapFromEncoding (SplineFont *sf, Encoding *enc)
         }
     }
 
-  map = (EncMap *) xzalloc (sizeof (EncMap));
+  map = xzalloc (sizeof (EncMap));
   map->enc_limit = base + extras;
 
   make_enc_to_gid (map);

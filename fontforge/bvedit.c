@@ -780,7 +780,7 @@ BDFGetMergedChar (BDFChar *bc)
 
   if (bc == NULL)
     return (NULL);
-  ret = (BDFChar *) xzalloc (sizeof (BDFChar));
+  ret = xzalloc (sizeof (BDFChar));
   memcpy (ret, bc, sizeof (BDFChar));
   ret->bitmap =
     xcalloc (ret->bytes_per_line * (ret->ymax - ret->ymin + 1),
@@ -1023,7 +1023,7 @@ BCMakeDependent (BDFChar *dependent, BDFChar *base)
        dlist = dlist->next);
   if (dlist == NULL)
     {
-      dlist = (struct bdfcharlist *) xzalloc (sizeof (struct bdfcharlist));
+      dlist = xzalloc (sizeof (struct bdfcharlist));
       dlist->bc = dependent;
       dlist->next = base->dependents;
       base->dependents = dlist;
@@ -1119,7 +1119,7 @@ BCScale (BDFChar *old, int from, int to)
 
   if (old == NULL || old->byte_data)
     return (NULL);
-  new = (BDFChar *) xzalloc (sizeof (BDFChar));
+  new = xzalloc (sizeof (BDFChar));
   new->sc = old->sc;
   new->xmin = rint (old->xmin * dto / from);
   new->ymin = rint (old->ymin * dto / from);
@@ -1207,7 +1207,7 @@ BCScaleGrey (BDFChar *old, int from, int from_depth, int to, int to_depth)
 
   if (old == NULL || !old->byte_data)
     return (NULL);
-  new = (BDFChar *) xzalloc (sizeof (BDFChar));
+  new = xzalloc (sizeof (BDFChar));
   new->sc = old->sc;
   new->xmin = rint (old->xmin * dto / from);
   new->ymin = rint (old->ymin * dto / from);
@@ -1303,7 +1303,7 @@ BCScaleGrey (BDFChar *old, int from, int from_depth, int to, int to_depth)
 BDFFont *
 BitmapFontScaleTo (BDFFont *old, int to)
 {
-  BDFFont *new = (BDFFont *) xzalloc (sizeof (BDFFont));
+  BDFFont *new = xzalloc (sizeof (BDFFont));
   int i;
   int to_depth = (to >> 16), old_depth = 1;
   int linear_scale = 1 << (to_depth / 2);

@@ -1467,7 +1467,7 @@ MMW_DoOK (MMW * mmw)
       memset (setto, 0, sizeof (MMSet));
     }
   else
-    setto = (MMSet *) xzalloc (sizeof (MMSet));
+    setto = xzalloc (sizeof (MMSet));
   setto->axis_count = mmw->axis_count;
   setto->instance_count = mmw->instance_count;
   defpos = mmw->instance_count;
@@ -2112,7 +2112,7 @@ MMCopy (MMSet *orig)
   /*  retain the proper counts in the mmw structure. This means we don't */
   /*  lose data when they shrink and then restore a value */
 
-  mm = (MMSet *) xzalloc (sizeof (MMSet));
+  mm = xzalloc (sizeof (MMSet));
   mm->instance_count = MmMax + 1;
   mm->axis_count = 4;
   for (i = 0; i < orig->axis_count; ++i)
@@ -2184,7 +2184,7 @@ MMWizard (MMSet *mm)
     }
   else
     {
-      mmw.mm = (MMSet *) xzalloc (sizeof (MMSet));
+      mmw.mm = xzalloc (sizeof (MMSet));
       mmw.axis_count = 1;
       mmw.instance_count = 2;
       mmw.mm->axis_count = 4;

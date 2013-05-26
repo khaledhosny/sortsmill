@@ -1428,7 +1428,7 @@ _CCD_Ok (struct contextchaindlg *ccd)
                            _(" There must be at least one contextual rule"));
             return;
           }
-        dummyfpst = (FPST *) xzalloc (sizeof (FPST));
+        dummyfpst = xzalloc (sizeof (FPST));
         *dummyfpst = *fpst;
         dummyfpst->format = pst_glyphs;
         if (ccd->aw == aw_classes_simple)
@@ -2694,7 +2694,7 @@ static FPST *FPSTGlyphToClass(FPST *fpst) {
     if ( fpst->format!=pst_glyphs )
 return( NULL );
 
-    new = (FPST *) xzalloc(sizeof (FPST));
+    new = xzalloc(sizeof (FPST));
     new->type = fpst->type;
     new->format = pst_class;
     new->subtable = fpst->subtable;
@@ -2847,7 +2847,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
       glyph_ci[0].title = _(glyph_ci[0].title);
     }
 
-  ccd = (struct contextchaindlg *) xzalloc (sizeof (struct contextchaindlg));
+  ccd = xzalloc (sizeof (struct contextchaindlg));
   ccd->gfi = gfi;
   ccd->sf = sf;
   ccd->fpst = fpst;

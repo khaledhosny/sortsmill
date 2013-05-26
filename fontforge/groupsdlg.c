@@ -1294,7 +1294,7 @@ Group_NewSubGroup (GGadget *g, GEvent *e)
         xrealloc (grp->oldsel->kids,
                   (++grp->oldsel->kid_cnt) * sizeof (Group *));
       grp->oldsel->kids[grp->oldsel->kid_cnt - 1] = new_grp =
-        (Group *) xzalloc (sizeof (Group));
+        xzalloc (sizeof (Group));
       new_grp->parent = grp->oldsel;
       new_grp->unique = grp->oldsel->unique;
       new_grp->name = xstrdup_or_null (_("UntitledGroup"));
@@ -1428,7 +1428,7 @@ DefineGroups (FontView *fv)
 
   if (group_root == NULL)
     {
-      grp->root = (Group *) xzalloc (sizeof (Group));
+      grp->root = xzalloc (sizeof (Group));
       grp->root->name = xstrdup_or_null (_("Groups"));
     }
   else
@@ -1876,7 +1876,7 @@ DisplayGroups (FontView *fv)
 
   if (grp.root == NULL)
     {
-      grp.root = (Group *) xzalloc (sizeof (Group));
+      grp.root = xzalloc (sizeof (Group));
       grp.root->name = xstrdup_or_null (_("Groups"));
     }
 

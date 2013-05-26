@@ -281,7 +281,7 @@ MMKern (SplineFont *sf, SplineChar *first, SplineChar *second, int diff,
           /* No mm support for vertical kerns */
           if (kp == NULL)
             {
-              kp = (KernPair *) xzalloc (sizeof (KernPair));
+              kp = xzalloc (sizeof (KernPair));
               if (oldkp != NULL)
                 *kp = *oldkp;
               else
@@ -450,7 +450,7 @@ _MMBlendChar (MMSet *mm, int gid)
   spllast = NULL;
   while (all)
     {
-      spl = (SplinePointList *) xzalloc (sizeof (SplinePointList));
+      spl = xzalloc (sizeof (SplinePointList));
       if (spllast == NULL)
         sc->layers[ly_fore].splines = spl;
       else
@@ -462,7 +462,7 @@ _MMBlendChar (MMSet *mm, int gid)
       spl->last = NULL;
       while (all2)
         {
-          to = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+          to = xzalloc (sizeof (SplinePoint));
           to->nonextcp = tos[0]->nonextcp;
           to->noprevcp = tos[0]->noprevcp;
           to->nextcpdef = tos[0]->nextcpdef;
@@ -470,7 +470,7 @@ _MMBlendChar (MMSet *mm, int gid)
           to->pointtype = tos[0]->pointtype;
           if (tos[0]->hintmask != NULL)
             {
-              to->hintmask = (HintMask *) xzalloc (sizeof (HintMask));
+              to->hintmask = xzalloc (sizeof (HintMask));
               memcpy (to->hintmask, tos[0]->hintmask, sizeof (HintMask));
             }
           for (i = 0; i < mm->instance_count; ++i)
@@ -555,7 +555,7 @@ _MMBlendChar (MMSet *mm, int gid)
       hlast = NULL;
       while (all)
         {
-          h = (StemInfo *) xzalloc (sizeof (StemInfo));
+          h = xzalloc (sizeof (StemInfo));
           *h = *hs[0];
           h->where = NULL;
           h->next = NULL;
@@ -607,7 +607,7 @@ _MMBlendChar (MMSet *mm, int gid)
                     ("This glyph contains different kerning pairs in different instances"));
           off += kptest->off * mm->defweights[i];
         }
-      kp = (KernPair *) xzalloc (sizeof (KernPair));
+      kp = xzalloc (sizeof (KernPair));
       kp->sc = mm->normal->glyphs[kp0->sc->orig_pos];
       kp->off = off;
       kp->subtable = kp0->subtable;

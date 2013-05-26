@@ -406,7 +406,7 @@ BdfCFromBitmap (FT_Bitmap * bitmap, int bitmap_left,
 {
   BDFChar *bdfc;
 
-  bdfc = (BDFChar *) xzalloc (sizeof (BDFChar));
+  bdfc = xzalloc (sizeof (BDFChar));
   bdfc->sc = sc;
   bdfc->ymax = bitmap_top - 1;
   bdfc->ymin = bitmap_top - bitmap->rows;
@@ -607,7 +607,7 @@ FT_MoveTo (const FT_Vector * to, void *user)
 
   FT_ClosePath (context);
 
-  context->cpl = (SplinePointList *) xzalloc (sizeof (SplinePointList));
+  context->cpl = xzalloc (sizeof (SplinePointList));
   if (context->lcpl == NULL)
     context->hcpl = context->cpl;
   else
@@ -618,7 +618,7 @@ FT_MoveTo (const FT_Vector * to, void *user)
     context->orig_sp = context->orig_cpl->first;
 
   context->last = context->cpl->first =
-    (SplinePoint *) xzalloc (sizeof (SplinePoint));
+    xzalloc (sizeof (SplinePoint));
   context->last->me.x = to->x * context->scalex;
   context->last->me.y = to->y * context->scaley;
   if (context->orig_sp == NULL)

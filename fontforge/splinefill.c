@@ -1514,7 +1514,7 @@ return( NULL );
 	}
     }
 
-    bdfc = (BDFChar *) xzalloc(sizeof (BDFChar));
+    bdfc = xzalloc(sizeof (BDFChar));
     memset( bdfc,'\0',sizeof( BDFChar ));
     bdfc->sc = sc;
     bdfc->xmin = rint(es.omin);

@@ -2700,7 +2700,7 @@ MakeSmallCapGlyphSlot (SplineFont *sf, SplineChar *cap_sc,
   sc_sc->name = xstrdup_or_null (buffer);
   SFHashGlyph (sf, sc_sc);
 
-  pst = (PST *) xzalloc (sizeof (PST));
+  pst = xzalloc (sizeof (PST));
   pst->next = cap_sc->possub;
   cap_sc->possub = pst;
   script_index = script == CHR ('l', 'a', 't', 'n') ? 0 :
@@ -2714,7 +2714,7 @@ MakeSmallCapGlyphSlot (SplineFont *sf, SplineChar *cap_sc,
   /*  feature attached to them. */
   if (lc_sc != NULL)
     {
-      pst = (PST *) xzalloc (sizeof (PST));
+      pst = xzalloc (sizeof (PST));
       pst->next = lc_sc->possub;
       lc_sc->possub = pst;
       pst->subtable = smcp[script_index];
@@ -3610,7 +3610,7 @@ MakeSupSupLookup (SplineFont *sf, uint32_t feature_tag,
       if (sl == NULL)
         {
           sl =
-            (struct scriptlanglist *) xzalloc (sizeof (struct scriptlanglist));
+            xzalloc (sizeof (struct scriptlanglist));
           sl->script = scripts[i];
           sl->lang_cnt = 1;
           sl->langs[0] = DEFAULT_LANG;
@@ -3649,7 +3649,7 @@ MakeSubSupGlyphSlot (SplineFont *sf, SplineChar *sc,
   sc_sc->name = xstrdup_or_null (buffer);
   SFHashGlyph (sf, sc_sc);
 
-  pst = (PST *) xzalloc (sizeof (PST));
+  pst = xzalloc (sizeof (PST));
   pst->next = sc->possub;
   sc->possub = pst;
   pst->subtable = feature;
@@ -5856,7 +5856,7 @@ MakeBottomItalicSerif (double stemwidth, double endx,
     (bold->stemwidth - normal->stemwidth);
   yscale = ii->x_height / normal->xheight;
 
-  ss = (SplineSet *) xzalloc (sizeof (SplineSet));
+  ss = xzalloc (sizeof (SplineSet));
   i = 0;
   InterpBp (&bp, i, xscale, yscale, interp, endx, normal, bold);
   ss->first = last = SplinePointCreate (bp.x, bp.y);
@@ -7509,7 +7509,7 @@ FFCopyTrans (ItalicInfo * ii, real *transform,
   last = NULL;
   for (sp = ii->ff_start1;; sp = sp->next->to)
     {
-      cur = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+      cur = xzalloc (sizeof (SplinePoint));
       *cur = *sp;
       cur->hintmask = NULL;
       cur->me.x =
@@ -7550,7 +7550,7 @@ FFCopyTrans (ItalicInfo * ii, real *transform,
   last = NULL;
   for (sp = ii->ff_start2;; sp = sp->next->to)
     {
-      cur = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+      cur = xzalloc (sizeof (SplinePoint));
       *cur = *sp;
       cur->hintmask = NULL;
       cur->me.x =
@@ -7744,7 +7744,7 @@ FFBottomFromTop (SplineChar *sc, int layer, ItalicInfo * ii)
       if (ss[0] == ss[1])
         {
           ss[0]->first = ss[0]->last = start[0];
-          ss[1] = (SplineSet *) xzalloc (sizeof (SplineSet));
+          ss[1] = xzalloc (sizeof (SplineSet));
           ss[1]->next = ss[0]->next;
           ss[0]->next = ss[1];
           ss[1]->first = ss[1]->last = start[1];
@@ -7775,7 +7775,7 @@ FCopyTrans (ItalicInfo * ii, real *transform, SplinePoint **f_start,
   last = NULL;
   for (sp = ii->f_start;; sp = sp->next->to)
     {
-      cur = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+      cur = xzalloc (sizeof (SplinePoint));
       *cur = *sp;
       cur->hintmask = NULL;
       cur->me.x =

@@ -464,7 +464,7 @@ static SplineSet *ContourFromPoint(TT_GlyphZoneRec *pts, real scalex, real scale
 
     sp = SplinePointCreate(me.x,me.y);
     sp->ttfindex = i;
-    cur = (SplineSet *) xzalloc(sizeof (SplineSet));
+    cur = xzalloc(sizeof (SplineSet));
     if ( last!=NULL )
 	last->next = cur;
     cur->first = cur->last = sp;
@@ -482,7 +482,7 @@ static SplineSet *SplineSetsFromPoints(TT_GlyphZoneRec *pts, real scalex, real s
     for ( c=0; c<pts->n_contours; ++c ) {
 	if ( pts->contours[c]<i )	/* Sigh. Yes there are fonts with bad endpt info */
     continue;
-	cur = (SplineSet *) xzalloc(sizeof (SplineSet));
+	cur = xzalloc(sizeof (SplineSet));
 	if ( head==NULL )
 	    head = cur;
 	else
@@ -625,7 +625,7 @@ static struct reflist *ARFindBase(SplineChar *sc,struct reflist *parent,int laye
     if ( sc->layers[layer].splines!=NULL ||
 	    sc->layers[layer].refs==NULL )
 return( parent );
-    ret = (struct reflist *) xzalloc(sizeof (struct reflist));
+    ret = xzalloc(sizeof (struct reflist));
     ret->parent = parent;
     for ( ref = sc->layers[layer].refs; ref!=NULL; ref=ref->next ) {
 	ret->ref = ref;

@@ -395,7 +395,7 @@ AW_AutoKern (WidthInfo * wi)
         }
       else if (diff != 0)
         {
-          kp = (KernPair *) xzalloc (sizeof (KernPair));
+          kp = xzalloc (sizeof (KernPair));
           kp->sc = rsc;
           kp->off = diff;
           kp->subtable = wi->subtable;
@@ -1735,7 +1735,7 @@ VSubtableFromH (struct lookupmap *lookupmap, struct lookup_subtable *sub)
     {
       ++lookupmap->lc;
       lookupmap->lmap[i].from = sub->lookup;
-      lookupmap->lmap[i].to = otl = (OTLookup *) xzalloc (sizeof (OTLookup));
+      lookupmap->lmap[i].to = otl = xzalloc (sizeof (OTLookup));
       otl->lookup_type = gpos_pair;
       otl->features = FeatureListCopy (sub->lookup->features);
       for (fl = otl->features; fl != NULL; fl = fl->next)
@@ -1751,7 +1751,7 @@ VSubtableFromH (struct lookupmap *lookupmap, struct lookup_subtable *sub)
   sc = lookupmap->sc++;
   lookupmap->smap[sc].from = sub;
   lookupmap->smap[sc].to = nsub =
-    (struct lookup_subtable *) xzalloc (sizeof (struct lookup_subtable));
+    xzalloc (sizeof (struct lookup_subtable));
   nsub->subtable_name = strconcat ("V", sub->subtable_name);
   nsub->per_glyph_pst_or_kern = sub->per_glyph_pst_or_kern;
   nsub->vertical_kerning = true;
@@ -1813,7 +1813,7 @@ FVVKernFromHKern (FontViewBase *fv)
             {
               if ((sc2 = SCHasVertVariant (kp->sc)) != NULL)
                 {
-                  vkp = (KernPair *) xzalloc (sizeof (KernPair));
+                  vkp = xzalloc (sizeof (KernPair));
                   *vkp = *kp;
                   vkp->subtable = VSubtableFromH (&lookupmap, kp->subtable);
                   vkp->adjust = DeviceTableCopy (vkp->adjust);
@@ -1845,7 +1845,7 @@ FVVKernFromHKern (FontViewBase *fv)
         }
       if (any1 && any2)
         {
-          vkc = (KernClass *) xzalloc (sizeof (KernClass));
+          vkc = xzalloc (sizeof (KernClass));
           *vkc = *kc;
           vkc->subtable = VSubtableFromH (&lookupmap, kc->subtable);
           vkc->subtable->kc = vkc;

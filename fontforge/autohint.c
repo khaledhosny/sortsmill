@@ -1677,7 +1677,7 @@ HICopyTrans (HintInstance * hi, real mul, real offset)
 
   while (hi != NULL)
     {
-      cur = (HintInstance *) xzalloc (sizeof (HintInstance));
+      cur = xzalloc (sizeof (HintInstance));
       if (mul > 0)
         {
           cur->begin = hi->begin * mul + offset;
@@ -1767,7 +1767,7 @@ SCGuessHintPoints (SplineChar *sc, int layer, StemInfo * stem, int major,
                prev = test, test = test->next);
           if (test == NULL || val != test->begin)
             {
-              cur = (HintInstance *) xzalloc (sizeof (HintInstance));
+              cur = xzalloc (sizeof (HintInstance));
               cur->begin = cur->end = val;
               cur->next = test;
               if (prev == NULL)
@@ -1792,7 +1792,7 @@ StemAddHIFromActive (struct stemdata *stem, int major)
     {
       mino = dir * stem->active[i].start + ((real *) &stem->left.x)[major];
       maxo = dir * stem->active[i].end + ((real *) &stem->left.x)[major];
-      cur = (HintInstance *) xzalloc (sizeof (HintInstance));
+      cur = xzalloc (sizeof (HintInstance));
       if (dir > 0)
         {
           cur->begin = mino;
@@ -1822,7 +1822,7 @@ DStemAddHIFromActive (struct stemdata *stem)
 
   for (i = 0; i < stem->activecnt; ++i)
     {
-      cur = (HintInstance *) xzalloc (sizeof (HintInstance));
+      cur = xzalloc (sizeof (HintInstance));
       cur->begin = stem->active[i].start;
       cur->end = stem->active[i].end;
       if (head == NULL)
@@ -1927,7 +1927,7 @@ SCGuessHintInstancesLight (SplineChar *sc, int layer, StemInfo * stem,
             }
           if (sm || wm)
             {
-              cur = (HintInstance *) xzalloc (sizeof (HintInstance));
+              cur = xzalloc (sizeof (HintInstance));
               if (ob > oe)
                 {
                   real temp = ob;
@@ -2004,7 +2004,7 @@ SCGuessHintInstancesLight (SplineChar *sc, int layer, StemInfo * stem,
               t->begin = w2->begin;
             if (w2->end <= t->end)
               {
-                cur = (HintInstance *) xzalloc (sizeof (HintInstance));
+                cur = xzalloc (sizeof (HintInstance));
                 cur->begin = w2->end;
                 cur->end = t->end;
                 cur->next = n;
@@ -2229,7 +2229,7 @@ SCGuessHHintInstancesAndAdd (SplineChar *sc, int layer, StemInfo * stem,
           guess1 = guess2;
           guess2 = temp;
         }
-      stem->where = (HintInstance *) xzalloc (sizeof (HintInstance));
+      stem->where = xzalloc (sizeof (HintInstance));
       stem->where->begin = guess1;
       stem->where->end = guess2;
     }
@@ -2256,7 +2256,7 @@ SCGuessVHintInstancesAndAdd (SplineChar *sc, int layer, StemInfo * stem,
           guess1 = guess2;
           guess2 = temp;
         }
-      stem->where = (HintInstance *) xzalloc (sizeof (HintInstance));
+      stem->where = xzalloc (sizeof (HintInstance));
       stem->where->begin = guess1;
       stem->where->end = guess2;
     }
@@ -2369,7 +2369,7 @@ MergeDStemInfo (SplineFont *sf, DStemInfo ** ds, DStemInfo * test)
       if (!overlap)
         {
           for (hi = dn->where; hi->next != NULL; hi = hi->next);
-          hi->next = (HintInstance *) xzalloc (sizeof (HintInstance));
+          hi->next = xzalloc (sizeof (HintInstance));
           hi->next->begin = ibegin;
           hi->next->end = iend;
           DStemInfoFree (test);
@@ -2451,7 +2451,7 @@ RefHintsMerge (StemInfo * into, StemInfo * rh, real mul, real offset,
            prev = h, h = h->next);
       if (h == NULL || start != h->start || width != h->width)
         {
-          n = (StemInfo *) xzalloc (sizeof (StemInfo));
+          n = xzalloc (sizeof (StemInfo));
           n->start = start;
           n->width = width;
           n->next = h;
@@ -2476,7 +2476,7 @@ RefDHintsMerge (SplineFont *sf, DStemInfo * into, DStemInfo * rh,
 
   for (; rh != NULL; rh = rh->next)
     {
-      new = (DStemInfo *) xzalloc (sizeof (DStemInfo));
+      new = xzalloc (sizeof (DStemInfo));
       *new = *rh;
       new->left.x = xmul * new->left.x + xoffset;
       new->right.x = xmul * new->right.x + xoffset;
@@ -3063,7 +3063,7 @@ FigureHintMask (SplineChar *scs[MmMax], SplinePoint *to[MmMax],
     if (to[i] != NULL)
       {
         free (to[i]->hintmask);
-        to[i]->hintmask = (HintMask *) xzalloc (sizeof (HintMask));
+        to[i]->hintmask = xzalloc (sizeof (HintMask));
         memcpy (to[i]->hintmask, mask, sizeof (HintMask));
       }
 }
@@ -3157,7 +3157,7 @@ AddCoord (MMH * mmh, SplinePoint *sps[MmMax], int instance_count, int ish)
   struct coords *coords;
   int i;
 
-  coords = (struct coords *) xzalloc (sizeof (struct coords));
+  coords = xzalloc (sizeof (struct coords));
   coords->next = mmh->where;
   mmh->where = coords;
   if (ish)
@@ -3198,7 +3198,7 @@ AddHintSet (MMH * hints, StemInfo * h[MmMax], int instance_count,
           best = test;
         }
     }
-  test = (MMH *) xzalloc (sizeof (MMH));
+  test = xzalloc (sizeof (MMH));
   test->next = hints;
   AddCoord (test, sps, instance_count, ish);
   for (i = 0; i < instance_count; ++i)
@@ -3210,7 +3210,7 @@ AddHintSet (MMH * hints, StemInfo * h[MmMax], int instance_count,
           if (best->hints[i] == h[i])
             {
               h[i]->hasconflicts = true;
-              test->map[i] = (StemInfo *) xzalloc (sizeof (StemInfo));
+              test->map[i] = xzalloc (sizeof (StemInfo));
               *test->map[i] = *h[i];
               test->map[i]->where = NULL;
               test->map[i]->used = true;
@@ -3332,7 +3332,7 @@ NumberMMH (MMH * mmh, int hstart, int instance_count)
           h->where = NULL;
           for (coords = mmh->where; coords != NULL; coords = coords->next)
             {
-              hi = (HintInstance *) xzalloc (sizeof (HintInstance));
+              hi = xzalloc (sizeof (HintInstance));
               hi->next = h->where;
               h->where = hi;
               hi->begin = coords->coords[i] - 1;
@@ -3682,7 +3682,7 @@ GDFindStems (struct glyphdata *gd, int major)
       stem = bundle->stemlist[i];
       l = (&stem->left.x)[other];
       r = (&stem->right.x)[other];
-      cur = (StemInfo *) xzalloc (sizeof (StemInfo));
+      cur = xzalloc (sizeof (StemInfo));
       if (l < r)
         {
           cur->start = l;
@@ -3740,7 +3740,7 @@ GDFindDStems (struct glyphdata *gd)
 
       if (stem->lpcnt < 2 || stem->rpcnt < 2)
         continue;
-      cur = (DStemInfo *) xzalloc (sizeof (DStemInfo));
+      cur = xzalloc (sizeof (DStemInfo));
       cur->left = stem->left;
       cur->right = stem->right;
       cur->unit = stem->unit;

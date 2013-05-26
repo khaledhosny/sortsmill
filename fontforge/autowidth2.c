@@ -848,7 +848,7 @@ AutoKern2 (SplineFont *sf, int layer, SplineChar **left, SplineChar **right,
             {
               if (addkp == NULL)
                 {
-                  kp = (KernPair *) xzalloc (sizeof (KernPair));
+                  kp = xzalloc (sizeof (KernPair));
                   kp->subtable = into;
                   kp->off = kern;
                   if (is_l2r)

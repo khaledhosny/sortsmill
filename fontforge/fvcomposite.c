@@ -2961,7 +2961,7 @@ DoSpaces (SplineFont *sf, SplineChar *sc, int layer, BDFFont *bdf,
 static SplinePoint *
 MakeSP (real x, real y, SplinePoint *last, int order2)
 {
-  SplinePoint *new = (SplinePoint *) xzalloc (sizeof (SplinePoint));
+  SplinePoint *new = xzalloc (sizeof (SplinePoint));
 
   new->me.x = x;
   new->me.y = y;
@@ -3080,7 +3080,7 @@ DoRules (SplineFont *sf, SplineChar *sc, int layer, BDFFont *bdf, int disp_only)
       sp = MakeSP (width - rbearing, ypos, sp, sc->layers[layer].order2);
       SplineMake (sp, first, sc->layers[layer].order2);
       sc->layers[layer].splines =
-        (SplinePointList *) xzalloc (sizeof (SplinePointList));
+        xzalloc (sizeof (SplinePointList));
       sc->layers[layer].splines->first = sc->layers[layer].splines->last =
         first;
       sc->width = width;

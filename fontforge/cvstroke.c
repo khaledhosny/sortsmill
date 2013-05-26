@@ -1868,7 +1868,7 @@ Gradient_OK (GGadget *g, GEvent *e)
         }
       if (gradient == NULL)
         gdd->active = gradient =
-          (struct gradient *) xzalloc (sizeof (struct gradient));
+          xzalloc (sizeof (struct gradient));
       gradient->start = start;
       gradient->stop = end;
       gradient->radius = radius;
@@ -1987,7 +1987,7 @@ GDDInit (GradientDlg *gdd, SplineFont *sf, Layer *ly, struct gradient *grad)
     {
       SplineSet *ss1, *ss2;
       SplinePoint *sp1, *sp2, *sp3;
-      ss1 = (SplineSet *) xzalloc (sizeof (SplineSet));
+      ss1 = xzalloc (sizeof (SplineSet));
       sp2 = SplinePointCreate (grad->stop.x, grad->stop.y);
       if (grad->radius == 0)
         {
@@ -2004,7 +2004,7 @@ GDDInit (GradientDlg *gdd, SplineFont *sf, Layer *ly, struct gradient *grad)
           ss1->last = sp3;
           if (grad->start.x != grad->stop.x || grad->start.y != grad->stop.y)
             {
-              ss2 = (SplineSet *) xzalloc (sizeof (SplineSet));
+              ss2 = xzalloc (sizeof (SplineSet));
               sp1 = SplinePointCreate (grad->start.x, grad->start.y);
               ss2->first = ss2->last = sp1;
               ss1->next = ss2;
@@ -2626,7 +2626,7 @@ Pat_OK (GGadget *g, GEvent *e)
         return (true);
 
       if (ld->curpat == NULL)
-        ld->curpat = (struct pattern *) xzalloc (sizeof (struct pattern));
+        ld->curpat = xzalloc (sizeof (struct pattern));
       free (ld->curpat->pattern);
       ld->curpat->pattern = name;
       for (i = 0; i < 6; ++i)
