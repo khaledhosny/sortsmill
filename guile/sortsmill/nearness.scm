@@ -21,7 +21,7 @@
   (export Within4RoundingErrors?
           Within16RoundingErrors?
           Within64RoundingErrors?
-          RealsNear?
+          RealNear?
           RealNearish?
           RealApprox?
           RealWithin?

@@ -44,6 +44,8 @@
    ;; (svg:parse-path-data string #:stage 'subpath-lists) → list
    ;; (svg:parse-path-data string #:stage 'subpath-vectors) → vector
    ;; (svg:parse-path-data string #:stage 'absolute-coords) → vector
+   ;; (svg:parse-path-data string #:stage 'quadratic) → vector?????????????????????????????????????????????????????
+   ;; (svg:parse-path-data string #:stage 'cubic) → vector?????????????????????????????????????????????????????????
    ;;
    ;; (svg:parse-path-data string) → vector  [equiv. to #:stage 'absolute-coords]
    ;;
@@ -425,9 +427,16 @@
                          (svg:parse-path-data path-data-string 'subpath-lists))]
       ['absolute-coords (svg:make-subpath-vectors-absolute!
                          (svg:parse-path-data path-data-string 'subpath-vectors))]
+      ['quadratic (assertion-violation 'svg:parse-path-data
+                                       "not yet implemented"
+                                       stage)]
+      ['cubic (svg:expand-elliptic-arcs!
+               (svg:subpaths-quadratic->cubic!
+                (svg:parse-path-data path-data-string 'absolute-coords))
+               3)]
       [_ (assertion-violation
           'svg:parse-path-data
-          "expected 'parse-only, 'subpath-lists, 'subpath-vectors, or 'absolute-coords"
+          "expected 'parse-only, 'subpath-lists, 'subpath-vectors, 'absolute-coords, 'quadratic, or 'cubic"
           stage)] ))
 
   ;;-------------------------------------------------------------------------

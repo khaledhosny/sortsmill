@@ -31,19 +31,30 @@
           contour-degree   contour-degree-set!
           contour-name     contour-name-set!
 
+          contour-points-RealNear?
+
+          path-data->contours
+
           contour->malloced-SplinePointList
           )
 
-  (import (sortsmill fontforge-api)
+  (import (sortsmill svg path-data)
+          (sortsmill nearness)
+          (sortsmill fontforge-api)
           (sortsmill dynlink)
           (sortsmill i18n)
+          (sortsmill kwargs)
           (rnrs)
           (except (guile) error
                   make-record-type      ; Use R⁶RS records instead.
                   )
+          (only (srfi :1) last)
           (srfi :4)                     ; Uniform numeric vectors.
+          (only (srfi :26) cut)
           (system foreign)
           (ice-9 match))
+
+  ;;-------------------------------------------------------------------------
 
   (sortsmill-dynlink-declarations "#include <contour_interface.h>")
 
@@ -167,5 +178,74 @@ unimplemented’."
                          (_ "unknown error") c)]) ))))
 
   (define (boolean->0-or-1 b?) (if b? 1 0))
+
+  (define (contour-points-RealNear? a b)
+    (and (RealNear? (contour-point-x a) (contour-point-x b))
+         (RealNear? (contour-point-y a) (contour-point-y b))))
+
+  ;;-------------------------------------------------------------------------
+
+  (define/kwargs (path-data->contours path-data [degree 3])
+    (assert (<= 2 degree 3))
+    (if (string? path-data)
+        [subpaths->contours
+         (case degree
+           [(2) (svg:parse-path-data path-data #:stage 'quadratic)]
+           [(3) (svg:parse-path-data path-data #:stage 'cubic)])
+         degree]
+        [subpaths->contours path-data degree]))
+
+  (define (subpaths->contours path-data degree)
+    (map (cut subpath->contour <> degree) (svg:subpaths->lists path-data)))
+
+  (define (subpath->contour subpath degree)
+    (case degree
+      [(2) (assertion-violation 'subpath->contour
+                                "not yet implemented for degree 2"
+                                degree)]
+      [(3) (let-values ([(points closed?) (svg-commands->points subpath)])
+             (make-contour points #:closed? closed? #:degree 3))] ))
+
+  (define* (svg-commands->points subpath #:optional
+                                 [points-so-far '()])
+    (match subpath
+      [() (values (reverse points-so-far) #f)]
+      [((#\Z))
+       (let ([first-point (last points-so-far)]
+             [last-point (car points-so-far)])
+         (values
+          (reverse
+           (if (contour-points-RealNear? first-point last-point)
+               (if (null? (cdr points-so-far))
+                   points-so-far
+                   (cdr points-so-far))
+               (cons (make-contour-point (contour-point-x first-point)
+                                         (contour-point-y first-point))
+                     points-so-far)))
+          #t))]
+      [((#\M x y) . tail)
+       (svg-commands->points tail (cons (make-contour-point x y)
+                                        points-so-far))]
+      [((#\L x y) . tail)
+       (svg-commands->points tail (cons (make-contour-point x y)
+                                        points-so-far))]
+      [((#\Q (x1 y1) (x2 y2)) . tail)
+       (svg-commands->points tail
+                             (cons* (make-contour-point x2 y2)
+                                    (make-contour-point x1 y1 #:on-curve? #f)
+                                    points-so-far))]
+      [((#\C (x1 y1) (x2 y2) (x3 y3)) . tail)
+       (svg-commands->points tail
+                             (cons* (make-contour-point x3 y3)
+                                    (make-contour-point x2 y2 #:on-curve? #f)
+                                    (make-contour-point x1 y1 #:on-curve? #f)
+                                    points-so-far))]
+      [(head . tail) (assertion-violation 'svg-commands->points
+                                          (_ "unexpected path data command")
+                                          head)]
+      [other (assertion-violation 'svg-commands->points
+                                  (_ "unexpected a list") other)] ))
+
+  ;;-------------------------------------------------------------------------
 
   ) ;; end of library.
