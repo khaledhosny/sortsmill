@@ -392,7 +392,7 @@ return( NULL );
 	memcpy(ret->u.image->clut->clut,bmp.clut,bmp.colorsused*sizeof(Color));
 	ret->u.image->clut->trans_index = COLOR_UNKNOWN;
     } else if ( ret->u.image->image_type==it_mono && bmp.colorsused!=0 ) {
-	ret->u.image->clut = (GClut *) xcalloc(1,sizeof(GClut));
+	ret->u.image->clut = xcalloc(1,sizeof(GClut));
 	ret->u.image->clut->clut_len = bmp.colorsused;
 	memcpy(ret->u.image->clut->clut,bmp.clut,bmp.colorsused*sizeof(Color));
 	ret->u.image->clut->trans_index = COLOR_UNKNOWN;

@@ -140,7 +140,7 @@ return( NULL );
 		png_get_image_width(png_ptr,info_ptr),png_get_image_height(png_ptr,info_ptr));
 	clut = ret->u.image->clut;
 	if ( clut==NULL )
-	    clut = ret->u.image->clut = (GClut *) xcalloc(1,sizeof(GClut));
+	    clut = ret->u.image->clut = xcalloc(1,sizeof(GClut));
 	clut->is_grey = true;
 	png_get_PLTE(png_ptr,info_ptr,&palette,&num_palette);
 	clut->clut_len = num_palette;

@@ -51,7 +51,7 @@ GImage *GImageCreate(enum image_type type, int32_t width, int32_t height) {
     if ( type<it_mono || type>it_rgba )
 return( NULL );
 
-    gi = (GImage *) xcalloc(1,sizeof(GImage));
+    gi = xcalloc(1,sizeof(GImage));
     base = (struct _GImage *) xmalloc(sizeof(struct _GImage));
     if ( gi==NULL || base==NULL ) {
 	free(gi); free(base);
@@ -72,7 +72,7 @@ return( NULL );
 return( NULL );
     }
     if ( type==it_index ) {
-	base->clut = (GClut *) xcalloc(1,sizeof(GClut));
+	base->clut = xcalloc(1,sizeof(GClut));
 	base->clut->trans_index = COLOR_UNKNOWN;
     }
 return( gi );
@@ -86,7 +86,7 @@ GImage *_GImage_Create(enum image_type type, int32_t width, int32_t height) {
     if ( type<it_mono || type>it_rgba )
 return( NULL );
 
-    gi = (GImage *) xcalloc(1,sizeof(GImage));
+    gi = xcalloc(1,sizeof(GImage));
     base = (struct _GImage *) xmalloc(sizeof(struct _GImage));
     if ( gi==NULL || base==NULL ) {
 	free(gi); free(base);
@@ -100,7 +100,7 @@ return( NULL );
     base->data = NULL;
     base->clut = NULL;
     if ( type==it_index )
-	base->clut = (GClut *) xcalloc(1,sizeof(GClut));
+	base->clut = xcalloc(1,sizeof(GClut));
 return( gi );
 }
 
@@ -124,7 +124,7 @@ void GImageDestroy(GImage *gi) {
 
 GImage *GImageCreateAnimation(GImage **images, int n) {
     struct _GImage **imgs = (struct _GImage **) xmalloc(szmax(1,n*sizeof(struct _GImage *)));
-    GImage *gi = (GImage *) xcalloc(1,sizeof(GImage));
+    GImage *gi = xcalloc(1,sizeof(GImage));
     int i;
 
     gi->list_len = n;

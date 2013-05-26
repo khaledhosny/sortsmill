@@ -129,7 +129,7 @@ return;
 	*ept++ = '/';
 
     while (( ent = readdir(dir))!=NULL ) {
-	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
+	cur = xcalloc(1,sizeof(GDirEntry));
 	cur->name = x_u32_strconv_from_locale (ent->d_name);
 	strcpy(ept,ent->d_name);
 	stat(buffer,&statb);
@@ -151,7 +151,7 @@ return;
     /* Under cygwin we should give the user access to /cygdrive, even though */
     /*  a diropen("/") will not find it */
     if ( strcmp(path,"/")==0 ) {
-	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
+	cur = xcalloc(1,sizeof(GDirEntry));
 	cur->name = x_u32_strconv_from_locale("cygdrive");
 	strcpy(ept,"cygdrive");
 	stat(buffer,&statb);
@@ -187,7 +187,7 @@ static void _gio_file_statfile(GIOControl *gc,char *path)
     GIOReporterror(gc,errno);
   else
     {
-      cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
+      cur = xcalloc(1,sizeof(GDirEntry));
       errno = 0;
 
       // FIXME: This is likely wrong, but we do _not_ want to allow

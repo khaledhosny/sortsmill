@@ -1780,7 +1780,7 @@ static void GFileChooserCreateChildren(GFileChooser *gfc, int flags) {
 }
 
 GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GFileChooser *gfc = (GFileChooser *) xcalloc(1,sizeof(GFileChooser));
+    GFileChooser *gfc = xcalloc(1,sizeof(GFileChooser));
 
     gfc->g.funcs = &GFileChooser_funcs;
     _GGadget_Create(&gfc->g,base,gd,data,&gfilechooser_box);

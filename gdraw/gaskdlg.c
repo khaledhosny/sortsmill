@@ -237,7 +237,7 @@ return( NULL );
     memset(qlabels,'\0',sizeof(qlabels));
     lb = FindLineBreaks(ubuf,qlabels);
     for ( bcnt=0; answers[bcnt]!=NULL; ++bcnt);
-    blabels = (GTextInfo *) xcalloc(bcnt+1,sizeof(GTextInfo));
+    blabels = xcalloc(bcnt+1,sizeof(GTextInfo));
     barray = (GGadgetCreateData **) xcalloc(2*bcnt+3,sizeof(GGadgetCreateData *));
     for ( bcnt=0; answers[bcnt]!=NULL; ++bcnt) {
 	blabels[bcnt].text = (uint32_t *) answers[bcnt];
@@ -305,7 +305,7 @@ return( NULL );
 	bspace = (maxw-bcnt*bw)/(bcnt-1);
     maxw += GDrawPointsToPixels(gw,16);
 
-    gcd = (GGadgetCreateData *) xcalloc(lb+bcnt+2,sizeof(GGadgetCreateData));
+    gcd = xcalloc(lb+bcnt+2,sizeof(GGadgetCreateData));
     memset(boxes,0,sizeof(boxes));
     l = 0;
     if ( lb==1 ) {
@@ -599,7 +599,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     ubuf = utf82u_copy(buf);
     memset(qlabels,'\0',sizeof(qlabels));
     lb = FindLineBreaks(ubuf,qlabels);
-    llabels = (GTextInfo *) xcalloc(cnt+1,sizeof(GTextInfo));
+    llabels = xcalloc(cnt+1,sizeof(GTextInfo));
     for ( i=0; i<cnt; ++i) {
 	if ( choices[i][0]=='-' && choices[i][1]=='\0' )
 	    llabels[i].line = true;
@@ -657,7 +657,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     }
     maxw += GDrawPointsToPixels(gw,20);
 
-    gcd = (GGadgetCreateData *) xcalloc(lb+1+2+2+2,sizeof(GGadgetCreateData));
+    gcd = xcalloc(lb+1+2+2+2,sizeof(GGadgetCreateData));
     array = (GGadgetCreateData **) xcalloc(2*(lb+1+2+2+2+1),sizeof(GGadgetCreateData *));
     memset(boxes,0,sizeof(boxes));
     l=0;

@@ -222,7 +222,7 @@ void GIOclose(GIOControl *gc) {
 GIOControl *GIOCreate(uint32_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *)) {
-    GIOControl *gc = (GIOControl *) xcalloc(1,sizeof(GIOControl));
+    GIOControl *gc = xcalloc(1,sizeof(GIOControl));
 
     gc->path = x_u32_strdup_or_null(path);
     gc->userdata = userdata;

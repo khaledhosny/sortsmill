@@ -695,7 +695,7 @@ return( &gl->g );
 }
 
 GGadget *GRadioCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GRadio *gl = (GRadio *) xcalloc(1,sizeof(GRadio));
+    GRadio *gl = xcalloc(1,sizeof(GRadio));
     GGadget *gr;
 
     gl->isradio = true;
