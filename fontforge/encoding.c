@@ -2700,7 +2700,7 @@ MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap *basemap, EncMap *map,
     {
       if (baseenc >= map->enc_limit)
         {
-          if (map == fv->map)
+          if (fv != NULL && map == fv->map)
             FVAddEncodingSlot (fv, gid);
           else
             MapAddEncodingSlot (map, gid);
