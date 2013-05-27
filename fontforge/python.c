@@ -6477,27 +6477,19 @@ static PyObject *
 PyFF_MathKern_get_kerns (PyFF_MathKern * self, void *closure)
 {
   struct mathkernvertex *mkv;
-  PyObject *tuple;
-  int i;
 
   if (self->sc->mathkern == NULL)
     Py_RETURN_NONE;
+
   mkv = &self->sc->mathkern->top_right + (int) (intptr_t) closure;
   if (mkv->cnt == 0)
     Py_RETURN_NONE;
 
-  tuple = PyTuple_New (mkv->cnt);
-  for (i = 0; i < mkv->cnt; ++i)
-    {
-      if (i == mkv->cnt - 1)
-        PyTuple_SetItem (tuple, i,
-                         Py_BuildValue ("(ii)", mkv->mkd[i].kern,
-                                        self->sc->parent->ascent));
-      else
-        PyTuple_SetItem (tuple, i,
-                         Py_BuildValue ("(ii)", mkv->mkd[i].kern,
-                                        mkv->mkd[i].height));
-    }
+  PyObject *tuple = PyTuple_New (mkv->cnt);
+  for (int i = 0; i < mkv->cnt; ++i)
+    PyTuple_SetItem (tuple, i,
+                     Py_BuildValue ("(ii)", mkv->mkd[i].kern,
+                                    mkv->mkd[i].height));
   return (tuple);
 }
 
@@ -6533,9 +6525,7 @@ PyFF_MathKern_set_kerns (PyFF_MathKern * self, PyObject *value, void *closure)
   for (i = 0; i < cnt; ++i)
     {
       PyObject *obj = PySequence_GetItem (value, i);
-      if (i == cnt - 1 && PyInt_Check (obj))
-        mkd[i].kern = PyInt_AsLong (obj);
-      else if (!PyArg_ParseTuple (obj, "hh", &mkd[i].kern, &mkd[i].height))
+      if (!PyArg_ParseTuple (obj, "hh", &mkd[i].kern, &mkd[i].height))
         {
           free (mkd);
           return (-1);
@@ -6559,15 +6549,16 @@ static PyGetSetDef PyFFMathKern_members[] = {
    (void *) (intptr_t) 0},
   {"topLeft",
    (getter) PyFF_MathKern_get_kerns, (setter) PyFF_MathKern_set_kerns,
-   "Math Kerning information for the top left corner", (void *) (intptr_t) 1},
-  {"bottomLeft",
-   (getter) PyFF_MathKern_get_kerns, (setter) PyFF_MathKern_set_kerns,
-   "Math Kerning information for the bottom left corner",
-   (void *) (intptr_t) 3},
+   "Math Kerning information for the top left corner",
+   (void *) (intptr_t) 1},
   {"bottomRight",
    (getter) PyFF_MathKern_get_kerns, (setter) PyFF_MathKern_set_kerns,
    "Math Kerning information for the bottom right corner",
    (void *) (intptr_t) 2},
+  {"bottomLeft",
+   (getter) PyFF_MathKern_get_kerns, (setter) PyFF_MathKern_set_kerns,
+   "Math Kerning information for the bottom left corner",
+   (void *) (intptr_t) 3},
   PYGETSETDEF_EMPTY             /* Sentinel */
 };
 
