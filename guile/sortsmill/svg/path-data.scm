@@ -44,8 +44,8 @@
    ;; (svg:parse-path-data string #:stage 'subpath-lists) → list
    ;; (svg:parse-path-data string #:stage 'subpath-vectors) → vector
    ;; (svg:parse-path-data string #:stage 'absolute-coords) → vector
-   ;; (svg:parse-path-data string #:stage 'quadratic) → vector?????????????????????????????????????????????????????
-   ;; (svg:parse-path-data string #:stage 'cubic) → vector?????????????????????????????????????????????????????????
+   ;; (svg:parse-path-data string #:stage 'quadratic) → vector
+   ;; (svg:parse-path-data string #:stage 'cubic) → vector
    ;;
    ;; (svg:parse-path-data string) → vector  [equiv. to #:stage 'absolute-coords]
    ;;
@@ -77,6 +77,7 @@
           (sortsmill math matrices)
           (sortsmill math geometry)
           (sortsmill math math-constants)
+          (sortsmill nearness)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) iota)
@@ -647,10 +648,9 @@
            ;; FontForge code suggests it might. The treatment there
            ;; was to snap values near zero to zero exactly, rather
            ;; than what we have done here.)
-           [factor (* sign
-                      (sqrt
-                       (max 0 (/ (- (* rx² ry²) rx²y₁^²+ry²x₁^²) rx²y₁^²+ry²x₁^²))))]
-
+           [factor
+            (let ([numer (max 0 (- (* rx² ry²) rx²y₁^²+ry²x₁^²))])
+              (* sign (/ numer rx²y₁^²+ry²x₁^²)))]
            [cx^ (/ (* factor rx y₁^) ry)]
            [cy^ (/ (* factor ry x₁^) rx)])
       (values cx^ cy^)))
@@ -702,6 +702,68 @@
                 (values rx ry (/ (* pi (mod rotation 360)) -180))
                 (values ry rx (/ (* pi (mod (+ 90 rotation) 360)) -180)))]
            [(cosφ sinφ) (values (cos φ) (sin φ))]
+           [(xsplines ysplines)
+            (if (and (RealNear? x₁ x₂) (RealNear? y₁ y₂))
+                ;; FIXME: THIS BRANCH IS NOT RIGHT YET.
+                (let* ([sign (if (eq? fA fS) -1 1)]
+                       [cx (* sign (+ (* rx cosφ) (* ry sinφ)))]
+                       [cy (* sign (- (* ry cosφ) (* rx sinφ)))])
+                  (elliptic-arc-piecewise-bezier degree spline-count-max
+                                                 error-threshold
+                                                 semimajor semiminor
+                                                 cx cy φ 0 360))
+                (let*-values
+                    ([(x₁^ y₁^) (transformed-start-point x₁ y₁ x₂ y₂ cosφ sinφ)]
+                     [(cx^ cy^) (center-of-transformed-ellipse
+                                 x₁^ y₁^ fA fS semimajor semiminor cosφ sinφ)]
+                     [(cx cy) (center-of-ellipse cx^ cy^ x₁ y₁ x₂ y₂ cosφ sinφ)]
+                     [(λ₁ λ₂) (endpoint-angles x₁ y₁ x₂ y₂ cx cy fS)])
+                  (elliptic-arc-piecewise-bezier degree spline-count-max
+                                                 error-threshold
+                                                 semimajor semiminor
+                                                 cx cy φ λ₁ λ₂)))])
+        ;; Store the exact endpoints.
+        (matrix-1set! xsplines 1 1 x₁)
+        (matrix-1set! ysplines 1 1 y₁)
+        (matrix-1set! xsplines
+                      (matrix-row-count xsplines)
+                      (matrix-column-count xsplines)
+                      x₂)
+        (matrix-1set! ysplines
+                      (matrix-row-count ysplines)
+                      (matrix-column-count ysplines)
+                      y₂)
+
+        (values xsplines ysplines))))
+
+  #|
+  (define/kwargs (expand-arc x₁ y₁ x₂ y₂ fA fS rx ry rotation degree
+                             [spline-count-max #f]
+                             [error-threshold #f])
+    (assert (positive? rx))
+    (assert (positive? ry))
+    (assert (<= 2 degree 3))
+    (let ([spline-count-max
+           (if spline-count-max spline-count-max
+               (case degree
+                 [(2) (fluid-ref svg:elliptic-arc-quadratic-spline-count-max)]
+                 [(3) (fluid-ref svg:elliptic-arc-cubic-spline-count-max)]))]
+          [error-threshold
+           (if error-threshold error-threshold
+               (case degree
+                 [(2) (fluid-ref svg:elliptic-arc-quadratic-error-threshold)]
+                 [(3) (fluid-ref svg:elliptic-arc-cubic-error-threshold)]))])
+      (let*-values
+          ;; Modify the problem so instead of the original @var{rx} and
+          ;; @var{ry} we are working with the semi-major and semi-minor
+          ;; axes, and @var{φ}, the (possibly negative)
+          ;; counterclockwise rotation with respect to the semi-major
+          ;; axis.
+          ([(semimajor semiminor φ)
+            (if (<= ry rx)
+                (values rx ry (/ (* pi (mod rotation 360)) -180))
+                (values ry rx (/ (* pi (mod (+ 90 rotation) 360)) -180)))]
+           [(cosφ sinφ) (values (cos φ) (sin φ))]
            [(x₁^ y₁^) (transformed-start-point x₁ y₁ x₂ y₂ cosφ sinφ)]
            [(cx^ cy^) (center-of-transformed-ellipse
                        x₁^ y₁^ fA fS semimajor semiminor cosφ sinφ)]
@@ -724,6 +786,7 @@
                       y₂)
 
         (values xsplines ysplines))))
+  |#
 
   (define (spline->command xspline yspline)
     (case (row-matrix-size xspline)

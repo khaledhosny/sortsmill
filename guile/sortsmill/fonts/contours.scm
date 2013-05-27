@@ -185,15 +185,18 @@ unimplemented’."
 
   ;;-------------------------------------------------------------------------
 
-  (define/kwargs (path-data->contours path-data [degree 3])
-    (assert (<= 2 degree 3))
-    (if (string? path-data)
-        [subpaths->contours
-         (case degree
-           [(2) (svg:parse-path-data path-data #:stage 'quadratic)]
-           [(3) (svg:parse-path-data path-data #:stage 'cubic)])
-         degree]
-        [subpaths->contours path-data degree]))
+  (define/kwargs (path-data->contours path-data [degree #f])
+    (assert (or (not degree) (<= 2 degree 3)))
+    ;; FIXME: Perhaps support automatic determination of the best degree
+    ;; for the given path data, rather than defaulting to degree 3.
+    (let ([degree (if degree degree 3)])
+      (if (string? path-data)
+          [subpaths->contours
+           (case degree
+             [(2) (svg:parse-path-data path-data #:stage 'quadratic)]
+             [(3) (svg:parse-path-data path-data #:stage 'cubic)])
+           degree]
+          [subpaths->contours path-data degree])))
 
   (define (subpaths->contours path-data degree)
     (map (cut subpath->contour <> degree) (svg:subpaths->lists path-data)))
