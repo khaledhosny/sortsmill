@@ -2191,14 +2191,36 @@ SVGParseExtendedPath (xmlNodePtr svg, xmlNodePtr top)
   outline = xmlGetProp (svg, "d");
   if (outline != NULL)
     {
+#if 1
+      // FIXME FIXME FIXME: Handle path data that contains more than
+      // one path. (Maybe best done by rewriting SVG support from
+      // scratch.)
       head = SVGParsePath (outline);
+#else
+      SCM contours =
+        scm_call_1 (scm_c_public_ref ("sortsmill", "path-data->contours"),
+                    scm_from_locale_string ((char *) outline));
+      if (!scm_is_null (contours))
+        {
+          // FIXME FIXME FIXME: Handle path data that contains more
+          // than one path. (Maybe best done by rewriting SVG support
+          // from scratch.)
+          head =
+            scm_to_pointer
+            (SCM_FF_API_CALL_1
+             ("SplinePointList->pointer",
+              scm_c_value_ref
+              (scm_call_1
+               (scm_c_public_ref ("sortsmill",
+                                  "contour->malloced-SplinePointList"),
+                SCM_CAR (contours)), 0)));
+        }
+#endif
       xmlFree (outline);
     }
 #if 0
-  effect =
-    xmlGetProp (svg, "path-effect" /*, "inkscape:" */ );
-  spirooutline =
-    xmlGetProp (svg, "original-d" /*, "inkscape:" */ );
+  effect = xmlGetProp (svg, "path-effect" /*, "inkscape:" */ );
+  spirooutline = xmlGetProp (svg, "original-d" /*, "inkscape:" */ );
   if (effect != NULL && spirooutline != NULL && *effect == '#')
     {
       xmlNodePtr effect_type = XmlFindID (top, effect + 1);
@@ -3412,7 +3434,7 @@ SVGFigureStyle (struct svg_state *st, char *name,
               pt = propbuf;
               while (*name != '\0' && *name != ';' && !isspace (*name))
                 {
-                  if (pt < namebuf + sizeof (namebuf) - 1)
+                  if (pt < propbuf + sizeof (propbuf) - 1)
                     *pt++ = *name;
                   ++name;
                 }
@@ -3427,17 +3449,15 @@ SVGFigureStyle (struct svg_state *st, char *name,
             xmlParseColor (propbuf, &st->currentColor, NULL, st);
           else if (strcmp (namebuf, "fill") == 0)
             st->dofill =
-              xmlParseColor (propbuf, &st->fillcol,
-                             fill_colour_source, st);
+              xmlParseColor (propbuf, &st->fillcol, fill_colour_source, st);
           else if (strcmp (namebuf, "visibility") == 0)
             st->isvisible = strcmp (propbuf, "hidden") != 0 &&
-              strcmp (propbuf, "colapse") != 0;
+              strcmp (propbuf, "collapse") != 0;
           else if (strcmp (namebuf, "fill-opacity") == 0)
             st->fillopacity = strtod (propbuf, NULL);
           else if (strcmp (namebuf, "stroke") == 0)
             st->dostroke =
-              xmlParseColor (propbuf, &st->strokecol,
-                             stroke_colour_source, st);
+              xmlParseColor (propbuf, &st->strokecol, stroke_colour_source, st);
           else if (strcmp (namebuf, "stroke-opacity") == 0)
             st->strokeopacity = strtod ((char *) propbuf, NULL);
           else if (strcmp (namebuf, "stroke-width") == 0)
@@ -3641,8 +3661,7 @@ tail_recurse:
   if ((treat_symbol_as_g && xmlStrcmp (svg->name, "symbol") == 0) ||
       xmlStrcmp (svg->name, "svg") == 0 ||
       xmlStrcmp (svg->name, "glyph") == 0 ||
-      xmlStrcmp (svg->name, "pattern") == 0 ||
-      xmlStrcmp (svg->name, "g") == 0)
+      xmlStrcmp (svg->name, "pattern") == 0 || xmlStrcmp (svg->name, "g") == 0)
     {
       ehead = elast = NULL;
       for (kid = svg->children; kid != NULL; kid = kid->next)
