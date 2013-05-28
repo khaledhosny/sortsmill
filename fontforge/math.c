@@ -822,6 +822,8 @@ extpart_finishedit (GGadget *g, int r, int c, int wasnew)
   cols = GMatrixEditGetColCnt (g);
   if (stuff[r * cols + 0].u.md_str == NULL)
     return;
+  if (math->sf == NULL)
+    return;
   sc = SFGetChar (math->sf, -1, stuff[r * cols + 0].u.md_str);
   if (sc == NULL)
     return;
