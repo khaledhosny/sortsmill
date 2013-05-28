@@ -35,6 +35,7 @@ sortsmill/math/polyspline/elev.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/ellipses.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/eval.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/implicit.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/mul.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/kwargs.go
+sortsmill/math/polyspline/intersection.go: sortsmill/math/matrices.go sortsmill/i18n.go
 sortsmill/math/polyspline/inversion.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/eval.go sortsmill/math/polyspline/reduce.go sortsmill/math/polyspline/roots.go sortsmill/math/matrices.go sortsmill/math/math-constants.go sortsmill/kwargs.go sortsmill/i18n.go
 sortsmill/math/polyspline/mul.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/reduce.go: sortsmill/dynlink.go
@@ -49,7 +50,7 @@ sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.g
 sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/iconv.go
 sortsmill/strings/grabbed-strings.go: sortsmill/alloc.go
 sortsmill/strings/rexp.go: sortsmill/dynlink.go
-sortsmill/svg/path-data.go: sortsmill/kwargs.go sortsmill/math/polyspline.go sortsmill/math/matrices.go sortsmill/math/geometry.go sortsmill/math/math-constants.go
+sortsmill/svg/path-data.go: sortsmill/kwargs.go sortsmill/math/polyspline.go sortsmill/math/matrices.go sortsmill/math/geometry.go sortsmill/math/math-constants.go sortsmill/nearness.go
 sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
 sortsmill/usermenu/pure.go: sortsmill/pure.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/fonts/views.go sortsmill/editor/finalization.go sortsmill/strings/hash-guillemet.go
 sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/machine.go sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/notices.go
@@ -67,7 +68,7 @@ sortsmill/math.go: sortsmill/math/brentroot.go sortsmill/math/functions.go sorts
 sortsmill/math/geometry.go: sortsmill/math/geometry/lines.go
 sortsmill/math/gsl.go: sortsmill/math/gsl/error.go sortsmill/math/gsl/matrices.go
 sortsmill/math/matrices.go: sortsmill/math/matrices/arithmetic.go sortsmill/math/matrices/base.go sortsmill/math/matrices/bezout.go sortsmill/math/matrices/linalg.go
-sortsmill/math/polyspline.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/bases.go sortsmill/math/polyspline/compose.go sortsmill/math/polyspline/deriv.go sortsmill/math/polyspline/div.go sortsmill/math/polyspline/elev.go sortsmill/math/polyspline/ellipses.go sortsmill/math/polyspline/eval.go sortsmill/math/polyspline/implicit.go sortsmill/math/polyspline/inversion.go sortsmill/math/polyspline/mul.go sortsmill/math/polyspline/reduce.go sortsmill/math/polyspline/roots.go sortsmill/math/polyspline/subdiv.go
+sortsmill/math/polyspline.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/bases.go sortsmill/math/polyspline/compose.go sortsmill/math/polyspline/deriv.go sortsmill/math/polyspline/div.go sortsmill/math/polyspline/elev.go sortsmill/math/polyspline/ellipses.go sortsmill/math/polyspline/eval.go sortsmill/math/polyspline/implicit.go sortsmill/math/polyspline/intersection.go sortsmill/math/polyspline/inversion.go sortsmill/math/polyspline/mul.go sortsmill/math/polyspline/reduce.go sortsmill/math/polyspline/roots.go sortsmill/math/polyspline/subdiv.go
 sortsmill/pkg-info.go: sortsmill/pkg-info/directory-layout.go sortsmill/pkg-info/i18n.go sortsmill/pkg-info/package.go sortsmill/pkg-info/pure.go sortsmill/pkg-info/python.go sortsmill/pkg-info/version.go
 sortsmill/strings.go: sortsmill/strings/gc.go sortsmill/strings/grabbed-strings.go sortsmill/strings/hash-guillemet.go sortsmill/strings/rexp.go sortsmill/strings/text-embedding.go
 sortsmill/svg.go: sortsmill/svg/path-data.go

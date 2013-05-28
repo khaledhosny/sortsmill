@@ -641,6 +641,13 @@ GO_FILES += sortsmill/math/polyspline/implicit.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/implicit.scm
 
 
+# (sortsmill math polyspline intersection)
+
+DIST_SCM_FILES += sortsmill/math/polyspline/intersection.scm
+GO_FILES += sortsmill/math/polyspline/intersection.go
+MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/intersection.scm
+
+
 # (sortsmill math polyspline inversion)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/inversion.scm

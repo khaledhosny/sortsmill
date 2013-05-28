@@ -704,14 +704,13 @@
            [(cosφ sinφ) (values (cos φ) (sin φ))]
            [(xsplines ysplines)
             (if (and (RealNear? x₁ x₂) (RealNear? y₁ y₂))
-                ;; FIXME: THIS BRANCH IS NOT RIGHT YET.
                 (let* ([sign (if (eq? fA fS) -1 1)]
-                       [cx (* sign (+ (* rx cosφ) (* ry sinφ)))]
-                       [cy (* sign (- (* ry cosφ) (* rx sinφ)))])
+                       [cx (+ x₁ (* sign (+ (* rx cosφ) (* ry sinφ))))]
+                       [cy (+ y₁ (* sign (- (* ry cosφ) (* rx sinφ))))])
                   (elliptic-arc-piecewise-bezier degree spline-count-max
                                                  error-threshold
                                                  semimajor semiminor
-                                                 cx cy φ 0 360))
+                                                 cx cy φ 0 (* 2 pi)))
                 (let*-values
                     ([(x₁^ y₁^) (transformed-start-point x₁ y₁ x₂ y₂ cosφ sinφ)]
                      [(cx^ cy^) (center-of-transformed-ellipse
