@@ -18,7 +18,8 @@
 
 (library (sortsmill fonts ufo)
 
-  (export ufo:read-metainfo)
+  (export ufo:read-metainfo
+          ufo:read-fontinfo)
 
   (import (sortsmill i18n)
           (rnrs)
@@ -30,6 +31,9 @@
 
   (define (ufo:read-metainfo ufo)
     (parse-dict-xml ufo "metainfo.plist"))
+
+  (define (ufo:read-fontinfo ufo)
+    (parse-dict-xml ufo "fontinfo.plist"))
 
   (define (parse-dict-xml ufo . components)
     (match (apply parse-ufo-xml ufo components)
@@ -70,6 +74,7 @@
       [(*TOP* ,[e]) e]
       [(plist ,[e] ...) (list e ...)]
       [(string ,s) s]
+      [(string) ""]
       [(integer ,n) (string->number n)]
       [(real ,x) (string->number x)]
       [(true) #t]
