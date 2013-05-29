@@ -377,6 +377,13 @@ GO_FILES += sortsmill/fonts/psmat.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/psmat.scm
 
 
+# (sortsmill fonts ufo)
+
+DIST_SCM_FILES += sortsmill/fonts/ufo.scm
+GO_FILES += sortsmill/fonts/ufo.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/ufo.scm
+
+
 # (sortsmill fonts views)
 
 DIST_SCM_FILES += sortsmill/fonts/views.scm
