@@ -24,6 +24,7 @@ VISIBLE void scm_c_assert_can_be_list_link (const char *who, SCM lst, SCM p);
 VISIBLE void scm_c_assert_can_be_alist_link (const char *who, SCM lst, SCM p);
 VISIBLE void scm_c_assert_list_does_not_end_here (const char *who, SCM lst,
                                                   SCM p);
+VISIBLE void scm_c_assert_list_ends_here (const char *who, SCM lst, SCM p);
 
 VISIBLE void
 scm_c_raise_is_not_a_list (const char *who, SCM lst)
@@ -57,3 +58,15 @@ scm_c_raise_list_ends_prematurely (const char *who, SCM lst)
       rnrs_c_make_message_condition (_("list ends prematurely")),
       rnrs_make_irritants_condition (scm_list_1 (lst))));
 }
+
+VISIBLE void
+scm_c_raise_list_fails_to_end (const char *who, SCM lst)
+{
+  rnrs_raise_condition
+    (scm_list_4
+     (rnrs_make_assertion_violation (),
+      rnrs_c_make_who_condition (who),
+      rnrs_c_make_message_condition (_("list fails to end as expected")),
+      rnrs_make_irritants_condition (scm_list_1 (lst))));
+}
+

@@ -90,6 +90,8 @@ SCM scm_find_bracketed_root_scm_sbern_exact (SCM spline, SCM a, SCM b,
 SCM scm_find_bracketed_root_scm_spower_exact (SCM spline, SCM a, SCM b,
                                               SCM tolerance, SCM epsilon);
 
+SCM scm_find_roots_scm_mono (SCM poly, SCM a, SCM b);
+
 #if 0
 {
 #endif

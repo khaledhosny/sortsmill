@@ -18,26 +18,14 @@
 
 (library (sortsmill math polyspline intersection)
 
-  (export poly:intersect-with-line-mono)
+  (export poly:plug-xy-into-line-scm-mono
+          poly:intersect-with-line-mono)
 
-  (import (sortsmill math matrices)
-          (sortsmill i18n)
+  (import (sortsmill math polyspline roots)
+          (sortsmill dynlink)
           (rnrs)
-          (except (guile) error)
-          (ice-9 match))
+          (except (guile) error))
 
-  (define (poly:intersect-with-line-mono xspline yspline line)
-    (match line
-      [(C A B) (let* ([Ax (vector-map (lambda (t) (* A t)) (row-matrix->vector xspline))]
-                      [By (vector-map (lambda (t) (* B t)) (row-matrix->vector yspline))]
-                      [n (vector-length Ax)]
-                      [Ax+By+C (make-vector n)])
-                 (vector-set! Ax+By+C 0 (+ (vector-ref Ax 0) (vector-ref By 0) C))
-                 (do ([i 1 (1+ i)]) ([= i n])
-                   (vector-set! Ax+By+C i (+ (vector-ref Ax i) (vector-ref By i))))
-                 Ax+By+C)]
-      [other (assertion-violation 'poly:intersect-with-line-mono
-                                  (_ "expected (C A B) for the line Ax+By+C=0")
-                                  other)] ))
+  (sortsmill-dynlink-load-extension "init_math_polyspline_intersection")
 
   ) ;; end of library.

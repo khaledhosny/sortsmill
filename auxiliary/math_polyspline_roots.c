@@ -20,6 +20,8 @@
 #include <sortsmill/guile.h>
 #include <sortsmill/copy_with_strides.h>
 
+static const char *my_module = "sortsmill math polyspline roots";
+
 //-------------------------------------------------------------------------
 
 static inline int
@@ -628,6 +630,15 @@ scm_find_bracketed_root_scm_spower_exact (SCM spline, SCM a, SCM b,
     scm_find_bracketed_root_scm_exact
     ("scm_find_bracketed_root_scm_spower_exact", eval_scm_spower, spline, a, b,
      tolerance, epsilon);
+}
+
+//-------------------------------------------------------------------------
+
+VISIBLE SCM
+scm_find_roots_scm_mono (SCM poly, SCM a, SCM b)
+{
+  return scm_call_3 (scm_c_public_ref (my_module, "poly:find-roots-scm-mono"),
+                     poly, a, b);
 }
 
 //-------------------------------------------------------------------------

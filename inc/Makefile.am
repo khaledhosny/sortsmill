@@ -157,6 +157,7 @@ nobase_include_HEADERS += sortsmill/math/polyspline/elev.h
 nobase_include_HEADERS += sortsmill/math/polyspline/ellipses.h
 nobase_include_HEADERS += sortsmill/math/polyspline/eval.h
 nobase_include_HEADERS += sortsmill/math/polyspline/implicit.h
+nobase_include_HEADERS += sortsmill/math/polyspline/intersection.h
 nobase_include_HEADERS += sortsmill/math/polyspline/mul.h
 nobase_include_HEADERS += sortsmill/math/polyspline/reduce.h
 nobase_include_HEADERS += sortsmill/math/polyspline/roots.h

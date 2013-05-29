@@ -35,7 +35,7 @@ sortsmill/math/polyspline/elev.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/ellipses.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/eval.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/implicit.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/mul.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill/math/polyspline/intersection.go: sortsmill/math/matrices.go sortsmill/i18n.go
+sortsmill/math/polyspline/intersection.go: sortsmill/math/matrices.go sortsmill/i18n.go sortsmill/dynlink.go
 sortsmill/math/polyspline/inversion.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/eval.go sortsmill/math/polyspline/reduce.go sortsmill/math/polyspline/roots.go sortsmill/math/matrices.go sortsmill/math/math-constants.go sortsmill/kwargs.go sortsmill/i18n.go
 sortsmill/math/polyspline/mul.go: sortsmill/dynlink.go
 sortsmill/math/polyspline/reduce.go: sortsmill/dynlink.go

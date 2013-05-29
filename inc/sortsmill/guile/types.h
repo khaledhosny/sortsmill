@@ -36,11 +36,13 @@ extern "C"
 void scm_c_raise_is_not_a_list (const char *who, SCM lst);
 void scm_c_raise_is_not_an_alist (const char *who, SCM lst);
 void scm_c_raise_list_ends_prematurely (const char *who, SCM lst);
+void scm_c_raise_list_fails_to_end (const char *who, SCM lst);
 
 inline void scm_c_assert_can_be_list_link (const char *who, SCM lst, SCM p);
 inline void scm_c_assert_can_be_alist_link (const char *who, SCM lst, SCM p);
 inline void scm_c_assert_list_does_not_end_here (const char *who, SCM lst,
                                                  SCM p);
+inline void scm_c_assert_list_ends_here (const char *who, SCM lst, SCM p);
 
 inline void
 scm_c_assert_can_be_list_link (const char *who, SCM lst, SCM p)
@@ -61,6 +63,13 @@ scm_c_assert_list_does_not_end_here (const char *who, SCM lst, SCM p)
 {
   if (scm_is_null (p))
     scm_c_raise_list_ends_prematurely (who, lst);
+}
+
+inline void
+scm_c_assert_list_ends_here (const char *who, SCM lst, SCM p)
+{
+  if (!scm_is_null (p))
+    scm_c_raise_list_fails_to_end (who, lst);
 }
 
 #if 0
