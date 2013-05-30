@@ -21,10 +21,12 @@
 /* Interface routines to Raph's spiro package. */
 
 #include "spiroentrypoints.h"
+#include <stdlib.h>
 
-void
+bool
 SpiroCPsToBezier (spiro_cp *spiros, int n, int isclosed, bezctx *bc)
 {
+  bool success = false;
   if (1 <= n)
     {
       spiro_seg *s;
@@ -40,14 +42,21 @@ SpiroCPsToBezier (spiro_cp *spiros, int n, int isclosed, bezctx *bc)
         }
       else
         s = run_spiro (spiros, n);
-      spiro_to_bpath (s, n, bc);
-      free_spiro (s);
+      if (s != NULL)
+        {
+          spiro_to_bpath (s, n, bc);
+          free_spiro (s);
+          success = true;
+        }
     }
+  return success;
 }
 
-void
+bool
 TaggedSpiroCPsToBezier (spiro_cp *spiros, bezctx *bc)
 {
+  bool success = false;
+
   int n = 0;
   while (spiros[n].ty != 'z' && spiros[n].ty != '}')
     n++;
@@ -57,7 +66,13 @@ TaggedSpiroCPsToBezier (spiro_cp *spiros, bezctx *bc)
   if (1 <= n)
     {
       spiro_seg *s = run_spiro (spiros, n);
-      spiro_to_bpath (s, n, bc);
-      free_spiro (s);
+      if (s != NULL)
+        {
+          spiro_to_bpath (s, n, bc);
+          free_spiro (s);
+          success = true;
+        }
     }
+
+  return success;
 }

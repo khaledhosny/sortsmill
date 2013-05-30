@@ -23,6 +23,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "bezctx_intf.h"
 #include "spiro.h"
@@ -170,7 +171,9 @@ integrate_spiro (const double ks[4], double xy[2])
         u = 1;
         v = 0;
         v += (1. / 12) * t1_2 + (1. / 80) * t1_4;
-        u -= (1. / 24) * t2_2 + (1. / 160) * t2_4 + (1. / 896) * t2_6 + (1. / 4608) * t2_8;
+        u -=
+          (1. / 24) * t2_2 + (1. / 160) * t2_4 + (1. / 896) * t2_6 +
+          (1. / 4608) * t2_8;
         v -= (1. / 480) * t3_4 + (1. / 2688) * t3_6 + (1. / 13824) * t3_8;
         u += (1. / 1920) * t4_4 + (1. / 10752) * t4_6 + (1. / 55296) * t4_8;
         v += (1. / 53760) * t5_6 + (1. / 276480) * t5_8;
@@ -201,7 +204,8 @@ integrate_spiro (const double ks[4], double xy[2])
         double t4_7 = 2 * (t2_2 * t2_5 + t2_3 * t2_4);
         double t4_8 = 2 * (t2_2 * t2_6 + t2_3 * t2_5) + t2_4 * t2_4;
         double t4_9 = 2 * (t2_2 * t2_7 + t2_3 * t2_6 + t2_4 * t2_5);
-        double t4_10 = 2 * (t2_2 * t2_8 + t2_3 * t2_7 + t2_4 * t2_6) + t2_5 * t2_5;
+        double t4_10 =
+          2 * (t2_2 * t2_8 + t2_3 * t2_7 + t2_4 * t2_6) + t2_5 * t2_5;
         double t5_6 = t4_4 * t1_2 + t4_5 * t1_1;
         double t5_8 = t4_4 * t1_4 + t4_5 * t1_3 + t4_6 * t1_2 + t4_7 * t1_1;
         double t5_10 = t4_6 * t1_4 + t4_7 * t1_3 + t4_8 * t1_2 + t4_9 * t1_1;
@@ -209,7 +213,8 @@ integrate_spiro (const double ks[4], double xy[2])
         double t6_7 = t4_4 * t2_3 + t4_5 * t2_2;
         double t6_8 = t4_4 * t2_4 + t4_5 * t2_3 + t4_6 * t2_2;
         double t6_9 = t4_4 * t2_5 + t4_5 * t2_4 + t4_6 * t2_3 + t4_7 * t2_2;
-        double t6_10 = t4_4 * t2_6 + t4_5 * t2_5 + t4_6 * t2_4 + t4_7 * t2_3 + t4_8 * t2_2;
+        double t6_10 =
+          t4_4 * t2_6 + t4_5 * t2_5 + t4_6 * t2_4 + t4_7 * t2_3 + t4_8 * t2_2;
         double t7_8 = t6_6 * t1_2 + t6_7 * t1_1;
         double t7_10 = t6_6 * t1_4 + t6_7 * t1_3 + t6_8 * t1_2 + t6_9 * t1_1;
         double t8_8 = t6_6 * t2_2;
@@ -220,11 +225,21 @@ integrate_spiro (const double ks[4], double xy[2])
         u = 1;
         v = 0;
         v += (1. / 12) * t1_2 + (1. / 80) * t1_4;
-        u -= (1. / 24) * t2_2 + (1. / 160) * t2_4 + (1. / 896) * t2_6 + (1. / 4608) * t2_8;
-        v -= (1. / 480) * t3_4 + (1. / 2688) * t3_6 + (1. / 13824) * t3_8 + (1. / 67584) * t3_10;
-        u += (1. / 1920) * t4_4 + (1. / 10752) * t4_6 + (1. / 55296) * t4_8 + (1. / 270336) * t4_10;
-        v += (1. / 53760) * t5_6 + (1. / 276480) * t5_8 + (1. / 1.35168e+06) * t5_10;
-        u -= (1. / 322560) * t6_6 + (1. / 1.65888e+06) * t6_8 + (1. / 8.11008e+06) * t6_10;
+        u -=
+          (1. / 24) * t2_2 + (1. / 160) * t2_4 + (1. / 896) * t2_6 +
+          (1. / 4608) * t2_8;
+        v -=
+          (1. / 480) * t3_4 + (1. / 2688) * t3_6 + (1. / 13824) * t3_8 +
+          (1. / 67584) * t3_10;
+        u +=
+          (1. / 1920) * t4_4 + (1. / 10752) * t4_6 + (1. / 55296) * t4_8 +
+          (1. / 270336) * t4_10;
+        v +=
+          (1. / 53760) * t5_6 + (1. / 276480) * t5_8 +
+          (1. / 1.35168e+06) * t5_10;
+        u -=
+          (1. / 322560) * t6_6 + (1. / 1.65888e+06) * t6_8 +
+          (1. / 8.11008e+06) * t6_10;
         v -= (1. / 1.16122e+07) * t7_8 + (1. / 5.67706e+07) * t7_10;
         u += (1. / 9.28973e+07) * t8_8 + (1. / 4.54164e+08) * t8_10;
         v += (1. / 4.08748e+09) * t9_10;
@@ -254,7 +269,8 @@ integrate_spiro (const double ks[4], double xy[2])
         double t4_7 = 2 * (t2_2 * t2_5 + t2_3 * t2_4);
         double t4_8 = 2 * (t2_2 * t2_6 + t2_3 * t2_5) + t2_4 * t2_4;
         double t4_9 = 2 * (t2_2 * t2_7 + t2_3 * t2_6 + t2_4 * t2_5);
-        double t4_10 = 2 * (t2_2 * t2_8 + t2_3 * t2_7 + t2_4 * t2_6) + t2_5 * t2_5;
+        double t4_10 =
+          2 * (t2_2 * t2_8 + t2_3 * t2_7 + t2_4 * t2_6) + t2_5 * t2_5;
         double t4_11 = 2 * (t2_3 * t2_8 + t2_4 * t2_7 + t2_5 * t2_6);
         double t4_12 = 2 * (t2_4 * t2_8 + t2_5 * t2_7) + t2_6 * t2_6;
         double t5_6 = t4_4 * t1_2 + t4_5 * t1_1;
@@ -265,12 +281,14 @@ integrate_spiro (const double ks[4], double xy[2])
         double t6_7 = t4_4 * t2_3 + t4_5 * t2_2;
         double t6_8 = t4_4 * t2_4 + t4_5 * t2_3 + t4_6 * t2_2;
         double t6_9 = t4_4 * t2_5 + t4_5 * t2_4 + t4_6 * t2_3 + t4_7 * t2_2;
-        double t6_10 = t4_4 * t2_6 + t4_5 * t2_5 + t4_6 * t2_4 + t4_7 * t2_3 + t4_8 * t2_2;
+        double t6_10 =
+          t4_4 * t2_6 + t4_5 * t2_5 + t4_6 * t2_4 + t4_7 * t2_3 + t4_8 * t2_2;
         double t6_11 =
-          t4_4 * t2_7 + t4_5 * t2_6 + t4_6 * t2_5 + t4_7 * t2_4 + t4_8 * t2_3 + t4_9 * t2_2;
+          t4_4 * t2_7 + t4_5 * t2_6 + t4_6 * t2_5 + t4_7 * t2_4 + t4_8 * t2_3 +
+          t4_9 * t2_2;
         double t6_12 =
-          t4_4 * t2_8 + t4_5 * t2_7 + t4_6 * t2_6 + t4_7 * t2_5 + t4_8 * t2_4 + t4_9 * t2_3 +
-          t4_10 * t2_2;
+          t4_4 * t2_8 + t4_5 * t2_7 + t4_6 * t2_6 + t4_7 * t2_5 + t4_8 * t2_4 +
+          t4_9 * t2_3 + t4_10 * t2_2;
         double t7_8 = t6_6 * t1_2 + t6_7 * t1_1;
         double t7_10 = t6_6 * t1_4 + t6_7 * t1_3 + t6_8 * t1_2 + t6_9 * t1_1;
         double t7_12 = t6_8 * t1_4 + t6_9 * t1_3 + t6_10 * t1_2 + t6_11 * t1_1;
@@ -278,7 +296,8 @@ integrate_spiro (const double ks[4], double xy[2])
         double t8_9 = t6_6 * t2_3 + t6_7 * t2_2;
         double t8_10 = t6_6 * t2_4 + t6_7 * t2_3 + t6_8 * t2_2;
         double t8_11 = t6_6 * t2_5 + t6_7 * t2_4 + t6_8 * t2_3 + t6_9 * t2_2;
-        double t8_12 = t6_6 * t2_6 + t6_7 * t2_5 + t6_8 * t2_4 + t6_9 * t2_3 + t6_10 * t2_2;
+        double t8_12 =
+          t6_6 * t2_6 + t6_7 * t2_5 + t6_8 * t2_4 + t6_9 * t2_3 + t6_10 * t2_2;
         double t9_10 = t8_8 * t1_2 + t8_9 * t1_1;
         double t9_12 = t8_8 * t1_4 + t8_9 * t1_3 + t8_10 * t1_2 + t8_11 * t1_1;
         double t10_10 = t8_8 * t2_2;
@@ -289,21 +308,27 @@ integrate_spiro (const double ks[4], double xy[2])
         u = 1;
         v = 0;
         v += (1. / 12) * t1_2 + (1. / 80) * t1_4;
-        u -= (1. / 24) * t2_2 + (1. / 160) * t2_4 + (1. / 896) * t2_6 + (1. / 4608) * t2_8;
-        v -=
-          (1. / 480) * t3_4 + (1. / 2688) * t3_6 + (1. / 13824) * t3_8 + (1. / 67584) * t3_10 +
-          (1. / 319488) * t3_12;
-        u +=
-          (1. / 1920) * t4_4 + (1. / 10752) * t4_6 + (1. / 55296) * t4_8 + (1. / 270336) * t4_10 +
-          (1. / 1.27795e+06) * t4_12;
-        v +=
-          (1. / 53760) * t5_6 + (1. / 276480) * t5_8 + (1. / 1.35168e+06) * t5_10 +
-          (1. / 6.38976e+06) * t5_12;
         u -=
-          (1. / 322560) * t6_6 + (1. / 1.65888e+06) * t6_8 + (1. / 8.11008e+06) * t6_10 +
-          (1. / 3.83386e+07) * t6_12;
-        v -= (1. / 1.16122e+07) * t7_8 + (1. / 5.67706e+07) * t7_10 + (1. / 2.6837e+08) * t7_12;
-        u += (1. / 9.28973e+07) * t8_8 + (1. / 4.54164e+08) * t8_10 + (1. / 2.14696e+09) * t8_12;
+          (1. / 24) * t2_2 + (1. / 160) * t2_4 + (1. / 896) * t2_6 +
+          (1. / 4608) * t2_8;
+        v -=
+          (1. / 480) * t3_4 + (1. / 2688) * t3_6 + (1. / 13824) * t3_8 +
+          (1. / 67584) * t3_10 + (1. / 319488) * t3_12;
+        u +=
+          (1. / 1920) * t4_4 + (1. / 10752) * t4_6 + (1. / 55296) * t4_8 +
+          (1. / 270336) * t4_10 + (1. / 1.27795e+06) * t4_12;
+        v +=
+          (1. / 53760) * t5_6 + (1. / 276480) * t5_8 +
+          (1. / 1.35168e+06) * t5_10 + (1. / 6.38976e+06) * t5_12;
+        u -=
+          (1. / 322560) * t6_6 + (1. / 1.65888e+06) * t6_8 +
+          (1. / 8.11008e+06) * t6_10 + (1. / 3.83386e+07) * t6_12;
+        v -=
+          (1. / 1.16122e+07) * t7_8 + (1. / 5.67706e+07) * t7_10 +
+          (1. / 2.6837e+08) * t7_12;
+        u +=
+          (1. / 9.28973e+07) * t8_8 + (1. / 4.54164e+08) * t8_10 +
+          (1. / 2.14696e+09) * t8_12;
         v += (1. / 4.08748e+09) * t9_10 + (1. / 1.93226e+10) * t9_12;
         u -= (1. / 4.08748e+10) * t10_10 + (1. / 1.93226e+11) * t10_12;
         v -= (1. / 2.12549e+12) * t11_12;
@@ -333,7 +358,8 @@ integrate_spiro (const double ks[4], double xy[2])
         double t4_7 = 2 * (t2_2 * t2_5 + t2_3 * t2_4);
         double t4_8 = 2 * (t2_2 * t2_6 + t2_3 * t2_5) + t2_4 * t2_4;
         double t4_9 = 2 * (t2_2 * t2_7 + t2_3 * t2_6 + t2_4 * t2_5);
-        double t4_10 = 2 * (t2_2 * t2_8 + t2_3 * t2_7 + t2_4 * t2_6) + t2_5 * t2_5;
+        double t4_10 =
+          2 * (t2_2 * t2_8 + t2_3 * t2_7 + t2_4 * t2_6) + t2_5 * t2_5;
         double t4_11 = 2 * (t2_3 * t2_8 + t2_4 * t2_7 + t2_5 * t2_6);
         double t4_12 = 2 * (t2_4 * t2_8 + t2_5 * t2_7) + t2_6 * t2_6;
         double t4_13 = 2 * (t2_5 * t2_8 + t2_6 * t2_7);
@@ -342,78 +368,93 @@ integrate_spiro (const double ks[4], double xy[2])
         double t5_8 = t4_4 * t1_4 + t4_5 * t1_3 + t4_6 * t1_2 + t4_7 * t1_1;
         double t5_10 = t4_6 * t1_4 + t4_7 * t1_3 + t4_8 * t1_2 + t4_9 * t1_1;
         double t5_12 = t4_8 * t1_4 + t4_9 * t1_3 + t4_10 * t1_2 + t4_11 * t1_1;
-        double t5_14 = t4_10 * t1_4 + t4_11 * t1_3 + t4_12 * t1_2 + t4_13 * t1_1;
+        double t5_14 =
+          t4_10 * t1_4 + t4_11 * t1_3 + t4_12 * t1_2 + t4_13 * t1_1;
         double t6_6 = t4_4 * t2_2;
         double t6_7 = t4_4 * t2_3 + t4_5 * t2_2;
         double t6_8 = t4_4 * t2_4 + t4_5 * t2_3 + t4_6 * t2_2;
         double t6_9 = t4_4 * t2_5 + t4_5 * t2_4 + t4_6 * t2_3 + t4_7 * t2_2;
-        double t6_10 = t4_4 * t2_6 + t4_5 * t2_5 + t4_6 * t2_4 + t4_7 * t2_3 + t4_8 * t2_2;
+        double t6_10 =
+          t4_4 * t2_6 + t4_5 * t2_5 + t4_6 * t2_4 + t4_7 * t2_3 + t4_8 * t2_2;
         double t6_11 =
-          t4_4 * t2_7 + t4_5 * t2_6 + t4_6 * t2_5 + t4_7 * t2_4 + t4_8 * t2_3 + t4_9 * t2_2;
+          t4_4 * t2_7 + t4_5 * t2_6 + t4_6 * t2_5 + t4_7 * t2_4 + t4_8 * t2_3 +
+          t4_9 * t2_2;
         double t6_12 =
-          t4_4 * t2_8 + t4_5 * t2_7 + t4_6 * t2_6 + t4_7 * t2_5 + t4_8 * t2_4 + t4_9 * t2_3 +
-          t4_10 * t2_2;
+          t4_4 * t2_8 + t4_5 * t2_7 + t4_6 * t2_6 + t4_7 * t2_5 + t4_8 * t2_4 +
+          t4_9 * t2_3 + t4_10 * t2_2;
         double t6_13 =
-          t4_5 * t2_8 + t4_6 * t2_7 + t4_7 * t2_6 + t4_8 * t2_5 + t4_9 * t2_4 + t4_10 * t2_3 +
-          t4_11 * t2_2;
+          t4_5 * t2_8 + t4_6 * t2_7 + t4_7 * t2_6 + t4_8 * t2_5 + t4_9 * t2_4 +
+          t4_10 * t2_3 + t4_11 * t2_2;
         double t6_14 =
-          t4_6 * t2_8 + t4_7 * t2_7 + t4_8 * t2_6 + t4_9 * t2_5 + t4_10 * t2_4 + t4_11 * t2_3 +
-          t4_12 * t2_2;
+          t4_6 * t2_8 + t4_7 * t2_7 + t4_8 * t2_6 + t4_9 * t2_5 + t4_10 * t2_4 +
+          t4_11 * t2_3 + t4_12 * t2_2;
         double t7_8 = t6_6 * t1_2 + t6_7 * t1_1;
         double t7_10 = t6_6 * t1_4 + t6_7 * t1_3 + t6_8 * t1_2 + t6_9 * t1_1;
         double t7_12 = t6_8 * t1_4 + t6_9 * t1_3 + t6_10 * t1_2 + t6_11 * t1_1;
-        double t7_14 = t6_10 * t1_4 + t6_11 * t1_3 + t6_12 * t1_2 + t6_13 * t1_1;
+        double t7_14 =
+          t6_10 * t1_4 + t6_11 * t1_3 + t6_12 * t1_2 + t6_13 * t1_1;
         double t8_8 = t6_6 * t2_2;
         double t8_9 = t6_6 * t2_3 + t6_7 * t2_2;
         double t8_10 = t6_6 * t2_4 + t6_7 * t2_3 + t6_8 * t2_2;
         double t8_11 = t6_6 * t2_5 + t6_7 * t2_4 + t6_8 * t2_3 + t6_9 * t2_2;
-        double t8_12 = t6_6 * t2_6 + t6_7 * t2_5 + t6_8 * t2_4 + t6_9 * t2_3 + t6_10 * t2_2;
+        double t8_12 =
+          t6_6 * t2_6 + t6_7 * t2_5 + t6_8 * t2_4 + t6_9 * t2_3 + t6_10 * t2_2;
         double t8_13 =
-          t6_6 * t2_7 + t6_7 * t2_6 + t6_8 * t2_5 + t6_9 * t2_4 + t6_10 * t2_3 + t6_11 * t2_2;
+          t6_6 * t2_7 + t6_7 * t2_6 + t6_8 * t2_5 + t6_9 * t2_4 + t6_10 * t2_3 +
+          t6_11 * t2_2;
         double t8_14 =
-          t6_6 * t2_8 + t6_7 * t2_7 + t6_8 * t2_6 + t6_9 * t2_5 + t6_10 * t2_4 + t6_11 * t2_3 +
-          t6_12 * t2_2;
+          t6_6 * t2_8 + t6_7 * t2_7 + t6_8 * t2_6 + t6_9 * t2_5 + t6_10 * t2_4 +
+          t6_11 * t2_3 + t6_12 * t2_2;
         double t9_10 = t8_8 * t1_2 + t8_9 * t1_1;
         double t9_12 = t8_8 * t1_4 + t8_9 * t1_3 + t8_10 * t1_2 + t8_11 * t1_1;
-        double t9_14 = t8_10 * t1_4 + t8_11 * t1_3 + t8_12 * t1_2 + t8_13 * t1_1;
+        double t9_14 =
+          t8_10 * t1_4 + t8_11 * t1_3 + t8_12 * t1_2 + t8_13 * t1_1;
         double t10_10 = t8_8 * t2_2;
         double t10_11 = t8_8 * t2_3 + t8_9 * t2_2;
         double t10_12 = t8_8 * t2_4 + t8_9 * t2_3 + t8_10 * t2_2;
         double t10_13 = t8_8 * t2_5 + t8_9 * t2_4 + t8_10 * t2_3 + t8_11 * t2_2;
-        double t10_14 = t8_8 * t2_6 + t8_9 * t2_5 + t8_10 * t2_4 + t8_11 * t2_3 + t8_12 * t2_2;
+        double t10_14 =
+          t8_8 * t2_6 + t8_9 * t2_5 + t8_10 * t2_4 + t8_11 * t2_3 +
+          t8_12 * t2_2;
         double t11_12 = t10_10 * t1_2 + t10_11 * t1_1;
-        double t11_14 = t10_10 * t1_4 + t10_11 * t1_3 + t10_12 * t1_2 + t10_13 * t1_1;
+        double t11_14 =
+          t10_10 * t1_4 + t10_11 * t1_3 + t10_12 * t1_2 + t10_13 * t1_1;
         double t12_12 = t10_10 * t2_2;
         double t12_13 = t10_10 * t2_3 + t10_11 * t2_2;
         double t12_14 = t10_10 * t2_4 + t10_11 * t2_3 + t10_12 * t2_2;
         double t13_14 = t12_12 * t1_2 + t12_13 * t1_1;
         double t14_14 = t12_12 * t2_2;
         u = 1;
-        u -= 1. / 24 * t2_2 + 1. / 160 * t2_4 + 1. / 896 * t2_6 + 1. / 4608 * t2_8;
-        u +=
-          1. / 1920 * t4_4 + 1. / 10752 * t4_6 + 1. / 55296 * t4_8 + 1. / 270336 * t4_10 +
-          1. / 1277952 * t4_12 + 1. / 5898240 * t4_14;
         u -=
-          1. / 322560 * t6_6 + 1. / 1658880 * t6_8 + 1. / 8110080 * t6_10 + 1. / 38338560 * t6_12 +
-          1. / 176947200 * t6_14;
+          1. / 24 * t2_2 + 1. / 160 * t2_4 + 1. / 896 * t2_6 + 1. / 4608 * t2_8;
         u +=
-          1. / 92897280 * t8_8 + 1. / 454164480 * t8_10 + 4.6577500191e-10 * t8_12 +
-          1.0091791708e-10 * t8_14;
-        u -= 2.4464949595e-11 * t10_10 + 5.1752777990e-12 * t10_12 + 1.1213101898e-12 * t10_14;
+          1. / 1920 * t4_4 + 1. / 10752 * t4_6 + 1. / 55296 * t4_8 +
+          1. / 270336 * t4_10 + 1. / 1277952 * t4_12 + 1. / 5898240 * t4_14;
+        u -=
+          1. / 322560 * t6_6 + 1. / 1658880 * t6_8 + 1. / 8110080 * t6_10 +
+          1. / 38338560 * t6_12 + 1. / 176947200 * t6_14;
+        u +=
+          1. / 92897280 * t8_8 + 1. / 454164480 * t8_10 +
+          4.6577500191e-10 * t8_12 + 1.0091791708e-10 * t8_14;
+        u -=
+          2.4464949595e-11 * t10_10 + 5.1752777990e-12 * t10_12 +
+          1.1213101898e-12 * t10_14;
         u += 3.9206649992e-14 * t12_12 + 8.4947741650e-15 * t12_14;
         u -= 4.6674583324e-17 * t14_14;
         v = 0;
         v += 1. / 12 * t1_2 + 1. / 80 * t1_4;
         v -=
-          1. / 480 * t3_4 + 1. / 2688 * t3_6 + 1. / 13824 * t3_8 + 1. / 67584 * t3_10 +
-          1. / 319488 * t3_12;
+          1. / 480 * t3_4 + 1. / 2688 * t3_6 + 1. / 13824 * t3_8 +
+          1. / 67584 * t3_10 + 1. / 319488 * t3_12;
         v +=
-          1. / 53760 * t5_6 + 1. / 276480 * t5_8 + 1. / 1351680 * t5_10 + 1. / 6389760 * t5_12 +
-          1. / 29491200 * t5_14;
+          1. / 53760 * t5_6 + 1. / 276480 * t5_8 + 1. / 1351680 * t5_10 +
+          1. / 6389760 * t5_12 + 1. / 29491200 * t5_14;
         v -=
-          1. / 11612160 * t7_8 + 1. / 56770560 * t7_10 + 1. / 268369920 * t7_12 +
-          8.0734333664e-10 * t7_14;
-        v += 2.4464949595e-10 * t9_10 + 5.1752777990e-11 * t9_12 + 1.1213101898e-11 * t9_14;
+          1. / 11612160 * t7_8 + 1. / 56770560 * t7_10 +
+          1. / 268369920 * t7_12 + 8.0734333664e-10 * t7_14;
+        v +=
+          2.4464949595e-10 * t9_10 + 5.1752777990e-11 * t9_12 +
+          1.1213101898e-11 * t9_14;
         v -= 4.7047979991e-13 * t11_12 + 1.0193728998e-13 * t11_14;
         v += 6.5344416654e-16 * t13_14;
 #endif
@@ -495,7 +536,8 @@ compute_ends (const double ks[4], double ends[2][4], double seg_ch)
 }
 
 static void
-compute_pderivs (const spiro_seg *s, double ends[2][4], double derivs[4][2][4], int jinc)
+compute_pderivs (const spiro_seg *s, double ends[2][4], double derivs[4][2][4],
+                 int jinc)
 {
   double recip_d = 2e6;
   double delta = 1. / recip_d;
@@ -681,8 +723,8 @@ count_vec (const spiro_seg *s, int nseg)
 }
 
 static void
-add_mat_line (bandmat *m, double *v, double derivs[4], double x, double y, int j, int jj, int jinc,
-              int nmat)
+add_mat_line (bandmat *m, double *v, double derivs[4], double x, double y,
+              int j, int jj, int jinc, int nmat)
 {
   int k;
 
@@ -698,7 +740,8 @@ add_mat_line (bandmat *m, double *v, double derivs[4], double x, double y, int j
           joff = 2 + (j + 3 - jj + nmat) % nmat;
         }
 #ifdef _SPIRO_VERBOSE
-      printf ("add_mat_line j=%d jj=%d jinc=%d nmat=%d joff=%d\n", j, jj, jinc, nmat, joff);
+      printf ("add_mat_line j=%d jj=%d jinc=%d nmat=%d joff=%d\n", j, jj, jinc,
+              nmat, joff);
 #endif
       v[jj] += x;
       for (k = 0; k < jinc; k++)
@@ -786,7 +829,8 @@ spiro_iter (spiro_seg *s, bandmat *m, int *perm, double *v, int n)
           jk2r = (jj + 3) % nmat;
         }
 
-      add_mat_line (m, v, derivs[0][0], th - ends[0][0], 1, j, jthl, jinc, nmat);
+      add_mat_line (m, v, derivs[0][0], th - ends[0][0], 1, j, jthl, jinc,
+                    nmat);
       add_mat_line (m, v, derivs[1][0], ends[0][1], -1, j, jk0l, jinc, nmat);
       add_mat_line (m, v, derivs[2][0], ends[0][2], -1, j, jk1l, jinc, nmat);
       add_mat_line (m, v, derivs[3][0], ends[0][3], -1, j, jk2l, jinc, nmat);
@@ -849,7 +893,25 @@ spiro_iter (spiro_seg *s, bandmat *m, int *perm, double *v, int n)
   return norm;
 }
 
-static int
+static bool
+check_finiteness (spiro_seg *segs, int num_segs)
+{
+  bool finite = true;
+  int i = 0;
+  while (finite && i < num_segs)
+    {
+      int j = 0;
+      while (finite && j < 4)
+        {
+          finite = isfinite (segs[i].ks[j]);
+          j++;
+        }
+      i++;
+    }
+  return finite;
+}
+
+static bool
 solve_spiro (spiro_seg *s, int nseg)
 {
   bandmat *m;
@@ -861,7 +923,7 @@ solve_spiro (spiro_seg *s, int nseg)
   int i;
 
   if (nmat == 0)
-    return 0;
+    return true;                // No convergence problems.
   if (s[0].ty != '{' && s[0].ty != 'v')
     n_alloc *= 3;
   if (n_alloc < 5)
@@ -870,27 +932,36 @@ solve_spiro (spiro_seg *s, int nseg)
   v = (double *) malloc (sizeof (double) * n_alloc);
   perm = (int *) malloc (sizeof (int) * n_alloc);
 
+  bool converged = false;
   for (i = 0; i < 30; i++)
     {
       norm = spiro_iter (s, m, perm, v, nseg);
 #ifdef _SPIRO_VERBOSE
       printf ("%% norm = %g\n", norm);
 #endif
-      if (norm < 1e-12)
+      if (!check_finiteness (s, nseg))
         break;
+      if (norm < 1e-12)
+        {
+          converged = true;
+          break;
+        }
     }
 
   free (m);
   free (v);
   free (perm);
-  return 0;
+  return converged;
 }
 
 static void
 spiro_seg_to_bpath (const double ks[4],
-                    double x0, double y0, double x1, double y1, bezctx *bc, int depth)
+                    double x0, double y0, double x1, double y1, bezctx *bc,
+                    int depth)
 {
-  double bend = fabs (ks[0]) + fabs (.5 * ks[1]) + fabs (.125 * ks[2]) + fabs ((1. / 48) * ks[3]);
+  double bend =
+    fabs (ks[0]) + fabs (.5 * ks[1]) + fabs (.125 * ks[2]) +
+    fabs ((1. / 48) * ks[3]);
 
   if (!bend > 1e-8)
     {
@@ -931,11 +1002,14 @@ spiro_seg_to_bpath (const double ks[4],
           double xmid, ymid;
           double cth, sth;
 
-          ksub[0] = .5 * ks[0] - .125 * ks[1] + (1. / 64) * ks[2] - (1. / 768) * ks[3];
+          ksub[0] =
+            .5 * ks[0] - .125 * ks[1] + (1. / 64) * ks[2] - (1. / 768) * ks[3];
           ksub[1] = .25 * ks[1] - (1. / 16) * ks[2] + (1. / 128) * ks[3];
           ksub[2] = .125 * ks[2] - (1. / 32) * ks[3];
           ksub[3] = (1. / 16) * ks[3];
-          thsub = rot - .25 * ks[0] + (1. / 32) * ks[1] - (1. / 384) * ks[2] + (1. / 6144) * ks[3];
+          thsub =
+            rot - .25 * ks[0] + (1. / 32) * ks[1] - (1. / 384) * ks[2] +
+            (1. / 6144) * ks[3];
           cth = .5 * scale * cos (thsub);
           sth = .5 * scale * sin (thsub);
           integrate_spiro (ksub, xysub);
@@ -955,8 +1029,14 @@ run_spiro (const spiro_cp *src, int n)
 {
   int nseg = src[0].ty == '{' ? n - 1 : n;
   spiro_seg *s = setup_path (src, n);
-  if (nseg > 1)
-    solve_spiro (s, nseg);
+  bool converged = true;
+  if (1 < nseg)
+    converged = solve_spiro (s, nseg);
+  if (!converged)
+    {
+      free (s);
+      s = NULL;
+    }
   return s;
 }
 
@@ -969,20 +1049,23 @@ free_spiro (spiro_seg *s)
 void
 spiro_to_bpath (const spiro_seg *s, int n, bezctx *bc)
 {
-  int i;
-  int nsegs = s[n - 1].ty == '}' ? n - 1 : n;
-
-  for (i = 0; i < nsegs; i++)
+  if (s != NULL)
     {
-      double x0 = s[i].x;
-      double y0 = s[i].y;
-      double x1 = s[i + 1].x;
-      double y1 = s[i + 1].y;
+      int i;
+      int nsegs = s[n - 1].ty == '}' ? n - 1 : n;
 
-      if (i == 0)
-        bezctx_moveto (bc, x0, y0, s[0].ty == '{');
-      bezctx_mark_knot (bc, i);
-      spiro_seg_to_bpath (s[i].ks, x0, y0, x1, y1, bc, 0);
+      for (i = 0; i < nsegs; i++)
+        {
+          double x0 = s[i].x;
+          double y0 = s[i].y;
+          double x1 = s[i + 1].x;
+          double y1 = s[i + 1].y;
+
+          if (i == 0)
+            bezctx_moveto (bc, x0, y0, s[0].ty == '{');
+          bezctx_mark_knot (bc, i);
+          spiro_seg_to_bpath (s[i].ks, x0, y0, x1, y1, bc, 0);
+        }
     }
 }
 
@@ -1061,7 +1144,9 @@ test_integ (void)
 void
 print_seg (const double ks[4], double x0, double y0, double x1, double y1)
 {
-  double bend = fabs (ks[0]) + fabs (.5 * ks[1]) + fabs (.125 * ks[2]) + fabs ((1. / 48) * ks[3]);
+  double bend =
+    fabs (ks[0]) + fabs (.5 * ks[1]) + fabs (.125 * ks[2]) +
+    fabs ((1. / 48) * ks[3]);
 
   if (bend < 1e-8)
     {
@@ -1094,7 +1179,8 @@ print_seg (const double ks[4], double x0, double y0, double x1, double y1)
           ur = (scale * (1. / 3)) * cos (th_even + th_odd);
           vr = (scale * (1. / 3)) * sin (th_even + th_odd);
 #ifdef _SPIRO_VERBOSE
-          printf ("%g %g %g %g %g %g curveto\n", x0 + ul, y0 + vl, x1 - ur, y1 - vr, x1, y1);
+          printf ("%g %g %g %g %g %g curveto\n", x0 + ul, y0 + vl, x1 - ur,
+                  y1 - vr, x1, y1);
 #endif
 
         }
@@ -1107,11 +1193,14 @@ print_seg (const double ks[4], double x0, double y0, double x1, double y1)
           double xmid, ymid;
           double cth, sth;
 
-          ksub[0] = .5 * ks[0] - .125 * ks[1] + (1. / 64) * ks[2] - (1. / 768) * ks[3];
+          ksub[0] =
+            .5 * ks[0] - .125 * ks[1] + (1. / 64) * ks[2] - (1. / 768) * ks[3];
           ksub[1] = .25 * ks[1] - (1. / 16) * ks[2] + (1. / 128) * ks[3];
           ksub[2] = .125 * ks[2] - (1. / 32) * ks[3];
           ksub[3] = (1. / 16) * ks[3];
-          thsub = rot - .25 * ks[0] + (1. / 32) * ks[1] - (1. / 384) * ks[2] + (1. / 6144) * ks[3];
+          thsub =
+            rot - .25 * ks[0] + (1. / 32) * ks[1] - (1. / 384) * ks[2] +
+            (1. / 6144) * ks[3];
           cth = .5 * scale * cos (thsub);
           sth = .5 * scale * sin (thsub);
           integrate_spiro (ksub, xysub);

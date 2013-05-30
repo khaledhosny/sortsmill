@@ -19,6 +19,7 @@
 
 #include "bezctx_intf.h"
 #include "spiro.h"
+#include <stdbool.h>
 
     /* Possible values of the "ty" field. */
 #define SPIRO_CORNER		'v'
@@ -39,11 +40,12 @@
 /*               and have the ty field of the last cp set to '}'    */
 /* Closed contours must have an extra cp at the end whose ty is 'z' */
 /*               the x&y values of this extra cp are ignored        */
-extern void TaggedSpiroCPsToBezier (spiro_cp *spiros, bezctx *bc);
+extern bool TaggedSpiroCPsToBezier (spiro_cp *spiros, bezctx *bc);
 
 /* The first argument is an array of spiro control points.          */
 /* Open contours do not need to start with '{', nor to end with '}' */
 /* Close contours do not need to end with 'z'                       */
-extern void SpiroCPsToBezier (spiro_cp *spiros, int n, int isclosed, bezctx *bc);
+extern bool SpiroCPsToBezier (spiro_cp *spiros, int n, int isclosed,
+                              bezctx *bc);
 
 #endif // _FF_INTERNAL_SPIROENTRYPOINTS_H
