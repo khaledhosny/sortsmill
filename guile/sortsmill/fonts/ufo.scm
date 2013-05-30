@@ -19,7 +19,15 @@
 (library (sortsmill fonts ufo)
 
   (export ufo:read-metainfo
-          ufo:read-fontinfo)
+          ufo:read-fontinfo
+          ufo:read-groups
+          ufo:read-kerning
+          ufo:read-lib
+          ufo:read-layercontents
+          ufo:read-contents
+          ufo:read-layerinfo
+          ufo:read-glif
+          )
 
   (import (sortsmill i18n)
           (rnrs)
@@ -35,10 +43,42 @@
   (define (ufo:read-fontinfo ufo)
     (parse-dict-xml ufo "fontinfo.plist"))
 
+  (define (ufo:read-groups ufo)
+    (parse-dict-xml ufo "groups.plist"))
+
+  (define (ufo:read-kerning ufo)
+    (parse-dict-xml ufo "kerning.plist"))
+
+  (define (ufo:read-lib ufo)
+    (parse-dict-xml ufo "lib.plist"))
+
+  (define (ufo:read-layercontents ufo)
+    (parse-array-xml ufo "layercontents.plist"))
+
+  (define (ufo:read-contents ufo)
+    (parse-dict-xml ufo "glyphs" "contents.plist"))
+
+  (define (ufo:read-layerinfo ufo)
+    (parse-dict-xml ufo "glyphs" "layerinfo.plist"))
+
+  (define (ufo:read-glif ufo glif-file)
+    (parse-ufo-xml ufo "glyphs" glif-file))
+
+  (define (parse-array-xml ufo . components)
+    (match (apply parse-ufo-xml ufo components)
+      ['file-not-found 'file-not-found]
+      [lst (isolated-array lst)] ))
+
   (define (parse-dict-xml ufo . components)
     (match (apply parse-ufo-xml ufo components)
       ['file-not-found 'file-not-found]
       [lst (isolated-dict lst)] ))
+
+  (define (isolated-array lst)
+    (let ([obj (isolated-element lst)])
+      (if (list? obj)
+          obj
+          (error 'isolated-array (_ "expected an <array>") obj))))
 
   (define (isolated-dict lst)
     (let ([obj (isolated-element lst)])
@@ -81,9 +121,105 @@
       [(false) #f]
       [(array ,[e] ...) (list e ...)]
       [(dict . ,pairs) (match-dict-pairs pairs)]
+      [(glyph (@ (name ,n) (format ,f)) ,[e] ...)
+       (list (cons 'name n)
+             (cons 'format (string->number f))
+             e ...)]
+      [(advance (@ (width (,w "0")) (height (,h "0"))))
+       (list 'advance (string->number w) (string->number h))]
+      [(unicode (@ (hex ,x))) (cons 'unicode (string->number x 16))]
+      [(note) (cons 'note "")]
+      [(note ,n) (cons 'note n)]
+      [(image (@ (fileName ,fn)
+                 (xScale (,xscale "1"))
+                 (xyScale (,xyscale "0"))
+                 (yxScale (,yxscale "0"))
+                 (yScale (,yscale "1"))
+                 (xOffset (,xoffset "0"))
+                 (yOffset (,yoffset "0"))
+                 (color (,c #f))))
+       (list 'image
+             (cons 'psmat (make-psmat xscale xyscale yxscale yscale
+                                      xoffset yoffset))
+             (cons 'color c))]
+      [(guideline (@ (x ,x) (y ,y) (angle ,angle)
+                     (name (,n #f))
+                     (color (,c #f))
+                     (identifier (,id #f))))
+       (list 'guideline
+             (cons 'x (string->number x))
+             (cons 'y (string->number y))
+             (cons 'angle angle)
+             (cons 'name n)
+             (cons 'color c)
+             (cons 'identifier id))]
+      [(anchor (@ (x ,x) (y ,y)
+                  (name (,n #f))
+                  (color (,c #f))
+                  (identifier (,id #f))))
+       (list 'anchor
+             (cons 'x (string->number x))
+             (cons 'y (string->number y))
+             (cons 'name n)
+             (cons 'color c)
+             (cons 'identifier id))]
+      [(outline ,[e] ...) (list 'outline e ...)]
+      [(component (@ (base ,base)
+                     (xScale (,xscale "1"))
+                     (xyScale (,xyscale "0"))
+                     (yxScale (,yxscale "0"))
+                     (yScale (,yscale "1"))
+                     (xOffset (,xoffset "0"))
+                     (yOffset (,yoffset "0"))
+                     (identifier (,id #f))))
+       (list 'component
+             (cons 'base base)
+             (cons 'psmat (make-psmat xscale xyscale yxscale yscale
+                                      xoffset yoffset))
+             (cons 'identifier id))]
+      [(contour (@ (identifier (,id #f))) ,[e] ...)
+       (list 'contour (cons 'identifier id) e ...)]
+      [(point (@ (x ,x) (y ,y)
+                 (type (,type "offcurve"))
+                 (smooth (,smooth "no"))
+                 (name (,n #f))))
+       (list 'point
+             (cons 'x (string->number x))
+             (cons 'y (string->number y))
+             (cons 'type (string->point-type type))
+             (cons 'smooth (yes-no-string->boolean smooth))
+             (cons 'name n))]
+      [(lib ,[e]) (cons 'lib e)]
       [,other (error 'match-ufo-element
                      (_ "unexpected SXML")
                      other)] ))
+
+  (define (string->point-type type)
+    (match type
+      ["move" 'move]
+      ["line" 'line]
+      ["offcurve" 'offcurve]
+      ["curve" 'curve]
+      ["qcurve" 'qcurve]
+      [other (error 'string->point-type
+                    (_ "unexpected curve type")
+                    other)] ))
+
+  (define (yes-no-string->boolean s)
+    (match s
+      ["yes" #t]
+      ["no"  #f]
+      [other (error 'yes-no-string->boolean
+                    (_ "expected `yes' or `no'")
+                    other)] ))
+
+  (define (make-psmat xscale xyscale yxscale yscale xoffset yoffset)
+    (list (string->number xscale)
+          (string->number xyscale)
+          (string->number yxscale)
+          (string->number yscale)
+          (string->number xoffset)
+          (string->number yoffset)))
 
   (define* (match-dict-pairs pairs #:optional [prior '()])
     (sxml-match pairs
