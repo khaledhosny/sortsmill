@@ -17,6 +17,7 @@ auxiliary/math_polyspline_add.c
 auxiliary/math_polyspline_div.c
 auxiliary/math_polyspline_elev.c
 auxiliary/math_polyspline_ellipses.c
+auxiliary/math_polyspline_intersection.c
 auxiliary/math_polyspline_reduce.c
 
 auxiliary/guile_python.c
@@ -81,6 +82,7 @@ fontforge/guile_fonts_peg_spacing.c
 fontforge/guile_internals_anchors.c
 fontforge/guile_internals_glyphs.c
 fontforge/guile_internals_lookups.c
+fontforge/guile_fonts_views.c
 fontforge/histograms.c
 fontforge/http.c
 fontforge/ikarus.c
@@ -187,6 +189,8 @@ guile/sortsmill/python.scm
 guile/sortsmill/fonts/anchors.scm
 guile/sortsmill/fonts/contours.scm
 guile/sortsmill/fonts/glyphs.scm
+guile/sortsmill/fonts/private-dict.scm
+guile/sortsmill/fonts/ufo.scm
 guile/sortsmill/fonts/views.scm
 
 guile/sortsmill/math/geometry/lines.scm
