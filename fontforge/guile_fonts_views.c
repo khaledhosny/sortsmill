@@ -1,6 +1,6 @@
 #include <config.h>
 
-// Copyright (C) 2013 Barry Schwartz
+// Copyright (C) 2013 Khaled Hosny and Barry Schwartz
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -18,6 +18,10 @@
 
 #include <sortsmill/guile.h>
 #include <usermenu.h>
+#include <fontforge.h>
+#include <splinefont.h>
+#include <baseviews.h>
+#include <intl.h>
 
 static const char my_module[] = "sortsmill fonts views";
 
@@ -116,6 +120,94 @@ scm_c_view_to_FontViewBase (SCM v)
 
 //-------------------------------------------------------------------------
 
+static FontViewBase *
+SFAdd (SplineFont *sf, bool hide)
+{
+  if (sf->fv == NULL)
+    {
+      if (get_no_windowing_ui ())
+        FVAppend (_FontViewCreate (sf));
+      else
+        FontViewCreate (sf, hide);
+    }
+  return sf->fv;
+}
+
+static SCM
+scm_c_SFAdd (SplineFont *sf, bool hide)
+{
+  return scm_pointer_to_font_view (scm_from_pointer (SFAdd (sf, hide), NULL));
+}
+
+VISIBLE SCM
+scm_c_make_font (const char *encoding, size_t foreground_degree,
+                 size_t background_degree, size_t guide_layer_degree, bool hide)
+{
+  const char *who = "scm_c_make_font";
+
+  Encoding *enc = FindOrMakeEncoding (encoding);
+  if (enc == NULL)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("encoding not recognized")),
+        rnrs_make_irritants_condition (scm_list_1
+                                       (scm_from_utf8_string (encoding)))));
+
+  if (foreground_degree < 2 || 3 < foreground_degree)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("unsupported foreground degree")),
+        rnrs_make_irritants_condition (scm_list_1
+                                       (scm_from_size_t (foreground_degree)))));
+
+  if (background_degree < 2 || 3 < background_degree)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("unsupported background degree")),
+        rnrs_make_irritants_condition (scm_list_1
+                                       (scm_from_size_t (background_degree)))));
+
+  if (guide_layer_degree < 2 || 3 < guide_layer_degree)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("unsupported guide layer degree")),
+        rnrs_make_irritants_condition (scm_list_1
+                                       (scm_from_size_t
+                                        (guide_layer_degree)))));
+
+  return scm_c_SFAdd (SplineFontNew_long_form (enc, foreground_degree,
+                                               background_degree,
+                                               guide_layer_degree), hide);
+}
+
+VISIBLE SCM
+scm_make_font (SCM encoding, SCM foreground_degree,
+               SCM background_degree, SCM guide_layer_degree, SCM hide)
+{
+  const char *default_encoding = "ISO8859-1";
+
+  const char *_encoding = (scm_is_false (encoding)) ?
+    default_encoding : x_gc_grabstr (scm_to_utf8_stringn (encoding, NULL));
+  const size_t _fg_degree = (scm_is_false (foreground_degree)) ?
+    (new_fonts_are_order2 ? 2 : 3) : scm_to_size_t (foreground_degree);
+  const size_t _bg_degree = (scm_is_false (background_degree)) ?
+    (new_fonts_are_order2 ? 2 : 3) : scm_to_size_t (background_degree);
+  const size_t _gl_degree = (scm_is_false (guide_layer_degree)) ?
+    (new_fonts_are_order2 ? 2 : 3) : scm_to_size_t (guide_layer_degree);
+  const bool _hide = scm_is_true (hide);
+  return scm_c_make_font (_encoding, _fg_degree, _bg_degree, _gl_degree, _hide);
+}
+
+//-------------------------------------------------------------------------
+
 void init_guile_fonts_views (void);
 
 VISIBLE void
@@ -123,6 +215,8 @@ init_guile_fonts_views (void)
 {
   scm_c_define ("font-view-flag", scm_from_int (FF_FONT_WINDOW));
   scm_c_define ("glyph-view-flag", scm_from_int (FF_GLYPH_WINDOW));
+
+  scm_c_define_gsubr ("private:make-font", 5, 0, 0, scm_make_font);
 }
 
 //-------------------------------------------------------------------------

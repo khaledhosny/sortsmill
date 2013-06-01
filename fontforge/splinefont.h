@@ -3294,6 +3294,10 @@ VISIBLE void SplineCharAddExtrema (SplineChar *sc, SplineSet *head,
                                    enum ae_type between_selected, int emsize);
 SplineSet *SplineCharRemoveTiny (SplineChar *sc, SplineSet *head);
 VISIBLE SplineFont *SplineFontNew (void);
+VISIBLE SplineFont *SplineFontNew_long_form (Encoding *enc, int
+                                             foreground_degree,
+                                             int background_degree,
+                                             int grid_degree);
 VISIBLE char *GetNextUntitledName (void);
 SplineFont *SplineFontEmpty (void);
 VISIBLE SplineFont *SplineFontBlank (int charcnt);
@@ -3662,13 +3666,14 @@ void SFAutoSave (SplineFont *sf, EncMap *map);
 VISIBLE void SFClearAutoSave (SplineFont *sf);
 
 void PSCharsFree (struct pschars *chrs);
-VISIBLE void PSDictFree (struct psdict *chrs);
+void PSDictFree (struct psdict *chrs);
 struct psdict *PSDictCopy (struct psdict *dict);
-VISIBLE int PSDictFindEntry (struct psdict *dict, char *key);
-VISIBLE char *PSDictHasEntry (struct psdict *dict, char *key);
-int PSDictSame (struct psdict *dict1, struct psdict *dict2);
-int PSDictRemoveEntry (struct psdict *dict, char *key);
-VISIBLE int PSDictChangeEntry (struct psdict *dict, char *key, char *newval);
+int PSDictFindEntry (struct psdict *dict, const char *key);
+const char *PSDictHasEntry (struct psdict *dict, const char *key);
+bool PSDictSame (struct psdict *dict1, struct psdict *dict2);
+int PSDictRemoveEntry (struct psdict *dict, const char *key);
+int PSDictChangeEntry (struct psdict *dict, const char *key,
+                       const char *newval);
 VISIBLE int SFPrivateGuess (SplineFont *sf, int layer,
                             struct psdict *private_, char *name, int onlyone);
 

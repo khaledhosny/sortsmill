@@ -370,6 +370,13 @@ GO_FILES += sortsmill/fonts/peg-spacing.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/peg-spacing.scm
 
 
+# (sortsmill private-dict)
+
+DIST_SCM_FILES += sortsmill/fonts/private-dict.scm
+GO_FILES += sortsmill/fonts/private-dict.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/private-dict.scm
+
+
 # (sortsmill fonts psmat)
 
 DIST_SCM_FILES += sortsmill/fonts/psmat.scm

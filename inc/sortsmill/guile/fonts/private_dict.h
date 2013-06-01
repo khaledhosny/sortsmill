@@ -16,14 +16,31 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_FONTS_H
-#define _SORTSMILL_GUILE_FONTS_H
+#ifndef _SORTSMILL_GUILE_FONTS_PRIVATE_DICT_H
+#define _SORTSMILL_GUILE_FONTS_PRIVATE_DICT_H
 
-#include <sortsmill/guile/fonts/anchors.h>
-#include <sortsmill/guile/fonts/contours.h>
-#include <sortsmill/guile/fonts/glyphs.h>
-#include <sortsmill/guile/fonts/peg_spacing.h>
-#include <sortsmill/guile/fonts/private_dict.h>
-#include <sortsmill/guile/fonts/views.h>
+#include <libguile.h>
 
-#endif /* _SORTSMILL_GUILE_FONTS_H */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+void scm_c_private_dict_set_x (SCM view, const char *key, const char *value);
+SCM scm_private_dict_set_x (SCM view, SCM key, SCM value);
+SCM scm_private_dict_value_to_string (SCM value);
+
+const char *scm_c_private_dict_ref (SCM view, const char *key);
+SCM scm_private_dict_ref (SCM view, SCM key);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_FONTS_PRIVATE_DICT_H */

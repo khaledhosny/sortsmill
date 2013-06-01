@@ -42,6 +42,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
 #include <stdbool.h>
 #include "fontforge.h"
 #include <math.h>
@@ -5121,21 +5122,51 @@ SplineFontBlank (int charcnt)
   return (sf);
 }
 
+static bool
+is_order2 (int degree)
+{
+  assert (2 <= degree || degree <= 3);
+
+  bool result;
+  switch (degree)
+    {
+    case 2:
+      result = true;
+      break;
+    case 3:
+      result = false;
+      break;
+    }
+  return result;
+}
+
+SplineFont *
+SplineFontNew_long_form (Encoding *enc, int foreground_degree,
+                         int background_degree, int grid_degree)
+{
+  const int enclen = enc->char_cnt;
+
+  SplineFont *sf = SplineFontBlank (enclen);
+
+  sf->onlybitmaps = true;
+  sf->new = true;
+
+  sf->layers[ly_back].order2 = is_order2 (background_degree);
+  sf->layers[ly_fore].order2 = is_order2 (foreground_degree);
+  sf->grid.order2 = is_order2 (grid_degree);
+
+  sf->map = EncMapNew (enclen, enc);
+
+  return sf;
+}
+
 SplineFont *
 SplineFontNew (void)
 {
-  SplineFont *sf;
-  int enclen = default_encoding->char_cnt;
-
-  sf = SplineFontBlank (enclen);
-  sf->onlybitmaps = true;
-  sf->new = true;
-  sf->layers[ly_back].order2 = new_fonts_are_order2;
-  sf->layers[ly_fore].order2 = new_fonts_are_order2;
-  sf->grid.order2 = new_fonts_are_order2;
-
-  sf->map = EncMapNew (enclen, default_encoding);
-  return (sf);
+  return SplineFontNew_long_form (default_encoding,
+                                  (new_fonts_are_order2 ? 2 : 3),
+                                  (new_fonts_are_order2 ? 2 : 3),
+                                  (new_fonts_are_order2 ? 2 : 3));
 }
 
 static void

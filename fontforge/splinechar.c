@@ -1428,7 +1428,8 @@ RevertedGlyphReferenceFixup (SplineChar *sc, SplineFont *sf)
 }
 
 static int
-CheckBluePair (char *blues, char *others, int bluefuzz, int magicpointsize)
+CheckBluePair (const char *blues, const char *others, int bluefuzz,
+               int magicpointsize)
 {
   int bound = 2 * bluefuzz + 1;
   int bluevals[10 + 14], cnt, pos = 0, maxzoneheight;
@@ -1520,7 +1521,8 @@ CheckBluePair (char *blues, char *others, int bluefuzz, int magicpointsize)
 static int
 CheckStdW (struct psdict *dict, char *key)
 {
-  char *str_val, *end;
+  const char *str_val;
+  char *end;
   bigreal val;
 
   if ((str_val = PSDictHasEntry (dict, key)) == NULL)
@@ -1548,7 +1550,8 @@ CheckStdW (struct psdict *dict, char *key)
 static int
 CheckStemSnap (struct psdict *dict, char *snapkey, char *stdkey)
 {
-  char *str_val, *end;
+  const char *str_val;
+  char *end;
   bigreal std_val = -1;
   bigreal stems[12], temp;
   int cnt, found;
@@ -1600,7 +1603,10 @@ int
 ValidatePrivate (SplineFont *sf)
 {
   int errs = 0;
-  char *blues, *bf, *test, *end;
+  const char *blues;
+  const char *bf;
+  const char *test;
+  char *end;
   int fuzz = 1;
   bigreal bluescale = .039625;
   int magicpointsize;

@@ -489,7 +489,7 @@ SplineFontSetUnChanged (SplineFont *sf)
 }
 
 static char *
-scaleString (char *string, double scale)
+scaleString (const char *string, double scale)
 {
   char *result;
   char *pt;
@@ -538,7 +538,7 @@ scaleString (char *string, double scale)
 }
 
 static char *
-iscaleString (char *string, double scale)
+iscaleString (const char *string, double scale)
 {
   char *result;
   char *pt;
@@ -605,7 +605,7 @@ SFScalePrivate (SplineFont *sf, double scale)
 
   for (i = 0; integerscalethese[i] != NULL; ++i)
     {
-      char *str = PSDictHasEntry (sf->private, integerscalethese[i]);
+      const char *str = PSDictHasEntry (sf->private, integerscalethese[i]);
       char *new = iscaleString (str, scale);
       if (new != NULL)
         PSDictChangeEntry (sf->private, integerscalethese[i], new);
@@ -613,7 +613,7 @@ SFScalePrivate (SplineFont *sf, double scale)
     }
   for (i = 0; scalethese[i] != NULL; ++i)
     {
-      char *str = PSDictHasEntry (sf->private, scalethese[i]);
+      const char *str = PSDictHasEntry (sf->private, scalethese[i]);
       char *new = scaleString (str, scale);
       if (new != NULL)
         PSDictChangeEntry (sf->private, scalethese[i], new);
@@ -2209,7 +2209,8 @@ SFStandardHeight (SplineFont *sf, int layer, int do_max, uint32_t *list)
   int fcnt = 0, ccnt = 0, cnt, tot, i, useit;
   uint32_t ch, top;
   bigreal result, bestheight, bestdiff, diff, val;
-  char *blues, *end;
+  const char *blues;
+  char *end;
 
   while (*list)
     {

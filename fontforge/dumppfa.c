@@ -401,8 +401,8 @@ PSDictCopy (struct psdict *dict)
   return (ret);
 }
 
-int
-PSDictFindEntry (struct psdict *dict, char *key)
+VISIBLE int
+PSDictFindEntry (struct psdict *dict, const char *key)
 {
   int i;
 
@@ -416,8 +416,8 @@ PSDictFindEntry (struct psdict *dict, char *key)
   return (-1);
 }
 
-char *
-PSDictHasEntry (struct psdict *dict, char *key)
+VISIBLE const char *
+PSDictHasEntry (struct psdict *dict, const char *key)
 {
   int i;
 
@@ -431,7 +431,7 @@ PSDictHasEntry (struct psdict *dict, char *key)
   return (NULL);
 }
 
-int
+bool
 PSDictSame (struct psdict *dict1, struct psdict *dict2)
 {
   int i;
@@ -443,7 +443,7 @@ PSDictSame (struct psdict *dict1, struct psdict *dict2)
 
   for (i = 0; i < dict1->cnt; ++i)
     {
-      char *val = PSDictHasEntry (dict2, dict1->keys[i]);
+      const char *val = PSDictHasEntry (dict2, dict1->keys[i]);
       if (val == NULL || strcmp (val, dict1->values[i]) != 0)
         return (false);
     }
@@ -451,7 +451,7 @@ PSDictSame (struct psdict *dict1, struct psdict *dict2)
 }
 
 int
-PSDictRemoveEntry (struct psdict *dict, char *key)
+PSDictRemoveEntry (struct psdict *dict, const char *key)
 {
   int i;
 
@@ -476,8 +476,8 @@ PSDictRemoveEntry (struct psdict *dict, char *key)
   return (true);
 }
 
-int
-PSDictChangeEntry (struct psdict *dict, char *key, char *newval)
+VISIBLE int
+PSDictChangeEntry (struct psdict *dict, const char *key, const char *newval)
 {
   int i;
 
@@ -510,7 +510,7 @@ dumpsubrs (void (*dumpchar) (int ch, void *data), void *data,
 {
   int leniv = 4;
   int i;
-  char *pt;
+  const char *pt;
 
   if (subrs == NULL)
     return;
@@ -533,7 +533,7 @@ dumpcharstrings (void (*dumpchar) (int ch, void *data), void *data,
 {
   int leniv = 4;
   int i;
-  char *pt;
+  const char *pt;
 
   if ((pt = PSDictHasEntry (sf->private, "lenIV")) != NULL)
     leniv = strtol (pt, NULL, 10);
@@ -1734,8 +1734,8 @@ dumpothersubrs (void (*dumpchar) (int ch, void *data), void *data,
   dumpstr (dumpchar, data, incid ? "def\n" : "ND\n");
 }
 
-static char *
-dumptospace (void (*dumpchar) (int ch, void *data), void *data, char *str)
+static const char *
+dumptospace (void (*dumpchar) (int ch, void *data), void *data, const char *str)
 {
 
   while (*str != ' ' && *str != ']' && *str != '\0')
@@ -1745,7 +1745,7 @@ dumptospace (void (*dumpchar) (int ch, void *data), void *data, char *str)
 
 static void
 dumpmmprivatearr (void (*dumpchar) (int ch, void *data), void *data,
-                  char *privates[16], int instance_count)
+                  const char *privates[16], int instance_count)
 {
   int j;
 
@@ -1792,7 +1792,7 @@ dumpmmprivatearr (void (*dumpchar) (int ch, void *data), void *data,
 static void
 dumpmmprivate (void (*dumpchar) (int ch, void *data), void *data, MMSet *mm)
 {
-  char *privates[16];
+  const char *privates[16];
   int j, k, missing, allsame;
   struct psdict *private = mm->instances[0]->private;
 
@@ -1827,7 +1827,7 @@ dumpmmprivate (void (*dumpchar) (int ch, void *data), void *data, MMSet *mm)
 }
 
 static double
-FindMaxDiffOfBlues (char *pt, double max_diff)
+FindMaxDiffOfBlues (const char *pt, double max_diff)
 {
   char *end;
   double p1, p2;
@@ -1855,7 +1855,7 @@ BlueScaleFigureForced (struct psdict *private_, real bluevalues[],
                        real otherblues[])
 {
   double max_diff = 0;
-  char *pt;
+  const char *pt;
   int i;
 
   pt = PSDictHasEntry (private_, "BlueValues");
@@ -3105,7 +3105,7 @@ gencidbinarydata (SplineFont *cidmaster, struct cidbytes *cidbytes,
   FILE *chrs, *subrs, *binary;
   char *buffer;
   long offset;
-  char *pt;
+  const char *pt;
   struct pschars *chars;
   int len;
 

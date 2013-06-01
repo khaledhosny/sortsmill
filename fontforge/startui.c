@@ -1,5 +1,6 @@
 #include <config.h>
 
+// Copyright (C) 2013 Khaled Hosny and Barry Schwartz
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -16,7 +17,6 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 /* Copyright (C) 2000-2012 by George Williams */
-/* Copyright (C) 2013 by Barry Schwartz       */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:

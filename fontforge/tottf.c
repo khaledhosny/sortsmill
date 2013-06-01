@@ -1029,7 +1029,7 @@ dumpmissingglyph (SplineFont *sf, struct glyphinfo *gi, int fixedwidth)
   BasePoint bp[10];
   uint8_t instrs[50];
   int stemcvt, stem;
-  char *stempt;
+  const char *stempt;
 
   stem = 0;
   if (sf->private != NULL
@@ -2014,7 +2014,7 @@ dumpsid (FILE *cfff, struct alltabs *at, char *str, int oper)
 }
 
 static void
-DumpStrDouble (char *pt, FILE *cfff, int oper)
+DumpStrDouble (const char *pt, FILE *cfff, int oper)
 {
   real d;
   if (*pt == '[')
@@ -2038,7 +2038,7 @@ DumpDblArray (real *arr, int n, FILE *cfff, int oper)
 }
 
 static void
-DumpStrArray (char *pt, FILE *cfff, int oper)
+DumpStrArray (const char *pt, FILE *cfff, int oper)
 {
   real d, last = 0;
   char *end;
@@ -2376,7 +2376,7 @@ ATFigureDefWidth (SplineFont *sf, struct alltabs *at, int subfont)
 static void
 dumpcffprivate (SplineFont *sf, struct alltabs *at, int subfont, int subrcnt)
 {
-  char *pt;
+  const char *pt;
   FILE *private = subfont == -1 ? at->private : at->fds[subfont].private;
   int mi, i;
   real bluevalues[14], otherblues[10];

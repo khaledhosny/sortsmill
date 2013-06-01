@@ -1,6 +1,6 @@
 #include <config.h>
 
-// Copyright (C) 2013 Barry Schwartz
+// Copyright (C) 2013 Khaled Hosny and Barry Schwartz
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -3216,7 +3216,9 @@ static SplineFont *
 SplineFontFromMMType1 (SplineFont *sf, FontDict *fd,
                        struct pscontext *pscontext)
 {
-  char *pt, *end, *origweight;
+  char *pt;
+  char *end;
+  char *origweight;
   MMSet *mm;
   int ipos, apos, ppos, item, i;
   real blends[12];              /* At most twelve points/axis in a blenddesignmap */
@@ -3428,9 +3430,11 @@ SplineFontFromMMType1 (SplineFont *sf, FontDict *fd,
             {
               static char *names[] =
                 { "ItalicAngle", "UnderlinePosition", "UnderlineThickness" };
-              pt = PSDictHasEntry (fd->blendfontinfo, names[item]);
-              if (pt != NULL)
+              const char *const_pt =
+                PSDictHasEntry (fd->blendfontinfo, names[item]);
+              if (const_pt != NULL)
                 {
+                  pt = x_gc_strdup (const_pt);
                   pt = MMExtractNth (pt, ipos);
                   if (pt != NULL)
                     {
@@ -3463,9 +3467,11 @@ SplineFontFromMMType1 (SplineFont *sf, FontDict *fd,
             { "ForceBold", "BlueFuzz", "BlueScale", "BlueShift", NULL };
           for (item = 0; scalarnames[item] != NULL; ++item)
             {
-              pt = PSDictHasEntry (fd->blendprivate, scalarnames[item]);
-              if (pt != NULL)
+              const char *const_pt =
+                PSDictHasEntry (fd->blendprivate, scalarnames[item]);
+              if (const_pt != NULL)
                 {
+                  pt = x_gc_strdup (const_pt);
                   pt = MMExtractNth (pt, ipos);
                   PSDictChangeEntry (fd->private->private, scalarnames[item],
                                      pt);
@@ -3474,9 +3480,11 @@ SplineFontFromMMType1 (SplineFont *sf, FontDict *fd,
             }
           for (item = 0; arrnames[item] != NULL; ++item)
             {
-              pt = PSDictHasEntry (fd->blendprivate, arrnames[item]);
-              if (pt != NULL)
+              const char *const_pt =
+                PSDictHasEntry (fd->blendprivate, arrnames[item]);
+              if (const_pt != NULL)
                 {
+                  pt = x_gc_strdup (const_pt);
                   pt = MMExtractArrayNth (pt, ipos);
                   PSDictChangeEntry (fd->private->private, arrnames[item], pt);
                   free (pt);

@@ -82,7 +82,8 @@ struct st
 static int
 GetBlueFuzz (SplineFont *sf)
 {
-  char *str, *end;
+  const char *str;
+  char *end;
 
   if (sf == NULL || sf->private == NULL ||
       (str = PSDictHasEntry (sf->private, "BlueFuzz")) == NULL

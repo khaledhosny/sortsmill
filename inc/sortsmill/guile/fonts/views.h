@@ -62,13 +62,20 @@ SCM scm_font_view_to_SplineFont (SCM);
 SCM scm_view_to_SplineFont (SCM);
 SCM scm_view_to_FontViewBase (SCM);
 
-/* The following functions return void pointers so they can be
-   included here without any reference to internal structures. */
+/* The functions in the following group return void pointers so they
+   can be included here without any reference to internal
+   structures. */
 void *scm_c_glyph_view_to_CharViewBase (SCM);
 void *scm_c_glyph_view_to_SplineChar (SCM);
 void *scm_c_font_view_to_SplineFont (SCM);
 void *scm_c_view_to_SplineFont (SCM);
 void *scm_c_view_to_FontViewBase (SCM);
+
+SCM scm_c_make_font (const char *encoding, size_t foreground_degree,
+                     size_t background_degree, size_t guide_layer_degree,
+                     bool hide);
+SCM scm_make_font (SCM encoding, SCM foreground_degree,
+                   SCM background_degree, SCM guide_layer_degree, SCM hide);
 
 #if 0
 {

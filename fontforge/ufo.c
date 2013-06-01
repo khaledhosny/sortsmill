@@ -524,7 +524,7 @@ PListOutputIntArray (FILE *plist, char *key, char *entries, int len)
 static void
 PListOutputPrivateArray (FILE *plist, char *key, struct psdict *private)
 {
-  char *value;
+  const char *value;
   int skipping;
 
   if (private == NULL)
@@ -565,7 +565,7 @@ static void
 PListOutputPrivateThing (FILE *plist, char *key, struct psdict *private,
                          char *type)
 {
-  char *value;
+  const char *value;
 
   if (private == NULL)
     return;
@@ -776,7 +776,7 @@ UFOOutputFontInfo (char *basedir, SplineFont *sf, int layer)
   PListOutputInteger (plist, "postscriptUnderlinePosition", sf->upos);
   if (sf->private != NULL)
     {
-      char *pt;
+      const char *pt;
       PListOutputPrivateArray (plist, "BlueValues", sf->private);
       PListOutputPrivateArray (plist, "OtherBlues", sf->private);
       PListOutputPrivateArray (plist, "FamilyBlues", sf->private);

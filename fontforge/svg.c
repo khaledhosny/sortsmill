@@ -96,7 +96,7 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
   };
   DBounds bb;
   BlueData bd;
-  char *hash, *hasv, ch;
+  char ch;
   int minu, maxu, i;
   time_t now;
   const char *author = GetAuthor ();
@@ -162,10 +162,11 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
   fprintf (file, "    underline-position=\"%g\"\n", (double) sf->upos);
   if (sf->italicangle != 0)
     fprintf (file, "    slope=\"%g\"\n", (double) sf->italicangle);
-  hash = PSDictHasEntry (sf->private, "StdHW");
-  hasv = PSDictHasEntry (sf->private, "StdVW");
-  if (hash != NULL)
+  const char *const_hash = PSDictHasEntry (sf->private, "StdHW");
+  const char *const_hasv = PSDictHasEntry (sf->private, "StdVW");
+  if (const_hash != NULL)
     {
+      char *hash = x_gc_strdup (const_hash);
       if (*hash == '[')
         ++hash;
       ch = hash[strlen (hash) - 1];
@@ -175,8 +176,9 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
       if (ch == ']')
         hash[strlen (hash)] = ch;
     }
-  if (hasv != NULL)
+  if (const_hasv != NULL)
     {
+      char *hasv = x_gc_strdup (const_hasv);
       if (*hasv == '[')
         ++hasv;
       ch = hasv[strlen (hasv) - 1];

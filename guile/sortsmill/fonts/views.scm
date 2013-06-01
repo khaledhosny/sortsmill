@@ -53,11 +53,15 @@
           glyph-view->SplineChar
           font-view->SplineFont
           view->SplineFont
-          view->FontViewBase)
+          view->FontViewBase
+
+          make-font        ; (make-font [optional kwargs]) → font-view
+          )
 
   (import (sortsmill fontforge-api)
           (sortsmill i18n)
           (sortsmill dynlink)
+          (sortsmill kwargs)
           (rnrs)
           (only (guile) compose eval-when)
           (system foreign)
@@ -167,5 +171,13 @@
 
   (define (raise-not-a-view who obj)
     (assertion-violation who (_ "expected a font-view or glyph-view") obj))
+
+  (define/kwargs (make-font [encoding #f]
+                            [foreground-degree #f]
+                            [background-degree #f]
+                            [guide-layer-degree #f]
+                            [hide #f])
+    (private:make-font encoding foreground-degree background-degree
+                       guide-layer-degree hide))
 
   ) ;; end of library.

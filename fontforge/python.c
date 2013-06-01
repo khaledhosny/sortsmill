@@ -12129,8 +12129,9 @@ PyFF_PrivateIndex (PyObject *self, PyObject *index)
 {
   SplineFont *sf = ((PyFF_Private *) self)->sf;
   struct psdict *private = sf->private;
-  char *value = NULL;
-  char *pt, *end;
+  const char *value = NULL;
+  const char *pt;
+  char *end;
   double temp;
   PyObject *tuple;
 

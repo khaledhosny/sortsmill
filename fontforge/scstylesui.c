@@ -460,7 +460,7 @@ static double
 GuessStemThreshold (SplineFont *sf)
 {
   double stdvw = 0, stdhw = 0, avg;
-  char *ret;
+  const char *ret;
 
   if (sf->private != NULL)
     {
@@ -988,7 +988,8 @@ static int
 ParseBlue (double blues[14], struct psdict *private, char *key)
 {
   int i;
-  char *val, *end;
+  const char *val;
+  char *end;
 
   if (private == NULL)
     return (0);

@@ -1316,7 +1316,8 @@ static void
 MMW_DesignsSetup (MMW * mmw)
 {
   int i, j, sel;
-  char buffer[80], *pt;
+  char buffer[80];
+  char *pt;
   uint32_t ubuf[80];
   GTextInfo **ti;
 
@@ -2162,7 +2163,7 @@ MMWizard (MMSet *mm)
     designlabel[MmMax + 1][5], dlabel, olabels[7];
   char axisbegins[4][20], axisends[4][20], axisdefs[4][20];
   char *normalized[4], *designs[4];
-  char *pt, *freeme;
+  char *freeme;
   int i, k;
   int space, blen =
     GIntGetResource (_NUM_Buttonsize) * 100 / GGadgetScale (100);
@@ -2730,11 +2731,12 @@ MMWizard (MMSet *mm)
   ogcd[k].gd.flags = gg_visible | gg_enabled;
   ogcd[k++].creator = GLabelCreate;
 
+  const char *const_pt;
   if (mmw.old != NULL &&
-      (pt =
+      (const_pt =
        PSDictHasEntry (mmw.old->normal->private,
                        "ForceBoldThreshold")) != NULL)
-    olabels[k].text = (uint32_t *) pt;
+    olabels[k].text = (uint32_t *) const_pt;
   else
     olabels[k].text = (uint32_t *) ".3";
   olabels[k].text_is_1byte = true;

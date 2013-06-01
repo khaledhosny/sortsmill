@@ -542,14 +542,14 @@ pdf_skip_brackets (FILE *stream, char *tokbuf)
 }
 
 static FILE *pdf_defilterstream (struct pdfcontext *pc);
-static int pdf_getinteger (char *pt, struct pdfcontext *pc);
+static int pdf_getinteger (const char *pt, struct pdfcontext *pc);
 
 static int
 pdf_findobject (struct pdfcontext *pc, int num)
 {
   int first_offset, n, i, o, offset, container;
   FILE *data;
-  char *pt;
+  const char *pt;
 
   if (pc->compressed != NULL)
     {
@@ -619,7 +619,7 @@ pdf_findobject (struct pdfcontext *pc, int num)
 static int
 pdf_getdescendantfont (struct pdfcontext *pc, int num)
 {
-  char *pt;
+  const char *pt;
   int nnum;
 
   if (pdf_findobject (pc, num) && pdf_readdict (pc))
@@ -643,7 +643,10 @@ static int
 pdf_findfonts (struct pdfcontext *pc)
 {
   int i, j, k = 0, dnum, cnum;
-  char *pt, *tpt, *cmap, *desc;
+  const char *pt;
+  char *tpt;
+  const char *cmap;
+  const char *desc;
 
   pc->fontobjs = xmalloc (pc->ocnt * sizeof (long));
   pc->cmapobjs = xmalloc (pc->ocnt * sizeof (long));
@@ -743,7 +746,7 @@ pdf_findfonts (struct pdfcontext *pc)
 }
 
 static int
-pdf_getinteger (char *pt, struct pdfcontext *pc)
+pdf_getinteger (const char *pt, struct pdfcontext *pc)
 {
   int val, ret;
   long here;
@@ -776,7 +779,8 @@ static void
 pdf_addpages (struct pdfcontext *pc, int obj)
 {
   /* Object is either a page or a page catalog */
-  char *pt, *end;
+  const char *pt;
+  char *end;
 
   if (pdf_findobject (pc, obj) && pdf_readdict (pc))
     {
@@ -1009,19 +1013,21 @@ pdf_defilterstream (struct pdfcontext *pc)
   /*  to another */
   FILE *res, *old, *pdf = pc->pdf;
   int i, length, ch;
-  char *pt, *end;
+  const char *const_pt;
+  char *pt;
+  char *end;
 
   if (pc->compressed != NULL)
     {
       LogError (_("A pdf stream object may not be a compressed object"));
       return (NULL);
     }
-  if ((pt = PSDictHasEntry (&pc->pdfdict, "Length")) == NULL)
+  if ((const_pt = PSDictHasEntry (&pc->pdfdict, "Length")) == NULL)
     {
       LogError (_("A pdf stream object is missing a Length attribute"));
       return (NULL);
     }
-  length = pdf_getinteger (pt, pc);
+  length = pdf_getinteger (const_pt, pc);
 
   while ((ch = getc (pdf)) != EOF && ch != 'm');        /* Skip over >>\nstream */
   if ((ch = getc (pdf)) == '\r')
@@ -1035,8 +1041,9 @@ pdf_defilterstream (struct pdfcontext *pc)
     }
   rewind (res);
 
-  if ((pt = PSDictHasEntry (&pc->pdfdict, "Filter")) == NULL)
+  if ((const_pt = PSDictHasEntry (&pc->pdfdict, "Filter")) == NULL)
     return (res);
+  pt = x_gc_strdup (const_pt);
   while (*pt == ' ' || *pt == '[' || *pt == ']' || *pt == '/')
     ++pt;                       /* Yes, I saw a null array once */
   while (*pt != '\0')
@@ -1107,7 +1114,7 @@ getuvalue (FILE *f, int len)
 static long *
 FindObjectsFromXREFObject (struct pdfcontext *pc, long prev_xref)
 {
-  char *pt;
+  const char *pt;
   long *ret = NULL;
   int *gen = NULL;
   int cnt = 0, i, start, num;
@@ -1931,7 +1938,7 @@ pdf_InterpretEntity (struct pdfcontext *pc, int page_num)
   EntityChar ec;
   SplineChar dummy;
   FILE *glyph_stream;
-  char *pt;
+  const char *pt;
   int content;
 
   if (!pdf_findobject (pc, pc->pages[page_num]) || !pdf_readdict (pc))
@@ -2173,7 +2180,7 @@ fail:
 }
 
 static int
-pdf_getcharprocs (struct pdfcontext *pc, char *charprocs)
+pdf_getcharprocs (struct pdfcontext *pc, const char *charprocs)
 {
   int cp = strtol (charprocs, NULL, 10);
   FILE *temp, *pdf = pc->pdf;
@@ -2205,7 +2212,10 @@ pdf_getcharprocs (struct pdfcontext *pc, char *charprocs)
 static SplineFont *
 pdf_loadtype3 (struct pdfcontext *pc)
 {
-  char *enc, *cp, *fontmatrix, *name;
+  const char *enc;
+  const char *cp;
+  const char *fontmatrix;
+  const char *name;
   double emsize;
   SplineFont *sf;
   int flags = -1;
@@ -2224,8 +2234,8 @@ pdf_loadtype3 (struct pdfcontext *pc)
   if (sscanf (fontmatrix, "[%lg", &emsize) != 1 || emsize == 0)
     goto fail;
   emsize = 1.0 / emsize;
-  enc = xstrdup_or_null (enc);
-  name = xstrdup_or_null (name + 1);
+  char *_enc = xstrdup_or_null (enc);
+  char *_name = xstrdup_or_null (name + 1);
 
   if (!pdf_getcharprocs (pc, cp))
     goto fail;
@@ -2237,9 +2247,9 @@ pdf_loadtype3 (struct pdfcontext *pc)
       free (sf->fontname);
       free (sf->fullname);
       free (sf->familyname);
-      sf->fontname = name;
-      sf->familyname = xstrdup_or_null (name);
-      sf->fullname = xstrdup_or_null (name);
+      sf->fontname = _name;
+      sf->familyname = xstrdup_or_null (_name);
+      sf->fullname = xstrdup_or_null (_name);
     }
   free (sf->copyright);
   sf->copyright = NULL;
@@ -2266,7 +2276,7 @@ pdf_loadtype3 (struct pdfcontext *pc)
   PSDictFree (charprocdict);
 
   /* I'm going to ignore the encoding vector for now, and just return original */
-  free (enc);
+  free (_enc);
   sf->map = EncMapFromEncoding (sf, FindOrMakeEncoding ("Original"));
 
   return (sf);
@@ -2289,7 +2299,7 @@ pdf_insertpfbsections (FILE *file, struct pdfcontext *pc)
 static SplineFont *
 pdf_loadfont (struct pdfcontext *pc, int font_num)
 {
-  char *pt;
+  const char *pt;
   int fd, type, ff;
   FILE *file;
   SplineFont *sf;

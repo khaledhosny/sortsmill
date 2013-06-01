@@ -199,7 +199,7 @@ figure_fontdesc (PI * pi, int sfid, struct fontdesc *fd, int fonttype,
   int beyond_std = false;
   int fd_num = pi->next_object;
   int cidmax;
-  char *stemv;
+  const char *stemv;
 
   memset (fd, 0, sizeof (*fd));
 

@@ -1,6 +1,6 @@
 #include <config.h>
 
-// Copyright (C) 2012 Barry Schwartz
+// Copyright (C) 2012 Khaled Hosny and Barry Schwartz
 // 
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by

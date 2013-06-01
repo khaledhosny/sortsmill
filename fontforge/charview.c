@@ -1719,11 +1719,12 @@ dtos (char *buf, real val)
 }
 
 static void
-CVDrawBlues (CharView *cv, GWindow pixmap, char *bluevals, char *others,
-             Color col)
+CVDrawBlues (CharView *cv, GWindow pixmap, const char *bluevals,
+             const char *others, Color col)
 {
   double blues[24];
-  char *pt, *end;
+  const char *pt;
+  char *end;
   int i = 0, bcnt = 0;
   GRect r;
   char buf[20];
@@ -1824,7 +1825,8 @@ CVShowHints (CharView *cv, GWindow pixmap)
   int end;
   Color col;
   DStemInfo *dstem;
-  char *blues, *others;
+  const char *blues;
+  const char *others;
   struct psdict *private = cv->b.sc->parent->private;
   char buf[20];
   int len, len2;

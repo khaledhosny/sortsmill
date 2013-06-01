@@ -2297,7 +2297,8 @@ CaseMajorVerticalStemWidth (SplineFont *sf, int layer,
   double width, sum, total;
   SplineChar *sc, dummy, *which;
   Layer layers[2];
-  char *snaps, *end;
+  const char *snaps;
+  char *end;
   StemInfo *s;
   double val, diff, bestwidth, bestdiff;
   real deskew[6];
@@ -3977,7 +3978,7 @@ double
 SFStdVW (SplineFont *sf)
 {
   double stdvw = 0;
-  char *ret;
+  const char *ret;
 
   if (sf->private != NULL
       && (ret = PSDictHasEntry (sf->private, "StdVW")) != NULL)
@@ -5259,7 +5260,7 @@ LCG_ZoneInit (SplineFont *sf, int layer, struct lcg_zones *zones,
 }
 
 static double
-BlueSearch (char *bluestring, double value, double bestvalue)
+BlueSearch (const char *bluestring, double value, double bestvalue)
 {
   char *end;
   double try, diff, bestdiff;
@@ -5290,7 +5291,8 @@ BlueSearch (char *bluestring, double value, double bestvalue)
 static double
 SearchBlues (SplineFont *sf, int type, double value)
 {
-  char *blues, *others;
+  const char *blues;
+  const char *others;
   double bestvalue;
 
   if (type == 'x')

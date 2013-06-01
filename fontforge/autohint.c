@@ -478,7 +478,7 @@ FindBlues (SplineFont *sf, int layer, real blues[14], real otherblues[10])
 }
 
 static int
-PVAddBlues (BlueData * bd, int bcnt, char *pt)
+PVAddBlues (BlueData * bd, int bcnt, const char *pt)
 {
   char *end;
   real val1, val2;
@@ -533,7 +533,7 @@ QuickBlues (SplineFont *_sf, int layer, BlueData * bd)
   SplineSet *spl;
   int i, j, bcnt;
   SplineChar *t;
-  char *pt;
+  const char *pt;
 
   /* Get the alignment zones we care most about */
 
@@ -4308,7 +4308,7 @@ MatchFlexes (MMSet *mm, int layer, int opos)
 int
 SplineCharIsFlexible (SplineChar *sc, int layer)
 {
-  char *pt;
+  const char *pt;
   int blueshift;
   int i;
   MMSet *mm;
@@ -4373,7 +4373,7 @@ SplineFontIsFlexible (SplineFont *sf, int layer, int flags)
 {
   int i;
   int max = 0, val;
-  char *pt;
+  const char *pt;
   int blueshift;
   /* if the return value is bigger than 6 and we don't have a BlueShift */
   /*  then we must set BlueShift to ret+1 before saving private dictionary */

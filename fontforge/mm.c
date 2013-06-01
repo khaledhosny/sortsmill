@@ -1140,7 +1140,7 @@ KernsMatch (SplineChar *sc1, SplineChar *sc2)
 }
 
 static int
-ArrayCount (char *val)
+ArrayCount (const char *val)
 {
   char *end;
   int cnt;
