@@ -183,9 +183,12 @@ scm_c_make_font (const char *encoding, size_t foreground_degree,
                                        (scm_from_size_t
                                         (guide_layer_degree)))));
 
-  return scm_c_SFAdd (SplineFontNew_long_form (enc, foreground_degree,
-                                               background_degree,
-                                               guide_layer_degree), hide);
+  SCM font_view = scm_c_SFAdd (SplineFontNew_long_form (enc, foreground_degree,
+                                                        background_degree,
+                                                        guide_layer_degree),
+                               hide);
+  scm_view_private_dict_set_from_alist_x (font_view, SCM_EOL);
+  return font_view;
 }
 
 VISIBLE SCM

@@ -137,13 +137,14 @@ scm_view_private_dict_to_alist (SCM view)
 {
   SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
   SCM lst = SCM_EOL;
-  for (size_t i = 0; i < sf->private->next; ++i)
-    {
-      const char *key = sf->private->keys[sf->private->next - 1 - i];
-      const char *value = sf->private->values[sf->private->next - 1 - i];
-      lst = scm_acons (scm_from_utf8_string (key),
-                       scm_from_utf8_string (value), lst);
-    }
+  if (sf->private != NULL)
+    for (size_t i = 0; i < sf->private->next; ++i)
+      {
+        const char *key = sf->private->keys[sf->private->next - 1 - i];
+        const char *value = sf->private->values[sf->private->next - 1 - i];
+        lst = scm_acons (scm_from_utf8_string (key),
+                         scm_from_utf8_string (value), lst);
+      }
   return lst;
 }
 
@@ -152,11 +153,12 @@ scm_view_private_dict_keys (SCM view)
 {
   SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
   SCM lst = SCM_EOL;
-  for (size_t i = 0; i < sf->private->next; ++i)
-    {
-      const char *key = sf->private->keys[sf->private->next - 1 - i];
-      lst = scm_cons (scm_from_utf8_string (key), lst);
-    }
+  if (sf->private != NULL)
+    for (size_t i = 0; i < sf->private->next; ++i)
+      {
+        const char *key = sf->private->keys[sf->private->next - 1 - i];
+        lst = scm_cons (scm_from_utf8_string (key), lst);
+      }
   return lst;
 }
 

@@ -27,9 +27,12 @@
           ufo:read-contents
           ufo:read-layerinfo
           ufo:read-glif
+
+          view:apply-ufo-fontinfo!
           )
 
   (import (sortsmill i18n)
+          (sortsmill fonts private-dict)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
@@ -63,6 +66,16 @@
 
   (define (ufo:read-glif ufo glif-file)
     (parse-ufo-xml ufo "glyphs" glif-file))
+
+  (define (view:apply-ufo-fontinfo! view ufo-or-fontinfo)
+    (let ([fontinfo (if (string? ufo-or-fontinfo)
+                        (let ([info (ufo:read-fontinfo ufo-or-fontinfo)])
+                          (if (eq? info 'file-not-found) '() info))
+                        ufo-or-fontinfo)])
+      (for-each
+       (lambda (entry)
+         (apply-ufo-fontinfo-entry! view (car entry) (cdr entry)))
+       fontinfo)))
 
   (define (parse-array-xml ufo . components)
     (match (apply parse-ufo-xml ufo components)
@@ -234,5 +247,19 @@
 
   (define (ufo-file-name ufo . components)
     (string-join (cons ufo components) "/"))
+
+  (define (apply-ufo-fontinfo-entry! view key value)
+    (match key
+      ['postscriptBlueValues (view:private-dict-set! view "BlueValues" value)]
+      ['postscriptOtherBlues (view:private-dict-set! view "OtherBlues" value)]
+      ['postscriptFamilyBlues (view:private-dict-set! view "FamilyBlues" value)]
+      ['postscriptFamilyOtherBlues (view:private-dict-set! view "FamilyOtherBlues" value)]
+      ['postscriptStemSnapH (view:private-dict-set! view "StemSnapH" value)]
+      ['postscriptStemSnapV (view:private-dict-set! view "StemSnapV" value)]
+      ['postscriptBlueFuzz (view:private-dict-set! view "BlueFuzz" value)]
+      ['postscriptBlueShift (view:private-dict-set! view "BlueShift" value)]
+      ['postscriptBlueScale (view:private-dict-set! view "BlueScale" value)]
+      ['postscriptForceBold (view:private-dict-set! view "ForceBold" value)]
+      [_ *unspecified*] ))
 
   ) ;; end of library.
