@@ -19,14 +19,32 @@
 (library (sortsmill fonts private-dict)
 
   (export
-   ;; (private-dict-set! font-or-glyph-view key value) → *unspecified*
-   private-dict-set!
+   ;; (view:private-dict-set! font-or-glyph-view key value) → *unspecified*
+   view:private-dict-set!
+
+   ;; (view:private-dict-ref font-or-glyph-view key) → string
+   view:private-dict-ref
+
+   ;; (view:private-dict-ref font-or-glyph-view key) → *unspecified*
+   view:private-dict-remove!
+
+   ;; (view:private-dict-clear! font-or-glyph-view) → *unspecified*
+   view:private-dict-clear!
+
+   ;; (view:private-dict-set-from-alist! font-or-glyph-view alist) → *unspecified*
+   view:private-dict-set-from-alist!
+
+   ;; (view:alist->private-dict! font-or-glyph-view alist) → *unspecified*
+   view:alist->private-dict!
+
+   ;; (view:private-dict->alist font-or-glyph-view) → alist
+   view:private-dict->alist
+
+   ;; (view:private-dict-keys font-or-glyph-view) → list
+   view:private-dict-keys
 
    ;; (private-dict-value->string various-types) → string
    private-dict-value->string
-
-  ;; (private-dict-ref font-or-glyph-view key) → string
-   private-dict-ref
    )
 
   (import (sortsmill dynlink)
