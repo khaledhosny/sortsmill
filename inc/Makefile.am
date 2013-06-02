@@ -188,6 +188,7 @@ nobase_include_HEADERS += sortsmill/guile/editor/main_loop.h
 
 nobase_include_HEADERS += sortsmill/guile/fonts/anchors.h
 nobase_include_HEADERS += sortsmill/guile/fonts/contours.h
+nobase_include_HEADERS += sortsmill/guile/fonts/fontinfo_dict.h
 nobase_include_HEADERS += sortsmill/guile/fonts/glyphs.h
 nobase_include_HEADERS += sortsmill/guile/fonts/peg_spacing.h
 nobase_include_HEADERS += sortsmill/guile/fonts/private_dict.h

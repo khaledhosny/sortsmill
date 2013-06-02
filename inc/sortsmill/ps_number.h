@@ -23,6 +23,7 @@
  * PostScript numbers.
  */
 
+#include <libguile.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -91,6 +92,13 @@ bool is_postscript_radix_number (const char *s);
 // vis--
 */
 bool is_postscript_number (const char *s);
+
+/* FIXME: These are not documented yet. OTOH the documentation in the
+   rest of this file is not being maintained anyway, at the time of
+   this writing. */
+SCM scm_c_postscript_to_number (const char *s);
+SCM scm_postscript_to_number (SCM s);
+SCM scm_postscript_number_p (SCM s);
 
 #if 0
 {

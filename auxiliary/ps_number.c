@@ -23,9 +23,13 @@
 #include <c-ctype.h>
 #include <xstrndup.h>
 #include <sortsmill/ps_number.h>
+#include <sortsmill/guile.h>
+#include <intl.h>
 
 static const char digits[] = "0123456789";
 static const char letters[] = "abcdefghijklmnopqrstuvwxyz";
+
+//-------------------------------------------------------------------------
 
 static bool
 is_digit_in_radix (int c, int radix)
@@ -136,10 +140,11 @@ is_postscript_radix_number (const char *s)
       do
         i++;
       while (c_isdigit (s[i]));
-      if (s[i] == '#' && c_isdigit (s[i + 1]))
+      if (s[i] == '#')
         {
           long int radix = strtol (s, NULL, 10);
-          if (2 <= radix && radix <= 36)
+          if (2 <= radix && radix <= 36
+              && is_digit_in_radix (s[i + 1], (int) radix))
             {
               do
                 i++;
@@ -159,3 +164,91 @@ is_postscript_number (const char *s)
   return (is_postscript_integer (s) || is_postscript_real (s)
           || is_postscript_radix_number (s));
 }
+
+static SCM
+scm_c_from_postscript_integer (const char *s)
+{
+  return scm_string_to_number (scm_from_utf8_string (s), scm_from_int (10));
+}
+
+static SCM
+scm_c_from_postscript_real (const char *s)
+{
+  return scm_string_to_number (scm_from_utf8_string (s), scm_from_int (10));
+}
+
+static SCM
+scm_c_from_postscript_radix_number (const char *s)
+{
+  size_t i = 0;
+  do
+    i++;
+  while (c_isdigit (s[i]));
+  SCM radix = scm_string_to_number (scm_from_utf8_stringn (s, i),
+                                    scm_from_int (10));
+  SCM numeral = scm_from_utf8_string (&s[i + 1]);
+  return scm_string_to_number (numeral, radix);
+}
+
+VISIBLE SCM
+scm_c_postscript_to_number (const char *s)
+{
+  SCM number = SCM_UNDEFINED;
+  if (is_postscript_integer (s))
+    number = scm_c_from_postscript_integer (s);
+  else if (is_postscript_real (s))
+    number = scm_c_from_postscript_real (s);
+  else if (is_postscript_radix_number (s))
+    number = scm_c_from_postscript_radix_number (s);
+  else
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_c_from_postscript_number"),
+        rnrs_c_make_message_condition (_("not a valid PostScript numeral")),
+        rnrs_make_irritants_condition (scm_list_1 (scm_from_utf8_string (s)))));
+  return number;
+}
+
+VISIBLE SCM
+scm_postscript_to_number (SCM s)
+{
+  scm_dynwind_begin (0);
+
+  char *_s = scm_to_utf8_stringn (s, NULL);
+  scm_dynwind_free (_s);
+
+  SCM number = scm_c_postscript_to_number (_s);
+
+  scm_dynwind_end ();
+
+  return number;
+}
+
+VISIBLE SCM
+scm_postscript_number_p (SCM s)
+{
+  scm_dynwind_begin (0);
+
+  char *_s = scm_to_utf8_stringn (s, NULL);
+  scm_dynwind_free (_s);
+
+  SCM result = scm_from_bool (is_postscript_number (_s));
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+//-------------------------------------------------------------------------
+
+void init_guile_ps_number (void);
+
+VISIBLE void
+init_guile_ps_number (void)
+{
+  scm_c_define_gsubr ("postscript->number", 1, 0, 0, scm_postscript_to_number);
+  scm_c_define_gsubr ("postscript-number?", 1, 0, 0, scm_postscript_number_p);
+}
+
+//-------------------------------------------------------------------------

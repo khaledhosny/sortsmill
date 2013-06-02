@@ -45,11 +45,8 @@
    )
 
   (import (sortsmill dynlink)
-          (sortsmill i18n)
           (rnrs)
-          (except (guile) error)
-          (ice-9 match)
-          (ice-9 format))
+          (except (guile) error))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_fonts_private_dict"))

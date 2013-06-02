@@ -25,35 +25,21 @@
    ;; (view:fontinfo-dict-ref font-or-glyph-view key) → string
    view:fontinfo-dict-ref
 
-   ;; (view:fontinfo-dict-ref font-or-glyph-view key) → *unspecified*
-   view:fontinfo-dict-remove!
-
-   ;; (view:fontinfo-dict-clear! font-or-glyph-view) → *unspecified*
-   view:fontinfo-dict-clear!
-
    ;; (view:fontinfo-dict-set-from-alist! font-or-glyph-view alist) → *unspecified*
    view:fontinfo-dict-set-from-alist!
-
-   ;; (view:alist->fontinfo-dict! font-or-glyph-view alist) → *unspecified*
-   view:alist->fontinfo-dict!
 
    ;; (view:fontinfo-dict->alist font-or-glyph-view) → alist
    view:fontinfo-dict->alist
 
    ;; (view:fontinfo-dict-keys font-or-glyph-view) → list
    view:fontinfo-dict-keys
-
-   ;; (fontinfo-dict-value->string various-types) → string
-   fontinfo-dict-value->string
    )
 
   (import (sortsmill dynlink)
-          (sortsmill i18n)
           (rnrs)
-          (except (guile) error)
-          (ice-9 format))
+          (except (guile) error))
 
-;;  (eval-when (compile load eval)
-;;    (sortsmill-dynlink-load-extension "init_guile_fonts_fontinfo_dict"))
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_guile_fonts_fontinfo_dict"))
 
   ) ;; end of library.

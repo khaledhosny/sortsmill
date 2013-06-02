@@ -16,11 +16,10 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_POSTSCRIPT_H
-#define _SORTSMILL_GUILE_POSTSCRIPT_H
+#ifndef _SORTSMILL_GUILE_FONTS_FONTINFO_DICT_H
+#define _SORTSMILL_GUILE_FONTS_FONTINFO_DICT_H
 
 #include <libguile.h>
-#include <sortsmill/ps_number.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -30,7 +29,17 @@ extern "C"
 }
 #endif
 
-SCM scm_to_postscript (SCM value);
+void scm_c_view_fontinfo_dict_set_x (SCM view, const char *key,
+                                     const char *value);
+SCM scm_view_fontinfo_dict_set_x (SCM view, SCM key, SCM value);
+
+SCM scm_c_view_fontinfo_dict_ref (SCM view, const char *key);
+SCM scm_view_fontinfo_dict_ref (SCM view, SCM key);
+
+SCM scm_view_fontinfo_dict_clear_x (SCM view);
+SCM scm_view_fontinfo_dict_set_from_alist_x (SCM view, SCM lst);
+SCM scm_view_fontinfo_dict_to_alist (SCM view);
+SCM scm_view_fontinfo_dict_keys (SCM view);
 
 #if 0
 {
@@ -39,4 +48,4 @@ SCM scm_to_postscript (SCM value);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_POSTSCRIPT_H */
+#endif /* _SORTSMILL_GUILE_FONTS_FONTINFO_DICT_H */

@@ -32,13 +32,15 @@
           )
 
   (import (sortsmill i18n)
+          (sortsmill fonts fontinfo-dict)
           (sortsmill fonts private-dict)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
           (sxml simple)
           (sxml match)
-          (ice-9 match))
+          (ice-9 match)
+          (ice-9 format))
 
   (define (ufo:read-metainfo ufo)
     (parse-dict-xml ufo "metainfo.plist"))
@@ -68,10 +70,19 @@
     (parse-ufo-xml ufo "glyphs" glif-file))
 
   (define (view:apply-ufo-fontinfo! view ufo-or-fontinfo)
-    (let ([fontinfo (if (string? ufo-or-fontinfo)
-                        (let ([info (ufo:read-fontinfo ufo-or-fontinfo)])
-                          (if (eq? info 'file-not-found) '() info))
-                        ufo-or-fontinfo)])
+    (let* ([fontinfo (if (string? ufo-or-fontinfo)
+                         (let ([info (ufo:read-fontinfo ufo-or-fontinfo)])
+                           (if (eq? info 'file-not-found) '() info))
+                         ufo-or-fontinfo)]
+           [version-major (assoc-ref fontinfo 'versionMajor)]
+           [version-minor (assoc-ref fontinfo 'versionMinor)]
+           [version (if version-major
+                        (if version-minor
+                            (format #f "~a.~a" version-major version-minor)
+                            (format #f "~a" version-major))
+                        #f)])
+      (when version
+        (view:fontinfo-dict-set! view "version" version))
       (for-each
        (lambda (entry)
          (apply-ufo-fontinfo-entry! view (car entry) (cdr entry)))
@@ -250,6 +261,16 @@
 
   (define (apply-ufo-fontinfo-entry! view key value)
     (match key
+      ['postscriptFullName (view:fontinfo-dict-set! view "FullName" value)]
+      ['fullName (view:fontinfo-dict-set! view "FullName" value)]
+      ['familyName (view:fontinfo-dict-set! view "FamilyName" value)]
+      ['postscriptWeightName (view:fontinfo-dict-set! view "Weight" value)]
+      ['weightName (view:fontinfo-dict-set! view "Weight" value)]
+      ['postscriptIsFixedPitch (view:fontinfo-dict-set! view "IsFixedPitch" value)]
+      ['postscriptUnderlinePosition (view:fontinfo-dict-set! view "UnderlinePosition" value)]
+      ['postscriptUnderlineThickness (view:fontinfo-dict-set! view "UnderlineThickness" value)]
+      ['copyright (view:fontinfo-dict-set! view "Notice" value)]
+      ['italicAngle (view:fontinfo-dict-set! view "ItalicAngle" value)]
       ['postscriptBlueValues (view:private-dict-set! view "BlueValues" value)]
       ['postscriptOtherBlues (view:private-dict-set! view "OtherBlues" value)]
       ['postscriptFamilyBlues (view:private-dict-set! view "FamilyBlues" value)]

@@ -4,6 +4,7 @@ data/sortsmill-editor.desktop.in
 data/fontforge.xml.in
 
 auxiliary/copy_with_strides.c
+auxiliary/ps_number.c
 auxiliary/rexp.c
 auxiliary/rnrs_conditions.c
 
@@ -77,6 +78,7 @@ fontforge/glyphcomp.c
 fontforge/gotodlg.c
 fontforge/groups.c
 fontforge/groupsdlg.c
+fontforge/guile_fonts_fontinfo_dict.c
 fontforge/guile_fonts_glyphs.c
 fontforge/guile_fonts_peg_spacing.c
 fontforge/guile_internals_anchors.c
@@ -189,7 +191,6 @@ guile/sortsmill/python.scm
 guile/sortsmill/fonts/anchors.scm
 guile/sortsmill/fonts/contours.scm
 guile/sortsmill/fonts/glyphs.scm
-guile/sortsmill/fonts/private-dict.scm
 guile/sortsmill/fonts/ufo.scm
 guile/sortsmill/fonts/views.scm
 
@@ -204,6 +205,8 @@ guile/sortsmill/math/matrices/bezout.scm
 guile/sortsmill/math/polyspline/bases.scm
 guile/sortsmill/math/polyspline/inversion.scm
 guile/sortsmill/math/polyspline/roots.scm
+
+guile/sortsmill/postscript.scm
 
 main/compare.c
 main/image.c

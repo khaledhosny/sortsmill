@@ -21,12 +21,22 @@
   (export
    ;; (scm->postscript various-types) → string
    scm->postscript
+
+   ;; (postscript->number string) → number
+   postscript->number
+
+   ;; (postscript-number? string) → boolean
+   postscript-number?
    )
 
-  (import (sortsmill i18n)
+  (import (sortsmill dynlink)
+          (sortsmill i18n)
           (rnrs)
           (except (guile) error)
           (ice-9 format))
+
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_guile_ps_number"))
 
   (define (scm->postscript value)
     (cond
