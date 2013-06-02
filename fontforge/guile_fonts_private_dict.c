@@ -40,7 +40,7 @@ scm_view_private_dict_set_x (SCM view, SCM key, SCM value)
   char *_key = scm_to_utf8_stringn (key, NULL);
   scm_dynwind_free (_key);
 
-  SCM value_string = scm_view_private_dict_value_to_string (value);
+  SCM value_string = scm_to_postscript (value);
   char *_value = scm_to_utf8_stringn (value_string, NULL);
   scm_dynwind_free (_value);
 
@@ -49,13 +49,6 @@ scm_view_private_dict_set_x (SCM view, SCM key, SCM value)
   scm_dynwind_end ();
 
   return SCM_UNSPECIFIED;
-}
-
-VISIBLE SCM
-scm_view_private_dict_value_to_string (SCM value)
-{
-  return scm_call_1 (scm_c_public_ref (my_module, "private-dict-value->string"),
-                     value);
 }
 
 VISIBLE const char *

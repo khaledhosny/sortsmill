@@ -16,8 +16,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_FONTS_PRIVATE_DICT_H
-#define _SORTSMILL_GUILE_FONTS_PRIVATE_DICT_H
+#ifndef _SORTSMILL_GUILE_POSTSCRIPT_H
+#define _SORTSMILL_GUILE_POSTSCRIPT_H
 
 #include <libguile.h>
 
@@ -29,21 +29,7 @@ extern "C"
 }
 #endif
 
-void scm_c_view_private_dict_set_x (SCM view, const char *key,
-                                    const char *value);
-SCM scm_view_private_dict_set_x (SCM view, SCM key, SCM value);
-
-const char *scm_c_view_private_dict_ref (SCM view, const char *key);
-SCM scm_view_private_dict_ref (SCM view, SCM key);
-
-void scm_c_view_private_dict_remove_x (SCM view, const char *key);
-SCM scm_view_private_dict_remove_x (SCM view, SCM key);
-
-SCM scm_view_private_dict_clear_x (SCM view);
-SCM scm_view_private_dict_set_from_alist_x (SCM view, SCM lst);
-SCM scm_view_alist_to_private_dict_x (SCM view, SCM lst);
-SCM scm_view_private_dict_to_alist (SCM view);
-SCM scm_view_private_dict_keys (SCM view);
+SCM scm_to_postscript (SCM value);
 
 #if 0
 {
@@ -52,4 +38,4 @@ SCM scm_view_private_dict_keys (SCM view);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_FONTS_PRIVATE_DICT_H */
+#endif /* _SORTSMILL_GUILE_POSTSCRIPT_H */

@@ -731,6 +731,14 @@ GO_FILES += sortsmill/options.go
 
 #--------------------------------------------------------------------------
 #
+# (sortsmill postscript)
+
+DIST_SCM_FILES += sortsmill/postscript.scm
+GO_FILES += sortsmill/postscript.go
+SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/postscript.scm
+
+#--------------------------------------------------------------------------
+#
 # (sortsmill pkg-info ...)
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/pkg-info.scm

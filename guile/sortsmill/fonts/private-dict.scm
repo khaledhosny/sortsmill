@@ -42,9 +42,6 @@
 
    ;; (view:private-dict-keys font-or-glyph-view) → list
    view:private-dict-keys
-
-   ;; (private-dict-value->string various-types) → string
-   private-dict-value->string
    )
 
   (import (sortsmill dynlink)
@@ -56,19 +53,5 @@
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_fonts_private_dict"))
-
-  (define (private-dict-value->string value)
-    (cond
-     [(eq? value #f) "false"]
-     [(eq? value #t) "true"]
-     [(string? value) value]
-     [(integer? value) (format #f "~d" value)]
-     [(real? value) (format #f "~f" value)]
-     [(list? value)
-      (let ([strings (map private-dict-value->string value)])
-        (string-append "[" (string-join strings " ") "]"))]
-     [else (assertion-violation 'private-dict-value->string
-                                (_ "unexpected private dictionary value")
-                                value)] ))
 
   ) ;; end of library.
