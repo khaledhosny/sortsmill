@@ -69,4 +69,3 @@ scm_c_raise_list_fails_to_end (const char *who, SCM lst)
       rnrs_c_make_message_condition (_("list fails to end as expected")),
       rnrs_make_irritants_condition (scm_list_1 (lst))));
 }
-

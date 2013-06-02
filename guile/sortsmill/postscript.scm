@@ -22,18 +22,28 @@
    ;; (scm->postscript various-types) → string
    scm->postscript
 
+   ;; (postscript-number? string) → boolean
    ;; (postscript->number string) → number
+   postscript-number?
    postscript->number
 
-   ;; (postscript-number? string) → boolean
-   postscript-number?
+   ;; (postscript-boolean? string) → boolean
+   ;; (postscript->boolean string) → boolean
+   postscript-boolean?
+   postscript->boolean
+
+   ;; (postscript-number-list? string) → boolean
+   ;; (postscript->number-list string) → number-list
+   postscript-number-list?
+   postscript->number-list
    )
 
   (import (sortsmill dynlink)
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
-          (ice-9 format))
+          (ice-9 format)
+          (ice-9 match))
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_guile_ps_number"))
@@ -51,5 +61,48 @@
      [else (assertion-violation 'scm->postscript
                                 (_ "unexpected argument value")
                                 value)] ))
+
+  (define (postscript-boolean? s)
+    (with-input-from-string s
+      (lambda ()
+        (match (read)
+          [(or 'true 'false) #t]
+          [_ #f]))))
+
+  (define (postscript->boolean s)
+    (with-input-from-string s
+      (lambda ()
+        (match (read)
+          ['true #t]
+          ['false #f]
+          [_ (assertion-violation 'postscript->boolean
+                                  (_ "not a valid PostScript boolean")
+                                  s)]))))
+
+  (define (postscript-number-list? s)
+    (let ([s^ (string-trim-both s)])
+      (cond [(not (string-prefix? "[" s^)) #f]
+            [(not (string-suffix? "]" s^)) #f]
+            [else (with-input-from-string s^
+                    (lambda ()
+                      (match (read)
+                        [((? real? _) ...) #t]
+                        [_ #f])))] )))
+
+
+  (define (postscript->number-list s)
+    (let ([erroneous
+           (lambda ()
+             (assertion-violation 'postscript->number-list
+                                  (_ "not a valid PostScript number array")
+                                  s))]
+          [s^ (string-trim-both s)])
+      (cond [(not (string-prefix? "[" s^)) (erroneous)]
+            [(not (string-suffix? "]" s^)) (erroneous)]
+            [else (with-input-from-string s^
+                    (lambda ()
+                      (match (read)
+                        [(and ((? real? _) ...) lst) lst]
+                        [_ (erroneous)] )))] )))
 
   ) ;; end of library.

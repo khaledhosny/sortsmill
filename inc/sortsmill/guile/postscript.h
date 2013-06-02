@@ -32,6 +32,12 @@ extern "C"
 
 SCM scm_to_postscript (SCM value);
 
+SCM scm_postscript_boolean_p (SCM s);
+SCM scm_postscript_to_boolean (SCM s);
+
+SCM scm_postscript_number_list_p (SCM s);
+SCM scm_postscript_to_number_list (SCM s);
+
 #if 0
 {
 #endif

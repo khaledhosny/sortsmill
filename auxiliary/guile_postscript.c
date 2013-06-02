@@ -21,8 +21,36 @@
 
 static const char *my_module = "sortsmill postscript";
 
+//-------------------------------------------------------------------------
+
 VISIBLE SCM
 scm_to_postscript (SCM value)
 {
   return scm_call_1 (scm_c_public_ref (my_module, "scm->postscript"), value);
+}
+
+VISIBLE SCM
+scm_postscript_boolean_p (SCM s)
+{
+  return scm_call_1 (scm_c_public_ref (my_module, "postscript-boolean?"), s);
+}
+
+VISIBLE SCM
+scm_postscript_to_boolean (SCM s)
+{
+  return scm_call_1 (scm_c_public_ref (my_module, "postscript->boolean"), s);
+}
+
+VISIBLE SCM
+scm_postscript_number_list_p (SCM s)
+{
+  return scm_call_1 (scm_c_public_ref (my_module, "postscript-number-list?"),
+                     s);
+}
+
+VISIBLE SCM
+scm_postscript_to_number_list (SCM s)
+{
+  return scm_call_1 (scm_c_public_ref (my_module, "postscript->number-list"),
+                     s);
 }
