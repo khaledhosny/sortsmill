@@ -41,11 +41,17 @@
    view:FontName-ref
    ;;
    ;; (view:FIELDNAME-ref font-or-glyph-view) → number, string, or #f
+   view:PaintType-ref
    view:StrokeWidth-ref
    ;;
    ;; (view:FIELDNAME-set! font-or-glyph-view value) → *unspecified*
    view:FontName-set!
+   view:PaintType-set!
    view:StrokeWidth-set!
+   ;;
+   ;; Other ways to access the PaintType.
+   view:stroked-font? ; (view:stroked-font font-or-glyph-view) → boolean
+   view:stroked-font-set! ; (view:stroked-font-set! font-or-glyph-view value) → *unspecified*
    )
 
   (import (sortsmill dynlink)

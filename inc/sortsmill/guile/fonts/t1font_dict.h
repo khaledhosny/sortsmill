@@ -42,10 +42,15 @@ SCM scm_view_t1font_dict_to_alist (SCM view);
 SCM scm_view_t1font_dict_keys (SCM view);
 
 SCM scm_view_FontName_ref (SCM view);
+SCM scm_view_PaintType_ref (SCM view);
 SCM scm_view_StrokeWidth_ref (SCM view);
 
 SCM scm_view_FontName_set_x (SCM view, SCM value);
+SCM scm_view_PaintType_set_x (SCM view, SCM value);
 SCM scm_view_StrokeWidth_set_x (SCM view, SCM value);
+
+SCM scm_view_stroked_font_p (SCM view);
+SCM scm_view_stroked_font_set_x (SCM view, SCM value);
 
 #if 0
 {

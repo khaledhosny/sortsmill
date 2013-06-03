@@ -27,12 +27,14 @@ static const char my_module[] = "sortsmill fonts t1font-dict";
 typedef enum
 {
   _t1font_FontName = 0,
+  _t1font_PaintType,
   _t1font_StrokeWidth,
   _t1font_SENTINEL
 } _t1font_key_t;
 
 static const char *t1font_key_table[] = {
   [_t1font_FontName] = "FontName",
+  [_t1font_PaintType] = "PaintType",
   [_t1font_StrokeWidth] = "StrokeWidth"
 };
 
@@ -64,6 +66,9 @@ scm_c_view_t1font_dict_set_x (SCM view, const char *key, const char *value)
     case _t1font_FontName:
       free (sf->fontname);
       sf->fontname = xstrdup (value);
+      break;
+    case _t1font_PaintType:
+      sf->strokedfont = (scm_to_int (scm_c_postscript_to_number (value)) == 2);
       break;
     case _t1font_StrokeWidth:
       sf->strokewidth = scm_to_double (scm_c_postscript_to_number (value));
@@ -107,6 +112,10 @@ scm_c_view_t1font_dict_ref (SCM view, const char *key)
     {
     case _t1font_FontName:
       result = scm_from_string_or_null (sf->fontname);
+      break;
+    case _t1font_PaintType:
+      result = scm_number_to_string (scm_from_int (sf->strokedfont ? 2 : 0),
+                                     scm_from_int (10));
       break;
     case _t1font_StrokeWidth:
       result = scm_number_to_string (scm_from_double (sf->strokewidth),
@@ -188,6 +197,7 @@ scm_view_t1font_dict_keys (SCM view)
   }
 
 VISIBLE _SCM_T1FONT_FIELD_STRING_REF (FontName);
+VISIBLE _SCM_T1FONT_FIELD_NUMBER_REF (PaintType);
 VISIBLE _SCM_T1FONT_FIELD_NUMBER_REF (StrokeWidth);
 
 #define _SCM_T1FONT_FIELD_SET_X(FIELDNAME)                              \
@@ -199,7 +209,21 @@ VISIBLE _SCM_T1FONT_FIELD_NUMBER_REF (StrokeWidth);
   }
 
 VISIBLE _SCM_T1FONT_FIELD_SET_X (FontName);
+VISIBLE _SCM_T1FONT_FIELD_SET_X (PaintType);
 VISIBLE _SCM_T1FONT_FIELD_SET_X (StrokeWidth);
+
+VISIBLE SCM
+scm_view_stroked_font_p (SCM view)
+{
+  return scm_num_eq_p (scm_view_PaintType_ref (view), scm_from_int (2));
+}
+
+VISIBLE SCM
+scm_view_stroked_font_set_x (SCM view, SCM value)
+{
+  scm_view_PaintType_set_x (view, scm_from_int ((scm_is_true (value)) ? 2 : 0));
+  return SCM_UNSPECIFIED;
+}
 
 //-------------------------------------------------------------------------
 
@@ -220,12 +244,18 @@ init_guile_fonts_t1font_dict (void)
                       scm_view_t1font_dict_keys);
 
   scm_c_define_gsubr ("view:FontName-ref", 1, 0, 0, scm_view_FontName_ref);
+  scm_c_define_gsubr ("view:PaintType-ref", 1, 0, 0, scm_view_PaintType_ref);
   scm_c_define_gsubr ("view:StrokeWidth-ref", 1, 0, 0,
                       scm_view_StrokeWidth_ref);
 
   scm_c_define_gsubr ("view:FontName-set!", 2, 0, 0, scm_view_FontName_set_x);
+  scm_c_define_gsubr ("view:PaintType-set!", 2, 0, 0, scm_view_PaintType_set_x);
   scm_c_define_gsubr ("view:StrokeWidth-set!", 2, 0, 0,
                       scm_view_StrokeWidth_set_x);
+
+  scm_c_define_gsubr ("view:stroked-font?", 1, 0, 0, scm_view_stroked_font_p);
+  scm_c_define_gsubr ("view:stroked-font-set!", 2, 0, 0,
+                      scm_view_stroked_font_set_x);
 }
 
 //-------------------------------------------------------------------------
