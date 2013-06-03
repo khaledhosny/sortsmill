@@ -257,7 +257,8 @@ set_vendor_id (const char *who, SplineFont *sf, SCM value)
       (scm_list_4
        (rnrs_make_assertion_violation (),
         rnrs_c_make_who_condition (who),
-        rnrs_c_make_message_condition (_("expected a string of length "
+        rnrs_c_make_message_condition (_("expected a space-padded "
+                                         "string of length "
                                          "at most 4")),
         rnrs_make_irritants_condition (scm_list_1 (value))));
 
