@@ -55,13 +55,19 @@
    view:StdVW-ref
    view:StemSnapH-ref
    view:StemSnapV-ref
+   ;;
+   ;; (view:FIELDNAME-ref font-or-glyph-view) → number, string, or #f
    view:BlueFuzz-ref
    view:BlueScale-ref
    view:BlueShift-ref
    view:ExpansionFactor-ref
    view:LanguageGroup-ref
-   view:ForceBold-ref ; Does not distinguish a missing entry from an entry set to "false".
-   view:RndStemUp-ref ; Does not distinguish a missing entry from an entry set to "false".
+   ;;
+   ;; (view:FIELDNAME-ref font-or-glyph-view) → boolean, string, or #f
+   ;; WARNING: These do not distinguish a missing entry from an entry
+   ;; set to "false".
+   view:ForceBold-ref
+   view:RndStemUp-ref
    ;;
    ;; (view:FIELDNAME-set! font-or-glyph-view value) → *unspecified*
    view:BlueValues-set!
