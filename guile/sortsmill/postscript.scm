@@ -63,11 +63,13 @@
                                 value)] ))
 
   (define (postscript-boolean? s)
-    (with-input-from-string s
-      (lambda ()
-        (match (read)
-          [(or 'true 'false) #t]
-          [_ #f]))))
+    (if (string? s)
+        (with-input-from-string s
+          (lambda ()
+            (match (read)
+              [(or 'true 'false) #t]
+              [_ #f])))
+        #f))
 
   (define (postscript->boolean s)
     (with-input-from-string s
@@ -80,15 +82,16 @@
                                   s)]))))
 
   (define (postscript-number-list? s)
-    (let ([s^ (string-trim-both s)])
-      (cond [(not (string-prefix? "[" s^)) #f]
-            [(not (string-suffix? "]" s^)) #f]
-            [else (with-input-from-string s^
-                    (lambda ()
-                      (match (read)
-                        [((? real? _) ...) #t]
-                        [_ #f])))] )))
-
+    (if (string? s)
+        (let ([s^ (string-trim-both s)])
+          (cond [(not (string-prefix? "[" s^)) #f]
+                [(not (string-suffix? "]" s^)) #f]
+                [else (with-input-from-string s^
+                        (lambda ()
+                          (match (read)
+                            [((? real? _) ...) #t]
+                            [_ #f])))] ))
+        #f))
 
   (define (postscript->number-list s)
     (let ([erroneous

@@ -42,6 +42,60 @@
 
    ;; (view:private-dict-keys font-or-glyph-view) → list
    view:private-dict-keys
+
+   ;; Convenience functions.
+   ;; --------------------------------------------------------------------------------
+   ;;
+   ;; (view:FIELDNAME-ref font-or-glyph-view) → number-list, string, or #f
+   view:BlueValues-ref
+   view:OtherBlues-ref
+   view:FamilyBlues-ref
+   view:FamilyOtherBlues-ref
+   view:StdHW-ref
+   view:StdVW-ref
+   view:StemSnapH-ref
+   view:StemSnapV-ref
+   view:BlueFuzz-ref
+   view:BlueScale-ref
+   view:BlueShift-ref
+   view:ExpansionFactor-ref
+   view:LanguageGroup-ref
+   view:ForceBold-ref ; Does not distinguish a missing entry from an entry set to "false".
+   view:RndStemUp-ref ; Does not distinguish a missing entry from an entry set to "false".
+   ;;
+   ;; (view:FIELDNAME-set! font-or-glyph-view value) → *unspecified*
+   view:BlueValues-set!
+   view:OtherBlues-set!
+   view:FamilyBlues-set!
+   view:FamilyOtherBlues-set!
+   view:StdHW-set!
+   view:StdVW-set!
+   view:StemSnapH-set!
+   view:StemSnapV-set!
+   view:BlueFuzz-set!
+   view:BlueScale-set!
+   view:BlueShift-set!
+   view:ExpansionFactor-set!
+   view:LanguageGroup-set!
+   view:ForceBold-set!
+   view:RndStemUp-set!
+   ;;
+   ;; (view:FIELDNAME-remove! font-or-glyph-view) → *unspecified*
+   view:BlueValues-remove!
+   view:OtherBlues-remove!
+   view:FamilyBlues-remove!
+   view:FamilyOtherBlues-remove!
+   view:StdHW-remove!
+   view:StdVW-remove!
+   view:StemSnapH-remove!
+   view:StemSnapV-remove!
+   view:BlueFuzz-remove!
+   view:BlueScale-remove!
+   view:BlueShift-remove!
+   view:ExpansionFactor-remove!
+   view:LanguageGroup-remove!
+   view:ForceBold-remove!
+   view:RndStemUp-remove!
    )
 
   (import (sortsmill dynlink)

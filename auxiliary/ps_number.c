@@ -228,15 +228,18 @@ scm_postscript_to_number (SCM s)
 VISIBLE SCM
 scm_postscript_number_p (SCM s)
 {
-  scm_dynwind_begin (0);
+  SCM result = SCM_BOOL_F;
+  if (scm_is_string (s))
+    {
+      scm_dynwind_begin (0);
 
-  char *_s = scm_to_utf8_stringn (s, NULL);
-  scm_dynwind_free (_s);
+      char *_s = scm_to_utf8_stringn (s, NULL);
+      scm_dynwind_free (_s);
 
-  SCM result = scm_from_bool (is_postscript_number (_s));
+      result = scm_from_bool (is_postscript_number (_s));
 
-  scm_dynwind_end ();
-
+      scm_dynwind_end ();
+    }
   return result;
 }
 

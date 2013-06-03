@@ -155,6 +155,110 @@ scm_view_private_dict_keys (SCM view)
   return lst;
 }
 
+#define _SCM_PRIVATE_FIELD_NUMBER_LIST_REF(FIELDNAME)                   \
+  SCM                                                                   \
+  scm_view_##FIELDNAME##_ref (SCM view)                                 \
+  {                                                                     \
+    SCM value = (scm_view_private_dict_ref                              \
+                 (view, scm_from_latin1_string (#FIELDNAME)));          \
+    return (scm_is_true (scm_postscript_number_list_p (value))) ?       \
+      scm_postscript_to_number_list (value) : value;                    \
+  }
+
+#define _SCM_PRIVATE_FIELD_NUMBER_REF(FIELDNAME)                \
+  SCM                                                           \
+  scm_view_##FIELDNAME##_ref (SCM view)                         \
+  {                                                             \
+    SCM value = (scm_view_private_dict_ref                      \
+                 (view, scm_from_latin1_string (#FIELDNAME)));  \
+    return (scm_is_true (scm_postscript_number_p (value))) ?    \
+      scm_postscript_to_number (value) : value;                 \
+  }
+
+// WARNING: This does not distinguish between a missing entry and an
+// entry set to "false".
+#define _SCM_PRIVATE_FIELD_BOOLEAN_REF(FIELDNAME)               \
+  SCM                                                           \
+  scm_view_##FIELDNAME##_ref (SCM view)                         \
+  {                                                             \
+    SCM value = (scm_view_private_dict_ref                      \
+                 (view, scm_from_latin1_string (#FIELDNAME)));  \
+    return (scm_is_true (scm_postscript_boolean_p (value))) ?   \
+      scm_postscript_to_boolean (value) : value;                \
+  }
+
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (BlueValues);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (OtherBlues);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (FamilyBlues);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (FamilyOtherBlues);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (StdHW);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (StdVW);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (StemSnapH);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_LIST_REF (StemSnapV);
+
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_REF (BlueFuzz);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_REF (BlueScale);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_REF (BlueShift);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_REF (ExpansionFactor);
+VISIBLE _SCM_PRIVATE_FIELD_NUMBER_REF (LanguageGroup);
+
+// WARNING: These do not distinguish between a missing entry and an
+// entry set to "false".
+VISIBLE _SCM_PRIVATE_FIELD_BOOLEAN_REF (ForceBold);
+VISIBLE _SCM_PRIVATE_FIELD_BOOLEAN_REF (RndStemUp);
+
+#define _SCM_PRIVATE_FIELD_SET_X(FIELDNAME)                             \
+  SCM                                                                   \
+  scm_view_##FIELDNAME##_set_x (SCM view, SCM value)                    \
+  {                                                                     \
+    return (scm_view_private_dict_set_x                                 \
+            (view, scm_from_latin1_string (#FIELDNAME), value));        \
+  }
+
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (BlueValues);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (OtherBlues);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (FamilyBlues);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (FamilyOtherBlues);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (StdHW);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (StdVW);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (StemSnapH);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (StemSnapV);
+
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (BlueFuzz);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (BlueScale);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (BlueShift);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (ExpansionFactor);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (LanguageGroup);
+
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (ForceBold);
+VISIBLE _SCM_PRIVATE_FIELD_SET_X (RndStemUp);
+
+#define _SCM_PRIVATE_FIELD_REMOVE_X(FIELDNAME)                  \
+  SCM                                                           \
+  scm_view_##FIELDNAME##_remove_x (SCM view)                    \
+  {                                                             \
+    return (scm_view_private_dict_remove_x                      \
+            (view, scm_from_latin1_string (#FIELDNAME)));       \
+  }
+
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (BlueValues);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (OtherBlues);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (FamilyBlues);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (FamilyOtherBlues);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (StdHW);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (StdVW);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (StemSnapH);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (StemSnapV);
+
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (BlueFuzz);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (BlueScale);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (BlueShift);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (ExpansionFactor);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (LanguageGroup);
+
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (ForceBold);
+VISIBLE _SCM_PRIVATE_FIELD_REMOVE_X (RndStemUp);
+
 //-------------------------------------------------------------------------
 
 void init_guile_fonts_private_dict (void);
@@ -178,6 +282,77 @@ init_guile_fonts_private_dict (void)
                       scm_view_private_dict_to_alist);
   scm_c_define_gsubr ("view:private-dict-keys", 1, 0, 0,
                       scm_view_private_dict_keys);
+
+  scm_c_define_gsubr ("view:BlueValues-ref", 1, 0, 0, scm_view_BlueValues_ref);
+  scm_c_define_gsubr ("view:OtherBlues-ref", 1, 0, 0, scm_view_OtherBlues_ref);
+  scm_c_define_gsubr ("view:FamilyBlues-ref", 1, 0, 0,
+                      scm_view_FamilyBlues_ref);
+  scm_c_define_gsubr ("view:FamilyOtherBlues-ref", 1, 0, 0,
+                      scm_view_FamilyOtherBlues_ref);
+  scm_c_define_gsubr ("view:StdHW-ref", 1, 0, 0, scm_view_StdHW_ref);
+  scm_c_define_gsubr ("view:StdVW-ref", 1, 0, 0, scm_view_StdVW_ref);
+  scm_c_define_gsubr ("view:StemSnapH-ref", 1, 0, 0, scm_view_StemSnapH_ref);
+  scm_c_define_gsubr ("view:StemSnapV-ref", 1, 0, 0, scm_view_StemSnapV_ref);
+  scm_c_define_gsubr ("view:BlueFuzz-ref", 1, 0, 0, scm_view_BlueFuzz_ref);
+  scm_c_define_gsubr ("view:BlueScale-ref", 1, 0, 0, scm_view_BlueScale_ref);
+  scm_c_define_gsubr ("view:BlueShift-ref", 1, 0, 0, scm_view_BlueShift_ref);
+  scm_c_define_gsubr ("view:ExpansionFactor-ref", 1, 0, 0,
+                      scm_view_ExpansionFactor_ref);
+  scm_c_define_gsubr ("view:LanguageGroup-ref", 1, 0, 0,
+                      scm_view_LanguageGroup_ref);
+  scm_c_define_gsubr ("view:ForceBold-ref", 1, 0, 0, scm_view_ForceBold_ref);
+  scm_c_define_gsubr ("view:RndStemUp-ref", 1, 0, 0, scm_view_RndStemUp_ref);
+
+  scm_c_define_gsubr ("view:BlueValues-set!", 2, 0, 0,
+                      scm_view_BlueValues_set_x);
+  scm_c_define_gsubr ("view:OtherBlues-set!", 2, 0, 0,
+                      scm_view_OtherBlues_set_x);
+  scm_c_define_gsubr ("view:FamilyBlues-set!", 2, 0, 0,
+                      scm_view_FamilyBlues_set_x);
+  scm_c_define_gsubr ("view:FamilyOtherBlues-set!", 2, 0, 0,
+                      scm_view_FamilyOtherBlues_set_x);
+  scm_c_define_gsubr ("view:StdHW-set!", 2, 0, 0, scm_view_StdHW_set_x);
+  scm_c_define_gsubr ("view:StdVW-set!", 2, 0, 0, scm_view_StdVW_set_x);
+  scm_c_define_gsubr ("view:StemSnapH-set!", 2, 0, 0, scm_view_StemSnapH_set_x);
+  scm_c_define_gsubr ("view:StemSnapV-set!", 2, 0, 0, scm_view_StemSnapV_set_x);
+  scm_c_define_gsubr ("view:BlueFuzz-set!", 2, 0, 0, scm_view_BlueFuzz_set_x);
+  scm_c_define_gsubr ("view:BlueScale-set!", 2, 0, 0, scm_view_BlueScale_set_x);
+  scm_c_define_gsubr ("view:BlueShift-set!", 2, 0, 0, scm_view_BlueShift_set_x);
+  scm_c_define_gsubr ("view:ExpansionFactor-set!", 2, 0, 0,
+                      scm_view_ExpansionFactor_set_x);
+  scm_c_define_gsubr ("view:LanguageGroup-set!", 2, 0, 0,
+                      scm_view_LanguageGroup_set_x);
+  scm_c_define_gsubr ("view:ForceBold-set!", 2, 0, 0, scm_view_ForceBold_set_x);
+  scm_c_define_gsubr ("view:RndStemUp-set!", 2, 0, 0, scm_view_RndStemUp_set_x);
+
+  scm_c_define_gsubr ("view:BlueValues-remove!", 1, 0, 0,
+                      scm_view_BlueValues_remove_x);
+  scm_c_define_gsubr ("view:OtherBlues-remove!", 1, 0, 0,
+                      scm_view_OtherBlues_remove_x);
+  scm_c_define_gsubr ("view:FamilyBlues-remove!", 1, 0, 0,
+                      scm_view_FamilyBlues_remove_x);
+  scm_c_define_gsubr ("view:FamilyOtherBlues-remove!", 1, 0, 0,
+                      scm_view_FamilyOtherBlues_remove_x);
+  scm_c_define_gsubr ("view:StdHW-remove!", 1, 0, 0, scm_view_StdHW_remove_x);
+  scm_c_define_gsubr ("view:StdVW-remove!", 1, 0, 0, scm_view_StdVW_remove_x);
+  scm_c_define_gsubr ("view:StemSnapH-remove!", 1, 0, 0,
+                      scm_view_StemSnapH_remove_x);
+  scm_c_define_gsubr ("view:StemSnapV-remove!", 1, 0, 0,
+                      scm_view_StemSnapV_remove_x);
+  scm_c_define_gsubr ("view:BlueFuzz-remove!", 1, 0, 0,
+                      scm_view_BlueFuzz_remove_x);
+  scm_c_define_gsubr ("view:BlueScale-remove!", 1, 0, 0,
+                      scm_view_BlueScale_remove_x);
+  scm_c_define_gsubr ("view:BlueShift-remove!", 1, 0, 0,
+                      scm_view_BlueShift_remove_x);
+  scm_c_define_gsubr ("view:ExpansionFactor-remove!", 1, 0, 0,
+                      scm_view_ExpansionFactor_remove_x);
+  scm_c_define_gsubr ("view:LanguageGroup-remove!", 1, 0, 0,
+                      scm_view_LanguageGroup_remove_x);
+  scm_c_define_gsubr ("view:ForceBold-remove!", 1, 0, 0,
+                      scm_view_ForceBold_remove_x);
+  scm_c_define_gsubr ("view:RndStemUp-remove!", 1, 0, 0,
+                      scm_view_RndStemUp_remove_x);
 }
 
 //-------------------------------------------------------------------------
