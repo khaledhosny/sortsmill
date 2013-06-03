@@ -36,7 +36,6 @@ SCM scm_view_fontinfo_dict_set_x (SCM view, SCM key, SCM value);
 SCM scm_c_view_fontinfo_dict_ref (SCM view, const char *key);
 SCM scm_view_fontinfo_dict_ref (SCM view, SCM key);
 
-SCM scm_view_fontinfo_dict_clear_x (SCM view);
 SCM scm_view_fontinfo_dict_set_from_alist_x (SCM view, SCM lst);
 SCM scm_view_fontinfo_dict_to_alist (SCM view);
 SCM scm_view_fontinfo_dict_keys (SCM view);

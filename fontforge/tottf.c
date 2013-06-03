@@ -3754,6 +3754,20 @@ SFDefaultOS2Info (struct pfminfo *pfminfo, SplineFont *sf, char *fontname)
     SFDefaultOS2SubSuper (pfminfo, sf->ascent + sf->descent, sf->italicangle);
 }
 
+void
+SFDefaultOS2 (SplineFont *sf)
+{
+  if (!sf->pfminfo.pfmset)
+    {
+      SFDefaultOS2Info (&sf->pfminfo, sf, sf->fontname);
+      sf->pfminfo.pfmset = true;
+      sf->pfminfo.subsuper_set = true;
+      sf->pfminfo.panose_set = true;
+      sf->pfminfo.hheadset = true;
+      sf->pfminfo.vheadset = true;
+    }
+}
+
 int
 AlreadyMSSymbolArea (SplineFont *sf, EncMap *map)
 {

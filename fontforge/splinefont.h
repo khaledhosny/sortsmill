@@ -2781,6 +2781,7 @@ VISIBLE void TeXDefaultParams (SplineFont *sf);
 VISIBLE int AlreadyMSSymbolArea (SplineFont *sf, EncMap *map);
 VISIBLE void OS2FigureCodePages (SplineFont *sf, uint32_t CodePage[2]);
 VISIBLE void OS2FigureUnicodeRanges (SplineFont *sf, uint32_t Ranges[4]);
+void SFDefaultOS2 (SplineFont *sf);
 VISIBLE void SFDefaultOS2Info (struct pfminfo *pfminfo, SplineFont *sf,
                                char *fontname);
 void SFDefaultOS2Simple (struct pfminfo *pfminfo, SplineFont *sf);

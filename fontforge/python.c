@@ -13790,16 +13790,16 @@ return( -1 );						\
 return( 0 );						\
 }
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
-static void
-SFDefaultOS2 (SplineFont *sf)
-{
-  if (!sf->pfminfo.pfmset)
-    {
-      SFDefaultOS2Info (&sf->pfminfo, sf, sf->fontname);
-      sf->pfminfo.pfmset = sf->pfminfo.subsuper_set = sf->pfminfo.panose_set =
-        sf->pfminfo.hheadset = sf->pfminfo.vheadset = true;
-    }
-}
+//static void
+//SFDefaultOS2 (SplineFont *sf)
+//{
+//  if (!sf->pfminfo.pfmset)
+//    {
+//      SFDefaultOS2Info (&sf->pfminfo, sf, sf->fontname);
+//      sf->pfminfo.pfmset = sf->pfminfo.subsuper_set = sf->pfminfo.panose_set =
+//        sf->pfminfo.hheadset = sf->pfminfo.vheadset = true;
+//    }
+//}
 
 #define ff_gs_os2int2(name) \
 static PyObject *PyFF_Font_get_OS2_##name(PyFF_Font *self, void *UNUSED(closure)) { \
@@ -14566,17 +14566,18 @@ PyFF_Font_set_OS2_vendor (PyFF_Font *self, PyObject *value,
   if (newv == NULL)
     return (-1);
 
-  if (strlen (newv) > 4)
+  const size_t n = strlen (newv);
+  if (n > 4)
     {
       PyErr_Format (PyExc_TypeError, "OS2 vendor is limited to 4 characters");
       return (-1);
     }
   SFDefaultOS2 (sf);
-  sf->pfminfo.os2_vendor[0] = newv[0];
-  sf->pfminfo.os2_vendor[1] = newv[1];
-  sf->pfminfo.os2_vendor[2] = newv[2];
-  sf->pfminfo.os2_vendor[3] = newv[3];
-  sf->pfminfo.panose_set = true;
+  sf->pfminfo.os2_vendor[0] = (n < 1) ? ' ' : newv[0];
+  sf->pfminfo.os2_vendor[1] = (n < 2) ? ' ' : newv[1];
+  sf->pfminfo.os2_vendor[2] = (n < 3) ? ' ' : newv[2];
+  sf->pfminfo.os2_vendor[3] = (n < 4) ? ' ' : newv[3];
+
   return (0);
 }
 

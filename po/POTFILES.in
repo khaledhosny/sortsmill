@@ -80,7 +80,9 @@ fontforge/groups.c
 fontforge/groupsdlg.c
 fontforge/guile_fonts_fontinfo_dict.c
 fontforge/guile_fonts_glyphs.c
+fontforge/guile_fonts_os2_table.c
 fontforge/guile_fonts_peg_spacing.c
+fontforge/guile_fonts_t1font_dict.c
 fontforge/guile_internals_anchors.c
 fontforge/guile_internals_glyphs.c
 fontforge/guile_internals_lookups.c

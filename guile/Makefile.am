@@ -370,6 +370,13 @@ GO_FILES += sortsmill/fonts/glyphs.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/glyphs.scm
 
 
+# (sortsmill fonts os2-table)
+
+DIST_SCM_FILES += sortsmill/fonts/os2-table.scm
+GO_FILES += sortsmill/fonts/os2-table.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/os2-table.scm
+
+
 # (sortsmill peg-spacing)
 
 DIST_SCM_FILES += sortsmill/fonts/peg-spacing.scm

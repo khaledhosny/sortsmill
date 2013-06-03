@@ -16,17 +16,34 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_FONTS_H
-#define _SORTSMILL_GUILE_FONTS_H
+#ifndef _SORTSMILL_GUILE_FONTS_OS2_TABLE_H
+#define _SORTSMILL_GUILE_FONTS_OS2_TABLE_H
 
-#include <sortsmill/guile/fonts/anchors.h>
-#include <sortsmill/guile/fonts/contours.h>
-#include <sortsmill/guile/fonts/fontinfo_dict.h>
-#include <sortsmill/guile/fonts/glyphs.h>
-#include <sortsmill/guile/fonts/os2_table.h>
-#include <sortsmill/guile/fonts/peg_spacing.h>
-#include <sortsmill/guile/fonts/private_dict.h>
-#include <sortsmill/guile/fonts/t1font_dict.h>
-#include <sortsmill/guile/fonts/views.h>
+#include <libguile.h>
 
-#endif /* _SORTSMILL_GUILE_FONTS_H */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+void scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value);
+SCM scm_view_os2_table_set_x (SCM view, SCM key, SCM value);
+
+SCM scm_c_view_os2_table_ref (SCM view, const char *key);
+SCM scm_view_os2_table_ref (SCM view, SCM key);
+
+SCM scm_view_os2_table_set_from_alist_x (SCM view, SCM lst);
+SCM scm_view_os2_table_to_alist (SCM view);
+SCM scm_view_os2_table_keys (SCM view);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_FONTS_OS2_TABLE_H */
