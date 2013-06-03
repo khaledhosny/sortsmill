@@ -41,6 +41,27 @@ SCM scm_view_fontinfo_dict_set_from_alist_x (SCM view, SCM lst);
 SCM scm_view_fontinfo_dict_to_alist (SCM view);
 SCM scm_view_fontinfo_dict_keys (SCM view);
 
+SCM scm_view_version_ref (SCM view);
+SCM scm_view_Notice_ref (SCM view);
+SCM scm_view_FullName_ref (SCM view);
+SCM scm_view_FamilyName_ref (SCM view);
+SCM scm_view_Weight_ref (SCM view);
+SCM scm_view_ItalicAngle_ref (SCM view);
+SCM scm_view_UnderlinePosition_ref (SCM view);
+SCM scm_view_UnderlineThickness_ref (SCM view);
+SCM scm_view_IsFixedPitch_ref (SCM view);       /* Does not distinguish a
+                                                   missing entry from an
+                                                   entry set to "false". */
+
+SCM scm_view_version_set_x (SCM view, SCM value);
+SCM scm_view_Notice_set_x (SCM view, SCM value);
+SCM scm_view_FullName_set_x (SCM view, SCM value);
+SCM scm_view_FamilyName_set_x (SCM view, SCM value);
+SCM scm_view_Weight_set_x (SCM view, SCM value);
+SCM scm_view_ItalicAngle_set_x (SCM view, SCM value);
+SCM scm_view_UnderlinePosition_set_x (SCM view, SCM value);
+SCM scm_view_UnderlineThickness_set_x (SCM view, SCM value);
+
 #if 0
 {
 #endif

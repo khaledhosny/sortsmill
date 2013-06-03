@@ -233,6 +233,66 @@ scm_view_fontinfo_dict_keys (SCM view)
   return lst;
 }
 
+#define _SCM_FONTINFO_FIELD_STRING_REF(FIELDNAME)               \
+  SCM                                                           \
+  scm_view_##FIELDNAME##_ref (SCM view)                         \
+  {                                                             \
+    return (scm_view_fontinfo_dict_ref                          \
+            (view, scm_from_latin1_string (#FIELDNAME)));       \
+  }
+
+#define _SCM_FONTINFO_FIELD_NUMBER_REF(FIELDNAME)               \
+  SCM                                                           \
+  scm_view_##FIELDNAME##_ref (SCM view)                         \
+  {                                                             \
+    SCM value = (scm_view_fontinfo_dict_ref                     \
+                 (view, scm_from_latin1_string (#FIELDNAME)));  \
+    return (scm_is_true (scm_postscript_number_p (value))) ?    \
+      scm_postscript_to_number (value) : value;                 \
+  }
+
+// WARNING: This does not distinguish between a missing entry and an
+// entry set to "false".
+#define _SCM_FONTINFO_FIELD_BOOLEAN_REF(FIELDNAME)              \
+  SCM                                                           \
+  scm_view_##FIELDNAME##_ref (SCM view)                         \
+  {                                                             \
+    SCM value = (scm_view_fontinfo_dict_ref                     \
+                 (view, scm_from_latin1_string (#FIELDNAME)));  \
+    return (scm_is_true (scm_postscript_boolean_p (value))) ?   \
+      scm_postscript_to_boolean (value) : value;                \
+  }
+
+VISIBLE _SCM_FONTINFO_FIELD_STRING_REF (version);
+VISIBLE _SCM_FONTINFO_FIELD_STRING_REF (Notice);
+VISIBLE _SCM_FONTINFO_FIELD_STRING_REF (FullName);
+VISIBLE _SCM_FONTINFO_FIELD_STRING_REF (FamilyName);
+VISIBLE _SCM_FONTINFO_FIELD_STRING_REF (Weight);
+
+VISIBLE _SCM_FONTINFO_FIELD_NUMBER_REF (ItalicAngle);
+VISIBLE _SCM_FONTINFO_FIELD_NUMBER_REF (UnderlinePosition);
+VISIBLE _SCM_FONTINFO_FIELD_NUMBER_REF (UnderlineThickness);
+
+VISIBLE _SCM_FONTINFO_FIELD_BOOLEAN_REF (IsFixedPitch);
+
+#define _SCM_FONTINFO_FIELD_SET_X(FIELDNAME)                            \
+  SCM                                                                   \
+  scm_view_##FIELDNAME##_set_x (SCM view, SCM value)                    \
+  {                                                                     \
+    return (scm_view_fontinfo_dict_set_x                                \
+            (view, scm_from_latin1_string (#FIELDNAME), value));        \
+  }
+
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (version);
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (Notice);
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (FullName);
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (FamilyName);
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (Weight);
+
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (ItalicAngle);
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (UnderlinePosition);
+VISIBLE _SCM_FONTINFO_FIELD_SET_X (UnderlineThickness);
+
 //-------------------------------------------------------------------------
 
 void init_guile_fonts_fontinfo_dict (void);
@@ -250,6 +310,33 @@ init_guile_fonts_fontinfo_dict (void)
                       scm_view_fontinfo_dict_to_alist);
   scm_c_define_gsubr ("view:fontinfo-dict-keys", 1, 0, 0,
                       scm_view_fontinfo_dict_keys);
+
+  scm_c_define_gsubr ("view:version-ref", 1, 0, 0, scm_view_version_ref);
+  scm_c_define_gsubr ("view:Notice-ref", 1, 0, 0, scm_view_Notice_ref);
+  scm_c_define_gsubr ("view:FullName-ref", 1, 0, 0, scm_view_FullName_ref);
+  scm_c_define_gsubr ("view:FamilyName-ref", 1, 0, 0, scm_view_FamilyName_ref);
+  scm_c_define_gsubr ("view:Weight-ref", 1, 0, 0, scm_view_Weight_ref);
+  scm_c_define_gsubr ("view:ItalicAngle-ref", 1, 0, 0,
+                      scm_view_ItalicAngle_ref);
+  scm_c_define_gsubr ("view:UnderlinePosition-ref", 1, 0, 0,
+                      scm_view_UnderlinePosition_ref);
+  scm_c_define_gsubr ("view:UnderlineThickness-ref", 1, 0, 0,
+                      scm_view_UnderlineThickness_ref);
+  scm_c_define_gsubr ("view:IsFixedPitch-ref", 1, 0, 0,
+                      scm_view_IsFixedPitch_ref);
+
+  scm_c_define_gsubr ("view:version-set!", 2, 0, 0, scm_view_version_set_x);
+  scm_c_define_gsubr ("view:Notice-set!", 2, 0, 0, scm_view_Notice_set_x);
+  scm_c_define_gsubr ("view:FullName-set!", 2, 0, 0, scm_view_FullName_set_x);
+  scm_c_define_gsubr ("view:FamilyName-set!", 2, 0, 0,
+                      scm_view_FamilyName_set_x);
+  scm_c_define_gsubr ("view:Weight-set!", 2, 0, 0, scm_view_Weight_set_x);
+  scm_c_define_gsubr ("view:ItalicAngle-set!", 2, 0, 0,
+                      scm_view_ItalicAngle_set_x);
+  scm_c_define_gsubr ("view:UnderlinePosition-set!", 2, 0, 0,
+                      scm_view_UnderlinePosition_set_x);
+  scm_c_define_gsubr ("view:UnderlineThickness-set!", 2, 0, 0,
+                      scm_view_UnderlineThickness_set_x);
 }
 
 //-------------------------------------------------------------------------

@@ -33,6 +33,36 @@
 
    ;; (view:fontinfo-dict-keys font-or-glyph-view) → list
    view:fontinfo-dict-keys
+
+   ;; Convenience functions.
+   ;; --------------------------------------------------------------------------------
+   ;;
+   ;; (view:FIELDNAME-ref font-or-glyph-view) → string or #f
+   view:version-ref
+   view:Notice-ref
+   view:FullName-ref
+   view:FamilyName-ref
+   view:Weight-ref
+   ;;
+   ;; (view:FIELDNAME-ref font-or-glyph-view) → number, string, or #f
+   view:ItalicAngle-ref
+   view:UnderlinePosition-ref
+   view:UnderlineThickness-ref
+   ;;
+   ;; (view:FIELDNAME-ref font-or-glyph-view) → boolean, string, or #f
+   ;; WARNING: These do not distinguish a missing entry from an entry
+   ;; set to "false".
+   view:IsFixedPitch-ref
+   ;;
+   ;; (view:FIELDNAME-set! font-or-glyph-view value) → *unspecified*
+   view:version-set!
+   view:Notice-set!
+   view:FullName-set!
+   view:FamilyName-set!
+   view:Weight-set!
+   view:ItalicAngle-set!
+   view:UnderlinePosition-set!
+   view:UnderlineThickness-set!
    )
 
   (import (sortsmill dynlink)
