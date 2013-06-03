@@ -55,7 +55,11 @@
           view->SplineFont
           view->FontViewBase
 
-          make-font        ; (make-font [optional kwargs]) → font-view
+          ;; Legal flags: 'fsType-permitted, 'all-glyphs-in-ttc,
+          ;; 'lint, 'hide-window
+          make-font ;; (make-font [optional kwargs]) → font-view
+          open-font ;; (open-font file-name [flag1 flag2 ...]) → font-view
+          open-font-hidden ;; (open-font-hidden file-name [flag1 flag2 ...]) → font-view
           )
 
   (import (sortsmill fontforge-api)

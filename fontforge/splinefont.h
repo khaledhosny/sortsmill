@@ -3532,10 +3532,10 @@ SplineFont *SFReadMacBinary (char *filename, int flags,
                              enum openflags openflags);
 SplineFont *SFReadWinFON (char *filename, int toback);
 SplineFont *SFReadPalmPdb (char *filename, int toback);
-VISIBLE SplineFont *LoadSplineFont (char *filename, enum openflags);
-VISIBLE SplineFont *_ReadSplineFont (FILE *file, char *filename,
+VISIBLE SplineFont *LoadSplineFont (const char *filename, enum openflags);
+VISIBLE SplineFont *_ReadSplineFont (FILE *file, const char *filename,
                                      enum openflags openflags);
-SplineFont *ReadSplineFont (char *filename, enum openflags);    /* Don't use this, use LoadSF instead */
+SplineFont *ReadSplineFont (const char *filename, enum openflags); /* Don't use this; use LoadSplineFont instead. */
 VISIBLE FILE *URLToTempFile (char *url, void *lock);
 int URLFromFile (char *url, FILE *from);
 void ArchiveCleanup (char *archivedir);

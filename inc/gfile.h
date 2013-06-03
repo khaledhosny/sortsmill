@@ -63,9 +63,9 @@ VISIBLE extern char *GFileAppendFile (const char *dir, const char *name,
 VISIBLE extern bool GFileIsAbsolute (const char *file);
 VISIBLE extern bool GFileIsDir (const char *file);
 VISIBLE extern bool GFileExists (const char *file);
-VISIBLE extern bool GFileReadable (char *file);
-VISIBLE extern int GFileMkDir (char *name);
-VISIBLE extern int GFileUnlink (char *name);
+VISIBLE extern bool GFileReadable (const char *file);
+VISIBLE extern int GFileMkDir (const char *name);
+VISIBLE extern int GFileUnlink (const char *name);
 
 VISIBLE inline uint8_t *u8_GFileGetUserConfigDir (void);
 VISIBLE inline uint8_t *u8_GFileGetUserCacheDir (void);

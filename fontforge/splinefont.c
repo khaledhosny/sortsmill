@@ -1110,22 +1110,31 @@ ForceFileToHaveName (FILE *file, char *exten)
 /* This does not check currently existing fontviews, and should only be used */
 /*  by LoadSplineFont (which does) and by RevertFile (which knows what it's doing) */
 SplineFont *
-_ReadSplineFont (FILE *file, char *filename, enum openflags openflags)
+_ReadSplineFont (FILE *file, const char *const_filename,
+                 enum openflags openflags)
 {
   SplineFont *sf;
   char ubuf[250];
   int fromsfd = false;
   int i;
-  char *pt, *ext2, *strippedname, *oldstrippedname, *tmpfile = NULL;
-  char *paren = NULL, *fullname = filename, *rparen;
+  char *pt = NULL;
+  char *ext2 = NULL;
+  char *strippedname = NULL;
+  char *oldstrippedname = NULL;
+  char *tmpfile = NULL;
+  char *paren = NULL;
+  char *rparen;
   char *archivedir = NULL;
   int len;
   int checked;
   int compression = 0;
   int wasurl = false, nowlocal = true, wasarchived = false;
 
-  if (filename == NULL)
+  if (const_filename == NULL)
     return NULL;
+
+  char *filename = x_gc_strdup (const_filename);
+  char *fullname = filename;
 
   strippedname = filename;
   pt = strrchr (filename, '/');
@@ -1584,16 +1593,19 @@ _ReadSplineFont (FILE *file, char *filename, enum openflags openflags)
 }
 
 SplineFont *
-ReadSplineFont (char *filename, enum openflags openflags)
+ReadSplineFont (const char *filename, enum openflags openflags)
 {
   return _ReadSplineFont (NULL, filename, openflags);
 }
 
 SplineFont *
-LoadSplineFont (char *filename, enum openflags openflags)
+LoadSplineFont (const char *filename, enum openflags openflags)
 {
   SplineFont *sf;
-  char *pt, *ept, *tobefreed1 = NULL, *tobefreed2 = NULL;
+  const char *pt = NULL;
+  char *ept = NULL;
+  char *tobefreed1 = NULL;
+  char *tobefreed2 = NULL;
   static char *extens[] =
     { ".sfd", ".pfa", ".pfb", ".ttf", ".otf", ".ps", ".cid", ".bin", ".dfont",
     ".PFA", ".PFB", ".TTF", ".OTF", ".PS", ".CID", ".BIN", ".DFONT", NULL

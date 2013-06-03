@@ -22,6 +22,7 @@
 #include <splinefont.h>
 #include <baseviews.h>
 #include <intl.h>
+#include <assert.h>
 
 static const char my_module[] = "sortsmill fonts views";
 
@@ -187,7 +188,11 @@ scm_c_make_font (const char *encoding, size_t foreground_degree,
                                                         background_degree,
                                                         guide_layer_degree),
                                hide);
+
+  // Make an empty Private dictionary. (This step is not strictly
+  // necessary, at the time of writing, but also does no harm.)
   scm_view_private_dict_set_from_alist_x (font_view, SCM_EOL);
+
   return font_view;
 }
 
@@ -209,6 +214,68 @@ scm_make_font (SCM encoding, SCM foreground_degree,
   return scm_c_make_font (_encoding, _fg_degree, _bg_degree, _gl_degree, _hide);
 }
 
+static int
+scm_symbol_list_to_openflags (const char *who, SCM lst)
+{
+  int flags = 0;
+  for (SCM p = lst; !scm_is_null (p); p = SCM_CDR (p))
+    {
+      scm_c_assert_can_be_list_link (who, lst, p);
+      SCM symb = SCM_CAR (p);
+      if (scm_is_eq (symb, scm_from_latin1_symbol ("fsType-permitted")))
+        flags |= of_fstypepermitted;
+      else if (scm_is_eq (symb, scm_from_latin1_symbol ("all-glyphs-in-ttc")))
+        flags |= of_all_glyphs_in_ttc;
+      else if (scm_is_eq (symb, scm_from_latin1_symbol ("lint")))
+        flags |= of_fontlint;
+      else if (scm_is_eq (symb, scm_from_latin1_symbol ("hide-window")))
+        flags |= of_hidewindow;
+      else
+        rnrs_raise_condition
+          (scm_list_4
+           (rnrs_make_assertion_violation (),
+            rnrs_c_make_who_condition (who),
+            rnrs_c_make_message_condition (_("not a legal font-opening flag")),
+            rnrs_make_irritants_condition (scm_list_1 (symb))));
+    }
+  return flags;
+}
+
+VISIBLE SCM
+scm_c_open_font (const char *file_name, SCM flags)
+{
+  const char *who = "scm_c_open_font";
+
+  if (SCM_UNBNDP (flags))
+    flags = SCM_EOL;
+  int openflags = scm_symbol_list_to_openflags (who, flags);
+  SplineFont *sf = LoadSplineFont (file_name, openflags);
+  return scm_c_SFAdd (sf, ((openflags & of_hidewindow) != 0));
+}
+
+VISIBLE SCM
+scm_open_font (SCM file_name, SCM flags)
+{
+  scm_dynwind_begin (0);
+
+  char *_file_name = scm_to_utf8_stringn (file_name, NULL);
+  scm_dynwind_free (_file_name);
+
+  SCM font = scm_c_open_font (_file_name, flags);
+
+  scm_dynwind_end ();
+
+  return font;
+}
+
+VISIBLE SCM
+scm_open_font_hidden (SCM file_name, SCM flags)
+{
+  return scm_open_font (file_name,
+                        scm_cons (scm_from_latin1_symbol ("hide-window"),
+                                  flags));
+}
+
 //-------------------------------------------------------------------------
 
 void init_guile_fonts_views (void);
@@ -220,6 +287,8 @@ init_guile_fonts_views (void)
   scm_c_define ("glyph-view-flag", scm_from_int (FF_GLYPH_WINDOW));
 
   scm_c_define_gsubr ("private:make-font", 5, 0, 0, scm_make_font);
+  scm_c_define_gsubr ("open-font", 1, 0, 1, scm_open_font);
+  scm_c_define_gsubr ("open-font-hidden", 1, 0, 1, scm_open_font_hidden);
 }
 
 //-------------------------------------------------------------------------

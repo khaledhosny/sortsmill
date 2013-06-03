@@ -77,6 +77,10 @@ SCM scm_c_make_font (const char *encoding, size_t foreground_degree,
 SCM scm_make_font (SCM encoding, SCM foreground_degree,
                    SCM background_degree, SCM guide_layer_degree, SCM hide);
 
+SCM scm_c_open_font (const char *file_name, SCM flags);
+SCM scm_open_font (SCM file_name, SCM flags);
+SCM scm_open_font_hidden (SCM file_name, SCM flags);
+
 #if 0
 {
 #endif

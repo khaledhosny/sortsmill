@@ -150,19 +150,19 @@ GFileExists (const char *file)
 }
 
 bool
-GFileReadable (char *file)
+GFileReadable (const char *file)
 {
   return (g_access (file, 04) == 0);
 }
 
 int
-GFileMkDir (char *name)
+GFileMkDir (const char *name)
 {
   return g_mkdir (name, 0755);
 }
 
 int
-GFileUnlink (char *name)
+GFileUnlink (const char *name)
 {
   return g_unlink (name);
 }
