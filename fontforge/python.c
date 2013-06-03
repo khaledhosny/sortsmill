@@ -14573,10 +14573,10 @@ PyFF_Font_set_OS2_vendor (PyFF_Font *self, PyObject *value,
       return (-1);
     }
   SFDefaultOS2 (sf);
-  sf->pfminfo.os2_vendor[0] = (n < 1) ? ' ' : newv[0];
-  sf->pfminfo.os2_vendor[1] = (n < 2) ? ' ' : newv[1];
-  sf->pfminfo.os2_vendor[2] = (n < 3) ? ' ' : newv[2];
-  sf->pfminfo.os2_vendor[3] = (n < 4) ? ' ' : newv[3];
+  sf->pfminfo.os2_vendor[0] = (n < 1) ? '\0' : newv[0];
+  sf->pfminfo.os2_vendor[1] = (n < 2) ? '\0' : newv[1];
+  sf->pfminfo.os2_vendor[2] = (n < 3) ? '\0' : newv[2];
+  sf->pfminfo.os2_vendor[3] = (n < 4) ? '\0' : newv[3];
 
   return (0);
 }

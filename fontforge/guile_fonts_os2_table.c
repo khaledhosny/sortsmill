@@ -242,6 +242,9 @@ get_code_page_range (SplineFont *sf)
 static void
 set_vendor_id (const char *who, SplineFont *sf, SCM value)
 {
+  value = scm_string_trim_right (value, SCM_UNDEFINED, SCM_UNDEFINED,
+                                 SCM_UNDEFINED);
+
   scm_dynwind_begin (0);
 
   char *_value = scm_to_latin1_stringn (value, NULL);
@@ -258,18 +261,29 @@ set_vendor_id (const char *who, SplineFont *sf, SCM value)
                                          "at most 4")),
         rnrs_make_irritants_condition (scm_list_1 (value))));
 
-  sf->pfminfo.os2_vendor[0] = (n < 1) ? ' ' : _value[0];
-  sf->pfminfo.os2_vendor[1] = (n < 2) ? ' ' : _value[1];
-  sf->pfminfo.os2_vendor[2] = (n < 3) ? ' ' : _value[2];
-  sf->pfminfo.os2_vendor[3] = (n < 4) ? ' ' : _value[3];
+  sf->pfminfo.os2_vendor[0] = (n < 1) ? '\0' : _value[0];
+  sf->pfminfo.os2_vendor[1] = (n < 2) ? '\0' : _value[1];
+  sf->pfminfo.os2_vendor[2] = (n < 3) ? '\0' : _value[2];
+  sf->pfminfo.os2_vendor[3] = (n < 4) ? '\0' : _value[3];
 
   scm_dynwind_end ();
+}
+
+static int
+nul_to_sp (int c)
+{
+  return (c == '\0') ? ' ' : c;
 }
 
 static SCM
 get_vendor_id (SplineFont *sf)
 {
-  return scm_from_latin1_stringn (sf->pfminfo.os2_vendor, 4);
+  char buffer[4];
+  buffer[0] = nul_to_sp (sf->pfminfo.os2_vendor[0]);
+  buffer[1] = nul_to_sp (sf->pfminfo.os2_vendor[1]);
+  buffer[2] = nul_to_sp (sf->pfminfo.os2_vendor[2]);
+  buffer[3] = nul_to_sp (sf->pfminfo.os2_vendor[3]);
+  return scm_from_latin1_stringn (buffer, 4);
 }
 
 VISIBLE void

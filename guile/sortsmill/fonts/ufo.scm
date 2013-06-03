@@ -33,6 +33,7 @@
 
   (import (sortsmill i18n)
           (sortsmill fonts fontinfo-dict)
+          (sortsmill fonts os2-table)
           (sortsmill fonts private-dict)
           (sortsmill fonts t1font-dict)
           (rnrs)
@@ -284,6 +285,8 @@
       ['postscriptBlueShift (view:private-dict-set! view "BlueShift" value)]
       ['postscriptBlueScale (view:private-dict-set! view "BlueScale" value)]
       ['postscriptForceBold (view:private-dict-set! view "ForceBold" value)]
+      ['openTypeOS2WidthClass (view:os2-table-set! view "usWidthClass" value)]
+      ['openTypeOS2WeightClass (view:os2-table-set! view "usWeightClass" value)]
       [_ *unspecified*] ))
 
   ) ;; end of library.
