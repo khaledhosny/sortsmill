@@ -17,7 +17,7 @@ sortsmill/fonts/peg-spacing.go: sortsmill/fonts/glyphs.go sortsmill/fonts/anchor
 sortsmill/fonts/private-dict.go: sortsmill/dynlink.go
 sortsmill/fonts/psmat.go: sortsmill/math/matrices.go
 sortsmill/fonts/t1font-dict.go: sortsmill/dynlink.go
-sortsmill/fonts/ufo.go: sortsmill/i18n.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/private-dict.go sortsmill/fonts/t1font-dict.go
+sortsmill/fonts/ufo.go: sortsmill/i18n.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/os2-table.go sortsmill/fonts/private-dict.go sortsmill/fonts/t1font-dict.go
 sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/i18n.go: sortsmill/pkg-info.go sortsmill/dynlink.go
 sortsmill/iconv.go: sortsmill/dynlink.go

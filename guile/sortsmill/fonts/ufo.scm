@@ -38,7 +38,11 @@
           (sortsmill fonts t1font-dict)
           (rnrs)
           (except (guile) error)
+          (only (srfi :4)
+                make-u32vector u32vector->list
+                u32vector-set! u32vector-ref)
           (only (srfi :26) cut)
+          (only (srfi :60) copy-bit)
           (sxml simple)
           (sxml match)
           (ice-9 match)
@@ -287,6 +291,28 @@
       ['postscriptForceBold (view:private-dict-set! view "ForceBold" value)]
       ['openTypeOS2WidthClass (view:os2-table-set! view "usWidthClass" value)]
       ['openTypeOS2WeightClass (view:os2-table-set! view "usWeightClass" value)]
+      ['openTypeOS2VendorID (view:os2-table-set! view "achVendID" value)]
+      ['openTypeOS2Panose (view:os2-table-set! view "panose" value)]
+      ['openTypeOS2FamilyClass (view:os2-table-set! view "sFamilyClass"
+                                                    (+ (* 256 (car value)) (cadr value)))]
+      ['openTypeOS2UnicodeRanges (view:os2-table-set! view "ulUnicodeRange"
+                                                      (bit-numbers->integers value 4))]
+      ['openTypeOS2CodePageRanges (view:os2-table-set! view "ulCodePageRange"
+                                                       (bit-numbers->integers value 2))]
       [_ *unspecified*] ))
+
+  (define (bit-numbers->integers bit-numbers integer-count)
+    (let ([ints (make-u32vector integer-count 0)])
+      (for-each
+       (lambda (bitnum)
+         ;; Ignore out-of-range bit numbers.
+         (when (< -1 bitnum (* 32 integer-count))
+           (let-values ([(word-num bit-in-word) (div-and-mod bitnum 32)])
+             (u32vector-set! ints word-num
+                             (copy-bit bit-in-word
+                                       (u32vector-ref ints word-num)
+                                       #t)))))
+       bit-numbers)
+      (u32vector->list ints)))
 
   ) ;; end of library.
