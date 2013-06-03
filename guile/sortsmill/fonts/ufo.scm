@@ -34,6 +34,7 @@
   (import (sortsmill i18n)
           (sortsmill fonts fontinfo-dict)
           (sortsmill fonts private-dict)
+          (sortsmill fonts t1font-dict)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
@@ -261,6 +262,8 @@
 
   (define (apply-ufo-fontinfo-entry! view key value)
     (match key
+      ['postscriptFontName (view:t1font-dict-set! view "FontName" value)]
+      ['fontName (view:t1font-dict-set! view "FontName" value)]
       ['postscriptFullName (view:fontinfo-dict-set! view "FullName" value)]
       ['fullName (view:fontinfo-dict-set! view "FullName" value)]
       ['familyName (view:fontinfo-dict-set! view "FamilyName" value)]

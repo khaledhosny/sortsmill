@@ -21,9 +21,11 @@
 
 #include <sortsmill/guile/fonts/anchors.h>
 #include <sortsmill/guile/fonts/contours.h>
+#include <sortsmill/guile/fonts/fontinfo_dict.h>
 #include <sortsmill/guile/fonts/glyphs.h>
 #include <sortsmill/guile/fonts/peg_spacing.h>
 #include <sortsmill/guile/fonts/private_dict.h>
+#include <sortsmill/guile/fonts/t1font_dict.h>
 #include <sortsmill/guile/fonts/views.h>
 
 #endif /* _SORTSMILL_GUILE_FONTS_H */

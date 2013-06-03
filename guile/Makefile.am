@@ -391,6 +391,13 @@ GO_FILES += sortsmill/fonts/psmat.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/psmat.scm
 
 
+# (sortsmill t1font-dict)
+
+DIST_SCM_FILES += sortsmill/fonts/t1font-dict.scm
+GO_FILES += sortsmill/fonts/t1font-dict.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/t1font-dict.scm
+
+
 # (sortsmill fonts ufo)
 
 DIST_SCM_FILES += sortsmill/fonts/ufo.scm

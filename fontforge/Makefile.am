@@ -229,6 +229,7 @@ libsortsmill_fontforge_la_SOURCES += guile_fonts_fontinfo_dict.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_glyphs.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_peg_spacing.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_private_dict.c
+libsortsmill_fontforge_la_SOURCES += guile_fonts_t1font_dict.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_views.c
 
 libsortsmill_fontforge_la_SOURCES += guile_notices.c
