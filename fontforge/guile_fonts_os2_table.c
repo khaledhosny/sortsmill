@@ -287,10 +287,88 @@ get_vendor_id (SplineFont *sf)
   return scm_from_latin1_stringn (buffer, 4);
 }
 
+static SCM
+stored_considering_offsets (bool stored_is_offset, SCM value,
+                            SCM given_is_offset, SCM base)
+{
+  SCM result;
+  if (scm_is_true (given_is_offset))
+    {
+      if (stored_is_offset)
+        result = value;
+      else
+        result = scm_sum (value, base);
+    }
+  else
+    {
+      if (stored_is_offset)
+        result = scm_difference (value, base);
+      else
+        result = value;
+    }
+  return result;
+}
+
+static int
+stored_int_considering_offsets (bool stored_is_offset, SCM value,
+                                SCM given_is_offset, SCM base,
+                                SCM rounding_function (SCM))
+{
+  SCM v = stored_considering_offsets (stored_is_offset, value,
+                                      given_is_offset, base);
+  return scm_to_int (scm_inexact_to_exact (rounding_function (v)));
+}
+
+static SCM
+value_considering_offsets (SCM result_is_offset, SCM value,
+                           bool stored_is_offset, SCM base)
+{
+  SCM result;
+  if (scm_is_true (result_is_offset))
+    {
+      if (stored_is_offset)
+        result = value;
+      else
+        result = scm_difference (value, base);
+    }
+  else
+    {
+      if (stored_is_offset)
+        result = scm_sum (value, base);
+      else
+        result = value;
+    }
+  return result;
+}
+
+static DBounds
+sf_bounding_box (SplineFont *sf)
+{
+  DBounds bbox;
+  SplineFontFindBounds (sf, &bbox);
+  return bbox;
+}
+
+static double
+sf_ymax (SplineFont *sf)
+{
+  return sf_bounding_box (sf).maxy;
+}
+
+static double
+sf_ymin (SplineFont *sf)
+{
+  return sf_bounding_box (sf).miny;
+}
+
 VISIBLE void
-scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value)
+scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value,
+                            SCM value_is_offset)
 {
   const char *who = "scm_c_view_os2_table_set_x";
+
+  if (SCM_UNBNDP (value_is_offset))
+    value_is_offset = SCM_BOOL_F;
 
   SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
 
@@ -353,19 +431,33 @@ scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value)
       set_vendor_id (who, sf, value);
       break;
     case _os2_sTypoAscender:
-      sf->pfminfo.os2_typoascent = scm_to_int (value);
+      sf->pfminfo.os2_typoascent =
+        stored_int_considering_offsets (sf->pfminfo.typoascent_add,
+                                        value, value_is_offset,
+                                        scm_from_int (sf->ascent), scm_ceiling);
       break;
     case _os2_sTypoDescender:
-      sf->pfminfo.os2_typodescent = scm_to_int (value);
+      sf->pfminfo.os2_typodescent =
+        stored_int_considering_offsets (sf->pfminfo.typodescent_add,
+                                        value, value_is_offset,
+                                        scm_from_int (-sf->descent), scm_floor);
       break;
     case _os2_sTypoLineGap:
       sf->pfminfo.os2_typolinegap = scm_to_int (value);
       break;
     case _os2_usWinAscent:
-      sf->pfminfo.os2_winascent = scm_to_int (value);
+      sf->pfminfo.os2_winascent =
+        stored_int_considering_offsets (sf->pfminfo.winascent_add,
+                                        value, value_is_offset,
+                                        scm_from_double (sf_ymax (sf)),
+                                        scm_ceiling);
       break;
     case _os2_usWinDescent:
-      sf->pfminfo.os2_windescent = scm_to_int (value);
+      sf->pfminfo.os2_windescent =
+        stored_int_considering_offsets (sf->pfminfo.windescent_add,
+                                        value, value_is_offset,
+                                        scm_from_double (-sf_ymin (sf)),
+                                        scm_ceiling);
       break;
     case _os2_ulCodePageRange:
       set_code_page_range (who, sf, value);
@@ -374,14 +466,14 @@ scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value)
 }
 
 VISIBLE SCM
-scm_view_os2_table_set_x (SCM view, SCM key, SCM value)
+scm_view_os2_table_set_x (SCM view, SCM key, SCM value, SCM value_is_offset)
 {
   scm_dynwind_begin (0);
 
   char *_key = scm_to_latin1_stringn (key, NULL);
   scm_dynwind_free (_key);
 
-  scm_c_view_os2_table_set_x (view, _key, value);
+  scm_c_view_os2_table_set_x (view, _key, value, value_is_offset);
 
   scm_dynwind_end ();
 
@@ -389,9 +481,12 @@ scm_view_os2_table_set_x (SCM view, SCM key, SCM value)
 }
 
 VISIBLE SCM
-scm_c_view_os2_table_ref (SCM view, const char *key)
+scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset)
 {
   const char *who = "scm_c_view_os2_table_ref";
+
+  if (SCM_UNBNDP (value_is_offset))
+    value_is_offset = SCM_BOOL_F;
 
   SplineFont *sf = (SplineFont *) scm_c_view_to_SplineFont (view);
 
@@ -455,19 +550,35 @@ scm_c_view_os2_table_ref (SCM view, const char *key)
       result = get_vendor_id (sf);
       break;
     case _os2_sTypoAscender:
-      result = scm_from_int (sf->pfminfo.os2_typoascent);
+      result =
+        value_considering_offsets (value_is_offset,
+                                   scm_from_int (sf->pfminfo.os2_typoascent),
+                                   sf->pfminfo.typoascent_add,
+                                   scm_from_int (sf->ascent));
       break;
     case _os2_sTypoDescender:
-      result = scm_from_int (sf->pfminfo.os2_typodescent);
+      result =
+        value_considering_offsets (value_is_offset,
+                                   scm_from_int (sf->pfminfo.os2_typodescent),
+                                   sf->pfminfo.typodescent_add,
+                                   scm_from_int (-sf->descent));
       break;
     case _os2_sTypoLineGap:
       result = scm_from_int (sf->pfminfo.os2_typolinegap);
       break;
     case _os2_usWinAscent:
-      result = scm_from_int (sf->pfminfo.os2_winascent);
+      result =
+        value_considering_offsets (value_is_offset,
+                                   scm_from_int (sf->pfminfo.os2_winascent),
+                                   sf->pfminfo.winascent_add,
+                                   scm_from_double (sf_ymax (sf)));
       break;
     case _os2_usWinDescent:
-      result = scm_from_int (sf->pfminfo.os2_windescent);
+      result =
+        value_considering_offsets (value_is_offset,
+                                   scm_from_int (sf->pfminfo.os2_windescent),
+                                   sf->pfminfo.windescent_add,
+                                   scm_from_double (-sf_ymin (sf)));
       break;
     case _os2_ulCodePageRange:
       result = get_code_page_range (sf);
@@ -477,14 +588,14 @@ scm_c_view_os2_table_ref (SCM view, const char *key)
 }
 
 VISIBLE SCM
-scm_view_os2_table_ref (SCM view, SCM key)
+scm_view_os2_table_ref (SCM view, SCM key, SCM value_is_offset)
 {
   scm_dynwind_begin (0);
 
   char *_key = scm_to_latin1_stringn (key, NULL);
   scm_dynwind_free (_key);
 
-  SCM s = scm_c_view_os2_table_ref (view, _key);
+  SCM s = scm_c_view_os2_table_ref (view, _key, value_is_offset);
 
   scm_dynwind_end ();
 
@@ -499,7 +610,8 @@ scm_view_os2_table_set_from_alist_x (SCM view, SCM lst)
   for (SCM p = lst; !scm_is_null (p); p = SCM_CDR (p))
     {
       scm_c_assert_can_be_alist_link (who, lst, p);
-      scm_view_os2_table_set_x (view, SCM_CAAR (p), SCM_CDAR (p));
+      scm_view_os2_table_set_x (view, SCM_CAAR (p), SCM_CDAR (p),
+                                SCM_UNDEFINED);
     }
   return SCM_UNSPECIFIED;
 }
@@ -512,7 +624,8 @@ scm_view_os2_table_to_alist (SCM view)
     {
       const char *key = os2_key_table[_os2_SENTINEL - 1 - k];
       lst = scm_acons (scm_from_latin1_string (key),
-                       scm_c_view_os2_table_ref (view, key), lst);
+                       scm_c_view_os2_table_ref (view, key, SCM_UNDEFINED),
+                       lst);
     }
   return lst;
 }
@@ -536,8 +649,8 @@ void init_guile_fonts_os2_table (void);
 VISIBLE void
 init_guile_fonts_os2_table (void)
 {
-  scm_c_define_gsubr ("view:os2-table-set!", 3, 0, 0, scm_view_os2_table_set_x);
-  scm_c_define_gsubr ("view:os2-table-ref", 2, 0, 0, scm_view_os2_table_ref);
+  scm_c_define_gsubr ("view:os2-table-set!", 3, 1, 0, scm_view_os2_table_set_x);
+  scm_c_define_gsubr ("view:os2-table-ref", 2, 1, 0, scm_view_os2_table_ref);
   scm_c_define_gsubr ("view:os2-table-set-from-alist!", 2, 0, 0,
                       scm_view_os2_table_set_from_alist_x);
   scm_c_define_gsubr ("view:os2-table->alist", 1, 0, 0,

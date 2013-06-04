@@ -20,9 +20,11 @@
 
   (export
    ;; (view:os2-table-set! font-or-glyph-view key value) → *unspecified*
+   ;; (view:os2-table-set! font-or-glyph-view key value value-is-offset?) → *unspecified*
    view:os2-table-set!
 
    ;; (view:os2-table-ref font-or-glyph-view key) → string
+   ;; (view:os2-table-ref font-or-glyph-view key value-is-offset?) → string
    view:os2-table-ref
 
    ;; (view:os2-table-set-from-alist! font-or-glyph-view alist) → *unspecified*

@@ -29,11 +29,13 @@ extern "C"
 }
 #endif
 
-void scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value);
-SCM scm_view_os2_table_set_x (SCM view, SCM key, SCM value);
+void scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value,
+                                 SCM value_is_offset);
+SCM scm_view_os2_table_set_x (SCM view, SCM key, SCM value,
+                              SCM value_is_offset);
 
-SCM scm_c_view_os2_table_ref (SCM view, const char *key);
-SCM scm_view_os2_table_ref (SCM view, SCM key);
+SCM scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset);
+SCM scm_view_os2_table_ref (SCM view, SCM key, SCM value_is_offset);
 
 SCM scm_view_os2_table_set_from_alist_x (SCM view, SCM lst);
 SCM scm_view_os2_table_to_alist (SCM view);
