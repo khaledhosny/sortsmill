@@ -22,10 +22,6 @@
 
 static const char my_module[] = "sortsmill fonts os2-table";
 
-// FIXME: Add a means to change (from a script) whether sTypoAscender,
-// sTypoDescender, usWinAscent, usWinDescent are stored as offsets or
-// not.
-
 //-------------------------------------------------------------------------
 
 typedef enum
@@ -66,6 +62,13 @@ typedef enum
   //_os2_usDefaultChar, <-- not supported here
   //_os2_usBreakChar, <-- not supported here
   //_os2_usMaxContext, <-- not supported here
+
+  // These ‘offset’ flags are FontForge/Sorts Mill Tools-specific.
+  _os2_sTypoAscender_is_offset,
+  _os2_sTypoDescender_is_offset,
+  _os2_usWinAscent_is_offset,
+  _os2_usWinDescent_is_offset,
+
   _os2_SENTINEL
 } _os2_key_t;
 
@@ -109,6 +112,14 @@ static const char *os2_key_table[] = {
   //[_os2_usDefaultChar] = "usDefaultChar", <-- not supported here
   //[_os2_usBreakChar] = "usBreakChar", <-- not supported here
   //[_os2_usMaxContext] = "usMaxContext" <-- not supported here
+
+  // These ‘offset’ flags are FontForge/Sorts Mill
+  // Tools-specific. They correspond to the ‘Offset’ checkboxes for
+  // the corresponding OS/2 table entries.
+  [_os2_sTypoAscender_is_offset] = "sTypoAscender-is-offset",
+  [_os2_sTypoDescender_is_offset] = "sTypoDescender-is-offset",
+  [_os2_usWinAscent_is_offset] = "usWinAscent-is-offset",
+  [_os2_usWinDescent_is_offset] = "usWinDescent-is-offset"
 };
 
 static void
@@ -466,6 +477,19 @@ scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value,
     case _os2_ulCodePageRange:
       set_code_page_range (who, sf, value);
       break;
+
+    case _os2_sTypoAscender_is_offset:
+      sf->pfminfo.typoascent_add = scm_is_true (value);
+      break;
+    case _os2_sTypoDescender_is_offset:
+      sf->pfminfo.typodescent_add = scm_is_true (value);
+      break;
+    case _os2_usWinAscent_is_offset:
+      sf->pfminfo.winascent_add = scm_is_true (value);
+      break;
+    case _os2_usWinDescent_is_offset:
+      sf->pfminfo.windescent_add = scm_is_true (value);
+      break;
     }
 }
 
@@ -586,6 +610,19 @@ scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset)
       break;
     case _os2_ulCodePageRange:
       result = get_code_page_range (sf);
+      break;
+
+    case _os2_sTypoAscender_is_offset:
+      result = scm_from_bool (sf->pfminfo.typoascent_add);
+      break;
+    case _os2_sTypoDescender_is_offset:
+      result = scm_from_bool (sf->pfminfo.typodescent_add);
+      break;
+    case _os2_usWinAscent_is_offset:
+      result = scm_from_bool (sf->pfminfo.winascent_add);
+      break;
+    case _os2_usWinDescent_is_offset:
+      result = scm_from_bool (sf->pfminfo.windescent_add);
       break;
     }
   return result;

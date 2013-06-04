@@ -2354,9 +2354,9 @@ typedef struct splinefont
   bool new;                     /* A new and unsaved font */
   bool compacted;               /* only used when opening a font */
   unsigned int backedup:2;      /* 0=>don't know, 1=>no, 2=>yes */
-  bool use_typo_metrics;        /* The standard says to. But MS */
-  /* seems to feel that isn't good */
-  /* enough and has created a bit */
+  bool use_typo_metrics;        /* The standard says to. But MS seems
+                                   to feel that isn't good enough and
+                                   has created a bit */
   /* to mean "really use them" */
   bool weight_width_slope_only; /* This bit seems stupid to me */
   bool save_to_dir;             /* Loaded from an sfdir collection rather than a simple sfd file */
