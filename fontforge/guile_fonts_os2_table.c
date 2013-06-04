@@ -22,6 +22,10 @@
 
 static const char my_module[] = "sortsmill fonts os2-table";
 
+// FIXME: Add a means to change (from a script) whether sTypoAscender,
+// sTypoDescender, usWinAscent, usWinDescent are stored as offsets or
+// not.
+
 //-------------------------------------------------------------------------
 
 typedef enum
