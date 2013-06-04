@@ -38,9 +38,6 @@
           (sortsmill fonts t1font-dict)
           (rnrs)
           (except (guile) error)
-          (only (srfi :4)
-                make-u32vector u32vector->list
-                u32vector-set! u32vector-ref)
           (only (srfi :26) cut)
           (only (srfi :60) copy-bit)
           (sxml simple)
@@ -296,23 +293,42 @@
       ['openTypeOS2FamilyClass (view:os2-table-set! view "sFamilyClass"
                                                     (+ (* 256 (car value)) (cadr value)))]
       ['openTypeOS2UnicodeRanges (view:os2-table-set! view "ulUnicodeRange"
-                                                      (bit-numbers->integers value 4))]
+                                                      (bit-numbers->integers value 32 4))]
       ['openTypeOS2CodePageRanges (view:os2-table-set! view "ulCodePageRange"
-                                                       (bit-numbers->integers value 2))]
+                                                       (bit-numbers->integers value 32 2))]
+      ['openTypeOS2TypoAscender (view:os2-table-set! view "sTypoAscender" value)]
+      ['openTypeOS2TypoDescender (view:os2-table-set! view "sTypoDescender" value)]
+      ['openTypeOS2TypoLineGap (view:os2-table-set! view "sTypoLineGap" value)]
+      ['openTypeOS2WinAscent (view:os2-table-set! view "usWinAscent" value)]
+      ['openTypeOS2WinDescent (view:os2-table-set! view "usWinDescent" value)]
+      ['openTypeOS2Type (view:os2-table-set! view "fsType" (bit-numbers->integer value 16))]
+      ['openTypeOS2SubscriptXSize (view:os2-table-set! view "ySubscriptXSize" value)]
+      ['openTypeOS2SubscriptYSize (view:os2-table-set! view "ySubscriptYSize" value)]
+      ['openTypeOS2SubscriptXOffset (view:os2-table-set! view "ySubscriptXOffset" value)]
+      ['openTypeOS2SubscriptYOffset (view:os2-table-set! view "ySubscriptYOffset" value)]
+      ['openTypeOS2SuperscriptXSize (view:os2-table-set! view "ySuperscriptXSize" value)]
+      ['openTypeOS2SuperscriptYSize (view:os2-table-set! view "ySuperscriptYSize" value)]
+      ['openTypeOS2SuperscriptXOffset (view:os2-table-set! view "ySuperscriptXOffset" value)]
+      ['openTypeOS2SuperscriptYOffset (view:os2-table-set! view "ySuperscriptYOffset" value)]
+      ['openTypeOS2StrikeoutSize (view:os2-table-set! view "yStrikeoutSize" value)]
+      ['openTypeOS2StrikeoutPosition (view:os2-table-set! view "yStrikeoutPosition" value)]
       [_ *unspecified*] ))
 
-  (define (bit-numbers->integers bit-numbers integer-count)
-    (let ([ints (make-u32vector integer-count 0)])
+  (define (bit-numbers->integer bit-numbers word-size)
+    (car (bit-numbers->integers bit-numbers word-size 1)))
+
+  (define (bit-numbers->integers bit-numbers word-size integer-count)
+    (let ([ints (make-vector integer-count 0)])
       (for-each
        (lambda (bitnum)
          ;; Ignore out-of-range bit numbers.
-         (when (< -1 bitnum (* 32 integer-count))
-           (let-values ([(word-num bit-in-word) (div-and-mod bitnum 32)])
-             (u32vector-set! ints word-num
-                             (copy-bit bit-in-word
-                                       (u32vector-ref ints word-num)
-                                       #t)))))
+         (when (< -1 bitnum (* word-size integer-count))
+           (let-values ([(word-num bit-in-word) (div-and-mod bitnum word-size)])
+             (vector-set! ints word-num
+                          (copy-bit bit-in-word
+                                    (vector-ref ints word-num)
+                                    #t)))))
        bit-numbers)
-      (u32vector->list ints)))
+      (vector->list ints)))
 
   ) ;; end of library.
