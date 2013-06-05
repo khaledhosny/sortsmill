@@ -70,16 +70,58 @@ LDADD = $(LIBADD) $(GUILIBADD)
 
 #--------------------------------------------------------------------------
 
-noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
-	flaglist.h namelist_data.h autowidth2.h fontforge.h psfont.h		\
-	stemdb.h autowidth.h delta.h fontforgevw.h lookups.h				\
-	generatefont.h ttf.h baseviews.h fvmetrics.h mm.h ttfinstrs.h		\
-	edgelist2.h namehash.h uiinterface.h bezctx_ff.h edgelist.h			\
-	groups.h nonlineartrans.h sd.h unicoderange.h bitmapcontrol.h		\
-	encoding.h ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h		\
-	ffpython.h sflayoutP.h print.h splinefont.h annotations.h			\
-	compare.h fontimage.h activeinui.h bezctx.h bezctx_intf.h spiro.h	\
-	spiroentrypoints.h zmisc.h
+noinst_HEADERS =
+noinst_HEADERS += fontforgeui.h
+noinst_HEADERS += sftextfieldP.h
+noinst_HEADERS += views.h
+noinst_HEADERS += is_LIGATURE.h
+noinst_HEADERS += flaglist.h
+noinst_HEADERS += namelist_data.h
+noinst_HEADERS += autowidth2.h
+noinst_HEADERS += fontforge.h
+noinst_HEADERS += psfont.h
+noinst_HEADERS += stemdb.h
+noinst_HEADERS += autowidth.h
+noinst_HEADERS += delta.h
+noinst_HEADERS += fontforgevw.h
+noinst_HEADERS += lookups.h
+noinst_HEADERS += generatefont.h
+noinst_HEADERS += ttf.h
+noinst_HEADERS += baseviews.h
+noinst_HEADERS += fvmetrics.h
+noinst_HEADERS += mm.h
+noinst_HEADERS += ttfinstrs.h
+noinst_HEADERS += edgelist2.h
+noinst_HEADERS += namehash.h
+noinst_HEADERS += uiinterface.h
+noinst_HEADERS += bezctx_ff.h
+noinst_HEADERS += edgelist.h
+noinst_HEADERS += groups.h
+noinst_HEADERS += nonlineartrans.h
+noinst_HEADERS += sd.h
+noinst_HEADERS += unicoderange.h
+noinst_HEADERS += bitmapcontrol.h
+noinst_HEADERS += encoding.h
+noinst_HEADERS += ofl.h
+noinst_HEADERS += search.h
+noinst_HEADERS += usermenu.h
+noinst_HEADERS += fffreetype.h
+noinst_HEADERS += PfEd.h
+noinst_HEADERS += sfd1.h
+noinst_HEADERS += ffpython.h
+noinst_HEADERS += sflayoutP.h
+noinst_HEADERS += print.h
+noinst_HEADERS += splinefont.h
+noinst_HEADERS += annotations.h
+noinst_HEADERS += compare.h
+noinst_HEADERS += fontimage.h
+noinst_HEADERS += activeinui.h
+noinst_HEADERS += bezctx.h
+noinst_HEADERS += bezctx_intf.h
+noinst_HEADERS += spiro.h
+noinst_HEADERS += spiroentrypoints.h
+noinst_HEADERS += zmisc.h
+noinst_HEADERS += guile_fonts_os2_hhea.h
 
 nobase_nodist_include_HEADERS = sortsmill/fontforge_api.h
 
@@ -227,6 +269,8 @@ libsortsmill_fontforge_la_SOURCES += guile_fonts_anchors.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_contours.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_fontinfo_dict.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_glyphs.c
+libsortsmill_fontforge_la_SOURCES += guile_fonts_hhea_table.c
+libsortsmill_fontforge_la_SOURCES += guile_fonts_os2_hhea.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_os2_table.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_peg_spacing.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_private_dict.c

@@ -17,6 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
+#include <guile_fonts_os2_hhea.h>
 #include <splinefont.h>
 #include <intl.h>
 
@@ -27,7 +28,7 @@ static const char my_module[] = "sortsmill fonts os2-table";
 typedef enum
 {
   _os2_version = 0,
-  //_os2_xAvgCharWidth, <-- not supported here
+  //_os2_xAvgCharWidth, ← not supported here
   _os2_usWeightClass,
   _os2_usWidthClass,
   _os2_fsType,
@@ -47,9 +48,9 @@ typedef enum
                                    _os2_ulUnicodeRange2, _os2_ulUnicodeRange3,
                                    _os2_ulUnicodeRange4. */
   _os2_achVendID,
-  //_os2_fsSelection, <-- not supported here
-  //_os2_usFirstCharIndex, <-- not supported here
-  //_os2_usLastCharIndex, <-- not supported here
+  //_os2_fsSelection, ← not supported here
+  //_os2_usFirstCharIndex, ← not supported here
+  //_os2_usLastCharIndex, ← not supported here
   _os2_sTypoAscender,
   _os2_sTypoDescender,
   _os2_sTypoLineGap,
@@ -57,11 +58,11 @@ typedef enum
   _os2_usWinDescent,
   _os2_ulCodePageRange,         /* Instead of _os2_ulCodePageRange1,
                                    _os2_ulCodePageRange2. */
-  //_os2_sxHeight, <-- not supported here
-  //_os2_sCapHeight, <-- not supported here
-  //_os2_usDefaultChar, <-- not supported here
-  //_os2_usBreakChar, <-- not supported here
-  //_os2_usMaxContext, <-- not supported here
+  //_os2_sxHeight, ← not supported here
+  //_os2_sCapHeight, ← not supported here
+  //_os2_usDefaultChar, ← not supported here
+  //_os2_usBreakChar, ← not supported here
+  //_os2_usMaxContext, ← not supported here
 
   // These ‘offset’ flags are FontForge/Sorts Mill Tools-specific.
   _os2_sTypoAscender_is_offset,
@@ -74,7 +75,7 @@ typedef enum
 
 static const char *os2_key_table[] = {
   [_os2_version] = "version",
-  //[_os2_xAvgCharWidth] = "xAvgCharWidth", <-- not supported here
+  //[_os2_xAvgCharWidth] = "xAvgCharWidth", ← not supported here
   [_os2_usWeightClass] = "usWeightClass",
   [_os2_usWidthClass] = "usWidthClass",
   [_os2_fsType] = "fsType",
@@ -96,9 +97,9 @@ static const char *os2_key_table[] = {
                                                    ulUnicodeRange3,
                                                    ulUnicodeRange4. */
   [_os2_achVendID] = "achVendID",
-  //[_os2_fsSelection] = "fsSelection", <-- not supported here
-  //[_os2_usFirstCharIndex] = "usFirstCharIndex", <-- not supported here
-  //[_os2_usLastCharIndex] = "usLastCharIndex", <-- not supported here
+  //[_os2_fsSelection] = "fsSelection", ← not supported here
+  //[_os2_usFirstCharIndex] = "usFirstCharIndex", ← not supported here
+  //[_os2_usLastCharIndex] = "usLastCharIndex", ← not supported here
   [_os2_sTypoAscender] = "sTypoAscender",
   [_os2_sTypoDescender] = "sTypoDescender",
   [_os2_sTypoLineGap] = "sTypoLineGap",
@@ -107,11 +108,11 @@ static const char *os2_key_table[] = {
   [_os2_ulCodePageRange] = "ulCodePageRange",   /* Instead of
                                                    ulCodePageRange1,
                                                    ulCodePageRange2. */
-  //[_os2_sxHeight] = "sxHeight", <-- not supported here
-  //[_os2_sCapHeight] = "sCapHeight", <-- not supported here
-  //[_os2_usDefaultChar] = "usDefaultChar", <-- not supported here
-  //[_os2_usBreakChar] = "usBreakChar", <-- not supported here
-  //[_os2_usMaxContext] = "usMaxContext" <-- not supported here
+  //[_os2_sxHeight] = "sxHeight", ← not supported here
+  //[_os2_sCapHeight] = "sCapHeight", ← not supported here
+  //[_os2_usDefaultChar] = "usDefaultChar", ← not supported here
+  //[_os2_usBreakChar] = "usBreakChar", ← not supported here
+  //[_os2_usMaxContext] = "usMaxContext" ← not supported here
 
   // These ‘offset’ flags are FontForge/Sorts Mill
   // Tools-specific. They correspond to the ‘Offset’ checkboxes for
@@ -300,80 +301,6 @@ get_vendor_id (SplineFont *sf)
   buffer[2] = nul_to_sp (sf->pfminfo.os2_vendor[2]);
   buffer[3] = nul_to_sp (sf->pfminfo.os2_vendor[3]);
   return scm_from_latin1_stringn (buffer, 4);
-}
-
-static SCM
-stored_considering_offsets (bool stored_is_offset, SCM value,
-                            SCM given_is_offset, SCM base)
-{
-  SCM result;
-  if (scm_is_true (given_is_offset))
-    {
-      if (stored_is_offset)
-        result = value;
-      else
-        result = scm_sum (value, base);
-    }
-  else
-    {
-      if (stored_is_offset)
-        result = scm_difference (value, base);
-      else
-        result = value;
-    }
-  return result;
-}
-
-static int
-stored_int_considering_offsets (bool stored_is_offset, SCM value,
-                                SCM given_is_offset, SCM base,
-                                SCM rounding_function (SCM))
-{
-  SCM v = stored_considering_offsets (stored_is_offset, value,
-                                      given_is_offset, base);
-  return scm_to_int (scm_inexact_to_exact (rounding_function (v)));
-}
-
-static SCM
-value_considering_offsets (SCM result_is_offset, SCM value,
-                           bool stored_is_offset, SCM base)
-{
-  SCM result;
-  if (scm_is_true (result_is_offset))
-    {
-      if (stored_is_offset)
-        result = value;
-      else
-        result = scm_difference (value, base);
-    }
-  else
-    {
-      if (stored_is_offset)
-        result = scm_sum (value, base);
-      else
-        result = value;
-    }
-  return result;
-}
-
-static DBounds
-sf_bounding_box (SplineFont *sf)
-{
-  DBounds bbox;
-  SplineFontFindBounds (sf, &bbox);
-  return bbox;
-}
-
-static double
-sf_ymax (SplineFont *sf)
-{
-  return sf_bounding_box (sf).maxy;
-}
-
-static double
-sf_ymin (SplineFont *sf)
-{
-  return sf_bounding_box (sf).miny;
 }
 
 VISIBLE void

@@ -377,6 +377,13 @@ GO_FILES += sortsmill/fonts/glyphs.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/glyphs.scm
 
 
+# (sortsmill fonts hhea-table)
+
+DIST_SCM_FILES += sortsmill/fonts/hhea-table.scm
+GO_FILES += sortsmill/fonts/hhea-table.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/hhea-table.scm
+
+
 # (sortsmill fonts os2-table)
 
 DIST_SCM_FILES += sortsmill/fonts/os2-table.scm

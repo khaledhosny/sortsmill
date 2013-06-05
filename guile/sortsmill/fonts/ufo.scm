@@ -34,6 +34,7 @@
   (import (sortsmill i18n)
           (sortsmill fonts fontinfo-dict)
           (sortsmill fonts general)
+          (sortsmill fonts hhea-table)
           (sortsmill fonts os2-table)
           (sortsmill fonts private-dict)
           (sortsmill fonts t1font-dict)
@@ -346,6 +347,9 @@
       ['openTypeOS2SuperscriptYOffset (view:os2-table-set! view "ySuperscriptYOffset" value)]
       ['openTypeOS2StrikeoutSize (view:os2-table-set! view "yStrikeoutSize" value)]
       ['openTypeOS2StrikeoutPosition (view:os2-table-set! view "yStrikeoutPosition" value)]
+      ['openTypeHheaAscender (view:hhea-table-set! view "Ascender" value)]
+      ['openTypeHheaDescender (view:hhea-table-set! view "Descender" value)]
+      ['openTypeHheaLineGap (view:hhea-table-set! view "LineGap" value)]
       [_ *unspecified*] ))
 
   (define (bit-numbers->integer bit-numbers word-size)
