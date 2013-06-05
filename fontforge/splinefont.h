@@ -2347,37 +2347,50 @@ typedef struct splinefont
   bool loading_cid_map;
   bool dupnamewarn;             /* Warn about duplicate names when loading bdf font */
   bool encodingchanged;         /* Font's encoding has changed since it was loaded */
-  bool multilayer;              /* only applies if TYPE3 is set, means this font can contain strokes & fills */
-  /*  I leave it in so as to avoid cluttering up code with #ifdefs */
+  bool multilayer;              /* Only applies if TYPE3 is set, means
+                                   this font can contain strokes &
+                                   fills. I leave it in so as to avoid
+                                   cluttering up code with #ifdefs. */
   bool strokedfont;
-//    bool new_;                        /* A new and unsaved font */ <-- Switch to this later.
   bool new;                     /* A new and unsaved font */
   bool compacted;               /* only used when opening a font */
   unsigned int backedup:2;      /* 0=>don't know, 1=>no, 2=>yes */
   bool use_typo_metrics;        /* The standard says to. But MS seems
                                    to feel that isn't good enough and
-                                   has created a bit */
-  /* to mean "really use them" */
-  bool weight_width_slope_only; /* This bit seems stupid to me */
-  bool save_to_dir;             /* Loaded from an sfdir collection rather than a simple sfd file */
-  bool head_optimized_for_cleartype;    /* Bit in the 'head' flags field, if unset "East Asian fonts in the Windows Presentation Framework (Avalon) will not be hinted" */
+                                   has created a bit to mean "really
+                                   use them". */
+  bool weight_width_slope_only; /* This bit seems stupid to me. */
+  bool save_to_dir;             /* Loaded from an sfdir collection
+                                   rather than a simple sfd file. */
+  bool head_optimized_for_cleartype; /* Bit in the 'head' flags field,
+                                        if unset "East Asian fonts in
+                                        the Windows Presentation
+                                        Framework (Avalon) will not be
+                                        hinted". */
   bool ticked;
-  bool internal_temp;           /* Internal temporary font to be passed to freetype for rasterizing. Don't complain about oddities. Don't generate GPOS/GSUB tables, etc. */
+  bool internal_temp;           /* Internal temporary font to be
+                                   passed to freetype for
+                                   rasterizing. Don't complain about
+                                   oddities. Don't generate GPOS/GSUB
+                                   tables, etc. */
   bool complained_about_spiros;
-  bool use_xuid;                /* Adobe has deprecated these two */
-  bool use_uniqueid;            /* fields. Mostly we don't want to use them */
-  /* 2 bits left */
+  bool use_xuid;                // Adobe has deprecated these two
+  bool use_uniqueid;            // fields. Mostly we don't want to use them.
   struct fontviewbase *fv;
   struct metricsview *metrics;
   enum uni_interp uni_interp;
   NameList *for_new_glyphs;
-  EncMap *map;                  /* only used when opening a font to provide original default encoding */
+  EncMap *map;                  /* Only used when opening a font, to
+                                   provide original default
+                                   encoding. */
   Layer grid;
   BDFFont *bitmaps;
-  char *origname;               /* filename of font file (ie. if not an sfd) */
+  char *origname;               /* Filename of font file (ie. if not
+                                   an sfd). */
   char *autosavename;
-  int display_size;             /* a val <0 => Generate our own images from splines, a value >0 => find a bdf font of that size */
-//    struct psdict *private_;  /* read in from type1 file or provided by user */ <-- switch to this later.
+  int display_size;             /* A val <0 => Generate our own images
+                                   from splines, a value >0 => find a
+                                   bdf font of that size. */
   struct psdict *private;       /* read in from type1 file or provided by user */
   char *xuid;
   struct pfminfo pfminfo;
@@ -2460,7 +2473,10 @@ typedef struct splinefont
   int display_layer;
   struct Base *horiz_base, *vert_base;
   Justify *justify;
-  int extrema_bound;            /* Splines do not count for extrema complaints when the distance between the endpoints is less than or equal to this */
+  int extrema_bound;            /* Splines do not count for extrema
+                                   complaints when the distance
+                                   between the endpoints is less than
+                                   or equal to this. */
   int width_separation;
   int sfntRevision;
 #define sfntRevisionUnset	0x44445555
@@ -2468,8 +2484,12 @@ typedef struct splinefont
 #define woffUnset		0x4455
   int woffMinor;
   char *woffMetadata;
-  real ufo_ascent, ufo_descent; /* I don't know what these mean, they don't seem to correspond to any other ascent/descent pair, but retain them so round-trip ufo input/output leaves them unchanged */
-  /* ufo_descent is negative */
+  real ufo_ascent, ufo_descent; /* I don't know what these mean; they
+                                   don't seem to correspond to any
+                                   other ascent/descent pair, but
+                                   retain them, so round-trip ufo
+                                   input/output leaves them unchanged.
+                                   ufo_descent is negative. */
 } SplineFont;
 
 inline SplineChar *sfglyph (SplineFont *sf, ssize_t i);

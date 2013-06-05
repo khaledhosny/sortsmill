@@ -363,6 +363,13 @@ GO_FILES += sortsmill/fonts/fontinfo-dict.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/fontinfo-dict.scm
 
 
+# (sortsmill fonts general)
+
+DIST_SCM_FILES += sortsmill/fonts/general.scm
+GO_FILES += sortsmill/fonts/general.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/general.scm
+
+
 # (sortsmill fonts glyphs)
 
 DIST_SCM_FILES += sortsmill/fonts/glyphs.scm

@@ -314,6 +314,10 @@
                  (* copyright)
                  (* filename file_name)
                  (* defbasefilename default_base_file_name)
+                 (int ascent)
+                 (int descent)
+                 (float ufo_ascent)
+                 (float ufo_descent)
                  ((* FontViewBase) fv)
                  ((* AnchorClass) anchor anchor_classes)
                  ;; There are many more fields.

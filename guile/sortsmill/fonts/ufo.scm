@@ -33,6 +33,7 @@
 
   (import (sortsmill i18n)
           (sortsmill fonts fontinfo-dict)
+          (sortsmill fonts general)
           (sortsmill fonts os2-table)
           (sortsmill fonts private-dict)
           (sortsmill fonts t1font-dict)
@@ -83,13 +84,45 @@
                         (if version-minor
                             (format #f "~a.~a" version-major version-minor)
                             (format #f "~a" version-major))
-                        #f)])
-      (when version
-        (view:fontinfo-dict-set! view "version" version))
+                        #f)]
+           [ascender (assoc-ref fontinfo 'ascender)]
+           [descender (assoc-ref fontinfo 'descender)]
+           [unitsPerEm (assoc-ref fontinfo 'unitsPerEm)])
+      (when version (view:fontinfo-dict-set! view "version" version))
+      (when ascender (view:ufo-ascent-set! view ascender))
+      (when descender (view:ufo-descent-set! view (- descender)))
+      (let-values ([(ascent descent) (compute-vertical-layout
+                                      'view:apply-ufo-fontinfo!
+                                      ascender descender unitsPerEm)])
+        (view:ascent-set! view ascent)
+        (view:descent-set! view descent))
       (for-each
        (lambda (entry)
          (apply-ufo-fontinfo-entry! view (car entry) (cdr entry)))
        fontinfo)))
+
+  (define (compute-vertical-layout who ascender descender unitsPerEm)
+    ;; Given the UFO documentation, such as it is at the time of this
+    ;; writing, it is unclear how to compute the ascent, descent, and
+    ;; units-per-em. Below is an attempt to make reasonable
+    ;; inferences.
+    (define (unable-to-infer-units-per-em who)
+      (error who (_ "I do not know how to infer the units-per-em for this UFO")))
+    (define (infer-from-units-per-em units-per-em ratio)
+      (let ([ascent (inexact->exact (round (* ratio units-per-em)))])
+        (values ascent (- units-per-em ascent))))
+    (match (list ascender descender unitsPerEm)
+      [(#f #f #f) (unable-to-infer-units-per-em who)]
+      [(_ #f #f)  (unable-to-infer-units-per-em who)]
+      [(#f _ #f)  (unable-to-infer-units-per-em who)]
+      [(#f #f _)  (infer-from-units-per-em unitsPerEm 800/1000)]
+      [(_ _ #f)   (values ascender (- descender))]
+      [(_ #f _)   (values ascender (- unitsPerEm ascender))]
+      [(#f _ _)   (values (+ unitsPerEm descender) (- descender))]
+      [(_ _ _)    (if (= unitsPerEm (- ascender descender))
+                      (values ascender (- descender))
+                      (let ([ratio (/ ascender (- ascender descender))])
+                        (infer-from-units-per-em unitsPerEm ratio)))] ))
 
   (define (parse-array-xml ufo . components)
     (match (apply parse-ufo-xml ufo components)
