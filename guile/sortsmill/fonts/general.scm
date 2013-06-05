@@ -98,15 +98,19 @@
           (pointer->string ptr -1 "UTF-8"))))
 
   (define (view:font-comment-set! view value)
-    (let ([sf (view->SplineFont view)])
-      (c:free (SplineFont:comment-ref sf))
-      (SplineFont:comment-set! sf %null-pointer)
-      (when value
-        (let* ([bv (string->utf8 value)]
-               [n (+ (bytevector-length bv) 1)]
-               [ptr (c:zalloc n)]
-               [target (pointer->bytevector ptr n)])
-          (bytevector-copy! bv 0 target 0 (bytevector-length bv))
-          (SplineFont:comment-set! sf ptr)))))
+
+    ;; The first step is to try to convert the new string, so if this
+    ;; fails then we retain the old string.
+    (let ([bv (if value (string->utf8 value) #f)])
+
+      (let ([sf (view->SplineFont view)])
+        (c:free (SplineFont:comment-ref sf))
+        (SplineFont:comment-set! sf %null-pointer)
+        (when bv
+          (let* ([n (+ (bytevector-length bv) 1)]
+                 [ptr (c:zalloc n)]
+                 [target (pointer->bytevector ptr n)])
+            (bytevector-copy! bv 0 target 0 (bytevector-length bv))
+            (SplineFont:comment-set! sf ptr))))))
 
   ) ;; end of library.
