@@ -50,13 +50,18 @@
           view:ufo-ascent-set!
           view:ufo-descent-ref
           view:ufo-descent-set!
+
+          view:font-comment-ref
+          view:font-comment-set!
           )
 
   (import (sortsmill fonts views)
           (sortsmill fonts fontinfo-dict) ; For reëxportation.
           (sortsmill fontforge-api)
+          (sortsmill alloc)
           (rnrs)
-          (except (guile) error))
+          (except (guile) error)
+          (system foreign))
 
   (define (view:ascent-ref view)
     (SplineFont:ascent-ref (view->SplineFont view)))
@@ -85,5 +90,23 @@
 
   (define (view:ufo-descent-set! view value)
     (SplineFont:ufo-descent-set! (view->SplineFont view) value))
+
+  (define (view:font-comment-ref view)
+    (let ([ptr (SplineFont:comment-ref (view->SplineFont view))])
+      (if (null-pointer? ptr)
+          #f
+          (pointer->string ptr -1 "UTF-8"))))
+
+  (define (view:font-comment-set! view value)
+    (let ([sf (view->SplineFont view)])
+      (c:free (SplineFont:comment-ref sf))
+      (SplineFont:comment-set! sf %null-pointer)
+      (when value
+        (let* ([bv (string->utf8 value)]
+               [n (+ (bytevector-length bv) 1)]
+               [ptr (c:zalloc n)]
+               [target (pointer->bytevector ptr n)])
+          (bytevector-copy! bv 0 target 0 (bytevector-length bv))
+          (SplineFont:comment-set! sf ptr)))))
 
   ) ;; end of library.

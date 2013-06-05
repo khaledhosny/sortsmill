@@ -297,6 +297,7 @@
 
   (define (apply-ufo-fontinfo-entry! view key value)
     (match key
+      ['note (view:font-comment-set! view value)]
       ['postscriptFontName (view:t1font-dict-set! view "FontName" value)]
       ['fontName (view:t1font-dict-set! view "FontName" value)]
       ['postscriptFullName (view:fontinfo-dict-set! view "FullName" value)]

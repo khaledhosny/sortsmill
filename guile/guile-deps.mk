@@ -11,14 +11,14 @@ sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
 sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__.go
 sortsmill/fonts/contours.go: sortsmill/svg/path-data.go sortsmill/nearness.go sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go sortsmill/kwargs.go
 sortsmill/fonts/fontinfo-dict.go: sortsmill/dynlink.go
-sortsmill/fonts/general.go: sortsmill/fonts/views.go sortsmill/fonts/fontinfo-dict.go sortsmill/fontforge-api.go
+sortsmill/fonts/general.go: sortsmill/fonts/views.go sortsmill/fonts/fontinfo-dict.go sortsmill/fontforge-api.go sortsmill/alloc.go
 sortsmill/fonts/glyphs.go: sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__/glyphs.go
 sortsmill/fonts/os2-table.go: sortsmill/dynlink.go
 sortsmill/fonts/peg-spacing.go: sortsmill/fonts/glyphs.go sortsmill/fonts/anchors.go sortsmill/fontforge-api.go sortsmill/dynlink.go
 sortsmill/fonts/private-dict.go: sortsmill/dynlink.go
 sortsmill/fonts/psmat.go: sortsmill/math/matrices.go
 sortsmill/fonts/t1font-dict.go: sortsmill/dynlink.go
-sortsmill/fonts/ufo.go: sortsmill/i18n.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/os2-table.go sortsmill/fonts/private-dict.go sortsmill/fonts/t1font-dict.go
+sortsmill/fonts/ufo.go: sortsmill/i18n.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/general.go sortsmill/fonts/os2-table.go sortsmill/fonts/private-dict.go sortsmill/fonts/t1font-dict.go
 sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill/i18n.go: sortsmill/pkg-info.go sortsmill/dynlink.go
 sortsmill/iconv.go: sortsmill/dynlink.go
