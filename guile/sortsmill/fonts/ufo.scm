@@ -34,10 +34,12 @@
   (import (sortsmill i18n)
           (sortsmill fonts fontinfo-dict)
           (sortsmill fonts general)
+          (sortsmill fonts head-table)
           (sortsmill fonts hhea-table)
           (sortsmill fonts os2-table)
           (sortsmill fonts private-dict)
           (sortsmill fonts t1font-dict)
+;;;;;;;;;;;;;;          (sortsmill strings rexp)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
@@ -350,6 +352,9 @@
       ['openTypeHheaAscender (view:hhea-table-set! view "Ascender" value)]
       ['openTypeHheaDescender (view:hhea-table-set! view "Descender" value)]
       ['openTypeHheaLineGap (view:hhea-table-set! view "LineGap" value)]
+      ['openTypeHeadFlags (view:head-table-set! view "flags" (bit-numbers->integer value 16))]
+      ['openTypeHeadCreated (view:head-table-set! view "created"
+                                                  (YYYY/MM/DD_HH:MM:SS->unix-time value))]
       [_ *unspecified*] ))
 
   (define (bit-numbers->integer bit-numbers word-size)
@@ -368,5 +373,9 @@
                                     #t)))))
        bit-numbers)
       (vector->list ints)))
+
+  (define (YYYY/MM/DD_HH:MM:SS->unix-time s)
+    (let ([tm (strptime "%Y/%m/%d %H:%M:%S" s)])
+      (car (mktime (car tm)))))
 
   ) ;; end of library.

@@ -44,6 +44,7 @@
 #include "fontforge.h"
 #include <math.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <time.h>
 #include <locale.h>
 #include <utype.h>
@@ -3266,7 +3267,12 @@ AnyMisleadingBitmapAdvances (SplineFont *sf, int32_t *bsizes)
 #ifdef HAVE_LONG_LONG_INT
 void
 cvt_unix_to_1904 (long long time, int32_t result[2])
+#else
+void
+cvt_unix_to_1904 (long time, int32_t result[2])
+#endif
 {
+#ifdef HAVE_LONG_LONG_INT
   uint32_t date1970[4], tm[4];
   uint32_t year[2];
   int i;
@@ -3276,9 +3282,6 @@ cvt_unix_to_1904 (long long time, int32_t result[2])
   tm[2] = (time >> 32) & 0xffff;
   tm[3] = (time >> 48) & 0xffff;
 #else
-void
-cvt_unix_to_1904 (long time, int32_t result[2])
-{
   int32_t date1970[4], tm[4];
   uint32_t year[2];
   int i;
@@ -3315,6 +3318,47 @@ cvt_unix_to_1904 (long time, int32_t result[2])
 
   result[0] = (tm[1] << 16) | tm[0];
   result[1] = (tm[3] << 16) | tm[2];
+}
+
+uint16_t
+head_table_flags (SplineFont *sf, enum fontformat format,
+                  int32_t *bsizes, bool arabic, bool rl)
+{
+  uint16_t flags = 8 | 2 | 1; /* baseline at 0, lsbline at 0, round
+                                 ppem */
+  if (format >= ff_ttf && format <= ff_ttfdfont)
+    {
+      if (AnyInstructions (sf))
+        flags = 0x10 | 8 | 4 | 2 | 1; /* baseline at 0, lsbline at 0,
+                                         round ppem, instructions may
+                                         depend on point size,
+                                         instructions change
+                                         metrics */
+      else if (AnyMisleadingBitmapAdvances (sf, bsizes))
+        flags = 0x10 | 8 | 2 | 1; /* baseline at 0, lsbline at 0,
+                                     round ppem, instructions change
+                                     metrics */
+    }
+
+  // If a font contains embedded bitmaps, and if some of those bitmaps
+  // have a different advance width from that expected by scaling,
+  // then will only notice the fact if the 0x10 bit is set (even
+  // though this has nothing to do with instructions).
+
+  // Apple flags.
+  if (sf->hasvmetrics)
+    flags |= (1 << 5);         // Designed to be layed out vertically.
+  // Bit 6 must be zero.
+  if (arabic)
+    flags |= (1 << 7);
+  if (rl)
+    flags |= (1 << 9);
+  // End Apple flags.
+  
+  if (sf->head_optimized_for_cleartype)
+    flags |= (1 << 13);
+
+  return flags;
 }
 
 static void
@@ -3395,29 +3439,7 @@ sethead (struct head *head, SplineFont *sf, struct alltabs *at,
     }
   head->checksumAdj = 0;
   head->magicNum = 0x5f0f3cf5;
-  head->flags = 8 | 2 | 1;      /* baseline at 0, lsbline at 0, round ppem */
-  if (format >= ff_ttf && format <= ff_ttfdfont)
-    {
-      if (AnyInstructions (sf))
-        head->flags = 0x10 | 8 | 4 | 2 | 1;     /* baseline at 0, lsbline at 0, round ppem, instructions may depend on point size, instructions change metrics */
-      else if (AnyMisleadingBitmapAdvances (sf, bsizes))
-        head->flags = 0x10 | 8 | 2 | 1; /* baseline at 0, lsbline at 0, round ppem, instructions change metrics */
-    }
-  /* If a font contains embedded bitmaps, and if some of those bitmaps have */
-  /*  a different advance width from that expected by scaling, then windows */
-  /*  will only notice the fact if the 0x10 bit is set (even though this has */
-  /*  nothing to do with instructions) */
-/* Apple flags */
-  if (sf->hasvmetrics)
-    head->flags |= (1 << 5);    /* designed to be layed out vertically */
-  /* Bit 6 must be zero */
-  if (arabic)
-    head->flags |= (1 << 7);
-  if (rl)
-    head->flags |= (1 << 9);
-/* End apple flags */
-  if (sf->head_optimized_for_cleartype)
-    head->flags |= (1 << 13);
+  head->flags = head_table_flags (sf, format, bsizes, arabic, rl);
   head->emunits = sf->ascent + sf->descent;
   head->macstyle = MacStyleCode (sf, NULL);
   head->lowestreadable = 8;
