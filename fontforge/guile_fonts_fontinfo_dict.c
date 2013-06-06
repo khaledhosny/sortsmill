@@ -17,6 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
+#include <guile_fonts_table.h>
 #include <splinefont.h>
 #include <intl.h>
 
@@ -111,25 +112,6 @@ scm_c_view_fontinfo_dict_set_x (SCM view, const char *key, const char *value)
     }
 }
 
-VISIBLE SCM
-scm_view_fontinfo_dict_set_x (SCM view, SCM key, SCM value)
-{
-  scm_dynwind_begin (0);
-
-  char *_key = scm_to_latin1_stringn (key, NULL);
-  scm_dynwind_free (_key);
-
-  SCM value_string = scm_to_postscript (value);
-  char *_value = scm_to_latin1_stringn (value_string, NULL);
-  scm_dynwind_free (_value);
-
-  scm_c_view_fontinfo_dict_set_x (view, _key, _value);
-
-  scm_dynwind_end ();
-
-  return SCM_UNSPECIFIED;
-}
-
 static SCM
 scm_from_string_or_null (const char *s)
 {
@@ -180,58 +162,22 @@ scm_c_view_fontinfo_dict_ref (SCM view, const char *key)
   return result;
 }
 
-VISIBLE SCM
-scm_view_fontinfo_dict_ref (SCM view, SCM key)
-{
-  scm_dynwind_begin (0);
+VISIBLE _SCM_VIEW_TABLE_SET_PS (scm_view_fontinfo_dict_set_x,
+                                scm_c_view_fontinfo_dict_set_x);
 
-  char *_key = scm_to_latin1_stringn (key, NULL);
-  scm_dynwind_free (_key);
+VISIBLE _SCM_VIEW_TABLE_REF (scm_view_fontinfo_dict_ref,
+                             scm_c_view_fontinfo_dict_ref);
 
-  SCM s = scm_c_view_fontinfo_dict_ref (view, _key);
+VISIBLE _SCM_VIEW_TABLE_SET_FROM_ALIST (scm_view_fontinfo_dict_set_from_alist_x,
+                                        scm_view_fontinfo_dict_set_x);
 
-  scm_dynwind_end ();
+VISIBLE _SCM_VIEW_TABLE_TO_ALIST (scm_view_fontinfo_dict_to_alist,
+                                  fontinfo_key_table, _fontinfo_key_t,
+                                  _fontinfo_SENTINEL,
+                                  scm_c_view_fontinfo_dict_ref);
 
-  return s;
-}
-
-VISIBLE SCM
-scm_view_fontinfo_dict_set_from_alist_x (SCM view, SCM lst)
-{
-  const char *who = "scm_view_fontinfo_dict_set_from_alist_x";
-
-  for (SCM p = lst; !scm_is_null (p); p = SCM_CDR (p))
-    {
-      scm_c_assert_can_be_alist_link (who, lst, p);
-      scm_view_fontinfo_dict_set_x (view, SCM_CAAR (p), SCM_CDAR (p));
-    }
-  return SCM_UNSPECIFIED;
-}
-
-VISIBLE SCM
-scm_view_fontinfo_dict_to_alist (SCM view)
-{
-  SCM lst = SCM_EOL;
-  for (_fontinfo_key_t k = 0; k < _fontinfo_SENTINEL; k++)
-    {
-      const char *key = fontinfo_key_table[_fontinfo_SENTINEL - 1 - k];
-      lst = scm_acons (scm_from_latin1_string (key),
-                       scm_c_view_fontinfo_dict_ref (view, key), lst);
-    }
-  return lst;
-}
-
-VISIBLE SCM
-scm_view_fontinfo_dict_keys (SCM view)
-{
-  SCM lst = SCM_EOL;
-  for (_fontinfo_key_t k = 0; k < _fontinfo_SENTINEL; k++)
-    {
-      const char *key = fontinfo_key_table[_fontinfo_SENTINEL - 1 - k];
-      lst = scm_cons (scm_from_latin1_string (key), lst);
-    }
-  return lst;
-}
+VISIBLE _SCM_VIEW_TABLE_KEYS (scm_view_fontinfo_dict_keys, fontinfo_key_table,
+                              _fontinfo_key_t, _fontinfo_SENTINEL);
 
 #define _SCM_FONTINFO_FIELD_STRING_REF(FIELDNAME)               \
   SCM                                                           \

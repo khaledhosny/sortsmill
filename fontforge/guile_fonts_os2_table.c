@@ -18,6 +18,7 @@
 
 #include <sortsmill/guile.h>
 #include <guile_fonts_os2_hhea.h>
+#include <guile_fonts_table.h>
 #include <splinefont.h>
 #include <intl.h>
 
@@ -421,21 +422,6 @@ scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value,
 }
 
 VISIBLE SCM
-scm_view_os2_table_set_x (SCM view, SCM key, SCM value, SCM value_is_offset)
-{
-  scm_dynwind_begin (0);
-
-  char *_key = scm_to_latin1_stringn (key, NULL);
-  scm_dynwind_free (_key);
-
-  scm_c_view_os2_table_set_x (view, _key, value, value_is_offset);
-
-  scm_dynwind_end ();
-
-  return SCM_UNSPECIFIED;
-}
-
-VISIBLE SCM
 scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset)
 {
   const char *who = "scm_c_view_os2_table_ref";
@@ -555,60 +541,20 @@ scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset)
   return result;
 }
 
-VISIBLE SCM
-scm_view_os2_table_ref (SCM view, SCM key, SCM value_is_offset)
-{
-  scm_dynwind_begin (0);
+VISIBLE _SCM_VIEW_TABLE_SET2 (scm_view_os2_table_set_x,
+                              scm_c_view_os2_table_set_x);
 
-  char *_key = scm_to_latin1_stringn (key, NULL);
-  scm_dynwind_free (_key);
+VISIBLE _SCM_VIEW_TABLE_REF2 (scm_view_os2_table_ref, scm_c_view_os2_table_ref);
 
-  SCM s = scm_c_view_os2_table_ref (view, _key, value_is_offset);
+VISIBLE _SCM_VIEW_TABLE_SET_FROM_ALIST2 (scm_view_os2_table_set_from_alist_x,
+                                         scm_view_os2_table_set_x);
 
-  scm_dynwind_end ();
+VISIBLE _SCM_VIEW_TABLE_TO_ALIST2 (scm_view_os2_table_to_alist,
+                                   os2_key_table, _os2_key_t,
+                                   _os2_SENTINEL, scm_c_view_os2_table_ref);
 
-  return s;
-}
-
-VISIBLE SCM
-scm_view_os2_table_set_from_alist_x (SCM view, SCM lst)
-{
-  const char *who = "scm_view_os2_table_set_from_alist_x";
-
-  for (SCM p = lst; !scm_is_null (p); p = SCM_CDR (p))
-    {
-      scm_c_assert_can_be_alist_link (who, lst, p);
-      scm_view_os2_table_set_x (view, SCM_CAAR (p), SCM_CDAR (p),
-                                SCM_UNDEFINED);
-    }
-  return SCM_UNSPECIFIED;
-}
-
-VISIBLE SCM
-scm_view_os2_table_to_alist (SCM view)
-{
-  SCM lst = SCM_EOL;
-  for (_os2_key_t k = 0; k < _os2_SENTINEL; k++)
-    {
-      const char *key = os2_key_table[_os2_SENTINEL - 1 - k];
-      lst = scm_acons (scm_from_latin1_string (key),
-                       scm_c_view_os2_table_ref (view, key, SCM_UNDEFINED),
-                       lst);
-    }
-  return lst;
-}
-
-VISIBLE SCM
-scm_view_os2_table_keys (SCM view)
-{
-  SCM lst = SCM_EOL;
-  for (_os2_key_t k = 0; k < _os2_SENTINEL; k++)
-    {
-      const char *key = os2_key_table[_os2_SENTINEL - 1 - k];
-      lst = scm_cons (scm_from_latin1_string (key), lst);
-    }
-  return lst;
-}
+VISIBLE _SCM_VIEW_TABLE_KEYS (scm_view_os2_table_keys, os2_key_table,
+                              _os2_key_t, _os2_SENTINEL);
 
 //-------------------------------------------------------------------------
 

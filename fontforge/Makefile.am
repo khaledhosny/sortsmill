@@ -122,6 +122,7 @@ noinst_HEADERS += spiro.h
 noinst_HEADERS += spiroentrypoints.h
 noinst_HEADERS += zmisc.h
 noinst_HEADERS += guile_fonts_os2_hhea.h
+noinst_HEADERS += guile_fonts_table.h
 
 nobase_nodist_include_HEADERS = sortsmill/fontforge_api.h
 
