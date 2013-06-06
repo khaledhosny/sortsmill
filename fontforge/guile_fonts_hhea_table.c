@@ -41,6 +41,11 @@ typedef enum
   //_hhea_caretOffset, ← not supported here
   //_hhea_metricDataFormat, ← not supported here
   //_hhea_numberOfHMetrics, ← not supported here
+
+  // These ‘offset’ flags are FontForge/Sorts Mill Tools-specific.
+  _hhea_Ascender_is_offset,
+  _hhea_Descender_is_offset,
+
   _hhea_SENTINEL
 } _hhea_key_t;
 
@@ -48,16 +53,22 @@ static const char *hhea_key_table[] = {
   //[_hhea_version] = "version", ← not supported here
   [_hhea_Ascender] = "Ascender",
   [_hhea_Descender] = "Descender",
-  [_hhea_LineGap] = "LineGap"
-    //[_hhea_advanceWidthMax] = "advanceWidthMax", ← not supported here
-    //[_hhea_minLeftSideBearing] = "minLeftSideBearing", ← not supported here
-    //[_hhea_minRightSideBearing] = "minRightSideBearing", ← not supported here
-    //[_hhea_xMaxExtent] = "xMaxExtent", ← not supported here
-    //[_hhea_caretSlopeRise] = "caretSlopeRise", ← not supported here
-    //[_hhea_caretSlopeRun] = "caretSlopeRun", ← not supported here
-    //[_hhea_caretOffset] = "caretOffset", ← not supported here
-    //[_hhea_metricDataFormat] = "metricDataFormat", ← not supported here
-    //[_hhea_numberOfHMetrics] = "numberOfHMetrics" ← not supported here
+  [_hhea_LineGap] = "LineGap",
+  //[_hhea_advanceWidthMax] = "advanceWidthMax", ← not supported here
+  //[_hhea_minLeftSideBearing] = "minLeftSideBearing", ← not supported here
+  //[_hhea_minRightSideBearing] = "minRightSideBearing", ← not supported here
+  //[_hhea_xMaxExtent] = "xMaxExtent", ← not supported here
+  //[_hhea_caretSlopeRise] = "caretSlopeRise", ← not supported here
+  //[_hhea_caretSlopeRun] = "caretSlopeRun", ← not supported here
+  //[_hhea_caretOffset] = "caretOffset", ← not supported here
+  //[_hhea_metricDataFormat] = "metricDataFormat", ← not supported here
+  //[_hhea_numberOfHMetrics] = "numberOfHMetrics" ← not supported here
+
+  // These ‘offset’ flags are FontForge/Sorts Mill
+  // Tools-specific. They correspond to the ‘Offset’ checkboxes for
+  // the corresponding hhea table entries.
+  [_hhea_Ascender_is_offset] = "Ascender-is-offset",
+  [_hhea_Descender_is_offset] = "Descender-is-offset"
 };
 
 static void
@@ -114,6 +125,12 @@ scm_c_view_hhea_table_set_x (SCM view, const char *key, SCM value,
     case _hhea_LineGap:
       sf->pfminfo.linegap = scm_to_int (value);
       break;
+    case _hhea_Ascender_is_offset:
+      sf->pfminfo.hheadascent_add = scm_is_true (value);
+      break;
+    case _hhea_Descender_is_offset:
+      sf->pfminfo.hheaddescent_add = scm_is_true (value);
+      break;
     }
 }
 
@@ -148,6 +165,12 @@ scm_c_view_hhea_table_ref (SCM view, const char *key, SCM value_is_offset)
       break;
     case _hhea_LineGap:
       result = scm_from_int (sf->pfminfo.linegap);
+      break;
+    case _hhea_Ascender_is_offset:
+      result = scm_from_bool (sf->pfminfo.hheadascent_add);
+      break;
+    case _hhea_Descender_is_offset:
+      result = scm_from_bool (sf->pfminfo.hheaddescent_add);
       break;
     }
   return result;
