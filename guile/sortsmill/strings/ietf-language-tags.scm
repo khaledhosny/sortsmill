@@ -76,6 +76,9 @@
    ;;    (parse-ietf-language-tag "en_US") → '(langtag "en" #f "US" #f #f #f)
    ;;
    parse-ietf-language-tag
+
+   ;; (unparse-ietf-language-tag decomposition) → string
+   unparse-ietf-language-tag
    )
 
   (import (sortsmill strings rexp)
@@ -243,6 +246,24 @@
 
   (define (string-length=1? s)
     (= 1 (string-length s)))
+
+  (define (unparse-langtag langtag-decomposition)
+    (let ([strings (map (lambda (entry)
+                          (if (string? entry)
+                              entry
+                              (unparse-langtag entry)))
+                        langtag-decomposition)])
+      (string-join strings "-")))
+
+  (define (unparse-ietf-language-tag decomposition)
+    (match decomposition
+      [('langtag . langtag-decomposition)
+       (unparse-langtag langtag-decomposition)]
+      [((or 'grandfathered 'privateuse) . tag)
+       tag]
+      [_ (assertion-violation 'unparse-ietf-language-tag
+                              (_ "not an IETF language tag decomposition")
+                              decomposition)]))
 
 ;;;  (write (parse-ietf-language-tag "sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-2222-a-Foobar-x-b-1234-a-Foobar"))
 ;;;  (newline)
