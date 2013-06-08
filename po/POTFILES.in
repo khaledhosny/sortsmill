@@ -211,6 +211,8 @@ guile/sortsmill/math/polyspline/bases.scm
 guile/sortsmill/math/polyspline/inversion.scm
 guile/sortsmill/math/polyspline/roots.scm
 
+guile/sortsmill/strings/ietf-language-tags.scm
+
 guile/sortsmill/postscript.scm
 
 main/compare.c

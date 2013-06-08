@@ -31,24 +31,58 @@
   (export
    ;; (ietf-language-tag=? tag1 tag2) → boolean
    ;;
-   ;; A case-insensitive string comparison. This comparison takes no
-   ;; account of language ranges [http://tools.ietf.org/html/rfc4647];
-   ;; the match must be exact except for letter case.
-   ;;
-   ;; FIXME: This is not how comparison should be done.
+   ;; This comparison takes no account of language ranges, fallbacks,
+   ;; etc.  [http://tools.ietf.org/html/rfc4647], nor does it
+   ;; canonicalize; the match must be exact except for formatting.
    ietf-language-tag=?
 
-   ;; (ietf-language-tag=? tag) → tag-in-recommended-format
+   ;; (reformat-ietf-language-tag tag) → tag-in-recommended-format
+   ;;
+   ;; Does not check whether the tag is well formed.
    ;;
    ;; See http://tools.ietf.org/html/rfc5646, section 2.1.1.
    reformat-ietf-language-tag
 
+   ;; (parse-ietf-language-tag tag) → decomposition or #f
+   ;;
+   ;; The tag is first reformatted by reformat-ietf-language-tag. One
+   ;; consequence is that equality of two decompositions can be tested
+   ;; case-sensitively.
+   ;;
+   ;; If the tag is not well formed, then #f is returned. No further
+   ;; validation is done.
+   ;;
+   ;; Examples:
+   ;;
+   ;;    (parse-ietf-language-tag "sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-2222-a-Foobar-x-b-1234-a-Foobar")
+   ;;        → '(langtag "sl-abc-def" "Cyrl" "YU"
+   ;;                     ("rozaj" "solba" "1994")
+   ;;                     ("b-1234-2222" "a-foobar")
+   ;;                     "x-b-1234-a-foobar")
+   ;;
+   ;;    (parse-ietf-language-tag "en-US") → '(langtag "en" #f "US" #f #f #f)
+   ;;
+   ;;    (parse-ietf-language-tag "x-sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-a-Foobar-x-b-1234-a-Foobar")
+   ;;        → '(privateuse . "x-sl-abc-def-cyrl-yu-rozaj-solba-1994-b-1234-a-foobar-x-b-1234-a-foobar")
+   ;;
+   ;;    (parse-ietf-language-tag "i-enoCHIAN") → '(grandfathered . "i-enochian")
+   ;;
+   ;;    (parse-ietf-language-tag "sgn-be-nl") → '(grandfathered . "sgn-BE-NL")
+   ;;
+   ;;    (parse-ietf-language-tag "not=a=tag") → #f
+   ;;
+   ;; Underscores are accepted in place of hyphens:
+   ;;
+   ;;    (parse-ietf-language-tag "en_US") → '(langtag "en" #f "US" #f #f #f)
+   ;;
    parse-ietf-language-tag
    )
 
   (import (sortsmill strings rexp)
+          (sortsmill i18n)
           (rnrs)
           (except (guile) error)
+          (only (srfi :1) break)
           (only (srfi :26) cut)
           (srfi :31)                    ; ‘rec’
           (ice-9 i18n)
@@ -63,11 +97,12 @@
   (define alphanum "[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]")
   (define singleton "[abcdefghijklmnopqrstuvwyzABCDEFGHIJKLMNOPQRSTUVWYZ0123456789]")
   (define digit "[0123456789]")
+  (define x-subtag "[xX]")
 
   (define tag-end (format #f "(?=~a|\\z)" separator))
 
   (define extlang-str (format #f "(~a{3}(~a~a{3}(~a~a{3})?)?)~a"
-                          alpha separator alpha separator alpha tag-end))
+                              alpha separator alpha separator alpha tag-end))
 
   (define language-str (format #f "(~a{4,8}|~a{2,3}(~a~a)?)~a"
                                alpha alpha separator extlang-str tag-end))
@@ -83,7 +118,8 @@
   (define extension-str (format #f "~a(~a(~a~a{2,8})+)~a"
                                 separator singleton separator alphanum tag-end))
 
-  (define privateuse-str (format #f "([xX](~a~a{1,8})+)\\z" separator alphanum))
+  (define privateuse-str (format #f "(~a(~a~a{1,8})+)\\z"
+                                 x-subtag separator alphanum))
 
   (define privateuse-subtags-str (format #f "~a~a" separator privateuse-str))
 
@@ -96,14 +132,6 @@
                 [(_ j) (values (substring s i j)
                                (substring s j))])
               (values #f s))))))
-
-  #|
-  (define remove-leading-separator
-    (let ([re (rexp:compile-study separator)])
-      (lambda (s)
-        (let ([m (rexp:match re s)])
-           (if m (string-drop s 1) s)))))
-  |#
 
   (define match-language (simple-matcher language-str 0))
   (define match-script (simple-matcher script-str 1))
@@ -157,58 +185,79 @@
   (define match-privateuse (simple-matcher privateuse-str 0))
 
   (define (parse-ietf-language-tag tag)
-    (let ([t (match-grandfathered tag)])
-      (if t
-          (cons 'grandfathered t)
-          (let ([t (match-privateuse tag)])
-            (if t
-                (cons 'privateuse t)
-                (let ([t (match-langtag tag)])
-                  (if t
-                      (cons 'langtag t)
-                      #f)))))))
-
-  #|
-  (write (parse-ietf-language-tag "sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-a-Foobar-x-b-1234-a-Foobar"))
-  (newline)
-
-  (write (parse-ietf-language-tag "x-sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-a-Foobar-x-b-1234-a-Foobar"))
-  (newline)
-
-  (write (parse-ietf-language-tag "i-enoCHIAN"))
-  (newline)
-
-  (write (parse-ietf-language-tag "i-enoCHIANfoo"))
-  (newline)
-  |#
+    (let ([tag (reformat-ietf-language-tag tag)])
+      (let ([t (match-grandfathered tag)])
+        (if t
+            (cons 'grandfathered t)
+            (let ([t (match-privateuse tag)])
+              (if t
+                  (cons 'privateuse t)
+                  (let ([t (match-langtag tag)])
+                    (if t
+                        (cons 'langtag t)
+                        #f))))))))
 
   (define (ietf-language-tag=? a b)
-    (string-locale-ci=? a b posix-locale))
+    (let ([a-decomposition (parse-ietf-language-tag a)])
+      (if a-decomposition
+          (let ([b-decomposition (parse-ietf-language-tag b)])
+            (if b-decomposition
+                (equal? a-decomposition b-decomposition)
+                (not-an-ietf-language-tag 'ietf-language-tag=? b)))
+          (not-an-ietf-language-tag 'ietf-language-tag=? a))))
+
+  (define (not-an-ietf-language-tag who obj)
+    (assertion-violation who (_ "not an IETF language tag") obj))
 
   (define (reformat-ietf-language-tag tag)
     ;; See http://tools.ietf.org/html/rfc5646, section 2.1.1.
     (if (not (string? tag))
         tag
-        (let* ([subtags
-                (list->vector
-                 (map
-                  (cut string-map       ; Accept #\_ in place of #\-
-                       (lambda (c) (if (char=? c #\_) #\- c)) <>)
-                  (map (cut string-locale-downcase <> posix-locale)
-                       (string-split tag #\-))))]
-               [n (vector-length subtags)])
-          (when (<= 2 n)
-            (do ([i 1 (+ i 1)]) ([= i n])
-              (unless (= 1 (string-length (vector-ref subtags (- i 1))))
-                (let ([subtag (vector-ref subtags i)])
-                  (case (string-length subtag)
-                    [(2) (vector-set! subtags i
-                                      (string-locale-upcase
-                                       subtag posix-locale))]
-                    [(4) (vector-set! subtags i
-                                      (string-locale-titlecase
-                                       subtag posix-locale))]
-                    [else *unspecified*])))))
-          (string-join (vector->list subtags) "-"))))
+        (let* ([tag                     ; Accept #\_ in place of #\-
+                (string-map (lambda (c) (if (char=? c #\_) #\- c)) tag)]
+               [subtags
+                (map (cut string-locale-downcase <> posix-locale)
+                     (string-split tag #\-))])
+          (match subtags
+            [() ""]
+            [(lang) lang]
+            [((? string-length=1? x) . more-subtags)
+             (join-subtags (cons x more-subtags))]
+            [(lang . more-subtags)
+             (let-values
+                 ([(pre-singletons post-singletons)
+                   (break string-length=1? more-subtags)])
+               (join-subtags
+                (append (list lang)
+                        (map (lambda (subtag)
+                               (case (string-length subtag)
+                                 [(2) (string-locale-upcase
+                                       subtag posix-locale)]
+                                 [(4) (string-locale-titlecase
+                                       subtag posix-locale)]
+                                 [else subtag]))
+                             pre-singletons)
+                        post-singletons)))] ))))
+
+  (define join-subtags (cut string-join <> "-"))
+
+  (define (string-length=1? s)
+    (= 1 (string-length s)))
+
+;;;  (write (parse-ietf-language-tag "sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-2222-a-Foobar-x-b-1234-a-Foobar"))
+;;;  (newline)
+;;;  (write (ietf-language-tag=?
+;;;          "sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-a-Foobar-x-b-1234-a-Foobar"
+;;;          "SL-ABC-DEF-CYRL-yu-ROZAJ-SOLBA-1994-B-1234-A-FOOBAR-X-B-1234-A-FOOBAR"))
+;;;  (newline)
+;;;
+;;;  (write (parse-ietf-language-tag "x-sl-abc-def-Cyrl-YU-rozaj-solba-1994-b-1234-a-Foobar-x-b-1234-a-Foobar"))
+;;;  (newline)
+;;;
+;;;  (write (parse-ietf-language-tag "i-enoCHIAN"))
+;;;  (newline)
+;;;
+;;;  (write (parse-ietf-language-tag "i-enoCHIANfoo"))
+;;;  (newline)
 
   ) ;; end of library.

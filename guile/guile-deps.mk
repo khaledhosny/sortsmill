@@ -59,7 +59,7 @@ sortsmill/pure.go: sortsmill/i18n.go sortsmill/dynlink.go sortsmill/editor/final
 sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.go sortsmill/ffcompat.go sortsmill/editor/finalization.go sortsmill/strings.go
 sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/iconv.go
 sortsmill/strings/grabbed-strings.go: sortsmill/alloc.go
-sortsmill/strings/ietf-language-tags.go: sortsmill/strings/rexp.go
+sortsmill/strings/ietf-language-tags.go: sortsmill/strings/rexp.go sortsmill/i18n.go
 sortsmill/strings/rexp.go: sortsmill/dynlink.go
 sortsmill/svg/path-data.go: sortsmill/kwargs.go sortsmill/math/polyspline.go sortsmill/math/matrices.go sortsmill/math/geometry.go sortsmill/math/math-constants.go sortsmill/nearness.go
 sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
