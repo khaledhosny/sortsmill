@@ -817,8 +817,8 @@ SCttfApprox (SplineChar *sc, int layer)
       for (ss = ref->layers[0].splines; ss != NULL; ss = ss->next)
         {
           tss =
-            sc->
-            layers[layer].order2 ? SplinePointListCopy1 (ss) : SSttfApprox (ss);
+            sc->layers[layer].
+            order2 ? SplinePointListCopy1 (ss) : SSttfApprox (ss);
           if (head == NULL)
             head = tss;
           else
@@ -3324,20 +3324,20 @@ uint16_t
 head_table_flags (SplineFont *sf, enum fontformat format,
                   int32_t *bsizes, bool arabic, bool rl)
 {
-  uint16_t flags = 8 | 2 | 1; /* baseline at 0, lsbline at 0, round
-                                 ppem */
+  uint16_t flags = 8 | 2 | 1;   /* baseline at 0, lsbline at 0, round
+                                   ppem */
   if (format >= ff_ttf && format <= ff_ttfdfont)
     {
       if (AnyInstructions (sf))
-        flags = 0x10 | 8 | 4 | 2 | 1; /* baseline at 0, lsbline at 0,
-                                         round ppem, instructions may
-                                         depend on point size,
-                                         instructions change
-                                         metrics */
+        flags = 0x10 | 8 | 4 | 2 | 1;   /* baseline at 0, lsbline at 0,
+                                           round ppem, instructions may
+                                           depend on point size,
+                                           instructions change
+                                           metrics */
       else if (AnyMisleadingBitmapAdvances (sf, bsizes))
-        flags = 0x10 | 8 | 2 | 1; /* baseline at 0, lsbline at 0,
-                                     round ppem, instructions change
-                                     metrics */
+        flags = 0x10 | 8 | 2 | 1;       /* baseline at 0, lsbline at 0,
+                                           round ppem, instructions change
+                                           metrics */
     }
 
   // If a font contains embedded bitmaps, and if some of those bitmaps
@@ -3347,14 +3347,14 @@ head_table_flags (SplineFont *sf, enum fontformat format,
 
   // Apple flags.
   if (sf->hasvmetrics)
-    flags |= (1 << 5);         // Designed to be layed out vertically.
+    flags |= (1 << 5);          // Designed to be layed out vertically.
   // Bit 6 must be zero.
   if (arabic)
     flags |= (1 << 7);
   if (rl)
     flags |= (1 << 9);
   // End Apple flags.
-  
+
   if (sf->head_optimized_for_cleartype)
     flags |= (1 << 13);
 
@@ -4742,7 +4742,7 @@ compare_entry (const void *_mn1, const void *_mn2)
 }
 
 static void
-AddEncodedName (NamTab * nt, char *utf8name, uint16_t lang, uint16_t strid)
+AddEncodedName (NamTab *nt, char *utf8name, uint16_t lang, uint16_t strid)
 {
   NameEntry *ne;
   int maclang, macenc = -1, specific;
@@ -4937,8 +4937,10 @@ dumpnames (struct alltabs *at, SplineFont *sf, enum fontformat format)
 
   qsort (nt.entries, nt.cur, sizeof (NameEntry), compare_entry);
 
+  ///// FIXME FIXME FIXME: Support name table format 1.
+  
   at->name = tmpfile ();
-  putshort (at->name, 0);       /* format */
+  putshort (at->name, 0);
   putshort (at->name, nt.cur);  /* numrec */
   putshort (at->name, (3 + nt.cur * 6) * sizeof (int16_t));     /* offset to strings */
 

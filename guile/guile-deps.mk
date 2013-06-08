@@ -15,6 +15,7 @@ sortsmill/fonts/general.go: sortsmill/fonts/views.go sortsmill/fonts/fontinfo-di
 sortsmill/fonts/glyphs.go: sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__/glyphs.go
 sortsmill/fonts/head-table.go: sortsmill/dynlink.go
 sortsmill/fonts/hhea-table.go: sortsmill/dynlink.go
+sortsmill/fonts/name-table.go: sortsmill/strings/ietf-language-tags.go sortsmill/kwargs.go sortsmill/i18n.go
 sortsmill/fonts/os2-table.go: sortsmill/dynlink.go
 sortsmill/fonts/peg-spacing.go: sortsmill/fonts/glyphs.go sortsmill/fonts/anchors.go sortsmill/fontforge-api.go sortsmill/dynlink.go
 sortsmill/fonts/private-dict.go: sortsmill/dynlink.go
@@ -58,6 +59,7 @@ sortsmill/pure.go: sortsmill/i18n.go sortsmill/dynlink.go sortsmill/editor/final
 sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.go sortsmill/ffcompat.go sortsmill/editor/finalization.go sortsmill/strings.go
 sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sortsmill/iconv.go
 sortsmill/strings/grabbed-strings.go: sortsmill/alloc.go
+sortsmill/strings/ietf-language-tags.go: sortsmill/strings/rexp.go
 sortsmill/strings/rexp.go: sortsmill/dynlink.go
 sortsmill/svg/path-data.go: sortsmill/kwargs.go sortsmill/math/polyspline.go sortsmill/math/matrices.go sortsmill/math/geometry.go sortsmill/math/math-constants.go sortsmill/nearness.go
 sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
@@ -71,7 +73,7 @@ sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/containers.go: sortsmill/containers/rbmap.go sortsmill/containers/rnrs-hashtable.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go sortsmill/machine.go
-sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/general.go sortsmill/fonts/glyphs.go sortsmill/fonts/head-table.go sortsmill/fonts/hhea-table.go sortsmill/fonts/os2-table.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/private-dict.go sortsmill/fonts/psmat.go sortsmill/fonts/t1font-dict.go sortsmill/fonts/ufo.go sortsmill/fonts/views.go
+sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/general.go sortsmill/fonts/glyphs.go sortsmill/fonts/head-table.go sortsmill/fonts/hhea-table.go sortsmill/fonts/name-table.go sortsmill/fonts/os2-table.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/private-dict.go sortsmill/fonts/psmat.go sortsmill/fonts/t1font-dict.go sortsmill/fonts/ufo.go sortsmill/fonts/views.go
 sortsmill/gdraw-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go sortsmill/machine.go
 sortsmill/math.go: sortsmill/math/brentroot.go sortsmill/math/functions.go sortsmill/math/geometry.go sortsmill/math/gsl.go sortsmill/math/math-constants.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
 sortsmill/math/geometry.go: sortsmill/math/geometry/lines.go
@@ -79,5 +81,5 @@ sortsmill/math/gsl.go: sortsmill/math/gsl/error.go sortsmill/math/gsl/matrices.g
 sortsmill/math/matrices.go: sortsmill/math/matrices/arithmetic.go sortsmill/math/matrices/base.go sortsmill/math/matrices/bezout.go sortsmill/math/matrices/linalg.go
 sortsmill/math/polyspline.go: sortsmill/math/polyspline/add.go sortsmill/math/polyspline/bases.go sortsmill/math/polyspline/compose.go sortsmill/math/polyspline/deriv.go sortsmill/math/polyspline/div.go sortsmill/math/polyspline/elev.go sortsmill/math/polyspline/ellipses.go sortsmill/math/polyspline/eval.go sortsmill/math/polyspline/implicit.go sortsmill/math/polyspline/intersection.go sortsmill/math/polyspline/inversion.go sortsmill/math/polyspline/mul.go sortsmill/math/polyspline/reduce.go sortsmill/math/polyspline/roots.go sortsmill/math/polyspline/subdiv.go
 sortsmill/pkg-info.go: sortsmill/pkg-info/directory-layout.go sortsmill/pkg-info/i18n.go sortsmill/pkg-info/package.go sortsmill/pkg-info/pure.go sortsmill/pkg-info/python.go sortsmill/pkg-info/version.go
-sortsmill/strings.go: sortsmill/strings/gc.go sortsmill/strings/grabbed-strings.go sortsmill/strings/hash-guillemet.go sortsmill/strings/rexp.go sortsmill/strings/text-embedding.go
+sortsmill/strings.go: sortsmill/strings/gc.go sortsmill/strings/grabbed-strings.go sortsmill/strings/hash-guillemet.go sortsmill/strings/ietf-language-tags.go sortsmill/strings/rexp.go sortsmill/strings/text-embedding.go
 sortsmill/svg.go: sortsmill/svg/path-data.go

@@ -22356,6 +22356,9 @@ static struct flaglist sfnt_name_str_ids[] = {
   FLAGLIST_EMPTY                /* Sentinel */
 };
 
+/////
+///// FIXME FIXME FIXME: Support name table format 1.
+/////
 /* These don't get translated. They are a copy of a similar list in fontinfo.c */
 static struct flaglist sfnt_name_mslangs[] = {
   {"Afrikaans", 0x436},

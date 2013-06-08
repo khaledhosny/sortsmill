@@ -1568,8 +1568,18 @@ static struct titlelist
   NULL, NULL}}
 };
 
-/* There is a similar list at the end of python.c, untranslated strings for */
-/*  scripting use */
+/////
+///// FIXME FIXME FIXME: Support name table format 1.
+/////
+/* These strings get translated during an initialization.
+
+   FIXME: There is a similar list at the end of python.c (FIXME: but
+   to be moved to guile/sortsmill/fonts/name-table.scm), untranslated
+   strings for scripting use (but the list should not be duplicated
+   and therefore error-prone).
+
+   FIXME: Once the untranslated strings are in Guile we can call Guile
+   to translate the strings and write the translated strings here. */
 static GTextInfo mslanguages[] = {
   {(uint32_t *) NC_ ("Language", "Afrikaans"), NULL, 0, 0, (void *) 0x436,
    NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -2020,8 +2030,15 @@ static GTextInfo mslanguages[] = {
   GTEXTINFO_EMPTY
 };
 
-/* There is a similar list at the end of python.c, untranslated strings for */
-/*  scripting use */
+/* These strings get translated during an initialization.
+
+   FIXME: There is a similar list at the end of python.c (FIXME: but
+   to be moved to guile/sortsmill/fonts/name-table.scm), untranslated
+   strings for scripting use (but the list should not be duplicated
+   and therefore error-prone).
+
+   FIXME: Once the untranslated strings are in Guile we can call Guile
+   to translate the strings and write the translated strings here. */
 static GTextInfo ttfnameids[] = {
 /* Put styles (docs call it subfamily) first because it is most likely to change */
   {(uint32_t *) N_("Styles (SubFamily)"), NULL, 0, 0, (void *) 2, NULL, 0, 0,

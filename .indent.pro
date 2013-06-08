@@ -120,6 +120,7 @@
 -T MenuInfo
 -T MetricsView
 -T MMSet
+-T NamTab
 -T DBounds
 -T SplineChar
 -T SplineFont

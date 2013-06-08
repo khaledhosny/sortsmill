@@ -391,6 +391,13 @@ GO_FILES += sortsmill/fonts/hhea-table.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/hhea-table.scm
 
 
+# (sortsmill fonts name-table)
+
+DIST_SCM_FILES += sortsmill/fonts/name-table.scm
+GO_FILES += sortsmill/fonts/name-table.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/name-table.scm
+
+
 # (sortsmill fonts os2-table)
 
 DIST_SCM_FILES += sortsmill/fonts/os2-table.scm
@@ -882,6 +889,12 @@ STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/grabbed-strings.scm
 DIST_SCM_FILES += sortsmill/strings/hash-guillemet.scm
 GO_FILES += sortsmill/strings/hash-guillemet.go
 STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/hash-guillemet.scm
+
+# (sortsmill strings ietf-language-tags)
+
+DIST_SCM_FILES += sortsmill/strings/ietf-language-tags.scm
+GO_FILES += sortsmill/strings/ietf-language-tags.go
+STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/ietf-language-tags.scm
 
 # (sortsmill strings rexp)
 

@@ -1932,10 +1932,13 @@ IsSubSetOf (const char *substr, const char *fullstr)
   return (ch1 == '\0');
 }
 
+///// FIXME FIXME FIXME: Support name table format 1.
 static void
 TTFAddLangStr (FILE *ttf, struct ttfinfo *info, int id,
                int strlen, int stroff, int plat, int spec, int language)
 {
+  ///// FIXME FIXME FIXME: Support name table format 1.
+
   struct ttflangname *cur, *prev;
   char *str;
 

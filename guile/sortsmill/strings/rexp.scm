@@ -16,6 +16,12 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+;;;;
+;;;; FIXME: Add named subpattern support.
+;;;;
+;;;; FIXME: Set up more flexible handling of locales, perhaps.
+;;;;
+
 (library (sortsmill strings rexp)
 
   (export rexp? pointer->rexp rexp->pointer
