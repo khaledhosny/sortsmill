@@ -47,7 +47,7 @@
    ;;
    ;; The tag is first reformatted by reformat-ietf-language-tag. One
    ;; consequence is that equality of two decompositions can be tested
-   ;; case-sensitively.
+   ;; with ‘equal?’ (as long as you do not need canonicalization).
    ;;
    ;; If the tag is not well formed, then #f is returned. No further
    ;; validation is done.
@@ -97,7 +97,7 @@
   (define alphanum "[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]")
   (define singleton "[abcdefghijklmnopqrstuvwyzABCDEFGHIJKLMNOPQRSTUVWYZ0123456789]")
   (define digit "[0123456789]")
-  (define x-subtag "[xX]")
+  (define letter-x "[xX]")
 
   (define tag-end (format #f "(?=~a|\\z)" separator))
 
@@ -119,7 +119,7 @@
                                 separator singleton separator alphanum tag-end))
 
   (define privateuse-str (format #f "(~a(~a~a{1,8})+)\\z"
-                                 x-subtag separator alphanum))
+                                 letter-x separator alphanum))
 
   (define privateuse-subtags-str (format #f "~a~a" separator privateuse-str))
 
