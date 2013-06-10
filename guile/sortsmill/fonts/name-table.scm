@@ -19,6 +19,12 @@
 (library (sortsmill fonts name-table)
 
   (export
+   name-table-set!
+   name-table-remove!
+   name-table-ref
+
+   name-table:check-language
+
    ;; (name-table:name-id->mnemonic integer) → string or #f
    ;; (name-table:name-mnemonic->id string) → integer or #f
    ;; (name-table:windows-language-id->mnemonic integer) → string or #f
@@ -36,15 +42,25 @@
    name-table:name-mnemonics      ; Lists the primary mnemonics, only.
    name-table:windows-language-ids
    name-table:windows-language-mnemonics ; Lists the primary mnemonics, only.
+
+   name-table:read-from-sfnt-at-offset
    )
 
-  (import (sortsmill strings ietf-language-tags)
+  (import (sortsmill dynlink)
+          (sortsmill fonts opentype-io)
+          (sortsmill strings ietf-language-tags)
           (sortsmill kwargs)
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) take)
-          (only (srfi :26) cut))
+          (only (srfi :26) cut)
+          (system foreign))
+
+  ;;-------------------------------------------------------------------------
+
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_sortsmill_parsettf_guile"))
 
   ;;-------------------------------------------------------------------------
 
@@ -102,26 +118,53 @@
 
   (define/kwargs (name-table-set! name-table value name-id
                                   [language #x0409] ; US English, for platform=3 (Windows).
-                                  [platform 3])     ; Microsoft Windows.
+                                  [platform 3] ; Microsoft Windows.
+                                  [strict? #f])
     (assert (string? value))
-    (assert-platform-supported 'name-table-set! platform)
-    (let ([lst-without-old-entry
-           (remp (lambda (entry)
-                   (name-record-keys-match?
-                    'name-table-set! entry name-id language platform))
-                 (vector-ref name-table 0))]
-          [new-entry `#(,platform
-                        ,(reformat-ietf-language-tag language)
-                        ,name-id ,value)])
-      (vector-set! name-table 0 (cons new-entry lst-without-old-entry))))
+    (assert (and (integer? name-id) (not (negative? name-id))))
+;;;;;;    (assert-platform-supported 'name-table-set! platform)
+    (let ([language (name-table:check-language language)])
+      (if language
+        (let ([lst-without-old-entry
+               (remp (lambda (entry)
+                       (name-record-keys-match?
+                        'name-table-set! entry name-id language platform))
+                     (vector-ref name-table 0))]
+              [new-entry `#(,platform
+                            ,(reformat-ietf-language-tag language)
+                            ,name-id ,value)])
+          (vector-set! name-table 0 (cons new-entry lst-without-old-entry)))
+        (when strict?
+          (not-a-valid-language-id 'name-table-set! language)))))
+
+  (define/kwargs (name-table-remove! name-table name-id
+                                     [language #x0409] ; US English, for platform=3 (Windows).
+                                     [platform 3] ; Microsoft Windows.
+                                     [strict? #f])
+    (assert (and (integer? name-id) (not (negative? name-id))))
+;;;;;;    (assert-platform-supported 'name-table-remove! platform)
+    (let ([language (name-table:check-language language)])
+      (if language
+        (let ([lst-without-old-entry
+               (remp (lambda (entry)
+                       (name-record-keys-match?
+                        'name-table-remove! entry name-id language platform))
+                     (vector-ref name-table 0))])
+          (vector-set! name-table 0 lst-without-old-entry))
+        (when strict?
+          (not-a-valid-language-id 'name-table-set! language)))))
 
   (define/kwargs (name-table-ref name-table name-id
                                  [language #x0409] ; US English, for platform=3 (Windows).
                                  [platform 3])     ; Microsoft Windows.
-    (assert-platform-supported 'name-table-ref platform)
-    (assp (lambda (entry) (name-record-keys-match?
-                           'name-table-ref entry name-id language platform))
-          (vector-ref name-table 0)))
+    (assert (and (integer? name-id) (not (negative? name-id))))
+;;;;;;;    (assert-platform-supported 'name-table-ref platform)
+    (let ([language (name-table:check-language language)])
+      (if language
+          (assp (lambda (entry) (name-record-keys-match?
+                                 'name-table-ref entry name-id language platform))
+                (vector-ref name-table 0))
+          #f)))
 
   (define (name-record-keys-match? who name-record name-id language platform)
     (if (and (eqv? name-id (vector-ref name-record 2))
@@ -140,6 +183,19 @@
       (assertion-violation who
                            (_ "only platform 3 (Windows) is supported")
                            platform)))
+
+  (define (not-a-valid-language-id who language)
+    (assertion-violation who (_ "not a value language ID") language))
+
+  (define/kwargs (name-table:check-language language
+                                            [platform 3]) ; Microsoft Windows.
+;;;;;;;;    (assert-platform-supported 'name-table-ref platform)
+    (cond [(integer? language)        ; Platform-specific language ID.
+           (if (<= 0 language #x7fff) language #f)]
+          [(string? language)           ; An IETF language tag.
+           (let ([decomposition (parse-ietf-language-tag language)])
+             (if decomposition (unparse-ietf-language-tag decomposition) #f))]
+          [else #f]))
 
   ;;-------------------------------------------------------------------------
 
@@ -443,6 +499,42 @@
                                 windows-language-associations)]
            [langs (map cdr pairs-without-dups)])
       (lambda () langs)))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (name-table:read-from-sfnt-at-offset port/fd offset)
+    (let ([port (if (port? port/fd) port/fd (fdes->inport port/fd))])
+      (ot:at-port-position
+       port offset
+       (lambda ()
+         (let* ([table-format (ot:read-USHORT port)]
+                [namerec-count (ot:read-USHORT port)]
+                [string-offset (ot:read-USHORT port)])
+           (format #t "table-format = ~a\n" table-format)
+           (format #t "namerec-count = ~a\n" namerec-count)
+           (format #t "string-offset = ~a\n" string-offset)
+           )))))
+
+  (define (read-name-record port string-buffer-position)
+    (let* ([platform-id (ot:read-USHORT port)]
+           [encoding-id (ot:read-USHORT port)]
+           [language-id (ot:read-USHORT port)]
+           [length (ot:read-USHORT port)]
+           [offset (ot:read-USHORT port)]
+           [str (read-ot-string length
+                                port (+ string-buffer-position offset)
+                                platform-id encoding-id language-id)])
+      (if str
+          #(platform-id language-id name-id str)
+          #f)))
+
+  (define (read-ot-string length port offset platform
+                          platform-specific-encoding language)
+    (let ([bv (ot:read-string length port offset)])
+      (recode-ot-string-as-utf8 (bytevector->pointer bv)
+                                (bytevector-length bv)
+                                platform platform-specific-encoding
+                                language)))
 
   ;;-------------------------------------------------------------------------
 

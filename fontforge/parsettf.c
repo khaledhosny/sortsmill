@@ -51,6 +51,7 @@
 #include <locale.h>
 #include <gwidget.h>
 #include "ttf.h"
+#include <sortsmill/xgc.h>
 
 VISIBLE char *SaveTablesPref;
 VISIBLE int ask_user_for_cmap = false;
@@ -645,7 +646,7 @@ enc_from_platspec (int platform, int specific)
         enc = "EUC-CN";
     }
   else if (platform == 2)
-    {                           /* obselete */
+    {                           /* obsolete */
       if (specific == 0)
         enc = "ASCII";
       else if (specific == 1)
@@ -706,29 +707,23 @@ enc_from_platspec (int platform, int specific)
 }
 
 static char *
-_readencstring (FILE *ttf, int offset, int len,
-                int platform, int specific, int language)
+recode_ot_string_as_utf8 (void *data, size_t len,
+                          int platform, int specific, int language)
 {
-  long pos = ftell (ttf);
-  uint32_t *str, *pt;
+  uint32_t *str;
+  uint32_t *pt;
   char *ret;
-  int i, ch;
   Encoding *enc;
-
-  fseek (ttf, offset, SEEK_SET);
 
   if (platform == 1)
     {
-      /* Mac is screwy, there are several different varients of MacRoman */
-      /*  depending on the language, they didn't get it right when they  */
-      /*  invented their script system */
-      char *cstr, *cpt;
-      cstr = cpt = xmalloc (len + 1);
-      for (i = 0; i < len; ++i)
-        *cpt++ = getc (ttf);
-      *cpt = '\0';
+      /* Mac is screwy, there are several different variants of
+         MacRoman depending on the language. They didn't get it right
+         when they invented their script system. */
+      char *cstr = x_gc_malloc_atomic (len + 1);
+      cstr[len] = '\0';
+      memcpy (cstr, data, len);
       ret = MacStrToUtf8 (cstr, specific, language);
-      free (cstr);
     }
   else
     {
@@ -737,49 +732,151 @@ _readencstring (FILE *ttf, int offset, int len,
         return (NULL);
       if (enc->is_unicodebmp)
         {
-          str = pt =
-            xmalloc ((sizeof (uint32_t) / 2) * len + sizeof (uint32_t));
-          for (i = 0; i < len / 2; ++i)
+          str =
+            x_gc_malloc_atomic ((sizeof (uint32_t) / 2) * len +
+                                sizeof (uint32_t));
+          pt = str;
+          uint8_t *dp = (uint8_t *) data;
+          for (size_t i = 0; i < len / 2; ++i)
             {
-              ch = getc (ttf) << 8;
-              *pt++ = ch | getc (ttf);
+              *pt = (dp[0] << 8) | dp[1];
+              pt++;
+              dp += 2;
             }
           *pt = 0;
         }
       else if (enc->unicode != NULL)
         {
-          str = pt = xmalloc (sizeof (uint32_t) * len + sizeof (uint32_t));
-          for (i = 0; i < len; ++i)
-            *pt++ = enc->unicode[getc (ttf)];
+          str =
+            x_gc_malloc_atomic (sizeof (uint32_t) * len + sizeof (uint32_t));
+          pt = str;
+          uint8_t *dp = (uint8_t *) data;
+          for (size_t i = 0; i < len; ++i)
+            {
+              *pt = enc->unicode[dp[0]];
+              pt++;
+              dp++;
+            }
           *pt = 0;
         }
       else if (enc->tounicode != NULL)
         {
-          size_t inlen = len + 1, outlen = sizeof (uint32_t) * (len + 1);
-          char *cstr = xmalloc (inlen), *cpt;
+          char *cstr = x_gc_malloc_atomic (len);
+          memcpy (cstr, data, len);
+          str = x_gc_malloc_atomic (sizeof (uint32_t) * (len + 1));
+
           ICONV_CONST char *in = cstr;
-          char *out;
-          for (cpt = cstr, i = 0; i < len; ++i)
-            *cpt++ = getc (ttf);
-          str = xmalloc (outlen + sizeof (uint32_t));
-          out = (char *) str;
+          size_t inlen = len;
+          char *out = (char *) str;
+          size_t outlen = sizeof (uint32_t) * len;
           iconv (enc->tounicode, &in, &inlen, &out, &outlen);
-          out[0] = '\0';
-          out[1] = '\0';
-          out[2] = '\0';
-          out[3] = '\0';
-          free (cstr);
+          out[0] = 0;
+          out[1] = 0;
+          out[2] = 0;
+          out[3] = 0;
         }
       else
         {
-          str = x_u8_to_u32 ("");
+          str = x_gc_u8_to_u32 ("");
         }
       ret = NULL_PASSTHRU (str, x_u32_to_u8 (str));
-      free (str);
     }
-  fseek (ttf, pos, SEEK_SET);
   return (ret);
 }
+
+static char *
+_readencstring (FILE *ttf, int offset, int len,
+                int platform, int specific, int language)
+{
+  const long pos = ftell (ttf);
+  fseek (ttf, offset, SEEK_SET);
+  char *buf = x_gc_malloc_atomic (len);
+  fread (buf, 1, len, ttf);
+  char *s = recode_ot_string_as_utf8 (buf, len, platform, specific, language);
+  fseek (ttf, pos, SEEK_SET);
+  return s;
+}
+
+/// FIXME: OLD CODE, RETAINED ONLY TEMPORARILY, for reference.
+///
+///static char *
+///_readencstring (FILE *ttf, int offset, int len,
+///                int platform, int specific, int language)
+///{
+///  long pos = ftell (ttf);
+///  uint32_t *str, *pt;
+///  char *ret;
+///  int i, ch;
+///  Encoding *enc;
+///
+///  fseek (ttf, offset, SEEK_SET);
+///
+///  if (platform == 1)
+///    {
+///      /* Mac is screwy, there are several different variants of
+///         MacRoman depending on the language. They didn't get it right
+///         when they invented their script system. */
+///      char *cstr, *cpt;
+///      cstr = cpt = xmalloc (len + 1);
+///      for (i = 0; i < len; ++i)
+///        *cpt++ = getc (ttf);
+///      *cpt = '\0';
+///      ret = MacStrToUtf8 (cstr, specific, language);
+///      free (cstr);
+///    }
+///  else
+///    {
+///      enc = enc_from_platspec (platform, specific);
+///      if (enc == NULL)
+///        return (NULL);
+///      if (enc->is_unicodebmp)
+///        {
+///          str = pt =
+///            xmalloc ((sizeof (uint32_t) / 2) * len + sizeof (uint32_t));
+///          for (i = 0; i < len / 2; ++i)
+///            {
+///              ch = getc (ttf) << 8;
+///              *pt++ = ch | getc (ttf);
+///            }
+///          *pt = 0;
+///        }
+///      else if (enc->unicode != NULL)
+///        {
+///          str = pt = xmalloc (sizeof (uint32_t) * len + sizeof (uint32_t));
+///          for (i = 0; i < len; ++i)
+///            *pt++ = enc->unicode[getc (ttf)];
+///          *pt = 0;
+///        }
+///      else if (enc->tounicode != NULL)
+///        {
+///          //
+///          // FIXME: These lengths, I believe, are too great by 1.
+///          //
+///          size_t inlen = len + 1, outlen = sizeof (uint32_t) * (len + 1);
+///          char *cstr = xmalloc (inlen), *cpt;
+///          ICONV_CONST char *in = cstr;
+///          char *out;
+///          for (cpt = cstr, i = 0; i < len; ++i)
+///            *cpt++ = getc (ttf);
+///          str = xmalloc (outlen + sizeof (uint32_t));
+///          out = (char *) str;
+///          iconv (enc->tounicode, &in, &inlen, &out, &outlen);
+///          out[0] = '\0';
+///          out[1] = '\0';
+///          out[2] = '\0';
+///          out[3] = '\0';
+///          free (cstr);
+///        }
+///      else
+///        {
+///          str = x_u8_to_u32 ("");
+///        }
+///      ret = NULL_PASSTHRU (str, x_u32_to_u8 (str));
+///      free (str);
+///    }
+///  fseek (ttf, pos, SEEK_SET);
+///  return (ret);
+///}
 
 char *
 TTFGetFontName (FILE *ttf, int32_t offset, int32_t off2)
@@ -2094,6 +2191,9 @@ FindLangEntry (struct ttfinfo *info, int id)
   return (ret);
 }
 
+/////
+///// FIXME FIXME FIXME: Support name table format 1.
+/////
 struct otfname *
 FindAllLangEntries (FILE *ttf, struct ttfinfo *info, int id)
 {
@@ -2138,11 +2238,26 @@ FindAllLangEntries (FILE *ttf, struct ttfinfo *info, int id)
   return (head);
 }
 
+/////
+///// FIXME FIXME FIXME: Support name table format 1.
+/////
 static void
 readttfcopyrights (FILE *ttf, struct ttfinfo *info)
 {
   int i, cnt, tableoff;
   int platform, specific, language, name, str_len, stroff;
+
+#if 0
+  // FIXME: Temporary code for activation during name table reimplementation.
+  //???????????????????????????????????????????????????????????????????????????????????????????????????????????
+  //fprintf (stderr, "=========================================================================\n");
+  scm_call_2 (scm_c_public_ref
+              ("sortsmill", "name-table:read-from-sfnt-at-offset"),
+              scm_from_int (fileno (ttf)),
+              scm_from_uintmax (info->copyright_start));
+  //  fprintf (stderr, "=========================================================================\n");
+  //???????????????????????????????????????????????????????????????????????????????????????????????????????????
+#endif
 
   if (info->copyright_start != 0)
     {
@@ -5306,8 +5421,7 @@ ApplyVariationSequenceSubtable (FILE *ttf, uint32_t vs_map,
                     }
                   else
                     {
-                      altuni =
-                        xzalloc (sizeof (struct altuni));
+                      altuni = xzalloc (sizeof (struct altuni));
                       altuni->unienc = uni;
                       altuni->vs = vs_data[i].vs;
                       altuni->fid = 0;
@@ -5353,8 +5467,7 @@ ApplyVariationSequenceSubtable (FILE *ttf, uint32_t vs_map,
                   else
                     {
                       SplineChar *sc = info->chars[curgid];
-                      struct altuni *altuni =
-                        xzalloc (sizeof (struct altuni));
+                      struct altuni *altuni = xzalloc (sizeof (struct altuni));
                       altuni->unienc = uni;
                       altuni->vs = vs_data[i].vs;
                       altuni->fid = 0;
@@ -6412,8 +6525,7 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
       EncMap *map = NULL;
       struct pschars *chars = info->fd->chars;
       if (info->map == NULL)
-        info->map = map =
-          EncMapNew (65536, FindOrMakeEncoding ("UnicodeBmp"));
+        info->map = map = EncMapNew (65536, FindOrMakeEncoding ("UnicodeBmp"));
       /* In type42 fonts the names are stored in a postscript /CharStrings dictionary */
       for (i = 0; i < chars->next; ++i)
         {
@@ -7144,7 +7256,7 @@ PseudoEncodeUnencoded (EncMap *map, struct ttfinfo *info)
 static void
 MapDoBack (EncMap *map, struct ttfinfo *info)
 {
-  if (map != NULL)             // @var{map} may be NULL for CID fonts.
+  if (map != NULL)              // @var{map} may be NULL for CID fonts.
     rebuild_gid_to_enc (map);
 }
 
@@ -7684,3 +7796,35 @@ NamesReadTTF (char *filename)
   fclose (ttf);
   return (ret);
 }
+
+//-------------------------------------------------------------------------
+
+static SCM
+scm_recode_ot_string_as_utf8 (SCM data, SCM len, SCM platform, SCM specific,
+                              SCM language)
+{
+  scm_dynwind_begin (0);
+
+  char *s =
+    recode_ot_string_as_utf8 (scm_to_pointer (data), scm_to_size_t (len),
+                              scm_to_int (platform), scm_to_int (specific),
+                              scm_to_int (language));
+  scm_dynwind_free (s);
+
+  SCM result = (s == NULL) ? SCM_BOOL_F : scm_from_utf8_string (s);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+void init_sortsmill_parsettf_guile (void);
+
+VISIBLE void
+init_sortsmill_parsettf_guile (void)
+{
+  scm_c_define_gsubr ("recode-ot-string-as-utf8", 5, 0, 0,
+                      scm_recode_ot_string_as_utf8);
+}
+
+//-------------------------------------------------------------------------

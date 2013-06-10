@@ -398,6 +398,13 @@ GO_FILES += sortsmill/fonts/name-table.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/name-table.scm
 
 
+# (sortsmill fonts opentype-io)
+
+DIST_SCM_FILES += sortsmill/fonts/opentype-io.scm
+GO_FILES += sortsmill/fonts/opentype-io.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/opentype-io.scm
+
+
 # (sortsmill fonts os2-table)
 
 DIST_SCM_FILES += sortsmill/fonts/os2-table.scm
