@@ -482,8 +482,8 @@ SplineCharFreeTypeRasterize (void *freetypecontext, int gid,
     goto fail;
   if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[gid],
                      depth ==
-                     1 ? (FT_LOAD_RENDER | FT_LOAD_TARGET_MONO) :
-                     FT_LOAD_RENDER))
+                     1 ? (FT_LOAD_NO_AUTOHINT | FT_LOAD_RENDER | FT_LOAD_TARGET_MONO) :
+                     (FT_LOAD_NO_AUTOHINT | FT_LOAD_RENDER)))
     goto fail;
 
   slot = ftc->face->glyph;
@@ -744,8 +744,8 @@ FreeType_GridFitChar (void *single_glyph_context, int enc,
 
   if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc],
                      depth ==
-                     1 ? (FT_LOAD_NO_BITMAP | FT_LOAD_TARGET_MONO) :
-                     FT_LOAD_NO_BITMAP))
+                     1 ? (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP | FT_LOAD_TARGET_MONO) :
+                     (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP)))
     return (NULL);
 
   slot = ftc->face->glyph;
@@ -802,8 +802,8 @@ FreeType_GetRaster (void *single_glyph_context,
 
   if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc],
                      depth ==
-                     1 ? (FT_LOAD_NO_BITMAP | FT_LOAD_TARGET_MONO) :
-                     FT_LOAD_NO_BITMAP))
+                     1 ? (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP | FT_LOAD_TARGET_MONO) :
+                     (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP)))
     return (NULL);
 
   slot = ((FT_Face) (ftc->face))->glyph;
