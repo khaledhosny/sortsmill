@@ -320,8 +320,10 @@ static void *StartChar(void *_dc) {
  goto finish;
 
     massive_kludge = dc;
-    FT_Load_Glyph(dc->ftc->face,dc->ftc->glyph_indeces[dc->sc->orig_pos],
-	    dc->is_bitmap ? (FT_LOAD_NO_AUTOHINT|FT_LOAD_NO_BITMAP|FT_LOAD_TARGET_MONO) : (FT_LOAD_NO_AUTOHINT|FT_LOAD_NO_BITMAP));
+    FT_Int32 load_flags = FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP;
+    if (dc->is_bitmap)
+	load_flags |= FT_LOAD_TARGET_MONO;
+    FT_Load_Glyph(dc->ftc->face,dc->ftc->glyph_indeces[dc->sc->orig_pos], load_flags);
 
  finish:
     dc->has_finished = true;

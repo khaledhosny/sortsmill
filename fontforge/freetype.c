@@ -477,13 +477,15 @@ SplineCharFreeTypeRasterize (void *freetypecontext, int gid,
 
   if (ftc->glyph_indeces[gid] == -1)
     goto fail;
-  if (FT_Set_Char_Size
-      (ftc->face, (int) (ptsize * 64), (int) (ptsize * 64), dpi, dpi))
+
+  if (FT_Set_Char_Size (ftc->face, ptsize * 64, 0, dpi, 0))
     goto fail;
-  if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[gid],
-                     depth ==
-                     1 ? (FT_LOAD_NO_AUTOHINT | FT_LOAD_RENDER | FT_LOAD_TARGET_MONO) :
-                     (FT_LOAD_NO_AUTOHINT | FT_LOAD_RENDER)))
+
+  FT_Int32 load_flags = FT_LOAD_NO_AUTOHINT | FT_LOAD_RENDER;
+  if (depth == 1)
+    load_flags |= FT_LOAD_TARGET_MONO;
+
+  if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[gid], load_flags))
     goto fail;
 
   slot = ftc->face->glyph;
@@ -742,10 +744,11 @@ FreeType_GridFitChar (void *single_glyph_context, int enc,
       (ftc->face, (int) (ptsizex * 64), (int) (ptsizey * 64), dpi, dpi))
     return (NULL);              /* Error Return */
 
-  if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc],
-                     depth ==
-                     1 ? (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP | FT_LOAD_TARGET_MONO) :
-                     (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP)))
+  FT_Int32 load_flags = FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP;
+  if (depth == 1)
+    load_flags |= FT_LOAD_TARGET_MONO;
+
+  if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc], load_flags));
     return (NULL);
 
   slot = ftc->face->glyph;
@@ -800,10 +803,11 @@ FreeType_GetRaster (void *single_glyph_context,
       (ftc->face, (int) (ptsizex * 64), (int) (ptsizey * 64), dpi, dpi))
     return (NULL);              /* Error Return */
 
-  if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc],
-                     depth ==
-                     1 ? (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP | FT_LOAD_TARGET_MONO) :
-                     (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP)))
+  FT_Int32 load_flags = FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP;
+  if (depth == 1)
+    load_flags |= FT_LOAD_TARGET_MONO;
+
+  if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc], load_flags))
     return (NULL);
 
   slot = ((FT_Face) (ftc->face))->glyph;
