@@ -54,14 +54,14 @@ hasFreeType (void)
   static bool ok = false;
 
   if (done)
-    return (ok);
+    return ok;
   done = true;
 
   if (FT_Init_FreeType (&ff_ft_context))
-    return (false);
+    return false;
 
   ok = true;
-  return (true);
+  return true;
 }
 
 void
@@ -76,12 +76,12 @@ bool
 hasFreeTypeByteCode (void)
 {
   if (!hasFreeType ())
-    return (false);
+    return false;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-  return (true);
+  return true;
 #else
-  return (false);
+  return false;
 #endif
 }
 
@@ -89,13 +89,13 @@ bool
 hasFreeTypeDebugger (void)
 {
   if (!hasFreeTypeByteCode ())
-    return (false);
+    return false;
 #if FREETYPE_HAS_DEBUGGER
   if (FT_Set_Debug_Hook != NULL && TT_RunIns != NULL)
-    return (true);
+    return true;
 #endif
 
-  return (false);
+  return false;
 }
 
 char *
@@ -105,10 +105,10 @@ FreeTypeStringVersion (void)
   static char buffer[60];
 
   if (!hasFreeType ())
-    return ("");
+    return "";
   FT_Library_Version (ff_ft_context, &ma, &mi, &pa);
   sprintf (buffer, "FreeType %d.%d.%d", ma, mi, pa);
-  return (buffer);
+  return buffer;
 }
 
 static void
@@ -177,9 +177,9 @@ __FreeTypeFontContext (FT_Library context,
   int i, cnt, notdefpos;
 
   if (context == NULL)
-    return (NULL);
+    return NULL;
   if (sf->multilayer || sf->strokedfont)
-    return (NULL);
+    return NULL;
 
   ftc = xcalloc (1, sizeof (FTC));
   if (shared_ftc != NULL)
@@ -201,7 +201,7 @@ __FreeTypeFontContext (FT_Library context,
       if (ftc->file == NULL)
         {
           free (ftc);
-          return (NULL);
+          return NULL;
         }
 
       old = sf->glyphs;
@@ -358,7 +358,7 @@ __FreeTypeFontContext (FT_Library context,
     goto fail;
   GlyphHashFree (sf);           /* If we created a tiny font, our hash table may reflect that */
 
-  return (ftc);
+  return ftc;
 
 fail:
   sf->internal_temp = false;
@@ -369,7 +369,7 @@ fail:
       free (sf->glyphs);
       sf->glyphs = old;
     }
-  return (NULL);
+  return NULL;
 }
 
 void *
@@ -379,7 +379,7 @@ _FreeTypeFontContext (SplineFont *sf, SplineChar *sc, FontViewBase *fv,
 {
 
   if (!hasFreeType ())
-    return (NULL);
+    return NULL;
 
   return (__FreeTypeFontContext (ff_ft_context, sf, sc, fv,
                                  layer, ff, flags, shared_ftc));
@@ -447,7 +447,7 @@ BdfCFromBitmap (FT_Bitmap * bitmap, int bitmap_left,
   BCCompressBitmap (bdfc);
   if (depth != 1 && depth != 8)
     BCTruncateToDepth (bdfc, depth);
-  return (bdfc);
+  return bdfc;
 }
 
 static BDFChar *
@@ -457,12 +457,12 @@ BDFCReClut (BDFChar *bdfc)
   uint8_t *pt, *end;
 
   if (bdfc == NULL)
-    return (NULL);
+    return NULL;
   pt = bdfc->bitmap;
   end = pt + bdfc->bytes_per_line * (bdfc->ymax - bdfc->ymin + 1);
   while (pt < end)
     *pt++ *= 17;
-  return (bdfc);
+  return bdfc;
 }
 
 BDFChar *
@@ -492,11 +492,11 @@ SplineCharFreeTypeRasterize (void *freetypecontext, int gid,
   sc = ftc->sf->glyphs[gid];
   bdfc = BdfCFromBitmap (&slot->bitmap, slot->bitmap_left, slot->bitmap_top,
                          pixelsize, depth, sc, &slot->metrics);
-  return (bdfc);
+  return bdfc;
 
 fail:
   if (depth == 1)
-    return (SplineCharRasterize (ftc->sf->glyphs[gid], ftc->layer, pixelsize));
+    return SplineCharRasterize (ftc->sf->glyphs[gid], ftc->layer, pixelsize);
   else
     return (BDFCReClut
             (SplineCharAntiAlias
@@ -553,7 +553,7 @@ SplineFontFreeTypeRasterize (void *freetypecontext, int pixelsize, int depth)
     }
   while (k < sf->subfontcnt);
   ff_progress_end_indicator ();
-  return (bdf);
+  return bdf;
 }
 
 /* ************************************************************************** */
@@ -630,7 +630,7 @@ FT_MoveTo (const FT_Vector * to, void *user)
       context->last->ttfindex = context->orig_sp->ttfindex;
       context->last->nextcpindex = context->orig_sp->nextcpindex;
     }
-  return (0);
+  return 0;
 }
 
 static int
@@ -653,7 +653,7 @@ FT_LineTo (const FT_Vector * to, void *user)
           sp->nextcpindex = context->orig_sp->nextcpindex;
         }
     }
-  return (0);
+  return 0;
 }
 
 static int
@@ -682,7 +682,7 @@ FT_ConicTo (const FT_Vector * _cp, const FT_Vector * to, void *user)
     }
   if (sp->ttfindex == 0xfffe)
     sp->ttfindex = 0xffff;
-  return (0);
+  return 0;
 }
 
 static int
@@ -707,7 +707,7 @@ FT_CubicTo (const FT_Vector * cp1, const FT_Vector * cp2,
       if (context->orig_sp != NULL)
         sp->ttfindex = context->orig_sp->ttfindex;
     }
-  return (0);
+  return 0;
 }
 
 static FT_Outline_Funcs outlinefuncs = {
@@ -729,7 +729,7 @@ FreeType_GridFitChar (void *single_glyph_context, int enc,
   static int bc_checked = false;
 
   if (ftc->face == (void *) -1)
-    return (NULL);
+    return NULL;
 
   if (!bc_checked && ftc->isttf)
     {
@@ -742,14 +742,14 @@ FreeType_GridFitChar (void *single_glyph_context, int enc,
 
   if (FT_Set_Char_Size
       (ftc->face, (int) (ptsizex * 64), (int) (ptsizey * 64), dpi, dpi))
-    return (NULL);              /* Error Return */
+    return NULL;              /* Error Return */
 
   FT_Int32 load_flags = FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP;
   if (depth == 1)
     load_flags |= FT_LOAD_TARGET_MONO;
 
   if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc], load_flags));
-    return (NULL);
+    return NULL;
 
   slot = ftc->face->glyph;
   memset (&outline_context, '\0', sizeof (outline_context));
@@ -783,9 +783,9 @@ FreeType_GridFitChar (void *single_glyph_context, int enc,
     {
       FT_ClosePath (&outline_context);
       *width = outline_context.scalex * slot->advance.x;
-      return (outline_context.hcpl);
+      return outline_context.hcpl;
     }
-  return (NULL);
+  return NULL;
 }
 
 struct freetype_raster *
@@ -797,27 +797,27 @@ FreeType_GetRaster (void *single_glyph_context,
   FTC *ftc = (FTC *) single_glyph_context;
 
   if (ftc->face == (void *) -1)
-    return (NULL);
+    return NULL;
 
   if (FT_Set_Char_Size
       (ftc->face, (int) (ptsizex * 64), (int) (ptsizey * 64), dpi, dpi))
-    return (NULL);              /* Error Return */
+    return NULL;              /* Error Return */
 
   FT_Int32 load_flags = FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_BITMAP;
   if (depth == 1)
     load_flags |= FT_LOAD_TARGET_MONO;
 
   if (FT_Load_Glyph (ftc->face, ftc->glyph_indeces[enc], load_flags))
-    return (NULL);
+    return NULL;
 
   slot = ((FT_Face) (ftc->face))->glyph;
   if (FT_Render_Glyph
       (slot, depth == 1 ? ft_render_mode_mono : ft_render_mode_normal))
-    return (NULL);
+    return NULL;
 
   if (slot->bitmap.pixel_mode != ft_pixel_mode_mono &&
       slot->bitmap.pixel_mode != ft_pixel_mode_grays)
-    return (NULL);
+    return NULL;
   ret = xmalloc (sizeof (struct freetype_raster));
 
   ret->rows = slot->bitmap.rows;
@@ -830,7 +830,7 @@ FreeType_GetRaster (void *single_glyph_context,
   /* But the obvious seems to work */
   ret->bitmap = xmalloc (ret->rows * ret->bytes_per_row);
   memcpy (ret->bitmap, slot->bitmap.buffer, ret->rows * ret->bytes_per_row);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -990,7 +990,7 @@ LayerAllOutlines (Layer *layer)
   RefChar *r;
 
   if (layer->refs == NULL)
-    return (layer->splines);
+    return layer->splines;
   head = SplinePointListCopy (layer->splines);
   if (head != NULL)
     for (last = head; last->next != NULL; last = last->next);
@@ -1010,7 +1010,7 @@ LayerAllOutlines (Layer *layer)
           for (; last->next != NULL; last = last->next);
         }
     }
-  return (head);
+  return head;
 }
 
 static SplineSet *
@@ -1046,7 +1046,7 @@ StrokeOutline (Layer *layer, SplineChar *sc)
               for (; tail->next != NULL; tail = tail->next);
             }
         }
-      return (head);
+      return head;
     }
   else
     {
@@ -1054,7 +1054,7 @@ StrokeOutline (Layer *layer, SplineChar *sc)
       si.join = layer->stroke_pen.linejoin;
       si.cap = layer->stroke_pen.linecap;
       si.stroke_type = si_std;
-      return (SplineSetStroke (layer->splines, &si, layer->order2));
+      return SplineSetStroke (layer->splines, &si, layer->order2);
     }
 }
 
@@ -1068,7 +1068,7 @@ RStrokeOutline (struct reflayer *layer, SplineChar *sc)
   si.join = layer->stroke_pen.linejoin;
   si.cap = layer->stroke_pen.linecap;
   si.stroke_type = si_std;
-  return (SplineSetStroke (layer->splines, &si, layer->order2));
+  return SplineSetStroke (layer->splines, &si, layer->order2);
 }
 
 static void
@@ -1160,16 +1160,16 @@ SplineCharFreeTypeRasterizeNoHints (SplineChar *sc, int layer,
   SplineSet *all;
 
   if (!hasFreeType ())
-    return (NULL);
+    return NULL;
   if (sc->layers[layer].order2 && sc->parent->strokedfont)
-    return (NULL);
+    return NULL;
   if (sc->layers[layer].order2 && sc->parent->multilayer)
     {
       /* I don't support stroking of order2 splines */
       for (i = ly_fore; i < sc->layer_cnt; ++i)
         {
           if (sc->layers[i].dostroke)
-            return (NULL);
+            return NULL;
         }
     }
   if (sc->parent->multilayer)
@@ -1178,7 +1178,7 @@ SplineCharFreeTypeRasterizeNoHints (SplineChar *sc, int layer,
       for (i = ly_fore; i < sc->layer_cnt; ++i)
         {
           if (sc->layers[i].images != NULL)
-            return (NULL);
+            return NULL;
         }
     }
 
@@ -1334,7 +1334,7 @@ SplineCharFreeTypeRasterizeNoHints (SplineChar *sc, int layer,
                         (int) rint ((ptsize * dpi) / 72.0), depth, sc, NULL);
     }
   free (bitmap.buffer);
-  return (bdfc);
+  return bdfc;
 }
 
 BDFFont *
@@ -1382,7 +1382,7 @@ SplineFontFreeTypeRasterizeNoHints (SplineFont *sf, int layer, int pixelsize,
     }
   while (k < sf->subfontcnt);
   ff_progress_end_indicator ();
-  return (bdf);
+  return bdf;
 }
 
 void *
