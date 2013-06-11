@@ -22,8 +22,9 @@
    name-table-set!
    name-table-remove!
    name-table-ref
+   name-table-partition
 
-   name-table:check-language
+   name-table:check-language-id
 
    ;; (name-table:name-id->mnemonic integer) → string or #f
    ;; (name-table:name-mnemonic->id string) → integer or #f
@@ -53,7 +54,7 @@
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) take)
+          (only (srfi :1) take list-tabulate partition)
           (only (srfi :26) cut)
           (system foreign))
 
@@ -98,8 +99,7 @@
   ;;
   ;;    #(platform-id language-id name-id value)
   ;;
-  ;; The platform-id field currently always is a Guile integer equal
-  ;; to 3, meaning the ‘Windows’ platform.
+  ;; The platform-id is an unsigned Guile integer.
   ;;
   ;; The language-id is either an unsigned Guile integer less than
   ;; #x8000 or a Guile string. If it is an integer, then it represents a
@@ -116,86 +116,109 @@
   ;;  
   ;;-------------------------------------------------------------------------
 
-  (define/kwargs (name-table-set! name-table value name-id
-                                  [language #x0409] ; US English, for platform=3 (Windows).
-                                  [platform 3] ; Microsoft Windows.
-                                  [strict? #f])
+  (define/kwargs (name-table-set! name-table platform-id language-id name-id
+                                  value [strict? #f])
     (assert (string? value))
     (assert (and (integer? name-id) (not (negative? name-id))))
-;;;;;;    (assert-platform-supported 'name-table-set! platform)
-    (let ([language (name-table:check-language language)])
-      (if language
-        (let ([lst-without-old-entry
-               (remp (lambda (entry)
-                       (name-record-keys-match?
-                        'name-table-set! entry name-id language platform))
-                     (vector-ref name-table 0))]
-              [new-entry `#(,platform
-                            ,(reformat-ietf-language-tag language)
-                            ,name-id ,value)])
-          (vector-set! name-table 0 (cons new-entry lst-without-old-entry)))
-        (when strict?
-          (not-a-valid-language-id 'name-table-set! language)))))
+    (assert-name-table-platform-supported 'name-table-set! platform-id)
+    (let ([language-id (name-table:check-language-id language-id)])
+      (if language-id
+          (let ([lst-without-old-entry
+                 (remp (lambda (entry)
+                         (name-record-keys-match?
+                          'name-table-set! entry platform-id language-id name-id))
+                       (vector-ref name-table 0))]
+                [new-entry `#(,platform-id
+                              ,(reformat-ietf-language-tag language-id)
+                              ,name-id ,value)])
+            (vector-set! name-table 0 (cons new-entry lst-without-old-entry)))
+          (when strict?
+            (not-a-valid-language-id 'name-table-set! language-id)))))
 
-  (define/kwargs (name-table-remove! name-table name-id
-                                     [language #x0409] ; US English, for platform=3 (Windows).
-                                     [platform 3] ; Microsoft Windows.
-                                     [strict? #f])
-    (assert (and (integer? name-id) (not (negative? name-id))))
-;;;;;;    (assert-platform-supported 'name-table-remove! platform)
-    (let ([language (name-table:check-language language)])
-      (if language
-        (let ([lst-without-old-entry
-               (remp (lambda (entry)
-                       (name-record-keys-match?
-                        'name-table-remove! entry name-id language platform))
-                     (vector-ref name-table 0))])
-          (vector-set! name-table 0 lst-without-old-entry))
-        (when strict?
-          (not-a-valid-language-id 'name-table-set! language)))))
+  (define/kwargs (name-table-remove! name-table platform-id language-id
+                                     name-id [strict? #f])
+    (assert (or (eq? name-id #t) (and (integer? name-id) (not (negative? name-id)))))
+    (unless (eq? platform-id #t)
+      (assert-name-table-platform-supported 'name-table-remove! platform-id))
+    (let ([language-id (name-table:check-language-id language-id #t)])
+      (if language-id
+          (let ([lst-without-old-entry
+                 (remp (lambda (entry)
+                         (name-record-keys-match?
+                          'name-table-remove! entry platform-id language-id name-id))
+                       (vector-ref name-table 0))])
+            (vector-set! name-table 0 lst-without-old-entry))
+          (when strict?
+            (not-a-valid-language-id 'name-table-set! language-id)))))
 
-  (define/kwargs (name-table-ref name-table name-id
-                                 [language #x0409] ; US English, for platform=3 (Windows).
-                                 [platform 3])     ; Microsoft Windows.
-    (assert (and (integer? name-id) (not (negative? name-id))))
-;;;;;;;    (assert-platform-supported 'name-table-ref platform)
-    (let ([language (name-table:check-language language)])
-      (if language
-          (assp (lambda (entry) (name-record-keys-match?
-                                 'name-table-ref entry name-id language platform))
-                (vector-ref name-table 0))
-          #f)))
+  (define/kwargs (name-table-ref name-table platform-id language-id name-id
+                                 [strict? #f])
+    (assert (or (eq? name-id #t) (and (integer? name-id) (not (negative? name-id)))))
+    (unless (eq? platform-id #t)
+      (assert-name-table-platform-supported 'name-table-ref platform-id))
+    (let ([language-id (name-table:check-language-id language-id #t)])
+      (if language-id
+          (let ([sublist
+                 (memp (lambda (entry) (name-record-keys-match?
+                                        'name-table-ref entry platform-id language-id
+                                        name-id))
+                       (vector-ref name-table 0))])
+            (if sublist (car sublist) #f))
+          (if strict?
+              (not-a-valid-language-id 'name-table-set! language-id)
+              #f))))
 
-  (define (name-record-keys-match? who name-record name-id language platform)
-    (if (and (eqv? name-id (vector-ref name-record 2))
-             (eqv? platform (vector-ref name-record 3)))
-        (cond [(integer? language)
-               (eqv? language (vector-ref name-record 1))]
-              [(string? language)
-               (ietf-language-tag=? language (vector-ref name-record 1))]
-              [else
-               (assertion-violation who (_ "expected an integer or string")
-                                    platform)])
+  (define/kwargs (name-table-partition name-table
+                                       [platform-id #t]
+                                       [language-id #t]
+                                       [name-id #t])
+    (let ([language-id (name-table:check-language-id language-id #t)])
+      (if language-id
+          (let-values ([(matched unmatched)
+                        (partition
+                         (lambda (entry)
+                           (name-record-keys-match? 'name-table-ref entry
+                                                    platform-id language-id
+                                                    name-id))
+                         (vector-ref name-table 0))])
+            (values `#(,matched) `#(,unmatched)))
+          (values #f #f))))
+
+  (define (name-record-keys-match? who name-record platform-id language-id name-id )
+    (if (and (or (eq? name-id #t) (eqv? name-id (vector-ref name-record 2)))
+             (or (eq? platform-id #t) (eqv? platform-id (vector-ref name-record 0))))
+        (if (eq? language-id #t)
+            #t
+            (cond [(integer? language-id)
+                   (eqv? language-id (vector-ref name-record 1))]
+                  [(string? language-id)
+                   (ietf-language-tag=? language-id (vector-ref name-record 1))]
+                  [else
+                   (assertion-violation who (_ "expected an integer or string")
+                                        language-id)]))
         #f))
 
-  (define (assert-platform-supported who platform)
-    (unless (eqv? platform 3)
-      (assertion-violation who
-                           (_ "only platform 3 (Windows) is supported")
-                           platform)))
+  (define/kwargs (name-table:check-language-id language-id [allow-wildcard? #f])
+    (if (and allow-wildcard? (eq? language-id #t))
+        #t
+        (cond [(integer? language-id)     ; Platform-specific language ID.
+               (if (<= 0 language-id #x7fff) language-id #f)]
+              [(string? language-id)        ; An IETF language tag.
+               (let ([decomposition (parse-ietf-language-tag language-id)])
+                 (if decomposition (unparse-ietf-language-tag decomposition) #f))]
+              [else #f])))
+
+  (define (assert-name-table-platform-supported who platform-id)
+    ;; Platforms that may appear in a ‘name’ table. (There are more
+    ;; that may appear in a ‘cmap’ table.)
+    (unless (or (eqv? platform-id 0)       ; Unicode.
+                (eqv? platform-id 1)       ; Macintosh.
+                (eqv? platform-id 3))      ; Windows.
+      (assertion-violation who (_ "platform ID not supported in name tables")
+                           platform-id)))
 
   (define (not-a-valid-language-id who language)
     (assertion-violation who (_ "not a value language ID") language))
-
-  (define/kwargs (name-table:check-language language
-                                            [platform 3]) ; Microsoft Windows.
-;;;;;;;;    (assert-platform-supported 'name-table-ref platform)
-    (cond [(integer? language)        ; Platform-specific language ID.
-           (if (<= 0 language #x7fff) language #f)]
-          [(string? language)           ; An IETF language tag.
-           (let ([decomposition (parse-ietf-language-tag language)])
-             (if decomposition (unparse-ietf-language-tag decomposition) #f))]
-          [else #f]))
 
   ;;-------------------------------------------------------------------------
 
@@ -509,23 +532,42 @@
        (lambda ()
          (let* ([table-format (ot:read-USHORT port)]
                 [namerec-count (ot:read-USHORT port)]
-                [string-offset (ot:read-USHORT port)])
+                [string-offset (ot:read-USHORT port)]
+                [namerecs
+                 (list-tabulate namerec-count
+                                (lambda (i)
+                                  (read-name-record
+                                   port (+ offset string-offset))))]
+                [name-table `#(,namerecs)])
            (format #t "table-format = ~a\n" table-format)
            (format #t "namerec-count = ~a\n" namerec-count)
            (format #t "string-offset = ~a\n" string-offset)
+           (format #t "e = ~a\n" (name-table-ref name-table 3 #t #t))
+           #;(format #t "e = ~a\n" (name-table-remove! name-table 3 #t #t))
+           (format #t "e = ~a\n" (name-table-set! name-table 3 1033 14 "set!"))
+           (format #t "e = ~a\n" (name-table-ref name-table 3 #t #t))
+           (format #t "e = ~a\n" (name-table-remove! name-table 3 #t #t))
+           (format #t "e = ~a\n" (name-table-ref name-table 3 #t #t))
+           ;;(format #t "name-table = ~a\n" name-table)
+           #;(let-values ([(a b) (name-table-partition name-table
+                                                     #:platform-id 1)])
+             (format #t "partitioned name-table a = ~a\n" a)
+             (format #t "partitioned name-table b = ~a\n" b)
+             )
            )))))
 
   (define (read-name-record port string-buffer-position)
     (let* ([platform-id (ot:read-USHORT port)]
            [encoding-id (ot:read-USHORT port)]
            [language-id (ot:read-USHORT port)]
+           [name-id (ot:read-USHORT port)]
            [length (ot:read-USHORT port)]
            [offset (ot:read-USHORT port)]
            [str (read-ot-string length
                                 port (+ string-buffer-position offset)
                                 platform-id encoding-id language-id)])
       (if str
-          #(platform-id language-id name-id str)
+          `#(,platform-id ,language-id ,name-id ,str)
           #f)))
 
   (define (read-ot-string length port offset platform
