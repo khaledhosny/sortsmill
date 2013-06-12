@@ -633,15 +633,29 @@
       (post-fontforge-error
        (_ "Bad Font Name")
        (format #f
-               (_ "The PostScript font name (Naming Table entry 6)\nfor platform ~a is assigned a language ID\nother than the platform-specific code for US English.")
+               (_ "A PostScript font name (Naming Table entry 6)\nfor platform ~a is assigned a language ID\nother than the platform-specific code for US English.\nOpenType requires that applications ignore it.")
                platform-id)))
 
     (define (warn-bad-platform platform-id)
       (post-fontforge-error
        (_ "Bad Font Name")
        (format #f
-               (_ "Their is a PostScript font name entry\n(Naming Table entry 6) for platform ~a,\nwhich is not allowed.")
+               (_ "Their is a PostScript font name entry\n(Naming Table entry 6) for platform ~a;\nOpenType requires that applications ignore it.")
                platform-id)))
+
+    (define (warn-missing-platform platform-id)
+      (post-fontforge-error
+       (_ "Bad Font Name")
+       (format #f
+               (_ "Their is a PostScript font name entry\n(Naming Table entry 6) for platform ~a is missing.\nIf a PostScript font name is included,\nthere must be entries for both platforms 1 and 3.")
+               platform-id)))
+
+    (define (warn-nonidentical-value value1 value3)
+      (post-fontforge-error
+       (_ "Bad Font Name")
+       (format #f
+               (_ "The PostScript font name entries (Naming Table entry 6)\nfor platforms 1 and 3 are not identical:\n~a\n~a")
+               value1 value3)))
 
     (let* ([bad-ps-name #f]
            [new-namerecs
@@ -649,13 +663,10 @@
              (lambda (nrec)
                (match nrec
                  [#((? (lambda (p) (= p 1)) platform-id)
-                    language-id
+                    (? (lambda (g) (= g 0)) language-id)
                     (? (lambda (n) (eqv? 6 n)) name-id)
                     value)
                   ;; PostScript name for Macintosh platform.
-                  (unless (zero? language-id)
-                    (set! bad-ps-name #t)
-                    (warn-bad-language platform-id))
                   (let-values ([(ps-name errors)
                                 (validate-postscript-font-name value)])
                     (unless (null? errors)
@@ -664,13 +675,10 @@
                     `#(,platform-id 0 ,name-id ,ps-name))]
 
                  [#((? (lambda (p) (= p 3)) platform-id)
-                    language-id
+                    (? (lambda (g) (= g #x409)) language-id)
                     (? (lambda (n) (eqv? 6 n)) name-id)
                     value)
                   ;; PostScript name for Windows platform.
-                  (unless (= #x409 language-id)
-                    (set! bad-ps-name #t)
-                    (warn-bad-language platform-id))
                   (let-values ([(ps-name errors)
                                 (validate-postscript-font-name value)])
                     (unless (null? errors)
@@ -678,15 +686,46 @@
                       (warn-bad-name value errors platform-id))
                     `#(,platform-id #x409 ,name-id ,ps-name))]
 
+                 [#((? (lambda (p) (or (= p 1) (= p 3))) platform-id)
+                    language-id
+                    (? (lambda (n) (eqv? 6 n)) name-id)
+                    _)
+                  (set! bad-ps-name #t)
+                  (warn-bad-language platform-id)]
+
                  [#(platform-id _ (? (lambda (n) (eqv? 6 n)) name-id) _)
-                  ;; PostScript name for other platforms. These are not
-                  ;; allowed by OpenType, so ignore the name record.
+                  ;; PostScript name for other platforms. These are required
+                  ;; by OpenType to be ignored.
                   (set! bad-ps-name #t)
                   (warn-bad-platform platform-id)
                   #f]
 
                  [nrec nrec]))
              namerecs)])
+
+      (let ([platform1-sublist
+             (memp (lambda (entry)
+                     (name-record-keys-match? 'fix-postscript-font-name
+                                              entry 1 0 6))
+                   namerecs)]
+            [platform3-sublist
+             (memp (lambda (entry)
+                     (name-record-keys-match? 'fix-postscript-font-name
+                                              entry 3 #x409 6))
+                   namerecs)])
+        (match (cons platform1-sublist platform3-sublist)
+          [(#f . #f) *unspecified*]
+          [(#f . _)
+           (set! bad-ps-name #t)
+           (warn-missing-platform 1)]
+          [(_ . #f)
+           (set! bad-ps-name #t)
+           (warn-missing-platform 3)]
+          [((#(_ _ _ val1) . _) . (#(_ _ _ val3) . _))
+           (unless (string=? val1 val3)
+             (set! bad-ps-name #t)
+             (warn-nonidentical-value val1 val3))]))
+
       (values namerecs bad-ps-name)))
 
   (define (read-ot-string length port offset platform
