@@ -690,12 +690,16 @@
                     language-id
                     (? (lambda (n) (eqv? 6 n)) name-id)
                     _)
+                  ;; PostScript name with language other than the
+                  ;; platform-specific ID for US English. OpenType
+                  ;; requires it be ignored, so we will leave it out.
                   (set! bad-ps-name #t)
-                  (warn-bad-language platform-id)]
+                  (warn-bad-language platform-id)
+                  #f]
 
                  [#(platform-id _ (? (lambda (n) (eqv? 6 n)) name-id) _)
-                  ;; PostScript name for other platforms. These are required
-                  ;; by OpenType to be ignored.
+                  ;; PostScript name for other platforms. OpenType
+                  ;; requires it be ignored, so we will leave it out.
                   (set! bad-ps-name #t)
                   (warn-bad-platform platform-id)
                   #f]
