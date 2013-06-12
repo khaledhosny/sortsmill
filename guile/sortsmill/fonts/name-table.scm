@@ -50,13 +50,17 @@
   (import (sortsmill dynlink)
           (sortsmill fonts opentype-io)
           (sortsmill strings ietf-language-tags)
+          (sortsmill postscript)
           (sortsmill kwargs)
+          (sortsmill notices)
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) take list-tabulate partition)
+          (only (srfi :1) take filter-map list-tabulate partition)
           (only (srfi :26) cut)
-          (system foreign))
+          (system foreign)
+          (ice-9 match)
+          (ice-9 format))
 
   ;;-------------------------------------------------------------------------
 
@@ -530,30 +534,41 @@
       (ot:at-port-position
        port offset
        (lambda ()
-         (let* ([table-format (ot:read-USHORT port)]
-                [namerec-count (ot:read-USHORT port)]
-                [string-offset (ot:read-USHORT port)]
-                [namerecs
-                 (list-tabulate namerec-count
-                                (lambda (i)
-                                  (read-name-record
-                                   port (+ offset string-offset))))]
-                [name-table `#(,namerecs)])
+         (let*-values
+             ([(table-format) (ot:read-USHORT port)]
+              [(namerec-count) (ot:read-USHORT port)]
+              [(string-offset) (ot:read-USHORT port)]
+              [(namerecs)
+               (list-tabulate namerec-count
+                              (lambda (i)
+                                (read-name-record
+                                 port (+ offset string-offset))))]
+              [(langtag-count) (if (= 1 table-format) (ot:read-USHORT port) 0)]
+              [(langtagrecs)
+               (list-tabulate langtag-count
+                              (lambda (i)
+                                (read-lang-tag-record
+                                 port (+ offset string-offset))))]
+              [(namerecs) (fix-up-namerecs namerecs langtagrecs)]
+              [(namerecs bad-ps-name) (fix-postscript-font-name namerecs)]
+              [(name-table) `#(,namerecs)])
+           #|
            (format #t "table-format = ~a\n" table-format)
            (format #t "namerec-count = ~a\n" namerec-count)
            (format #t "string-offset = ~a\n" string-offset)
            (format #t "e = ~a\n" (name-table-ref name-table 3 #t #t))
-           #;(format #t "e = ~a\n" (name-table-remove! name-table 3 #t #t))
+           ;;(format #t "e = ~a\n" (name-table-remove! name-table 3 #t #t))
            (format #t "e = ~a\n" (name-table-set! name-table 3 1033 14 "set!"))
            (format #t "e = ~a\n" (name-table-ref name-table 3 #t #t))
            (format #t "e = ~a\n" (name-table-remove! name-table 3 #t #t))
            (format #t "e = ~a\n" (name-table-ref name-table 3 #t #t))
-           ;;(format #t "name-table = ~a\n" name-table)
-           #;(let-values ([(a b) (name-table-partition name-table
-                                                     #:platform-id 1)])
-             (format #t "partitioned name-table a = ~a\n" a)
-             (format #t "partitioned name-table b = ~a\n" b)
-             )
+           |#
+           (format #t "name-table = ~a\n" name-table)
+           ;;(let-values ([(a b) (name-table-partition name-table
+           ;;                                          #:platform-id 1)])
+           ;;  (format #t "partitioned name-table a = ~a\n" a)
+           ;;  (format #t "partitioned name-table b = ~a\n" b)
+           ;;  )
            )))))
 
   (define (read-name-record port string-buffer-position)
@@ -570,6 +585,110 @@
           `#(,platform-id ,language-id ,name-id ,str)
           #f)))
 
+  (define (read-lang-tag-record port string-buffer-position)
+    (let* ([length (ot:read-USHORT port)]
+           [offset (ot:read-USHORT port)]
+           [bv (ot:read-string length port (+ string-buffer-position offset))]
+           [str (utf16->string bv (endianness big))]
+           [decomposition (parse-ietf-language-tag str)]
+           [tag (if decomposition (unparse-ietf-language-tag decomposition) #f)])
+      tag))
+
+  (define (fix-up-namerecs namerecs langtagrecs)
+    (let* ([tags (list->vector langtagrecs)]
+           [n (vector-length tags)])
+      (filter-map
+       (lambda (nrec)
+         (let ([language-id (vector-ref nrec 1)])
+           (cond
+            [(< language-id #x8000) nrec] ; Platform-specific language ID.
+            [(< (- language-id #x8000) n) ; IETF language tag.
+             (let* ([i (- language-id #x8000)]
+                    [tag (vector-ref tags i)])
+               (cond
+                [tag `#(,(vector-ref nrec 0)
+                        ,tag
+                        ,(vector-ref nrec 2)
+                        ,(vector-ref nrec 3))]
+                [else
+                 ;; Ignore any name record whose language tag is
+                 ;; unparseable.
+                 #f]))]
+            [else
+             ;; Ignore any name record whose platform-specific
+             ;; language ID is greater than #x7FFF.
+             #f])))
+       namerecs)))
+
+  (define (fix-postscript-font-name namerecs)
+
+    (define (warn-bad-name value errors platform-id)
+      (post-fontforge-error
+       (_ "Bad Font Name")
+       (format #f
+               (_ "The PostScript font name \"~a\"\nfor platform ~a is invalid.\nThe PostScript name should be printable ASCII,\nmust not contain (){}[]<>%%/, space,\nor a byte order mark,\nmust be no longer than 63 characters,\nand cannot be a PostScript number.")
+               value platform-id)))
+
+    (define (warn-bad-language platform-id)
+      (post-fontforge-error
+       (_ "Bad Font Name")
+       (format #f
+               (_ "The PostScript font name (Naming Table entry 6)\nfor platform ~a is assigned a language ID\nother than the platform-specific code for US English.")
+               platform-id)))
+
+    (define (warn-bad-platform platform-id)
+      (post-fontforge-error
+       (_ "Bad Font Name")
+       (format #f
+               (_ "Their is a PostScript font name entry\n(Naming Table entry 6) for platform ~a,\nwhich is not allowed.")
+               platform-id)))
+
+    (let* ([bad-ps-name #f]
+           [new-namerecs
+            (filter-map
+             (lambda (nrec)
+               (match nrec
+                 [#((? (lambda (p) (= p 1)) platform-id)
+                    language-id
+                    (? (lambda (n) (eqv? 6 n)) name-id)
+                    value)
+                  ;; PostScript name for Macintosh platform.
+                  (unless (zero? language-id)
+                    (set! bad-ps-name #t)
+                    (warn-bad-language platform-id))
+                  (let-values ([(ps-name errors)
+                                (validate-postscript-font-name value)])
+                    (unless (null? errors)
+                      (set! bad-ps-name #t)
+                      (warn-bad-name value errors platform-id))
+                    `#(,platform-id 0 ,name-id ,ps-name))]
+
+                 [#((? (lambda (p) (= p 3)) platform-id)
+                    language-id
+                    (? (lambda (n) (eqv? 6 n)) name-id)
+                    value)
+                  ;; PostScript name for Windows platform.
+                  (unless (= #x409 language-id)
+                    (set! bad-ps-name #t)
+                    (warn-bad-language platform-id))
+                  (let-values ([(ps-name errors)
+                                (validate-postscript-font-name value)])
+                    (unless (null? errors)
+                      (set! bad-ps-name #t)
+                      (warn-bad-name value errors platform-id))
+                    `#(,platform-id #x409 ,name-id ,ps-name))]
+
+                 [#(platform-id _ (? (lambda (n) (eqv? 6 n)) name-id) _)
+                  ;; PostScript name for other platforms. These are not
+                  ;; allowed by OpenType, so ignore the name record.
+                  (set! bad-ps-name #t)
+                  (warn-bad-platform platform-id)
+                  #f]
+
+                 [nrec nrec]))
+             namerecs)])
+      (values namerecs bad-ps-name)))
+
   (define (read-ot-string length port offset platform
                           platform-specific-encoding language)
     (let ([bv (ot:read-string length port offset)])
@@ -577,6 +696,50 @@
                                 (bytevector-length bv)
                                 platform platform-specific-encoding
                                 language)))
+
+  ;;-------------------------------------------------------------------------
+
+  (define* (validate-postscript-font-name font-name)
+    (let*-values
+        ([(name errors) (values font-name '())]
+         [(name errors) (check-for-byte-order-mark name errors)]
+         [(name errors) (check-for-postscript-number name errors)]
+         [(name errors) (check-for-illegal-characters name errors)]
+         [(name errors) (check-for-font-name-too-long name errors)])
+      (values name errors)))
+
+  (define (check-for-byte-order-mark font-name errors)
+    (if (and (positive? (string-length font-name))
+             (char=? #\xFEFF (string-ref font-name 0)))
+        (values (substring font-name 1) (cons 'byte-order-mark errors))
+        (values font-name errors)))
+
+  (define (check-for-postscript-number font-name errors)
+    (if (postscript-number? font-name)
+        (values (string-append "font-" font-name)
+                (cons 'postscript-number errors))
+        (values font-name errors)))
+
+  (define char-set:postscript-name-legal-chars
+    (char-set-delete (char-set-intersection char-set:ascii char-set:graphic)
+                     #\( #\[ #\{ #\< #\) #\] #\} #\> #\% #\/))
+
+  (define (check-for-illegal-characters font-name errors)
+    (let ([mapped-name (string-map
+                        (lambda (c)
+                          (if (char-set-contains?
+                               char-set:postscript-name-legal-chars c)
+                              c
+                              #\_))
+                        font-name)])
+      (values mapped-name (if (string=? font-name mapped-name)
+                              errors
+                              (cons 'illegal-characters errors)))))
+
+  (define (check-for-font-name-too-long font-name errors)
+    (if (< 63 (string-length font-name))
+        (values (substring font-name 0 63) (cons 'too-long errors))
+        (values font-name errors)))
 
   ;;-------------------------------------------------------------------------
 

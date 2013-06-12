@@ -1906,9 +1906,9 @@ ValidatePostScriptFontName (struct ttfinfo *info, char *str)
   char *end, *pt, *npt;
   int complained = false;
 
-  /* someone gave me a font where the fontname started with the utf8 byte */
-  /*  order mark.  PLRM says only ASCII encoding is supported. CFF says */
-  /*  only printable ASCII should be used */
+  /* someone gave me a font where the fontname started with the utf8
+     byte order mark.  PLRM says only ASCII encoding is supported. CFF
+     says only printable ASCII should be used. */
   if (((uint8_t *) str)[0] == 0xef && ((uint8_t *) str)[1] == 0xbb
       && ((uint8_t *) str)[2] == 0xbf)
     {
@@ -1939,8 +1939,10 @@ ValidatePostScriptFontName (struct ttfinfo *info, char *str)
           if (!complained)
             {
               ff_post_error (_("Bad Font Name"),
-                             _
-                             ("The PostScript font name \"%.63s\" is invalid.\nIt should be printable ASCII,\nmust not contain (){}[]<>%%/ or space\nand must be shorter than 63 characters"),
+                             _("The PostScript font name \"%.63s\" is invalid.\n"
+                               "It should be printable ASCII,\n"
+                               "must not contain (){}[]<>%%/ or space\n"
+                               "and must be shorter than 63 characters"),
                              str);
               info->bad_ps_fontname = true;
             }
@@ -1954,8 +1956,10 @@ ValidatePostScriptFontName (struct ttfinfo *info, char *str)
   if (strlen (str) > 63)
     {
       ff_post_error (_("Bad Font Name"),
-                     _
-                     ("The PostScript font name \"%.63s\" is invalid.\nIt should be printable ASCII,\nmust not contain (){}[]<>%%/ or space\nand must be shorter than 63 characters"),
+                     _("The PostScript font name \"%.63s\" is invalid.\n"
+                       "It should be printable ASCII,\n"
+                       "must not contain (){}[]<>%%/ or space\n"
+                       "and must be shorter than 63 characters"),
                      str);
       info->bad_ps_fontname = true;
       str[63] = '\0';
