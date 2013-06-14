@@ -4873,7 +4873,7 @@ AddEncodedName (NamTab *nt, char *utf8name, uint16_t lang, uint16_t strid)
   nt->cur = ne - nt->entries;
 }
 
-/* There's an inconsistancy here. Apple's docs say there most be only one */
+/* There's an inconsistency here. Apple's docs say there most be only one */
 /*  nameid==6 and that name must be ascii (presumably plat=1, spec=0, lang=0) */
 /* The opentype docs say there must be two (psl=1,0,0 & psl=3,1,0x409) any */
 /*  others are to be ignored */
