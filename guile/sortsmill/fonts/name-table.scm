@@ -594,6 +594,7 @@
            encoded-namerecs)]
          [(namerecs ps-name-errors) (fix-postscript-font-name namerecs)])
       (unless (null? ps-name-errors)
+;;;;;        (format #t "ps-name-errors = ~a\n" ps-name-errors)
         (set! errors (cons (list 'ps-name-errors ps-name-errors) errors)))
       (values `#(,namerecs) errors)))
 
@@ -692,58 +693,51 @@
                (_ "The PostScript font name entries (Naming Table entry 6)\nfor platforms 1 and 3 are not identical:\n~a\n~a")
                value1 value3)))
 
-    (let* ([ps-name-errors '()]
-           [new-namerecs
-            (filter-map
-             (lambda (nrec)
-               (match nrec
-                 [#((? (lambda (p) (= p 1)) platform-id)
-                    (? (lambda (g) (= g 0)) language-id)
-                    (? (lambda (n) (eqv? 6 n)) name-id)
-                    value)
-                  ;; PostScript name for Macintosh platform.
-                  (let-values ([(ps-name errors)
-                                (validate-postscript-font-name value)])
-                    (unless (null? errors)
-                      (set! ps-name-errors (append errors ps-name-errors))
-                      (warn-bad-name value errors platform-id))
-                    `#(,platform-id 0 ,name-id ,ps-name))]
+    (define (fix-individual-entries namerecs)
+      (let ([namerecs-and-errors
+             (map
+              (match-lambda
+               [#((? (lambda (p) (= p 1)) platform-id)
+                  (? (lambda (g) (= g 0)) language-id)
+                  (? (lambda (n) (eqv? 6 n)) name-id)
+                  value)
+                ;; PostScript name for Macintosh platform.
+                (let-values ([(ps-name errors)
+                              (validate-postscript-font-name value)])
+                  (unless (null? errors)
+                    (warn-bad-name value errors platform-id))
+                  (cons `#(,platform-id 0 ,name-id ,ps-name) errors))]
+               [#((? (lambda (p) (= p 3)) platform-id)
+                  (? (lambda (g) (= g #x409)) language-id)
+                  (? (lambda (n) (eqv? 6 n)) name-id)
+                  value)
+                ;; PostScript name for Windows platform.
+                (let-values ([(ps-name errors)
+                              (validate-postscript-font-name value)])
+                  (unless (null? errors)
+                    (warn-bad-name value errors platform-id))
+                  (cons `#(,platform-id #x409 ,name-id ,ps-name) errors))]
+               [#((? (lambda (p) (or (= p 1) (= p 3))) platform-id)
+                  language-id
+                  (? (lambda (n) (eqv? 6 n)) name-id)
+                  _)
+                ;; PostScript name with language other than the
+                ;; platform-specific ID for US English. OpenType
+                ;; requires it be ignored, so we will leave it out.
+                (warn-bad-language platform-id)
+                (cons #f (list (list 'bad-language-id platform-id language-id)))]
+               [#(platform-id _ (? (lambda (n) (eqv? 6 n)) name-id) _)
+                ;; PostScript name for other platforms. OpenType
+                ;; requires it be ignored, so we will leave it out.
+                (warn-bad-platform platform-id)
+                (cons #f (list (list 'bad-platform-id platform-id)))]
+               [nrec (cons nrec '())])
+              namerecs)])
+        (values (filter-map car namerecs-and-errors)
+                (fold-left (lambda (prior n&e) (append (cdr n&e) prior))
+                           '() namerecs-and-errors))))
 
-                 [#((? (lambda (p) (= p 3)) platform-id)
-                    (? (lambda (g) (= g #x409)) language-id)
-                    (? (lambda (n) (eqv? 6 n)) name-id)
-                    value)
-                  ;; PostScript name for Windows platform.
-                  (let-values ([(ps-name errors)
-                                (validate-postscript-font-name value)])
-                    (unless (null? errors)
-                      (set! ps-name-errors (append errors ps-name-errors))
-                      (warn-bad-name value errors platform-id))
-                    `#(,platform-id #x409 ,name-id ,ps-name))]
-
-                 [#((? (lambda (p) (or (= p 1) (= p 3))) platform-id)
-                    language-id
-                    (? (lambda (n) (eqv? 6 n)) name-id)
-                    _)
-                  ;; PostScript name with language other than the
-                  ;; platform-specific ID for US English. OpenType
-                  ;; requires it be ignored, so we will leave it out.
-                  (set! ps-name-errors
-                        (cons (list 'bad-language-id) ps-name-errors))
-                  (warn-bad-language platform-id)
-                  #f]
-
-                 [#(platform-id _ (? (lambda (n) (eqv? 6 n)) name-id) _)
-                  ;; PostScript name for other platforms. OpenType
-                  ;; requires it be ignored, so we will leave it out.
-                  (set! ps-name-errors
-                        (cons (list 'bad-platform-id) ps-name-errors))
-                  (warn-bad-platform platform-id)
-                  #f]
-
-                 [nrec nrec]))
-             namerecs)])
-
+    (define (check-entry-pairing namerecs)
       (let ([platform1-sublist
              (memp (lambda (entry)
                      (name-record-keys-match? 'fix-postscript-font-name
@@ -755,22 +749,24 @@
                                               entry 3 #x409 6))
                    namerecs)])
         (match (cons platform1-sublist platform3-sublist)
-          [(#f . #f) *unspecified*]
+          [(#f . #f) '()]
           [(#f . _)
-           (set! ps-name-errors
-                 (cons (list 'missing-platform 1) ps-name-errors))
-           (warn-missing-platform 1)]
+           (warn-missing-platform 1)
+           (list (list 'missing-platform 1))]
           [(_ . #f)
-           (set! ps-name-errors
-                 (cons (list 'missing-platform 3) ps-name-errors))
-           (warn-missing-platform 3)]
+           (warn-missing-platform 3)
+           (list (list 'missing-platform 3))]
           [((#(_ _ _ val1) . _) . (#(_ _ _ val3) . _))
-           (unless (string=? val1 val3)
-             (set! ps-name-errors
-                   (cons (list 'nonidentical-values val1 val3) ps-name-errors))
-             (warn-nonidentical-values val1 val3))]))
+           (if (string=? val1 val3)
+               '()
+               (begin
+                 (warn-nonidentical-values val1 val3)
+                 (list (list 'nonidentical-values val1 val3))))])))
 
-      (values namerecs ps-name-errors)))
+    (let*-values
+        ([(pairing-errors) (check-entry-pairing namerecs)]
+         [(namerecs indiv-errors) (fix-individual-entries namerecs)])
+      (values namerecs (append pairing-errors indiv-errors))))
 
   ;;-------------------------------------------------------------------------
 
@@ -831,6 +827,9 @@
            [table-format (if (zero? langtagrec-count) 0 1)]
            [namerec-size 12]
            [namerecs-total-size (* namerec-size namerec-count)]
+           [nrec-str-offsets (namerec-string-offsets encoded-namerecs)]
+           [namerec-str-offsets (car nrec-str-offsets)]
+           [namerec-strings-size (cadr nrec-str-offsets)]
            [langtagrec-size 4]
            [langtagrecs-total-size (* langtagrec-size langtagrec-count)]
            [string-offset (case table-format
@@ -839,8 +838,29 @@
       (ot:write-USHORT port table-format)
       (ot:write-USHORT port namerec-count)
       (ot:write-USHORT port string-offset)
-;;;      (format #t "namerec-count = ~a\n" namerec-count)
-;;;      (format #t "table-format = ~a\n" table-format)
+      (for-each
+       (lambda (nrec str-offset)
+         (match nrec
+           [#(platform-id language-id name-id value encoding-id)
+            (ot:write-USHORT port platform-id)
+            (ot:write-USHORT port encoding-id)
+            (if (string? language-id)
+                'not-yet-implemented-?????????????????????????????????????????????????????????????????????????
+                (ot:write-USHORT port language-id))
+            (ot:write-USHORT port name-id)
+            (ot:write-USHORT port (bytevector-length value))
+            (ot:write-USHORT port str-offset)]))
+       encoded-namerecs namerec-str-offsets)
       ))
+
+  (define (namerec-string-offsets encoded-namerecs)
+    (define (nrecs->offsets offsets total-offset nrecs)
+      (match nrecs
+        [() (list (reverse offsets) total-offset)]
+        [(#(platform-id language-id name-id value encoding-id) . more-nrecs)
+         (nrecs->offsets (cons total-offset offsets)
+                         (+ total-offset (bytevector-length value))
+                         more-nrecs)]))
+    (nrecs->offsets '() 0 encoded-namerecs))
 
   ) ;; end of library.
