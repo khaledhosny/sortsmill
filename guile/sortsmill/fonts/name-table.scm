@@ -122,9 +122,10 @@
   ;;
   ;; The value field is a Guile string.
   ;;
-  ;; When a name table has just been inputted or is ready for output,
-  ;; instead of regular name records there are ‘encoded name
-  ;; records’. An encoded name record is a Guile vector like this:
+  ;; When a name table is ready for output, and optionally when it has
+  ;; just been inputted, instead of regular name records there are
+  ;; ‘encoded name records’. An encoded name record is a Guile vector
+  ;; like this:
   ;;
   ;;    #(platform-id language-id name-id value encoding-id)
   ;;
@@ -542,7 +543,8 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define (encoded-name-table:read-from-sfnt-at-offset port/fd offset)
+  (define/kwargs (encoded-name-table:read-from-sfnt-at-offset port/fd offset
+                                                              [decode? #t])
     (let ([port (if (port? port/fd) port/fd (fdes->inport port/fd))])
       (ot:at-port-position
        port offset
@@ -565,13 +567,11 @@
               [(namerecs fix-up-errors)
                (fix-up-encoded-namerecs namerecs langtagrecs)]
               [(encoded-name-table) `#(,namerecs)])
-;;;           (format #t "encoded-name-table = ~a\n" encoded-name-table)
-;;;;           (let-values ([(name-table errors) (encoded-name-table->name-table encoded-name-table)])
-;;;;             (format #t "name-table = ~a\nerrors = ~a\n" name-table errors))
-;;;           (format #t "fix-up-errors = ~a\n" fix-up-errors)
-;;;           (encoded-name-table:write-to-sfnt 1 encoded-name-table)
-;;;           (newline)
-           (values encoded-name-table (append fix-up-errors)))))))
+           (if decode?
+               (let-values ([(name-table errors)
+                             (encoded-name-table->name-table encoded-name-table)])
+                 (values name-table (append fix-up-errors errors)))
+               (values encoded-name-table (append fix-up-errors))))))))
 
   (define (encoded-name-table->name-table encoded-name-table)
     (let*-values
