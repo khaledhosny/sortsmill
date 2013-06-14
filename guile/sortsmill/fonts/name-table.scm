@@ -693,6 +693,13 @@
                (_ "The PostScript font name entries (Naming Table entry 6)\nfor platforms 1 and 3 are not identical:\n~a\n~a")
                value1 value3)))
 
+    (define (warn-multiple-entries platform-id)
+      (post-fontforge-error
+       (_ "Bad Font Name")
+       (format #f
+               (_ "Their is more than one PostScript font name entry\n(Naming Table entry 6) for platform ~a.")
+               platform-id)))
+
     (define (fix-individual-entries namerecs)
       (let ([namerecs-and-errors
              (map
@@ -763,10 +770,31 @@
                  (warn-nonidentical-values val1 val3)
                  (list (list 'nonidentical-values val1 val3))))])))
 
+    (define (check-multiple-entries namerecs platform-id language-id)
+      (let ([n
+             (count
+              (match-lambda
+               [#(platform-id^
+                  language-id^
+                  (? (lambda (n) (eqv? 6 n)) _)
+                  _)
+                (and (= platform-id platform-id^)
+                     (= language-id language-id^))]
+               [_ #f])
+              namerecs)])
+        (if (<= n 1)
+            '()
+            (begin
+              (warn-multiple-entries platform-id)
+              (list (list 'multiple-entries platform-id))))))
+
     (let*-values
-        ([(pairing-errors) (check-entry-pairing namerecs)]
+        ([(multiple-1-entry-errors) (check-multiple-entries namerecs 1 0)]
+         [(multiple-3-entry-errors) (check-multiple-entries namerecs 3 #x409)]
+         [(pairing-errors) (check-entry-pairing namerecs)]
          [(namerecs indiv-errors) (fix-individual-entries namerecs)])
-      (values namerecs (append pairing-errors indiv-errors))))
+      (values namerecs (append multiple-1-entry-errors multiple-3-entry-errors
+                               pairing-errors indiv-errors))))
 
   ;;-------------------------------------------------------------------------
 
