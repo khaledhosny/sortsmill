@@ -60,7 +60,7 @@
           (except (guile) error)
           (only (srfi :1)
                 take count filter-map list-tabulate partition
-                delete-duplicates)
+                list-index delete-duplicates)
           (only (srfi :26) cut)
           (system foreign)
           (ice-9 match)
@@ -567,6 +567,7 @@
               [(namerecs fix-up-errors)
                (fix-up-encoded-namerecs namerecs langtagrecs)]
               [(encoded-name-table) `#(,namerecs)])
+;;;;;;;;;;;           (encoded-name-table:write-to-sfnt 1 encoded-name-table)
            (if decode?
                (let-values ([(name-table errors)
                              (encoded-name-table->name-table encoded-name-table)])
@@ -850,14 +851,18 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define (encoded-name-table:write-to-sfnt port/fd encoded-name-table)
+  (define/kwargs (encoded-name-table:write-to-sfnt port/fd encoded-name-table)
     (let* ([port (if (port? port/fd) port/fd (fdes->outport port/fd))]
            [encoded-namerecs (vector-ref encoded-name-table 0)]
            [namerec-count (length encoded-namerecs)]
-           [langtagrec-count (count (lambda (entry)
-                                      (string? (vector-ref entry 1)))
-                                    encoded-namerecs)]
-           [table-format (if (zero? langtagrec-count) 0 1)]
+           [langtags (unique-langtags encoded-namerecs)]
+           [encoded-langtags (map (cut string->utf16 <> (endianness big))
+                                  langtags)]
+           [table-format (if (null? langtags) 0 1)]
+           [langtagrec-count (length langtags)]
+           [langtag-id (lambda (tag)
+                         (+ #x8000
+                            (list-index (cut string=? tag <>) langtags)))]
            [namerec-size 12]
            [namerecs-total-size (* namerec-size namerec-count)]
            [nrec-str-offsets (namerec-string-offsets encoded-namerecs)]
@@ -865,6 +870,9 @@
            [namerec-strings-size (cadr nrec-str-offsets)]
            [langtagrec-size 4]
            [langtagrecs-total-size (* langtagrec-size langtagrec-count)]
+           [ltag-str-offsets (langtag-string-offsets encoded-langtags)]
+           [langtag-str-offsets (map (cut + namerecs-total-size <>)
+                                     (car ltag-str-offsets))]
            [string-offset (case table-format
                             [(0) (+ 6 namerecs-total-size)]
                             [(1) (+ 8 namerecs-total-size langtagrecs-total-size)])])
@@ -877,14 +885,33 @@
            [#(platform-id language-id name-id value encoding-id)
             (ot:write-USHORT port platform-id)
             (ot:write-USHORT port encoding-id)
-            (if (string? language-id)
-                'not-yet-implemented-?????????????????????????????????????????????????????????????????????????
-                (ot:write-USHORT port language-id))
+            (ot:write-USHORT port (if (string? language-id)
+                                      (langtag-id language-id)
+                                      language-id))
             (ot:write-USHORT port name-id)
             (ot:write-USHORT port (bytevector-length value))
             (ot:write-USHORT port str-offset)]))
        encoded-namerecs namerec-str-offsets)
-      ))
+      (when (= table-format 1)
+        (ot:write-USHORT port langtagrec-count))
+      (for-each
+       (lambda (encoded-tag str-offset)
+         (ot:write-USHORT port (bytevector-length encoded-tag))
+         (ot:write-USHORT port str-offset))
+       encoded-langtags langtag-str-offsets)
+      (for-each
+       (match-lambda [#(_ _ _ value _) (ot:write-string port value)])
+       encoded-namerecs)
+      (for-each (cut ot:write-string port <>) encoded-langtags)))
+
+  (define (unique-langtags namerecs)
+    (without-adjacent-duplicates
+     string=?
+     (list-sort string<?
+                (filter-map (lambda (nrec)
+                              (let ([language-id (vector-ref nrec 1)])
+                                (if (string? language-id) language-id #f)))
+                            namerecs))))
 
   (define (namerec-string-offsets encoded-namerecs)
     (define (nrecs->offsets offsets total-offset nrecs)
@@ -895,5 +922,15 @@
                          (+ total-offset (bytevector-length value))
                          more-nrecs)]))
     (nrecs->offsets '() 0 encoded-namerecs))
+
+  (define (langtag-string-offsets encoded-langtags)
+    (define (tags->offsets offsets total-offset tags)
+      (match tags
+        [() (list (reverse offsets) total-offset)]
+        [(tag . more-tags)
+         (tags->offsets (cons total-offset offsets)
+                         (+ total-offset (bytevector-length tag))
+                         more-tags)]))
+    (tags->offsets '() 0 encoded-langtags))
 
   ) ;; end of library.
