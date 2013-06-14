@@ -58,7 +58,9 @@
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
-          (only (srfi :1) take count filter-map list-tabulate partition)
+          (only (srfi :1)
+                take count filter-map list-tabulate partition
+                delete-duplicates)
           (only (srfi :26) cut)
           (system foreign)
           (ice-9 match)
@@ -560,43 +562,41 @@
                               (lambda (i)
                                 (read-lang-tag-record
                                  port (+ offset string-offset))))]
-              [(namerecs fix-up-errors) (fix-up-namerecs namerecs langtagrecs)]
+              [(namerecs fix-up-errors)
+               (fix-up-encoded-namerecs namerecs langtagrecs)]
               [(encoded-name-table) `#(,namerecs)])
-           (format #t "encoded-name-table = ~a\n" encoded-name-table)
-           (let-values ([(name-table errors) (encoded-name-table->name-table encoded-name-table)])
-             (format #t "name-table = ~a\nerrors = ~a\n" name-table errors))
-           (encoded-name-table:write-to-sfnt 1 encoded-name-table)
-           (newline)
-           encoded-name-table)))))
+;;;           (format #t "encoded-name-table = ~a\n" encoded-name-table)
+;;;;           (let-values ([(name-table errors) (encoded-name-table->name-table encoded-name-table)])
+;;;;             (format #t "name-table = ~a\nerrors = ~a\n" name-table errors))
+;;;           (format #t "fix-up-errors = ~a\n" fix-up-errors)
+;;;           (encoded-name-table:write-to-sfnt 1 encoded-name-table)
+;;;           (newline)
+           (values encoded-name-table (append fix-up-errors)))))))
 
   (define (encoded-name-table->name-table encoded-name-table)
     (let*-values
-        ([(errors) '()]
-         [(encoded-namerecs) (vector-ref encoded-name-table 0)]
-         [(namerecs)
-          (filter-map
-           (lambda (nrec)
-             (match nrec
-               [#(platform-id language-id name-id value encoding-id)
-                (let ([str (recode-ot-string-as-utf8 (bytevector->pointer value)
-                                                     (bytevector-length value)
-                                                     platform-id encoding-id
-                                                     language-id)])
-                  (if str
-                      `#(,platform-id ,language-id ,name-id ,str)
-                      (begin
-                        ;; Undecodable string.
-                        ;;
-                        ;; FIXME: Post a warning and log a validation problem.
-                        ;;
-                        (unless (assq 'undecodable-string errors)
-                          (set! errors (cons 'undecodable-string errors))))))]))
+        ([(encoded-namerecs) (vector-ref encoded-name-table 0)]
+         [(namerecs-and-errors)
+          (map
+           (match-lambda
+            [#(platform-id language-id name-id value encoding-id)
+             (let ([str (recode-ot-string-as-utf8 (bytevector->pointer value)
+                                                  (bytevector-length value)
+                                                  platform-id encoding-id
+                                                  language-id)])
+               (if str
+                   (cons `#(,platform-id ,language-id ,name-id ,str) '())
+                   (begin
+                     ;; Undecodable string.
+                     ;;
+                     ;; FIXME: Post a warning and log a validation problem.
+                     ;;
+                     (cons #f (list (list 'undecodable-string))))))])
            encoded-namerecs)]
+         [(namerecs) (filter-map car namerecs-and-errors)]
+         [(errors) (fold-namerec-errors namerecs-and-errors)]
          [(namerecs ps-name-errors) (fix-postscript-font-name namerecs)])
-      (unless (null? ps-name-errors)
-;;;;;        (format #t "ps-name-errors = ~a\n" ps-name-errors)
-        (set! errors (cons (list 'ps-name-errors ps-name-errors) errors)))
-      (values `#(,namerecs) errors)))
+      (values `#(,namerecs) (append errors ps-name-errors))))
 
   (define (read-name-record port string-buffer-position)
     (let* ([platform-id (ot:read-USHORT port)]
@@ -618,43 +618,44 @@
            [tag (if decomposition (unparse-ietf-language-tag decomposition) #f)])
       tag))
 
-  (define (fix-up-namerecs namerecs langtagrecs)
-    (let* ([errors '()]
-           [tags (list->vector langtagrecs)]
+  (define (fix-up-encoded-namerecs namerecs langtagrecs)
+    (let* ([tags (list->vector langtagrecs)]
            [n (vector-length tags)]
-           [nrecs
-            (filter-map
-             (lambda (nrec)
-               (match nrec
-                 [#(platform-id language-id name-id value encoding-id)
-                  (cond
-                   [(< language-id #x8000) nrec] ; Platform-specific language ID.
-                   [(< (- language-id #x8000) n) ; IETF language tag.
-                    (let* ([i (- language-id #x8000)]
-                           [tag (vector-ref tags i)])
-                      (cond
-                       [tag `#(,platform-id ,tag ,name-id ,value ,encoding-id)]
-                       [else
-                        ;; Ignore any name record whose language tag was
-                        ;; unparseable.
-                        ;;
-                        ;; FIXME: Post a warning and log a validation problem.
-                        ;;
-                        (unless (assq 'unparseable-language-tag errors)
-                          (set! errors (cons (list 'unparseable-language-tag) errors)))
-                        #f]))]
-                   [else
-                    ;; Ignore any name record whose platform-specific
-                    ;; language ID is greater than #x7FFF.
-                    ;;
-                    ;; FIXME: Post a warning and log a validation problem.
-                    ;;
-                    (let ([err (list 'language-id-above-7FFF language-id)])
-                      (unless (member err errors)
-                        (set! errors (cons err errors))))
-                    #f])]))
+           [namerecs-and-errors
+            (map
+             (match-lambda
+              [(and #(platform-id
+                      (? (lambda (lang) (< lang #x8000)) language-id)
+                      name-id value encoding-id) nrec)
+               ;; Platform-specific language ID.
+               (cons nrec '())]
+              [#(platform-id
+                 (? (lambda (lang) (< (- lang #x8000) n)) language-id)
+                 name-id value encoding-id)
+               ;; IETF language tag.
+               (let* ([i (- language-id #x8000)]
+                      [tag (vector-ref tags i)])
+                 (cond
+                  [tag
+                   (cons `#(,platform-id ,tag ,name-id ,value ,encoding-id)
+                         '())]
+                  [else
+                   ;; Ignore any name record whose language tag was
+                   ;; unparseable.
+                   ;;
+                   ;; FIXME: Post a warning and log a validation problem.
+                   ;;
+                   (cons #f (list (list 'unparseable-language-tag)))] ))]
+              [#(platform-id language-id name-id value encoding-id)
+               ;; Ignore any name record whose platform-specific
+               ;; language ID is greater than #x7FFF.
+               ;;
+               ;; FIXME: Post a warning and log a validation problem.
+               ;;
+               (cons #f (list (list 'language-id-above-7FFF language-id)))])
              namerecs)])
-      (values nrecs errors)))
+      (values (filter-map car namerecs-and-errors)
+              (fold-namerec-errors namerecs-and-errors))))
 
   (define (fix-postscript-font-name namerecs)
 
@@ -741,8 +742,7 @@
                [nrec (cons nrec '())])
               namerecs)])
         (values (filter-map car namerecs-and-errors)
-                (fold-left (lambda (prior n&e) (append (cdr n&e) prior))
-                           '() namerecs-and-errors))))
+                (fold-namerec-errors namerecs-and-errors))))
 
     (define (check-entry-pairing namerecs)
       (let ([platform1-sublist
@@ -795,6 +795,11 @@
          [(namerecs indiv-errors) (fix-individual-entries namerecs)])
       (values namerecs (append multiple-1-entry-errors multiple-3-entry-errors
                                pairing-errors indiv-errors))))
+
+  (define (fold-namerec-errors namerecs-and-errors)
+    (delete-duplicates
+     (fold-left (lambda (prior n&e) (append (cdr n&e) prior))
+                '() namerecs-and-errors)))
 
   ;;-------------------------------------------------------------------------
 
