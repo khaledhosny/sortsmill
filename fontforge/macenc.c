@@ -41,10 +41,13 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "fontforgevw.h"
+#include <fontforgevw.h>
 #include <gkeysym.h>
 #include <ustring.h>
-#include "ttf.h"
+#include <ttf.h>
+#include <intl.h>
+#include <sortsmill/guile.h>
+#include <assert.h>
 
 // The original data for these mappings may be found at
 //
@@ -1250,8 +1253,9 @@ MacStrToUtf8 (const char *str, int macenc, int maclang)
   return (ret);
 }
 
-char *
-Utf8ToMacStr (const char *ustr, int macenc, int maclang)
+static char *
+Utf8ToMacStr_with_length (const char *ustr, int macenc, int maclang,
+                          size_t *length)
 {
   char *ret, *rpt;
   const uint32_t *table;
@@ -1283,6 +1287,7 @@ Utf8ToMacStr (const char *ustr, int macenc, int maclang)
       outlen = sizeof (uint32_t) * strlen (ustr);
       out = ret = xmalloc (outlen + sizeof (uint32_t));
       iconv (fromutf8, &in, &inlen, &out, &outlen);
+      *length = out - ret;
       out[0] = out[1] = '\0';
       out[2] = out[3] = '\0';
       iconv_close (fromutf8);
@@ -1317,8 +1322,16 @@ Utf8ToMacStr (const char *ustr, int macenc, int maclang)
             break;
           }
     }
+  *length = rpt - ret;
   *rpt = '\0';
   return (ret);
+}
+
+char *
+Utf8ToMacStr (const char *ustr, int macenc, int maclang)
+{
+  size_t length;
+  return Utf8ToMacStr_with_length (ustr, macenc, maclang, &length);
 }
 
 uint8_t
@@ -1702,3 +1715,93 @@ MacLanguageFromCode (int code)
 
   return (_("Unknown Language"));
 }
+
+//-------------------------------------------------------------------------
+
+static void
+scm_c_assert_is_bytevector (const char *who, SCM obj)
+{
+  if (!scm_is_bytevector (obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("expected a bytevector")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+}
+
+static SCM
+scm_from_mac_encoded_string (SCM mac_str, SCM mac_encoding, SCM mac_language)
+{
+  const char *who = "scm_from_mac_encoded_string";
+
+  scm_c_assert_is_bytevector (who, mac_str);
+
+  scm_dynwind_begin (0);
+
+  size_t bv_length = SCM_BYTEVECTOR_LENGTH (mac_str);
+  char *buf = xzalloc (bv_length + 4);
+  scm_dynwind_free (buf);
+
+  memcpy (buf, SCM_BYTEVECTOR_CONTENTS (mac_str), bv_length);
+
+  char *s = MacStrToUtf8 (buf, scm_to_int (mac_encoding),
+                          scm_to_int (mac_language));
+  scm_dynwind_free (s);
+
+  SCM result = (s == NULL) ? SCM_BOOL_F : scm_from_utf8_string (s);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+static SCM
+scm_to_mac_encoded_string (SCM string, SCM mac_encoding, SCM mac_language)
+{
+  scm_dynwind_begin (0);
+
+  char *s = scm_to_utf8_stringn (string, NULL);
+  scm_dynwind_free (s);
+
+  size_t length;
+  char *mac_s = Utf8ToMacStr_with_length (s, scm_to_int (mac_encoding),
+                                          scm_to_int (mac_language), &length);
+  scm_dynwind_free (mac_s);
+
+  SCM bv = scm_c_make_bytevector (length);
+  memcpy (SCM_BYTEVECTOR_CONTENTS (bv), mac_s, length);
+
+  scm_dynwind_end ();
+
+  return bv;
+}
+
+static SCM
+scm_mac_language_code_from_locale (void)
+{
+  return scm_from_int (MacLangFromLocale ());
+}
+
+static SCM
+scm_mac_language_from_code (SCM code)
+{
+  return scm_from_utf8_string (MacLanguageFromCode (scm_to_int (code)));
+}
+
+void init_fontforge_macenc_guile (void);
+
+VISIBLE void
+init_fontforge_macenc_guile (void)
+{
+  scm_c_define_gsubr ("mac-encoded-string->string", 3, 0, 0,
+                      scm_from_mac_encoded_string);
+  scm_c_define_gsubr ("string->mac-encoded-string", 3, 0, 0,
+                      scm_to_mac_encoded_string);
+  scm_c_define_gsubr ("mac-language-code-from-locale", 0, 0, 0,
+                      scm_mac_language_code_from_locale);
+  scm_c_define_gsubr ("mac-language-from-code", 1, 0, 0,
+                      scm_mac_language_from_code);
+}
+
+//-------------------------------------------------------------------------
