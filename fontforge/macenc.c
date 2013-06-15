@@ -1778,6 +1778,34 @@ scm_to_mac_encoded_string (SCM string, SCM mac_encoding, SCM mac_language)
 }
 
 static SCM
+scm_mac_encoding_from_mac_language (SCM mac_language)
+{
+  const uint8_t enc = MacEncFromMacLang (scm_to_int (mac_language));
+  return (enc == 0xFF) ? SCM_BOOL_F : scm_from_uint8 (enc);
+}
+
+static SCM
+scm_windows_language_from_mac_language (SCM mac_language)
+{
+  const uint16_t lang = WinLangFromMac (scm_to_int (mac_language));
+  return (lang == 0xffff) ? SCM_BOOL_F : scm_from_uint16 (lang);
+}
+
+static SCM
+scm_mac_language_from_windows_language (SCM windows_language)
+{
+  const uint16_t lang = WinLangToMac (scm_to_int (windows_language));
+  return (lang == 0xffff) ? SCM_BOOL_F : scm_from_uint16 (lang);
+}
+
+static SCM
+scm_can_encode_for_mac_given_windows_language_p (SCM windows_language)
+{
+  return
+    scm_from_bool (CanEncodingWinLangAsMac (scm_to_int (windows_language)));
+}
+
+static SCM
 scm_mac_language_code_from_locale (void)
 {
   return scm_from_int (MacLangFromLocale ());
@@ -1789,6 +1817,8 @@ scm_mac_language_from_code (SCM code)
   return scm_from_utf8_string (MacLanguageFromCode (scm_to_int (code)));
 }
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 void init_fontforge_macenc_guile (void);
 
 VISIBLE void
@@ -1798,6 +1828,14 @@ init_fontforge_macenc_guile (void)
                       scm_from_mac_encoded_string);
   scm_c_define_gsubr ("string->mac-encoded-string", 3, 0, 0,
                       scm_to_mac_encoded_string);
+  scm_c_define_gsubr ("mac-encoding-from-mac-language", 1, 0, 0,
+                      scm_mac_encoding_from_mac_language);
+  scm_c_define_gsubr ("windows-language-from-mac-language", 1, 0, 0,
+                      scm_windows_language_from_mac_language);
+  scm_c_define_gsubr ("mac-language-from-windows-language", 1, 0, 0,
+                      scm_mac_language_from_windows_language);
+  scm_c_define_gsubr ("can-encode-for-mac-given-windows-language?", 1, 0, 0,
+                      scm_can_encode_for_mac_given_windows_language_p);
   scm_c_define_gsubr ("mac-language-code-from-locale", 0, 0, 0,
                       scm_mac_language_code_from_locale);
   scm_c_define_gsubr ("mac-language-from-code", 1, 0, 0,

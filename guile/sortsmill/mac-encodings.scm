@@ -25,6 +25,18 @@
    ;; (string->mac-encoded-string string mac-encoding-int mac-language-int) → bytevector
    string->mac-encoded-string
 
+   ;; (mac-encoding-from-mac-language integer) → integer
+   mac-encoding-from-mac-language
+
+   ;; (windows-language-from-mac-language integer) → integer
+   windows-language-from-mac-language
+
+   ;; (mac-language-from-windows-language integer) → integer
+   mac-language-from-windows-language
+
+   ;; (can-encode-for-mac-given-windows-language? integer) → boolean
+   can-encode-for-mac-given-windows-language?
+
    ;; (mac-language-code-from-locale) → integer
    mac-language-code-from-locale
 
