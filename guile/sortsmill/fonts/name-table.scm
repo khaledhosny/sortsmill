@@ -44,15 +44,28 @@
    name-table:windows-language-ids
    name-table:windows-language-mnemonics ; Lists the primary mnemonics, only.
 
-   encoded-name-table:read-from-sfnt-at-offset
+   name-table:read-from-sfnt-at-offset
    encoded-name-table:write-to-sfnt
    encoded-name-table->name-table
+
+   name-table:string-is-subset?
+
+   ;; (name-table:name-table:partition-by-name-and-language-ids name-table) → list-of-name-tables
+   name-table:partition-by-name-and-language-ids
+
+   ;; (name-table:languages-match? namerec1 namerec2) → boolean
+   ;;
+   ;; The name-table:languages-match? function is stored in the fluid
+   ;; name-table:languages-match?-function
+   name-table:languages-match?
+   name-table:languages-match?-function
    )
 
   (import (sortsmill dynlink)
           (sortsmill fonts opentype-io)
           (sortsmill strings ietf-language-tags)
           (sortsmill postscript)
+          (sortsmill mac-encodings)
           (sortsmill kwargs)
           (sortsmill notices)
           (sortsmill i18n)
@@ -543,8 +556,8 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define/kwargs (encoded-name-table:read-from-sfnt-at-offset port/fd offset
-                                                              [decode? #t])
+  (define/kwargs (name-table:read-from-sfnt-at-offset port/fd offset
+                                                      [decode? #t])
     (let ([port (if (port? port/fd) port/fd (fdes->inport port/fd))])
       (ot:at-port-position
        port offset
@@ -571,6 +584,7 @@
            (if decode?
                (let-values ([(name-table errors)
                              (encoded-name-table->name-table encoded-name-table)])
+;;;;;;;;;;;         ((@ (ice-9 pretty-print) pretty-print) (name-table:partition-by-name-and-language-ids name-table))
                  (values name-table (append fix-up-errors errors)))
                (values encoded-name-table (append fix-up-errors))))))))
 
@@ -848,6 +862,71 @@
         (values (substring font-name 0 63)
                 (cons (list 'too-long font-name) errors))
         (values font-name errors)))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (languages-match?-function-default namerec1 namerec2)
+    (match namerec1
+      [#(platform-id1 language-id1 name-id1 value1)
+       (match namerec2
+         [#(platform-id2 language-id2 name-id2 value2)
+          (cond
+           [(string? language-id1)
+            (and (string? language-id2)
+                 (ietf-language-tag=? language-id1 language-id2))]
+           [else
+            ;; We will assume that platform 0 uses Macintosh language
+            ;; ID codes, unless the language ID is an IETF language
+            ;; tag.
+            ;;
+            ;; There is no standard meaning for language ID codes
+            ;; under #x8000 for platform 0. The OpenType standard
+            ;; slyly recommends setting it to zero, which conveniently
+            ;; corresponds to the Macintosh platform code for
+            ;; ‘English’. See Microsoft’s Calibri fonts for an
+            ;; example: language ID is set to zero, and the name
+            ;; strings are in English.
+            (case platform-id1
+              [(0 1) (case platform-id2
+                     [(0 1) (= language-id1 language-id2)]
+                     [(3) (= (windows-language-from-mac-language language-id1)
+                             language-id2)]
+                     [else (assertion-violation 'languages-match?
+                                                (_ "unexpected platform ID")
+                                                platform-id2)])]
+              [(3) (case platform-id2
+                     [(0 1) (= language-id1
+                               (windows-language-from-mac-language language-id2))]
+                     [(3) (= language-id1 language-id2)]
+                     [else (assertion-violation 'languages-match?
+                                                (_ "unexpected platform ID")
+                                                platform-id2)])]
+              [else (assertion-violation 'languages-match?
+                                         (_ "unexpected platform ID")
+                                         platform-id1)])] )] )] ))
+
+  (define name-table:languages-match?-function
+    (make-fluid languages-match?-function-default))
+
+  (define (name-table:languages-match? namerec1 namerec2)
+    ((fluid-ref name-table:languages-match?-function) namerec1 namerec2))
+
+  (define/kwargs (name-table:partition-by-name-and-language-ids name-table)
+    (let* ([langs-match? (fluid-ref name-table:languages-match?-function)]
+           [they-match? (lambda (nrec1 nrec2)
+                          (and (= (vector-ref nrec1 2) (vector-ref nrec2 2))
+                               (langs-match? nrec1 nrec2)))])
+      (letrec
+          ([partition-by-langs
+            (match-lambda
+             [() '()]
+             [(nrec . more-nrecs)
+              (let-values
+                  ([(matching nonmatching)
+                    (partition (cut they-match? nrec <>) more-nrecs)])
+                (cons `#(,(cons nrec matching))
+                      (partition-by-langs nonmatching)))])])
+        (partition-by-langs (vector-ref name-table 0)))))
 
   ;;-------------------------------------------------------------------------
 
