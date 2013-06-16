@@ -682,17 +682,15 @@
                value platform-id)))
 
     (define (warn-bad-language platform-id)
-      (post-fontforge-error
-       (_ "Bad Font Name")
+      (log-fontforge-warning
        (format #f
-               (_ "A PostScript font name (Naming Table entry 6)\nfor platform ~a is assigned a language ID\nother than the platform-specific code for US English.\nOpenType requires that applications ignore it.")
+               (_ "Warning: A PostScript font name (Naming Table entry 6)\nfor platform ~a is assigned a language ID\nother than the platform-specific code for US English.\nOpenType requires that applications ignore it.")
                platform-id)))
 
     (define (warn-bad-platform platform-id)
-      (post-fontforge-error
-       (_ "Bad Font Name")
+      (log-fontforge-warning
        (format #f
-               (_ "Their is a PostScript font name entry\n(Naming Table entry 6) for platform ~a;\nOpenType requires that applications ignore it.")
+               (_ "Warning: There is a PostScript font name entry\n(Naming Table entry 6) for platform ~a;\nOpenType requires that applications ignore it.")
                platform-id)))
 
     (define (warn-missing-platform platform-id)
@@ -740,20 +738,23 @@
                   (unless (null? errors)
                     (warn-bad-name value errors platform-id))
                   (cons `#(,platform-id #x409 ,name-id ,ps-name) errors))]
-               [#((? (lambda (p) (or (= p 1) (= p 3))) platform-id)
-                  language-id
-                  (? (lambda (n) (eqv? 6 n)) name-id)
-                  _)
+               [(and #((? (lambda (p) (or (= p 1) (= p 3))) platform-id)
+                       language-id
+                       (? (lambda (n) (eqv? 6 n)) name-id)
+                       _)
+                     nrec)
                 ;; PostScript name with language other than the
                 ;; platform-specific ID for US English. OpenType
-                ;; requires it be ignored, so we will leave it out.
+                ;; requires it be ignored, so issue a warning.
                 (warn-bad-language platform-id)
-                (cons #f (list (list 'bad-language-id platform-id language-id)))]
-               [#(platform-id _ (? (lambda (n) (eqv? 6 n)) name-id) _)
+                (cons nrec (list (list 'warning:bad-language-id
+                                       platform-id language-id)))]
+               [(and #(platform-id _ (? (lambda (n) (eqv? 6 n)) name-id) _)
+                     nrec)
                 ;; PostScript name for other platforms. OpenType
-                ;; requires it be ignored, so we will leave it out.
+                ;; requires it be ignored, so issue a warning.
                 (warn-bad-platform platform-id)
-                (cons #f (list (list 'bad-platform-id platform-id)))]
+                (cons nrec (list (list 'warning:bad-platform-id platform-id)))]
                [nrec (cons nrec '())])
               namerecs)])
         (values (filter-map car namerecs-and-errors)
