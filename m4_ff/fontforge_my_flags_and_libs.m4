@@ -30,7 +30,6 @@ my_cflags="${my_cflags} ${LIBXML_CFLAGS}"
 my_cflags="${my_cflags} ${PYTHON_CFLAGS}"
 my_cflags="${my_cflags} ${PURE_CFLAGS}"
 my_cflags="${my_cflags} ${PTHREAD_CFLAGS}"
-test x"${SDK}" = x || my_cflags="${my_cflags} -I${SDK}"
 AC_SUBST([MY_CFLAGS],[${my_cflags}])
 ])
 
