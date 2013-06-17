@@ -47,9 +47,7 @@
 #include "ustring.h"
 #include "utype.h"
 
-#if !defined(__MINGW32__)
 #include <netdb.h>
-#endif
 
 char *
 GIODecomposeURL(const uint32_t *url,char **host, int *port, char **username,

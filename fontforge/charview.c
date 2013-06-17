@@ -3917,48 +3917,11 @@ CVCharUp (CharView *cv, GEvent *event)
         }
     }
 
-
-
-#if _ModKeysAutoRepeat
-  /* Under cygwin these keys auto repeat, they don't under normal X */
-  if (event->u.chr.keysym == GK_Shift_L || event->u.chr.keysym == GK_Shift_R
-      || event->u.chr.keysym == GK_Control_L
-      || event->u.chr.keysym == GK_Control_R
-      || event->u.chr.keysym == GK_Meta_L || event->u.chr.keysym == GK_Meta_R
-      || event->u.chr.keysym == GK_Alt_L || event->u.chr.keysym == GK_Alt_R
-      || event->u.chr.keysym == GK_Super_L
-      || event->u.chr.keysym == GK_Super_R
-      || event->u.chr.keysym == GK_Hyper_L || event->u.chr.keysym == GK_Hyper_R)
-    {
-      if (cv->autorpt != NULL)
-        {
-          GDrawCancelTimer (cv->autorpt);
-          CVToolsSetCursor (cv, cv->oldstate, NULL);
-        }
-      cv->keysym = event->u.chr.keysym;
-      cv->oldkeyx = event->u.chr.x;
-      cv->oldkeyy = event->u.chr.y;
-      cv->oldkeyw = event->w;
-      cv->oldstate = TrueCharState (event);
-      cv->autorpt = GDrawRequestTimer (cv->v, 100, 0, NULL);
-    }
-  else
-    {
-      if (cv->autorpt != NULL)
-        {
-          GDrawCancelTimer (cv->autorpt);
-          cv->autorpt = NULL;
-          CVToolsSetCursor (cv, cv->oldstate, NULL);
-        }
-      CVToolsSetCursor (cv, TrueCharState (event), NULL);
-    }
-#else
   CVToolsSetCursor (cv, TrueCharState (event), NULL);
   if (event->u.chr.keysym == GK_Shift_L || event->u.chr.keysym == GK_Shift_R
       || event->u.chr.keysym == GK_Alt_L || event->u.chr.keysym == GK_Alt_R
       || event->u.chr.keysym == GK_Meta_L || event->u.chr.keysym == GK_Meta_R)
     CVFakeMove (cv, event);
-#endif
 }
 
 void
@@ -5544,25 +5507,6 @@ CVTimer (CharView *cv, GEvent *event)
             GScrollBarSetPos (cv->hsb, -cv->xoff);
           GDrawRequestExpose (cv->v, NULL, false);
         }
-#if _ModKeysAutoRepeat
-      /* Under cygwin the modifier keys auto repeat, they don't under normal X */
-    }
-  else if (cv->autorpt == event->u.timer.timer)
-    {
-      cv->autorpt = NULL;
-      CVToolsSetCursor (cv, cv->oldstate, NULL);
-      if (cv->keysym == GK_Shift_L || cv->keysym == GK_Shift_R
-          || cv->keysym == GK_Alt_L || cv->keysym == GK_Alt_R
-          || cv->keysym == GK_Meta_L || cv->keysym == GK_Meta_R)
-        {
-          GEvent e;
-          e.w = cv->oldkeyw;
-          e.u.chr.keysym = cv->keysym;
-          e.u.chr.x = cv->oldkeyx;
-          e.u.chr.y = cv->oldkeyy;
-          CVFakeMove (cv, &e);
-        }
-#endif
     }
 }
 
@@ -7723,18 +7667,6 @@ CVChar (CharView *cv, GEvent *event)
           return;
         }
     }
-
-#if _ModKeysAutoRepeat
-  /* Under cygwin these keys auto repeat, they don't under normal X */
-  if (cv->autorpt != NULL)
-    {
-      GDrawCancelTimer (cv->autorpt);
-      cv->autorpt = NULL;
-      if (cv->keysym == event->u.chr.keysym)    /* It's an autorepeat, ignore it */
-        return;
-      CVToolsSetCursor (cv, cv->oldstate, NULL);
-    }
-#endif
 
   if (!HaveModifiers && event->u.chr.keysym == ' ' && cv->spacebar_hold == 0)
     {

@@ -84,19 +84,6 @@ AS_CASE([$host],
 
    [*sparc*],[AC_DEFINE([_Keyboard],[2])],
 
-   [*-pc-cygwin*],[
-
-      AC_DEFINE([__CygWin],[1],[If you are on a windows box with cygwin define __CygWin to 1.])
-      AC_DEFINE([_BrokenBitmapImages],[1],
-                [If you are on cygwin where some of the drawmode functions (like AND)
-                 don't work then define _BrokenBitmapImages to 1.])
-      AC_DEFINE([_ModKeysAutoRepeat],[1],
-                [If you are on cygwin where even the modifier keys autorepeat then
-                 define _ModKeysAutoRepeat to 1.])
-
-      gww_iscygwin="yes"
-   ],
-
    [:]  dnl DEFAULT AS_CASE
 
 ) dnl END AS_CASE

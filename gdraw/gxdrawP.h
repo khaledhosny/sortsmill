@@ -326,8 +326,6 @@ extern unsigned long _GXDraw_GetScreenPixel(GXDisplay *gdisp, Color col);
 
 extern void _XSyncScreen(void);
 
-#if !defined(__MINGW32__)
 extern int GDrawKeyToXK(int keysym);
-#endif
 
 #endif

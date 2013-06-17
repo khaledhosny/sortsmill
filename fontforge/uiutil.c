@@ -877,7 +877,6 @@ UI_saveas_file (const char *title, const char *defaultfile,
 static void
 tinysleep (int microsecs)
 {
-#if !defined(__MINGW32__)
   fd_set none;
   struct timeval timeout;
 
@@ -886,7 +885,6 @@ tinysleep (int microsecs)
   timeout.tv_usec = microsecs;
 
   select (1, &none, &none, &none, &timeout);
-#endif
 }
 
 static void

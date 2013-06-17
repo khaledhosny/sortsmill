@@ -312,18 +312,6 @@ BVChar (BitmapView *bv, GEvent *event)
   BDFRefChar *head;
   extern int navigation_mask;
 
-#if _ModKeysAutoRepeat
-  /* Under cygwin these keys auto repeat, they don't under normal X */
-  if (bv->autorpt != NULL)
-    {
-      GDrawCancelTimer (bv->autorpt);
-      bv->autorpt = NULL;
-      if (bv->keysym == event->u.chr.keysym)    /* It's an autorepeat, ignore it */
-        return;
-      BVToolsSetCursor (bv, bv->oldstate, NULL);
-    }
-#endif
-
   BVPaletteActivate (bv);
   BVToolsSetCursor (bv, TrueCharState (event), NULL);
   if (event->u.chr.keysym == 's' &&
@@ -448,42 +436,7 @@ BVCharUp (BitmapView *bv, GEvent *event)
       (event->u.chr.state & ksm_shift) && (event->u.chr.state & ksm_meta))
     SCCharInfo (bv->bc->sc, bv->fv->b.active_layer, bv->fv->b.map,
                 BVCurEnc (bv));
-#if _ModKeysAutoRepeat
-  /* Under cygwin these keys auto repeat, they don't under normal X */
-  else if (event->u.chr.keysym == GK_Shift_L
-           || event->u.chr.keysym == GK_Shift_R
-           || event->u.chr.keysym == GK_Control_L
-           || event->u.chr.keysym == GK_Control_R
-           || event->u.chr.keysym == GK_Meta_L
-           || event->u.chr.keysym == GK_Meta_R
-           || event->u.chr.keysym == GK_Alt_L || event->u.chr.keysym == GK_Alt_R
-           || event->u.chr.keysym == GK_Super_L
-           || event->u.chr.keysym == GK_Super_R
-           || event->u.chr.keysym == GK_Hyper_L
-           || event->u.chr.keysym == GK_Hyper_R)
-    {
-      if (bv->autorpt != NULL)
-        {
-          GDrawCancelTimer (bv->autorpt);
-          BVToolsSetCursor (bv, bv->oldstate, NULL);
-        }
-      bv->keysym = event->u.chr.keysym;
-      bv->oldstate = TrueCharState (event);
-      bv->autorpt = GDrawRequestTimer (bv->v, 100, 0, NULL);
-    }
-  else
-    {
-      if (bv->autorpt != NULL)
-        {
-          GDrawCancelTimer (bv->autorpt);
-          bv->autorpt = NULL;
-          BVToolsSetCursor (bv, bv->oldstate, NULL);
-        }
-      BVToolsSetCursor (bv, TrueCharState (event), NULL);
-    }
-#else
   BVToolsSetCursor (bv, TrueCharState (event), NULL);
-#endif
 }
 
 static void
@@ -1865,14 +1818,6 @@ v_e_h (GWindow gw, GEvent *event)
       BVCharUp (bv, event);
       break;
     case et_timer:
-#if _ModKeysAutoRepeat
-      /* Under cygwin the modifier keys auto repeat, they don't under normal X */
-      if (bv->autorpt == event->u.timer.timer)
-        {
-          bv->autorpt = NULL;
-          BVToolsSetCursor (bv, bv->oldstate, NULL);
-        }
-#endif
       break;
     case et_focus:
 #if 0

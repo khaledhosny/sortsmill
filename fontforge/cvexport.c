@@ -746,19 +746,8 @@ MakeExportName (char *buffer, int blen, char *format_spec,
             bend = end;
           if (ch == 'n')
             {
-#if defined( __CygWin ) || defined(__Mac)
-              /* Windows file systems are not case conscious */
-              /*  nor is the default mac filesystem */
-              for (pt = sc->name; *pt != '\0' && buffer < bend;)
-                {
-                  if (isupper (*pt))
-                    *buffer++ = '$';
-                  *buffer++ = *pt++;
-                }
-#else
               for (pt = sc->name; *pt != '\0' && buffer < bend;)
                 *buffer++ = *pt++;
-#endif
             }
           else if (ch == 'f')
             {
