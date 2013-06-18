@@ -23,6 +23,7 @@
    name-table-remove!
    name-table-ref
    name-table-partition
+   name-table-append
 
    name-table:check-language-id
 
@@ -214,6 +215,13 @@
                          (vector-ref name-table 0))])
             (values `#(,matched) `#(,unmatched)))
           (values #f #f))))
+
+  (define (name-table-append . args)
+    (match args
+      [() '#(())]
+      [(name-table . more-name-tables)
+       `#(,(append (vector-ref name-table 0)
+                   (vector-ref (apply name-table-append more-name-tables) 0)))]))
 
   (define (name-record-keys-match? who name-record platform-id language-id name-id )
     (if (and (or (eq? name-id #t) (eqv? name-id (vector-ref name-record 2)))
@@ -584,7 +592,7 @@
            (if decode?
                (let-values ([(name-table errors)
                              (encoded-name-table->name-table encoded-name-table)])
-;;;;;;;;;;;         ((@ (ice-9 pretty-print) pretty-print) (name-table:partition-by-name-and-language-ids name-table))
+;;;;;;;;;;((@ (ice-9 pretty-print) pretty-print) (apply get-font-specific-name-ids (name-table:partition-by-name-and-language-ids name-table)))
                  (values name-table (append fix-up-errors errors)))
                (values encoded-name-table (append fix-up-errors))))))))
 
@@ -928,6 +936,52 @@
                 (cons `#(,(cons nrec matching))
                       (partition-by-langs nonmatching)))])])
         (partition-by-langs (vector-ref name-table 0)))))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (reidentify-name-string! namerec get-new-name-id)
+    ;; A typical value for get-new-name-id, given a list of
+    ;; name-tables, when you want the new name ID to be unique within
+    ;; those tables:
+    ;;
+    ;;    (lambda () (apply get-unused-name-id list-of-name-tables))
+    ;;
+    (vector-set! namerec 2 (get-new-name-id)))
+
+  (define (get-unused-name-id . name-tables)
+    ;; Find a name ID, in the `font-specific' range [256,32767], that
+    ;; does not yet appear in any of the name-tables listed as
+    ;; arguments.
+
+    (define (find-first-unused used-values value-to-try)
+      (when (< 32767 value-to-try)
+        (error 'get-unused-name-id
+               "no font-specific name IDs are available (which, in practice, never should have happened)"))
+      (if (memv value-to-try used-values)
+          (find-first-unused used-values (+ value-to-try 1))
+          value-to-try))
+
+    (let ([font-specific-name-ids
+           (apply get-font-specific-name-ids list-of-name-tables)])
+      (find-first-unused font-specific-name-ids 256)))
+
+  (define (get-font-specific-name-ids . name-tables)
+    ;; Return a list of all name IDs, in the font-specific range
+    ;; [256,32767], that appear in any of the name-tables listed as
+    ;; arguments.
+    (fold-left (lambda (prior nametab)
+                 (append (fold-left
+                          (lambda (prior^ nrec)
+                            (let ([name-id (vector-ref nrec 2)])
+                              (if (and (<= 256 name-id)
+                                       (not (memq name-id prior^)))
+                                  (cons name-id prior^)
+                                  prior^)))
+                          '()
+                          (vector-ref nametab 0))
+                         prior))
+               '()
+               name-tables))
 
   ;;-------------------------------------------------------------------------
 
