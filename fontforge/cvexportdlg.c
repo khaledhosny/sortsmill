@@ -797,23 +797,7 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
       _format == 3 ? "glif" :
       _format == 4 ? "pdf" : _format == 5 ? "plate" :
       _format == 6 ? "xbm" : _format == 7 ? "bmp" : "png";
-#if defined( __CygWin ) || defined(__Mac)
-  /* Windows file systems are not case conscious */
-  {
-    char *pt, *bpt, *end;
-    bpt = buffer;
-    end = buffer + 40;
-    for (pt = sc->name; *pt != '\0' && bpt < end;)
-      {
-        if (isupper (*pt))
-          *bpt++ = '$';
-        *bpt++ = *pt++;
-      }
-    sprintf (bpt, "_%.40s.%s", sc->parent->fontname, ext);
-  }
-#else
   sprintf (buffer, "%.40s_%.40s.%s", sc->name, sc->parent->fontname, ext);
-#endif
   u32_strcpy (ubuf, x_gc_u8_to_u32 (buffer));
   GGadgetSetTitle (gcd[0].ret, ubuf);
   GFileChooserGetChildren (gcd[0].ret, &pulldown, &files, &tf);

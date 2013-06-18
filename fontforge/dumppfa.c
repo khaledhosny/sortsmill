@@ -61,12 +61,6 @@
 #include <gdraw.h>              /* For image defn */
 #include "print.h"              /* For makePatName */
 
-#ifdef __CygWin
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#endif
-
 extern int autohint_before_generate;
 char *xuid = NULL;
 
@@ -3377,20 +3371,6 @@ _WritePSFont (FILE *out, SplineFont *sf, enum fontformat format, int flags,
   setlocale (LC_NUMERIC, oldloc);
   if (ferror (out) || err)
     return (0);
-
-#ifdef __CygWin
-  /* Modern versions of windows want the execute bit set on a ttf file */
-  /*  It might also be needed for a postscript font, but I haven't checked */
-  /* It isn't needed on the pfb file, but is on the pfm, so this code */
-  /*  isn't really useful */
-  /* I've no idea what this corresponds to in windows, nor any idea on */
-  /*  how to set it from the windows UI, but this seems to work */
-  {
-    struct stat buf;
-    fstat (fileno (out), &buf);
-    fchmod (fileno (out), S_IXUSR | buf.st_mode);
-  }
-#endif
 
   return (true);
 }

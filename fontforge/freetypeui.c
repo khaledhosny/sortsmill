@@ -56,12 +56,7 @@
 
 #include "ffthread.h"
 
-// FIXME: What is this about?
-#if defined(__MINGW32__)
-#include <freetype/truetype/tterrors.h>
-#else
 #include <tterrors.h>
-#endif
 
 typedef struct bpdata
 {

@@ -299,12 +299,6 @@ typedef struct charview
   SplineChar *template1, *template2;
   real oldwidth, oldvwidth;
   int16_t oldic, oldtah;
-#if _ModKeysAutoRepeat
-  GDTimer *autorpt;
-  int keysym, oldstate;
-  int oldkeyx, oldkeyy;
-  GWindow oldkeyw;
-#endif
   PST *lcarets;
   int16_t nearcaret;
   /* freetype results display */
@@ -355,10 +349,6 @@ typedef struct bitmapview
   int info_x, info_y;
   int event_x, event_y;
   int16_t sas, sfh;
-#if _ModKeysAutoRepeat
-  GDTimer *autorpt;
-  int keysym, oldstate;
-#endif
   int color;                    /* for greyscale fonts (between 0,255) */
   int color_under_cursor;
 } BitmapView;

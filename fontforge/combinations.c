@@ -564,9 +564,7 @@ static void KP_ExposeKerns(KPData *kpd,GWindow pixmap,GRect *rect) {
 		    (kern->newoff*kpd->bdf->pixelsize/em);
 	}
 	BaseFillFromBDFC(&base,bdfc2);
-#ifndef _BrokenBitmapImages
 	base.trans = base.clut->trans_index = 0;
-#endif
 	yoff = (kern->newyoff*kpd->bdf->pixelsize/em);
 	GDrawDrawImage(pixmap,&gi,NULL, x,subclip.y+as-bdfc2->ymax-yoff);
 	GDrawDrawLine(pixmap,0,subclip.y+kpd->uh-1,
@@ -586,9 +584,7 @@ static void KP_ExposeKerns(KPData *kpd,GWindow pixmap,GRect *rect) {
 	}
 	GDrawPopClip(pixmap,&subold);
     }
-#ifndef _BrokenBitmapImages
     base.clut->trans_index = -1;
-#endif
     GDrawPopClip(pixmap,&old);
     GDrawSetDither(NULL, true);
 }

@@ -147,28 +147,6 @@ return;
 	    last = cur;
 	}
     }
-#if __CygWin
-    /* Under cygwin we should give the user access to /cygdrive, even though */
-    /*  a diropen("/") will not find it */
-    if ( strcmp(path,"/")==0 ) {
-	cur = xcalloc(1,sizeof(GDirEntry));
-	cur->name = x_u32_strconv_from_locale("cygdrive");
-	strcpy(ept,"cygdrive");
-	stat(buffer,&statb);
-	cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
-	cur->size    = statb.st_size;
-	cur->mode    = statb.st_mode;
-	cur->modtime = statb.st_mtime;
-	cur->isdir   = S_ISDIR(cur->mode);
-	cur->isexe   = !cur->isdir && (cur->mode & 0100);
-	if ( last==NULL )
-	    head = last = cur;
-	else {
-	    last->next = cur;
-	    last = cur;
-	}
-    }
-#endif
     closedir(dir);
     free(buffer);
     gc->iodata = head;

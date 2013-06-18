@@ -49,9 +49,7 @@
 #include "gfile.h"
 
 #include <sys/types.h>          /* for waitpid */
-#if !defined(__MINGW32__)
 #include <sys/wait.h>           /* for waitpid */
-#endif
 #include <unistd.h>             /* for access, unlink, fork, execvp, getcwd */
 #include <sys/stat.h>           /* for open */
 #include <fcntl.h>              /* for open */
@@ -228,7 +226,6 @@ localSplinesFromEntities (Entity * ent, Color bgcol, int ispotrace)
   return (head);
 }
 
-#if !defined(__MINGW32__)
 /* I think this is total paranoia. but it's annoying to have linker complaints... */
 static int
 mytempnam (char *buffer)
@@ -284,129 +281,7 @@ mytempdir (void)
         return (NULL);
     }
 }
-#endif
 
-
-#if defined(__MINGW32__)
-static char *
-add_arg (char *buffer, char *s)
-{
-  while (*s)
-    *buffer++ = *s++;
-  *buffer = '\0';
-  return buffer;
-}
-
-void
-_SCAutoTrace (SplineChar *sc, int layer, char **args)
-{
-  ImageList *images;
-  SplineSet *new_, *last;
-  struct _GImage *ib;
-  Color bgcol;
-  int ispotrace;
-  real transform[6];
-  char tempname_in[1025];
-  char tempname_out[1025];
-  char *prog, *command, *cmd;
-  FILE *ps;
-  int i, changed = false;
-
-  if (sc->layers[ly_back].images == NULL)
-    return;
-  prog = FindAutoTraceName ();
-  if (prog == NULL)
-    return;
-  ispotrace = (strcasestr (prog, "potrace") != NULL);
-  for (images = sc->layers[ly_back].images; images != NULL;
-       images = images->next)
-    {
-      ib =
-        images->image->list_len ==
-        0 ? images->image->u.image : images->image->u.images[0];
-      if (ib->width == 0 || ib->height == 0)
-        {
-          continue;
-        }
-
-      strcpy (tempname_in, _tempnam (NULL, "FontForge_in_"));
-      strcpy (tempname_out, _tempnam (NULL, "FontForge_out_"));
-      GImageWriteBmp (images->image, tempname_in);
-
-      if (ib->trans == -1)
-        bgcol = 0xffffff;       /* reasonable guess */
-      else if (ib->image_type == it_true)
-        bgcol = ib->trans;
-      else if (ib->clut != NULL)
-        bgcol = ib->clut->clut[ib->trans];
-      else
-        bgcol = 0xffffff;
-
-      command = xmalloc (32768);
-      cmd = add_arg (command, prog);
-      cmd = add_arg (cmd, " ");
-      if (args)
-        {
-          for (i = 0; args[i]; i++)
-            {
-              cmd = add_arg (cmd, args[i]);
-              cmd = add_arg (cmd, " ");
-            }
-        }
-      if (ispotrace)
-        cmd = add_arg (cmd, "-c --eps -r 72 --output=\"");
-      else
-        cmd =
-          add_arg (cmd,
-                   "--output-format=eps --input-format=BMP --output-file \"");
-
-      cmd = add_arg (cmd, tempname_out);
-      cmd = add_arg (cmd, "\" \"");
-      cmd = add_arg (cmd, tempname_in);
-      cmd = add_arg (cmd, "\"");
-      /*fprintf(stdout, "---EXEC---\n%s\n----------\n", command);fflush(stdout); */
-      system (command);
-      free (command);
-
-      ps = fopen (tempname_out, "r");
-      if (ps)
-        {
-          new_ =
-            localSplinesFromEntities (EntityInterpretPS (ps, NULL), bgcol,
-                                      ispotrace);
-          transform[0] = images->xscale;
-          transform[3] = images->yscale;
-          transform[1] = transform[2] = 0;
-          transform[4] = images->xoff;
-          transform[5] = images->yoff - images->yscale * ib->height;
-          new_ = SplinePointListTransform (new_, transform, tpt_AllPoints);
-          if (sc->layers[layer].order2)
-            {
-              SplineSet *o2 = SplineSetsTTFApprox (new_);
-              SplinePointListsFree (new_);
-              new_ = o2;
-            }
-          if (new_ != NULL)
-            {
-              sc->parent->onlybitmaps = false;
-              if (!changed)
-                SCPreserveLayer (sc, layer, false);
-              for (last = new_; last->next != NULL; last = last->next);
-              last->next = sc->layers[layer].splines;
-              sc->layers[layer].splines = new_;
-              changed = true;
-            }
-          fclose (ps);
-        }
-
-      unlink (tempname_in);
-      unlink (tempname_out);
-    }
-  if (changed)
-    SCCharChangedUpdate (sc, layer);
-
-}
-#else
 void
 _SCAutoTrace (SplineChar *sc, int layer, char **args)
 {
@@ -546,7 +421,6 @@ _SCAutoTrace (SplineChar *sc, int layer, char **args)
   if (changed)
     SCCharChangedUpdate (sc, layer);
 }
-#endif
 
 static char **
 makevector (const char *str)
@@ -914,9 +788,6 @@ MfArgs (void)
 SplineFont *
 SFFromMF (char *filename)
 {
-#if defined(__MINGW32__)
-  return (NULL);
-#else
   char *tempdir;
   char *arglist[8];
   int pid, status, ac, i;
@@ -1026,5 +897,4 @@ SFFromMF (char *filename)
   free (arglist[1]);
   cleantempdir (tempdir);
   return (sf);
-#endif
 }
