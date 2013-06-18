@@ -52,6 +52,7 @@
 #include <gwidget.h>
 #include "ttf.h"
 #include <sortsmill/xgc.h>
+#include <sortsmill/guile.h>
 
 VISIBLE char *SaveTablesPref;
 VISIBLE int ask_user_for_cmap = false;
@@ -2000,12 +2001,13 @@ EnforcePostScriptName (char *old)
   return (str);
 }
 
-static int
+static bool
 IsSubSetOf (const char *substr, const char *fullstr)
 {
-  /* The mac string is often a subset of the unicode string. Certain */
-  /*  characters can't be expressed in the mac encoding and are omitted */
-  /*  or turned to question marks or some such */
+  /* The mac string is often a subset of the unicode string. Certain
+     characters can't be expressed in the mac encoding and are omitted
+     or turned to question marks or some such. */
+
   const char *pt1, *pt2;
   uint32_t ch1, ch2;
 
@@ -2059,7 +2061,10 @@ TTFAddLangStr (FILE *ttf, struct ttfinfo *info, int id,
 
   if (plat == 1 || plat == 0)
     language = WinLangFromMac (language);
+
   if ((language & 0xff00) == 0)
+    // FIXME: I am pretty sure this never actually happens. Maybe an
+    // earlier version of WinLangFromMac left out the 0x400.
     language |= 0x400;
 
   for (prev = NULL, cur = info->names; cur != NULL && cur->lang != language;
@@ -2254,11 +2259,21 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
 #if 0
   // FIXME: Temporary code for activation during name table reimplementation.
   //???????????????????????????????????????????????????????????????????????????????????????????????????????????
-  scm_call_3 (scm_c_public_ref
-              ("sortsmill", "encoded-name-table:read-from-sfnt-at-offset"),
-              scm_from_int (fileno (ttf)),
-              scm_from_uintmax (info->copyright_start),
-              SCM_BOOL_F);
+  scm_c_utf8_format (SCM_BOOL_F, "~a\n",
+                     scm_list_1
+                     (scm_call_1
+                      (scm_c_public_ref
+                       ("sortsmill",
+                        "name-table:partition-by-name-and-language-ids"),
+                       (scm_c_value_ref
+                        (scm_call_3
+                         (scm_c_public_ref
+                          ("sortsmill",
+                           "name-table:read-from-sfnt-at-offset"),
+                          scm_from_int (fileno (ttf)),
+                          scm_from_uintmax (info->copyright_start),
+                          SCM_BOOL_T),
+                         0)))));
   //???????????????????????????????????????????????????????????????????????????????????????????????????????????
 #endif
 
@@ -7821,6 +7836,26 @@ scm_recode_ot_string_as_utf8 (SCM data, SCM len, SCM platform, SCM specific,
   return result;
 }
 
+static SCM
+scm_name_table_string_is_subset_p (SCM substring, SCM full_string)
+{
+  scm_dynwind_begin (0);
+
+  char *substr = scm_to_utf8_stringn (substring, NULL);
+  scm_dynwind_free (substr);
+
+  char *full_str = scm_to_utf8_stringn (full_string, NULL);
+  scm_dynwind_free (full_str);
+
+  SCM result = scm_from_bool (IsSubSetOf (substr, full_str));
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
 void init_sortsmill_parsettf_guile (void);
 
 VISIBLE void
@@ -7828,6 +7863,8 @@ init_sortsmill_parsettf_guile (void)
 {
   scm_c_define_gsubr ("recode-ot-string-as-utf8", 5, 0, 0,
                       scm_recode_ot_string_as_utf8);
+  scm_c_define_gsubr ("name-table:string-is-subset?", 2, 0, 0,
+                      scm_name_table_string_is_subset_p);
 }
 
 //-------------------------------------------------------------------------
