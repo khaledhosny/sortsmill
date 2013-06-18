@@ -962,7 +962,7 @@
           value-to-try))
 
     (let ([font-specific-name-ids
-           (apply get-font-specific-name-ids list-of-name-tables)])
+           (apply get-font-specific-name-ids name-tables)])
       (find-first-unused font-specific-name-ids 256)))
 
   (define (get-font-specific-name-ids . name-tables)
