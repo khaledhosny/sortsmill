@@ -16,20 +16,29 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_FONTS_H
-#define _SORTSMILL_GUILE_FONTS_H
+#ifndef _SORTSMILL_GUILE_FONTS_FONT_FORMATS_H
+#define _SORTSMILL_GUILE_FONTS_FONT_FORMATS_H
 
-#include <sortsmill/guile/fonts/anchors.h>
-#include <sortsmill/guile/fonts/contours.h>
-#include <sortsmill/guile/fonts/font_formats.h>
-#include <sortsmill/guile/fonts/fontinfo_dict.h>
-#include <sortsmill/guile/fonts/glyphs.h>
-#include <sortsmill/guile/fonts/head_table.h>
-#include <sortsmill/guile/fonts/hhea_table.h>
-#include <sortsmill/guile/fonts/os2_table.h>
-#include <sortsmill/guile/fonts/peg_spacing.h>
-#include <sortsmill/guile/fonts/private_dict.h>
-#include <sortsmill/guile/fonts/t1font_dict.h>
-#include <sortsmill/guile/fonts/views.h>
+#include <libguile.h>
 
-#endif /* _SORTSMILL_GUILE_FONTS_H */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#if 0
+}
+#endif
+
+SCM scm_from_FontFormat (int fontformat);
+int scm_to_FontFormat (SCM symbol);
+SCM scm_integer_to_font_format (SCM i);
+SCM scm_font_format_to_integer (SCM symbol);
+
+#if 0
+{
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _SORTSMILL_GUILE_FONTS_FONT_FORMATS_H */

@@ -268,6 +268,7 @@ libsortsmill_fontforge_la_SOURCES += guile_internals_lookups.c
 
 libsortsmill_fontforge_la_SOURCES += guile_fonts_anchors.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_contours.c
+libsortsmill_fontforge_la_SOURCES += guile_fonts_font_formats.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_fontinfo_dict.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_glyphs.c
 libsortsmill_fontforge_la_SOURCES += guile_fonts_head_table.c

@@ -1078,6 +1078,11 @@
 
   ;;-------------------------------------------------------------------------
 
+  (define (encode-name-record namerec applemode encoding-name)
+    33333333333333)
+
+  ;;-------------------------------------------------------------------------
+
   (define/kwargs (encoded-name-table:write-to-sfnt port/fd encoded-name-table)
     (let* ([port (if (port? port/fd) port/fd (fdes->outport port/fd))]
            [encoded-namerecs (vector-ref encoded-name-table 0)]

@@ -356,6 +356,13 @@ GO_FILES += sortsmill/fonts/contours.go
 FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/contours.scm
 
 
+# (sortsmill font-formats)
+
+DIST_SCM_FILES += sortsmill/fonts/font-formats.scm
+GO_FILES += sortsmill/fonts/font-formats.go
+FONTS_REEXPORTED_SCM_FILES += sortsmill/fonts/font-formats.scm
+
+
 # (sortsmill fontinfo-dict)
 
 DIST_SCM_FILES += sortsmill/fonts/fontinfo-dict.scm

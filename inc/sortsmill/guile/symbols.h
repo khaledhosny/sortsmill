@@ -94,6 +94,37 @@ SCM scm_symbol__special (void); /* special */
 
 /*-----------------------------------------------------------------------*/
 
+/* Font formats. */
+
+SCM scm_symbol__pfa (void);     /* pfa */
+SCM scm_symbol__pfb (void);     /* pfb */
+SCM scm_symbol__pfb_macbin (void);      /* pfb-macbin */
+SCM scm_symbol__pfb_multiple (void);    /* pfb-multiple */
+SCM scm_symbol__mma (void);     /* mma */
+SCM scm_symbol__mmb (void);     /* mmb */
+SCM scm_symbol__type3 (void);   /* type3 */
+SCM scm_symbol__type0 (void);   /* type0 */
+SCM scm_symbol__cid (void);     /* cid */
+SCM scm_symbol__cff (void);     /* cff */
+SCM scm_symbol__cff_cid (void); /* cff-cid */
+SCM scm_symbol__type42 (void);  /* type42 */
+SCM scm_symbol__type11 (void);  /* type11 */// ‘Type 42 CID’.
+SCM scm_symbol__ttf (void);     /* ttf */
+SCM scm_symbol__ttf_symbol (void);      /* ttf-symbol */
+SCM scm_symbol__ttf_macbin (void);      /* ttf-macbin */
+SCM scm_symbol__ttc (void);     /* ttc */
+SCM scm_symbol__ttf_dfont (void);       /* ttf-dfont */
+SCM scm_symbol__otf (void);     /* otf */
+SCM scm_symbol__otf_dfont (void);       /* otf-dfont */
+SCM scm_symbol__otf_cid (void); /* otf-cid */
+SCM scm_symbol__otf_cid_dfont (void);   /* otf-cid-dfont */
+SCM scm_symbol__svg (void);     /* svg */
+SCM scm_symbol__ufo (void);     /* ufo */
+SCM scm_symbol__woff (void);    /* woff */
+SCM scm_symbol__no_font (void); /* no-font */
+
+/*-----------------------------------------------------------------------*/
+
 #if 0
 {
 #endif

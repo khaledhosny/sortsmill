@@ -196,6 +196,7 @@ guile/sortsmill/fonts/anchors.scm
 guile/sortsmill/fonts/contours.scm
 guile/sortsmill/fonts/glyphs.scm
 guile/sortsmill/fonts/name-table.scm
+guile/sortsmill/fonts/opentype-io.scm
 guile/sortsmill/fonts/ufo.scm
 guile/sortsmill/fonts/views.scm
 

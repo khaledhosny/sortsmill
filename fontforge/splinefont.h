@@ -1142,14 +1142,14 @@ typedef struct encmap
 {
   /* A per-font map of encoding to glyph id. */
 
-  SCM _enc_to_gid;        /* A map from encoding point to glyph ID. */
-  SCM _gid_to_enc;        /* A map from glyph ID to encoding point. */
+  SCM _enc_to_gid;              /* A map from encoding point to glyph ID. */
+  SCM _gid_to_enc;              /* A map from glyph ID to encoding point. */
 
-  int enc_limit;          /* One more than the highest encoding point.
-                             Strictly speaking, this might include
-                             glyphs that are not encoded, but which
-                             are displayed after the encoding
-                             proper. */
+  int enc_limit;                /* One more than the highest encoding point.
+                                   Strictly speaking, this might include
+                                   glyphs that are not encoded, but which
+                                   are displayed after the encoding
+                                   proper. */
 
   /* FIXME: We also need a SplineChar-to-GID mapping (which would NOT
      be part of EncMap), or replace the GIDs with SplineChars
@@ -1198,9 +1198,9 @@ inline void set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 void add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 void remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc);
 inline void remove_all_gid_to_enc (EncMap *map, ssize_t gid);
-inline ssize_t gid_to_enc (EncMap *map, ssize_t gid); /* Returns the
-                                                         first code
-                                                         point. */
+inline ssize_t gid_to_enc (EncMap *map, ssize_t gid);   /* Returns the
+                                                           first code
+                                                           point. */
 inline SCM gid_to_enc_list (EncMap *map, ssize_t gid);
 inline bool gid_to_enc_is_set (EncMap *map, ssize_t gid);
 void copy_gid_to_enc_contents (EncMap *new, EncMap *old);
@@ -2362,11 +2362,11 @@ typedef struct splinefont
   bool weight_width_slope_only; /* This bit seems stupid to me. */
   bool save_to_dir;             /* Loaded from an sfdir collection
                                    rather than a simple sfd file. */
-  bool head_optimized_for_cleartype; /* Bit in the 'head' flags field,
-                                        if unset "East Asian fonts in
-                                        the Windows Presentation
-                                        Framework (Avalon) will not be
-                                        hinted". */
+  bool head_optimized_for_cleartype;    /* Bit in the 'head' flags field,
+                                           if unset "East Asian fonts in
+                                           the Windows Presentation
+                                           Framework (Avalon) will not be
+                                           hinted". */
   bool ticked;
   bool internal_temp;           /* Internal temporary font to be
                                    passed to freetype for
@@ -2690,13 +2690,39 @@ int CIDOneWidth (SplineFont *sf);
 int SFOneHeight (SplineFont *sf);
 int SFIsCJK (SplineFont *sf, EncMap *map);
 VISIBLE void CIDMasterAsDes (SplineFont *sf);
-enum fontformat
-{ ff_pfa, ff_pfb, ff_pfbmacbin, ff_multiple, ff_mma, ff_mmb,
-  ff_ptype3, ff_ptype0, ff_cid, ff_cff, ff_cffcid,
-  ff_type42, ff_type42cid,
-  ff_ttf, ff_ttfsym, ff_ttfmacbin, ff_ttc, ff_ttfdfont, ff_otf, ff_otfdfont,
-  ff_otfcid, ff_otfciddfont, ff_svg, ff_ufo, ff_woff, ff_none
-};
+
+typedef enum fontformat
+{
+  // If you change this enum, please also make any appropriate changes
+  // fontforge/guile_fonts_font_formats.c.
+  ff_pfa = 0,
+  ff_pfb,
+  ff_pfbmacbin,
+  ff_multiple,
+  ff_mma,
+  ff_mmb,
+  ff_ptype3,
+  ff_ptype0,
+  ff_cid,
+  ff_cff,
+  ff_cffcid,
+  ff_type42,
+  ff_type42cid,
+  ff_ttf,
+  ff_ttfsym,
+  ff_ttfmacbin,
+  ff_ttc,
+  ff_ttfdfont,
+  ff_otf,
+  ff_otfdfont,
+  ff_otfcid,
+  ff_otfciddfont,
+  ff_svg,
+  ff_ufo,
+  ff_woff,
+  ff_none                       // ff_none comes last.
+} FontFormat;
+
 VISIBLE int CanWoff (void);
 struct pschars *SplineFont2ChrsSubrs (SplineFont *sf, int iscjk,
                                       struct pschars *subrs, int flags,
@@ -3558,7 +3584,7 @@ SplineFont *SFReadPalmPdb (char *filename, int toback);
 VISIBLE SplineFont *LoadSplineFont (const char *filename, enum openflags);
 VISIBLE SplineFont *_ReadSplineFont (FILE *file, const char *filename,
                                      enum openflags openflags);
-SplineFont *ReadSplineFont (const char *filename, enum openflags); /* Don't use this; use LoadSplineFont instead. */
+SplineFont *ReadSplineFont (const char *filename, enum openflags);      /* Don't use this; use LoadSplineFont instead. */
 VISIBLE FILE *URLToTempFile (char *url, void *lock);
 int URLFromFile (char *url, FILE *from);
 void ArchiveCleanup (char *archivedir);

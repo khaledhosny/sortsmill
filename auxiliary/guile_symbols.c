@@ -89,3 +89,34 @@ SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__kerning_only, "kerning-only");
 SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__special, "special");
 
 //-------------------------------------------------------------------------
+//
+// Font formats.
+
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__pfa, "pfa");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__pfb, "pfb");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__pfb_macbin, "pfb-macbin");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__pfb_multiple, "pfb-multiple");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__mma, "mma");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__mmb, "mmb");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__type3, "type3");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__type0, "type0");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__cid, "cid");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__cff, "cff");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__cff_cid, "cff-cid");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__type42, "type42");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__type11, "type11"); // ‘Type 42 CID’.
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__ttf, "ttf");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__ttf_symbol, "ttf-symbol");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__ttf_macbin, "ttf-macbin");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__ttc, "ttc");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__ttf_dfont, "ttf-dfont");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf, "otf");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf_dfont, "otf-dfont");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf_cid, "otf-cid");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf_cid_dfont, "otf-cid-dfont");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__svg, "svg");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__ufo, "ufo");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__woff, "woff");
+SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__no_font, "no-font");
+
+//-------------------------------------------------------------------------
