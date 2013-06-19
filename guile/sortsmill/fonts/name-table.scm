@@ -60,6 +60,13 @@
    ;; name-table:languages-match?-function
    name-table:languages-match?
    name-table:languages-match?-function
+
+   name-table:select-name-string-function
+   name-table:select-name-string
+
+   name-table:save-redundant-strings?
+
+   name-table:prune-and-prepare
    )
 
   (import (sortsmill dynlink)
@@ -592,7 +599,7 @@
            (if decode?
                (let-values ([(name-table errors)
                              (encoded-name-table->name-table encoded-name-table)])
-;;;;;;;;;;((@ (ice-9 pretty-print) pretty-print) (apply get-font-specific-name-ids (name-table:partition-by-name-and-language-ids name-table)))
+;;;;;;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (name-table:prune-and-prepare name-table))
                  (values name-table (append fix-up-errors errors)))
                (values encoded-name-table (append fix-up-errors))))))))
 
@@ -884,35 +891,26 @@
             (and (string? language-id2)
                  (ietf-language-tag=? language-id1 language-id2))]
            [else
-            ;; We will assume that platform 0 uses Macintosh language
-            ;; ID codes, unless the language ID is an IETF language
-            ;; tag.
-            ;;
-            ;; There is no standard meaning for language ID codes
-            ;; under #x8000 for platform 0. The OpenType standard
-            ;; slyly recommends setting it to zero, which conveniently
-            ;; corresponds to the Macintosh platform code for
-            ;; ‘English’. See Microsoft’s Calibri fonts for an
-            ;; example: language ID is set to zero, and the name
-            ;; strings are in English.
-            (case platform-id1
-              [(0 1) (case platform-id2
-                     [(0 1) (= language-id1 language-id2)]
-                     [(3) (= (windows-language-from-mac-language language-id1)
-                             language-id2)]
-                     [else (assertion-violation 'languages-match?
-                                                (_ "unexpected platform ID")
-                                                platform-id2)])]
-              [(3) (case platform-id2
-                     [(0 1) (= language-id1
-                               (windows-language-from-mac-language language-id2))]
-                     [(3) (= language-id1 language-id2)]
-                     [else (assertion-violation 'languages-match?
-                                                (_ "unexpected platform ID")
-                                                platform-id2)])]
-              [else (assertion-violation 'languages-match?
-                                         (_ "unexpected platform ID")
-                                         platform-id1)])] )] )] ))
+            (let ([winlang1 (windows-language-id platform-id1 language-id1)]
+                  [winlang2 (windows-language-id platform-id2 language-id2)])
+              (and winlang1 winlang2 (= winlang1 winlang2)))] )] )] ))
+
+  (define (windows-language-id platform-id language-id)
+    ;; We will assume that platform 0 uses Macintosh language ID
+    ;; codes, unless the language ID is an IETF language tag.
+    ;;
+    ;; There is no standard meaning for language ID codes under #x8000
+    ;; for platform 0. The OpenType standard slyly recommends setting
+    ;; it to zero, which conveniently corresponds to the Macintosh
+    ;; platform code for ‘English’. See Microsoft’s Calibri fonts for
+    ;; an example: language ID is set to zero, and the name strings
+    ;; are in English.
+    (case platform-id
+      [(0 1) (windows-language-from-mac-language language-id)]
+      [(3) language-id]
+      [else
+       ;; What platform is this?
+       #f]))
 
   (define name-table:languages-match?-function
     (make-fluid languages-match?-function-default))
@@ -937,16 +935,111 @@
                       (partition-by-langs nonmatching)))])])
         (partition-by-langs (vector-ref name-table 0)))))
 
-  ;;-------------------------------------------------------------------------
 
-  (define (reidentify-name-string! namerec get-new-name-id)
+  (define (select-name-string-function-default name-table)
+    (let* ([namerecs (vector-ref name-table 0)]
+           [unicode-names (memp-by-platform 0 namerecs)]
+           [macintosh-names (memp-by-platform 1 namerecs)]
+           [windows-names (memp-by-platform 3 namerecs)])
+      (cond [windows-names (car windows-names)]
+            [unicode-names (car unicode-names)]
+            [macintosh-names (car macintosh-names)]
+            [else
+             (assertion-violation
+              'select-name-string-function-default
+              (_ "expected there to be at least one valid entry in the given name-table")
+              name-table)])))
+
+  (define (memp-by-platform platform-id namerecs)
+    (memp (lambda (nrec) (= platform-id (vector-ref nrec 0))) namerecs))
+
+  (define name-table:select-name-string-function
+    (make-fluid select-name-string-function-default))
+
+  (define (name-table:select-name-string name-table)
+    ((fluid-ref name-table:select-name-string-function) name-table))
+
+  (define (get-mismatched-namerecs namerec name-table)
+    (let ([value (vector-ref namerec 3)]
+          [nrecs (vector-ref name-table 0)])
+      (delete-duplicates
+       (filter (lambda (nrec) (not (string=? (vector-ref nrec 3) value))) nrecs)
+       (lambda (nrec1 nrec2) (string=? (vector-ref nrec1 3)
+                                       (vector-ref nrec2 3))))))
+
+  (define name-table:save-redundant-strings? (make-fluid #f))
+
+  (define (prune-single-language-and-name-id-name-table selected-namerec name-table
+                                                        get-new-name-id)
     ;; A typical value for get-new-name-id, given a list of
     ;; name-tables, when you want the new name ID to be unique within
     ;; those tables:
     ;;
     ;;    (lambda () (apply get-unused-name-id list-of-name-tables))
     ;;
-    (vector-set! namerec 2 (get-new-name-id)))
+    (let ([language-id (vector-ref selected-namerec 1)]
+          [name-id (vector-ref selected-namerec 2)]
+          [value (vector-ref selected-namerec 3)]
+          [mismatches (get-mismatched-namerecs selected-namerec name-table)])
+      (if (fluid-ref name-table:save-redundant-strings?)
+          `#(,(cons
+               selected-namerec
+               (map
+                (lambda (nrec)
+                  (let ([new-name-id (get-new-name-id)])
+                    (log-fontforge-warning
+                     (format
+                      #f
+                      (_ "Warning: For name string ~a, language ~a,\nI am taking string\n  ~s\ninstead of\n  ~s\nand changing the name ID of the latter to ~a.")
+                      name-id language-id value (vector-ref nrec 3) new-name-id))
+                    `#(,(vector-ref nrec 0)
+                       ,(vector-ref nrec 1)
+                       ,new-name-id
+                       ,(vector-ref nrec 3))))
+                mismatches)))
+          (begin
+            (for-each
+             (lambda (nrec)
+               (log-fontforge-warning
+                (format
+                 #f
+                 (_ "Warning: For name string ~a, language ~a,\nI am taking string\n  ~s\ninstead of\n  ~s\nand discarding the latter.")
+                 name-id language-id value (vector-ref nrec 3))))
+             mismatches)
+            `#(,(list selected-namerec))))))
+
+  (define (convert-to-windows-strings name-table)
+    (let ([namerecs
+           (filter-map
+            (match-lambda
+             [#(platform-id language-id name-id value)
+              (if (string? language-id)
+                  `#(3 ,language-id ,name-id ,value)
+                  (let ([winlang (windows-language-id platform-id language-id)])
+                    (if (not winlang)
+                        #f ;; FIXME: Maybe post a warning.
+                        `#(3 ,winlang ,name-id ,value))))])
+            (vector-ref name-table 0))])
+      `#(,namerecs)))
+
+  (define/kwargs (name-table:prune-and-prepare name-table)
+    (let ([partitioned-name-tables
+           (name-table:partition-by-name-and-language-ids name-table)])
+      (convert-to-windows-strings
+       (fold-left
+        (lambda (new-name-table isolated-string-nametab)
+          (let* ([get-new-name-id
+                  (lambda () (get-unused-name-id new-name-table))]
+                 [selected-namerec
+                  (name-table:select-name-string isolated-string-nametab)]
+                 [new-isolated-string-nametab
+                  (prune-single-language-and-name-id-name-table
+                   selected-namerec isolated-string-nametab get-new-name-id)])
+            (name-table-append new-isolated-string-nametab new-name-table)))
+        '#(())
+        partitioned-name-tables))))
+
+  ;;-------------------------------------------------------------------------
 
   (define (get-unused-name-id . name-tables)
     ;; Find a name ID, in the `font-specific' range [256,32767], that
