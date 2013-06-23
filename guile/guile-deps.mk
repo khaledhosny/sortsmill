@@ -10,12 +10,13 @@ sortsmill/editor/main-loop.go: sortsmill/editor/finalization.go sortsmill/dynlin
 sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
 sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__.go
 sortsmill/fonts/contours.go: sortsmill/svg/path-data.go sortsmill/nearness.go sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go sortsmill/kwargs.go
+sortsmill/fonts/font-formats.go: sortsmill/dynlink.go
 sortsmill/fonts/fontinfo-dict.go: sortsmill/dynlink.go
 sortsmill/fonts/general.go: sortsmill/fonts/views.go sortsmill/fonts/fontinfo-dict.go sortsmill/fontforge-api.go sortsmill/alloc.go
 sortsmill/fonts/glyphs.go: sortsmill/fonts/views.go sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__/glyphs.go
 sortsmill/fonts/head-table.go: sortsmill/dynlink.go
 sortsmill/fonts/hhea-table.go: sortsmill/dynlink.go
-sortsmill/fonts/name-table.go: sortsmill/dynlink.go sortsmill/fonts/opentype-io.go sortsmill/strings/ietf-language-tags.go sortsmill/postscript.go sortsmill/kwargs.go sortsmill/notices.go sortsmill/i18n.go
+sortsmill/fonts/name-table.go: sortsmill/dynlink.go sortsmill/fonts/opentype-io.go sortsmill/strings/ietf-language-tags.go sortsmill/postscript.go sortsmill/mac-encodings.go sortsmill/kwargs.go sortsmill/notices.go sortsmill/i18n.go sortsmill/fontforge-api.go
 sortsmill/fonts/opentype-io.go: sortsmill/i18n.go
 sortsmill/fonts/os2-table.go: sortsmill/dynlink.go
 sortsmill/fonts/peg-spacing.go: sortsmill/fonts/glyphs.go sortsmill/fonts/anchors.go sortsmill/fontforge-api.go sortsmill/dynlink.go
@@ -75,7 +76,7 @@ sortsmill/alloc.go: sortsmill/alloc/alloc-base.go sortsmill/alloc/alloc-die.go
 sortsmill/containers.go: sortsmill/containers/rbmap.go sortsmill/containers/rnrs-hashtable.go
 sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
 sortsmill/fontforge-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go sortsmill/machine.go
-sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/general.go sortsmill/fonts/glyphs.go sortsmill/fonts/head-table.go sortsmill/fonts/hhea-table.go sortsmill/fonts/name-table.go sortsmill/fonts/opentype-io.go sortsmill/fonts/os2-table.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/private-dict.go sortsmill/fonts/psmat.go sortsmill/fonts/t1font-dict.go sortsmill/fonts/ufo.go sortsmill/fonts/views.go
+sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/font-formats.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/general.go sortsmill/fonts/glyphs.go sortsmill/fonts/head-table.go sortsmill/fonts/hhea-table.go sortsmill/fonts/name-table.go sortsmill/fonts/opentype-io.go sortsmill/fonts/os2-table.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/private-dict.go sortsmill/fonts/psmat.go sortsmill/fonts/t1font-dict.go sortsmill/fonts/ufo.go sortsmill/fonts/views.go
 sortsmill/gdraw-api.go: sortsmill/alloc/alloc-base.go sortsmill/pkg-info/package.go sortsmill/machine.go
 sortsmill/math.go: sortsmill/math/brentroot.go sortsmill/math/functions.go sortsmill/math/geometry.go sortsmill/math/gsl.go sortsmill/math/math-constants.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
 sortsmill/math/geometry.go: sortsmill/math/geometry/lines.go

@@ -51,6 +51,7 @@
 #include <ustring.h>
 #include <chardata.h>
 #include <gwidget.h>
+#include <sortsmill/guile.h>
 
 #include "ttf.h"
 
@@ -811,8 +812,8 @@ SCttfApprox (SplineChar *sc, int layer)
       for (ss = ref->layers[0].splines; ss != NULL; ss = ss->next)
         {
           tss =
-            sc->layers[layer].
-            order2 ? SplinePointListCopy1 (ss) : SSttfApprox (ss);
+            sc->
+            layers[layer].order2 ? SplinePointListCopy1 (ss) : SSttfApprox (ss);
           if (head == NULL)
             head = tss;
           else
@@ -4735,6 +4736,23 @@ compare_entry (const void *_mn1, const void *_mn2)
   return (mn1->strid - mn2->strid);
 }
 
+static const char *
+to_encname_for_windows (Encoding *_encoding_name)
+{
+  const char *result;
+  if (_encoding_name->is_japanese)
+    result = "SJIS";
+  else if (strcasecmp (_encoding_name->enc_name, "JOHAB") == 0)
+    result = "JOHAB";
+  else if (_encoding_name->is_korean)
+    result = "EUC-KR";
+  else if (_encoding_name->is_simplechinese)
+    result = "EUC-CN";
+  else
+    result = _encoding_name->enc_name;
+  return result;
+}
+
 static void
 AddEncodedName (NamTab *nt, char *utf8name, uint16_t lang, uint16_t strid)
 {
@@ -4831,16 +4849,19 @@ AddEncodedName (NamTab *nt, char *utf8name, uint16_t lang, uint16_t strid)
         }
       else
         {
-          char *space, *encname, *out;
+          char *space;
+          char *out;
+          const char *encname;
           ICONV_CONST char *in;
           Encoding *enc;
           size_t inlen, outlen;
           ne->offset = ftell (nt->strings);
-          encname = nt->encoding_name->is_japanese ? "SJIS" :
-            strcasecmp (nt->encoding_name->enc_name, "JOHAB") == 0 ? "JOHAB" :
-            nt->encoding_name->is_korean ? "EUC-KR" :
-            nt->encoding_name->is_simplechinese ? "EUC-CN" :
-            nt->encoding_name->enc_name;
+          encname = to_encname_for_windows (nt->encoding_name);
+//        encname = nt->encoding_name->is_japanese ? "SJIS" :
+//          strcasecmp (nt->encoding_name->enc_name, "JOHAB") == 0 ? "JOHAB" :
+//          nt->encoding_name->is_korean ? "EUC-KR" :
+//          nt->encoding_name->is_simplechinese ? "EUC-CN" :
+//          nt->encoding_name->enc_name;
           enc = FindOrMakeEncoding (encname);
           if (enc == NULL)
             --ne;
@@ -4885,13 +4906,26 @@ dumpnames (struct alltabs *at, SplineFont *sf, enum fontformat format)
   struct otffeatname *fn;
 
   memset (&nt, 0, sizeof (nt));
+
+  // FIXME: Set the fluid name-table:encoding-name temporarily in a
+  // dynamic wind.
   nt.encoding_name = at->map->enc;
+
+  // FIXME: Instead of doing this weird font-format aliasing, set
+  // appropriate Guile fluids temporarily in a dynamic wind. In
+  // particular, set (fluid-set!
+  // name-table:use-windows-symbol-encoding? #t) temporarily. The
+  // method is ugly but still IMO an improvement.
   nt.format = format;
-  nt.applemode = at->applemode;
-  nt.strings = tmpfile ();
   if ((format >= ff_ttf && format <= ff_otfdfont)
       && (at->gi.flags & ttf_flag_symbol))
     nt.format = ff_ttfsym;
+
+  // FIXME: This applemode stuff probably will end up being handled by
+  // a fluid, like the other fluids mentioned in FIXMEs above.
+  nt.applemode = at->applemode;
+
+  nt.strings = tmpfile ();
 
   memset (&dummy, 0, sizeof (dummy));
   for (cur = sf->names; cur != NULL; cur = cur->next)
@@ -4932,7 +4966,7 @@ dumpnames (struct alltabs *at, SplineFont *sf, enum fontformat format)
   qsort (nt.entries, nt.cur, sizeof (NameEntry), compare_entry);
 
   ///// FIXME FIXME FIXME: Support name table format 1.
-  
+
   at->name = tmpfile ();
   putshort (at->name, 0);
   putshort (at->name, nt.cur);  /* numrec */
@@ -8404,3 +8438,63 @@ WriteTTC (char *filename, struct sflist *sfs, enum fontformat format,
     LogError (_("Something went wrong"));
   return ok;
 }
+
+//-------------------------------------------------------------------------
+
+static SCM
+scm_encode_name_string_for_windows (SCM string, SCM encoding_name)
+{
+  Encoding *_encoding_name =
+    scm_to_pointer (SCM_FF_API_CALL_1 ("Encoding->pointer", encoding_name));
+  const char *encname = to_encname_for_windows (_encoding_name);
+  Encoding *enc = FindOrMakeEncoding (encname);
+
+  SCM result = SCM_EOL;
+  if (enc != NULL)
+    {
+      scm_dynwind_begin (0);
+
+      char *utf8name = scm_to_utf8_stringn (string, NULL);
+      scm_dynwind_free (utf8name);
+
+      uint32_t *uin = utf82u_copy (utf8name);
+      scm_dynwind_free (uin);
+
+      size_t outlen = 3 * strlen (utf8name) + 10;
+
+      char *space = xmalloc (outlen + 2);
+      scm_dynwind_free (space);
+
+      size_t inlen = 2 * u32_strlen (uin);
+
+      char *out = space;
+      char *in = (char *) uin;
+
+      // Should not be needed, but just in case. FIXME: What is this
+      // for?
+      iconv (enc->fromunicode, NULL, NULL, NULL, NULL);
+
+      iconv (enc->fromunicode, &in, &inlen, &out, &outlen);
+
+      const size_t length = out - space;
+      SCM bv = scm_c_make_bytevector (length);
+      memcpy (SCM_BYTEVECTOR_CONTENTS (bv), space, length);
+      result = scm_cons (bv, result);
+
+      scm_dynwind_end ();
+    }
+  return result;
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+void init_sortsmill_tottf_guile (void);
+
+VISIBLE void
+init_sortsmill_tottf_guile (void)
+{
+  scm_c_define_gsubr ("encode-name-string-for-windows", 2, 0, 0,
+                      scm_encode_name_string_for_windows);
+}
+
+//-------------------------------------------------------------------------

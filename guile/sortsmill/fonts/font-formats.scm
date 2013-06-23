@@ -23,6 +23,35 @@
    font-format->integer ;; (font-format->integer symbol) → integer or #f
    )
 
+  ;; font-format symbols:
+  ;;
+  ;;    'pfa
+  ;;    'pfb
+  ;;    'pfb-macbin
+  ;;    'pfb-multiple
+  ;;    'mma
+  ;;    'mmb
+  ;;    'type3
+  ;;    'type0
+  ;;    'cid
+  ;;    'cff
+  ;;    'cff-cid
+  ;;    'type42
+  ;;    'type11  (CID-indexed Type 42)
+  ;;    'ttf
+  ;;    'ttf-symbol
+  ;;    'ttf-macbin
+  ;;    'ttc
+  ;;    'ttf-dfont
+  ;;    'otf
+  ;;    'otf-dfont
+  ;;    'otf-cid
+  ;;    'otf-cid-dfont
+  ;;    'svg
+  ;;    'ufo
+  ;;    'woff
+  ;;    'no-font
+
   (import (sortsmill dynlink)
           (rnrs)
           (except (guile) error))

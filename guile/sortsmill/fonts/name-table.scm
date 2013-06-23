@@ -66,6 +66,16 @@
 
    name-table:save-redundant-strings?
 
+   name-table->encoded-name-table
+   name-table->encoded-name-table-fluid
+   name-table:platform-0-encoding-id
+   name-table:use-windows-symbol-encoding?
+   name-table:use-windows-ucs2-encoding?
+   name-table:use-windows-ucs4-encoding?
+   name-table:use-windows-language-specific-encoding?
+   name-table:restrict-postscript-name-entries?
+   name-table:encoding-name
+
    name-table:prune-and-prepare
    )
 
@@ -77,6 +87,7 @@
           (sortsmill kwargs)
           (sortsmill notices)
           (sortsmill i18n)
+          (sortsmill fontforge-api)
           (rnrs)
           (except (guile) error)
           (only (srfi :1)
@@ -91,6 +102,9 @@
 
   (eval-when (compile load eval)
     (sortsmill-dynlink-load-extension "init_sortsmill_parsettf_guile"))
+
+  (eval-when (compile load eval)
+    (sortsmill-dynlink-load-extension "init_sortsmill_tottf_guile"))
 
   ;;-------------------------------------------------------------------------
 
@@ -599,11 +613,13 @@
            (if decode?
                (let-values ([(name-table errors)
                              (encoded-name-table->name-table encoded-name-table)])
-;;;;;;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (name-table:prune-and-prepare name-table))
+;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (vector-ref (name-table:prune-and-prepare name-table) 0))
+;;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (map (match-lambda [#(p g n v e) `#(,p ,g ,e)])(vector-ref encoded-name-table 0)))
+;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (name-table->encoded-name-table (name-table:prune-and-prepare name-table)))
                  (values name-table (append fix-up-errors errors)))
                (values encoded-name-table (append fix-up-errors))))))))
 
-  (define (encoded-name-table->name-table encoded-name-table)
+  (define/kwargs (encoded-name-table->name-table encoded-name-table)
     (let*-values
         ([(encoded-namerecs) (vector-ref encoded-name-table 0)]
          [(namerecs-and-errors)
@@ -1078,10 +1094,110 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define (encode-name-record namerec applemode encoding-name)
-    33333333333333)
+  (define name-table:platform-0-encoding-id (make-fluid 4)) ; Unicode full repertoire.
+  (define name-table:use-windows-symbol-encoding? (make-fluid #f))
+  (define name-table:use-windows-ucs2-encoding? (make-fluid #t))
+  (define name-table:use-windows-ucs4-encoding? (make-fluid #f))
+  (define name-table:use-windows-language-specific-encoding? (make-fluid #t))
+  (define name-table:restrict-postscript-name-entries? (make-fluid #t))
 
-  ;;-------------------------------------------------------------------------
+  ;; FIXME: This fluid, if set to something other than #f, is set to a
+  ;; fontforge-api structure. This is not desirable.
+  (define name-table:encoding-name (make-fluid #f))
+
+  (define (encoding-name->windows-encoding-id encoding-name)
+    (cond
+     [(Encoding:is-korean-ref encoding-name) 5]   ; Wansung.
+     [(Encoding:is-japanese-ref encoding-name) 2] ; ShiftJIS.
+     [(Encoding:is-simple-chinese-ref encoding-name) 3] ; PRC (packed GB2312).
+     [(string-ci=? "EUC-GB12345"
+                   (pointer->string (Encoding:encoding-name-ref encoding-name)
+                                    -1 "UTF-8")) 3]   ; Tell a lie.
+     [(Encoding:is-trad-chinese-ref encoding-name) 4] ; Big5.
+     [else #f] ))
+
+  (define (encode-name-record name-record)
+    (match name-record
+      [(? (const (fluid-ref name-table:restrict-postscript-name-entries?))
+          #(1 0 6 value))
+       ;; PostScript name, in Macintosh Roman.
+       `(#(1 0 6 ,(string->mac-encoded-string value 0 0) 0))]
+      [(? (const (fluid-ref name-table:restrict-postscript-name-entries?))
+          #(3 #x409 6 value))
+       ;; PostScript name, in Windows ‘UCS-2’.
+       ;;
+       ;; I believe modern Windows can at least display UTF-16
+       ;; surrogate pairs, but a PostScript name is required to be
+       ;; ASCII, anyway.
+       `(#(3 #x409 6 ,(string->utf16 value (endianness little)) 1))]
+      [(? (const (fluid-ref name-table:restrict-postscript-name-entries?))
+          #(_ _ 6 _))
+       ;; Any other PostScript name string is supposed to be ignored
+       ;; by applications, so do not bother outputting it.
+       '()]
+      [#(0 language-id name-id value) ;; Unicode platform.
+       `(#(0
+           ,language-id
+           ,name-id
+           ,(string->utf16 value (endianness big))
+           ,(fluid-ref name-table:platform-0-encoding-id)))]
+      [#(3 language-id name-id value) ;; Windows platform.
+       (let* ([encoded-namerec
+              (lambda (encoder encoding-id)
+                `#(3
+                   ,language-id
+                   ,name-id
+                   ,(encoder value (endianness little))
+                   ,encoding-id))]
+              [ucs2 (if (fluid-ref name-table:use-windows-ucs2-encoding?)
+                        ;; I believe modern Windows can at least
+                        ;; display UTF-16 surrogate pairs, if not
+                        ;; handle them in all ways in all
+                        ;; applications.
+                        (list (encoded-namerec string->utf16 1))
+                        '())]
+              [ucs4 (if (fluid-ref name-table:use-windows-ucs4-encoding?)
+                        (list (encoded-namerec string->utf32 10))
+                        '())]
+              #|
+              ;; FIXME: Instead of doing this, have the caller set the
+              ;; fluid name-table:use-windows-symbol-encoding?
+              ;; temporarily in a dynamic wind.
+              ;;
+              [symbol-font? (eq? font-format 'ttf-symbol)]
+              [symbol (if (and symbol-font?
+                               (fluid-ref name-table:use-windows-symbol-encoding?))
+                          (list (encoded-namerec string->utf16 0))
+                          '())]
+              |#
+              [symbol (if (fluid-ref name-table:use-windows-symbol-encoding?)
+                          (list (encoded-namerec string->utf16 0))
+                          '())]
+              [language-specific
+               (if (and (fluid-ref name-table:use-windows-language-specific-encoding?)
+                        (fluid-ref name-table:encoding-name))
+                   (let* ([encoding-name (fluid-ref name-table:encoding-name)]
+                          [encoding-id
+                           (encoding-name->windows-encoding-id encoding-name)])
+                     (if (not encoding-id)
+                         '()
+                         (encode-name-string-for-windows value encoding-name)))
+                   '())])
+         (append ucs2 ucs4 symbol language-specific))] ))
+
+  (define (name-table->encoded-name-table-default name-table)
+    `#(,(fold-left (lambda (encoded-nrecs nrec)
+                     (append (encode-name-record nrec) encoded-nrecs))
+                   '()
+                   (vector-ref name-table 0))))
+
+  (define name-table->encoded-name-table-fluid
+    (make-fluid name-table->encoded-name-table-default))
+
+  (define/kwargs (name-table->encoded-name-table name-table)
+    ((fluid-ref name-table->encoded-name-table-fluid) name-table))
+
+   ;;-------------------------------------------------------------------------
 
   (define/kwargs (encoded-name-table:write-to-sfnt port/fd encoded-name-table)
     (let* ([port (if (port? port/fd) port/fd (fdes->outport port/fd))]
