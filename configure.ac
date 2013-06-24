@@ -60,7 +60,7 @@ AC_CANONICAL_HOST                  dnl For what platform are we compiling?
 AC_CONFIG_HEADERS([inc/config.h])  dnl Where autoheader puts macros.
 AC_USE_SYSTEM_EXTENSIONS           dnl Define such macros as _GNU_SOURCE.
 
-AM_INIT_AUTOMAKE([1.12.2 -Wall -Wno-portability -Werror])
+AM_INIT_AUTOMAKE([1.12.2 dist-xz subdir-objects -Wall -Wno-portability -Werror])
 AM_MAINTAINER_MODE([enable])
 
 # I am going to enable silent-rules by default, so builders are
