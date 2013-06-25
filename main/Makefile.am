@@ -89,13 +89,13 @@ if THE_PROGRAMS
 bin_PROGRAMS += sortsmill-lint sortsmill-image sortsmill-compare
 bin_PROGRAMS += smlint smimage smcompare
 
-dist_sortsmill_lint_SOURCES = $(srcdir)/lint.c
+dist_sortsmill_lint_SOURCES = lint.c
 dist_smlint_SOURCES = $(dist_sortsmill_lint_SOURCES)
 
-dist_sortsmill_image_SOURCES = $(srcdir)/image.c
+dist_sortsmill_image_SOURCES = image.c
 dist_smimage_SOURCES = $(dist_sortsmill_image_SOURCES)
 
-dist_sortsmill_compare_SOURCES = $(srcdir)/compare.c
+dist_sortsmill_compare_SOURCES = compare.c
 dist_smcompare_SOURCES = $(dist_sortsmill_compare_SOURCES)
 
 endif THE_PROGRAMS
