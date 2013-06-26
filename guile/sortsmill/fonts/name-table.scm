@@ -78,6 +78,7 @@
    name-table:platform-3-output-language-specific-encoding?
    name-table:restrict-postscript-name-entries?
    name-table:encoding-name
+   encoded-name-table-entry<?
 
    name-table:prune-and-prepare
    )
@@ -99,7 +100,8 @@
           (only (srfi :26) cut)
           (system foreign)
           (ice-9 match)
-          (ice-9 format))
+          (ice-9 format)
+          (ice-9 i18n))
 
   ;;-------------------------------------------------------------------------
 
@@ -1249,9 +1251,50 @@
                    '()
                    (vector-ref name-table 0))))
 
+  (define posix-locale (make-locale (list LC_ALL) "C"))
+
+  (define (encoded-name-table-entry<?-default namerec1 namerec2)
+    (match namerec1
+      [#(platform-id1 language-id1 name-id1 value1 encoding-id1)
+       (match namerec2
+         [#(platform-id2 language-id2 name-id2 value2 encoding-id2)
+          (cond
+           [(< platform-id1 platform-id2) #t]
+           [(> platform-id1 platform-id2) #f]
+           [else
+            (cond
+             [(< encoding-id1 encoding-id2) #t]
+             [(> encoding-id1 encoding-id2) #f]
+             [else
+              (cond
+               [(number? language-id1)
+                (cond
+                 [(string? language-id2) #t]
+                 [(< language-id1 language-id2) #t]
+                 [(> language-id1 language-id2) #f]
+                 [else (< name-id1 name-id2)])]
+               [else
+                (cond
+                 [(string? language-id2)
+                  (cond
+                   [(ietf-language-tag=? language-id1 language-id2)
+                    (< name-id1 name-id2)]
+                   [else (string-locale-ci<? language-id1 language-id2
+                                             posix-locale)])]
+                 [else #f])])])])])]))
+
+  (define encoded-name-table-entry<?
+    (make-fluid encoded-name-table-entry<?-default))
+
+  (define (sort-encoded-name-table name-table)
+    `#(,(list-sort
+         (fluid-ref encoded-name-table-entry<?)
+         (vector-ref name-table 0))))
+
   (define (name-table->encoded-name-table-default name-table)
-    (name-table->encoded-name-table-stage2
-     (name-table->encoded-name-table-stage1 name-table)))
+    (sort-encoded-name-table
+     (name-table->encoded-name-table-stage2
+      (name-table->encoded-name-table-stage1 name-table))))
 
   (define name-table->encoded-name-table-fluid
     (make-fluid name-table->encoded-name-table-default))
