@@ -77,10 +77,8 @@ AC_LINK_IFELSE(
 [
 pcre_free_study (0);
 ])],
-[AC_MSG_RESULT([yes])
- fontforge_cv_func_pcre_free_study=yes],
-[AC_MSG_RESULT([no])
- fontforge_cv_func_pcre_free_study=no])
+[fontforge_cv_func_pcre_free_study=yes],
+[fontforge_cv_func_pcre_free_study=no])
 
 AC_LANG_POP
 
@@ -112,10 +110,8 @@ AC_LINK_IFELSE(
 [
 int x = PCRE_STUDY_JIT_COMPILE;
 ])],
-[AC_MSG_RESULT([yes])
- fontforge_cv_macro_PCRE_STUDY_JIT_COMPILE=yes],
-[AC_MSG_RESULT([no])
- fontforge_cv_macro_PCRE_STUDY_JIT_COMPILE=no])
+[fontforge_cv_macro_PCRE_STUDY_JIT_COMPILE=yes],
+[fontforge_cv_macro_PCRE_STUDY_JIT_COMPILE=no])
 
 AC_LANG_POP
 
