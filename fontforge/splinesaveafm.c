@@ -70,14 +70,14 @@ mygets (FILE *file, char *buffer, int size)
     *pt++ = ch;
   *pt = '\0';
   if (ch == EOF && pt == buffer)
-    return (NULL);
+    return NULL;
   if (ch == '\r')
     {
       ch = getc (file);
       if (ch != '\n')
         ungetc (ch, file);
     }
-  return (buffer);
+  return buffer;
 }
 
 /* ************************************************************************** */
@@ -133,7 +133,7 @@ LoadKerningDataFromAfm (SplineFont *sf, char *filename, EncMap *map)
   bigreal scale = (sf->ascent + sf->descent) / 1000.0;
 
   if (file == NULL)
-    return (0);
+    return 0;
   ff_progress_change_line2 (_("Reading AFM file"));
   while (mygets (file, buffer, sizeof (buffer)) != NULL)
     {
@@ -198,7 +198,7 @@ LoadKerningDataFromAfm (SplineFont *sf, char *filename, EncMap *map)
         }
     }
   fclose (file);
-  return (1);
+  return 1;
 }
 
 static void
@@ -250,7 +250,7 @@ LoadKerningDataFromAmfm (SplineFont *sf, char *filename, EncMap *map)
       free (afmname);
     }
   if (file == NULL)
-    return (0);
+    return 0;
 
   ff_progress_change_line2 (_("Reading AFM file"));
   while (fgets (buffer, sizeof (buffer), file) != NULL)
@@ -293,7 +293,7 @@ LoadKerningDataFromAmfm (SplineFont *sf, char *filename, EncMap *map)
         }
     }
   fclose (file);
-  return (true);
+  return true;
 }
 
 int
@@ -335,7 +335,7 @@ CheckAfmOfPostScript (SplineFont *sf, char *psname, EncMap *map)
         ret = true;
     }
   free (new);
-  return (ret);
+  return ret;
 }
 
 void
@@ -482,7 +482,7 @@ tfmDoLigKern (SplineFont *sf, int enc, int lk_index,
 int
 doesGlyphExpandHorizontally (SplineChar *sc)
 {
-  return (false);
+  return false;
 }
 
 static void
@@ -619,7 +619,7 @@ LoadKerningDataFromTfm (SplineFont *sf, char *filename, EncMap *map)
   real scale = (sf->ascent + sf->descent) / (bigreal) (1 << 20);
 
   if (file == NULL)
-    return (0);
+    return 0;
   tfmd.file_len = getushort (file);
   tfmd.head_len = getushort (file);
   tfmd.first = getushort (file);
@@ -635,7 +635,7 @@ LoadKerningDataFromTfm (SplineFont *sf, char *filename, EncMap *map)
   if (tfmd.first - 1 > tfmd.last || tfmd.last >= 256)
     {
       fclose (file);
-      return (0);
+      return 0;
     }
   tfmd.kerntab = xcalloc (tfmd.kern_size, sizeof (int32_t));
   tfmd.ligkerntab = xcalloc (tfmd.ligkern_size, sizeof (int32_t));
@@ -719,7 +719,7 @@ LoadKerningDataFromTfm (SplineFont *sf, char *filename, EncMap *map)
   free (tfmd.httab);
   free (tfmd.widtab);
   fclose (file);
-  return (1);
+  return 1;
 }
 
 /* ************************************************************************** */
@@ -877,7 +877,7 @@ LoadKerningDataFromOfm (SplineFont *sf, char *filename, EncMap *map)
   struct tfmdata tfmd;
 
   if (file == NULL)
-    return (0);
+    return 0;
   /* No one bothered to mention this in the docs, but there appears to be */
   /*  an initial 0 in an ofm file. I wonder if that is the level? */
   /* according to the ofm2opl source, it is the level */
@@ -898,7 +898,7 @@ LoadKerningDataFromOfm (SplineFont *sf, char *filename, EncMap *map)
   if (tfmd.first - 1 > tfmd.last || tfmd.last >= 65536)
     {
       fclose (file);
-      return (0);
+      return 0;
     }
   if (tfmd.file_len !=
       14 + tfmd.head_len + 2 * (tfmd.last - tfmd.first + 1) + tfmd.width_size +
@@ -940,7 +940,7 @@ LoadKerningDataFromOfm (SplineFont *sf, char *filename, EncMap *map)
                        _
                        ("This doesn't look like an ofm file, I don't know how to read it."));
       fclose (file);
-      return (0);
+      return 0;
     }
 
   tfmd.kerntab = xcalloc (tfmd.kern_size, sizeof (int32_t));
@@ -1023,7 +1023,7 @@ LoadKerningDataFromOfm (SplineFont *sf, char *filename, EncMap *map)
   free (tfmd.widtab);
   free (tfmd.charlist);
   fclose (file);
-  return (1);
+  return 1;
 }
 
 /* ************************************************************************** */
@@ -1036,40 +1036,40 @@ EncodingName (Encoding *map)
   char *pt;
 
   if (strcasecmp (name, "AdobeStandard") == 0)
-    return ("AdobeStandardEncoding");
+    return "AdobeStandardEncoding";
   if ((strstr (name, "8859") != NULL && name[len - 1] == '1' &&
        (!isdigit (name[len - 2]) || name[len - 2] == '9')) ||
       strcasestr (name, "latin1") != NULL)
-    return ("ISOLatin1Encoding");
+    return "ISOLatin1Encoding";
   else if (map->is_unicodebmp || map->is_unicodefull)
-    return ("ISO10646-1");
+    return "ISO10646-1";
   else if (strcasecmp (name, "mac") == 0 || strcasecmp (name, "macintosh") == 0
            || strcasecmp (name, "macroman") == 0)
-    return ("MacRoman");
+    return "MacRoman";
   else if (strcasecmp (name, "ms-ansi") == 0
            || strcasestr (name, "1252") != NULL)
-    return ("WinRoman");
+    return "WinRoman";
   else if (strcasecmp (name, "sjis") == 0 ||
            ((pt = strcasestr (name, "jp")) != NULL && pt[2] == '\0' &&
             strstr (name, "646") == NULL))
-    return ("JISX0208.1997");
+    return "JISX0208.1997";
   else if (map->is_japanese)
-    return ("JISX0212.1990");
+    return "JISX0212.1990";
   else if (strcasecmp (name, "johab") == 0)
-    return ("Johab");
+    return "Johab";
   else if (map->is_korean)
-    return ("KSC5601.1992");
+    return "KSC5601.1992";
   else if (map->is_simplechinese)
-    return ("GB2312.1980");
+    return "GB2312.1980";
   else if (strcasestr (name, "hkscs") != NULL)
-    return ("BIG5HKSCS.2001");
+    return "BIG5HKSCS.2001";
   else if (map->is_tradchinese)
-    return ("BIG5");            /* 2002? */
+    return "BIG5";            /* 2002? */
 
   if (map->is_custom || map->is_original || map->is_compact)
-    return ("FontSpecific");
+    return "FontSpecific";
 
-  return (name);
+  return name;
 }
 
 static void
@@ -1178,7 +1178,7 @@ anykerns (SplineFont *sf, int isv)
               ++cnt;
         }
     }
-  return (cnt);
+  return cnt;
 }
 
 static void
@@ -1254,7 +1254,7 @@ SFFindNotdef (SplineFont *sf, int fixed)
           {
             if (strcmp (sf->glyphs[i]->name, ".notdef") == 0 &&
                 sf->glyphs[i]->width == fixed)
-              return (i);
+              return i;
           }
     }
   else
@@ -1263,11 +1263,11 @@ SFFindNotdef (SplineFont *sf, int fixed)
         if (SCWorthOutputting (sf->glyphs[i]))
           {
             if (strcmp (sf->glyphs[i]->name, ".notdef") == 0)
-              return (i);
+              return i;
           }
     }
 
-  return (notdefpos);
+  return notdefpos;
 }
 
 int
@@ -1277,19 +1277,19 @@ SCDrawsSomething (SplineChar *sc)
   RefChar *ref;
 
   if (sc == NULL)
-    return (false);
+    return false;
   for (layer = 0; layer < sc->layer_cnt; ++layer)
     if (!sc->layers[layer].background)
       {
         if (sc->layers[layer].splines != NULL
             || sc->layers[layer].images != NULL)
-          return (true);
+          return true;
         for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
           for (l = 0; l < ref->layer_cnt; ++l)
             if (ref->layers[l].splines != NULL)
-              return (true);
+              return true;
       }
-  return (false);
+  return false;
 }
 
 int
@@ -1306,7 +1306,7 @@ CIDWorthOutputting (SplineFont *cidmaster, int enc)
   int i;
 
   if (enc < 0)
-    return (-1);
+    return -1;
 
   if (cidmaster->subfontcnt == 0)
     return (enc >=
@@ -1317,9 +1317,9 @@ CIDWorthOutputting (SplineFont *cidmaster, int enc)
   for (i = 0; i < cidmaster->subfontcnt; ++i)
     if (enc < cidmaster->subfonts[i]->glyphcnt &&
         SCWorthOutputting (cidmaster->subfonts[i]->glyphs[enc]))
-      return (i);
+      return i;
 
-  return (-1);
+  return -1;
 }
 
 static void
@@ -1492,7 +1492,7 @@ FigureName (int *unicode, char *name, int u)
           u = FigureName (unicode, start, u);
           *upt = '_';
           if (u == -1)
-            return (-1);
+            return -1;
           start = upt + 1;
         }
     }
@@ -1506,16 +1506,16 @@ FigureName (int *unicode, char *name, int u)
           unicode[u++] = strtol (start, &end, 16);
           start[4] = ch;
           if (*end != '\0')
-            return (-1);
+            return -1;
           start += 4;
         }
-      return (u);
+      return u;
     }
   unicode[u] = UniFromName (start, ui_none, &custom);
   if (unicode[u] == -1)
-    return (-1);
+    return -1;
 
-  return (u + 1);
+  return u + 1;
 }
 
 #include <chardata.h>
@@ -1526,9 +1526,9 @@ FigureUnicodes (int *unicode, SplineChar *sc, int u)
   const uint32_t *upt;
 
   if (u == -1)
-    return (-1);
+    return -1;
   if (sc->unicodeenc == -1)
-    return (FigureName (unicode, sc->name, u));
+    return FigureName (unicode, sc->name, u);
   if (isdecompositionnormative (sc->unicodeenc) && sc->unicodeenc >= 65536 &&
       unicode_alternates[sc->unicodeenc >> 8] != NULL &&
       (upt =
@@ -1539,7 +1539,7 @@ FigureUnicodes (int *unicode, SplineChar *sc, int u)
     }
   else
     unicode[u++] = sc->unicodeenc;
-  return (u);
+  return u;
 }
 
 static int
@@ -1556,10 +1556,10 @@ FindDecomposition (int *unicode, int u)
         {
           for (i = 0; *upt != '\0' && i < u && *upt == unicode[i]; ++i, ++upt);
           if (*upt == '\0' && i == u)
-            return (uni);
+            return uni;
         }
     }
-  return (-1);
+  return -1;
 }
 
 static void
@@ -1593,7 +1593,7 @@ NameFrom (struct cc_data *this, int *unicode, int u, int uni)
   int i, len;
 
   if (uni != -1)
-    return (xstrdup_or_null (StdGlyphName (buffer, uni, ui_none, NULL)));
+    return xstrdup_or_null (StdGlyphName (buffer, uni, ui_none, NULL));
   if (u != -1 && (unicode[0] < 0x370 || unicode[0] > 0x3ff))
     {
       /* Don't use the unicode decomposition to get a name for greek */
@@ -1606,7 +1606,7 @@ NameFrom (struct cc_data *this, int *unicode, int u, int uni)
           sprintf (pt, "%04X", unicode[i]);
           pt += 4;
         }
-      return (ret);
+      return ret;
     }
   len = strlen (this->base->name) + 1;
   for (cca = this->accents; cca != NULL; cca = cca->next)
@@ -1620,7 +1620,7 @@ NameFrom (struct cc_data *this, int *unicode, int u, int uni)
       strcpy (pt, cca->accent->name);
       pt = pt + strlen (pt);
     }
-  return (ret);
+  return ret;
 }
 
 static int
@@ -1646,14 +1646,14 @@ AfmBuildCCName (struct cc_data *this, struct cc_container *cc)
   uni = FindDecomposition (unicode, u);
   if (uni != -1)
     if (SFGetChar (cc->sf, uni, NULL) != NULL)
-      return (false);           /* Character already exists in font */
+      return false;           /* Character already exists in font */
   this->name = NameFrom (this, unicode, u, uni);
   if (SFGetChar (cc->sf, -1, this->name) != NULL)
     {
       free (this->name);
-      return (false);           /* Character already exists in font */
+      return false;           /* Character already exists in font */
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1802,7 +1802,7 @@ AfmFigureCCdata (SplineFont *sf, int *total)
   free (cc.mpos);
   free (mmax);
   *total = cc.cnt;
-  return (cc.ccs);
+  return cc.ccs;
 }
 
 static void
@@ -2066,7 +2066,7 @@ AfmSplineFont (FILE *afm, SplineFont *sf, int formattype, EncMap *map,
   SFKernCleanup (sf, true);
   CCFree (cc);
 
-  return (!ferror (afm));
+  return !ferror (afm);
 }
 
 int
@@ -2134,7 +2134,7 @@ AmfmSplineFont (FILE *amfm, MMSet *mm, int formattype, EncMap *map, int layer)
       fprintf (amfm, "EndMaster\n");
     }
   fprintf (amfm, "EndMasterFontMetrics\n");
-  return (!ferror (amfm));
+  return !ferror (amfm);
 }
 
 void
@@ -2446,7 +2446,7 @@ KernClassToSC (SplineFont *sf, char **classnames, int cnt)
         }
       scs[i][j] = NULL;
     }
-  return (scs);
+  return scs;
 }
 
 static void
@@ -2544,7 +2544,7 @@ getlshort (FILE *pfm)
 {
   int ch1;
   ch1 = getc (pfm);
-  return ((getc (pfm) << 8) | ch1);
+  return (getc (pfm) << 8) | ch1;
 }
 
 static int
@@ -2554,7 +2554,7 @@ getlint (FILE *pfm)
   ch1 = getc (pfm);
   ch2 = getc (pfm);
   ch3 = getc (pfm);
-  return ((getc (pfm) << 24) | (ch3 << 16) | (ch2 << 8) | ch1);
+  return (getc (pfm) << 24) | (ch3 << 16) | (ch2 << 8) | ch1;
 }
 
 static void
@@ -2633,7 +2633,7 @@ inwin (SplineFont *sf, int winmap[256])
   for (i = 0x80, cnt = 0; i < 0x100; ++i)
     if (winmap[i] != -1)
       ++cnt;
-  return (cnt > 64);
+  return cnt > 64;
 }
 
 static int
@@ -2643,7 +2643,7 @@ revwinmap (int winmap[256], int gid)
   for (i = 255; i >= 0; --i)
     if (winmap[i] == gid)
       break;
-  return (i);
+  return i;
 }
 
 int
@@ -2950,7 +2950,7 @@ PfmSplineFont (FILE *pfm, SplineFont *sf, int type0, EncMap *map, int layer)
 
   SFKernCleanup (sf, false);
 
-  return (!ferror (pfm));
+  return !ferror (pfm);
 }
 
 /* ************************************************************************** */
@@ -2966,11 +2966,11 @@ LoadKerningDataFromPfm (SplineFont *sf, char *filename, EncMap *map)
   int encoding;
 
   if (file == NULL)
-    return (0);
+    return 0;
   if (getlshort (file) != 0x100)
     {
       fclose (file);
-      return (false);
+      return false;
     }
   /* filesize = */ getlint (file);
   for (i = 0; i < 60; ++i)
@@ -3040,7 +3040,7 @@ LoadKerningDataFromPfm (SplineFont *sf, char *filename, EncMap *map)
         }
     }
   fclose (file);
-  return (true);
+  return true;
 }
 
 /* ************************************************************************** */
@@ -3118,7 +3118,7 @@ TfmAddKern (KernPair *kp, struct ligkern *last, double *kerns,
       new->op = 128 + (i >> 16);
     }
   new->next = last;
-  return (new);
+  return new;
 }
 
 static struct ligkern *
@@ -3128,20 +3128,20 @@ TfmAddLiga (LigList * l, struct ligkern *last, EncMap *map,
   struct ligkern *new;
 
   if (!l->lig->subtable->lookup->store_in_afm)
-    return (last);
+    return last;
   if (gid_to_enc (map, l->lig->u.lig.lig->orig_pos) >= maxc)
-    return (last);
+    return last;
   if (l->components == NULL
       || gid_to_enc (map, l->components->sc->orig_pos) >= maxc
       || l->components->next != NULL)
-    return (last);
+    return last;
   new = xcalloc (1, sizeof (struct ligkern));
   new->other_char = gid_to_enc (map, l->components->sc->orig_pos);
   new->remainder = gid_to_enc (map, l->lig->u.lig.lig->orig_pos);
   new->next = last;
   new->op = 0 * 4 + 0 * 2 + 0;
   /* delete next char, delete current char, start over and check the resultant ligature for more ligs */
-  return (new);
+  return new;
 }
 
 static void
@@ -3269,7 +3269,7 @@ FindExtensions (SplineFont *sf, struct extension *extensions, int *extenindex,
               }
           }
       }
-  return (ecnt);
+  return ecnt;
 }
 
 static int
@@ -3378,7 +3378,7 @@ CoalesceValues (double *values, int max, int *index, int maxc)
           free (totvalues);
           free (cnt);
         }
-      return (top);
+      return top;
     }
 
   for (i = 0; i < top; ++i)
@@ -3428,7 +3428,7 @@ CoalesceValues (double *values, int max, int *index, int maxc)
       free (totvalues);
       free (cnt);
     }
-  return (top);
+  return top;
 }
 
 void
@@ -3510,9 +3510,9 @@ OfmGuessDirection (SplineFont *sf)
           /* Neutrals, or weakly oriented characters. Don't count them */ ;
       }
   if (r2lcnt > l2rcnt)
-    return (2);                 /* In omega this means Top, Right */
+    return 2;                 /* In omega this means Top, Right */
 
-  return (0);                   /* In omega this means Top, Left */
+  return 0;                   /* In omega this means Top, Left */
 }
 #endif
 
@@ -4120,14 +4120,14 @@ _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
     }
   else
     free (lkarray);
-  return (!ferror (tfm));
+  return !ferror (tfm);
 }
 
 int
 TfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
                int layer)
 {
-  return (_OTfmSplineFont (tfm, sf, formattype, map, 256, layer));
+  return _OTfmSplineFont (tfm, sf, formattype, map, 256, layer);
 }
 
 /* ************************************************************************** */
@@ -4138,7 +4138,7 @@ int
 OfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
                int layer)
 {
-  return (_OTfmSplineFont (tfm, sf, formattype, map, 65536, layer));
+  return _OTfmSplineFont (tfm, sf, formattype, map, 65536, layer);
 }
 
 /* ************************************************************************** */
@@ -4155,7 +4155,7 @@ MetricsFormatType (char *filename)
   int len;
 
   if (file == NULL)
-    return (mf_none);
+    return mf_none;
 
   len = fread (buffer, 1, sizeof (buffer) - 1, file);
   buffer[len] = '\0';
@@ -4163,9 +4163,9 @@ MetricsFormatType (char *filename)
   fclose (file);
 
   if (strstr ((char *) buffer, "StartFontMetrics") != NULL)
-    return (mf_afm);
+    return mf_afm;
   if (strstr ((char *) buffer, "StartMasterFontMetrics") != NULL || strstr ((char *) buffer, "StarMasterFontMetrics") != NULL)  /* ff had a bug and used this file header by mistake */
-    return (mf_amfm);
+    return mf_amfm;
 
   if (len >= 48 && sb.st_size == 4 * ((buffer[0] << 8) | buffer[1]) &&
       ((buffer[0] << 8) | buffer[1]) == 6 +
@@ -4178,7 +4178,7 @@ MetricsFormatType (char *filename)
       ((buffer[16] << 8) | buffer[17]) +
       ((buffer[18] << 8) | buffer[19]) +
       ((buffer[20] << 8) | buffer[21]) + ((buffer[22] << 8) | buffer[23]))
-    return (mf_tfm);
+    return mf_tfm;
 
   if (len >= 48 && sb.st_size == 4 * BigEndianWord (buffer + 4) &&
       BigEndianWord (buffer) == 0 &&
@@ -4192,29 +4192,29 @@ MetricsFormatType (char *filename)
       2 * BigEndianWord (buffer + 36) +
       BigEndianWord (buffer + 40) +
       2 * BigEndianWord (buffer + 44) + BigEndianWord (buffer + 48))
-    return (mf_ofm);
+    return mf_ofm;
 
   if (len >= 6 && buffer[0] == 0 && buffer[1] == 1 &&
       (buffer[2] | (buffer[3] << 8) | (buffer[4] << 16) | (buffer[5] << 24)) ==
       sb.st_size)
-    return (mf_pfm);
+    return mf_pfm;
 
   /* I don't see any distinquishing marks for a feature file */
 
   if (strcasestr (filename, ".afm") != NULL)
-    return (mf_afm);
+    return mf_afm;
   if (strcasestr (filename, ".amfm") != NULL)
-    return (mf_amfm);
+    return mf_amfm;
   if (strcasestr (filename, ".tfm") != NULL)
-    return (mf_tfm);
+    return mf_tfm;
   if (strcasestr (filename, ".ofm") != NULL)
-    return (mf_ofm);
+    return mf_ofm;
   if (strcasestr (filename, ".pfm") != NULL)
-    return (mf_pfm);
+    return mf_pfm;
   if (strcasestr (filename, ".fea") != NULL)
-    return (mf_feat);
+    return mf_feat;
 
-  return (mf_none);
+  return mf_none;
 }
 
 int
@@ -4256,5 +4256,5 @@ LoadKerningDataFromMetricsFile (SplineFont *sf, char *filename, EncMap *map)
       FontInfo_Destroy (sf);
       MVReKernAll (sf);
     }
-  return (ret);
+  return ret;
 }

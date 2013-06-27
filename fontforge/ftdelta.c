@@ -99,7 +99,7 @@ NearestPt (Spline *s, BasePoint *bp)
           pt = s->from->nextcpindex;
         }
     }
-  return (pt);
+  return pt;
 }
 
 static int
@@ -114,10 +114,10 @@ Duplicate (struct qg_data *data, int pt, int x, int y, double dist)
         {
           if (dist < data->qg[i].distance)
             data->qg[i].distance = dist;
-          return (true);
+          return true;
         }
     }
-  return (false);
+  return false;
 }
 
 static void

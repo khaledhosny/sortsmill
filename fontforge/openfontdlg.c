@@ -176,7 +176,7 @@ StandardFilters (void)
         ti = xmalloc ((cnt + 3) * sizeof (GTextInfo *));
     }
   ti[default_font_filter_index]->selected = true;
-  return (ti);
+  return ti;
 }
 
 struct filter_d
@@ -197,7 +197,7 @@ Filter_Cancel (GGadget *g, GEvent *e)
       d = GDrawGetUserData (gw);
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -242,7 +242,7 @@ Filter_OK (GGadget *g, GEvent *e)
       SavePrefs (true);
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -255,9 +255,9 @@ filter_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -268,9 +268,9 @@ filter_candelete (GGadget *g, int r)
 
   md = GMatrixEditGet (g, &rows);
   if (r >= rows)
-    return (false);
+    return false;
 
-  return (!md[2 * r].frozen);
+  return !md[2 * r].frozen;
 }
 
 static void
@@ -481,13 +481,13 @@ GFD_Ok (GGadget *g, GEvent *e)
               ff_post_error (_("Namelist contains non-ASCII names"),
                              _
                              ("Glyph names should be limited to characters in the ASCII character set, but there are names in this namelist which use characters outside that range."));
-              return (true);
+              return true;
             }
           d->done = true;
           d->ret = GGadgetGetTitle (d->gfc);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -500,7 +500,7 @@ GFD_New (GGadget *g, GEvent *e)
       GDrawSetVisible (GGadgetGetWindow (g), false);
       FontNew ();
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -511,7 +511,7 @@ GFD_Cancel (GGadget *g, GEvent *e)
       struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -540,7 +540,7 @@ GFD_FilterSelected (GGadget *g, GEvent *e)
           SavePrefs (true);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -555,27 +555,27 @@ WithinList (struct gfc_data *d, GEvent *event)
   uint32_t *msg;
 
   if (event->type != et_mousemove)
-    return (false);
+    return false;
 
   GFileChooserGetChildren (d->gfc, NULL, &list, NULL);
   if (list == NULL)
-    return (false);
+    return false;
   GGadgetGetSize (list, &size);
   if (event->u.mouse.x < size.x || event->u.mouse.y < size.y ||
       event->u.mouse.x >= size.x + size.width ||
       event->u.mouse.y >= size.y + size.height)
-    return (false);
+    return false;
   pos = GListIndexFromY (list, event->u.mouse.y);
   if (pos == d->filename_popup_pos)
-    return (pos != -1);
+    return pos != -1;
   if (pos == -1 || GFileChooserPosIsDir (d->gfc, pos))
     {
       d->filename_popup_pos = -1;
-      return (pos != -1);
+      return pos != -1;
     }
   ufile = GFileChooserFileNameOfPos (d->gfc, pos);
   if (ufile == NULL)
-    return (true);
+    return true;
   file = u2def_copy (ufile);
 
   fontnames = GetFontNames (file);
@@ -600,7 +600,7 @@ WithinList (struct gfc_data *d, GEvent *event)
   free (file);
   free (d->lastpopupfontname);
   d->lastpopupfontname = msg;
-  return (true);
+  return true;
 }
 
 static int
@@ -618,7 +618,7 @@ e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_mousemove ||
            (event->type == et_mousedown && event->u.mouse.button == 3))
@@ -631,7 +631,7 @@ e_h (GWindow gw, GEvent *event)
            (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
       struct gfc_data *d = GDrawGetUserData (gw);
-      return (GGadgetDispatchEvent ((GGadget *) (d->gfc), event));
+      return GGadgetDispatchEvent ((GGadget *) (d->gfc), event);
     }
   else if (event->type == et_resize)
     {
@@ -644,7 +644,7 @@ e_h (GWindow gw, GEvent *event)
           GGadgetResize (d->gfc, size.width - 2 * r.x, r.height);
         }
     }
-  return (event->type != et_char);
+  return event->type != et_char;
 }
 
 uint32_t *
@@ -900,5 +900,5 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   GDrawSync (NULL);
   GDrawProcessPendingEvents (NULL);     /* Give the window a chance to vanish... */
   free (d.lastpopupfontname);
-  return (d.ret);
+  return d.ret;
 }

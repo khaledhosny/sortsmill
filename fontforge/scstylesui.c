@@ -117,7 +117,7 @@ CondenseExtend_OK (GGadget *g, GEvent *e)
       ci.correct_italic =
         GGadgetIsChecked (GWidgetGetControl (ew, CID_CorrectItalic));
       if (err)
-        return (true);
+        return true;
 
       last_ci = ci;
 
@@ -128,7 +128,7 @@ CondenseExtend_OK (GGadget *g, GEvent *e)
         CVCondenseExtend (ed->cv, &ci);
       ed->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -139,7 +139,7 @@ CondenseExtend_Cancel (GGadget *g, GEvent *e)
       StyleDlg *ed = GDrawGetUserData (GGadgetGetWindow (g));
       ed->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -155,11 +155,11 @@ style_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("Styles.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 void
@@ -480,7 +480,7 @@ GuessStemThreshold (SplineFont *sf)
   avg = (stdvw + stdhw) / 2;
   if (avg <= 0)
     avg = (sf->ascent + sf->descent) / 25;
-  return (avg);
+  return avg;
 }
 
 static int
@@ -509,7 +509,7 @@ SS_Feature_Changed (GGadget *g, GEvent *e)
                rint (ed->small->xheight * ss_percent_xh_up[index] / 100.0));
       GGadgetSetTitle8 (GWidgetGetControl (ew, CID_VerticalOff), offset);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -560,7 +560,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
       genchange.dstem_control =
         GGadgetIsChecked (GWidgetGetControl (ew, CID_DStemOn));
       if (err)
-        return (true);
+        return true;
       if (stem_bywidth && genchange.stem_threshold <= 0)
         ff_post_error (_("Unlikely stem threshold"),
                        _("Stem threshold should be positive"));
@@ -570,7 +570,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("Unlikely scale factor"),
                          _("Scale factors must be between 3 and 1000 percent"));
-          return (true);
+          return true;
         }
       if (genchange.stem_height_add != genchange.stem_width_add)
         {
@@ -581,7 +581,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
               ff_post_error (_("Bad stem add"),
                              _
                              ("The horizontal and vertical stem add amounts must either both be zero, or neither may be 0"));
-              return (true);
+              return true;
             }
           /* if width_add has a different sign than height_add that's also */
           /*  a problem, but this test will catch that too */
@@ -591,7 +591,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
               ff_post_error (_("Bad stem add"),
                              _
                              ("The horizontal and vertical stem add amounts may not differ by more than a factor of 4"));
-              return (true);
+              return true;
             }
         }
       if (gc == gc_subsuper)
@@ -620,7 +620,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
                               ff_post_error (_("Bad tag"),
                                              _
                                              ("Feature tags are limited to 4 letters"));
-                              return (true);
+                              return true;
                             }
                         }
                     }
@@ -635,12 +635,12 @@ GlyphChange_OK (GGadget *g, GEvent *e)
               ff_post_error (_("Missing glyph extension"),
                              _("You must specify a glyph extension"));
               free (genchange.glyph_extension);
-              return (true);
+              return true;
             }
           genchange.vertical_offset =
             GetReal8 (ew, CID_VerticalOff, _("Vertical Offset"), &err);
           if (err)
-            return (true);
+            return true;
         }
       else if (gc == gc_smallcaps)
         {
@@ -660,7 +660,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
               free (genchange.extension_for_symbols);
               ff_post_error (_("Missing extension"),
                              _("You must provide a glyph extension"));
-              return (true);
+              return true;
             }
         }
 
@@ -697,7 +697,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
             GetReal8 (ew, CID_RSBAdd, _("Right Side Bearing Add"), &err);
         }
       if (err)
-        return (true);
+        return true;
 
       genchange.use_vert_mapping =
         GGadgetIsChecked (GWidgetGetControl (ew, CID_UseVerticalMappings));
@@ -711,7 +711,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
           genchange.v_scale =
             GetReal8 (ew, CID_VerticalScale, _("Vertical Scale"), &err) / 100.;
           if (err)
-            return (true);
+            return true;
           genchange.m.cnt = rows;
           genchange.m.maps = xmalloc (rows * sizeof (struct position_maps));
           for (i = 0; i < rows; ++i)
@@ -741,7 +741,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
           genchange.vcounter_add =
             GetReal8 (ew, CID_VCounterAdd, _("Vertical Counter Add"), &err);
           if (err)
-            return (true);
+            return true;
         }
       if (ed->gc == gc_smallcaps)
         FVAddSmallCaps ((FontViewBase *) ed->fv, &genchange);
@@ -755,7 +755,7 @@ GlyphChange_OK (GGadget *g, GEvent *e)
       free (genchange.extension_for_symbols);
       ed->done = true;
     }
-  return (true);
+  return true;
 }
 
 static GTextInfo stemwidth[] = {
@@ -814,7 +814,7 @@ CG_SameAs_Changed (GGadget *g, GEvent *e)
       GGadgetSetTitle8 (GWidgetGetControl (ew, CID_StemHeightLabel),
                         (char *) h_label);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -842,7 +842,7 @@ CG_VStem_Changed (GGadget *g, GEvent *e)
 
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -877,7 +877,7 @@ CG_CounterSameAs_Changed (GGadget *g, GEvent *e)
                                              (ew, CID_CounterAdd)));
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -903,7 +903,7 @@ CG_Counter_Changed (GGadget *g, GEvent *e)
                                              (ew, CID_CounterAdd)));
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -922,7 +922,7 @@ CG_UseVCounters (GGadget *g, GEvent *e)
       GGadgetSetEnabled (GWidgetGetControl (ew, CID_VerticalScale), !on);
       GGadgetSetEnabled (GWidgetGetControl (ew, CID_VMappings), !on);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -942,7 +942,7 @@ CG_VScale_Changed (GGadget *g, GEvent *e)
 
       scale = GetCalmReal8 (ew, CID_VerticalScale, "unused", &err) / 100.0;
       if (err || scale <= 0 || RealNear (ed->scale, scale))
-        return (true);
+        return true;
       for (i = 0; i < rows; ++i)
         {
           bigreal offset =
@@ -954,7 +954,7 @@ CG_VScale_Changed (GGadget *g, GEvent *e)
       ed->scale = scale;
       GGadgetRedraw (map);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -968,7 +968,7 @@ CG_PetiteCapsChange (GGadget *g, GEvent *e)
       GGadgetSetTitle8 (GWidgetGetControl (ew, CID_Letter_Ext),
                         petite ? "pc" : "sc");
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -981,7 +981,7 @@ CG_SmallCapSymbols (GGadget *g, GEvent *e)
       int on = GGadgetIsChecked (g);
       GGadgetSetEnabled (GWidgetGetControl (ew, CID_Symbol_Ext), on);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -992,9 +992,9 @@ ParseBlue (double blues[14], struct psdict *private, char *key)
   char *end;
 
   if (private == NULL)
-    return (0);
+    return 0;
   if ((val = PSDictHasEntry (private, key)) == NULL)
-    return (0);
+    return 0;
   while (isspace (*val) || *val == '[')
     ++val;
 
@@ -1003,13 +1003,13 @@ ParseBlue (double blues[14], struct psdict *private, char *key)
       while (isspace (*val))
         ++val;
       if (*val == ']' || *val == '\0')
-        return (i);
+        return i;
       blues[i] = strtod (val, &end);
       if (end == val)           /* Not a number */
-        return (0);
+        return 0;
       val = end;
     }
-  return (i);
+  return i;
 }
 
 static struct col_init mapci[5] = {
@@ -1176,7 +1176,7 @@ GlyphChange_Default (GGadget *g, GEvent *e)
                                 NULL);
       CG_UseVCounters (GWidgetGetControl (ew, CID_UseVerticalMappings), NULL);
     }
-  return (true);
+  return true;
 }
 
 void
@@ -2235,7 +2235,7 @@ Embolden_OK (GGadget *g, GEvent *e)
             GetReal8 (ew, CID_BottomHint, _("Bottom Hint"), &err);
         }
       if (err)
-        return (true);
+        return true;
       zones.counter_type =
         GGadgetIsChecked (GWidgetGetControl (ew, CID_Squish)) ? ct_squish :
         GGadgetIsChecked (GWidgetGetControl (ew, CID_Retain)) ? ct_retain :
@@ -2255,7 +2255,7 @@ Embolden_OK (GGadget *g, GEvent *e)
         CVEmbolden ((CharViewBase *) ed->cv, type, &zones);
       ed->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2266,7 +2266,7 @@ Embolden_Cancel (GGadget *g, GEvent *e)
       StyleDlg *ed = GDrawGetUserData (GGadgetGetWindow (g));
       ed->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2282,7 +2282,7 @@ Embolden_Radio (GGadget *g, GEvent *e)
       GGadgetSetEnabled (GWidgetGetControl (ed->gw, CID_TopHint), en);
       GGadgetSetEnabled (GWidgetGetControl (ed->gw, CID_BottomHint), en);
     }
-  return (true);
+  return true;
 }
 
 void
@@ -2863,13 +2863,13 @@ Ital_Ok (GGadget *g, GEvent *e)
             GetReal8 (ew, CID_CompressRSB + i * 10,
                       _("RSB Compression Percent"), &err) / 100.0;
           if (err)
-            return (true);
+            return true;
         }
       ii.xheight_percent =
         GetReal8 (ew, CID_XHeightPercent, _("XHeight Percent"), &err) / 100;
       ii.italic_angle = GetReal8 (ew, CID_ItalicAngle, _("Italic Angle"), &err);
       if (err)
-        return (true);
+        return true;
 
       ii.secondary_serif =
         GGadgetIsChecked (GWidgetGetControl (ew, CID_Flat)) ? srf_flat :
@@ -2893,7 +2893,7 @@ Ital_Ok (GGadget *g, GEvent *e)
         {
           ff_post_error (_("Bad setting"),
                          _("You may not select both variants of 'f'"));
-          return (true);
+          return true;
         }
 
       ii.cyrl_i = GGadgetIsChecked (GWidgetGetControl (ew, CID_Cyrl_I));
@@ -2908,7 +2908,7 @@ Ital_Ok (GGadget *g, GEvent *e)
       MakeItalic ((FontViewBase *) ed->fv, (CharViewBase *) ed->cv, &ii);
       ed->done = true;
     }
-  return (true);
+  return true;
 }
 
 void
@@ -3474,12 +3474,12 @@ XHeight_OK (GGadget *g, GEvent *e)
       xi.serif_height =
         GetReal8 (ew, CID_Serif_Height, _("Serif Height"), &err);
       if (err)
-        return (true);
+        return true;
 
       ChangeXHeight ((FontViewBase *) ed->fv, (CharViewBase *) ed->cv, &xi);
       ed->done = true;
     }
-  return (true);
+  return true;
 }
 
 void

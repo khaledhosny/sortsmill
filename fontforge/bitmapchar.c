@@ -130,9 +130,9 @@ IsUnsignedBDFKey (char *key)
 
   for (i = 0; StandardProps[i].name != NULL; ++i)
     if (strcmp (key, StandardProps[i].name) == 0)
-      return ((StandardProps[i].type & ~prt_property) == prt_uint);
+      return (StandardProps[i].type & ~prt_property) == prt_uint;
 
-  return (false);
+  return false;
 }
 
 char *
@@ -147,15 +147,15 @@ BdfPropHasString (BDFFont *font, const char *key, char *def)
           {
           case prt_string:
             if (font->props[i].u.str != NULL)   /* Can be NULL when creating & defaulting a prop */
-              return (font->props[i].u.str);
+              return font->props[i].u.str;
             break;
           case prt_atom:
             if (font->props[i].u.atom != NULL)  /* Can be NULL when creating & defaulting a prop */
-              return (font->props[i].u.atom);
+              return font->props[i].u.atom;
             break;
           }
       }
-  return (def);
+  return def;
 }
 
 int
@@ -170,11 +170,11 @@ BdfPropHasInt (BDFFont *font, const char *key, int def)
           {
           case prt_int:
           case prt_uint:
-            return (font->props[i].u.val);
+            return font->props[i].u.val;
             break;
           }
       }
-  return (def);
+  return def;
 }
 
 static void
@@ -280,7 +280,7 @@ AllSame (BDFFont *font, int *avg, int *cnt)
   else
     *avg = (10 * a) / c;
   *cnt = c;
-  return (common == -2 ? "P" : cell ? "C" : "M");
+  return common == -2 ? "P" : cell ? "C" : "M";
 }
 
 static void
@@ -350,9 +350,9 @@ BDFPropReplace (BDFFont *bdf, const char *key, const char *value)
           bdf->props[i].u.str = xstrdup_or_null (value);
         else
           bdf->props[i].u.str = xstrndup_or_null (value, pt - value);
-        return (true);
+        return true;
       }
-  return (false);
+  return false;
 }
 
 static void
@@ -472,7 +472,7 @@ BdfPropsCopy (BDFProperties * props, int cnt)
   int i;
 
   if (cnt == 0)
-    return (NULL);
+    return NULL;
   ret = xmalloc (cnt * sizeof (BDFProperties));
   memcpy (ret, props, cnt * sizeof (BDFProperties));
   for (i = 0; i < cnt; ++i)
@@ -482,7 +482,7 @@ BdfPropsCopy (BDFProperties * props, int cnt)
           || (ret[i].type & ~prt_property) == prt_atom)
         ret[i].u.str = xstrdup_or_null (ret[i].u.str);
     }
-  return (ret);
+  return ret;
 }
 
 void
@@ -657,7 +657,7 @@ getcomponent (char *xlfd, char *pt, int maxlen)
   while (*xlfd != '-' && *xlfd != '\0')
     ++xlfd;
   *pt = '\0';
-  return (xlfd);
+  return xlfd;
 }
 
 void
@@ -826,7 +826,7 @@ GenerateGlyphRanges (BDFFont *font)
   if (map->enc->is_unicodebmp || map->enc->is_unicodefull)
     max = map->enc->char_cnt;
   else
-    return (0);
+    return 0;
   BDFPropClearKey (font, "_XFREE86_GLYPH_RANGES");
   pt = buffer;
   end = pt + sizeof (buffer);
@@ -858,9 +858,9 @@ GenerateGlyphRanges (BDFFont *font)
       BDFPropAppendString (font, "_XFREE86_GLYPH_RANGES", buffer);
       ++cnt;
     }
-  return (cnt);
+  return cnt;
 #else
-  return (0);
+  return 0;
 #endif /* FONTFORGE_CONFIG_BDF_GLYPH_RANGES */
 }
 
@@ -1104,7 +1104,7 @@ BDFMakeGID (BDFFont *bdf, int gid)
   extern int use_freetype_to_rasterize_fv;
 
   if (gid == -1)
-    return (NULL);
+    return NULL;
 
   if (sf->cidmaster != NULL || sf->subfonts != NULL)
     {
@@ -1117,12 +1117,12 @@ BDFMakeGID (BDFFont *bdf, int gid)
             if (gid < sf->subfonts[j]->glyphcnt)
               break;
           if (j == sf->subfontcnt)
-            return (NULL);
+            return NULL;
         }
       sf = sf->subfonts[j];
     }
   if ((sc = sfglyph (sf, gid)) == NULL)
-    return (NULL);
+    return NULL;
 
   if (gid >= bdf->glyphcnt)
     {
@@ -1157,7 +1157,7 @@ BDFMakeGID (BDFFont *bdf, int gid)
       bc->orig_pos = gid;
       BCCharChangedUpdate (bc);
     }
-  return (bc);
+  return bc;
 }
 
 BDFChar *
@@ -1166,7 +1166,7 @@ BDFMakeChar (BDFFont *bdf, EncMap *map, int enc)
   SplineFont *sf = bdf->sf;
 
   if (enc == -1)
-    return (NULL);
+    return NULL;
 
   if (sf->cidmaster != NULL)
     {
@@ -1178,12 +1178,12 @@ BDFMakeChar (BDFFont *bdf, EncMap *map, int enc)
             if (enc < sf->subfonts[j]->glyphcnt)
               break;
           if (j == sf->subfontcnt)
-            return (NULL);
+            return NULL;
         }
       sf = sf->subfonts[j];
     }
   SFMakeChar (sf, map, enc);
-  return (BDFMakeGID (bdf, enc_to_gid (map, enc)));
+  return BDFMakeGID (bdf, enc_to_gid (map, enc));
 }
 
 void

@@ -92,7 +92,7 @@ FindXRef (FILE *pdf)
             break;
         }
       if (ch == EOF)
-        return (-1);
+        return -1;
       while (ch == 's')
         {
           if ((ch = getc (pdf)) != 't')
@@ -112,9 +112,9 @@ FindXRef (FILE *pdf)
           if ((ch = getc (pdf)) != 'f')
             continue;
           if (fscanf (pdf, "%ld", &xrefpos) != 1)
-            return (-1);
+            return -1;
 
-          return (xrefpos);
+          return xrefpos;
         }
     }
 }
@@ -130,19 +130,19 @@ findkeyword (FILE *pdf, char *keyword, char *end)
   for (i = 0; i < len; ++i)
     buffer[i] = ch = getc (pdf);
   if (ch == EOF)
-    return (false);
+    return false;
   buffer[i] = 0;
   while (true)
     {
       if (strcmp (buffer, keyword) == 0)
-        return (true);
+        return true;
       if (strncmp (buffer, end, end_len) == 0)
-        return (false);
+        return false;
       for (i = 1; i < len; ++i)
         buffer[i - 1] = buffer[i];
       buffer[len - 1] = ch = getc (pdf);
       if (ch == EOF)
-        return (false);
+        return false;
     }
 }
 
@@ -153,7 +153,7 @@ seektrailer (FILE *pdf, int *start, int *num, struct pdfcontext *pc)
   int pos;
 
   if (!findkeyword (pdf, "trailer", NULL))
-    return (false);
+    return false;
   pos = ftell (pdf);
   if (findkeyword (pdf, "/Encrypt", ">>"))
     {
@@ -172,14 +172,14 @@ seektrailer (FILE *pdf, int *start, int *num, struct pdfcontext *pc)
     }
   fseek (pdf, pos, SEEK_SET);
   if (!findkeyword (pdf, "/Prev", ">>"))
-    return (false);
+    return false;
   if (fscanf (pdf, "%d", &prev_xref) != 1)
-    return (false);
+    return false;
   fseek (pdf, prev_xref, SEEK_SET);
   if (fscanf (pdf, "xref %d %d", start, num) != 2)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static long *FindObjectsFromXREFObject (struct pdfcontext *pc, long prev_xref);
@@ -197,7 +197,7 @@ FindObjects (struct pdfcontext *pc)
   char f;
 
   if (xrefpos == -1)
-    return (NULL);
+    return NULL;
   fseek (pdf, xrefpos, SEEK_SET);
 
   if (fscanf (pdf, "xref %d %d", &start, &num) != 2)
@@ -205,18 +205,18 @@ FindObjects (struct pdfcontext *pc)
       int foo, bar;
       fseek (pdf, xrefpos, SEEK_SET);
       if (fscanf (pdf, "%d %d", &foo, &bar) != 2)
-        return (NULL);
+        return NULL;
       while (isspace (ch = getc (pdf)));
       if (ch != 'o')
-        return (NULL);
+        return NULL;
       if (getc (pdf) != 'b')
-        return (NULL);
+        return NULL;
       if (getc (pdf) != 'j')
-        return (NULL);
+        return NULL;
       if (!isspace (getc (pdf)))
-        return (NULL);
+        return NULL;
 
-      return (FindObjectsFromXREFObject (pc, xrefpos));
+      return FindObjectsFromXREFObject (pc, xrefpos);
     }
 
   while (true)
@@ -236,7 +236,7 @@ FindObjects (struct pdfcontext *pc)
           if (fscanf (pdf, "%ld %d %c", &offset, &gennum, &f) != 3)
             {
               free (gen);
-              return (ret);
+              return ret;
             }
           if (f == 'f')
             {
@@ -257,14 +257,14 @@ FindObjects (struct pdfcontext *pc)
           else
             {
               free (gen);
-              return (ret);
+              return ret;
             }
         }
       if (fscanf (pdf, "%d %d", &start, &num) != 2)
         if (!seektrailer (pdf, &start, &num, pc))
           {
             free (gen);
-            return (ret);
+            return ret;
           }
     }
 }
@@ -277,7 +277,7 @@ pdf_peekch (FILE *pdf)
 {
   int ch = getc (pdf);
   ungetc (ch, pdf);
-  return (ch);
+  return ch;
 }
 
 static void
@@ -311,7 +311,7 @@ pdf_getname (struct pdfcontext *pc)
   if (ch != '/')
     {
       ungetc (ch, pdf);
-      return (NULL);
+      return NULL;
     }
   for (ch = getc (pdf);; ch = getc (pdf))
     {
@@ -326,7 +326,7 @@ pdf_getname (struct pdfcontext *pc)
         {
           ungetc (ch, pdf);
           *pt = '\0';
-          return (pc->tokbuf);
+          return pc->tokbuf;
         }
       *pt++ = ch;
     }
@@ -387,7 +387,7 @@ pdf_getdictvalue (struct pdfcontext *pc)
               pt[-1] = '\0';
               if (pt > pc->tokbuf + 1 && pt[-2] == ' ')
                 pt[-2] = '\0';
-              return (pc->tokbuf);
+              return pc->tokbuf;
             }
           --dnest;
         }
@@ -399,7 +399,7 @@ pdf_getdictvalue (struct pdfcontext *pc)
           pt[-1] = '\0';
           if (pt > pc->tokbuf + 1 && pt[-2] == ' ')
             pt[-2] = '\0';
-          return (pc->tokbuf);
+          return pc->tokbuf;
         }
       else if (ch == '%' || pdf_space (ch))
         {
@@ -410,7 +410,7 @@ pdf_getdictvalue (struct pdfcontext *pc)
       else if (ch == EOF)
         {
           pt[-1] = '\0';
-          return (pc->tokbuf);
+          return pc->tokbuf;
         }
       ch = getc (pdf);
     }
@@ -441,7 +441,7 @@ pdf_readdict (struct pdfcontext *pc)
   pdf_skipwhitespace (pc);
   ch = getc (pdf);
   if (ch != '<' || pdf_peekch (pdf) != '<')
-    return (false);
+    return false;
   getc (pdf);                   /* Eat the second '<' */
 
   while (true)
@@ -454,7 +454,7 @@ pdf_readdict (struct pdfcontext *pc)
               fclose (pc->compressed);  /* so close the compressed */
               pc->compressed = NULL;    /* stream in which it lives */
             }
-          return (true);
+          return true;
         }
       value = xstrdup_or_null (pdf_getdictvalue (pc));
       if (value == NULL || strcmp (value, "null") == 0)
@@ -501,7 +501,7 @@ hex (int ch1, int ch2)
     val |= (ch2 - 'a' + 10);
   else
     val |= (ch2 - 'A' + 10);
-  return (val);
+  return val;
 }
 
 static int
@@ -523,7 +523,7 @@ pdf_getprotectedtok (FILE *stream, char *tokbuf)
   else
     ungetc (ch, stream);
   *pt = '\0';
-  return (pt != tokbuf ? 1 : ch == EOF ? -1 : 0);
+  return pt != tokbuf ? 1 : ch == EOF ? -1 : 0;
 }
 
 static int
@@ -557,14 +557,14 @@ pdf_findobject (struct pdfcontext *pc, int num)
       pc->compressed = NULL;
     }
   if (num < 0 || num >= pc->ocnt)
-    return (false);
+    return false;
   if (pc->subindex == NULL || pc->subindex[num] == -1)
     {
       if (pc->objs[num] == -1)
-        return (false);
+        return false;
       fseek (pc->pdf, pc->objs[num], SEEK_SET);
       pdf_skipobjectheader (pc);
-      return (true);
+      return true;
     }
   else
     {
@@ -575,27 +575,27 @@ pdf_findobject (struct pdfcontext *pc, int num)
             {
               LogError (_
                         ("Compressed object container is itself a compressed object"));
-              return (false);
+              return false;
             }
           fseek (pc->pdf, pc->objs[container], SEEK_SET);
           pdf_skipobjectheader (pc);
           if (!pdf_readdict (pc))
-            return (false);
+            return false;
           if ((pt = PSDictHasEntry (&pc->pdfdict, "Type")) == NULL
               || strcmp (pt, "/ObjStm") != 0)
-            return (false);
+            return false;
           if ((pt = PSDictHasEntry (&pc->pdfdict, "N")) == NULL)
-            return (false);
+            return false;
           n = pdf_getinteger (pt, pc);
           if ((pt = PSDictHasEntry (&pc->pdfdict, "First")) == NULL)
-            return (false);
+            return false;
           first_offset = pdf_getinteger (pt, pc);
           container = -1;
           if ((pt = PSDictHasEntry (&pc->pdfdict, "Extends")) != NULL)
             container = strtol (pt, NULL, 0);
           data = pdf_defilterstream (pc);
           if (data == NULL)
-            return (false);
+            return false;
           rewind (data);
           for (i = 0; i < n; ++i)
             {
@@ -607,12 +607,12 @@ pdf_findobject (struct pdfcontext *pc, int num)
             {
               fseek (data, first_offset + offset, SEEK_SET);
               pc->compressed = data;
-              return (true);
+              return true;
             }
           fclose (data);
         }
       /* Not found in any extents */
-      return (false);
+      return false;
     }
 }
 
@@ -629,14 +629,14 @@ pdf_getdescendantfont (struct pdfcontext *pc, int num)
           && PSDictHasEntry (&pc->pdfdict, "FontDescriptor") != NULL
           && (pt = PSDictHasEntry (&pc->pdfdict, "BaseFont")) != NULL)
         {
-          return (num);
+          return num;
         }
     }
   if ((pt = pdf_getdictvalue (pc)) != NULL && sscanf (pt, "%d", &nnum)
       && nnum > 0 && nnum < pc->ocnt)
-    return (pdf_getdescendantfont (pc, nnum));
+    return pdf_getdescendantfont (pc, nnum);
 
-  return (-1);
+  return -1;
 }
 
 static int
@@ -742,7 +742,7 @@ pdf_findfonts (struct pdfcontext *pc)
           }
       }
   pc->fcnt = k;
-  return (k > 0);
+  return k > 0;
 }
 
 static int
@@ -753,15 +753,15 @@ pdf_getinteger (const char *pt, struct pdfcontext *pc)
   FILE *pdf;
 
   if (pt == NULL)
-    return (0);
+    return 0;
   val = strtol (pt, NULL, 10);
   if (pt[strlen (pt) - 1] != 'R')
-    return (val);
+    return val;
   if (val < 0 || val >= pc->ocnt || pc->objs[val] == -1)
-    return (0);
+    return 0;
   here = ftell (pc->pdf);
   if (!pdf_findobject (pc, val))
-    return (0);
+    return 0;
   pdf = pc->compressed ? pc->compressed : pc->pdf;
   ret = fscanf (pdf, "%d", &val);
   if (pc->compressed)
@@ -771,8 +771,8 @@ pdf_getinteger (const char *pt, struct pdfcontext *pc)
     }
   fseek (pc->pdf, here, SEEK_SET);
   if (ret != 1)
-    return (0);
-  return (val);
+    return 0;
+  return val;
 }
 
 static void
@@ -831,16 +831,16 @@ pdf_findpages (struct pdfcontext *pc)
   /* I could just find all the Page objects, but they would not be in order then */
 
   if (pc->root == 0)
-    return (0);
+    return 0;
 
   fseek (pdf, pc->objs[pc->root], SEEK_SET);
   if (!findkeyword (pdf, "/Pages", ">>"))
-    return (0);
+    return 0;
   if (fscanf (pdf, "%d", &top_ref) != 1)
-    return (0);
+    return 0;
   pc->pages = xmalloc (pc->ocnt * sizeof (long));
   pdf_addpages (pc, top_ref);
-  return (pc->pcnt);
+  return pc->pcnt;
 }
 
 /* ************************************************************************** */
@@ -973,7 +973,7 @@ pdf_zfilter (FILE *to, FILE *from)
   (void) inflateEnd (&strm);
   free (in);
   free (out);
-  return (ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR);
+  return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
 }
 
 static void
@@ -1020,12 +1020,12 @@ pdf_defilterstream (struct pdfcontext *pc)
   if (pc->compressed != NULL)
     {
       LogError (_("A pdf stream object may not be a compressed object"));
-      return (NULL);
+      return NULL;
     }
   if ((const_pt = PSDictHasEntry (&pc->pdfdict, "Length")) == NULL)
     {
       LogError (_("A pdf stream object is missing a Length attribute"));
-      return (NULL);
+      return NULL;
     }
   length = pdf_getinteger (const_pt, pc);
 
@@ -1042,7 +1042,7 @@ pdf_defilterstream (struct pdfcontext *pc)
   rewind (res);
 
   if ((const_pt = PSDictHasEntry (&pc->pdfdict, "Filter")) == NULL)
-    return (res);
+    return res;
   pt = x_gc_strdup (const_pt);
   while (*pt == ' ' || *pt == '[' || *pt == ']' || *pt == '/')
     ++pt;                       /* Yes, I saw a null array once */
@@ -1078,7 +1078,7 @@ pdf_defilterstream (struct pdfcontext *pc)
           LogError (_("Unsupported filter: %s"), pt);
           fclose (old);
           fclose (res);
-          return (NULL);
+          return NULL;
         }
       *end = ch;
       pt = end;
@@ -1086,7 +1086,7 @@ pdf_defilterstream (struct pdfcontext *pc)
         ++pt;
       fclose (old);
     }
-  return (res);
+  return res;
 }
 
 /* ************************************************************************** */
@@ -1108,7 +1108,7 @@ getuvalue (FILE *f, int len)
       ch = getc (f);
       val = (val << 8) | ch;
     }
-  return (val);
+  return val;
 }
 
 static long *
@@ -1128,12 +1128,12 @@ FindObjectsFromXREFObject (struct pdfcontext *pc, long prev_xref)
       fseek (pdf, prev_xref, SEEK_SET);
       pdf_skipobjectheader (pc);
       if (!pdf_readdict (pc))
-        return (NULL);
+        return NULL;
       if ((pt = PSDictHasEntry (&pc->pdfdict, "Type")) == NULL
           || strcmp (pt, "/XRef") != 0)
-        return (NULL);
+        return NULL;
       if ((pt = PSDictHasEntry (&pc->pdfdict, "Size")) == NULL)
-        return (NULL);
+        return NULL;
       else
         {
           start = 0;
@@ -1142,14 +1142,14 @@ FindObjectsFromXREFObject (struct pdfcontext *pc, long prev_xref)
       if ((pt = PSDictHasEntry (&pc->pdfdict, "Index")) != NULL)
         {
           if (sscanf (pt, "[%d %d]", &start, &num) != 2)
-            return (NULL);
+            return NULL;
         }
       if ((pt = PSDictHasEntry (&pc->pdfdict, "W")) == NULL)
-        return (NULL);
+        return NULL;
       else
         {
           if (sscanf (pt, "[%d %d %d]", &typewidth, &offwidth, &genwidth) != 3)
-            return (NULL);
+            return NULL;
         }
       if ((pt = PSDictHasEntry (&pc->pdfdict, "Encrypt")) != NULL)
         {
@@ -1183,7 +1183,7 @@ FindObjectsFromXREFObject (struct pdfcontext *pc, long prev_xref)
       /* Now gather the cross references from their stream */
       xref_stream = pdf_defilterstream (pc);
       if (xref_stream == NULL)
-        return (NULL);
+        return NULL;
       rewind (xref_stream);
       for (i = start; i < start + num; ++i)
         {
@@ -1193,7 +1193,7 @@ FindObjectsFromXREFObject (struct pdfcontext *pc, long prev_xref)
           if (feof (xref_stream))
             {
               fclose (xref_stream);
-              return (NULL);
+              return NULL;
             }
           if (type == 0)
             {
@@ -1224,7 +1224,7 @@ FindObjectsFromXREFObject (struct pdfcontext *pc, long prev_xref)
       fclose (xref_stream);
     }
   free (gen);
-  return (ret);
+  return ret;
 }
 
 /* ************************************************************************** */
@@ -1287,7 +1287,7 @@ nextpdftoken (FILE *file, real *val, char *tokbuf, int tbsize)
     }
 
   if (ch == EOF)
-    return (pt_eof);
+    return pt_eof;
 
   pt = tokbuf;
   end = pt + tbsize - 1;
@@ -1314,7 +1314,7 @@ nextpdftoken (FILE *file, real *val, char *tokbuf, int tbsize)
             quote = 1;
         }
       *pt = '\0';
-      return (pt_string);
+      return pt_string;
     }
   else if (ch == '<')
     {
@@ -1345,21 +1345,21 @@ nextpdftoken (FILE *file, real *val, char *tokbuf, int tbsize)
             }
         }
       *pt = '\0';
-      return (pt_string);
+      return pt_string;
     }
   else if (ch == ')' || ch == '>' || ch == '[' || ch == ']' || ch == '{'
            || ch == '}')
     {
       if (ch == '{')
-        return (pt_opencurly);
+        return pt_opencurly;
       else if (ch == '}')
-        return (pt_closecurly);
+        return pt_closecurly;
       if (ch == '[')
-        return (pt_openarray);
+        return pt_openarray;
       else if (ch == ']')
-        return (pt_closearray);
+        return pt_closearray;
 
-      return (pt_unknown);      /* single character token */
+      return pt_unknown;      /* single character token */
     }
   else if (ch == '/')
     {
@@ -1371,7 +1371,7 @@ nextpdftoken (FILE *file, real *val, char *tokbuf, int tbsize)
           *pt++ = ch;
       *pt = '\0';
       ungetc (ch, file);
-      return (pt_namelit);      /* name literal */
+      return pt_namelit;      /* name literal */
     }
   else
     {
@@ -1389,7 +1389,7 @@ nextpdftoken (FILE *file, real *val, char *tokbuf, int tbsize)
       if (*pt == '\0')
         {                       /* It's a normal integer */
           *val = r;
-          return (pt_number);
+          return pt_number;
         }
       else if (*pt == '#')
         {
@@ -1397,7 +1397,7 @@ nextpdftoken (FILE *file, real *val, char *tokbuf, int tbsize)
           if (*end == '\0')
             {                   /* It's a radix integer */
               *val = r;
-              return (pt_number);
+              return pt_number;
             }
         }
       else
@@ -1411,14 +1411,14 @@ nextpdftoken (FILE *file, real *val, char *tokbuf, int tbsize)
               *val = 0;
             }
           if (*end == '\0')     /* It's a real */
-            return (pt_number);
+            return pt_number;
         }
       /* It's not a number */
       for (i = 0; toknames[i] != NULL; ++i)
         if (strcmp (tokbuf, toknames[i]) == 0)
-          return (i);
+          return i;
 
-      return (pt_unknown);
+      return pt_unknown;
     }
 }
 
@@ -1444,7 +1444,7 @@ EntityCreate (SplinePointList *head, int linecap, int linejoin,
   ent->u.splines.fill.opacity = 1.0;
   ent->u.splines.stroke.opacity = 1.0;
   memcpy (ent->u.splines.transform, transform, 6 * sizeof (real));
-  return (ent);
+  return ent;
 }
 
 static void
@@ -1909,7 +1909,7 @@ pdf_InterpretSC (struct pdfcontext *pc, char *glyphname,
     goto fail;
   glyph_stream = pdf_defilterstream (pc);
   if (glyph_stream == NULL)
-    return (NULL);
+    return NULL;
   rewind (glyph_stream);
 
   memset (&ec, '\0', sizeof (ec));
@@ -1925,11 +1925,11 @@ pdf_InterpretSC (struct pdfcontext *pc, char *glyphname,
     ++sc->layer_cnt;
 
   fclose (glyph_stream);
-  return (sc);
+  return sc;
 
 fail:
   LogError (_("Syntax error while parsing type3 glyph: %s"), glyphname);
-  return (NULL);
+  return NULL;
 }
 
 static Entity *
@@ -1944,23 +1944,23 @@ pdf_InterpretEntity (struct pdfcontext *pc, int page_num)
   if (!pdf_findobject (pc, pc->pages[page_num]) || !pdf_readdict (pc))
     {
       LogError (_("Syntax error while parsing pdf graphics"));
-      return (NULL);
+      return NULL;
     }
   if ((pt = PSDictHasEntry (&pc->pdfdict, "Contents")) == NULL ||
       sscanf (pt, "%d", &content) != 1)
     {
       LogError (_
                 ("Syntax error while parsing pdf graphics: Page with no Contents"));
-      return (NULL);
+      return NULL;
     }
   if (!pdf_findobject (pc, content) || !pdf_readdict (pc))
     {
       LogError (_("Syntax error while parsing pdf graphics"));
-      return (NULL);
+      return NULL;
     }
   glyph_stream = pdf_defilterstream (pc);
   if (glyph_stream == NULL)
-    return (NULL);
+    return NULL;
   rewind (glyph_stream);
 
   memset (&ec, '\0', sizeof (ec));
@@ -1972,7 +1972,7 @@ pdf_InterpretEntity (struct pdfcontext *pc, int page_num)
   _InterpretPdf (glyph_stream, pc, &ec);
 
   fclose (glyph_stream);
-  return (ec.splines);
+  return ec.splines;
 }
 
 /* ************************************************************************** */
@@ -2190,12 +2190,12 @@ pdf_getcharprocs (struct pdfcontext *pc, const char *charprocs)
   if (cp != 0)
     {
       if (!pdf_findobject (pc, cp))
-        return (false);
-      return (pdf_readdict (pc));
+        return false;
+      return pdf_readdict (pc);
     }
   temp = tmpfile ();
   if (temp == NULL)
-    return (false);
+    return false;
   while (*charprocs)
     {
       putc (*charprocs, temp);
@@ -2206,7 +2206,7 @@ pdf_getcharprocs (struct pdfcontext *pc, const char *charprocs)
   ret = pdf_readdict (pc);
   pc->pdf = pdf;
   fclose (temp);
-  return (ret);
+  return ret;
 }
 
 static SplineFont *
@@ -2279,11 +2279,11 @@ pdf_loadtype3 (struct pdfcontext *pc)
   free (_enc);
   sf->map = EncMapFromEncoding (sf, FindOrMakeEncoding ("Original"));
 
-  return (sf);
+  return sf;
 
 fail:
   LogError (_("Syntax errors while parsing Type3 font headers"));
-  return (NULL);
+  return NULL;
 }
 
 static FILE *
@@ -2293,7 +2293,7 @@ pdf_insertpfbsections (FILE *file, struct pdfcontext *pc)
   /*  about cleartext length, binary length, cleartext length that */
   /*  the pfb section headings do. But the info isn't important in */
   /*  parsing the pfb file, so we can just ignore it */
-  return (file);
+  return file;
 }
 
 static SplineFont *
@@ -2305,11 +2305,11 @@ pdf_loadfont (struct pdfcontext *pc, int font_num)
   SplineFont *sf;
 
   if (!pdf_findobject (pc, pc->fontobjs[font_num]) || !pdf_readdict (pc))
-    return (NULL);
+    return NULL;
 
   if ((pt = PSDictHasEntry (&pc->pdfdict, "Subtype")) != NULL
       && strcmp (pt, "/Type3") == 0)
-    return (pdf_loadtype3 (pc));
+    return pdf_loadtype3 (pc);
 
   if ((pt = PSDictHasEntry (&pc->pdfdict, "FontDescriptor")) == NULL)
     goto fail;
@@ -2329,14 +2329,14 @@ pdf_loadfont (struct pdfcontext *pc, int font_num)
       LogError (_
                 ("The font %s is one of the standard fonts. It isn't actually in the file."),
                 pc->fontnames[font_num]);
-      return (NULL);
+      return NULL;
     }
   ff = strtol (pt, NULL, 10);
   if (!pdf_findobject (pc, ff) || !pdf_readdict (pc))
     goto fail;
   file = pdf_defilterstream (pc);
   if (file == NULL)
-    return (NULL);
+    return NULL;
   rewind (file);
   if (type == 1)
     {
@@ -2363,12 +2363,12 @@ pdf_loadfont (struct pdfcontext *pc, int font_num)
   /* which are usually more meaningful */
   if (pc->cmapobjs[font_num] != -1 && type > 1)
     pdf_getcmap (pc, sf, font_num);
-  return (sf);
+  return sf;
 
 fail:
   LogError (_("Unable to parse the pdf objects that make up %s"),
             pc->fontnames[font_num]);
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -2403,7 +2403,7 @@ NamesReadPDF (char *filename)
   memset (&pc, 0, sizeof (pc));
   pc.pdf = fopen (filename, "r");
   if (pc.pdf == NULL)
-    return (NULL);
+    return NULL;
   if ((pc.objs = FindObjects (&pc)) == NULL)
     {
       LogError (_
@@ -2411,7 +2411,7 @@ NamesReadPDF (char *filename)
       fclose (pc.pdf);
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   if (pc.encrypted)
     {
@@ -2420,14 +2420,14 @@ NamesReadPDF (char *filename)
       fclose (pc.pdf);
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   if (pdf_findfonts (&pc) == 0)
     {
       fclose (pc.pdf);
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   list = xmalloc ((pc.fcnt + 1) * sizeof (char *));
   for (i = 0; i < pc.fcnt; ++i)
@@ -2436,7 +2436,7 @@ NamesReadPDF (char *filename)
   fclose (pc.pdf);
   pcFree (&pc);
   setlocale (LC_NUMERIC, oldloc);
-  return (list);
+  return list;
 }
 
 SplineFont *
@@ -2459,7 +2459,7 @@ _SFReadPdfFont (FILE *pdf, char *filename, enum openflags openflags)
                 ("Doesn't look like a valid pdf file, couldn't find xref section"));
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   if (pc.encrypted)
     {
@@ -2467,14 +2467,14 @@ _SFReadPdfFont (FILE *pdf, char *filename, enum openflags openflags)
                 ("This pdf file contains an /Encrypt dictionary, and FontForge does not currently\nsupport pdf encryption"));
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   if (pdf_findfonts (&pc) == 0)
     {
       LogError (_("This pdf file has no fonts"));
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   // parse the chosen font name
   if ((pt = strchr (filename, '(')) != NULL)
@@ -2524,7 +2524,7 @@ _SFReadPdfFont (FILE *pdf, char *filename, enum openflags openflags)
   setlocale (LC_NUMERIC, oldloc);
   pcFree (&pc);
   free (select_this_font);
-  return (sf);
+  return sf;
 }
 
 SplineFont *
@@ -2541,7 +2541,7 @@ SFReadPdfFont (char *filename, enum openflags openflags)
       sf = _SFReadPdfFont (pdf, filename, openflags);
       fclose (pdf);
     }
-  return (sf);
+  return sf;
 }
 
 Entity *
@@ -2564,7 +2564,7 @@ EntityInterpretPDFPage (FILE *pdf, int select_page)
                 ("Doesn't look like a valid pdf file, couldn't find xref section"));
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   if (pc.encrypted)
     {
@@ -2572,14 +2572,14 @@ EntityInterpretPDFPage (FILE *pdf, int select_page)
                 ("This pdf file contains an /Encrypt dictionary, and FontForge does not currently\nsupport pdf encryption"));
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   if (pdf_findpages (&pc) == 0)
     {
       LogError (_("This pdf file has no pages"));
       pcFree (&pc);
       setlocale (LC_NUMERIC, oldloc);
-      return (NULL);
+      return NULL;
     }
   if (pc.pcnt == 1)
     {
@@ -2604,19 +2604,19 @@ EntityInterpretPDFPage (FILE *pdf, int select_page)
             {
               pcFree (&pc);
               setlocale (LC_NUMERIC, oldloc);
-              return (NULL);
+              return NULL;
             }
           choice = strtol (ret, NULL, 10) - 1;
           if (choice < 0 || choice >= pc.pcnt)
             {
               pcFree (&pc);
               setlocale (LC_NUMERIC, oldloc);
-              return (NULL);
+              return NULL;
             }
         }
       ent = pdf_InterpretEntity (&pc, choice);
     }
   setlocale (LC_NUMERIC, oldloc);
   pcFree (&pc);
-  return (ent);
+  return ent;
 }

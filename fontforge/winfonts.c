@@ -200,7 +200,7 @@ lgetushort (FILE *f)
   int ch1, ch2;
   ch1 = getc (f);
   ch2 = getc (f);
-  return ((ch2 << 8) | ch1);
+  return (ch2 << 8) | ch1;
 }
 
 static int
@@ -211,7 +211,7 @@ lgetlong (FILE *f)
   ch2 = getc (f);
   ch3 = getc (f);
   ch4 = getc (f);
-  return ((ch4 << 24) | (ch3 << 16) | (ch2 << 8) | ch1);
+  return (ch4 << 24) | (ch3 << 16) | (ch2 << 8) | ch1;
 }
 
 static void
@@ -244,7 +244,7 @@ FNT_Load (FILE *fnt, SplineFont *sf)
   memset (&fntheader, 0, sizeof (fntheader));
   fntheader.version = lgetushort (fnt);
   if (fntheader.version != 0x200 && fntheader.version != 0x300)
-    return (false);
+    return false;
   fntheader.filesize = lgetlong (fnt);
   for (i = 0; i < 60; ++i)
     fntheader.copyright[i] = getc (fnt);
@@ -253,7 +253,7 @@ FNT_Load (FILE *fnt, SplineFont *sf)
     fntheader.copyright[i] = '\0';
   fntheader.type = lgetushort (fnt);
   if (fntheader.type & (FNT_TYPE_VECTOR | FNT_TYPE_MEMORY | FNT_TYPE_DEVICE))
-    return (false);
+    return false;
   fntheader.pointsize = lgetushort (fnt);
   fntheader.vertres = lgetushort (fnt);
   fntheader.hortres = lgetushort (fnt);
@@ -286,7 +286,7 @@ FNT_Load (FILE *fnt, SplineFont *sf)
       if (fntheader.flags &
           (FNT_FLAGS_ABCFIXED | FNT_FLAGS_ABCPROP | FNT_FLAGS_16COLOR |
            FNT_FLAGS_256COLOR | FNT_FLAGS_RGBCOLOR))
-        return (false);
+        return false;
       fntheader.aspace = lgetushort (fnt);
       fntheader.bspace = lgetushort (fnt);
       fntheader.cspace = lgetushort (fnt);
@@ -425,13 +425,13 @@ FNT_Load (FILE *fnt, SplineFont *sf)
         if (feof (fnt))
           {
             BDFFontFree (bdf);
-            return (false);
+            return false;
           }
       }
 
   bdf->next = sf->bitmaps;
   sf->bitmaps = bdf;
-  return (true);
+  return true;
 }
 
 SplineFont *
@@ -446,7 +446,7 @@ SFReadWinFON (char *filename, int toback)
 
   fon = fopen (filename, "rb");
   if (fon == NULL)
-    return (NULL);
+    return NULL;
   magic = lgetushort (fon);
   fseek (fon, 0, SEEK_SET);
   if (magic != 0x200 && magic != 0x300 && magic != FON_MZ_MAGIC)
@@ -455,7 +455,7 @@ SFReadWinFON (char *filename, int toback)
       ff_post_error (_("Bad magic number"),
                      _
                      ("This does not appear to be a Windows FNT for FON file"));
-      return (NULL);
+      return NULL;
     }
   sf = SplineFontBlank (256);
   sf->map = EncMapNew (256, FindOrMakeEncoding ("win"));
@@ -474,7 +474,7 @@ SFReadWinFON (char *filename, int toback)
           EncMapFree (sf->map);
           SplineFontFree (sf);
           fclose (fon);
-          return (NULL);
+          return NULL;
         }
       for (i = 0; i < 34; ++i)
         getc (fon);
@@ -515,7 +515,7 @@ SFReadWinFON (char *filename, int toback)
     {
       EncMapFree (sf->map);
       SplineFontFree (sf);
-      return (NULL);
+      return NULL;
     }
 
   SFOrderBitmapList (sf);
@@ -538,7 +538,7 @@ SFReadWinFON (char *filename, int toback)
         sf->glyphs[i]->widthset = true;
       }
   sf->onlybitmaps = true;
-  return (sf);
+  return sf;
 }
 
 /* ************************************************************************** */
@@ -559,7 +559,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   BDFChar *bdfc;
 
   if (font->clut != NULL)
-    return (false);
+    return false;
 
   for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
@@ -772,7 +772,7 @@ _FntFontDump (FILE *file, BDFFont *font, EncMap *map, int res)
   for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
-  return (true);
+  return true;
 }
 
 int
@@ -785,14 +785,14 @@ FNTFontDump (char *filename, BDFFont *font, EncMap *map, int res)
   if (file == NULL)
     {
       LogError (_("Can't open %s\n"), filename);
-      return (0);
+      return 0;
     }
   ret = _FntFontDump (file, font, map, res);
   if (ferror (file))
     ret = 0;
   if (fclose (file) != 0)
     ret = 0;
-  return (ret);
+  return ret;
 }
 
 #include "fontforgevw.h"
@@ -1005,7 +1005,7 @@ FONFontDump (char *filename, SplineFont *sf, int32_t *sizes, int resol,
           for (j = 0; j < i; ++j)
             fclose (fntarray[j]);
           free (fntarray);
-          return (false);
+          return false;
         }
       fntarray[i] = tmpfile ();
       if (!_FntFontDump (fntarray[i], bdf, map, resol))
@@ -1013,7 +1013,7 @@ FONFontDump (char *filename, SplineFont *sf, int32_t *sizes, int resol,
           for (j = 0; j <= i; ++j)
             fclose (fntarray[j]);
           free (fntarray);
-          return (false);
+          return false;
         }
       ff_progress_next_stage ();
 
@@ -1092,7 +1092,7 @@ FONFontDump (char *filename, SplineFont *sf, int32_t *sizes, int resol,
       for (j = 0; j < num_files; ++j)
         fclose (fntarray[j]);
       free (fntarray);
-      return (false);
+      return false;
     }
 
   fwrite (MZ_hdr, sizeof (MZ_hdr), 1, fon);

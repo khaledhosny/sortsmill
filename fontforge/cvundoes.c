@@ -68,7 +68,7 @@ bmpcopy (uint8_t *bitmap, int bytes_per_line, int lines)
 {
   uint8_t *ret = xmalloc (bytes_per_line * lines);
   memcpy (ret, bitmap, bytes_per_line * lines);
-  return (ret);
+  return ret;
 }
 
 RefChar *
@@ -77,7 +77,7 @@ RefCharsCopyState (SplineChar *sc, int layer)
   RefChar *head = NULL, *last = NULL, *new_, *crefs;
 
   if (layer < 0 || sc->layers[layer].refs == NULL)
-    return (NULL);
+    return NULL;
   for (crefs = sc->layers[layer].refs; crefs != NULL; crefs = crefs->next)
     {
       new_ = RefCharCreate ();
@@ -93,7 +93,7 @@ RefCharsCopyState (SplineChar *sc, int layer)
           last = new_;
         }
     }
-  return (head);
+  return head;
 }
 
 static SplinePointList *
@@ -104,7 +104,7 @@ RefCharsCopyUnlinked (SplinePointList *sofar, SplineChar *sc, int layer)
   int l;
 
   if (layer < 0 || sc->layers[layer].refs == NULL)
-    return (sofar);
+    return sofar;
   if (sofar != NULL)
     for (last = sofar; last->next != NULL; last = last->next);
   for (crefs = sc->layers[layer].refs; crefs != NULL; crefs = crefs->next)
@@ -125,7 +125,7 @@ RefCharsCopyUnlinked (SplinePointList *sofar, SplineChar *sc, int layer)
             }
         }
     }
-  return (sofar);
+  return sofar;
 }
 
 static int
@@ -141,14 +141,14 @@ RefCharsMatch (RefChar *urefs, RefChar *crefs)
           urefs->transform[3] != crefs->transform[3] ||
           urefs->transform[4] != crefs->transform[4] ||
           urefs->transform[5] != crefs->transform[5])
-        return (false);
+        return false;
       urefs = urefs->next;
       crefs = crefs->next;
     }
   if (urefs == NULL && crefs == NULL)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static int
@@ -161,14 +161,14 @@ ImagesMatch (ImageList *uimgs, ImageList *cimgs)
           uimgs->xoff != cimgs->xoff ||
           uimgs->yoff != cimgs->yoff ||
           uimgs->xscale != cimgs->xscale || uimgs->yscale != cimgs->yscale)
-        return (false);
+        return false;
       uimgs = uimgs->next;
       cimgs = cimgs->next;
     }
   if (uimgs == NULL && cimgs == NULL)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static RefChar *
@@ -183,10 +183,10 @@ RefCharInList (RefChar *search, RefChar *list)
           search->transform[3] == list->transform[3] &&
           search->transform[4] == list->transform[4] &&
           search->transform[5] == list->transform[5])
-        return (list);
+        return list;
       list = list->next;
     }
-  return (NULL);
+  return NULL;
 }
 
 static ImageList *
@@ -198,10 +198,10 @@ ImageInList (ImageList *search, ImageList *list)
           search->xoff != list->xoff ||
           search->yoff != list->yoff ||
           search->xscale != list->xscale || search->yscale != list->yscale)
-        return (list);
+        return list;
       list = list->next;
     }
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -290,14 +290,14 @@ BDFRefCharsMatch (BDFRefChar * urefs, BDFRefChar * crefs)
     {
       if (urefs->bdfc != crefs->bdfc ||
           urefs->xoff != crefs->xoff || urefs->yoff != crefs->yoff)
-        return (false);
+        return false;
       urefs = urefs->next;
       crefs = crefs->next;
     }
   if (urefs == NULL && crefs == NULL)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static BDFRefChar *
@@ -307,10 +307,10 @@ BDFRefCharInList (BDFRefChar * search, BDFRefChar * list)
     {
       if (search->bdfc == list->bdfc &&
           search->xoff == list->xoff && search->yoff == list->yoff)
-        return (list);
+        return list;
       list = list->next;
     }
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -517,7 +517,7 @@ UHintCopy (SplineChar *sc, int docopy)
       for (d = d->next; d != NULL; d = d->next)
         d->hinttype = ht_unspecified;
     }
-  return (ret);
+  return ret;
 }
 
 static void
@@ -672,7 +672,7 @@ AddUndo (Undoes *undo, Undoes **uhead, Undoes **rhead)
     }
   undo->next = *uhead;
   *uhead = undo;
-  return (undo);
+  return undo;
 }
 
 static Undoes *
@@ -698,7 +698,7 @@ CVPreserveState (CharViewBase *cv)
   int layer = CVLayer (cv);
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
+    return NULL;
 
   undo = xzalloc (sizeof (Undoes));
 
@@ -722,7 +722,7 @@ CVPreserveState (CharViewBase *cv)
   undo->u.state.dofill = cv->layerheads[cv->drawmode]->dofill;
   undo->u.state.dostroke = cv->layerheads[cv->drawmode]->dostroke;
   undo->u.state.fillfirst = cv->layerheads[cv->drawmode]->fillfirst;
-  return (CVAddUndo (cv, undo));
+  return CVAddUndo (cv, undo);
 }
 
 Undoes *
@@ -738,7 +738,7 @@ CVPreserveStateHints (CharViewBase *cv)
       undo->u.state.instrs[cv->sc->ttf_instrs_len] = 0; // FIXME: Is this byte needed?
       undo->u.state.instrs_len = cv->sc->ttf_instrs_len;
     }
-  return (undo);
+  return undo;
 }
 
 Undoes *
@@ -747,9 +747,9 @@ SCPreserveHints (SplineChar *sc, int layer)
   Undoes *undo;
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
+    return NULL;
   if (!preserve_hint_undoes)
-    return (NULL);
+    return NULL;
 
   undo = xzalloc (sizeof (Undoes));
 
@@ -761,7 +761,7 @@ SCPreserveHints (SplineChar *sc, int layer)
   undo->u.state.instrs[sc->ttf_instrs_len] = 0; // FIXME: Is this byte needed?
   undo->u.state.instrs_len = sc->ttf_instrs_len;
   undo->copied_from = sc->parent;
-  return (AddUndo (undo, &sc->layers[layer].undoes, &sc->layers[layer].redoes));
+  return AddUndo (undo, &sc->layers[layer].undoes, &sc->layers[layer].redoes);
 }
 
 /* This routine allows for undoes in scripting -- under controlled conditions */
@@ -771,7 +771,7 @@ _SCPreserveLayer (SplineChar *sc, int layer, int dohints)
   Undoes *undo;
 
   if (maxundoes == 0)
-    return (NULL);
+    return NULL;
 
   if (layer == ly_grid)
     layer = ly_fore;
@@ -813,7 +813,7 @@ _SCPreserveLayer (SplineChar *sc, int layer, int dohints)
   undo->u.state.dostroke = sc->layers[layer].dostroke;
   undo->u.state.fillfirst = sc->layers[layer].fillfirst;
   undo->copied_from = sc->parent;
-  return (AddUndo (undo, &sc->layers[layer].undoes, &sc->layers[layer].redoes));
+  return AddUndo (undo, &sc->layers[layer].undoes, &sc->layers[layer].redoes);
 }
 
 /* This routine does not allow for undoes in scripting */
@@ -822,8 +822,8 @@ SCPreserveLayer (SplineChar *sc, int layer, int dohints)
 {
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
-  return (_SCPreserveLayer (sc, layer, dohints));
+    return NULL;
+  return _SCPreserveLayer (sc, layer, dohints);
 }
 
 
@@ -835,13 +835,13 @@ SCPreserveState (SplineChar *sc, int dohints)
   if (sc->parent->multilayer)
     for (i = ly_fore + 1; i < sc->layer_cnt; ++i)
       SCPreserveLayer (sc, i, false);
-  return (SCPreserveLayer (sc, ly_fore, dohints));
+  return SCPreserveLayer (sc, ly_fore, dohints);
 }
 
 Undoes *
 SCPreserveBackground (SplineChar *sc)
 {
-  return (SCPreserveLayer (sc, ly_back, false));
+  return SCPreserveLayer (sc, ly_back, false);
 }
 
 Undoes *
@@ -862,15 +862,15 @@ _SFPreserveGuide (SplineFont *sf)
   undo->u.state.dostroke = sf->grid.dostroke;
   undo->u.state.fillfirst = sf->grid.fillfirst;
   undo->copied_from = sf;
-  return (AddUndo (undo, &sf->grid.undoes, &sf->grid.redoes));
+  return AddUndo (undo, &sf->grid.undoes, &sf->grid.redoes);
 }
 
 Undoes *
 SFPreserveGuide (SplineFont *sf)
 {
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
-  return (_SFPreserveGuide (sf));
+    return NULL;
+  return _SFPreserveGuide (sf);
 }
 
 void
@@ -912,7 +912,7 @@ _CVPreserveTState (CharViewBase *cv, PressedOn *p)
   if (was0)
     maxundoes = 0;
 
-  return (undo);
+  return undo;
 }
 
 Undoes *
@@ -921,7 +921,7 @@ CVPreserveWidth (CharViewBase *cv, int width)
   Undoes *undo;
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
+    return NULL;
 
   undo = xzalloc (sizeof (Undoes));
 
@@ -929,7 +929,7 @@ CVPreserveWidth (CharViewBase *cv, int width)
   undo->was_modified = cv->sc->changed;
   undo->was_order2 = cv->layerheads[cv->drawmode]->order2;
   undo->u.width = width;
-  return (CVAddUndo (cv, undo));
+  return CVAddUndo (cv, undo);
 }
 
 Undoes *
@@ -938,7 +938,7 @@ CVPreserveVWidth (CharViewBase *cv, int vwidth)
   Undoes *undo;
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
+    return NULL;
 
   undo = xzalloc (sizeof (Undoes));
 
@@ -946,7 +946,7 @@ CVPreserveVWidth (CharViewBase *cv, int vwidth)
   undo->was_modified = cv->sc->changed;
   undo->was_order2 = cv->layerheads[cv->drawmode]->order2;
   undo->u.width = vwidth;
-  return (CVAddUndo (cv, undo));
+  return CVAddUndo (cv, undo);
 }
 
 Undoes *
@@ -955,7 +955,7 @@ SCPreserveWidth (SplineChar *sc)
   Undoes *undo;
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
+    return NULL;
 
   undo = xzalloc (sizeof (Undoes));
 
@@ -973,7 +973,7 @@ SCPreserveVWidth (SplineChar *sc)
   Undoes *undo;
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
+    return NULL;
 
   undo = xzalloc (sizeof (Undoes));
 
@@ -992,7 +992,7 @@ BCPreserveState (BDFChar *bc)
   BDFRefChar *head, *ref, *prev = NULL;
 
   if (no_windowing_ui || maxundoes == 0)        /* No use for undoes in scripting */
-    return (NULL);
+    return NULL;
 
   undo = xzalloc (sizeof (Undoes));
 
@@ -1016,7 +1016,7 @@ BCPreserveState (BDFChar *bc)
         prev->next = ref;
       prev = ref;
     }
-  return (AddUndo (undo, &bc->undoes, &bc->redoes));
+  return AddUndo (undo, &bc->undoes, &bc->redoes);
 }
 
 static void
@@ -1464,13 +1464,13 @@ out:
       cur->u.state.splines->first->next != NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   sp = cur->u.state.splines->first;
   sprintf (buffer, "(%g%s%g)", (double) sp->me.x, coord_sep, (double) sp->me.y);
   *len = strlen (buffer);
-  return (xstrdup_or_null (buffer));
+  return xstrdup_or_null (buffer);
 }
 
 static void *
@@ -1499,10 +1499,10 @@ out:
   if (cur == NULL || FontViewFirst () == NULL || cur->u.state.charname == NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
   *len = strlen (cur->u.state.charname);
-  return (xstrdup_or_null (cur->u.state.charname));
+  return xstrdup_or_null (cur->u.state.charname);
 }
 
 static RefChar *
@@ -1527,7 +1527,7 @@ XCopyInstanciateRefs (RefChar *refs, SplineChar *container, int layer)
       last = cur;
       refs = refs->next;
     }
-  return (head);
+  return head;
 }
 
 static int
@@ -1536,7 +1536,7 @@ FFClipToSC (SplineChar *dummy, Undoes *cur)
   int lcnt;
 
   if (cur == NULL)
-    return (false);
+    return false;
 
   dummy->name = "dummy";
   if (cur->undotype != ut_layers)
@@ -1580,7 +1580,7 @@ FFClipToSC (SplineChar *dummy, Undoes *cur)
       dummy->layers[ly_fore].refs =
         XCopyInstanciateRefs (cur->u.state.refs, dummy, ly_fore);
     }
-  return (true);
+  return true;
 }
 
 static void *
@@ -1618,14 +1618,14 @@ out:
   if (FontViewFirst () == NULL || cur == NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   svg = tmpfile ();
   if (svg == NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   memset (&dummy, 0, sizeof (dummy));
@@ -1636,7 +1636,7 @@ out:
     {
       fclose (svg);
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   old_order2 = dummy.parent->layers[ly_fore].order2;
@@ -1656,7 +1656,7 @@ out:
   rewind (svg);
   fread (ret, 1, *len, svg);
   fclose (svg);
-  return (ret);
+  return ret;
 }
 
 /* When a selection contains multiple glyphs, save them into an svg font */
@@ -1676,14 +1676,14 @@ copybuffer2svgmult (void *_copybuffer, int32_t *len)
       || FontViewFirst () == NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   svg = tmpfile ();
   if (svg == NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   cur = cur->u.multiple.mult;
@@ -1732,7 +1732,7 @@ copybuffer2svgmult (void *_copybuffer, int32_t *len)
   rewind (svg);
   fread (ret, 1, *len, svg);
   fclose (svg);
-  return (ret);
+  return ret;
 }
 
 static void *
@@ -1770,7 +1770,7 @@ out:
   if (cur == NULL || FontViewFirst () == NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   memset (&dummy, 0, sizeof (dummy));
@@ -1822,7 +1822,7 @@ out:
   if (eps == NULL)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   old_order2 = dummy.parent->layers[ly_fore].order2;
@@ -1844,7 +1844,7 @@ out:
   rewind (eps);
   fread (ret, 1, *len, eps);
   fclose (eps);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1915,11 +1915,11 @@ CopyUndoType (void)
       if (paster->undotype == ut_multiple)
         paster = paster->u.multiple.mult;
       else if (paster->u.composit.state == NULL)
-        return (ut_none);
+        return ut_none;
       else
         paster = paster->u.composit.state;
     }
-  return (paster->undotype);
+  return paster->undotype;
 }
 
 int
@@ -1929,10 +1929,10 @@ CopyContainsSomething (void)
   if (cur->undotype == ut_multiple)
     cur = cur->u.multiple.mult;
   if (cur->undotype == ut_composit)
-    return (cur->u.composit.state != NULL);
+    return cur->u.composit.state != NULL;
 
   if (cur->undotype == ut_statelookup && cur->copied_from == NULL)
-    return (false);             /* That is, if the source font has been closed, we can't use this any more */
+    return false;             /* That is, if the source font has been closed, we can't use this any more */
 
   return (cur->undotype == ut_state || cur->undotype == ut_tstate ||
           cur->undotype == ut_statehint || cur->undotype == ut_statename ||
@@ -1951,7 +1951,7 @@ CopyContainsBitmap (void)
   if (cur->undotype == ut_multiple)
     cur = cur->u.multiple.mult;
   if (cur->undotype == ut_composit)
-    return (cur->u.composit.bitmaps != NULL);
+    return cur->u.composit.bitmaps != NULL;
 
   return (cur->undotype == ut_bitmap || cur->undotype == ut_bitmapsel
           || cur->undotype == ut_noop);
@@ -1964,7 +1964,7 @@ CopyContainsVectors (void)
   if (cur->undotype == ut_multiple)
     cur = cur->u.multiple.mult;
   if (cur->undotype == ut_composit)
-    return (cur->u.composit.state != NULL);
+    return cur->u.composit.state != NULL;
 
   return (cur->undotype == ut_state || cur->undotype == ut_statehint ||
           cur->undotype == ut_statename || cur->undotype == ut_layers);
@@ -1978,27 +1978,27 @@ CopyContainsRef (SplineFont *sf)
     {
       cur = cur->u.multiple.mult;
       if (cur->next != NULL)
-        return (NULL);
+        return NULL;
     }
   if (cur->undotype == ut_composit)
     cur = cur->u.composit.state;
   if (cur == NULL || (cur->undotype != ut_state && cur->undotype != ut_tstate &&
                       cur->undotype != ut_statehint
                       && cur->undotype != ut_statename))
-    return (NULL);
+    return NULL;
   if (cur->u.state.splines != NULL || cur->u.state.refs == NULL ||
       cur->u.state.refs->next != NULL)
-    return (NULL);
+    return NULL;
   if (sf != cur->copied_from)
-    return (NULL);
+    return NULL;
 
-  return (cur->u.state.refs);
+  return cur->u.state.refs;
 }
 
 const Undoes *
 CopyBufferGet (void)
 {
-  return (&copybuffer);
+  return &copybuffer;
 }
 
 static void
@@ -2052,7 +2052,7 @@ getAdobeEnc (char *name)
       break;
   if (i == 256)
     i = -1;
-  return (i);
+  return i;
 }
 
 void
@@ -2263,7 +2263,7 @@ SCCopyAllLayer (SplineChar *sc, enum fvcopy_type full, int layer)
         }
       cur->copied_from = sc->parent;
     }
-  return (cur);
+  return cur;
 }
 
 static Undoes *
@@ -2298,10 +2298,10 @@ SCCopyAll (SplineChar *sc, int layer, enum fvcopy_type full)
               /* full = ct_reference;         Hunh? What was I thinking? */
             }
         }
-      return (ret);
+      return ret;
     }
   else
-    return (SCCopyAllLayer (sc, full, layer));
+    return SCCopyAllLayer (sc, full, layer);
 }
 
 void
@@ -2375,9 +2375,9 @@ FindCharacter (SplineFont *into, SplineFont *from, RefChar *rf,
        || (rf->unicode_enc == -1
            && fromname != NULL
            && strcmp (sfglyph (into, rf->orig_pos)->name, fromname) == 0)))
-    return (sfglyph (into, rf->orig_pos));
+    return sfglyph (into, rf->orig_pos);
 
-  return (SFGetChar (into, rf->unicode_enc, fromname));
+  return SFGetChar (into, rf->unicode_enc, fromname);
 }
 
 int
@@ -2386,13 +2386,13 @@ SCDependsOnSC (SplineChar *parent, SplineChar *child)
   RefChar *ref;
 
   if (parent == child)
-    return (true);
+    return true;
   for (ref = parent->layers[ly_fore].refs; ref != NULL; ref = ref->next)
     {
       if (SCDependsOnSC (ref->sc, child))
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -2401,13 +2401,13 @@ BCRefersToBC (BDFChar *parent, BDFChar *child)
   BDFRefChar *head;
 
   if (parent == child)
-    return (true);
+    return true;
   for (head = child->refs; head != NULL; head = head->next)
     {
       if (BCRefersToBC (parent, head->bdfc))
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -2600,9 +2600,9 @@ PasteFigureScale (SplineFont *newsf, SplineFont *oldsf)
 {
 
   if (newsf == oldsf)
-    return (1.0);
+    return 1.0;
   if (!SFIsActive (oldsf))      /* Font we copied from has been closed */
-    return (1.0);
+    return 1.0;
 
   return ((newsf->ascent + newsf->descent) / (double) (oldsf->ascent +
                                                        oldsf->descent));
@@ -2709,9 +2709,9 @@ InstrsSameParent (SplineChar *sc, SplineFont *copied_from)
   int ret;
 
   if (sc->parent == copied_from)
-    return (true);
+    return true;
   if (sc->parent == dontask_parent && copied_from == dontask_copied_from)
-    return (dontask_ret);
+    return dontask_ret;
   buts[0] = _("_Yes");
   buts[3] = _("_No");
   buts[1] = _("Yes to _All");
@@ -2722,13 +2722,13 @@ InstrsSameParent (SplineChar *sc, SplineFont *copied_from)
             _
             ("You are attempting to paste glyph instructions from one font to another. Generally this will not work unless the 'prep', 'fpgm' and 'cvt ' tables are the same.\nDo you want to continue anyway?"));
   if (ret == 0)
-    return (true);
+    return true;
   if (ret == 3)
-    return (false);
+    return false;
   dontask_parent = sc->parent;
   dontask_copied_from = copied_from;
   dontask_ret = ret == 1;
-  return (dontask_ret);
+  return dontask_ret;
 }
 
 int
@@ -2740,18 +2740,18 @@ SCWasEmpty (SplineChar *sc, int skip_this_layer)
     if (i != skip_this_layer && !sc->layers[i].background)
       {
         if (sc->layers[i].refs != NULL)
-          return (false);
+          return false;
         else if (sc->layers[i].splines != NULL)
           {
             SplineSet *ss;
             for (ss = sc->layers[i].splines; ss != NULL; ss = ss->next)
               {
                 if (ss->first->prev != NULL)
-                  return (false);       /* Closed contour */
+                  return false;       /* Closed contour */
               }
           }
       }
-  return (true);
+  return true;
 }
 
 /* when pasting from the fontview we do a clear first */
@@ -3442,9 +3442,9 @@ HasNonClass (OTLookup *otl)
   struct lookup_subtable *sub;
   for (sub = otl->subtables; sub != NULL; sub = sub->next)
     if (sub->kc == NULL)
-      return (true);
+      return true;
 
-  return (false);
+  return false;
 }
 
 static OTLookup **
@@ -3514,7 +3514,7 @@ GetLookupsToCopy (SplineFont *sf, OTLookup ***backpairlist, int is_same)
       if (cnt == 0)
         {                       /* If cnt==0 then bcnt must be too */
           ff_post_error (_("No Lookups"), _("No lookups to copy"));
-          return (NULL);
+          return NULL;
         }
       if (!doit)
         {
@@ -3586,7 +3586,7 @@ GetLookupsToCopy (SplineFont *sf, OTLookup ***backpairlist, int is_same)
   free (choices);
   free (list1);
   free (list2);
-  return (list);
+  return list;
 }
 
 static void
@@ -3929,24 +3929,24 @@ ClipBoardToSplineSet (void)
         default:
         case ut_noop:
         case ut_none:
-          return (NULL);
+          return NULL;
           break;
         case ut_state:
         case ut_statehint:
         case ut_statename:
           if (paster->u.state.refs != NULL)
-            return (NULL);
+            return NULL;
 
-          return (paster->u.state.splines);
+          return paster->u.state.splines;
           break;
         case ut_width:
-          return (NULL);
+          return NULL;
         case ut_vwidth:
-          return (NULL);
+          return NULL;
         case ut_rbearing:
-          return (NULL);
+          return NULL;
         case ut_lbearing:
-          return (NULL);
+          return NULL;
         case ut_composit:
           paster = paster->u.composit.state;
           break;
@@ -3955,7 +3955,7 @@ ClipBoardToSplineSet (void)
           break;
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 static Undoes *
@@ -4006,7 +4006,7 @@ BCCopyAll (BDFChar *bc, int pixelsize, int depth, enum fvcopy_type full)
     }
   cur->u.bmpstate.pixelsize = pixelsize;
   cur->u.bmpstate.depth = depth;
-  return (cur);
+  return cur;
 }
 
 void
@@ -4432,7 +4432,7 @@ BitmapCreateCheck (FontViewBase *fv, int *yestoall, int first, int pixelsize,
       fv->sf->changed = true;
       SFOrderBitmapList (fv->sf);
     }
-  return (bdf);
+  return bdf;
 }
 
 static int
@@ -4440,7 +4440,7 @@ copybufferHasLookups (Undoes *cb)
 {
   if (cb->undotype == ut_multiple)
     cb = cb->u.multiple.mult;
-  return (cb->undotype == ut_statelookup);
+  return cb->undotype == ut_statelookup;
 }
 
 void

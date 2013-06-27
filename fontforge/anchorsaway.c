@@ -260,7 +260,7 @@ AnchorD_GlyphsInClass (AnchorDlg *a)
           ti[btot + mcnt + 4] = xcalloc (1, sizeof (GTextInfo));
         }
     }
-  return (ti);
+  return ti;
 }
 
 static void
@@ -424,7 +424,7 @@ APRasterize (void *freetypecontext, SplineChar *sc, int layer, int *off,
         *size = bdfc->xmax + 1;
     }
   ++*size;
-  return (bdfc);
+  return bdfc;
 }
 
 static void
@@ -552,8 +552,8 @@ DevTabFind (DeviceTable *adjust, int pixelsize)
   if (adjust == NULL || adjust->corrections == NULL ||
       pixelsize < adjust->first_pixel_size ||
       pixelsize > adjust->last_pixel_size)
-    return (0);
-  return (adjust->corrections[pixelsize - adjust->first_pixel_size]);
+    return 0;
+  return adjust->corrections[pixelsize - adjust->first_pixel_size];
 }
 
 static void
@@ -740,7 +740,7 @@ AnchorD_Mouse (AnchorDlg *a, GEvent *event)
   int i;
 
   if (event->u.mouse.x < a->ctl_len || event->u.mouse.y >= a->sb_base)
-    return (false);
+    return false;
   if (a->xlen > 0 && event->u.mouse.x >= a->apmatch[0].xstart)
     {
       int x = event->u.mouse.x + a->xoff;
@@ -810,7 +810,7 @@ AnchorD_Mouse (AnchorDlg *a, GEvent *event)
       AnchorD_FigurePos (a, event);
       AnchorD_DrawPos (a);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -878,7 +878,7 @@ SCFindPoint (SplineChar *sc, int layer, int ptnum)
       for (sp = ss->first;;)
         {
           if (sp->ttfindex == ptnum)
-            return (sp);
+            return sp;
           if (sp->next == NULL)
             break;
           sp = sp->next->to;
@@ -886,7 +886,7 @@ SCFindPoint (SplineChar *sc, int layer, int ptnum)
             break;
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -989,7 +989,7 @@ AnchorD_MagnificationChanged (GGadget *g, GEvent *e)
           GDrawRequestExpose (a->gw, NULL, false);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1039,7 +1039,7 @@ AnchorD_DisplaySizeChanged (GGadget *g, GEvent *e)
           GDrawRequestExpose (a->gw, NULL, false);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1056,20 +1056,20 @@ AnchorD_CorrectionChanged (GGadget *g, GEvent *e)
       while (*end == ' ')
         ++end;
       if (*end != '\0')
-        return (true);
+        return true;
       if (correction < -128 || correction > 127)
         {
           ff_post_error (_("Out of Range"),
                          _("Corrections must be between -128 and 127 "
                            "(and should be smaller)"));
-          return (true);
+          return true;
         }
 
       DeviceTableSet (is_y ? &a->yadjust : &a->xadjust, a->pixelsize,
                       correction);
       GDrawRequestExpose (a->gw, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1086,10 +1086,10 @@ AnchorD_PositionChanged (GGadget *g, GEvent *e)
       while (*end == ' ')
         ++end;
       if (*end != '\0')
-        return (true);
+        return true;
 
       if ((is_y && a->apos.y == val) || (!is_y && a->apos.x == val))
-        return (true);
+        return true;
       if (is_y)
         a->apos.y = val;
       else
@@ -1097,7 +1097,7 @@ AnchorD_PositionChanged (GGadget *g, GEvent *e)
       AnchorD_ClearCorrections (a);
       GDrawRequestExpose (a->gw, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1108,14 +1108,14 @@ AnchorD_Cancel (GGadget *g, GEvent *e)
       AnchorDlg *a = GDrawGetUserData (GGadgetGetWindow (g));
       AnchorD_DoCancel (a);
     }
-  return (true);
+  return true;
 }
 
 static int
 AnchorD_Apply (AnchorDlg *a)
 {
   SetAnchor (a->sc, a->layer, a->ap, &a->xadjust, &a->yadjust, &a->apos);
-  return (true);
+  return true;
 }
 
 static int
@@ -1127,7 +1127,7 @@ AnchorD_OK (GGadget *g, GEvent *e)
       AnchorD_Apply (a);
       a->done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1201,9 +1201,9 @@ AnchorD_ChangeGlyph (AnchorDlg *a, SplineChar *sc, AnchorPoint *ap)
   struct state *old;
 
   if (ap == NULL || sc == NULL)
-    return (true);
+    return true;
   if (a->ap == ap)
-    return (true);
+    return true;
   /* Do we already have an entry for the current anchor? */
   for (old = a->orig_vals; old != NULL && old->ap_pt != a->ap; old = old->next);
   /* If so we've already noted its original state and need do nothing more */
@@ -1235,7 +1235,7 @@ AnchorD_ChangeGlyph (AnchorDlg *a, SplineChar *sc, AnchorPoint *ap)
   AnchorD_SetDevTabs (a);
   AnchorD_ChangeSize (a);
   AnchorD_SetTitle (a);
-  return (true);
+  return true;
 }
 
 static SplineChar *
@@ -1257,7 +1257,7 @@ AddAnchor (AnchorDlg *a, SplineFont *sf, AnchorClass *ac, int ismarklike)
                            "will add an anchor to that glyph."));
       free (def);
       if (ret == NULL)
-        return (NULL);
+        return NULL;
       sc = SFGetChar (sf, -1, ret);
       def = ret;
       if (sc == NULL)
@@ -1359,7 +1359,7 @@ AddAnchor (AnchorDlg *a, SplineFont *sf, AnchorClass *ac, int ismarklike)
         }
       AnchorD_ChangeGlyph (a, sc, ap);
     }
-  return (sc);
+  return sc;
 }
 
 static int
@@ -1385,7 +1385,7 @@ AnchorD_GlyphChanged (GGadget *g, GEvent *e)
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1428,26 +1428,26 @@ anchord_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("anchorcontrol.html");
-          return (true);
+          return true;
         }
       else if (event->u.chr.keysym == GK_Page_Down
                || event->u.chr.keysym == GK_KP_Page_Down)
         {
           AnchorD_NextPrev (a, 1);
-          return (true);
+          return true;
         }
       else if (event->u.chr.keysym == GK_Page_Up
                || event->u.chr.keysym == GK_KP_Page_Up)
         {
           AnchorD_NextPrev (a, -1);
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
       break;
     case et_mouseup:
     case et_mousemove:
     case et_mousedown:
-      return (AnchorD_Mouse (a, event));
+      return AnchorD_Mouse (a, event);
       break;
     case et_expose:
       AnchorD_Expose (a, gw, event);
@@ -1465,7 +1465,7 @@ anchord_e_h (GWindow gw, GEvent *event)
         }
       break;
     }
-  return (true);
+  return true;
 }
 
 static GTextInfo magnifications[] = {

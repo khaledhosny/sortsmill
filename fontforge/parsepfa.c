@@ -905,7 +905,7 @@ MakeEmptyFont (void)
   ret->private->leniv = 4;
   ret->encoding_name = &custom;
   ret->fontinfo->fstype = -1;
-  return (ret);
+  return ret;
 }
 
 static struct fontdict *
@@ -913,7 +913,7 @@ PSMakeEmptyFont (void)
 {
   struct fontdict *ret = MakeEmptyFont ();
   ret->charprocs = xcalloc (1, sizeof (struct charprocs));
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -936,9 +936,9 @@ myfgets (char *str, int len, FILE *file)
         *pt++ = '\n';
     }
   if (pt == str)
-    return (NULL);
+    return NULL;
   *pt = '\0';
-  return (str);
+  return str;
 }
 
 static char *
@@ -964,9 +964,9 @@ myfgetsNoNulls (char *str, int len, FILE *file)
         *pt++ = '\n';
     }
   if (pt == str)
-    return (NULL);
+    return NULL;
   *pt = '\0';
-  return (str);
+  return str;
 }
 
 static char *
@@ -983,7 +983,7 @@ getstring (char *start, FILE *in)
       if (*start == '\0')
         {
           if (myfgetsNoNulls (buffer, sizeof (buffer), in) == NULL)
-            return (xstrdup (""));
+            return xstrdup ("");
           start = buffer;
         }
       else
@@ -1016,10 +1016,10 @@ getstring (char *start, FILE *in)
       if (*end != '\0')
         break;
       if (myfgetsNoNulls (buffer, sizeof (buffer), in) == NULL)
-        return (ret);
+        return ret;
       start = buffer;
     }
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -1038,7 +1038,7 @@ gettoken (char *start)
   if (end > start)
     strncpy (ret, start, end - start);
   ret[end - start] = '\0';
-  return (ret);
+  return ret;
 }
 
 static int
@@ -1048,9 +1048,9 @@ getbool (char *start)
   while (isspace (*start))
     ++start;
   if (*start == 'T' || *start == 't')
-    return (1);
+    return 1;
 
-  return (0);
+  return 0;
 }
 
 static void
@@ -1172,11 +1172,11 @@ mycmp (char *str, char *within, char *end)
   while (within < end)
     {
       if (*str != *within)
-        return (*str - *within);
+        return *str - *within;
       ++str;
       ++within;
     }
-  return (*str == '\0' ? 0 : 1);
+  return *str == '\0' ? 0 : 1;
 }
 
 static void
@@ -1325,7 +1325,7 @@ hex (int ch1, int ch2)
     ch2 -= 'a' - 10;
   else
     ch2 -= 'A' - 10;
-  return ((ch1 << 4) | ch2);
+  return (ch1 << 4) | ch2;
 }
 
 unsigned short r;
@@ -1343,7 +1343,7 @@ decode (unsigned char cypher)
 {
   unsigned char plain = (cypher ^ (r >> 8));
   r = (cypher + r) * c1 + c2;
-  return (plain);
+  return plain;
 }
 
 static void
@@ -1477,7 +1477,7 @@ rmbinary (char *line)
           break;
         }
     }
-  return (line);
+  return line;
 }
 
 static void
@@ -2496,7 +2496,7 @@ glorpline (struct fontparse *fp, FILE *temp, char *rdtok)
 
   ch = getc (temp);
   if (ch == EOF)
-    return (0);
+    return 0;
   ungetc (ch, temp);
 
   if (buffer == NULL)
@@ -2702,7 +2702,7 @@ glorpline (struct fontparse *fp, FILE *temp, char *rdtok)
     {
       addinfo (fp, buffer, temptok, binstart, binlen, temp);
     }
-  return (1);
+  return 1;
 }
 
 static int nrandombytes[4];
@@ -2892,7 +2892,7 @@ readt1str (FILE *temp, int offset, int len, int leniv)
         }
     }
   *pt = '\0';
-  return (str);
+  return str;
 }
 
 static void
@@ -3208,7 +3208,7 @@ _ReadPSFont (FILE *in)
     {
       LogError (_("Cannot open a temporary file\n"));
       fclose (in);
-      return (NULL);
+      return NULL;
     }
 
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
@@ -3227,7 +3227,7 @@ _ReadPSFont (FILE *in)
       fp.fd->modificationtime = b.st_mtime;
       fp.fd->creationtime = b.st_mtime;
     }
-  return (fp.fd);
+  return fp.fd;
 }
 
 FontDict *
@@ -3240,11 +3240,11 @@ ReadPSFont (char *fontname)
   if (in == NULL)
     {
       LogError (_("Cannot open %s\n"), fontname);
-      return (NULL);
+      return NULL;
     }
   fd = _ReadPSFont (in);
   fclose (in);
-  return (fd);
+  return fd;
 }
 
 void
@@ -3395,11 +3395,11 @@ _NamesReadPostScript (FILE *ps)
         }
       fclose (ps);
     }
-  return (ret);
+  return ret;
 }
 
 char **
 NamesReadPostScript (char *filename)
 {
-  return (_NamesReadPostScript (fopen (filename, "rb")));
+  return _NamesReadPostScript (fopen (filename, "rb"));
 }

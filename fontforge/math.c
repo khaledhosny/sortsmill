@@ -244,18 +244,18 @@ GV_StringCheck (SplineFont *sf, char *str)
       while (*start == ' ')
         ++start;
       if (*start == '\0')
-        return (pcnt);
+        return pcnt;
       for (pt = start; *pt != ':' && *pt != ' ' && *pt != '\0'; ++pt);
       ch = *pt;
       if (ch == ' ' || ch == '\0')
-        return (-1);
+        return -1;
       if (sf != NULL)
         {
           *pt = '\0';
           sc = SFGetChar (sf, -1, start);
           *pt = ch;
           if (sc == NULL)
-            return (-1);
+            return -1;
         }
       scnt = 0;
       while (*pt != ' ' && *pt != '\0')
@@ -263,11 +263,11 @@ GV_StringCheck (SplineFont *sf, char *str)
           if (*pt == ':')
             ++scnt;
           else if (!isdigit (*pt))
-            return (-1);
+            return -1;
           ++pt;
         }
       if (scnt != 4)
-        return (-1);
+        return -1;
       ++pcnt;
       start = pt;
     }
@@ -281,7 +281,7 @@ GV_FromString (struct glyphvariants *gv, char *str)
   int ch, temp;
 
   if (pcnt <= 0)
-    return (gv);
+    return gv;
   if (gv == NULL)
     gv = xzalloc (sizeof (struct glyphvariants));
   gv->part_cnt = pcnt;
@@ -292,7 +292,7 @@ GV_FromString (struct glyphvariants *gv, char *str)
       while (*start == ' ')
         ++start;
       if (*start == '\0')
-        return (gv);
+        return gv;
       for (pt = start; *pt != ':'; ++pt);
       ch = *pt;
       *pt = '\0';
@@ -317,7 +317,7 @@ GV_ToString (struct glyphvariants *gv)
   char buffer[80], *str;
 
   if (gv == NULL || gv->part_cnt == 0)
-    return (NULL);
+    return NULL;
   for (i = len = 0; i < gv->part_cnt; ++i)
     {
       len += strlen (gv->parts[i].component);
@@ -341,7 +341,7 @@ GV_ToString (struct glyphvariants *gv)
     str[len - 1] = '\0';
   else
     *str = '\0';
-  return (str);
+  return str;
 }
 
 static int
@@ -352,14 +352,14 @@ SF_NameListCheck (SplineFont *sf, char *list)
   SplineChar *sc;
 
   if (list == NULL)
-    return (true);
+    return true;
 
   for (start = list;;)
     {
       while (*start == ' ')
         ++start;
       if (*start == '\0')
-        return (true);
+        return true;
       for (pt = start; *pt != ' ' && *pt != '\0' && *pt != '('; ++pt);
       ch = *pt;
       *pt = '\0';
@@ -374,7 +374,7 @@ SF_NameListCheck (SplineFont *sf, char *list)
         }
       start = pt;
       if (sc == NULL)
-        return (false);
+        return false;
     }
 }
 
@@ -400,7 +400,7 @@ MATH_GlyphNameCompletion (GGadget *t, int from_tab)
     GDrawGetUserData (GDrawGetParentWindow (GGadgetGetWindow (t)));
   SplineFont *sf = math->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, false));
+  return SFGlyphNameCompletion (sf, t, from_tab, false);
 }
 
 static uint32_t **
@@ -410,7 +410,7 @@ MATH_GlyphListCompletion (GGadget *t, int from_tab)
     GDrawGetUserData (GDrawGetParentWindow (GGadgetGetWindow (t)));
   SplineFont *sf = math->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, true));
+  return SFGlyphNameCompletion (sf, t, from_tab, true);
 }
 
 static void
@@ -628,7 +628,7 @@ _MATHConst_GetImage (const void *_math)
     GV_GetConstructedImage (sc, math->def_layer, gv,
                             GGadgetGetCid (varlist) == CID_HGlyphConst);
   GlyphVariantsFree (gv);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -690,7 +690,7 @@ _GVC_GetImage (const void *_math)
   gv = GV_ParseConstruction (NULL, old, rows, cols);
   ret = GV_GetConstructedImage (math->sc, math->def_layer, gv, math->is_horiz);
   GlyphVariantsFree (gv);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -859,7 +859,7 @@ GVC_OK (GGadget *g, GEvent *e)
       math->done = true;
       math->ok = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -870,7 +870,7 @@ MATH_Cancel (GGadget *g, GEvent *e)
       MathDlg *math = GDrawGetUserData (GGadgetGetWindow (g));
       math->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -887,7 +887,7 @@ gc_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("math.html#GlyphConstruction");
-          return (true);
+          return true;
         }
       else if (GMenuIsCommand (event, H_ ("Quit|Ctl+Q")))
         {
@@ -897,9 +897,9 @@ gc_e_h (GWindow gw, GEvent *event)
         {
           math->done = true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static char *
@@ -1014,7 +1014,7 @@ GlyphConstruction_Dlg (GGadget *g, int r, int c)
   else
     ret = xstrdup_or_null (old[r * cols + cols - 1].u.md_str);
   GDrawDestroyWindow (md.gw);
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -1026,13 +1026,13 @@ MKChange_Dlg (GGadget *g, int r, int c)
   SplineChar *sc;
 
   if (old[r * cols + 0].u.md_str == NULL)
-    return (NULL);
+    return NULL;
   sc = SFGetChar (math->sf, -1, old[r * cols + 0].u.md_str);
   if (sc == NULL)
-    return (NULL);
+    return NULL;
 
   MathKernDialog (sc, math->def_layer);
-  return (NULL);
+  return NULL;
 }
 
 static int
@@ -1053,7 +1053,7 @@ MATH_OK (GGadget *g, GEvent *e)
           GetInt8 (math->gw, 2 * i + 1, math_constants_descriptor[i].ui_name,
                    &err);
           if (err)
-            return (true);
+            return true;
           if (math_constants_descriptor[i].devtab_offset >= 0)
             {
               GGadget *tf2 = GWidgetGetControl (math->gw, 2 * i + 2);
@@ -1064,7 +1064,7 @@ MATH_OK (GGadget *g, GEvent *e)
                                  _("Bad device table for %s"),
                                  math_constants_descriptor[i].ui_name);
                   free (str);
-                  return (true);
+                  return true;
                 }
               free (str);
             }
@@ -1083,7 +1083,7 @@ MATH_OK (GGadget *g, GEvent *e)
                                  _("There is no glyph named %s (used in %s)"),
                                  old[i * cols + 0].u.md_str,
                                  gi_aspectnames[cid - CID_Exten]);
-                  return (true);
+                  return true;
                 }
               if (cid == CID_Italic || cid == CID_TopAccent ||
                   cid == CID_VGlyphConst || cid == CID_HGlyphConst)
@@ -1094,7 +1094,7 @@ MATH_OK (GGadget *g, GEvent *e)
                                      _("Bad device table for glyph %s in %s"),
                                      old[i * cols + 0].u.md_str,
                                      gi_aspectnames[cid - CID_Exten]);
-                      return (true);
+                      return true;
                     }
                 }
               if (cid == CID_VGlyphConst || cid == CID_HGlyphConst)
@@ -1106,7 +1106,7 @@ MATH_OK (GGadget *g, GEvent *e)
                                      _("Bad parts list for glyph %s in %s"),
                                      old[i * cols + 0].u.md_str,
                                      gi_aspectnames[cid - CID_Exten]);
-                      return (true);
+                      return true;
                     }
                 }
               if (cid == CID_VGlyphVar || cid == CID_HGlyphVar)
@@ -1117,7 +1117,7 @@ MATH_OK (GGadget *g, GEvent *e)
                                      _("Bad Variants list for glyph %s in %s"),
                                      old[i * cols + 0].u.md_str,
                                      gi_aspectnames[cid - CID_Exten]);
-                      return (true);
+                      return true;
                     }
                 }
             }
@@ -1227,7 +1227,7 @@ MATH_OK (GGadget *g, GEvent *e)
       math->done = true;
       math->ok = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1244,7 +1244,7 @@ math_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("math.html");
-          return (true);
+          return true;
         }
       else if (GMenuIsCommand (event, H_ ("Quit|Ctl+Q")))
         {
@@ -1254,9 +1254,9 @@ math_e_h (GWindow gw, GEvent *event)
         {
           math->done = true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 #define MAX_PAGE	9
@@ -1693,7 +1693,7 @@ mkd_sub_e_h (GWindow gw, GEvent *event)
       MKDChar (mkd, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1733,7 +1733,7 @@ mkd_e_h (GWindow gw, GEvent *event)
       /* mkd->isvisible = event->u.map.is_visible; */
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1866,11 +1866,11 @@ bp_order_height (const void *bpp1, const void *bpp2)
   const BasePoint *bp1 = *(const BasePoint **) bpp1;
   const BasePoint *bp2 = *(const BasePoint **) bpp2;
   if (bp1->y > bp2->y)
-    return (1);
+    return 1;
   else if (bp1->y < bp2->y)
-    return (-1);
+    return -1;
 
-  return (0);
+  return 0;
 }
 
 static int
@@ -1879,11 +1879,11 @@ mkd_order_height (const void *_mkd1, const void *_mkd2)
   const struct mathkerndata *mkd1 = (const struct mathkerndata *) _mkd1;
   const struct mathkerndata *mkd2 = (const struct mathkerndata *) _mkd2;
   if (mkd1->height > mkd2->height)
-    return (1);
+    return 1;
   else if (mkd1->height < mkd2->height)
-    return (-1);
+    return -1;
 
-  return (0);
+  return 0;
 }
 
 static int
@@ -2002,7 +2002,7 @@ MKD_Parse (MathKernDlg *mkd)
                   ff_post_error (_("Bad device table"),
                                  _("Bad device table for in row %d of %s"), j,
                                  cornernames[i]);
-                  return (false);
+                  return false;
                 }
             }
         }
@@ -2049,7 +2049,7 @@ MKD_Parse (MathKernDlg *mkd)
     }
   /* The only potential error is two entries with the same height, and I don't */
   /*  check for that */
-  return (true);
+  return true;
 }
 
 static int
@@ -2066,7 +2066,7 @@ MKD_AspectChange (GGadget *g, GEvent *e)
       int new_aspect = GTabSetGetSel (g);
 
       if (new_aspect == mkd->last_aspect)
-        return (true);
+        return true;
 
       GGadgetSetEnabled (mkd->mb, new_aspect == 0);
 
@@ -2088,7 +2088,7 @@ MKD_AspectChange (GGadget *g, GEvent *e)
       mkd->last_aspect = new_aspect;
       MKDFillup (mkd, mkd->cursc);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2107,7 +2107,7 @@ MathKernD_GlyphChanged (GGadget *g, GEvent *e)
           MKDFillupRefresh (mkd, sc);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2127,7 +2127,7 @@ MathKernD_Cancel (GGadget *g, GEvent *e)
       MKD_DoClose (((CharViewBase *) GDrawGetUserData (GGadgetGetWindow (g)))->
                    container);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2147,19 +2147,19 @@ MathKernD_OK (GGadget *g, GEvent *e)
           MKD_DoClose ((struct cvcontainer *) mkd);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
 MKD_Can_Navigate (struct cvcontainer *cvc, enum nav_type type)
 {
-  return (true);
+  return true;
 }
 
 static int
 MKD_Can_Open (struct cvcontainer *cvc)
 {
-  return (false);
+  return false;
 }
 
 static void
@@ -2216,7 +2216,7 @@ MKD_Do_Navigate (struct cvcontainer *cvc, enum nav_type type)
 static SplineFont *
 SF_Of_MKD (struct cvcontainer *foo)
 {
-  return (NULL);
+  return NULL;
 }
 
 struct cvcontainer_funcs mathkern_funcs = {

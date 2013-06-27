@@ -123,7 +123,7 @@ WriteAfmFile (char *filename, SplineFont *sf, int formattype,
   if (afm == NULL)
     {
       free (buf);
-      return (false);
+      return false;
     }
   ret =
     AfmSplineFont (afm, sf, subtype, map, flags & ps_flag_afmwithmarks, fullsf,
@@ -132,9 +132,9 @@ WriteAfmFile (char *filename, SplineFont *sf, int formattype,
     ret = URLFromFile (buf, afm);
   free (buf);
   if (fclose (afm) == -1)
-    return (false);
+    return false;
   if (!ret)
-    return (false);
+    return false;
 
   if ((formattype == ff_mma || formattype == ff_mmb) && sf->mm != NULL)
     {
@@ -156,14 +156,14 @@ WriteAfmFile (char *filename, SplineFont *sf, int formattype,
           afm = fopen (buf, "w");
           free (buf);
           if (afm == NULL)
-            return (false);
+            return false;
           ret =
             AfmSplineFont (afm, sf, subtype, map, flags & ps_flag_afmwithmarks,
                            NULL, layer);
           if (fclose (afm) == -1)
-            return (false);
+            return false;
           if (!ret)
-            return (false);
+            return false;
         }
       buf = xmalloc (strlen (filename) + 8);
 
@@ -179,12 +179,12 @@ WriteAfmFile (char *filename, SplineFont *sf, int formattype,
       afm = fopen (buf, "w");
       free (buf);
       if (afm == NULL)
-        return (false);
+        return false;
       ret = AmfmSplineFont (afm, mm, formattype, map, layer);
       if (fclose (afm) == -1)
-        return (false);
+        return false;
     }
-  return (ret);
+  return ret;
 }
 
 static int
@@ -210,7 +210,7 @@ WriteTfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
   ff_progress_next ();          /* Forces a refresh */
   tfm = fopen (buf, "wb");
   if (tfm == NULL)
-    return (false);
+    return false;
   ret = TfmSplineFont (tfm, sf, formattype, map, layer);
   if (fclose (tfm) == -1)
     ret = 0;
@@ -220,7 +220,7 @@ WriteTfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
   enc = fopen (buf, "wb");
   free (buf);
   if (enc == NULL)
-    return (false);
+    return false;
 
   encname = NULL;
   if (sf->subfontcnt == 0 && map->enc != &custom)
@@ -252,7 +252,7 @@ WriteTfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
 
   if (fclose (enc) == -1)
     ret = 0;
-  return (ret);
+  return ret;
 }
 
 static int
@@ -282,7 +282,7 @@ WriteOfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
   ff_progress_next ();          /* Forces a refresh */
   tfm = fopen (buf, "wb");
   if (tfm == NULL)
-    return (false);
+    return false;
   ret = OfmSplineFont (tfm, sf, formattype, map, layer);
   if (fclose (tfm) == -1)
     ret = 0;
@@ -292,7 +292,7 @@ WriteOfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
   enc = fopen (buf, "wb");
   free (buf);
   if (enc == NULL)
-    return (false);
+    return false;
 
   fprintf (enc, "VTITLE %s\n", sf->fontname);
   fprintf (enc, "FAMILY %s\n", sf->familyname);
@@ -317,7 +317,7 @@ WriteOfmFile (char *filename, SplineFont *sf, int formattype, EncMap *map,
 
   if (fclose (enc) == -1)
     ret = 0;
-  return (ret);
+  return ret;
 }
 
 #if FONTFORGE_CONFIG_WRITE_PFM
@@ -345,11 +345,11 @@ WritePfmFile (char *filename, SplineFont *sf, int type0, EncMap *map, int layer)
   pfm = fopen (buf, "wb");
   free (buf);
   if (pfm == NULL)
-    return (false);
+    return false;
   ret = PfmSplineFont (pfm, sf, type0, map, layer);
   if (fclose (pfm) == -1)
-    return (0);
-  return (ret);
+    return 0;
+  return ret;
 }
 
 static int
@@ -360,7 +360,7 @@ WriteFontLog (char *filename, SplineFont *sf, int formattype,
   FILE *flog;
 
   if (sf->fontlog == NULL || *sf->fontlog == '\0')
-    return (true);
+    return true;
 
   strcpy (buf, filename);
   pt = strrchr (buf, '/');
@@ -371,14 +371,14 @@ WriteFontLog (char *filename, SplineFont *sf, int formattype,
   flog = fopen (buf, "w");
   free (buf);
   if (flog == NULL)
-    return (false);
+    return false;
 
   for (pt = sf->fontlog; *pt; ++pt)
     putc (*pt, flog);
   if (fclose (flog) != 0)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -408,7 +408,7 @@ WriteBitmaps (char *filename, SplineFont *sf, int32_t *sizes, int res,
                           ("Attempt to generate a pixel size that has not been created (%d@%d)"),
                           sizes[i] & 0xffff, sizes[i] >> 16);
           free (buf);
-          return (false);
+          return false;
         }
 
       if (bf == bf_ptype3 && bdf->clut != NULL)
@@ -416,7 +416,7 @@ WriteBitmaps (char *filename, SplineFont *sf, int32_t *sizes, int res,
           ff_post_notice (_("Missing Bitmap"),
                           _
                           ("Currently, FontForge only supports bitmap (not bytemap) type3 output"));
-          return (false);
+          return false;
         }
 
       strcpy (buf, filename);
@@ -448,7 +448,7 @@ WriteBitmaps (char *filename, SplineFont *sf, int32_t *sizes, int res,
       ff_progress_next_stage ();
     }
   free (buf);
-  return (true);
+  return true;
 }
 
 static int32_t *
@@ -475,7 +475,7 @@ ParseWernerSFDFile (char *wernerfilename, SplineFont *sf, int *max,
     {
       ff_post_error (_("No Sub Font Definition file"),
                      _("No Sub Font Definition file"));
-      return (NULL);
+      return NULL;
     }
 
   k = 0;
@@ -506,7 +506,7 @@ ParseWernerSFDFile (char *wernerfilename, SplineFont *sf, int *max,
                          _
                          ("This looks like one of FontForge's SplineFont DataBase files.\nNot one of TeX's SubFont Definition files.\nAn unfortunate confusion of extensions."));
           free (mapping);
-          return (NULL);
+          return NULL;
         }
       pt = buffer + strlen (buffer) - 1;
       bpt = buffer;
@@ -625,7 +625,7 @@ ParseWernerSFDFile (char *wernerfilename, SplineFont *sf, int *max,
   names[subfilecnt] = NULL;
   *_names = names;
   fclose (file);
-  return (mapping);
+  return mapping;
 }
 
 static int
@@ -690,7 +690,7 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
           }
       }
   if (used == 0)
-    return (0);
+    return 0;
 
   /* check for any references to things outside this subfont and add them */
   /*  as unencoded chars */
@@ -837,7 +837,7 @@ GenerateSubFont (SplineFont *sf, char *newname, int32_t *sizes, int res,
   release_enc_to_gid (&encmap);
   release_gid_to_enc (&encmap);
 
-  return (err);
+  return err;
 }
 
 /* ttf2tfm supports multiple sfd files. I do not. */
@@ -860,15 +860,15 @@ WriteMultiplePSFont (SplineFont *sf, char *newname, int32_t *sizes,
       ff_post_error (_("Bad Extension"),
                      _
                      ("You must specify a standard type1 extension (.pfb or .pfa)"));
-      return (0);
+      return 0;
     }
   if (wernerfilename == NULL)
-    return (0);
+    return 0;
   mapping = ParseWernerSFDFile (wernerfilename, sf, &max, &names, map);
   if (tofree)
     free (wernerfilename);
   if (mapping == NULL)
-    return (1);
+    return 1;
 
   if (sf->cidmaster != NULL)
     sf = sf->cidmaster;
@@ -898,7 +898,7 @@ WriteMultiplePSFont (SplineFont *sf, char *newname, int32_t *sizes,
   ff_progress_end_indicator ();
   if (!err)
     SavePrefs (true);
-  return (err);
+  return err;
 }
 
 int
@@ -925,13 +925,13 @@ CheckIfTransparent (SplineFont *sf)
                      _
                      ("This font contains at least one translucent layer, but type3 does not support that (anything translucent or transparent is treated as opaque). Do you want to proceed anyway?"))
                     == 1)
-                  return (true);
+                  return true;
 
-                return (false);
+                return false;
               }
           }
       }
-  return (false);
+  return false;
 }
 
 int
@@ -1018,7 +1018,7 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
           case ff_type42:
           case ff_type42cid:
             if (sf->multilayer && CheckIfTransparent (sf))
-              return (true);
+              return true;
             oerr =
               !WritePSFont (newname, sf, oldformatstate, flags, map, NULL,
                             layer);
@@ -1170,7 +1170,7 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
   ff_progress_end_indicator ();
   if (!err)
     SavePrefs (true);
-  return (err);
+  return err;
 }
 
 void
@@ -1258,7 +1258,7 @@ AllBitmapSizes (SplineFont *sf)
       sizes = xmalloc ((cnt + 1) * sizeof (int32_t));
     }
   sizes[cnt] = 0;
-  return (sizes);
+  return sizes;
 }
 
 int
@@ -1606,5 +1606,5 @@ GenerateScript (SplineFont *sf, char *filename, char *bitmaptype, int fmflags,
             free (sfi->sizes);
         }
     }
-  return (ret);
+  return ret;
 }

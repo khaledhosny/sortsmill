@@ -176,7 +176,7 @@ HistFindBlues (SplineFont *sf, int layer, uint8_t *selected, EncMap *map)
       free (hist->hist);
       hist->hist = h;
     }
-  return (hist);
+  return hist;
 }
 
 static HistData *
@@ -265,19 +265,19 @@ HistFindStemWidths (SplineFont *sf, int layer, uint8_t *selected, EncMap *map,
       free (hist->hist);
       hist->hist = h;
     }
-  return (hist);
+  return hist;
 }
 
 static HistData *
 HistFindHStemWidths (SplineFont *sf, int layer, uint8_t *selected, EncMap *map)
 {
-  return (HistFindStemWidths (sf, layer, selected, map, true));
+  return HistFindStemWidths (sf, layer, selected, map, true);
 }
 
 static HistData *
 HistFindVStemWidths (SplineFont *sf, int layer, uint8_t *selected, EncMap *map)
 {
-  return (HistFindStemWidths (sf, layer, selected, map, false));
+  return HistFindStemWidths (sf, layer, selected, map, false);
 }
 
 static void
@@ -461,7 +461,7 @@ ArrayOrder (const uint32_t *old, int args, int val1, int val2)
         *pt++ = ' ';
     }
   *pt = '\0';
-  return (new);
+  return new;
 }
 
 static void
@@ -774,9 +774,9 @@ leftside_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("histogram.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
       break;
     case et_expose:
       HistLExpose (gw, hist);
@@ -786,7 +786,7 @@ leftside_e_h (GWindow gw, GEvent *event)
       GGadgetEndPopup ();
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -800,9 +800,9 @@ rightside_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("histogram.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
       break;
     case et_expose:
       HistRExpose (gw, hist);
@@ -812,7 +812,7 @@ rightside_e_h (GWindow gw, GEvent *event)
       GGadgetEndPopup ();
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -826,9 +826,9 @@ histogram_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("histogram.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
       break;
     case et_expose:
       HistExpose (gw, hist);
@@ -842,7 +842,7 @@ histogram_e_h (GWindow gw, GEvent *event)
       HistPress (hist, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -862,9 +862,9 @@ hist_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("histogram.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_resize)
     {
@@ -928,7 +928,7 @@ hist_e_h (GWindow gw, GEvent *event)
           break;
         }
     }
-  return (true);
+  return true;
 }
 
 static void

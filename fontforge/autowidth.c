@@ -138,7 +138,7 @@ LineFindLeftDistance (struct charone *right, WidthInfo * wi)
 
   fudge = (wi->sf->ascent + wi->sf->descent) / 100;
   if (min == NOTREACHED)
-    return (0);
+    return 0;
   else
     {
       sum = cnt = 0;
@@ -155,7 +155,7 @@ LineFindLeftDistance (struct charone *right, WidthInfo * wi)
               sum += right->ledge[i - right->base];
             }
         }
-      return ((min + sum / cnt) / 2 - right->lbearing);
+      return (min + sum / cnt) / 2 - right->lbearing;
     }
 }
 
@@ -181,7 +181,7 @@ LineFindRightDistance (struct charone *left, WidthInfo * wi)
 
   fudge = (wi->sf->ascent + wi->sf->descent) / 100;
   if (max == NOTREACHED)
-    return (0);
+    return 0;
   else
     {
       sum = cnt = 0;
@@ -198,7 +198,7 @@ LineFindRightDistance (struct charone *left, WidthInfo * wi)
               sum += left->redge[i - left->base];
             }
         }
-      return ((max + sum / cnt) / 2 - left->rmax);
+      return (max + sum / cnt) / 2 - left->rmax;
     }
 }
 #endif /* Not used */
@@ -415,15 +415,15 @@ SplineFindMinXAtY (Spline *spline, real y, real min)
 
   if (y > spline->from->me.y && y > spline->from->nextcp.y &&
       y > spline->to->me.y && y > spline->to->prevcp.y)
-    return (min);
+    return min;
   if (y < spline->from->me.y && y < spline->from->nextcp.y &&
       y < spline->to->me.y && y < spline->to->prevcp.y)
-    return (min);
+    return min;
   if (min != NOTREACHED)
     {
       if (min <= spline->from->me.x && min <= spline->from->nextcp.x &&
           min <= spline->to->me.x && min <= spline->to->prevcp.x)
-        return (min);
+        return min;
     }
 
   xsp = &spline->splines[0];
@@ -458,7 +458,7 @@ SplineFindMinXAtY (Spline *spline, real y, real min)
       if (min == NOTREACHED || val < min)
         min = val;
     }
-  return (min);
+  return min;
 }
 
 static void
@@ -543,7 +543,7 @@ SSFindMinXAtY (SplineSet *spl, real y, real min)
         }
       spl = spl->next;
     }
-  return (min);
+  return min;
 }
 
 static real
@@ -568,7 +568,7 @@ SSIsMinXAtYCurved (SplineSet *spl, real y, real oldmin, int *curved)
         }
       spl = spl->next;
     }
-  return (oldmin);
+  return oldmin;
 }
 
 static void
@@ -598,7 +598,7 @@ SCFindMinXAtY (SplineChar *sc, int layer, real y)
   min = SSFindMinXAtY (sc->layers[layer].splines, y, NOTREACHED);
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     min = SSFindMinXAtY (ref->layers[0].splines, y, min);
-  return (min);
+  return min;
 }
 
 static int
@@ -611,7 +611,7 @@ SCIsMinXAtYCurved (SplineChar *sc, int layer, real y)
   min = SSFindMinXAtY (sc->layers[layer].splines, y, NOTREACHED);
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     min = SSIsMinXAtYCurved (ref->layers[0].splines, y, min, &curved);
-  return (curved);
+  return curved;
 }
 
 static void
@@ -1004,7 +1004,7 @@ SFGuessItalicAngle (SplineFont *sf)
         && sfglyph (sf, si) != NULL)
       break;
   if (easyserif[i] == '\0')     /* can't guess */
-    return (0);
+    return 0;
 
   SplineCharFindBounds (sfglyph (sf, si), &bb);
   as = bb.maxy - bb.miny;
@@ -1012,12 +1012,12 @@ SFGuessItalicAngle (SplineFont *sf)
   topx = SCFindMinXAtY (sfglyph (sf, si), ly_fore, 2 * as / 3 + bb.miny);
   bottomx = SCFindMinXAtY (sfglyph (sf, si), ly_fore, as / 3 + bb.miny);
   if (topx == bottomx)
-    return (0);
+    return 0;
 
   angle = atan2 (as / 3, topx - bottomx) * 180 / 3.1415926535897932 - 90;
   if (angle < 1 && angle > -1)
     angle = 0;
-  return (angle);
+  return angle;
 }
 
 #if 0
@@ -1141,7 +1141,7 @@ KernThreshold (SplineFont *sf, int cnt)
   KernPair *kp;
 
   if (cnt == 0)                 /* Infinite */
-    return (0);
+    return 0;
 
   high = sf->ascent + sf->descent;
   totals = xcalloc (high + 1, sizeof (int));
@@ -1169,10 +1169,10 @@ KernThreshold (SplineFont *sf, int cnt)
       for (i = high; i > 0 && tot + totals[i] < cnt; --i)
         tot += totals[i];
       free (totals);
-      return (i + 1);
+      return i + 1;
     }
   free (totals);
-  return (0);
+  return 0;
 }
 
 void
@@ -1213,7 +1213,7 @@ AW_MakeCharOne (SplineChar *sc)
 
   ch->sc = sc;
   ch->newr = ch->newl = NOTREACHED;
-  return (ch);
+  return ch;
 }
 
 struct kernsets
@@ -1280,7 +1280,7 @@ ugetstr (FILE *file, int format, uint32_t *buffer, int len)
     }
 
   if (ch == EOF && upt == buffer)
-    return (NULL);
+    return NULL;
   *upt = '\0';
 
   for (upt = buffer; *upt; ++upt)
@@ -1307,7 +1307,7 @@ ugetstr (FILE *file, int format, uint32_t *buffer, int len)
           u32_strcpy (upt + 1, upt + 6);
         }
     }
-  return (buffer);
+  return buffer;
 }
 
 static void
@@ -1391,7 +1391,7 @@ figurekernsets (WidthInfo * wi, struct kernsets *ks)
   SplineFont *sf = wi->sf;
 
   if (ks->cur == 0)
-    return (false);
+    return false;
 
   wi->left = xmalloc ((ks->cur + 1) * sizeof (struct charone *));
   for (i = cnt = 0; i < ks->cur; ++i)
@@ -1410,7 +1410,7 @@ figurekernsets (WidthInfo * wi, struct kernsets *ks)
     {
       free (wi->left);
       wi->left = NULL;
-      return (false);
+      return false;
     }
 
   for (i = max = 0; i < ks->cur; ++i)
@@ -1451,7 +1451,7 @@ figurekernsets (WidthInfo * wi, struct kernsets *ks)
       wi->left = NULL;
       free (wi->right);
       wi->right = NULL;
-      return (false);
+      return false;
     }
   AW_ScriptSerifChecker (wi);
 
@@ -1477,7 +1477,7 @@ figurekernsets (WidthInfo * wi, struct kernsets *ks)
         ++lcnt;
       }
   wi->pcnt = cnt;
-  return (true);
+  return true;
 }
 
 static void
@@ -1508,7 +1508,7 @@ AW_ReadKernPairFile (char *fn, WidthInfo * wi)
       ff_post_error (_("Couldn't open file"), _("Couldn't open file %.200s"),
                      fn);
       free (fn);
-      return (false);
+      return false;
     }
 
   ch = getc (file);
@@ -1537,11 +1537,11 @@ AW_ReadKernPairFile (char *fn, WidthInfo * wi)
                      fn);
       free (filename);
       kernsetsfree (&ks);
-      return (false);
+      return false;
     }
   kernsetsfree (&ks);
   free (fn);
-  return (true);
+  return true;
 }
 
 void
@@ -1606,7 +1606,7 @@ SCHasVertVariant (SplineChar *sc)
   PST *pst;
 
   if (sc == NULL)
-    return (NULL);
+    return NULL;
 
   for (pst = sc->possub; pst != NULL; pst = pst->next)
     {
@@ -1616,10 +1616,10 @@ SCHasVertVariant (SplineChar *sc)
            || FeatureTagInFeatureScriptList (CHR ('v', 'r', 't', '2'),
                                              pst->subtable->lookup->features)))
         {
-          return (SFGetChar (sc->parent, -1, pst->u.subs.variant));
+          return SFGetChar (sc->parent, -1, pst->u.subs.variant);
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 static SplineChar **
@@ -1630,7 +1630,7 @@ CharNamesToVertSC (SplineFont *sf, char *names)
   SplineChar **list;
 
   if (names == NULL || *names == '\0')
-    return (NULL);
+    return NULL;
   cnt = 1;
   for (pt = names; (pt = strchr (pt, ' ')) != NULL; ++pt)
     ++cnt;
@@ -1658,7 +1658,7 @@ CharNamesToVertSC (SplineFont *sf, char *names)
       free (list);
       list = NULL;
     }
-  return (list);
+  return list;
 }
 
 static char *
@@ -1679,7 +1679,7 @@ SCListToName (SplineChar **sclist)
     }
   if (pt > names)
     pt[-1] = '\0';
-  return (names);
+  return names;
 }
 
 struct otlmap
@@ -1709,7 +1709,7 @@ VSubtableFromH (struct lookupmap *lookupmap, struct lookup_subtable *sub)
 
   for (i = 0; i < lookupmap->sc; ++i)
     if (lookupmap->smap[i].from == sub)
-      return (lookupmap->smap[i].to);
+      return lookupmap->smap[i].to;
 
   if (lookupmap->lmap == NULL)
     {
@@ -1781,7 +1781,7 @@ VSubtableFromH (struct lookupmap *lookupmap, struct lookup_subtable *sub)
       nsub->next = otl->subtables;
       otl->subtables = nsub;
     }
-  return (nsub);
+  return nsub;
 }
 
 void
@@ -1953,7 +1953,7 @@ autowidthBuildCharList (FontViewBase *fv, SplineFont *sf,
         }
     }
   *tot = cnt;
-  return (ret);
+  return ret;
 }
 
 int
@@ -1980,7 +1980,7 @@ AutoWidthScript (FontViewBase *fv, int spacing)
     {
       AW_FreeCharList (wi.left);
       AW_FreeCharList (wi.right);
-      return (0);
+      return 0;
     }
   AW_ScriptSerifChecker (&wi);
   wi.done = true;
@@ -1990,7 +1990,7 @@ AutoWidthScript (FontViewBase *fv, int spacing)
   AW_FreeCharList (wi.left);
   AW_FreeCharList (wi.right);
   AW_FreeCharPairs (wi.pairs, wi.lcnt * wi.rcnt);
-  return (true);
+  return true;
 }
 
 int
@@ -2022,7 +2022,7 @@ AutoKernScript (FontViewBase *fv, int spacing, int threshold,
         {
           AW_FreeCharList (wi.left);
           AW_FreeCharList (wi.right);
-          return (false);
+          return false;
         }
       AW_ScriptSerifChecker (&wi);
       AW_InitCharPairs (&wi);
@@ -2030,7 +2030,7 @@ AutoKernScript (FontViewBase *fv, int spacing, int threshold,
   else
     {
       if (!AW_ReadKernPairFile (xstrdup_or_null (kernfile), &wi))
-        return (false);
+        return false;
     }
   wi.done = true;
   AW_BuildCharPairs (&wi);
@@ -2039,5 +2039,5 @@ AutoKernScript (FontViewBase *fv, int spacing, int threshold,
   AW_FreeCharList (wi.left);
   AW_FreeCharList (wi.right);
   AW_FreeCharPairs (wi.pairs, wi.lcnt * wi.rcnt);
-  return (true);
+  return true;
 }

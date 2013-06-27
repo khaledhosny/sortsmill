@@ -272,7 +272,7 @@ hashfunc (uint8_t *data, int len)
       hash = (hash | r) & 0xffffffff;
       hash ^= *data++;
     }
-  return (hash % HSH_SIZE);
+  return hash % HSH_SIZE;
 }
 
 static void
@@ -376,7 +376,7 @@ NumberHints (SplineChar *scs[MmMax], int instance_count)
       else if (cnt != i)
         IError ("MM font with different hint counts");
     }
-  return (cnt);
+  return cnt;
 }
 
 void
@@ -418,13 +418,13 @@ static bigreal
 myround (bigreal pos, int round)
 {
   if (round)
-    return (rint (pos));
+    return rint (pos);
 #if 0
   else if (RealWithin (rint (pos * 1000), pos * 1000, .01))
-    return (rint (pos * 1000.) / 1000.);
+    return rint (pos * 1000.) / 1000.;
 #endif
   else
-    return (rint (pos * 1024.) / 1024.);
+    return rint (pos * 1024.) / 1024.;
 }
 
 static void
@@ -599,12 +599,12 @@ CvtPsStem3 (GrowBuf * gb, SplineChar *scs[MmMax], int instance_count,
   for (i = 0; i < instance_count; ++i)
     {
       if ((ishstem && scs[i]->hconflicts) || (!ishstem && scs[i]->vconflicts))
-        return (false);
+        return false;
       h1 = ishstem ? scs[i]->hstem : scs[i]->vstem;
       if (h1 == NULL || (h2 = h1->next) == NULL || (h3 = h2->next) == NULL)
-        return (false);
+        return false;
       if (h3->next != NULL)
-        return (false);
+        return false;
       off = ishstem ? 0 : scs[i]->lsidebearing;
       if (h1->width < 0)
         {
@@ -647,10 +647,10 @@ CvtPsStem3 (GrowBuf * gb, SplineChar *scs[MmMax], int instance_count,
           h3 = ht;
         }
       if (h1->width != h3->width)
-        return (false);
+        return false;
       if ((h2->start + h2->width / 2) - (h1->start + h1->width / 2) !=
           (h3->start + h3->width / 2) - (h2->start + h2->width / 2))
-        return (false);
+        return false;
       data[i][0] = h1->start - off;
       data[i][1] = h1->width;
       data[i][2] = h2->start - off;
@@ -659,13 +659,13 @@ CvtPsStem3 (GrowBuf * gb, SplineChar *scs[MmMax], int instance_count,
       data[i][5] = h3->width;
     }
   if (gb == NULL)
-    return (true);
+    return true;
   AddData (gb, data, instance_count, 6, round);
   if (gb->pt + 3 >= gb->end)
     GrowBuffer (gb);
   *(gb->pt)++ = 12;
   *(gb->pt)++ = ishstem ? 2 : 1;        /* h/v stem3 */
-  return (true);
+  return true;
 }
 
 static void
@@ -783,7 +783,7 @@ FigureCounters (StemInfo * stems, real *hints, int base, real offset,
         }
     }
   hints[base] = cnt;
-  return (pos);
+  return pos;
 }
 
 static void
@@ -861,7 +861,7 @@ FindOrBuildHintSubr (struct hintdb *hdb, uint8_t mask[12], int round)
   for (mh = hdb->sublist; mh != NULL; mh = mh->next)
     {
       if (memcmp (mask, mh->mask, 12 * sizeof (uint8_t)) == 0)
-        return (mh->subr);
+        return mh->subr;
 #if 0
       /* If we find a subr for which we have all the bits set (with extras */
       /*  since we didn't match) then it is safe to replace the old subr */
@@ -919,7 +919,7 @@ FindOrBuildHintSubr (struct hintdb *hdb, uint8_t mask[12], int round)
     }
   free (gb.base);
 
-  return (mh->subr);
+  return mh->subr;
 }
 
 static void
@@ -1084,9 +1084,9 @@ NeverConflicts (RefChar *refs[MmMax], int instance_count)
   int i;
   for (i = 0; i < instance_count; ++i)
     if (refs[i]->sc->hconflicts || refs[i]->sc->vconflicts)
-      return (false);
+      return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -1097,16 +1097,16 @@ AllStationary (RefChar *refs[MmMax], BasePoint trans[MmMax], int instance_count)
     if (!refs[i]->justtranslated ||
         refs[i]->transform[4] + trans[i].x != 0 ||
         refs[i]->transform[5] + trans[i].y != 0)
-      return (false);
+      return false;
 
-  return (true);
+  return true;
 }
 
 static int
 AnyRefs (SplineChar *sc, int layer)
 {
 
-  return (sc->layers[layer].refs != NULL);
+  return sc->layers[layer].refs != NULL;
 }
 
 static void
@@ -1234,13 +1234,13 @@ SplinesAreFlexible (Spline *splines[MmMax], int instance_count)
   for (i = 0; i < instance_count; ++i)
     {
       if (!splines[i]->to->flexx && !splines[i]->to->flexy)
-        return (false);
+        return false;
       if ((x && splines[i]->to->flexy) || (y && splines[i]->to->flexx))
-        return (false);
+        return false;
       x = splines[i]->to->flexx;
       y = splines[i]->to->flexy;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1447,14 +1447,14 @@ IsPSSeacable (SplineChar *sc, int layer)
   RefChar *ref;
 
   if (sc->layers[layer].refs == NULL || sc->layers[layer].splines != NULL)
-    return (false);
+    return false;
 
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     {
       if (!ref->justtranslated)
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 static RefChar *
@@ -1472,7 +1472,7 @@ RefFindAdobe (RefChar *r, RefChar *t, int layer)
       t->orig_pos = t->sc->layers[layer].refs->orig_pos;
       t->sc = t->sc->layers[layer].refs->sc;
     }
-  return (t);
+  return t;
 }
 
 static int
@@ -1489,11 +1489,11 @@ IsSeacable (GrowBuf * gb, SplineChar *scs[MmMax],
 
   for (j = 0; j < instance_count; ++j)
     if (!IsPSSeacable (scs[j], layer))
-      return (false);
+      return false;
 
   refs = scs[0]->layers[layer].refs;
   if (refs == NULL)
-    return (false);
+    return false;
 
   r1 = refs;
   if ((r2 = r1->next) == NULL)
@@ -1550,7 +1550,7 @@ IsSeacable (GrowBuf * gb, SplineChar *scs[MmMax],
         || r1->sc->width != scs[0]->width)
        && (r2->transform[4] != 0
            || r2->transform[5] != 0 || r2->sc->width != scs[0]->width)))
-    return (false);
+    return false;
 
   swap = false;
   if (r1->transform[4] != 0 || r1->transform[5] != 0)
@@ -1580,7 +1580,7 @@ IsSeacable (GrowBuf * gb, SplineChar *scs[MmMax],
   if (r1->sc->width != scs[0]->width
       || r1->sc->lsidebearing != scs[0]->lsidebearing || r1->transform[4] != 0
       || r1->transform[5] != 0)
-    return (false);
+    return false;
 
   for (j = 0; j < instance_count; ++j)
     {
@@ -1609,7 +1609,7 @@ IsSeacable (GrowBuf * gb, SplineChar *scs[MmMax],
   *(gb->pt)++ = 12;
   *(gb->pt)++ = 6;              /* seac 12,6 */
 
-  return (true);
+  return true;
 }
 
 static int
@@ -1618,16 +1618,16 @@ _SCNeedsSubsPts (SplineChar *sc, int layer)
   RefChar *ref;
 
   if (sc->hstem == NULL && sc->vstem == NULL)
-    return (false);
+    return false;
 
   if (sc->layers[layer].splines != NULL)
-    return (sc->layers[layer].splines->first->hintmask == NULL);
+    return sc->layers[layer].splines->first->hintmask == NULL;
 
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     if (ref->layers[0].splines != NULL)
-      return (ref->layers[0].splines->first->hintmask == NULL);
+      return ref->layers[0].splines->first->hintmask == NULL;
 
-  return (false);               /* It's empty. that's easy. */
+  return false;               /* It's empty. that's easy. */
 }
 
 static int
@@ -1636,8 +1636,8 @@ SCNeedsSubsPts (SplineChar *sc, enum fontformat format, int layer)
   if ((format != ff_mma && format != ff_mmb) || sc->parent->mm == NULL)
     {
       if (!sc->hconflicts && !sc->vconflicts)
-        return (false);         /* No conflicts, no swap-over points needed */
-      return (_SCNeedsSubsPts (sc, layer));
+        return false;         /* No conflicts, no swap-over points needed */
+      return _SCNeedsSubsPts (sc, layer);
     }
   else
     {
@@ -1647,9 +1647,9 @@ SCNeedsSubsPts (SplineChar *sc, enum fontformat format, int layer)
         if (sc->orig_pos < mm->instances[i]->glyphcnt)
           {
             if (_SCNeedsSubsPts (mm->instances[i]->glyphs[sc->orig_pos], layer))
-              return (true);
+              return true;
           }
-      return (false);
+      return false;
     }
 }
 
@@ -1972,7 +1972,7 @@ SplineChar2PS (SplineChar *sc, int *len, int round, int iscjk,
       for (i = 0; i < instance_count; ++i)
         scs[i]->layers[gi->layer].splines->first->hintmask = hm[i];
     }
-  return (ret);
+  return ret;
 }
 
 #if FONTFORGE_CONFIG_PS_REFS_GET_SUBRS
@@ -1983,9 +1983,9 @@ AlwaysSeacable (SplineChar *sc, int flags)
   RefChar *r;
 
   if (sc->parent->cidmaster != NULL)    /* Can't use seac in CID fonts, no encoding */
-    return (false);
+    return false;
   if (flags & ps_flag_noseac)
-    return (false);
+    return false;
 
   for (d = sc->dependents; d != NULL; d = d->next)
     {
@@ -2002,25 +2002,25 @@ AlwaysSeacable (SplineChar *sc, int flags)
       for (r = d->sc->layers[layer].refs; r != NULL; r = r->next)
         {
           if (r->adobe_enc == -1)
-            return (false);     /* not seacable, but could go in subr */
+            return false;     /* not seacable, but could go in subr */
         }
       r = d->sc->layers[layer].refs;
       if (r->next != NULL && r->next->next != NULL)
-        return (false);         /* seac only takes 2 glyphs */
+        return false;         /* seac only takes 2 glyphs */
       if (r->next != NULL &&
           ((r->transform[4] != 0 || r->transform[5] != 0
             || r->sc->width != d->sc->width)
            && (r->next->transform[4] != 0
                || r->next->transform[5] != 0
                || r->next->sc->width != d->sc->width)))
-        return (false);         /* seac only allows one to be translated, and the untranslated one must have the right width */
+        return false;         /* seac only allows one to be translated, and the untranslated one must have the right width */
       if (r->next == NULL &&
           (r->transform[4] != 0 || r->transform[5] != 0
            || r->sc->width != d->sc->width))
-        return (false);
+        return false;
     }
   /* Either always can be represented by seac, or sometimes by neither */
-  return (true);
+  return true;
 }
 
 /* normally we can't put a character with hint conflicts into a subroutine */
@@ -2049,9 +2049,9 @@ SpecialCaseConflicts (SplineChar *sc)
       for (r = d->sc->layers[layer].refs; r != NULL; r = r->next)
         if (r->sc == sc && r->justtranslated &&
             r->transform[4] == 0 && r->transform[5] == 0)
-          return (true);
+          return true;
     }
-  return (false);
+  return false;
 }
 
 static BasePoint *
@@ -2115,7 +2115,7 @@ FigureStartStop (SplineChar *sc, GlyphInfo * gi)
             }
         }
     }
-  return (startstop);
+  return startstop;
 }
 #endif /* FONTFORGE_CONFIG_PS_REFS_GET_SUBRS */
 
@@ -2217,7 +2217,7 @@ SFOneWidth (SplineFont *sf)
             break;
           }
       }
-  return (width);
+  return width;
 }
 
 int
@@ -2254,7 +2254,7 @@ CIDOneWidth (SplineFont *_sf)
       ++k;
     }
   while (k < _sf->subfontcnt);
-  return (width);
+  return width;
 }
 
 int
@@ -2263,7 +2263,7 @@ SFOneHeight (SplineFont *sf)
   int width, i;
 
   if (!sf->hasvmetrics)
-    return (sf->ascent + sf->descent);
+    return sf->ascent + sf->descent;
 
   width = -2;
   for (i = 0; i < sf->glyphcnt; ++i)
@@ -2281,7 +2281,7 @@ SFOneHeight (SplineFont *sf)
             break;
           }
       }
-  return (width);
+  return width;
 }
 
 int
@@ -2290,16 +2290,16 @@ SFIsCJK (SplineFont *sf, EncMap *map)
   const char *val;
 
   if ((val = PSDictHasEntry (sf->private, "LanguageGroup")) != NULL)
-    return (strtol (val, NULL, 10));
+    return strtol (val, NULL, 10);
 
   if (map->enc->is_japanese || map->enc->is_korean ||
       map->enc->is_tradchinese || map->enc->is_simplechinese)
-    return (true);
+    return true;
   if ((map->enc->is_unicodebmp || map->enc->is_unicodefull) &&
       sf->glyphcnt > 0x3000 &&
       SCWorthOutputting (sf->glyphs[0x3000]) &&
       !SCWorthOutputting (sf->glyphs['A']))
-    return (true);
+    return true;
   if (map->enc == &custom)
     {
       /* If it's in a CID font and it doesn't contain alphabetics, then */
@@ -2310,7 +2310,7 @@ SFIsCJK (SplineFont *sf, EncMap *map)
                 !SCWorthOutputting (SFGetChar (sf, -1, "uni0041.hw"))); /* Halfwidth A, non standard name, from my cidmap */
     }
 
-  return (false);
+  return false;
 }
 
 static void
@@ -2559,7 +2559,7 @@ SplineFont2ChrsSubrs (SplineFont *sf, int iscjk,
         {
           PSCharsFree (chrs);
           GIFree (&gi, &dummynotdef);
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -2577,7 +2577,7 @@ SplineFont2ChrsSubrs (SplineFont *sf, int iscjk,
   chrs->next = cnt;
   if (chrs->next > chrs->cnt)
     IError ("Character estimate failed, about to die...");
-  return (chrs);
+  return chrs;
 }
 
 struct pschars *
@@ -2667,7 +2667,7 @@ CID2ChrsSubrs (SplineFont *cidmaster, struct cidbytes *cidbytes, int flags,
             {
               PSCharsFree (chrs);
               GIFree (&gi, &dummynotdef);
-              return (NULL);
+              return NULL;
             }
         }
 
@@ -2677,7 +2677,7 @@ CID2ChrsSubrs (SplineFont *cidmaster, struct cidbytes *cidbytes, int flags,
     }
   GIFree (&gi, &dummynotdef);
   chrs->next = cnt;
-  return (chrs);
+  return chrs;
 }
 
 /* ************************************************************************** */
@@ -2692,9 +2692,9 @@ static real
 myround2 (real pos, int round)
 {
   if (round)
-    return (rint (pos));
+    return rint (pos);
 
-  return (rint (65536 * pos) / 65536);
+  return rint (65536 * pos) / 65536;
 }
 
 static void
@@ -2801,10 +2801,10 @@ HintSetup2 (GrowBuf * gb, struct hintdb *hdb, SplinePoint *to, int break_subr)
   /* in that case hdb->cnt will be 0 and we should ignore it */
   /* components in subroutines depend on not having any hintmasks */
   if (to->hintmask == NULL || hdb->cnt == 0 || hdb->noconflicts || hdb->skiphm)
-    return (false);
+    return false;
 
   if (memcmp (hdb->mask, *to->hintmask, (hdb->cnt + 7) / 8) == 0)
-    return (false);
+    return false;
 
   if (break_subr)
     BreakSubroutine (gb, hdb);
@@ -2814,7 +2814,7 @@ HintSetup2 (GrowBuf * gb, struct hintdb *hdb, SplinePoint *to, int break_subr)
   hdb->donefirsthm = true;
   if (break_subr)
     StartNextSubroutine (gb, hdb);
-  return (true);
+  return true;
 }
 
 static void
@@ -2966,7 +2966,7 @@ lineto2 (GrowBuf * gb, struct hintdb *hdb, Spline *spline, Spline *done,
           if (gb->pt + 1 >= gb->end)
             GrowBuffer (gb);
           *(gb->pt)++ = spline->from->me.x == spline->to->me.x ? 7 : 6;
-          return (test);
+          return test;
         }
     }
 
@@ -3002,7 +3002,7 @@ lineto2 (GrowBuf * gb, struct hintdb *hdb, Spline *spline, Spline *done,
   if (gb->pt + 1 >= gb->end)
     GrowBuffer (gb);
   *(gb->pt)++ = 5;              /* r line to */
-  return (test);
+  return test;
 }
 
 static Spline *
@@ -3091,7 +3091,7 @@ curveto2 (GrowBuf * gb, struct hintdb *hdb, Spline *spline, Spline *done,
       if (gb->pt + 1 >= gb->end)
         GrowBuffer (gb);
       *(gb->pt)++ = (start.x == myround2 (first->from->nextcp.x, round) && myround2 (first->to->prevcp.y, round) == myround2 (first->to->me.y, round)) ? 30 : 31;       /* vhcurveto:hvcurveto */
-      return (spline);
+      return spline;
     }
   while (cnt < 6)
     {
@@ -3148,7 +3148,7 @@ curveto2 (GrowBuf * gb, struct hintdb *hdb, Spline *spline, Spline *done,
   if (gb->pt + 1 >= gb->end)
     GrowBuffer (gb);
   *(gb->pt)++ = 8;              /* rrcurveto */
-  return (spline);
+  return spline;
 }
 
 static void
@@ -3708,7 +3708,7 @@ SplineChar2PS2 (SplineChar *sc, int *len, int nomwid,
     }
   else if (hm != NULL)
     sc->layers[gi->layer].splines->first->hintmask = hm;
-  return (ret);
+  return ret;
 }
 
 static SplinePoint *
@@ -3716,7 +3716,7 @@ LineTo (SplinePoint *last, int x, int y)
 {
   SplinePoint *sp = SplinePointCreate (x, y);
   SplineMake3 (last, sp);
-  return (sp);
+  return sp;
 }
 
 static void
@@ -3794,9 +3794,9 @@ Type2SpecialCase (SplineChar *sc)
             break;
         }
       if (r == NULL)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 #endif /* FONTFORGE_CONFIG_PS_REFS_GET_SUBRS */
 
@@ -4097,7 +4097,7 @@ SplineFont2ChrsSubrs2 (SplineFont *sf, int nomwid, int defwid,
 
   GIFree (&gi, &dummynotdef);
   *_subrs = subrs;
-  return (chrs);
+  return chrs;
 }
 
 struct pschars *
@@ -4343,5 +4343,5 @@ CID2ChrsSubrs2 (SplineFont *cidmaster, struct fd2data *fds,
     }
   GIFree (&gi, &dummynotdef);
   *_glbls = glbls;
-  return (chrs);
+  return chrs;
 }

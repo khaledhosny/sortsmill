@@ -68,13 +68,13 @@ aw2_bbox_separation (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
 #if !defined(_NO_PYTHON)
 
   if (PyFF_GlyphSeparationHook != NULL)
-    return (PyFF_GlyphSeparation (g1, g2, all));
+    return PyFF_GlyphSeparation (g1, g2, all);
 #endif
 
   imin_y = g2->imin_y > g1->imin_y ? g2->imin_y : g1->imin_y;
   imax_y = g2->imax_y < g1->imax_y ? g2->imax_y : g1->imax_y;
   if (imax_y < imin_y)          /* no overlap. ie grave and "a" */
-    return (0);
+    return 0;
   denom = all->denom;
   tot = cnt = 0;
   for (j = imin_y; j < imax_y; ++j)
@@ -93,7 +93,7 @@ aw2_bbox_separation (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
     }
   if (cnt != 0)
     tot /= cnt;
-  return (rint (tot));
+  return rint (tot);
 }
 
 static void
@@ -250,7 +250,7 @@ ak2_figure_kern (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
 {
   int sep = aw2_bbox_separation (g1, g2, all);
   sep += g2->bb.minx + g1->sc->width - g1->bb.maxx;
-  return (all->desired_separation - sep);
+  return all->desired_separation - sep;
 }
 
 static int
@@ -263,7 +263,7 @@ ak2_figure_touch (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
   imin_y = g2->imin_y > g1->imin_y ? g2->imin_y : g1->imin_y;
   imax_y = g2->imax_y < g1->imax_y ? g2->imax_y : g1->imax_y;
   if (imax_y < imin_y)          /* no overlap. ie grave and "a" */
-    return (-(g2->bb.minx + g1->sc->width - g1->bb.maxx));
+    return -(g2->bb.minx + g1->sc->width - g1->bb.maxx);
   smallest = 0x7fff;
   for (j = imin_y; j < imax_y; ++j)
     {
@@ -272,10 +272,10 @@ ak2_figure_touch (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
         smallest = tot;
     }
   if (smallest == 0x7fff)       /* Overlaps only in gaps, "i" and something between the base and the dot */
-    return (-(g2->bb.minx + g1->sc->width - g1->bb.maxx));
+    return -(g2->bb.minx + g1->sc->width - g1->bb.maxx);
 
   smallest += g2->bb.minx + g1->sc->width - g1->bb.maxx;
-  return (all->desired_separation - smallest);
+  return all->desired_separation - smallest;
 }
 
 static int
@@ -297,11 +297,11 @@ ak2_figure_kernclass (int *class1, int *class2, AW_Data * all)
         }
     }
   if (cnt2 == 0)
-    return (0);
+    return 0;
 
   if (cnt2 != 0)
     tot /= cnt2;
-  return (all->desired_separation - tot);
+  return all->desired_separation - tot;
 }
 
 static int
@@ -345,9 +345,9 @@ ak2_figure_touchclass (int *class1, int *class2, AW_Data * all)
         }
     }
   if (smallest == 0x7fff)
-    return (0);
+    return 0;
 
-  return (all->desired_separation - smallest);
+  return all->desired_separation - smallest;
 }
 
 static double
@@ -365,7 +365,7 @@ MonotonicFindY (Monotonic * m, double test, double old_t)
         tend = old_t;
     }
   t = IterateSplineSolve (&m->s->splines[1], tstart, tend, test);
-  return (t);
+  return t;
 }
 
 static void
@@ -547,7 +547,7 @@ GlyphClassesFromNames (SplineFont *sf, char **classnames, int class_cnt)
             classes[i] = xmalloc ((clen + 1) * sizeof (SplineChar *));
         }
     }
-  return (classes);
+  return classes;
 }
 
 void

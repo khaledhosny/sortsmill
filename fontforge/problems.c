@@ -641,11 +641,11 @@ explain_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("problems.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -960,7 +960,7 @@ missing (struct problems *p, SplineSet *test, SplinePoint *sp)
   SplinePoint *tsp;
 
   if (!p->explain)
-    return (false);
+    return false;
 
   if (p->cv != NULL)
     spl = p->cv->b.layerheads[p->cv->b.drawmode]->splines;
@@ -968,20 +968,20 @@ missing (struct problems *p, SplineSet *test, SplinePoint *sp)
     spl = p->sc->layers[p->layer].splines;
   for (check = spl; check != test && check != NULL; check = check->next);
   if (check == NULL)
-    return (true);              /* Deleted splineset */
+    return true;              /* Deleted splineset */
 
   if (sp != NULL)
     {
       for (tsp = test->first; tsp != sp;)
         {
           if (tsp->next == NULL)
-            return (true);
+            return true;
           tsp = tsp->next->to;
           if (tsp == test->first)
-            return (true);
+            return true;
         }
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -991,7 +991,7 @@ missingspline (struct problems *p, SplineSet *test, Spline *spline)
   Spline *t, *first = NULL;
 
   if (!p->explain)
-    return (false);
+    return false;
 
   if (p->cv != NULL)
     spl = p->cv->b.layerheads[p->cv->b.drawmode]->splines;
@@ -999,13 +999,13 @@ missingspline (struct problems *p, SplineSet *test, Spline *spline)
     spl = p->sc->layers[p->layer].splines;
   for (check = spl; check != test && check != NULL; check = check->next);
   if (check == NULL)
-    return (true);              /* Deleted splineset */
+    return true;              /* Deleted splineset */
 
   for (t = test->first->next; t != NULL && t != first && t != spline;
        t = t->to->next)
     if (first == NULL)
       first = t;
-  return (t != spline);
+  return t != spline;
 }
 
 static int
@@ -1014,7 +1014,7 @@ missinghint (StemInfo * base, StemInfo * findme)
 
   while (base != NULL && base != findme)
     base = base->next;
-  return (base == NULL);
+  return base == NULL;
 }
 
 static int
@@ -1024,12 +1024,12 @@ missingschint (StemInfo * findme, SplineChar *sc)
 
   for (base = sc->hstem; base != NULL; base = base->next)
     if (base == findme)
-      return (false);           /* Hasn't been deleted */
+      return false;           /* Hasn't been deleted */
   for (base = sc->vstem; base != NULL; base = base->next)
     if (base == findme)
-      return (false);
+      return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -1127,9 +1127,9 @@ HVITest (struct problems *p, BasePoint *to, BasePoint *from,
         ExplainIt (p, p->sc, _(vmsgs[type]), other->x, base->x);
       else
         ExplainIt (p, p->sc, _(imsgs[type]), 0, 0);
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 /* Is the control point outside of the spline segment when projected onto the */
@@ -1167,9 +1167,9 @@ OddCPCheck (BasePoint *cp, BasePoint *base, BasePoint *v,
           ("The control point left of the selected point is outside the spline segment");
       sp->selected = true;
       ExplainIt (p, p->sc, msg, 0, 0);
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -1179,12 +1179,12 @@ Hint3Check (struct problems *p, StemInfo * h)
 
   /* Must be three hints to be interesting */
   if (h == NULL || (h2 = h->next) == NULL || (h3 = h2->next) == NULL)
-    return (false);
+    return false;
   if (h3->next != NULL)
     {
       StemInfo *bad, *goods[3];
       if (h3->next->next != NULL)       /* Don't try to find a subset with 5 */
-        return (false);
+        return false;
       if (h->width == h2->width || h->width == h3->width)
         {
           goods[0] = h;
@@ -1202,7 +1202,7 @@ Hint3Check (struct problems *p, StemInfo * h)
                   bad = h3;
                 }
               else
-                return (false);
+                return false;
             }
           else if (h->width == h3->width && h->width == h3->next->width)
             {
@@ -1211,7 +1211,7 @@ Hint3Check (struct problems *p, StemInfo * h)
               bad = h2;
             }
           else
-            return (false);
+            return false;
         }
       else if (h2->width == h3->width && h2->width == h3->next->width)
         {
@@ -1221,7 +1221,7 @@ Hint3Check (struct problems *p, StemInfo * h)
           goods[2] = h3->next;
         }
       else
-        return (false);
+        return false;
       if (goods[2]->start - goods[1]->start ==
           goods[1]->start - goods[0]->start)
         {
@@ -1235,9 +1235,9 @@ Hint3Check (struct problems *p, StemInfo * h)
             bad->active = false;
           if (p->ignorethis)
             p->stem3 = false;
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
 
   if (h->width == h2->width && h->width == h3->width &&
@@ -1249,7 +1249,7 @@ Hint3Check (struct problems *p, StemInfo * h)
           if (p->ignorethis)
             p->showexactstem3 = false;
         }
-      return (false);           /* It IS a stem3, so don't complain */
+      return false;           /* It IS a stem3, so don't complain */
     }
 
   if (h->width == h2->width && h->width == h3->width)
@@ -1263,9 +1263,9 @@ Hint3Check (struct problems *p, StemInfo * h)
                      0, 0);
           if (p->ignorethis)
             p->stem3 = false;
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
 
   if ((h2->start - h->start + p->near > h3->start - h2->start &&
@@ -1288,10 +1288,10 @@ Hint3Check (struct problems *p, StemInfo * h)
                 h3->active = false;
               if (p->ignorethis)
                 p->stem3 = false;
-              return (true);
+              return true;
             }
           else
-            return (false);
+            return false;
         }
       if (h->width == h3->width)
         {
@@ -1306,10 +1306,10 @@ Hint3Check (struct problems *p, StemInfo * h)
                 h2->active = false;
               if (p->ignorethis)
                 p->stem3 = false;
-              return (true);
+              return true;
             }
           else
-            return (false);
+            return false;
         }
       if (h2->width == h3->width)
         {
@@ -1324,13 +1324,13 @@ Hint3Check (struct problems *p, StemInfo * h)
                 h->active = false;
               if (p->ignorethis)
                 p->stem3 = false;
-              return (true);
+              return true;
             }
           else
-            return (false);
+            return false;
         }
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -1345,7 +1345,7 @@ probRefDepth (RefChar *r, int layer)
       if (cur > max)
         max = cur;
     }
-  return (max + 1);
+  return max + 1;
 }
 
 static int
@@ -1360,7 +1360,7 @@ SCRefDepth (SplineChar *sc, int layer)
       if (cur > max)
         max = cur;
     }
-  return (max);
+  return max;
 }
 
 static int
@@ -1388,7 +1388,7 @@ SPLPointCnt (SplinePointList *spl)
             break;
         }
     }
-  return (cnt);
+  return cnt;
 }
 
 static RefChar *
@@ -1408,11 +1408,11 @@ FindRefOfSplineInLayer (Layer *layer, Spline *spline)
               if (first == NULL)
                 first = s;
               if (s == spline)
-                return (r);
+                return r;
             }
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 static int
@@ -2903,7 +2903,7 @@ restart:
 
   if (needsupdate || changed)
     SCUpdateAll (sc);
-  return (changed);
+  return changed;
 }
 
 static int
@@ -2939,7 +2939,7 @@ CIDCheck (struct problems *p, int cid)
           found = true;
         }
     }
-  return (found);
+  return found;
 }
 
 static char *
@@ -2949,9 +2949,9 @@ missinglookup (struct problems *p, char *str)
 
   for (i = 0; i < p->rpl_cnt; ++i)
     if (strcmp (str, p->mg[i].search) == 0)
-      return (p->mg[i].rpl);
+      return p->mg[i].rpl;
 
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -3062,7 +3062,7 @@ MGA_RplChange (GGadget *g, GEvent *e)
       const uint32_t *rpl = _GGadgetGetTitle (g);
       GGadgetSetEnabled (GWidgetGetControl (d->gw, CID_Rpl), *rpl != 0);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3080,7 +3080,7 @@ MGA_Rpl (GGadget *g, GEvent *e)
       free (rpl);
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3094,7 +3094,7 @@ MGA_Delete (GGadget *g, GEvent *e)
       mgreplace (d->_str, d->start, d->end, "", d->sc, d->pst);
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3105,7 +3105,7 @@ MGA_Skip (GGadget *g, GEvent *e)
       struct mgask_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       d->done = d->skipped = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3121,11 +3121,11 @@ mgask_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("problems.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3313,7 +3313,7 @@ mgAsk (struct problems *p, char **_str, char *str, char *end, uint32_t tag,
   if (GGadgetIsChecked (GWidgetGetControl (gw, CID_Ignore)))
     p->missingglyph = false;
   GDrawDestroyWindow (gw);
-  return (!d.skipped);
+  return !d.skipped;
 }
 
 static int
@@ -3330,7 +3330,7 @@ StrMissingGlyph (struct problems *p, char **_str, SplineChar *sc, int which,
   int changed = false;
 
   if (str == NULL)
-    return (false);
+    return false;
 
   while (*str)
     {
@@ -3373,7 +3373,7 @@ StrMissingGlyph (struct problems *p, char **_str, SplineChar *sc, int which,
                   for (test = sc->possub; test != NULL && test != data;
                        test = test->next);
                   if (test == NULL)     /* Entire pst was removed */
-                    return (true);
+                    return true;
                   *_str = test->u.subs.variant;
                 }
               end = *_str + off;
@@ -3381,7 +3381,7 @@ StrMissingGlyph (struct problems *p, char **_str, SplineChar *sc, int which,
         }
       str = end;
     }
-  return (found);
+  return found;
 }
 
 static int
@@ -3391,7 +3391,7 @@ SCMissingGlyph (struct problems *p, SplineChar *sc)
   int found = false;
 
   if (!p->missingglyph || p->finish || sc == NULL)
-    return (false);
+    return false;
 
   for (pst = sc->possub; pst != NULL; pst = next)
     {
@@ -3409,7 +3409,7 @@ SCMissingGlyph (struct problems *p, SplineChar *sc)
           break;
         }
     }
-  return (found);
+  return found;
 }
 
 static int
@@ -3424,7 +3424,7 @@ KCMissingGlyph (struct problems *p, KernClass *kc, int isv)
       found |= StrMissingGlyph (p, &kc->firsts[i], NULL, which, kc);
   for (i = 1; i < kc->second_cnt; ++i)
     found |= StrMissingGlyph (p, &kc->seconds[i], NULL, which, kc);
-  return (found);
+  return found;
 }
 
 static int
@@ -3460,7 +3460,7 @@ FPSTMissingGlyph (struct problems *p, FPST *fpst)
                              NULL, mg_fpst, fpst);
       break;
     }
-  return (found);
+  return found;
 }
 
 static int
@@ -3477,7 +3477,7 @@ LookupFeaturesMissScript (struct problems *p, OTLookup *otl, OTLookup *nested,
   char *buts[4];
 
   if (script == DEFAULT_SCRIPT)
-    return (false);
+    return false;
 
   if (otl->features == NULL)
     {
@@ -3487,7 +3487,7 @@ LookupFeaturesMissScript (struct problems *p, OTLookup *otl, OTLookup *nested,
         {
           /* There is no need to have a nested contextual lookup */
           /*  so we don't support them */
-          return (false);
+          return false;
         }
       any = NULL;
       for (invokers =
@@ -3574,10 +3574,10 @@ LookupFeaturesMissScript (struct problems *p, OTLookup *otl, OTLookup *nested,
             }
           else if (ret == 2)
             p->missingscriptinfeature = false;
-          return (true);
+          return true;
         }
     }
-  return (found);
+  return found;
 }
 
 static int
@@ -3589,7 +3589,7 @@ SCMissingScriptFeat (struct problems *p, SplineFont *sf, SplineChar *sc)
   AnchorPoint *ap;
 
   if (!p->missingscriptinfeature || p->finish || sc == NULL)
-    return (false);
+    return false;
   script = SCScriptFromUnicode (sc);
 
   for (pst = sc->possub; pst != NULL; pst = pst->next)
@@ -3602,7 +3602,7 @@ SCMissingScriptFeat (struct problems *p, SplineFont *sf, SplineChar *sc)
       LookupFeaturesMissScript (p, ap->anchor->subtable->lookup, NULL, script,
                                 sf, sc->name);
 
-  return (found);
+  return found;
 }
 
 static int
@@ -3616,7 +3616,7 @@ StrMissingScript (struct problems *p, SplineFont *sf, OTLookup *otl,
   int found = 0;
 
   if (class == NULL)
-    return (false);
+    return false;
 
   for (pt = class; *pt && p->missingscriptinfeature;)
     {
@@ -3636,7 +3636,7 @@ StrMissingScript (struct problems *p, SplineFont *sf, OTLookup *otl,
             LookupFeaturesMissScript (p, otl, NULL, script, sf, sc->name);
         }
     }
-  return (found);
+  return found;
 }
 
 static int
@@ -3648,7 +3648,7 @@ KCMissingScriptFeat (struct problems *p, SplineFont *sf, KernClass *kc, int isv)
 
   for (i = 0; i < kc->first_cnt; ++i)
     found |= StrMissingScript (p, sf, otl, kc->firsts[i]);
-  return (found);
+  return found;
 }
 
 static int
@@ -3683,7 +3683,7 @@ FPSTMissingScriptFeat (struct problems *p, SplineFont *sf, FPST *fpst)
                               (&fpst->rules[0].u.coverage.ncovers)[i][j]);
       break;
     }
-  return (found);
+  return found;
 }
 
 static int
@@ -3766,7 +3766,7 @@ CheckForATT (struct problems *p)
         }
     }
 
-  return (found);
+  return found;
 }
 
 static void
@@ -3876,7 +3876,7 @@ Prob_DoAll (GGadget *g, GEvent *e)
       for (i = 0; cbs[i] != 0; ++i)
         GGadgetSetChecked (GWidgetGetControl (gw, cbs[i]), set);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4031,7 +4031,7 @@ Prob_OK (GGadget *g, GEvent *e)
                     &errs) / 100.0;
       near = p->near = GetReal8 (gw, CID_Near, _("Near"), &errs);
       if (errs)
-        return (true);
+        return true;
       lastsf = p->fv->b.sf;
       if (doynearstd)
         FigureStandardHeights (p);
@@ -4053,7 +4053,7 @@ Prob_OK (GGadget *g, GEvent *e)
         }
       p->done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -4098,7 +4098,7 @@ Prob_Cancel (GGadget *g, GEvent *e)
       struct problems *p = GDrawGetUserData (GGadgetGetWindow (g));
       p->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4110,7 +4110,7 @@ Prob_TextChanged (GGadget *g, GEvent *e)
                          (GGadgetGetWindow (g),
                           (intptr_t) GGadgetGetUserData (g)), true);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4122,7 +4122,7 @@ Prob_EnableExact (GGadget *g, GEvent *e)
                          (GGadgetGetWindow (g), CID_ShowExactStem3),
                          GGadgetIsChecked (g));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4133,7 +4133,7 @@ e_h (GWindow gw, GEvent *event)
       struct problems *p = GDrawGetUserData (gw);
       p->done = true;
     }
-  return (event->type != et_char);
+  return event->type != et_char;
 }
 
 void
@@ -5697,7 +5697,7 @@ VSErrorsFromMask (int mask, int private_mask)
       ret[len++] = '\n';
     }
   ret[len] = '\0';
-  return (ret);
+  return ret;
 }
 
 static int
@@ -5718,7 +5718,7 @@ VSModMask (SplineChar *sc, struct val_data *vw)
           sc->layers[vw->layer].refs != NULL)
         vs &= ~(vs_selfintersects | vs_wrongdirection);
     }
-  return (vs);
+  return vs;
 }
 
 static int
@@ -5759,7 +5759,7 @@ VW_FindLine (struct val_data *vw, int line, int *skips)
           if (sofar + tot > line)
             {
               *skips = line - sofar;
-              return (gid);
+              return gid;
             }
           sofar += tot;
         }
@@ -5777,12 +5777,12 @@ VW_FindLine (struct val_data *vw, int line, int *skips)
       if (sofar + tot > line)
         {
           *skips = line - sofar;
-          return (-2);
+          return -2;
         }
     }
 
   *skips = 0;
-  return (-1);
+  return -1;
 }
 
 static int
@@ -5815,7 +5815,7 @@ VW_FindSC (struct val_data *vw, SplineChar *sought)
       if ((vs & vs_known) && (vs & vw->mask) != 0)
         {
           if (sc == sought)
-            return (sofar);
+            return sofar;
           ++sofar;
           if (sc->vs_open)
             for (bit = (vs_known << 1); bit <= vs_last; bit <<= 1)
@@ -5823,9 +5823,9 @@ VW_FindSC (struct val_data *vw, SplineChar *sought)
                 ++sofar;
         }
       else if (sc == sought)
-        return (-1);
+        return -1;
     }
-  return (-1);
+  return -1;
 }
 
 static int
@@ -5876,7 +5876,7 @@ VW_VScroll (GGadget *g, GEvent *e)
       GScrollBarSetPos (vw->vsb, newpos);
       GDrawRequestExpose (vw->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -7160,7 +7160,7 @@ VWCheckup (struct val_data *vw)
     VW_Remetric (vw);
   if (!firstv)
     GDrawSetCursor (vw->v, ct_pointer);
-  return (a_change);
+  return a_change;
 }
 
 static int
@@ -7173,7 +7173,7 @@ VW_OK (GGadget *g, GEvent *e)
         (struct val_data *) GDrawGetUserData (GGadgetGetWindow (g));
       GDrawDestroyWindow (vw->gw);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7197,12 +7197,12 @@ vwv_e_h (GWindow gw, GEvent *event)
       if ((event->type == et_mouseup || event->type == et_mousedown) &&
           (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
         {
-          return (GGadgetDispatchEvent (vw->vsb, event));
+          return GGadgetDispatchEvent (vw->vsb, event);
         }
       VWMouse (vw, event);
       break;
     case et_char:
-      return (false);
+      return false;
       break;
     case et_resize:
       {
@@ -7215,7 +7215,7 @@ vwv_e_h (GWindow gw, GEvent *event)
       VWCheckup (vw);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7229,7 +7229,7 @@ vw_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_destroy)
     {
@@ -7237,7 +7237,7 @@ vw_e_h (GWindow gw, GEvent *event)
         vw->sf->valwin = NULL;
       free (vw);
     }
-  return (true);
+  return true;
 }
 
 void

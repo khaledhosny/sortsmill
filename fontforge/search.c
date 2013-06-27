@@ -56,13 +56,13 @@ CoordMatches (real real_off, real search_off, SearchData *s)
 {
   real fudge;
   if (real_off >= search_off - s->fudge && real_off <= search_off + s->fudge)
-    return (true);
+    return true;
   fudge = s->fudge_percent * search_off;
   if (fudge < 0)
     fudge = -fudge;
   if (real_off >= search_off - fudge && real_off <= search_off + fudge)
-    return (true);
-  return (false);
+    return true;
+  return false;
 }
 
 static int
@@ -82,7 +82,7 @@ BPMatches (BasePoint *sc_p1, BasePoint *sc_p2, BasePoint *p_p1, BasePoint *p_p2,
   sxoff *= scale;
   syoff *= scale;
   if (rot == 0)
-    return (CoordMatches (sxoff, pxoff, s) && CoordMatches (syoff, pyoff, s));
+    return CoordMatches (sxoff, pxoff, s) && CoordMatches (syoff, pyoff, s);
 
   return (CoordMatches (sxoff * s->matched_co + syoff * s->matched_si, pxoff, s)
           && CoordMatches (-sxoff * s->matched_si + syoff * s->matched_co,
@@ -118,29 +118,29 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
       p_unit.y = p_sp->me.y - p_prevsp->me.y;
       len = sqrt (p_unit.x * p_unit.x + p_unit.y * p_unit.y);
       if (len == 0)
-        return (false);
+        return false;
       p_unit.x /= len;
       p_unit.y /= len;
       if (sp->prev == NULL)
-        return (false);
+        return false;
       psc_sp = sp->prev->from;
       if ((sp->me.x - psc_sp->me.x) * (sp->me.x - psc_sp->me.x) +
           (sp->me.y - psc_sp->me.y) * (sp->me.y - psc_sp->me.y) < len * len)
-        return (false);
+        return false;
     }
   if (s->endpoints)
     {
       SplinePoint *p_nextsp = path->last;
       SplinePoint *p_end = p_nextsp->prev->from;
       if (sp->next == NULL)
-        return (false);
+        return false;
       for (p_end = p_sp, p_nextsp = p_end->next->to, sc_sp = sp, nsc_sp =
            sp->next->to;;)
         {
           if (p_nextsp->next == NULL)
             break;
           if (nsc_sp->next == NULL)
-            return (false);
+            return false;
           p_end = p_nextsp;
           sc_sp = nsc_sp;
           p_nextsp = p_nextsp->next->to;
@@ -150,12 +150,12 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
       pend_unit.y = p_nextsp->me.y - p_end->me.y;
       len = sqrt (pend_unit.x * pend_unit.x + pend_unit.y * pend_unit.y);
       if (len == 0)
-        return (false);
+        return false;
       pend_unit.x /= len;
       pend_unit.y /= len;
       if ((sp->me.x - nsc_sp->me.x) * (sp->me.x - nsc_sp->me.x) +
           (sp->me.y - nsc_sp->me.y) * (sp->me.y - nsc_sp->me.y) < len * len)
-        return (false);
+        return false;
     }
 
 /* ******************* Match with no transformations applied **************** */
@@ -163,14 +163,14 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
   for (sc_sp = sp;;)
     {
       if (sc_sp->ticked)        /* Don't search within stuff we have just replaced */
-        return (false);
+        return false;
 
       if (p_sp->next == NULL)
         {
           if (substring || sc_sp->next == NULL)
             {
               s->last_sp = saw_sc_first ? NULL : sp;
-              return (true);
+              return true;
             }
           break;
         }
@@ -183,12 +183,12 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
         {
           SplinePoint *sc_prevsp;
           if (sc_sp->prev == NULL)
-            return (false);
+            return false;
           sc_prevsp = sc_sp->prev->from;
           if (!p_sp->noprevcp)
             {
               if (sc_sp->noprevcp)
-                return (false);
+                return false;
               if (!CoordMatches
                   (sc_sp->prevcp.x - sc_sp->me.x, p_sp->prevcp.x - p_sp->me.x,
                    s)
@@ -199,12 +199,12 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
           else
             {
               if (!sc_sp->noprevcp)
-                return (false);
+                return false;
               sc_unit.x = sc_sp->me.x - sc_prevsp->me.x;
               sc_unit.y = sc_sp->me.y - sc_prevsp->me.y;
               len = sqrt (sc_unit.x * sc_unit.x + sc_unit.y * sc_unit.y);
               if (len == 0)
-                return (false);
+                return false;
               sc_unit.x /= len;
               sc_unit.y /= len;
               if (!RealNear (sc_unit.x, p_unit.x)
@@ -217,7 +217,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
         {
           SplinePoint *sc_nextsp;
           if (sc_sp->next == NULL)
-            return (false);
+            return false;
           sc_nextsp = sc_sp->next->to;
           if (!p_sp->nonextcp)
             {
@@ -231,19 +231,19 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
           else
             {
               if (!sc_sp->nonextcp)
-                return (false);
+                return false;
               sc_unit.x = sc_nextsp->me.x - sc_sp->me.x;
               sc_unit.y = sc_nextsp->me.y - sc_sp->me.y;
               len = sqrt (sc_unit.x * sc_unit.x + sc_unit.y * sc_unit.y);
               if (len == 0)
-                return (false);
+                return false;
               sc_unit.x /= len;
               sc_unit.y /= len;
               if (RealNear (sc_unit.x, pend_unit.x)
                   && RealNear (sc_unit.y, pend_unit.y))
                 {
                   s->last_sp = saw_sc_first ? NULL : sp;
-                  return (true);
+                  return true;
                 }
               else
                 break;
@@ -268,7 +268,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
           if (nsc_sp == sp)
             {
               s->last_sp = saw_sc_first ? NULL : sp;
-              return (true);
+              return true;
             }
           break;
         }
@@ -294,7 +294,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                   {
                     s->matched_flip = flip;
                     s->last_sp = saw_sc_first ? NULL : sp;
-                    return (true);
+                    return true;
                   }
                 else
                   break;
@@ -336,7 +336,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
               {
                 SplinePoint *sc_nextsp;
                 if (sc_sp->next == NULL)
-                  return (false);
+                  return false;
                 sc_nextsp = sc_sp->next->to;
                 if (!p_sp->nonextcp)
                   {
@@ -351,12 +351,12 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                 else
                   {
                     if (!sc_sp->nonextcp)
-                      return (false);
+                      return false;
                     sc_unit.x = sc_nextsp->me.x - sc_sp->me.x;
                     sc_unit.y = sc_nextsp->me.y - sc_sp->me.y;
                     len = sqrt (sc_unit.x * sc_unit.x + sc_unit.y * sc_unit.y);
                     if (len == 0)
-                      return (false);
+                      return false;
                     sc_unit.x /= len;
                     sc_unit.y /= len;
                     if (RealNear (sc_unit.x, xsign * pend_unit.x)
@@ -364,7 +364,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                       {
                         s->matched_flip = flip;
                         s->last_sp = saw_sc_first ? NULL : sp;
-                        return (true);
+                        return true;
                       }
                     else
                       break;
@@ -391,7 +391,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                   {
                     s->matched_flip = flip;
                     s->last_sp = saw_sc_first ? NULL : sp;
-                    return (true);
+                    return true;
                   }
                 else
                   break;
@@ -416,12 +416,12 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
           np_sp = p_sp->next->to;       /* if p_sp->next were NULL, we'd have returned by now */
           sc_sp = sp;
           if (sc_sp->next == NULL)
-            return (false);
+            return false;
           nsc_sp = sc_sp->next->to;
           if (p_sp->me.x == np_sp->me.x && p_sp->me.y == np_sp->me.y)
-            return (false);
+            return false;
           if (sc_sp->me.x == nsc_sp->me.x && sc_sp->me.y == nsc_sp->me.y)
-            return (false);
+            return false;
           if (s->tryrotate && s->endpoints && np_sp->next == NULL)
             {
               int xsign = (flip & 1) ? -1 : 1, ysign = (flip & 2) ? -1 : 1;
@@ -445,7 +445,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
             }
           else if (s->endpoints && np_sp->next == NULL)
             {
-              return (false);   /* Not enough info to make a guess */
+              return false;   /* Not enough info to make a guess */
             }
           else if (!s->tryrotate)
             {
@@ -462,7 +462,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                   scale =
                     (np_sp->me.x - p_sp->me.x) / (nsc_sp->me.x - sc_sp->me.x);
                   if (scale < .99 * yscale || scale > 1.01 * yscale)
-                    return (false);
+                    return false;
                 }
               rot = 0;
             }
@@ -487,7 +487,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                                                          sc_sp->me.x)));
             }
           if (scale > -.00001 && scale < .00001)
-            return (false);
+            return false;
           s->matched_rot = rot;
           if (rot == 0)
             s->matched_co = 1, s->matched_si = 0;
@@ -512,14 +512,14 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                       s->matched_rot = rot;
                       s->matched_scale = scale;
                       s->last_sp = saw_sc_first ? NULL : sp;
-                      return (true);
+                      return true;
                     }
                   else
-                    return (false);
+                    return false;
                 }
               np_sp = p_sp->next->to;
               if (sc_sp->next == NULL)
-                return (false);
+                return false;
               nsc_sp = sc_sp->next->to;
 
               if (first_of_path && s->endpoints)
@@ -557,7 +557,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                 {
                   SplinePoint *sc_nextsp;
                   if (sc_sp->next == NULL)
-                    return (false);
+                    return false;
                   sc_nextsp = sc_sp->next->to;
                   if (!p_sp->nonextcp)
                     {
@@ -569,13 +569,13 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                   else
                     {
                       if (!sc_sp->nonextcp)
-                        return (false);
+                        return false;
                       sc_unit.x = sc_nextsp->me.x - sc_sp->me.x;
                       sc_unit.y = sc_nextsp->me.y - sc_sp->me.y;
                       len =
                         sqrt (sc_unit.x * sc_unit.x + sc_unit.y * sc_unit.y);
                       if (len == 0)
-                        return (false);
+                        return false;
                       sc_unit.x /= len;
                       sc_unit.y /= len;
                       temp =
@@ -590,7 +590,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                           s->matched_rot = rot;
                           s->matched_scale = scale;
                           s->last_sp = saw_sc_first ? NULL : sp;
-                          return (true);
+                          return true;
                         }
                       else
                         break;
@@ -604,7 +604,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                                  flip, rot, scale, s)
                   || !BPMatches (&nsc_sp->prevcp, &nsc_sp->me, &np_sp->prevcp,
                                  &np_sp->me, flip, rot, scale, s))
-                return (false);
+                return false;
               if (np_sp == path->first)
                 {
                   if (nsc_sp == sp)
@@ -613,10 +613,10 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
                       s->matched_rot = rot;
                       s->matched_scale = scale;
                       s->last_sp = saw_sc_first ? NULL : sp;
-                      return (true);
+                      return true;
                     }
                   else
-                    return (false);
+                    return false;
                 }
               sc_sp = nsc_sp;
               if (sc_sp == sc_path_first)
@@ -625,7 +625,7 @@ SPMatchesF (SplinePoint *sp, SearchData *s, SplineSet *path,
             }
         }
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -640,10 +640,10 @@ SPMatchesO (SplinePoint *sp, SearchData *s, SplineSet *path)
       for (sc_sp = sp, p_sp = path->first;;)
         {
           if (p_sp->next == NULL)
-            return (sc_sp->next == NULL);
+            return sc_sp->next == NULL;
           np_sp = p_sp->next->to;
           if (sc_sp->next == NULL)
-            return (false);
+            return false;
           nsc_sp = sc_sp->next->to;
           if (!CoordMatches
               (sc_sp->nextcp.x - sc_sp->me.x, p_sp->nextcp.x - p_sp->me.x, s)
@@ -657,9 +657,9 @@ SPMatchesO (SplinePoint *sp, SearchData *s, SplineSet *path)
                                 np_sp->prevcp.x - np_sp->me.x, s)
               || !CoordMatches (nsc_sp->prevcp.y - nsc_sp->me.y,
                                 np_sp->prevcp.y - np_sp->me.y, s))
-            return (false);
+            return false;
           if (np_sp == path->first)
-            return (nsc_sp == sp);
+            return nsc_sp == sp;
           sc_sp = nsc_sp;
           p_sp = np_sp;
         }
@@ -671,10 +671,10 @@ SPMatchesO (SplinePoint *sp, SearchData *s, SplineSet *path)
       for (sc_sp = sp, p_sp = path->first;;)
         {
           if (p_sp->next == NULL)
-            return (sc_sp->next == NULL);
+            return sc_sp->next == NULL;
           np_sp = p_sp->next->to;
           if (sc_sp->next == NULL)
-            return (false);
+            return false;
           nsc_sp = sc_sp->next->to;
           if (!CoordMatches
               (sc_sp->nextcp.x - sc_sp->me.x,
@@ -689,9 +689,9 @@ SPMatchesO (SplinePoint *sp, SearchData *s, SplineSet *path)
                                 xsign * (np_sp->prevcp.x - np_sp->me.x), s)
               || !CoordMatches (nsc_sp->prevcp.y - nsc_sp->me.y,
                                 ysign * (np_sp->prevcp.y - np_sp->me.y), s))
-            return (false);
+            return false;
           if (np_sp == path->first)
-            return (nsc_sp == sp);
+            return nsc_sp == sp;
           sc_sp = nsc_sp;
           p_sp = np_sp;
         }
@@ -702,10 +702,10 @@ SPMatchesO (SplinePoint *sp, SearchData *s, SplineSet *path)
       for (sc_sp = sp, p_sp = path->first;;)
         {
           if (p_sp->next == NULL)
-            return (sc_sp->next == NULL);
+            return sc_sp->next == NULL;
           np_sp = p_sp->next->to;
           if (sc_sp->next == NULL)
-            return (false);
+            return false;
           nsc_sp = sc_sp->next->to;
           if (!BPMatches (&sc_sp->nextcp, &sc_sp->me, &p_sp->nextcp, &p_sp->me,
                           s->matched_flip, s->matched_rot, s->matched_scale, s)
@@ -715,14 +715,14 @@ SPMatchesO (SplinePoint *sp, SearchData *s, SplineSet *path)
               || !BPMatches (&nsc_sp->prevcp, &nsc_sp->me, &np_sp->prevcp,
                              &np_sp->me, s->matched_flip, s->matched_rot,
                              s->matched_scale, s))
-            return (false);
+            return false;
           if (np_sp == path->first)
-            return (nsc_sp == sp);
+            return nsc_sp == sp;
           sc_sp = nsc_sp;
           p_sp = np_sp;
         }
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -772,16 +772,16 @@ SPMatches (SplinePoint *sp, SearchData *s, SplineSet *path,
       res.y = transform[1] * p->x + transform[3] * p->y + transform[5];
       if (sp->me.x > res.x + fudge || sp->me.x < res.x - fudge ||
           sp->me.y > res.y + fudge || sp->me.y < res.y - fudge)
-        return (false);
+        return false;
 
-      return (SPMatchesO (sp, s, path));
+      return SPMatchesO (sp, s, path);
     }
   else
     {
       if (!SPMatchesF (sp, s, path, sc_path_first, false))
-        return (false);
+        return false;
       SVFigureTranslation (s, &path->first->me, sp);
-      return (true);
+      return true;
     }
 }
 
@@ -804,14 +804,14 @@ SCMatchesIncomplete (SplineChar *sc, SearchData *s, int startafter)
           if (SPMatchesF (sp, s, s->path, spl->first, true))
             {
               SVFigureTranslation (s, &s->path->first->me, sp);
-              return (true);
+              return true;
             }
           else if (s->tryreverse
                    && SPMatchesF (sp, s, s->revpath, spl->first, true))
             {
               SVFigureTranslation (s, &s->revpath->first->me, sp);
               s->wasreversed = true;
-              return (true);
+              return true;
             }
           if (sp->next == NULL)
             break;
@@ -821,7 +821,7 @@ SCMatchesIncomplete (SplineChar *sc, SearchData *s, int startafter)
         }
       startafter = false;
     }
-  return (false);
+  return false;
 }
 
 /* We are given several paths/refs to match. We have a match if each path */
@@ -868,7 +868,7 @@ SCMatchesFull (SplineChar *sc, SearchData *s)
               }
           }
       if (r == NULL)
-        return (false);
+        return false;
       s->matched_refs |= 1 << i;
     }
   ref_first = first;
@@ -933,7 +933,7 @@ retry:
       if (spl == NULL)
         {
           if (s_spl == s->path)
-            return (false);
+            return false;
           /* Ok, we could not find a match starting from the contour */
           /*  we started with. However if there are multiple contours */
           /*  in the search pattern, that might just mean that we a bad */
@@ -950,7 +950,7 @@ retry:
         s->matched_ss |= 1 << i;
       first = false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -970,7 +970,7 @@ AdjustBP (BasePoint *changeme, BasePoint *rel,
   yoff *= s->matched_scale;
   changeme->x = xoff * s->matched_co - yoff * s->matched_si + fudge->x + rel->x;
   changeme->y = yoff * s->matched_co + xoff * s->matched_si + fudge->y + rel->y;
-  return (changeme->x == rel->x && changeme->y == rel->y);
+  return changeme->x == rel->x && changeme->y == rel->y;
 }
 
 static void
@@ -1038,7 +1038,7 @@ RplInsertSP (SplinePoint *after, SplinePoint *nrpl, SplinePoint *rpl,
       SplineRefigure (after->next);
       SplineMake (new, nsp, after->next->order2);
     }
-  return (new);
+  return new;
 }
 
 static void
@@ -1251,15 +1251,15 @@ HeuristiclyBadMatch (SplineChar *sc, SearchData *s)
       if (!(s->matched_ss & (1 << i)))
         {
           if (SplinePointListIsClockwise (spl) == 1)
-            return (false);
+            return false;
           ++contour_cnt;
         }
     }
   if (contour_cnt == 0)
-    return (false);             /* Exact match */
+    return false;             /* Exact match */
 
   /* Everything remaining is counter-clockwise */
-  return (true);
+  return true;
 }
 
 static void
@@ -1463,9 +1463,9 @@ SearchChar (SearchData *sv, int gid, int startafter)
   sv->matched_x = sv->matched_y = 0;
 
   if (sv->subpatternsearch)
-    return (SCMatchesIncomplete (sv->curchar, sv, startafter));
+    return SCMatchesIncomplete (sv->curchar, sv, startafter);
   else
-    return (SCMatchesFull (sv->curchar, sv));
+    return SCMatchesFull (sv->curchar, sv);
 }
 
 int
@@ -1478,12 +1478,12 @@ DoRpl (SearchData *sv)
   for (r = sv->sc_rpl.layers[ly_fore].refs; r != NULL; r = r->next)
     {
       if (SCDependsOnSC (r->sc, sv->curchar))
-        return (false);
+        return false;
     }
 
   if (sv->replaceall && !sv->subpatternsearch &&
       HeuristiclyBadMatch (sv->curchar, sv))
-    return (false);
+    return false;
 
   SCPreserveLayer (sv->curchar, layer, false);
   if (sv->subpatternsearch)
@@ -1491,7 +1491,7 @@ DoRpl (SearchData *sv)
   else
     DoReplaceFull (sv->curchar, sv);
   SCCharChangedUpdate (sv->curchar, layer);
-  return (true);
+  return true;
 }
 
 int
@@ -1526,7 +1526,7 @@ _DoFindAll (SearchData *sv)
         sv->fv->selected[i] = false;
     }
   sv->curchar = startcur;
-  return (any);
+  return any;
 }
 
 void
@@ -1567,7 +1567,7 @@ SDFillup (SearchData *sv, FontViewBase *fv)
   LayerDefault (&sv->sc_rpl.layers[1]);
 
   sv->fv = fv;
-  return (sv);
+  return sv;
 }
 
 static int
@@ -1585,20 +1585,20 @@ IsASingleReferenceOrEmpty (SplineChar *sc, int layer)
   for (i = first; i <= last; ++i)
     {
       if (sc->layers[i].splines != NULL)
-        return (false);
+        return false;
       if (sc->layers[i].images != NULL)
-        return (false);
+        return false;
       if (sc->layers[i].refs != NULL)
         {
           if (!empty)
-            return (false);
+            return false;
           if (sc->layers[i].refs->next != NULL)
-            return (false);
+            return false;
           empty = false;
         }
     }
 
-  return (true);
+  return true;
 }
 
 static void
@@ -1722,7 +1722,7 @@ FVReplaceAll (FontViewBase *fv, SplineSet *find, SplineSet *rpl, double fudge,
 
   SDDestroy (sv);
   free (sv);
-  return (ret);
+  return ret;
 }
 
 /* This will free both the find and rpl contours */
@@ -1745,7 +1745,7 @@ SDFromContour (FontViewBase *fv, SplineSet *find, double fudge, int flags)
   SVResetPaths (sv);
 
   sv->last_gid = -1;
-  return (sv);
+  return sv;
 }
 
 SplineChar *
@@ -1755,7 +1755,7 @@ SDFindNext (SearchData *sd)
   FontViewBase *fv;
 
   if (sd == NULL)
-    return (NULL);
+    return NULL;
   fv = sd->fv;
 
   for (gid = sd->last_gid + 1; gid < fv->sf->glyphcnt; ++gid)
@@ -1764,10 +1764,10 @@ SDFindNext (SearchData *sd)
       if (SearchChar (sd, gid, false))
         {
           sd->last_gid = gid;
-          return (fv->sf->glyphs[gid]);
+          return fv->sf->glyphs[gid];
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 /* ************************************************************************** */
@@ -1814,7 +1814,7 @@ RC_MakeNewGlyph (FontViewBase *fv, SplineChar *base, int index,
     xmalloc (strlen (reason) + strlen (ret->name) + strlen (morereason) + 2);
   sprintf (ret->comment, reason, base->name, morereason);
   ret->color = 0xff8080;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1844,12 +1844,12 @@ DListRemove (struct splinecharlist *dependents, SplineChar *this_sc)
   struct splinecharlist *dlist, *pd;
 
   if (dependents == NULL)
-    return (NULL);
+    return NULL;
   else if (dependents->sc == this_sc)
     {
       dlist = dependents->next;
       free (dependents);
-      return (dlist);
+      return dlist;
     }
   else
     {
@@ -1860,7 +1860,7 @@ DListRemove (struct splinecharlist *dependents, SplineChar *this_sc)
           pd->next = dlist->next;
           free (dlist);
         }
-      return (dependents);
+      return dependents;
     }
 }
 

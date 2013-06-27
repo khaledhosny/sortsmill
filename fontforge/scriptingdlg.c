@@ -91,7 +91,7 @@ SD_Call (GGadget *g, GEvent *e)
 
       fn = gwwv_open_filename (_("Call Script"), NULL, "*", NULL);
       if (fn == NULL)
-        return (true);
+        return true;
       insert = xmalloc ((strlen (fn) + 10) * sizeof (uint32_t));
       *insert = '"';
       utf82u_strcpy (insert + 1, fn);
@@ -101,7 +101,7 @@ SD_Call (GGadget *g, GEvent *e)
       free (insert);
       free (fn);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -127,7 +127,7 @@ SD_OK (GGadget *g, GEvent *e)
       ExecPython (g, e);
       sd->done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -143,7 +143,7 @@ SD_Cancel (GGadget *g, GEvent *e)
     {
       SD_DoCancel (GDrawGetUserData (GGadgetGetWindow (g)));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -152,7 +152,7 @@ sd_e_h (GWindow gw, GEvent *event)
   struct sd_data *sd = GDrawGetUserData (gw);
 
   if (sd == NULL)
-    return (true);
+    return true;
 
   if (event->type == et_close)
     {
@@ -163,9 +163,9 @@ sd_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("scripting.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_map)
     {
@@ -176,7 +176,7 @@ sd_e_h (GWindow gw, GEvent *event)
     {
       GDrawRequestExpose (gw, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static void

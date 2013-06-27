@@ -142,7 +142,7 @@ TDMakeSamples (TD * td)
       ++pcnt;
     }
   if (len == 0)
-    return (false);
+    return false;
   td->plength = len;
   td->pcnt = pcnt;
 
@@ -262,7 +262,7 @@ TDMakeSamples (TD * td)
   td->njoins = pcnt;
   if (i != td->nsamples + 1)
     IError ("Sample failure %d is not %d", i, td->samples + 1);
-  return (true);
+  return true;
 }
 
 static void
@@ -456,7 +456,7 @@ SplinePointListTruncateAtY (SplineSet *spl, real y)
         }
       prev = nprev;
     }
-  return (ss);
+  return ss;
 }
 
 static SplineSet *
@@ -535,7 +535,7 @@ SplinePointListMerge (SplineSet *old, SplineSet *new)
       old = new;
       new = next;
     }
-  return (old);
+  return old;
 }
 
 #define Round_Up_At	.5
@@ -804,7 +804,7 @@ TDMakePoint (TD * td, Spline *old, real t)
   new->prevcp = new->me;
   new->nonextcp = new->noprevcp = true;
   new->nextcpdef = new->prevcpdef = false;
-  return (new);
+  return new;
 }
 
 static Spline *
@@ -821,7 +821,7 @@ AdjustSpline (TD * td, Spline *old, SplinePoint *newfrom, SplinePoint *newto,
     newto = TDMakePoint (td, old, 1);
   for (i = 1, t = 1 / 16.0; i < 16; ++i, t += 1 / 16.0)
     AdjustPoint (td, old, t, &tps[i - 1]);
-  return (ApproximateSplineFromPoints (newfrom, newto, tps, 15, order2));
+  return ApproximateSplineFromPoints (newfrom, newto, tps, 15, order2);
 }
 
 static void
@@ -1080,7 +1080,7 @@ tpd_sub_e_h (GWindow gw, GEvent *event)
   TilePathDlg *tpd;
 
   if (event->type == et_destroy)
-    return (true);
+    return true;
 
   tpd = (TilePathDlg *) ((CharViewBase *) GDrawGetUserData (gw))->container;
 
@@ -1094,7 +1094,7 @@ tpd_sub_e_h (GWindow gw, GEvent *event)
       TPDChar (tpd, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1104,7 +1104,7 @@ tpd_e_h (GWindow gw, GEvent *event)
   int i;
 
   if (event->type == et_destroy)
-    return (true);
+    return true;
 
   tpd = (TilePathDlg *) ((CharViewBase *) GDrawGetUserData (gw))->container;
   switch (event->type)
@@ -1136,7 +1136,7 @@ tpd_e_h (GWindow gw, GEvent *event)
       /* tpd->isvisible = event->u.map.is_visible; */
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1150,7 +1150,7 @@ TilePathD_Cancel (GGadget *g, GEvent *e)
              container);
       TPD_DoClose (&tpd->base);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1159,9 +1159,9 @@ TPD_Useless (SplineSet *ss)
   DBounds bb;
 
   if (ss == NULL)
-    return (true);
+    return true;
   SplineSetFindBounds (ss, &bb);
-  return (bb.maxy == bb.miny);
+  return bb.maxy == bb.miny;
 }
 
 static int
@@ -1196,7 +1196,7 @@ TilePathD_OK (GGadget *g, GEvent *e)
                            _("You must specify an isolated (or medial) tile"));
           else
             ff_post_error (_("Bad Tile"), _("You must specify a medial tile"));
-          return (true);
+          return true;
         }
 
       tilepos = td->tilepos;
@@ -1234,25 +1234,25 @@ TilePathD_OK (GGadget *g, GEvent *e)
       TPD_DoClose (&tpd->base);
       tpd->oked = true;
     }
-  return (true);
+  return true;
 }
 
 static int
 TPD_Can_Navigate (struct cvcontainer *cvc, enum nav_type type)
 {
-  return (false);
+  return false;
 }
 
 static int
 TPD_Can_Open (struct cvcontainer *cvc)
 {
-  return (false);
+  return false;
 }
 
 static SplineFont *
 SF_Of_TPD (struct cvcontainer *foo)
 {
-  return (NULL);
+  return NULL;
 }
 
 struct cvcontainer_funcs tilepath_funcs = {
@@ -1602,7 +1602,7 @@ TileAsk (struct tiledata *td, SplineFont *sf)
   release_enc_to_gid (&tpd.dummy_map);
   release_gid_to_enc (&tpd.dummy_map);
 
-  return (tpd.oked);
+  return tpd.oked;
 }
 
 static void
@@ -1855,7 +1855,7 @@ ptd_sub_e_h (GWindow gw, GEvent *event)
   TilePathDlg *ptd;
 
   if (event->type == et_destroy)
-    return (true);
+    return true;
 
   ptd = (TilePathDlg *) ((CharViewBase *) GDrawGetUserData (gw))->container;
 
@@ -1869,7 +1869,7 @@ ptd_sub_e_h (GWindow gw, GEvent *event)
       PTDChar (ptd, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1878,7 +1878,7 @@ ptd_e_h (GWindow gw, GEvent *event)
   TilePathDlg *ptd;
 
   if (event->type == et_destroy)
-    return (true);
+    return true;
 
   ptd = (TilePathDlg *) ((CharViewBase *) GDrawGetUserData (gw))->container;
   switch (event->type)
@@ -1958,7 +1958,7 @@ ptd_e_h (GWindow gw, GEvent *event)
       /* ptd->isvisible = event->u.map.is_visible; */
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1979,7 +1979,7 @@ PTD_RefigureBackground (GGadget *g, GEvent *e)
       hsize = GetCalmReal8 (ptd->gw, CID_PatternWidth, _("Width"), &err);
       vsize = GetCalmReal8 (ptd->gw, CID_PatternHeight, _("Height"), &err);
       if (err)
-        return (true);
+        return true;
       ptd->sc_first.width = hsize;
       SplinePointListFree (ptd->sc_first.layers[ly_back].splines);
       sp1 = SplinePointCreate (-1000, vsize);
@@ -1998,7 +1998,7 @@ PTD_RefigureBackground (GGadget *g, GEvent *e)
       ptd->sc_first.layers[ly_back].splines->next = ss;
       GDrawRequestExpose (ptd->cv_first.v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2012,7 +2012,7 @@ PTD_Cancel (GGadget *g, GEvent *e)
              container);
       PTD_DoClose (&ptd->base);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2037,20 +2037,20 @@ PTD_OK (GGadget *g, GEvent *e)
       td->repeatCnt.y =
         GetInt8 (ptd->gw, CID_YRepeat, _("Y Repeat Count"), &err);
       if (err)
-        return (true);
+        return true;
       if (td->patternSize.x <= 0 || td->patternSize.y <= 0)
         {
           ff_post_error (_("Bad Pattern Size"),
                          _
                          ("The pattern size (width & height) must be a positive number"));
-          return (true);
+          return true;
         }
       if (td->repeatCnt.x <= 0 || td->repeatCnt.y <= 0 || td->repeatCnt.x > 2000
           || td->repeatCnt.y > 2000)
         {
           ff_post_error (_("Bad Pattern Size"),
                          _("The repeat counts must be positive numbers"));
-          return (true);
+          return true;
         }
 
       td->pattern = xcalloc (1, sizeof (Layer));
@@ -2061,32 +2061,32 @@ PTD_OK (GGadget *g, GEvent *e)
       if (td->pattern->splines == NULL && td->pattern->refs == NULL)
         {
           ff_post_error (_("Bad Pattern"), _("You must specify a pattern"));
-          return (true);
+          return true;
         }
 
       PTD_DoClose (&ptd->base);
       ptd->oked = true;
     }
-  return (true);
+  return true;
 }
 
 static int
 PTD_Can_Navigate (struct cvcontainer *cvc, enum nav_type type)
 {
-  return (false);
+  return false;
 }
 
 static int
 PTD_Can_Open (struct cvcontainer *cvc)
 {
-  return (false);
+  return false;
 }
 
 static SplineFont *
 SF_Of_PTD (struct cvcontainer *cvc)
 {
   TilePathDlg *ptd = (TilePathDlg *) cvc;
-  return (ptd->base_sf);
+  return ptd->base_sf;
 }
 
 struct cvcontainer_funcs tilepattern_funcs = {
@@ -2375,7 +2375,7 @@ TilePatternAsk (struct tiledata *td, SplineFont *sf)
   release_enc_to_gid (&ptd.dummy_map);
   release_gid_to_enc (&ptd.dummy_map);
 
-  return (ptd.oked);
+  return ptd.oked;
 }
 
 static void

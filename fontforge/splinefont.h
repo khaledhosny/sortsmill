@@ -1264,7 +1264,7 @@ enc_to_gid (EncMap *map, ssize_t enc)
 inline bool
 enc_to_gid_is_set (EncMap *map, ssize_t enc)
 {
-  return (enc_to_gid (map, enc) != -1);
+  return enc_to_gid (map, enc) != -1;
 }
 
 inline enc_iter_t
@@ -1290,7 +1290,7 @@ enc_iter_last (EncMap *map)
 inline bool
 enc_done (enc_iter_t iter)
 {
-  return (iter._iter == NULL);
+  return iter._iter == NULL;
 }
 
 inline enc_iter_t
@@ -1385,7 +1385,7 @@ gid_to_enc_is_set (EncMap *map, ssize_t gid)
 {
   SCM value = scm_rbmapi_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
                               SCM_BOOL_F);
-  return (scm_is_true (value));
+  return scm_is_true (value);
 }
 
 inline gid_iter_t
@@ -1411,7 +1411,7 @@ gid_iter_last (EncMap *map)
 inline bool
 gid_done (gid_iter_t iter)
 {
-  return (iter._iter == NULL);
+  return iter._iter == NULL;
 }
 
 inline gid_iter_t

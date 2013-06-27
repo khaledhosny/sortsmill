@@ -151,7 +151,7 @@ ExecConvertDesignVector (real *designs, int dcnt, char *ndv, char *cdv,
 
   cnt = EvaluatePS (temp, stack, MmMax);
   free (temp);
-  return (cnt);
+  return cnt;
 }
 
 static int
@@ -162,9 +162,9 @@ StandardPositions (MMSet *mm, int instance_count, int axis_count)
       for (int j = 0; j < axis_count; ++j)
         if (mm->positions[i * mm->axis_count + j] !=
             ((i & (1 << j)) ? 1 : 0))
-          return (false);
+          return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -174,15 +174,15 @@ OrderedPositions (MMSet *mm, int instance_count)
   int i;
 
   if (mm->positions[0] != 0)     /* must start at 0 */
-    return (false);
+    return false;
   if (mm->positions[(instance_count - 1) * 4] != 1)     /* and end at 1 */
-    return (false);
+    return false;
   for (i = 1; i < mm->instance_count; ++i)
     if (mm->positions[i * mm->axis_count] <=
         mm->positions[(i - 1) * mm->axis_count])
-      return (false);
+      return false;
 
-  return (true);
+  return true;
 }
 
 static uint32_t *
@@ -195,7 +195,7 @@ MMDesignCoords (MMSet *mm)
 
   if (mm->instance_count != (1 << mm->axis_count) ||
       !StandardPositions (mm, mm->instance_count, mm->axis_count))
-    return (x_u8_to_u32 (""));
+    return x_u8_to_u32 ("");
   MMWeightsUnMap (mm->defweights, axiscoords, mm->axis_count);
   pt = buffer;
   for (i = 0; i < mm->axis_count; ++i)
@@ -204,7 +204,7 @@ MMDesignCoords (MMSet *mm)
       pt += strlen (pt);
     }
   pt[-1] = ' ';
-  return (x_u8_to_u32 (buffer));
+  return x_u8_to_u32 (buffer);
 }
 
 struct mmcb
@@ -235,7 +235,7 @@ MMCB_Changed (GGadget * g, GEvent * e)
       GGadgetSetEnabled (GWidgetGetControl (gw, CID_NewDesign),
                          !explicitblends);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -270,7 +270,7 @@ GetWeights (GWindow gw, real blends[MmMax], MMSet *mm,
       ff_post_error (_("Bad MM Weights"),
                      _
                      ("Incorrect number of instances weights, or illegal numbers"));
-      return (false);
+      return false;
     }
   if (explicitblends)
     {
@@ -279,7 +279,7 @@ GetWeights (GWindow gw, real blends[MmMax], MMSet *mm,
           ff_post_error (_("Bad MM Weights"),
                          _
                          ("The weights for the default version of the font must sum to 1.0"));
-          return (false);
+          return false;
         }
     }
   else
@@ -290,10 +290,10 @@ GetWeights (GWindow gw, real blends[MmMax], MMSet *mm,
           ff_post_error (_("Bad MM Weights"),
                          _
                          ("The results produced by applying the NormalizeDesignVector and ConvertDesignVector functions were not the results expected. You may need to change these functions"));
-          return (false);
+          return false;
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -307,11 +307,11 @@ MMCB_OK (GGadget * g, GEvent * e)
       if (!GetWeights
           (mmcb->gw, blends, mmcb->mm, mmcb->mm->instance_count,
            mmcb->mm->axis_count))
-        return (true);
+        return true;
       MMCreateBlendedFont (mmcb->mm, (FontViewBase *) mmcb->fv, blends,
                            mmcb->tonew);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -322,7 +322,7 @@ MMCB_Cancel (GGadget * g, GEvent * e)
       struct mmcb *mmcb = GDrawGetUserData (GGadgetGetWindow (g));
       mmcb->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -338,11 +338,11 @@ mmcb_e_h (GWindow gw, GEvent * event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("mmmenu.html");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 void
@@ -674,7 +674,7 @@ MMW_AxisCntChanged (GGadget * g, GEvent * e)
     {
       SetMasterToAxis (GDrawGetUserData (GGadgetGetWindow (g)), false);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -749,7 +749,7 @@ MMW_Cancel (GGadget * g, GEvent * e)
       MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
       MMW_Close (mmw);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -789,7 +789,7 @@ ParseWeights (GWindow gw, int cid, char *str,
           if (tabset_cid != -1)
             GTabSetSetSel (GWidgetGetControl (gw, tabset_cid), aspect);
           ff_post_error (_("Bad Axis"), _("Bad Number in %s"), str);
-          return (0);
+          return 0;
         }
       for (pt = endpt; *pt == ' '; ++pt);
     }
@@ -798,10 +798,10 @@ ParseWeights (GWindow gw, int cid, char *str,
       if (tabset_cid != -1)
         GTabSetSetSel (GWidgetGetControl (gw, tabset_cid), aspect);
       ff_post_error (_("Bad Axis"), _("Wrong number of entries in %s"), str);
-      return (0);
+      return 0;
     }
 
-  return (cnt);
+  return cnt;
 }
 
 static int
@@ -855,7 +855,7 @@ ParseList (GWindow gw, int cid, char *str8, int *err, real start,
           free (list);
           ff_post_error (_("Bad Axis"), _("Bad Number in %s"), str8);
           *err = true;
-          return (0);
+          return 0;
         }
       for (pt = endpt; *pt == ' '; ++pt);
     }
@@ -868,11 +868,11 @@ ParseList (GWindow gw, int cid, char *str8, int *err, real start,
         ff_post_error (_("Bad Axis"), _("The %s list is not ordered"), str8);
         free (list);
         *err = true;
-        return (0);
+        return 0;
       }
 
   *_list = list;
-  return (cnt);
+  return cnt;
 }
 
 static char *
@@ -911,13 +911,13 @@ _ChooseFonts (char *buffer, SplineFont **sfs, real *positions, int i, int cnt)
     }
 
   if (elsepart == NULL)
-    return (xstrdup_or_null (buffer));
+    return xstrdup_or_null (buffer);
 
   ret = xmalloc (strlen (buffer) + strlen (elsepart) + 40);
   sprintf (ret, "dup %g le {%s} {%s} ifelse", (double) positions[i + 1],
            buffer, elsepart);
   free (elsepart);
-  return (ret);
+  return ret;
 }
 
 static uint32_t *
@@ -931,21 +931,21 @@ Figure1AxisCDV (MMW * mmw)
   char buffer[400];
 
   if (mmw->axis_count != 1)
-    return (x_u8_to_u32 (""));
+    return x_u8_to_u32 ("");
   if (mmw->instance_count == 2)
-    return (x_u8_to_u32 (u8_force_valid (standard_cdvs[1])));
+    return x_u8_to_u32 (u8_force_valid (standard_cdvs[1]));
 
   for (i = 0; i < mmw->instance_count; ++i)
     {
       positions[i] = mmw->mm->positions[4 * i];
       sfs[i] = mmw->mm->instances[i];
       if (i > 0 && positions[i - 1] >= positions[i])
-        return (x_u8_to_u32 (""));
+        return x_u8_to_u32 ("");
     }
   temp = _ChooseFonts (buffer, sfs, positions, 0, mmw->instance_count);
   ret = x_u8_to_u32 (u8_force_valid (temp));
   free (temp);
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -983,13 +983,13 @@ _NormalizeAxis (char *buffer, struct axismap *axis, int i)
     }
 
   if (elsepart == NULL)
-    return (xstrdup_or_null (buffer));
+    return xstrdup_or_null (buffer);
 
   ret = xmalloc (strlen (buffer) + strlen (elsepart) + 40);
   sprintf (ret, "dup %g le {%s} {%s} ifelse", (double) axis->designs[i + 1],
            buffer, elsepart);
   free (elsepart);
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -1009,7 +1009,7 @@ NormalizeAxis (char *header, struct axismap *axis)
       free (ret);
       ret = temp;
     }
-  return (ret);
+  return ret;
 }
 
 static int
@@ -1019,22 +1019,22 @@ SameAxes (int cnt1, int cnt2, struct axismap *axismaps1,
   int i, j;
 
   if (cnt1 != cnt2)
-    return (false);
+    return false;
   for (i = 0; i < cnt1; ++i)
     {
       if (axismaps1[i].points != axismaps2[i].points)
-        return (false);
+        return false;
       for (j = 0; j < axismaps1[i].points; ++j)
         {
           if (axismaps1[i].designs[j] >= axismaps2[i].designs[j] + .01 ||
               axismaps1[i].designs[j] <= axismaps2[i].designs[j] - .01)
-            return (false);
+            return false;
           if (axismaps1[i].blends[j] >= axismaps2[i].blends[j] + .001 ||
               axismaps1[i].blends[j] <= axismaps2[i].blends[j] - .001)
-            return (false);
+            return false;
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1071,9 +1071,9 @@ PositionsMatch (MMSet *old, MMSet *mm)
       for (j = 0; j < old->axis_count; ++j)
         if (old->positions[i * old->axis_count + j] !=
             mm->positions[i * mm->axis_count + j])
-          return (false);
+          return false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1241,7 +1241,7 @@ TiFromFont (SplineFont *sf)
   ti->text = x_u8_to_u32 (u8_force_valid (sf->fontname));
   ti->fg = ti->bg = COLOR_DEFAULT;
   ti->userdata = sf;
-  return (ti);
+  return ti;
 }
 
 static GTextInfo **
@@ -1309,7 +1309,7 @@ FontList (MMW * mmw, int instance, int *sel)
   ti[pos]->selected = true;
   *sel = pos;
 
-  return (ti);
+  return ti;
 }
 
 static void
@@ -1878,7 +1878,7 @@ MMW_OK (GGadget * g, GEvent * e)
       MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
       MMW_DoOK (mmw);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1889,7 +1889,7 @@ MMW_Next (GGadget * g, GEvent * e)
       MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
       MMW_DoNext (mmw);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1907,7 +1907,7 @@ MMW_Prev (GGadget * g, GEvent * e)
           MMW_SetState (mmw);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1970,7 +1970,7 @@ MMW_CheckOptical (GGadget * g, GEvent * e)
                                           CID_AxisDefault), ut);
       free (ut);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1991,23 +1991,23 @@ MMW_CheckBrowse (GGadget * g, GEvent * e)
         {
           temp = GetFontNameDialog (NULL, false);
           if (temp == NULL)
-            return (true);
+            return true;
           sf = LoadSplineFont (temp, 0);
           if (sf == NULL)
-            return (true);
+            return true;
           if (sf->cidmaster != NULL || sf->subfonts != 0)
             {
               ff_post_error (_("Bad Multiple Master Font"),
                              _
                              ("CID keyed fonts may not be a master design of a multiple master font"));
-              return (true);
+              return true;
             }
           else if (sf->mm != NULL)
             {
               ff_post_error (_("Bad Multiple Master Font"),
                              _
                              ("CID keyed fonts may not be a master design of a multiple master font"));
-              return (true);
+              return true;
             }
           if (sf->fv == NULL)
             {
@@ -2040,7 +2040,7 @@ MMW_CheckBrowse (GGadget * g, GEvent * e)
           free (ut);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2051,23 +2051,23 @@ mmwsub_e_h (GWindow gw, GEvent * event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("multiplemaster.html");
-          return (true);
+          return true;
         }
       else if (event->u.chr.keysym == 'q'
                && (event->u.chr.state & ksm_control))
         {
           if (event->u.chr.state & ksm_shift)
             MMW_Close (GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
       else if (event->u.chr.chars[0] == '\r')
         {
           MMW_SimulateDefaultButton ((MMW *) GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2083,7 +2083,7 @@ mmw_e_h (GWindow gw, GEvent * event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("multiplemaster.html");
-          return (true);
+          return true;
         }
       else if (event->u.chr.keysym == 'q'
                && (event->u.chr.state & ksm_control))
@@ -2092,16 +2092,16 @@ mmw_e_h (GWindow gw, GEvent * event)
             MMW_Close (GDrawGetUserData (gw));
           else
             MenuExit (NULL, NULL, NULL);
-          return (true);
+          return true;
         }
       else if (event->u.chr.chars[0] == '\r')
         {
           MMW_SimulateDefaultButton ((MMW *) GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static MMSet *
@@ -2146,7 +2146,7 @@ MMCopy (MMSet *orig)
     }
   mm->cdv = xstrdup_or_null (orig->cdv);
   mm->ndv = xstrdup_or_null (orig->ndv);
-  return (mm);
+  return mm;
 }
 
 void

@@ -94,10 +94,10 @@ SupportedLocale (char *fullspec, char *locale)
         {
           strcat (fullspec, locale);
           strcat (fullspec, "/");
-          return (true);
+          return true;
         }
     }
-  return (false);
+  return false;
 }
 
 // FIXME: Are these docs maintained?
@@ -320,9 +320,9 @@ ErrChar (GEvent *e)
       errdata.offtop = newpos;
       GScrollBarSetPos (errdata.vsb, errdata.offtop);
       GDrawRequestExpose (errdata.v, NULL, false);
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -332,13 +332,13 @@ warnings_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown) &&
       (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (errdata.vsb, event));
+      return GGadgetDispatchEvent (errdata.vsb, event);
     }
 
   switch (event->type)
     {
     case et_char:
-      return (ErrChar (event));
+      return ErrChar (event);
       break;
     case et_expose:
       break;
@@ -378,7 +378,7 @@ warnings_e_h (GWindow gw, GEvent *event)
     case et_destroy:
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -405,14 +405,14 @@ genutf8data (void *_ed, int32_t *len)
   if (s_l == -1)
     {
       *len = 0;
-      return (xstrdup (""));
+      return xstrdup ("");
     }
 
   l = s_l;
   if (e_l == l)
     {
       *len = e_c - s_c;
-      return (xstrndup_or_null (errdata.errlines[l] + s_c, e_c - s_c));
+      return xstrndup_or_null (errdata.errlines[l] + s_c, e_c - s_c);
     }
 
   cnt = strlen (errdata.errlines[l] + s_c) + 1;
@@ -432,7 +432,7 @@ genutf8data (void *_ed, int32_t *len)
     }
   strncpy (pt, errdata.errlines[l], e_c);
   *len = cnt;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -551,7 +551,7 @@ warningsv_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown) &&
       (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (errdata.vsb, event));
+      return GGadgetDispatchEvent (errdata.vsb, event);
     }
 
   switch (event->type)
@@ -604,7 +604,7 @@ warningsv_e_h (GWindow gw, GEvent *event)
         }
       break;
     case et_char:
-      return (ErrChar (event));
+      return ErrChar (event);
       break;
     case et_mousedown:
       if (event->u.mouse.button == 3)
@@ -616,14 +616,14 @@ warningsv_e_h (GWindow gw, GEvent *event)
       else
         {
           if (errdata.down)
-            return (true);
+            return true;
           MouseToPos (event, &errdata.start_l, &errdata.start_c);
           errdata.down = true;
         }
     case et_mousemove:
     case et_mouseup:
       if (!errdata.down)
-        return (true);
+        return true;
       MouseToPos (event, &errdata.end_l, &errdata.end_c);
       GDrawRequestExpose (gw, NULL, false);
       if (event->type == et_mouseup)
@@ -653,7 +653,7 @@ warningsv_e_h (GWindow gw, GEvent *event)
     case et_focus:
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -760,7 +760,7 @@ AppendToErrorWindow (char *buffer)
 int
 ErrorWindowExists (void)
 {
-  return (errdata.gw != NULL);
+  return errdata.gw != NULL;
 }
 
 void
@@ -864,14 +864,14 @@ static char *
 UI_open_file (const char *title, const char *defaultfile,
               const char *initial_filter)
 {
-  return (gwwv_open_filename (title, defaultfile, initial_filter, NULL));
+  return gwwv_open_filename (title, defaultfile, initial_filter, NULL);
 }
 
 static char *
 UI_saveas_file (const char *title, const char *defaultfile,
                 const char *initial_filter)
 {
-  return (gwwv_save_filename (title, defaultfile, initial_filter));
+  return gwwv_save_filename (title, defaultfile, initial_filter);
 }
 
 static void

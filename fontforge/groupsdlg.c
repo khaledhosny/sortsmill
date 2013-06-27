@@ -118,9 +118,9 @@ GroupFindLPos (Group * group, int lpos, int *depth)
   while (true)
     {
       if (group->lpos == lpos)
-        return (group);
+        return group;
       if (!group->open)
-        return (NULL);
+        return NULL;
       for (i = 0; i < group->kid_cnt - 1; ++i)
         {
           if (lpos < group->kids[i + 1]->lpos)
@@ -138,12 +138,12 @@ GroupPosInParent (Group * group)
   int i;
 
   if (parent == NULL)
-    return (0);
+    return 0;
   for (i = 0; i < parent->kid_cnt; ++i)
     if (parent->kids[i] == group)
-      return (i);
+      return i;
 
-  return (-1);
+  return -1;
 }
 
 static Group *
@@ -152,16 +152,16 @@ GroupNext (Group * group, int *depth)
   if (group->open && group->kids)
     {
       ++*depth;
-      return (group->kids[0]);
+      return group->kids[0];
     }
   while (true)
     {
       int pos;
       if (group->parent == NULL)
-        return (NULL);
+        return NULL;
       pos = GroupPosInParent (group);
       if (pos + 1 < group->parent->kid_cnt)
-        return (group->parent->kids[pos + 1]);
+        return group->parent->kids[pos + 1];
       group = group->parent;
       --*depth;
     }
@@ -178,7 +178,7 @@ GroupPrev (struct groupdlg *grp, Group * group, int *depth)
       --*depth;
     }
   if (group->parent == NULL)
-    return (NULL);
+    return NULL;
   pos = GroupPosInParent (group);
   group = group->parent->kids[pos - 1];
   while (group->open)
@@ -186,7 +186,7 @@ GroupPrev (struct groupdlg *grp, Group * group, int *depth)
       group = group->kids[group->kid_cnt - 1];
       ++*depth;
     }
-  return (group);
+  return group;
 }
 
 static int
@@ -208,7 +208,7 @@ _GroupSBSizes (struct groupdlg *grp, Group * group, int lpos, int depth)
       for (i = 0; i < group->kid_cnt; ++i)
         lpos = _GroupSBSizes (grp, group->kids[i], lpos, depth + 1);
     }
-  return (lpos);
+  return lpos;
 }
 
 static int
@@ -224,7 +224,7 @@ GroupSBSizes (struct groupdlg *grp)
   GScrollBarSetBounds (grp->vsb, 0, lpos, grp->lines_page);
   GScrollBarSetBounds (grp->hsb, 0, grp->maxl, grp->page_width);
   grp->open_cnt = lpos;
-  return (lpos);
+  return lpos;
 }
 
 static void
@@ -255,14 +255,14 @@ _GroupCurrentlySelected (Group * group)
   Group *sel;
 
   if (group->selected)
-    return (group);
+    return group;
   for (i = 0; i < group->kid_cnt; ++i)
     {
       sel = _GroupCurrentlySelected (group->kids[i]);
       if (sel != NULL)
-        return (sel);
+        return sel;
     }
-  return (NULL);
+  return NULL;
 }
 
 static Group *
@@ -270,8 +270,8 @@ GroupCurrentlySelected (struct groupdlg *grp)
 {
 
   if (grp->select_many)
-    return (NULL);
-  return (_GroupCurrentlySelected (grp->root));
+    return NULL;
+  return _GroupCurrentlySelected (grp->root);
 }
 
 static void
@@ -536,7 +536,7 @@ GroupChar (struct groupdlg *grp, GEvent *event)
     case GK_F1:
     case GK_Help:
       help ("groups.html");
-      return (true);
+      return true;
     case GK_Return:
     case GK_KP_Enter:
       if (current != NULL)
@@ -545,7 +545,7 @@ GroupChar (struct groupdlg *grp, GEvent *event)
           GroupSBSizes (grp);
           GDrawRequestExpose (grp->v, NULL, false);
         }
-      return (true);
+      return true;
     case GK_Page_Down:
     case GK_KP_Page_Down:
       pos = grp->off_top + (grp->lines_page <= 1 ? 1 : grp->lines_page - 1);
@@ -556,7 +556,7 @@ GroupChar (struct groupdlg *grp, GEvent *event)
       grp->off_top = pos;
       GScrollBarSetPos (grp->vsb, pos);
       GDrawRequestExpose (grp->v, NULL, false);
-      return (true);
+      return true;
     case GK_Down:
     case GK_KP_Down:
       if (current == NULL || (event->u.chr.state & ksm_control))
@@ -570,7 +570,7 @@ GroupChar (struct groupdlg *grp, GEvent *event)
         }
       else
         GroupWChangeCurrent (grp, current, GroupNext (current, &depth));
-      return (true);
+      return true;
     case GK_Up:
     case GK_KP_Up:
       if (current == NULL || (event->u.chr.state & ksm_control))
@@ -584,7 +584,7 @@ GroupChar (struct groupdlg *grp, GEvent *event)
         }
       else
         GroupWChangeCurrent (grp, current, GroupPrev (grp, current, &depth));
-      return (true);
+      return true;
     case GK_Page_Up:
     case GK_KP_Page_Up:
       pos = grp->off_top - (grp->lines_page <= 1 ? 1 : grp->lines_page - 1);
@@ -593,12 +593,12 @@ GroupChar (struct groupdlg *grp, GEvent *event)
       grp->off_top = pos;
       GScrollBarSetPos (grp->vsb, pos);
       GDrawRequestExpose (grp->v, NULL, false);
-      return (true);
+      return true;
     case GK_Left:
     case GK_KP_Left:
       if (!grp->select_many && current != NULL)
         GroupWChangeCurrent (grp, current, current->parent);
-      return (true);
+      return true;
     case GK_Right:
     case GK_KP_Right:
       if (!grp->select_many && current != NULL && current->kid_cnt != 0)
@@ -610,7 +610,7 @@ GroupChar (struct groupdlg *grp, GEvent *event)
             }
           GroupWChangeCurrent (grp, current, current->kids[0]);
         }
-      return (true);
+      return true;
     case GK_Home:
     case GK_KP_Home:
       if (grp->off_top != 0)
@@ -621,7 +621,7 @@ GroupChar (struct groupdlg *grp, GEvent *event)
         }
       if (!grp->select_many)
         GroupWChangeCurrent (grp, current, grp->root);
-      return (true);
+      return true;
     case GK_End:
     case GK_KP_End:
       pos = grp->open_cnt - grp->lines_page;
@@ -637,9 +637,9 @@ GroupChar (struct groupdlg *grp, GEvent *event)
         GroupWChangeCurrent (grp, current,
                              GroupFindLPos (grp->root, grp->open_cnt - 1,
                                             &depth));
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -650,7 +650,7 @@ grpv_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown) &&
       (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (grp->vsb, event));
+      return GGadgetDispatchEvent (grp->vsb, event);
     }
 
   switch (event->type)
@@ -659,12 +659,12 @@ grpv_e_h (GWindow gw, GEvent *event)
       GroupWExpose (grp, gw, &event->u.expose.rect);
       break;
     case et_char:
-      return (GroupChar (grp, event));
+      return GroupChar (grp, event);
     case et_mouseup:
       GroupWMouse (grp, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -733,7 +733,7 @@ FindDuplicateNumberInString (int seek, char *str)
   char *start;
 
   if (str == NULL)
-    return (false);
+    return false;
 
   while (*str != '\0')
     {
@@ -755,10 +755,10 @@ FindDuplicateNumberInString (int seek, char *str)
               val2 = strtol (end + 1, NULL, 16);
             }
           if (seek >= val && seek <= val2)
-            return (true);
+            return true;
         }
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -767,7 +767,7 @@ FindDuplicateNameInString (char *name, char *str)
   char *start;
 
   if (str == NULL)
-    return (false);
+    return false;
 
   while (*str != '\0')
     {
@@ -787,12 +787,12 @@ FindDuplicateNameInString (char *name, char *str)
           if (strcmp (name, start) == 0)
             {
               *str = ch;
-              return (true);
+              return true;
             }
           *str = ch;
         }
     }
-  return (false);
+  return false;
 }
 
 static Group *
@@ -802,16 +802,16 @@ FindDuplicateNumber (Group * top, int val, Group * cur, char *str)
   Group *grp;
 
   if (FindDuplicateNumberInString (val, str))
-    return (cur);
+    return cur;
   if (top == cur)
-    return (NULL);
+    return NULL;
   if (FindDuplicateNumberInString (val, top->glyphs))
-    return (top);
+    return top;
   for (i = 0; i < top->kid_cnt; ++i)
     if ((grp = FindDuplicateNumber (top->kids[i], val, cur, NULL)) != NULL)
-      return (grp);
+      return grp;
 
-  return (NULL);
+  return NULL;
 }
 
 static Group *
@@ -821,16 +821,16 @@ FindDuplicateName (Group * top, char *name, Group * cur, char *str)
   Group *grp;
 
   if (FindDuplicateNameInString (name, str))
-    return (cur);
+    return cur;
   if (top == cur)
-    return (NULL);
+    return NULL;
   if (FindDuplicateNameInString (name, top->glyphs))
-    return (top);
+    return top;
   for (i = 0; i < top->kid_cnt; ++i)
     if ((grp = FindDuplicateName (top->kids[i], name, cur, NULL)) != NULL)
-      return (grp);
+      return grp;
 
-  return (NULL);
+  return NULL;
 }
 
 static int
@@ -849,7 +849,7 @@ GroupValidateGlyphs (Group * cur, char *g, const uint32_t *gu, int unique)
             {
               ff_post_error (_("Glyph names must be valid postscript names"),
                              _("Glyph names must be valid postscript names"));
-              return (false);
+              return false;
             }
         }
     }
@@ -883,7 +883,7 @@ GroupValidateGlyphs (Group * cur, char *g, const uint32_t *gu, int unique)
                                  _
                                  ("Bad Range, start (%1$04X) is greater than end (%2$04X)"),
                                  val, val2);
-                  return (false);
+                  return false;
                 }
               for (; val <= val2; ++val)
                 if ((grp = FindDuplicateNumber (top, val, cur, gpt)) != NULL)
@@ -892,7 +892,7 @@ GroupValidateGlyphs (Group * cur, char *g, const uint32_t *gu, int unique)
                                    _
                                    ("The code point U+%1$04X occurs in groups %2$.30s and %3$.30s"),
                                    val, cur->name, grp->name);
-                    return (false);
+                    return false;
                   }
             }
           else
@@ -908,13 +908,13 @@ GroupValidateGlyphs (Group * cur, char *g, const uint32_t *gu, int unique)
                                  ("The glyph name \"%1$.30s\" occurs in groups %2$.30s and %3$.30s"),
                                  start, cur->name, grp->name);
                   *gpt = ch;
-                  return (false);
+                  return false;
                 }
               *gpt = ch;
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -925,13 +925,13 @@ GroupSetKidsUnique (Group * group)
   group->unique = true;
   for (i = 0; i < group->kid_cnt; ++i)
     if (!GroupSetKidsUnique (group->kids[i]))
-      return (false);
+      return false;
   if (group->glyphs != NULL)
     {
       if (!GroupValidateGlyphs (group, group->glyphs, NULL, true))
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -947,7 +947,7 @@ GroupFinishOld (struct groupdlg *grp)
           (grp->oldsel, g, gu, GGadgetIsChecked (grp->unique)))
         {
           free (g);
-          return (false);
+          return false;
         }
 
       free (grp->oldsel->name);
@@ -967,10 +967,10 @@ GroupFinishOld (struct groupdlg *grp)
           /* The just set the unique bit. We must force it set in all */
           /*  kids. We really should check for uniqueness too!!!!! */
           if (!GroupSetKidsUnique (grp->oldsel))
-            return (false);
+            return false;
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1044,7 +1044,7 @@ Group_GlyphListChanged (GGadget *g, GEvent *e)
         GDrawCancelTimer (grp->showchange);
       grp->showchange = GDrawRequestTimer (grp->gw, 500, 0, NULL);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1119,7 +1119,7 @@ Group_ToSelection (GGadget *g, GEvent *e)
         FVScrollToChar (fv, found);
       GDrawRequestExpose (fv->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1222,7 +1222,7 @@ Group_FromSelection (GGadget *g, GEvent *e)
       GGadgetSetTitle (grp->glyphs, vals);
       free (vals);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1270,7 +1270,7 @@ Group_AddColor (GGadget *g, GEvent *e)
         }
       GGadgetSelectOneListItem (g, 0);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1281,14 +1281,14 @@ Group_NewSubGroup (GGadget *g, GEvent *e)
       struct groupdlg *grp = GDrawGetUserData (GGadgetGetWindow (g));
       Group *new_grp;
       if (!GroupFinishOld (grp))
-        return (true);
+        return true;
       GDrawRequestExpose (grp->v, NULL, false);
       if (grp->oldsel == NULL)
-        return (true);
+        return true;
       if (grp->oldsel->glyphs != NULL && grp->oldsel->glyphs != '\0')
         {
           GGadgetSetEnabled (grp->newsub, false);
-          return (true);
+          return true;
         }
       grp->oldsel->kids =
         xrealloc (grp->oldsel->kids,
@@ -1305,7 +1305,7 @@ Group_NewSubGroup (GGadget *g, GEvent *e)
       GroupSelected (grp);
       GDrawRequestExpose (grp->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1317,11 +1317,11 @@ Group_Delete (GGadget *g, GEvent *e)
       Group *parent;
       int pos, i;
       if (grp->oldsel == NULL || grp->oldsel->parent == NULL)
-        return (true);
+        return true;
       parent = grp->oldsel->parent;
       pos = GroupPosInParent (grp->oldsel);
       if (pos == -1)
-        return (true);
+        return true;
       for (i = pos; i < parent->kid_cnt - 1; ++i)
         parent->kids[i] = parent->kids[i + 1];
       --parent->kid_cnt;
@@ -1331,7 +1331,7 @@ Group_Delete (GGadget *g, GEvent *e)
       GroupSelected (grp);
       GDrawRequestExpose (grp->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1342,18 +1342,18 @@ displaygrp_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown) &&
       (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (grp->vsb, event));
+      return GGadgetDispatchEvent (grp->vsb, event);
     }
 
   if (grp == NULL)
-    return (true);
+    return true;
 
   switch (event->type)
     {
     case et_expose:
       break;
     case et_char:
-      return (GroupChar (grp, event));
+      return GroupChar (grp, event);
       break;
     case et_timer:
       GroupShowChange (grp);
@@ -1383,7 +1383,7 @@ displaygrp_e_h (GWindow gw, GEvent *event)
     case et_destroy:
       if (grp->newsub != NULL)
         free (grp);
-      return (true);
+      return true;
     }
   if (grp->done && grp->newsub != NULL)
     {
@@ -1392,7 +1392,7 @@ displaygrp_e_h (GWindow gw, GEvent *event)
           if (!GroupFinishOld (grp))
             {
               grp->done = grp->oked = false;
-              return (true);
+              return true;
             }
           GroupFree (group_root);
           if (grp->root->kid_cnt == 0 && grp->root->glyphs == NULL)
@@ -1408,7 +1408,7 @@ displaygrp_e_h (GWindow gw, GEvent *event)
         GroupFree (grp->root);
       GDrawDestroyWindow (grp->gw);
     }
-  return (true);
+  return true;
 }
 
 void
@@ -1762,7 +1762,7 @@ MapAddSelectedGroups (EncMap *map, SplineFont *sf, Group * group, int compacted)
         }
       ++cnt;
     }
-  return (cnt);
+  return cnt;
 }
 
 static int
@@ -1783,7 +1783,7 @@ GroupSelCnt (Group * group, Group ** first, Group ** second)
         *second = group;
       ++cnt;
     }
-  return (cnt);
+  return cnt;
 }
 
 static char *
@@ -1797,7 +1797,7 @@ EncNameFromGroups (Group * group)
   switch (cnt)
     {
     case 0:
-      return (xstrdup_or_null (_("No Groups")));
+      return xstrdup_or_null (_("No Groups"));
     case 1:
       ret = xmalloc (strlen (prefix) + strlen (first->name) + 3);
       sprintf (ret, "%s: %s", prefix, first->name);
@@ -1815,7 +1815,7 @@ EncNameFromGroups (Group * group)
       sprintf (ret, "%s: %s, %s ...", prefix, first->name, second->name);
       break;
     }
-  return (ret);
+  return ret;
 }
 
 static void

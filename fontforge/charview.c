@@ -2484,7 +2484,7 @@ APinSC (AnchorPoint *ap, SplineChar *sc)
   AnchorPoint *test;
 
   for (test = sc->anchor; test != NULL && test != ap; test = test->next);
-  return (test == ap);
+  return test == ap;
 }
 
 static void
@@ -2830,7 +2830,7 @@ CVExposeGlyphFill (CharView *cv, GWindow pixmap, GEvent *event, DRect *clip)
           filled = 1;
         }
     }
-  return (filled);
+  return filled;
 }
 
 static void
@@ -3508,14 +3508,14 @@ CharIcon (CharView *cv, FontView *fv)
       GDrawDrawText (icon, (r.width - width) / 2,
                      (r.height - as - ds) / 2 + as, text, 1, 0xffffff);
     }
-  return (icon);
+  return icon;
 }
 
 static int
 CVCurEnc (CharView *cv)
 {
   if (cv->map_of_enc == ((FontView *) (cv->b.fv))->b.map && cv->enc != -1)
-    return (cv->enc);
+    return cv->enc;
 
   return gid_to_enc (((FontView *) (cv->b.fv))->b.map, cv->b.sc->orig_pos);
 }
@@ -3549,7 +3549,7 @@ CVMakeTitles (CharView *cv, char *buf)
   if (cv->show_ft_results || cv->dv)
     sprintf (buf + strlen (buf), " (%gpt, %ddpi)", (double) cv->ft_pointsizey,
              cv->ft_dpi);
-  return (title);
+  return title;
 }
 
 static void
@@ -3807,12 +3807,12 @@ CVChangeToFormer (GGadget *g, GEvent *e)
             }
         }
       if (gid < 0)
-        return (true);
+        return true;
       CVChangeSC (cv, sf->glyphs[gid]);
       cv->enc = gid_to_enc (((FontView *) (cv->b.fv))->b.map,
                             cv->b.sc->orig_pos);
     }
-  return (true);
+  return true;
 }
 
 //static void CVClear (GWindow, GMenuItem * mi, GEvent *);
@@ -4151,9 +4151,9 @@ CheckSpiroPoint (FindSel *fs, spiro_cp *cp, SplineSet *spl, int index)
       fs->p->anysel = true;
       fs->p->spl = spl;
       fs->p->spiro_index = index;
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -4168,7 +4168,7 @@ CheckPoint (FindSel *fs, SplinePoint *sp, SplineSet *spl)
       fs->p->anysel = true;
       fs->p->spl = spl;
       if (!fs->seek_controls)
-        return (true);
+        return true;
     }
   if ((sp->selected && fs->select_controls) || fs->all_controls)
     {
@@ -4200,7 +4200,7 @@ CheckPoint (FindSel *fs, SplinePoint *sp, SplineSet *spl)
               fs->p->cp.y = sp->me.y + (sp->me.y - sp->prevcp.y);
             }
           sp->selected = true;
-          return (true);
+          return true;
         }
       else if (selp)
         {
@@ -4217,10 +4217,10 @@ CheckPoint (FindSel *fs, SplinePoint *sp, SplineSet *spl)
               fs->p->cp.y = sp->me.y + (sp->me.y - sp->nextcp.y);
             }
           sp->selected = true;
-          return (true);
+          return true;
         }
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -4229,7 +4229,7 @@ CheckSpline (FindSel *fs, Spline *spline, SplineSet *spl)
 
   /* Anything else is better than a spline */
   if (fs->p->anysel)
-    return (false);
+    return false;
 
   if (NearSpline (fs, spline))
     {
@@ -4237,11 +4237,11 @@ CheckSpline (FindSel *fs, Spline *spline, SplineSet *spl)
       fs->p->spl = spl;
       fs->p->anysel = true;
       fs->p->spiro_index = SplineT2SpiroIndex (spline, fs->p->t, spl);
-      return (false /*true */ );        /* Check if there's a point where we are first */
+      return false /*true */ ;        /* Check if there's a point where we are first */
       /* if there is use it, if not (because anysel is true) we'll fall back */
       /* here */
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -4253,11 +4253,11 @@ InImage (FindSel *fs, ImageList *img)
   y = floor ((img->yoff - fs->p->cy) / img->yscale);
   if (x < 0 || y < 0 || x >= GImageGetWidth (img->image)
       || y >= GImageGetHeight (img->image))
-    return (false);
+    return false;
   if (GImageGetPixelRGBA (img->image, x, y) < 0x80000000)       /* Transparent(ish) */
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -4273,13 +4273,13 @@ InSplineSet (FindSel *fs, SplinePointList *set, int inspiro)
         {
           for (i = 0; i < spl->spiro_cnt - 1; ++i)
             if (CheckSpiroPoint (fs, &spl->spiros[i], spl, i))
-              return (true);
+              return true;
           first = NULL;
           for (spline = spl->first->next; spline != NULL && spline != first;
                spline = spline->to->next)
             {
               if (CheckSpline (fs, spline, spl), fs->p->anysel)
-                return (true);
+                return true;
               if (first == NULL)
                 first = spline;
             }
@@ -4289,7 +4289,7 @@ InSplineSet (FindSel *fs, SplinePointList *set, int inspiro)
           if (CheckPoint (fs, spl->first, spl)
               && (!fs->seek_controls || fs->p->nextcp || fs->p->prevcp))
             {
-              return (true);
+              return true;
             }
           first = NULL;
           for (spline = spl->first->next; spline != NULL && spline != first;
@@ -4299,14 +4299,14 @@ InSplineSet (FindSel *fs, SplinePointList *set, int inspiro)
                    && (!fs->seek_controls || fs->p->nextcp || fs->p->prevcp))
                   || (CheckSpline (fs, spline, spl) && !fs->seek_controls))
                 {
-                  return (true);
+                  return true;
                 }
               if (first == NULL)
                 first = spline;
             }
         }
     }
-  return (fs->p->anysel);
+  return fs->p->anysel;
 }
 
 static int
@@ -4322,13 +4322,13 @@ NearSplineSetPoints (FindSel *fs, SplinePointList *set, int inspiro)
         {
           for (i = 0; i < spl->spiro_cnt; ++i)
             if (CheckSpiroPoint (fs, &spl->spiros[i], spl, i))
-              return (true);
+              return true;
         }
       else
         {
           if (CheckPoint (fs, spl->first, spl))
             {
-              return (true);
+              return true;
             }
           first = NULL;
           for (spline = spl->first->next; spline != NULL && spline != first;
@@ -4336,14 +4336,14 @@ NearSplineSetPoints (FindSel *fs, SplinePointList *set, int inspiro)
             {
               if (CheckPoint (fs, spline->to, spl))
                 {
-                  return (true);
+                  return true;
                 }
               if (first == NULL)
                 first = spline;
             }
         }
     }
-  return (fs->p->anysel);
+  return fs->p->anysel;
 }
 
 static void
@@ -4405,7 +4405,7 @@ CVConstrainedMouseDown (CharView *cv, GEvent *event, GEvent *fake)
   int sign;
 
   if (!CVAnySelPoint (cv, &base, &basecp))
-    return (event);
+    return event;
 
   if (base != NULL)
     {
@@ -4464,7 +4464,7 @@ CVConstrainedMouseDown (CharView *cv, GEvent *event, GEvent *fake)
       cv->p.cy = basetruey - sign * (cv->p.cx - basetruex);
     }
 
-  return (fake);
+  return fake;
 }
 
 static void
@@ -4596,7 +4596,7 @@ _CVTestSelectFromEvent (CharView *cv, FindSel *fs)
             }
         }
     }
-  return (cv->p.anysel);
+  return cv->p.anysel;
 }
 
 int
@@ -4605,7 +4605,7 @@ CVTestSelectFromEvent (CharView *cv, GEvent *event)
   FindSel fs;
 
   SetFS (&fs, &cv->p, cv, event);
-  return (_CVTestSelectFromEvent (cv, &fs));
+  return _CVTestSelectFromEvent (cv, &fs);
 }
 
 static void
@@ -5584,9 +5584,9 @@ v_e_h (GWindow gw, GEvent *event)
           if (event->u.mouse.state & ksm_shift)
             ish = !ish;
           if (ish)              /* bind shift to vertical scrolling */
-            return (GGadgetDispatchEvent (cv->hsb, event));
+            return GGadgetDispatchEvent (cv->hsb, event);
           else
-            return (GGadgetDispatchEvent (cv->vsb, event));
+            return GGadgetDispatchEvent (cv->vsb, event);
         }
     }
 
@@ -5638,7 +5638,7 @@ v_e_h (GWindow gw, GEvent *event)
         }
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -6205,9 +6205,9 @@ cv_e_h (GWindow gw, GEvent *event)
       if (event->u.mouse.state & ksm_shift)
         ish = !ish;
       if (ish)                  /* bind shift to vertical scrolling */
-        return (GGadgetDispatchEvent (cv->hsb, event));
+        return GGadgetDispatchEvent (cv->hsb, event);
       else
-        return (GGadgetDispatchEvent (cv->vsb, event));
+        return GGadgetDispatchEvent (cv->vsb, event);
     }
 
   switch (event->type)
@@ -6348,7 +6348,7 @@ cv_e_h (GWindow gw, GEvent *event)
         }
       break;
     }
-  return (true);
+  return true;
 }
 
 #define MID_Fit		2001
@@ -7532,13 +7532,13 @@ GlyphsMatchingAP (SplineFont *sf, AnchorPoint *ap)
       if (!k)
         {
           if (gcnt == 0)
-            return (NULL);
+            return NULL;
           glyphs = xmalloc ((gcnt + 1) * sizeof (SplineChar *));
         }
       else
         glyphs[gcnt] = NULL;
     }
-  return (glyphs);
+  return glyphs;
 }
 
 static void
@@ -9299,9 +9299,9 @@ getorigin (void *d, BasePoint *base, int index)
       /*  hasn't they'll just get a 0,0 origin. oh well */
       break;
     default:
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -9917,12 +9917,12 @@ SPLSelected (SplineSet *ss)
   for (sp = ss->first;;)
     {
       if (sp->selected)
-        return (true);
+        return true;
       if (sp->next == NULL)
-        return (false);
+        return false;
       sp = sp->next->to;
       if (sp == ss->first)
-        return (false);
+        return false;
     }
 }
 
@@ -10181,12 +10181,12 @@ IOSA_OK (GGadget *g, GEvent *e)
           which = 1;
         }
       if (err)
-        return (true);
+        return true;
       if (CubicSolve (&iosa->s->splines[which], val, ts) == 0)
         {
           ff_post_error (_("Out of Range"), _("The spline does not reach %g"),
                          (double) val);
-          return (true);
+          return true;
         }
       iosa->done = true;
       CVPreserveState (&iosa->cv->b);
@@ -10213,18 +10213,18 @@ IOSA_OK (GGadget *g, GEvent *e)
           if (ts[1] == -1)
             {
               CVCharChangedUpdate (&iosa->cv->b);
-              return (true);
+              return true;
             }
           iosa->s = sp->next;
           if (CubicSolve (&iosa->s->splines[which], val, ts) == 0)
             {
               /* Odd. We found one earlier */
               CVCharChangedUpdate (&iosa->cv->b);
-              return (true);
+              return true;
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -10235,7 +10235,7 @@ IOSA_Cancel (GGadget *g, GEvent *e)
       struct insertonsplineat *iosa = GDrawGetUserData (GGadgetGetWindow (g));
       iosa->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -10247,7 +10247,7 @@ IOSA_FocusChange (GGadget *g, GEvent *e)
       int cid = (intptr_t) GGadgetGetUserData (g);
       GGadgetSetChecked (GWidgetGetControl (iosa->gw, cid), true);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -10260,7 +10260,7 @@ IOSA_RadioChange (GGadget *g, GEvent *e)
       GWidgetIndicateFocusGadget (GWidgetGetControl (iosa->gw, cid));
       GTextFieldSelect (GWidgetGetControl (iosa->gw, cid), 0, -1);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -10273,14 +10273,14 @@ iosa_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_map)
     {
       /* Above palettes */
       GDrawRaise (gw);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -11194,7 +11194,7 @@ CVNumForePointsSelected (CharView *cv, BasePoint **bp)
   int i, cnt;
 
   if (cv->b.drawmode != dm_fore)
-    return (0);
+    return 0;
   cnt = 0;
   for (spl = cv->b.sc->layers[ly_fore].splines; spl != NULL; spl = spl->next)
     {
@@ -11205,7 +11205,7 @@ CVNumForePointsSelected (CharView *cv, BasePoint **bp)
             {
               bps[cnt++] = &(test->me);
               if (cnt > 4)
-                return (0);
+                return 0;
             }
           if (first == NULL)
             first = test;
@@ -11217,7 +11217,7 @@ CVNumForePointsSelected (CharView *cv, BasePoint **bp)
     {
       bp[i] = bps[i];
     }
-  return (cnt);
+  return cnt;
 }
 
 VISIBLE void
@@ -16770,7 +16770,7 @@ CharViewCreate (SplineChar *sc, FontView *fv, int enc)
   GGadgetTakesKeyboard (cv->tabs, false);
 
   _CharViewCreate (cv, sc, fv, enc);
-  return (cv);
+  return cv;
 }
 
 void
@@ -16814,17 +16814,17 @@ CVValid (SplineFont *sf, SplineChar *sc, CharView *cv)
   CharView *test;
 
   if (cv->b.sc != sc || sc->parent != sf)
-    return (false);
+    return false;
   if (sc->orig_pos < 0 || sc->orig_pos > sf->glyphcnt)
-    return (false);
+    return false;
   if (sf->glyphs[sc->orig_pos] != sc)
-    return (false);
+    return false;
   for (test = (CharView *) (sc->views); test != NULL;
        test = (CharView *) (test->b.next))
     if (test == cv)
-      return (true);
+      return true;
 
-  return (false);
+  return false;
 }
 
 static void
@@ -16887,7 +16887,7 @@ nested_cv_e_h (GWindow gw, GEvent *event)
       CVPaletteActivate (cv);
       break;
     }
-  return (true);
+  return true;
 }
 
 void

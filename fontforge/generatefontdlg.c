@@ -301,9 +301,9 @@ ParseBitmapSizes (GGadget *g, char *msg, int *err)
     }
   setlocale (LC_NUMERIC, oldloc);
   if (*err)
-    return (NULL);
+    return NULL;
   sizes[i] = 0;
-  return (sizes);
+  return sizes;
 }
 
 static int
@@ -331,7 +331,7 @@ OPT_PSHints (GGadget *g, GEvent *e)
           GGadgetSetChecked (GWidgetGetControl (gw, CID_PS_Flex), false);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -343,7 +343,7 @@ OPT_Applemode (GGadget *g, GEvent *e)
       if (GGadgetIsChecked (g))
         GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_OldKern), false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -355,7 +355,7 @@ OPT_OldKern (GGadget *g, GEvent *e)
       if (GGadgetIsChecked (g))
         GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_AppleMode), false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -371,9 +371,9 @@ sod_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("generate.html#Options");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_controlevent
            && event->u.control.subtype == et_buttonactivate)
@@ -508,7 +508,7 @@ sod_e_h (GWindow gw, GEvent *event)
         }
       d->sod_done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1179,7 +1179,7 @@ br_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_map)
     {
@@ -1201,7 +1201,7 @@ br_e_h (GWindow gw, GEvent *event)
     {
       GGadgetSetChecked (GWidgetGetControl (gw, 1004), true);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1221,7 +1221,7 @@ AskResolution (int bf, BDFFont *bdf)
     def_res = bdf->res;
 
   if (no_windowing_ui)
-    return (-1);
+    return -1;
 
   gw = bf == bf_bdf ? bdf_gw : fon_gw;
   if (gw == NULL)
@@ -1420,19 +1420,19 @@ AskResolution (int bf, BDFFont *bdf)
           else if (!err)
             {
               GDrawSetVisible (gw, false);
-              return (res);
+              return res;
             }
           continue;
         }
       GDrawSetVisible (gw, false);
       if (done == -1)
-        return (-2);
+        return -2;
       if (GGadgetIsChecked (GWidgetGetControl (gw, 75)))
-        return (bf == bf_bdf ? 75 : 96);
+        return bf == bf_bdf ? 75 : 96;
       if (GGadgetIsChecked (GWidgetGetControl (gw, 100)))
-        return (bf == bf_bdf ? 100 : 120);
+        return bf == bf_bdf ? 100 : 120;
       /*if ( GGadgetIsChecked(GWidgetGetControl(gw,-1)) ) */
-      return (-1);
+      return -1;
     }
 }
 
@@ -1444,22 +1444,22 @@ SearchDirForWernerFile (char *dir, char *filename)
   int good = false;
 
   if (dir == NULL)
-    return (NULL);
+    return NULL;
 
   strcpy (buffer, dir);
   strcat (buffer, "/");
   strcat (buffer, filename);
   file = fopen (buffer, "r");
   if (file == NULL)
-    return (NULL);
+    return NULL;
   if (fgets (buf2, sizeof (buf2), file) != NULL &&
       strncmp (buf2, pfaeditflag, strlen (pfaeditflag)) == 0)
     good = true;
   fclose (file);
   if (good)
-    return (xstrdup_or_null (buffer));
+    return xstrdup_or_null (buffer);
 
-  return (NULL);
+  return NULL;
 }
 
 static enum fchooserret
@@ -1489,7 +1489,7 @@ GFileChooserFilterWernerSFDs (GGadget *g, GDirEntry * ent,
         }
       free (filename);
     }
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -1533,21 +1533,21 @@ GetWernerSFDFile (SplineFont *sf, EncMap * map)
           if (ret == NULL)
             ret = SearchDirForWernerFile (SHAREDIR, def);
           if (ret != NULL)
-            return (ret);
+            return ret;
         }
       if (sf->subfontcnt != 0)
         break;
     }
 
   if (no_windowing_ui)
-    return (NULL);
+    return NULL;
 
   /*if ( def==NULL ) */
   def = "*.sfd";
   ret =
     gwwv_open_filename (_("Find Sub Font Definition file"), NULL, "*.sfd",
                         GFileChooserFilterWernerSFDs);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -1558,10 +1558,10 @@ AnyRefs (RefChar * refs)
     {
       for (j = 0; j < refs->layer_cnt; ++j)
         if (refs->layers[j].splines != NULL)
-          return (true);
+          return true;
       refs = refs->next;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -2041,7 +2041,7 @@ GFD_GenerateOk (GGadget *g, GEvent *e)
       struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       _GFD_GenerateOk (d);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2053,7 +2053,7 @@ GFD_Cancel (GGadget *g, GEvent *e)
       d->done = true;
       d->ret = false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -2096,7 +2096,7 @@ GFD_Options (GGadget *g, GEvent *e)
       GFD_FigureWhich (d);
       GenerationOptionsDlg (d, d->sod_which, iscid);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -2134,7 +2134,7 @@ GFD_NewDir (GGadget *g, GEvent *e)
         gwwv_ask_string (_("Create directory..."), NULL,
                          _("Directory name?"));
       if (newdir == NULL)
-        return (true);
+        return true;
       if (!GFileIsAbsolute (newdir))
         {
           char *olddir = x_u32_to_u8 (GFileChooserGetDir (d->gfc));
@@ -2150,7 +2150,7 @@ GFD_NewDir (GGadget *g, GEvent *e)
       free (newdir);
       free (temp);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -2213,7 +2213,7 @@ GFD_Format (GGadget *g, GEvent *e)
               list[bf_ttf]->disabled = true;
             }
           BitmapName (d);
-          return (true);
+          return true;
         }
 
       ret = GGadgetGetTitle (d->gfc);
@@ -2298,7 +2298,7 @@ GFD_Format (GGadget *g, GEvent *e)
 #endif
       GGadgetSetEnabled (d->bmptype, format != ff_multiple);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2321,7 +2321,7 @@ GFD_BitmapFormat (GGadget *g, GEvent *e)
         }
       BitmapName (d);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2341,7 +2341,7 @@ GFD_ToggleFontLog (GGadget *g, GEvent *e)
 
       GWidgetToDesiredSize (d->gw);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2358,32 +2358,32 @@ e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("generate.html");
-          return (true);
+          return true;
         }
       else if ((event->u.chr.keysym == 's' || event->u.chr.keysym == 'g' ||
                 event->u.chr.keysym == 'G') &&
                (event->u.chr.state & ksm_control))
         {
           _GFD_GenerateOk (GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_mousemove ||
            (event->type == et_mousedown && event->u.mouse.button == 3))
     {
       struct gfc_data *d = GDrawGetUserData (gw);
       if (!GGadgetWithin (d->gfc, event->u.mouse.x, event->u.mouse.y))
-        return (false);
+        return false;
       GFileChooserPopupCheck (d->gfc, event);
     }
   else if ((event->type == et_mouseup || event->type == et_mousedown) &&
            (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
       struct gfc_data *d = GDrawGetUserData (gw);
-      return (GGadgetDispatchEvent ((GGadget *) (d->gfc), event));
+      return GGadgetDispatchEvent ((GGadget *) (d->gfc), event);
     }
-  return (true);
+  return true;
 }
 
 static uint32_t *
@@ -2409,7 +2409,7 @@ BitmapList (SplineFont *sf)
   *pt = '\0';
   uret = x_u8_to_u32 (u8_force_valid (cret));
   free (cret);
-  return (uret);
+  return uret;
 }
 
 static uint32_t *
@@ -2433,7 +2433,7 @@ uStyleName (SplineFont *sf)
     strcat (buffer, " Extended");
   if (buffer[0] == '\0')
     strcpy (buffer, " Plain");
-  return (x_u8_to_u32 (buffer + 1));
+  return x_u8_to_u32 (buffer + 1);
 }
 
 #if 0 && defined( HAVE_PTHREAD_H )
@@ -2463,7 +2463,7 @@ BackgroundValidate (void *_d)
     }
   while (k < sf->subfontcnt);
 
-  return (NULL);
+  return NULL;
 }
 #endif
 
@@ -2519,7 +2519,7 @@ SFUsableLayerNames (SplineFont *sf, int def_layer)
         ti[cnt].selected = layer == def_layer;
         ti[cnt++].userdata = (void *) (intptr_t) layer;
       }
-  return (ti);
+  return ti;
 }
 
 typedef SplineFont *SFArray[48];
@@ -2684,7 +2684,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
               ff_post_error (_("Bad Mac Family"),
                              _
                              ("To generate a Mac family file, the current font must have plain (Normal, Regular, etc.) style, and there must be other open fonts with the same family name."));
-              return (0);
+              return 0;
             }
           else if (dup)
             {
@@ -2694,7 +2694,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
                              ("There are two open fonts with the current family name and the same style. %.30s and %.30s"),
                              dup->fontname,
                              familysfs[dupfc][dupstyle]->fontname);
-              return (0);
+              return 0;
             }
         }
       else
@@ -3405,5 +3405,5 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       d.thread_active = false;
     }
 #endif
-  return (d.ret);
+  return d.ret;
 }

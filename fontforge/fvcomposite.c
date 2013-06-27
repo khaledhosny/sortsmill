@@ -146,7 +146,7 @@ CanonicalCombiner (int uni)
   /*  translate them. They aren't accents */
   if (uni == ',' || uni == '\'' || uni == '"' || uni == '~' || uni == '^'
       || uni == '-' || uni == '+' || uni == '.')
-    return (uni);
+    return uni;
 
   for (j = 0; accents[j][0] != 0xffff; ++j)
     {
@@ -161,7 +161,7 @@ CanonicalCombiner (int uni)
       if (uni >= 0x300 && uni < 0x370)
         break;
     }
-  return (uni);
+  return uni;
 }
 
 static const char *uc_accent_names[] = {
@@ -979,7 +979,7 @@ SplineSetQuickTop (SplineSet *ss)
     }
   if (max < -65536)
     max = 0;                    /* return a reasonable value for an empty glyph */
-  return (max);
+  return max;
 }
 
 static real
@@ -992,23 +992,23 @@ SplineCharQuickTop (SplineChar *sc, int layer)
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     if ((temp = SplineSetQuickTop (ref->layers[0].splines)) > max)
       max = temp;
-  return (max);
+  return max;
 }
 
 int
 isaccent (int uni)
 {
   if (uni < 0x10000 && iscombining (uni))
-    return (true);
+    return true;
   if (uni >= 0x2b0 && uni < 0x2ff)
-    return (true);
+    return true;
   if (uni == '.' || uni == ',' || uni == 0x60 || uni == 0x5e || uni == 0x7e ||
       uni == 0xa8 || uni == 0xaf || uni == 0xb8 || uni == 0x384 || uni == 0x385
       || (uni >= 0x1fbd && uni <= 0x1fc1) || (uni >= 0x1fcd && uni <= 0x1fcf)
       || (uni >= 0x1fed && uni <= 0x1fef) || (uni >= 0x1ffd && uni <= 0x1fff))
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static int
@@ -1017,16 +1017,16 @@ haschar (SplineFont *sf, uint32_t ch, char *dot)
   char buffer[200], namebuf[200];
 
   if (dot == NULL || ch == -1)
-    return (SCWorthOutputting (SFGetChar (sf, ch, NULL)));
+    return SCWorthOutputting (SFGetChar (sf, ch, NULL));
   snprintf (buffer, sizeof (buffer), "%s%s",
             (char *) StdGlyphName (namebuf, ch, sf->uni_interp,
                                    sf->for_new_glyphs), dot);
   if (SCWorthOutputting (SFGetChar (sf, -1, buffer)))
-    return (true);
+    return true;
   else if (isaccent (ch))
-    return (SCWorthOutputting (SFGetChar (sf, ch, NULL)));
+    return SCWorthOutputting (SFGetChar (sf, ch, NULL));
   else
-    return (false);
+    return false;
 }
 
 static SplineChar *
@@ -1037,16 +1037,16 @@ GetChar (SplineFont *sf, uint32_t ch, char *dot)
   /* Basically the same as above */
 
   if (dot == NULL || ch == -1)
-    return (SFGetChar (sf, ch, NULL));
+    return SFGetChar (sf, ch, NULL);
   snprintf (buffer, sizeof (buffer), "%s%s",
             (char *) StdGlyphName (namebuf, ch, sf->uni_interp,
                                    sf->for_new_glyphs), dot);
   if ((sc = SFGetChar (sf, -1, buffer)))
-    return (sc);
+    return sc;
   else if (isaccent (ch))
-    return (SFGetChar (sf, ch, NULL));
+    return SFGetChar (sf, ch, NULL);
   else
-    return (NULL);
+    return NULL;
 }
 
 static const uint32_t *
@@ -1080,9 +1080,9 @@ arabicfixup (SplineFont *sf, const uint32_t *upt, int ini, int final)
   if (*pt == '\0')
     {
       *apt = '\0';
-      return (arabicalts);
+      return arabicalts;
     }
-  return (upt);
+  return upt;
 }
 
 static const uint32_t *
@@ -1101,7 +1101,7 @@ SFAlternateFromLigature (SplineFont *sf, int base, SplineChar *sc)
     for (pst = sc->possub; pst != NULL && pst->type != pst_ligature;
          pst = pst->next);
   if (sc == NULL || pst == NULL)
-    return (NULL);
+    return NULL;
 
   ligstart = pst->u.lig.components;
   semi = strchr (ligstart, ';');
@@ -1135,7 +1135,7 @@ SFAlternateFromLigature (SplineFont *sf, int base, SplineChar *sc)
       if (j >= sf->glyphcnt || sf->glyphs[j]->unicodeenc == -1 || spt >= send)
         {
           *semi = sch;
-          return (NULL);
+          return NULL;
         }
       *spt++ = sf->glyphs[j]->unicodeenc;
       if (ch != '\0')
@@ -1153,10 +1153,10 @@ SFAlternateFromLigature (SplineFont *sf, int base, SplineChar *sc)
         ini = true;
       else if (strncmp (dpt, ".final", strlen (".final")) == 0)
         final = true;
-      return (arabicfixup (sf, space, ini, final));
+      return arabicfixup (sf, space, ini, final);
     }
 
-  return (space);
+  return space;
 }
 
 const uint32_t *
@@ -1184,7 +1184,7 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
       else
         greekalts[2] = (base - 0xac00) % 28 - 1 + 0x11a8;
       greekalts[3] = 0;
-      return (greekalts);
+      return greekalts;
     }
   if (base == 'i' || base == 'j')
     {
@@ -1196,16 +1196,16 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
         greekalts[0] = 0xf6be;  /* Dotlessj in Adobe's private use area */
       greekalts[1] = 0x307;
       greekalts[2] = 0;
-      return (greekalts);
+      return greekalts;
     }
 
   if (sf->uni_interp == ui_adobe && base >= 0xf600 && base <= 0xf7ff &&
       adobes_pua_alts[base - 0xf600] != 0)
-    return (adobes_pua_alts[base - 0xf600]);
+    return adobes_pua_alts[base - 0xf600];
 
   if (base == -1 || base >= 65536 || unicode_alternates[base >> 8] == NULL ||
       (upt = unicode_alternates[base >> 8][base & 0xff]) == NULL)
-    return (SFAlternateFromLigature (sf, base, sc));
+    return SFAlternateFromLigature (sf, base, sc);
 
   /* The definitions of some of the greek letters may make some */
   /*  linguistic sense, but I can't use it to place the accents */
@@ -1216,7 +1216,7 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
       if (*gpt && (nocheck ||
                    (haschar (sf, *gpt, dot)
                     && (gpt[1] == '\0' || haschar (sf, gpt[1], dot)))))
-        return (gpt);
+        return gpt;
       /* Similarly for these (korean) jamo */
     }
   else if ((base >= 0x1176 && base <= 0x117e)
@@ -1225,7 +1225,7 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
       greekalts[0] = upt[1];
       greekalts[1] = upt[0];
       greekalts[2] = 0;
-      return (greekalts);
+      return greekalts;
     }
   else if (base >= 0x380 && base <= 0x3ff && upt != NULL)
     {
@@ -1236,7 +1236,7 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
           greekalts[1] = 0x385;
           greekalts[2] = '\0';
           if (nocheck || haschar (sf, greekalts[1], dot))
-            return (greekalts);
+            return greekalts;
         }
       /* In version 3 of unicode tonos gets converted to acute, which it */
       /*  doesn't look like. Convert it back */
@@ -1252,7 +1252,7 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
               else
                 *gpt++ = *upt;
             }
-          return (greekalts);
+          return greekalts;
         }
     }
   else if ((base >= 0xfb50 && base <= 0xfdff)
@@ -1275,7 +1275,7 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
         base == 0x0146 ? 'n' : base == 0x0156 ? 'R' : 'r';
       greekalts[1] = 0x326;
       greekalts[2] = '\0';
-      return (greekalts);
+      return greekalts;
     }
   else if (base == 0x0123)
     {
@@ -1283,7 +1283,7 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
       greekalts[0] = 'g';
       greekalts[1] = 0x312;
       greekalts[2] = '\0';
-      return (greekalts);
+      return greekalts;
     }
   else if (base == 0x010f || base == 0x013d || base == 0x013e || base == 0x0165)
     {
@@ -1292,10 +1292,10 @@ SFGetAlternate (SplineFont *sf, int base, SplineChar *sc, int nocheck)
         base == 0x013d ? 'L' : base == 0x013e ? 'l' : 't';
       greekalts[1] = 0x315;
       greekalts[2] = '\0';
-      return (greekalts);
+      return greekalts;
     }
 
-  return (upt);
+  return upt;
 }
 
 static SplineChar *GetGoodAccentGlyph (SplineFont *sf, int uni, int basech,
@@ -1326,7 +1326,7 @@ SFIsCompositBuildable (SplineFont *sf, int unicodeenc, SplineChar *sc,
     }
 
   if ((all = pt = SFGetAlternate (sf, unicodeenc, sc, false)) == NULL)
-    return (false);
+    return false;
 
   if (sc != NULL)
     one = sc;
@@ -1344,15 +1344,15 @@ SFIsCompositBuildable (SplineFont *sf, int unicodeenc, SplineChar *sc,
                                 one);
         }
       else if (!haschar (sf, ch, dot))
-        return (false);
+        return false;
       else
         two = GetChar (sf, ch, dot);
       /* No recursive references */
       /* Cyrillic gamma could refer to Greek gamma, which the entry gives as an alternate */
       if (one != NULL && (two == NULL || SCDependsOnSC (two, one)))
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 int
@@ -1365,32 +1365,32 @@ SFIsRotatable (SplineFont *sf, SplineChar *sc, int layer)
     {
       cid = strtol (sc->name + 8, &end, 10);
       if (*end == '\0' && SFHasCID (sf, cid) != -1)
-        return (true);
+        return true;
     }
   else if (sf->cidmaster != NULL && strstr (sc->name, ".vert") != NULL &&
            (cid = CIDFromName (sc->name, sf->cidmaster)) != -1)
     {
       if (SFHasCID (sf, cid) != -1)
-        return (true);
+        return true;
     }
   else if (strncmp (sc->name, "vertuni", 7) == 0 && strlen (sc->name) == 11)
     {
       int uni = strtol (sc->name + 7, &end, 16);
       if (*end == '\0' && SFCIDFindExistingChar (sf, uni, NULL) != -1)
-        return (true);
+        return true;
     }
   else if (strncmp (sc->name, "uni", 3) == 0
            && strstr (sc->name, ".vert") != NULL)
     {
       int uni = strtol (sc->name + 3, &end, 16);
       if (*end == '.' && SFCIDFindExistingChar (sf, uni, NULL) != -1)
-        return (true);
+        return true;
     }
   else if (sc->name[0] == 'u' && strstr (sc->name, ".vert") != NULL)
     {
       int uni = strtol (sc->name + 1, &end, 16);
       if (*end == '.' && SFCIDFindExistingChar (sf, uni, NULL) != -1)
-        return (true);
+        return true;
     }
   else if (strstr (sc->name, ".vert") != NULL
            || strstr (sc->name, ".vrt2") != NULL)
@@ -1401,9 +1401,9 @@ SFIsRotatable (SplineFont *sf, SplineChar *sc, int layer)
       temp = xstrndup (sc->name, end - sc->name);
       ret = SFFindExistingSlot (sf, -1, temp) != -1;
       free (temp);
-      return (ret);
+      return ret;
     }
-  return (false);
+  return false;
 }
 
 int
@@ -1416,27 +1416,27 @@ hascomposing (SplineFont *sf, int u, SplineChar *sc)
       while (*upt)
         {
           if ((u == 0x13f || u == 0x140) && *upt == 0xb7)
-            return (true);      /* b7, centered dot is used as a combining accent for Ldot */
+            return true;      /* b7, centered dot is used as a combining accent for Ldot */
           /* It's spacing for ldot (but we want to pretend it's an accent) */
           /*  and 0x22EF is a ligature of ... */
           else if (iscombining (*upt) || *upt == 0x0384 ||      /* tonos */
                    *upt == 0x0385 ||    /* dieresis/tonos */
                    *upt == 0x1ffe || *upt == 0x1fbf || *upt == 0x1fcf || *upt == 0x1fdf || *upt == 0x1fbd || *upt == 0x1fef || *upt == 0x1fc0 || *upt == 0x1fc1 || *upt == 0x1fee || *upt == 0x1ffd || *upt == 0x1fbe || *upt == 0x1fed || *upt == 0x1fcd || *upt == 0x1fdd || *upt == 0x1fce || *upt == 0x1fde)        /* Special greek accents */
-            return (true);
+            return true;
           /* Only build Jongsung out of chosung when doing a build composit */
           /*  not when doing a build accented (that's what the upt[1]!='\0' */
           /*  means */
           if (*upt >= 0x1100 && *upt < 0x11c7 && upt[1] != '\0')
-            return (true);
+            return true;
           ++upt;
         }
 
       if (u >= 0x1f70 && u < 0x1f80)
-        return (true);          /* Yes. they do work, I don't care what it looks like */
+        return true;          /* Yes. they do work, I don't care what it looks like */
       if (u == 0x0149)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 int
@@ -1448,35 +1448,35 @@ SFIsSomethingBuildable (SplineFont *sf, SplineChar *sc, int layer,
   if (onlyaccents &&            /* Don't build greek accents out of latin ones */
       (unicodeenc == 0x1fbd || unicodeenc == 0x1fbe || unicodeenc == 0x1fbf ||
        unicodeenc == 0x1fef || unicodeenc == 0x1ffd || unicodeenc == 0x1ffe))
-    return (false);
+    return false;
 
   if ((unicodeenc <= 0xffff && iszerowidth (unicodeenc)) ||
       (unicodeenc >= 0x2000 && unicodeenc <= 0x2015))
-    return (!onlyaccents);
+    return !onlyaccents;
 
   if (SFIsCompositBuildable (sf, unicodeenc, sc, layer))
-    return (!onlyaccents || hascomposing (sf, sc->unicodeenc, sc));
+    return !onlyaccents || hascomposing (sf, sc->unicodeenc, sc);
 
   if (!onlyaccents && SCMakeDotless (sf, sc, layer, NULL, false, false))
-    return (true);
+    return true;
 
-  return (SFIsRotatable (sf, sc, layer));
+  return SFIsRotatable (sf, sc, layer);
 }
 
 static int
 SPInRange (SplinePoint *sp, real ymin, real ymax)
 {
   if (sp->me.y >= ymin && sp->me.y <= ymax)
-    return (true);
+    return true;
 #if 0
   if (sp->prev != NULL)
     if (sp->prev->from->me.y >= ymin && sp->prev->from->me.y <= ymax)
-      return (true);
+      return true;
   if (sp->next != NULL)
     if (sp->next->to->me.y >= ymin && sp->next->to->me.y <= ymax)
-      return (true);
+      return true;
 #endif
-  return (false);
+  return false;
 }
 
 static void
@@ -1621,7 +1621,7 @@ _SplineSetFindXRangeAtYExtremum (SplinePointList *spl, DBounds *bounds,
             break;
         }
     }
-  return (yextreme);
+  return yextreme;
 }
 
 /* this is called by the accented character routines with bounds set for the */
@@ -1648,7 +1648,7 @@ SCFindTopXRange (SplineChar *sc, int layer, DBounds *bounds, real ia)
                                      yextreme, ia);
   if (yextreme == -0x80000)
     yextreme = 0;
-  return (yextreme);
+  return yextreme;
 }
 
 static real
@@ -1670,7 +1670,7 @@ SCFindBottomXRange (SplineChar *sc, int layer, DBounds *bounds, real ia)
                                      yextreme, ia);
   if (yextreme == 0x80000)
     yextreme = 0;
-  return (yextreme);
+  return yextreme;
 }
 
 /* the cedilla and ogonec accents do not center on the accent itself but on */
@@ -1688,7 +1688,7 @@ SCFindTopBounds (SplineChar *sc, int layer, DBounds *bounds, real ia)
     _SplineSetFindXRange (rf->layers[0].splines, bounds, ymin, ymax, ia);
 
   _SplineSetFindXRange (sc->layers[layer].splines, bounds, ymin, ymax, ia);
-  return (ymin);
+  return ymin;
 }
 
 /* And similarly for the floating hook, and often for grave and acute */
@@ -1705,7 +1705,7 @@ SCFindBottomBounds (SplineChar *sc, int layer, DBounds *bounds, real ia)
     _SplineSetFindXRange (rf->layers[0].splines, bounds, ymin, ymax, ia);
 
   _SplineSetFindXRange (sc->layers[layer].splines, bounds, ymin, ymax, ia);
-  return (ymin);
+  return ymin;
 }
 
 static real
@@ -1728,7 +1728,7 @@ SplineCharFindSlantedBounds (SplineChar *sc, int layer, DBounds *bounds,
 
       _SplineSetFindXRange (sc->layers[layer].splines, bounds, ymin, ymax, ia);
     }
-  return (ymin);
+  return ymin;
 }
 
 static int
@@ -1744,7 +1744,7 @@ SCStemCheck (SplineFont *sf, int layer, int basech, DBounds *bb, DBounds *rbb,
 
   sc = SFGetChar (sf, basech, NULL);
   if (sc == NULL)
-    return (0x70000000);
+    return 0x70000000;
   if (autohint_before_generate && sc->changedsincelasthinted
       && !sc->manualhints)
     SplineCharAutoHint (sc, layer, NULL);
@@ -1829,9 +1829,9 @@ SCStemCheck (SplineFont *sf, int layer, int basech, DBounds *bb, DBounds *rbb,
                          (lbx + rbx) / 2 <= (bb->maxx + bb->minx) / 2) ||
                         (pos & ____CENTERRIGHT &&
                          (lbx + rbx) / 2 >= (bb->maxx + bb->minx) / 2)))
-        return ((lbx + rbx) / 2 - (rbb->maxx - rbb->minx) / 2 - rbb->minx);
+        return (lbx + rbx) / 2 - (rbb->maxx - rbb->minx) / 2 - rbb->minx;
     }
-  return (0x70000000);
+  return 0x70000000;
 }
 
 void
@@ -1915,9 +1915,9 @@ BCFindGap (BDFChar *bc)
         if (bc->bitmap[(bc->ymax - y) * bc->bytes_per_line + i] != 0)
           break;
       if (i == bc->bytes_per_line)
-        return (y);
+        return y;
     }
-  return (bc->ymax);
+  return bc->ymax;
 }
 
 static int
@@ -1978,7 +1978,7 @@ SCMakeBaseReference (SplineChar *sc, SplineFont *sf, int layer, int ch,
         }
     }
   if (rsc == NULL)
-    return (0);
+    return 0;
   if (bdf == NULL || !disp_only)
     {
       sc->width = rsc->width;
@@ -2022,7 +2022,7 @@ SCMakeBaseReference (SplineChar *sc, SplineFont *sf, int layer, int ch,
                             0);
         }
     }
-  return (1);
+  return 1;
 }
 
 static SplineChar *
@@ -2205,7 +2205,7 @@ GetGoodAccentGlyph (SplineFont *sf, int uni, int basech,
     }
   if (rsc != NULL && SCDependsOnSC (rsc, destination))
     rsc = NULL;
-  return (rsc);
+  return rsc;
 }
 
 static void
@@ -2251,11 +2251,11 @@ AnchorClassMatch (SplineChar *sc1, SplineChar *sc2, AnchorClass *restrict_,
 #endif
                 *_ap1 = ap1;
                 *_ap2 = ap2;
-                return (ap1->anchor);
+                return ap1->anchor;
               }
             }
       }
-  return (NULL);
+  return NULL;
 }
 
 AnchorClass *
@@ -2273,11 +2273,11 @@ AnchorClassMkMkMatch (SplineChar *sc1, SplineChar *sc2,
             {
               *_ap1 = ap1;
               *_ap2 = ap2;
-              return (ap1->anchor);
+              return ap1->anchor;
             }
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 AnchorClass *
@@ -2295,11 +2295,11 @@ AnchorClassCursMatch (SplineChar *sc1, SplineChar *sc2,
             {
               *_ap1 = ap1;
               *_ap2 = ap2;
-              return (ap1->anchor);
+              return ap1->anchor;
             }
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -2970,7 +2970,7 @@ MakeSP (real x, real y, SplinePoint *last, int order2)
   new->pointtype = pt_corner;
   if (last != NULL)
     SplineMake (last, new, order2);
-  return (new);
+  return new;
 }
 
 static void
@@ -3274,7 +3274,7 @@ SCMakeRightToLeftLig (SplineChar *sc, SplineFont *sf,
         }
       ret = true;
     }
-  return (ret);
+  return ret;
 }
 
 static void
@@ -3332,10 +3332,10 @@ _SCMakeDotless (SplineFont *sf, SplineChar *dotless, int layer, int doit)
   xsc = SFGetChar (sf, 'x', NULL);
   if (sc == NULL || sc->layers[layer].splines == NULL
       || sc->layers[layer].refs != NULL || xsc == NULL)
-    return (false);
+    return false;
   QuickBlues (sf, layer, &bd);
   if (bd.xheight == 0)
-    return (false);
+    return false;
   for (test = sc->layers[layer].splines; test != NULL; test = test->next)
     {
       next = test->next;
@@ -3345,7 +3345,7 @@ _SCMakeDotless (SplineFont *sf, SplineChar *dotless, int layer, int doit)
       if (b.miny < bd.xheight)
         {
           if (!doit)
-            return (true);
+            return true;
           cur = SplinePointListCopy1 (test);
           if (last == NULL)
             head = cur;
@@ -3355,7 +3355,7 @@ _SCMakeDotless (SplineFont *sf, SplineChar *dotless, int layer, int doit)
         }
     }
   if (head == NULL)
-    return (false);
+    return false;
 
   SCPreserveLayer (dotless, layer, true);
   SplinePointListsFree (dotless->layers[layer].splines);
@@ -3364,7 +3364,7 @@ _SCMakeDotless (SplineFont *sf, SplineChar *dotless, int layer, int doit)
   dotless->width = sc->width;
   dotless->layers[layer].splines = head;
   SCCharChangedUpdate (dotless, layer);
-  return (true);
+  return true;
 }
 
 int
@@ -3376,13 +3376,13 @@ SCMakeDotless (SplineFont *sf, SplineChar *dotless, int layer, BDFFont *bdf,
   int ret = 0;
 
   if (dotless == NULL)
-    return (ret);
+    return ret;
   if (dotless->unicodeenc != 0x131 && dotless->unicodeenc != 0xf6be
       && dotless->unicodeenc != 0x237)
-    return (ret);
+    return ret;
   sc = SFGetChar (sf, dotless->unicodeenc == 0x131 ? 'i' : 'j', NULL);
   if (sc == NULL)
-    return (ret);
+    return ret;
   if (bdf == NULL || !disp_only)
     ret = _SCMakeDotless (sf, dotless, layer, doit);
 
@@ -3406,7 +3406,7 @@ SCMakeDotless (SplineFont *sf, SplineChar *dotless, int layer, BDFFont *bdf,
         }
     }
 
-  return (ret);
+  return ret;
 }
 
 static void
@@ -3600,7 +3600,7 @@ SCAppendAccent (SplineChar *sc, int layer, char *glyph_name,    /* unicode char 
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     last = ref;
   if (last == NULL)
-    return (1);                 /* No base character reference found */
+    return 1;                 /* No base character reference found */
   basech = last->sc->unicodeenc;
 
   if ((ia = sf->italicangle) == 0)
@@ -3615,7 +3615,7 @@ SCAppendAccent (SplineChar *sc, int layer, char *glyph_name,    /* unicode char 
   else if (asc == NULL && uni != -1)
     asc = GetGoodAccentGlyph (sf, uni, basech, &invert, ia, NULL, sc);
   if (asc == NULL)
-    return (2);                 /* Could not find that accent */
+    return 2;                 /* Could not find that accent */
   if (uni == -1 && (pt = strchr (asc->name, '.')) != NULL
       && pt - asc->name < 100)
     {
@@ -3645,5 +3645,5 @@ SCAppendAccent (SplineChar *sc, int layer, char *glyph_name,    /* unicode char 
 
   _SCCenterAccent (sc, last->sc, sf, layer, uni, NULL, false, asc, ia, basech,
                    invert, pos);
-  return (0);
+  return 0;
 }

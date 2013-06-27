@@ -653,12 +653,12 @@ NOUI_GetPrefs (char *name, Val *val)
                 val->u.fval = *((float *) (pf->val));
               }
             else
-              return (false);
+              return false;
 
-            return (true);
+            return true;
           }
       }
-  return (false);
+  return false;
 }
 
 static int
@@ -677,7 +677,7 @@ NOUI_SetPrefs (char *name, Val *val1, Val *val2)
               {
                 if ((val1->type != v_int && val1->type != v_unicode)
                     || val2 != NULL)
-                  return (-1);
+                  return -1;
                 *((int *) (pf->val)) = val1->u.ival;
               }
             else if (pf->type == pr_real)
@@ -686,7 +686,7 @@ NOUI_SetPrefs (char *name, Val *val1, Val *val2)
                   *((float *) (pf->val)) = val1->u.fval;
                 else if (val1->type != v_int
                          || (val2 != NULL && val2->type != v_int))
-                  return (-1);
+                  return -1;
                 else
                   *((float *) (pf->val)) =
                     (val2 ==
@@ -696,7 +696,7 @@ NOUI_SetPrefs (char *name, Val *val1, Val *val2)
             else if (pf->type == pr_string || pf->type == pr_file)
               {
                 if (val1->type != v_str || val2 != NULL)
-                  return (-1);
+                  return -1;
                 if (pf->set)
                   {
                     pf->set (val1->u.sval);
@@ -710,21 +710,21 @@ NOUI_SetPrefs (char *name, Val *val1, Val *val2)
             else if (pf->type == pr_encoding)
               {
                 if (val2 != NULL)
-                  return (-1);
+                  return -1;
                 else if (val1->type == v_str && pf->val == &default_encoding)
                   {
                     Encoding *enc = FindOrMakeEncoding (val1->u.sval);
                     if (enc == NULL)
-                      return (-1);
+                      return -1;
                     *((Encoding **) (pf->val)) = enc;
                   }
                 else
-                  return (-1);
+                  return -1;
               }
             else if (pf->type == pr_namelist)
               {
                 if (val2 != NULL)
-                  return (-1);
+                  return -1;
                 else if (val1->type == v_str)
                   {
                     NameList *nl = NameListByName (val1->u.sval);
@@ -732,20 +732,20 @@ NOUI_SetPrefs (char *name, Val *val1, Val *val2)
                         && pf->val != &namelist_for_new_fonts)
                       nl = NULL;
                     else if (nl == NULL)
-                      return (-1);
+                      return -1;
                     *((NameList **) (pf->val)) = nl;
                   }
                 else
-                  return (-1);
+                  return -1;
               }
             else
-              return (false);
+              return false;
 
             SavePrefs (true);
-            return (true);
+            return true;
           }
       }
-  return (false);
+  return false;
 }
 
 static char *
@@ -755,18 +755,18 @@ getPfaEditPrefs (void)
   char buffer[1025];
 
   if (prefs != NULL)
-    return (prefs);
+    return prefs;
   if (getUserConfigDir () == NULL)
-    return (NULL);
+    return NULL;
   sprintf (buffer, "%s/prefs", getUserConfigDir ());
   prefs = xstrdup_or_null (buffer);
-  return (prefs);
+  return prefs;
 }
 
 static char *
 NOUI_getFontForgeShareDir (void)
 {
-  return (SHAREDIR "/fontforge");
+  return SHAREDIR "/fontforge";
 }
 
 static void

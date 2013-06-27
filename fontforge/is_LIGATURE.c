@@ -20,7 +20,7 @@ static int compare_codepoints (const void *codepoint1, const void *codepoint2)
 {
     const unsigned int *cp1 = (const unsigned int *) codepoint1;
     const unsigned int *cp2 = (const unsigned int *) codepoint2;
-    return ((*cp1 < *cp2) ? -1 : ((*cp1 == *cp2) ? 0 : 1));
+    return (*cp1 < *cp2) ? -1 : ((*cp1 == *cp2) ? 0 : 1);
 }
 
 int is_LIGATURE_or_VULGAR_FRACTION(unsigned int codepoint);
@@ -31,6 +31,6 @@ int is_LIGATURE_or_VULGAR_FRACTION(unsigned int codepoint)
         (unsigned int *) bsearch (&codepoint, matching_codepoints,
                                   528, sizeof (unsigned int),
                                   compare_codepoints);
-    return (p != (unsigned int *) 0);
+    return p != (unsigned int *) 0;
 }
 

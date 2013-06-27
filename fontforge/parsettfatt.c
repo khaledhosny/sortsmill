@@ -170,13 +170,13 @@ ClassFindCnt (uint16_t *class, int tot)
   for (i = 0; i < tot; ++i)
     if (class[i] > max)
       max = class[i];
-  return (max + 1);
+  return max + 1;
 }
 
 static int
 uint16_t_cmp (const void *u1, const void *u2)
 {
-  return (((int) *((const uint16_t *) u1)) - ((int) *((const uint16_t *) u2)));
+  return ((int) *((const uint16_t *) u1)) - ((int) *((const uint16_t *) u2));
 }
 
 static char *
@@ -3859,7 +3859,7 @@ memlong (uint8_t *data, int len, int offset)
     {
       int ch1 = data[offset], ch2 = data[offset + 1], ch3 =
         data[offset + 2], ch4 = data[offset + 3];
-      return ((ch1 << 24) | (ch2 << 16) | (ch3 << 8) | ch4);
+      return (ch1 << 24) | (ch2 << 16) | (ch3 << 8) | ch4;
     }
   else
     {
@@ -3874,7 +3874,7 @@ memushort (uint8_t *data, int len, int offset)
   if (offset >= 0 && offset + 1 < len)
     {
       int ch1 = data[offset], ch2 = data[offset + 1];
-      return ((ch1 << 8) | ch2);
+      return (ch1 << 8) | ch2;
     }
   else
     {

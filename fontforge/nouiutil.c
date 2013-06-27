@@ -109,42 +109,42 @@ static int
 NOUI_ask (const char *title, const char **answers,
           int def, int cancel, const char *question, ...)
 {
-  return (def);
+  return def;
 }
 
 static int
 NOUI_choose (const char *title, const char **choices, int cnt, int def,
              const char *question, ...)
 {
-  return (def);
+  return def;
 }
 
 static int
 NOUI_choose_multiple (char *title, const char **choices, char *sel,
                       int cnt, char *buts[2], const char *question, ...)
 {
-  return (-1);
+  return -1;
 }
 
 static char *
 NOUI_ask_string (const char *title, const char *def,
                  const char *question, ...)
 {
-  return ((char *) def);
+  return (char *) def;
 }
 
 static char *
 NOUI_open_file (const char *title, const char *defaultfile,
                 const char *initial_filter)
 {
-  return (NULL);
+  return NULL;
 }
 
 static char *
 NOUI_saveas_file (const char *title, const char *defaultfile,
                   const char *initial_filter)
 {
-  return (xstrdup_or_null (defaultfile));
+  return xstrdup_or_null (defaultfile);
 }
 
 static void
@@ -166,7 +166,7 @@ NOUI_void_int_noop (int useless)
 static int
 NOUI_int_int_noop (int useless)
 {
-  return (true);
+  return true;
 }
 
 static void
@@ -177,13 +177,13 @@ NOUI_void_str_noop (const char *useless)
 static int
 NOUI_alwaystrue (void)
 {
-  return (true);
+  return true;
 }
 
 static int
 NOUI_DefaultStrokeFlags (void)
 {
-  return (sf_correctdir);
+  return sf_correctdir;
 }
 
 static ui_interface_t noui_interface = {

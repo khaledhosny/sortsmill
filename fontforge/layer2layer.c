@@ -76,7 +76,7 @@ SFLayerList (SplineFont *sf, int def_layer)
       ret[l].userdata = (void *) (intptr_t) l;
     }
   ret[def_layer].selected = true;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -203,7 +203,7 @@ L2L_OK (GGadget *g, GEvent *e)
         {
           errbound = GetReal8 (d->gw, CID_ErrorBound, _("Error Bound"), &err);
           if (err)
-            return (true);
+            return true;
           if (d->cv)
             _DoCVCompare (d->cv, from, to, errbound);
           else
@@ -211,7 +211,7 @@ L2L_OK (GGadget *g, GEvent *e)
         }
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -223,7 +223,7 @@ L2L_Cancel (GGadget *g, GEvent *e)
       L2LDlg *d = GDrawGetUserData (GGadgetGetWindow (g));
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -237,9 +237,9 @@ l2l_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static void

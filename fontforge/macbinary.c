@@ -253,7 +253,7 @@ HashToId (char *fontname, SplineFont *sf, EncMap *map)
     }
   hash %= (high - low + 1);
   hash += low;
-  return (hash);
+  return hash;
 }
 
 static int
@@ -271,10 +271,10 @@ IsMacMonospaced (SplineFont *sf, EncMap *map)
           if (width == 0x80000000)
             width = sf->glyphs[gid]->width;
           else if (sf->glyphs[gid]->width != width)
-            return (false);
+            return false;
         }
     }
-  return (true);
+  return true;
 }
 
 SplineChar *
@@ -285,8 +285,8 @@ SFFindExistingCharMac (SplineFont *sf, EncMap *map, int unienc)
   for (i = 0; i < map->enc_limit && i < 256; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL
         && sf->glyphs[gid]->unicodeenc == unienc)
-      return (sf->glyphs[gid]);
-  return (NULL);
+      return sf->glyphs[gid];
+  return NULL;
 }
 
 static double
@@ -306,9 +306,9 @@ SFMacWidthMax (SplineFont *sf, EncMap *map)
         }
     }
   if (width < 0)                /* No chars, or widths the mac doesn't support */
-    return (0);
+    return 0;
 
-  return (width);
+  return width;
 }
 
 static int
@@ -327,7 +327,7 @@ SFMacAnyKerns (SplineFont *sf, EncMap *map)
               ++cnt;
         }
     }
-  return (cnt);
+  return cnt;
 }
 
 struct resource
@@ -375,7 +375,7 @@ PSToResources (FILE *res, FILE *pfbfile)
       if (getc (pfbfile) != 0x80)
         {
           IError ("We made a pfb file, but didn't get one. Hunh?");
-          return (NULL);
+          return NULL;
         }
       type = getc (pfbfile);
       if (type == 3)
@@ -409,7 +409,7 @@ PSToResources (FILE *res, FILE *pfbfile)
         }
     }
   resstarts[cnt].pos = 0;
-  return (resstarts);
+  return resstarts;
 }
 
 static uint32_t
@@ -426,7 +426,7 @@ TTFToResource (FILE *res, FILE *ttffile)
   putlong (res, statb.st_size);
   while ((ch = getc (ttffile)) != EOF)
     putc (ch, res);
-  return (resstart);
+  return resstart;
 }
 
 static int
@@ -455,7 +455,7 @@ BDFCCopyBitmaps (uint8_t **rows, int offset, BDFChar *bdfc, BDFFont *bdf)
         }
       ++r;
     }
-  return (offset + bdfc->xmax - bdfc->xmin + 1);
+  return offset + bdfc->xmax - bdfc->xmin + 1;
 }
 
 static uint32_t
@@ -582,7 +582,7 @@ BDFToNFNT (FILE *res, BDFFont *bdf, EncMap *map)
     free (rows[k]);
   free (rows);
 
-  return (rlenpos);
+  return rlenpos;
 }
 
 static uint32_t
@@ -631,7 +631,7 @@ DummyNFNT (FILE *res, BDFFont *bdf, EncMap *map)
                      (bdf->sf->ascent + bdf->sf->descent)));
   putshort (res, 0);
 
-  return (rlenpos);
+  return rlenpos;
 }
 
 static struct resource *
@@ -662,7 +662,7 @@ SFToNFNTs (FILE *res, SplineFont *sf, int32_t *sizes, EncMap *map)
       resstarts[i].pos = BDFToNFNT (res, bdf, map);
       /* NFNTs seem to have resource flags of 0 */
     }
-  return (resstarts);
+  return resstarts;
 }
 
 static struct resource *
@@ -715,7 +715,7 @@ SFsToNFNTs (FILE *res, struct sflist *sfs, int baseresid)
           }
       cnt += j;
     }
-  return (resstarts);
+  return resstarts;
 }
 
 static struct resource *
@@ -747,7 +747,7 @@ BuildDummyNFNTlist (FILE *res, SplineFont *sf,
       resstarts[i].pos = DummyNFNT (res, bdf, map);
       /* NFNTs seem to have resource flags of 0 */
     }
-  return (resstarts);
+  return resstarts;
 }
 
 static struct resource *
@@ -798,7 +798,7 @@ BuildDummyNFNTfamilyList (FILE *res, struct sflist *sfs, int baseresid)
           }
       cnt += j;
     }
-  return (resstarts);
+  return resstarts;
 }
 
 enum psstyle_flags
@@ -879,7 +879,7 @@ _MacStyleCode (char *styles, SplineFont *sf, uint16_t *psstylecode)
     }
   if (psstylecode != NULL)
     *psstylecode = psstyle;
-  return (stylecode);
+  return stylecode;
 }
 
 uint16_t
@@ -1125,7 +1125,7 @@ SFToFOND (FILE *res, SplineFont *sf, uint32_t id, int dottf,
   fseek (res, rlenpos, SEEK_SET);
   putlong (res, end - rlenpos - 4);     /* resource length */
   fseek (res, end, SEEK_SET);
-  return (rlenpos);
+  return rlenpos;
 }
 
 static void
@@ -1244,7 +1244,7 @@ FondSplitter (struct sflist *sfs, int *fondcnt)
       ++fc;
     }
   *fondcnt = fc;
-  return (sfsl);
+  return sfsl;
 }
 
 static void
@@ -1563,7 +1563,7 @@ SFsToFOND (FILE *res, struct sflist *sfs, uint32_t id, int format, int bf)
   fseek (res, rlenpos, SEEK_SET);
   putlong (res, end - rlenpos - 4);     /* resource length */
   fseek (res, end, SEEK_SET);
-  return (rlenpos);
+  return rlenpos;
 }
 
 /* I presume this routine is called after all resources have been written */
@@ -1707,7 +1707,7 @@ mactime (void)
   for (i = 1904; i < 1970; i += 4)
     now += 24 * 60 * 60;
   /* Ignore any leap seconds -- Sorry Steve */
-  return (now);
+  return now;
 }
 
 static int
@@ -1820,7 +1820,7 @@ DumpMacBinaryHeader (FILE *res, struct macbinaryheader *mb)
 
   fseek (res, 0, SEEK_SET);
   fwrite (header, 1, sizeof (header), res);
-  return (true);
+  return true;
 #else
   int ret;
   FSRef ref, parentref;
@@ -1855,7 +1855,7 @@ DumpMacBinaryHeader (FILE *res, struct macbinaryheader *mb)
   ret = FSPathMakeRef ((uint8_t *) dirname, &parentref, NULL);
   free (dirname);
   if (ret != noErr)
-    return (false);
+    return false;
 
   memset (&info, 0, sizeof (info));
   ((FInfo *) (info.finderInfo))->fdType = mb->type;
@@ -1879,7 +1879,7 @@ DumpMacBinaryHeader (FILE *res, struct macbinaryheader *mb)
       ret = FSPathMakeRef ((uint8_t *) fname, &ref, NULL);
     }
   if (ret != noErr)
-    return (false);
+    return false;
 
   FSGetResourceForkName (&resforkname);
   FSCreateFork (&ref, resforkname.length, resforkname.unicode); /* I don't think this is needed, but it doesn't hurt... */
@@ -1887,7 +1887,7 @@ DumpMacBinaryHeader (FILE *res, struct macbinaryheader *mb)
     FSOpenFork (&ref, resforkname.length, resforkname.unicode, fsWrPerm,
                 &macfile);
   if (ret != noErr)
-    return (false);
+    return false;
   FSSetForkSize (macfile, fsFromStart, 0);      /* Truncate it just in case it existed... */
   fseek (res, 128, SEEK_SET);   /* Everything after the mac binary header in */
   /* the temp file is resource fork */
@@ -1896,7 +1896,7 @@ DumpMacBinaryHeader (FILE *res, struct macbinaryheader *mb)
     FSWriteFork (macfile, fsAtMark, 0, len, buf, &whocares);
   FSCloseFork (macfile);
   free (buf);
-  return (true);
+  return true;
 #endif
 }
 
@@ -1969,7 +1969,7 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
 
   temppfb = tmpfile ();
   if (temppfb == NULL)
-    return (0);
+    return 0;
 
   /* The mac has rules about what the filename should be for a postscript */
   /*  font. If you deviate from those rules the font will not be found */
@@ -2002,7 +2002,7 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
   if (ret == 0 || ferror (temppfb))
     {
       fclose (temppfb);
-      return (0);
+      return 0;
     }
 
   if (__Mac && format == ff_pfbmacbin)
@@ -2012,7 +2012,7 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
   if (res == NULL)
     {
       fclose (temppfb);
-      return (0);
+      return 0;
     }
 
   WriteDummyMacHeaders (res);
@@ -2049,7 +2049,7 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
 #if __Mac
   free (header.macfilename);
 #endif
-  return (ret);
+  return ret;
 }
 
 int
@@ -2065,7 +2065,7 @@ WriteMacTTFFont (char *filename, SplineFont *sf, enum fontformat format,
 
   tempttf = tmpfile ();
   if (tempttf == NULL)
-    return (0);
+    return 0;
 
   if (_WriteTTFFont (tempttf, sf, format == ff_none ? ff_none :
                      format == ff_ttfmacbin ? ff_ttf :
@@ -2073,7 +2073,7 @@ WriteMacTTFFont (char *filename, SplineFont *sf, enum fontformat format,
       || ferror (tempttf))
     {
       fclose (tempttf);
-      return (0);
+      return 0;
     }
   if (bf != bf_ttf && bf != bf_sfnt_dfont)
     bsizes = NULL;              /* as far as the FOND for the truetype is concerned anyway */
@@ -2085,7 +2085,7 @@ WriteMacTTFFont (char *filename, SplineFont *sf, enum fontformat format,
   if (res == NULL)
     {
       fclose (tempttf);
-      return (0);
+      return 0;
     }
 
   if (format != ff_ttfmacbin)
@@ -2134,7 +2134,7 @@ WriteMacTTFFont (char *filename, SplineFont *sf, enum fontformat format,
     ret = URLFromFile (filename, res);
   if (fclose (res) == -1)
     ret = 0;
-  return (ret);
+  return ret;
 }
 
 int
@@ -2176,7 +2176,7 @@ WriteMacBitmaps (char *filename, SplineFont *sf, int32_t *sizes, int is_dfont,
   if (res == NULL)
     {
       free (binfilename);
-      return (0);
+      return 0;
     }
 
   if (is_dfont)
@@ -2211,7 +2211,7 @@ WriteMacBitmaps (char *filename, SplineFont *sf, int32_t *sizes, int is_dfont,
     ret = 0;
   free (resources[0].res);
   free (binfilename);
-  return (ret);
+  return ret;
 }
 
 /* We have to worry about these font formats:
@@ -2268,7 +2268,7 @@ WriteMacFamily (char *filename, struct sflist *sfs, enum fontformat format,
             }
           if (WriteMacPSFont (tempname, sfi->sf, format, flags, sfi->map, layer)
               == 0)
-            return (0);
+            return 0;
           free (tempname);
         }
     }
@@ -2286,7 +2286,7 @@ WriteMacFamily (char *filename, struct sflist *sfs, enum fontformat format,
             {
               for (sfsub = sfs; sfsub != sfi; sfsub = sfsub->next)
                 fclose (sfsub->tempttf);
-              return (0);
+              return 0;
             }
           rewind (sfi->tempttf);
         }
@@ -2301,7 +2301,7 @@ WriteMacFamily (char *filename, struct sflist *sfs, enum fontformat format,
     {
       for (sfsub = sfs; sfsub != NULL; sfsub = sfsub->next)
         fclose (sfsub->tempttf);
-      return (0);
+      return 0;
     }
 
   if (format == ff_ttfdfont || format == ff_otfdfont || format == ff_otfciddfont
@@ -2379,7 +2379,7 @@ WriteMacFamily (char *filename, struct sflist *sfs, enum fontformat format,
       free (sfi->ids);
       free (sfi->bdfs);
     }
-  return (ret);
+  return ret;
 }
 
 void
@@ -2441,7 +2441,7 @@ SearchPostScriptResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
       LogError (_("Can't open temporary file for postscript output\n"));
       fseek (f, here, SEEK_SET);
       free (offsets);
-      return (NULL);
+      return NULL;
     }
 
   putc (0x80, pfb);
@@ -2522,7 +2522,7 @@ SearchPostScriptResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
   fseek (f, here, SEEK_SET);
   rewind (pfb);
   if (flags & ttf_onlynames)
-    return ((SplineFont *) _NamesReadPostScript (pfb)); /* This closes the font for us */
+    return (SplineFont *) _NamesReadPostScript (pfb); /* This closes the font for us */
 
   fd = _ReadPSFont (pfb);
   sf = NULL;
@@ -2533,7 +2533,7 @@ SearchPostScriptResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
       /* There is no FOND in a postscript file, so we can't read any kerning */
     }
   fclose (pfb);
-  return (sf);
+  return sf;
 }
 
 static SplineFont *
@@ -2581,7 +2581,7 @@ SearchTtfResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
         }
       if (flags & ttf_onlynames)
         {
-          return ((SplineFont *) names);
+          return (SplineFont *) names;
         }
       if ((pt = strrchr (filename, '/')) == NULL)
         pt = filename;
@@ -2682,14 +2682,14 @@ SearchTtfResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
           fseek (f, start, SEEK_SET);
           if (sf->chosenname == NULL)
             sf->chosenname = chosenname;
-          return (sf);
+          return sf;
         }
       fseek (f, here, SEEK_SET);
     }
   free (chosenname);
   free (buffer);
   fseek (f, start, SEEK_SET);
-  return (NULL);
+  return NULL;
 }
 
 struct assoc
@@ -2942,7 +2942,7 @@ BuildFondList (FILE *f, long rlistpos, int subcnt, long rdata_pos,
       fseek (f, here, SEEK_SET);
     }
   fseek (f, start, SEEK_SET);
-  return (head);
+  return head;
 }
 
 static BDFChar *
@@ -2980,7 +2980,7 @@ NFNTCvtBitmap (struct MacFontRec *font, int index, SplineFont *sf, int gid)
         }
     }
   BCCompressBitmap (bdfc);
-  return (bdfc);
+  return bdfc;
 }
 
 static void
@@ -3094,7 +3094,7 @@ BuildName (char *family, int style)
     strcat (buffer, "Condensed");
   if (style & sf_extend)
     strcat (buffer, "Extended");
-  return (xstrdup_or_null (buffer));
+  return xstrdup_or_null (buffer);
 }
 
 static int
@@ -3154,7 +3154,7 @@ PickFOND (FOND * fondlist, char *filename, char **name, int *style)
               {
                 *style = (i & 3) | ((i & ~3) << 1);     /* PS styles skip underline bit */
                 *name = xstrdup_or_null (test->psnames[i]);
-                return (test);
+                return test;
               }
         }
     }
@@ -3233,9 +3233,9 @@ PickFOND (FOND * fondlist, char *filename, char **name, int *style)
   free (fonds);
   free (styles);
   if (which == -1)
-    return (NULL);
+    return NULL;
 
-  return (fond);
+  return fond;
 }
 
 static SplineFont *
@@ -3258,7 +3258,7 @@ SearchBitmapResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
 
   fond = PickFOND (fondlist, filename, &name, &style);
   if (fond == NULL)
-    return (NULL);
+    return NULL;
 
   find_id = -1;
   if (flags & ttf_onlyonestrike)
@@ -3337,7 +3337,7 @@ SearchBitmapResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
 
   sf->onlybitmaps = true;
   SFOrderBitmapList (sf);
-  return (sf);
+  return sf;
 }
 
 /* Look for kerning info and merge it into the currently existing font "into" */
@@ -3355,7 +3355,7 @@ FindFamilyStyleKerns (SplineFont *into, EncMap *map, FOND * fondlist,
 
   fond = PickFOND (fondlist, filename, &name, &style);
   if (fond == NULL || into == NULL)
-    return (NULL);
+    return NULL;
   for (i = 0; i < fond->stylekerncnt; ++i)
     if (fond->stylekerns[i].style == style)
       break;
@@ -3363,7 +3363,7 @@ FindFamilyStyleKerns (SplineFont *into, EncMap *map, FOND * fondlist,
     {
       LogError (_("No kerning table for %s\n"), name);
       free (name);
-      return (NULL);
+      return NULL;
     }
   for (j = 0; j < fond->stylekerns[i].kernpairs; ++j)
     {
@@ -3393,7 +3393,7 @@ FindFamilyStyleKerns (SplineFont *into, EncMap *map, FOND * fondlist,
         }
       kp->off = offset;
     }
-  return (into);
+  return into;
 }
 
 /* Look for a bare truetype font in a binhex/macbinary wrapper */
@@ -3411,11 +3411,11 @@ MightBeTrueType (FILE *binary, int32_t pos, int32_t dlen, int flags,
       char **ret;
       char *temp = TTFGetFontName (binary, pos, pos);
       if (temp == NULL)
-        return (NULL);
+        return NULL;
       ret = xmalloc (2 * sizeof (char *));
       ret[0] = temp;
       ret[1] = NULL;
-      return ((SplineFont *) ret);
+      return (SplineFont *) ret;
     }
 
   fseek (binary, pos, SEEK_SET);
@@ -3432,7 +3432,7 @@ MightBeTrueType (FILE *binary, int32_t pos, int32_t dlen, int flags,
   sf = _SFReadTTF (temp, flags, openflags, NULL, NULL);
   fclose (temp);
   free (buffer);
-  return (sf);
+  return sf;
 }
 
 static SplineFont *
@@ -3455,7 +3455,7 @@ IsResourceFork (FILE *f, long offset, char *filename, int flags,
 
   fseek (f, offset, SEEK_SET);
   if (fread (buffer, 1, 16, f) != 16)
-    return (NULL);
+    return NULL;
   rdata_pos =
     offset +
     ((buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3]);
@@ -3467,11 +3467,11 @@ IsResourceFork (FILE *f, long offset, char *filename, int flags,
   map_len =
     ((buffer[12] << 24) | (buffer[13] << 16) | (buffer[14] << 8) | buffer[15]);
   if (rdata_pos + rdata_len != map_pos || rdata_len == 0)
-    return (NULL);
+    return NULL;
   fseek (f, map_pos, SEEK_SET);
   buffer2[15] = buffer[15] + 1; /* make it be different */
   if (fread (buffer2, 1, 16, f) != 16)
-    return (NULL);
+    return NULL;
 
 /* Apple's data fork resources appear to have a bunch of zeroes here instead */
 /*  of a copy of the first 16 bytes */
@@ -3482,7 +3482,7 @@ IsResourceFork (FILE *f, long offset, char *filename, int flags,
     {
       for (i = 0; i < 16; ++i)
         if (buffer[i] != buffer2[i])
-          return (NULL);
+          return NULL;
     }
   getlong (f);                  /* skip the handle to the next resource map */
   getushort (f);                /* skip the file resource number */
@@ -3523,10 +3523,10 @@ IsResourceFork (FILE *f, long offset, char *filename, int flags,
           fond_subcnt = subcnt;
         }
       if (sf != NULL)
-        return (sf);
+        return sf;
     }
   if (flags & ttf_onlynames)    /* Not interested in bitmap resources here */
-    return (NULL);
+    return NULL;
 
   if (flags & ttf_onlykerns)
     {                           /* For kerns */
@@ -3535,7 +3535,7 @@ IsResourceFork (FILE *f, long offset, char *filename, int flags,
           BuildFondList (f, fond_pos, fond_subcnt, rdata_pos, name_list, flags);
       into = FindFamilyStyleKerns (into, map, fondlist, filename);
       FondListFree (fondlist);
-      return (into);
+      return into;
     }
   /* Ok. If no outline font, try for a bitmap */
   if (nfnt_subcnt == 0)
@@ -3553,9 +3553,9 @@ IsResourceFork (FILE *f, long offset, char *filename, int flags,
                                filename, fondlist, flags);
       FondListFree (fondlist);
       if (sf != NULL)
-        return (sf);
+        return sf;
     }
-  return ((SplineFont *) -1);   /* It's a valid resource file, but just has no fonts */
+  return (SplineFont *) -1;   /* It's a valid resource file, but just has no fonts */
 }
 
 #if __Mac
@@ -3590,10 +3590,10 @@ HasResourceFork (char *filename, int flags, enum openflags openflags,
   if (tempfn != filename)
     free (tempfn);
   if (resfork == NULL)
-    return (NULL);
+    return NULL;
   ret = IsResourceFork (resfork, 0, filename, flags, openflags, into, map);
   fclose (resfork);
-  return (ret);
+  return ret;
 }
 #endif
 
@@ -3605,10 +3605,10 @@ IsResourceInBinary (FILE *f, char *filename, int flags,
   unsigned long offset, dlen, rlen;
 
   if (fread (header, 1, 128, f) != 128)
-    return (NULL);
+    return NULL;
   if (header[0] != 0 || header[74] != 0 || header[82] != 0 || header[1] <= 0 ||
       header[1] > 33 || header[63] != 0 || header[2 + header[1]] != 0)
-    return (NULL);
+    return NULL;
   dlen =
     ((header[0x53] << 24) | (header[0x54] << 16) | (header[0x55] << 8) |
      header[0x56]);
@@ -3629,9 +3629,9 @@ IsResourceInBinary (FILE *f, char *filename, int flags,
                                                        && header[1] == 1
                                                        && header[2] == 0
                                                        && header[3] == 0))
-        return (MightBeTrueType (f, pos, dlen, flags, openflags));
+        return MightBeTrueType (f, pos, dlen, flags, openflags);
     }
-  return (IsResourceFork (f, offset, filename, flags, openflags, into, map));
+  return IsResourceFork (f, offset, filename, flags, openflags, into, map);
 }
 
 static int lastch = 0, repeat = 0;
@@ -3683,7 +3683,7 @@ IsResourceInHex (FILE *f, char *filename, int flags, enum openflags openflags,
   if (binary == NULL)
     {
       LogError (_("can't create temporary file\n"));
-      return (NULL);
+      return NULL;
     }
 
   lastch = repeat = 0;
@@ -3697,7 +3697,7 @@ IsResourceInHex (FILE *f, char *filename, int flags, enum openflags openflags,
       if (*pt == '\0')
         {
           fclose (binary);
-          return (NULL);
+          return NULL;
         }
       val = (val << 6) | (pt - sixbit);
       if (++cnt == 4)
@@ -3735,7 +3735,7 @@ IsResourceInHex (FILE *f, char *filename, int flags, enum openflags openflags,
   if (getc (binary) != '\0')
     {
       fclose (binary);
-      return (NULL);
+      return NULL;
     }
   fread (header, 1, 20, binary);
   dlen =
@@ -3756,13 +3756,13 @@ IsResourceInHex (FILE *f, char *filename, int flags, enum openflags openflags,
         {
           ret = MightBeTrueType (binary, pos, dlen, flags, openflags);
           fclose (binary);
-          return (ret);
+          return ret;
         }
     }
   if (rlen == 0)
     {
       fclose (binary);
-      return (NULL);
+      return NULL;
     }
 
   ret =
@@ -3770,7 +3770,7 @@ IsResourceInHex (FILE *f, char *filename, int flags, enum openflags openflags,
                     openflags, into, map);
 
   fclose (binary);
-  return (ret);
+  return ret;
 }
 
 static SplineFont *
@@ -3793,7 +3793,7 @@ IsResourceInFile (char *filename, int flags, enum openflags openflags,
   if (temp != filename)
     free (temp);
   if (f == NULL)
-    return (NULL);
+    return NULL;
   spt = strrchr (filename, '/');
   if (spt == NULL)
     spt = filename;
@@ -3805,7 +3805,7 @@ IsResourceInFile (char *filename, int flags, enum openflags openflags,
       if ((sf = IsResourceInBinary (f, filename, flags, openflags, into, map)))
         {
           fclose (f);
-          return (sf);
+          return sf;
         }
     }
   else if (pt != NULL && (pt[1] == 'h' || pt[1] == 'H')
@@ -3815,7 +3815,7 @@ IsResourceInFile (char *filename, int flags, enum openflags openflags,
       if ((sf = IsResourceInHex (f, filename, flags, openflags, into, map)))
         {
           fclose (f);
-          return (sf);
+          return sf;
         }
     }
 
@@ -3825,7 +3825,7 @@ IsResourceInFile (char *filename, int flags, enum openflags openflags,
   if (sf == NULL)
     sf = HasResourceFork (filename, flags, openflags, into, map);
 #endif
-  return (sf);
+  return sf;
 }
 
 static SplineFont *
@@ -3837,7 +3837,7 @@ FindResourceFile (char *filename, int flags, enum openflags openflags,
   SplineFont *sf;
 
   if ((sf = IsResourceInFile (filename, flags, openflags, into, map)))
-    return (sf);
+    return sf;
 
   /* Well, look in the resource fork directory (if it exists), the resource */
   /*  fork is placed there in a separate file on (some) non-Mac disks */
@@ -3856,7 +3856,7 @@ FindResourceFile (char *filename, int flags, enum openflags openflags,
   strcpy (spt, "resource.frk/");
   strcat (spt, pt);
   if ((sf = IsResourceInFile (buffer, flags, openflags, into, map)))
-    return (sf);
+    return sf;
 
   /* however the resource fork does not appear to do long names properly */
   /*  names are always lower case 8.3, do some simple things to check */
@@ -3878,7 +3878,7 @@ FindResourceFile (char *filename, int flags, enum openflags openflags,
       *dpt++ = '1';
       strcpy (dpt, exten);
     }
-  return (IsResourceInFile (buffer, flags, openflags, into, map));
+  return IsResourceInFile (buffer, flags, openflags, into, map);
 }
 
 SplineFont *
@@ -3895,20 +3895,20 @@ SFReadMacBinary (char *filename, int flags, enum openflags openflags)
                 filename);
       sf = NULL;
     }
-  return (sf);
+  return sf;
 }
 
 int
 LoadKerningDataFromMacFOND (SplineFont *sf, char *filename, EncMap *map)
 {
   if (FindResourceFile (filename, ttf_onlykerns, 0, sf, map) == NULL)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 char **
 NamesReadMacBinary (char *filename)
 {
-  return ((char **) FindResourceFile (filename, ttf_onlynames, 0, NULL, NULL));
+  return (char **) FindResourceFile (filename, ttf_onlynames, 0, NULL, NULL);
 }

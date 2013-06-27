@@ -62,7 +62,7 @@ nld_e_h (GWindow gw, GEvent * event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_controlevent
            && event->u.control.subtype == et_buttonactivate)
@@ -71,7 +71,7 @@ nld_e_h (GWindow gw, GEvent * event)
       d->done = true;
       d->ok = GGadgetGetCid (event->u.control.g);
     }
-  return (true);
+  return true;
 }
 
 void
@@ -323,7 +323,7 @@ GetQuietReal (GWindow gw, int cid, int *err)
   val = u32_strtod (txt, &end);
   if (*end != '\0')
     *err = true;
-  return (val);
+  return val;
 }
 
 static void
@@ -374,7 +374,7 @@ PoV_Vanish (GGadget *g, GEvent * e)
       struct nldlg *d = GDrawGetUserData (GGadgetGetWindow (g));
       PoV_DoVanish (d);
     }
-  return (true);
+  return true;
 }
 
 int
@@ -743,7 +743,7 @@ PointOfViewDlg (struct pov_data *pov, SplineFont *sf, int flags)
           if (!d.ok)
             {
               GDrawDestroyWindow (d.gw);
-              return (-1);
+              return -1;
             }
           err = false;
           x = GetReal8 (d.gw, CID_XValue, _("_X"), &err);
@@ -783,7 +783,7 @@ PointOfViewDlg (struct pov_data *pov, SplineFont *sf, int flags)
   def.y /= emsize;
   def.z /= emsize;
   def.d /= emsize;
-  return (0);                   /* -1 => Canceled */
+  return 0;                   /* -1 => Canceled */
 }
 
 void

@@ -186,7 +186,7 @@ KCLookupSubtableArray (SplineFont *sf, int isv)
       ti[cnt]->text = utf82u_copy (kc->subtable->subtable_name);
     }
   ti[cnt] = xcalloc (1, sizeof (GTextInfo));
-  return (ti);
+  return ti;
 }
 
 static GTextInfo *
@@ -205,7 +205,7 @@ KCLookupSubtableList (SplineFont *sf, int isv)
   ti = xcalloc (cnt + 1, sizeof (GTextInfo));
   for (kc = head, cnt = 0; kc != NULL; kc = kc->next, ++cnt)
     ti[cnt].text = utf82u_copy (kc->subtable->subtable_name);
-  return (ti);
+  return ti;
 }
 
 static int
@@ -215,7 +215,7 @@ isEverythingElse (char *text)
   /* of classes (a set of kerning classes) where class 0 designates the */
   /* default class containing all glyphs not specified in the other classes */
   int ret = strcmp (text, _("{Everything Else}"));
-  return (ret == 0);
+  return ret == 0;
 }
 
 static void
@@ -414,7 +414,7 @@ KPD_Cancel (GGadget *g, GEvent *e)
       KernClassDlg *kcd = GDrawGetUserData (GGadgetGetWindow (g));
       KPD_DoCancel (kcd);
     }
-  return (true);
+  return true;
 }
 
 static int KPD_FinishKP (KernClassDlg *);
@@ -426,7 +426,7 @@ KPD_OK (GGadget *g, GEvent *e)
     {
       KernClassDlg *kcd = GDrawGetUserData (GGadgetGetWindow (g));
       if (!KPD_FinishKP (kcd))
-        return (true);
+        return true;
       BDFCharFree (kcd->fsc);
       BDFCharFree (kcd->ssc);
       kcd->fsc = kcd->ssc = NULL;
@@ -436,7 +436,7 @@ KPD_OK (GGadget *g, GEvent *e)
       kcd->orig_adjust.corrections = NULL;
       kcd->done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -524,21 +524,21 @@ static int
 KCD_RightToLeft (KernClassDlg * kcd)
 {
   if (kcd->subtable != NULL)
-    return (kcd->subtable->lookup->lookup_flags & pst_r2l);
+    return kcd->subtable->lookup->lookup_flags & pst_r2l;
 
   if (kcd->scf != NULL)
     {
       uint32_t script = SCScriptFromUnicode (kcd->scf);
       if (script != DEFAULT_SCRIPT)
-        return (ScriptIsRightToLeft (script));
+        return ScriptIsRightToLeft (script);
     }
   if (kcd->scs != NULL)
     {
       uint32_t script = SCScriptFromUnicode (kcd->scs);
       if (script != DEFAULT_SCRIPT)
-        return (ScriptIsRightToLeft (script));
+        return ScriptIsRightToLeft (script);
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -804,7 +804,7 @@ KCD_KernOffChanged (GGadget *g, GEvent *e)
   KernClassDlg *kcd = GDrawGetUserData (GGadgetGetWindow (g));
   if (e->type == et_controlevent && e->u.control.subtype == et_textchanged)
     GDrawRequestExpose (kcd->subw, NULL, false);
-  return (true);
+  return true;
 }
 
 static void
@@ -899,7 +899,7 @@ KCD_DisplaySizeChanged (GGadget *g, GEvent *e)
     {
       _KCD_DisplaySizeChanged (kcd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -918,7 +918,7 @@ KCD_MagnificationChanged (GGadget *g, GEvent *e)
           GDrawRequestExpose (kcd->subw, NULL, false);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -931,7 +931,7 @@ KCB_FreeTypeChanged (GGadget *g, GEvent *e)
       KCD_UpdateGlyph (kcd, 1);
       GDrawRequestExpose (kcd->subw, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -948,11 +948,11 @@ KCD_CorrectionChanged (GGadget *g, GEvent *e)
       while (*end == ' ')
         ++end;
       if (*end != '\0')
-        return (true);
+        return true;
       if (correction < -128 || correction > 127)
         {
           ff_post_error (_("Value out of range"), _("Value out of range"));
-          return (true);
+          return true;
         }
 
       DeviceTableSet (&kcd->active_adjust, kcd->pixelsize, correction);
@@ -960,7 +960,7 @@ KCD_CorrectionChanged (GGadget *g, GEvent *e)
       GGadgetSetEnabled (GWidgetGetControl (kcd->gw, CID_ClearDevice),
                          kcd->active_adjust.corrections != NULL);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -976,7 +976,7 @@ KCD_ClearDevice (GGadget *g, GEvent *e)
       GGadgetSetTitle8 (GWidgetGetControl (kcd->gw, CID_Correction), "0");
       GGadgetSetEnabled (g, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1002,7 +1002,7 @@ KCD_RevertKerning (GGadget *g, GEvent *e)
         }
       _KCD_DisplaySizeChanged (kcd);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1027,13 +1027,13 @@ KPD_FinishKP (KernClassDlg * kcd)
       for (kp = kcd->isv ? kcd->scf->vkerns : kcd->scf->kerns;
            kp != NULL && kp->sc != kcd->scs; kp = kp->next);
       if (kp == NULL && offset == 0 && kcd->active_adjust.corrections == NULL)
-        return (true);
+        return true;
       if (kcd->subtable == NULL)
         {
           ff_post_error (_("No lookup selected"),
                          _
                          ("You must select a lookup subtable to contain this kerning pair"));
-          return (false);
+          return false;
         }
       if (kp == NULL)
         {
@@ -1064,7 +1064,7 @@ KPD_FinishKP (KernClassDlg * kcd)
         }
       memset (&kcd->active_adjust, 0, sizeof (DeviceTable));
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1164,7 +1164,7 @@ KP_Subtable (GGadget *g, GEvent *e)
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1269,7 +1269,7 @@ KCD_GlyphSelected (GGadget *g, GEvent *e)
       if (!KPD_FinishKP (kcd))
         {
           KPD_RestoreGlyphs (kcd);
-          return (true);
+          return true;
         }
       KCD_UpdateGlyph (kcd, which);
       if (which == 0)
@@ -1277,7 +1277,7 @@ KCD_GlyphSelected (GGadget *g, GEvent *e)
       KPD_PairSearch (kcd);
       GDrawRequestExpose (kcd->subw, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static GTextInfo **
@@ -1323,7 +1323,7 @@ TiNamesFromClass (GGadget *list, int class_index)
   if (i > 0)
     ti[0]->selected = true;
   ti[i] = xcalloc (1, sizeof (GTextInfo));
-  return (ti);
+  return ti;
 }
 
 static void
@@ -1447,7 +1447,7 @@ KC_ShowHideKernPane (GGadget *g, GEvent *e)
       if (e != NULL)
         SavePrefs (true);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1478,7 +1478,7 @@ KC_OK (GGadget *g, GEvent *e)
         GGadgetIsChecked (GWidgetGetControl (kcd->gw, CID_OnlyCloser));
       autokern = GGadgetIsChecked (GWidgetGetControl (kcd->gw, CID_Autokern));
       if (err)
-        return (true);
+        return true;
       KCD_Finalize (kcd);
 
       kc = kcd->orig;
@@ -1519,7 +1519,7 @@ KC_OK (GGadget *g, GEvent *e)
 
       GDrawDestroyWindow (kcd->gw);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1551,7 +1551,7 @@ KC_Cancel (GGadget *g, GEvent *e)
 
       KC_DoCancel (kcd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1590,7 +1590,7 @@ KCD_TextSelect (GGadget *g, GEvent *e)
                     KCD_VShow (kcd, i);
                   else
                     KCD_HShow (kcd, i);
-                  return (true);
+                  return true;
                 }
               if (*pt == '(')
                 {
@@ -1606,7 +1606,7 @@ KCD_TextSelect (GGadget *g, GEvent *e)
       if (nlen != 0)
         GMatrixEditActivateRowCol (list, -1, -1);
     }
-  return (true);
+  return true;
 }
 
 #define MID_Clear		1000
@@ -1866,13 +1866,13 @@ KCD_NameClass (SplineFont *sf, char *buf, int blen, char *class_str)
   if (class_str == NULL)
     {
       utf8_idpb (buf, 0x2205);  /* Empty set glyph */
-      return (true);
+      return true;
     }
   if (isEverythingElse (class_str))
     {
       /* TRANSLATORS: Short form of {Everything Else}, might use universal? U+2200 */
       strcpy (buf, _("{All}"));
-      return (true);
+      return true;
     }
   for (start = class_str; *start == ' '; ++start);
   bpt = buf;
@@ -1899,7 +1899,7 @@ KCD_NameClass (SplineFont *sf, char *buf, int blen, char *class_str)
       if (*start == '\0')
         {
           *bpt = '\0';
-          return (false);
+          return false;
         }
       *bpt++ = ' ';
     }
@@ -1910,7 +1910,7 @@ KCD_NameClass (SplineFont *sf, char *buf, int blen, char *class_str)
       *bpt++ = '.';
       *bpt++ = '.';
       *bpt = '\0';
-      return (false);
+      return false;
     }
 
   ch = *pt;
@@ -1920,7 +1920,7 @@ KCD_NameClass (SplineFont *sf, char *buf, int blen, char *class_str)
     {
       snprintf (buf, blen, "!%s", start);
       *pt = ch;
-      return (true);
+      return true;
     }
   else if (sc->unicodeenc == -1 || isprivateuse (sc->unicodeenc))       /* Pango complains that privateuse code points are "Invalid UTF8 strings" */
     snprintf (buf, blen, "%s", start);
@@ -1930,7 +1930,7 @@ KCD_NameClass (SplineFont *sf, char *buf, int blen, char *class_str)
       *bpt = '\0';
     }
   *pt = ch;
-  return (false);
+  return false;
 }
 
 static void
@@ -2115,7 +2115,7 @@ KCD_SBReset (KernClassDlg * kcd)
   GScrollBarSetPos (kcd->vsb, kcd->offtop);
   GScrollBarSetPos (kcd->hsb, kcd->offleft);
 
-  return (oldtop != kcd->offtop || oldleft != kcd->offleft);
+  return oldtop != kcd->offtop || oldleft != kcd->offleft;
 }
 
 static void
@@ -2281,13 +2281,13 @@ kcd_sub_e_h (GWindow gw, GEvent *event)
       KCD_KernMouse (kcd, event);
       break;
     case et_char:
-      return (false);
+      return false;
     case et_resize:
       kcd->subwidth = event->u.resize.size.width;
       GDrawRequestExpose (gw, NULL, false);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2305,9 +2305,9 @@ kcd_e_h (GWindow gw, GEvent *event)
         {
           help (kcd->iskernpair ? "metricsview.html#kernpair" :
                 "metricsview.html#kernclass");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
       break;
     case et_destroy:
       if (kcd != NULL)
@@ -2357,7 +2357,7 @@ kcd_e_h (GWindow gw, GEvent *event)
         }
       break;
     }
-  return (true);
+  return true;
 }
 
 void
@@ -2733,7 +2733,7 @@ KCD_PickGlyphsForClass (GGadget *g, int r, int c)
   struct matrix_data *classes = _GMatrixEditGet (g, &rows);
   char *new =
     GlyphSetFromSelection (kcd->sf, kcd->layer, classes[r * cols + c].u.md_str);
-  return (new);
+  return new;
 }
 
 static enum gme_updown
@@ -2747,7 +2747,7 @@ KCD_EnableUpDown (GGadget *g, int r)
     ret = ud_up_enabled;
   if (r >= 1 && r < rows - 1)
     ret |= ud_down_enabled;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -2792,7 +2792,7 @@ KCD_RowMotion (GGadget *g, int oldr, int newr)
 static int
 KCD_EnableDeleteClass (GGadget *g, int whichclass)
 {
-  return (whichclass > 0);
+  return whichclass > 0;
 }
 
 static void
@@ -2872,7 +2872,7 @@ KCD_GlyphListCompletion (GGadget *t, int from_tab)
     GDrawGetUserData (GDrawGetParentWindow (GGadgetGetWindow (t)));
   SplineFont *sf = kcd->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, true));
+  return SFGlyphNameCompletion (sf, t, from_tab, true);
 }
 
 static uint32_t **
@@ -2881,7 +2881,7 @@ KCD_GlyphCompletion (GGadget *t, int from_tab)
   KernClassDlg *kcd = GDrawGetUserData (GGadgetGetWindow (t));
   SplineFont *sf = kcd->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, false));
+  return SFGlyphNameCompletion (sf, t, from_tab, false);
 }
 
 static struct col_init class_ci[] = {
@@ -2982,7 +2982,7 @@ AddClassList (GGadgetCreateData *gcd, GTextInfo *label, int k, int off,
   gcd[k].gd.u.boxelements = varray;
   gcd[k++].creator = GVBoxCreate;
 
-  return (k);
+  return k;
 }
 
 static void
@@ -3733,7 +3733,7 @@ KCL_New (GGadget *g, GEvent *e)
         sdf_kernclass;
       SFNewLookupSubtableOfType (kcld->sf, gpos_pair, &sd, kcld->layer);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3789,7 +3789,7 @@ KCL_Delete (GGadget *g, GEvent *e)
       GGadgetSetEnabled (GWidgetGetControl (GGadgetGetWindow (g), CID_Edit),
                          false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3806,12 +3806,12 @@ KCL_Edit (GGadget *g, GEvent *e)
         GGadgetGetFirstListSelectedItem (GWidgetGetControl
                                          (GGadgetGetWindow (g), CID_List));
       if (sel == -1)
-        return (true);
+        return true;
       for (kc = kcld->isv ? kcld->sf->vkerns : kcld->sf->kerns, i = 0; i < sel;
            kc = kc->next, ++i);
       KernClassD (kc, kcld->sf, kcld->layer, kcld->isv);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3824,7 +3824,7 @@ KCL_Done (GGadget *g, GEvent *e)
       kcld = GDrawGetUserData (GGadgetGetWindow (g));
       GDrawDestroyWindow (kcld->gw);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3845,7 +3845,7 @@ KCL_SelChanged (GGadget *g, GEvent *e)
       e->u.control.g = GWidgetGetControl (kcld->gw, CID_Edit);
       KCL_Edit (e->u.control.g, e);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3861,9 +3861,9 @@ kcl_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("metricsview.html#kernclass");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_destroy)
     {
@@ -3874,7 +3874,7 @@ kcl_e_h (GWindow gw, GEvent *event)
         kcld->sf->kcld = NULL;
       free (kcld);
     }
-  return (true);
+  return true;
 }
 
 void
@@ -4189,12 +4189,12 @@ SFFindKernClass (SplineFont *sf, SplineChar *first, SplineChar *last,
               if (i > 1 || kc->offsets[f * kc->second_cnt + l] != 0)
                 {
                   *index = f * kc->second_cnt + l;
-                  return (kc);
+                  return kc;
                 }
             }
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 KernClass *
@@ -4218,10 +4218,10 @@ SFFindVKernClass (SplineFont *sf, SplineChar *first, SplineChar *last,
               if (i > 1 || kc->offsets[f * kc->second_cnt + l] != 0)
                 {
                   *index = f * kc->second_cnt + l;
-                  return (kc);
+                  return kc;
                 }
             }
         }
     }
-  return (NULL);
+  return NULL;
 }
