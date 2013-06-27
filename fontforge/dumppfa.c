@@ -175,7 +175,7 @@ startfileencoding (DumpChar dumpchar, void *data,
   func (randombytes[1], fed);
   func (randombytes[2], fed);
   func (randombytes[3], fed);
-  return (func);
+  return func;
 }
 
 /* Encode a string in adobe's format. choose a different set of initial random*/
@@ -293,9 +293,9 @@ isStdEncoding (char *encoding[256])
     if (strcmp (encoding[i], ".notdef") == 0)
       /* that's ok */ ;
     else if (strcmp (encoding[i], AdobeStandardEncoding[i]) != 0)
-      return (0);
+      return 0;
 
-  return (1);
+  return 1;
 }
 
 #if 0
@@ -379,7 +379,7 @@ PSDictCopy (struct psdict *dict)
   int i;
 
   if (dict == NULL)
-    return (NULL);
+    return NULL;
 
   ret = xcalloc (1, sizeof (struct psdict));
   ret->cnt = dict->cnt;
@@ -392,7 +392,7 @@ PSDictCopy (struct psdict *dict)
       ret->values[i] = xstrdup_or_null (dict->values[i]);
     }
 
-  return (ret);
+  return ret;
 }
 
 VISIBLE int
@@ -401,13 +401,13 @@ PSDictFindEntry (struct psdict *dict, const char *key)
   int i;
 
   if (dict == NULL)
-    return (-1);
+    return -1;
 
   for (i = 0; i < dict->next; ++i)
     if (strcmp (dict->keys[i], key) == 0)
-      return (i);
+      return i;
 
-  return (-1);
+  return -1;
 }
 
 VISIBLE const char *
@@ -416,13 +416,13 @@ PSDictHasEntry (struct psdict *dict, const char *key)
   int i;
 
   if (dict == NULL)
-    return (NULL);
+    return NULL;
 
   for (i = 0; i < dict->next; ++i)
     if (strcmp (dict->keys[i], key) == 0)
-      return (dict->values[i]);
+      return dict->values[i];
 
-  return (NULL);
+  return NULL;
 }
 
 bool
@@ -431,17 +431,17 @@ PSDictSame (struct psdict *dict1, struct psdict *dict2)
   int i;
 
   if ((dict1 == NULL || dict1->cnt == 0) && (dict2 == NULL || dict2->cnt == 0))
-    return (true);
+    return true;
   if (dict1 == NULL || dict2 == NULL || dict1->cnt != dict2->cnt)
-    return (false);
+    return false;
 
   for (i = 0; i < dict1->cnt; ++i)
     {
       const char *val = PSDictHasEntry (dict2, dict1->keys[i]);
       if (val == NULL || strcmp (val, dict1->values[i]) != 0)
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 int
@@ -450,13 +450,13 @@ PSDictRemoveEntry (struct psdict *dict, const char *key)
   int i;
 
   if (dict == NULL)
-    return (false);
+    return false;
 
   for (i = 0; i < dict->next; ++i)
     if (strcmp (dict->keys[i], key) == 0)
       break;
   if (i == dict->next)
-    return (false);
+    return false;
   free (dict->keys[i]);
   free (dict->values[i]);
   --dict->next;
@@ -467,7 +467,7 @@ PSDictRemoveEntry (struct psdict *dict, const char *key)
       ++i;
     }
 
-  return (true);
+  return true;
 }
 
 VISIBLE int
@@ -476,7 +476,7 @@ PSDictChangeEntry (struct psdict *dict, const char *key, const char *newval)
   int i;
 
   if (dict == NULL)
-    return (-1);
+    return -1;
 
   for (i = 0; i < dict->next; ++i)
     if (strcmp (dict->keys[i], key) == 0)
@@ -495,7 +495,7 @@ PSDictChangeEntry (struct psdict *dict, const char *key, const char *newval)
     }
   free (dict->values[i]);
   dict->values[i] = xstrdup_or_null (newval);
-  return (i);
+  return i;
 }
 
 static void
@@ -542,10 +542,10 @@ dumpcharstrings (void (*dumpchar) (int ch, void *data), void *data,
       encodestrout (dumpchar, data, chars->values[i], chars->lens[i], leniv);
       dumpstr (dumpchar, data, " ND\n");
       if (!ff_progress_next ())
-        return (false);
+        return false;
     }
   dumpstr (dumpchar, data, "end end\nreadonly put\n");
-  return (true);
+  return true;
 }
 
 static void
@@ -602,7 +602,7 @@ InvertTransform (real inverse[6], real transform[6])
   inverse[1] = inverse[2] = inverse[4] = inverse[5] = 0;
 
   if (temp[0] == 0 && temp[2] == 0)
-    return (false);             /* Not invertable */
+    return false;             /* Not invertable */
   if (temp[0] == 0)
     {
       val = temp[0];
@@ -627,7 +627,7 @@ InvertTransform (real inverse[6], real transform[6])
   inverse[4] -= val * inverse[0];
   inverse[5] -= val * inverse[1];
   if (temp[3] == 0)
-    return (false);
+    return false;
   val = 1 / temp[3];
   inverse[2] *= val;
   inverse[3] *= val;
@@ -637,7 +637,7 @@ InvertTransform (real inverse[6], real transform[6])
   val = temp[5];
   inverse[4] -= val * inverse[2];
   inverse[5] -= val * inverse[3];
-  return (true);
+  return true;
 }
 
 static void
@@ -1495,30 +1495,30 @@ SCSetsColor (SplineChar *sc)
   for (l = ly_fore; l < sc->layer_cnt; ++l)
     {
       if (sc->layers[l].fill_brush.col != COLOR_INHERITED)
-        return (true);
+        return true;
       if (sc->layers[l].fill_brush.gradient != NULL
           || sc->layers[l].fill_brush.pattern != NULL)
-        return (true);
+        return true;
       if (sc->layers[l].stroke_pen.brush.col != COLOR_INHERITED)
-        return (true);
+        return true;
       if (sc->layers[l].stroke_pen.brush.gradient != NULL
           || sc->layers[l].stroke_pen.brush.pattern != NULL)
-        return (true);
+        return true;
       for (img = sc->layers[l].images; img != NULL; img = img->next)
         {
           GImage *image = img->image;
           struct _GImage *base =
             image->list_len == 0 ? image->u.image : image->u.images[0];
           if (base->image_type != it_mono)
-            return (true);
+            return true;
           if (!sc->layers[l].dofill)
-            return (true);
+            return true;
         }
       for (r = sc->layers[l].refs; r != NULL; r = r->next)
         if (SCSetsColor (r->sc))
-          return (true);
+          return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -1585,11 +1585,11 @@ dumpcharprocs (void (*dumpchar) (int ch, void *data), void *data,
         if (SCWorthOutputting (sfglyph (sf, i)))
           dumpproc (dumpchar, data, sfglyph (sf, i));
         if (!ff_progress_next ())
-          return (false);
+          return false;
       }
   dumpstr (dumpchar, data, "end\ncurrentdict end\n");
   dumpf (dumpchar, data, "/%s exch definefont\n", sf->fontname);
-  return (true);
+  return true;
 }
 
 static struct pschars *
@@ -1629,7 +1629,7 @@ initsubrs (int needsflex, MMSet *mm)
         }
       sub->next = 10;
     }
-  return (sub);
+  return sub;
 }
 
 static void
@@ -1734,7 +1734,7 @@ dumptospace (void (*dumpchar) (int ch, void *data), void *data, const char *str)
 
   while (*str != ' ' && *str != ']' && *str != '\0')
     dumpchar (*str++, data);
-  return (str);
+  return str;
 }
 
 static void
@@ -1841,7 +1841,7 @@ FindMaxDiffOfBlues (const char *pt, double max_diff)
         max_diff = p2 - p1;
       pt = end;
     }
-  return (max_diff);
+  return max_diff;
 }
 
 double
@@ -1886,18 +1886,18 @@ BlueScaleFigureForced (struct psdict *private_, real bluevalues[],
   if (pt != NULL)
     max_diff = FindMaxDiffOfBlues (pt, max_diff);
   if (max_diff <= 0)
-    return (-1);
+    return -1;
   if (1 / max_diff > .039625)
-    return (-1);
+    return -1;
 
-  return (.99 / max_diff);
+  return .99 / max_diff;
 }
 
 double
 BlueScaleFigure (struct psdict *private_, real bluevalues[], real otherblues[])
 {
   if (PSDictHasEntry (private_, "BlueScale") != NULL)
-    return (-1);
+    return -1;
   return BlueScaleFigureForced (private_, bluevalues, otherblues);
 }
 
@@ -1925,7 +1925,7 @@ dumpprivatestuff (void (*dumpchar) (int ch, void *data), void *data,
     {
       flex_max = SplineFontIsFlexible (sf, layer, flags);
       if ((subrs = initsubrs (flex_max > 0, mm)) == NULL)
-        return (false);
+        return false;
       iscjk = SFIsCJK (sf, map);
     }
   else
@@ -1959,14 +1959,14 @@ dumpprivatestuff (void (*dumpchar) (int ch, void *data), void *data,
       SplineFontAutoHint (sf, layer);
     }
   if (!ff_progress_next_stage ())
-    return (false);
+    return false;
 
   otherblues[0] = otherblues[1] = bluevalues[0] = bluevalues[1] = 0;
   if (!hasblue)
     {
       FindBlues (sf, layer, bluevalues, otherblues);
       if (!ff_progress_next_stage ())
-        return (false);
+        return false;
     }
   bluescale = BlueScaleFigure (sf->private, bluevalues, otherblues);
 
@@ -2005,7 +2005,7 @@ dumpprivatestuff (void (*dumpchar) (int ch, void *data), void *data,
       if ((chars =
            SplineFont2ChrsSubrs (sf, iscjk, subrs, flags, format,
                                  layer)) == NULL)
-        return (false);
+        return false;
       ff_progress_next_stage ();
       ff_progress_change_line1 (_("Saving PostScript Font"));
     }
@@ -2145,7 +2145,7 @@ dumpprivatestuff (void (*dumpchar) (int ch, void *data), void *data,
     }
 
   ff_progress_change_stages (1);
-  return (true);
+  return true;
 }
 
 static void
@@ -2296,7 +2296,7 @@ GetAuthor (void)
   if (author == "Unknown")
     author = NULL;
 
-  return (author);
+  return author;
 }
 
 static void
@@ -2963,7 +2963,7 @@ dumpnotdefenc (FILE *out, SplineFont *sf)
   for (i = 0; i < 256; ++i)
     fprintf (out, " /%s\n", notdefname);
   fprintf (out, "] ReEncode\n\n");
-  return (notdefname);
+  return notdefname;
 }
 
 static int
@@ -2975,9 +2975,9 @@ somecharsused (SplineFont *sf, int bottom, int top, EncMap *map)
     {
       if (enc_to_gid (map, i) != -1
           && SCWorthOutputting (sfglyph (sf, enc_to_gid (map, i))))
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -3118,7 +3118,7 @@ gencidbinarydata (SplineFont *cidmaster, struct cidbytes *cidbytes,
           for (j = 0; j < i; ++j)
             PSCharsFree (cidbytes->fds[j].subrs);
           free (cidbytes->fds);
-          return (NULL);
+          return NULL;
         }
       fd->iscjk = SFIsCJK (sf, map);
       pt = PSDictHasEntry (sf->private, "lenIV");
@@ -3129,7 +3129,7 @@ gencidbinarydata (SplineFont *cidmaster, struct cidbytes *cidbytes,
     }
   ff_progress_change_line1 (_("Converting PostScript"));
   if ((chars = CID2ChrsSubrs (cidmaster, cidbytes, flags, layer)) == NULL)
-    return (NULL);
+    return NULL;
   ff_progress_next_stage ();
   ff_progress_change_line1 (_("Saving PostScript Font"));
 
@@ -3143,7 +3143,7 @@ gencidbinarydata (SplineFont *cidmaster, struct cidbytes *cidbytes,
           if (!ff_progress_next ())
             {
               fclose (chrs);
-              return (NULL);
+              return NULL;
             }
           if (leniv > 0)
             chars->lens[i] += leniv;
@@ -3231,7 +3231,7 @@ gencidbinarydata (SplineFont *cidmaster, struct cidbytes *cidbytes,
   free (buffer);
 
   cidbytes->errors |= ferror (binary);
-  return (binary);
+  return binary;
 }
 
 static int
@@ -3289,7 +3289,7 @@ dumpcidstuff (FILE *out, SplineFont *cidmaster, int flags, EncMap *map,
 
   if ((binary =
        gencidbinarydata (cidmaster, &cidbytes, flags, map, layer)) == NULL)
-    return (0);
+    return 0;
 
   fprintf (out, "\n/CIDMapOffset %d def\n", cidbytes.cidmapoffset);
   fprintf (out, "/FDBytes %d def\n", cidbytes.fdbytes);
@@ -3337,7 +3337,7 @@ dumpcidstuff (FILE *out, SplineFont *cidmaster, int flags, EncMap *map,
   free (cidbytes.fds);
 
   fprintf (out, "\n%%%%EndData\n%%%%EndResource\n%%%%EOF\n");
-  return (!cidbytes.errors);
+  return !cidbytes.errors;
 }
 
 int
@@ -3370,9 +3370,9 @@ _WritePSFont (FILE *out, SplineFont *sf, enum fontformat format, int flags,
     }
   setlocale (LC_NUMERIC, oldloc);
   if (ferror (out) || err)
-    return (0);
+    return 0;
 
-  return (true);
+  return true;
 }
 
 int
@@ -3385,19 +3385,19 @@ WritePSFont (char *fontname, SplineFont *sf, enum fontformat format, int flags,
   if (strstr (fontname, "://") != NULL)
     {
       if ((out = tmpfile ()) == NULL)
-        return (0);
+        return 0;
     }
   else
     {
       if ((out = fopen (fontname, "wb")) == NULL)
-        return (0);
+        return 0;
     }
   ret = _WritePSFont (out, sf, format, flags, map, fullsf, layer);
   if (strstr (fontname, "://") != NULL && ret)
     ret = URLFromFile (fontname, out);
   if (fclose (out) == -1)
     ret = 0;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -3487,5 +3487,5 @@ PSBitmapDump (char *filename, BDFFont *font, EncMap *map)
         if (font->glyphs[i] != NULL)
           BCRestoreAfterOutput (font->glyphs[i]);
     }
-  return (ret);
+  return ret;
 }

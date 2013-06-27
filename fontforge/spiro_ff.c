@@ -203,7 +203,7 @@ SplineSet2SpiroCP (SplineSet *ss, uint16_t *_cnt)
     ret[0].ty = SPIRO_OPEN_CONTOUR;
   if (_cnt != NULL)
     *_cnt = cnt;
-  return (ret);
+  return ret;
 }
 
 spiro_cp *
@@ -213,13 +213,13 @@ SpiroCPCopy (spiro_cp *spiros, uint16_t *_cnt)
   spiro_cp *nspiros;
 
   if (spiros == NULL)
-    return (NULL);
+    return NULL;
   for (n = 0; spiros[n].ty != 'z'; ++n);
   nspiros = xmalloc ((n + 1) * sizeof (spiro_cp));
   memcpy (nspiros, spiros, (n + 1) * sizeof (spiro_cp));
   if (_cnt != NULL)
     *_cnt = n + 1;
-  return (nspiros);
+  return nspiros;
 }
 
 void

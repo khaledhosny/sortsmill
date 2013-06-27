@@ -485,7 +485,7 @@ PVAddBlues (BlueData * bd, int bcnt, const char *pt)
   int i, j;
 
   if (pt == NULL)
-    return (bcnt);
+    return bcnt;
 
   while (isspace (*pt) || *pt == '[')
     ++pt;
@@ -516,7 +516,7 @@ PVAddBlues (BlueData * bd, int bcnt, const char *pt)
         break;
       for (pt = end; isspace (*pt); ++pt);
     }
-  return (bcnt);
+  return bcnt;
 }
 
 /* Quick and dirty (and sometimes wrong) approach to figure out the common */
@@ -937,7 +937,7 @@ EIAddEdge (Spline *spline, real tmin, real tmax, EIList * el)
     {
       /* This spline is too small for us to notice */
       free (new);
-      return (false);
+      return false;
     }
   else
     {
@@ -950,7 +950,7 @@ EIAddEdge (Spline *spline, real tmin, real tmax, EIList * el)
       if (el->splinefirst == NULL)
         el->splinefirst = new;
 
-      return (true);
+      return true;
     }
 }
 
@@ -1056,13 +1056,13 @@ IsBiggerSlope (EI * test, EI * base, int major)
      2 * base->spline->splines[other].b) * t + base->spline->splines[other].c;
 
   if (tdm == 0 && bdm == 0)
-    return (tdo > bdo);
+    return tdo > bdo;
   if (tdo == 0)
-    return (tdo > 0);
+    return tdo > 0;
   else if (bdo == 0)
-    return (bdo > 0);
+    return bdo > 0;
 
-  return (tdo / tdm > bdo / bdm);
+  return tdo / tdm > bdo / bdm;
 }
 
 void
@@ -1162,7 +1162,7 @@ HIMerge (HintInstance * into, HintInstance * hi)
       else
         last->next = hi;
     }
-  return (first);
+  return first;
 }
 
 StemInfo *
@@ -1249,7 +1249,7 @@ HintCleanup (StemInfo * stem, int dosort, int instance_count)
               p = s;
           }
     }
-  return (stem);
+  return stem;
 }
 
 real
@@ -1267,10 +1267,10 @@ EITOfNextMajor (EI * e, EIList * el, real sought_m)
       if (msp->c == 0)
         {
           IError ("Hor/Vert line when not expected");
-          return (0);
+          return 0;
         }
       new_t = (sought_m - msp->d) / (msp->c);
-      return (new_t);
+      return new_t;
     }
 
   t_mmax = e->up ? e->tmax : e->tmin;
@@ -1282,7 +1282,7 @@ EITOfNextMajor (EI * e, EIList * el, real sought_m)
       new_t = (t_mmin + t_mmax) / 2;
       found_m = (((msp->a * new_t + msp->b) * new_t + msp->c) * new_t + msp->d);
       if (found_m > sought_m - .001 && found_m < sought_m + .001)
-        return (new_t);
+        return new_t;
       if (found_m > sought_m)
         {
           t_mmax = new_t;
@@ -1295,7 +1295,7 @@ EITOfNextMajor (EI * e, EIList * el, real sought_m)
         {
           IError ("EITOfNextMajor failed! on %s",
                   el->sc != NULL ? el->sc->name : "Unknown");
-          return (new_t);
+          return new_t;
         }
     }
 }
@@ -1341,7 +1341,7 @@ EIActiveListReorder (EI * active, int *change)
             }
         }
     }
-  return (active);
+  return active;
 }
 
 EI *
@@ -1414,7 +1414,7 @@ EIActiveEdgesRefigure (EIList * el, EI * active, real i, int major,
       npt = npt->ordered;
     }
   *_change = change;
-  return (active);
+  return active;
 }
 
 /* Should I consider e and n to be a continuation of the same spline? */
@@ -1438,7 +1438,7 @@ EISameLine (EI * e, EI * n, real i, int major)
            n->tcur < n->tmin + .2 && e->tcur > e->tmax - .2) ||
           (n->splinenext == e && n->tmax == e->tmin &&
            n->tcur > n->tmax - .2 && e->tcur < e->tmin + .2))
-        return (true);
+        return true;
       /* can be separated by a horizontal/vertical line in the other direction */
       if (n->tmax == 1 && e->tmin == 0 && n->tcur > .8 && e->tcur < .2)
         {
@@ -1447,9 +1447,9 @@ EISameLine (EI * e, EI * n, real i, int major)
             {
               if (t == NULL || t == n ||
                   (major && !t->hor) || (!major && !t->vert))
-                return (false);
+                return false;
             }
-          return (n->up == e->up);
+          return n->up == e->up;
         }
       else if (n->tmin == 0 && e->tmax == 1 && n->tcur < .2 && e->tcur > .8)
         {
@@ -1458,12 +1458,12 @@ EISameLine (EI * e, EI * n, real i, int major)
             {
               if (t == NULL || t == e ||
                   (major && !t->hor) || (!major && !t->vert))
-                return (false);
+                return false;
             }
-          return (n->up == e->up);
+          return n->up == e->up;
         }
     }
-  return (false);
+  return false;
 }
 
 #if 1
@@ -1473,7 +1473,7 @@ EISkipExtremum (EI * e, real i, int major)
   EI *n = e->aenext, *t;
 
   if (n == NULL)
-    return (false);
+    return false;
   if ((ceil (e->coordmin[major]) == i || floor (e->coordmin[major]) == i
        || floor (e->coordmax[major]) == i || ceil (e->coordmax[major]) == i)
       && (ceil (n->coordmin[major]) == i || floor (n->coordmin[major]) == i
@@ -1483,7 +1483,7 @@ EISkipExtremum (EI * e, real i, int major)
            n->tcur < n->tmin + .2 && e->tcur > e->tmax - .2) ||
           (n->splinenext == e && n->tmax == e->tmin &&
            n->tcur > n->tmax - .2 && e->tcur < e->tmin + .2))
-        return (n->up != e->up);
+        return n->up != e->up;
       /* can be separated by a horizontal/vertical line in the other direction */
       if (n->tmax == 1 && e->tmin == 0 && n->tcur > .8 && e->tcur < .2)
         {
@@ -1492,9 +1492,9 @@ EISkipExtremum (EI * e, real i, int major)
             {
               if (t == NULL || t == n ||
                   (major && !t->hor) || (!major && !t->vert))
-                return (false);
+                return false;
             }
-          return (n->up != e->up);
+          return n->up != e->up;
         }
       else if (n->tmin == 0 && e->tmax == 1 && n->tcur < .2 && e->tcur > .8)
         {
@@ -1503,12 +1503,12 @@ EISkipExtremum (EI * e, real i, int major)
             {
               if (t == NULL || t == e ||
                   (major && !t->hor) || (!major && !t->vert))
-                return (false);
+                return false;
             }
-          return (n->up != e->up);
+          return n->up != e->up;
         }
     }
-  return (false);
+  return false;
 }
 #else
 int
@@ -1525,9 +1525,9 @@ EISkipExtremum (EI * e, real pos, int major)
     {
       slopem /= slopeo;
       if (slopem > -.15 && slopem < .15)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 #endif
 
@@ -1545,7 +1545,7 @@ EIActiveEdgesFindStem (EI * apt, real i, int major)
 
   e = apt->aenext;
   if (e == NULL)
-    return (NULL);
+    return NULL;
 
   for (; e != NULL && cnt != 0; e = e->aenext)
     {
@@ -1561,7 +1561,7 @@ EIActiveEdgesFindStem (EI * apt, real i, int major)
         e = e->aenext;
       cnt += (e->up ? 1 : -1);
     }
-  return (p);
+  return p;
 }
 
 static StemInfo *
@@ -1574,7 +1574,7 @@ StemRemoveFlexCandidates (StemInfo * stems)
   /* and one from the internal point */
 
   if (stems == NULL)
-    return (NULL);
+    return NULL;
 
   for (s = stems; (sn = s->next) != NULL; s = sn)
     {
@@ -1593,7 +1593,7 @@ StemRemoveFlexCandidates (StemInfo * stems)
             break;
         }
     }
-  return (stems);
+  return stems;
 }
 
 real
@@ -1604,7 +1604,7 @@ HIlen (StemInfo * stems)
 
   for (hi = stems->where; hi != NULL; hi = hi->next)
     len += hi->end - hi->begin;
-  return (len);
+  return len;
 }
 
 real
@@ -1630,7 +1630,7 @@ HIoverlap (HintInstance * mhi, HintInstance * thi)
           len += e - s;
         }
     }
-  return (len);
+  return len;
 }
 
 int
@@ -1639,10 +1639,10 @@ StemInfoAnyOverlaps (StemInfo * stems)
   while (stems != NULL)
     {
       if (stems->hasconflicts)
-        return (true);
+        return true;
       stems = stems->next;
     }
-  return (false);
+  return false;
 }
 
 int
@@ -1667,7 +1667,7 @@ StemListAnyConflicts (StemInfo * stems)
         }
       stems = stems->next;
     }
-  return (any);
+  return any;
 }
 
 HintInstance *
@@ -1707,7 +1707,7 @@ HICopyTrans (HintInstance * hi, real mul, real offset)
         }
       hi = hi->next;
     }
-  return (first);
+  return first;
 }
 
 static HintInstance *
@@ -1777,7 +1777,7 @@ SCGuessHintPoints (SplineChar *sc, int layer, StemInfo * stem, int major,
             }
         }
     }
-  return (head);
+  return head;
 }
 
 static HintInstance *
@@ -1811,7 +1811,7 @@ StemAddHIFromActive (struct stemdata *stem, int major)
           head = cur;
         }
     }
-  return (head);
+  return head;
 }
 
 static HintInstance *
@@ -1831,7 +1831,7 @@ DStemAddHIFromActive (struct stemdata *stem)
         t->next = cur;
       t = cur;
     }
-  return (head);
+  return head;
 }
 
 static void
@@ -2093,7 +2093,7 @@ StemInfoAdd (StemInfo * list, StemInfo * new)
     list = new;
   else
     prev->next = new;
-  return (list);
+  return list;
 }
 
 void
@@ -2311,7 +2311,7 @@ MergeDStemInfo (SplineFont *sf, DStemInfo ** ds, DStemInfo * test)
   if (*ds == NULL)
     {
       *ds = test;
-      return (true);
+      return true;
     }
   dist_error_diag = (sf->ascent + sf->descent) * 0.0065;
 
@@ -2331,7 +2331,7 @@ MergeDStemInfo (SplineFont *sf, DStemInfo ** ds, DStemInfo * test)
           test->right.x == dn->right.x && test->right.y == dn->right.y)
         {
           DStemInfoFree (test);
-          return (false);
+          return false;
         }
       dot = (test->unit.x * dn->unit.y) - (test->unit.y * dn->unit.x);
       if (dot <= -0.5 || dot >= 0.5)
@@ -2373,7 +2373,7 @@ MergeDStemInfo (SplineFont *sf, DStemInfo ** ds, DStemInfo * test)
           hi->next->begin = ibegin;
           hi->next->end = iend;
           DStemInfoFree (test);
-          return (false);
+          return false;
           /* The found stem is close but not identical to the stem we  */
           /* are going to add. So just replace the older stem with the */
           /* new one */
@@ -2386,7 +2386,7 @@ MergeDStemInfo (SplineFont *sf, DStemInfo ** ds, DStemInfo * test)
           else
             prev->next = test;
           DStemInfoFree (dn);
-          return (true);
+          return true;
         }
     }
 
@@ -2426,7 +2426,7 @@ MergeDStemInfo (SplineFont *sf, DStemInfo ** ds, DStemInfo * test)
 
         }
     }
-  return (true);
+  return true;
 }
 
 static StemInfo *
@@ -2464,7 +2464,7 @@ RefHintsMerge (StemInfo * into, StemInfo * rh, real mul, real offset,
       else
         h->where = HIMerge (h->where, HICopyTrans (rh->where, omul, oofset));
     }
-  return (into);
+  return into;
 }
 
 static DStemInfo *
@@ -2496,7 +2496,7 @@ RefDHintsMerge (SplineFont *sf, DStemInfo * into, DStemInfo * rh,
 
       MergeDStemInfo (sf, &into, new);
     }
-  return (into);
+  return into;
 }
 
 static void __SplineCharAutoHint (SplineChar *sc, int layer, BlueData * bd,
@@ -2769,7 +2769,7 @@ stemmatches (StemInfo * main)
           ++cnt;
         }
     }
-  return (cnt);
+  return cnt;
 }
 
 static int
@@ -2797,9 +2797,9 @@ FigureCounters (StemInfo * stems, HintMask mask)
               h->used = true;
             }
         }
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 /* Only used for metafont routine */
@@ -2926,26 +2926,26 @@ OnHHint (SplinePoint *sp, StemInfo * s)
   HintInstance *hi;
 
   if (sp == NULL)
-    return (NULL);
+    return NULL;
 
   for (; s != NULL; s = s->next)
     {
       if (sp->me.y < s->start)
-        return (possible);
+        return possible;
       if (s->start == sp->me.y || s->start + s->width == sp->me.y)
         {
           if (!s->hasconflicts)
-            return (s);
+            return s;
           for (hi = s->where; hi != NULL; hi = hi->next)
             {
               if (hi->begin <= sp->me.x && hi->end >= sp->me.x)
-                return (s);
+                return s;
             }
           if (!s->used)
             possible = s;
         }
     }
-  return (possible);
+  return possible;
 }
 
 static StemInfo *
@@ -2955,26 +2955,26 @@ OnVHint (SplinePoint *sp, StemInfo * s)
   HintInstance *hi;
 
   if (sp == NULL)
-    return (NULL);
+    return NULL;
 
   for (; s != NULL; s = s->next)
     {
       if (sp->me.x < s->start)
-        return (possible);
+        return possible;
       if (s->start == sp->me.x || s->start + s->width == sp->me.x)
         {
           if (!s->hasconflicts)
-            return (s);
+            return s;
           for (hi = s->where; hi != NULL; hi = hi->next)
             {
               if (hi->begin <= sp->me.y && hi->end >= sp->me.y)
-                return (s);
+                return s;
             }
           if (!s->used)
             possible = s;
         }
     }
-  return (possible);
+  return possible;
 }
 
 /* Does h have a conflict with any of the stems in the list which have bits */
@@ -2989,11 +2989,11 @@ ConflictsWithMask (StemInfo * stems, HintMask mask, StemInfo * h)
           if (stems->hintnumber != -1 &&
               (mask[stems->hintnumber >> 3] &
                (0x80 >> (stems->hintnumber & 7))))
-            return (true);
+            return true;
         }
       stems = stems->next;
     }
-  return (false);
+  return false;
 }
 
 /* All instances of a MM set must have the same hint mask at all points */
@@ -3097,10 +3097,10 @@ TestHintMask (SplineChar *scs[MmMax], SplinePoint *to[MmMax],
         break;
     }
   if (i == instance_count)      /* All hint masks were ok */
-    return (false);
+    return false;
 
   FigureHintMask (scs, to, instance_count, mask);
-  return (true);
+  return true;
 }
 
 static void
@@ -3124,7 +3124,7 @@ NumberHints (SplineChar *sc)
     h->hintnumber = hcnt >= HntMax ? -1 : hcnt++;
   for (h = sc->vstem; h != NULL; h = h->next)
     h->hintnumber = hcnt >= HntMax ? -1 : hcnt++;
-  return (hcnt);
+  return hcnt;
 }
 
 static void
@@ -3177,7 +3177,7 @@ AddHintSet (MMH * hints, StemInfo * h[MmMax], int instance_count,
 
   for (i = 0; i < instance_count; ++i)
     if (h[i] == NULL)
-      return (hints);
+      return hints;
 
   best = NULL;
   bestc = 0;
@@ -3190,7 +3190,7 @@ AddHintSet (MMH * hints, StemInfo * h[MmMax], int instance_count,
       if (cnt == instance_count)
         {
           AddCoord (test, sps, instance_count, ish);
-          return (hints);
+          return hints;
         }
       if (cnt > bestc)
         {
@@ -3225,7 +3225,7 @@ AddHintSet (MMH * hints, StemInfo * h[MmMax], int instance_count,
       for (i = 0; i < instance_count; ++i)
         test->map[i] = h[i];
     }
-  return (test);
+  return test;
 }
 
 static int
@@ -3234,18 +3234,18 @@ CompareMMH (MMH * mmh1, MMH * mmh2, int instance_count)
   int i;
 
   if (mmh1->map[0] == NULL)
-    return (1);
+    return 1;
   if (mmh2->map[0] == NULL)
-    return (-1);
+    return -1;
 
   for (i = 0; i < instance_count; ++i)
     {
       if (mmh1->map[i]->start != mmh2->map[i]->start)
         {
           if (mmh1->map[i]->start > mmh2->map[i]->start)
-            return (1);
+            return 1;
           else
-            return (-1);
+            return -1;
         }
     }
   for (i = 0; i < instance_count; ++i)
@@ -3253,12 +3253,12 @@ CompareMMH (MMH * mmh1, MMH * mmh2, int instance_count)
       if (mmh1->map[i]->width != mmh2->map[i]->width)
         {
           if (mmh1->map[i]->width > mmh2->map[i]->width)
-            return (1);
+            return 1;
           else
-            return (-1);
+            return -1;
         }
     }
-  return (0);
+  return 0;
 }
 
 static MMH *
@@ -3304,7 +3304,7 @@ SortMMH (MMH * head, int instance_count)
       p = smallest;
       mmh = smallest->next;
     }
-  return (head);
+  return head;
 }
 
 static int
@@ -3343,7 +3343,7 @@ NumberMMH (MMH * mmh, int hstart, int instance_count)
         ++hstart;
       mmh = mmh->next;
     }
-  return (hstart);
+  return hstart;
 }
 
 static void
@@ -3593,7 +3593,7 @@ SplFigureHintMasks (SplineChar *scs[MmMax], SplineSet *spl[MmMax],
       if (!anymore)
         break;
     }
-  return (inited);
+  return inited;
 }
 
 void
@@ -3711,7 +3711,7 @@ GDFindStems (struct glyphdata *gd, int major)
       cur->where = StemAddHIFromActive (stem, major);
     }
   head = StemRemoveFlexCandidates (head);
-  return (head);
+  return head;
 }
 
 static DStemInfo *
@@ -3747,7 +3747,7 @@ GDFindDStems (struct glyphdata *gd)
       MergeDStemInfo (gd->sf, &head, cur);
       cur->where = DStemAddHIFromActive (stem);
     }
-  return (head);
+  return head;
 }
 
 void
@@ -3847,12 +3847,12 @@ SFNeedsAutoHint (SplineFont *_sf, int layer)
           {
             if (sfglyph (sf, i)->changedsincelasthinted &&
                 !sfglyph (sf, i)->manualhints)
-              return (true);
+              return true;
           }
       ++k;
     }
   while (k < _sf->subfontcnt);
-  return (false);
+  return false;
 }
 
 void
@@ -4107,7 +4107,7 @@ IsFlexSmooth (SplinePoint *sp)
   double proj_same, proj_normal;
 
   if (sp->nonextcp || sp->noprevcp)
-    return (false);             /* No continuity of slopes */
+    return false;             /* No continuity of slopes */
 
   nvec.x = sp->nextcp.x - sp->me.x;
   nvec.y = sp->nextcp.y - sp->me.y;
@@ -4116,16 +4116,16 @@ IsFlexSmooth (SplinePoint *sp)
 
   /* Avoid cases where the slopes are 180 out of phase */
   if ((proj_same = nvec.x * pvec.x + nvec.y * pvec.y) <= 0)
-    return (false);
+    return false;
   if ((proj_normal = nvec.x * pvec.y - nvec.y * pvec.x) < 0)
     proj_normal = -proj_normal;
 
   /* Something is smooth if the normal projection is 0. Let's allow for */
   /*  some rounding errors */
   if (proj_same >= 16 * proj_normal)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static int
@@ -4150,7 +4150,7 @@ _SplineCharIsFlexible (SplineChar *sc, int layer, int blueshift)
   RefChar *r;
 
   if (sc == NULL)
-    return (false);
+    return false;
 
   for (spl = sc->layers[layer].splines; spl != NULL; spl = spl->next)
     {
@@ -4235,7 +4235,7 @@ _SplineCharIsFlexible (SplineChar *sc, int layer, int blueshift)
           sc->layers[layer].anyflexes = true;
           break;
         }
-  return (max);
+  return max;
 }
 
 static int
@@ -4302,7 +4302,7 @@ MatchFlexes (MMSet *mm, int layer, int opos)
         if (spl[i] != NULL)
           spl[i] = spl[i]->next;
     }
-  return (any);
+  return any;
 }
 
 int
@@ -4324,7 +4324,7 @@ SplineCharIsFlexible (SplineChar *sc, int layer)
   else if (PSDictHasEntry (sc->parent->private, "BlueValues") != NULL)
     blueshift = 7;
   if (sc->parent->mm == NULL)
-    return (_SplineCharIsFlexible (sc, layer, blueshift));
+    return _SplineCharIsFlexible (sc, layer, blueshift);
 
   mm = sc->parent->mm;
   for (i = 0; i < mm->instance_count; ++i)
@@ -4332,7 +4332,7 @@ SplineCharIsFlexible (SplineChar *sc, int layer)
         && sfglyph (mm->instances[i], sc->orig_pos) != NULL)
       _SplineCharIsFlexible (sfglyph (mm->instances[i], sc->orig_pos), layer,
                              blueshift);
-  return (MatchFlexes (mm, layer, sc->orig_pos));
+  return MatchFlexes (mm, layer, sc->orig_pos);
 }
 
 static void
@@ -4385,7 +4385,7 @@ SplineFontIsFlexible (SplineFont *sf, int layer, int flags)
       for (i = 0; i < sf->glyphcnt; ++i)
         if (sfglyph (sf, i) != NULL)
           SCUnflex (sfglyph (sf, i), layer);
-      return (0);
+      return 0;
     }
 
   pt = PSDictHasEntry (sf->private, "BlueShift");
@@ -4409,5 +4409,5 @@ SplineFontIsFlexible (SplineFont *sf, int layer, int flags)
           if (sfglyph (sf, i)->layers[layer].anyflexes)
             FlexDependents (sfglyph (sf, i), layer);
         }
-  return (max);
+  return max;
 }

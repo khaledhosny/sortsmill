@@ -96,7 +96,7 @@ FindNewT (double pos, const Spline1D *s, double old_t)
             closest = ts[i];
         }
     }
-  return (closest);
+  return closest;
 }
 
 /* I have arranged so that either both splinesets are clockwise or anti */
@@ -122,7 +122,7 @@ NearSplineSet (BasePoint *here, const SplineSet *ss,
         {
           *last_found = ss->first->next;
           *last_t = 0;
-          return (true);
+          return true;
         }
       /* Ok, it wasn't. Check everywhere */
       first = NULL;
@@ -163,7 +163,7 @@ NearSplineSet (BasePoint *here, const SplineSet *ss,
                             {
                               *last_found = s;
                               *last_t = ts[i];
-                              return (true);
+                              return true;
                             }
                           best_s = s;
                           best = dx + dy;
@@ -174,10 +174,10 @@ NearSplineSet (BasePoint *here, const SplineSet *ss,
             }
         }
       if (best_s == NULL)
-        return (false);
+        return false;
       *last_found = best_s;
       *last_t = best_t;
-      return (true);
+      return true;
     }
   else
     {
@@ -220,7 +220,7 @@ NearSplineSet (BasePoint *here, const SplineSet *ss,
                       {
                         *last_found = s;
                         *last_t = ts[i];
-                        return (true);
+                        return true;
                       }
                   }
               /* If the end point of the current spline is further from the */
@@ -250,7 +250,7 @@ NearSplineSet (BasePoint *here, const SplineSet *ss,
           s = *last_found;
           t = *last_t;
         }
-      return (false);
+      return false;
     }
 }
 
@@ -274,7 +274,7 @@ ContourMatch (const SplineSet *ss1, const SplineSet *ss2, real err)
       if (first == NULL)
         first = s;
       if (!NearSplineSet (&s->from->me, ss2, &last_found, &last_t, err))
-        return (false);
+        return false;
       here = s->from->me;
       while (true)
         {
@@ -340,10 +340,10 @@ ContourMatch (const SplineSet *ss1, const SplineSet *ss2, real err)
             ((s->splines[1].a * t + s->splines[1].b) * t +
              s->splines[1].c) * t + s->splines[1].d;
           if (!NearSplineSet (&here, ss2, &last_found, &last_t, err))
-            return (false);
+            return false;
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -364,7 +364,7 @@ AllPointsMatch (const SplinePoint *start1, const SplinePoint *start2,
           (dy = sp1->prevcp.y - sp2->prevcp.y) <= err && dy >= -err)
         /* Good */ ;
       else
-        return (false);
+        return false;
 
       if (sp1->hintmask != NULL && sp2->hintmask != NULL &&
           memcmp (sp1->hintmask, sp2->hintmask, sizeof (HintMask)) == 0)
@@ -384,20 +384,20 @@ AllPointsMatch (const SplinePoint *start1, const SplinePoint *start2,
         {
           if (hmfail != NULL)
             *_hmfail = hmfail;
-          return (true);
+          return true;
         }
       if (sp2->next == NULL || sp1->next == NULL)
-        return (false);
+        return false;
       sp1 = sp1->next->to;
       sp2 = sp2->next->to;
       if (sp1 == start1 && sp2 == start2)
         {
           if (hmfail != NULL)
             *_hmfail = hmfail;
-          return (true);
+          return true;
         }
       if (sp1 == start1 || sp2 == start2)
-        return (false);
+        return false;
     }
 }
 
@@ -411,12 +411,12 @@ ContourPointsMatch (const SplineSet *ss1, const SplineSet *ss2,
   for (sp2 = ss2->first;;)
     {
       if (AllPointsMatch (ss1->first, sp2, err, _hmfail))
-        return (sp2 == ss2->first ? 1 : 2);
+        return sp2 == ss2->first ? 1 : 2;
       if (sp2->next == NULL)
-        return (false);
+        return false;
       sp2 = sp2->next->to;
       if (sp2 == ss2->first)
-        return (false);
+        return false;
     }
 }
 
@@ -438,7 +438,7 @@ SSsCompare (const SplineSet *ss1, const SplineSet *ss2,
   for (ss = ss1, cnt1 = 0; ss != NULL; ss = ss->next, ++cnt1);
   for (ss = ss2, cnt2 = 0; ss != NULL; ss = ss->next, ++cnt2);
   if (cnt1 != cnt2)
-    return (SS_DiffContourCount | SS_NoMatch);
+    return SS_DiffContourCount | SS_NoMatch;
 
   b1 = xmalloc (cnt1 * sizeof (DBounds));
   b2 = xmalloc (cnt1 * sizeof (DBounds));
@@ -490,7 +490,7 @@ SSsCompare (const SplineSet *ss1, const SplineSet *ss2,
           free (b1);
           free (b2);
           free (match);
-          return (SS_MismatchOpenClosed | SS_NoMatch);
+          return SS_MismatchOpenClosed | SS_NoMatch;
         }
       match[cnt1] = bestss;
       b2[bestcnt].maxx = b2[bestcnt].minx - 1;  /* Mark as used */
@@ -561,9 +561,9 @@ SSsCompare (const SplineSet *ss1, const SplineSet *ss2,
 
   free (match);
   if (!allmatch)
-    return (SS_NoMatch | SS_ContourMismatch);
+    return SS_NoMatch | SS_ContourMismatch;
 
-  return (info);
+  return info;
 }
 
 static int
@@ -624,7 +624,7 @@ SSRefCompare (const SplineSet *ss1, const SplineSet *ss2,
 
   SplinePointListsFree (head1);
   SplinePointListsFree (head2);
-  return (ret);
+  return ret;
 }
 
 /* ************************************************************************** */
@@ -641,7 +641,7 @@ BitmapCompare (BDFChar *bc1, BDFChar *bc2, int err, int bb_err)
   int failed = 0;
 
   if (bc1->byte_data != bc2->byte_data)
-    return (BC_DepthMismatch | BC_NoMatch);
+    return BC_DepthMismatch | BC_NoMatch;
 
   if (bc1->width != bc2->width)
     failed = SS_WidthMismatch | BC_NoMatch;
@@ -658,7 +658,7 @@ BitmapCompare (BDFChar *bc1, BDFChar *bc2, int err, int bb_err)
           (d = bc1->ymin - bc2->ymin) > bb_err || d < -bb_err ||
           (d = bc1->xmax - bc2->xmax) > bb_err || d < -bb_err ||
           (d = bc1->ymax - bc2->ymax) > bb_err || d < -bb_err)
-        return (BC_BoundingBoxMismatch | BC_NoMatch | failed);
+        return BC_BoundingBoxMismatch | BC_NoMatch | failed;
 
       xmin = bc1->xmin > bc2->xmin ? bc2->xmin : bc1->xmin;
       ymin = bc1->ymin > bc2->ymin ? bc2->ymin : bc1->ymin;
@@ -685,7 +685,7 @@ BitmapCompare (BDFChar *bc1, BDFChar *bc2, int err, int bb_err)
               else
                 c2 = 0;
               if ((d = c1 - c2) > err || d < -err)
-                return (BC_NoMatch | BC_BitmapMismatch | failed);
+                return BC_NoMatch | BC_BitmapMismatch | failed;
             }
         }
     }
@@ -694,7 +694,7 @@ BitmapCompare (BDFChar *bc1, BDFChar *bc2, int err, int bb_err)
       /* Bitmap */
       if (bc1->xmin != bc2->xmin || bc1->xmax != bc2->xmax ||
           bc1->ymin != bc2->ymin || bc1->ymax != bc2->ymax)
-        return (BC_BoundingBoxMismatch | BC_NoMatch | failed);
+        return BC_BoundingBoxMismatch | BC_NoMatch | failed;
 
       xlen = bc1->xmax - bc1->xmin;
       mask = 0xff00 >> ((xlen & 7) + 1);
@@ -705,13 +705,13 @@ BitmapCompare (BDFChar *bc1, BDFChar *bc2, int err, int bb_err)
           pt2 = bc2->bitmap + j * bc2->bytes_per_line;
           for (i = xlen - 1; i >= 0; --i)
             if (pt1[i] != pt2[i])
-              return (BC_NoMatch | BC_BitmapMismatch | failed);
+              return BC_NoMatch | BC_BitmapMismatch | failed;
           if ((pt1[xlen] & mask) != (pt2[xlen] & mask))
-            return (BC_NoMatch | BC_BitmapMismatch | failed);
+            return BC_NoMatch | BC_BitmapMismatch | failed;
         }
     }
 
-  return (failed == 0 ? BC_Match : failed);
+  return failed == 0 ? BC_Match : failed;
 }
 
 /* ************************************************************************** */
@@ -747,7 +747,7 @@ RefCheck (const RefChar *ref1, const RefChar *ref2)
       if (r2 != NULL)
         ((RefChar *) r2)->checked = true;
       else
-        return (false);
+        return false;
       if (r1->point_match != r2->point_match ||
           (r1->point_match &&
            (r1->match_pt_base != r2->match_pt_base
@@ -758,10 +758,10 @@ RefCheck (const RefChar *ref1, const RefChar *ref2)
   for (r2 = ref2; r2 != NULL; r2 = r2->next)
     if (!r2->checked)
       {
-        return (false);
+        return false;
       }
 
-  return (true + ptmatchdiff);
+  return true + ptmatchdiff;
 }
 
 int
@@ -773,7 +773,7 @@ CompareLayer (const SplineSet *ss1, const SplineSet *ss2,
   int val, refc;
 
   if (pt_err < 0 && spline_err < 0)
-    return (SS_PointsMatch);
+    return SS_PointsMatch;
 #if 0
   /* Unfortunately we can't do this because references in the clipboard */
   /*  don't have inline copies of their splines */
@@ -809,15 +809,15 @@ CompareLayer (const SplineSet *ss1, const SplineSet *ss2,
         GCErrorString ("Reference mismatch in glyph", name);
       else
         GCErrorString ("Spline mismatch in glyph", name);
-      return (-1);
+      return -1;
     }
   if ((val & SS_RefPtMismatch) && diffs_are_errors)
     {
       GCErrorString
         ("References have different truetype point matching in glyph", name);
-      return (-1);
+      return -1;
     }
-  return (val);
+  return val;
 }
 
 static int
@@ -836,7 +836,7 @@ CompareBitmap (FontViewBase *fv, SplineChar *sc, const Undoes *cur,
       || bdf->glyphs[sc->orig_pos] == NULL)
     {
       GCError ("Missing bitmap size");
-      return (-1);
+      return -1;
     }
   memset (&bc, 0, sizeof (bc));
   bc.xmin = cur->u.bmpstate.xmin;
@@ -866,9 +866,9 @@ CompareBitmap (FontViewBase *fv, SplineChar *sc, const Undoes *cur,
       else
         GCError3 ("Bitmap mismatch in glyph %s pixelsize %d depth %d",
                   sc->name, bdf->pixelsize, BDFDepth (bdf));
-      return (-1);
+      return -1;
     }
-  return (ret);
+  return ret;
 }
 
 static int
@@ -883,10 +883,10 @@ CompareHints (SplineChar *sc, const void *_test)
              && (test->hinttype == ht_unspecified || test->hinttype == ht_h))
         {
           if (h == NULL)
-            return (false);
+            return false;
           if (rint (h->start) != rint (test->start)
               || rint (h->width) != rint (test->width))
-            return (false);
+            return false;
           h = h->next;
           test = test->next;
         }
@@ -897,10 +897,10 @@ CompareHints (SplineChar *sc, const void *_test)
              && (test->hinttype == ht_unspecified || test->hinttype == ht_v))
         {
           if (v == NULL)
-            return (false);
+            return false;
           if (rint (v->start) != rint (test->start)
               || rint (v->width) != rint (test->width))
-            return (false);
+            return false;
           v = v->next;
           test = test->next;
         }
@@ -910,9 +910,9 @@ CompareHints (SplineChar *sc, const void *_test)
     test = NULL;                /* In case there are some old files (with dhints) */
 
   if (h != NULL || v != NULL || test != NULL)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -938,7 +938,7 @@ CompareSplines (FontViewBase *fv, SplineChar *sc, const Undoes *cur,
                           cur->u.state.refs, pt_err, spline_err, sc->name,
                           diffs_are_errors, &hmfail);
           if (ret == -1)
-            return (-1);
+            return -1;
           if (ret & SS_NoMatch)
             failed |= ret;
           if (sc->vwidth - cur->u.state.vwidth > err
@@ -969,7 +969,7 @@ CompareSplines (FontViewBase *fv, SplineChar *sc, const Undoes *cur,
                               sc->layers[ly].refs, cur->u.state.refs, pt_err,
                               spline_err, sc->name, diffs_are_errors, &hmfail);
               if (temp == -1)
-                return (-1);
+                return -1;
               if (temp & SS_NoMatch)
                 failed |= temp;
               else
@@ -992,36 +992,36 @@ CompareSplines (FontViewBase *fv, SplineChar *sc, const Undoes *cur,
       break;
     default:
       GCError ("Unexpected clipboard contents");
-      return (-1);
+      return -1;
     }
 
   if ((ret & SS_WidthMismatch) && diffs_are_errors)
     {
       GCErrorString ("Advance width mismatch in glyph", sc->name);
-      return (-1);
+      return -1;
     }
   if ((ret & SS_VWidthMismatch) && diffs_are_errors)
     {
       GCErrorString ("Vertical advance width mismatch in glyph", sc->name);
-      return (-1);
+      return -1;
     }
   if ((ret & SS_HintMismatch) && diffs_are_errors)
     {
       GCErrorString ("Hinting mismatch in glyph", sc->name);
-      return (-1);
+      return -1;
     }
   if ((ret & SS_HintMaskMismatch) && diffs_are_errors)
     {
       if (hmfail == NULL)
         GCErrorString ("Hint mask mismatch in glyph", sc->name);
-      return (-1);
+      return -1;
     }
   if ((ret & SS_LayerCntMismatch) && diffs_are_errors)
     {
       GCErrorString ("Layer difference in glyph", sc->name);
-      return (-1);
+      return -1;
     }
-  return (ret);
+  return ret;
 }
 
 int
@@ -1040,14 +1040,14 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
   if (cnt == 0)
     {
       GCError ("Nothing selected");
-      return (-1);
+      return -1;
     }
 
   cur = CopyBufferGet ();
   if (cur->undotype == ut_noop || cur->undotype == ut_none)
     {
       GCError ("Nothing in clipboard");
-      return (-1);
+      return -1;
     }
 
   if (cur->undotype == ut_multiple)
@@ -1063,13 +1063,13 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
         if (sc == NULL)
           {
             GCError ("Missing character");
-            return (-1);
+            return -1;
           }
 
         if (cur == NULL)
           {
             GCError ("Too few glyphs in clipboard");
-            return (-1);
+            return -1;
           }
 
         switch (cur->undotype)
@@ -1084,7 +1084,7 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
                   CompareSplines (fv, sc, cur, pt_err, spline_err, comp_hints,
                                   diffs_are_errors);
                 if (ret == -1)
-                  return (-1);
+                  return -1;
               }
             break;
           case ut_bitmapsel:
@@ -1095,7 +1095,7 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
                   CompareBitmap (fv, sc, cur, pixel_off_frac, bb_err,
                                  diffs_are_errors);
                 if (ret == -1)
-                  return (-1);
+                  return -1;
               }
             break;
           case ut_composit:
@@ -1113,18 +1113,18 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
                       CompareBitmap (fv, sc, bmp, pixel_off_frac, bb_err,
                                      diffs_are_errors);
                     if (ret == -1)
-                      return (-1);
+                      return -1;
                   }
               }
             break;
           default:
             GCError ("Unexpected clipboard contents");
-            return (-1);
+            return -1;
           }
         if (ret & (SS_NoMatch | SS_RefMismatch | SS_WidthMismatch | BC_NoMatch))
           {
             ret &= ~(BC_Match | SS_PointsMatch | SS_ContourMatch);
-            return (ret);
+            return ret;
           }
         cur = cur->next;
       }
@@ -1132,9 +1132,9 @@ CompareGlyphs (FontViewBase *fv, real pt_err, real spline_err,
   if (cur != NULL)
     {
       GCError ("Too many glyphs in clipboard");
-      return (-1);
+      return -1;
     }
-  return (ret);
+  return ret;
 }
 #endif /* !defined(_NO_PYTHON) */
 
@@ -1223,18 +1223,18 @@ SCCompareHints (SplineChar *sc1, SplineChar *sc2)
   for (h1 = sc1->hstem, h2 = sc2->hstem; h1 != NULL && h2 != NULL;
        h1 = h1->next, h2 = h2->next)
     if (h1->width != h2->width || h1->start != h2->start)
-      return (false);
+      return false;
   if (h1 != NULL || h2 != NULL)
-    return (false);
+    return false;
 
   for (h1 = sc1->vstem, h2 = sc2->vstem; h1 != NULL && h2 != NULL;
        h1 = h1->next, h2 = h2->next)
     if (h1->width != h2->width || h1->start != h2->start)
-      return (false);
+      return false;
   if (h1 != NULL || h2 != NULL)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -1321,7 +1321,7 @@ fdRefCheck (struct font_diff *fd, SplineChar *sc1,
                             sc1->name, r2->sc->name, fd->name2);
         ret = false;
       }
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1970,9 +1970,9 @@ ScriptMatch (struct scriptlanglist *sl1, struct scriptlanglist *sl2,
            s1 = s1->next, s2 = s2->next)
         {
           if (s1->script != s2->script)
-            return (false);
+            return false;
         }
-      return (true);
+      return true;
     }
   else
     {
@@ -1995,10 +1995,10 @@ ScriptMatch (struct scriptlanglist *sl1, struct scriptlanglist *sl2,
                   && (s2->next != NULL || s2 != sl2))
                 continue;
               if (s1->script == s2->script)
-                return (true);
+                return true;
             }
         }
-      return (false);
+      return false;
     }
 }
 
@@ -2016,9 +2016,9 @@ FeatureMatch (FeatureScriptLangList *fl1, FeatureScriptLangList *fl2,
         {
           if (f1->featuretag != f2->featuretag
               || !ScriptMatch (f1->scripts, f2->scripts, exactness))
-            return (false);
+            return false;
         }
-      return (true);
+      return true;
     }
   else
     {
@@ -2027,9 +2027,9 @@ FeatureMatch (FeatureScriptLangList *fl1, FeatureScriptLangList *fl2,
           for (f2 = fl2; f2 != NULL; f2 = f2->next)
             if (f1->featuretag == f2->featuretag
                 && ScriptMatch (f1->scripts, f2->scripts, exactness))
-              return (true);
+              return true;
         }
-      return (false);
+      return false;
     }
 }
 
@@ -2037,14 +2037,14 @@ static int
 comparepst (struct font_diff *fd, PST *pst1, PST *pst2)
 {
   if (pst1->type != pst2->type)
-    return (false);
+    return false;
   if (pst1->type == pst_position)
     {
       if (pst1->u.pos.xoff != pst2->u.pos.xoff ||
           pst1->u.pos.yoff != pst2->u.pos.yoff ||
           pst1->u.pos.h_adv_off != pst2->u.pos.h_adv_off ||
           pst1->u.pos.v_adv_off != pst2->u.pos.v_adv_off)
-        return (false);
+        return false;
     }
   else if (pst1->type == pst_pair)
     {
@@ -2057,29 +2057,29 @@ comparepst (struct font_diff *fd, PST *pst1, PST *pst2)
           pst1->u.pair.vr[1].h_adv_off != pst2->u.pair.vr[1].h_adv_off ||
           pst1->u.pair.vr[1].v_adv_off != pst2->u.pair.vr[1].v_adv_off ||
           strcmp (pst1->u.pair.paired, pst2->u.pair.paired) != 0)
-        return (false);
+        return false;
     }
   else if (pst1->type == pst_substitution || pst1->type == pst_alternate ||
            pst1->type == pst_multiple || pst1->type == pst_ligature)
     {
       if (strcmp (pst1->u.subs.variant, pst2->u.subs.variant) != 0)
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 static int
 compareap (struct font_diff *fd, AnchorPoint *ap1, AnchorPoint *ap2)
 {
   if (ap1->type != ap2->type)
-    return (false);
+    return false;
   if (ap1->me.x != ap2->me.x || ap1->me.y != ap2->me.y)
-    return (false);
+    return false;
   if (ap1->has_ttf_pt != ap2->has_ttf_pt ||
       (ap1->has_ttf_pt && ap1->ttf_pt_index != ap2->ttf_pt_index))
-    return (2);
+    return 2;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -2090,7 +2090,7 @@ classcmp (char *str1, char *str2)
 
   /* Sometimes classes are in the same order and all is easy */
   if (strcmp (str1, str2) == 0)
-    return (0);
+    return 0;
 
   for (pt1 = str1, cnt1 = 1; *pt1 != '\0'; ++pt1)
     if (*pt1 == ' ')
@@ -2107,7 +2107,7 @@ classcmp (char *str1, char *str2)
           ++pt2;
       }
   if (cnt1 != cnt2)
-    return (-1);
+    return -1;
 
   for (start1 = str1; *start1 != '\0';)
     {
@@ -2131,12 +2131,12 @@ classcmp (char *str1, char *str2)
         }
       *pt1 = ch1;
       if (*start2 == '\0')
-        return (-1);
+        return -1;
       while (*pt1 == ' ')
         ++pt1;
       start1 = pt1;
     }
-  return (0);
+  return 0;
 }
 
 static int
@@ -2145,27 +2145,27 @@ comparekc (struct font_diff *fd, KernClass *kc1, KernClass *kc2)
   int i;
 
   if (kc1->first_cnt != kc2->first_cnt || kc1->second_cnt != kc2->second_cnt)
-    return (false);
+    return false;
   if (memcmp
       (kc1->offsets, kc2->offsets,
        kc1->first_cnt * kc2->second_cnt * sizeof (int16_t)) != 0)
-    return (false);
+    return false;
 
   if (kc1->firsts[0] == NULL && kc2->firsts[0] == NULL)
     /* That's ok */ ;
   else if (kc1->firsts[0] != NULL || kc2->firsts[0] != NULL)
-    return (false);
+    return false;
   else if (classcmp (kc1->firsts[0], kc2->firsts[0]) != 0)
-    return (false);
+    return false;
 
   for (i = 1; i < kc1->first_cnt; ++i)
     if (classcmp (kc1->firsts[i], kc2->firsts[i]) != 0)
-      return (false);
+      return false;
   for (i = 1; i < kc1->second_cnt; ++i)
     if (classcmp (kc1->seconds[i], kc2->seconds[i]) != 0)
-      return (false);
+      return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -2174,9 +2174,9 @@ NestedLookupsMatch (struct font_diff *fd, OTLookup *otl1, OTLookup *otl2)
 
   if (fd->l2match1[otl1->lookup_index] == NULL ||
       fd->l2match1[otl1->lookup_index] != otl2)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -2185,28 +2185,28 @@ comparefpst (struct font_diff *fd, FPST *fpst1, FPST *fpst2)
   int i, j;
 
   if (fpst1->type != fpst2->type || fpst1->format != fpst2->format)
-    return (false);
+    return false;
   if (fpst1->rule_cnt != fpst2->rule_cnt)
-    return (false);
+    return false;
 
   if (fpst1->nccnt != fpst2->nccnt || fpst1->bccnt != fpst2->bccnt
       || fpst1->fccnt != fpst2->fccnt)
-    return (false);
+    return false;
   for (i = 0; i < fpst1->nccnt; ++i)
     if (!(fpst1->nclass[i] == NULL && fpst2->nclass[i] == NULL) &&
         ((fpst1->nclass[i] == NULL || fpst2->nclass[i] == NULL) ||
          classcmp (fpst1->nclass[i], fpst2->nclass[i]) != 0))
-      return (false);
+      return false;
   for (i = 0; i < fpst1->bccnt; ++i)
     if (!(fpst1->bclass[i] == NULL && fpst2->bclass[i] == NULL) &&
         ((fpst1->bclass[i] == NULL || fpst2->bclass[i] == NULL) ||
          classcmp (fpst1->bclass[i], fpst2->bclass[i]) != 0))
-      return (false);
+      return false;
   for (i = 0; i < fpst1->fccnt; ++i)
     if (!(fpst1->fclass[i] == NULL && fpst2->fclass[i] == NULL) &&
         ((fpst1->fclass[i] == NULL || fpst2->fclass[i] == NULL) ||
          classcmp (fpst1->fclass[i], fpst2->fclass[i]) != 0))
-      return (false);
+      return false;
 
   for (i = 0; i < fpst1->rule_cnt; ++i)
     {
@@ -2215,39 +2215,39 @@ comparefpst (struct font_diff *fd, FPST *fpst1, FPST *fpst2)
           if (strcmp
               (fpst1->rules[i].u.glyph.names,
                fpst2->rules[i].u.glyph.names) != 0)
-            return (false);
+            return false;
           if (fpst1->rules[i].u.glyph.back != NULL
               && fpst2->rules[i].u.glyph.back != NULL
               && strcmp (fpst1->rules[i].u.glyph.back,
                          fpst2->rules[i].u.glyph.back) != 0)
-            return (false);
+            return false;
           if (fpst1->rules[i].u.glyph.fore != NULL
               && fpst2->rules[i].u.glyph.fore != NULL
               && strcmp (fpst1->rules[i].u.glyph.fore,
                          fpst2->rules[i].u.glyph.fore) != 0)
-            return (false);
+            return false;
         }
       else if (fpst1->format == pst_class)
         {
           if (fpst1->rules[i].u.class.ncnt != fpst2->rules[i].u.class.ncnt ||
               fpst1->rules[i].u.class.bcnt != fpst2->rules[i].u.class.bcnt ||
               fpst1->rules[i].u.class.fcnt != fpst2->rules[i].u.class.fcnt)
-            return (false);
+            return false;
           if (memcmp
               (fpst1->rules[i].u.class.nclasses,
                fpst2->rules[i].u.class.nclasses,
                fpst1->rules[i].u.class.ncnt * sizeof (uint16_t)) != 0)
-            return (false);
+            return false;
           if (fpst1->rules[i].u.class.bcnt != 0 &&
               memcmp (fpst1->rules[i].u.class.bclasses,
                       fpst2->rules[i].u.class.bclasses,
                       fpst1->rules[i].u.class.bcnt * sizeof (uint16_t)) != 0)
-            return (false);
+            return false;
           if (fpst1->rules[i].u.class.fcnt != 0 &&
               memcmp (fpst1->rules[i].u.class.fclasses,
                       fpst2->rules[i].u.class.fclasses,
                       fpst1->rules[i].u.class.fcnt * sizeof (uint16_t)) != 0)
-            return (false);
+            return false;
         }
       else if (fpst1->format == pst_coverage
                || fpst1->format == pst_reversecoverage)
@@ -2257,44 +2257,44 @@ comparefpst (struct font_diff *fd, FPST *fpst1, FPST *fpst2)
               fpst2->rules[i].u.class.bcnt
               || fpst1->rules[i].u.coverage.fcnt !=
               fpst2->rules[i].u.class.fcnt)
-            return (false);
+            return false;
           for (j = 0; j < fpst1->rules[i].u.coverage.ncnt; ++j)
             if (classcmp
                 (fpst1->rules[i].u.coverage.ncovers[j],
                  fpst2->rules[i].u.coverage.ncovers[j]) != 0)
-              return (false);
+              return false;
           for (j = 0; j < fpst1->rules[i].u.coverage.bcnt; ++j)
             if (classcmp
                 (fpst1->rules[i].u.coverage.bcovers[j],
                  fpst2->rules[i].u.coverage.bcovers[j]) != 0)
-              return (false);
+              return false;
           for (j = 0; j < fpst1->rules[i].u.coverage.fcnt; ++j)
             if (classcmp
                 (fpst1->rules[i].u.coverage.fcovers[j],
                  fpst2->rules[i].u.coverage.fcovers[j]) != 0)
-              return (false);
+              return false;
           if (fpst1->format == pst_reversecoverage)
             if (strcmp
                 (fpst1->rules[i].u.rcoverage.replacements,
                  fpst2->rules[i].u.rcoverage.replacements) != 0)
-              return (false);
+              return false;
         }
       else
-        return (false);
+        return false;
 
       if (fpst1->rules[i].lookup_cnt != fpst2->rules[i].lookup_cnt)
-        return (false);
+        return false;
       for (j = 0; j < fpst1->rules[i].lookup_cnt; ++j)
         if (fpst1->rules[i].lookups[j].seq != fpst2->rules[i].lookups[j].seq)
-          return (false);
+          return false;
       for (j = 0; j < fpst1->rules[i].lookup_cnt; ++j)
         if (!NestedLookupsMatch (fd,
                                  fpst1->rules[i].lookups[j].lookup,
                                  fpst2->rules[i].lookups[j].lookup))
-          return (false);
+          return false;
     }
 
-  return (true);
+  return true;
 }
 
 /* See if we have an exact match on the subtable */
@@ -2314,14 +2314,14 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
   /* These are complex to check and involve testing nested lookups which we */
   /*  might not have worked out yet */
   if (sub1->fpst != NULL)
-    return (false);
+    return false;
   if (sub1->kc != NULL || sub2->kc != NULL)
     {
       if (sub1->kc != NULL && sub2->kc != NULL
           && comparekc (fd, sub1->kc, sub2->kc))
-        return (true);
+        return true;
 
-      return (false);
+      return false;
     }
 
   lookup_type = sub1->lookup->lookup_type;
@@ -2330,7 +2330,7 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
     lookup_type == gpos_single || lookup_type == gpos_pair;
   test_kerns = lookup_type == gpos_pair;
   if (!test_anchors && !test_kerns && !test_psts)
-    return (false);
+    return false;
 
   for (gid1 = 0; gid1 < fd->sf1_glyphcnt; ++gid1)
     if ((sc2 = fd->matches[gid1]) != NULL
@@ -2348,7 +2348,7 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
                           break;
                       }
                   if (pst2 == NULL)
-                    return (false);
+                    return false;
                 }
             for (pst2 = sc2->possub; pst2 != NULL; pst2 = pst2->next)
               if (pst2->subtable == sub2)
@@ -2360,7 +2360,7 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
                           break;
                       }
                   if (pst1 == NULL)
-                    return (false);
+                    return false;
                 }
           }
         if (test_kerns)
@@ -2380,7 +2380,7 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
                               break;
                           }
                       if (kp2 == NULL)
-                        return (false);
+                        return false;
                     }
                 for (kp2 = isv ? sc2->kerns : sc2->vkerns; kp2 != NULL;
                      kp2 = kp2->next)
@@ -2395,7 +2395,7 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
                               break;
                           }
                       if (kp1 == NULL)
-                        return (false);
+                        return false;
                     }
               }
           }
@@ -2411,7 +2411,7 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
                           break;
                       }
                   if (ap2 == NULL)
-                    return (false);
+                    return false;
                 }
             for (ap2 = sc2->anchor; ap2 != NULL; ap2 = ap2->next)
               if (ap2->anchor->subtable == sub2)
@@ -2423,11 +2423,11 @@ comparelookupsubtable (struct font_diff *fd, struct lookup_subtable *sub1,
                           break;
                       }
                   if (ap1 == NULL)
-                    return (false);
+                    return false;
                 }
           }
       }
-  return (true);
+  return true;
 }
 
 static void
@@ -3135,7 +3135,7 @@ CompareFonts (SplineFont *sf1, EncMap *map1, SplineFont *sf2, FILE *diffs,
   if (fd.sf1_glyphcnt != sf1->glyphcnt) /* If we added glyphs, they didn't get hashed properly */
     GlyphHashFree (sf1);
 
-  return (fd.diff);
+  return fd.diff;
 }
 
 int
@@ -3145,11 +3145,11 @@ LayersSimilar (Layer *ly1, Layer *ly2, double spline_err)
   int ret;
 
   if (!fdRefCheck (NULL, NULL, ly1->refs, ly2->refs, false))
-    return (false);
+    return false;
   ret =
     SSsCompare (ly1->splines, ly2->splines, spline_err, spline_err, &hmfail);
   if (ret & SS_NoMatch)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }

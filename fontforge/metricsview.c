@@ -99,9 +99,9 @@ MVShowGrid (MetricsView *mv)
 {
   if (mv->showgrid == mv_hidegrid
       || (mv->showgrid == mv_hidemovinggrid && mv->pressed))
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static void
@@ -1181,9 +1181,9 @@ MV_WidthChanged (GGadget *g, GEvent *e)
   int i;
 
   if (e->type != et_controlevent)
-    return (true);
+    return true;
   if (which >= mv->glyphcnt)
-    return (true);
+    return true;
   if (e->u.control.subtype == et_textchanged)
     {
       uint32_t *end;
@@ -1212,7 +1212,7 @@ MV_WidthChanged (GGadget *g, GEvent *e)
           MVDeselectChar (mv, i);
       MVSelectChar (mv, which);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1223,9 +1223,9 @@ MV_LBearingChanged (GGadget *g, GEvent *e)
   int i;
 
   if (e->type != et_controlevent)
-    return (true);
+    return true;
   if (which >= mv->glyphcnt)
-    return (true);
+    return true;
   if (e->u.control.subtype == et_textchanged)
     {
       uint32_t *end;
@@ -1263,7 +1263,7 @@ MV_LBearingChanged (GGadget *g, GEvent *e)
           MVDeselectChar (mv, i);
       MVSelectChar (mv, which);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1274,9 +1274,9 @@ MV_RBearingChanged (GGadget *g, GEvent *e)
   int i;
 
   if (e->type != et_controlevent)
-    return (true);
+    return true;
   if (which >= mv->glyphcnt)
-    return (true);
+    return true;
   if (e->u.control.subtype == et_textchanged)
     {
       uint32_t *end;
@@ -1332,7 +1332,7 @@ MV_RBearingChanged (GGadget *g, GEvent *e)
           MVDeselectChar (mv, i);
       MVSelectChar (mv, which);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1375,7 +1375,7 @@ MV_ChangeKerning (MetricsView *mv, int which, int offset, int is_diff)
         kc = NULL;
       else if ((!is_diff && offset == kc->offsets[index]) ||
                (is_diff && offset == 0))
-        return (true);          /* No change, don't bother user */
+        return true;          /* No change, don't bother user */
       /* If there is already a kerning pair, then assume it takes the precedence over the kerning class */
       else if (kc->offsets[index] == 0
                && !AskNewKernClassEntry (psc, sc,
@@ -1408,7 +1408,7 @@ MV_ChangeKerning (MetricsView *mv, int which, int offset, int is_diff)
           sub =
             SFNewLookupSubtableOfType (psc->parent, gpos_pair, &sd, mv->layer);
           if (sub == NULL)
-            return (false);
+            return false;
           mv->cur_subtable = sub;
           MVSetSubtables (mv->sf);
           MVSetFeatures (mv);
@@ -1497,7 +1497,7 @@ MV_ChangeKerning (MetricsView *mv, int which, int offset, int is_diff)
     }
   mv->sf->changed = true;
   GDrawRequestExpose (mv->v, NULL, false);
-  return (true);
+  return true;
 }
 
 static int
@@ -1508,9 +1508,9 @@ MV_KernChanged (GGadget *g, GEvent *e)
   int i;
 
   if (e->type != et_controlevent)
-    return (true);
+    return true;
   if (which > mv->glyphcnt - 1 || which == 0)
-    return (true);
+    return true;
   if (e->u.control.subtype == et_textchanged)
     {
       uint32_t *end;
@@ -1531,7 +1531,7 @@ MV_KernChanged (GGadget *g, GEvent *e)
           MVDeselectChar (mv, i);
       MVSelectChar (mv, which);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1583,18 +1583,18 @@ MVSCFromUnicode (MetricsView *mv, SplineFont *sf, EncMap *map, int ch,
 
   if (mv->fake_unicode_base && ch >= mv->fake_unicode_base &&
       ch <= mv->fake_unicode_base + mv->sf->glyphcnt)
-    return (mv->sf->glyphs[ch - mv->fake_unicode_base]);
+    return mv->sf->glyphs[ch - mv->fake_unicode_base];
 
   i = SFFindSlot (sf, map, ch, NULL);
   if (i == -1)
-    return (NULL);
+    return NULL;
   else
     {
       sc = SFMakeChar (sf, map, i);
       if (bdf != NULL)
         BDFMakeChar (bdf, map, i);
     }
-  return (sc);
+  return sc;
 }
 
 static void
@@ -1631,9 +1631,9 @@ MVDisplayedCnt (MetricsView *mv)
     {
       wid += mv->perchar[i].dwidth;
       if (wid > mv->dwidth)
-        return (i - mv->coff);
+        return i - mv->coff;
     }
-  return (i - mv->coff);        /* There's extra room. don't know exactly how much but allow for some */
+  return i - mv->coff;        /* There's extra room. don't know exactly how much but allow for some */
 }
 
 static void
@@ -1658,7 +1658,7 @@ MVSetVSb (MetricsView *mv)
   int fudge;
 
   if (mv->displayend == 0)
-    return (0);                 /* Setting the scroll bar is premature */
+    return 0;                 /* Setting the scroll bar is premature */
 
   if (mv->vertical)
     {
@@ -1691,7 +1691,7 @@ MVSetVSb (MetricsView *mv)
   ret = yoff != mv->yoff;
   mv->yoff = yoff;
   GScrollBarSetPos (mv->vsb, yoff);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1820,7 +1820,7 @@ MVFakeUnicodeOfSc (MetricsView *mv, SplineChar *sc)
 {
 
   if (sc->unicodeenc != -1)
-    return (sc->unicodeenc);
+    return sc->unicodeenc;
 
   if (mv->fake_unicode_base == 0)
     {                           /* Not set */
@@ -1886,18 +1886,18 @@ MVFakeUnicodeOfSc (MetricsView *mv, SplineChar *sc)
     }
 
   if (mv->fake_unicode_base == -1)
-    return (0xfffd);
+    return 0xfffd;
   else
-    return (mv->fake_unicode_base + sc->orig_pos);
+    return mv->fake_unicode_base + sc->orig_pos;
 }
 
 static int
 MVOddMatch (MetricsView *mv, int uni, SplineChar *sc)
 {
   if (sc->unicodeenc != -1)
-    return (false);
+    return false;
   else if (mv->fake_unicode_base <= 0)
-    return (uni == 0xfffd);
+    return uni == 0xfffd;
   else
     return (uni >= mv->fake_unicode_base
             && sc->orig_pos == uni - mv->fake_unicode_base);
@@ -2217,7 +2217,7 @@ MV_TextChanged (GGadget *g, GEvent *e)
         }
       MVTextChanged (mv);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2239,20 +2239,20 @@ MV_ScriptLangChanged (GGadget *g, GEvent *e)
         {
           if (u32_strlen (sstr) < 4 || !isalpha (sstr[0]) || !isalnum (sstr[1])
               /*|| !isalnum(sstr[2]) || !isalnum(sstr[3]) */ )
-            return (true);
+            return true;
           if (u32_strlen (sstr) == 4)
             /* No language, we'll use default */ ;
           else if (u32_strlen (sstr) != 10 || sstr[4] != '{' || sstr[9] != '}'
                    || !isalpha (sstr[5]) || !isalpha (sstr[6])
                    || !isalpha (sstr[7]))
-            return (true);
+            return true;
         }
       MVSetFeatures (mv);
       if (mv->clen != 0)        /* if there are no chars, remetricking will set the script field to DFLT */
         MVRemetric (mv);
       GDrawRequestExpose (mv->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2265,7 +2265,7 @@ MV_FeaturesChanged (GGadget *g, GEvent *e)
       MVRemetric (mv);
       GDrawRequestExpose (mv->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 void
@@ -2316,7 +2316,7 @@ MV_SubtableChanged (GGadget *g, GEvent *e)
             sdf_kernpair | sdf_dontedit;
           sub = SFNewLookupSubtableOfType (sf, gpos_pair, &sd, mv->layer);
           if (sub == NULL)
-            return (true);
+            return true;
           mv->cur_subtable = sub;
           MVSetSubtables (mv->sf);
           MVSetFeatures (mv);   /* Is this needed? */
@@ -2339,7 +2339,7 @@ MV_SubtableChanged (GGadget *g, GEvent *e)
       if (kp != NULL)
         kp->subtable = mv->cur_subtable;
     }
-  return (true);
+  return true;
 }
 
 #define MID_ZoomIn	2002
@@ -2842,9 +2842,9 @@ getorigin (void *d, BasePoint *base, int index)
       base->y = (bb.miny + bb.maxy) / 2;
       break;
     default:
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -3481,11 +3481,11 @@ PXSZ_OK (GGadget *g, GEvent *e)
       ptsize = GetInt8 (pxsz->gw, CID_Size, _("Point Size"), &err);
       dpi = GetInt8 (pxsz->gw, CID_DPI, _("DPI"), &err);
       if (err)
-        return (true);
+        return true;
       if (ptsize < 3 || ptsize > 300 || dpi < 10 || dpi > 2000)
         {
           ff_post_error (_("Number out of range"), _("Number out of range"));
-          return (true);
+          return true;
         }
       mv->pixelsize_set_by_window = false;
       mv->ptsize = ptsize;
@@ -3503,7 +3503,7 @@ PXSZ_OK (GGadget *g, GEvent *e)
       MVSetVSb (mv);
       pxsz->done = 2;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3515,7 +3515,7 @@ PXSZ_Cancel (GGadget *g, GEvent *e)
       struct pxsz *pxsz = GDrawGetUserData (GGadgetGetWindow (g));
       pxsz->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3526,12 +3526,12 @@ pxsz_e_h (GWindow gw, GEvent *event)
   switch (event->type)
     {
     case et_char:
-      return (false);
+      return false;
     case et_close:
       pxsz->done = true;
       break;
     }
-  return (true);
+  return true;
 }
 
 VISIBLE void
@@ -6116,7 +6116,7 @@ static int
 hitsbit (BDFChar *bc, int x, int y)
 {
   if (bc->byte_data)
-    return (bc->bitmap[y * bc->bytes_per_line + x]);
+    return bc->bitmap[y * bc->bytes_per_line + x];
   else
     return (bc->bitmap[y * bc->bytes_per_line + (x >> 3)] &
             (1 << (7 - (x & 7))));
@@ -7035,13 +7035,13 @@ mv_v_e_h (GWindow gw, GEvent *event)
             }
           else if (ish)
             {                   /* bind shift to horizontal scroll */
-              return (GGadgetDispatchEvent (mv->hsb, event));
+              return GGadgetDispatchEvent (mv->hsb, event);
             }
           else
             {
-              return (GGadgetDispatchEvent (mv->vsb, event));
+              return GGadgetDispatchEvent (mv->vsb, event);
             }
-          return (true);
+          return true;
         }
       if (mv->gwgic != NULL && event->type == et_mousedown)
         GDrawSetGIC (mv->gw, mv->gwgic, 0, 20);
@@ -7051,7 +7051,7 @@ mv_v_e_h (GWindow gw, GEvent *event)
       MVDrop (mv, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7108,13 +7108,13 @@ mv_e_h (GWindow gw, GEvent *event)
             }
           else if (ish)
             {                   /* bind shift to horizontal scroll */
-              return (GGadgetDispatchEvent (mv->hsb, event));
+              return GGadgetDispatchEvent (mv->hsb, event);
             }
           else
             {
-              return (GGadgetDispatchEvent (mv->vsb, event));
+              return GGadgetDispatchEvent (mv->vsb, event);
             }
-          return (true);
+          return true;
         }
       if (mv->gwgic != NULL && event->type == et_mousedown)
         GDrawSetGIC (mv->gw, mv->gwgic, 0, 20);
@@ -7159,7 +7159,7 @@ mv_e_h (GWindow gw, GEvent *event)
 #endif
       break;
     }
-  return (true);
+  return true;
 }
 
 GTextInfo *
@@ -7175,7 +7175,7 @@ SLOfFont (SplineFont *sf)
   LookupUIInit ();
   scripttags = SFScriptsInLookups (sf, -1);
   if (scripttags == NULL)
-    return (NULL);
+    return NULL;
 
   for (k = 0; k < 2; ++k)
     {
@@ -7236,7 +7236,7 @@ SLOfFont (SplineFont *sf)
         ret = xcalloc ((cnt + 1), sizeof (GTextInfo));
     }
   free (scripttags);
-  return (ret);
+  return ret;
 }
 
 #define metricsicon_width 16
@@ -7443,7 +7443,7 @@ MetricsViewCreate (FontView *fv, SplineChar *sc, BDFFont *bdf)
 
   GDrawSetVisible (mv->v, true);
   GDrawSetVisible (gw, true);
-  return (mv);
+  return mv;
 }
 
 void
@@ -7480,16 +7480,16 @@ MVRefreshAll (MetricsView *mv)
 static int
 MV_GlyphCnt (struct metricsview *mv)
 {
-  return (mv->glyphcnt);
+  return mv->glyphcnt;
 }
 
 static SplineChar *
 MV_Glyph (struct metricsview *mv, int i)
 {
   if (i < 0 || i >= mv->glyphcnt)
-    return (NULL);
+    return NULL;
 
-  return (mv->glyphs[i].sc);
+  return mv->glyphs[i].sc;
 }
 
 static void

@@ -846,7 +846,7 @@ DevTabLen (DeviceTable *dt)
   else
     cnt = (cnt + 7) / 8;
   cnt += 3;                     /* first, last, type */
-  return (sizeof (uint16_t) * cnt);
+  return sizeof (uint16_t) * cnt;
 }
 
 static int
@@ -1203,7 +1203,7 @@ static int
 cmp_gid (const void *_s1, const void *_s2)
 {
   const struct sckppst *s1 = _s1, *s2 = _s2;
-  return (((int) s1->other_gid) - ((int) s2->other_gid));
+  return ((int) s1->other_gid) - ((int) s2->other_gid);
 }
 
 static void
@@ -1960,7 +1960,7 @@ orderglyph (const void *_sc1, const void *_sc2)
 {
   SplineChar *const *sc1 = _sc1, *const *sc2 = _sc2;
 
-  return ((*sc1)->ttf_glyph - (*sc2)->ttf_glyph);
+  return (*sc1)->ttf_glyph - (*sc2)->ttf_glyph;
 }
 
 static SplineChar **
@@ -2469,7 +2469,7 @@ NamesStartWith (SplineChar *sc, char *names)
   if (pt - names != strlen (sc->name))
     return false;
 
-  return (strncmp (sc->name, names, pt - names) == 0);
+  return strncmp (sc->name, names, pt - names) == 0;
 }
 
 static int
@@ -3024,7 +3024,7 @@ static int
 lookup_size_cmp (const void *_l1, const void *_l2)
 {
   const OTLookup *l1 = *(OTLookup **) _l1, *l2 = *(OTLookup **) _l2;
-  return (l1->lookup_length - l2->lookup_length);
+  return l1->lookup_length - l2->lookup_length;
 }
 
 static void
@@ -4017,7 +4017,7 @@ gdefclass (SplineChar *sc)
   AnchorPoint *ap;
 
   if (sc->glyph_class != 0)
-    return (sc->glyph_class - 1);
+    return sc->glyph_class - 1;
 
   if (strcmp (sc->name, ".notdef") == 0)
     return 0;
@@ -4385,7 +4385,7 @@ ttf_math_dump_extended (FILE *mathf, struct alltabs *at, SplineFont *sf)
 static int
 mkv_len (struct mathkernvertex *mkv)
 {
-  return (2 + 8 * mkv->cnt - 4);
+  return 2 + 8 * mkv->cnt - 4;
 }
 
 static int
@@ -4556,7 +4556,7 @@ gv_len (SplineFont *sf, struct glyphvariants *gv)
       while (*start == ' ')
         ++start;
       if (*start == '\0')
-        return (4 + 4 * cnt);   /* MathGlyphConstructionTable */
+        return 4 + 4 * cnt;   /* MathGlyphConstructionTable */
       for (pt = start; *pt != ' ' && *pt != '\0'; ++pt);
       ch = *pt;
       *pt = '\0';
@@ -4574,7 +4574,7 @@ gvc_len (struct glyphvariants *gv)
   if (gv->part_cnt == 0)
     return 0;
 
-  return (6 + 10 * gv->part_cnt);
+  return 6 + 10 * gv->part_cnt;
 }
 
 static uint32_t
@@ -4639,7 +4639,7 @@ ttf_math_dump_mathglyphconstructiontable (FILE *mathf,
           start = pt;
         }
     }
-  return (pos + gvc_len (gv));
+  return pos + gvc_len (gv);
 }
 
 static uint32_t
@@ -5341,7 +5341,7 @@ jstf_dumplklist (FILE *jstf, OTLookup **PS, uint32_t base)
   for (i = 0; PS[i] != NULL; ++i)
     putshort (jstf, PS[i]->lookup_index);
   free (PS);
-  return (here - base);
+  return here - base;
 }
 
 static uint32_t
@@ -5396,7 +5396,7 @@ jstf_dumpmaxlookups (FILE *jstf, SplineFont *sf, struct alltabs *at,
         ++cnt;
       }
 
-  return (here - base);
+  return here - base;
 }
 
 void

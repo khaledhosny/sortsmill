@@ -1192,7 +1192,7 @@ MacEncLangToTable (int macenc, int maclang)
     table = romanian;
   else if (maclang == 31 /* Farsi/Persian */ )
     table = farsi;
-  return (table);
+  return table;
 }
 
 char *
@@ -1203,7 +1203,7 @@ MacStrToUtf8 (const char *str, int macenc, int maclang)
   const uint8_t *ustr = (uint8_t *) str;
 
   if (str == NULL)
-    return (NULL);
+    return NULL;
 
   if (macenc == sm_japanese || macenc == sm_korean || macenc == sm_tradchinese
       || macenc == sm_simpchinese)
@@ -1217,12 +1217,12 @@ MacStrToUtf8 (const char *str, int macenc, int maclang)
       char *out;
       size_t inlen, outlen;
       if (enc == NULL)
-        return (NULL);
+        return NULL;
       toutf8 =
         iconv_open ("UTF-8",
                     enc->iconv_name != NULL ? enc->iconv_name : enc->enc_name);
       if (toutf8 == (iconv_t) - 1 || toutf8 == NULL)
-        return (NULL);
+        return NULL;
       in = (char *) str;
       inlen = strlen (in);
       outlen = (inlen + 1) * 4;
@@ -1230,18 +1230,18 @@ MacStrToUtf8 (const char *str, int macenc, int maclang)
       iconv (toutf8, &in, &inlen, &out, &outlen);
       out[0] = '\0';
       iconv_close (toutf8);
-      return (ret);
+      return ret;
     }
 
   if (macenc < 0 || macenc > 31)
     {
       IError ("Invalid mac encoding %d.\n", macenc);
-      return (NULL);
+      return NULL;
     }
   table = MacEncLangToTable (macenc, maclang);
 
   if (table == NULL)
-    return (NULL);
+    return NULL;
 
   ret = xmalloc ((strlen (str) + 1) * 3);
   for (rpt = ret; *ustr; ++ustr)
@@ -1250,7 +1250,7 @@ MacStrToUtf8 (const char *str, int macenc, int maclang)
       rpt = utf8_idpb (rpt, ch);
     }
   *rpt = '\0';
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -1262,7 +1262,7 @@ Utf8ToMacStr_with_length (const char *ustr, int macenc, int maclang,
   int i, ch;
 
   if (ustr == NULL)
-    return (NULL);
+    return NULL;
 
   if (macenc == sm_japanese || macenc == sm_korean || macenc == sm_tradchinese
       || macenc == sm_simpchinese)
@@ -1276,12 +1276,12 @@ Utf8ToMacStr_with_length (const char *ustr, int macenc, int maclang,
       char *out;
       size_t inlen, outlen;
       if (enc == NULL)
-        return (NULL);
+        return NULL;
       fromutf8 =
         iconv_open (enc->iconv_name != NULL ? enc->iconv_name : enc->enc_name,
                     "UTF-8");
       if (fromutf8 == (iconv_t) - 1 || fromutf8 == NULL)
-        return (NULL);
+        return NULL;
       in = (char *) ustr;
       inlen = strlen (ustr);
       outlen = sizeof (uint32_t) * strlen (ustr);
@@ -1291,7 +1291,7 @@ Utf8ToMacStr_with_length (const char *ustr, int macenc, int maclang,
       out[0] = out[1] = '\0';
       out[2] = out[3] = '\0';
       iconv_close (fromutf8);
-      return (ret);
+      return ret;
     }
 
   table = macencodings[macenc];
@@ -1310,7 +1310,7 @@ Utf8ToMacStr_with_length (const char *ustr, int macenc, int maclang,
     table = farsi;
 
   if (table == NULL)
-    return (NULL);
+    return NULL;
 
   ret = xmalloc (strlen (ustr) + 1);
   for (rpt = ret; (ch = u8_get_next ((const uint8_t **) &ustr));)
@@ -1324,7 +1324,7 @@ Utf8ToMacStr_with_length (const char *ustr, int macenc, int maclang,
     }
   *length = rpt - ret;
   *rpt = '\0';
-  return (ret);
+  return ret;
 }
 
 char *
@@ -1340,9 +1340,9 @@ MacEncFromMacLang (int maclang)
   if (maclang < 0
       || maclang >=
       sizeof (_MacScriptFromLanguage) / sizeof (_MacScriptFromLanguage[0]))
-    return (0xff);
+    return 0xff;
 
-  return (_MacScriptFromLanguage[maclang]);
+  return _MacScriptFromLanguage[maclang];
 }
 
 uint16_t
@@ -1351,9 +1351,9 @@ WinLangFromMac (int maclang)
 
   if (maclang < 0
       || maclang >= sizeof (_WinLangFromMac) / sizeof (_WinLangFromMac[0]))
-    return (0xffff);
+    return 0xffff;
 
-  return (_WinLangFromMac[maclang]);
+  return _WinLangFromMac[maclang];
 }
 
 uint16_t
@@ -1363,14 +1363,14 @@ WinLangToMac (int winlang)
 
   for (i = 0; i < sizeof (_WinLangFromMac) / sizeof (_WinLangFromMac[0]); ++i)
     if (_WinLangFromMac[i] == winlang)
-      return (i);
+      return i;
 
   winlang &= 0xff;
   for (i = 0; i < sizeof (_WinLangFromMac) / sizeof (_WinLangFromMac[0]); ++i)
     if ((_WinLangFromMac[i] & 0xff) == winlang)
-      return (i);
+      return i;
 
-  return (0xffff);
+  return 0xffff;
 }
 
 int
@@ -1380,11 +1380,11 @@ CanEncodingWinLangAsMac (int winlang)
   int macenc = MacEncFromMacLang (maclang);
 
   if (macenc == 0xff)
-    return (false);
+    return false;
   if (macencodings[macenc] == NULL)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 const int32_t *
@@ -1396,10 +1396,10 @@ MacEncToUnicode (int script, int lang)
 
   table = MacEncLangToTable (script, lang);
   if (table == NULL)
-    return (NULL);
+    return NULL;
   for (i = 0; i < 256; ++i)
     temp[i] = table[i];
-  return (temp);
+  return temp;
 }
 
 int
@@ -1411,7 +1411,7 @@ MacLangFromLocale (void)
   int i;
 
   if (found != -1)
-    return (found);
+    return found;
 
   loc = getenv ("LC_ALL");
   if (loc == NULL)
@@ -1422,12 +1422,12 @@ MacLangFromLocale (void)
   if (loc == NULL)
     {
       found = 0;                /* Default to english */
-      return (found);
+      return found;
     }
   if (strncmp (loc, "nl_BE", 5) == 0)
     {
       found = 34;
-      return (found);
+      return found;
     }
   for (i = 0;
        i <
@@ -1439,7 +1439,7 @@ MacLangFromLocale (void)
                    strlen (LanguageCodesFromMacLang[i])) == 0)
         {
           found = i;
-          return (found);
+          return found;
         }
     }
   if (strncmp (loc, "zh_HK", 2) == 0)   /* I think there are other
@@ -1451,7 +1451,7 @@ MacLangFromLocale (void)
     found = 19;
   else
     found = 0;
-  return (found);
+  return found;
 }
 
 /* Sigh. This list is duplicated in macencui.c */
@@ -1707,13 +1707,13 @@ MacLanguageFromCode (int code)
   int i;
 
   if (code == -1)
-    return (_("Unspecified Language"));
+    return _("Unspecified Language");
 
   for (i = 0; localmaclang[i].name != NULL; ++i)
     if (code == localmaclang[i].code)
-      return ((char *) g_dpgettext2 (NULL, "Language", localmaclang[i].name));
+      return (char *) g_dpgettext2 (NULL, "Language", localmaclang[i].name);
 
-  return (_("Unknown Language"));
+  return _("Unknown Language");
 }
 
 //-------------------------------------------------------------------------

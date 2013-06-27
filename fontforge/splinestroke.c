@@ -227,9 +227,9 @@ AdjustedSplineLength (Spline *s)
   bigreal distance = sqrt (xdiff * xdiff + ydiff * ydiff);
 
   if (len <= distance)
-    return (len);               /* It's a straight line */
+    return len;               /* It's a straight line */
   len += 1.5 * (len - distance);
-  return (len);
+  return len;
 }
 
 enum hittest
@@ -266,7 +266,7 @@ PolygonHitTest (BasePoint *poly, BasePoint *polyslopes, int n, BasePoint *test,
       else if (dot < 0)
         {                       /* It's on the left, so it can't be inside */
           if (distance == NULL)
-            return (ht_Outside);
+            return ht_Outside;
           outside = true;
           if (bestd < -dot)
             bestd = -dot;
@@ -276,7 +276,7 @@ PolygonHitTest (BasePoint *poly, BasePoint *polyslopes, int n, BasePoint *test,
   if (outside)
     {
       *distance = bestd;
-      return (ht_Outside);
+      return ht_Outside;
     }
 
   if (distance != NULL)
@@ -284,10 +284,10 @@ PolygonHitTest (BasePoint *poly, BasePoint *polyslopes, int n, BasePoint *test,
   /* zero_cnt==1 => on edge, zero_cnt==2 => on a vertex (on edge), zero_cnt>2 is impossible on a nice poly */
   if (zero_cnt > 0)
     {
-      return (ht_OnEdge);
+      return ht_OnEdge;
     }
 
-  return (ht_Inside);
+  return ht_Inside;
 }
 
 /* Something is a valid polygonal pen if: */
@@ -318,7 +318,7 @@ PolygonIsConvex (BasePoint *poly, int n, int *badpointindex)
   if (badpointindex != NULL)
     *badpointindex = -1;
   if (n < 3)
-    return (Poly_TooFewPoints);
+    return Poly_TooFewPoints;
   /* All the points might lie on one line. That wouldn't be a polygon */
   nx = -(poly[1].y - poly[0].y);
   ny = (poly[1].x - poly[0].x);
@@ -328,11 +328,11 @@ PolygonIsConvex (BasePoint *poly, int n, int *badpointindex)
         break;
     }
   if (i == n)
-    return (Poly_Line);         /* Collinear */
+    return Poly_Line;         /* Collinear */
   if (n == 3)
     {
       /* Triangles are always convex */
-      return (Poly_Convex);
+      return Poly_Convex;
     }
 
   for (j = 0; j < n; ++j)
@@ -379,12 +379,12 @@ PolygonIsConvex (BasePoint *poly, int n, int *badpointindex)
           if (badpointindex != NULL)
             *badpointindex = j;
           if (zero_cnt > 0)
-            return (Poly_PointOnEdge);
+            return Poly_PointOnEdge;
           else
-            return (Poly_Concave);
+            return Poly_Concave;
         }
     }
-  return (Poly_Convex);
+  return Poly_Convex;
 }
 
 /******************************************************************************/
@@ -1254,7 +1254,7 @@ WhichSquareCorner (BasePoint *slope, bigreal t, int *right_trace)
   if (rt >= 4)
     rt -= 4;
   *right_trace = rt;
-  return (left_trace);
+  return left_trace;
 }
 
 static void
@@ -1568,25 +1568,25 @@ SquareWhichExtreme (StrokePoint * before, StrokePoint * after)
   /* Just on the off chance that we hit exactly on the extremum */
 
   if (RealWithin (before->slope.x * before->slope.y, 0, .0001))
-    return (-1);                /* the extremum will have a 0 value for either x/y */
+    return -1;                /* the extremum will have a 0 value for either x/y */
   if (RealWithin (after->slope.x * after->slope.y, 0, .0001))
-    return (1);
+    return 1;
 
   if (before->slope.y * after->slope.y < 0)
     {
       /* The extremum is in y */
       if (before->slope.y < 0)  /* Heading for a minimum */
-        return (before->me.y < after->me.y ? -1 : 1);
+        return before->me.y < after->me.y ? -1 : 1;
       else                      /* A maximum */
-        return (before->me.y > after->me.y ? -1 : 1);
+        return before->me.y > after->me.y ? -1 : 1;
     }
   else
     {
       /* The extremum is in x */
       if (before->slope.x < 0)
-        return (before->me.x < after->me.x ? -1 : 1);
+        return before->me.x < after->me.x ? -1 : 1;
       else
-        return (before->me.x > after->me.x ? -1 : 1);
+        return before->me.x > after->me.x ? -1 : 1;
     }
 }
 
@@ -1815,7 +1815,7 @@ WhichPolyCorner (StrokeContext * c, BasePoint *slope, int *right_trace)
         bestr = c->n - 1;
     }
   *right_trace = bestr;
-  return (bestl);
+  return bestl;
 }
 
 static void
@@ -2096,7 +2096,7 @@ ExtensiveHitTest (BasePoint *pt, StrokeContext * c, StrokePoint * other,
        PolygonHitTest (c->corners, c->slopes, c->n, &rel,
                        &distance)) == ht_Inside || (hit == ht_OnEdge
                                                     && hide_if_on_edge))
-    return (true);
+    return true;
   if (distance < 2 * c->resolution && !other->line)
     {
       tlow = thigh = other->t;
@@ -2126,7 +2126,7 @@ ExtensiveHitTest (BasePoint *pt, StrokeContext * c, StrokePoint * other,
                                    &distance)) == ht_Inside || (hit == ht_OnEdge
                                                                 &&
                                                                 hide_if_on_edge))
-                return (true);
+                return true;
               if (distance < bestd)
                 {
                   bestt = t;
@@ -2160,12 +2160,12 @@ ExtensiveHitTest (BasePoint *pt, StrokeContext * c, StrokePoint * other,
                        PolygonHitTest (c->corners, c->slopes, c->n, &rel,
                                        &distance)) == ht_Inside
                       || (hit == ht_OnEdge && hide_if_on_edge))
-                    return (true);
+                    return true;
                 }
             }
         }
     }
-  return (false);
+  return false;
 }
 #endif
 
@@ -2281,11 +2281,11 @@ PolyWhichExtreme (StrokeContext * c, int corner, int bends_left,
     -before->slope.y * c->slopes[corner].x +
     before->slope.x * c->slopes[corner].y;
   if (RealWithin (sy, 0, .0001))        /* Extremum is at the point, not between */
-    return (-1);
+    return -1;
   if (RealWithin
       (-after->slope.y * c->slopes[corner].x +
        after->slope.x * c->slopes[corner].y, 0, .0001))
-    return (1);
+    return 1;
 
   by = -before->me.y * c->slopes[corner].x + before->me.x * c->slopes[corner].y;
   ay = -after->me.y * c->slopes[corner].x + after->me.x * c->slopes[corner].y;
@@ -2300,7 +2300,7 @@ PolyWhichExtreme (StrokeContext * c, int corner, int bends_left,
       /* A maximum */
       ret = (by > ay ? -1 : 1);
     }
-  return (ret);
+  return ret;
 }
 
 static void
@@ -2662,7 +2662,7 @@ SpOnCircle (int i, bigreal radius, BasePoint *center)
   sp->nextcp.x = unitcircle[i].nextcp.x * radius + center->x;
   sp->nextcp.y = unitcircle[i].nextcp.y * radius + center->y;
   sp->nonextcp = sp->noprevcp = false;
-  return (sp);
+  return sp;
 }
 
 SplineSet *
@@ -2731,7 +2731,7 @@ UnitShape (int n)
       SplineMake3 (sp1, ret->first);
       ret->last = ret->first;
     }
-  return (ret);
+  return ret;
 }
 
 static SplinePointList *
@@ -2795,7 +2795,7 @@ SinglePointStroke (SplinePoint *sp, struct strokecontext *c)
       SplineMake3 (sp1, ret->first);
       ret->last = ret->first;
     }
-  return (ret);
+  return ret;
 }
 
 static int
@@ -2804,7 +2804,7 @@ AllHiddenLeft (struct strokecontext *c)
   int i;
 
   for (i = c->cur - 1; i >= 0 && c->all[i].left_hidden; --i);
-  return (i < 0);
+  return i < 0;
 }
 
 static int
@@ -2813,7 +2813,7 @@ AllHiddenRight (struct strokecontext *c)
   int i;
 
   for (i = c->cur - 1; i >= 0 && c->all[i].right_hidden; --i);
-  return (i < 0);
+  return i < 0;
 }
 
 static void
@@ -3007,7 +3007,7 @@ LeftPointFromContext (struct strokecontext *c, int *_pos, int *newcontour)
         *newcontour = true;
     }
   *_pos = pos;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -3190,7 +3190,7 @@ RightPointFromContext (struct strokecontext *c, int *_pos, int *newcontour)
         *newcontour = true;
     }
   *_pos = pos;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -3624,7 +3624,7 @@ JoinFragments (SplineSet *fragments, SplineSet **contours, bigreal resolution)
       else
         prev = cur;
     }
-  return (fragments);
+  return fragments;
 }
 
 static int
@@ -3635,16 +3635,16 @@ Linelike (SplineSet *ss, bigreal resolution)
   Spline *s;
 
   if (ss->first->prev != NULL)
-    return (false);
+    return false;
 
   if (ss->first->next == ss->last->prev)
-    return (true);
+    return true;
 
   slope.x = ss->last->me.x - ss->first->me.x;
   slope.y = ss->last->me.y - ss->first->me.y;
   len = slope.x * slope.x + slope.y * slope.y;
   if (len == 0)
-    return (false);
+    return false;
   len = sqrt (len);
   slope.x /= len;
   slope.y /= len;
@@ -3653,17 +3653,17 @@ Linelike (SplineSet *ss, bigreal resolution)
       dot = slope.y * (s->from->nextcp.x - ss->first->me.x) -
         slope.x * (s->from->nextcp.y - ss->first->me.y);
       if (dot > resolution || dot < -resolution)
-        return (false);
+        return false;
       dot = slope.y * (s->to->prevcp.x - ss->first->me.x) -
         slope.x * (s->to->prevcp.y - ss->first->me.y);
       if (dot > resolution || dot < -resolution)
-        return (false);
+        return false;
       dot = slope.y * (s->to->me.x - ss->first->me.x) -
         slope.x * (s->to->me.y - ss->first->me.y);
       if (dot > resolution || dot < -resolution)
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 /* This routine is a set of hacks to handle things I can't figure out how to */
@@ -3790,7 +3790,7 @@ EdgeEffects (SplineSet *fragments, StrokeContext * c)
             }
         }
     }
-  return (fragments);
+  return fragments;
 }
 
 static int
@@ -3806,18 +3806,18 @@ ReversedLines (Spline *line1, Spline *line2, SplinePoint **start,
   slope2.x = line2->to->me.x - line2->from->me.x;
   slope2.y = line2->to->me.y - line2->from->me.y;
   if (slope1.x * slope2.x + slope1.y * slope2.y >= 0)
-    return (false);             /* Lines go vaguely in the same direction, not reversed */
+    return false;             /* Lines go vaguely in the same direction, not reversed */
   len1 = sqrt (slope1.x * slope1.x + slope1.y * slope1.y);
   len2 = sqrt (slope2.x * slope2.x + slope2.y * slope2.y);
   if (len1 == 0 || len2 == 0)
-    return (false);             /* zero length lines are just points. Ignore */
+    return false;             /* zero length lines are just points. Ignore */
 
   normal_off = slope1.x * slope2.y / len2 - slope1.y * slope2.x / len2;
   if (normal_off < -.1 || normal_off > .1)
-    return (false);             /* Not parallel */
+    return false;             /* Not parallel */
   normal_off = slope2.x * slope1.y / len1 - slope2.y * slope1.x / len1;
   if (normal_off < -.1 || normal_off > .1)
-    return (false);             /* Not parallel */
+    return false;             /* Not parallel */
 
   /* OK, the lines are parallel, and point in the right direction, but do they */
   /*  intersect? */
@@ -3827,42 +3827,42 @@ ReversedLines (Spline *line1, Spline *line2, SplinePoint **start,
     {
       *start = line2->to;
       *end = line2->from;
-      return (true);
+      return true;
     }
   f1 = BpWithin (&line2->from->me, &line1->from->me, &line2->to->me);
   if (f1 && f2)
     {
       *start = line1->from;
       *end = line2->from;
-      return (true);
+      return true;
     }
   else if (f1 && t2)
     {
       *start = line1->from;
       *end = line2->to;
-      return (true);
+      return true;
     }
   t1 = BpWithin (&line2->from->me, &line1->to->me, &line2->to->me);
   if (f1 && t1)
     {
       *start = line1->from;
       *end = line1->to;
-      return (true);
+      return true;
     }
   else if (t1 && f2)
     {
       *start = line2->from;
       *end = line1->to;
-      return (true);
+      return true;
     }
   else if (t1 && t2)
     {
       *start = line2->to;
       *end = line1->to;
-      return (true);
+      return true;
     }
 
-  return (false);
+  return false;
 }
 
 static SplinePoint *
@@ -3873,15 +3873,15 @@ SplineInsertPoint (Spline *s, SplinePoint *sp)
   s->from->nonextcp = true;
   to->noprevcp = true;
   if (sp->me.x == s->from->me.x && sp->me.y == s->from->me.y)
-    return (s->from);
+    return s->from;
   if (sp->me.x == to->me.x && sp->me.y == to->me.y)
-    return (to);
+    return to;
 
   sp = SplinePointCreate (sp->me.x, sp->me.y);
   s->to = sp;
   sp->prev = s;
   SplineMake3 (sp, to);
-  return (sp);
+  return sp;
 }
 
 static void
@@ -3916,12 +3916,12 @@ RemoveBackForthLine (SplineSet *ss)
   SSRemoveCollinearPoints (ss);
 
   if (ss->first->prev == NULL)
-    return (ss);
+    return ss;
   if (ss->first->next->to == ss->first && ss->first->next->knownlinear)
     {
       /* Entire splineset is a single point *//* Remove it all */
       SplinePointListFree (ss);
-      return (NULL);
+      return NULL;
     }
 
 #if 0
@@ -3938,7 +3938,7 @@ RemoveBackForthLine (SplineSet *ss)
                 {
                   /* Entire splineset is a reversed line *//* Remove it all */
                   SplinePointListFree (ss);
-                  return (NULL);
+                  return NULL;
                 }
               /* Force the two reversed lines to have the same length by adding */
               /*  an internal point if needed */
@@ -4000,13 +4000,13 @@ RemoveBackForthLine (SplineSet *ss)
                     || first1->me.y != second2->me.y)
                   {
                     IError ("Confusion reighns!");
-                    return (ss);
+                    return ss;
                   }
                 if (second1->me.x != first2->me.x
                     || second1->me.y != first2->me.y)
                   {
                     IError ("Confusion regnas!");
-                    return (ss);
+                    return ss;
                   }
                 if (isnext || isprev)
                   {
@@ -4023,7 +4023,7 @@ RemoveBackForthLine (SplineSet *ss)
                     if (second1 != sp2 || first2 != sp2)
                       {
                         IError ("Confusion wiggles!\n");
-                        return (ss);
+                        return ss;
                       }
                     SplineFree (sp2->prev);
                     SplineFree (sp2->next);
@@ -4059,7 +4059,7 @@ RemoveBackForthLine (SplineSet *ss)
                     for (test = ss; test->next != NULL; test = test->next);
                     test->next = other;
                   }
-                return (ss);
+                return ss;
               }
             sp2 = sp2->next->to;
             if (sp2 == ss->first)
@@ -4070,7 +4070,7 @@ RemoveBackForthLine (SplineSet *ss)
         break;
     }
 
-  return (ss);
+  return ss;
 }
 
 static SplineSet *
@@ -4109,7 +4109,7 @@ SSRemoveBackForthLine (SplineSet *contours)
           ret->next = next;
         }
     }
-  return (contours);
+  return contours;
 }
 
 #define MAX_TPOINTS	40
@@ -4132,7 +4132,7 @@ InterpolateTPoints (StrokeContext * c, int start_pos, int end_pos, int isleft)
   bigreal len;
 
   if (start_pos == 0)
-    return (end_pos - start_pos);
+    return end_pos - start_pos;
 
   if (20 >= c->tmax)
     c->tpt = xrealloc (c->tpt, (c->tmax = 20 + MAX_TPOINTS) * sizeof (TPoint));
@@ -4156,7 +4156,7 @@ InterpolateTPoints (StrokeContext * c, int start_pos, int end_pos, int isleft)
           c->tpt[i].x = me.y + slope.y * (i + 1);
           c->tpt[i].t = (i + 1) / 6.0;
         }
-      return (5);
+      return 5;
     }
   else if (c->all[start_pos].circle)
     {
@@ -4209,14 +4209,14 @@ InterpolateTPoints (StrokeContext * c, int start_pos, int end_pos, int isleft)
               c->tpt[i].t = (i + 1) / 11.0;
             }
         }
-      return (10);
+      return 10;
     }
 
   if (c->all[start_pos - 1].t == c->all[end_pos].t ||
       c->all[start_pos - 1].sp != c->all[end_pos].sp ||
       (isleft && c->all[start_pos - 1].lt != c->all[end_pos].lt) ||
       (!isleft && c->all[start_pos - 1].rt != c->all[end_pos].rt))
-    return (end_pos - start_pos);       /* Well, nothing we can do here */
+    return end_pos - start_pos;       /* Well, nothing we can do here */
 
   start_t = c->all[start_pos - 1].t;
   end_t = c->all[end_pos].t;
@@ -4281,7 +4281,7 @@ InterpolateTPoints (StrokeContext * c, int start_pos, int end_pos, int isleft)
           c->tpt[j++].t = (i + 1) / 11.0;
         }
     }
-  return (j);
+  return j;
 }
 
 static SplineSet *
@@ -4557,7 +4557,7 @@ ApproximateStrokeContours (StrokeContext * c)
     }
   contours = SSRemoveBackForthLine (contours);
 
-  return (contours);
+  return contours;
 }
 
 static SplineSet *
@@ -4569,7 +4569,7 @@ SplineSet_Stroke (SplineSet *ss, struct strokecontext *c, int order2)
   base = SplinePointListCopy (ss);
   base = SSRemoveZeroLengthSplines (base);      /* Hard to get a slope for a zero length spline, that causes problems */
   if (base == NULL)
-    return (NULL);
+    return NULL;
   if (c->transform_needed)
     base = SplinePointListTransform (base, c->transform, tpt_AllPoints);
   if (base->first->next == NULL)
@@ -4602,7 +4602,7 @@ SplineSet_Stroke (SplineSet *ss, struct strokecontext *c, int order2)
   if (order2)
     ret = SplineSetsConvertOrder (ret, order2);
   SplinePointListFree (base);
-  return (ret);
+  return ret;
 }
 
 static SplineSet *
@@ -4622,7 +4622,7 @@ SplineSets_Stroke (SplineSet *ss, struct strokecontext *c, int order2)
           last = last->next;
       ss = ss->next;
     }
-  return (first);
+  return first;
 }
 
 SplineSet *
@@ -4694,7 +4694,7 @@ SplineSetStroke (SplineSet *ss, StrokeInfo *si, int order2)
             {
               ++n;
               if (sp->next == NULL)
-                return (NULL);  /* That's an error, must be closed */
+                return NULL;  /* That's an error, must be closed */
               sp = sp->next->to;
               if (sp == active->first)
                 break;
@@ -4796,7 +4796,7 @@ SplineSetStroke (SplineSet *ss, StrokeInfo *si, int order2)
     }
   free (c.all);
   free (c.tpt);
-  return (ret);
+  return ret;
 }
 
 #include "baseviews.h"

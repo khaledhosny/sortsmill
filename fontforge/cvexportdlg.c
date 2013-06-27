@@ -76,14 +76,14 @@ SB_OK (GGadget *g, GEvent *e)
       *d->pixels = GetInt8 (d->gw, CID_Size, _("Pixel size:"), &err);
       *d->bits = GetInt8 (d->gw, CID_Bits, _("Bits/Pixel:"), &err);
       if (err)
-        return (true);
+        return true;
       if (*d->bits != 1 && *d->bits != 2 && *d->bits != 4 && *d->bits != 8)
         {
           ff_post_error (_
                          ("The only valid values for bits/pixel are 1, 2, 4 or 8"),
                          _
                          ("The only valid values for bits/pixel are 1, 2, 4 or 8"));
-          return (true);
+          return true;
         }
       free (last);
       free (last_bits);
@@ -92,7 +92,7 @@ SB_OK (GGadget *g, GEvent *e)
       d->done = true;
       d->good = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -103,7 +103,7 @@ SB_Cancel (GGadget *g, GEvent *e)
       struct sizebits *d = GDrawGetUserData (GGadgetGetWindow (g));
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -114,7 +114,7 @@ sb_e_h (GWindow gw, GEvent *event)
       struct sizebits *d = GDrawGetUserData (gw);
       d->done = true;
     }
-  return (event->type != et_char);
+  return event->type != et_char;
 }
 
 static int
@@ -252,7 +252,7 @@ AskSizeBits (int *pixelsize, int *bitsperpixel)
   while (!sb.done)
     GDrawProcessOneEvent (NULL);
   GDrawDestroyWindow (gw);
-  return (sb.good);
+  return sb.good;
 }
 
 static int
@@ -265,9 +265,9 @@ ExportXBM (char *filename, SplineChar *sc, int layer, int format)
     {
       ans = gwwv_ask_string (_("Pixel size?"), "100", _("Pixel size?"));
       if (ans == NULL)
-        return (0);
+        return 0;
       if ((pixelsize = strtol (ans, NULL, 10)) <= 0)
-        return (0);
+        return 0;
       free (last);
       last = ans;
       bitsperpixel = 1;
@@ -275,12 +275,12 @@ ExportXBM (char *filename, SplineChar *sc, int layer, int format)
   else
     {
       if (!AskSizeBits (&pixelsize, &bitsperpixel))
-        return (0);
+        return 0;
     }
   if (autohint_before_generate && sc->changedsincelasthinted
       && !sc->manualhints)
     SplineCharAutoHint (sc, layer, NULL);
-  return (ExportImage (filename, sc, layer, format, pixelsize, bitsperpixel));
+  return ExportImage (filename, sc, layer, format, pixelsize, bitsperpixel);
 }
 
 struct gfc_data
@@ -414,7 +414,7 @@ GFD_SaveOk (GGadget *g, GEvent *e)
           free (ret);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -426,7 +426,7 @@ GFD_Cancel (GGadget *g, GEvent *e)
       d->done = true;
       d->ret = false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -466,7 +466,7 @@ GFD_Format (GGadget *g, GEvent *e)
       GGadgetSetTitle (d->gfc, f2);
       free (f2);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -505,7 +505,7 @@ GFD_NewDir (GGadget *g, GEvent *e)
       newdir =
         gwwv_ask_string (_("Create directory"), NULL, _("Directory name?"));
       if (newdir == NULL)
-        return (true);
+        return true;
       if (!GFileIsAbsolute (newdir))
         {
           char *basedir = x_u32_to_u8 (GFileChooserGetDir (d->gfc));
@@ -521,7 +521,7 @@ GFD_NewDir (GGadget *g, GEvent *e)
                                                   GFD_dircreatefailed)));
       free (utemp);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -535,7 +535,7 @@ e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_map)
     {
@@ -551,9 +551,9 @@ e_h (GWindow gw, GEvent *event)
            (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
       struct gfc_data *d = GDrawGetUserData (gw);
-      return (GGadgetDispatchEvent ((GGadget *) (d->gfc), event));
+      return GGadgetDispatchEvent ((GGadget *) (d->gfc), event);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -563,10 +563,10 @@ CanBeAPlateFile (SplineChar *sc)
   SplineSet *ss;
 
   if (sc->parent->multilayer)
-    return (false);
+    return false;
   /* Plate files can't handle refs */
   if (sc->layers[ly_fore].refs != NULL)
-    return (false);
+    return false;
 
   /* Plate files can only handle 1 open contour */
   open_cnt = 0;
@@ -578,7 +578,7 @@ CanBeAPlateFile (SplineChar *sc)
             ++open_cnt;
         }
     }
-  return (open_cnt <= 1);
+  return open_cnt <= 1;
 }
 
 static int
@@ -819,17 +819,17 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
   while (!d.done)
     GDrawProcessOneEvent (NULL);
   GDrawDestroyWindow (gw);
-  return (d.ret);
+  return d.ret;
 }
 
 int
 CVExport (CharView * cv)
 {
-  return (_Export (cv->b.sc, NULL, CVLayer ((CharViewBase *) cv)));
+  return _Export (cv->b.sc, NULL, CVLayer ((CharViewBase *) cv));
 }
 
 int
 BVExport (BitmapView * bv)
 {
-  return (_Export (bv->bc->sc, bv->bc, ly_fore));
+  return _Export (bv->bc->sc, bv->bc, ly_fore);
 }

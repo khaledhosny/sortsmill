@@ -223,7 +223,7 @@ localSplinesFromEntities (Entity * ent, Color bgcol, int ispotrace)
           }
       }
     while (removed);
-  return (head);
+  return head;
 }
 
 /* I think this is total paranoia. but it's annoying to have linker complaints... */
@@ -250,7 +250,7 @@ mytempnam (char *buffer)
     strcpy (buffer, old);
   free (old);
 #endif
-  return (fd);
+  return fd;
 }
 
 static char *
@@ -274,11 +274,11 @@ mytempdir (void)
     {
       sprintf (eon, "%04X_mf%d", getpid (), ++cnt);
       if (mkdir (buffer, 0770) == 0)
-        return (xstrdup_or_null (buffer));
+        return xstrdup_or_null (buffer);
       else if (errno != EEXIST)
-        return (NULL);
+        return NULL;
       if (++tries > 100)
-        return (NULL);
+        return NULL;
     }
 }
 
@@ -430,7 +430,7 @@ makevector (const char *str)
   int i, cnt;
 
   if (str == NULL)
-    return (NULL);
+    return NULL;
 
   vector = NULL;
   for (i = 0; i < 2; ++i)
@@ -446,15 +446,15 @@ makevector (const char *str)
           for (start = pt; isspace (*start); ++start);
         }
       if (cnt == 0)
-        return (NULL);
+        return NULL;
       if (vector)
         {
           vector[cnt] = NULL;
-          return (vector);
+          return vector;
         }
       vector = xmalloc ((cnt + 1) * sizeof (char *));
     }
-  return (NULL);
+  return NULL;
 }
 
 static char *
@@ -464,7 +464,7 @@ flatten (char *const *args)
   int j, i, len;
 
   if (args == NULL)
-    return (NULL);
+    return NULL;
 
   ret = rpt = NULL;
   for (i = 0; i < 2; ++i)
@@ -483,13 +483,13 @@ flatten (char *const *args)
       if (rpt)
         {
           rpt[-1] = '\0';
-          return (ret);
+          return ret;
         }
       else if (len <= 1)
-        return (NULL);
+        return NULL;
       ret = rpt = xmalloc (len);
     }
-  return (NULL);
+  return NULL;
 }
 
 static char **args = NULL;
@@ -500,7 +500,7 @@ VISIBLE char *mf_args = NULL;
 void *
 GetAutoTraceArgs (void)
 {
-  return (flatten (args));
+  return flatten (args);
 }
 
 void
@@ -531,12 +531,12 @@ AutoTraceArgs (int ask)
                             _("Additional arguments for autotrace program:"));
       free (cdef);
       if (cret == NULL)
-        return ((char **) -1);
+        return (char **) -1;
       args = makevector (cret);
       free (cret);
       SavePrefs (true);
     }
-  return (args);
+  return args;
 }
 
 void
@@ -611,7 +611,7 @@ ProgramExists (char *prog, char *buffer)
   char *path, *pt;
 
   if ((path = getenv ("PATH")) == NULL)
-    return (NULL);
+    return NULL;
 
   while (1)
     {
@@ -629,14 +629,14 @@ ProgramExists (char *prog, char *buffer)
           /*  no need for special check to add ".exe" */
           if (access (buffer, X_OK) != -1)
             {
-              return (buffer);
+              return buffer;
             }
         }
       if (*pt == '\0')
         break;
       path = pt + 1;
     }
-  return (NULL);
+  return NULL;
 }
 
 char *
@@ -648,19 +648,19 @@ FindAutoTraceName (void)
   char buffer[1025];
 
   if (searched && waspotraceprefered == preferpotrace)
-    return (name);
+    return name;
 
   searched = true;
   waspotraceprefered = preferpotrace;
   if (preferpotrace)
     {
       if ((name = getenv ("POTRACE")) != NULL)
-        return (name);
+        return name;
     }
   if ((name = getenv ("AUTOTRACE")) != NULL)
-    return (name);
+    return name;
   if ((name = getenv ("POTRACE")) != NULL)
-    return (name);
+    return name;
 
   if (preferpotrace)
     {
@@ -671,7 +671,7 @@ FindAutoTraceName (void)
     name = "autotrace";
   if (name == NULL && ProgramExists ("potrace", buffer) != NULL)
     name = "potrace";
-  return (name);
+  return name;
 }
 
 char *
@@ -682,14 +682,14 @@ FindMFName (void)
   char buffer[1025];
 
   if (searched)
-    return (name);
+    return name;
 
   searched = true;
   if ((name = getenv ("MF")) != NULL)
-    return (name);
+    return name;
   if (ProgramExists ("mf", buffer) != NULL)
     name = "mf";
-  return (name);
+  return name;
 }
 
 static char *
@@ -718,7 +718,7 @@ FindGfFile (char *tempdir)
         }
       closedir (temp);
     }
-  return (ret);
+  return ret;
 }
 
 static void
@@ -778,11 +778,11 @@ MfArgs (void)
                            mf_args,
                            _("Additional arguments for autotrace program:"));
       if (ret == NULL)
-        return ((char *) -1);
+        return (char *) -1;
       mf_args = ret;
       SavePrefs (true);
     }
-  return (mf_args);
+  return mf_args;
 }
 
 SplineFont *
@@ -799,17 +799,17 @@ SFFromMF (char *filename)
       ff_post_error (_("Can't find mf"),
                      _
                      ("Can't find mf program -- metafont (set MF environment variable) or download from:\n  http://www.tug.org/\n  http://www.ctan.org/\nIt's part of the TeX distribution"));
-      return (NULL);
+      return NULL;
     }
   else if (FindAutoTraceName () == NULL)
     {
       ff_post_error (_("Can't find autotrace"),
                      _
                      ("Can't find autotrace program (set AUTOTRACE environment variable) or download from:\n  http://sf.net/projects/autotrace/"));
-      return (NULL);
+      return NULL;
     }
   if (MfArgs () == (char *) -1 || AutoTraceArgs (false) == (char **) -1)
-    return (NULL);
+    return NULL;
 
   /* I don't know how to tell mf to put its files where I want them. */
   /*  so instead I create a temporary directory, cd mf there, and it */
@@ -819,7 +819,7 @@ SFFromMF (char *filename)
     {
       ff_post_error (_("Can't create temporary directory"),
                      _("Can't create temporary directory"));
-      return (NULL);
+      return NULL;
     }
 
   ac = 0;
@@ -896,5 +896,5 @@ SFFromMF (char *filename)
     ff_post_error (_("Can't run mf"), _("Can't run mf"));
   free (arglist[1]);
   cleantempdir (tempdir);
-  return (sf);
+  return sf;
 }

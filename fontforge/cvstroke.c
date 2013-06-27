@@ -359,11 +359,11 @@ _Stroke_OK (StrokeDlg *sd, int isapply)
       err = true;
     }
   if (err)
-    return (true);
+    return true;
   if (sd->strokeit != NULL)
     (sd->strokeit) (sd->cv, si, isapply);
   sd->done = !isapply;
-  return (true);
+  return true;
 }
 
 static int
@@ -375,9 +375,9 @@ Stroke_OK (GGadget *g, GEvent *e)
       GWindow sw = GGadgetGetWindow (g);
       StrokeDlg *sd =
         (StrokeDlg *) ((CharViewBase *) GDrawGetUserData (sw))->container;
-      return (_Stroke_OK (sd, GGadgetGetCid (g) == CID_Apply));
+      return _Stroke_OK (sd, GGadgetGetCid (g) == CID_Apply);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -401,7 +401,7 @@ Stroke_Cancel (GGadget *g, GEvent *e)
                        GDrawGetUserData (GGadgetGetWindow (g)))->container;
       _Stroke_Cancel (sd);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -529,7 +529,7 @@ Stroke_TextChanged (GGadget *g, GEvent *e)
                        GDrawGetUserData (GGadgetGetWindow (g)))->container;
       Stroke_ShowNib (sd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -543,7 +543,7 @@ Stroke_CenterLine (GGadget *g, GEvent *e)
       StrokeSetup (sd, si_centerline);
       Stroke_ShowNib (sd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -557,7 +557,7 @@ Stroke_Caligraphic (GGadget *g, GEvent *e)
       StrokeSetup (sd, si_caligraphic);
       Stroke_ShowNib (sd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -571,7 +571,7 @@ Stroke_Stroke (GGadget *g, GEvent *e)
       StrokeSetup (sd, si_std);
       Stroke_ShowNib (sd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -585,7 +585,7 @@ Stroke_Polygon (GGadget *g, GEvent *e)
       StrokeSetup (sd, si_poly);
       Stroke_ShowNib (sd);
     }
-  return (true);
+  return true;
 }
 
 #if 0
@@ -599,7 +599,7 @@ Stroke_PressureChange (GGadget *g, GEvent *e)
                        GDrawGetUserData (GGadgetGetWindow (g)))->container;
       StrokePressureCheck (sd);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -728,28 +728,28 @@ stroke_sub_e_h (GWindow gw, GEvent *event)
     case et_mouseup:
     case et_mousedown:
     case et_mousemove:
-      return (false);
+      return false;
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
 Stroke_Can_Navigate (struct cvcontainer *cvc, enum nav_type type)
 {
-  return (false);
+  return false;
 }
 
 static int
 Stroke_Can_Open (struct cvcontainer *cvc)
 {
-  return (false);
+  return false;
 }
 
 static SplineFont *
 SF_Of_Stroke (struct cvcontainer *foo)
 {
-  return (NULL);
+  return NULL;
 }
 
 struct cvcontainer_funcs stroke_funcs = {
@@ -855,9 +855,9 @@ stroke_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("elementmenu.html#Expand");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_mousemove)
     {
@@ -914,7 +914,7 @@ stroke_e_h (GWindow gw, GEvent *event)
       /* Above palettes */
       GDrawRaise (gw);
     }
-  return (true);
+  return true;
 }
 
 #define SD_Width	230
@@ -1682,10 +1682,10 @@ gdd_sub_e_h (GWindow gw, GEvent *event)
     case et_mouseup:
     case et_mousedown:
     case et_mousemove:
-      return (false);
+      return false;
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1721,7 +1721,7 @@ gdd_e_h (GWindow gw, GEvent *event)
       /* gdd->isvisible = event->u.map.is_visible; */
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1735,7 +1735,7 @@ Gradient_Cancel (GGadget *g, GEvent *e)
              container);
       GDD_DoClose (&gdd->base);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1744,11 +1744,11 @@ orderstops (const void *_md1, const void *_md2)
   const struct matrix_data *md1 = _md1, *md2 = _md2;
 
   if (md1->u.md_real > md2->u.md_real)
-    return (1);
+    return 1;
   else if (md1->u.md_real == md2->u.md_real)
-    return (0);
+    return 0;
   else
-    return (-1);
+    return -1;
 }
 
 static int
@@ -1774,7 +1774,7 @@ Gradient_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("Bad Gradient"),
                          _("There must be at least 2 gradient stops"));
-          return (true);
+          return true;
         }
       for (i = 0; i < rows; ++i)
         {
@@ -1785,7 +1785,7 @@ Gradient_OK (GGadget *g, GEvent *e)
                              _
                              ("Bad offset on line %d, must be between 0% and 100%."),
                              i);
-              return (true);
+              return true;
             }
           if (md[cols * i + 1].u.md_ival < 0
               || md[cols * i + 1].u.md_ival > 0xffffff)
@@ -1794,7 +1794,7 @@ Gradient_OK (GGadget *g, GEvent *e)
                              _
                              ("Bad color on line %d, must be between 000000 and ffffff."),
                              i);
-              return (true);
+              return true;
             }
           if (md[cols * i + 2].u.md_real < 0
               || md[cols * i + 2].u.md_real > 1.0)
@@ -1803,7 +1803,7 @@ Gradient_OK (GGadget *g, GEvent *e)
                              _
                              ("Bad opacity on line %d, must be between 0.0 and 1.0."),
                              i);
-              return (true);
+              return true;
             }
         }
 
@@ -1820,7 +1820,7 @@ Gradient_OK (GGadget *g, GEvent *e)
           (!linear && ss->next != NULL && ss->next->next != NULL))
         {
           ff_post_error (_("Bad Gradient"), _("You must draw a line"));
-          return (true);
+          return true;
         }
       ss2 = NULL;
       if (!linear && ss->next != NULL)
@@ -1838,7 +1838,7 @@ Gradient_OK (GGadget *g, GEvent *e)
                   ff_post_error (_("Bad Gradient"),
                                  _
                                  ("You must draw a line, with at most one additional point"));
-                  return (true);
+                  return true;
                 }
             }
         }
@@ -1846,7 +1846,7 @@ Gradient_OK (GGadget *g, GEvent *e)
            ss->first->next->to->next != NULL) || !ss->first->next->islinear)
         {
           ff_post_error (_("Bad Gradient"), _("You must draw a line"));
-          return (true);
+          return true;
         }
 
       if (linear)
@@ -1889,25 +1889,25 @@ Gradient_OK (GGadget *g, GEvent *e)
       GDD_DoClose (&gdd->base);
       gdd->oked = true;
     }
-  return (true);
+  return true;
 }
 
 static int
 GDD_Can_Navigate (struct cvcontainer *cvc, enum nav_type type)
 {
-  return (false);
+  return false;
 }
 
 static int
 GDD_Can_Open (struct cvcontainer *cvc)
 {
-  return (false);
+  return false;
 }
 
 static SplineFont *
 SF_Of_GDD (struct cvcontainer *foo)
 {
-  return (NULL);
+  return NULL;
 }
 
 struct cvcontainer_funcs gradient_funcs = {
@@ -2030,10 +2030,10 @@ Grad_CanDelete (GGadget *g, int row)
   int rows;
   struct matrix_data *md = GMatrixEditGet (g, &rows);
   if (md == NULL)
-    return (false);
+    return false;
 
   /* There must always be at least two entries in the table */
-  return (rows > 2);
+  return rows > 2;
 }
 
 static void
@@ -2337,7 +2337,7 @@ GradientEdit (struct layer_dlg *ld, struct gradient *active)
   release_enc_to_gid (&gdd.dummy_map);
   release_gid_to_enc (&gdd.dummy_map);
 
-  return (gdd.active);
+  return gdd.active;
 }
 
 static void
@@ -2368,7 +2368,7 @@ Layer_FillGradDelete (GGadget *g, GEvent *e)
       ld->fillgrad = NULL;
       Layer_GradSet (ld);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2381,7 +2381,7 @@ Layer_FillGradAddEdit (GGadget *g, GEvent *e)
       ld->fillgrad = GradientEdit (ld, ld->fillgrad);
       Layer_GradSet (ld);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2395,7 +2395,7 @@ Layer_StrokeGradDelete (GGadget *g, GEvent *e)
       ld->strokegrad = NULL;
       Layer_GradSet (ld);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2408,7 +2408,7 @@ Layer_StrokeGradAddEdit (GGadget *g, GEvent *e)
       ld->strokegrad = GradientEdit (ld, ld->strokegrad);
       Layer_GradSet (ld);
     }
-  return (true);
+  return true;
 }
 
 #define CID_PatternName	1001
@@ -2440,18 +2440,18 @@ Pat_WidthChanged (GGadget *g, GEvent *e)
 
       free (name);
       if (patternsc == NULL)
-        return (true);
+        return true;
       if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_Aspect)))
-        return (true);
+        return true;
       width = GetCalmReal8 (gw, CID_TWidth, _("Width"), &err);
       if (err)
-        return (true);
+        return true;
       PatternSCBounds (patternsc, &b);
       height = width * (b.maxy - b.miny) / (b.maxx - b.minx);
       sprintf (buffer, "%g", (double) height);
       GGadgetSetTitle8 (GWidgetGetControl (gw, CID_THeight), buffer);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2471,18 +2471,18 @@ Pat_HeightChanged (GGadget *g, GEvent *e)
 
       free (name);
       if (patternsc == NULL)
-        return (true);
+        return true;
       if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_Aspect)))
-        return (true);
+        return true;
       height = GetCalmReal8 (gw, CID_THeight, _("Height"), &err);
       if (err)
-        return (true);
+        return true;
       PatternSCBounds (patternsc, &b);
       width = height * (b.maxx - b.minx) / (b.maxy - b.miny);
       sprintf (buffer, "%g", (double) width);
       GGadgetSetTitle8 (GWidgetGetControl (gw, CID_TWidth), buffer);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2503,7 +2503,7 @@ Pat_TransformChanged (GGadget *g, GEvent *e)
            &trans[3], &trans[4], &trans[5]) != 6)
         {
           free (name);
-          return (true);
+          return true;
         }
       free (name);
 
@@ -2538,7 +2538,7 @@ Pat_TransformChanged (GGadget *g, GEvent *e)
           GGadgetSetTitle8 (GWidgetGetControl (gw, CID_TransY), "");
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2562,14 +2562,14 @@ Pat_AnglesChanged (GGadget *g, GEvent *e)
       x = GetCalmReal8 (gw, CID_TransX, _("Translation in X"), &err);
       y = GetCalmReal8 (gw, CID_TransY, _("Translation in Y"), &err);
       if (err)
-        return (true);
+        return true;
       t = tan (skew);
       c = cos (rotate);
       s = sin (rotate);
       sprintf (buffer, "[%g %g %g %g %g %g]", c, s, t * c - s, t * s + c, x, y);
       GGadgetSetTitle8 (GWidgetGetControl (gw, CID_Transform), buffer);
     }
-  return (true);
+  return true;
 }
 
 static uint32_t **
@@ -2577,7 +2577,7 @@ Pat_GlyphNameCompletion (GGadget *t, int from_tab)
 {
   struct layer_dlg *ld = GDrawGetUserData (GGadgetGetWindow (t));
 
-  return (SFGlyphNameCompletion (ld->sf, t, from_tab, false));
+  return SFGlyphNameCompletion (ld->sf, t, from_tab, false);
 }
 
 static int
@@ -2603,7 +2603,7 @@ Pat_OK (GGadget *g, GEvent *e)
           free (transstring);
           ff_post_error (_("Bad Transformation matrix"),
                          _("Bad Transformation matrix"));
-          return (true);
+          return true;
         }
       free (transstring);
 
@@ -2616,14 +2616,14 @@ Pat_OK (GGadget *g, GEvent *e)
                          ("This font does not contain a glyph named \"%.40s\""),
                          name);
           free (name);
-          return (true);
+          return true;
         }
 
       err = false;
       width = GetReal8 (gw, CID_TWidth, _("Width"), &err);
       height = GetReal8 (gw, CID_THeight, _("Height"), &err);
       if (err)
-        return (true);
+        return true;
 
       if (ld->curpat == NULL)
         ld->curpat = xzalloc (sizeof (struct pattern));
@@ -2635,7 +2635,7 @@ Pat_OK (GGadget *g, GEvent *e)
       ld->curpat->height = height;
       ld->pat_done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2647,7 +2647,7 @@ Pat_Cancel (GGadget *g, GEvent *e)
       struct layer_dlg *ld = GDrawGetUserData (gw);
       ld->pat_done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2658,13 +2658,13 @@ pat_e_h (GWindow gw, GEvent *event)
   switch (event->type)
     {
     case et_char:
-      return (false);
+      return false;
       break;
     case et_close:
       ld->pat_done = true;
       break;
     }
-  return (true);
+  return true;
 }
 
 static struct pattern *
@@ -2953,7 +2953,7 @@ PatternEdit (struct layer_dlg *ld, struct pattern *active)
     GDrawProcessOneEvent (NULL);
 
   GDrawDestroyWindow (gw);
-  return (ld->curpat);
+  return ld->curpat;
 }
 
 static void
@@ -2984,7 +2984,7 @@ Layer_FillPatDelete (GGadget *g, GEvent *e)
       ld->fillpat = NULL;
       Layer_PatSet (ld);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2997,7 +2997,7 @@ Layer_FillPatAddEdit (GGadget *g, GEvent *e)
       ld->fillpat = PatternEdit (ld, ld->fillpat);
       Layer_PatSet (ld);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3011,7 +3011,7 @@ Layer_StrokePatDelete (GGadget *g, GEvent *e)
       ld->strokepat = NULL;
       Layer_PatSet (ld);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3024,7 +3024,7 @@ Layer_StrokePatAddEdit (GGadget *g, GEvent *e)
       ld->strokepat = PatternEdit (ld, ld->strokepat);
       Layer_PatSet (ld);
     }
-  return (true);
+  return true;
 }
 
 static uint32_t
@@ -3042,7 +3042,7 @@ getcol (GGadget *g, int *err)
       *err = true;
       ff_post_error (_("Bad Color"), _("Bad Color"));
     }
-  return (col);
+  return col;
 }
 
 static int
@@ -3088,7 +3088,7 @@ Layer_OK (GGadget *g, GEvent *e)
       else
         temp.stroke_pen.width = GetReal8 (gw, CID_Width, _("_Width"), &err);
       if (err)
-        return (true);
+        return true;
 
       ret = _GGadgetGetTitle (GWidgetGetControl (gw, CID_Trans));
       while (*ret == ' ' || *ret == '[')
@@ -3103,7 +3103,7 @@ Layer_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("Bad Transformation Matrix"),
                          _("Bad Transformation Matrix"));
-          return (true);
+          return true;
         }
       if (GGadgetIsChecked (GWidgetGetControl (gw, CID_DashesInherit)))
         {
@@ -3123,19 +3123,19 @@ Layer_OK (GGadget *g, GEvent *e)
               if (val < 0 || val > 255)
                 {
                   ff_post_error (_("Bad dash list"), _("Value out of range"));
-                  return (true);
+                  return true;
                 }
               else if (*end != ' ')
                 {
                   ff_post_error (_("Bad dash list"), _("Bad Number"));
-                  return (true);
+                  return true;
                 }
               else if (i >= DASH_MAX)
                 {
                   ff_post_error (_("Bad dash list"),
                                  _("Too many dashes (at most %d allowed)"),
                                  DASH_MAX);
-                  return (true);
+                  return true;
                 }
               temp.stroke_pen.dashes[i] = val;
               ret = end;
@@ -3173,7 +3173,7 @@ Layer_OK (GGadget *g, GEvent *e)
       ld->layer->fill_brush.pattern = ld->fillpat;
       ld->layer->stroke_pen.brush.pattern = ld->strokepat;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3184,7 +3184,7 @@ Layer_Cancel (GGadget *g, GEvent *e)
       struct layer_dlg *ld = GDrawGetUserData (GGadgetGetWindow (g));
       ld->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3196,7 +3196,7 @@ Layer_Inherit (GGadget *g, GEvent *e)
       int cid = (intptr_t) GGadgetGetUserData (g);
       GGadgetSetEnabled (GWidgetGetControl (gw, cid), !GGadgetIsChecked (g));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3231,7 +3231,7 @@ Layer_DoColorWheel (GGadget *g, GEvent *e)
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3247,11 +3247,11 @@ layer_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("multilayer.html#Layer");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 int
@@ -4095,5 +4095,5 @@ LayerDialog (Layer *layer, SplineFont *sf)
       PatternFree (ld.fillpat);
       PatternFree (ld.strokepat);
     }
-  return (ld.ok);
+  return ld.ok;
 }

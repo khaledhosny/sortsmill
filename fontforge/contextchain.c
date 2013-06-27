@@ -168,7 +168,7 @@ cu_copybetween (const uint32_t *start, const uint32_t *end)
   char *ret = xmalloc (end - start + 1);
   cu_strncpy (ret, start, end - start);
   ret[end - start] = '\0';
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -178,7 +178,7 @@ reversenames (char *str)
   char *rpt, *pt, *start, *spt;
 
   if (str == NULL)
-    return (NULL);
+    return NULL;
 
   rpt = ret = xmalloc (strlen (str) + 1);
   *ret = '\0';
@@ -191,7 +191,7 @@ reversenames (char *str)
     }
   if (rpt > ret)
     rpt[-1] = '\0';
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -213,7 +213,7 @@ rpl (const char *src, const char *find, const char *rpl)
         ++found_cnt;
     }
   if (found_cnt == 0)
-    return (xstrdup_or_null (src));
+    return xstrdup_or_null (src);
 
   rpt = ret = xmalloc (strlen (src) + found_cnt * (strlen (rpl) - flen) + 1);
   for (pt = src; *pt;)
@@ -235,7 +235,7 @@ rpl (const char *src, const char *find, const char *rpl)
         }
     }
   *rpt = '\0';
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -278,7 +278,7 @@ classnumbers (int cnt, uint16_t *classes, struct matrix_data *classnames,
     }
   if (pt > ret && pt[-1] == ' ')
     pt[-1] = '\0';
-  return (ret);
+  return ret;
 }
 
 static char *
@@ -320,7 +320,7 @@ rclassnumbers (int cnt, uint16_t *classes, struct matrix_data *classnames,
     }
   if (pt > ret && pt[-1] == ' ')
     pt[-1] = '\0';
-  return (ret);
+  return ret;
 }
 
 static int
@@ -333,12 +333,12 @@ CCD_GlyphNameCnt (const char *pt)
       while (isspace (*pt))
         ++pt;
       if (*pt == '\0')
-        return (cnt);
+        return cnt;
       ++cnt;
       while (!isspace (*pt) && *pt != '\0')
         ++pt;
     }
-  return (cnt);
+  return cnt;
 }
 
 static int
@@ -353,7 +353,7 @@ seqlookuplen (struct fpst_rule *r)
       sprintf (buf, " %d \"\",", r->lookups[i].seq);
       len += strlen (buf) + strlen (r->lookups[i].lookup->lookup_name);
     }
-  return (len);
+  return len;
 }
 
 static char *
@@ -371,7 +371,7 @@ addseqlookups (char *pt, struct fpst_rule *r)
   if (pt[-1] == ',')
     --pt;
   *pt = '\0';
-  return (pt);
+  return pt;
 }
 
 static void
@@ -462,7 +462,7 @@ gruleitem (struct fpst_rule *r)
       *pt++ = ' ';
     }
   pt = addseqlookups (pt, r);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -592,7 +592,7 @@ classruleitem (struct fpst_rule *r, struct matrix_data **classes, int clen[3],
 
   *pt++ = ' ';
   pt = addseqlookups (pt, r);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -791,7 +791,7 @@ CCD_ReasonableClassNum (const uint32_t *umatch, GGadget *list,
               ff_post_error (_("Bad Class"),
                              _("%.*s is not a valid class name (or number)"),
                              pt - start, start);
-              return (false);
+              return false;
             }
           if (doit)
             (&r->u.class.nclasses)[which][any] = val;
@@ -803,7 +803,7 @@ CCD_ReasonableClassNum (const uint32_t *umatch, GGadget *list,
           (&r->u.class.nclasses)[which] = xmalloc (any * sizeof (uint16_t));
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -980,7 +980,7 @@ isEverythingElse (char *text)
   /* of classes (a set of kerning classes) where class 0 designates the */
   /* default class containing all glyphs not specified in the other classes */
   int ret = strcmp (text, _("{Everything Else}"));
-  return (ret == 0);
+  return ret == 0;
 }
 
 static char *
@@ -992,7 +992,7 @@ CCD_PickGlyphsForClass (GGadget *g, int r, int c)
   char *new =
     GlyphSetFromSelection (ccd->sf, ccd->layer,
                            classes[r * cols + c].u.md_str);
-  return (new);
+  return new;
 }
 
 static void
@@ -1018,7 +1018,7 @@ CCD_FromSelection (GGadget *g, GEvent *e)
 
       _CCD_FromSelection (ccd, cid);
     }
-  return (true);
+  return true;
 }
 
 static struct matrix_data *
@@ -1032,7 +1032,7 @@ MD2MD (struct matrix_data *md, int len)
       newmd[2 * i + 0].u.md_str = xstrdup_or_null (md[3 * i + 0].u.md_str);
       newmd[2 * i + 1].u.md_str = xstrdup_or_null (md[3 * i + 1].u.md_str);
     }
-  return (newmd);
+  return newmd;
 }
 
 static void
@@ -1079,7 +1079,7 @@ _CCD_NewGlyphRule (GGadget *glyphrules, int r, int c)
   int rows;
   struct matrix_data *rulelist = GMatrixEditGet (glyphrules, &rows);
   CCD_NewGlyphRule (glyphrules, r, c);
-  return (xstrdup_or_null (rulelist[r].u.md_str));      /* We change the display to get the new value, but we must return something... */
+  return xstrdup_or_null (rulelist[r].u.md_str);      /* We change the display to get the new value, but we must return something... */
 }
 
 static void
@@ -1155,7 +1155,7 @@ _CCD_NewClassRule (GGadget *classrules, int r, int c)
   int rows;
   struct matrix_data *rulelist = GMatrixEditGet (classrules, &rows);
   CCD_NewClassRule (classrules, r, c);
-  return (xstrdup_or_null (rulelist[r].u.md_str));      /* We change the display to get the new value, but we must return something... */
+  return xstrdup_or_null (rulelist[r].u.md_str);      /* We change the display to get the new value, but we must return something... */
 }
 
 static int
@@ -1170,14 +1170,14 @@ CCD_SameAsClasses (GGadget *g, GEvent *e)
       int off = cid - CID_SameAsClasses;
       GGadgetSetEnabled (GWidgetGetControl (ccd->gw, CID_GList + 300 + off),
                          !ison);
-      return (true);
+      return true;
     }
   else
     {
       int off = cid - CID_SameAsClasses_S;
       GGadgetSetEnabled (GWidgetGetControl (ccd->gw, CID_CList_Simple + off),
                          !ison);
-      return (true);
+      return true;
     }
 }
 
@@ -1225,11 +1225,11 @@ CCD_ParseCoverageList (struct contextchaindlg *ccd, int cid, int *cnt)
 
   *cnt = _cnt;
   if (_cnt == 0)
-    return (NULL);
+    return NULL;
   ret = xmalloc (*cnt * sizeof (char *));
   for (i = 0; i < _cnt; ++i)
     ret[i] = GlyphNameListDeUnicode (covers[i].u.md_str);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1719,7 +1719,7 @@ CCD_OK (GGadget *g, GEvent *e)
       struct contextchaindlg *ccd = GDrawGetUserData (GGadgetGetWindow (g));
       _CCD_Ok (ccd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1730,7 +1730,7 @@ CCD_Cancel (GGadget *g, GEvent *e)
       struct contextchaindlg *ccd = GDrawGetUserData (GGadgetGetWindow (g));
       CCD_Close (ccd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1794,7 +1794,7 @@ CCD_Next (GGadget *g, GEvent *e)
         }
       CCD_EnableNextPrev (ccd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1842,7 +1842,7 @@ CCD_Prev (GGadget *g, GEvent *e)
         }
       CCD_EnableNextPrev (ccd);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1884,7 +1884,7 @@ CCD_NewSection (GGadget *g, GEvent *e)
       if (tf != NULL)
         GTextFieldReplace (tf, section_mark);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1913,7 +1913,7 @@ CCD_AddLookup (GGadget *g, GEvent *e)
         }
       GGadgetSelectOneListItem (g, 0);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1924,27 +1924,27 @@ subccd_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("contextchain.html");
-          return (true);
+          return true;
         }
       else if (GMenuIsCommand (event, H_ ("Quit|Ctl+Q")))
         {
           MenuExit (NULL, NULL, NULL);
-          return (true);
+          return true;
         }
       else if (GMenuIsCommand (event, H_ ("Close|Ctl+Shft+Q")))
         {
           CCD_Close (GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
       else if (event->u.chr.chars[0] == '\r')
         {
           CCD_SimulateDefaultButton ((struct contextchaindlg *)
                                      GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1965,25 +1965,25 @@ ccd_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("contextchain.html");
-          return (true);
+          return true;
         }
       else if (GMenuIsCommand (event, H_ ("Quit|Ctl+Q")))
         {
           MenuExit (NULL, NULL, NULL);
-          return (true);
+          return true;
         }
       else if (GMenuIsCommand (event, H_ ("Close|Ctl+Shft+Q")))
         {
           CCD_Close (GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
       else if (event->u.chr.chars[0] == '\r')
         {
           CCD_SimulateDefaultButton ((struct contextchaindlg *)
                                      GDrawGetUserData (gw));
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_resize)
     {
@@ -2016,7 +2016,7 @@ ccd_e_h (GWindow gw, GEvent *event)
                           aw_classes_simple ? ccd->classes_simple : ccd->
                           glyphs_simple, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 #define CCD_WIDTH	340
@@ -2029,7 +2029,7 @@ CCD_GlyphListCompletion (GGadget *t, int from_tab)
     GDrawGetUserData (GDrawGetParentWindow (GGadgetGetWindow (t)));
   SplineFont *sf = ccd->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, true));
+  return SFGlyphNameCompletion (sf, t, from_tab, true);
 }
 
 static uint32_t **
@@ -2050,7 +2050,7 @@ CCD_ClassListCompletion (GGadget *t, int from_tab)
 
   pt = spt = basept = (uint32_t *) _GGadgetGetTitle (t);
   if (pt == NULL || *pt == '\0')
-    return (NULL);
+    return NULL;
 
   if (ccd->fpst->type == pst_contextsub || ccd->fpst->type == pst_contextpos)
     section = 1;
@@ -2076,7 +2076,7 @@ CCD_ClassListCompletion (GGadget *t, int from_tab)
     cid = CID_MatchClasses;
   classnames = GMatrixEditGet (GWidgetGetControl (ccd->gw, cid), &namecnt);
   if (namecnt == 0)             /* No classes_simple specified yet, can't help */
-    return (NULL);
+    return NULL;
 
   if ((spt = u32_strrchr (spt, ' ')) == NULL)
     spt = basept;
@@ -2084,14 +2084,14 @@ CCD_ClassListCompletion (GGadget *t, int from_tab)
     {
       pt = ++spt;
       if (*pt == '\0')
-        return (NULL);
+        return NULL;
     }
   while (*pt && *pt != '*' && *pt != '?' && *pt != '[' && *pt != '{')
     ++pt;
   do_wildcards = *pt != '\0';
 
   if (do_wildcards && !from_tab)
-    return (NULL);
+    return NULL;
 
   wild = NULL;
   if (do_wildcards)
@@ -2152,7 +2152,7 @@ CCD_ClassListCompletion (GGadget *t, int from_tab)
         ret = xmalloc ((cnt + 1) * sizeof (uint32_t *));
     }
   free (wild);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -2288,7 +2288,7 @@ WhichSections (struct contextchaindlg *ccd, GGadget *g)
     sections = 0x1;             /* Backtracking */
   else
     sections = 0x4;             /* Foreward */
-  return (sections);
+  return sections;
 }
 
 static void
@@ -2556,7 +2556,7 @@ CCD_InitClassRow (GGadget *g, int r)
 static int
 CCD_EnableDeleteClass (GGadget *g, int whichclass)
 {
-  return (whichclass > 0);
+  return whichclass > 0;
 }
 
 static enum gme_updown
@@ -2570,7 +2570,7 @@ CCD_EnableUpDown (GGadget *g, int r)
     ret = ud_up_enabled;
   if (r >= 1 && r < rows - 1)
     ret |= ud_down_enabled;
-  return (ret);
+  return ret;
 }
 
 static GTextInfo section[] = {
@@ -2659,15 +2659,15 @@ CanBeSimple (FPST * fpst)
       for (s = 0; s < r->lookup_cnt; ++s)
         {
           if (last_seq > r->lookups[s].seq)
-            return (false);
+            return false;
           else if (last_seq == r->lookups[s].seq &&
                    (fpst->format == pst_coverage
                     || fpst->format == pst_reversecoverage))
-            return (false);
+            return false;
           last_seq = r->lookups[s].seq;
         }
     }
-  return (true);
+  return true;
 }
 
 

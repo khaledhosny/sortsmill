@@ -287,7 +287,7 @@ PyFF_GlyphForSC (SplineChar *sc)
 static int
 IsFontClosed (const PyFF_Font *self)
 {
-  return (self == NULL || self->fv == NULL);
+  return self == NULL || self->fv == NULL;
 }
 
 static int
@@ -297,7 +297,7 @@ CheckIfFontClosed (const PyFF_Font *self)
     {
       PyErr_Format (PyExc_RuntimeError,
                     "Operation is not allowed after font has been closed");
-      return (-1);
+      return -1;
     }
   return 0;
 }
@@ -391,7 +391,7 @@ FlagsFromString (char *str, struct flaglist *flags, const char *flagkind)
 
       PyErr_Format (PyExc_ValueError, "Unknown %s \"%s\"", flagkind, str);
     }
-  return (i);
+  return i;
 }
 
 /* FlagsFromTuple() - Converts a python sequence of strings into a flags integer.
@@ -412,21 +412,21 @@ FlagsFromTuple (PyObject *tuple, struct flaglist *flags, const char *flagkind)
 
   /* Might be omitted */
   if (tuple == NULL)
-    return (0);
+    return 0;
   /* Might just be one string, might be a tuple (or any sequence) of strings */
   if (STRING_CHECK (tuple))
     {
 #if PY_MAJOR_VERSION >= 3
       obj = PyUnicode_AsUTF8String (tuple);
       if (obj == NULL)
-        return (FLAG_UNKNOWN);
+        return FLAG_UNKNOWN;
       str = PyBytes_AsString (obj);
       i = FlagsFromString (str, flags, flagkind);
       Py_DECREF (obj);
       return i;
 #else /* PY_MAJOR_VERSION >= 3 */
       str = PyBytes_AsString (tuple);
-      return (FlagsFromString (str, flags, flagkind));
+      return FlagsFromString (str, flags, flagkind);
 #endif /* PY_MAJOR_VERSION >= 3 */
     }
   else if (PySequence_Check (tuple))
@@ -442,13 +442,13 @@ FlagsFromTuple (PyObject *tuple, struct flaglist *flags, const char *flagkind)
               PyErr_Format (PyExc_TypeError,
                             "Bad %s list, must consist of strings only",
                             flagkind);
-              return (FLAG_UNKNOWN);
+              return FLAG_UNKNOWN;
             }
 #if PY_MAJOR_VERSION >= 3
           {
             PyObject *obj2 = PyUnicode_AsUTF8String (obj);
             if (obj2 == NULL)
-              return (FLAG_UNKNOWN);
+              return FLAG_UNKNOWN;
             str = PyBytes_AsString (obj2);
             temp = FlagsFromString (str, flags, flagkind);
             Py_DECREF (obj2);
@@ -458,17 +458,17 @@ FlagsFromTuple (PyObject *tuple, struct flaglist *flags, const char *flagkind)
           temp = FlagsFromString (str, flags, flagkind);
 #endif /* PY_MAJOR_VERSION >= 3 */
           if (temp == FLAG_UNKNOWN)
-            return (FLAG_UNKNOWN);
+            return FLAG_UNKNOWN;
           ret |= temp;
         }
-      return (ret);
+      return ret;
     }
   else
     {
       PyErr_Format (PyExc_TypeError,
                     "Bad %s list, must be a single string or a sequence (tuple/list) of strings",
                     flagkind);
-      return (FLAG_UNKNOWN);
+      return FLAG_UNKNOWN;
     }
 }
 
@@ -476,15 +476,15 @@ static PyObject *
 PyFF_ValToObject (Val *val)
 {
   if (val->type == v_int || val->type == v_unicode)
-    return (Py_BuildValue ("i", val->u.ival));
+    return Py_BuildValue ("i", val->u.ival);
   else if (val->type == v_str)
-    return (Py_BuildValue ("s", val->u.sval));
+    return Py_BuildValue ("s", val->u.sval);
   else if (val->type == v_real)
-    return (Py_BuildValue ("d", val->u.fval));
+    return Py_BuildValue ("d", val->u.fval);
   else if (val->type == v_arr || val->type == v_arrfree)
     PyErr_SetString (PyExc_NotImplementedError,
                      "Array -> tuple conversion not yet implemented. I didn't think I needed to.");
-  return (NULL);
+  return NULL;
 }
 
 VISIBLE void
@@ -504,7 +504,7 @@ PyFV_From_FV (FontViewBase *fv)
   if (fv == NULL)
     Py_RETURN_NONE;
   prepare_python_fv_object (fv);
-  return (fv->python_fv_object);
+  return fv->python_fv_object;
 }
 
 VISIBLE PyObject *
@@ -512,7 +512,7 @@ PyFV_From_FV_I (FontViewBase *fv)
 {
   PyObject *f = PyFV_From_FV (fv);
   Py_INCREF (f);
-  return (f);
+  return f;
 }
 
 VISIBLE PyObject *
@@ -525,7 +525,7 @@ PySC_From_SC (SplineChar *sc)
       ((PyFF_Glyph *) (sc->python_sc_object))->layer = ly_fore;
       Py_INCREF ((PyObject *) (sc->python_sc_object));  /* for the pointer in my fv */
     }
-  return (sc->python_sc_object);
+  return sc->python_sc_object;
 }
 
 VISIBLE PyObject *
@@ -533,7 +533,7 @@ PySC_From_SC_I (SplineChar *sc)
 {
   PyObject *s = PySC_From_SC (sc);
   Py_INCREF (s);
-  return (s);
+  return s;
 }
 
 VISIBLE void
@@ -553,7 +553,7 @@ StrToTag (char *tag_name)
     {
       PyErr_Format (PyExc_TypeError,
                     "OpenType tags must be represented strings");
-      return (BAD_TAG);
+      return BAD_TAG;
     }
 
   foo[0] = foo[1] = foo[2] = foo[3] = ' ';
@@ -574,13 +574,13 @@ StrToTag (char *tag_name)
                       PyErr_Format (PyExc_ValueError,
                                     "OpenType tags are limited to 4 characters: %s",
                                     tag_name);
-                      return (BAD_TAG);
+                      return BAD_TAG;
                     }
                 }
             }
         }
     }
-  return ((foo[0] << 24) | (foo[1] << 16) | (foo[2] << 8) | foo[3]);
+  return (foo[0] << 24) | (foo[1] << 16) | (foo[2] << 8) | foo[3];
 }
 
 static PyObject *
@@ -594,7 +594,7 @@ TagToPythonString (uint32_t tag)
   foo[3] = tag;
   foo[4] = '\0';
 
-  return (STRING_TO_PY (foo));
+  return STRING_TO_PY (foo);
 }
 
 /* ************************************************************************** */
@@ -609,16 +609,16 @@ PyFF_GetPrefs (PyObject *UNUSED (self), PyObject *args)
 
   /* Pref names are ascii so no need to worry about encoding */
   if (!PyArg_ParseTuple (args, "s", &prefname))
-    return (NULL);
+    return NULL;
   memset (&val, 0, sizeof (val));
 
   if (!GetPrefs ((char *) prefname, &val))
     {
       PyErr_Format (PyExc_NameError,
                     "Unknown preference item in GetPrefs: %s", prefname);
-      return (NULL);
+      return NULL;
     }
-  return (PyFF_ValToObject (&val));
+  return PyFF_ValToObject (&val);
 }
 
 static PyObject *
@@ -646,7 +646,7 @@ PyFF_SetPrefs (PyObject *UNUSED (self), PyObject *args)
               val.type = v_real;
             }
           else
-            return (NULL);
+            return NULL;
         }
     }
 
@@ -654,7 +654,7 @@ PyFF_SetPrefs (PyObject *UNUSED (self), PyObject *args)
     {
       PyErr_Format (PyExc_NameError,
                     "Unknown preference item in SetPrefs: %s", prefname);
-      return (NULL);
+      return NULL;
     }
   Py_RETURN_NONE;
 }
@@ -690,13 +690,13 @@ PyFF_ReadOtherSubrsFile (PyObject *UNUSED (self), PyObject *args)
 
   /* here we do want the default encoding */
   if (!PyArg_ParseTuple (args, "s", &filename))
-    return (NULL);
+    return NULL;
 
   if (ReadOtherSubrsFile ((char *) filename) <= 0)
     {
       PyErr_Format (PyExc_ImportError, "Could not find OtherSubrs file %s",
                     filename);
-      return (NULL);
+      return NULL;
     }
 
   Py_RETURN_NONE;
@@ -710,7 +710,7 @@ PyFF_LoadEncodingFile (PyObject *UNUSED (self), PyObject *args)
 
   /* here we do want the default encoding */
   if (!PyArg_ParseTuple (args, "s|s", &filename, &encodingname))
-    return (NULL);
+    return NULL;
 
   return (Py_BuildValue
           ("s", ParseEncodingFile ((char *) filename, encodingname)));
@@ -723,7 +723,7 @@ PyFF_LoadNamelist (PyObject *UNUSED (self), PyObject *args)
 
   /* here we do want the default encoding */
   if (!PyArg_ParseTuple (args, "s", &filename))
-    return (NULL);
+    return NULL;
 
   LoadNamelist ((char *) filename);
 
@@ -737,7 +737,7 @@ PyFF_LoadNamelistDir (PyObject *UNUSED (self), PyObject *args)
 
   /* here we do want the default encoding */
   if (!PyArg_ParseTuple (args, "s", &filename))
-    return (NULL);
+    return NULL;
 
   LoadNamelistDir ((char *) filename);
 
@@ -769,7 +769,7 @@ PyFF_PreloadCidmap (PyObject *UNUSED (self), PyObject *args)
 
   /* here we do want the default encoding for the filename, the others should be ascii */
   if (!PyArg_ParseTuple (args, "sssi", &filename, &reg, &order, &supplement))
-    return (NULL);
+    return NULL;
 
   LoadMapFromFile ((char *) filename, (char *) reg, (char *) order, supplement);
 
@@ -783,11 +783,11 @@ PyFF_UnicodeFromName (PyObject *UNUSED (self), PyObject *args)
   PyObject *ret;
 
   if (!PyArg_ParseTuple (args, "es", "UTF-8", &name))
-    return (NULL);
+    return NULL;
 
   ret = Py_BuildValue ("i", UniFromName ((char *) name, ui_none, &custom));
   free (name);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -799,7 +799,7 @@ PyFF_NameFromUnicode (PyObject *UNUSED (self), PyObject *args)
   PyObject *ret;
 
   if (!PyArg_ParseTuple (args, "i|s", &uni, &nlist))
-    return (NULL);
+    return NULL;
 
   if (nlist != NULL)
     {
@@ -809,7 +809,7 @@ PyFF_NameFromUnicode (PyObject *UNUSED (self), PyObject *args)
         {
           PyErr_Format (PyExc_EnvironmentError, "Unknown namelist: %s\n",
                         nlist);
-          return (NULL);
+          return NULL;
         }
     }
   else if (fv_active_in_ui == NULL)
@@ -825,7 +825,7 @@ PyFF_NameFromUnicode (PyObject *UNUSED (self), PyObject *args)
 
   ret =
     Py_BuildValue ("s", StdGlyphName (buffer, uni, uniinterp, for_new_glyphs));
-  return (ret);
+  return ret;
 }
 
 //static PyObject *
@@ -838,7 +838,7 @@ PyFF_NameFromUnicode (PyObject *UNUSED (self), PyObject *args)
 //
 //  // A big value for old scripts checking for minimal version.
 //  sprintf (buffer, "99999999");
-//  return (Py_BuildValue ("s", buffer));
+//  return Py_BuildValue ("s", buffer);
 //}
 
 static PyObject *
@@ -853,7 +853,7 @@ PyFF_FontTuple (PyObject *UNUSED (self), PyObject *UNUSED (args))
   for (fv = FontViewFirst (), cnt = 0; fv != NULL; fv = fv->next, ++cnt)
     PyTuple_SET_ITEM (tuple, cnt, PyFV_From_FV_I (fv));
 
-  return (tuple);
+  return tuple;
 }
 
 static PyObject *
@@ -863,7 +863,7 @@ PyFF_ActiveFont (PyObject *UNUSED (self), PyObject *UNUSED (args))
   if (fv_active_in_ui == NULL)
     Py_RETURN_NONE;
 
-  return (PyFV_From_FV_I (fv_active_in_ui));
+  return PyFV_From_FV_I (fv_active_in_ui);
 }
 
 static PyObject *
@@ -873,14 +873,14 @@ PyFF_ActiveGlyph (PyObject *UNUSED (self), PyObject *UNUSED (args))
   if (sc_active_in_ui == NULL)
     Py_RETURN_NONE;
 
-  return (PySC_From_SC_I (sc_active_in_ui));
+  return PySC_From_SC_I (sc_active_in_ui);
 }
 
 static PyObject *
 PyFF_ActiveLayer (PyObject *UNUSED (self), PyObject *UNUSED (args))
 {
 
-  return (Py_BuildValue ("i", layer_active_in_ui));
+  return Py_BuildValue ("i", layer_active_in_ui);
 }
 
 static FontViewBase *
@@ -892,7 +892,7 @@ SFAdd (SplineFont *sf, int hide)
     FontViewCreate (sf, hide);
   else
     FVAppend (_FontViewCreate (sf));
-  return (sf->fv);
+  return sf->fv;
 }
 
 static PyObject *
@@ -903,7 +903,7 @@ PyFF_OpenFont (PyObject *UNUSED (self), PyObject *args)
   SplineFont *sf;
 
   if (!PyArg_ParseTuple (args, "es|i", "UTF-8", &filename, &openflags))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
 
@@ -917,10 +917,10 @@ PyFF_OpenFont (PyObject *UNUSED (self), PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError, "Open failed");
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
   free (locfilename);
-  return (PyFV_From_FV_I (SFAdd (sf, openflags & of_hidewindow)));
+  return PyFV_From_FV_I (SFAdd (sf, openflags & of_hidewindow));
 }
 
 static PyObject *
@@ -933,7 +933,7 @@ PyFF_FontsInFile (PyObject *UNUSED (self), PyObject *args)
   int cnt, i;
 
   if (!PyArg_ParseTuple (args, "es", "UTF-8", &filename))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
   ret = GetFontNames (locfilename);
@@ -945,7 +945,7 @@ PyFF_FontsInFile (PyObject *UNUSED (self), PyObject *args)
   tuple = PyTuple_New (cnt);
   for (i = 0; i < cnt; ++i)
     PyTuple_SetItem (tuple, i, Py_BuildValue ("s", ret[i]));
-  return (tuple);
+  return tuple;
 }
 
 static void
@@ -963,17 +963,17 @@ PyFF_ParseTTFInstrs (PyObject *UNUSED (self), PyObject *args)
   uint8_t *instrs;
 
   if (!PyArg_ParseTuple (args, "s", &instr_str))
-    return (NULL);
+    return NULL;
   instrs = _IVParse (NULL, instr_str, &icnt, prterror, NULL);
   if (instrs == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Failed to parse instructions");
-      return (NULL);
+      return NULL;
     }
   binstr = PyBytes_FromStringAndSize ((char *) instrs, icnt);
   free (instrs);
 
-  return (binstr);
+  return binstr;
 }
 
 static PyObject *
@@ -985,11 +985,11 @@ PyFF_UnParseTTFInstrs (PyObject *UNUSED (self), PyObject *args)
   char *as_str;
 
   if (!PyArg_ParseTuple (args, "O", &tuple))
-    return (NULL);
+    return NULL;
   if (!PySequence_Check (tuple))
     {
       PyErr_Format (PyExc_TypeError, "Argument must be a sequence");
-      return (NULL);
+      return NULL;
     }
   if (PyBytes_Check (tuple))
     {
@@ -1010,7 +1010,7 @@ PyFF_UnParseTTFInstrs (PyObject *UNUSED (self), PyObject *args)
           if (PyErr_Occurred ())
             {
               free (instrs);
-              return (NULL);
+              return NULL;
             }
         }
     }
@@ -1018,7 +1018,7 @@ PyFF_UnParseTTFInstrs (PyObject *UNUSED (self), PyObject *args)
   ret = PyBytes_FromString (as_str);
   free (as_str);
   free (instrs);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -1029,11 +1029,11 @@ PyFF_unitShape (PyObject *UNUSED (self), PyObject *args)
   PyObject *ret;
 
   if (!PyArg_ParseTuple (args, "|i", &n))
-    return (NULL);
+    return NULL;
   ss = UnitShape (n);
   ret = (PyObject *) ContourFromSS (ss, NULL);
   SplinePointListFree (ss);
-  return (ret);
+  return ret;
 }
 
 static struct flaglist printmethod[] = {
@@ -1053,11 +1053,11 @@ PyFF_printSetup (PyObject *UNUSED (self), PyObject *args)
   int iptype;
 
   if (!PyArg_ParseTuple (args, "s|sii", &ptype, &pcmd, &pagewidth, &pageheight))
-    return (NULL);
+    return NULL;
   iptype = FlagsFromString (ptype, printmethod, "printing method");
   if (iptype == FLAG_UNKNOWN)
     {
-      return (NULL);
+      return NULL;
     }
 
   printtype = iptype;
@@ -1145,7 +1145,7 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
   if (!PyArg_ParseTuple
       (args, "OOOess|s", &import, &export, &data, "UTF-8", &name, &exten,
        &exten_list))
-    return (NULL);
+    return NULL;
   if (import == Py_None && export == Py_None)
     Py_RETURN_NONE;             /* Well, that was pointless */
   if (import == Py_None)
@@ -1153,14 +1153,14 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
   else if (!PyCallable_Check (import))
     {
       PyErr_Format (PyExc_TypeError, "First argument is not callable");
-      return (NULL);
+      return NULL;
     }
   if (export == Py_None)
     export = NULL;
   else if (!PyCallable_Check (export))
     {
       PyErr_Format (PyExc_TypeError, "Second argument is not callable");
-      return (NULL);
+      return NULL;
     }
 
   Py_XINCREF (import);
@@ -1190,7 +1190,7 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
 //  PyObject *ret = hasspiro ()? Py_True : Py_False;
 //
 //  Py_INCREF (ret);
-//  return (ret);
+//  return ret;
 //}
 
 /* ************************************************************************** */
@@ -1210,7 +1210,7 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
 //  PyObject *ret = no_windowing_ui ? Py_False : Py_True;
 //
 //  Py_INCREF (ret);
-//  return (ret);
+//  return ret;
 //}
 
 //static PyObject *
@@ -1218,7 +1218,7 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
 //{
 //  char *msg;
 //  if (!PyArg_ParseTuple (args, "es", "UTF-8", &msg))
-//    return (NULL);
+//    return NULL;
 //  LogError (msg);
 //  free (msg);
 //  Py_RETURN_NONE;
@@ -1229,7 +1229,7 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
 //{
 //  char *msg, *title;
 //  if (!PyArg_ParseTuple (args, "eses", "UTF-8", &title, "UTF-8", &msg))
-//    return (NULL);
+//    return NULL;
 //  ff_post_error (title, msg);   /* Prints to stderr if no ui */
 //  Py_RETURN_NONE;
 //}
@@ -1239,7 +1239,7 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
 //{
 //  char *msg, *title;
 //  if (!PyArg_ParseTuple (args, "eses", "UTF-8", &title, "UTF-8", &msg))
-//    return (NULL);
+//    return NULL;
 //  ff_post_notice (title, msg);  /* Prints to stderr if no ui */
 //  Py_RETURN_NONE;
 //}
@@ -1254,12 +1254,12 @@ PyFF_openFilename (PyObject *UNUSED (self), PyObject *args)
   if (no_windowing_ui)
     {
       PyErr_Format (PyExc_EnvironmentError, "No user interface");
-      return (NULL);
+      return NULL;
     }
 
   if (!PyArg_ParseTuple
       (args, "es|ess", "UTF-8", &title, "UTF-8", &def, &filter))
-    return (NULL);
+    return NULL;
 
   ret = ff_open_filename (title, def, filter);
   free (title);
@@ -1268,7 +1268,7 @@ PyFF_openFilename (PyObject *UNUSED (self), PyObject *args)
     Py_RETURN_NONE;
   reto = DECODE_UTF8 (ret, strlen (ret), NULL);
   free (ret);
-  return (reto);
+  return reto;
 }
 
 static PyObject *
@@ -1281,12 +1281,12 @@ PyFF_saveFilename (PyObject *UNUSED (self), PyObject *args)
   if (no_windowing_ui)
     {
       PyErr_Format (PyExc_EnvironmentError, "No user interface");
-      return (NULL);
+      return NULL;
     }
 
   if (!PyArg_ParseTuple
       (args, "es|ess", "UTF-8", &title, "UTF-8", &def, &filter))
-    return (NULL);
+    return NULL;
 
   ret = ff_save_filename (title, def, filter);
   free (title);
@@ -1295,7 +1295,7 @@ PyFF_saveFilename (PyObject *UNUSED (self), PyObject *args)
     Py_RETURN_NONE;
   reto = DECODE_UTF8 (ret, strlen (ret), NULL);
   free (ret);
-  return (reto);
+  return reto;
 }
 
 static PyObject *
@@ -1309,20 +1309,20 @@ PyFF_ask (PyObject *UNUSED (self), PyObject *args)
   if (no_windowing_ui)
     {
       PyErr_Format (PyExc_EnvironmentError, "No user interface");
-      return (NULL);
+      return NULL;
     }
 
   if (!PyArg_ParseTuple
       (args, "esesO|ii", "UTF-8", &title, "UTF-8", &quest, &answero, &def,
        &cancel))
-    return (NULL);
+    return NULL;
   if (!PySequence_Check (answero) || STRING_CHECK (answero))
     {
       PyErr_Format (PyExc_TypeError,
                     "Expected a tuple of strings for the third argument");
       free (title);
       free (quest);
-      return (NULL);
+      return NULL;
     }
   cnt = PySequence_Size (answero);
   answers = xmalloc ((cnt + 1) * sizeof (char *));
@@ -1335,7 +1335,7 @@ PyFF_ask (PyObject *UNUSED (self), PyObject *args)
       free (title);
       free (quest);
       free (answers);
-      return (NULL);
+      return NULL;
     }
   for (i = 0; i < cnt; ++i)
     {
@@ -1345,7 +1345,7 @@ PyFF_ask (PyObject *UNUSED (self), PyObject *args)
           free (title);
           free (quest);
           FreeStringArray (i, answers);
-          return (NULL);
+          return NULL;
         }
       answers[i] = xstrdup_or_null (PyBytes_AsString (utf8_name));
       Py_DECREF (utf8_name);
@@ -1356,7 +1356,7 @@ PyFF_ask (PyObject *UNUSED (self), PyObject *args)
   free (title);
   free (quest);
   FreeStringArray (cnt, answers);
-  return (Py_BuildValue ("i", ret));
+  return Py_BuildValue ("i", ret);
 }
 
 static PyObject *
@@ -1370,19 +1370,19 @@ PyFF_askChoices (PyObject *UNUSED (self), PyObject *args)
   if (no_windowing_ui)
     {
       PyErr_Format (PyExc_EnvironmentError, "No user interface");
-      return (NULL);
+      return NULL;
     }
 
   if (!PyArg_ParseTuple
       (args, "esesO|i", "UTF-8", &title, "UTF-8", &quest, &answero, &def))
-    return (NULL);
+    return NULL;
   if (!PySequence_Check (answero) || STRING_CHECK (answero))
     {
       PyErr_Format (PyExc_TypeError,
                     "Expected a tuple of strings for the third argument");
       free (title);
       free (quest);
-      return (NULL);
+      return NULL;
     }
   cnt = PySequence_Size (answero);
   answers = xmalloc ((cnt + 1) * sizeof (char *));
@@ -1391,7 +1391,7 @@ PyFF_askChoices (PyObject *UNUSED (self), PyObject *args)
       PyErr_Format (PyExc_ValueError, "Value out of bounds for 4th argument");
       free (title);
       free (quest);
-      return (NULL);
+      return NULL;
     }
   for (i = 0; i < cnt; ++i)
     {
@@ -1401,7 +1401,7 @@ PyFF_askChoices (PyObject *UNUSED (self), PyObject *args)
           free (title);
           free (quest);
           FreeStringArray (i, answers);
-          return (NULL);
+          return NULL;
         }
       answers[i] = xstrdup_or_null (PyBytes_AsString (utf8_name));
       Py_DECREF (utf8_name);
@@ -1412,7 +1412,7 @@ PyFF_askChoices (PyObject *UNUSED (self), PyObject *args)
   free (title);
   free (quest);
   FreeStringArray (cnt, answers);
-  return (Py_BuildValue ("i", ret));
+  return Py_BuildValue ("i", ret);
 }
 
 static PyObject *
@@ -1425,12 +1425,12 @@ PyFF_askString (PyObject *UNUSED (self), PyObject *args)
   if (no_windowing_ui)
     {
       PyErr_Format (PyExc_EnvironmentError, "No user interface");
-      return (NULL);
+      return NULL;
     }
 
   if (!PyArg_ParseTuple
       (args, "eses|es", "UTF-8", &title, "UTF-8", &quest, "UTF-8", &def))
-    return (NULL);
+    return NULL;
 
   ret = ff_ask_string (title, def, quest);
   free (title);
@@ -1441,7 +1441,7 @@ PyFF_askString (PyObject *UNUSED (self), PyObject *args)
     Py_RETURN_NONE;
   reto = Py_BuildValue ("s", ret);
   free (ret);
-  return (reto);
+  return reto;
 }
 
 /* ************************************************************************** */
@@ -1455,7 +1455,7 @@ PyFFPoint_dup (PyFF_Point * self)
   ret->y = self->y;
   ret->on_curve = self->on_curve;
   ret->selected = self->selected;
-  return ((PyObject *) ret);
+  return (PyObject *) ret;
 }
 
 static void
@@ -1476,7 +1476,7 @@ PyFFPoint_Transform (PyFF_Point * self, PyObject *args)
 
   if (!PyArg_ParseTuple
       (args, "(dddddd)", &m[0], &m[1], &m[2], &m[3], &m[4], &m[5]))
-    return (NULL);
+    return NULL;
   PyFF_TransformPoint (self, m);
   Py_INCREF ((PyObject *) self);
   Py_RETURN (self);
@@ -1498,7 +1498,7 @@ PyFFPoint_pickleReducer (PyFF_Point * self, PyObject *UNUSED (args))
   PyTuple_SetItem (argTuple, 1, Py_BuildValue ("d", self->y));
   PyTuple_SetItem (argTuple, 2, Py_BuildValue ("i", self->on_curve));
   PyTuple_SetItem (argTuple, 3, Py_BuildValue ("i", self->selected));
-  return (reductionTuple);
+  return reductionTuple;
 }
 
 static int
@@ -1510,7 +1510,7 @@ PyFFPoint_compare (PyFF_Point * self, PyObject *other)
   if (PyTuple_Check (other) && PyTuple_Size (other) == 2)
     {
       if (!PyArg_ParseTuple (other, "dd", &x, &y))
-        return (-1);
+        return -1;
     }
   else if (PyType_IsSubtype (&PyFF_PointType, ((PyObject *) other)->ob_type))
     {
@@ -1520,19 +1520,19 @@ PyFFPoint_compare (PyFF_Point * self, PyObject *other)
   else
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (-1);
+      return -1;
     }
   if (RealNear (self->x, x))
     {
       if (RealNear (self->y, y))
-        return (0);
+        return 0;
       else if (self->y > y)
-        return (1);
+        return 1;
     }
   else if (self->x > x)
-    return (1);
+    return 1;
 
-  return (-1);
+  return -1;
 }
 
 #if PY_MAJOR_VERSION >= 3
@@ -1550,7 +1550,7 @@ PyFFPoint_Repr (PyFF_Point * self)
 
   sprintf (buffer, "%s(%g,%g,%s)", self->ob_type->tp_name, self->x, self->y,
            self->on_curve ? "True" : "False");
-  return (STRING_TO_PY (buffer));
+  return STRING_TO_PY (buffer);
 }
 
 static PyObject *
@@ -1560,7 +1560,7 @@ PyFFPoint_Str (PyFF_Point * self)
 
   sprintf (buffer, "<FFPoint (%g,%g) %s>", self->x, self->y,
            self->on_curve ? "on" : "off");
-  return (STRING_TO_PY (buffer));
+  return STRING_TO_PY (buffer);
 }
 
 static PyMemberDef FFPoint_members[] = {
@@ -1599,7 +1599,7 @@ PyFFPoint_New (PyTypeObject * type, PyObject *args, PyObject *kwds)
       sel = 0;
       if (args != NULL
           && !PyArg_ParseTuple (args, "|ffii", &self->x, &self->y, &on, &sel))
-        return (NULL);
+        return NULL;
       self->on_curve = on;
       self->selected = sel;
     }
@@ -1680,7 +1680,7 @@ PyFFPoint_CNew (double x, double y, int on_curve, int sel)
   self->y = y;
   self->on_curve = on_curve;
   self->selected = sel;
-  return (self);
+  return self;
 }
 
 /* ************************************************************************** */
@@ -1727,7 +1727,7 @@ contouriter_iternext (contouriterobject * ci)
     {
       pt = (PyObject *) contour->points[ci->pos++];
       Py_INCREF (pt);
-      return (pt);
+      return pt;
     }
 
   return NULL;
@@ -1876,7 +1876,7 @@ PyFFContour_Str (PyFF_Contour * self)
   strcpy (pt, ">");
   ret = STRING_TO_PY (buffer);
   free (buffer);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -1890,14 +1890,14 @@ PyFFContour_docompare (PyFF_Contour * self, PyObject *other, double pt_err,
   if (!PyType_IsSubtype (&PyFF_ContourType, ((PyObject *) other)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (-1);
+      return -1;
     }
   ss = SSFromContour (self, NULL);
   ss2 = SSFromContour ((PyFF_Contour *) other, NULL);
   ret = SSsCompare (ss, ss2, pt_err, spline_err, &badpoint);
   SplinePointListFree (ss);
   SplinePointListFree (ss2);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -1908,13 +1908,13 @@ PyFFContour_compare (PyFF_Contour * self, PyObject *other)
 
   ret = PyFFContour_docompare (self, other, pt_err, spline_err);
   if (!(ret & SS_NoMatch))
-    return (0);
+    return 0;
   /* There's no real ordering on these guys. Make up something that is */
   /*  at least consistent */
   if (self->pt_cnt < ((PyFF_Contour *) other)->pt_cnt)
-    return (-1);
+    return -1;
   else if (self->pt_cnt > ((PyFF_Contour *) other)->pt_cnt)
-    return (1);
+    return 1;
   /* If there's a difference, then there must be at least one point to be */
   /*  different. And we only get here if there were a difference */
   for (i = 0; i < self->pt_cnt; ++i)
@@ -1923,9 +1923,9 @@ PyFFContour_compare (PyFF_Contour * self, PyObject *other)
         PyFFPoint_compare (self->points[i],
                            (PyObject *) (((PyFF_Contour *) other)->points[i]));
       if (ret != 0)
-        return (ret);
+        return ret;
     }
-  return (-1);                  /* Arbitrary... but we can't get here=>all points same */
+  return -1;                  /* Arbitrary... but we can't get here=>all points same */
 }
 
 #if PY_MAJOR_VERSION >= 3
@@ -1942,7 +1942,7 @@ PyFFContour_richcompare (PyObject *a, PyObject *b, int op)
 static PyObject *
 PyFF_Contour_get_is_quadratic (PyFF_Contour * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->is_quadratic));
+  return Py_BuildValue ("i", self->is_quadratic);
 }
 
 static int
@@ -1954,11 +1954,11 @@ PyFF_Contour_set_is_quadratic (PyFF_Contour * self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
 
   val = (val != 0);
   if (val == self->is_quadratic)
-    return (0);
+    return 0;
   if (self->pt_cnt != 0)
     {
       ss = SSFromContour (self, NULL);
@@ -1972,13 +1972,13 @@ PyFF_Contour_set_is_quadratic (PyFF_Contour * self, PyObject *value,
       SplinePointListFree (ss2);
     }
   self->is_quadratic = (val != 0);
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Contour_get_closed (PyFF_Contour * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->closed));
+  return Py_BuildValue ("i", self->closed);
 }
 
 static int
@@ -1989,11 +1989,11 @@ PyFF_Contour_set_closed (PyFF_Contour * self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
 
   val = (val != 0);
   if (val == self->closed)
-    return (0);
+    return 0;
   PyFFContour_ClearSpiros ((PyFF_Contour *) self);
   if (!val)
     {
@@ -2014,7 +2014,7 @@ PyFF_Contour_set_closed (PyFF_Contour * self, PyObject *value,
           Py_DECREF (self->points[self->pt_cnt]);
         }
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -2045,7 +2045,7 @@ PyFF_Contour_get_spiros (PyFF_Contour * self, void *UNUSED (closure))
                                       SPIRO_RIGHT ? 5 : 6,
                                       (self->spiros[i].ty & 0x80) >> 7));
     }
-  return (spirotuple);
+  return spirotuple;
 }
 
 static int
@@ -2061,7 +2061,7 @@ PyFF_Contour_set_spiros (PyFF_Contour * self, PyObject *value,
     {
       PyErr_Format (PyExc_TypeError,
                     "Please specify a tuple of spiro control points");
-      return (-1);
+      return -1;
     }
   cnt = PySequence_Size (spirotuple);
   PyFFContour_ClearSpiros ((PyFF_Contour *) self);
@@ -2078,7 +2078,7 @@ PyFF_Contour_set_spiros (PyFF_Contour * self, PyObject *value,
           PyErr_Format (PyExc_TypeError,
                         "Please specify a tuple of spiro control points");
           free (spiros);
-          return (-1);
+          return -1;
         }
       spiros[i].x = x;
       spiros[i].y = y;
@@ -2099,7 +2099,7 @@ PyFF_Contour_set_spiros (PyFF_Contour * self, PyObject *value,
           PyErr_Format (PyExc_TypeError,
                         "Unknown spiro control point type: %d", type);
           free (spiros);
-          return (-1);
+          return -1;
         }
       if (flags == 1)
         SPIRO_SELECT (&spiros[i]);
@@ -2108,7 +2108,7 @@ PyFF_Contour_set_spiros (PyFF_Contour * self, PyObject *value,
           PyErr_Format (PyExc_TypeError, "Unexpected value for flags: %d",
                         flags);
           free (spiros);
-          return (-1);
+          return -1;
         }
     }
   ss = SpiroCP2SplineSet (spiros);
@@ -2118,7 +2118,7 @@ PyFF_Contour_set_spiros (PyFF_Contour * self, PyObject *value,
   self->spiro_cnt = cnt + 1;
   self->spiros = spiros;
   SplinePointListFree (ss);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -2127,7 +2127,7 @@ PyFF_Contour_get_name (PyFF_Contour * self, void *UNUSED (closure))
   if (self->name == NULL)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("s", self->name));
+  return Py_BuildValue ("s", self->name);
 }
 
 static int
@@ -2143,14 +2143,14 @@ PyFF_Contour_set_name (PyFF_Contour * self, PyObject *value,
 #if PY_MAJOR_VERSION >= 3
       value = PyUnicode_AsUTF8String (value);
       if (value == NULL)
-        return (-1);
+        return -1;
       self->name = PyBytes_AsString (value);
       Py_DECREF (value);
 #else
       self->name = PyBytes_AsString (value);
 #endif
     }
-  return (0);
+  return 0;
 }
 
 static PyGetSetDef PyFFContour_getset[] = {
@@ -2182,7 +2182,7 @@ static PyGetSetDef PyFFContour_getset[] = {
 static Py_ssize_t
 PyFFContour_Length (PyObject *self)
 {
-  return (((PyFF_Contour *) self)->pt_cnt);
+  return ((PyFF_Contour *) self)->pt_cnt;
 }
 
 static PyObject *
@@ -2221,7 +2221,7 @@ PyFFContour_Concat (PyObject *_c1, PyObject *_c2)
         {
           PyErr_Format (PyExc_TypeError,
                         "Both arguments must be Contours of the same order");
-          return (NULL);
+          return NULL;
         }
     }
   self = (PyFF_Contour *) PyFF_ContourType.tp_alloc (&PyFF_ContourType, 0);
@@ -2277,7 +2277,7 @@ PyFFContour_InPlaceConcat (PyObject *_self, PyObject *_c2)
         {
           PyErr_Format (PyExc_TypeError,
                         "Both arguments must be Contours of the same order");
-          return (NULL);
+          return NULL;
         }
     }
   old_cnt = self->pt_cnt;
@@ -2301,11 +2301,11 @@ PyFFContour_Index (PyObject *self, Py_ssize_t pos)
   if (pos < 0 || pos >= cont->pt_cnt)
     {
       PyErr_Format (PyExc_TypeError, "Index out of bounds");
-      return (NULL);
+      return NULL;
     }
   ret = (PyObject *) cont->points[pos];
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -2317,26 +2317,26 @@ PyFFContour_IndexAssign (PyObject *self, Py_ssize_t pos, PyObject *val)
   if (!PyType_IsSubtype (&PyFF_PointType, ((PyObject *) val)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a (FontForge) Point");
-      return (-1);
+      return -1;
     }
   if (pos < 0 || pos >= cont->pt_cnt)
     {
       PyErr_Format (PyExc_TypeError, "Index out of bounds");
-      return (-1);
+      return -1;
     }
   if (cont->points[pos]->on_curve != ((PyFF_Point *) val)->on_curve
       && !cont->is_quadratic)
     {
       PyErr_Format (PyExc_TypeError,
                     "Replacement point must have the same on_curve setting as original in a cubic contour");
-      return (-1);
+      return -1;
     }
 
   old = (PyObject *) cont->points[pos];
   cont->points[pos] = (PyFF_Point *) val;
   PyFFContour_ClearSpiros ((PyFF_Contour *) self);
   Py_DECREF (old);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -2383,7 +2383,7 @@ PyFFContour_Slice (PyObject *self, Py_ssize_t start, Py_ssize_t end)
     }
   for (i = 0; i < ret->pt_cnt; ++i)
     Py_INCREF (ret->points[i]);
-  return ((PyObject *) ret);
+  return (PyObject *) ret;
 }
 
 static int
@@ -2397,7 +2397,7 @@ PyFFContour_SliceAssign (PyObject *_self, Py_ssize_t start, Py_ssize_t end,
     {
       PyErr_Format (PyExc_TypeError,
                     "Replacement must be a (FontForge) Contour");
-      return (-1);
+      return -1;
     }
 
   if (start < 0)
@@ -2412,7 +2412,7 @@ PyFFContour_SliceAssign (PyObject *_self, Py_ssize_t start, Py_ssize_t end,
   if (end < start)
     {
       PyErr_Format (PyExc_ValueError, "Slice specification out of order");
-      return (-1);
+      return -1;
     }
 
   diff = rpl->pt_cnt - (end - start);
@@ -2440,7 +2440,7 @@ PyFFContour_SliceAssign (PyObject *_self, Py_ssize_t start, Py_ssize_t end,
       Py_INCREF (rpl->points[i]);
     }
   PyFFContour_ClearSpiros ((PyFF_Contour *) self);
-  return (0);
+  return 0;
 }
 
 static int
@@ -2453,12 +2453,12 @@ PyFFContour_Contains (PyObject *_self, PyObject *_pt)
   if (PySequence_Check (_pt))
     {
       if (!PyArg_ParseTuple (_pt, "ff", &x, &y))
-        return (-1);
+        return -1;
     }
   else if (!PyType_IsSubtype (&PyFF_PointType, ((PyObject *) _pt)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a (FontForge) Point");
-      return (-1);
+      return -1;
     }
   else
     {
@@ -2468,9 +2468,9 @@ PyFFContour_Contains (PyObject *_self, PyObject *_pt)
 
   for (i = 0; i < self->pt_cnt; ++i)
     if (self->points[i]->x == x && self->points[i]->y == y)
-      return (1);
+      return 1;
 
-  return (0);
+  return 0;
 }
 
 static PySequenceMethods PyFFContour_Sequence = {
@@ -2512,14 +2512,14 @@ PyFFContour_dup (PyFF_Contour * self)
       ret->spiros = xmalloc (ret->pt_cnt * sizeof (spiro_cp));
       memcpy (ret->spiros, self->spiros, self->spiro_cnt * sizeof (spiro_cp));
     }
-  return ((PyObject *) ret);
+  return (PyObject *) ret;
 }
 
 static PyObject *
 PyFFContour_IsEmpty (PyFF_Contour * self)
 {
   /* Arg checking done elsewhere */
-  return (Py_BuildValue ("i", self->pt_cnt == 0));
+  return Py_BuildValue ("i", self->pt_cnt == 0);
 }
 
 static PyObject *
@@ -2530,10 +2530,10 @@ PyFFContour_Start (PyFF_Contour * self, PyObject *args)
   if (self->pt_cnt != 0)
     {
       PyErr_SetString (PyExc_AttributeError, "Contour not empty");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple (args, "dd", &x, &y))
-    return (NULL);
+    return NULL;
   if (1 > self->pt_max)
     {
       /* Messes with self->points */
@@ -2555,13 +2555,13 @@ PyFFContour_LineTo (PyFF_Contour * self, PyObject *args)
   if (self->pt_cnt == 0)
     {
       PyErr_SetString (PyExc_AttributeError, "Contour empty");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple (args, "dd|i", &x, &y, &pos))
     {
       PyErr_Clear ();
       if (!PyArg_ParseTuple (args, "(dd)|i", &x, &y, &pos))
-        return (NULL);
+        return NULL;
     }
   if (pos < 0 || pos >= self->pt_cnt - 1)
     pos = self->pt_cnt - 1;
@@ -2571,7 +2571,7 @@ PyFFContour_LineTo (PyFF_Contour * self, PyObject *args)
     {
       PyErr_SetString (PyExc_AttributeError,
                        "Contour contains no on-curve points");
-      return (NULL);
+      return NULL;
     }
   if (self->pt_cnt >= self->pt_max)
     {
@@ -2597,7 +2597,7 @@ PyFFContour_CubicTo (PyFF_Contour * self, PyObject *args)
   if (self->is_quadratic || self->pt_cnt == 0)
     {
       PyErr_SetString (PyExc_AttributeError, "Contour quadratic, or empty");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple
       (args, "(dd)(dd)(dd)|i", &x[0], &y[0], &x[1], &y[1], &x[2], &y[2], &pos))
@@ -2605,7 +2605,7 @@ PyFFContour_CubicTo (PyFF_Contour * self, PyObject *args)
       PyErr_Clear ();
       if (!PyArg_ParseTuple
           (args, "dddddd|i", &x[0], &y[0], &x[1], &y[1], &x[2], &y[2], &pos))
-        return (NULL);
+        return NULL;
     }
   np = PyFFPoint_CNew (x[0], y[0], false, false);
   pp = PyFFPoint_CNew (x[1], y[1], false, false);
@@ -2614,7 +2614,7 @@ PyFFContour_CubicTo (PyFF_Contour * self, PyObject *args)
     {
       Py_XDECREF (pp);
       Py_XDECREF (np);
-      return (NULL);
+      return NULL;
     }
 
   if (pos < 0 || pos >= self->pt_cnt - 1)
@@ -2625,7 +2625,7 @@ PyFFContour_CubicTo (PyFF_Contour * self, PyObject *args)
     {
       PyErr_SetString (PyExc_AttributeError,
                        "Contour contains no on-curve points");
-      return (NULL);
+      return NULL;
     }
   if (self->pt_cnt + 3 >= self->pt_max)
     {
@@ -2653,20 +2653,20 @@ PyFFContour_QuadraticTo (PyFF_Contour * self, PyObject *args)
   if (!self->is_quadratic || self->pt_cnt == 0)
     {
       PyErr_SetString (PyExc_AttributeError, "Contour cubic, or empty");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple (args, "(dd)(dd)|i", &x[0], &y[0], &x[1], &y[1], &pos))
     {
       PyErr_Clear ();
       if (!PyArg_ParseTuple (args, "dddd|i", &x[0], &y[0], &x[1], &y[1], &pos))
-        return (NULL);
+        return NULL;
     }
   cp = PyFFPoint_CNew (x[0], y[0], false, false);
   p = PyFFPoint_CNew (x[1], y[1], true, false);
   if (p == NULL)
     {
       Py_XDECREF (cp);
-      return (NULL);
+      return NULL;
     }
 
   if (pos < 0 || pos >= self->pt_cnt - 1)
@@ -2677,7 +2677,7 @@ PyFFContour_QuadraticTo (PyFF_Contour * self, PyObject *args)
     {
       PyErr_SetString (PyExc_AttributeError,
                        "Contour contains no on-curve points");
-      return (NULL);
+      return NULL;
     }
   if (self->pt_cnt + 2 >= self->pt_max)
     {
@@ -2713,7 +2713,7 @@ PyFFContour_InsertPoint (PyFF_Contour * self, PyObject *args)
               if (!PyArg_ParseTuple (args, "O|i", &p, &pos)
                   || !PyType_IsSubtype (&PyFF_PointType,
                                         ((PyObject *) p)->ob_type))
-                return (NULL);
+                return NULL;
             }
         }
     }
@@ -2748,7 +2748,7 @@ PyFFContour_MakeFirst (PyFF_Contour * self, PyObject *args)
   PyFF_Point **temp, **old;
 
   if (!PyArg_ParseTuple (args, "i", &pos))
-    return (NULL);
+    return NULL;
 
   temp = PyMem_New (PyFF_Point *, self->pt_max);
   old = self->points;
@@ -2804,11 +2804,11 @@ PyFFContour_IsClockwise (PyFF_Contour * self, PyObject *UNUSED (args))
   if (ss == NULL)
     {
       PyErr_SetString (PyExc_AttributeError, "Empty Contour");
-      return (NULL);
+      return NULL;
     }
   ret = SplinePointListIsClockwise (ss);
   SplinePointListFree (ss);
-  return (Py_BuildValue ("i", ret));
+  return Py_BuildValue ("i", ret);
 }
 
 static PyObject *
@@ -2820,7 +2820,7 @@ PyFFContour_xBoundsAtY (PyFF_Contour * self, PyObject *args)
   int ret;
 
   if (!PyArg_ParseTuple (args, "d|d", &y1, &y2))
-    return (NULL);
+    return NULL;
 
   ss = SSFromContour (self, NULL);
   if (ss == NULL)
@@ -2833,7 +2833,7 @@ PyFFContour_xBoundsAtY (PyFF_Contour * self, PyObject *args)
   if (!ret)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("(dd)", (double) xmin, (double) xmax));
+  return Py_BuildValue ("(dd)", (double) xmin, (double) xmax);
 }
 
 static PyObject *
@@ -2845,7 +2845,7 @@ PyFFContour_yBoundsAtX (PyFF_Contour * self, PyObject *args)
   int ret;
 
   if (!PyArg_ParseTuple (args, "d|d", &x1, &x2))
-    return (NULL);
+    return NULL;
 
   ss = SSFromContour (self, NULL);
   if (ss == NULL)
@@ -2858,7 +2858,7 @@ PyFFContour_yBoundsAtX (PyFF_Contour * self, PyObject *args)
   if (!ret)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("(dd)", (double) ymin, (double) ymax));
+  return Py_BuildValue ("(dd)", (double) ymin, (double) ymax);
 }
 
 static PyObject *
@@ -2871,13 +2871,13 @@ PyFFContour_Merge (PyFF_Contour * self, PyObject *args)
   if (ss == NULL)
     {
       PyErr_SetString (PyExc_AttributeError, "Empty Contour");
-      return (NULL);
+      return NULL;
     }
   for (i = 0; i < PySequence_Size (args); ++i)
     {
       pos = PyInt_AsLong (PySequence_GetItem (args, i));
       if (PyErr_Occurred ())
-        return (NULL);
+        return NULL;
       SSSelectOnCurve (ss, pos);
     }
   SplineCharMerge (NULL, &ss, 1);
@@ -2923,7 +2923,7 @@ PyFFContour_selfIntersects (PyFF_Contour * self, PyObject *UNUSED (args))
   ret = SplineSetIntersect (ss, &s, &s2) ? Py_True : Py_False;
   SplinePointListFree (ss);
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -2954,7 +2954,7 @@ PyFFContour_Simplify (PyFF_Contour * self, PyObject *args)
   if (!PyErr_Occurred () && PySequence_Size (args) >= 5)
     smpl.linelenmax = PyFloat_AsDouble (PySequence_GetItem (args, 4));
   if (PyErr_Occurred ())
-    return (NULL);
+    return NULL;
   SplinePointListSimplify (NULL, ss, &smpl);
   if (ss == NULL)
     {
@@ -2978,7 +2978,7 @@ PyFFContour_Transform (PyFF_Contour * self, PyObject *args)
 
   if (!PyArg_ParseTuple
       (args, "(dddddd)", &m[0], &m[1], &m[2], &m[3], &m[4], &m[5]))
-    return (NULL);
+    return NULL;
   for (i = 0; i < self->pt_cnt; ++i)
     PyFF_TransformPoint (self->points[i], m);
   PyFFContour_ClearSpiros ((PyFF_Contour *) self);
@@ -2993,7 +2993,7 @@ PyFFContour_similar (PyFF_Contour * self, PyObject *args)
   PyObject *other, *retO;
 
   if (!PyArg_ParseTuple (args, "O|dd", &other, &pt_err, &spline_err))
-    return (NULL);
+    return NULL;
   if (pt_err == -1)
     {
       pt_err = .5;
@@ -3005,13 +3005,13 @@ PyFFContour_similar (PyFF_Contour * self, PyObject *args)
   if (!PyType_IsSubtype (&PyFF_ContourType, ((PyObject *) other)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (NULL);
+      return NULL;
     }
 
   ret = PyFFContour_docompare (self, other, pt_err, spline_err);
   retO = (ret & SS_NoMatch) ? Py_False : Py_True;
   Py_INCREF (retO);
-  return (retO);
+  return retO;
 }
 
 static PyObject *
@@ -3034,7 +3034,7 @@ PyFFContour_pickleReducer (PyFF_Contour * self, PyObject *UNUSED (args))
       Py_INCREF ((PyObject *) self->points[i]);
       PyTuple_SetItem (argTuple, 2 + i, (PyObject *) self->points[i]);
     }
-  return (reductionTuple);
+  return reductionTuple;
 }
 
 static PyObject *
@@ -3044,7 +3044,7 @@ PyFFContour_Round (PyFF_Contour * self, PyObject *args)
   int i;
 
   if (!PyArg_ParseTuple (args, "|d", &factor))
-    return (NULL);
+    return NULL;
   for (i = 0; i < self->pt_cnt; ++i)
     {
       self->points[i]->x = rint (factor * self->points[i]->x) / factor;
@@ -3063,7 +3063,7 @@ PyFFContour_Cluster (PyFF_Contour * self, PyObject *args)
   Layer layers[2];
 
   if (!PyArg_ParseTuple (args, "|dd", &within, &max))
-    return (NULL);
+    return NULL;
 
   ss = SSFromContour (self, NULL);
   if (ss == NULL)
@@ -3098,12 +3098,12 @@ PyFFContour_AddExtrema (PyFF_Contour * self, PyObject *args)
   SplineSet *ss;
 
   if (!PyArg_ParseTuple (args, "|si", &flag, &emsize))
-    return (NULL);
+    return NULL;
   if (flag != NULL)
     {
       ae = FlagsFromString (flag, addextremaflags, "extrema flag");
       if (ae == FLAG_UNKNOWN)
-        return (NULL);
+        return NULL;
     }
 
   ss = SSFromContour (self, NULL);
@@ -3122,7 +3122,7 @@ PyFFContour_BoundingBox (PyFF_Contour * self, PyObject *UNUSED (args))
   int i;
 
   if (self->pt_cnt == 0)
-    return (Py_BuildValue ("(dddd)", 0, 0, 0, 0));
+    return Py_BuildValue ("(dddd)", 0, 0, 0, 0);
 
   xmin = xmax = self->points[0]->x;
   ymin = ymax = self->points[0]->y;
@@ -3137,7 +3137,7 @@ PyFFContour_BoundingBox (PyFF_Contour * self, PyObject *UNUSED (args))
       if (self->points[i]->y > ymax)
         ymax = self->points[i]->y;
     }
-  return (Py_BuildValue ("(dddd)", xmin, ymin, xmax, ymax));
+  return Py_BuildValue ("(dddd)", xmin, ymin, xmax, ymax);
 }
 
 static PyObject *
@@ -3148,11 +3148,11 @@ PyFFContour_GetSplineAfterPoint (PyFF_Contour * self, PyObject *args)
   double cx, cy, bx, by;
 
   if (!PyArg_ParseTuple (args, "i", &pnum))
-    return (NULL);
+    return NULL;
   if (pnum >= self->pt_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Point index out of range");
-      return (NULL);
+      return NULL;
     }
   if (self->is_quadratic)
     {
@@ -3302,7 +3302,7 @@ PointTuple (PyFF_Point * pt)
 
   PyTuple_SetItem (pt_tuple, 0, Py_BuildValue ("d", pt->x));
   PyTuple_SetItem (pt_tuple, 1, Py_BuildValue ("d", pt->y));
-  return (pt_tuple);
+  return pt_tuple;
 }
 
 static PyObject *
@@ -3313,7 +3313,7 @@ PyFFContour_draw (PyFF_Contour * self, PyObject *args)
   int i, start, off, last, j;
 
   if (!PyArg_ParseTuple (args, "O", &pen))
-    return (NULL);
+    return NULL;
   if (self->pt_cnt < 2)
     Py_RETURN (self);
 
@@ -3342,7 +3342,7 @@ PyFFContour_draw (PyFF_Contour * self, PyObject *args)
         {
           PyErr_Format (PyExc_TypeError,
                         "A cubic contour must have at least one oncurve point to be drawn");
-          return (NULL);
+          return NULL;
         }
     }
   else
@@ -3362,7 +3362,7 @@ PyFFContour_draw (PyFF_Contour * self, PyObject *args)
       PyTuple_SetItem (tuple, 0, PointTuple (points[0]));
       do_pycall (pen, "moveTo", tuple);
       if (PyErr_Occurred ())
-        return (NULL);
+        return NULL;
       last = 0;
       for (i = 1; i < self->pt_cnt; ++i)
         {
@@ -3393,10 +3393,10 @@ PyFFContour_draw (PyFF_Contour * self, PyObject *args)
             {
               PyErr_Format (PyExc_TypeError,
                             "Wrong number of off-curve points on a cubic contour");
-              return (NULL);
+              return NULL;
             }
           if (PyErr_Occurred ())
-            return (NULL);
+            return NULL;
           last = i;
         }
       if (i - last == 3 && !self->is_quadratic && self->closed)
@@ -3419,7 +3419,7 @@ PyFFContour_draw (PyFF_Contour * self, PyObject *args)
   free (freeme);
 
   if (PyErr_Occurred ())
-    return (NULL);
+    return NULL;
 
   tuple = PyTuple_New (0);
   if (self->closed)
@@ -3427,7 +3427,7 @@ PyFFContour_draw (PyFF_Contour * self, PyObject *args)
   else
     do_pycall (pen, "endPath", tuple);
   if (PyErr_Occurred ())
-    return (NULL);
+    return NULL;
 
   Py_RETURN (self);
 }
@@ -3601,7 +3601,7 @@ layeriter_iternext (layeriterobject * li)
     {
       c = (PyObject *) layer->contours[li->pos++];
       Py_INCREF (c);
-      return (c);
+      return c;
     }
 
   return NULL;
@@ -3750,7 +3750,7 @@ PyFFLayer_Str (PyFF_Layer * self)
   strcpy (pt, ">");
   ret = STRING_TO_PY (buffer);
   free (buffer);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -3773,12 +3773,12 @@ PyFFLayer_docompare (PyFF_Layer * self, PyObject *other, double pt_err,
   else
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (-1);
+      return -1;
     }
   ret = SSsCompare (ss, ss2, pt_err, spline_err, &badpoint);
   SplinePointListsFree (ss);
   SplinePointListsFree (ss2);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -3789,18 +3789,18 @@ PyFFLayer_compare (PyFF_Layer * self, PyObject *other)
 
   ret = PyFFLayer_docompare (self, other, pt_err, spline_err);
   if (!(ret & SS_NoMatch))
-    return (0);
+    return 0;
 
   /* There's no real ordering on these guys. Make up something that is */
   /*  at least consistent */
   if (PyType_IsSubtype (&PyFF_ContourType, ((PyObject *) other)->ob_type))
-    return (-1);
+    return -1;
 
   /* Ok, both are layers */
   if (self->cntr_cnt < ((PyFF_Layer *) other)->cntr_cnt)
-    return (-1);
+    return -1;
   else if (self->cntr_cnt > ((PyFF_Layer *) other)->cntr_cnt)
-    return (1);
+    return 1;
   /* If there's a difference, then there must be at least one point to be */
   /*  different. And we only get here if there were a difference */
   for (j = 0; j < self->cntr_cnt; ++j)
@@ -3808,19 +3808,19 @@ PyFFLayer_compare (PyFF_Layer * self, PyObject *other)
       PyFF_Contour *scon = self->contours[j], *ocon =
         ((PyFF_Layer *) other)->contours[j];
       if (scon->pt_cnt < ocon->pt_cnt)
-        return (-1);
+        return -1;
       else if (scon->pt_cnt > ocon->pt_cnt)
-        return (1);
+        return 1;
       for (i = 0; i < scon->pt_cnt; ++i)
         {
           ret =
             PyFFPoint_compare (scon->points[i], (PyObject *) ocon->points[i]);
           if (ret != 0)
-            return (ret);
+            return ret;
         }
     }
 
-  return (-1);                  /* Arbitrary... but we can't get here=>all points same */
+  return -1;                  /* Arbitrary... but we can't get here=>all points same */
 }
 
 #if PY_MAJOR_VERSION >= 3
@@ -3837,7 +3837,7 @@ PyFFLayer_richcompare (PyObject *a, PyObject *b, int op)
 static PyObject *
 PyFF_Layer_get_is_quadratic (PyFF_Layer * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->is_quadratic));
+  return Py_BuildValue ("i", self->is_quadratic);
 }
 
 static int
@@ -3849,11 +3849,11 @@ PyFF_Layer_set_is_quadratic (PyFF_Layer * self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
 
   val = (val != 0);
   if (val == self->is_quadratic)
-    return (0);
+    return 0;
   ss = SSFromLayer (self);
   PyFFLayer_clear (self);
   if (val)
@@ -3864,7 +3864,7 @@ PyFF_Layer_set_is_quadratic (PyFF_Layer * self, PyObject *value,
   self->is_quadratic = (val != 0);
   LayerFromSS (ss2, self);
   SplinePointListFree (ss2);
-  return (0);
+  return 0;
 }
 
 static PyGetSetDef PyFFLayer_getset[] = {
@@ -3880,7 +3880,7 @@ static PyGetSetDef PyFFLayer_getset[] = {
 static Py_ssize_t
 PyFFLayer_Length (PyObject *self)
 {
-  return (((PyFF_Layer *) self)->cntr_cnt);
+  return ((PyFF_Layer *) self)->cntr_cnt;
 }
 
 static PyObject *
@@ -3907,7 +3907,7 @@ PyFFLayer_Concat (PyObject *_c1, PyObject *_c2)
     {
       PyErr_Format (PyExc_TypeError,
                     "Both arguments must be Layers of the same order");
-      return (NULL);
+      return NULL;
     }
   self = (PyFF_Layer *) PyFF_LayerType.tp_alloc (&PyFF_LayerType, 0);
   self->is_quadratic = c1->is_quadratic;
@@ -3949,7 +3949,7 @@ PyFFLayer_InPlaceConcat (PyObject *_self, PyObject *_c2)
     {
       PyErr_Format (PyExc_TypeError,
                     "Both arguments must be Layers of the same order");
-      return (NULL);
+      return NULL;
     }
   old_cnt = self->cntr_cnt;
   self->cntr_cnt += c2->cntr_cnt;
@@ -3975,11 +3975,11 @@ PyFFLayer_Index (PyObject *self, Py_ssize_t pos)
   if (pos < 0 || pos >= layer->cntr_cnt)
     {
       PyErr_Format (PyExc_TypeError, "Index out of bounds");
-      return (NULL);
+      return NULL;
     }
   ret = (PyObject *) layer->contours[pos];
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -3992,25 +3992,25 @@ PyFFLayer_IndexAssign (PyObject *self, Py_ssize_t pos, PyObject *val)
   if (!PyType_IsSubtype (&PyFF_ContourType, ((PyObject *) val)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a (FontForge) Contour");
-      return (-1);
+      return -1;
     }
   contour = (PyFF_Contour *) val;
   if (pos < 0 || pos >= layer->cntr_cnt)
     {
       PyErr_Format (PyExc_TypeError, "Index out of bounds");
-      return (-1);
+      return -1;
     }
   if (contour->is_quadratic != layer->is_quadratic)
     {
       PyErr_Format (PyExc_TypeError,
                     "Replacement contour must have the same order as the layer");
-      return (-1);
+      return -1;
     }
 
   old = layer->contours[pos];
   layer->contours[pos] = contour;
   Py_DECREF (old);
-  return (0);
+  return 0;
 }
 
 static PySequenceMethods PyFFLayer_Sequence = {
@@ -4044,14 +4044,14 @@ PyFFLayer_dup (PyFF_Layer * self)
       for (i = 0; i < ret->cntr_cnt; ++i)
         ret->contours[i] = (PyFF_Contour *) PyFFContour_dup (self->contours[i]);
     }
-  return ((PyObject *) ret);
+  return (PyObject *) ret;
 }
 
 static PyObject *
 PyFFLayer_IsEmpty (PyFF_Layer * self)
 {
   /* Arg checking done elsewhere */
-  return (Py_BuildValue ("i", self->cntr_cnt == 0));
+  return Py_BuildValue ("i", self->cntr_cnt == 0);
 }
 
 static PyObject *
@@ -4065,7 +4065,7 @@ PyFFLayer_selfIntersects (PyFF_Layer * self, PyObject *UNUSED (args))
   ret = SplineSetIntersect (ss, &s, &s2) ? Py_True : Py_False;
   SplinePointListFree (ss);
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -4095,7 +4095,7 @@ PyFFLayer_Simplify (PyFF_Layer * self, PyObject *args)
   if (!PyErr_Occurred () && PySequence_Size (args) >= 5)
     smpl.linelenmax = PyFloat_AsDouble (PySequence_GetItem (args, 4));
   if (PyErr_Occurred ())
-    return (NULL);
+    return NULL;
   ss = SplineCharSimplify (NULL, ss, &smpl);
   LayerFromSS (ss, self);
   SplinePointListsFree (ss);
@@ -4110,7 +4110,7 @@ PyFFLayer_similar (PyFF_Layer * self, PyObject *args)
   PyObject *other, *retO;
 
   if (!PyArg_ParseTuple (args, "O|dd", &other, &pt_err, &spline_err))
-    return (NULL);
+    return NULL;
   if (pt_err == -1)
     {
       pt_err = .5;
@@ -4123,13 +4123,13 @@ PyFFLayer_similar (PyFF_Layer * self, PyObject *args)
       && !PyType_IsSubtype (&PyFF_ContourType, ((PyObject *) other)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (NULL);
+      return NULL;
     }
 
   ret = PyFFLayer_docompare (self, other, pt_err, spline_err);
   retO = (ret & SS_NoMatch) ? Py_False : Py_True;
   Py_INCREF (retO);
-  return (retO);
+  return retO;
 }
 
 static PyObject *
@@ -4141,7 +4141,7 @@ PyFFLayer_Transform (PyFF_Layer * self, PyObject *args)
 
   if (!PyArg_ParseTuple
       (args, "(dddddd)", &m[0], &m[1], &m[2], &m[3], &m[4], &m[5]))
-    return (NULL);
+    return NULL;
   for (i = 0; i < self->cntr_cnt; ++i)
     {
       cntr = self->contours[i];
@@ -4158,7 +4158,7 @@ PyFFLayer_NLTransform (PyFF_Layer * self, PyObject *args)
   SplineSet *ss;
 
   if (!PyArg_ParseTuple (args, "ss", &xexpr, &yexpr))
-    return (NULL);
+    return NULL;
 
   ss = SSFromLayer (self);
   if (ss == NULL)
@@ -4168,7 +4168,7 @@ PyFFLayer_NLTransform (PyFF_Layer * self, PyObject *args)
     {
       PyErr_Format (PyExc_TypeError, "Unparseable expression.");
       SplinePointListsFree (ss);
-      return (NULL);
+      return NULL;
     }
 
   LayerFromSS (ss, self);
@@ -4195,7 +4195,7 @@ PyFFLayer_pickleReducer (PyFF_Layer * self, PyObject *UNUSED (args))
       Py_INCREF ((PyObject *) self->contours[i]);
       PyTuple_SetItem (argTuple, 1 + i, (PyObject *) self->contours[i]);
     }
-  return (reductionTuple);
+  return reductionTuple;
 }
 
 static PyObject *
@@ -4206,7 +4206,7 @@ PyFFLayer_Round (PyFF_Layer * self, PyObject *args)
   PyFF_Contour *cntr;
 
   if (!PyArg_ParseTuple (args, "|d", &factor))
-    return (NULL);
+    return NULL;
   for (i = 0; i < self->cntr_cnt; ++i)
     {
       cntr = self->contours[i];
@@ -4228,7 +4228,7 @@ PyFFLayer_Cluster (PyFF_Layer * self, PyObject *args)
   SplineSet *ss;
 
   if (!PyArg_ParseTuple (args, "|dd", &within, &max))
-    return (NULL);
+    return NULL;
 
   ss = SSFromLayer (self);
   if (ss == NULL)
@@ -4253,12 +4253,12 @@ PyFFLayer_AddExtrema (PyFF_Layer * self, PyObject *args)
   SplineSet *ss;
 
   if (!PyArg_ParseTuple (args, "|si", &flag, &emsize))
-    return (NULL);
+    return NULL;
   if (flag != NULL)
     {
       ae = FlagsFromString (flag, addextremaflags, "extrema flag");
       if (ae == FLAG_UNKNOWN)
-        return (NULL);
+        return NULL;
     }
 
   ss = SSFromLayer (self);
@@ -4284,7 +4284,7 @@ PolyCheck (SplineSet *poly)
         {
           PyErr_Format (PyExc_ValueError,
                         "The polygonal pen must be a closed, convex polygon. This one is not closed.");
-          return (false);
+          return false;
         }
       else
         {
@@ -4295,7 +4295,7 @@ PolyCheck (SplineSet *poly)
                 {
                   PyErr_Format (PyExc_ValueError,
                                 "The polygonal pen must be a closed, convex polygon. This one is has curved edges.");
-                  return (false);
+                  return false;
                 }
               sp = sp->next->to;
               if (sp == ss->first)
@@ -4308,7 +4308,7 @@ PolyCheck (SplineSet *poly)
             {
               PyErr_Format (PyExc_ValueError,
                             "There are too many vertices on this polygon.");
-              return (false);
+              return false;
             }
           else
             {
@@ -4319,13 +4319,13 @@ PolyCheck (SplineSet *poly)
                 {
                   PyErr_Format (PyExc_ValueError,
                                 "The polygonal pen must be a closed, convex polygon. This one is a line.");
-                  return (false);
+                  return false;
                 }
               else if (pt == Poly_TooFewPoints)
                 {
                   PyErr_Format (PyExc_ValueError,
                                 "The polygonal pen must be a closed, convex polygon. This one has too few points.");
-                  return (false);
+                  return false;
                 }
               else if (pt != Poly_Convex)
                 {
@@ -4335,12 +4335,12 @@ PolyCheck (SplineSet *poly)
                   else
                     PyErr_Format (PyExc_ValueError,
                                   "The polygonal pen must be a closed, convex polygon. This one is concave.");
-                  return (false);
+                  return false;
                 }
             }
         }
     }
-  return (true);
+  return true;
 }
 
 /* Linecap type: see 'enum linecap' in splinefont.h */
@@ -4382,18 +4382,18 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
   if (!PySequence_Check (args))
     {
       PyErr_Format (PyExc_TypeError, "Expected a sequence");
-      return (-1);
+      return -1;
     }
   argcnt = PySequence_Size (args);
   if (argcnt == 0)
     {
       PyErr_Format (PyExc_TypeError, "Expected a name of a pen type");
-      return (-1);
+      return -1;
     }
 #if PY_MAJOR_VERSION >= 3
   bytes = PyUnicode_AsUTF8String (PySequence_GetItem (args, 0));
   if (bytes == NULL)
-    return (-1);
+    return -1;
   str = PyBytes_AsString (bytes);
 #else /* PY_MAJOR_VERSION >= 3 */
   str = PyBytes_AsString (PySequence_GetItem (args, 0));
@@ -4404,7 +4404,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
 #if PY_MAJOR_VERSION >= 3
       Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
-      return (-1);
+      return -1;
     }
   if (strcmp (str, "circular") == 0)
     {
@@ -4414,7 +4414,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
 #if PY_MAJOR_VERSION >= 3
           Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
-          return (-1);
+          return -1;
         }
       si->stroke_type = si_std;
       minor = width;
@@ -4429,7 +4429,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
 #if PY_MAJOR_VERSION >= 3
           Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
-          return (-1);
+          return -1;
         }
       si->stroke_type = si_std;
     }
@@ -4441,7 +4441,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
 #if PY_MAJOR_VERSION >= 3
           Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
-          return (-1);
+          return -1;
         }
       si->stroke_type = si_caligraphic;
     }
@@ -4452,7 +4452,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
 #if PY_MAJOR_VERSION >= 3
           Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
-          return (-1);
+          return -1;
         }
       si->stroke_type = si_poly;
     }
@@ -4462,7 +4462,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
       Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
       PyErr_Format (PyExc_ValueError, "Unknown stroke type %s", str);
-      return (-1);
+      return -1;
     }
 #if PY_MAJOR_VERSION >= 3
   Py_DECREF (bytes);
@@ -4487,7 +4487,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
         {
           PyErr_Format (PyExc_TypeError,
                         "Second argument must be a (FontForge) Contour or Layer");
-          return (-1);
+          return -1;
         }
       if (order2)
         {
@@ -4496,23 +4496,23 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
           ss = temp;
         }
       if (!PolyCheck (ss))
-        return (-1);
+        return -1;
       si->poly = ss;
     }
   else if (width <= 0 || minor <= 0)
     {
       PyErr_Format (PyExc_ValueError, "Stroke width must be positive");
-      return (-1);
+      return -1;
     }
   c = FlagsFromString (cap, linecap, "linecap type");
   if (c == FLAG_UNKNOWN)
-    return (-1);
+    return -1;
   j = FlagsFromString (join, linejoin, "linejoin type");
   if (c == FLAG_UNKNOWN)
-    return (-1);
+    return -1;
   f = FlagsFromTuple (flagtuple, strokeflags, "stroke flag");
   if (c == FLAG_UNKNOWN)
-    return (-1);
+    return -1;
 
   si->radius = width / 2;
   si->join = j;
@@ -4526,7 +4526,7 @@ Stroke_Parse (StrokeInfo *si, PyObject *args)
   si->penangle = angle;
   si->minorradius = minor / 2;
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -4540,7 +4540,7 @@ PyFFLayer_export (PyFF_Layer * self, PyObject *args)
   Layer dummylayers[2];
 
   if (!PyArg_ParseTuple (args, "es", "UTF-8", &filename))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
 
@@ -4553,7 +4553,7 @@ PyFFLayer_export (PyFF_Layer * self, PyObject *args)
     {
       PyErr_SetFromErrnoWithFilename (PyExc_IOError, locfilename);
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
 
   memset (&sc, 0, sizeof (sc));
@@ -4583,7 +4583,7 @@ PyFFLayer_export (PyFF_Layer * self, PyObject *args)
       free (locfilename);
       fclose (file);
       SplinePointListsFree (dummylayers[ly_fore].splines);
-      return (NULL);
+      return NULL;
     }
   fclose (file);
 
@@ -4599,7 +4599,7 @@ PyFFLayer_Stroke (PyFF_Layer * self, PyObject *args)
   StrokeInfo si;
 
   if (Stroke_Parse (&si, args) == -1)
-    return (NULL);
+    return NULL;
 
   ss = SSFromLayer (self);
   if (ss == NULL)
@@ -4676,11 +4676,11 @@ PyFFLayer_Exclude (PyFF_Layer * self, PyObject *args)
   PyObject *obj;
 
   if (!PyArg_ParseTuple (args, "O", &obj))
-    return (NULL);
+    return NULL;
   if (!PyType_IsSubtype (&PyFF_LayerType, ((PyObject *) obj)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a (FontForge) Layer");
-      return (NULL);
+      return NULL;
     }
 
   ss = SSFromLayer (self);
@@ -4710,11 +4710,11 @@ PyFFLayer_interpolateNewLayer (PyFF_Layer * self, PyObject *args)
   SplineChar dummy;
 
   if (!PyArg_ParseTuple (args, "Od", &obj, &amount))
-    return (NULL);
+    return NULL;
   if (!PyType_IsSubtype (&PyFF_LayerType, ((PyObject *) obj)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a (FontForge) Layer");
-      return (NULL);
+      return NULL;
     }
 
   memset (&dummy, 0, sizeof (dummy));   /* Only used for error messages */
@@ -4727,7 +4727,7 @@ PyFFLayer_interpolateNewLayer (PyFF_Layer * self, PyObject *args)
   SplinePointListsFree (ss);
   SplinePointListsFree (otherss);
   SplinePointListsFree (newss);
-  return (obj);
+  return obj;
 }
 
 static PyObject *
@@ -4740,7 +4740,7 @@ PyFFLayer_stemControl (PyObject *self, PyObject *args)
   if (!PyArg_ParseTuple
       (args, "d|dddd", &stemwidthscale, &hscale, &stemheightscale, &vscale,
        &xheight))
-    return (NULL);
+    return NULL;
 
   ss = SSFromLayer ((PyFF_Layer *) self);
   if (ss == NULL)
@@ -4786,9 +4786,9 @@ PyFFLayer_BoundingBox (PyFF_Layer * self, PyObject *UNUSED (args))
         }
     }
   if (none)
-    return (Py_BuildValue ("(dddd)", 0.0, 0.0, 0.0, 0.0));
+    return Py_BuildValue ("(dddd)", 0.0, 0.0, 0.0, 0.0);
 
-  return (Py_BuildValue ("(dddd)", xmin, ymin, xmax, ymax));
+  return Py_BuildValue ("(dddd)", xmin, ymin, xmax, ymax);
 }
 
 static PyObject *
@@ -4800,7 +4800,7 @@ PyFFLayer_xBoundsAtY (PyFF_Layer * self, PyObject *args)
   bigreal xmin, xmax;
 
   if (!PyArg_ParseTuple (args, "d|d", &y1, &y2))
-    return (NULL);
+    return NULL;
 
   ss = SSFromLayer ((PyFF_Layer *) self);
   if (ss == NULL)
@@ -4813,7 +4813,7 @@ PyFFLayer_xBoundsAtY (PyFF_Layer * self, PyObject *args)
   if (!ret)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("(dd)", (double) xmin, (double) xmax));
+  return Py_BuildValue ("(dd)", (double) xmin, (double) xmax);
 }
 
 static PyObject *
@@ -4825,7 +4825,7 @@ PyFFLayer_yBoundsAtX (PyFF_Layer * self, PyObject *args)
   bigreal ymin, ymax;
 
   if (!PyArg_ParseTuple (args, "d|d", &x1, &x2))
-    return (NULL);
+    return NULL;
 
   ss = SSFromLayer ((PyFF_Layer *) self);
   if (ss == NULL)
@@ -4838,7 +4838,7 @@ PyFFLayer_yBoundsAtX (PyFF_Layer * self, PyObject *args)
   if (!ret)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("(dd)", (double) ymin, (double) ymax));
+  return Py_BuildValue ("(dd)", (double) ymin, (double) ymax);
 }
 
 static PyObject *
@@ -4987,7 +4987,7 @@ SSSelectOnCurve (SplineSet *ss, int pos)
           if (sp->ttfindex == pos)
             {
               sp->selected = true;
-              return (true);
+              return true;
             }
           if (sp->next == NULL)
             break;
@@ -4997,7 +4997,7 @@ SSSelectOnCurve (SplineSet *ss, int pos)
         }
       ss = ss->next;
     }
-  return (0);
+  return 0;
 }
 
 static SplineSet *
@@ -5012,7 +5012,7 @@ SSFromContour (PyFF_Contour * c, int *tt_start)
   if (c->pt_cnt == 0)
     {
       /*PyErr_Format(PyExc_TypeError, "Empty contour"); */
-      return (NULL);
+      return NULL;
     }
 
   if (tt_start != NULL)
@@ -5038,7 +5038,7 @@ SSFromContour (PyFF_Contour * c, int *tt_start)
                 SplinePointCreate (c->points[0]->x, c->points[0]->y);
               ss->first->selected = c->points[0]->selected;
               SPLCategorizePoints (ss);
-              return (ss);
+              return ss;
             }
           ++i;
           ++next;
@@ -5167,7 +5167,7 @@ SSFromContour (PyFF_Contour * c, int *tt_start)
                 {
                   PyErr_Format (PyExc_TypeError,
                                 "In cubic splines there must be exactly 2 control points between on curve points");
-                  return (NULL);
+                  return NULL;
                 }
               if (nexti == c->pt_cnt - 1)
                 nexti = 0;
@@ -5177,7 +5177,7 @@ SSFromContour (PyFF_Contour * c, int *tt_start)
                 {
                   PyErr_Format (PyExc_TypeError,
                                 "In cubic splines there must be exactly 2 control points between on curve points");
-                  return (NULL);
+                  return NULL;
                 }
             }
           if (ss->last == NULL)
@@ -5189,7 +5189,7 @@ SSFromContour (PyFF_Contour * c, int *tt_start)
       if (ss->last == NULL)
         {
           PyErr_Format (PyExc_TypeError, "Empty contour");
-          return (NULL);
+          return NULL;
         }
     }
   if (c->closed)
@@ -5200,7 +5200,7 @@ SSFromContour (PyFF_Contour * c, int *tt_start)
   if (tt_start != NULL)
     *tt_start = next;
   SPLCategorizePoints (ss);
-  return (ss);
+  return ss;
 }
 
 static PyFF_Contour *
@@ -5307,7 +5307,7 @@ ContourFromSS (SplineSet *ss, PyFF_Contour * ret)
           ret->pt_cnt = cnt;
         }
     }
-  return (ret);
+  return ret;
 }
 
 static SplineSet *
@@ -5329,7 +5329,7 @@ SSFromLayer (PyFF_Layer * layer)
           tail = cur;
         }
     }
-  return (head);
+  return head;
 }
 
 static PyFF_Layer *
@@ -5363,7 +5363,7 @@ LayerFromSS (SplineSet *ss, PyFF_Layer * layer)
       layer->contours[cnt] = ContourFromSS (cur, layer->contours[cnt]);
       layer->is_quadratic = layer->contours[cnt]->is_quadratic;
     }
-  return (layer);
+  return layer;
 }
 
 static PyFF_Layer *
@@ -5372,7 +5372,7 @@ LayerFromLayer (Layer *inlayer, PyFF_Layer * ret)
   /* May want to copy fills and pens someday!! */
   PyFF_Layer *layer = LayerFromSS (inlayer->splines, ret);
   layer->is_quadratic = inlayer->order2;
-  return (layer);
+  return layer;
 }
 
 /* ************************************************************************** */
@@ -5394,7 +5394,7 @@ PyFF_GlyphPen_dealloc (PyFF_GlyphPen * self)
 static PyObject *
 PyFFGlyphPen_Str (PyFF_GlyphPen * self)
 {
-  return (STRING_FROM_FORMAT ("<GlyphPen for %s>", self->sc->name));
+  return STRING_FROM_FORMAT ("<GlyphPen for %s>", self->sc->name);
 }
 
 /* ************************************************************************** */
@@ -5421,13 +5421,13 @@ PyFFGlyphPen_moveTo (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "The moveTo operator may not be called while drawing a contour");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple (args, "(dd)", &x, &y))
     {
       PyErr_Clear ();
       if (!PyArg_ParseTuple (args, "dd", &x, &y))
-        return (NULL);
+        return NULL;
     }
   if (((PyFF_GlyphPen *) self)->replace)
     GlyphClear (self);
@@ -5454,13 +5454,13 @@ PyFFGlyphPen_lineTo (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "The lineTo operator must be preceded by a moveTo operator");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple (args, "(dd)", &x, &y))
     {
       PyErr_Clear ();
       if (!PyArg_ParseTuple (args, "dd", &x, &y))
-        return (NULL);
+        return NULL;
     }
   ss = sc->layers[layer].splines;
   sp = SplinePointCreate (x, y);
@@ -5483,7 +5483,7 @@ PyFFGlyphPen_curveTo (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "The curveTo operator must be preceded by a moveTo operator");
-      return (NULL);
+      return NULL;
     }
   if (sc->layers[layer].order2)
     {
@@ -5491,7 +5491,7 @@ PyFFGlyphPen_curveTo (PyObject *self, PyObject *args)
         {
           PyErr_Clear ();
           if (!PyArg_ParseTuple (args, "dddd", &x[1], &y[1], &x[2], &y[2]))
-            return (NULL);
+            return NULL;
         }
       x[0] = x[1];
       y[0] = y[1];
@@ -5504,7 +5504,7 @@ PyFFGlyphPen_curveTo (PyObject *self, PyObject *args)
           PyErr_Clear ();
           if (!PyArg_ParseTuple
               (args, "dddddd", &x[0], &y[0], &x[1], &y[1], &x[2], &y[2]))
-            return (NULL);
+            return NULL;
         }
     }
   ss = sc->layers[layer].splines;
@@ -5535,7 +5535,7 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "qCurveTo only applies to quadratic fonts");
-      return (NULL);
+      return NULL;
     }
 
   len = PySequence_Size (args);
@@ -5543,7 +5543,7 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "qCurveTo requires at least two arguments");
-      return (NULL);
+      return NULL;
     }
   else if (PySequence_GetItem (args, len - 1) == Py_None)
     {
@@ -5552,18 +5552,18 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
         {
           PyErr_Format (PyExc_EnvironmentError,
                         "qCurveTo must describe an entire contour if its last argument is None");
-          return (NULL);
+          return NULL;
         }
       else if (len < 2)
         {
           PyErr_Format (PyExc_EnvironmentError,
                         "qCurveTo must have at least two tuples");
-          return (NULL);
+          return NULL;
         }
 
       pt_tuple = PySequence_GetItem (args, 0);
       if (!PyArg_ParseTuple (pt_tuple, "dd", &x0, &y0))
-        return (NULL);
+        return NULL;
 
       ss = xzalloc (sizeof (SplineSet));
       ss->next = sc->layers[layer].splines;
@@ -5575,7 +5575,7 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
         {
           pt_tuple = PySequence_GetItem (args, i);
           if (!PyArg_ParseTuple (pt_tuple, "dd", &x2, &y2))
-            return (NULL);
+            return NULL;
           sp = SplinePointCreate ((x1 + x2) / 2, (y1 + y2) / 2);
           sp->noprevcp = false;
           sp->prevcp.x = x1;
@@ -5613,18 +5613,18 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
         {
           PyErr_Format (PyExc_EnvironmentError,
                         "The qCurveTo operator must be preceded by a moveTo operator");
-          return (NULL);
+          return NULL;
         }
       else if (len < 2)
         {
           PyErr_Format (PyExc_EnvironmentError,
                         "qCurveTo must have at least two tuples");
-          return (NULL);
+          return NULL;
         }
       ss = sc->layers[layer].splines;
       pt_tuple = PySequence_GetItem (args, 0);
       if (!PyArg_ParseTuple (pt_tuple, "dd", &x1, &y1))
-        return (NULL);
+        return NULL;
       ss->last->nextcp.x = x1;
       ss->last->nextcp.y = y1;
       ss->last->nonextcp = false;
@@ -5632,7 +5632,7 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
         {
           pt_tuple = PySequence_GetItem (args, i);
           if (!PyArg_ParseTuple (pt_tuple, "dd", &x2, &y2))
-            return (NULL);
+            return NULL;
           sp = SplinePointCreate ((x1 + x2) / 2, (y1 + y2) / 2);
           sp->noprevcp = false;
           sp->prevcp.x = x1;
@@ -5647,7 +5647,7 @@ PyFFGlyphPen_qCurveTo (PyObject *self, PyObject *args)
         }
       pt_tuple = PySequence_GetItem (args, i);
       if (!PyArg_ParseTuple (pt_tuple, "dd", &x2, &y2))
-        return (NULL);
+        return NULL;
       sp = SplinePointCreate (x2, y2);
       sp->noprevcp = false;
       sp->prevcp.x = x1;
@@ -5670,7 +5670,7 @@ PyFFGlyphPen_closePath (PyObject *self, PyObject *UNUSED (args))
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "The closePath operator requires and open path to close");
-      return (NULL);
+      return NULL;
     }
 
   ss = sc->layers[layer].splines;
@@ -5701,7 +5701,7 @@ PyFFGlyphPen_endPath (PyObject *self, PyObject *UNUSED (args))
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "The endPath operator must be preceded path operations");
-      return (NULL);
+      return NULL;
     }
 
   ((PyFF_GlyphPen *) self)->ended = true;
@@ -5723,7 +5723,7 @@ PyFFGlyphPen_addComponent (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "The addComponent operator may not be called while drawing a contour");
-      return (NULL);
+      return NULL;
     }
   if (((PyFF_GlyphPen *) self)->replace)
     GlyphClear (self);
@@ -5732,12 +5732,12 @@ PyFFGlyphPen_addComponent (PyObject *self, PyObject *args)
   m[0] = m[3] = 1;
   if (!PyArg_ParseTuple
       (args, "s|(dddddd)", &str, &m[0], &m[1], &m[2], &m[3], &m[4], &m[5]))
-    return (NULL);
+    return NULL;
   rsc = SFGetChar (sc->parent, -1, str);
   if (rsc == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No glyph named %s", str);
-      return (NULL);
+      return NULL;
     }
   for (j = 0; j < 6; ++j)
     transform[j] = m[j];
@@ -5847,7 +5847,7 @@ PyFF_Glyph_get_layer_references (PyFF_Glyph *self, void *UNUSED (closure),
                                      ref->transform[0], ref->transform[1],
                                      ref->transform[2], ref->transform[3],
                                      ref->transform[4], ref->transform[5]));
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -5865,7 +5865,7 @@ PyFF_Glyph_set_layer_references (PyFF_Glyph *self, PyObject *value,
   if (!PySequence_Check (value))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a tuple of references");
-      return (-1);
+      return -1;
     }
   cnt = PySequence_Size (value);
   for (refs = sc->layers[layer].refs; refs != NULL; refs = next)
@@ -5879,18 +5879,18 @@ PyFF_Glyph_set_layer_references (PyFF_Glyph *self, PyObject *value,
       if (!PyArg_ParseTuple
           (PySequence_GetItem (value, i), "s(dddddd)", &str, &m[0], &m[1],
            &m[2], &m[3], &m[4], &m[5]))
-        return (-1);
+        return -1;
       rsc = SFGetChar (sf, -1, str);
       if (rsc == NULL)
         {
           PyErr_Format (PyExc_EnvironmentError, "No glyph named %s", str);
-          return (-1);
+          return -1;
         }
       for (j = 0; j < 6; ++j)
         transform[j] = m[j];
       _SCAddRef (sc, rsc, layer, transform);
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -5903,14 +5903,14 @@ PyFF_Glyph_get_a_layer (PyFF_Glyph *self, int layeri)
   if (layeri < -1 || layeri >= sc->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Bad layer");
-      return (NULL);
+      return NULL;
     }
   else if (layeri == -1)
     layer = &sc->parent->grid;
   else
     layer = &sc->layers[layeri];
   ly = LayerFromLayer (layer, NULL);
-  return ((PyObject *) ly);
+  return (PyObject *) ly;
 }
 
 static int
@@ -5925,7 +5925,7 @@ PyFF_Glyph_set_a_layer (PyFF_Glyph *self, PyObject *value,
   if (layeri < -1 || layeri >= sc->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Bad layer");
-      return (-1);
+      return -1;
     }
   else if (layeri == -1)
     layer = &sc->parent->grid;
@@ -5944,7 +5944,7 @@ PyFF_Glyph_set_a_layer (PyFF_Glyph *self, PyObject *value,
   else
     {
       PyErr_Format (PyExc_TypeError, "Argument must be a layer or a contour");
-      return (-1);
+      return -1;
     }
   if (layer->order2 != isquad)
     {
@@ -5959,7 +5959,7 @@ PyFF_Glyph_set_a_layer (PyFF_Glyph *self, PyObject *value,
   layer->splines = ss;
 
   SCCharChangedUpdate (sc, self->layer);
-  return (0);
+  return 0;
 }
 
 static int
@@ -5972,11 +5972,11 @@ SFFindLayerIndexByName (SplineFont *sf, char *name)
       for (l = 0; l < sf->layer_cnt; ++l)
         {
           if (strcmp (sf->layers[l].name, name) == 0)
-            return (l);
+            return l;
         }
     }
   PyErr_Format (PyExc_ValueError, "Bad layer name: %s", name);
-  return (-1);
+  return -1;
 }
 
 /* ************************************************************************** */
@@ -6024,7 +6024,7 @@ layersiter_iternextkey (layersiterobject * di)
     return NULL;
 
   if (di->pos < sf->layer_cnt)
-    return (Py_BuildValue ("s", sf->layers[di->pos++].name));
+    return Py_BuildValue ("s", sf->layers[di->pos++].name);
 
   return NULL;
 }
@@ -6101,7 +6101,7 @@ PyFF_LayerArray_dealloc (PyFF_LayerArray * self)
 static PyObject *
 PyFFLayerArray_Str (PyFF_LayerArray * self)
 {
-  return (STRING_FROM_FORMAT ("<Layers Array for %s>", self->sc->name));
+  return STRING_FROM_FORMAT ("<Layers Array for %s>", self->sc->name);
 }
 
 static PyObject *
@@ -6133,9 +6133,9 @@ PyFF_LayerArrayLength (PyObject *self)
 {
   SplineChar *sc = ((PyFF_LayerArray *) self)->sc;
   if (sc == NULL)
-    return (0);
+    return 0;
   else
-    return (sc->layer_cnt);
+    return sc->layer_cnt;
 }
 
 static PyObject *
@@ -6150,7 +6150,7 @@ PyFF_LayerArrayIndex (PyObject *self, PyObject *index)
       char *name;
       PyObject *bytes = PyUnicode_AsUTF8String (index);
       if (bytes == NULL)
-        return (NULL);
+        return NULL;
       name = PyBytes_AsString (bytes);
       layer = SFFindLayerIndexByName (sc->parent, name);
       Py_DECREF (bytes);
@@ -6159,7 +6159,7 @@ PyFF_LayerArrayIndex (PyObject *self, PyObject *index)
       layer = SFFindLayerIndexByName (sc->parent, name);
 #endif /* PY_MAJOR_VERSION >= 3 */
       if (layer < 0)
-        return (NULL);
+        return NULL;
     }
   else if (PyInt_Check (index))
     {
@@ -6168,9 +6168,9 @@ PyFF_LayerArrayIndex (PyObject *self, PyObject *index)
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be a layer name or index");
-      return (NULL);
+      return NULL;
     }
-  return (PyFF_Glyph_get_a_layer ((PyFF_Glyph *) PySC_From_SC (sc), layer));
+  return PyFF_Glyph_get_a_layer ((PyFF_Glyph *) PySC_From_SC (sc), layer);
 }
 
 static int
@@ -6185,7 +6185,7 @@ PyFF_LayerArrayIndexAssign (PyObject *self, PyObject *index, PyObject *value)
       char *name;
       PyObject *bytes = PyUnicode_AsUTF8String (index);
       if (bytes == NULL)
-        return (-1);
+        return -1;
       name = PyBytes_AsString (bytes);
       layer = SFFindLayerIndexByName (sc->parent, name);
       Py_DECREF (bytes);
@@ -6194,7 +6194,7 @@ PyFF_LayerArrayIndexAssign (PyObject *self, PyObject *index, PyObject *value)
       layer = SFFindLayerIndexByName (sc->parent, name);
 #endif /* PY_MAJOR_VERSION >= 3 */
       if (layer < 0)
-        return (-1);
+        return -1;
     }
   else if (PyInt_Check (index))
     {
@@ -6203,7 +6203,7 @@ PyFF_LayerArrayIndexAssign (PyObject *self, PyObject *index, PyObject *value)
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be a layer name or index");
-      return (-1);
+      return -1;
     }
   return (PyFF_Glyph_set_a_layer
           ((PyFF_Glyph *) PySC_From_SC (sc), value, NULL, layer));
@@ -6313,9 +6313,9 @@ PyFF_RefArrayLength (PyObject *self)
 {
   SplineChar *sc = ((PyFF_RefArray *) self)->sc;
   if (sc == NULL)
-    return (0);
+    return 0;
   else
-    return (sc->layer_cnt);
+    return sc->layer_cnt;
 }
 
 static PyObject *
@@ -6330,7 +6330,7 @@ PyFF_RefArrayIndex (PyObject *self, PyObject *index)
       char *name;
       PyObject *bytes = PyUnicode_AsUTF8String (index);
       if (bytes == NULL)
-        return (NULL);
+        return NULL;
       name = PyBytes_AsString (bytes);
       layer = SFFindLayerIndexByName (sc->parent, name);
       Py_DECREF (bytes);
@@ -6339,7 +6339,7 @@ PyFF_RefArrayIndex (PyObject *self, PyObject *index)
       layer = SFFindLayerIndexByName (sc->parent, name);
 #endif /* PY_MAJOR_VERSION >= 3 */
       if (layer < 0)
-        return (NULL);
+        return NULL;
     }
   else if (PyInt_Check (index))
     {
@@ -6348,7 +6348,7 @@ PyFF_RefArrayIndex (PyObject *self, PyObject *index)
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be a layer name or index");
-      return (NULL);
+      return NULL;
     }
   return (PyFF_Glyph_get_layer_references
           ((PyFF_Glyph *) PySC_From_SC (sc), NULL, layer));
@@ -6366,7 +6366,7 @@ PyFF_RefArrayIndexAssign (PyObject *self, PyObject *index, PyObject *value)
       char *name;
       PyObject *bytes = PyUnicode_AsUTF8String (index);
       if (bytes == NULL)
-        return (-1);
+        return -1;
       name = PyBytes_AsString (bytes);
       layer = SFFindLayerIndexByName (sc->parent, name);
       Py_DECREF (bytes);
@@ -6375,7 +6375,7 @@ PyFF_RefArrayIndexAssign (PyObject *self, PyObject *index, PyObject *value)
       layer = SFFindLayerIndexByName (sc->parent, name);
 #endif /* PY_MAJOR_VERSION >= 3 */
       if (layer < 0)
-        return (-1);
+        return -1;
     }
   else if (PyInt_Check (index))
     {
@@ -6384,7 +6384,7 @@ PyFF_RefArrayIndexAssign (PyObject *self, PyObject *index, PyObject *value)
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be a layer name or index");
-      return (-1);
+      return -1;
     }
   return (PyFF_Glyph_set_layer_references
           ((PyFF_Glyph *) PySC_From_SC (sc), value, NULL, layer));
@@ -6490,7 +6490,7 @@ PyFF_MathKern_get_kerns (PyFF_MathKern * self, void *closure)
     PyTuple_SetItem (tuple, i,
                      Py_BuildValue ("(ii)", mkv->mkd[i].kern,
                                     mkv->mkd[i].height));
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -6503,7 +6503,7 @@ PyFF_MathKern_set_kerns (PyFF_MathKern * self, PyObject *value, void *closure)
   if (self->sc->mathkern == NULL)
     {
       if (value == Py_None)
-        return (0);
+        return 0;
       self->sc->mathkern =
         xzalloc (sizeof (struct mathkern));
     }
@@ -6513,12 +6513,12 @@ PyFF_MathKern_set_kerns (PyFF_MathKern * self, PyObject *value, void *closure)
       MathKernVContentsFree (mkv);
       mkv->cnt = 0;
       mkv->mkd = NULL;
-      return (0);
+      return 0;
     }
   if (!PyTuple_Check (value) && !PyList_Check (value))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a tuple or a list");
-      return (-1);
+      return -1;
     }
   cnt = PySequence_Size (value);
   mkd = xcalloc (cnt, sizeof (struct mathkerndata));
@@ -6528,7 +6528,7 @@ PyFF_MathKern_set_kerns (PyFF_MathKern * self, PyObject *value, void *closure)
       if (!PyArg_ParseTuple (obj, "hh", &mkd[i].kern, &mkd[i].height))
         {
           free (mkd);
-          return (-1);
+          return -1;
         }
     }
   MathKernVContentsFree (mkv);
@@ -6539,7 +6539,7 @@ PyFF_MathKern_set_kerns (PyFF_MathKern * self, PyObject *value, void *closure)
       mkd = NULL;
     }
   mkv->mkd = mkd;
-  return (0);
+  return 0;
 }
 
 static PyGetSetDef PyFFMathKern_members[] = {
@@ -6693,14 +6693,14 @@ PyFFGlyph_Repr (PyFF_Glyph *self)
   ret = STRING_TO_PY (repr);
   if (repr != buf)
     free (repr);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
 PyFFGlyph_Str (PyFF_Glyph *self)
 {
   if (self->sc == NULL || self->sc->parent == NULL)
-    return (STRING_TO_PY ("<Glyph from closed font>"));
+    return STRING_TO_PY ("<Glyph from closed font>");
   return (STRING_FROM_FORMAT
           ("<Glyph %s in font %s>", self->sc->name,
            self->sc->parent->fontname));
@@ -6727,7 +6727,7 @@ PyFFGlyph_docompare (PyFF_Glyph *self, PyObject *other, double pt_err,
                       sc2->layers[olayer].splines,
                       sc->layers[self->layer].refs, sc2->layers[olayer].refs,
                       pt_err, spline_err, sc->name, false, &dummy);
-      return (ret);
+      return ret;
     }
   else if (PyType_IsSubtype (&PyFF_ContourType, ((PyObject *) other)->ob_type))
     {
@@ -6740,15 +6740,15 @@ PyFFGlyph_docompare (PyFF_Glyph *self, PyObject *other, double pt_err,
   else
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (-1);
+      return -1;
     }
   if (self->sc->layers[self->layer].refs != NULL)
-    return (SS_NoMatch | SS_RefMismatch);
+    return SS_NoMatch | SS_RefMismatch;
   ret =
     SSsCompare (self->sc->layers[self->layer].splines, ss2, pt_err,
                 spline_err, &badpoint);
   SplinePointListsFree (ss2);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -6760,16 +6760,16 @@ PyFFGlyph_compare (PyFF_Glyph *self, PyObject *other)
 
   ret = PyFFGlyph_docompare (self, other, pt_err, spline_err);
   if (!(ret & SS_NoMatch))
-    return (0);
+    return 0;
 
   /* There's no real ordering on these guys. Make up something that is */
   /*  at least consistent */
   if (!PyType_IsSubtype (&PyFF_GlyphType, ((PyObject *) other)->ob_type))
-    return (-1);
+    return -1;
   /* Ok, both are glyphs */
   sc1 = self->sc;
   sc2 = ((PyFF_Glyph *) other)->sc;
-  return (sc1 < sc2 ? -1 : 1);
+  return sc1 < sc2 ? -1 : 1;
 }
 
 #if PY_MAJOR_VERSION >= 3
@@ -6790,7 +6790,7 @@ PyFF_Glyph_get_temporary (PyFF_Glyph *self, void *UNUSED (closure))
   if (self->sc->python_temporary == NULL)
     Py_RETURN_NONE;
   Py_INCREF ((PyObject *) (self->sc->python_temporary));
-  return (self->sc->python_temporary);
+  return self->sc->python_temporary;
 }
 
 static int
@@ -6807,7 +6807,7 @@ PyFF_Glyph_set_temporary (PyFF_Glyph *self, PyObject *value,
   Py_XINCREF (value);
   self->sc->python_temporary = value;
   Py_XDECREF (old);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -6816,7 +6816,7 @@ PyFF_Glyph_get_persistent (PyFF_Glyph *self, void *UNUSED (closure))
   if (self->sc->python_persistent == NULL)
     Py_RETURN_NONE;
   Py_INCREF ((PyObject *) (self->sc->python_persistent));
-  return (self->sc->python_persistent);
+  return self->sc->python_persistent;
 }
 
 static int
@@ -6833,13 +6833,13 @@ PyFF_Glyph_set_persistent (PyFF_Glyph *self, PyObject *value,
   Py_XINCREF (value);
   self->sc->python_persistent = value;
   Py_XDECREF (old);
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_activeLayer (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->layer));
+  return Py_BuildValue ("i", self->layer);
 }
 
 static int
@@ -6855,22 +6855,22 @@ PyFF_Glyph_set_activeLayer (PyFF_Glyph *self, PyObject *value,
       char *name = PyBytes_AsString (value);
       layer = SFFindLayerIndexByName (self->sc->parent, name);
       if (layer < 0)
-        return (-1);
+        return -1;
     }
   if (layer < 0 || layer >= self->sc->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Layer is out of range");
-      return (-1);
+      return -1;
     }
   self->layer = layer;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_glyphname (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("s", self->sc->name));
+  return Py_BuildValue ("s", self->sc->name);
 }
 
 static int
@@ -6883,7 +6883,7 @@ PyFF_Glyph_set_glyphname (PyFF_Glyph *self, PyObject *value,
   char *str;
   PyObject *bytes = PyUnicode_AsUTF8String (value);
   if (bytes == NULL)
-    return (-1);
+    return -1;
   str = PyBytes_AsString (bytes);
 #else /* PY_MAJOR_VERSION >= 3 */
   char *str = PyBytes_AsString (value);
@@ -6894,7 +6894,7 @@ PyFF_Glyph_set_glyphname (PyFF_Glyph *self, PyObject *value,
 #if PY_MAJOR_VERSION >= 3
       Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
-      return (-1);
+      return -1;
     }
 
   SFGlyphRenameFixup (self->sc->parent, self->sc->name, str, false);
@@ -6915,7 +6915,7 @@ PyFF_Glyph_set_glyphname (PyFF_Glyph *self, PyObject *value,
           FVSetTitle (fvs);
         }
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -6924,7 +6924,7 @@ PyFF_Glyph_get_encoding (PyFF_Glyph *self, void *UNUSED (closure))
   SplineChar *sc = self->sc;
   EncMap *map = sc->parent->fv->map;
 
-  return (Py_BuildValue ("i", gid_to_enc (map, sc->orig_pos)));
+  return Py_BuildValue ("i", gid_to_enc (map, sc->orig_pos));
 }
 
 static PyObject *
@@ -6934,14 +6934,14 @@ PyFF_Glyph_get_codepoint (PyFF_Glyph *self, void *UNUSED (closure))
   if (self->sc == NULL || self->sc->unicodeenc < 0)
     Py_RETURN_NONE;
   snprintf (s, sizeof (s), "U+%04X", self->sc->unicodeenc);
-  return (STRING_TO_PY (s));
+  return STRING_TO_PY (s);
 }
 
 static PyObject *
 PyFF_Glyph_get_unicode (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->unicodeenc));
+  return Py_BuildValue ("i", self->sc->unicodeenc);
 }
 
 static int
@@ -6953,7 +6953,7 @@ PyFF_Glyph_set_unicode (PyFF_Glyph *self, PyObject *value,
 
   uenc = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->unicodeenc = uenc;
   SCRefreshTitles (self->sc);
   for (fvs = self->sc->parent->fv; fvs != NULL; fvs = fvs->nextsame)
@@ -6965,7 +6965,7 @@ PyFF_Glyph_set_unicode (PyFF_Glyph *self, PyObject *value,
           FVSetTitle (fvs);
         }
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -6985,7 +6985,7 @@ PyFF_Glyph_get_altuni (PyFF_Glyph *self, void *UNUSED (closure))
       PyTuple_SET_ITEM (ret, cnt,
                         Py_BuildValue ("(iii)", au->unienc, au->vs, au->fid));
     }
-  return (ret);
+  return ret;
 }
 
 static int
@@ -7003,7 +7003,7 @@ PyFF_Glyph_set_altuni (PyFF_Glyph *self, PyObject *value,
     {
       PyErr_Format (PyExc_TypeError,
                     "Value must be a tuple of alternate unicode values");
-      return (-1);
+      return -1;
     }
   else
     {
@@ -7017,7 +7017,7 @@ PyFF_Glyph_set_altuni (PyFF_Glyph *self, PyObject *value,
           if (PyInt_Check (obj))
             uni = PyInt_AsLong (obj);
           else if (!PyArg_ParseTuple (obj, "i|ii", &uni, &vs, &fid))
-            return (-1);
+            return -1;
           cur = xzalloc (sizeof (struct altuni));
           if (vs == 0)
             vs = -1;            /* convention used in charinfo */
@@ -7034,14 +7034,14 @@ PyFF_Glyph_set_altuni (PyFF_Glyph *self, PyObject *value,
 
   AltUniFree (self->sc->altuni);
   self->sc->altuni = head;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_changed (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->changed));
+  return Py_BuildValue ("i", self->sc->changed);
 }
 
 static int
@@ -7052,16 +7052,16 @@ PyFF_Glyph_set_changed (PyFF_Glyph *self, PyObject *value,
 
   uenc = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->changed = uenc;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_texheight (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->tex_height));
+  return Py_BuildValue ("i", self->sc->tex_height);
 }
 
 static int
@@ -7072,16 +7072,16 @@ PyFF_Glyph_set_texheight (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->tex_height = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_texdepth (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->tex_depth));
+  return Py_BuildValue ("i", self->sc->tex_depth);
 }
 
 static int
@@ -7092,16 +7092,16 @@ PyFF_Glyph_set_texdepth (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->tex_depth = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_italiccorrection (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->italic_correction));
+  return Py_BuildValue ("i", self->sc->italic_correction);
 }
 
 static int
@@ -7112,16 +7112,16 @@ PyFF_Glyph_set_italiccorrection (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->italic_correction = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_topaccent (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->top_accent_horiz));
+  return Py_BuildValue ("i", self->sc->top_accent_horiz);
 }
 
 static int
@@ -7132,9 +7132,9 @@ PyFF_Glyph_set_topaccent (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->top_accent_horiz = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -7144,7 +7144,7 @@ PyFF_Glyph_get_isextendedshape (PyFF_Glyph *self, void *UNUSED (closure))
 
   ret = self->sc->is_extended_shape ? Py_True : Py_False;
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -7155,9 +7155,9 @@ PyFF_Glyph_set_isextendedshape (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->is_extended_shape = val != 0;
-  return (0);
+  return 0;
 }
 
 
@@ -7165,7 +7165,7 @@ static PyObject *
 PyFF_Glyph_get_unlinkRmOvrlpSave (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->unlink_rm_ovrlp_generate_undo));
+  return Py_BuildValue ("i", self->sc->unlink_rm_ovrlp_generate_undo);
 }
 
 static int
@@ -7176,23 +7176,23 @@ PyFF_Glyph_set_unlinkRmOvrlpSave (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->unlink_rm_ovrlp_generate_undo = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_originalgid (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->orig_pos));
+  return Py_BuildValue ("i", self->sc->orig_pos);
 }
 
 static PyObject *
 PyFF_Glyph_get_width (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->width));
+  return Py_BuildValue ("i", self->sc->width);
 }
 
 static int
@@ -7202,10 +7202,10 @@ PyFF_Glyph_set_width (PyFF_Glyph *self, PyObject *value, void *UNUSED (closure))
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   SCSynchronizeWidth (self->sc, val, self->sc->width, NULL);
   SCCharChangedUpdate (self->sc, ly_none);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -7215,7 +7215,7 @@ PyFF_Glyph_get_lsb (PyFF_Glyph *self, void *UNUSED (closure))
 
   SplineCharFindBounds (self->sc, &b);
 
-  return (Py_BuildValue ("d", b.minx));
+  return Py_BuildValue ("d", b.minx);
 }
 
 static int
@@ -7228,7 +7228,7 @@ PyFF_Glyph_set_lsb (PyFF_Glyph *self, PyObject *value, void *UNUSED (closure))
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   SplineCharFindBounds (sc, &b);
 
   memset (trans, 0, sizeof (trans));
@@ -7236,7 +7236,7 @@ PyFF_Glyph_set_lsb (PyFF_Glyph *self, PyObject *value, void *UNUSED (closure))
   trans[4] = val - b.minx;
   if (trans[4] != 0)
     FVTrans (sc->parent->fv, sc, trans, NULL, fvt_alllayers);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -7246,7 +7246,7 @@ PyFF_Glyph_get_rsb (PyFF_Glyph *self, void *UNUSED (closure))
 
   SplineCharFindBounds (self->sc, &b);
 
-  return (Py_BuildValue ("d", self->sc->width - b.maxx));
+  return Py_BuildValue ("d", self->sc->width - b.maxx);
 }
 
 static int
@@ -7257,19 +7257,19 @@ PyFF_Glyph_set_rsb (PyFF_Glyph *self, PyObject *value, void *UNUSED (closure))
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
 
   SplineCharFindBounds (self->sc, &b);
   SCSynchronizeWidth (self->sc, rint (val + b.maxx), self->sc->width, NULL);
   SCCharChangedUpdate (self->sc, ly_none);
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_vwidth (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->vwidth));
+  return Py_BuildValue ("i", self->sc->vwidth);
 }
 
 static int
@@ -7280,16 +7280,16 @@ PyFF_Glyph_set_vwidth (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->vwidth = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_manualhints (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->manualhints));
+  return Py_BuildValue ("i", self->sc->manualhints);
 }
 
 static PyObject *
@@ -7319,7 +7319,7 @@ PyFF_Glyph_get_lcarets (PyFF_Glyph *self, void *UNUSED (closure))
                            Py_BuildValue ("i", lcar->u.lcaret.carets[i]));
         }
     }
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -7334,7 +7334,7 @@ PyFF_Glyph_set_lcarets (PyFF_Glyph *self, PyObject *value,
 
   cnt = PySequence_Size (value);
   if (cnt == -1)
-    return (-1);
+    return -1;
 
   if (cnt > 0)
     carets = xmalloc (cnt * sizeof (int16_t));
@@ -7342,7 +7342,7 @@ PyFF_Glyph_set_lcarets (PyFF_Glyph *self, PyObject *value,
     {
       carets[i] = PyInt_AsLong (PySequence_GetItem (value, i));
       if (PyErr_Occurred ())
-        return (-1);
+        return -1;
     }
 
   for (pst = sc->possub; pst != NULL; pst = pst->next)
@@ -7375,7 +7375,7 @@ PyFF_Glyph_set_lcarets (PyFF_Glyph *self, PyObject *value,
       lcar->u.lcaret.carets = cnt > 0 ? carets : NULL;
       sc->lig_caret_cnt_fixed = (cnt != lig_comp_max) ? true : false;
     }
-  return (0);
+  return 0;
 }
 
 static int
@@ -7386,9 +7386,9 @@ PyFF_Glyph_set_manualhints (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->manualhints = (val != 0);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -7404,13 +7404,13 @@ PyFF_Glyph_get_font (PyFF_Glyph *self, void *UNUSED (closure))
 static PyObject *
 PyFF_Glyph_get_references (PyFF_Glyph *self, void *closure)
 {
-  return (PyFF_Glyph_get_layer_references (self, closure, self->layer));
+  return PyFF_Glyph_get_layer_references (self, closure, self->layer);
 }
 
 static int
 PyFF_Glyph_set_references (PyFF_Glyph *self, PyObject *value, void *closure)
 {
-  return (PyFF_Glyph_set_layer_references (self, value, closure, self->layer));
+  return PyFF_Glyph_set_layer_references (self, value, closure, self->layer);
 }
 
 static PyObject *
@@ -7437,7 +7437,7 @@ PyFF_Glyph_get_ttfinstrs (PyFF_Glyph *self, void *UNUSED (closure))
 
   binstr =
     PyBytes_FromStringAndSize ((char *) sc->ttf_instrs, sc->ttf_instrs_len);
-  return (binstr);
+  return binstr;
 }
 
 static int
@@ -7450,7 +7450,7 @@ PyFF_Glyph_set_ttfinstrs (PyFF_Glyph *self, PyObject *value,
   if (!PySequence_Check (value))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a sequence of integers");
-      return (-1);
+      return -1;
     }
   cnt = PySequence_Size (value);
   free (sc->ttf_instrs);
@@ -7459,7 +7459,7 @@ PyFF_Glyph_set_ttfinstrs (PyFF_Glyph *self, PyObject *value,
   SCNumberPoints (sc, self->layer);     /* If the point numbering is wrong then we'll just throw away the instructions when we notice it */
   sc->instructions_out_of_date = false;
   if (cnt == 0)
-    return (0);
+    return 0;
   if (PyBytes_Check (value))
     {
       char *space;
@@ -7476,11 +7476,11 @@ PyFF_Glyph_set_ttfinstrs (PyFF_Glyph *self, PyObject *value,
         {
           int val = PyInt_AsLong (PySequence_GetItem (value, i));
           if (PyErr_Occurred () != NULL)
-            return (-1);
+            return -1;
           sc->ttf_instrs[i] = val;
         }
     }
-  return (0);
+  return 0;
 }
 
 struct flaglist glyphclasses[] = {
@@ -7496,7 +7496,7 @@ struct flaglist glyphclasses[] = {
 static PyObject *
 PyFF_Glyph_get_glyphclass (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("s", glyphclasses[self->sc->glyph_class].name));
+  return Py_BuildValue ("s", glyphclasses[self->sc->glyph_class].name);
 }
 
 static int
@@ -7507,36 +7507,36 @@ PyFF_Glyph_set_glyphclass (PyFF_Glyph *self, PyObject *value,
   char *str = PyBytes_AsString (value);
 
   if (str == NULL)
-    return (-1);
+    return -1;
   gc = FlagsFromString (str, glyphclasses, "glyph class");
   if (gc == FLAG_UNKNOWN)
-    return (-1);
+    return -1;
   self->sc->glyph_class = gc;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_foreground (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (PyFF_Glyph_get_a_layer (self, ly_fore));
+  return PyFF_Glyph_get_a_layer (self, ly_fore);
 }
 
 static int
 PyFF_Glyph_set_foreground (PyFF_Glyph *self, PyObject *value, void *closure)
 {
-  return (PyFF_Glyph_set_a_layer (self, value, closure, ly_fore));
+  return PyFF_Glyph_set_a_layer (self, value, closure, ly_fore);
 }
 
 static PyObject *
 PyFF_Glyph_get_background (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (PyFF_Glyph_get_a_layer (self, ly_back));
+  return PyFF_Glyph_get_a_layer (self, ly_back);
 }
 
 static int
 PyFF_Glyph_set_background (PyFF_Glyph *self, PyObject *value, void *closure)
 {
-  return (PyFF_Glyph_set_a_layer (self, value, closure, ly_back));
+  return PyFF_Glyph_set_a_layer (self, value, closure, ly_back);
 }
 
 static PyObject *
@@ -7559,7 +7559,7 @@ static PyObject *
 PyFF_Glyph_get_layer_cnt (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->layer_cnt));
+  return Py_BuildValue ("i", self->sc->layer_cnt);
 }
 
 static PyObject *
@@ -7584,7 +7584,7 @@ PyFF_Glyph_get_hints (StemInfo * head)
       PyTuple_SetItem (tuple, cnt, Py_BuildValue ("(dd)", start, width));
     }
 
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -7599,12 +7599,12 @@ PyFF_Glyph_set_hints (PyFF_Glyph *self, int is_v, PyObject *value)
 
   cnt = PySequence_Size (value);
   if (cnt == -1)
-    return (-1);
+    return -1;
   for (i = 0; i < cnt; ++i)
     {
       if (!PyArg_ParseTuple
           (PySequence_GetItem (value, i), "dd", &start, &width))
-        return (-1);
+        return -1;
       cur = xzalloc (sizeof (StemInfo));
       if (width == -20 || width == -21)
         cur->ghost = true;
@@ -7642,7 +7642,7 @@ PyFF_Glyph_set_hints (PyFF_Glyph *self, int is_v, PyObject *value)
     }
 
   SCCharChangedUpdate (sc, ly_none);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -7666,7 +7666,7 @@ PyFF_Glyph_get_dhints (PyFF_Glyph *self, void *UNUSED (closure))
                                       right.x, right.y, unit.x, unit.y));
     }
 
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -7682,13 +7682,13 @@ PyFF_Glyph_set_dhints (PyFF_Glyph *self, PyObject *value,
 
   cnt = PySequence_Size (value);
   if (cnt == -1)
-    return (-1);
+    return -1;
   for (i = 0; i < cnt; ++i)
     {
       if (!PyArg_ParseTuple
           (PySequence_GetItem (value, i), "(dd)(dd)(dd)", &lx, &ly, &rx, &ry,
            &ux, &uy))
-        return (-1);
+        return -1;
       if (ux == 0 && uy == 0)
         {
           LogError (_
@@ -7744,40 +7744,40 @@ PyFF_Glyph_set_dhints (PyFF_Glyph *self, PyObject *value,
   SCGuessHintInstancesList (sc, self->layer, NULL, NULL, sc->dstem, false,
                             true);
   SCCharChangedUpdate (sc, ly_none);
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_hhints (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (PyFF_Glyph_get_hints (self->sc->hstem));
+  return PyFF_Glyph_get_hints (self->sc->hstem);
 }
 
 static int
 PyFF_Glyph_set_hhints (PyFF_Glyph *self, PyObject *value,
                        void *UNUSED (closure))
 {
-  return (PyFF_Glyph_set_hints (self, false, value));
+  return PyFF_Glyph_set_hints (self, false, value);
 }
 
 static PyObject *
 PyFF_Glyph_get_vhints (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (PyFF_Glyph_get_hints (self->sc->vstem));
+  return PyFF_Glyph_get_hints (self->sc->vstem);
 }
 
 static int
 PyFF_Glyph_set_vhints (PyFF_Glyph *self, PyObject *value,
                        void *UNUSED (closure))
 {
-  return (PyFF_Glyph_set_hints (self, true, value));
+  return PyFF_Glyph_set_hints (self, true, value);
 }
 
 static PyObject *
 PyFF_Glyph_get_comment (PyFF_Glyph *self, void *UNUSED (closure))
 {
   if (self->sc->comment == NULL)
-    return (Py_BuildValue ("s", ""));
+    return Py_BuildValue ("s", "");
   else
     return (PyUnicode_DecodeUTF8
             (self->sc->comment, strlen (self->sc->comment), NULL));
@@ -7801,10 +7801,10 @@ PyFF_Glyph_set_comment (PyFF_Glyph *self, PyObject *value,
   else
     newv = xstrdup_or_null (PyBytes_AsString (value));
   if (newv == NULL)
-    return (-1);
+    return -1;
   free (self->sc->comment);
   self->sc->comment = newv;
-  return (0);
+  return 0;
 }
 
 /* Anchor type: see 'enum anchor_type' in splinefont.h */
@@ -7862,19 +7862,19 @@ _PyFF_Glyph_get_anchorPoints (PyFF_Glyph *self, int withsel)
         }
     }
 
-  return (tuple);
+  return tuple;
 }
 
 static PyObject *
 PyFF_Glyph_get_anchorPoints (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (_PyFF_Glyph_get_anchorPoints (self, false));
+  return _PyFF_Glyph_get_anchorPoints (self, false);
 }
 
 static PyObject *
 PyFF_Glyph_get_anchorPointsWithSel (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (_PyFF_Glyph_get_anchorPoints (self, true));
+  return _PyFF_Glyph_get_anchorPoints (self, true);
 }
 
 static AnchorPoint *
@@ -7903,17 +7903,17 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
     {
       if (!PyArg_ParseTuple
           (tuple, "ssdd|ii", &ac_name, &type, &x, &y, &selected, &lig_index))
-        return (NULL);
+        return NULL;
     }
   else
     {
       if (!PyArg_ParseTuple
           (tuple, "ssdd|i", &ac_name, &type, &x, &y, &lig_index))
-        return (NULL);
+        return NULL;
     }
   aptype = FlagsFromString (type, ap_types, "anchor type");
   if (aptype == FLAG_UNKNOWN)
-    return (NULL);
+    return NULL;
   for (ac = sf->anchor; ac != NULL; ac = ac->next)
     {
       if (strcmp (ac->name, ac_name) == 0)
@@ -7922,7 +7922,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
   if (ac == NULL)
     {
       PyErr_Format (PyExc_TypeError, "No anchor class named %s", ac_name);
-      return (NULL);
+      return NULL;
     }
 
   switch (AnchorClass_lookup_type (ac))
@@ -7933,7 +7933,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
           PyErr_Format (PyExc_TypeError,
                         "You must specify either a mark or a base anchor type for this anchor class, %s.",
                         ac_name);
-          return (NULL);
+          return NULL;
         }
       break;
     case gpos_mark2mark:
@@ -7942,7 +7942,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
           PyErr_Format (PyExc_TypeError,
                         "You must specify either a mark or a base mark anchor type for this anchor class, %s.",
                         ac_name);
-          return (NULL);
+          return NULL;
         }
       break;
     case gpos_mark2ligature:
@@ -7951,7 +7951,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
           PyErr_Format (PyExc_TypeError,
                         "You must specify either a mark or a ligature anchor type for this anchor class, %s.",
                         ac_name);
-          return (NULL);
+          return NULL;
         }
       break;
     case gpos_cursive:
@@ -7960,7 +7960,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
           PyErr_Format (PyExc_TypeError,
                         "You must specify either an entry or an exit anchor type for this anchor class, %s.",
                         ac_name);
-          return (NULL);
+          return NULL;
         }
       break;
     }
@@ -7968,13 +7968,13 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
     {
       PyErr_Format (PyExc_TypeError,
                     "You must specify a ligature index for a ligature anchor point");
-      return (NULL);
+      return NULL;
     }
   else if (lig_index != -1 && aptype != at_baselig)
     {
       PyErr_Format (PyExc_TypeError,
                     "You may not specify a ligature index for a non-ligature anchor point");
-      return (NULL);
+      return NULL;
     }
 
   ap = xzalloc (sizeof (AnchorPoint));
@@ -7985,7 +7985,7 @@ APFromTuple (SplineChar *sc, PyObject *tuple)
   ap->selected = selected;
   if (aptype == at_baselig)
     ap->lig_index = lig_index;
-  return (ap);
+  return ap;
 }
 
 static int
@@ -8000,14 +8000,14 @@ PyFF_Glyph_set_anchorPoints (PyFF_Glyph *self, PyObject *value,
   if (!PySequence_Check (value))
     {
       PyErr_Format (PyExc_TypeError, "Expected a tuple of anchor points");
-      return (-1);
+      return -1;
     }
 
   for (i = 0; i < PySequence_Size (value); ++i)
     {
       AnchorPoint *ap = APFromTuple (sc, PySequence_GetItem (value, i));
       if (ap == NULL)
-        return (-1);
+        return -1;
       if (aphead == NULL)
         aphead = ap;
       else
@@ -8019,13 +8019,13 @@ PyFF_Glyph_set_anchorPoints (PyFF_Glyph *self, PyObject *value,
   AnchorPointsFree (aphead);
 
   SCCharChangedUpdate (sc, ly_none);
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_color (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->sc->color));
+  return Py_BuildValue ("i", self->sc->color);
 }
 
 static int
@@ -8035,9 +8035,9 @@ PyFF_Glyph_set_color (PyFF_Glyph *self, PyObject *value, void *UNUSED (closure))
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   self->sc->color = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -8045,13 +8045,13 @@ PyFF_Glyph_get_script (PyFF_Glyph *self, void *UNUSED (closure))
 {
   uint32_t script = SCScriptFromUnicode (self->sc);
 
-  return (TagToPythonString (script));
+  return TagToPythonString (script);
 }
 
 static PyObject *
 PyFF_Glyph_get_validation_state (PyFF_Glyph *self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->sc->layers[self->layer].validation_state));
+  return Py_BuildValue ("i", self->sc->layers[self->layer].validation_state);
 }
 
 static char *
@@ -8063,7 +8063,7 @@ GlyphListToStr (PyObject *value)
   if (!PySequence_Check (value))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a sequence");
-      return (NULL);
+      return NULL;
     }
   if (PyBytes_Check (value))
     {
@@ -8092,7 +8092,7 @@ GlyphListToStr (PyObject *value)
           else
             {
               PyErr_Format (PyExc_TypeError, "Must be a sequence of glyphs");
-              return (NULL);
+              return NULL;
             }
         }
       pt = str = xmalloc (len + 1);
@@ -8108,7 +8108,7 @@ GlyphListToStr (PyObject *value)
       if (pt > str)
         pt[-1] = '\0';
     }
-  return (str);
+  return str;
 }
 
 static PyObject *
@@ -8129,7 +8129,7 @@ BuildComponentTuple (struct glyphvariants *gv)
                                       gv->parts[i].endConnectorLength,
                                       gv->parts[i].fullAdvance));
     }
-  return (tuple);
+  return tuple;
 }
 
 static struct gv_part *
@@ -8141,7 +8141,7 @@ ParseComponentTuple (PyObject *tuple, int *_cnt)
   if (!PyTuple_Check (tuple) && !PyList_Check (tuple))
     {
       PyErr_Format (PyExc_TypeError, "Must be a tuple or list");
-      return (NULL);
+      return NULL;
     }
   *_cnt = cnt = PySequence_Size (tuple);
   parts = xcalloc (cnt + 1, sizeof (struct gv_part));
@@ -8172,7 +8172,7 @@ ParseComponentTuple (PyObject *tuple, int *_cnt)
               (obj, "O|iiii", &g, &extender, &start, &end, &full))
             {
               free (parts);
-              return (NULL);
+              return NULL;
             }
           parts[i].component = xstrdup_or_null (((PyFF_Glyph *) g)->sc->name);
         }
@@ -8182,14 +8182,14 @@ ParseComponentTuple (PyObject *tuple, int *_cnt)
              &full))
         {
           free (parts);
-          return (NULL);
+          return NULL;
         }
       parts[i].is_extender = extender;
       parts[i].startConnectorLength = start;
       parts[i].endConnectorLength = end;
       parts[i].fullAdvance = full;
     }
-  return (parts);
+  return parts;
 }
 
 static void
@@ -8210,9 +8210,9 @@ static PyObject *
 PyFF_Glyph_get_horizontalCIC (PyFF_Glyph *self, void *UNUSED (closure))
 {
   if (self->sc->horiz_variants == NULL)
-    return (Py_BuildValue ("i", 0));
+    return Py_BuildValue ("i", 0);
 
-  return (Py_BuildValue ("i", self->sc->horiz_variants->italic_correction));
+  return Py_BuildValue ("i", self->sc->horiz_variants->italic_correction);
 }
 
 static int
@@ -8223,21 +8223,21 @@ PyFF_Glyph_set_horizontalCIC (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   if (self->sc->horiz_variants == NULL)
     self->sc->horiz_variants =
       xzalloc (sizeof (struct glyphvariants));
   self->sc->horiz_variants->italic_correction = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Glyph_get_verticalCIC (PyFF_Glyph *self, void *UNUSED (closure))
 {
   if (self->sc->vert_variants == NULL)
-    return (Py_BuildValue ("i", 0));
+    return Py_BuildValue ("i", 0);
 
-  return (Py_BuildValue ("i", self->sc->vert_variants->italic_correction));
+  return Py_BuildValue ("i", self->sc->vert_variants->italic_correction);
 }
 
 static int
@@ -8248,12 +8248,12 @@ PyFF_Glyph_set_verticalCIC (PyFF_Glyph *self, PyObject *value,
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   if (self->sc->vert_variants == NULL)
     self->sc->vert_variants =
       xzalloc (sizeof (struct glyphvariants));
   self->sc->vert_variants->italic_correction = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -8263,7 +8263,7 @@ PyFF_Glyph_get_verticalVariants (PyFF_Glyph *self, void *UNUSED (closure))
       || self->sc->vert_variants->variants == NULL)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("s", self->sc->vert_variants->variants));
+  return Py_BuildValue ("s", self->sc->vert_variants->variants);
 }
 
 static int
@@ -8284,13 +8284,13 @@ PyFF_Glyph_set_verticalVariants (PyFF_Glyph *self, PyObject *value,
     {
       str = GlyphListToStr (value);
       if (str == NULL)
-        return (-1);
+        return -1;
       if (self->sc->vert_variants == NULL)
         self->sc->vert_variants =
           xzalloc (sizeof (struct glyphvariants));
       self->sc->vert_variants->variants = xstrdup_or_null (str);
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -8300,7 +8300,7 @@ PyFF_Glyph_get_horizontalVariants (PyFF_Glyph *self, void *UNUSED (closure))
       || self->sc->horiz_variants->variants == NULL)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("s", self->sc->horiz_variants->variants));
+  return Py_BuildValue ("s", self->sc->horiz_variants->variants);
 }
 
 static int
@@ -8321,13 +8321,13 @@ PyFF_Glyph_set_horizontalVariants (PyFF_Glyph *self, PyObject *value,
     {
       str = GlyphListToStr (value);
       if (str == NULL)
-        return (-1);
+        return -1;
       if (self->sc->horiz_variants == NULL)
         self->sc->horiz_variants =
           xzalloc (sizeof (struct glyphvariants));
       self->sc->horiz_variants->variants = xstrdup_or_null (str);
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -8336,7 +8336,7 @@ PyFF_Glyph_get_horizontalComponents (PyFF_Glyph *self, void *UNUSED (closure))
   if (self->sc->horiz_variants == 0 || self->sc->horiz_variants->part_cnt == 0)
     Py_RETURN_NONE;
 
-  return (BuildComponentTuple (self->sc->horiz_variants));
+  return BuildComponentTuple (self->sc->horiz_variants);
 }
 
 static int
@@ -8357,7 +8357,7 @@ PyFF_Glyph_set_horizontalComponents (PyFF_Glyph *self, PyObject *value,
     {
       parts = ParseComponentTuple (value, &cnt);
       if (parts == NULL)
-        return (-1);
+        return -1;
       FreeGVParts (self->sc->horiz_variants);
       if (self->sc->horiz_variants == NULL)
         self->sc->horiz_variants =
@@ -8365,7 +8365,7 @@ PyFF_Glyph_set_horizontalComponents (PyFF_Glyph *self, PyObject *value,
       self->sc->horiz_variants->part_cnt = cnt;
       self->sc->horiz_variants->parts = parts;
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -8374,7 +8374,7 @@ PyFF_Glyph_get_verticalComponents (PyFF_Glyph *self, void *UNUSED (closure))
   if (self->sc->vert_variants == 0 || self->sc->vert_variants->part_cnt == 0)
     Py_RETURN_NONE;
 
-  return (BuildComponentTuple (self->sc->vert_variants));
+  return BuildComponentTuple (self->sc->vert_variants);
 }
 
 static int
@@ -8395,7 +8395,7 @@ PyFF_Glyph_set_verticalComponents (PyFF_Glyph *self, PyObject *value,
     {
       parts = ParseComponentTuple (value, &cnt);
       if (parts == NULL)
-        return (-1);
+        return -1;
       FreeGVParts (self->sc->vert_variants);
       if (self->sc->vert_variants == NULL)
         self->sc->vert_variants =
@@ -8403,7 +8403,7 @@ PyFF_Glyph_set_verticalComponents (PyFF_Glyph *self, PyObject *value,
       self->sc->vert_variants->part_cnt = cnt;
       self->sc->vert_variants->parts = parts;
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -8627,23 +8627,23 @@ PyFFGlyph_appendAccent (PyObject *self, PyObject *args, PyObject *keywds)
 
   if (!PyArg_ParseTupleAndKeywords
       (args, keywds, "|sii", appendaccent_keywords, &name, &uni, &pos))
-    return (NULL);
+    return NULL;
   if (name == NULL && uni == -1)
     {
       PyErr_Format (PyExc_ValueError,
                     "You must specify either a name of a unicode code point");
-      return (NULL);
+      return NULL;
     }
   ret = SCAppendAccent (sc, layer, name, uni, (uint32_t) (pos));
   if (ret == 1)
     {
       PyErr_Format (PyExc_ValueError, "No base character reference found");
-      return (NULL);
+      return NULL;
     }
   else if (ret == 2)
     {
       PyErr_Format (PyExc_ValueError, "Could not find that accent");
-      return (NULL);
+      return NULL;
     }
   SCCharChangedUpdate (sc, layer);
 
@@ -8660,7 +8660,7 @@ PyFFGlyph_useRefsMetrics (PyObject *self, PyObject *args)
   int setting = true;
 
   if (!PyArg_ParseTuple (args, "s|i", &name, &setting))
-    return (NULL);
+    return NULL;
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     ref->use_my_metrics = 0;
   itwilldo = NULL;
@@ -8680,7 +8680,7 @@ PyFFGlyph_useRefsMetrics (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_ValueError, "Could not find a reference named %s",
                     name);
-      return (NULL);
+      return NULL;
     }
   if (setting)
     {
@@ -8746,14 +8746,14 @@ CW_ParseArgs (SplineFont *sf, struct lcg_zones *zones, PyObject *args)
       (args, "d|sddsiO", &zones->stroke_width, &type_name,
        &zones->serif_height, &zones->serif_fuzz, &counter_name,
        &zones->removeoverlap, &zoneO))
-    return (embolden_error);
+    return embolden_error;
   type = FlagsFromString (type_name, cw_types, "embolden type");
   if (type == (uint32_t) FLAG_UNKNOWN)
-    return (embolden_error);
+    return embolden_error;
   zones->counter_type =
     FlagsFromString (counter_name, co_types, "counter type");
   if (zones->counter_type == (uint32_t) FLAG_UNKNOWN)
-    return (embolden_error);
+    return embolden_error;
 
   just_top = true;
   if (zoneO == NULL)
@@ -8765,7 +8765,7 @@ CW_ParseArgs (SplineFont *sf, struct lcg_zones *zones, PyObject *args)
       if (!PyArg_ParseTuple
           (args, "dddd", &zones->top_bound, &zones->top_zone,
            &zones->bottom_zone, &zones->bottom_bound))
-        return (embolden_error);
+        return embolden_error;
       just_top = false;
     }
   if (just_top)
@@ -8775,7 +8775,7 @@ CW_ParseArgs (SplineFont *sf, struct lcg_zones *zones, PyObject *args)
       zones->bottom_zone = zones->top_bound / 4;
     }
 
-  return (type);
+  return type;
 }
 
 static PyObject *
@@ -8787,7 +8787,7 @@ PyFFGlyph_changeWeight (PyObject *self, PyObject *args)
 
   type = CW_ParseArgs (sc->parent, &zones, args);
   if (type == embolden_error)
-    return (NULL);
+    return NULL;
   ScriptSCEmbolden (sc, ((PyFF_Glyph *) self)->layer, type, &zones);
 
   Py_RETURN (self);
@@ -8807,7 +8807,7 @@ PyFFGlyph_condenseExtend (PyObject *self, PyObject *args)
   if (!PyArg_ParseTuple
       (args, "dd|ddi", &ci.c_factor, &ci.c_add, &ci.sb_factor, &ci.sb_add,
        &ci.correct_italic))
-    return (NULL);
+    return NULL;
   ci.c_factor *= 100;           /* UI uses a percent */
   if (ci.sb_factor == -10000)
     ci.sb_factor = ci.c_factor;
@@ -8833,12 +8833,12 @@ PyFFGlyph_AddReference (PyObject *self, PyObject *args)
   m[0] = m[3] = 1;
   if (!PyArg_ParseTuple
       (args, "s|(dddddd)", &str, &m[0], &m[1], &m[2], &m[3], &m[4], &m[5]))
-    return (NULL);
+    return NULL;
   rsc = SFGetChar (sf, -1, str);
   if (rsc == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No glyph named %s", str);
-      return (NULL);
+      return NULL;
     }
   for (j = 0; j < 6; ++j)
     transform[j] = m[j];
@@ -8858,7 +8858,7 @@ PyFFGlyph_addAnchorPoint (PyObject *self, PyObject *args)
   int done = false;
 
   if (ap == NULL)
-    return (NULL);
+    return NULL;
 
   for (AnchorPoint *ap2 = sc->anchor; ap2 != NULL; ap2 = ap2->next)
     {
@@ -8919,7 +8919,7 @@ PyFFGlyph_GlyphPen (PyObject *self, PyObject *args, PyObject *keywds)
 
   if (!PyArg_ParseTupleAndKeywords
       (args, keywds, "|i", glyphpen_keywords, &replace))
-    return (NULL);
+    return NULL;
   gp = PyFF_GlyphPenType.tp_alloc (&PyFF_GlyphPenType, 0);
   ((PyFF_GlyphPen *) gp)->sc = ((PyFF_Glyph *) self)->sc;
   ((PyFF_GlyphPen *) gp)->layer = ((PyFF_Glyph *) self)->layer;
@@ -8927,7 +8927,7 @@ PyFFGlyph_GlyphPen (PyObject *self, PyObject *args, PyObject *keywds)
   ((PyFF_GlyphPen *) gp)->ended = true;
   ((PyFF_GlyphPen *) gp)->changed = false;
   /* tp_alloc increments the reference count for us */
-  return (gp);
+  return gp;
 }
 
 static PyObject *
@@ -8938,7 +8938,7 @@ PyFFGlyph_draw (PyObject *self, PyObject *args)
   PyObject *tuple;
 
   if (!PyArg_ParseTuple (args, "O", &pen))
-    return (NULL);
+    return NULL;
 
   layer =
     PyFF_Glyph_get_a_layer ((PyFF_Glyph *) self, ((PyFF_Glyph *) self)->layer);
@@ -8955,7 +8955,7 @@ PyFFGlyph_draw (PyObject *self, PyObject *args)
                        ref->transform[3], ref->transform[4], ref->transform[5]);
       do_pycall (pen, "addComponent", tuple);
     }
-  return (result);
+  return result;
 }
 
 static PyObject *
@@ -8968,7 +8968,7 @@ PyFFGlyph_addHint (PyObject *self, PyObject *args)
   StemInfo *h;
 
   if (!PyArg_ParseTuple (args, "idd", &is_v, &start, &width))
-    return (NULL);
+    return NULL;
 
   h = xzalloc (sizeof (StemInfo));
   if (width == -20 || width == -21)
@@ -9031,7 +9031,7 @@ PyFFGlyph_autoTrace (PyObject *self, PyObject *UNUSED (args))
   if (at_args == (char **) -1)
     {
       PyErr_Format (PyExc_EnvironmentError, "Bad autotrace args");
-      return (NULL);
+      return NULL;
     }
   _SCAutoTrace (sc, layer, at_args);
   Py_RETURN (self);
@@ -9055,7 +9055,7 @@ PyFFGlyph_import (PyObject *self, PyObject *args)
   PyObject *flags = NULL;
 
   if (!PyArg_ParseTuple (args, "es|O", "UTF-8", &filename, &flags))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
 
@@ -9064,7 +9064,7 @@ PyFFGlyph_import (PyObject *self, PyObject *args)
     {
       PyErr_SetFromErrnoWithFilename (PyExc_IOError, locfilename);
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
 
   pt = strrchr (locfilename, '.');
@@ -9080,7 +9080,7 @@ PyFFGlyph_import (PyObject *self, PyObject *args)
       if (psflags == FLAG_UNKNOWN)
         {
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
       SCImportPS (sc, ((PyFF_Glyph *) self)->layer, locfilename, false,
                   psflags);
@@ -9102,7 +9102,7 @@ PyFFGlyph_import (PyObject *self, PyObject *args)
         {
           PyErr_SetFromErrnoWithFilename (PyExc_IOError, locfilename);
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
       else
         {
@@ -9119,7 +9119,7 @@ PyFFGlyph_import (PyObject *self, PyObject *args)
           PyErr_Format (PyExc_EnvironmentError,
                         "Could not load image file \"%s\"", locfilename);
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
       if (!sc->layers[ly].background)
         ly = ly_back;
@@ -9144,7 +9144,7 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
   char *layer_str = NULL;
 
   if (!PyArg_ParseTuple (args, "es|OO", "UTF-8", &filename, &foo, &bar))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
 
@@ -9166,14 +9166,14 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
       if (!PyArg_ParseTuple (args, "O|ii", &foo, &pixels, &bits))
         {
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
       if (!ExportImage (locfilename, sc, layer, format, pixels, bits))
         {
           PyErr_Format (PyExc_EnvironmentError,
                         "Could not create image file \"%s\"", locfilename);
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
     }
   else
@@ -9183,7 +9183,7 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
         {
           PyErr_SetFromErrnoWithFilename (PyExc_IOError, locfilename);
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
 
       if (!PyArg_ParseTuple (args, "O|i", &foo, &layer))
@@ -9193,14 +9193,14 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
             {
               free (locfilename);
               fclose (file);
-              return (NULL);
+              return NULL;
             }
           layer = SFFindLayerIndexByName (sc->parent, layer_str);
           if (layer < 0)
             {
               free (locfilename);
               fclose (file);
-              return (NULL);
+              return NULL;
             }
         }
       if (layer < 0 || layer >= sc->layer_cnt)
@@ -9208,7 +9208,7 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
           PyErr_Format (PyExc_ValueError, "Layer is out of range");
           free (locfilename);
           fclose (file);
-          return (NULL);
+          return NULL;
         }
 
       if (strcasecmp (pt, ".eps") == 0 || strcasecmp (pt, ".ps") == 0
@@ -9228,7 +9228,7 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
           PyErr_Format (PyExc_TypeError, "Unknown extension to export: %s", pt);
           free (locfilename);
           fclose (file);
-          return (NULL);
+          return NULL;
         }
       fclose (file);
     }
@@ -9246,7 +9246,7 @@ PyFFGlyph_unlinkRef (PyObject *self, PyObject *args)
   int any = false;
 
   if (!PyArg_ParseTuple (args, "|s", &refname))
-    return (NULL);
+    return NULL;
   for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
     {
       if (refname == NULL || strcmp (ref->sc->name, refname) == 0)
@@ -9261,7 +9261,7 @@ PyFFGlyph_unlinkRef (PyObject *self, PyObject *args)
       PyErr_Format (PyExc_EnvironmentError,
                     "No reference named %s found in glyph %s", refname,
                     sc->name);
-      return (NULL);
+      return NULL;
     }
   if (any)
     SCCharChangedUpdate (sc, ((PyFF_Glyph *) self)->layer);
@@ -9288,7 +9288,7 @@ TupleOfGlyphNames (char *str, int extras)
 
   for (pt = str; *pt == ' '; ++pt);
   if (*pt == '\0')
-    return (PyTuple_New (extras));
+    return PyTuple_New (extras);
 
   for (cnt = 1; *pt; ++pt)
     {
@@ -9315,7 +9315,7 @@ TupleOfGlyphNames (char *str, int extras)
       *pt = ch;
       ++cnt;
     }
-  return (tuple);
+  return tuple;
 }
 
 static char *
@@ -9330,18 +9330,18 @@ GlyphNamesFromTuple (PyObject *glyphs)
 #if PY_MAJOR_VERSION >= 3
       PyObject *bytes = PyUnicode_AsUTF8String (glyphs);
       if (bytes == NULL)
-        return (NULL);
+        return NULL;
       str = xstrdup_or_null (PyBytes_AsString (bytes));
       Py_DECREF (bytes);
-      return (str);
+      return str;
 #else /* PY_MAJOR_VERSION >= 3 */
-      return (xstrdup_or_null (PyBytes_AsString (glyphs)));
+      return xstrdup_or_null (PyBytes_AsString (glyphs));
 #endif /* PY_MAJOR_VERSION >= 3 */
     }
   if (!PySequence_Check (glyphs))
     {
       PyErr_Format (PyExc_TypeError, "Expected tuple of glyph names");
-      return (NULL);
+      return NULL;
     }
   cnt = PySequence_Size (glyphs);
   len = 0;
@@ -9358,7 +9358,7 @@ GlyphNamesFromTuple (PyObject *glyphs)
       if (str == NULL)
         {
           PyErr_Format (PyExc_TypeError, "Expected tuple of glyph names");
-          return (NULL);
+          return NULL;
         }
       len += strlen (str) + 1;
     }
@@ -9381,7 +9381,7 @@ GlyphNamesFromTuple (PyObject *glyphs)
   if (pt != ret)
     --pt;
   *pt = '\0';
-  return (ret);
+  return ret;
 }
 
 static char **
@@ -9394,7 +9394,7 @@ GlyphNameArrayFromTuple (PyObject *glyphs)
   if (STRING_CHECK (glyphs) || !PySequence_Check (glyphs))
     {
       PyErr_Format (PyExc_TypeError, "Expected tuple of glyph names");
-      return (NULL);
+      return NULL;
     }
   cnt = PySequence_Size (glyphs);
   ret = xmalloc ((cnt + 1) * sizeof (char *));
@@ -9412,11 +9412,11 @@ GlyphNameArrayFromTuple (PyObject *glyphs)
         {
           PyErr_Format (PyExc_TypeError, "Expected tuple of glyph names");
           free (ret);
-          return (NULL);
+          return NULL;
         }
       ret[i] = xstrdup_or_null (str);
     }
-  return (ret);
+  return ret;
 }
 
 static SplineChar **
@@ -9430,7 +9430,7 @@ GlyphsFromTuple (SplineFont *sf, PyObject *glyphs)
   if (glyphs == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Unspecified argument.");
-      return (NULL);
+      return NULL;
     }
   if (STRING_CHECK (glyphs))
     {
@@ -9447,7 +9447,7 @@ GlyphsFromTuple (SplineFont *sf, PyObject *glyphs)
             ++pt;
         }
       if (cnt == 0)
-        return (xcalloc (1, sizeof (SplineChar *)));
+        return xcalloc (1, sizeof (SplineChar *));
 
       ret = xmalloc ((cnt + 1) * sizeof (SplineChar *));
       cnt = 0;
@@ -9465,7 +9465,7 @@ GlyphsFromTuple (SplineFont *sf, PyObject *glyphs)
               PyErr_Format (PyExc_TypeError,
                             "String, %s, is not the name of a glyph in the expected font.",
                             start);
-              return (NULL);
+              return NULL;
             }
           *pt = ch;
           ret[cnt++] = sc;
@@ -9473,14 +9473,14 @@ GlyphsFromTuple (SplineFont *sf, PyObject *glyphs)
             ++pt;
         }
       ret[cnt] = NULL;
-      return (ret);
+      return ret;
     }
 
   /* A tuple or list of glyphs of glyph names */
   if (!PySequence_Check (glyphs))
     {
       PyErr_Format (PyExc_TypeError, "Expected tuple of glyph names");
-      return (NULL);
+      return NULL;
     }
   cnt = PySequence_Size (glyphs);
   ret = xmalloc ((cnt + 1) * sizeof (SplineChar *));
@@ -9495,7 +9495,7 @@ GlyphsFromTuple (SplineFont *sf, PyObject *glyphs)
               PyErr_Format (PyExc_TypeError,
                             "Glyph object, %s, must belong to the expected font.",
                             ret[i]->name);
-              return (NULL);
+              return NULL;
             }
         }
       else
@@ -9505,7 +9505,7 @@ GlyphsFromTuple (SplineFont *sf, PyObject *glyphs)
             {
               PyErr_Format (PyExc_TypeError,
                             "Expected a name of a glyph in the expected font.");
-              return (NULL);
+              return NULL;
             }
           sc = SFGetChar (sf, -1, str);
           if (sc == NULL)
@@ -9513,13 +9513,13 @@ GlyphsFromTuple (SplineFont *sf, PyObject *glyphs)
               PyErr_Format (PyExc_TypeError,
                             "String, %s, is not the name of a glyph in the expected font.",
                             str);
-              return (NULL);
+              return NULL;
             }
           ret[i] = sc;
         }
     }
   ret[i] = NULL;
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -9542,11 +9542,11 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
   if (PySequence_Size (args) != 1)
     {
       PyErr_Format (PyExc_TypeError, "Expected a subtable name");
-      return (NULL);
+      return NULL;
     }
   subname = PyBytes_AsString (PySequence_GetItem (args, 0));
   if (subname == NULL)
-    return (NULL);
+    return NULL;
   if (*subname == '*')
     sub = NULL;
   else
@@ -9555,7 +9555,7 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
       if (sub == NULL)
         {
           PyErr_Format (PyExc_KeyError, "Unknown lookup subtable: %s", subname);
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -9672,7 +9672,7 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
       if (i == 0)
         ret = PyTuple_New (cnt);
     }
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -9694,11 +9694,11 @@ PyFFGlyph_removePosSub (PyObject *self, PyObject *args)
   if (PySequence_Size (args) != 1)
     {
       PyErr_Format (PyExc_TypeError, "Expected a subtable name");
-      return (NULL);
+      return NULL;
     }
   subname = PyBytes_AsString (PySequence_GetItem (args, 0));
   if (subname == NULL)
-    return (NULL);
+    return NULL;
   if (*subname == '*')
     sub = NULL;
   else
@@ -9707,7 +9707,7 @@ PyFFGlyph_removePosSub (PyObject *self, PyObject *args)
       if (sub == NULL)
         {
           PyErr_Format (PyExc_KeyError, "Unknown lookup subtable: %s", subname);
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -9777,16 +9777,16 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
     {
       PyErr_Format (PyExc_TypeError,
                     "The first argument must be a subtable name");
-      return (NULL);
+      return NULL;
     }
   subname = PyBytes_AsString (PySequence_GetItem (args, 0));
   if (subname == NULL)
-    return (NULL);
+    return NULL;
   sub = SFFindLookupSubtable (sf, subname);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_KeyError, "Unknown lookup subtable: %s", subname);
-      return (NULL);
+      return NULL;
     }
 
   temp.subtable = sub;
@@ -9799,7 +9799,7 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
       if (!PyArg_ParseTuple
           (args, "shhhh", &subname, &temp.u.pos.xoff, &temp.u.pos.yoff,
            &temp.u.pos.h_adv_off, &temp.u.pos.v_adv_off))
-        return (NULL);
+        return NULL;
       temp.type = pst_position;
     }
   else if (sub->lookup->lookup_type == gpos_pair)
@@ -9819,7 +9819,7 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
                &temp.u.pair.vr[0].v_adv_off, &temp.u.pair.vr[1].xoff,
                &temp.u.pair.vr[1].yoff, &temp.u.pair.vr[1].h_adv_off,
                &temp.u.pair.vr[1].v_adv_off))
-            return (NULL);
+            return NULL;
           if (temp.u.pair.vr[0].xoff == 0 && temp.u.pair.vr[0].yoff == 0
               && temp.u.pair.vr[1].xoff == 0 && temp.u.pair.vr[1].yoff == 0
               && temp.u.pair.vr[1].v_adv_off == 0)
@@ -9896,17 +9896,17 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
   else if (sub->lookup->lookup_type == gsub_single)
     {
       if (!PyArg_ParseTuple (args, "ss", &subname, &other))
-        return (NULL);
+        return NULL;
       temp.type = pst_substitution;
       temp.u.subs.variant = xstrdup_or_null (other);
     }
   else
     {
       if (!PyArg_ParseTuple (args, "sO", &subname, &others))
-        return (NULL);
+        return NULL;
       other = GlyphNamesFromTuple (others);
       if (other == NULL)
-        return (NULL);
+        return NULL;
       if (sub->lookup->lookup_type == gsub_alternate)
         temp.type = pst_alternate;
       else if (sub->lookup->lookup_type == gsub_multiple)
@@ -9920,7 +9920,7 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
         {
           PyErr_Format (PyExc_KeyError, "Unexpected lookup type: %s",
                         sub->lookup->lookup_name);
-          return (NULL);
+          return NULL;
         }
       temp.u.subs.variant = other;
     }
@@ -9965,7 +9965,7 @@ PyFFGlyph_selfIntersects (PyObject *self, PyObject *UNUSED (args))
   ret = SplineSetIntersect (ss, &s, &s2) ? Py_True : Py_False;
   LayerUnAllSplines (&sc->layers[layer]);
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -9976,8 +9976,8 @@ PyFFGlyph_validate (PyObject *self, PyObject *args)
   int layer = ((PyFF_Glyph *) self)->layer;
 
   if (!PyArg_ParseTuple (args, "|i", &force))
-    return (NULL);
-  return (Py_BuildValue ("i", SCValidate (sc, layer, force)));
+    return NULL;
+  return Py_BuildValue ("i", SCValidate (sc, layer, force));
 }
 
 /* Transformation flags: see 'enum fvtrans_flags' in baseviews.h */
@@ -9999,10 +9999,10 @@ PyFFGlyph_Transform (PyObject *self, PyObject *args)
 
   if (!PyArg_ParseTuple
       (args, "(dddddd)|O", &m[0], &m[1], &m[2], &m[3], &m[4], &m[5], &flagO))
-    return (NULL);
+    return NULL;
   flags = FlagsFromTuple (flagO, trans_flags, "transformation flag");
   if (flags == FLAG_UNKNOWN)
-    return (NULL);
+    return NULL;
   flags |= fvt_alllayers;
   for (i = 0; i < 6; ++i)
     t[i] = m[i];
@@ -10017,11 +10017,11 @@ PyFFGlyph_NLTransform (PyObject *self, PyObject *args)
   char *xexpr, *yexpr;
 
   if (!PyArg_ParseTuple (args, "ss", &xexpr, &yexpr))
-    return (NULL);
+    return NULL;
   if (!SCNLTrans (sc, ((PyFF_Glyph *) self)->layer, xexpr, yexpr))
     {
       PyErr_Format (PyExc_TypeError, "Unparseable expression.");
-      return (NULL);
+      return NULL;
     }
   Py_RETURN (self);
 }
@@ -10051,7 +10051,7 @@ PyFFGlyph_Simplify (PyFF_Glyph *self, PyObject *args)
   if (!PyErr_Occurred () && PySequence_Size (args) >= 5)
     smpl.linelenmax = PyFloat_AsDouble (PySequence_GetItem (args, 4));
   if (PyErr_Occurred ())
-    return (NULL);
+    return NULL;
   sc->layers[self->layer].splines =
     SplineCharSimplify (sc, sc->layers[self->layer].splines, &smpl);
   SCCharChangedUpdate (self->sc, self->layer);
@@ -10064,7 +10064,7 @@ PyFFGlyph_Round (PyFF_Glyph *self, PyObject *args)
   double factor = 1;
 
   if (!PyArg_ParseTuple (args, "|d", &factor))
-    return (NULL);
+    return NULL;
   SCRound2Int (self->sc, self->layer, factor);
   SCCharChangedUpdate (self->sc, self->layer);
   Py_RETURN (self);
@@ -10076,7 +10076,7 @@ PyFFGlyph_Cluster (PyFF_Glyph *self, PyObject *args)
   double within = .1, max = .5;
 
   if (!PyArg_ParseTuple (args, "|dd", &within, &max))
-    return (NULL);
+    return NULL;
 
   SCRoundToCluster (self->sc, self->layer, false, within, max);
   SCCharChangedUpdate (self->sc, self->layer);
@@ -10093,12 +10093,12 @@ PyFFGlyph_AddExtrema (PyFF_Glyph *self, PyObject *args)
   SplineFont *sf = sc->parent;
 
   if (!PyArg_ParseTuple (args, "|si", &flag, &emsize))
-    return (NULL);
+    return NULL;
   if (flag != NULL)
     {
       ae = FlagsFromString (flag, addextremaflags, "extrema flag");
       if (ae == FLAG_UNKNOWN)
-        return (NULL);
+        return NULL;
     }
   SplineCharAddExtrema (sc, sc->layers[self->layer].splines, ae,
                         sf->ascent + sf->descent);
@@ -10113,7 +10113,7 @@ PyFFGlyph_Stroke (PyFF_Glyph *self, PyObject *args)
   SplineSet *newss;
 
   if (Stroke_Parse (&si, args) == -1)
-    return (NULL);
+    return NULL;
 
   newss =
     SplineSetStroke (self->sc->layers[self->layer].splines, &si,
@@ -10167,11 +10167,11 @@ PyFFGlyph_Exclude (PyFF_Glyph *self, PyObject *args)
   PyObject *obj;
 
   if (!PyArg_ParseTuple (args, "O", &obj))
-    return (NULL);
+    return NULL;
   if (!PyType_IsSubtype (&PyFF_LayerType, ((PyObject *) obj)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a (FontForge) Layer");
-      return (NULL);
+      return NULL;
     }
 
   excludes = SSFromLayer ((PyFF_Layer *) obj);
@@ -10196,7 +10196,7 @@ PyFFGlyph_preserveLayer (PyFF_Glyph *self, PyObject *args)
   int layer = self->layer, dohints = false;
 
   if (!PyArg_ParseTuple (args, "|ii", &layer, &dohints))
-    return (NULL);
+    return NULL;
   _SCPreserveLayer (self->sc, layer, dohints);
   Py_RETURN (self);
 }
@@ -10208,7 +10208,7 @@ PyFFGlyph_BoundingBox (PyFF_Glyph *self, PyObject *UNUSED (args))
 
   SplineCharFindBounds (self->sc, &bb);
 
-  return (Py_BuildValue ("(dddd)", bb.minx, bb.miny, bb.maxx, bb.maxy));
+  return Py_BuildValue ("(dddd)", bb.minx, bb.miny, bb.maxx, bb.maxy);
 }
 
 static PyObject *
@@ -10228,7 +10228,7 @@ PyFFGlyph_isWorthOutputting (PyFF_Glyph *self, PyObject *UNUSED (args))
 
   ret = SCWorthOutputting (self->sc) ? Py_True : Py_False;
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static PyMethodDef PyFF_Glyph_methods[] = {
@@ -10426,7 +10426,7 @@ cvtiter_iternext (cvtiterobject * ci)
       entry =
         (((PyObject *) cvt)->ob_type->tp_as_sequence->
          sq_item) ((PyObject *) cvt, ci->pos++);
-      return (entry);
+      return entry;
     }
 
   return NULL;
@@ -10505,7 +10505,7 @@ PyFFCvt_new (PyFF_Font *owner)
   PyFF_Cvt *self;
 
   if (CheckIfFontClosed (owner))
-    return (NULL);
+    return NULL;
 
   if (owner->cvt != NULL)
     Py_RETURN (owner->cvt);
@@ -10519,7 +10519,7 @@ PyFFCvt_new (PyFF_Font *owner)
 static PyObject *
 PyFFCvt_Str (PyFF_Cvt * self)
 {
-  return (STRING_FROM_FORMAT ("<cvt table for font %s>", self->sf->fontname));
+  return STRING_FROM_FORMAT ("<cvt table for font %s>", self->sf->fontname);
 }
 
 
@@ -10542,9 +10542,9 @@ static Py_ssize_t
 PyFFCvt_Length (PyObject *self)
 {
   if (((PyFF_Cvt *) self)->cvt == NULL)
-    return (0);
+    return 0;
   else
-    return (((PyFF_Cvt *) self)->cvt->len / 2);
+    return ((PyFF_Cvt *) self)->cvt->len / 2;
 }
 
 static struct ttf_table *
@@ -10559,7 +10559,7 @@ BuildCvt (SplineFont *sf, int initial_size)
   cvt->data = xmalloc (initial_size);
   cvt->len = 0;
   cvt->maxlen = initial_size;
-  return (cvt);
+  return cvt;
 }
 
 static PyObject *
@@ -10586,7 +10586,7 @@ PyFFCvt_Concat (PyObject *_c1, PyObject *_c2)
     {
       PyErr_Format (PyExc_TypeError,
                     "The second argument must be either another cvt or a tuple of integers");
-      return (NULL);
+      return NULL;
     }
   ret = PyTuple_New (len1 + len2);
   for (i = 0; i < len1; ++i)
@@ -10636,7 +10636,7 @@ PyFFCvt_InPlaceConcat (PyObject *_self, PyObject *_c2)
     {
       PyErr_Format (PyExc_TypeError,
                     "The second argument must be either another cvt or a tuple of integers");
-      return (NULL);
+      return NULL;
     }
 
   if (self->cvt == NULL)
@@ -10655,7 +10655,7 @@ PyFFCvt_InPlaceConcat (PyObject *_self, PyObject *_c2)
         {
           int val = PyInt_AsLong (PySequence_GetItem (_c2, i));
           if (PyErr_Occurred ())
-            return (NULL);
+            return NULL;
           memputshort (cvt->data, sizeof (uint16_t) * (len1 + i), val);
         }
     }
@@ -10671,7 +10671,7 @@ PyFFCvt_Index (PyObject *self, Py_ssize_t pos)
   if (c->cvt == NULL || pos < 0 || pos >= c->cvt->len / 2)
     {
       PyErr_Format (PyExc_TypeError, "Index out of bounds");
-      return (NULL);
+      return NULL;
     }
   return (Py_BuildValue
           ("i",
@@ -10688,14 +10688,14 @@ PyFFCvt_IndexAssign (PyObject *self, Py_ssize_t pos, PyObject *value)
 
   val = PyInt_AsLong (value);
   if (PyErr_Occurred ())
-    return (-1);
+    return -1;
   if (c->cvt == NULL)
     c->cvt = BuildCvt (c->sf, 2);
   cvt = c->cvt;
   if (cvt == NULL || pos < 0 || pos > cvt->len / 2)
     {
       PyErr_Format (PyExc_TypeError, "Index out of bounds");
-      return (-1);
+      return -1;
     }
   if (2 * pos >= cvt->maxlen)
     cvt->data = xrealloc (cvt->data, cvt->maxlen =
@@ -10703,7 +10703,7 @@ PyFFCvt_IndexAssign (PyObject *self, Py_ssize_t pos, PyObject *value)
   if (2 * pos >= cvt->len)
     cvt->len = sizeof (uint16_t) * pos;
   memputshort (cvt->data, sizeof (uint16_t) * pos, val);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -10718,7 +10718,7 @@ PyFFCvt_Slice (PyObject *self, Py_ssize_t start, Py_ssize_t end)
   if (cvt == NULL || end < start || end < 0 || 2 * start >= cvt->len)
     {
       PyErr_Format (PyExc_ValueError, "Slice specification out of range");
-      return (NULL);
+      return NULL;
     }
 
   len = end - start + 1;
@@ -10729,7 +10729,7 @@ PyFFCvt_Slice (PyObject *self, Py_ssize_t start, Py_ssize_t end)
                      Py_BuildValue ("i",
                                     memushort (cvt->data, cvt->len, 2 * i)));
 
-  return ((PyObject *) ret);
+  return (PyObject *) ret;
 }
 
 static int
@@ -10744,7 +10744,7 @@ PyFFCvt_SliceAssign (PyObject *_self, Py_ssize_t start, Py_ssize_t end,
   if (cvt == NULL || end < start || end < 0 || 2 * start >= cvt->len)
     {
       PyErr_Format (PyExc_ValueError, "Slice specification out of range");
-      return (-1);
+      return -1;
     }
 
   len = end - start + 1;
@@ -10754,16 +10754,16 @@ PyFFCvt_SliceAssign (PyObject *_self, Py_ssize_t start, Py_ssize_t end,
       if (!PyErr_Occurred ())
         PyErr_Format (PyExc_ValueError,
                       "Replacement is different size than slice");
-      return (-1);
+      return -1;
     }
   for (i = start; i <= end; ++i)
     {
       memputshort (cvt->data, sizeof (uint16_t) * i,
                    PyInt_AsLong (PySequence_GetItem (rpl, i - start)));
       if (PyErr_Occurred ())
-        return (-1);
+        return -1;
     }
-  return (0);
+  return 0;
 }
 
 static int
@@ -10776,17 +10776,17 @@ PyFFCvt_Contains (PyObject *_self, PyObject *_val)
 
   val = PyInt_AsLong (_val);
   if (PyErr_Occurred ())
-    return (-1);
+    return -1;
 
   cvt = c->cvt;
   if (cvt == NULL)
-    return (0);
+    return 0;
 
   for (i = 0; i < cvt->len / 2; ++i)
     if (memushort (cvt->data, cvt->len, 2 * i) == val)
-      return (1);
+      return 1;
 
-  return (0);
+  return 0;
 }
 
 static PySequenceMethods PyFFCvt_Sequence = {
@@ -10810,21 +10810,21 @@ PyFFCvt_find (PyObject *self, PyObject *args)
   int i, val, low = 0, high;
 
   if (cvt == NULL)
-    return (Py_BuildValue ("i", -1));
+    return Py_BuildValue ("i", -1);
 
   high = cvt->len / 2;
 
   if (!PyArg_ParseTuple (args, "i|ii", &val, &low, &high))
-    return (NULL);
+    return NULL;
   if (low < 0)
     low = 0;
   if (high > cvt->len / 2)
     high = cvt->len / 2;
   for (i = low; i < high; ++i)
     if ((short) memushort (cvt->data, cvt->len, 2 * i) == val)
-      return (Py_BuildValue ("i", i));
+      return Py_BuildValue ("i", i);
 
-  return (Py_BuildValue ("i", -1));
+  return Py_BuildValue ("i", -1);
 }
 
 static PyGetSetDef PyFFCvt_getset[] = {
@@ -10916,7 +10916,7 @@ PyFFSelection_new (PyFF_Font *owner)
   PyFF_Selection *self;
 
   if (CheckIfFontClosed (owner))
-    return (NULL);
+    return NULL;
 
   if (owner->selection != NULL)
     Py_RETURN (owner->selection);
@@ -10931,7 +10931,7 @@ PyFFSelection_new (PyFF_Font *owner)
 static PyObject *
 PyFFSelection_Str (PyFF_Selection * self)
 {
-  return (STRING_FROM_FORMAT ("<Selection for %s>", self->fv->sf->fontname));
+  return STRING_FROM_FORMAT ("<Selection for %s>", self->fv->sf->fontname);
 }
 
 static PyObject *
@@ -11050,14 +11050,14 @@ SelIndex (PyObject *arg, FontViewBase *fv, int ints_as_unicode)
   else
     {
       PyErr_Format (PyExc_TypeError, "Unexpected argument type");
-      return (-1);
+      return -1;
     }
   if (enc < 0 || enc >= fv->map->enc_limit)
     {
       PyErr_Format (PyExc_ValueError, "Encoding is out of range");
-      return (-1);
+      return -1;
     }
-  return (enc);
+  return enc;
 }
 
 static void
@@ -11082,7 +11082,7 @@ PyFFSelection_select (PyObject *self, PyObject *args)
         {
           int newflags = FlagsFromTuple (arg, select_flags, "select flag");
           if (newflags == FLAG_UNKNOWN)
-            return (NULL);
+            return NULL;
           if ((newflags & (sel_more | sel_less)) == 0)
             newflags |= (flags & (sel_more | sel_less));
           if ((newflags & (sel_unicode | sel_encoding)) == 0)
@@ -11100,7 +11100,7 @@ PyFFSelection_select (PyObject *self, PyObject *args)
             FVBDeselectAll (fv);
           enc = SelIndex (arg, fv, flags & sel_unicode);
           if (enc == -1)
-            return (NULL);
+            return NULL;
           if (flags & sel_less)
             fv->selected[enc] = 0;
           else
@@ -11142,10 +11142,10 @@ PySelection_iter (PyObject *object)
   PyFF_Font *font = PyFF_FontForFV (self->fv);
 
   if (CheckIfFontClosed (font))
-    return (NULL);
+    return NULL;
 
   /* FontIter with either 1 => encodings of selected glyphs, or 2 => selected glyphs */
-  return (fontiter_New (font, self->by_glyphs + 1, NULL));
+  return fontiter_New (font, self->by_glyphs + 1, NULL);
 }
 
 static PyMethodDef PyFFSelection_methods[] = {
@@ -11177,7 +11177,7 @@ static PyGetSetDef PyFFSelection_getset[] = {
 static Py_ssize_t
 PyFFSelection_Length (PyObject *self)
 {
-  return (((PyFF_Selection *) self)->fv->map->enc_limit);
+  return ((PyFF_Selection *) self)->fv->map->enc_limit;
 }
 
 static PyObject *
@@ -11189,11 +11189,11 @@ PyFFSelection_Index (PyObject *self, PyObject *index)
 
   pos = SelIndex (index, c->fv, false);
   if (pos == -1)
-    return (NULL);
+    return NULL;
 
   ret = c->fv->selected[pos] ? Py_True : Py_False;
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static int
@@ -11209,14 +11209,14 @@ PyFFSelection_IndexAssign (PyObject *self, PyObject *index, PyObject *value)
       for (pos = 0; pos < cnt; ++pos)
         if (PyFFSelection_IndexAssign
             (self, PySequence_GetItem (index, pos), value) == -1)
-          return (-1);
+          return -1;
 
-      return (0);
+      return 0;
     }
 
   pos = SelIndex (index, c->fv, false);
   if (pos == -1)
-    return (-1);
+    return -1;
 
   if (value == Py_True)
     val = 1;
@@ -11226,10 +11226,10 @@ PyFFSelection_IndexAssign (PyObject *self, PyObject *index, PyObject *value)
     {
       val = PyInt_AsLong (value);
       if (PyErr_Occurred ())
-        return (-1);
+        return -1;
     }
   c->fv->selected[pos] = val;
-  return (0);
+  return 0;
 }
 
 static PyMappingMethods PyFFSelection_Mapping = {
@@ -11340,7 +11340,7 @@ layerinfoiter_iternextkey (layerinfoiterobject * di)
     return NULL;
 
   if (di->pos < sf->layer_cnt)
-    return (Py_BuildValue ("s", sf->layers[di->pos++].name));
+    return Py_BuildValue ("s", sf->layers[di->pos++].name);
 
   return NULL;
 }
@@ -11435,7 +11435,7 @@ PyFF_LayerInfo_get_font (PyFF_LayerInfo * self, void *UNUSED (closure))
 static PyObject *
 PyFF_LayerInfo_get_name (PyFF_LayerInfo * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("s", self->sf->layers[self->layer].name));
+  return Py_BuildValue ("s", self->sf->layers[self->layer].name);
 }
 
 static int
@@ -11447,16 +11447,16 @@ PyFF_LayerInfo_set_name (PyFF_LayerInfo * self, PyObject *value,
       free (self->sf->layers[self->layer].name);
       self->sf->layers[self->layer].name =
         xstrdup_or_null (PyBytes_AsString (value));
-      return (0);
+      return 0;
     }
   PyErr_Format (PyExc_TypeError, "Expected layer name");
-  return (-1);
+  return -1;
 }
 
 static PyObject *
 PyFF_LayerInfo_get_order2 (PyFF_LayerInfo * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->sf->layers[self->layer].order2));
+  return Py_BuildValue ("i", self->sf->layers[self->layer].order2);
 }
 
 static int
@@ -11475,16 +11475,16 @@ PyFF_LayerInfo_set_order2 (PyFF_LayerInfo * self, PyObject *value,
           else
             SFConvertLayerToOrder3 (sf, layer);
         }
-      return (0);
+      return 0;
     }
   PyErr_Format (PyExc_TypeError, "Expected boolean value");
-  return (-1);
+  return -1;
 }
 
 static PyObject *
 PyFF_LayerInfo_get_background (PyFF_LayerInfo * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->sf->layers[self->layer].background));
+  return Py_BuildValue ("i", self->sf->layers[self->layer].background);
 }
 
 static int
@@ -11498,10 +11498,10 @@ PyFF_LayerInfo_set_background (PyFF_LayerInfo * self, PyObject *value,
       int layer = self->layer;
       if (val != sf->layers[layer].background)
         SFLayerSetBackground (sf, layer, val);
-      return (0);
+      return 0;
     }
   PyErr_Format (PyExc_TypeError, "Expected boolean value");
-  return (-1);
+  return -1;
 }
 
 static PyGetSetDef PyFF_LayerInfo_getset[] = {
@@ -11595,7 +11595,7 @@ PyFF_LayerInfoArray_dealloc (PyFF_LayerInfoArray * self)
 static PyObject *
 PyFFLayerInfoArray_Str (PyFF_LayerInfoArray * self)
 {
-  return (STRING_FROM_FORMAT ("<Layer Info Array for %s>", self->sf->fontname));
+  return STRING_FROM_FORMAT ("<Layer Info Array for %s>", self->sf->fontname);
 }
 
 static PyObject *
@@ -11617,9 +11617,9 @@ PyFF_LayerInfoArrayLength (PyObject *self)
 {
   SplineFont *sf = ((PyFF_LayerInfoArray *) self)->sf;
   if (sf == NULL)
-    return (0);
+    return 0;
   else
-    return (sf->layer_cnt);
+    return sf->layer_cnt;
 }
 
 static PyObject *
@@ -11635,7 +11635,7 @@ PyFF_LayerInfoArrayIndex (PyObject *self, PyObject *index)
       char *name;
       PyObject *bytes = PyUnicode_AsUTF8String (index);
       if (bytes == NULL)
-        return (NULL);
+        return NULL;
       name = PyBytes_AsString (bytes);
       layer = SFFindLayerIndexByName (sf, name);
       Py_DECREF (bytes);
@@ -11644,7 +11644,7 @@ PyFF_LayerInfoArrayIndex (PyObject *self, PyObject *index)
       layer = SFFindLayerIndexByName (sf, name);
 #endif /* PY_MAJOR_VERSION >= 3 */
       if (layer < 0)
-        return (NULL);
+        return NULL;
     }
   else if (PyInt_Check (index))
     {
@@ -11653,17 +11653,17 @@ PyFF_LayerInfoArrayIndex (PyObject *self, PyObject *index)
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be a layer name or index");
-      return (NULL);
+      return NULL;
     }
   if (layer < 0 || layer >= sf->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Layer is out of range");
-      return (NULL);
+      return NULL;
     }
   li = PyObject_New (PyFF_LayerInfo, &PyFF_LayerInfoType);
   li->sf = sf;
   li->layer = layer;
-  return ((PyObject *) li);
+  return (PyObject *) li;
 }
 
 static int
@@ -11679,7 +11679,7 @@ PyFF_LayerInfoArrayIndexAssign (PyObject *self, PyObject *index,
       char *name = PyBytes_AsString (index);
       layer = SFFindLayerIndexByName (sf, name);
       if (layer < 0)
-        return (-1);
+        return -1;
     }
   else if (PyInt_Check (index))
     {
@@ -11688,12 +11688,12 @@ PyFF_LayerInfoArrayIndexAssign (PyObject *self, PyObject *index,
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be a layer name or index");
-      return (-1);
+      return -1;
     }
   if (layer < 0 || layer >= sf->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Layer is out of range");
-      return (-1);
+      return -1;
     }
   if (value == NULL)
     {
@@ -11703,12 +11703,12 @@ PyFF_LayerInfoArrayIndexAssign (PyObject *self, PyObject *index,
         {
           PyErr_Format (PyExc_ValueError,
                         "You may not delete the background or foreground layers");
-          return (-1);
+          return -1;
         }
-      return (0);
+      return 0;
     }
   else if (!PyArg_ParseTuple (value, "si", &name, &order2))
-    return (-1);
+    return -1;
   free (sf->layers[layer].name);
   sf->layers[layer].name = xstrdup_or_null (name);
   order2 = order2 != 0;
@@ -11722,7 +11722,7 @@ PyFF_LayerInfoArrayIndexAssign (PyObject *self, PyObject *index,
             SFConvertLayerToOrder3 (sf, layer);
         }
     }
-  return (0);
+  return 0;
 }
 
 static PyMappingMethods PyFF_LayerInfoArrayMapping = {
@@ -11739,7 +11739,7 @@ PyFF_LayerInfoArray_add (PyObject *self, PyObject *args)
   char *name;
 
   if (!PyArg_ParseTuple (args, "si|i", &name, &order2, &background))
-    return (NULL);
+    return NULL;
   SFAddLayer (sf, name, order2, background);
   CVLayerPaletteCheck (sf);
   Py_RETURN (self);
@@ -11827,7 +11827,7 @@ PyFFMath_dealloc (PyFF_Math * self)
 static PyObject *
 PyFFMath_Str (PyFF_Math * self)
 {
-  return (STRING_FROM_FORMAT ("<math table for font %s>", self->sf->fontname));
+  return STRING_FROM_FORMAT ("<math table for font %s>", self->sf->fontname);
 }
 
 static struct MATH *
@@ -11837,7 +11837,7 @@ SFGetMathTable (SplineFont *sf)
     sf = sf->cidmaster;
   if (sf->MATH == NULL)
     sf->MATH = MathTableNew (sf);
-  return (sf->MATH);
+  return sf->MATH;
 }
 
 static PyObject *
@@ -11848,7 +11848,7 @@ PyFFMath_get (PyFF_Math * self, void *closure)
 
   math = SFGetMathTable (self->sf);
   /* some entries are unsigned, but I don't know which here */
-  return (Py_BuildValue ("i", *(int16_t *) (((char *) math) + offset)));
+  return Py_BuildValue ("i", *(int16_t *) (((char *) math) + offset));
 }
 
 static int
@@ -11861,16 +11861,16 @@ PyFFMath_set (PyFF_Math * self, PyObject *value, void *closure)
   math = SFGetMathTable (self->sf);
   val = PyInt_AsLong (value);
   if (val == -1 && PyErr_Occurred ())
-    return (-1);
+    return -1;
   if (val < -32768 || val > 65535)
     {
       PyErr_Format (PyExc_ValueError,
                     "The math table constants must have 16 bit values, but this (%ld) is out of range",
                     val);
-      return (-1);
+      return -1;
     }
   *(int16_t *) (((char *) math) + offset) = val;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -11896,7 +11896,7 @@ PyFFMath_exists (PyFF_Math * self, PyObject *UNUSED (args))
     sf = sf->cidmaster;
   ret = self->sf->MATH != NULL ? Py_True : Py_False;
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static PyMethodDef FFMath_methods[] = {
@@ -12029,7 +12029,7 @@ privateiter_iternextkey (privateiterobject * di)
     return NULL;
 
   if (di->pos < d->sf->private->next)
-    return (Py_BuildValue ("s", d->sf->private->keys[di->pos++]));
+    return Py_BuildValue ("s", d->sf->private->keys[di->pos++]);
 
   return NULL;
 }
@@ -12119,9 +12119,9 @@ PyFF_PrivateLength (PyObject *self)
 {
   struct psdict *private = ((PyFF_Private *) self)->sf->private;
   if (private == NULL)
-    return (0);
+    return 0;
   else
-    return (private->next);
+    return private->next;
 }
 
 static PyObject *
@@ -12141,7 +12141,7 @@ PyFF_PrivateIndex (PyObject *self, PyObject *index)
       char *name;
       PyObject *bytes = PyUnicode_AsUTF8String (index);
       if (bytes == NULL)
-        return (NULL);
+        return NULL;
       name = PyBytes_AsString (bytes);
       if (private != NULL)
         value = PSDictHasEntry (private, name);
@@ -12155,18 +12155,18 @@ PyFF_PrivateIndex (PyObject *self, PyObject *index)
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be a string");
-      return (NULL);
+      return NULL;
     }
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "No such entry");
-      return (NULL);
+      return NULL;
     }
   strtod (value, &end);
   while (*end == ' ')
     ++end;
   if (*end == '\0')
-    return (Py_BuildValue ("d", strtod (value, NULL)));
+    return Py_BuildValue ("d", strtod (value, NULL));
 
   if (*value == '[')
     {
@@ -12195,10 +12195,10 @@ PyFF_PrivateIndex (PyObject *self, PyObject *index)
               PyTuple_SetItem (tuple, cnt++, Py_BuildValue ("d", temp));
               pt = end;
             }
-          return (tuple);
+          return tuple;
         }
     }
-  return (Py_BuildValue ("s", value));
+  return Py_BuildValue ("s", value);
 }
 
 static int
@@ -12243,7 +12243,7 @@ PyFF_PrivateIndexAssign (PyObject *self, PyObject *index, PyObject *value)
   else
     {
       PyErr_Format (PyExc_TypeError, "Tuple expected for argument");
-      return (-1);
+      return -1;
     }
 
   if (STRING_CHECK (index))
@@ -12257,9 +12257,9 @@ PyFF_PrivateIndexAssign (PyObject *self, PyObject *index, PyObject *value)
     {
       free (freeme);
       PyErr_Format (PyExc_TypeError, "Index must be a string");
-      return (-1);
+      return -1;
     }
-  return (0);
+  return 0;
 }
 
 static PyMappingMethods PyFF_PrivateMapping = {
@@ -12275,7 +12275,7 @@ PyFFPrivate_Guess (PyFF_Private * self, PyObject *args)
   char *name;
 
   if (!PyArg_ParseTuple (args, "s", &name))
-    return (NULL);
+    return NULL;
   if (sf->private == NULL)
     sf->private = xcalloc (1, sizeof (struct psdict));
 
@@ -12369,7 +12369,7 @@ fontiter_New (PyFF_Font *self, int bysel, struct searchdata *sv)
   fontiterobject *di;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   di = PyObject_New (fontiterobject, &PyFF_FontIterType);
   if (di == NULL)
@@ -12386,7 +12386,7 @@ static PyObject *
 fontiter_new_wholefont (PyObject *object)
 {
   PyFF_Font *self = (PyFF_Font *) object;
-  return (fontiter_New (self, false, NULL));
+  return fontiter_New (self, false, NULL);
 }
 
 static void
@@ -12428,7 +12428,7 @@ fontiter_iternextkey (fontiterobject * di)
           Py_DECREF (tempdict);
           Py_DECREF (matched);
 
-          return (glyph);
+          return glyph;
         }
     }
   else
@@ -12444,7 +12444,7 @@ fontiter_iternextkey (fontiterobject * di)
           while (di->pos < sf->glyphcnt)
             {
               if (sf->glyphs[di->pos] != NULL)
-                return (Py_BuildValue ("s", sf->glyphs[di->pos++]->name));
+                return Py_BuildValue ("s", sf->glyphs[di->pos++]->name);
               ++di->pos;
             }
           break;
@@ -12456,7 +12456,7 @@ fontiter_iternextkey (fontiterobject * di)
           while (di->pos < enc_limit)
             {
               if (fv->selected[di->pos])
-                return (Py_BuildValue ("i", di->pos++));
+                return Py_BuildValue ("i", di->pos++);
               ++di->pos;
             }
           break;
@@ -12472,7 +12472,7 @@ fontiter_iternextkey (fontiterobject * di)
                   && SCWorthOutputting (fv->sf->glyphs[gid]))
                 {
                   ++di->pos;
-                  return (PySC_From_SC_I (fv->sf->glyphs[gid]));
+                  return PySC_From_SC_I (fv->sf->glyphs[gid]);
                 }
               ++di->pos;
             }
@@ -12486,7 +12486,7 @@ fontiter_iternextkey (fontiterobject * di)
             {
               if (SCWorthOutputting (fv->sf->glyphs[di->pos]))
                 {
-                  return (PySC_From_SC_I (fv->sf->glyphs[di->pos++]));
+                  return PySC_From_SC_I (fv->sf->glyphs[di->pos++]);
                 }
               ++di->pos;
             }
@@ -12503,7 +12503,7 @@ fontiter_iternextkey (fontiterobject * di)
                   && SCWorthOutputting (fv->sf->glyphs[gid]))
                 {
                   ++di->pos;
-                  return (PySC_From_SC_I (fv->sf->glyphs[gid]));
+                  return PySC_From_SC_I (fv->sf->glyphs[gid]);
                 }
               ++di->pos;
             }
@@ -12604,7 +12604,7 @@ PyFF_Font_new (PyTypeObject * type, PyObject *UNUSED (args),
       self->fv = SFAdd (SplineFontNew (), false);
       self->fv->python_fv_object = self;
     }
-  return ((PyObject *) self);
+  return (PyObject *) self;
 }
 
 static PyObject *
@@ -12613,7 +12613,7 @@ PyFFFont_close (PyFF_Font *self, PyObject *UNUSED (args))
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
 
   if (self->math != NULL && self->math->sf == fv->sf)
@@ -12661,7 +12661,7 @@ PyFFFont_Repr (PyFF_Font *self)
     ret = STRING_FROM_FORMAT ("%s CLOSED>", prefix);
   else
     ret = STRING_FROM_FORMAT ("%s \"%s\">", prefix, self->fv->sf->fontname);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -12702,7 +12702,7 @@ sfntnametuple (int lang, int strid, char *name)
     PyTuple_SetItem (tuple, 1, Py_BuildValue ("s", sfnt_name_str_ids[i].name));
   else
     PyTuple_SetItem (tuple, 1, Py_BuildValue ("i", strid));
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -12719,13 +12719,13 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
   if (!PySequence_Check (tuple))
     {
       PyErr_Format (PyExc_TypeError, "sfnt_name must be a tuple");
-      return (0);
+      return 0;
     }
   if (PySequence_Size (tuple) != 3)
     {
       PyErr_Format (PyExc_TypeError,
                     "sfnt_name tuple must consist of three strings");
-      return (0);
+      return 0;
     }
 
   val = PySequence_GetItem (tuple, 0);
@@ -12734,7 +12734,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
 #if PY_MAJOR_VERSION >= 3
       bytes = PyUnicode_AsUTF8String (val);
       if (bytes == NULL)
-        return (0);
+        return 0;
       lang_str = PyBytes_AsString (bytes);
       lang = FlagsFromString (lang_str, sfnt_name_mslangs, "language");
       Py_DECREF (bytes);
@@ -12744,7 +12744,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
 #endif /* PY_MAJOR_VERSION >= 3 */
       if (lang == FLAG_UNKNOWN)
         {
-          return (0);
+          return 0;
         }
     }
   else if (PyInt_Check (val))
@@ -12752,7 +12752,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
   else
     {
       PyErr_Format (PyExc_TypeError, "Language must be a string or an integer");
-      return (0);
+      return 0;
     }
 
   val = PySequence_GetItem (tuple, 1);
@@ -12761,7 +12761,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
 #if PY_MAJOR_VERSION >= 3
       bytes = PyUnicode_AsUTF8String (val);
       if (bytes == NULL)
-        return (0);
+        return 0;
       strid_str = PyBytes_AsString (bytes);
       strid = FlagsFromString (strid_str, sfnt_name_str_ids, "string id");
       Py_DECREF (bytes);
@@ -12771,7 +12771,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
 #endif /* PY_MAJOR_VERSION >= 3 */
       if (strid == FLAG_UNKNOWN)
         {
-          return (0);
+          return 0;
         }
     }
   else if (PyInt_Check (val))
@@ -12780,7 +12780,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
     {
       PyErr_Format (PyExc_TypeError,
                     "String-id must be a string or an integer");
-      return (0);
+      return 0;
     }
 
   for (names = sf->names; names != NULL; names = names->next)
@@ -12794,32 +12794,32 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
           free (names->names[strid]);
           names->names[strid] = NULL;
         }
-      return (1);
+      return 1;
     }
 
 #if PY_MAJOR_VERSION >= 3
   bytes = PyUnicode_AsUTF8String (PySequence_GetItem (tuple, 2));
   if (bytes == NULL)
-    return (0);
+    return 0;
   string = PyBytes_AsString (bytes);
   if (string == NULL)
     {
       Py_DECREF (bytes);
-      return (0);
+      return 0;
     }
   if (lang == 0x409 && english != NULL && english->names[strid] != NULL
       && strcmp (string, english->names[strid]) == 0)
     {
       Py_DECREF (bytes);
-      return (1);               /* If they set it to the default, there's nothing to do */
+      return 1;               /* If they set it to the default, there's nothing to do */
     }
 #else /* PY_MAJOR_VERSION >= 3 */
   string = PyBytes_AsString (PySequence_GetItem (tuple, 2));
   if (string == NULL)
-    return (0);
+    return 0;
   if (lang == 0x409 && english != NULL && english->names[strid] != NULL
       && strcmp (string, english->names[strid]) == 0)
-    return (1);                 /* If they set it to the default, there's nothing to do */
+    return 1;                 /* If they set it to the default, there's nothing to do */
 #endif /* PY_MAJOR_VERSION >= 3 */
 
   if (names == NULL)
@@ -12834,7 +12834,7 @@ SetSFNTName (SplineFont *sf, PyObject *tuple, struct ttflangname *english)
 #if PY_MAJOR_VERSION >= 3
   Py_DECREF (bytes);
 #endif /* PY_MAJOR_VERSION >= 3 */
-  return (1);
+  return 1;
 }
 
 /* ************************************************************************** */
@@ -12851,7 +12851,7 @@ PyFF_Font_get_sfntnames (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   sf = self->fv->sf;
   memset (&dummy, 0, sizeof (dummy));
@@ -12900,7 +12900,7 @@ PyFF_Font_get_sfntnames (PyFF_Font *self, void *UNUSED (closure))
   for (i = 0; i < ttf_namemax; ++i)
     free (dummy.names[i]);
 
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -12913,13 +12913,13 @@ PyFF_Font_set_sfntnames (PyFF_Font *self, PyObject *value,
   int i;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   sf = self->fv->sf;
   if (!PySequence_Check (value))
     {
       PyErr_Format (PyExc_TypeError, "Value must be a tuple");
-      return (-1);
+      return -1;
     }
 
   memset (&dummy, 0, sizeof (dummy));
@@ -12935,12 +12935,12 @@ PyFF_Font_set_sfntnames (PyFF_Font *self, PyObject *value,
     }
   for (i = PySequence_Size (value) - 1; i >= 0; --i)
     if (!SetSFNTName (sf, PySequence_GetItem (value, i), &dummy))
-      return (-1);
+      return -1;
 
   for (i = 0; i < ttf_namemax; ++i)
     free (dummy.names[i]);
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -12952,7 +12952,7 @@ PyFF_Font_get_bitmapSizes (PyFF_Font *self, void *UNUSED (closure))
   BDFFont *bdf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   sf = self->fv->sf;
   for (cnt = 0, bdf = sf->bitmaps; bdf != NULL; bdf = bdf->next, ++cnt);
@@ -12966,7 +12966,7 @@ PyFF_Font_get_bitmapSizes (PyFF_Font *self, void *UNUSED (closure))
                                                              (BDFDepth (bdf)
                                                               << 16))));
 
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -12976,18 +12976,18 @@ bitmapper (PyFF_Font *self, PyObject *value, int isavail)
   int *sizes;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   cnt = PyTuple_Size (value);
   if (PyErr_Occurred ())
-    return (-1);
+    return -1;
   sizes = xmalloc ((cnt + 1) * sizeof (int));
   for (i = 0; i < cnt; ++i)
     {
       if (!PyArg_ParseTuple (PyTuple_GetItem (value, i), "i", &sizes[i]))
         {
           free (sizes);
-          return (-1);
+          return -1;
         }
       if ((sizes[i] >> 16) == 0)
         sizes[i] |= 0x10000;
@@ -12998,17 +12998,17 @@ bitmapper (PyFF_Font *self, PyObject *value, int isavail)
     {
       free (sizes);
       PyErr_Format (PyExc_EnvironmentError, "Bitmap operation failed");
-      return (-1);
+      return -1;
     }
   free (sizes);
-  return (0);
+  return 0;
 }
 
 static int
 PyFF_Font_set_bitmapSizes (PyFF_Font *self, PyObject *value,
                            void *UNUSED (closure))
 {
-  return (bitmapper (self, value, true));
+  return bitmapper (self, value, true);
 }
 
 /* GASP (grid-fitting and scan procedure) flags */
@@ -13028,7 +13028,7 @@ PyFF_Font_get_gasp (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   sf = self->fv->sf;
   tuple = PyTuple_New (sf->gasp_cnt);
@@ -13047,7 +13047,7 @@ PyFF_Font_get_gasp (PyFF_Font *self, void *UNUSED (closure))
                        Py_BuildValue ("iO", sf->gasp[i].ppem, flagstuple));
     }
 
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -13059,12 +13059,12 @@ PyFF_Font_set_gasp (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
   PyObject *flags;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   sf = self->fv->sf;
   cnt = PyTuple_Size (value);
   if (PyErr_Occurred ())
-    return (-1);
+    return -1;
   if (cnt == 0)
     gasp = NULL;
   else
@@ -13076,13 +13076,13 @@ PyFF_Font_set_gasp (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
               (PyTuple_GetItem (value, i), "HO", &gasp[i].ppem, &flags))
             {
               free (gasp);
-              return (-1);
+              return -1;
             }
           flag = FlagsFromTuple (flags, gaspflags, "gasp flag");
           if (flag == FLAG_UNKNOWN)
             {
               free (gasp);
-              return (-1);
+              return -1;
             }
           gasp[i].flags = flag;
         }
@@ -13090,7 +13090,7 @@ PyFF_Font_set_gasp (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
   free (sf->gasp);
   sf->gasp = gasp;
   sf->gasp_cnt = cnt;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -13102,7 +13102,7 @@ PyFF_Font_get_lookups (PyFF_Font *self, void *UNUSED (closure), int isgpos)
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   sf = self->fv->sf;
   cnt = 0;
@@ -13117,19 +13117,19 @@ PyFF_Font_get_lookups (PyFF_Font *self, void *UNUSED (closure), int isgpos)
        otl = otl->next)
     PyTuple_SetItem (tuple, cnt++, Py_BuildValue ("s", otl->lookup_name));
 
-  return (tuple);
+  return tuple;
 }
 
 static PyObject *
 PyFF_Font_get_gpos_lookups (PyFF_Font *self, void *closure)
 {
-  return (PyFF_Font_get_lookups (self, closure, true));
+  return PyFF_Font_get_lookups (self, closure, true);
 }
 
 static PyObject *
 PyFF_Font_get_gsub_lookups (PyFF_Font *self, void *closure)
 {
-  return (PyFF_Font_get_lookups (self, closure, false));
+  return PyFF_Font_get_lookups (self, closure, false);
 }
 
 static PyObject *
@@ -13138,7 +13138,7 @@ PyFF_Font_get_math (PyFF_Font *self, void *UNUSED (closure))
   PyFF_Math *math;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   if (self->math != NULL)
     Py_RETURN (self->math);
@@ -13157,7 +13157,7 @@ PyFF_Font_get_private (PyFF_Font *self, void *UNUSED (closure))
   PyFF_Private *private;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   if (self->private != NULL)
     Py_RETURN (self->private);
@@ -13176,7 +13176,7 @@ PyFF_Font_get_layers (PyFF_Font *self, void *UNUSED (closure))
   PyFF_LayerInfoArray *layers;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   if (self->layers != NULL)
     Py_RETURN (self->layers);
@@ -13195,16 +13195,16 @@ static PyObject *
 PyFF_Font_get_layer_cnt (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("i", self->fv->sf->layer_cnt));
+    return NULL;
+  return Py_BuildValue ("i", self->fv->sf->layer_cnt);
 }
 
 static PyObject *
 PyFF_Font_get_activeLayer (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("i", self->fv->active_layer));
+    return NULL;
+  return Py_BuildValue ("i", self->fv->active_layer);
 }
 
 static int
@@ -13214,7 +13214,7 @@ PyFF_Font_set_activeLayer (PyFF_Font *self, PyObject *value,
   int layer;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   if (PyInt_Check (value))
     layer = PyInt_AsLong (value);
@@ -13223,21 +13223,21 @@ PyFF_Font_set_activeLayer (PyFF_Font *self, PyObject *value,
       char *name = PyBytes_AsString (value);
       layer = SFFindLayerIndexByName (self->fv->sf, name);
       if (layer < 0)
-        return (-1);
+        return -1;
     }
   if (layer < 0 || layer >= self->fv->sf->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Layer is out of range");
-      return (-1);
+      return -1;
     }
   self->fv->active_layer = layer;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Font_get_selection (PyFF_Font *self, void *UNUSED (closure))
 {
-  return (PyFFSelection_new (self));
+  return PyFFSelection_new (self);
 }
 
 static int
@@ -13250,7 +13250,7 @@ PyFF_Font_set_selection (PyFF_Font *self, PyObject *value,
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   fv = self->fv;
   if (PyType_IsSubtype (&PyFF_SelectionType, ((PyObject *) value)->ob_type))
@@ -13267,13 +13267,13 @@ PyFF_Font_set_selection (PyFF_Font *self, PyObject *value,
     {
       PyErr_Format (PyExc_TypeError,
                     "The value must be either another selection or a tuple of integers");
-      return (-1);
+      return -1;
     }
 
   if (len2 >= fv->map->enc_limit)
     {
       PyErr_Format (PyExc_TypeError, "Too much data");
-      return (-1);
+      return -1;
     }
   if (is_sel)
     {
@@ -13294,18 +13294,18 @@ PyFF_Font_set_selection (PyFF_Font *self, PyObject *value,
             {
               val = PyInt_AsLong (obj);
               if (PyErr_Occurred ())
-                return (-1);
+                return -1;
             }
           fv->selected[i] = val;
         }
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Font_get_cvt (PyFF_Font *self, void *UNUSED (closure))
 {
-  return (PyFFCvt_new (self));
+  return PyFFCvt_new (self);
 }
 
 static int
@@ -13318,7 +13318,7 @@ PyFF_Font_set_cvt (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
   struct ttf_table *cvt;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   sf = self->fv->sf;
   if (PyType_IsSubtype (&PyFF_CvtType, ((PyObject *) value)->ob_type))
@@ -13335,7 +13335,7 @@ PyFF_Font_set_cvt (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
     {
       PyErr_Format (PyExc_TypeError,
                     "The value must be either another cvt or a tuple of integers");
-      return (-1);
+      return -1;
     }
 
   cvt = SFFindTable (sf, CHR ('c', 'v', 't', ' '));
@@ -13356,11 +13356,11 @@ PyFF_Font_set_cvt (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
           memputshort (cvt->data, 2 * i,
                        PyInt_AsLong (PySequence_GetItem (value, i)));
           if (PyErr_Occurred ())
-            return (-1);
+            return -1;
         }
     }
   cvt->len = 2 * len2;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -13369,13 +13369,13 @@ PyFF_Font_get_temporary (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   sf = self->fv->sf;
   if (sf->python_temporary == NULL)
     Py_RETURN_NONE;
   Py_INCREF ((PyObject *) (sf->python_temporary));
-  return (sf->python_temporary);
+  return sf->python_temporary;
 }
 
 static int
@@ -13386,7 +13386,7 @@ PyFF_Font_set_temporary (PyFF_Font *self, PyObject *value,
   PyObject *old;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   sf = self->fv->sf;
   old = sf->python_temporary;
@@ -13398,7 +13398,7 @@ PyFF_Font_set_temporary (PyFF_Font *self, PyObject *value,
   Py_XINCREF (value);
   sf->python_temporary = value;
   Py_XDECREF (old);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -13407,13 +13407,13 @@ PyFF_Font_get_persistent (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   sf = self->fv->sf;
   if (sf->python_persistent == NULL)
     Py_RETURN_NONE;
   Py_INCREF ((PyObject *) (sf->python_persistent));
-  return (sf->python_persistent);
+  return sf->python_persistent;
 }
 
 static int
@@ -13424,7 +13424,7 @@ PyFF_Font_set_persistent (PyFF_Font *self, PyObject *value,
   PyObject *old;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
 
   sf = self->fv->sf;
   old = sf->python_persistent;
@@ -13436,7 +13436,7 @@ PyFF_Font_set_persistent (PyFF_Font *self, PyObject *value,
   Py_XINCREF (value);
   sf->python_persistent = value;
   Py_XDECREF (old);
-  return (0);
+  return 0;
 }
 
 static int
@@ -13448,7 +13448,7 @@ _PyFF_Font_set_str_null (SplineFont *sf, PyObject *value, char *str, int offset)
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete the %s", str);
-      return (-1);
+      return -1;
     }
   if (value == Py_None)
     newv = NULL;
@@ -13463,19 +13463,19 @@ _PyFF_Font_set_str_null (SplineFont *sf, PyObject *value, char *str, int offset)
   else
     newv = xstrdup_or_null (PyBytes_AsString (value));
   if (newv == NULL && value != Py_None)
-    return (-1);
+    return -1;
   oldpos = (char **) (((char *) sf) + offset);
   free (*oldpos);
   *oldpos = newv;
-  return (0);
+  return 0;
 }
 
 static int
 PyFF_Font_set_str_null (PyFF_Font *self, PyObject *value, char *str, int offset)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (_PyFF_Font_set_str_null (self->fv->sf, value, str, offset));
+    return -1;
+  return _PyFF_Font_set_str_null (self->fv->sf, value, str, offset);
 }
 
 static int
@@ -13483,13 +13483,13 @@ PyFF_Font_set_cidstr_null (PyFF_Font *self, PyObject *value, char *str,
                            int offset)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (self->fv->cidmaster == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "Not a cid-keyed font");
-      return (-1);
+      return -1;
     }
-  return (_PyFF_Font_set_str_null (self->fv->cidmaster, value, str, offset));
+  return _PyFF_Font_set_str_null (self->fv->cidmaster, value, str, offset);
 }
 
 static int
@@ -13499,11 +13499,11 @@ PyFF_Font_set_str (PyFF_Font *self, PyObject *value, char *str, int offset)
   PyObject *temp;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete the %s", str);
-      return (-1);
+      return -1;
     }
   if (PyUnicode_Check (value))
     {
@@ -13516,11 +13516,11 @@ PyFF_Font_set_str (PyFF_Font *self, PyObject *value, char *str, int offset)
   else
     newv = xstrdup_or_null (PyBytes_AsString (value));
   if (newv == NULL)
-    return (-1);
+    return -1;
   oldpos = (char **) (((char *) (self->fv->sf)) + offset);
   free (*oldpos);
   *oldpos = newv;
-  return (0);
+  return 0;
 }
 
 static int
@@ -13531,34 +13531,34 @@ _PyFF_Font_set_real (SplineFont *sf, PyObject *value, char *str, int offset)
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete the %s", str);
-      return (-1);
+      return -1;
     }
   temp = PyFloat_AsDouble (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   *(real *) (((char *) sf) + offset) = temp;
-  return (0);
+  return 0;
 }
 
 static int
 PyFF_Font_set_real (PyFF_Font *self, PyObject *value, char *str, int offset)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (_PyFF_Font_set_real (self->fv->sf, value, str, offset));
+    return -1;
+  return _PyFF_Font_set_real (self->fv->sf, value, str, offset);
 }
 
 static int
 PyFF_Font_set_cidreal (PyFF_Font *self, PyObject *value, char *str, int offset)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (self->fv->cidmaster == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "Not a cid-keyed font");
-      return (-1);
+      return -1;
     }
-  return (_PyFF_Font_set_real (self->fv->cidmaster, value, str, offset));
+  return _PyFF_Font_set_real (self->fv->cidmaster, value, str, offset);
 }
 
 static int
@@ -13569,34 +13569,34 @@ _PyFF_Font_set_int (SplineFont *sf, PyObject *value, char *str, int offset)
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete the %s", str);
-      return (-1);
+      return -1;
     }
   temp = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   *(int *) (((char *) sf) + offset) = temp;
-  return (0);
+  return 0;
 }
 
 static int
 PyFF_Font_set_int (PyFF_Font *self, PyObject *value, char *str, int offset)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (_PyFF_Font_set_int (self->fv->sf, value, str, offset));
+    return -1;
+  return _PyFF_Font_set_int (self->fv->sf, value, str, offset);
 }
 
 static int
 PyFF_Font_set_cidint (PyFF_Font *self, PyObject *value, char *str, int offset)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (self->fv->cidmaster == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "Not a cid-keyed font");
-      return (-1);
+      return -1;
     }
-  return (_PyFF_Font_set_int (self->fv->cidmaster, value, str, offset));
+  return _PyFF_Font_set_int (self->fv->cidmaster, value, str, offset);
 }
 
 static int
@@ -13604,17 +13604,17 @@ PyFF_Font_set_int2 (PyFF_Font *self, PyObject *value, char *str, int offset)
 {
   long temp;
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete the %s", str);
-      return (-1);
+      return -1;
     }
   temp = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   *(int16_t *) (((char *) (self->fv->sf)) + offset) = temp;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -13626,7 +13626,7 @@ PyFF_Font_get_texparams (PyFF_Font *self, void *UNUSED (closure))
   double val;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   sf = self->fv->sf;
   em = sf->ascent + sf->descent;
@@ -13650,7 +13650,7 @@ PyFF_Font_get_texparams (PyFF_Font *self, void *UNUSED (closure))
       PyTuple_SetItem (tuple, i, Py_BuildValue ("d", val));
     }
 
-  return (tuple);
+  return tuple;
 }
 
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
@@ -13712,73 +13712,73 @@ return( PyFF_Font_set_real(self,value,#name,offsetof(SplineFont,name)) );\
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_cidreal(name) \
 static PyObject *PyFF_Font_get_##name(PyFF_Font *self, void *UNUSED(closure)) { \
-    if ( CheckIfFontClosed(self) ) return (NULL);	\
+    if ( CheckIfFontClosed(self) ) return NULL;	\
     if ( self->fv->cidmaster==NULL )			\
 Py_RETURN_NONE;						\
 return( Py_BuildValue("d", self->fv->cidmaster->name ));	\
 }							\
 							\
 static int PyFF_Font_set_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) {\
-    if ( CheckIfFontClosed(self) ) return (-1);				    \
+    if ( CheckIfFontClosed(self) ) return -1;				    \
 return( PyFF_Font_set_cidreal(self,value,#name,offsetof(SplineFont,name)) );\
 }
 
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_int(name) \
 static PyObject *PyFF_Font_get_##name(PyFF_Font *self, void *UNUSED(closure)) { \
-    if ( CheckIfFontClosed(self) ) return (NULL);	\
+    if ( CheckIfFontClosed(self) ) return NULL;	\
 return( Py_BuildValue("i", self->fv->sf->name ));	\
 }							\
 							\
 static int PyFF_Font_set_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) {\
-    if ( CheckIfFontClosed(self) ) return (-1);				\
+    if ( CheckIfFontClosed(self) ) return -1;				\
 return( PyFF_Font_set_int(self,value,#name,offsetof(SplineFont,name)) );\
 }
 
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_cidint(name) \
 static PyObject *PyFF_Font_get_##name(PyFF_Font *self, void *UNUSED(closure)) { \
-    if ( CheckIfFontClosed(self) ) return (NULL);		\
+    if ( CheckIfFontClosed(self) ) return NULL;		\
     if ( self->fv->cidmaster==NULL )				\
 Py_RETURN_NONE;							\
 return( Py_BuildValue("i", self->fv->cidmaster->name ));	\
 }								\
 								\
 static int PyFF_Font_set_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) {\
-    if ( CheckIfFontClosed(self) ) return (-1);				   \
+    if ( CheckIfFontClosed(self) ) return -1;				   \
 return( PyFF_Font_set_cidint(self,value,#name,offsetof(SplineFont,name)) );\
 }
 
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_int2(name) \
 static PyObject *PyFF_Font_get_##name(PyFF_Font *self, void *UNUSED(closure)) { \
-    if ( CheckIfFontClosed(self) ) return (NULL);	\
+    if ( CheckIfFontClosed(self) ) return NULL;	\
 return( Py_BuildValue("i", self->fv->sf->name ));	\
 }							\
 							\
 static int PyFF_Font_set_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) {\
-    if ( CheckIfFontClosed(self) ) return (-1);				 \
+    if ( CheckIfFontClosed(self) ) return -1;				 \
 return( PyFF_Font_set_int2(self,value,#name,offsetof(SplineFont,name)) );\
 }
 
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_ro_bit(name) \
 static PyObject *PyFF_Font_get_##name(PyFF_Font *self, void *UNUSED(closure)) { \
-    if ( CheckIfFontClosed(self) ) return (NULL);	\
+    if ( CheckIfFontClosed(self) ) return NULL;	\
 return( Py_BuildValue("i", self->fv->sf->name ));	\
 }
 
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_bit(name) \
 static PyObject *PyFF_Font_get_##name(PyFF_Font *self, void *UNUSED(closure)) { \
-    if ( CheckIfFontClosed(self) ) return (NULL);	\
+    if ( CheckIfFontClosed(self) ) return NULL;	\
 return( Py_BuildValue("i", self->fv->sf->name ));	\
 }							\
 							\
 static int PyFF_Font_set_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) { \
     long temp;						\
 							\
-    if ( CheckIfFontClosed(self) ) return (-1);		\
+    if ( CheckIfFontClosed(self) ) return -1;		\
     if ( value==NULL ) {				\
 	PyErr_SetString(PyExc_TypeError, "Cannot delete the " #name ); \
 return( -1 );						\
@@ -13804,7 +13804,7 @@ return( 0 );						\
 #define ff_gs_os2int2(name) \
 static PyObject *PyFF_Font_get_OS2_##name(PyFF_Font *self, void *UNUSED(closure)) { \
     SplineFont *sf;					\
-    if ( CheckIfFontClosed(self) ) return (NULL);	\
+    if ( CheckIfFontClosed(self) ) return NULL;	\
     sf = self->fv->sf;					\
     SFDefaultOS2(sf);					\
 return( Py_BuildValue("i", sf->pfminfo.name ));		\
@@ -13812,7 +13812,7 @@ return( Py_BuildValue("i", sf->pfminfo.name ));		\
 							\
 static int PyFF_Font_set_OS2_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) {\
     SplineFont *sf;					\
-    if ( CheckIfFontClosed(self) ) return (-1);		\
+    if ( CheckIfFontClosed(self) ) return -1;		\
     sf = self->fv->sf;					\
     SFDefaultOS2(sf);					\
 return( PyFF_Font_set_int2(self,value,#name,offsetof(SplineFont,pfminfo)+offsetof(struct pfminfo,name)) );\
@@ -13821,7 +13821,7 @@ return( PyFF_Font_set_int2(self,value,#name,offsetof(SplineFont,pfminfo)+offseto
 #define ff_gs_os2bit(name) \
 static PyObject *PyFF_Font_get_OS2_##name(PyFF_Font *self, void *UNUSED(closure)) { \
     SplineFont *sf;					\
-    if ( CheckIfFontClosed(self) ) return (NULL);	\
+    if ( CheckIfFontClosed(self) ) return NULL;	\
     sf = self->fv->sf;					\
     SFDefaultOS2(sf);					\
 return( Py_BuildValue("i", self->fv->sf->pfminfo.name ));	\
@@ -13831,7 +13831,7 @@ static int PyFF_Font_set_OS2_##name(PyFF_Font *self,PyObject *value, void *UNUSE
     SplineFont *sf;					\
     long temp;						\
 							\
-    if ( CheckIfFontClosed(self) ) return (-1);		\
+    if ( CheckIfFontClosed(self) ) return -1;		\
     sf = self->fv->sf;					\
     if ( value==NULL ) {				\
 	PyErr_SetString(PyExc_TypeError, "Cannot delete the " #name ); \
@@ -13880,11 +13880,11 @@ ff_gs_bit (hasvmetrics) ff_gs_bit (head_optimized_for_cleartype)
   int version = self->fv->sf->sfntRevision;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (version == sfntRevisionUnset)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("d", version / 65536.0));
+  return Py_BuildValue ("d", version / 65536.0);
 }
 
 static int
@@ -13894,7 +13894,7 @@ PyFF_Font_set_sfntRevision (PyFF_Font *self, PyObject *value,
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == Py_None)
     sf->sfntRevision = sfntRevisionUnset;
@@ -13915,10 +13915,10 @@ PyFF_Font_set_sfntRevision (PyFF_Font *self, PyObject *value,
   else
     {
       PyErr_Format (PyExc_TypeError, "Value must be a double, integer or None");
-      return (-1);
+      return -1;
     }
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -13927,12 +13927,12 @@ PyFF_Font_get_woffMajor (PyFF_Font *self, void *UNUSED (closure))
   int version;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   version = self->fv->sf->woffMajor;
   if (version == woffUnset)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("i", version));
+  return Py_BuildValue ("i", version);
 }
 
 static int
@@ -13942,7 +13942,7 @@ PyFF_Font_set_woffMajor (PyFF_Font *self, PyObject *value,
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == Py_None)
     {
@@ -13959,10 +13959,10 @@ PyFF_Font_set_woffMajor (PyFF_Font *self, PyObject *value,
   else
     {
       PyErr_Format (PyExc_TypeError, "Value must be an integer or None");
-      return (-1);
+      return -1;
     }
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -13971,12 +13971,12 @@ PyFF_Font_get_woffMinor (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (sf->woffMajor == woffUnset)
     Py_RETURN_NONE;
 
-  return (Py_BuildValue ("i", sf->woffMinor));
+  return Py_BuildValue ("i", sf->woffMinor);
 }
 
 static int
@@ -13986,7 +13986,7 @@ PyFF_Font_set_woffMinor (PyFF_Font *self, PyObject *value,
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == Py_None)
     {
@@ -14003,18 +14003,18 @@ PyFF_Font_set_woffMinor (PyFF_Font *self, PyObject *value,
   else
     {
       PyErr_Format (PyExc_TypeError, "Value must be an integer or None");
-      return (-1);
+      return -1;
     }
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Font_get_vertical_origin (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("i", 0));      /* No longer implemented, return 0 for backwards compatability */
+    return NULL;
+  return Py_BuildValue ("i", 0);      /* No longer implemented, return 0 for backwards compatability */
 }
 
 static int
@@ -14022,7 +14022,7 @@ PyFF_Font_set_vertical_origin (PyFF_Font *UNUSED (self),
                                PyObject *UNUSED (value), void *UNUSED (closure))
 {
   PyErr_Format (PyExc_NotImplementedError, "No longer supported");
-  return (-1);
+  return -1;
 }
 
 static PyObject *
@@ -14031,7 +14031,7 @@ PyFF_Font_get_os2codepages (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!sf->pfminfo.hascodepages)
     OS2FigureCodePages (sf, sf->pfminfo.codepages);
@@ -14047,19 +14047,19 @@ PyFF_Font_set_os2codepages (PyFF_Font *self, PyObject *value,
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == NULL)
     {
       sf->pfminfo.hascodepages = false;
-      return (0);
+      return 0;
     }
 
   if (!PyArg_ParseTuple
       (value, "ii", &sf->pfminfo.codepages[0], &sf->pfminfo.codepages[1]))
-    return (-1);
+    return -1;
   sf->pfminfo.hascodepages = true;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -14068,7 +14068,7 @@ PyFF_Font_get_os2unicoderanges (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!sf->pfminfo.hasunicoderanges)
     OS2FigureUnicodeRanges (sf, sf->pfminfo.unicoderanges);
@@ -14086,37 +14086,37 @@ PyFF_Font_set_os2unicoderanges (PyFF_Font *self, PyObject *value,
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == NULL)
     {
       sf->pfminfo.hasunicoderanges = false;
-      return (0);
+      return 0;
     }
 
   if (!PyArg_ParseTuple
       (value, "iiii", &sf->pfminfo.unicoderanges[0],
        &sf->pfminfo.unicoderanges[1], &sf->pfminfo.unicoderanges[2],
        &sf->pfminfo.unicoderanges[3]))
-    return (-1);
+    return -1;
   sf->pfminfo.hasunicoderanges = true;
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Font_get_loadvalidation_state (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("i", self->fv->sf->loadvalidation_state));
+    return NULL;
+  return Py_BuildValue ("i", self->fv->sf->loadvalidation_state);
 }
 
 static PyObject *
 PyFF_Font_get_privatevalidation_state (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("i", ValidatePrivate (self->fv->sf)));
+    return NULL;
+  return Py_BuildValue ("i", ValidatePrivate (self->fv->sf));
 }
 
 static PyObject *
@@ -14130,7 +14130,7 @@ PyFF_Font_get_baseline (PyFF_Font *self, void *UNUSED (closure),
   struct baselangextent *bl, *feat;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (base == NULL)
     Py_RETURN_NONE;
 
@@ -14189,23 +14189,23 @@ PyFF_Font_get_baseline (PyFF_Font *self, void *UNUSED (closure),
             }
         }
     }
-  return (ret);
+  return ret;
 }
 
 static PyObject *
 PyFF_Font_get_horizontal_baseline (PyFF_Font *self, void *closure)
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_get_baseline (self, closure, self->fv->sf->horiz_base));
+    return NULL;
+  return PyFF_Font_get_baseline (self, closure, self->fv->sf->horiz_base);
 }
 
 static PyObject *
 PyFF_Font_get_vertical_baseline (PyFF_Font *self, void *closure)
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_get_baseline (self, closure, self->fv->sf->vert_base));
+    return NULL;
+  return PyFF_Font_get_baseline (self, closure, self->fv->sf->vert_base);
 }
 
 static int
@@ -14221,22 +14221,22 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
   struct baselangextent *ft, *lastft;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (value == Py_None)
     {
       BaseFree (*basep);
       *basep = NULL;
-      return (0);
+      return 0;
     }
   if (!PyArg_ParseTuple (value, "OO", &basetags, &scripts))
-    return (-1);
+    return -1;
   if (basetags == Py_None)
     basecnt = 0;
   else
     {
       basecnt = PyTuple_Size (basetags);
       if (basecnt < 0)
-        return (-1);
+        return -1;
     }
   base = xzalloc (sizeof (struct Base));
   base->baseline_cnt = basecnt;
@@ -14250,13 +14250,13 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           PyErr_Format (PyExc_TypeError,
                         "Baseline tag must be a 4 character string");
           BaseFree (base);
-          return (-1);
+          return -1;
         }
       base->baseline_tags[i] = StrToTag (PyBytes_AsString (str));
       if (base->baseline_tags[i] == BAD_TAG)
         {
           BaseFree (base);
-          return (-1);
+          return -1;
         }
     }
 
@@ -14265,7 +14265,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
   if (scriptcnt < 0)
     {
       BaseFree (base);
-      return (-1);
+      return -1;
     }
   for (j = 0; j < scriptcnt; ++j)
     {
@@ -14277,7 +14277,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           (script, "szOO", &scripttag, &def_baseln, &offsets, &langs))
         {
           BaseFree (base);
-          return (-1);
+          return -1;
         }
       bs = xzalloc (sizeof (struct basescript));
       if (lastbs == NULL)
@@ -14289,7 +14289,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
       if (bs->script == BAD_TAG)
         {
           BaseFree (base);
-          return (-1);
+          return -1;
         }
       if (basecnt == 0 && (def_baseln == NULL && offsets == NULL))
         /* That's reasonable */ ;
@@ -14300,14 +14300,14 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           if (tag == BAD_TAG)
             {
               BaseFree (base);
-              return (-1);
+              return -1;
             }
           if (PyTuple_Size (offsets) != basecnt)
             {
               PyErr_Format (PyExc_TypeError,
                             "There must be as many baseline positions as there are baslines, in a script");
               BaseFree (base);
-              return (-1);
+              return -1;
             }
           for (i = 0; i < basecnt && base->baseline_tags[i] != tag; ++i);
           if (i == basecnt)
@@ -14315,7 +14315,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
               PyErr_Format (PyExc_TypeError,
                             "A script's default baseline must be one of the baselines specified");
               BaseFree (base);
-              return (-1);
+              return -1;
             }
           bs->def_baseline = i;
           bs->baseline_pos = xmalloc (basecnt * sizeof (int16_t));
@@ -14326,7 +14326,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
                   PyErr_Format (PyExc_TypeError,
                                 "Baseline positions must be integers");
                   BaseFree (base);
-                  return (-1);
+                  return -1;
                 }
               bs->baseline_pos[i] = PyInt_AsLong (PyTuple_GetItem (offsets, i));
             }
@@ -14340,7 +14340,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           else
             PyErr_Format (PyExc_TypeError,
                           "You must specify a default baseline and offsets in a script");
-          return (-1);
+          return -1;
         }
 
       if (langs == Py_None)
@@ -14350,7 +14350,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           PyErr_Format (PyExc_TypeError,
                         "The languages must be specified by a tuple");
           BaseFree (base);
-          return (-1);
+          return -1;
         }
       lastln = NULL;
       langcnt = PyTuple_Size (langs);
@@ -14364,7 +14364,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           if (!PyArg_ParseTuple (lang, "siiO", &tag, &min, &max, &features))
             {
               BaseFree (base);
-              return (-1);
+              return -1;
             }
           ln =
             xzalloc (sizeof (struct baselangextent));
@@ -14379,7 +14379,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
               PyErr_Format (PyExc_TypeError,
                             "A language tag must be a 4 character string");
               BaseFree (base);
-              return (-1);
+              return -1;
             }
           ln->descent = min;
           ln->ascent = max;
@@ -14391,7 +14391,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
               PyErr_Format (PyExc_TypeError,
                             "The features must be specified by a tuple");
               BaseFree (base);
-              return (-1);
+              return -1;
             }
           lastft = NULL;
           featcnt = PyTuple_Size (features);
@@ -14404,7 +14404,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
               if (!PyArg_ParseTuple (feat, "sii", &tag, &min, &max))
                 {
                   BaseFree (base);
-                  return (-1);
+                  return -1;
                 }
               ft =
                 (struct baselangextent *)
@@ -14418,7 +14418,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
               if (ft->lang == BAD_TAG)
                 {
                   BaseFree (base);
-                  return (-1);
+                  return -1;
                 }
               ft->descent = min;
               ft->ascent = max;
@@ -14427,7 +14427,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
     }
   BaseFree (*basep);
   *basep = base;
-  return (0);
+  return 0;
 }
 
 static int
@@ -14435,7 +14435,7 @@ PyFF_Font_set_horizontal_baseline (PyFF_Font *self, PyObject *value,
                                    void *closure)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   return (PyFF_Font_set_baseline
           (self, value, closure, &self->fv->sf->horiz_base));
 }
@@ -14445,7 +14445,7 @@ PyFF_Font_set_vertical_baseline (PyFF_Font *self, PyObject *value,
                                  void *closure)
 {
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   return (PyFF_Font_set_baseline
           (self, value, closure, &self->fv->sf->vert_base));
 }
@@ -14454,22 +14454,22 @@ static PyObject *
 PyFF_Font_get_path (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (self->fv->sf->origname == NULL)
     Py_RETURN_NONE;
   else
-    return (Py_BuildValue ("s", self->fv->sf->origname));
+    return Py_BuildValue ("s", self->fv->sf->origname);
 }
 
 static PyObject *
 PyFF_Font_get_sfd_path (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (self->fv->sf->filename == NULL)
     Py_RETURN_NONE;
   else
-    return (Py_BuildValue ("s", self->fv->sf->filename));
+    return Py_BuildValue ("s", self->fv->sf->filename);
 }
 
 static PyObject *
@@ -14480,7 +14480,7 @@ PyFF_Font_get_OS2_panose (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!sf->pfminfo.panose_set)
     SFDefaultOS2 (sf);
@@ -14488,7 +14488,7 @@ PyFF_Font_get_OS2_panose (PyFF_Font *self, void *UNUSED (closure))
   for (i = 0; i < 10; ++i)
     PyTuple_SET_ITEM (tuple, i,
                       Py_BuildValue ("i", self->fv->sf->pfminfo.panose[i]));
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -14499,24 +14499,24 @@ PyFF_Font_set_OS2_panose (PyFF_Font *self, PyObject *value,
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete panose");
-      return (-1);
+      return -1;
     }
   if (!PyArg_ParseTuple
       (value, "iiiiiiiiii", &panose[0], &panose[1], &panose[2], &panose[3],
        &panose[4], &panose[5], &panose[6], &panose[7], &panose[8], &panose[9]))
-    return (-1);
+    return -1;
 
   if (!sf->pfminfo.panose_set)
     SFDefaultOS2 (sf);
   for (i = 0; i < 10; ++i)
     sf->pfminfo.panose[i] = panose[i];
   sf->pfminfo.panose_set = true;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -14526,7 +14526,7 @@ PyFF_Font_get_OS2_vendor (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   SFDefaultOS2 (sf);
   buf[0] = sf->pfminfo.os2_vendor[0];
@@ -14534,7 +14534,7 @@ PyFF_Font_get_OS2_vendor (PyFF_Font *self, void *UNUSED (closure))
   buf[2] = sf->pfminfo.os2_vendor[2];
   buf[3] = sf->pfminfo.os2_vendor[3];
   buf[4] = '\0';
-  return (Py_BuildValue ("s", buf));
+  return Py_BuildValue ("s", buf);
 }
 
 static int
@@ -14546,12 +14546,12 @@ PyFF_Font_set_OS2_vendor (PyFF_Font *self, PyObject *value,
   PyObject *temp;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete vendor");
-      return (-1);
+      return -1;
     }
   if (PyUnicode_Check (value))
     {
@@ -14564,13 +14564,13 @@ PyFF_Font_set_OS2_vendor (PyFF_Font *self, PyObject *value,
   else
     newv = PyBytes_AsString (value);
   if (newv == NULL)
-    return (-1);
+    return -1;
 
   const size_t n = strlen (newv);
   if (n > 4)
     {
       PyErr_Format (PyExc_TypeError, "OS2 vendor is limited to 4 characters");
-      return (-1);
+      return -1;
     }
   SFDefaultOS2 (sf);
   sf->pfminfo.os2_vendor[0] = (n < 1) ? '\0' : newv[0];
@@ -14578,7 +14578,7 @@ PyFF_Font_set_OS2_vendor (PyFF_Font *self, PyObject *value,
   sf->pfminfo.os2_vendor[2] = (n < 3) ? '\0' : newv[2];
   sf->pfminfo.os2_vendor[3] = (n < 4) ? '\0' : newv[3];
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -14586,8 +14586,8 @@ PyFF_Font_get_design_size (PyFF_Font *self, void *UNUSED (closure))
 {
   /* Design size is expressed in tenths of points */
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("d", self->fv->sf->design_size / 10.0));
+    return NULL;
+  return Py_BuildValue ("d", self->fv->sf->design_size / 10.0);
 }
 
 static int
@@ -14597,24 +14597,24 @@ PyFF_Font_set_design_size (PyFF_Font *self, PyObject *value,
   double temp;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (value == NULL)
     self->fv->sf->design_size = 0;
   else if (PyFloat_Check (value))
     {
       temp = PyFloat_AsDouble (value);
       if (PyErr_Occurred () != NULL)
-        return (-1);
+        return -1;
       self->fv->sf->design_size = rint (10.0 * temp);
     }
   else if (PyInt_Check (value))
     {
       int t = PyInt_AsLong (value);
       if (PyErr_Occurred () != NULL)
-        return (-1);
+        return -1;
       self->fv->sf->design_size = 10 * t;
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -14630,7 +14630,7 @@ PyFF_Font_get_size_feature (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (sf->design_size == 0)
     Py_RETURN_NONE;
@@ -14638,7 +14638,7 @@ PyFF_Font_get_size_feature (PyFF_Font *self, void *UNUSED (closure))
   for (names = sf->fontstyle_name, cnt = 0; names != NULL;
        names = names->next, ++cnt);
   if (cnt == 0)
-    return (Py_BuildValue ("(d)", sf->design_size / 10.0));
+    return Py_BuildValue ("(d)", sf->design_size / 10.0);
   tuple = PyTuple_New (cnt);
   for (names = sf->fontstyle_name, cnt = 0; names != NULL;
        names = names->next, ++cnt)
@@ -14672,13 +14672,13 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
   char *string;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == NULL)
     {
       sf->design_size = 0;
       /* Setting the design size to zero means there will be no 'size' feature in the output */
-      return (0);
+      return 0;
     }
   /* If they only specify a design size, we won't require that it be a tuple */
   /*  if it is in a tuple, remove it and treat as a single value */
@@ -14691,18 +14691,18 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
       else
         temp = PyInt_AsLong (value);
       if (PyErr_Occurred () != NULL)
-        return (-1);
+        return -1;
       sf->design_size = rint (10.0 * temp);
       sf->design_range_bottom = 0;
       sf->design_range_top = 0;
       sf->fontstyle_id = 0;
       OtfNameListFree (sf->fontstyle_name);
       sf->fontstyle_name = NULL;
-      return (0);
+      return 0;
     }
 
   if (!PyArg_ParseTuple (value, "dddiO", &temp, &bot, &top, &id, &names))
-    return (-1);
+    return -1;
   sf->design_size = rint (10.0 * temp);
   sf->design_range_bottom = rint (10.0 * bot);
   sf->design_range_top = rint (10.0 * top);
@@ -14712,7 +14712,7 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
     {
       PyErr_Format (PyExc_TypeError,
                     "Final argument must be a tuple of tuples");
-      return (-1);
+      return -1;
     }
   head = last = NULL;
   for (i = 0; i < PySequence_Size (names); ++i)
@@ -14725,14 +14725,14 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
         {
           PyErr_Format (PyExc_TypeError, "Value must be a tuple");
           OtfNameListFree (head);
-          return (-1);
+          return -1;
         }
       if (PySequence_Size (subtuple) != 2)
         {
           PyErr_Format (PyExc_TypeError,
                         "Value must be a tuple of a language name and string");
           OtfNameListFree (head);
-          return (-1);
+          return -1;
         }
       val = PySequence_GetItem (subtuple, 0);
       if (STRING_CHECK (val))
@@ -14742,7 +14742,7 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
           if (lang == FLAG_UNKNOWN)
             {
               OtfNameListFree (head);
-              return (-1);
+              return -1;
             }
         }
       else if (PyInt_Check (val))
@@ -14752,14 +14752,14 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
           PyErr_Format (PyExc_TypeError,
                         "Language must be a string or an integer");
           OtfNameListFree (head);
-          return (-1);
+          return -1;
         }
 
       string = PyBytes_AsString (PySequence_GetItem (subtuple, 1));
       if (string == NULL)
         {
           OtfNameListFree (head);
-          return (-1);
+          return -1;
         }
       cur = xzalloc (sizeof (struct otfname));
       cur->name = xstrdup_or_null (string);
@@ -14774,17 +14774,17 @@ PyFF_Font_set_size_feature (PyFF_Font *self, PyObject *value,
   OtfNameListFree (sf->fontstyle_name);
   sf->fontstyle_name = head;
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Font_get_cidsubfontcnt (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (self->fv->cidmaster == NULL)
-    return (Py_BuildValue ("i", 0));
-  return (Py_BuildValue ("i", self->fv->cidmaster->subfontcnt));
+    return Py_BuildValue ("i", 0);
+  return Py_BuildValue ("i", self->fv->cidmaster->subfontcnt);
 }
 
 static PyObject *
@@ -14795,7 +14795,7 @@ PyFF_Font_get_cidsubfontnames (PyFF_Font *self, void *UNUSED (closure))
   int i;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   cidmaster = self->fv->cidmaster;
   if (cidmaster == NULL)
     Py_RETURN_NONE;
@@ -14803,7 +14803,7 @@ PyFF_Font_get_cidsubfontnames (PyFF_Font *self, void *UNUSED (closure))
   for (i = 0; i < cidmaster->subfontcnt; ++i)
     PyTuple_SET_ITEM (tuple, i,
                       Py_BuildValue ("s", cidmaster->subfonts[i]->fontname));
-  return (tuple);
+  return tuple;
 }
 
 static PyObject *
@@ -14813,13 +14813,13 @@ PyFF_Font_get_cidsubfont (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *cidmaster, *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   cidmaster = self->fv->cidmaster;
   sf = self->fv->sf;
   if (cidmaster == NULL)
-    return (Py_BuildValue ("i", -1));
+    return Py_BuildValue ("i", -1);
   for (i = 0; i < cidmaster->subfontcnt && sf != cidmaster->subfonts[i]; ++i);
-  return (Py_BuildValue ("i", i));
+  return Py_BuildValue ("i", i);
 }
 
 static int
@@ -14831,13 +14831,13 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
   EncMap *map;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   cidmaster = self->fv->cidmaster;
   map = self->fv->map;
   if (cidmaster == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "Not a cid-keyed font");
-      return (-1);
+      return -1;
     }
   if (STRING_CHECK (value))
     {
@@ -14847,7 +14847,7 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
       if (i < 0)
         {
           PyErr_Format (PyExc_EnvironmentError, "No subfont named %s", name);
-          return (-1);
+          return -1;
         }
     }
   else if (PyInt_Check (value))
@@ -14858,14 +14858,14 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
           PyErr_Format (PyExc_EnvironmentError,
                         "Subfont index %d out of bounds must be >=0 and <%d.",
                         i, cidmaster->subfontcnt);
-          return (-1);
+          return -1;
         }
     }
   else
     {
       PyErr_Format (PyExc_TypeError,
                     "Expected either a string (fontname) or an index when setting the subfont");
-      return (-1);
+      return -1;
     }
 
   sf = cidmaster->subfonts[i];
@@ -14888,7 +14888,7 @@ PyFF_Font_set_cidsubfont (PyFF_Font *self, PyObject *value,
       FVSetTitle (self->fv);
       FontViewReformatOne (self->fv);
     }
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -14897,12 +14897,12 @@ PyFF_Font_get_is_cid (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *cidmaster;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   cidmaster = self->fv->cidmaster;
   if (cidmaster == NULL)
-    return (Py_BuildValue ("i", 0));
+    return Py_BuildValue ("i", 0);
 
-  return (Py_BuildValue ("i", 1));
+  return Py_BuildValue ("i", 1);
 }
 
 #if 0
@@ -14913,19 +14913,19 @@ PyFF_Font_set_is_cid (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
   SplineFont *cidmaster, *sf;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   cidmaster = self->fv->cidmaster;
   if (!PyInt_Check (value))
     {
       PyErr_Format (PyExc_TypeError, "Expected boolean value");
-      return (-1);
+      return -1;
     }
 
   i = PyInt_AsLong (value);
   if (cidmaster == NULL && i == 0)
-    return (0);
+    return 0;
   if (cidmaster != NULL && i != 0)
-    return (0);
+    return 0;
 
   if (i == 0)
     {
@@ -14948,8 +14948,8 @@ static PyObject *
 PyFF_Font_get_encoding (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("s", self->fv->map->enc->enc_name));
+    return NULL;
+  return Py_BuildValue ("s", self->fv->map->enc->enc_name);
 }
 
 static int
@@ -14964,29 +14964,29 @@ PyFF_Font_set_encoding (PyFF_Font *self, PyObject *value,
 #endif
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   fv = self->fv;
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete encoding field");
-      return (-1);
+      return -1;
     }
 #if PY_MAJOR_VERSION >= 3
   {
     bytes = PyUnicode_AsUTF8String (value);
     if (bytes == NULL)
-      return (-1);
+      return -1;
     encname = PyBytes_AsString (bytes);
     if (PyErr_Occurred () != NULL)
       {
         Py_DECREF (bytes);
-        return (-1);
+        return -1;
       }
   }
 #else /* PY_MAJOR_VERSION >= 3 */
   encname = PyBytes_AsString (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
 #endif /* PY_MAJOR_VERSION >= 3 */
   if (strcasecmp (encname, "compacted") == 0)
     {
@@ -15030,7 +15030,7 @@ PyFF_Font_set_encoding (PyFF_Font *self, PyObject *value,
   Py_DECREF (bytes);
 #endif
 
-  return (0);
+  return 0;
 }
 
 /* Not really the right question now... but this is the closest we come */
@@ -15038,7 +15038,7 @@ static PyObject *
 PyFF_Font_get_is_quadratic (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   return (Py_BuildValue
           ("i", self->fv->sf->layers[self->fv->active_layer].order2));
 }
@@ -15051,16 +15051,16 @@ PyFF_Font_set_is_quadratic (PyFF_Font *self, PyObject *value,
   int order2;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete is_quadratic field");
-      return (-1);
+      return -1;
     }
   order2 = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
-    return (-1);
+    return -1;
   if (sf->layers[self->fv->active_layer].order2 == order2)
     /* Do Nothing */ ;
   else if (order2)
@@ -15070,15 +15070,15 @@ PyFF_Font_set_is_quadratic (PyFF_Font *self, PyObject *value,
     }
   else
     SFConvertToOrder3 (sf);
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Font_get_guide (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return ((PyObject *) LayerFromLayer (&self->fv->sf->grid, NULL));
+    return NULL;
+  return (PyObject *) LayerFromLayer (&self->fv->sf->grid, NULL);
 }
 
 static int
@@ -15090,11 +15090,11 @@ PyFF_Font_set_guide (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
   Layer *guide;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   if (value == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Cannot delete guide field");
-      return (-1);
+      return -1;
     }
   if (PyType_IsSubtype (&PyFF_LayerType, ((PyObject *) value)->ob_type))
     {
@@ -15109,7 +15109,7 @@ PyFF_Font_set_guide (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
   else
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (-1);
+      return -1;
     }
   sf = self->fv->sf;
   guide = &sf->grid;
@@ -15124,7 +15124,7 @@ PyFF_Font_set_guide (PyFF_Font *self, PyObject *value, void *UNUSED (closure))
       ss = newss;
     }
   guide->splines = ss;
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -15135,7 +15135,7 @@ PyFF_Font_get_mark_classes (PyFF_Font *self, void *UNUSED (closure))
   int i;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (sf->mark_class_cnt == 0)
     Py_RETURN_NONE;
@@ -15148,7 +15148,7 @@ PyFF_Font_get_mark_classes (PyFF_Font *self, void *UNUSED (closure))
                        Py_BuildValue ("(sO)", sf->mark_class_names[i],
                                       nametuple));
     }
-  return (tuple);
+  return tuple;
 }
 
 static int
@@ -15162,7 +15162,7 @@ PyFF_Font_set_mark_classes (PyFF_Font *self, PyObject *value,
   PyObject *subtuple;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   if (value == NULL || value == Py_None)
     cnt = 0;
@@ -15170,12 +15170,12 @@ PyFF_Font_set_mark_classes (PyFF_Font *self, PyObject *value,
     {
       cnt = PySequence_Size (value);
       if (cnt == -1)
-        return (-1);
+        return -1;
       if (cnt >= 256)
         {
           PyErr_Format (PyExc_ValueError,
                         "There may be at most 255 mark classes");
-          return (-1);
+          return -1;
         }
     }
   if (cnt == 0)
@@ -15185,7 +15185,7 @@ PyFF_Font_set_mark_classes (PyFF_Font *self, PyObject *value,
       sf->mark_class_cnt = 0;
       sf->mark_classes = NULL;
       sf->mark_class_names = NULL;
-      return (0);
+      return 0;
     }
 
   names = xmalloc ((cnt + 1) * sizeof (char *));
@@ -15200,14 +15200,14 @@ PyFF_Font_set_mark_classes (PyFF_Font *self, PyObject *value,
         {
           FreeStringArray (i, names);
           FreeStringArray (i, classes);
-          return (-1);
+          return -1;
         }
       classes[i] = GlyphNamesFromTuple (subtuple);
       if (classes[i + 1] == NULL)
         {
           FreeStringArray (i, names);
           FreeStringArray (i, classes);
-          return (-1);
+          return -1;
         }
       names[i] = xstrdup_or_null (nm);
     }
@@ -15217,15 +15217,15 @@ PyFF_Font_set_mark_classes (PyFF_Font *self, PyObject *value,
   sf->mark_classes = classes;
   sf->mark_class_names = names;
 
-  return (0);
+  return 0;
 }
 
 static PyObject *
 PyFF_Font_get_em (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (Py_BuildValue ("i", self->fv->sf->ascent + self->fv->sf->descent));
+    return NULL;
+  return Py_BuildValue ("i", self->fv->sf->ascent + self->fv->sf->descent);
 }
 
 static int
@@ -15273,11 +15273,11 @@ PyFF_Font_SetMaxpValue (PyFF_Font *self, PyObject *value, char *str)
   int val;
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   sf = self->fv->sf;
   val = PyInt_AsLong (value);
   if (PyErr_Occurred ())
-    return (-1);
+    return -1;
 
   tab = SFFindTable (sf, CHR ('m', 'a', 'x', 'p'));
   if (tab == NULL)
@@ -15307,7 +15307,7 @@ PyFF_Font_SetMaxpValue (PyFF_Font *self, PyObject *value, char *str)
     memputshort (tab->data, 10 * sizeof (uint16_t), val);
   else if (strcasecmp (str, "IDEFs") == 0)
     memputshort (tab->data, 11 * sizeof (uint16_t), val);
-  return (0);
+  return 0;
 }
 
 static PyObject *
@@ -15319,7 +15319,7 @@ PyFF_Font_GetMaxpValue (PyFF_Font *self, char *str)
   int val;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   memset (dummy, 0, 32);
   dummy[15] = 2;
@@ -15348,15 +15348,15 @@ PyFF_Font_GetMaxpValue (PyFF_Font *self, char *str)
     val = memushort (data, 32, 11 * sizeof (uint16_t));
   else
     val = -1;
-  return (Py_BuildValue ("i", val));
+  return Py_BuildValue ("i", val);
 }
 
 static PyObject *
 PyFF_Font_get_maxp_IDEFs (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_GetMaxpValue (self, "IDEFs"));
+    return NULL;
+  return PyFF_Font_GetMaxpValue (self, "IDEFs");
 }
 
 static int
@@ -15364,16 +15364,16 @@ PyFF_Font_set_maxp_IDEFs (PyFF_Font *self, PyObject *value,
                           void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (PyFF_Font_SetMaxpValue (self, value, "IDEFs"));
+    return -1;
+  return PyFF_Font_SetMaxpValue (self, value, "IDEFs");
 }
 
 static PyObject *
 PyFF_Font_get_maxp_FDEFs (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_GetMaxpValue (self, "FDEFs"));
+    return NULL;
+  return PyFF_Font_GetMaxpValue (self, "FDEFs");
 }
 
 static int
@@ -15381,16 +15381,16 @@ PyFF_Font_set_maxp_FDEFs (PyFF_Font *self, PyObject *value,
                           void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (PyFF_Font_SetMaxpValue (self, value, "FDEFs"));
+    return -1;
+  return PyFF_Font_SetMaxpValue (self, value, "FDEFs");
 }
 
 static PyObject *
 PyFF_Font_get_maxp_maxStackDepth (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_GetMaxpValue (self, "MaxStackDepth"));
+    return NULL;
+  return PyFF_Font_GetMaxpValue (self, "MaxStackDepth");
 }
 
 static int
@@ -15398,16 +15398,16 @@ PyFF_Font_set_maxp_maxStackDepth (PyFF_Font *self, PyObject *value,
                                   void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (PyFF_Font_SetMaxpValue (self, value, "MaxStackDepth"));
+    return -1;
+  return PyFF_Font_SetMaxpValue (self, value, "MaxStackDepth");
 }
 
 static PyObject *
 PyFF_Font_get_maxp_storageCnt (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_GetMaxpValue (self, "StorageCnt"));
+    return NULL;
+  return PyFF_Font_GetMaxpValue (self, "StorageCnt");
 }
 
 static int
@@ -15415,16 +15415,16 @@ PyFF_Font_set_maxp_storageCnt (PyFF_Font *self, PyObject *value,
                                void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (PyFF_Font_SetMaxpValue (self, value, "StorageCnt"));
+    return -1;
+  return PyFF_Font_SetMaxpValue (self, value, "StorageCnt");
 }
 
 static PyObject *
 PyFF_Font_get_maxp_twilightPtCnt (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_GetMaxpValue (self, "TwilightPntCnt"));
+    return NULL;
+  return PyFF_Font_GetMaxpValue (self, "TwilightPntCnt");
 }
 
 static int
@@ -15432,16 +15432,16 @@ PyFF_Font_set_maxp_twilightPtCnt (PyFF_Font *self, PyObject *value,
                                   void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (PyFF_Font_SetMaxpValue (self, value, "TwilightPntCnt"));
+    return -1;
+  return PyFF_Font_SetMaxpValue (self, value, "TwilightPntCnt");
 }
 
 static PyObject *
 PyFF_Font_get_maxp_zones (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
-  return (PyFF_Font_GetMaxpValue (self, "Zones"));
+    return NULL;
+  return PyFF_Font_GetMaxpValue (self, "Zones");
 }
 
 static int
@@ -15449,8 +15449,8 @@ PyFF_Font_set_maxp_zones (PyFF_Font *self, PyObject *value,
                           void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (PyFF_Font_SetMaxpValue (self, value, "Zones"));
+    return -1;
+  return PyFF_Font_SetMaxpValue (self, value, "Zones");
 }
 
 static PyObject *
@@ -15459,10 +15459,10 @@ PyFF_Font_get_xHeight (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
   double val;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   val = SFXHeight (sf, self->fv->active_layer, true);
-  return (Py_BuildValue ("d", val));
+  return Py_BuildValue ("d", val);
 }
 
 static PyObject *
@@ -15471,10 +15471,10 @@ PyFF_Font_get_capHeight (PyFF_Font *self, void *UNUSED (closure))
   SplineFont *sf;
   double val;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   val = SFCapHeight (sf, self->fv->active_layer, true);
-  return (Py_BuildValue ("d", val));
+  return Py_BuildValue ("d", val);
 }
 
 static PyGetSetDef PyFF_Font_getset[] = {
@@ -15913,12 +15913,12 @@ PyFFFont_GetTableData (PyFF_Font *self, PyObject *args)
   PyObject *binstr;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (!PyArg_ParseTuple (args, "s", &table_name))
-    return (NULL);
+    return NULL;
   tag = StrToTag (table_name);
   if (tag == BAD_TAG)
-    return (NULL);
+    return NULL;
 
   for (tab = self->fv->sf->ttf_tables; tab != NULL && tab->tag != tag;
        tab = tab->next);
@@ -15930,7 +15930,7 @@ PyFFFont_GetTableData (PyFF_Font *self, PyObject *args)
     Py_RETURN_NONE;
 
   binstr = PyBytes_FromStringAndSize ((char *) tab->data, tab->len);
-  return (binstr);
+  return binstr;
 }
 
 static void
@@ -15996,12 +15996,12 @@ PyFFFont_SetTableData (PyFF_Font *self, PyObject *args)
   int icnt, i;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (!PyArg_ParseTuple (args, "sO", &table_name, &tuple))
-    return (NULL);
+    return NULL;
   tag = StrToTag (table_name);
   if (tag == BAD_TAG)
-    return (NULL);
+    return NULL;
 
   if (tuple == Py_None)
     {
@@ -16012,7 +16012,7 @@ PyFFFont_SetTableData (PyFF_Font *self, PyObject *args)
   if (!PySequence_Check (tuple))
     {
       PyErr_Format (PyExc_TypeError, "Argument must be a tuple");
-      return (NULL);
+      return NULL;
     }
   if (PyBytes_Check (tuple))
     {
@@ -16031,7 +16031,7 @@ PyFFFont_SetTableData (PyFF_Font *self, PyObject *args)
         {
           instrs[i] = PyInt_AsLong (PySequence_GetItem (tuple, i));
           if (PyErr_Occurred ())
-            return (NULL);
+            return NULL;
         }
     }
   TableAddInstrs (self->fv->sf, tag, true, instrs, icnt);
@@ -16043,9 +16043,9 @@ static PyObject *
 PyFFFont_regenBitmaps (PyFF_Font *self, PyObject *args)
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (bitmapper (self, args, false) == -1)
-    return (NULL);
+    return NULL;
 
   Py_RETURN (self);
 }
@@ -16060,10 +16060,10 @@ PyFFFont_importBitmaps (PyFF_Font *self, PyObject *args)
   int ok, format;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "es|i", "UTF-8", &filename, &to_background))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
 
@@ -16075,7 +16075,7 @@ PyFFFont_importBitmaps (PyFF_Font *self, PyObject *args)
       if (ext[0] != 'p' || ext[1] != 'k')
         {
           PyErr_Format (PyExc_EnvironmentError, "No extension for bitmap font");
-          return (NULL);
+          return NULL;
         }
     }
   if (strcasecmp (ext, ".bdf") == 0 || strcasecmp (ext - 4, ".bdf.gz") == 0)
@@ -16094,7 +16094,7 @@ PyFFFont_importBitmaps (PyFF_Font *self, PyObject *args)
   else
     {
       PyErr_Format (PyExc_EnvironmentError, "Bad extension for bitmap font");
-      return (NULL);
+      return NULL;
     }
   if (to_background != -1)
     back = to_background;
@@ -16110,7 +16110,7 @@ PyFFFont_importBitmaps (PyFF_Font *self, PyObject *args)
   if (!ok)
     {
       PyErr_Format (PyExc_EnvironmentError, "Could not load bitmap font");
-      return (NULL);
+      return NULL;
     }
 
   Py_RETURN (self);
@@ -16145,9 +16145,9 @@ PyFFFont_compareFonts (PyFF_Font *self, PyObject *args)
   char *filename, *locfilename;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (!PyArg_ParseTuple (args, "OesO", &other, "UTF-8", &filename, &flagstuple))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
 
@@ -16155,15 +16155,15 @@ PyFFFont_compareFonts (PyFF_Font *self, PyObject *args)
     {
       PyErr_Format (PyExc_TypeError, "First argument must be a fontforge font");
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
   if (CheckIfFontClosed (other))
-    return (NULL);
+    return NULL;
   flags = FlagsFromTuple (flagstuple, compflags, "comparison flag");
   if (flags == FLAG_UNKNOWN)
     {
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
 
   if (strcmp (locfilename, "-") == 0)
@@ -16175,7 +16175,7 @@ PyFFFont_compareFonts (PyFF_Font *self, PyObject *args)
         {
           PyErr_SetFromErrnoWithFilename (PyExc_IOError, locfilename);
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -16187,7 +16187,7 @@ PyFFFont_compareFonts (PyFF_Font *self, PyObject *args)
                                  diffs, flags));
   if (diffs != stdout)
     fclose (diffs);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -16198,13 +16198,13 @@ PyFFFont_appendSFNTName (PyFF_Font *self, PyObject *args)
   int i;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   memset (&dummy, 0, sizeof (dummy));
   DefaultTTFEnglishNames (&dummy, sf);
 
   if (!SetSFNTName (sf, args, &dummy))
-    return (NULL);
+    return NULL;
 
   for (i = 0; i < ttf_namemax; ++i)
     free (dummy.names[i]);
@@ -16222,24 +16222,24 @@ PyFFFont_cidConvertTo (PyFF_Font *self, PyObject *args)
   int supplement;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   if (sf->cidmaster != NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This font is already a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple (args, "ssi", &registry, &ordering, &supplement))
-    return (NULL);
+    return NULL;
   map = FindCidMap (registry, ordering, supplement, sf);
   if (map == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "No cidmap matching given ROS (%s-%s-%d)", registry,
                     ordering, supplement);
-      return (NULL);
+      return NULL;
     }
   MakeCIDMaster (sf, fv->map, false, NULL, map);
   Py_RETURN (self);
@@ -16253,17 +16253,17 @@ PyFFFont_cidConvertByCmap (PyFF_Font *self, PyObject *args)
   char *locfilename;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   if (sf->cidmaster != NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This font is already a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
   if (!PyArg_ParseTuple (args, "s", &locfilename))
-    return (NULL);
+    return NULL;
   MakeCIDMaster (sf, fv->map, true, locfilename, NULL);
   Py_RETURN (self);
 }
@@ -16274,13 +16274,13 @@ PyFFFont_cidFlatten (PyFF_Font *self, PyObject *UNUSED (args))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (sf->cidmaster == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This font is not a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
 
   SFFlatten (sf->cidmaster);
@@ -16294,23 +16294,23 @@ PyFFFont_cidFlattenByCMap (PyFF_Font *self, PyObject *args)
   char *locfilename;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (sf->cidmaster == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This font is not a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
 
   if (!PyArg_ParseTuple (args, "s", &locfilename))
-    return (NULL);
+    return NULL;
 
   if (!SFFlattenByCMap (sf, locfilename))
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "Can't find (or can't parse) cmap file: %s", locfilename);
-      return (NULL);
+      return NULL;
     }
   Py_RETURN (self);
 }
@@ -16323,20 +16323,20 @@ PyFFFont_cidInsertBlankSubFont (PyFF_Font *self, PyObject *UNUSED (args))
   struct cidmap *map;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   cidmaster = fv->cidmaster;
   if (cidmaster == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This font is not a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
   if (cidmaster->subfontcnt >= 255)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "You may have at most 255 subfonts in a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
 
   map =
@@ -16362,7 +16362,7 @@ PyFFFont_cidRemoveSubFont (PyFF_Font *self, PyObject *UNUSED (args))
   int i;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   cidmaster = fv->cidmaster;
@@ -16370,13 +16370,13 @@ PyFFFont_cidRemoveSubFont (PyFF_Font *self, PyObject *UNUSED (args))
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This font is not a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
   if (cidmaster->subfontcnt <= 1)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "You must have at least 1 subfont in a CID keyed font.");
-      return (NULL);
+      return NULL;
     }
 
   for (i = 0; i < sf->glyphcnt; ++i)
@@ -16419,7 +16419,7 @@ addLookupSubtable (SplineFont *sf, char *lookup, char *new_subtable,
   if (otl == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s", lookup);
-      return (NULL);
+      return NULL;
     }
   if (after_str != NULL)
     {
@@ -16428,14 +16428,14 @@ addLookupSubtable (SplineFont *sf, char *lookup, char *new_subtable,
         {
           PyErr_Format (PyExc_EnvironmentError, "No lookup subtable named %s",
                         after_str);
-          return (NULL);
+          return NULL;
         }
       else if (after->lookup != otl)
         {
           PyErr_Format (PyExc_EnvironmentError,
                         "Subtable, %s, is not in lookup %s.", after_str,
                         lookup);
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -16446,7 +16446,7 @@ addLookupSubtable (SplineFont *sf, char *lookup, char *new_subtable,
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "A lookup subtable named %s already exists", new_subtable);
-      return (NULL);
+      return NULL;
     }
 
   sub = xzalloc (sizeof (struct lookup_subtable));
@@ -16489,7 +16489,7 @@ addLookupSubtable (SplineFont *sf, char *lookup, char *new_subtable,
       break;
     }
 
-  return (sub);
+  return sub;
 }
 
 static PyObject *
@@ -16498,7 +16498,7 @@ PyFFFont_buildOrReplaceAALTFeatures (PyFF_Font *self, PyObject *UNUSED (args))
   SplineFont *sf;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   AddNewAALTFeatures (sf);
 
@@ -16515,16 +16515,16 @@ PyFFFont_addAnchorClass (PyFF_Font *self, PyObject *args)
   int lookup_type;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "ss", &subtable, &anchor_name))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No subtable named %s", subtable);
-      return (NULL);
+      return NULL;
     }
   lookup_type = sub->lookup->lookup_type;
   if (lookup_type < gpos_cursive || lookup_type > gpos_mark2mark)
@@ -16532,7 +16532,7 @@ PyFFFont_addAnchorClass (PyFF_Font *self, PyObject *args)
       PyErr_Format (PyExc_EnvironmentError,
                     "Cannot add an anchor class to %s, it has the wrong lookup type",
                     subtable);
-      return (NULL);
+      return NULL;
     }
   for (ac = sf->anchor; ac != NULL; ac = ac->next)
     {
@@ -16543,7 +16543,7 @@ PyFFFont_addAnchorClass (PyFF_Font *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "An anchor class named %s already exists", anchor_name);
-      return (NULL);
+      return NULL;
     }
   ac = xzalloc (sizeof (AnchorClass));
   ac->name = xstrdup_or_null (anchor_name);
@@ -16562,10 +16562,10 @@ PyFFFont_removeAnchorClass (PyFF_Font *self, PyObject *args)
   AnchorClass *ac;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &anchor_name))
-    return (NULL);
+    return NULL;
 
   for (ac = sf->anchor; ac != NULL; ac = ac->next)
     {
@@ -16576,7 +16576,7 @@ PyFFFont_removeAnchorClass (PyFF_Font *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError, "No anchor class named %s exists",
                     anchor_name);
-      return (NULL);
+      return NULL;
     }
   SFRemoveAnchorClass (sf, ac);
   Py_RETURN (self);
@@ -16591,7 +16591,7 @@ ParseClassNames (PyObject *classes, char ***class_strs)
   *class_strs = NULL;
   cnt = PySequence_Size (classes);
   if (cnt == -1)
-    return (-1);
+    return -1;
   *class_strs = cls = xmalloc (cnt * sizeof (char *));
   for (i = 0; i < cnt; ++i)
     {
@@ -16602,10 +16602,10 @@ ParseClassNames (PyObject *classes, char ***class_strs)
         {
           cls[i] = GlyphNamesFromTuple (thingy);
           if (cls[i] == NULL)
-            return (-1);
+            return -1;
         }
     }
-  return (cnt);
+  return cnt;
 }
 
 static PyObject *
@@ -16625,7 +16625,7 @@ MakeClassNameTuple (int cnt, char **classes)
       else
         PyTuple_SetItem (tuple, i, TupleOfGlyphNames (classes[i], 0));
     }
-  return (tuple);
+  return tuple;
 }
 
 static SplineChar **
@@ -16650,7 +16650,7 @@ GlyphsFromSelection (FontViewBase *fv)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "Please select some glyphs in the font view for FontForge to put into classes.");
-      return (NULL);
+      return NULL;
     }
 
   glyphlist = xmalloc ((selcnt + 1) * sizeof (SplineChar *));
@@ -16662,7 +16662,7 @@ GlyphsFromSelection (FontViewBase *fv)
         glyphlist[selcnt++] = sc;
     }
   glyphlist[selcnt] = NULL;
-  return (glyphlist);
+  return glyphlist;
 }
 
 static int
@@ -16675,7 +16675,7 @@ pyBuildClasses (FontViewBase *fv, struct lookup_subtable *sub,
     {
       glyphlist = GlyphsFromSelection (fv);
       if (glyphlist == NULL)
-        return (false);
+        return false;
       first = second = glyphlist;
     }
   else
@@ -16684,14 +16684,14 @@ pyBuildClasses (FontViewBase *fv, struct lookup_subtable *sub,
       second = GlyphsFromTuple (fv->sf, list2);
     }
   if (first == NULL || second == NULL)
-    return (false);
+    return false;
   AutoKern2BuildClasses (fv->sf, fv->active_layer, first, second, sub,
                          sub->separation, 0, sub->kerning_by_touch,
                          sub->onlyCloser, !sub->dontautokern, good_enough);
   free (first);
   if (first != second)
     free (second);
-  return (true);
+  return true;
 }
 
 static void
@@ -16767,13 +16767,13 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
    */
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   if ((acnt = PySequence_Size (args)) < 4)
     {
       PyErr_Format (PyExc_EnvironmentError, "Too few arguments.");
-      return (NULL);
+      return NULL;
     }
   arg3 = PySequence_GetItem (args, 2);
   arg4 = PySequence_GetItem (args, 3);
@@ -16783,7 +16783,7 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
       if (!PyArg_ParseTuple
           (args, "ssOOO|s", &lookup, &subtable, &class1s, &class2s, &offsets,
            &after_str))
-        return (NULL);
+        return NULL;
       do_autokern = false;
     }
   else if (!PyInt_Check (arg4) && !PyLong_Check (arg4) && !PyFloat_Check (arg4))
@@ -16794,14 +16794,14 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
           if (!PyArg_ParseTuple
               (args, "ssiOO|iis", &lookup, &subtable, &separation, &class1s,
                &class2s, &only_closer, &autokern, &after_str))
-            return (NULL);
+            return NULL;
         }
       else
         {
           if (!PyArg_ParseTuple
               (args, "ssiOO|is", &lookup, &subtable, &separation, &class1s,
                &class2s, &only_closer, &after_str))
-            return (NULL);
+            return NULL;
         }
     }
   else if (acnt > 5 && (arg5 = PySequence_GetItem (args, 4))
@@ -16814,14 +16814,14 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
               (args, "ssidOO|iis", &lookup, &subtable, &separation,
                &class_error_distance, &list1, &list2, &only_closer, &autokern,
                &after_str))
-            return (NULL);
+            return NULL;
         }
       else
         {
           if (!PyArg_ParseTuple
               (args, "ssidOO|is", &lookup, &subtable, &separation,
                &class_error_distance, &list1, &list2, &only_closer, &after_str))
-            return (NULL);
+            return NULL;
         }
     }
   else
@@ -16832,14 +16832,14 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
           if (!PyArg_ParseTuple
               (args, "ssid|iis", &lookup, &subtable, &separation,
                &class_error_distance, &only_closer, &autokern, &after_str))
-            return (NULL);
+            return NULL;
         }
       else
         {
           if (!PyArg_ParseTuple
               (args, "ssid|is", &lookup, &subtable, &separation,
                &class_error_distance, &only_closer, &after_str))
-            return (NULL);
+            return NULL;
         }
     }
   if (separation == 0)
@@ -16856,14 +16856,14 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
               PyErr_Format (PyExc_ValueError,
                             "There aren't enough kerning offsets for the number of kerning classes. Should be %d",
                             cnt1 * cnt2);
-              return (NULL);
+              return NULL;
             }
           offs = xmalloc (cnt1 * cnt2 * sizeof (int16_t));
           for (i = 0; i < cnt1 * cnt2; ++i)
             {
               offs[i] = PyInt_AsLong (PySequence_GetItem (offsets, i));
               if (PyErr_Occurred ())
-                return (NULL);
+                return NULL;
             }
         }
       else
@@ -16872,13 +16872,13 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
 
   sub = addLookupSubtable (sf, lookup, subtable, after_str);
   if (sub == NULL)
-    return (NULL);
+    return NULL;
   if (sub->lookup->lookup_type != gpos_pair)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "Cannot add kerning data to %s, it has the wrong lookup type",
                     lookup);
-      return (NULL);
+      return NULL;
     }
   sub->per_glyph_pst_or_kern = false;
   if (do_autokern)
@@ -16904,7 +16904,7 @@ PyFFFont_addKerningClass (PyFF_Font *self, PyObject *args)
   else
     {
       if (!pyBuildClasses (fv, sub, class_error_distance, list1, list2))
-        return (NULL);
+        return NULL;
     }
 
   if (sub->vertical_kerning)
@@ -16931,23 +16931,23 @@ PyFFFont_addMarkClass (PyFF_Font *self, PyObject *args)
   int cnt;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   if (PySequence_Size (args) < 2)
     {
       PyErr_Format (PyExc_EnvironmentError, "Too few arguments.");
-      return (NULL);
+      return NULL;
     }
 
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "sO", &name, &markclass))
-    return (NULL);
+    return NULL;
 
   str = GlyphListToStr (markclass);
   if (str == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Bad mark class");
-      return (NULL);
+      return NULL;
     }
 
   cnt = sf->mark_class_cnt;
@@ -16982,23 +16982,23 @@ PyFFFont_addMarkSet (PyFF_Font *self, PyObject *args)
   int cnt;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
 
   if (PySequence_Size (args) < 2)
     {
       PyErr_Format (PyExc_EnvironmentError, "Too few arguments.");
-      return (NULL);
+      return NULL;
     }
 
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "sO", &name, &markset))
-    return (NULL);
+    return NULL;
 
   str = GlyphListToStr (markset);
   if (str == NULL)
     {
       PyErr_Format (PyExc_TypeError, "Bad mark set");
-      return (NULL);
+      return NULL;
     }
 
   cnt = sf->mark_set_cnt;
@@ -17036,23 +17036,23 @@ PyFFFont_alterKerningClass (PyFF_Font *self, PyObject *args)
   int16_t *offs;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "sOOO", &subtable, &class1s, &class2s, &offsets))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No subtable named %s", subtable);
-      return (NULL);
+      return NULL;
     }
   if (sub->kc == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This subtable, %s, does not contain not a kerning class",
                     subtable);
-      return (NULL);
+      return NULL;
     }
 
   cnt1 = ParseClassNames (class1s, &class1_strs);
@@ -17062,14 +17062,14 @@ PyFFFont_alterKerningClass (PyFF_Font *self, PyObject *args)
       PyErr_Format (PyExc_ValueError,
                     "There aren't enough kerning offsets for the number of kerning classes. Should be %d",
                     cnt1 * cnt2);
-      return (NULL);
+      return NULL;
     }
   offs = xmalloc (cnt1 * cnt2 * sizeof (int16_t));
   for (i = 0; i < cnt1 * cnt2; ++i)
     {
       offs[i] = PyInt_AsLong (PySequence_GetItem (offsets, i));
       if (PyErr_Occurred ())
-        return (NULL);
+        return NULL;
     }
 
   KernClassFreeContents (sub->kc);
@@ -17093,23 +17093,23 @@ PyFFFont_getKerningClass (PyFF_Font *self, PyObject *args)
   int i;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &subtable))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No subtable named %s", subtable);
-      return (NULL);
+      return NULL;
     }
   if (sub->kc == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This subtable, %s, does not contain not a kerning class",
                     subtable);
-      return (NULL);
+      return NULL;
     }
   offsets = PyTuple_New (sub->kc->first_cnt * sub->kc->second_cnt);
   for (i = 0; i < sub->kc->first_cnt * sub->kc->second_cnt; ++i)
@@ -17130,10 +17130,10 @@ PyFFFont_isKerningClass (PyFF_Font *self, PyObject *args)
   PyObject *ret;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &subtable))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL || sub->kc == NULL)
@@ -17141,7 +17141,7 @@ PyFFFont_isKerningClass (PyFF_Font *self, PyObject *args)
   else
     ret = Py_True;
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -17153,10 +17153,10 @@ PyFFFont_isVerticalKerning (PyFF_Font *self, PyObject *args)
   PyObject *ret;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &subtable))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL || !sub->vertical_kerning)
@@ -17164,7 +17164,7 @@ PyFFFont_isVerticalKerning (PyFF_Font *self, PyObject *args)
   else
     ret = Py_True;
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static char *ak_keywords1[] = { "subTableName", "separation", "minKern",
@@ -17188,7 +17188,7 @@ PyFFFont_autoKern (PyFF_Font *self, PyObject *args, PyObject *keywds)
   int minkern = 10, touch = 0, height = 0, onlyCloser = 0;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   if (PySequence_Size (args) == 2)
@@ -17196,27 +17196,27 @@ PyFFFont_autoKern (PyFF_Font *self, PyObject *args, PyObject *keywds)
       if (!PyArg_ParseTupleAndKeywords
           (args, keywds, "si|iiii", ak_keywords1, &subtablename, &separation,
            &minkern, &touch, &onlyCloser, &height))
-        return (NULL);
+        return NULL;
     }
   else
     {
       if (!PyArg_ParseTupleAndKeywords
           (args, keywds, "siOO|iiii", ak_keywords2, &subtablename,
            &separation, &list1, &list2, &minkern, &touch, &onlyCloser, &height))
-        return (NULL);
+        return NULL;
     }
   sub = SFFindLookupSubtable (sf, subtablename);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No subtable named %s exists",
                     subtablename);
-      return (NULL);
+      return NULL;
     }
   if (sub->lookup->lookup_type != gpos_pair || sub->kc != NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "%s is not a kerning pair subtable", subtablename);
-      return (NULL);
+      return NULL;
     }
 
   if (list1 != NULL)
@@ -17229,7 +17229,7 @@ PyFFFont_autoKern (PyFF_Font *self, PyObject *args, PyObject *keywds)
       first = second = GlyphsFromSelection (fv);
     }
   if (first == NULL || second == NULL)
-    return (NULL);
+    return NULL;
   if (sub->lookup->lookup_flags & pst_r2l)
     {
       left = second;
@@ -17256,17 +17256,17 @@ PyFFFont_removeLookup (PyFF_Font *self, PyObject *args)
   OTLookup *otl;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &lookup))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup);
   if (otl == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s exists",
                     lookup);
-      return (NULL);
+      return NULL;
     }
   SFRemoveLookup (sf, otl);
   Py_RETURN (self);
@@ -17281,31 +17281,31 @@ PyFFFont_mergeLookups (PyFF_Font *self, PyObject *args)
   struct lookup_subtable *sub;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "ss", &lookup1, &lookup2))
-    return (NULL);
+    return NULL;
 
   otl1 = SFFindLookup (sf, lookup1);
   if (otl1 == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s exists",
                     lookup1);
-      return (NULL);
+      return NULL;
     }
   otl2 = SFFindLookup (sf, lookup2);
   if (otl2 == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s exists",
                     lookup2);
-      return (NULL);
+      return NULL;
     }
   if (otl1->lookup_type != otl2->lookup_type)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "When merging two lookups they must be of the same type, but %s and %s are not",
                     lookup1, lookup2);
-      return (NULL);
+      return NULL;
     }
   FLMerge (otl1, otl2);
 
@@ -17331,17 +17331,17 @@ PyFFFont_removeLookupSubtable (PyFF_Font *self, PyObject *args)
   struct lookup_subtable *sub;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &subtable))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No subtable named %s exists",
                     subtable);
-      return (NULL);
+      return NULL;
     }
   SFRemoveLookupSubTable (sf, sub);
   Py_RETURN (self);
@@ -17355,31 +17355,31 @@ PyFFFont_mergeLookupSubtables (PyFF_Font *self, PyObject *args)
   struct lookup_subtable *sub1, *sub2;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "ss", &subtable1, &subtable2))
-    return (NULL);
+    return NULL;
 
   sub1 = SFFindLookupSubtable (sf, subtable1);
   if (sub1 == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No subtable named %s exists",
                     subtable1);
-      return (NULL);
+      return NULL;
     }
   sub2 = SFFindLookupSubtable (sf, subtable2);
   if (sub2 == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No subtable named %s exists",
                     subtable2);
-      return (NULL);
+      return NULL;
     }
   if (sub1->lookup != sub2->lookup)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "When merging two lookup subtables they must be in the same lookup, but %s and %s are not",
                     subtable1, subtable2);
-      return (NULL);
+      return NULL;
     }
   SFSubTablesMerge (sf, sub1, sub2);
   SFRemoveLookupSubTable (sf, sub2);
@@ -17427,21 +17427,21 @@ ParseLookupFlagsItem (SplineFont *sf, PyObject *flagstr)
   int i;
 
   if (str == NULL)
-    return (-1);
+    return -1;
   for (i = 0; lookup_flags[i].name != NULL; ++i)
     if (strcmp (lookup_flags[i].name, str) == 0)
-      return (lookup_flags[i].flag);
+      return lookup_flags[i].flag;
 
   for (i = 1; i < sf->mark_class_cnt; ++i)      /* Start at 1 because class 0 is unused */
     if (strcmp (sf->mark_class_names[i], str) == 0)
-      return (i << 8);
+      return i << 8;
 
   for (i = 0; i < sf->mark_set_cnt; ++i)
     if (strcmp (sf->mark_set_names[i], str) == 0)
-      return ((i << 16) | pst_usemarkfilteringset);
+      return (i << 16) | pst_usemarkfilteringset;
 
   PyErr_Format (PyExc_ValueError, "Unknown lookup flag %s", str);
-  return (-1);
+  return -1;
 }
 
 static int
@@ -17450,20 +17450,20 @@ ParseLookupFlags (SplineFont *sf, PyObject *flagtuple)
   int i, flags = 0, cnt, temp;
 
   if (PyInt_Check (flagtuple))
-    return (PyInt_AsLong (flagtuple));
+    return PyInt_AsLong (flagtuple);
   if (STRING_CHECK (flagtuple))
-    return (ParseLookupFlagsItem (sf, flagtuple));
+    return ParseLookupFlagsItem (sf, flagtuple);
   cnt = PySequence_Size (flagtuple);
   if (cnt == -1)
-    return (-1);
+    return -1;
   for (i = 0; i < cnt; ++i)
     {
       temp = ParseLookupFlagsItem (sf, PySequence_GetItem (flagtuple, i));
       if (temp == -1)
-        return (-1);
+        return -1;
       flags |= temp;
     }
-  return (flags);
+  return flags;
 }
 
 #define BAD_FEATURE_LIST ((FeatureScriptLangList*)-1)
@@ -17480,7 +17480,7 @@ PyParseFeatureList (PyObject *tuple)
     {
       PyErr_Format (PyExc_TypeError,
                     "A feature list is composed of a tuple of tuples");
-      return ((FeatureScriptLangList *) -1);
+      return (FeatureScriptLangList *) -1;
     }
   cnt = PySequence_Size (tuple);
 
@@ -17492,21 +17492,21 @@ PyParseFeatureList (PyObject *tuple)
           PyErr_Format (PyExc_TypeError,
                         "A feature list is composed of a tuple of tuples");
           FeatureScriptLangListFree (flhead);
-          return (BAD_FEATURE_LIST);
+          return BAD_FEATURE_LIST;
         }
       else if (PySequence_Size (subs) != 2)
         {
           PyErr_Format (PyExc_TypeError,
                         "A feature list is composed of a tuple of tuples each containing two elements");
           FeatureScriptLangListFree (flhead);
-          return (BAD_FEATURE_LIST);
+          return BAD_FEATURE_LIST;
         }
       else if (!STRING_CHECK (PySequence_GetItem (subs, 0))
                || !PySequence_Check (PySequence_GetItem (subs, 1)))
         {
           PyErr_Format (PyExc_TypeError, "Bad type for argument");
           FeatureScriptLangListFree (flhead);
-          return (BAD_FEATURE_LIST);
+          return BAD_FEATURE_LIST;
         }
       fl = xzalloc (sizeof (FeatureScriptLangList));
       fl->featuretag =
@@ -17515,7 +17515,7 @@ PyParseFeatureList (PyObject *tuple)
         {
           free (fl);
           FeatureScriptLangListFree (flhead);
-          return (BAD_FEATURE_LIST);
+          return BAD_FEATURE_LIST;
         }
       if (flhead == NULL)
         flhead = fl;
@@ -17528,14 +17528,14 @@ PyParseFeatureList (PyObject *tuple)
           PyErr_Format (PyExc_TypeError,
                         "A script list is composed of a tuple of tuples");
           FeatureScriptLangListFree (flhead);
-          return (BAD_FEATURE_LIST);
+          return BAD_FEATURE_LIST;
         }
       else if (PySequence_Size (scripts) == 0)
         {
           PyErr_Format (PyExc_TypeError,
                         "No scripts specified for feature %s",
                         PyBytes_AsString (PySequence_GetItem (subs, 0)));
-          return (BAD_FEATURE_LIST);
+          return BAD_FEATURE_LIST;
           FeatureScriptLangListFree (flhead);
         }
       sltail = NULL;
@@ -17547,21 +17547,21 @@ PyParseFeatureList (PyObject *tuple)
               PyErr_Format (PyExc_TypeError,
                             "A script list is composed of a tuple of tuples");
               FeatureScriptLangListFree (flhead);
-              return (BAD_FEATURE_LIST);
+              return BAD_FEATURE_LIST;
             }
           else if (PySequence_Size (scriptsubs) != 2)
             {
               PyErr_Format (PyExc_TypeError,
                             "A script list is composed of a tuple of tuples each containing two elements");
               FeatureScriptLangListFree (flhead);
-              return (BAD_FEATURE_LIST);
+              return BAD_FEATURE_LIST;
             }
           else if (!STRING_CHECK (PySequence_GetItem (scriptsubs, 0))
                    || !PySequence_Check (PySequence_GetItem (scriptsubs, 1)))
             {
               PyErr_Format (PyExc_TypeError, "Bad type for argument");
               FeatureScriptLangListFree (flhead);
-              return (BAD_FEATURE_LIST);
+              return BAD_FEATURE_LIST;
             }
           sl =
             xzalloc (sizeof (struct scriptlanglist));
@@ -17571,7 +17571,7 @@ PyParseFeatureList (PyObject *tuple)
             {
               free (sl);
               FeatureScriptLangListFree (flhead);
-              return (BAD_FEATURE_LIST);
+              return BAD_FEATURE_LIST;
             }
           if (sltail == NULL)
             fl->scripts = sl;
@@ -17585,7 +17585,7 @@ PyParseFeatureList (PyObject *tuple)
               if (lang == BAD_TAG)
                 {
                   FeatureScriptLangListFree (flhead);
-                  return (BAD_FEATURE_LIST);
+                  return BAD_FEATURE_LIST;
                 }
               sl->lang_cnt = 1;
               sl->langs[0] = lang;
@@ -17595,7 +17595,7 @@ PyParseFeatureList (PyObject *tuple)
               PyErr_Format (PyExc_TypeError,
                             "A language list is composed of a tuple of strings");
               FeatureScriptLangListFree (flhead);
-              return (BAD_FEATURE_LIST);
+              return BAD_FEATURE_LIST;
             }
           else if (PySequence_Size (langs) == 0)
             {
@@ -17615,7 +17615,7 @@ PyParseFeatureList (PyObject *tuple)
                   if (lang == BAD_TAG)
                     {
                       FeatureScriptLangListFree (flhead);
-                      return (BAD_FEATURE_LIST);
+                      return BAD_FEATURE_LIST;
                     }
                   if (l < MAX_LANG)
                     sl->langs[l] = lang;
@@ -17625,7 +17625,7 @@ PyParseFeatureList (PyObject *tuple)
             }
         }
     }
-  return (flhead);
+  return flhead;
 }
 
 static PyObject *
@@ -17640,18 +17640,18 @@ PyFFFont_addLookup (PyFF_Font *self, PyObject *args)
   FeatureScriptLangList *fl;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple
       (args, "ssOO|s", &lookup_str, &type, &flagtuple, &featlist, &after_str))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup_str);
   if (otl != NULL)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "A lookup named %s already exists", lookup_str);
-      return (NULL);
+      return NULL;
     }
   if (after_str != NULL)
     {
@@ -17660,21 +17660,21 @@ PyFFFont_addLookup (PyFF_Font *self, PyObject *args)
         {
           PyErr_Format (PyExc_EnvironmentError, "No lookup named %s",
                         after_str);
-          return (NULL);
+          return NULL;
         }
     }
 
   itype = FlagsFromString (type, lookup_types, "lookup type");
   if (itype == FLAG_UNKNOWN)
-    return (NULL);
+    return NULL;
 
   flags = ParseLookupFlags (sf, flagtuple);
   if (flags == -1)
-    return (NULL);
+    return NULL;
 
   fl = PyParseFeatureList (featlist);
   if (fl == BAD_FEATURE_LIST)
-    return (NULL);
+    return NULL;
 
   if (after != NULL
       && (after->lookup_type >= gpos_start) != (itype >= gpos_start))
@@ -17682,7 +17682,7 @@ PyFFFont_addLookup (PyFF_Font *self, PyObject *args)
       PyErr_Format (PyExc_EnvironmentError,
                     "After lookup, %s, is in a different table", after_str);
       FeatureScriptLangListFree (fl);
-      return (NULL);
+      return NULL;
     }
 
   if (sf->cidmaster)
@@ -17727,18 +17727,18 @@ PyFFFont_importLookups (PyFF_Font *self, PyObject *args)
   int i;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple
       (args, "OO|s", ((PyObject **) &otherfont), &lookup_list, &before_str))
-    return (NULL);
+    return NULL;
   if (!PyType_IsSubtype (&PyFF_FontType, ((PyObject *) otherfont)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "First argument must be a fontforge font");
-      return (NULL);
+      return NULL;
     }
   if (CheckIfFontClosed (otherfont))
-    return (NULL);
+    return NULL;
 
   othersf = otherfont->fv->sf;
 
@@ -17755,7 +17755,7 @@ PyFFFont_importLookups (PyFF_Font *self, PyObject *args)
           PyErr_Format (PyExc_EnvironmentError,
                         "No lookup named %s exists in %s.", lookup_str,
                         othersf->fontname);
-          return (NULL);
+          return NULL;
         }
       list = xcalloc (2, sizeof (OTLookup *));
       list[0] = otl;
@@ -17771,7 +17771,7 @@ PyFFFont_importLookups (PyFF_Font *self, PyObject *args)
             {
               PyErr_Format (PyExc_TypeError, "Unexpected type");
               free (list);
-              return (NULL);
+              return NULL;
             }
           lookup_str = PyBytes_AsString (str);
           otl = SFFindLookup (othersf, lookup_str);
@@ -17781,7 +17781,7 @@ PyFFFont_importLookups (PyFF_Font *self, PyObject *args)
                             "No lookup named %s exists in %s.", lookup_str,
                             othersf->fontname);
               free (list);
-              return (NULL);
+              return NULL;
             }
           list[i] = otl;
         }
@@ -17791,7 +17791,7 @@ PyFFFont_importLookups (PyFF_Font *self, PyObject *args)
       PyErr_Format (PyExc_TypeError, "Unexpected type");
       if (list != NULL)
         free (list);
-      return (NULL);
+      return NULL;
     }
   OTLookupsCopyInto (sf, othersf, list, before);
   free (list);
@@ -17808,21 +17808,21 @@ PyFFFont_lookupSetFeatureList (PyFF_Font *self, PyObject *args)
   FeatureScriptLangList *fl;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "sO", &lookup, &featlist))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup);
   if (otl == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s", lookup);
-      return (NULL);
+      return NULL;
     }
 
   fl = PyParseFeatureList (featlist);
   if (fl == BAD_FEATURE_LIST)
-    return (NULL);
+    return NULL;
 
   FeatureScriptLangListFree (otl->features);
   otl->features = fl;
@@ -17839,21 +17839,21 @@ PyFFFont_lookupSetFlags (PyFF_Font *self, PyObject *args)
   int flags;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "sO", &lookup, &flagtuple))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup);
   if (otl == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s", lookup);
-      return (NULL);
+      return NULL;
     }
 
   flags = ParseLookupFlags (sf, flagtuple);
   if (flags == -1)
-    return (NULL);
+    return NULL;
 
   otl->lookup_flags = flags;
   Py_RETURN (self);
@@ -17868,16 +17868,16 @@ PyFFFont_lookupSetStoreLigatureInAfm (PyFF_Font *self, PyObject *args)
   int store_it;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "si", &lookup, &store_it))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup);
   if (otl == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s", lookup);
-      return (NULL);
+      return NULL;
     }
   otl->store_in_afm = store_it;
   Py_RETURN (self);
@@ -17898,16 +17898,16 @@ PyFFFont_getLookupInfo (PyFF_Font *self, PyObject *args)
   PyObject *farray, *sarray, *larray;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &lookup))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup);
   if (otl == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s", lookup);
-      return (NULL);
+      return NULL;
     }
 
   for (i = 0; lookup_types[i].name != NULL; ++i)
@@ -17960,7 +17960,7 @@ PyFFFont_getLookupInfo (PyFF_Font *self, PyObject *args)
                                       TagToPythonString (fl->featuretag),
                                       sarray));
     }
-  return (Py_BuildValue ("(sOO)", type, flags_tuple, farray));
+  return Py_BuildValue ("(sOO)", type, flags_tuple, farray);
 }
 
 static PyObject *
@@ -17971,10 +17971,10 @@ PyFFFont_addLookupSubtable (PyFF_Font *self, PyObject *args)
   OTLookup *otl;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "ss|s", &lookup, &subtable, &after_str))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup);
   if (otl != NULL)
@@ -17988,12 +17988,12 @@ PyFFFont_addLookupSubtable (PyFF_Font *self, PyObject *args)
           PyErr_Format (PyExc_TypeError,
                         "Use addContextualSubtable to create a subtable in %s.",
                         lookup);
-          return (NULL);
+          return NULL;
         }
     }
 
   if (addLookupSubtable (sf, lookup, subtable, after_str) == NULL)
-    return (NULL);
+    return NULL;
 
   Py_RETURN (self);
 }
@@ -18042,13 +18042,13 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
   char *msg;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTupleAndKeywords
       (args, keywds, "ssss|sOOO", contextchain_keywords, &lookup, &subtable,
        &type, &rule, &after_str, &bclasses, &mclasses, &fclasses,
        &bclassnames, &mclassnames, &fclassnames))
-    return (NULL);
+    return NULL;
 
   if (strcasecmp (type, "glyph") == 0)
     format = pst_glyphs;
@@ -18063,7 +18063,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
       PyErr_Format (PyExc_TypeError,
                     "Bad format, %s, for contextual lookup (must be one of \"glyph\", \"class\" or \"coverage\" (or, rarely, \"reversecoverage\"))",
                     type);
-      return (NULL);
+      return NULL;
     }
 
   otl = SFFindLookup (sf, lookup);
@@ -18078,7 +18078,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
           PyErr_Format (PyExc_TypeError,
                         "The lookup, %s, may not contain a contextual subtable.\nUse addLookupSubtable() instead",
                         lookup);
-          return (NULL);
+          return NULL;
         }
       if (otl->lookup_type == gsub_reversecchain
           && format != pst_reversecoverage)
@@ -18086,7 +18086,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
           PyErr_Format (PyExc_TypeError,
                         "Bad format, %s, for reverse context chaining lookup (must be \"reversecoverage\")",
                         type);
-          return (NULL);
+          return NULL;
         }
       if (otl->lookup_type != gsub_reversecchain
           && format == pst_reversecoverage)
@@ -18094,7 +18094,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
           PyErr_Format (PyExc_TypeError,
                         "Bad format, %s, for this lookup (must be one of \"glyph\", \"class\" or \"coverage\")",
                         type);
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -18102,7 +18102,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
     {
       PyErr_Format (PyExc_TypeError,
                     "When using the class format, you must specify some classes");
-      return (NULL);
+      return NULL;
     }
   else if (format != pst_class
            && (mclasses != NULL || bclasses != NULL || fclasses != NULL
@@ -18111,7 +18111,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
     {
       PyErr_Format (PyExc_TypeError,
                     "When not using the class format, you may not specify any classes");
-      return (NULL);
+      return NULL;
     }
   else if (otl != NULL
            && (otl->lookup_type == gsub_context
@@ -18120,7 +18120,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
     {
       PyErr_Format (PyExc_TypeError,
                     "You may only specify backtracking or forward-looking classes when building a contextual chaining lookup (this one is merely contextual).");
-      return (NULL);
+      return NULL;
     }
   else if ((mclasses == NULL && mclassnames != NULL)
            || (bclasses == NULL && bclassnames != NULL) || (fclasses == NULL
@@ -18129,7 +18129,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
     {
       PyErr_Format (PyExc_TypeError,
                     "If you specify class names, you must also specify some classes...");
-      return (NULL);
+      return NULL;
     }
   else
     if ((mclasses != NULL && mclassnames != NULL
@@ -18141,7 +18141,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
     {
       PyErr_Format (PyExc_TypeError,
                     "When you specify class names there must be as many names as there are classes");
-      return (NULL);
+      return NULL;
     }
   else if (format == pst_class)
     {
@@ -18149,7 +18149,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
       if (mcnt == -1)
         {
           PyErr_Format (PyExc_TypeError, "Bad match class");
-          return (NULL);
+          return NULL;
         }
       if (mclassnames != NULL)
         {
@@ -18157,7 +18157,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
             {
               PyErr_Format (PyExc_TypeError,
                             "Bad set of class names for mclassname.");
-              return (NULL);
+              return NULL;
             }
         }
       if (bclasses != NULL)
@@ -18166,7 +18166,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
           if (bcnt == -1)
             {
               PyErr_Format (PyExc_TypeError, "Bad backtrack class");
-              return (NULL);
+              return NULL;
             }
           if (bclassnames != NULL)
             {
@@ -18175,7 +18175,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
                 {
                   PyErr_Format (PyExc_TypeError,
                                 "Bad set of class names for bclassname.");
-                  return (NULL);
+                  return NULL;
                 }
             }
         }
@@ -18185,7 +18185,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
           if (fcnt == -1)
             {
               PyErr_Format (PyExc_TypeError, "Bad forward class");
-              return (NULL);
+              return NULL;
             }
           if (fclassnames != NULL)
             {
@@ -18194,7 +18194,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
                 {
                   PyErr_Format (PyExc_TypeError,
                                 "Bad set of class names for fclassname.");
-                  return (NULL);
+                  return NULL;
                 }
             }
         }
@@ -18202,7 +18202,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
 
   new_subtable = addLookupSubtable (sf, lookup, subtable, after_str);
   if (new_subtable == NULL)
-    return (NULL);
+    return NULL;
   fpst = xzalloc (sizeof (FPST));
   fpst->subtable = new_subtable;
   new_subtable->fpst = fpst;
@@ -18247,7 +18247,7 @@ PyFFFont_addContextualSubtable (PyFF_Font *self, PyObject *args,
     {
       PyErr_Format (PyExc_TypeError, "%s", msg);
       free (msg);
-      return (NULL);
+      return NULL;
     }
 
   Py_RETURN (self);
@@ -18264,22 +18264,22 @@ PyFFFont_getLookupSubtables (PyFF_Font *self, PyObject *args)
   PyObject *tuple;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &lookup))
-    return (NULL);
+    return NULL;
 
   otl = SFFindLookup (sf, lookup);
   if (otl == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup named %s", lookup);
-      return (NULL);
+      return NULL;
     }
   for (sub = otl->subtables, cnt = 0; sub != NULL; sub = sub->next, ++cnt);
   tuple = PyTuple_New (cnt);
   for (sub = otl->subtables, cnt = 0; sub != NULL; sub = sub->next, ++cnt)
     PyTuple_SetItem (tuple, cnt, Py_BuildValue ("s", sub->subtable_name));
-  return (tuple);
+  return tuple;
 }
 
 static PyObject *
@@ -18293,17 +18293,17 @@ PyFFFont_getLookupSubtableAnchorClasses (PyFF_Font *self, PyObject *args)
   PyObject *tuple;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &subtable))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup subtable named %s",
                     subtable);
-      return (NULL);
+      return NULL;
     }
   for (ac = sf->anchor, cnt = 0; ac != NULL; ac = ac->next)
     if (ac->subtable == sub)
@@ -18312,7 +18312,7 @@ PyFFFont_getLookupSubtableAnchorClasses (PyFF_Font *self, PyObject *args)
   for (ac = sf->anchor, cnt = 0; ac != NULL; ac = ac->next)
     if (ac->subtable == sub)
       PyTuple_SetItem (tuple, cnt++, Py_BuildValue ("s", ac->name));
-  return (tuple);
+  return tuple;
 }
 
 static PyObject *
@@ -18323,19 +18323,19 @@ PyFFFont_getLookupOfSubtable (PyFF_Font *self, PyObject *args)
   struct lookup_subtable *sub;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &subtable))
-    return (NULL);
+    return NULL;
 
   sub = SFFindLookupSubtable (sf, subtable);
   if (sub == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "No lookup subtable named %s",
                     subtable);
-      return (NULL);
+      return NULL;
     }
-  return (Py_BuildValue ("s", sub->lookup->lookup_name));
+  return Py_BuildValue ("s", sub->lookup->lookup_name);
 }
 
 static PyObject *
@@ -18346,18 +18346,18 @@ PyFFFont_getSubtableOfAnchor (PyFF_Font *self, PyObject *args)
   AnchorClass *ac;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   sf = self->fv->sf;
   if (!PyArg_ParseTuple (args, "s", &anchorclass))
-    return (NULL);
+    return NULL;
 
   for (ac = sf->anchor; ac != NULL; ac = ac->next)
     if (strcmp (ac->name, anchorclass) == 0)
-      return (Py_BuildValue ("s", ac->subtable->subtable_name));
+      return Py_BuildValue ("s", ac->subtable->subtable_name);
 
   PyErr_Format (PyExc_EnvironmentError, "No anchor class named %s",
                 anchorclass);
-  return (NULL);
+  return NULL;
 }
 
 static PyObject *
@@ -18368,16 +18368,16 @@ PyFFFont_saveNamelist (PyFF_Font *self, PyObject *args)
   FILE *file;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "s", &filename))
-    return (NULL);
+    return NULL;
 
   file = fopen (filename, "w");
   if (file == NULL)
     {
       PyErr_SetFromErrnoWithFilename (PyExc_IOError, filename);
-      return (NULL);
+      return NULL;
     }
   FVB_MakeNamelist (fv, file);
   fclose (file);
@@ -18393,10 +18393,10 @@ PyFFFont_replaceAll (PyFF_Font *self, PyObject *args)
   double err = .01;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "OO|d", &srch, &rpl, &err))
-    return (NULL);
+    return NULL;
 
   if (PyType_IsSubtype (&PyFF_LayerType, ((PyObject *) srch)->ob_type))
     {
@@ -18409,7 +18409,7 @@ PyFFFont_replaceAll (PyFF_Font *self, PyObject *args)
   else
     {
       PyErr_Format (PyExc_TypeError, "Expected a contour or layer");
-      return (NULL);
+      return NULL;
     }
 
   if (PyType_IsSubtype (&PyFF_LayerType, ((PyObject *) rpl)->ob_type))
@@ -18423,7 +18423,7 @@ PyFFFont_replaceAll (PyFF_Font *self, PyObject *args)
   else
     {
       PyErr_Format (PyExc_TypeError, "Expected a contour or layer");
-      return (NULL);
+      return NULL;
     }
 
   /* srch_ss and rpl_ss will be freed by ReplaceAll */
@@ -18453,10 +18453,10 @@ PyFFFont_find (PyFF_Font *self, PyObject *args)
   double err = .01;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "O|dO", &srch, &err, &pyflags))
-    return (NULL);
+    return NULL;
 
   if (PyType_IsSubtype (&PyFF_LayerType, ((PyObject *) srch)->ob_type))
     {
@@ -18469,19 +18469,19 @@ PyFFFont_find (PyFF_Font *self, PyObject *args)
   else
     {
       PyErr_Format (PyExc_TypeError, "Expected a contour or layer");
-      return (NULL);
+      return NULL;
     }
   if (pyflags)
     {
       flags = FlagsFromTuple (pyflags, find_flags, "search flag");
       if (flags == FLAG_UNKNOWN)
-        return (NULL);
+        return NULL;
     }
   else
     flags = sv_reverse | sv_flips;
 
   /* srch_ss will be freed when the iterator dies */
-  return (fontiter_New (self, false, SDFromContour (fv, srch_ss, err, flags)));
+  return fontiter_New (self, false, SDFromContour (fv, srch_ss, err, flags));
 }
 
 static PyObject *
@@ -18491,9 +18491,9 @@ PyFFFont_glyphs (PyFF_Font *self, PyObject *args)
   int index;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (!PyArg_ParseTuple (args, "|s", &type))
-    return (NULL);
+    return NULL;
 
   if (strcasecmp (type, "GID") == 0)
     index = 3;
@@ -18502,10 +18502,10 @@ PyFFFont_glyphs (PyFF_Font *self, PyObject *args)
   else
     {
       PyErr_Format (PyExc_TypeError, "Unexpected type");
-      return (NULL);
+      return NULL;
     }
 
-  return (fontiter_New (self, index, NULL));
+  return fontiter_New (self, index, NULL);
 }
 
 static PyObject *
@@ -18518,14 +18518,14 @@ PyFFFont_Save (PyFF_Font *self, PyObject *args)
   int s2d = false;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
 
   if (PySequence_Size (args) == 1)
     {
       /* Save As - Filename was provided */
       if (!PyArg_ParseTuple (args, "es", "UTF-8", &filename))
-        return (NULL);
+        return NULL;
       locfilename = utf82def_copy (filename);
       free (filename);
       pt = strrchr (locfilename, '.');
@@ -18536,7 +18536,7 @@ PyFFFont_Save (PyFF_Font *self, PyObject *args)
           PyErr_Format (PyExc_EnvironmentError, "Save As \"%s\" failed",
                         locfilename);
           free (locfilename);
-          return (NULL);
+          return NULL;
         }
     }
   else
@@ -18572,7 +18572,7 @@ PyFFFont_Save (PyFF_Font *self, PyObject *args)
           if (!SFDWriteBak (fv->sf, fv->map, fv->normal))
             {
               PyErr_Format (PyExc_EnvironmentError, "Save failed");
-              return (NULL);
+              return NULL;
             }
         }
       else
@@ -18582,7 +18582,7 @@ PyFFFont_Save (PyFF_Font *self, PyObject *args)
               PyErr_Format (PyExc_EnvironmentError, "Save As \"%s\" failed",
                             locfilename);
               free (locfilename);
-              return (NULL);
+              return NULL;
             }
         }
     }
@@ -18626,7 +18626,7 @@ PyFFFont_revert (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVRevert (fv);
   Py_RETURN (self);
@@ -18637,7 +18637,7 @@ PyFFFont_revertFromBackup (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVRevertBackup (fv);
   Py_RETURN (self);
@@ -18717,7 +18717,7 @@ PyFFFont_Generate (PyFF_Font *self, PyObject *args, PyObject *keywds)
   char *layer_str = NULL;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   layer = fv->active_layer;
   if (!PyArg_ParseTupleAndKeywords
@@ -18729,22 +18729,22 @@ PyFFFont_Generate (PyFF_Font *self, PyObject *args, PyObject *keywds)
           (args, keywds, "es|sOisss", gen_keywords, "UTF-8", &filename,
            &bitmaptype, &flags, &resolution, &subfontdirectory, &namelist,
            &layer_str))
-        return (NULL);
+        return NULL;
       layer = SFFindLayerIndexByName (fv->sf, layer_str);
       if (layer < 0)
-        return (NULL);
+        return NULL;
     }
   if (layer < 0 || layer >= fv->sf->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Layer is out of range");
-      return (NULL);
+      return NULL;
     }
   if (flags != NULL)
     {
       iflags = FlagsFromTuple (flags, gen_flags, "generate flag");
       if (iflags == FLAG_UNKNOWN)
         {
-          return (NULL);
+          return NULL;
         }
       /* Legacy screw ups mean that opentype & apple bits don't mean what */
       /*  I want them to. Python users should not see that, but fix it up */
@@ -18764,7 +18764,7 @@ PyFFFont_Generate (PyFF_Font *self, PyObject *args, PyObject *keywds)
       if (rename_to == NULL)
         {
           PyErr_Format (PyExc_EnvironmentError, "Unknown namelist");
-          return (NULL);
+          return NULL;
         }
     }
   locfilename = utf82def_copy (filename);
@@ -18774,7 +18774,7 @@ PyFFFont_Generate (PyFF_Font *self, PyObject *args, PyObject *keywds)
        NULL, fv->normal == NULL ? fv->map : fv->normal, rename_to, layer))
     {
       PyErr_Format (PyExc_EnvironmentError, "Font generation failed");
-      return (NULL);
+      return NULL;
     }
   free (locfilename);
   Py_RETURN (self);
@@ -18802,7 +18802,7 @@ makesflist (PyFF_Font *font, enum bitmapformat bf)
   struct sflist *ret;
 
   if (CheckIfFontClosed (font))
-    return (NULL);
+    return NULL;
 
   ret = xzalloc (sizeof (struct sflist));
   ret->sf = font->fv->sf;
@@ -18828,7 +18828,7 @@ makesflist (PyFF_Font *font, enum bitmapformat bf)
             }
         }
     }
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -18849,7 +18849,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
   enum bitmapformat bf = bf_none;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
 
   if (!PyArg_ParseTupleAndKeywords
@@ -18860,22 +18860,22 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
       if (!PyArg_ParseTupleAndKeywords
           (args, keywds, "esO|sOOss", gen_keywords, "UTF-8", &filename,
            &others, &bitmaptype, &flags, &ttcflags, &namelist, &layer_str))
-        return (NULL);
+        return NULL;
       layer = SFFindLayerIndexByName (fv->sf, layer_str);
       if (layer < 0)
-        return (NULL);
+        return NULL;
     }
   if (layer < 0 || layer >= fv->sf->layer_cnt)
     {
       PyErr_Format (PyExc_ValueError, "Layer is out of range");
-      return (NULL);
+      return NULL;
     }
   if (flags != NULL)
     {
       iflags = FlagsFromTuple (flags, gen_flags, "generate flag");
       if (iflags == FLAG_UNKNOWN)
         {
-          return (NULL);
+          return NULL;
         }
       /* Legacy screw ups mean that opentype & apple bits don't mean what */
       /*  I want them to. Python users should not see that, but fix it up */
@@ -18894,7 +18894,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
       ittcflags = FlagsFromTuple (ttcflags, genttc_flags, "generate TTC flag");
       if (ittcflags == FLAG_UNKNOWN)
         {
-          return (NULL);
+          return NULL;
         }
     }
   if (bitmaptype != NULL && *bitmaptype != '\0')
@@ -18904,7 +18904,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
       else
         {
           PyErr_Format (PyExc_TypeError, "Unknown bitmap format");
-          return (NULL);
+          return NULL;
         }
     }
   if (namelist != NULL)
@@ -18913,7 +18913,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
       if (rename_to == NULL)
         {
           PyErr_Format (PyExc_EnvironmentError, "Unknown namelist");
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -18926,7 +18926,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
       if (CheckIfFontClosed (otherfont))
         {
           freesflist (head);
-          return (NULL);
+          return NULL;
         }
       cur = makesflist (otherfont, bf);
       last->next = cur;
@@ -18944,7 +18944,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
               if (CheckIfFontClosed (otherfont))
                 {
                   freesflist (head);
-                  return (NULL);
+                  return NULL;
                 }
               cur = makesflist (otherfont, bf);
               last->next = cur;
@@ -18954,7 +18954,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
             {
               PyErr_Format (PyExc_TypeError,
                             "Second argument must be either a font or a list of fonts");
-              return (NULL);
+              return NULL;
             }
         }
     }
@@ -18962,7 +18962,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
     {
       PyErr_Format (PyExc_TypeError,
                     "Second argument must be either a font or a list of fonts");
-      return (NULL);
+      return NULL;
     }
 
   locfilename = utf82def_copy (filename);
@@ -18976,7 +18976,7 @@ PyFFFont_GenerateTTC (PyFF_Font *self, PyObject *args, PyObject *keywds)
   free (locfilename);
   freesflist (head);
   if (PyErr_Occurred ())
-    return (NULL);
+    return NULL;
   Py_RETURN (self);
 }
 
@@ -18992,10 +18992,10 @@ PyFFFont_GenerateFeature (PyFF_Font *self, PyObject *args)
   int err;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "es|s", "UTF-8", &filename, &lookup_name))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
 
@@ -19006,7 +19006,7 @@ PyFFFont_GenerateFeature (PyFF_Font *self, PyObject *args)
         {
           PyErr_Format (PyExc_EnvironmentError, "No lookup named %s",
                         lookup_name);
-          return (NULL);
+          return NULL;
         }
     }
   out = fopen (locfilename, "w");
@@ -19014,7 +19014,7 @@ PyFFFont_GenerateFeature (PyFF_Font *self, PyObject *args)
     {
       PyErr_SetFromErrnoWithFilename (PyExc_IOError, locfilename);
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
   if (otl != NULL)
     FeatDumpOneLookup (out, fv->sf, otl);
@@ -19025,7 +19025,7 @@ PyFFFont_GenerateFeature (PyFF_Font *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError, "IO error on file %s", locfilename);
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
   free (locfilename);
   Py_RETURN (self);
@@ -19039,16 +19039,16 @@ PyFFFont_MergeKern (PyFF_Font *self, PyObject *args)
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "es", "UTF-8", &filename))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
   if (!LoadKerningDataFromMetricsFile (fv->sf, locfilename, fv->map))
     {
       PyErr_Format (PyExc_EnvironmentError, "No metrics data found");
-      return (NULL);
+      return NULL;
     }
   free (locfilename);
   Py_RETURN (self);
@@ -19065,12 +19065,12 @@ PyFFFont_MergeFonts (PyFF_Font *self, PyObject *args)
   int preserveCrossFontKerning = 0;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple
       (args, "es|ii", "UTF-8", &filename, &preserveCrossFontKerning,
        &openflags))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
   sf = LoadSplineFont (locfilename, openflags);
@@ -19079,7 +19079,7 @@ PyFFFont_MergeFonts (PyFF_Font *self, PyObject *args)
       PyErr_Format (PyExc_EnvironmentError, "No font found in file \"%s\"",
                     locfilename);
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
   free (locfilename);
   if (sf->fv == NULL)
@@ -19099,11 +19099,11 @@ PyFFFont_InterpolateFonts (PyFF_Font *self, PyObject *args)
   double fraction;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple
       (args, "des|i", &fraction, "UTF-8", &filename, &openflags))
-    return (NULL);
+    return NULL;
   locfilename = utf82def_copy (filename);
   free (filename);
   sf = LoadSplineFont (locfilename, openflags);
@@ -19112,13 +19112,13 @@ PyFFFont_InterpolateFonts (PyFF_Font *self, PyObject *args)
       PyErr_Format (PyExc_EnvironmentError, "No font found in file \"%s\"",
                     locfilename);
       free (locfilename);
-      return (NULL);
+      return NULL;
     }
   free (locfilename);
   if (sf->fv == NULL)
     EncMapFree (sf->map);
   newfv = SFAdd (InterpolateFont (fv->sf, sf, fraction, fv->map->enc), false);
-  return (PyFV_From_FV_I (newfv));
+  return PyFV_From_FV_I (newfv);
 }
 
 static PyObject *
@@ -19130,17 +19130,17 @@ PyFFFont_CreateMappedChar (PyFF_Font *self, PyObject *args)
   SplineChar *sc;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "s", &str))
     {
       PyErr_Clear ();
       if (!PyArg_ParseTuple (args, "i", &enc))
-        return (NULL);
+        return NULL;
       if (enc < 0 || enc > fv->map->enc_limit)
         {
           PyErr_Format (PyExc_ValueError, "Encoding is out of range");
-          return (NULL);
+          return NULL;
         }
     }
   else
@@ -19150,11 +19150,11 @@ PyFFFont_CreateMappedChar (PyFF_Font *self, PyObject *args)
         {
           PyErr_Format (PyExc_ValueError,
                         "Glyph name, %s, not in current encoding", str);
-          return (NULL);
+          return NULL;
         }
     }
   sc = SFMakeChar (fv->sf, fv->map, enc);
-  return (PySC_From_SC_I (sc));
+  return PySC_From_SC_I (sc);
 }
 
 static PyObject *
@@ -19166,22 +19166,22 @@ PyFFFont_CreateUnicodeChar (PyFF_Font *self, PyObject *args)
   SplineChar *sc;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "i|s", &uni, &name))
-    return (NULL);
+    return NULL;
   if (uni < -1 || uni >= unicode4_size)
     {
       PyErr_Format (PyExc_ValueError,
                     "Unicode codepoint, %d, out of range, must be either -1 or between 0 and 0x10ffff",
                     uni);
-      return (NULL);
+      return NULL;
     }
   else if (uni == -1 && name == NULL)
     {
       PyErr_Format (PyExc_ValueError,
                     "If you do not specify a code point, you must specify a name.");
-      return (NULL);
+      return NULL;
     }
 
   enc = SFFindSlot (fv->sf, fv->map, uni, name);
@@ -19200,7 +19200,7 @@ PyFFFont_CreateUnicodeChar (PyFF_Font *self, PyObject *args)
       /* does not add to current map. But since we didn't find a slot it's */
       /*  not in the encoding. We could add it in the unencoded area */
     }
-  return (PySC_From_SC_I (sc));
+  return PySC_From_SC_I (sc);
 }
 
 static PyObject *
@@ -19214,16 +19214,16 @@ PyFFFont_CreateInterpolatedGlyph (PyFF_Font *self, PyObject *args)
   int baseenc;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   if (!PyArg_ParseTuple (args, "OOd", &from, &to, &by))
-    return (NULL);
+    return NULL;
   if (!PyType_IsSubtype (&PyFF_GlyphType, ((PyObject *) from)->ob_type)
       || !PyType_IsSubtype (&PyFF_GlyphType, ((PyObject *) to)->ob_type))
     {
       PyErr_Format (PyExc_TypeError, "Expected glyph objects");
-      return (NULL);
+      return NULL;
     }
   if (SFGetChar
       (fv->sf, ((PyFF_Glyph *) from)->sc->unicodeenc,
@@ -19231,7 +19231,7 @@ PyFFFont_CreateInterpolatedGlyph (PyFF_Font *self, PyObject *args)
     {
       PyErr_Format (PyExc_EnvironmentError,
                     "This glyph already exists in the font");
-      return (NULL);
+      return NULL;
     }
 
   sc =
@@ -19240,7 +19240,7 @@ PyFFFont_CreateInterpolatedGlyph (PyFF_Font *self, PyObject *args)
   if (sc == NULL)
     {
       PyErr_Format (PyExc_EnvironmentError, "Interpolation failed");
-      return (NULL);
+      return NULL;
     }
 
   baseenc = EncFromUni (sc->unicodeenc, fv->map->enc);
@@ -19248,7 +19248,7 @@ PyFFFont_CreateInterpolatedGlyph (PyFF_Font *self, PyObject *args)
     baseenc = fv->map->enc_limit + 1;
 
   SFAddGlyphAndEncode (sf, sc, fv->map, baseenc);
-  return (PySC_From_SC_I (sc));
+  return PySC_From_SC_I (sc);
 }
 
 static PyObject *
@@ -19259,23 +19259,23 @@ PyFFFont_findEncodingSlot (PyFF_Font *self, PyObject *args)
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "s", &name))
     {
       PyErr_Clear ();
       if (!PyArg_ParseTuple (args, "i", &uni))
-        return (NULL);
+        return NULL;
     }
   if (uni < -1 || uni >= unicode4_size)
     {
       PyErr_Format (PyExc_ValueError,
                     "Unicode codepoint, %d, out of range, must be either -1 or between 0 and 0x10ffff",
                     uni);
-      return (NULL);
+      return NULL;
     }
 
-  return (Py_BuildValue ("i", SFFindSlot (fv->sf, fv->map, uni, name)));
+  return Py_BuildValue ("i", SFFindSlot (fv->sf, fv->map, uni, name));
 }
 
 static PyObject *
@@ -19288,7 +19288,7 @@ PyFFFont_removeGlyph (PyFF_Font *self, PyObject *args)
   int flags = 0;                /* Currently unused */
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (PyTuple_Size (args) == 1
       && PyType_IsSubtype (&PyFF_GlyphType,
@@ -19298,7 +19298,7 @@ PyFFFont_removeGlyph (PyFF_Font *self, PyObject *args)
       if (sc->parent != fv->sf)
         {
           PyErr_Format (PyExc_ValueError, "This glyph is not in the font");
-          return (NULL);
+          return NULL;
         }
     }
   else
@@ -19306,29 +19306,29 @@ PyFFFont_removeGlyph (PyFF_Font *self, PyObject *args)
       if (PyTuple_Size (args) == 1 && STRING_CHECK (PyTuple_GetItem (args, 0)))
         {
           if (!PyArg_ParseTuple (args, "s", &name))
-            return (NULL);
+            return NULL;
           uni = -1;
         }
       else if (!PyArg_ParseTuple (args, "i|s", &uni, &name))
-        return (NULL);
+        return NULL;
       if (uni < -1 || uni >= unicode4_size)
         {
           PyErr_Format (PyExc_ValueError,
                         "Unicode codepoint, %d, out of range, must be either -1 or between 0 and 0x10ffff",
                         uni);
-          return (NULL);
+          return NULL;
         }
       else if (uni == -1 && name == NULL)
         {
           PyErr_Format (PyExc_ValueError,
                         "If you do not specify a code point, you must specify a name.");
-          return (NULL);
+          return NULL;
         }
       sc = SFGetChar (fv->sf, uni, name);
       if (sc == NULL)
         {
           PyErr_Format (PyExc_ValueError, "This glyph is not in the font");
-          return (NULL);
+          return NULL;
         }
     }
   SFRemoveGlyph (fv->sf, sc, &flags);
@@ -19359,21 +19359,21 @@ PyFFFont_printSample (PyFF_Font *self, PyObject *args)
   char *ptype;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   arg_cnt = PyTuple_Size (args);
   if (arg_cnt < 1 || arg_cnt > 4)
     {
       PyErr_Format (PyExc_ValueError, "Wrong number of arguments");
-      return (NULL);
+      return NULL;
     }
 
   ptype = PyBytes_AsString (PyTuple_GetItem (args, 0));
   if (ptype == NULL)
-    return (NULL);
+    return NULL;
   type = FlagsFromString (ptype, printflags, "print sample type");
   if (type == FLAG_UNKNOWN)
     {
-      return (NULL);
+      return NULL;
     }
   if (type == 4)
     {
@@ -19402,7 +19402,7 @@ PyFFFont_printSample (PyFF_Font *self, PyObject *args)
               if (PyErr_Occurred ())
                 {
                   free (pointsizes);
-                  return (NULL);
+                  return NULL;
                 }
             }
           pointsizes[i] = 0;
@@ -19410,7 +19410,7 @@ PyFFFont_printSample (PyFF_Font *self, PyObject *args)
       else
         {
           PyErr_Format (PyExc_TypeError, "Unexpected type for pointsize");
-          return (NULL);
+          return NULL;
         }
     }
   if (arg_cnt > 2)
@@ -19420,7 +19420,7 @@ PyFFFont_printSample (PyFF_Font *self, PyObject *args)
         {
           if (pointsizes != NULL)
             free (pointsizes);
-          return (NULL);
+          return NULL;
         }
       if (inlinesample)
         {
@@ -19444,7 +19444,7 @@ PyFFFont_printSample (PyFF_Font *self, PyObject *args)
             free (locfilename);
           if (sample != NULL)
             free (sample);
-          return (NULL);
+          return NULL;
         }
     }
   ScriptPrint (self->fv, type, pointsizes, samplefile, sample, output);
@@ -19463,10 +19463,10 @@ PyFFFont_randomText (PyFF_Font *self, PyObject *args)
   PyObject *ret;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "s|s", &script, &lang))
-    return (NULL);
+    return NULL;
   stag = StrToTag (script);
   if (lang != NULL)
     {
@@ -19477,7 +19477,7 @@ PyFFFont_randomText (PyFF_Font *self, PyObject *args)
     txt = RandomParaFromScript (stag, &ltag, fv->sf);
   ret = Py_BuildValue ("s", txt);
   free (txt);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -19485,7 +19485,7 @@ PyFFFont_clear (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVClear (fv);
   Py_RETURN (self);
@@ -19496,7 +19496,7 @@ PyFFFont_cut (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVCopy (fv, ct_fullcopy);
   FVClear (fv);
@@ -19508,7 +19508,7 @@ PyFFFont_copy (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVCopy (fv, ct_fullcopy);
   Py_RETURN (self);
@@ -19519,7 +19519,7 @@ PyFFFont_copyReference (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVCopy (fv, ct_reference);
   Py_RETURN (self);
@@ -19530,7 +19530,7 @@ PyFFFont_paste (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   PasteIntoFV (fv, false, NULL);
   Py_RETURN (self);
@@ -19541,7 +19541,7 @@ PyFFFont_pasteInto (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   PasteIntoFV (fv, true, NULL);
   Py_RETURN (self);
@@ -19552,7 +19552,7 @@ PyFFFont_unlinkReferences (PyFF_Font *self, PyObject *UNUSED (args))
 {
   FontViewBase *fv;
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVUnlinkRef (fv);
   Py_RETURN (self);
@@ -19565,7 +19565,7 @@ PyFFFont_Build (PyFF_Font *self, PyObject *UNUSED (args))
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVBuildAccent (fv, false);
 
@@ -19581,7 +19581,7 @@ PyFFFont_canonicalContours (PyFF_Font *self, PyObject *UNUSED (args))
   int i, gid;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
@@ -19601,7 +19601,7 @@ PyFFFont_canonicalStart (PyFF_Font *self, PyObject *UNUSED (args))
   int i, gid;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
@@ -19620,11 +19620,11 @@ PyFFFont_changeWeight (PyFF_Font *self, PyObject *args)
   struct lcg_zones zones;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   type = CW_ParseArgs (fv->sf, &zones, args);
   if (type == embolden_error)
-    return (NULL);
+    return NULL;
   FVEmbolden (fv, type, &zones);
 
   Py_RETURN (self);
@@ -19637,7 +19637,7 @@ PyFFFont_condenseExtend (PyFF_Font *self, PyObject *args)
   struct counterinfo ci;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   memset (&ci, 0, sizeof (ci));
   ci.sb_factor = ci.sb_add = -10000;
@@ -19646,7 +19646,7 @@ PyFFFont_condenseExtend (PyFF_Font *self, PyObject *args)
   if (!PyArg_ParseTuple
       (args, "dd|ddi", &ci.c_factor, &ci.c_add, &ci.sb_factor, &ci.sb_add,
        &ci.correct_italic))
-    return (NULL);
+    return NULL;
   ci.c_factor *= 100;           /* UI uses a percent */
   if (ci.sb_factor == -10000)
     ci.sb_factor = ci.c_factor;
@@ -19721,7 +19721,7 @@ static int
 SquashParse (struct hsquash *squash, PyObject *po)
 {
   if (po == NULL)
-    return (true);
+    return true;
 
   if (PyFloat_Check (po))
     {
@@ -19732,9 +19732,9 @@ SquashParse (struct hsquash *squash, PyObject *po)
     if (!PyArg_ParseTuple
         (po, "dddd", squash->lsb_percent, squash->stem_percent,
          squash->counter_percent, squash->rsb_percent))
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -19764,10 +19764,10 @@ Parse_ItalicArgs (ItalicInfo * ii, PyObject *args, PyObject *keywds)
        &symbols, &deserif_flat, &deserif_slant, &deserif_pen, &bottom_serif,
        &xh_serif, &as_serif, &dg_serif, &ds_serif, &a, &f, &u0444, &u0438,
        &u043f, &u0442, &u0448, &u0452, &u045f))
-    return (false);
+    return false;
   if (!SquashParse (&ii->lc, lc) || !SquashParse (&ii->uc, uc)
       || !SquashParse (&ii->neither, symbols))
-    return (false);
+    return false;
   if (deserif_flat)
     ii->secondary_serif = srf_flat;
   else if (deserif_slant)
@@ -19794,7 +19794,7 @@ Parse_ItalicArgs (ItalicInfo * ii, PyObject *args, PyObject *keywds)
   ii->cyrl_sha = u0448;
   ii->cyrl_dje = u0452;
   ii->cyrl_dzhe = u045f;
-  return (true);
+  return true;
 }
 
 static PyObject *
@@ -19804,10 +19804,10 @@ PyFFFont_italicize (PyFF_Font *self, PyObject *args, PyObject *keywds)
   ItalicInfo ii;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!Parse_ItalicArgs (&ii, args, keywds))
-    return (NULL);
+    return NULL;
   MakeItalic (fv, NULL, &ii);
 
   Py_RETURN (self);
@@ -19843,7 +19843,7 @@ PyFFFont_addSmallCaps (PyFF_Font *self, PyObject *args, PyObject *keywds)
   int dosymbols = 0;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   memset (&genchange, 0, sizeof (genchange));
   SmallCapsFindConstants (&small, fv->sf, fv->active_layer);
@@ -19855,7 +19855,7 @@ PyFFFont_addSmallCaps (PyFF_Font *self, PyObject *args, PyObject *keywds)
       (args, keywds, "|ddddissddd", smallcaps_keywords, &scheight, &capheight,
        &lc_width, &uc_width, &dosymbols, &genchange.extension_for_letters,
        &genchange.extension_for_symbols, &vstem_factor, &hscale, &vscale))
-    return (NULL);
+    return NULL;
   if (lc_width != 0 || uc_width != 0)
     {
       if (lc_width != 0)
@@ -19958,7 +19958,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
   PyObject *vMap = NULL;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   memset (&genchange, 0, sizeof (genchange));
   SmallCapsFindConstants (&small, fv->sf, fv->active_layer);
@@ -19975,7 +19975,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
        &rsbScale, &rsbAdd,
 /* Vertical counter info */
        &vCounterType, &vCounterScale, vCounterAdd, &vScale, &vMap))
-    return (NULL);
+    return NULL;
 
 /* Stem info */
   if (strcasecmp (stemtype, "uniform") == 0)
@@ -19985,7 +19985,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for stemScale: %g.",
                         stemscale);
-          return (NULL);
+          return NULL;
         }
       genchange.stem_width_scale = genchange.stem_height_scale = stemscale;
       genchange.stem_width_add = genchange.stem_height_add = stemadd;
@@ -19997,21 +19997,21 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for thinStemScale: %g.",
                         thinstemscale);
-          return (NULL);
+          return NULL;
         }
       if (thickstemscale <= 0)
         {
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for thickStemScale: %g.",
                         thickstemscale);
-          return (NULL);
+          return NULL;
         }
       if (thickthreshold <= 0)
         {
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for thickThreshold: %g.",
                         thickthreshold);
-          return (NULL);
+          return NULL;
         }
       genchange.stem_width_scale = thickstemscale;
       genchange.stem_width_add = thickstemadd;
@@ -20026,14 +20026,14 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for stemHeightScale: %g.",
                         stemheightscale);
-          return (NULL);
+          return NULL;
         }
       if (stemwidthscale <= 0)
         {
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for stemWidthScale: %g.",
                         stemwidthscale);
-          return (NULL);
+          return NULL;
         }
       genchange.stem_width_scale = stemwidthscale;
       genchange.stem_width_add = stemwidthadd;
@@ -20045,7 +20045,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
       PyErr_Format (PyExc_TypeError,
                     "Unexpected value for stemType: %s\n (Try: 'uniform', 'thickThin', or 'horizontalVertical')",
                     stemtype);
-      return (NULL);
+      return NULL;
     }
   genchange.dstem_control = processdiagonalstems;
   if (genchange.stem_height_add != genchange.stem_width_add)
@@ -20056,7 +20056,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_SetString (PyExc_TypeError,
                            _
                            ("The horizontal and vertical stem add amounts must either both be zero, or neither may be 0"));
-          return (NULL);
+          return NULL;
         }
       /* if width_add has a different sign than height_add that's also */
       /*  a problem, but this test will catch that too */
@@ -20066,7 +20066,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_SetString (PyExc_TypeError,
                            _
                            ("The horizontal and vertical stem add amounts may not differ by more than a factor of 4"));
-          return (NULL);
+          return NULL;
         }
     }
 
@@ -20078,7 +20078,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for hCounterScale: %g.",
                         counterScale);
-          return (NULL);
+          return NULL;
         }
       genchange.hcounter_scale = genchange.lsb_scale = genchange.rsb_scale =
         counterScale;
@@ -20092,21 +20092,21 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for hCounterScale: %g.",
                         counterScale);
-          return (NULL);
+          return NULL;
         }
       if (lsbScale <= 0)
         {
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for lsbScale: %g.",
                         lsbScale);
-          return (NULL);
+          return NULL;
         }
       if (rsbScale <= 0)
         {
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for rsbScale: %g.",
                         rsbScale);
-          return (NULL);
+          return NULL;
         }
       genchange.hcounter_scale = counterScale;
       genchange.lsb_scale = lsbScale;
@@ -20128,7 +20128,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
       PyErr_Format (PyExc_TypeError,
                     "Unexpected value for hCounterType: %s\n (Try: 'uniform', 'nonUniform', 'retain', or 'scale')",
                     hcountertype);
-      return (NULL);
+      return NULL;
     }
 
 /* Vertical counter info */
@@ -20139,7 +20139,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for vCounterScale: %g.",
                         vCounterScale);
-          return (NULL);
+          return NULL;
         }
       genchange.vcounter_scale = vCounterScale;
       genchange.vcounter_add = vCounterAdd;
@@ -20154,14 +20154,14 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
           PyErr_Format (PyExc_TypeError,
                         "Unexpected (or unspecified) value for vScale: %g.",
                         vScale);
-          return (NULL);
+          return NULL;
         }
       genchange.v_scale = vScale;
       if (vMap == NULL || !PySequence_Check (vMap) || STRING_CHECK (vMap))
         {
           PyErr_Format (PyExc_TypeError,
                         "vMap should be a tuple (or some other sequence type).");
-          return (NULL);
+          return NULL;
         }
       cnt = PySequence_Size (vMap);
       genchange.m.cnt = cnt;
@@ -20175,14 +20175,14 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
               PyErr_Format (PyExc_TypeError,
                             "vMap should be a tuple of 3-tuples.");
               free (genchange.m.maps);
-              return (NULL);
+              return NULL;
             }
           if (!PyArg_ParseTuple
               (subTuple, "ddd", &genchange.m.maps[i].current,
                &genchange.m.maps[i].desired, &genchange.m.maps[i].cur_width))
             {
               free (genchange.m.maps);
-              return (NULL);
+              return NULL;
             }
         }
     }
@@ -20191,7 +20191,7 @@ PyFFFont_genericGlyphChange (PyFF_Font *self, PyObject *args, PyObject *keywds)
       PyErr_Format (PyExc_TypeError,
                     "Unexpected value for vCounterType: %s\n (Try: 'scaled', or 'mapped')",
                     vCounterType);
-      return (NULL);
+      return NULL;
     }
 
   FVGenericChange (fv, &genchange);
@@ -20206,7 +20206,7 @@ PyFFFont_autoHint (PyFF_Font *self, PyObject *UNUSED (args))
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVAutoHint (fv);
   Py_RETURN (self);
@@ -20218,7 +20218,7 @@ PyFFFont_autoInstr (PyFF_Font *self, PyObject *UNUSED (args))
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVAutoInstr (fv);
   Py_RETURN (self);
@@ -20239,12 +20239,12 @@ PyFFFont_autoWidth (PyFF_Font *self, PyObject *args, PyObject *keywds)
   int space, min = 10, max = -1, height = 0, loop = 1;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTupleAndKeywords
       (args, keywds, "i|iiii", autowidth_keywords, &space, &min, &max,
        &height, &loop))
-    return (NULL);
+    return NULL;
   AutoWidth2 (fv, space, min, max, height, loop);
   Py_RETURN (self);
 }
@@ -20255,7 +20255,7 @@ PyFFFont_autoTrace (PyFF_Font *self, PyObject *UNUSED (args))
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVAutoTrace (fv, false);
   Py_RETURN (self);
@@ -20271,11 +20271,11 @@ PyFFFont_Transform (PyFF_Font *self, PyObject *args)
   BVTFunc bvts[1];
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple
       (args, "(dddddd)", &m[0], &m[1], &m[2], &m[3], &m[4], &m[5]))
-    return (NULL);
+    return NULL;
   for (i = 0; i < 6; ++i)
     t[i] = m[i];
   bvts[0].func = bvt_none;
@@ -20290,14 +20290,14 @@ PyFFFont_NLTransform (PyFF_Font *self, PyObject *args)
   char *xexpr, *yexpr;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "ss", &xexpr, &yexpr))
-    return (NULL);
+    return NULL;
   if (!SFNLTrans (fv, xexpr, yexpr))
     {
       PyErr_Format (PyExc_TypeError, "Unparseable expression.");
-      return (NULL);
+      return NULL;
     }
   Py_RETURN (self);
 }
@@ -20309,7 +20309,7 @@ PyFFFont_Simplify (PyFF_Font *self, PyObject *args)
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   smpl.err = (fv->sf->ascent + fv->sf->descent) / 1000.;
   smpl.linefixup = (fv->sf->ascent + fv->sf->descent) / 500.;
@@ -20328,7 +20328,7 @@ PyFFFont_Simplify (PyFF_Font *self, PyObject *args)
   if (!PyErr_Occurred () && PySequence_Size (args) >= 5)
     smpl.linelenmax = PyFloat_AsDouble (PySequence_GetItem (args, 4));
   if (PyErr_Occurred ())
-    return (NULL);
+    return NULL;
   _FVSimplify (self->fv, &smpl);
   Py_RETURN (self);
 }
@@ -20343,12 +20343,12 @@ PyFFFont_Round (PyFF_Font *self, PyObject *args)
   int i, gid;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
   if (!PyArg_ParseTuple (args, "|d", &factor))
-    return (NULL);
+    return NULL;
   for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
       {
@@ -20368,12 +20368,12 @@ PyFFFont_Cluster (PyFF_Font *self, PyObject *args)
   EncMap *map;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
   if (!PyArg_ParseTuple (args, "|dd", &within, &max))
-    return (NULL);
+    return NULL;
 
   for (i = 0; i < map->enc_limit; ++i)
     if ((gid = enc_to_gid (map, i)) != -1 && sf->glyphs[gid] != NULL && fv->selected[i])
@@ -20390,7 +20390,7 @@ PyFFFont_AddExtrema (PyFF_Font *self, PyObject *UNUSED (args))
   FontViewBase *fv;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   FVAddExtrema (fv, false);
   Py_RETURN (self);
@@ -20402,9 +20402,9 @@ PyFFFont_Stroke (PyFF_Font *self, PyObject *args)
   StrokeInfo si;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (Stroke_Parse (&si, args) == -1)
-    return (NULL);
+    return NULL;
 
   FVStrokeItScript (self->fv, &si, false);
   SplinePointListsFree (si.poly);
@@ -20425,7 +20425,7 @@ PyFFFont_correctDirection (PyFF_Font *self, PyObject *UNUSED (args))
   SplineChar *sc;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   map = fv->map;
@@ -20467,7 +20467,7 @@ static PyObject *
 PyFFFont_RemoveOverlap (PyFF_Font *self, PyObject *UNUSED (args))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   FVOverlap (self->fv, over_remove);
   Py_RETURN (self);
 }
@@ -20476,7 +20476,7 @@ static PyObject *
 PyFFFont_Intersect (PyFF_Font *self, PyObject *UNUSED (args))
 {
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   FVOverlap (self->fv, over_intersect);
   Py_RETURN (self);
 }
@@ -20487,9 +20487,9 @@ PyFFFont_replaceWithReference (PyFF_Font *self, PyObject *args)
   double fudge = .01;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (!PyArg_ParseTuple (args, "|d", &fudge))
-    return (NULL);
+    return NULL;
 
   FVBReplaceOutlineWithReference (self->fv, fudge);
   Py_RETURN (self);
@@ -20518,18 +20518,18 @@ PyFFFont_compareGlyphs (PyFF_Font *self, PyObject *args)
   int ret;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   if (!PyArg_ParseTuple
       (args, "|dddiii", &pt_err, &spline_err, &bitmaps, &bb_err, &comp_hints,
        &report_errors))
-    return (NULL);
+    return NULL;
   ret =
     CompareGlyphs (self->fv, pt_err, spline_err, bitmaps, bb_err, comp_hints,
                    report_errors);
   if (ret == -1)
-    return (NULL);
+    return NULL;
 
-  return (Py_BuildValue ("i", ret));
+  return Py_BuildValue ("i", ret);
 }
 #endif
 
@@ -20541,12 +20541,12 @@ PyFFFont_validate (PyFF_Font *self, PyObject *args)
   int force = false;
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   if (!PyArg_ParseTuple (args, "|i", &force))
-    return (NULL);
-  return (Py_BuildValue ("i", SFValidate (sf, fv->active_layer, force)));
+    return NULL;
+  return Py_BuildValue ("i", SFValidate (sf, fv->active_layer, force));
 }
 
 
@@ -20767,8 +20767,8 @@ PyFF_FontLength (PyObject *object)
 {
   PyFF_Font *self = (PyFF_Font *) object;
   if (CheckIfFontClosed (self))
-    return (-1);
-  return (self->fv->map->enc_limit);
+    return -1;
+  return self->fv->map->enc_limit;
 }
 
 static PyObject *
@@ -20783,7 +20783,7 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
 #endif
 
   if (CheckIfFontClosed (self))
-    return (NULL);
+    return NULL;
   fv = self->fv;
   sf = fv->sf;
   if (STRING_CHECK (index))
@@ -20792,7 +20792,7 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
 #if PY_MAJOR_VERSION >= 3
       index = PyUnicode_AsUTF8String (index);
       if (index == NULL)
-        return (NULL);
+        return NULL;
       index_is_bytes = true;
 #endif
       name = PyBytes_AsString (index);
@@ -20804,7 +20804,7 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
       if (pos < 0 || pos >= fv->map->enc_limit)
         {
           PyErr_Format (PyExc_TypeError, "Index out of bounds");
-          return (NULL);
+          return NULL;
         }
       gid = enc_to_gid (fv->map, pos);
       sc = gid == -1 ? NULL : sf->glyphs[gid];
@@ -20812,7 +20812,7 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
   else
     {
       PyErr_Format (PyExc_TypeError, "Index must be an integer or a string");
-      return (NULL);
+      return NULL;
     }
   if (sc == NULL)
     {
@@ -20821,13 +20821,13 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
         Py_DECREF (index);
 #endif
       PyErr_Format (PyExc_TypeError, "No such glyph");
-      return (NULL);
+      return NULL;
     }
 #if PY_MAJOR_VERSION >= 3
   if (index_is_bytes)
     Py_DECREF (index);
 #endif
-  return (PySC_From_SC_I (sc));
+  return PySC_From_SC_I (sc);
 }
 
 static int
@@ -20842,7 +20842,7 @@ PyFF_FontContains (PyObject *object, PyObject *index)
 #endif
 
   if (CheckIfFontClosed (self))
-    return (-1);
+    return -1;
   fv = self->fv;
   sf = fv->sf;
   if (STRING_CHECK (index))
@@ -20850,7 +20850,7 @@ PyFF_FontContains (PyObject *object, PyObject *index)
 #if PY_MAJOR_VERSION >= 3
       index = PyUnicode_AsUTF8String (index);
       if (index == NULL)
-        return (0);
+        return 0;
       index_is_bytes = true;
 #endif
       char *name = PyBytes_AsString (index);
@@ -20861,7 +20861,7 @@ PyFF_FontContains (PyObject *object, PyObject *index)
       int pos = PyInt_AsLong (index), gid;
       if (pos < 0 || pos >= fv->map->enc_limit)
         {
-          return (0);
+          return 0;
         }
       gid = enc_to_gid (fv->map, pos);
       sc = gid == -1 ? NULL : sf->glyphs[gid];
@@ -20873,13 +20873,13 @@ PyFF_FontContains (PyObject *object, PyObject *index)
         Py_DECREF (index);
 #endif
       PyErr_Format (PyExc_TypeError, "Index must be an integer or a string");
-      return (-1);
+      return -1;
     }
 #if PY_MAJOR_VERSION >= 3
   if (index_is_bytes)
     Py_DECREF (index);
 #endif
-  return (sc != NULL);
+  return sc != NULL;
 }
 
 static PySequenceMethods PyFF_FontSequence = {
@@ -21001,7 +21001,7 @@ static Py_ssize_t
 PyFF_AWGlyphLength (PyObject *self)
 {
   AW_Glyph *aw = ((PyFF_AWGlyphI *) self)->base;
-  return (aw->imax_y - aw->imin_y + 1);
+  return aw->imax_y - aw->imin_y + 1;
 }
 
 static PyObject *
@@ -21013,19 +21013,19 @@ PyFF_AWGlyphIndex (PyObject *self, PyObject *index)
   if (!PyInt_Check (index))
     {
       PyErr_Format (PyExc_TypeError, "Index must be an integer");
-      return (NULL);
+      return NULL;
     }
 
   pos = PyInt_AsLong (index);
   if (pos < aw->imin_y || pos > aw->imax_y)
     {
       PyErr_Format (PyExc_TypeError, "Index out of bounds");
-      return (NULL);
+      return NULL;
     }
   if (((PyFF_AWGlyphI *) self)->is_left)
-    return (Py_BuildValue ("i", aw->left[pos - aw->imin_y]));
+    return Py_BuildValue ("i", aw->left[pos - aw->imin_y]);
   else
-    return (Py_BuildValue ("i", aw->right[pos - aw->imin_y]));
+    return Py_BuildValue ("i", aw->right[pos - aw->imin_y]);
 }
 
 static PyMappingMethods PyFF_AWGlyphMapping = {
@@ -21110,7 +21110,7 @@ GetPythonObjectForAWGlyph (AW_Glyph * aw)
       Py_INCREF ((PyObject *) (aw->python_data));       /* for the pointer in the aw_glyph */
     }
   Py_INCREF ((PyFF_AWGlyph *) (aw->python_data));
-  return ((PyObject *) (aw->python_data));
+  return (PyObject *) (aw->python_data);
 }
 
 static PyObject *
@@ -21122,7 +21122,7 @@ PyFF_AWGlyph_getGlyph (PyFF_AWGlyph * self, void *UNUSED (closure))
   else
     ret = PySC_From_SC (self->base->sc);
   Py_INCREF (ret);
-  return (ret);
+  return ret;
 }
 
 static PyObject *
@@ -21136,13 +21136,13 @@ PyFF_AWGlyph_getBB (PyFF_AWGlyph * self, void *UNUSED (closure))
 static PyObject *
 PyFF_AWGlyph_getIminY (PyFF_AWGlyph * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->base->imin_y));
+  return Py_BuildValue ("i", self->base->imin_y);
 }
 
 static PyObject *
 PyFF_AWGlyph_getImaxY (PyFF_AWGlyph * self, void *UNUSED (closure))
 {
-  return (Py_BuildValue ("i", self->base->imax_y));
+  return Py_BuildValue ("i", self->base->imax_y);
 }
 
 static PyObject *
@@ -21156,7 +21156,7 @@ PyFF_AWGlyph_getLeft (PyFF_AWGlyph * self, void *UNUSED (closure))
       Py_INCREF (self->left);   /* for the pointer in the aw_glyph */
     }
   Py_INCREF (self->left);
-  return (self->left);
+  return self->left;
 }
 
 static PyObject *
@@ -21170,7 +21170,7 @@ PyFF_AWGlyph_getRight (PyFF_AWGlyph * self, void *UNUSED (closure))
       Py_INCREF (self->right);  /* for the pointer in the aw_glyph */
     }
   Py_INCREF (self->right);
-  return (self->right);
+  return self->right;
 }
 
 static PyGetSetDef PyFF_AWGlyph_getset[] = {
@@ -21272,13 +21272,13 @@ GetPythonObjectForAWData (AW_Data * all)
       Py_INCREF ((PyObject *) (all->python_data));      /* for the pointer in the aw_glyph */
     }
   Py_INCREF ((PyFF_AWContext *) (all->python_data));
-  return ((PyObject *) (all->python_data));
+  return (PyObject *) (all->python_data);
 }
 
 static PyObject *
 PyFF_AWContext_getFont (PyFF_AWContext *self, void *UNUSED (closure))
 {
-  return (PyFV_From_FV (self->base->fv));
+  return PyFV_From_FV (self->base->fv);
 }
 
 static PyObject *
@@ -21288,7 +21288,7 @@ PyFF_AWContext_getEmSize (PyFF_AWContext *self, void *UNUSED (closure))
     self->emSize =
       PyInt_FromLong (self->base->sf->ascent + self->base->sf->descent);
   Py_INCREF (self->emSize);
-  return (self->emSize);
+  return self->emSize;
 }
 
 static PyObject *
@@ -21297,7 +21297,7 @@ PyFF_AWContext_getLayer (PyFF_AWContext *self, void *UNUSED (closure))
   if (self->layer == NULL)
     self->layer = PyInt_FromLong (self->base->layer);
   Py_INCREF (self->layer);
-  return (self->layer);
+  return self->layer;
 }
 
 static PyObject *
@@ -21306,7 +21306,7 @@ PyFF_AWContext_getRegionHeight (PyFF_AWContext *self, void *UNUSED (closure))
   if (self->regionHeight == NULL)
     self->regionHeight = PyInt_FromLong (self->base->sub_height);
   Py_INCREF (self->regionHeight);
-  return (self->regionHeight);
+  return self->regionHeight;
 }
 
 static PyObject *
@@ -21315,7 +21315,7 @@ PyFF_AWContext_getDenom (PyFF_AWContext *self, void *UNUSED (closure))
   if (self->denom == NULL)
     self->denom = PyFloat_FromDouble (self->base->denom);
   Py_INCREF (self->denom);
-  return (self->denom);
+  return self->denom;
 }
 
 static PyGetSetDef PyFF_AWContext_getset[] = {
@@ -21404,7 +21404,7 @@ PyFF_GlyphSeparation (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
   int ret;
 
   if (PyFF_GlyphSeparationHook == NULL)
-    return (-1);
+    return -1;
 
   arglist = PyTuple_New (PyFF_GlyphSeparationArg != NULL
                          && PyFF_GlyphSeparationArg != Py_None ? 4 : 3);
@@ -21423,7 +21423,7 @@ PyFF_GlyphSeparation (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
     {
       PyErr_Print ();
       Py_XDECREF (result);
-      return (-1);
+      return -1;
     }
   else
     {
@@ -21432,9 +21432,9 @@ PyFF_GlyphSeparation (AW_Glyph * g1, AW_Glyph * g2, AW_Data * all)
       if (PyErr_Occurred () != NULL)
         {
           PyErr_Print ();
-          return (-1);
+          return -1;
         }
-      return (ret);
+      return ret;
     }
 }
 
@@ -21445,7 +21445,7 @@ PyFF_registerGlyphSeparationHook (PyObject *UNUSED (self), PyObject *args)
   PyObject *hook, *arg = NULL;
 
   if (!PyArg_ParseTuple (args, "O|OO", &hook, &arg, &name))
-    return (NULL);
+    return NULL;
   if (hook == Py_None)
     {
       Py_XDECREF ((PyObject *) PyFF_GlyphSeparationHook);
@@ -21456,7 +21456,7 @@ PyFF_registerGlyphSeparationHook (PyObject *UNUSED (self), PyObject *args)
   else if (!PyCallable_Check ((PyObject *) hook))
     {
       PyErr_Format (PyExc_TypeError, "First argument is not callable");
-      return (NULL);
+      return NULL;
     }
   else
     {
@@ -21638,10 +21638,10 @@ PyFF_PickleMeToString (void *pydata)
     {
       PyErr_Print ();
       free (ret);
-      return (NULL);
+      return NULL;
     }
   else
-    return (ret);
+    return ret;
 }
 
 void *
@@ -21661,10 +21661,10 @@ PyFF_UnPickleMeToObjects (char *str)
   if (PyErr_Occurred () != NULL)
     {
       PyErr_Print ();
-      return (NULL);
+      return NULL;
     }
   else
-    return (result);
+    return result;
 }
 
 static PyObject *
@@ -21672,7 +21672,7 @@ PyFFi_initPickles (PyObject *UNUSED (noself), PyObject *args)
 {
 
   if (!PyArg_ParseTuple (args, "OO", &pickler, &unpickler))
-    return (NULL);
+    return NULL;
   Py_INCREF (pickler);
   Py_INCREF (unpickler);
   Py_RETURN_NONE;
@@ -21683,7 +21683,7 @@ PyFFi_initPickleTypes (PyObject *UNUSED (noself), PyObject *args)
 {
 
   if (!PyArg_ParseTuple (args, "OOO", &_new_point, &_new_contour, &_new_layer))
-    return (NULL);
+    return NULL;
   Py_INCREF (_new_point);
   Py_INCREF (_new_contour);
   Py_INCREF (_new_layer);
@@ -21693,7 +21693,7 @@ PyFFi_initPickleTypes (PyObject *UNUSED (noself), PyObject *args)
 static PyObject *
 PyFFi_newPoint (PyObject *UNUSED (noself), PyObject *args)
 {
-  return (PyFFPoint_New (&PyFF_PointType, args, NULL));
+  return PyFFPoint_New (&PyFF_PointType, args, NULL);
 }
 
 static PyObject *
@@ -21704,35 +21704,35 @@ PyFFi_newContour (PyObject *UNUSED (noself), PyObject *args)
   int i, len;
 
   if (self == NULL)
-    return (NULL);
+    return NULL;
   len = PyTuple_Size (args);
   if (len < 2)
     {
       PyErr_Format (PyExc_TypeError, "Too few arguments");
-      return (NULL);
+      return NULL;
     }
   self->is_quadratic = PyInt_AsLong (PyTuple_GetItem (args, 0));
   if (PyErr_Occurred () != NULL)
-    return (NULL);
+    return NULL;
   self->closed = PyInt_AsLong (PyTuple_GetItem (args, 1));
   if (PyErr_Occurred () != NULL)
-    return (NULL);
+    return NULL;
   self->pt_cnt = self->pt_max = len - 2;
   self->points = PyMem_New (PyFF_Point *, self->pt_max);
   if (self->points == NULL)
-    return (NULL);
+    return NULL;
   for (i = 0; i < len - 2; ++i)
     {
       PyObject *obj = PyTuple_GetItem (args, 2 + i);
       if (!PyType_IsSubtype (&PyFF_PointType, ((PyObject *) obj)->ob_type))
         {
           PyErr_Format (PyExc_TypeError, "Expected FontForge points.");
-          return (NULL);
+          return NULL;
         }
       Py_INCREF (obj);
       self->points[i] = (PyFF_Point *) obj;
     }
-  return ((PyObject *) self);
+  return (PyObject *) self;
 }
 
 static PyObject *
@@ -21742,32 +21742,32 @@ PyFFi_newLayer (PyObject *UNUSED (noself), PyObject *args)
   int i, len;
 
   if (self == NULL)
-    return (NULL);
+    return NULL;
   len = PyTuple_Size (args);
   if (len < 1)
     {
       PyErr_Format (PyExc_TypeError, "Too few arguments");
-      return (NULL);
+      return NULL;
     }
   self->is_quadratic = PyInt_AsLong (PyTuple_GetItem (args, 0));
   if (PyErr_Occurred () != NULL)
-    return (NULL);
+    return NULL;
   self->cntr_cnt = self->cntr_max = len - 2;
   self->contours = PyMem_New (PyFF_Contour *, self->cntr_max);
   if (self->contours == NULL)
-    return (NULL);
+    return NULL;
   for (i = 0; i < len - 1; ++i)
     {
       PyObject *obj = PyTuple_GetItem (args, 1 + i);
       if (!PyType_IsSubtype (&PyFF_ContourType, ((PyObject *) obj)->ob_type))
         {
           PyErr_Format (PyExc_TypeError, "Expected FontForge Contours.");
-          return (NULL);
+          return NULL;
         }
       Py_INCREF (obj);
       self->contours[i] = (PyFF_Contour *) obj;
     }
-  return ((PyObject *) self);
+  return (PyObject *) self;
 }
 
 static PyMethodDef FontForge_internal_methods[] = {
@@ -22594,9 +22594,9 @@ NOUI_TTFNameIds (int id)
 
   for (i = 0; sfnt_name_str_ids[i].name != NULL; ++i)
     if (sfnt_name_str_ids[i].flag == id)
-      return ((char *) sfnt_name_str_ids[i].name);
+      return (char *) sfnt_name_str_ids[i].name;
 
-  return (_("Unknown"));
+  return _("Unknown");
 }
 
 const char *
@@ -22606,12 +22606,12 @@ NOUI_MSLangString (int language)
 
   for (i = 0; sfnt_name_mslangs[i].name != NULL; ++i)
     if (sfnt_name_mslangs[i].flag == language)
-      return ((char *) sfnt_name_mslangs[i].name);
+      return (char *) sfnt_name_mslangs[i].name;
 
   language &= 0xff;
   for (i = 0; sfnt_name_mslangs[i].name != NULL; ++i)
     if (sfnt_name_mslangs[i].flag == language)
-      return ((char *) sfnt_name_mslangs[i].name);
+      return (char *) sfnt_name_mslangs[i].name;
 
-  return (_("Unknown"));
+  return _("Unknown");
 }

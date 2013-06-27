@@ -70,7 +70,7 @@ EncodingList (void)
       ti[i++].text = x_u8_to_u32 (u8_force_valid (item->enc_name));
   if (i != 0)
     ti[0].selected = true;
-  return (ti);
+  return ti;
 }
 
 #define CID_Encodings	1001
@@ -106,7 +106,7 @@ DE_Delete (GGadget *g, GEvent *e)
         DeleteEncoding (item);
       *done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -121,7 +121,7 @@ DE_Cancel (GGadget *g, GEvent *e)
       done = GDrawGetUserData (gw);
       *done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -134,9 +134,9 @@ de_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 void
@@ -230,13 +230,13 @@ MakeEncoding (SplineFont *sf, EncMap * map)
   SplineChar *sc;
 
   if (map->enc != &custom)
-    return (NULL);
+    return NULL;
 
   name =
     gwwv_ask_string (_("Please name this encoding"), NULL,
                      _("Please name this encoding"));
   if (name == NULL)
-    return (NULL);
+    return NULL;
   item = xcalloc (1, sizeof (Encoding));
   item->enc_name = name;
   item->only_1byte = item->has_1byte = true;
@@ -264,7 +264,7 @@ MakeEncoding (SplineFont *sf, EncMap * map)
       temp->next = item;
     }
   DumpPfaEditEncodings ();
-  return (item);
+  return item;
 }
 
 void
@@ -524,7 +524,7 @@ AskUserForCIDMap (void)
     free (block.maps[i]);
   free (block.maps);
   free (block.dirs);
-  return (map);
+  return map;
 }
 
 GTextInfo encodingtypes[] = {
@@ -676,7 +676,7 @@ GetEncodingMenu (void (*func) (GWindow, GMenuItem *, GEvent *),
             mi[i++].invoke = func;
           }
     }
-  return (mi);
+  return mi;
 }
 
 GTextInfo *
@@ -708,7 +708,7 @@ GetEncodingTypes (void)
             ti[i++].userdata = (void *) item->enc_name;
           }
     }
-  return (ti);
+  return ti;
 }
 
 GTextInfo *
@@ -727,9 +727,9 @@ EncodingTypesFindEnc (GTextInfo * encodingtypes, Encoding *enc)
       if (new_enc == NULL)
         continue;
       if (enc == new_enc)
-        return (&encodingtypes[i]);
+        return &encodingtypes[i];
     }
-  return (NULL);
+  return NULL;
 }
 
 Encoding *
@@ -756,5 +756,5 @@ ParseEncodingNameFromList (GGadget *listfield)
     enc = FindOrMakeEncoding (NULL_PASSTHRU (name, x_gc_u32_to_u8 (name)));
   if (enc == NULL)
     ff_post_error (_("Bad Encoding"), _("Bad Encoding"));
-  return (enc);
+  return enc;
 }

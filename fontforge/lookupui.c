@@ -94,7 +94,7 @@ SFLookupListFromType (SplineFont *sf, int lookup_type)
       else
         ti[cnt] = xcalloc (1, sizeof (GTextInfo));
     }
-  return (ti);
+  return ti;
 }
 
 GTextInfo *
@@ -126,7 +126,7 @@ SFLookupArrayFromType (SplineFont *sf, int lookup_type)
       if (!k)
         ti = xcalloc (cnt + 2, sizeof (GTextInfo));
     }
-  return (ti);
+  return ti;
 }
 
 GTextInfo *
@@ -165,7 +165,7 @@ SFLookupArrayFromMask (SplineFont *sf, int mask)
       if (!k)
         ti = xcalloc (cnt + 2, sizeof (GTextInfo));
     }
-  return (ti);
+  return ti;
 }
 
 /* ************************************************************************** */
@@ -1312,9 +1312,9 @@ langs_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("lookups.html#scripts-dlg");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_controlevent
            && event->u.control.subtype == et_buttonactivate)
@@ -1329,7 +1329,7 @@ langs_e_h (GWindow gw, GEvent *event)
           break;
         }
     }
-  return (true);
+  return true;
 }
 
 static char *
@@ -1519,7 +1519,7 @@ retry:
         pt[-1] = '\0';
     }
   GDrawDestroyWindow (gw);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1606,7 +1606,7 @@ Script_OK (GGadget *g, GEvent *e)
           ff_post_error (_("No scripts"),
                          _
                          ("You must select at least one script if you provide a feature tag."));
-          return (true);
+          return true;
         }
       script_cnt = rows;
       lang_cnt = 0;
@@ -1618,7 +1618,7 @@ Script_OK (GGadget *g, GEvent *e)
                              _
                              ("The script tag on line %d (%s) is too long.  It may be at most 4 letters"),
                              i + 1, strings[2 * i + 0].u.md_str);
-              return (true);
+              return true;
             }
           else
             {
@@ -1629,7 +1629,7 @@ Script_OK (GGadget *g, GEvent *e)
                                    _
                                    ("The script tag on line %d (%s) should be in ASCII.\n"),
                                    i + 1, strings[2 * i + 0].u.md_str);
-                    return (true);
+                    return true;
                   }
             }
           /* Now check the languages */
@@ -1638,7 +1638,7 @@ Script_OK (GGadget *g, GEvent *e)
               ff_post_error (_("No languages"),
                              _
                              ("You must select at least one language for each script."));
-              return (true);
+              return true;
             }
           for (start = strings[2 * i + 1].u.md_str; *start != '\0';)
             {
@@ -1650,7 +1650,7 @@ Script_OK (GGadget *g, GEvent *e)
                                      _
                                      ("A language tag on line %d (%s) should be in ASCII.\n"),
                                      i + 1, strings[2 * i + 1].u.md_str);
-                      return (true);
+                      return true;
                     }
                 }
               if (pt - start > 4)
@@ -1659,7 +1659,7 @@ Script_OK (GGadget *g, GEvent *e)
                                  _
                                  ("A language tag on line %d (%s) is too long.  It may be at most 4 letters"),
                                  i + 1, strings[2 * i + 0].u.md_str);
-                  return (true);
+                  return true;
                 }
               ++lang_cnt;
               start = pt;
@@ -1702,7 +1702,7 @@ Script_OK (GGadget *g, GEvent *e)
       ld->scriptdone = true;
       ld->scriptret = ret;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1715,7 +1715,7 @@ Script_Cancel (GGadget *g, GEvent *e)
       ld->scriptdone = true;
       ld->scriptret = NULL;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1733,12 +1733,12 @@ script_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("lookups.html#scripts-dlg");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
 
-  return (true);
+  return true;
 }
 
 static char *
@@ -1858,7 +1858,7 @@ LK_ScriptsDlg (GGadget *g, int r, int c)
   while (!ld->scriptdone)
     GDrawProcessOneEvent (NULL);
   GDrawDestroyWindow (gw);
-  return (ld->scriptret);
+  return ld->scriptret;
 }
 
 static FeatureScriptLangList *
@@ -1939,7 +1939,7 @@ LK_ParseFL (struct matrix_data *strings, int rows)
         }
     }
   free (langs);
-  return (fhead);
+  return fhead;
 }
 
 static void
@@ -2157,7 +2157,7 @@ SFMarkClassList (SplineFont *sf, int class)
       if (i == class)
         ti[i].selected = true;
     }
-  return (ti);
+  return ti;
 }
 
 static GTextInfo *
@@ -2184,7 +2184,7 @@ SFMarkSetList (SplineFont *sf, int set)
       if (i == set)
         ti[i + 1].selected = true;
     }
-  return (ti);
+  return ti;
 }
 
 static int
@@ -2198,9 +2198,9 @@ MaskFromLookupType (int lookup_type)
     case gsub_ligature:
     case gsub_context:
     case gsub_contextchain:
-      return (1 << (lookup_type - 1));
+      return 1 << (lookup_type - 1);
     case gsub_reversecchain:
-      return (gsub_reversecchain_mask);
+      return gsub_reversecchain_mask;
     case gpos_single:
     case gpos_pair:
     case gpos_cursive:
@@ -2209,9 +2209,9 @@ MaskFromLookupType (int lookup_type)
     case gpos_mark2mark:
     case gpos_context:
     case gpos_contextchain:
-      return (gpos_single_mask << (lookup_type - gpos_single));
+      return gpos_single_mask << (lookup_type - gpos_single);
     default:
-      return (0);
+      return 0;
     }
 }
 
@@ -2252,7 +2252,7 @@ FeatureListFromLookupType (int lookup_type)
       if (!k)
         ti = xcalloc (cnt + 1, sizeof (GTextInfo));
     }
-  return (ti);
+  return ti;
 }
 
 static int
@@ -2265,7 +2265,7 @@ Lookup_NameChanged (GGadget *g, GEvent *e)
       if (*_GGadgetGetTitle (g) != '\0')
         ld->name_has_been_set = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2289,7 +2289,7 @@ LK_TypeChanged (GGadget *g, GEvent *e)
                                false);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2316,13 +2316,13 @@ Lookup_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("No Lookup Type Selected"),
                          _("You must select a Lookup Type."));
-          return (true);
+          return true;
         }
       if (*_GGadgetGetTitle (GWidgetGetControl (ld->gw, CID_LookupName)) ==
           '\0')
         {
           ff_post_error (_("Unnamed lookup"), _("You must name the lookup."));
-          return (true);
+          return true;
         }
       for (i = 0; i < rows; ++i)
         {
@@ -2334,7 +2334,7 @@ Lookup_OK (GGadget *g, GEvent *e)
                              _
                              ("The feature tag on line %d (%s) is too long.  It may be at most 4 letters (or it could be a mac feature setting, two numbers in brokets <3,4>)"),
                              i + 1, strings[2 * i + 0].u.md_str);
-              return (true);
+              return true;
             }
           else
             {
@@ -2345,7 +2345,7 @@ Lookup_OK (GGadget *g, GEvent *e)
                                    _
                                    ("The feature tag on line %d (%s) should be in ASCII.\n"),
                                    i + 1, strings[2 * i + 0].u.md_str);
-                    return (true);
+                    return true;
                   }
             }
           /* Now check the script langs */
@@ -2359,7 +2359,7 @@ Lookup_OK (GGadget *g, GEvent *e)
                                      _
                                      ("A script tag on line %d (%s) should be in ASCII.\n"),
                                      i + 1, strings[2 * i + 1].u.md_str);
-                      return (true);
+                      return true;
                     }
                 }
               if (pt - start > 4)
@@ -2368,7 +2368,7 @@ Lookup_OK (GGadget *g, GEvent *e)
                                  _
                                  ("A script tag on line %d (%s) is too long.  It may be at most 4 letters"),
                                  i + 1, strings[2 * i + 0].u.md_str);
-                  return (true);
+                  return true;
                 }
               if (*pt == '{')
                 {
@@ -2384,7 +2384,7 @@ Lookup_OK (GGadget *g, GEvent *e)
                                              ("A language tag on line %d (%s) should be in ASCII.\n"),
                                              i + 1,
                                              strings[2 * i + 1].u.md_str);
-                              return (true);
+                              return true;
                             }
                         }
                       if (pt - start > 4)
@@ -2393,7 +2393,7 @@ Lookup_OK (GGadget *g, GEvent *e)
                                          _
                                          ("A language tag on line %d (%s) is too long.  It may be at most 4 letters"),
                                          i + 1, strings[2 * i + 0].u.md_str);
-                          return (true);
+                          return true;
                         }
                       start = (*pt == ',') ? pt + 1 : pt;
                     }
@@ -2418,7 +2418,7 @@ Lookup_OK (GGadget *g, GEvent *e)
                                  _
                                  ("This name has already been used for another lookup.\nLookup names must be unique."));
                   free (name);
-                  return (true);
+                  return true;
                 }
             }
         }
@@ -2462,7 +2462,7 @@ Lookup_OK (GGadget *g, GEvent *e)
       ld->done = true;
       ld->ok = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2475,7 +2475,7 @@ Lookup_Cancel (GGadget *g, GEvent *e)
       ld->done = true;
       ld->ok = false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2493,12 +2493,12 @@ lookup_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("lookups.html#Add-Lookup");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
 
-  return (true);
+  return true;
 }
 
 int
@@ -2852,7 +2852,7 @@ EditLookup (OTLookup *otl, int isgpos, SplineFont *sf)
     GDrawProcessOneEvent (NULL);
   GDrawDestroyWindow (gw);
 
-  return (ld.ok);
+  return ld.ok;
 }
 
 static OTLookup *
@@ -2866,10 +2866,10 @@ CreateAndSortNewLookupOfType (SplineFont *sf, int lookup_type)
   if (!EditLookup (newotl, isgpos, sf))
     {
       free (newotl);
-      return (NULL);
+      return NULL;
     }
   SortInsertLookup (sf, newotl);
-  return (newotl);
+  return newotl;
 }
 
 /* ************************************************************************** */
@@ -2936,7 +2936,7 @@ SFAddAnchorClass (SplineFont *sf, struct lookup_subtable *sub, char *name)
   ac->subtable = sub;
   ac->next = sf->anchor;
   sf->anchor = ac;
-  return (ac);
+  return ac;
 }
 
 static int
@@ -2957,7 +2957,7 @@ AnchorClassD_ShowAnchors (GGadget *g, GEvent *e)
       int cols = GMatrixEditGetColCnt (thing);
       int row = GMatrixEditGetActiveRow (thing);
       if (row == -1)
-        return (true);
+        return true;
 
       ac = classes[cols * row + 1].u.md_addr;
       if (ac == NULL)
@@ -2973,11 +2973,11 @@ AnchorClassD_ShowAnchors (GGadget *g, GEvent *e)
                            "identify an anchor class in a different "
                            "lookup subtable (%.80s)"),
                          ac->name, ac->subtable->subtable_name);
-          return (true);
+          return true;
         }
       AnchorControlClass (acd->sf, ac, acd->def_layer);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -3017,7 +3017,7 @@ AC_OK (GGadget *g, GEvent *e)
                                  _
                                  ("The name, %.80s, appears twice in this list.\nEach anchor class must have a distinct name."),
                                  classes[2 * i + 0].u.md_str);
-                  return (true);
+                  return true;
                 }
             }
           for (actest = acd->sf->anchor; actest != NULL; actest = actest->next)
@@ -3030,7 +3030,7 @@ AC_OK (GGadget *g, GEvent *e)
                              _
                              ("The name, %.80s, has already been used to identify an anchor class in a different lookup subtable (%.80s)"),
                              actest->name, actest->subtable->subtable_name);
-              return (true);
+              return true;
             }
         }
 
@@ -3055,7 +3055,7 @@ AC_OK (GGadget *g, GEvent *e)
                    _
                    ("Do you really want to remove the anchor class, %.80s?\nThis will remove all anchor points associated with that class."),
                    ac->name) == 1)
-                return (true);
+                return true;
             }
         }
 
@@ -3088,7 +3088,7 @@ AC_OK (GGadget *g, GEvent *e)
         }
       acd->done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -3107,7 +3107,7 @@ AC_Cancel (GGadget *g, GEvent *e)
       acd = GDrawGetUserData (GGadgetGetWindow (g));
       AC_DoCancel (acd);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3124,9 +3124,9 @@ acd_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("lookups.html#Anchor");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
       break;
     case et_destroy:
       break;
@@ -3139,7 +3139,7 @@ acd_e_h (GWindow gw, GEvent *event)
     case et_resize:
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -3379,23 +3379,23 @@ _md_cmp (const struct sortinfo *md1, const struct sortinfo *md2)
   if (md1->sc == NULL || md2->sc == NULL)
     {
       if (md1->sc != NULL)
-        return (1);
+        return 1;
       else if (md2->sc != NULL)
-        return (-1);
+        return -1;
       else
-        return (strcmp (md1->glyphname, md2->glyphname));
+        return strcmp (md1->glyphname, md2->glyphname);
     }
 
   if (byscripts && md1->script != md2->script)
     {
       if (md1->script == DEFAULT_SCRIPT)
-        return (1);
+        return 1;
       else if (md2->script == DEFAULT_SCRIPT)
-        return (-1);
+        return -1;
       if (md1->script > md2->script)
-        return (1);
+        return 1;
       else
-        return (-1);
+        return -1;
     }
 
   if (!isalphabetic)
@@ -3416,26 +3416,26 @@ _md_cmp (const struct sortinfo *md1, const struct sortinfo *md2)
             uni2 = toupper (uni2);
 
           if (uni1 > uni2)
-            return (1);
+            return 1;
           else if (uni1 < uni2)
-            return (-1);
+            return -1;
 
           uni1 =
             (md1->base->unicodeenc != -1) ? md1->base->unicodeenc : 0xffffff;
           uni2 =
             (md2->base->unicodeenc != -1) ? md2->base->unicodeenc : 0xffffff;
           if (uni1 > uni2)
-            return (1);
+            return 1;
           else if (uni1 < uni2)
-            return (-1);
+            return -1;
         }
 
       uni1 = (md1->sc->unicodeenc != -1) ? md1->sc->unicodeenc : 0xffffff;
       uni2 = (md2->sc->unicodeenc != -1) ? md2->sc->unicodeenc : 0xffffff;
       if (uni1 > uni2)
-        return (1);
+        return 1;
       else if (uni1 < uni2)
-        return (-1);
+        return -1;
     }
   else
     {
@@ -3444,13 +3444,13 @@ _md_cmp (const struct sortinfo *md1, const struct sortinfo *md2)
           int ret;
           ret = strcasecmp (md1->base->name, md2->base->name);
           if (ret != 0)
-            return (ret);
+            return ret;
           ret = strcmp (md1->base->name, md2->base->name);
           if (ret != 0)
-            return (ret);
+            return ret;
         }
     }
-  return (strcmp (md1->glyphname, md2->glyphname));
+  return strcmp (md1->glyphname, md2->glyphname);
 }
 
 static int
@@ -3464,7 +3464,7 @@ md_cmp (const void *_md1, const void *_md2)
     ret =
       _md_cmp ((struct sortinfo *) md1[1].u.md_ival,
                (struct sortinfo *) md2[1].u.md_ival);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -3552,12 +3552,12 @@ is_boundsFeat (struct lookup_subtable *sub)
       for (testf = features; testf != NULL; testf = testf->next)
         {
           if (testf->featuretag == CHR ('l', 'f', 'b', 'd'))
-            return (1);
+            return 1;
           else if (testf->featuretag == CHR ('r', 't', 'b', 'd'))
-            return (-1);
+            return -1;
         }
     }
-  return (0);
+  return 0;
 }
 
 static void
@@ -4031,7 +4031,7 @@ PSTKD_Sort (GGadget *g, GEvent *e)
       PSTKD_DoSort (pstkd, old, rows, cols);
       GGadgetRedraw (pstk);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -4102,7 +4102,7 @@ PSTKD_HideUnused (GGadget *g, GEvent *e)
       PSTKD_DoHideUnused (pstkd);
       GGadgetRedraw (GWidgetGetControl (pstkd->gw, CID_PSTList));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4119,7 +4119,7 @@ PSTKD_MagnificationChanged (GGadget *g, GEvent *e)
           GGadgetRedraw (GWidgetGetControl (pstkd->gw, CID_KernDisplay));
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4146,7 +4146,7 @@ PSTKD_DisplaySizeChanged (GGadget *g, GEvent *e)
           GGadgetRedraw (GWidgetGetControl (pstkd->gw, CID_KernDisplay));
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -4180,7 +4180,7 @@ FigureValue (struct matrix_data *old, int rcol, int c, int startc, GGadget *tf,
     val += dt.corrections[pixelsize - dt.first_pixel_size];
   free (dt.corrections);
   free (freeme);
-  return (val);
+  return val;
 }
 
 static int
@@ -4202,7 +4202,7 @@ ParsePSTKVR (PSTKernDlg * pstkd, GGadget *pstk, int startc, struct vr *vr)
     FigureValue (old, r * cols, c, startc + 4, tf, scale, pstkd->pixelsize);
   vr->v_adv_off =
     FigureValue (old, r * cols, c, startc + 6, tf, scale, pstkd->pixelsize);
-  return (true);
+  return true;
 }
 
 static void
@@ -4448,31 +4448,31 @@ pstkern_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("lookups.html#Pair");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     case et_expose:
       PSTKern_Expose (gw, GDrawGetUserData (gw));
-      return (true);
+      return true;
     case et_mousedown:
     case et_mouseup:
     case et_mousemove:
       PSTKern_Mouse (GDrawGetUserData (gw), event);
-      return (true);
+      return true;
     }
-  return (true);
+  return true;
 }
 
 static int
 SCReasonable (SplineChar *sc)
 {
   if (sc == NULL)
-    return (false);
+    return false;
   if (strcmp (sc->name, ".notdef") == 0 || strcmp (sc->name, ".null") == 0
       || strcmp (sc->name, "nonmarkingreturn") == 0)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static struct matrix_data *
@@ -4488,7 +4488,7 @@ MDCopy (struct matrix_data *old, int rows, int cols)
       if (cols == 2 /* subs, lig, alt, etc. */  || cols >= 10 /* kerning */ )
         md[r * cols + 1].u.md_str = xstrdup_or_null (md[r * cols + 1].u.md_str);
     }
-  return (md);
+  return md;
 }
 
 static int
@@ -4508,12 +4508,12 @@ SCNameUnused (char *name, struct matrix_data *old, int rows, int cols)
                   && old[r * cols + 2].u.md_ival == 0
                   && old[r * cols + 3].u.md_ival == 0
                   && old[r * cols + 4].u.md_ival == 0))
-            return (r);         /* There's an entry, but it's blank, fill it if we can */
+            return r;         /* There's an entry, but it's blank, fill it if we can */
           else
-            return (-1);
+            return -1;
         }
     }
-  return (r);                   /* Off end of list */
+  return r;                   /* Off end of list */
 }
 
 static int
@@ -4523,13 +4523,13 @@ SCIsLigature (SplineChar *sc)
   const uint32_t *alt = NULL;
 
   if (strchr (sc->name, '_') != NULL)
-    return (true);
+    return true;
   len = strlen (sc->name);
   if (strncmp (sc->name, "uni", 3) == 0 && (len - 3) % 4 == 0 && len > 7)
-    return (true);
+    return true;
 
   if (sc->unicodeenc == -1 || sc->unicodeenc >= 0x10000)
-    return (false);
+    return false;
   else if (isdecompositionnormative (sc->unicodeenc)
            && unicode_alternates[sc->unicodeenc >> 8] != NULL
            && (alt =
@@ -4538,14 +4538,14 @@ SCIsLigature (SplineChar *sc)
            NULL)
     {
       if (alt[1] == '\0')
-        return (false);         /* Single replacements aren't ligatures */
+        return false;         /* Single replacements aren't ligatures */
       else if (iscombining (alt[1]) && (alt[2] == '\0' || iscombining (alt[2])))
-        return (false);         /* Nor am I interested in accented letters */
+        return false;         /* Nor am I interested in accented letters */
       else
-        return (true);
+        return true;
     }
   else
-    return (false);
+    return false;
 }
 
 enum pop_type
@@ -4676,7 +4676,7 @@ PSTKD_PopulateWithSuffix (GGadget *g, GEvent *e)
         }
       free (suffix);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4700,7 +4700,7 @@ PSTKD_Populate (GGadget *g, GEvent *e)
       PSTKD_DoPopulate (pstkd, suffix, pt_all);
       free (suffix);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4724,7 +4724,7 @@ PSTKD_PopulateSelected (GGadget *g, GEvent *e)
       PSTKD_DoPopulate (pstkd, suffix, pt_selected);
       free (suffix);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4733,7 +4733,7 @@ PSTKD_DoAutoKern (PSTKernDlg * pstkd, SplineChar **glyphlist)
   int err, touch, separation, minkern, onlyCloser;
 
   if (!GGadgetIsChecked (GWidgetGetControl (pstkd->gw, CID_Autokern)))
-    return (false);
+    return false;
 
   err = false;
   touch = GGadgetIsChecked (GWidgetGetControl (pstkd->gw, CID_Touched));
@@ -4741,10 +4741,10 @@ PSTKD_DoAutoKern (PSTKernDlg * pstkd, SplineChar **glyphlist)
   minkern = GetInt8 (pstkd->gw, CID_MinKern, _("Min Kern"), &err);
   onlyCloser = GGadgetIsChecked (GWidgetGetControl (pstkd->gw, CID_OnlyCloser));
   if (err)
-    return (false);
+    return false;
   AutoKern2 (pstkd->sf, pstkd->def_layer, glyphlist, glyphlist, pstkd->sub,
              separation, minkern, touch, onlyCloser, 0, PSTKD_AddKP, pstkd);
-  return (true);
+  return true;
 }
 
 static int
@@ -4778,7 +4778,7 @@ PSTKD_AutoKern (GGadget *g, GEvent *e)
           ff_post_error (_("No scripts"),
                          _
                          ("There are no scripts bound to features bound to this lookup. So nothing happens."));
-          return (true);
+          return true;
         }
       scripttags = xmalloc ((cnt + 1) * sizeof (uint32_t));
       for (testf = features, cnt = 0; testf != NULL; testf = testf->next)
@@ -4819,7 +4819,7 @@ PSTKD_AutoKern (GGadget *g, GEvent *e)
       GMatrixEditSet (pstk, pstkd->psts, pstkd->next_row, false);
       GGadgetRedraw (pstk);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4864,7 +4864,7 @@ PSTKD_AutoKernSelected (GGadget *g, GEvent *e)
       GMatrixEditSet (pstk, pstkd->psts, pstkd->next_row, false);
       GGadgetRedraw (pstk);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4880,7 +4880,7 @@ PSTKD_RemoveAll (GGadget *g, GEvent *e)
       psts = xcalloc (cols, sizeof (struct matrix_data));
       GMatrixEditSet (pstk, psts, 0, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4926,7 +4926,7 @@ PSTKD_RemoveEmpty (GGadget *g, GEvent *e)
           GMatrixEditSet (pstk, psts, rows - rm_cnt, false);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -4970,7 +4970,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
           autokern =
             GGadgetIsChecked (GWidgetGetControl (pstkd->gw, CID_Autokern));
           if (err)
-            return (true);
+            return true;
         }
 
       /* Glyph names that aren't in the font */
@@ -4981,7 +4981,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
               ff_post_error (_("Missing glyph"),
                              _("There is no glyph named %s in the font"),
                              psts[cols * r + 0].u.md_str);
-              return (true);
+              return true;
             }
         }
       /* Empty entries */
@@ -5000,7 +5000,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
                                  _
                                  ("You must specify a replacement glyph for %s"),
                                  psts[cols * r + 0].u.md_str);
-                  return (true);
+                  return true;
                 }
               /* Replacements which aren't in the font */
               while (*start)
@@ -5022,7 +5022,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
                            psts[cols * r + 0].u.md_str, start) == 1)
                         {
                           *pt = ch;
-                          return (true);
+                          return true;
                         }
                     }
                   *pt = ch;
@@ -5059,7 +5059,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
                                          ("There are two entries for the same glyph set (%.80s and %.80s)"),
                                          psts[cols * r + 0].u.md_str,
                                          psts[cols * r + 1].u.md_str);
-                          return (true);
+                          return true;
                         }
                     }
                   else
@@ -5068,7 +5068,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
                                      _
                                      ("There are two entries for the same glyph (%.80s)"),
                                      psts[cols * r + 0].u.md_str);
-                      return (true);
+                      return true;
                     }
                 }
             }
@@ -5089,7 +5089,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
                                      _
                                      ("A device table adjustment specified for %.80s is invalid"),
                                      psts[cols * r + 0].u.md_str);
-                      return (true);
+                      return true;
                     }
                 }
             }
@@ -5242,7 +5242,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
         }
       pstkd->done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -5261,7 +5261,7 @@ PSTKD_Cancel (GGadget *g, GEvent *e)
       pstkd = GDrawGetUserData (GGadgetGetWindow (g));
       PSTKD_DoCancel (pstkd);
     }
-  return (true);
+  return true;
 }
 
 char *
@@ -5292,7 +5292,7 @@ GlyphNameListDeUnicode (char *str)
         *rpt++ = *pt++;
     }
   *rpt = '\0';
-  return (ret);
+  return ret;
 }
 
 char *
@@ -5303,9 +5303,9 @@ SFNameList2NameUni (SplineFont *sf, char *str)
   SplineChar *sc;
 
   if (str == NULL)
-    return (NULL);
+    return NULL;
   if (!add_char_to_name_list)
-    return (xstrdup_or_null (str));
+    return xstrdup_or_null (str);
 
   cnt = 0;
   for (pt = str; *pt != '\0'; ++pt)
@@ -5348,7 +5348,7 @@ SFNameList2NameUni (SplineFont *sf, char *str)
     rpt[-1] = '\0';
   else
     ret[0] = '\0';
-  return (ret);
+  return ret;
 }
 
 char *
@@ -5358,9 +5358,9 @@ SCNameUniStr (SplineChar *sc)
   int len;
 
   if (sc == NULL)
-    return (NULL);
+    return NULL;
   if (!add_char_to_name_list)
-    return (xstrdup_or_null (sc->name));
+    return xstrdup_or_null (sc->name);
 
   len = strlen (sc->name);
   temp = xmalloc (len + 8);
@@ -5375,7 +5375,7 @@ SCNameUniStr (SplineChar *sc)
       *pt++ = ')';
       *pt = '\0';
     }
-  return (temp);
+  return temp;
 }
 
 uint32_t *
@@ -5385,7 +5385,7 @@ uSCNameUniStr (SplineChar *sc)
   int len;
 
   if (sc == NULL)
-    return (NULL);
+    return NULL;
   temp = xmalloc ((strlen (sc->name) + 5) * sizeof (uint32_t));
   utf82u_strcpy (temp, sc->name);
   if (sc->unicodeenc > 32 && sc->unicodeenc != ')' && add_char_to_name_list
@@ -5398,7 +5398,7 @@ uSCNameUniStr (SplineChar *sc)
       temp[len + 2] = ')';
       temp[len + 3] = '\0';
     }
-  return (temp);
+  return temp;
 }
 
 uint32_t **
@@ -5413,7 +5413,7 @@ SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
 
   pt = spt = basept = (uint32_t *) _GGadgetGetTitle (t);
   if (pt == NULL || *pt == '\0')
-    return (NULL);
+    return NULL;
   if (new_name_after_space)
     {
       if ((spt = u32_strrchr (spt, ' ')) == NULL)
@@ -5422,7 +5422,7 @@ SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
         {
           pt = ++spt;
           if (*pt == '\0')
-            return (NULL);
+            return NULL;
         }
     }
   while (*pt && *pt != '*' && *pt != '?' && *pt != '[' && *pt != '{')
@@ -5442,11 +5442,11 @@ SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
           ret = xmalloc ((2) * sizeof (uint32_t *));
           ret[0] = uSCNameUniStr (sc);
           ret[1] = NULL;
-          return (ret);
+          return ret;
         }
     }
   if (do_wildcards && !from_tab)
-    return (NULL);
+    return NULL;
 
   wild = NULL;
   if (do_wildcards)
@@ -5518,7 +5518,7 @@ SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
         ret = xmalloc ((cnt + 1) * sizeof (uint32_t *));
     }
   free (wild);
-  return (ret);
+  return ret;
 }
 
 static uint32_t **
@@ -5528,7 +5528,7 @@ PSTKD_GlyphNameCompletion (GGadget *t, int from_tab)
     GDrawGetUserData (GDrawGetParentWindow (GGadgetGetWindow (t)));
   SplineFont *sf = pstkd->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, false));
+  return SFGlyphNameCompletion (sf, t, from_tab, false);
 }
 
 static uint32_t **
@@ -5538,7 +5538,7 @@ PSTKD_GlyphListCompletion (GGadget *t, int from_tab)
     GDrawGetUserData (GDrawGetParentWindow (GGadgetGetWindow (t)));
   SplineFont *sf = pstkd->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, true));
+  return SFGlyphNameCompletion (sf, t, from_tab, true);
 }
 
 static int
@@ -5561,9 +5561,9 @@ pstkd_e_h (GWindow gw, GEvent *event)
             help ("lookups.html#Pair");
           else
             help ("lookups.html#basic-subs");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
       break;
     case et_destroy:
       break;
@@ -5576,7 +5576,7 @@ pstkd_e_h (GWindow gw, GEvent *event)
     case et_resize:
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -6198,7 +6198,7 @@ SubtableNameInUse (char *subname, SplineFont *sf,
                   if (strcmp
                       (lk->all[i].subtables[j].subtable->subtable_name,
                        subname) == 0)
-                    return (true);
+                    return true;
                 }
             }
         }
@@ -6215,12 +6215,12 @@ SubtableNameInUse (char *subname, SplineFont *sf,
                   if (sub == exclude)
                     continue;
                   if (strcmp (sub->subtable_name, subname) == 0)
-                    return (true);
+                    return true;
                 }
             }
         }
     }
-  return (false);
+  return false;
 }
 
 int
@@ -6249,7 +6249,7 @@ EditSubtable (struct lookup_subtable *sub, int isgpos, SplineFont *sf,
                          _("Please name this subtable"));
       free (freeme);
       if (def == NULL)
-        return (false);
+        return false;
       freeme = def;
       if (SubtableNameInUse (def, sf, sub))
         ff_post_notice (_("Duplicate name"),
@@ -6264,7 +6264,7 @@ EditSubtable (struct lookup_subtable *sub, int isgpos, SplineFont *sf,
     sub->suffix = SuffixFromTags (sub->lookup->features);
   if (new && (sd == NULL || !(sd->flags & sdf_dontedit)))
     _LookupSubtableContents (sf, sub, sd, def_layer);
-  return (true);
+  return true;
 }
 
 static struct lookup_subtable *
@@ -6281,7 +6281,7 @@ NewSubtable (OTLookup *otl, int isgpos, SplineFont *sf,
   if (!EditSubtable (sub, isgpos, sf, sd, def_layer))
     {
       free (sub);
-      return (NULL);
+      return NULL;
     }
   if (otl->subtables == NULL)
     otl->subtables = sub;
@@ -6312,7 +6312,7 @@ NewSubtable (OTLookup *otl, int isgpos, SplineFont *sf,
           GFI_LookupEnableButtons (sf->fontinfo, isgpos);
         }
     }
-  return (sub);
+  return sub;
 }
 
 GTextInfo **
@@ -6394,11 +6394,11 @@ SFSubtablesOfType (SplineFont *sf, int lookup_type, int kernclass, int add_none)
           ti[pos]->fg = ti[pos]->bg = COLOR_DEFAULT;
           ti[pos++]->text = utf82u_copy (_("New Lookup Subtable..."));
           ti[pos] = xcalloc (1, sizeof (GTextInfo));
-          return (ti);
+          return ti;
         }
     }
   /* We'll never get here */
-  return (NULL);
+  return NULL;
 }
 
 GTextInfo *
@@ -6410,7 +6410,7 @@ SFSubtableListOfType (SplineFont *sf, int lookup_type, int kernclass,
 
   temp = SFSubtablesOfType (sf, lookup_type, kernclass, add_none);
   if (temp == NULL)
-    return (NULL);
+    return NULL;
   for (cnt = 0; temp[cnt]->text != NULL || temp[cnt]->line; ++cnt);
   ti = xcalloc (cnt + 1, sizeof (GTextInfo));
   for (cnt = 0; temp[cnt]->text != NULL || temp[cnt]->line; ++cnt)
@@ -6419,7 +6419,7 @@ SFSubtableListOfType (SplineFont *sf, int lookup_type, int kernclass,
       free (temp[cnt]);
     }
   free (temp);
-  return (ti);
+  return ti;
 }
 
 struct lookup_subtable *
@@ -6447,11 +6447,11 @@ SFNewLookupSubtableOfType (SplineFont *sf, int lookup_type,
       /*  a subtable to it */
       found = CreateAndSortNewLookupOfType (sf, lookup_type);
       if (found == NULL)
-        return (NULL);
+        return NULL;
       sub = NewSubtable (found, isgpos, sf, sd, def_layer);
       /* even if they canceled the subtable creation they are now stuck */
       /*  with the lookup */
-      return (sub);
+      return sub;
     }
 
   /* I thought briefly that if cnt were 1 I might want to automagically */
@@ -6492,9 +6492,9 @@ SFNewLookupSubtableOfType (SplineFont *sf, int lookup_type,
     }
   free (choices);
   if (found == NULL)
-    return (NULL);
+    return NULL;
 
-  return (NewSubtable (found, isgpos, sf, sd, def_layer));
+  return NewSubtable (found, isgpos, sf, sd, def_layer);
 }
 
 static void
@@ -6628,7 +6628,7 @@ kf_sub_e_h (GWindow pixmap, GEvent *event)
   struct kf_dlg *kf;
 
   if (event->type == et_destroy)
-    return (true);
+    return true;
 
   active_fv = (FontView *) GDrawGetUserData (pixmap);
   kf = (struct kf_dlg *) (active_fv->b.container);
@@ -6636,7 +6636,7 @@ kf_sub_e_h (GWindow pixmap, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown)
       && (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (active_fv->vsb, event));
+      return GGadgetDispatchEvent (active_fv->vsb, event);
     }
 
   switch (event->type)
@@ -6657,20 +6657,20 @@ kf_sub_e_h (GWindow pixmap, GEvent *event)
       break;
     case et_mousedown:
       if (event->u.mouse.y < kf->mbh)
-        return (false);
+        return false;
       kf_activateMe (&kf->base,
                      (struct fontviewbase *) ((event->u.mouse.y > kf->label2_y)
                                               ? kf->second_fv : kf->first_fv));
-      return (false);
+      return false;
       break;
     case et_mouseup:
     case et_mousemove:
-      return (false);
+      return false;
     case et_resize:
       kf_sizeSet (kf, pixmap);
       break;
     }
-  return (true);
+  return true;
 }
 
 #undef CID_Separation
@@ -6720,7 +6720,7 @@ KF_FormatChange (GGadget *g, GEvent *e)
           GGadgetSetTitle8 (GWidgetGetControl (kf->gw, CID_MinKern), "0");
         }
     }
-  return (true);
+  return true;
 }
 
 static SplineChar **
@@ -6747,7 +6747,7 @@ SelectedGlyphs (FontView *_fv)
       ff_post_error (_("No selection"),
                      _
                      ("Please select some glyphs in the font views at the bottom of the dialog for FontForge to put into classes."));
-      return (NULL);
+      return NULL;
     }
 
   glyphlist = xmalloc ((selcnt + 1) * sizeof (SplineChar *));
@@ -6759,7 +6759,7 @@ SelectedGlyphs (FontView *_fv)
         glyphlist[selcnt++] = sc;
     }
   glyphlist[selcnt] = NULL;
-  return (glyphlist);
+  return glyphlist;
 }
 
 static int
@@ -6782,7 +6782,7 @@ KF_OK (GGadget *g, GEvent *e)
         GGadgetIsChecked (GWidgetGetControl (kf->gw, CID_OnlyCloser));
       autokern = GGadgetIsChecked (GWidgetGetControl (kf->gw, CID_Autokern));
       if (err)
-        return (true);
+        return true;
 
       isclass = GGadgetIsChecked (GWidgetGetControl (kf->gw, CID_KClasses));
       if (isclass)
@@ -6793,19 +6793,19 @@ KF_OK (GGadget *g, GEvent *e)
             GetReal8 (kf->gw, CID_ClassDistance, _("Intra Class Distance"),
                       &err);
           if (err)
-            return (true);
+            return true;
         }
       if (autobuild || autokern)
         {
           results->firstglyphs = SelectedGlyphs (kf->first_fv);
           if (results->firstglyphs == NULL)
-            return (true);
+            return true;
           results->secondglyphs = SelectedGlyphs (kf->second_fv);
           if (results->secondglyphs == NULL)
             {
               free (results->firstglyphs);
               results->firstglyphs = NULL;
-              return (true);
+              return true;
             }
         }
       kf->sub->separation = separation;
@@ -6822,7 +6822,7 @@ KF_OK (GGadget *g, GEvent *e)
       results->autokern = autokern;
       kf->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -6835,7 +6835,7 @@ KF_Cancel (GGadget *g, GEvent *e)
       kf = GDrawGetUserData (GGadgetGetWindow (g));
       kf->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -6849,10 +6849,10 @@ kf_e_h (GWindow gw, GEvent *event)
       kf->done = true;
       break;
     case et_char:
-      return (false);
+      return false;
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7197,7 +7197,7 @@ kern_format_dlg (SplineFont *sf, int def_layer, struct lookup_subtable *sub,
   FontViewFree (&kf.first_fv->b);
   GDrawSetUserData (kf.gw, NULL);
   GDrawDestroyWindow (kf.gw);
-  return (results->asked);
+  return results->asked;
 }
 
 void
@@ -7344,16 +7344,16 @@ StrNextLang (char **_pt)
   while (*pt == ' ' || *pt == ',')
     ++pt;
   if (*pt == '\0')
-    return (0);
+    return 0;
 
   for (i = 0; i < 4 && *pt != '\0' && *pt != ','; ++i)
     tag[i] = *pt++;
   while (*pt == ' ')
     ++pt;
   if (*pt != '\0' && *pt != ',')
-    return (0xffffffff);
+    return 0xffffffff;
   *_pt = (char *) pt;
-  return ((tag[0] << 24) | (tag[1] << 16) | (tag[2] << 8) | tag[3]);
+  return (tag[0] << 24) | (tag[1] << 16) | (tag[2] << 8) | tag[3];
 }
 
 static void
@@ -7462,7 +7462,7 @@ ARL_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("No Script Tag"),
                          _("Please specify a 4 letter opentype script tag"));
-          return (true);
+          return true;
         }
       for (i = 0; i < 4 && *spt != '\0'; ++i)
         tag[i] = *spt++;
@@ -7472,7 +7472,7 @@ ARL_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("Script Tag too long"),
                          _("Please specify a 4 letter opentype script tag"));
-          return (true);
+          return true;
         }
       script_tag = (tag[0] << 24) | (tag[1] << 16) | (tag[2] << 8) | tag[3];
 
@@ -7484,7 +7484,7 @@ ARL_OK (GGadget *g, GEvent *e)
               ff_post_error (_("Invalid language"),
                              _
                              ("Please specify a comma separated list of 4 letter opentype language tags"));
-              return (true);
+              return true;
             }
         }
 
@@ -7492,7 +7492,7 @@ ARL_OK (GGadget *g, GEvent *e)
       free (langs);
       arl->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7504,7 +7504,7 @@ ARL_Cancel (GGadget *g, GEvent *e)
       struct addrmlang *arl = GDrawGetUserData (GGadgetGetWindow (g));
       arl->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7526,7 +7526,7 @@ ARL_TagChanged (GGadget *g, GEvent *e)
       tag[4] = 0;
       GGadgetSetTitle8 (g, tag);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7537,12 +7537,12 @@ arl_e_h (GWindow gw, GEvent *event)
   switch (event->type)
     {
     case et_char:
-      return (false);
+      return false;
     case et_close:
       arl->done = true;
       break;
     }
-  return (true);
+  return true;
 }
 
 static GTextInfo *
@@ -7584,7 +7584,7 @@ ScriptListOfFont (SplineFont *sf)
     }
   ti[0].selected = true;
   free (ourscripts);
-  return (ti);
+  return ti;
 }
 
 void
@@ -7774,7 +7774,7 @@ MRD_OK (GGadget *g, GEvent *e)
                              ("The encoding does not contain something named %.40s"),
                              start_name);
               free (start_name);
-              return (true);
+              return true;
             }
           free (start_name);
           if (enc_start + sel_cnt >= enc_max)
@@ -7782,7 +7782,7 @@ MRD_OK (GGadget *g, GEvent *e)
               ff_post_error (_("Not enough glyphs"),
                              _
                              ("There aren't enough glyphs in the encoding to name all the selected characters"));
-              return (true);
+              return true;
             }
           for (enc = enc_start; enc < enc_start + sel_cnt; ++enc)
             if (mrd->fv->b.selected[enc])
@@ -7790,7 +7790,7 @@ MRD_OK (GGadget *g, GEvent *e)
                 ff_post_error (_("Bad selection"),
                                _
                                ("You may not rename any of the base glyphs, but your selection overlaps the set of base glyphs."));
-                return (true);
+                return true;
               }
         }
       else
@@ -7808,7 +7808,7 @@ MRD_OK (GGadget *g, GEvent *e)
           ff_post_error (_("Can't specify a subtable here"),
                          _
                          ("As the selected glyphs are also source glyphs, they will be renamed, so they can't act as source glyphs for a lookup."));
-          return (true);
+          return true;
         }
 
       suffix = GGadgetGetTitle8 (GWidgetGetControl (mrd->gw, CID_Suffix));
@@ -7818,7 +7818,7 @@ MRD_OK (GGadget *g, GEvent *e)
                          _
                          ("If you don't specify a suffix, the glyphs don't get renamed."));
           free (suffix);
-          return (true);
+          return true;
         }
       if (*suffix != '.')
         {
@@ -7870,7 +7870,7 @@ MRD_OK (GGadget *g, GEvent *e)
       free (suffix);
       mrd->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7882,7 +7882,7 @@ MRD_Cancel (GGadget *g, GEvent *e)
       MassRenameDlg *mrd = GDrawGetUserData (GGadgetGetWindow (g));
       mrd->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7910,11 +7910,11 @@ MRD_SuffixChange (GGadget *g, GEvent *e)
             {
               GGadgetSelectOneListItem (GWidgetGetControl
                                         (mrd->gw, CID_SubTable), i);
-              return (true);
+              return true;
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -7968,7 +7968,7 @@ MRD_Subtable (GGadget *g, GEvent *e)
                               sub->suffix);
         }
     }
-  return (true);
+  return true;
 }
 
 static uint32_t **
@@ -7977,7 +7977,7 @@ MRD_GlyphNameCompletion (GGadget *t, int from_tab)
   MassRenameDlg *mrd = GDrawGetUserData (GGadgetGetWindow (t));
   SplineFont *sf = mrd->fv->b.sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, false));
+  return SFGlyphNameCompletion (sf, t, from_tab, false);
 }
 
 static int
@@ -7988,12 +7988,12 @@ mrd_e_h (GWindow gw, GEvent *event)
   switch (event->type)
     {
     case et_char:
-      return (false);
+      return false;
     case et_close:
       mrd->done = true;
       break;
     }
-  return (true);
+  return true;
 }
 
 void

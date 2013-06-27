@@ -86,20 +86,20 @@ Delta_OK (GGadget *g, GEvent *e)
       within = GetReal8 (qg->gw, CID_Within, _("Proximity"), &err);
       dpi = GetInt8 (qg->gw, CID_DPI, _("DPI"), &err);
       if (err)
-        return (true);
+        return true;
       if (within <= 0 || within >= .5)
         {
           ff_post_error (_("Bad Number"),
                          _
                          ("The \"Proximity\" field must be more than 0 and less than a half."));
-          return (true);
+          return true;
         }
       if (dpi < 10 || dpi > 5000)
         {
           ff_post_error (_("Unreasonable DPI"),
                          _
                          ("The \"DPI\" field must be more than 10 and less than 5000."));
-          return (true);
+          return true;
         }
       depth = GGadgetIsChecked (GWidgetGetControl (qg->gw, CID_BW)) ? 1 : 8;
       sizes = GGadgetGetTitle8 (GWidgetGetControl (qg->gw, CID_Sizes));
@@ -151,7 +151,7 @@ Delta_OK (GGadget *g, GEvent *e)
             }
           free (sizes);
           qg->cur = 0;
-          return (true);
+          return true;
         }
 
       free (delta_sizes);
@@ -164,7 +164,7 @@ Delta_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("Nothing found"), _("Nothng found."));
           qg->done = true;
-          return (true);
+          return true;
         }
 
       if (qg->cur >= qg->max)
@@ -174,7 +174,7 @@ Delta_OK (GGadget *g, GEvent *e)
       StartDeltaDisplay (qg);
       qg->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -185,7 +185,7 @@ Delta_Cancel (GGadget *g, GEvent *e)
       QGData *qg = GDrawGetUserData (GGadgetGetWindow (g));
       qg->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -198,7 +198,7 @@ delta_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_map)
     {
@@ -211,7 +211,7 @@ delta_e_h (GWindow gw, GEvent *event)
       free (qg->qg);
       free (qg);
     }
-  return (true);
+  return true;
 }
 
 void
@@ -567,7 +567,7 @@ QG_VScroll (GGadget *g, GEvent *e)
       GScrollBarSetPos (qg->vsb, newpos);
       GDrawRequestExpose (qg->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -587,16 +587,16 @@ QG_Count (struct qgnode *parent)
   int l, cnt = 0;
 
   if (!parent->open)
-    return (0);
+    return 0;
   if (parent->kids == NULL)
-    return (parent->qg_cnt);
+    return parent->qg_cnt;
 
   for (l = 0; l < parent->kid_cnt; ++l)
     {
       parent->kids[l].tot_under = QG_Count (&parent->kids[l]);
       cnt += 1 + parent->kids[l].tot_under;
     }
-  return (cnt);
+  return cnt;
 }
 
 static void
@@ -758,11 +758,11 @@ qg_sorter (const void *pt1, const void *pt2)
       break;
     }
   if (t1 != 0)
-    return (t1);
+    return t1;
   if (t2 != 0)
-    return (t2);
+    return t2;
 
-  return (t3);
+  return t3;
 }
 
 static void
@@ -1022,7 +1022,7 @@ QGSorter (GGadget *g, GEvent *e)
       QGDoSort (qg);
       GDrawRequestExpose (qg->v, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1150,7 +1150,7 @@ qgv_e_h (GWindow gw, GEvent *event)
       QGMouse (qg, event);
       break;
     case et_char:
-      return (false);
+      return false;
       break;
     case et_resize:
       {
@@ -1160,7 +1160,7 @@ qgv_e_h (GWindow gw, GEvent *event)
         GDrawRequestExpose (qg->v, NULL, false);
       } break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1172,7 +1172,7 @@ QG_OK (GGadget *g, GEvent *e)
       QGData *qg = GDrawGetUserData (GGadgetGetWindow (g));
       qg->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1186,9 +1186,9 @@ qg_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static void

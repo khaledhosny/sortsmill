@@ -55,9 +55,9 @@ int
 IsntBDFChar (BDFChar *bdfc)
 {
   if (bdfc == NULL)
-    return (true);
+    return true;
 
-  return (!SCWorthOutputting (bdfc->sc));
+  return !SCWorthOutputting (bdfc->sc);
 }
 
 static void
@@ -284,9 +284,9 @@ BdfPropHasKey (BDFFont *font, const char *key, char *buffer, int len)
             snprintf (buffer, len, "%d", font->props[i].u.val);
             break;
           }
-        return (true);
+        return true;
       }
-  return (false);
+  return false;
 }
 
 static void
@@ -563,5 +563,5 @@ BDFFontDump (char *filename, BDFFont *font, EncMap *map, int res)
   for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = font->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
-  return (ret);
+  return ret;
 }

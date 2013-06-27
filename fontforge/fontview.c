@@ -235,13 +235,13 @@ FeatureTrans (FontView *fv, int enc)
 
   if (enc < 0 || enc >= fv->b.map->enc_limit
       || (gid = enc_to_gid (fv->b.map, enc)) == -1)
-    return (-1);
+    return -1;
   if (fv->cur_subtable == NULL)
-    return (gid);
+    return gid;
 
   sc = fv->b.sf->glyphs[gid];
   if (sc == NULL)
-    return (-1);
+    return -1;
   for (pst = sc->possub; pst != NULL; pst = pst->next)
     {
       if ((pst->type == pst_substitution || pst->type == pst_alternate)
@@ -249,14 +249,14 @@ FeatureTrans (FontView *fv, int enc)
         break;
     }
   if (pst == NULL)
-    return (-1);
+    return -1;
   pt = strchr (pst->u.subs.variant, ' ');
   if (pt != NULL)
     *pt = '\0';
   gid = SFFindExistingSlot (fv->b.sf, -1, pst->u.subs.variant);
   if (pt != NULL)
     *pt = ' ';
-  return (gid);
+  return gid;
 }
 
 static void
@@ -684,7 +684,7 @@ AskChanged (SplineFont *sf)
               _
               ("Font %1$.40s in file %2$.40s has been changed.\nDo you want to save it?"),
               fontname, filename);
-  return (ret);
+  return ret;
 }
 
 int
@@ -743,7 +743,7 @@ SaveAs_FormatChange (GGadget *g, GEvent *e)
       save_to_dir = *_s2d = s2d;
       SavePrefs (true);
     }
-  return (true);
+  return true;
 }
 
 int
@@ -802,7 +802,7 @@ _FVMenuSaveAs (FontView *fv)
   ret = gwwv_save_filename_with_gadget (_("Save as..."), temp, NULL, &gcd);
   free (temp);
   if (ret == NULL)
-    return (0);
+    return 0;
   filename = utf82def_copy (ret);
   free (ret);
   FVFlattenAllBitmapSelections (fv);
@@ -838,7 +838,7 @@ _FVMenuSaveAs (FontView *fv)
     }
   else
     free (filename);
-  return (ok);
+  return ok;
 }
 
 VISIBLE void
@@ -854,8 +854,8 @@ IsBackupName (char *filename)
 {
 
   if (filename == NULL)
-    return (false);
-  return (filename[strlen (filename) - 1] == '~');
+    return false;
+  return filename[strlen (filename) - 1] == '~';
 }
 
 int
@@ -879,7 +879,7 @@ _FVMenuSave (FontView *fv)
           ret = true;
         }
     }
-  return (ret);
+  return ret;
 }
 
 VISIBLE void
@@ -1005,15 +1005,15 @@ SFAnyChanged (SplineFont *sf)
       MMSet *mm = sf->mm;
       int i;
       if (mm->changed)
-        return (true);
+        return true;
       for (i = 0; i < mm->instance_count; ++i)
         if (sf->mm->instances[i]->changed)
-          return (true);
+          return true;
 
-      return (false);
+      return false;
     }
   else
-    return (sf->changed);
+    return sf->changed;
 }
 
 static int
@@ -1023,7 +1023,7 @@ _FVMenuClose (FontView *fv)
   SplineFont *sf = fv->b.cidmaster ? fv->b.cidmaster : fv->b.sf;
 
   if (!SFCloseAllInstrs (fv->b.sf))
-    return (false);
+    return false;
 
   if (fv->b.nextsame != NULL || fv->b.sf->fv != &fv->b)
     {
@@ -1033,9 +1033,9 @@ _FVMenuClose (FontView *fv)
     {
       i = AskChanged (fv->b.sf);
       if (i == 2)               /* Cancel */
-        return (false);
+        return false;
       if (i == 0 && !_FVMenuSave (fv))  /* Save */
-        return (false);
+        return false;
       else
         SFClearAutoSave (sf);   /* if they didn't save it, remove change
                                    record. */
@@ -1046,7 +1046,7 @@ _FVMenuClose (FontView *fv)
   else if (sf->origname != NULL)
     RecentFilesRemember (sf->origname);
   GDrawDestroyWindow (fv->gw);
-  return (true);
+  return true;
 }
 
 void
@@ -1223,7 +1223,7 @@ GetFontNameDialog (char *dir, int mult)
   temp = u2def_copy (ret);
   free (ret);
   free (u_dir);
-  return (temp);
+  return temp;
 }
 
 void
@@ -1468,7 +1468,7 @@ about_e_h (GWindow gw, GEvent *event)
                                 sizeof (foolishness[0]))]));
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1536,9 +1536,9 @@ FVSelCount (FontView *fv)
            _
            ("This involves opening more than 10 windows.\nIs that really what you want?"))
           == 1)
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 VISIBLE void
@@ -1962,7 +1962,7 @@ fv_all_selected (FontViewBase *fvb)
         }
       i++;
     }
-  return (something_is_worth_outputting && !one_is_not_selected);
+  return something_is_worth_outputting && !one_is_not_selected;
 }
 
 /* Returns -1 if nothing selected, if exactly one char return it, -2
@@ -2206,7 +2206,7 @@ static enum merge_type
 SelMergeType (GEvent *e)
 {
   if (e->type != et_mouseup)
-    return (mt_set);
+    return mt_set;
 
   return (((e->u.mouse.state & ksm_shift) ? mt_merge : 0) | ((e->u.mouse.state &
                                                               ksm_control) ?
@@ -2223,19 +2223,19 @@ SubMatch (char *pattern, char *eop, char *name, int ignorecase)
       if (ch == '*')
         {
           if (pattern[1] == '\0')
-            return (name + strlen (name));
+            return name + strlen (name);
           for (npt = name;; ++npt)
             {
               if ((eon = SubMatch (pattern + 1, eop, npt, ignorecase)) != NULL)
-                return (eon);
+                return eon;
               if (*npt == '\0')
-                return (NULL);
+                return NULL;
             }
         }
       else if (ch == '?')
         {
           if (*name == '\0')
-            return (NULL);
+            return NULL;
           ++name;
         }
       else if (ch == '[')
@@ -2304,7 +2304,7 @@ SubMatch (char *pattern, char *eop, char *name, int ignorecase)
                 }
             }
           if (!found)
-            return (NULL);
+            return NULL;
           while (*ppt != ']' && *ppt != '\0')
             ++ppt;
           pattern = ppt;
@@ -2325,10 +2325,10 @@ SubMatch (char *pattern, char *eop, char *name, int ignorecase)
                     ++ecurly;
                   if ((eon =
                        SubMatch (ecurly + 1, eop, npt, ignorecase)) != NULL)
-                    return (eon);
+                    return eon;
                 }
               if (*ept == '}')
-                return (NULL);
+                return NULL;
               if (*ept == ',')
                 ++ept;
             }
@@ -2342,10 +2342,10 @@ SubMatch (char *pattern, char *eop, char *name, int ignorecase)
           ++name;
         }
       else
-        return (NULL);
+        return NULL;
       ++pattern;
     }
-  return (name);
+  return name;
 }
 
 /* Handles *?{}[] wildcards */
@@ -2355,15 +2355,15 @@ WildMatch (char *pattern, char *name, int ignorecase)
   char *eop = pattern + strlen (pattern);
 
   if (pattern == NULL)
-    return (true);
+    return true;
 
   name = SubMatch (pattern, eop, name, ignorecase);
   if (name == NULL)
-    return (false);
+    return false;
   if (*name == '\0')
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static int
@@ -2384,7 +2384,7 @@ SS_ScriptChanged (GGadget *g, GEvent *e)
         }
       free (txt);
       if (scripts[i].text == NULL)
-        return (true);
+        return true;
       buf[0] = ((intptr_t) scripts[i].userdata) >> 24;
       buf[1] = ((intptr_t) scripts[i].userdata) >> 16;
       buf[2] = ((intptr_t) scripts[i].userdata) >> 8;
@@ -2392,7 +2392,7 @@ SS_ScriptChanged (GGadget *g, GEvent *e)
       buf[4] = 0;
       GGadgetSetTitle8 (g, buf);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2404,7 +2404,7 @@ SS_OK (GGadget *g, GEvent *e)
       int *done = GDrawGetUserData (GGadgetGetWindow (g));
       *done = 2;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2416,7 +2416,7 @@ SS_Cancel (GGadget *g, GEvent *e)
       int *done = GDrawGetUserData (GGadgetGetWindow (g));
       *done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2427,12 +2427,12 @@ ss_e_h (GWindow gw, GEvent *event)
   switch (event->type)
     {
     case et_char:
-      return (false);
+      return false;
     case et_close:
       *done = true;
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -2763,7 +2763,7 @@ FVSelectByName (FontView *fv, char *ret, int merge)
       if (*end != '\0' || uni < 0 || uni >= 0x110000)
         {
           ff_post_error (_("Bad Number"), _("Bad Number"));
-          return (false);
+          return false;
         }
       for (j = 0; j < map->enc_limit; ++j)
         if ((gid = enc_to_gid (map, j)) != -1 && (sc = sf->glyphs[gid]) != NULL)
@@ -2801,7 +2801,7 @@ FVSelectByName (FontView *fv, char *ret, int merge)
     }
   GDrawRequestExpose (fv->v, NULL, false);
   fv->sel_index = 1;
-  return (true);
+  return true;
 }
 
 VISIBLE void
@@ -3315,9 +3315,9 @@ getorigin (void *UNUSED (d), BasePoint *base, int index)
       /*CVFindCenter(cv,base,!CVAnySel(cv,NULL,NULL,NULL,NULL)); */
       break;
     default:
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -4074,12 +4074,12 @@ md_e_h (GWindow gw, GEvent *e)
       if (e->u.chr.keysym == GK_F1 || e->u.chr.keysym == GK_Help)
         {
           help ("fontinfo.html");
-          return (true);
+          return true;
         }
 #endif
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 VISIBLE void
@@ -4752,7 +4752,7 @@ CMapFilter (GGadget *g, GDirEntry * ent, const uint32_t *dir)
         }
       free (filename);
     }
-  return (ret);
+  return ret;
 }
 
 VISIBLE void
@@ -5019,9 +5019,9 @@ FVFindACharInDisplay (FontView *fv)
   for (enc = start; enc < end && enc < map->enc_limit; ++enc)
     {
       if ((gid = enc_to_gid (map, enc)) != -1 && (sc = sf->glyphs[gid]) != NULL)
-        return (sc);
+        return sc;
     }
-  return (NULL);
+  return NULL;
 }
 
 VISIBLE void
@@ -11336,7 +11336,7 @@ FVMakeChar (FontView *fv, int enc)
   int feat_gid = FeatureTrans (fv, enc);
 
   if (fv->cur_subtable == NULL)
-    return (base_sc);
+    return base_sc;
 
   if (feat_gid == -1)
     {
@@ -11368,7 +11368,7 @@ FVMakeChar (FontView *fv, int enc)
             isolated : -1;
           feat_sc = SFGetChar (sf, uni, NULL);
           if (feat_sc != NULL)
-            return (feat_sc);
+            return feat_sc;
         }
       feat_sc = SFSplineCharCreate (sf);
       feat_sc->unicodeenc = uni;
@@ -11402,10 +11402,10 @@ FVMakeChar (FontView *fv, int enc)
         }
       SFAddGlyphAndEncode (sf, feat_sc, fv->b.map, fv->b.map->enc_limit);
       AddSubPST (base_sc, fv->cur_subtable, feat_sc->name);
-      return (feat_sc);
+      return feat_sc;
     }
   else
-    return (base_sc);
+    return base_sc;
 }
 
 /* we style some glyph names differently, see FVExpose() */
@@ -11426,7 +11426,7 @@ FVCheckFont (FontView *fv, int type)
       fv->fontset[type] =
         GDrawNewFont (fv->v, fv_fontnames, fv_fontsize, 400, style);
     }
-  return (fv->fontset[type]);
+  return fv->fontset[type];
 }
 
 extern uint32_t adobes_pua_alts[0x200][3];
@@ -12307,7 +12307,7 @@ ddgencharlist (void *_fv, int32_t *len)
   if (cnt > 0)
     data[--cnt] = '\0';
   *len = cnt;
-  return (data);
+  return data;
 }
 
 static void
@@ -12700,7 +12700,7 @@ FVScroll (GGadget *g, GEvent *e)
       GScrollBarSetPos (fv->vsb, fv->rowoff);
       GDrawScroll (fv->v, NULL, 0, diff * fv->cbh);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -12711,7 +12711,7 @@ v_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown)
       && (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (fv->vsb, event));
+      return GGadgetDispatchEvent (fv->vsb, event);
     }
 
   GGadgetPopupExternalEvent (event);
@@ -12749,7 +12749,7 @@ v_e_h (GWindow gw, GEvent *event)
         }
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -12866,7 +12866,7 @@ fv_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown)
       && (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (fv->vsb, event));
+      return GGadgetDispatchEvent (fv->vsb, event);
     }
 
   switch (event->type)
@@ -12916,7 +12916,7 @@ fv_e_h (GWindow gw, GEvent *event)
       FontViewRemove (fv);
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -13036,7 +13036,7 @@ __FontViewCreate (SplineFont *sf)
 #ifndef _NO_PYTHON
   PyFF_InitFontHook ((FontViewBase *) fv);
 #endif
-  return (fv);
+  return fv;
 }
 
 static void
@@ -13211,7 +13211,7 @@ FontView_Create (SplineFont *sf, int hide)
       GDrawSetVisible (gw, true);
       FontViewOpenKids (fv);
     }
-  return (fv);
+  return fv;
 }
 
 static FontView *
@@ -13229,13 +13229,13 @@ FontView_Append (FontView *fv)
            test = (FontView *) test->b.next);
       test->b.next = (FontViewBase *) fv;
     }
-  return (fv);
+  return fv;
 }
 
 FontView *
 FontNew (void)
 {
-  return (FontView_Create (SplineFontNew (), false));
+  return FontView_Create (SplineFontNew (), false);
 }
 
 static void
@@ -13295,13 +13295,13 @@ FontViewWinInfo (FontView *fv, int *cc, int *rc)
     {
       *cc = 16;
       *rc = 4;
-      return (-1);
+      return -1;
     }
 
   *cc = fv->colcnt;
   *rc = fv->rowcnt;
 
-  return (fv->rowoff * fv->colcnt);
+  return fv->rowoff * fv->colcnt;
 }
 
 static FontViewBase *
@@ -13317,9 +13317,9 @@ FontIsActive (SplineFont *sf)
 
   for (fv = fv_list; fv != NULL; fv = (FontView *) (fv->b.next))
     if (fv->b.sf == sf)
-      return (true);
+      return true;
 
-  return (false);
+  return false;
 }
 
 static SplineFont *
@@ -13333,13 +13333,13 @@ FontOfFilename (const char *filename)
     {
       if (fv->b.sf->filename != NULL
           && strcmp (fv->b.sf->filename, abs_file) == 0)
-        return (fv->b.sf);
+        return fv->b.sf;
       else if (fv->b.sf->origname != NULL
                && strcmp (fv->b.sf->origname, abs_file) == 0)
-        return (fv->b.sf);
+        return fv->b.sf;
     }
   free (abs_file);
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -13591,7 +13591,7 @@ GS_OK (GGadget *g, GEvent *e)
       gs->done = true;
       gs->good = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -13604,7 +13604,7 @@ GS_Cancel (GGadget *g, GEvent *e)
       gs = GDrawGetUserData (GGadgetGetWindow (g));
       gs->done = true;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -13665,7 +13665,7 @@ gs_sub_e_h (GWindow pixmap, GEvent *event)
   struct gsd *gs;
 
   if (event->type == et_destroy)
-    return (true);
+    return true;
 
   active_fv = (FontView *) GDrawGetUserData (pixmap);
   gs = (struct gsd *) (active_fv->b.container);
@@ -13673,7 +13673,7 @@ gs_sub_e_h (GWindow pixmap, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown)
       && (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (active_fv->vsb, event));
+      return GGadgetDispatchEvent (active_fv->vsb, event);
     }
 
 
@@ -13686,16 +13686,16 @@ gs_sub_e_h (GWindow pixmap, GEvent *event)
       gs_charEvent (&gs->base, event);
       break;
     case et_mousedown:
-      return (false);
+      return false;
       break;
     case et_mouseup:
     case et_mousemove:
-      return (false);
+      return false;
     case et_resize:
       gs_sizeSet (gs, pixmap);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -13712,7 +13712,7 @@ gs_e_h (GWindow gw, GEvent *event)
       FVChar (gs->fv, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 char *
@@ -13937,5 +13937,5 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
   GDrawSetUserData (gs.gw, NULL);
   GDrawSetUserData (dw, NULL);
   GDrawDestroyWindow (gs.gw);
-  return (ret);
+  return ret;
 }

@@ -26,7 +26,7 @@ FindFlagByName (struct flaglist *flags, const char *name)
   for (i = 0; flags[i].name != NULL; ++i)
     {
       if (strcmp (name, flags[i].name) == 0)
-        return (flags[i].flag);
+        return flags[i].flag;
     }
   return FLAG_UNKNOWN;
 }

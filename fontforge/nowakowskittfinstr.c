@@ -142,7 +142,7 @@ pushheader (uint8_t *instrs, int isword, int tot)
       else
         *instrs++ = 0xb0 + (tot - 1);   /* Push bytes */
     }
-  return (instrs);
+  return instrs;
 }
 
 static uint8_t *
@@ -157,7 +157,7 @@ addpoint (uint8_t *instrs, int isword, int pt)
       *instrs++ = pt >> 8;
       *instrs++ = pt & 0xff;
     }
-  return (instrs);
+  return instrs;
 }
 
 /* Exemplary high-level routines to add PUSH-es to bytecode instruction
@@ -170,7 +170,7 @@ static uint8_t *
 pushpoint (uint8_t *instrs, int pt)
 {
   instrs = pushheader (instrs, (pt > 255) || (pt < 0), 1);
-  return (addpoint (instrs, (pt > 255) || (pt < 0), pt));
+  return addpoint (instrs, (pt > 255) || (pt < 0), pt);
 }
 
 #define pushnum(a, b) pushpoint(a, b)
@@ -181,7 +181,7 @@ pushpointstem (uint8_t *instrs, int pt, int stem)
   int isword = pt > 255 || stem > 255 || pt < 0 || stem < 0;
   instrs = pushheader (instrs, isword, 2);
   instrs = addpoint (instrs, isword, pt);
-  return (addpoint (instrs, isword, stem));
+  return addpoint (instrs, isword, stem);
 }
 
 #define push2points(a, b, c) pushpointstem(a, b, c)
@@ -217,7 +217,7 @@ pushpoints (uint8_t *instrs, int ptcnt, const int *pts)
   instrs = pushheader (instrs, isword, ptcnt);
   for (i = 0; i < ptcnt; i++)
     instrs = addpoint (instrs, isword, pts[i]);
-  return (instrs);
+  return instrs;
 }
 
 #define pushnums(a, b, c) pushpoints(a, b, c)
@@ -261,7 +261,7 @@ pushF26Dot6 (uint8_t *instrs, double num)
   if (negative)
     *instrs++ = NEG;
 
-  return (instrs);
+  return instrs;
 }
 
 /* Compute an EF2Dot14 representation of a floating point number.
@@ -272,7 +272,7 @@ pushF26Dot6 (uint8_t *instrs, double num)
 static int
 EF2Dot14 (double num)
 {
-  return (rint (num * 16384));
+  return rint (num * 16384);
 }
 
 /* An apparatus for instructing sets of points with given truetype command.
@@ -312,7 +312,7 @@ instructpoints (uint8_t *instrs, int ptcnt, const int *pts, uint8_t command)
       instructpoints (instrs, ptcnt - (STACK_DEPTH - 1),
                       pts + (STACK_DEPTH - 1), command);
 
-  return (instrs);
+  return instrs;
 }
 
 /******************************************************************************
@@ -329,7 +329,7 @@ SFFindTable (SplineFont *sf, uint32_t tag)
   struct ttf_table *tab;
 
   for (tab = sf->ttf_tables; tab != NULL && tab->tag != tag; tab = tab->next);
-  return (tab);
+  return tab;
 }
 
 int
@@ -352,7 +352,7 @@ TTF__getcvtval (SplineFont *sf, int val)
       int tval = (int16_t) memushort (cvt_tab->data, cvt_tab->len,
                                       sizeof (uint16_t) * i);
       if (val >= tval - 1 && val <= tval + 1)
-        return (i);
+        return i;
     }
   if ((int) sizeof (uint16_t) * i >= cvt_tab->maxlen)
     {
@@ -363,7 +363,7 @@ TTF__getcvtval (SplineFont *sf, int val)
     }
   memputshort (cvt_tab->data, sizeof (uint16_t) * i, val);
   cvt_tab->len += sizeof (uint16_t);
-  return (i);
+  return i;
 }
 
 /* by default sign is unimportant in the cvt
@@ -375,7 +375,7 @@ TTF_getcvtval (SplineFont *sf, int val)
 {
   if (val < 0)
     val = -val;
-  return (TTF__getcvtval (sf, val));
+  return TTF__getcvtval (sf, val);
 }
 
 /* We are given a stem weight and try to find matching one in CVT.
@@ -2476,7 +2476,7 @@ IsInflectionPoint (int *contourends, BasePoint *bp, SplinePoint *sp)
   in /= fabs (in);
   out /= fabs (out);
 
-  return (in * out < 0);
+  return in * out < 0;
 }
 
 /******************************************************************************
@@ -2614,13 +2614,13 @@ value_point (InstrCt * ct, int p, SplinePoint *sp, real fudge)
     score += 2;
 
   if (!score)
-    return (0);
+    return 0;
 
   if (ct->diagstems != NULL && ct->diagpts[p].count)
     score += 9;
   if (ct->touched[p] & touchflag)
     score += 26;
-  return (score);
+  return score;
 }
 
 /* search for points to be snapped to an edge - to be used in RunOnPoints() */
@@ -2703,9 +2703,9 @@ StemPreferredForPoint (PointData * pd, StemData * stem, int is_next)
         }
     }
   if (best < *stemcnt && stem == stems[best])
-    return (best);
+    return best;
 
-  return (-1);
+  return -1;
 }
 
 static int
@@ -2720,9 +2720,9 @@ has_valid_dstem (PointData * pd, int next)
       test = next ? pd->nextstems[i] : pd->prevstems[i];
       if (!test->toobig && test->lpcnt > 1 && test->rpcnt > 1 &&
           fabs (test->unit.x) > .05 && fabs (test->unit.y) > .05)
-        return (i);
+        return i;
     }
-  return (-1);
+  return -1;
 }
 
 /* init_stem_edge(): Initialize the InstrCt for instructing given edge.
@@ -3948,7 +3948,7 @@ snap_stem_to_blue (InstrCt * ct, StemData * stem, BlueZone * blue, int idx)
           if (slave->blue == idx)
             ret += snap_stem_to_blue (ct, slave, blue, idx);
         }
-      return (ret);
+      return ret;
     }
   update_blue_pts (idx, ct);
   callargs[0] = ct->rp0 = ct->edge.refpt;
@@ -3980,7 +3980,7 @@ snap_stem_to_blue (InstrCt * ct, StemData * stem, BlueZone * blue, int idx)
     instruct_serifs (ct, stem);
   instruct_dependent (ct, stem);
   update_blue_pts (idx, ct);    /* this uses only refpt: who cares? */
-  return (ret + 1);
+  return ret + 1;
 }
 
 /* Snap stems and perhaps also some other points to given bluezone and set up
@@ -4116,7 +4116,7 @@ get_counters_cut_in (InstrCt * ct, int m1, int m2, int c1, int c2)
   width2 = e2 - s2;
 
   if (RealNear (width1, width2))
-    return (0);
+    return 0;
 
   for (i = 7; i < 32768; i++)
     {
@@ -4125,7 +4125,7 @@ get_counters_cut_in (InstrCt * ct, int m1, int m2, int c1, int c2)
       if (fabs (swidth1 - swidth2) >= SNAP_THRESHOLD)
         break;
     }
-  return (i);
+  return i;
 }
 
 /******************************************************************************
@@ -4568,11 +4568,11 @@ ds_cmp (const void *_s1, const void *_s2)
   bp1 = (*s1)->unit.y > 0 ? &(*s1)->keypts[0]->base : &(*s1)->keypts[2]->base;
   bp2 = (*s2)->unit.y > 0 ? &(*s2)->keypts[0]->base : &(*s2)->keypts[2]->base;
   if (bp1->x < bp2->x || (bp1->x == bp2->x && bp1->y < bp2->y))
-    return (-1);
+    return -1;
   else if (bp2->x < bp1->x || (bp2->x == bp1->x && bp2->y < bp1->y))
-    return (1);
+    return 1;
 
-  return (0);
+  return 0;
 }
 
 /* Takes a line defined by two points and returns a vector decribed as a
@@ -4599,7 +4599,7 @@ GetVector (BasePoint *top, BasePoint *bottom, int orth)
       ret.x = -ret.y;
       ret.y = temp;
     }
-  return (ret);
+  return ret;
 }
 
 static int
@@ -4613,7 +4613,7 @@ SetDStemKeyPoint (InstrCt * ct, StemData * stem, PointData * pd, int aindex)
   real prevdot, nextdot, cpdist;
 
   if (pd == NULL)
-    return (false);
+    return false;
 
   flag = fabs (stem->unit.y) > fabs (stem->unit.x) ? tf_y : tf_x;
   is_start = (aindex == 0 || aindex == 2);
@@ -4634,7 +4634,7 @@ SetDStemKeyPoint (InstrCt * ct, StemData * stem, PointData * pd, int aindex)
       nsidx = IsStemAssignedToPoint (ncpd, stem, false);
 
       if (psidx == -1 && nsidx == -1)
-        return (false);
+        return false;
 
       if (psidx > -1 && nsidx > -1)
         best = (prev_outer) ? pcpd : ncpd;
@@ -4668,7 +4668,7 @@ SetDStemKeyPoint (InstrCt * ct, StemData * stem, PointData * pd, int aindex)
     best = pd;
 
   stem->keypts[aindex] = best;
-  return (true);
+  return true;
 }
 
 static void
@@ -4849,7 +4849,7 @@ FindDiagStartPoint (StemData * stem, uint8_t *touched)
     {
       if ((touched[stem->keypts[i]->ttfindex] & tf_x) &&
           (touched[stem->keypts[i]->ttfindex] & tf_y))
-        return (i);
+        return i;
     }
 
   for (i = 0; i < 4; ++i)
@@ -4858,15 +4858,15 @@ FindDiagStartPoint (StemData * stem, uint8_t *touched)
            touched[stem->keypts[i]->ttfindex] & tf_y) ||
           (stem->unit.y > stem->unit.x &&
            touched[stem->keypts[i]->ttfindex] & tf_x))
-        return (i);
+        return i;
     }
 
   for (i = 0; i < 4; ++i)
     {
       if (touched[stem->keypts[i]->ttfindex] & (tf_x | tf_y))
-        return (i);
+        return i;
     }
-  return (0);
+  return 0;
 }
 
 /* Check the directions at which the given point still can be moved
@@ -4897,7 +4897,7 @@ SetFreedomVector (uint8_t **instrs, int pnum, int ptcnt,
 
       /* This should never happen */
       if (start == NULL || end == NULL)
-        return (false);
+        return false;
 
       newfv = GetVector (&start->base, &end->base, false);
       if (!UnitsParallel (fv, &newfv, true))
@@ -4911,7 +4911,7 @@ SetFreedomVector (uint8_t **instrs, int pnum, int ptcnt,
           *(*instrs)++ = 0x08;  /*SFVTL[parallel] */
         }
 
-      return (true);
+      return true;
 
     }
   else if (touched[pnum] & tf_x && !(touched[pnum] & tf_d)
@@ -4923,7 +4923,7 @@ SetFreedomVector (uint8_t **instrs, int pnum, int ptcnt,
           fv->x = 0;
           fv->y = 1;
         }
-      return (true);
+      return true;
 
     }
   else if (touched[pnum] & tf_y && !(touched[pnum] & tf_d)
@@ -4935,7 +4935,7 @@ SetFreedomVector (uint8_t **instrs, int pnum, int ptcnt,
           fv->x = 1;
           fv->y = 0;
         }
-      return (true);
+      return true;
     }
   else if (!(touched[pnum] & (tf_x | tf_y | tf_d)))
     {
@@ -4963,9 +4963,9 @@ SetFreedomVector (uint8_t **instrs, int pnum, int ptcnt,
               *(*instrs)++ = 0x0b;      /* SFVFS */
             }
         }
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -4980,10 +4980,10 @@ MarkLineFinished (int pnum, int startnum, int endnum, DiagPointInfo * diagpts)
         {
 
           diagpts[pnum].line[i].done = 2;
-          return (true);
+          return true;
         }
     }
-  return (false);
+  return false;
 }
 
 static uint8_t *
@@ -5060,7 +5060,7 @@ FixDStemPoint (InstrCt * ct, StemData * stem,
         MarkLineFinished (pt, stem->keypts[2]->ttfindex,
                           stem->keypts[3]->ttfindex, diagpts);
     }
-  return (instrs);
+  return instrs;
 }
 
 static int
@@ -5071,20 +5071,20 @@ DStemHasSnappableCorners (InstrCt * ct, StemData * stem, PointData * pd1,
 
   /* We should be dealing with oncurve points */
   if (pd1->sp == NULL || pd2->sp == NULL)
-    return (false);
+    return false;
 
   /* points should not be lined up vertically or horizontally */
   if (fabs (pd1->base.x - pd2->base.x) <= ct->gic->fudge ||
       fabs (pd1->base.y - pd2->base.y) <= ct->gic->fudge)
-    return (false);
+    return false;
 
   if ((pd1->x_corner == 1 && !(touched[pd1->ttfindex] & tf_y) &&
        pd2->y_corner == 1 && !(touched[pd2->ttfindex] & tf_x)) ||
       (pd1->y_corner == 1 && !(touched[pd1->ttfindex] & tf_x) &&
        pd2->x_corner == 1 && !(touched[pd2->ttfindex] & tf_y)))
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static uint8_t *
@@ -5122,7 +5122,7 @@ SnapDStemCorners (InstrCt * ct, StemData * stem, PointData * pd1,
   fv->x = 0;
   fv->y = 1;
 
-  return (instrs);
+  return instrs;
 }
 
 /* A basic algorithm for hinting diagonal stems:
@@ -5150,7 +5150,7 @@ FixDstem (InstrCt * ct, StemData * ds, BasePoint *fv)
   int pushpts[3];
 
   if (ds->ldone && ds->rdone)
-    return (ct->pt);
+    return ct->pt;
 
   ptcnt = ct->ptcnt;
   touched = ct->touched;
@@ -5250,7 +5250,7 @@ FixDstem (InstrCt * ct, StemData * ds, BasePoint *fv)
     }
 
   ds->ldone = ds->rdone = true;
-  return (ct->pt);
+  return ct->pt;
 }
 
 static uint8_t *
@@ -5309,7 +5309,7 @@ FixPointOnLine (DiagPointInfo * diagpts, PointVector * line,
           *instrs++ = MDRP_grey;
         }
     }
-  return (instrs);
+  return instrs;
 }
 
 /* If a point has to be positioned just relatively to the diagonal
@@ -5334,7 +5334,7 @@ InterpolateAlongDiag (DiagPointInfo * diagpts, PointVector * line,
 
   if (diagpts[pd->ttfindex].count != 1 || touched[pd->ttfindex] & (tf_x | tf_y)
       || diagpts[pd->ttfindex].line[0].done > 1)
-    return (instrs);
+    return instrs;
 
   newpv = GetVector (&line->pd1->base, &line->pd2->base, false);
 
@@ -5383,7 +5383,7 @@ InterpolateAlongDiag (DiagPointInfo * diagpts, PointVector * line,
   *instrs++ = IP;
   touched[pd->ttfindex] |= tf_d;
   diagpts[pd->ttfindex].line[0].done = 2;
-  return (instrs);
+  return instrs;
 }
 
 /* When all stem edges have already been positioned, run through other
@@ -5497,7 +5497,7 @@ MovePointsToIntersections (InstrCt * ct, BasePoint *fv)
               }
         }
     }
-  return (ct->pt);
+  return ct->pt;
 }
 
 static void
@@ -5620,7 +5620,7 @@ TouchDStemPoints (InstrCt * ct, BasePoint *fv)
 
   free (tobefixedy);
   free (tobefixedx);
-  return (instrs);
+  return instrs;
 }
 
 static void
@@ -5671,7 +5671,7 @@ static int
 sortedges (const void *_e1, const void *_e2)
 {
   const struct stemedge *e1 = _e1, *e2 = _e2;
-  return (e1->pos > e2->pos);
+  return e1->pos > e2->pos;
 }
 
 static int
@@ -5702,7 +5702,7 @@ AddEdge (InstrCt * ct, StemData * stem, int is_l, struct stemedge *edgelist,
           edgelist[cnt++].pos = coord;
         }
     }
-  return (cnt);
+  return cnt;
 }
 
 /* Optional feature: tries to maintain relative position of some important

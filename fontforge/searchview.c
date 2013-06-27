@@ -194,7 +194,7 @@ DoFindOne (SearchView *sv, int startafter)
       sv->sd.curchar = startcur;
       GGadgetSetTitle8 (GWidgetGetControl (sv->gw, CID_Find), _("Find"));
       sv->showsfindnext = false;
-      return (false);
+      return false;
     }
   SVSelectSC (sv);
   if (sv->lastcv != NULL && sv->lastcv->b.sc == startcur
@@ -208,7 +208,7 @@ DoFindOne (SearchView *sv, int startafter)
     sv->lastcv = CharViewCreate (sv->sd.curchar, (FontView *) sv->sd.fv, -1);
   GGadgetSetTitle8 (GWidgetGetControl (sv->gw, CID_Find), _("Find Next"));
   sv->showsfindnext = true;
-  return (true);
+  return true;
 }
 
 static void
@@ -231,13 +231,13 @@ pathpointcnt (SplineSet *ss)
   int cnt;
 
   if (ss == NULL)               /* No paths */
-    return (0);
+    return 0;
   if (ss->next != NULL)         /* more than one path */
-    return (-1);
+    return -1;
   if (ss->first->prev != NULL)  /* single path, but it is closed */
-    return (-2);
+    return -2;
   for (sp = ss->first, cnt = 1; sp->next != NULL; sp = sp->next->to, ++cnt);
-  return (cnt);
+  return cnt;
 }
 
 static int
@@ -248,7 +248,7 @@ SVParseDlg (SearchView *sv, int check_replace)
 
   fudge = GetReal8 (sv->gw, CID_Fuzzy, _("Match Fuzziness:"), &err);
   if (err)
-    return (false);
+    return false;
   old_fudge = fudge;
 
   sv->sd.tryreverse = true;
@@ -282,7 +282,7 @@ SVParseDlg (SearchView *sv, int check_replace)
             ff_post_error (_("Bad replace pattern"),
                            _
                            ("When \"Endpoints specify minimum length and direction only\" is checked, the replace pattern must be a single open contour with at least 3 points on it."));
-          return (false);
+          return false;
         }
     }
   else if (pathpointcnt (sv->sd.path) > 0)
@@ -294,13 +294,13 @@ SVParseDlg (SearchView *sv, int check_replace)
           ff_post_error (_("Bad replace pattern"),
                          _
                          ("When the search path is a single open contour, the replace pattern must also be."));
-          return (false);
+          return false;
         }
     }
 
   sv->sd.fudge = fudge;
   sv->sd.fudge_percent = sv->sd.tryrotate ? .01 : .001;
-  return (true);
+  return true;
 }
 
 static int
@@ -312,11 +312,11 @@ SV_Find (GGadget *g, GEvent *e)
         (SearchView *) ((CharViewBase *)
                         GDrawGetUserData (GGadgetGetWindow (g)))->container;
       if (!SVParseDlg (sv, false))
-        return (true);
+        return true;
       sv->sd.findall = sv->sd.replaceall = false;
       DoFindOne (sv, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -328,12 +328,12 @@ SV_FindAll (GGadget *g, GEvent *e)
         (SearchView *) ((CharViewBase *)
                         GDrawGetUserData (GGadgetGetWindow (g)))->container;
       if (!SVParseDlg (sv, false))
-        return (true);
+        return true;
       sv->sd.findall = true;
       sv->sd.replaceall = false;
       DoFindAll (sv);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -346,7 +346,7 @@ SV_RplFind (GGadget *g, GEvent *e)
                         GDrawGetUserData (GGadgetGetWindow (g)))->container;
       RefChar *rf;
       if (!SVParseDlg (sv, true))
-        return (true);
+        return true;
       sv->sd.findall = sv->sd.replaceall = false;
       for (rf = sv->sd.sc_rpl.layers[ly_fore].refs; rf != NULL; rf = rf->next)
         {
@@ -355,13 +355,13 @@ SV_RplFind (GGadget *g, GEvent *e)
               ff_post_error (_("Self-referential glyph"),
                              _
                              ("Attempt to make a glyph that refers to itself"));
-              return (true);
+              return true;
             }
         }
       DoRpl (&sv->sd);
       DoFindOne (sv, sv->sd.subpatternsearch);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -373,12 +373,12 @@ SV_RplAll (GGadget *g, GEvent *e)
         (SearchView *) ((CharViewBase *)
                         GDrawGetUserData (GGadgetGetWindow (g)))->container;
       if (!SVParseDlg (sv, true))
-        return (true);
+        return true;
       sv->sd.findall = false;
       sv->sd.replaceall = true;
       DoFindAll (sv);
     }
-  return (true);
+  return true;
 }
 
 /* ************************************************************************** */
@@ -395,7 +395,7 @@ SV_Cancel (GGadget *g, GEvent *e)
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     SV_DoClose (((CharViewBase *)
                  GDrawGetUserData (GGadgetGetWindow (g)))->container);
-  return (true);
+  return true;
 }
 
 static void
@@ -612,7 +612,7 @@ sv_e_h (GWindow gw, GEvent *event)
       sv->isvisible = event->u.map.is_visible;
       break;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -630,10 +630,10 @@ SVAttachFV (FontView *fv, int ask_if_difficult)
   RefChar *r, *rnext, *rprev;
 
   if (searcher == NULL)
-    return (false);
+    return false;
 
   if (searcher->sd.fv == (FontViewBase *) fv)
-    return (true);
+    return true;
   if (searcher->sd.fv != NULL && searcher->sd.fv->sf == fv->b.sf)
     {
       ((FontView *) searcher->sd.fv)->sv = NULL;
@@ -641,7 +641,7 @@ SVAttachFV (FontView *fv, int ask_if_difficult)
       searcher->sd.fv = (FontViewBase *) fv;
       SVSetTitle (searcher);
       searcher->sd.curchar = NULL;
-      return (true);
+      return true;
     }
 
   if (searcher->dummy_sf.layers[ly_fore].order2 !=
@@ -677,14 +677,14 @@ SVAttachFV (FontView *fv, int ask_if_difficult)
                   buttons[1] = _("Cancel");
                   buttons[2] = NULL;
                   if (ask_if_difficult == 2 && !searcher->isvisible)
-                    return (false);
+                    return false;
                   if (gwwv_ask
                       (_("Bad Reference"), (const char **) buttons, 1, 1,
                        _
                        ("The %1$s in the search dialog contains a reference to %2$.20hs which does not exist in the new font.\nShould I remove the reference?"),
                        i == 0 ? _("Search Pattern") : _("Replace Pattern"),
                        r->sc->name) == 1)
-                    return (false);
+                    return false;
                 }
               else if (!doit)
                 /* Do Nothing */ ;
@@ -719,7 +719,7 @@ SVAttachFV (FontView *fv, int ask_if_difficult)
       GDrawRequestExpose (searcher->cv_rpl.v, NULL, false);
     }
   SVSetTitle (searcher);
-  return (true);
+  return true;
 }
 
 void
@@ -744,13 +744,13 @@ SVDetachFV (FontView *fv)
 static int
 SV_Can_Navigate (struct cvcontainer *cvc, enum nav_type type)
 {
-  return (false);
+  return false;
 }
 
 static int
 SV_Can_Open (struct cvcontainer *cvc)
 {
-  return (true);
+  return true;
 }
 
 static void
@@ -761,7 +761,7 @@ SV_Do_Navigate (struct cvcontainer *cvc, enum nav_type type)
 static SplineFont *
 SF_Of_SV (struct cvcontainer *cvc)
 {
-  return (((SearchView *) cvc)->sd.fv->sf);
+  return ((SearchView *) cvc)->sd.fv->sf;
 }
 
 struct cvcontainer_funcs searcher_funcs = {
@@ -826,7 +826,7 @@ SVFillup (SearchView *sv, FontView *fv)
   sv->sd.fv = (FontViewBase *) fv;
   if (fv != NULL)
     fv->sv = sv;
-  return (sv);
+  return sv;
 }
 
 SearchView *
@@ -850,10 +850,10 @@ SVCreate (FontView *fv)
         {
           GDrawSetVisible (fv->sv->gw, true);
           GDrawRaise (fv->sv->gw);
-          return (searcher);
+          return searcher;
         }
       else
-        return (NULL);
+        return NULL;
     }
 
   searcher = sv = SVFillup (xcalloc (1, sizeof (SearchView)), fv);
@@ -1132,7 +1132,7 @@ SVCreate (FontView *fv)
   GDrawResize (gw, 650, 400);   /* Force a resize event */
 
   GDrawSetVisible (sv->gw, true);
-  return (sv);
+  return sv;
 }
 
 void

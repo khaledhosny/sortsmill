@@ -152,7 +152,7 @@ base64_encode (char *ostr, long ch)
   *ostr++ = base64[(ch >> 12) & 0x3f];
   *ostr++ = base64[(ch >> 6) & 0x3f];
   *ostr++ = base64[(ch) & 0x3f];
-  return (ostr);
+  return ostr;
 }
 
 static void
@@ -263,7 +263,7 @@ utf8toutf7_copy (const char *_str)
   char *ret = NULL, *ostr = NULL;
 
   if (str == NULL)
-    return (NULL);
+    return NULL;
   for (i = 0; i < 2; ++i)
     {
       str = (const unsigned char *) _str;
@@ -410,7 +410,7 @@ utf8toutf7_copy (const char *_str)
         ostr = ret = xmalloc (len + 1);
     }
   *ostr = '\0';
-  return (ret);
+  return ret;
 }
 
 // Get the next character in a line.
@@ -472,7 +472,7 @@ SFDReadUTF7Str (FILE *sfd)
   if (ch1 == '\n' || ch1 == '\r')
     ungetc (ch1, sfd);
   if (ch1 != '"')
-    return (NULL);
+    return NULL;
   pt = NULL;
   while ((ch1 = nlgetc (sfd)) != EOF && ch1 != '"')
     {
@@ -576,11 +576,11 @@ SFDReadUTF7Str (FILE *sfd)
         }
     }
   if (buffer == NULL)
-    return (NULL);
+    return NULL;
   *pt = '\0';
   pt = xstrdup_or_null (buffer);
   free (buffer);
-  return (pt);
+  return pt;
 }
 
 char *
@@ -592,7 +592,7 @@ utf7toutf8_copy (const char *_str)
   const char *str = _str;
 
   if (str == NULL)
-    return (NULL);
+    return NULL;
   buffer = pt = xmalloc (400);
   end = pt + 400;
   while ((ch1 = *str++) != '\0')
@@ -691,7 +691,7 @@ utf7toutf8_copy (const char *_str)
   *pt = '\0';
   pt = xstrdup_or_null (buffer);
   free (buffer);
-  return (pt);
+  return pt;
 }
 
 struct enc85
@@ -980,7 +980,7 @@ image2rle (struct _GImage *img, int *len)
 
   *len = 0;
   if (img->image_type != it_mono || img->bytes_per_line < 5)
-    return (NULL);
+    return NULL;
   rle = xcalloc (max, sizeof (uint8_t)), pt = rle, end = rle + max - 3;
 
   for (i = 0; i < img->height; ++i)
@@ -1006,7 +1006,7 @@ image2rle (struct _GImage *img, int *len)
                   if (pt > end)
                     {
                       free (rle);
-                      return (NULL);
+                      return NULL;
                     }
                   *pt++ = 255;
                   *pt++ = 0;
@@ -1038,7 +1038,7 @@ image2rle (struct _GImage *img, int *len)
               if (pt >= end)
                 {
                   free (rle);
-                  return (NULL);
+                  return NULL;
                 }
               if (cnt <= 254)
                 *pt++ = cnt;
@@ -1064,7 +1064,7 @@ image2rle (struct _GImage *img, int *len)
         }
     }
   *len = pt - rle;
-  return (rle);
+  return rle;
 }
 
 static void
@@ -1309,14 +1309,14 @@ SFDOmit (SplineChar *sc)
   BDFFont *bdf;
 
   if (sc == NULL)
-    return (true);
+    return true;
   if (sc->comment != NULL || sc->color != COLOR_DEFAULT)
-    return (false);
+    return false;
   for (layer = ly_back; layer < sc->layer_cnt; ++layer)
     {
       if (sc->layers[layer].splines != NULL || sc->layers[layer].refs != NULL
           || sc->layers[layer].images != NULL)
-        return (false);
+        return false;
     }
   if (sc->parent->onlybitmaps)
     {
@@ -1324,13 +1324,13 @@ SFDOmit (SplineChar *sc)
         {
           if (sc->orig_pos < bdf->glyphcnt
               && bdf->glyphs[sc->orig_pos] != NULL)
-            return (false);
+            return false;
         }
     }
   if (!sc->widthset)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static void
@@ -1491,7 +1491,7 @@ SFDUnPickle (FILE *sfd)
   end = buf + max;
   while ((ch = nlgetc (sfd)) != '"' && ch != '\n' && ch != EOF);
   if (ch != '"')
-    return (NULL);
+    return NULL;
 
   quoted = false;
   while (((ch = nlgetc (sfd)) != '"' || quoted) && ch != EOF)
@@ -1512,12 +1512,12 @@ SFDUnPickle (FILE *sfd)
         }
     }
   if (pt == buf)
-    return (NULL);
+    return NULL;
   *pt = '\0';
 #ifdef _NO_PYTHON
-  return (xstrdup_or_null (buf));
+  return xstrdup_or_null (buf);
 #else
-  return (PyFF_UnPickleMeToObjects (buf));
+  return PyFF_UnPickleMeToObjects (buf);
 #endif
   /* buf is a static buffer, I don't free it, I'll reuse it next time */
 }
@@ -1971,7 +1971,7 @@ SFDDumpBitmapFont (FILE *sfd, BDFFont *bdf, EncMap * encm, int *newgids,
                    ref->xoff, ref->yoff, ref->selected ? 'S' : 'N');
       }
   fprintf (sfd, "EndBitmapFont\n");
-  return (err);
+  return err;
 }
 
 static void
@@ -2088,7 +2088,7 @@ putstring (FILE *sfd, char *header, char *body)
 const char *
 EncName (Encoding * encname)
 {
-  return (encname->enc_name);
+  return encname->enc_name;
 }
 
 static void
@@ -2892,7 +2892,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
            sf->cidmaster == NULL ? "EndSplineFont\n" : "EndSubSplineFont\n");
   if (newgids != NULL)
     free (newgids);
-  return (err);
+  return err;
 }
 
 static int
@@ -2924,7 +2924,7 @@ SFD_MIDump (SplineFont *sf, EncMap * map, EncMap * normal, char *dirname,
     err = true;
   free (fontprops);
   free (instance);
-  return (err);
+  return err;
 }
 
 static int
@@ -2987,7 +2987,7 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
       SFD_Dump (sfd, mm->normal, map, normal, todir, dirname);
     }
   fprintf (sfd, "EndMMFonts\n");
-  return (err);
+  return err;
 }
 
 static int
@@ -3015,7 +3015,7 @@ SFDDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   else
     err = SFD_Dump (sfd, sf, map, normal, todir, dirname);
   ff_progress_end_indicator ();
-  return (err);
+  return err;
 }
 
 static void
@@ -3122,7 +3122,7 @@ SFDWrite (char *filename, SplineFont *sf, EncMap * map, EncMap * normal,
   if (tempfilename != filename)
     free (tempfilename);
   if (sfd == NULL)
-    return (0);
+    return 0;
 
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
@@ -3148,7 +3148,7 @@ SFDWrite (char *filename, SplineFont *sf, EncMap * map, EncMap * normal,
     err = true;
   if (todir)
     SFFinalDirClean (filename);
-  return (!err);
+  return !err;
 }
 
 int
@@ -3206,7 +3206,7 @@ SFDWriteBak (SplineFont *sf, EncMap * map, EncMap * normal)
         }
       free (buf2);
     }
-  return (ret);
+  return ret;
 }
 
 /* ********************************* INPUT ********************************** */
@@ -3258,7 +3258,7 @@ getquotedeol (FILE *sfd)
       free (str);
       str = pt;
     }
-  return (str);
+  return str;
 }
 
 static int
@@ -3275,7 +3275,7 @@ geteol (FILE *sfd, char *tokbuf)
       ch = nlgetc (sfd);
     }
   *pt = '\0';
-  return (pt != tokbuf ? 1 : ch == EOF ? -1 : 0);
+  return pt != tokbuf ? 1 : ch == EOF ? -1 : 0;
 }
 
 // Read up to the next space character, or one of "[]{}<%". Return the
@@ -3361,7 +3361,7 @@ gettag (FILE *sfd)
   tag |= nlgetc (sfd);
   if (quoted)
     (void) nlgetc (sfd);
-  return (tag);
+  return tag;
 }
 
 static int
@@ -3386,7 +3386,7 @@ getint (FILE *sfd, int *val)
   *pt = '\0';
   ungetc (ch, sfd);
   *val = strtol (tokbuf, NULL, 10);
-  return (pt != tokbuf ? 1 : ch == EOF ? -1 : 0);
+  return pt != tokbuf ? 1 : ch == EOF ? -1 : 0;
 }
 
 // Copy a string to a 100-byte token buffer.
@@ -3437,7 +3437,7 @@ getlonglong (FILE *sfd, __longlong *val)
 #else
   *val = strtol (tokbuf, NULL, 10);
 #endif
-  return (pt != tokbuf ? 1 : ch == EOF ? -1 : 0);
+  return pt != tokbuf ? 1 : ch == EOF ? -1 : 0;
 }
 
 static int
@@ -3476,7 +3476,7 @@ gethex (FILE *sfd, uint32_t *val)
   *pt = '\0';
   ungetc (ch, sfd);
   *val = strtoul (tokbuf, NULL, 16);
-  return (pt != tokbuf ? 1 : ch == EOF ? -1 : 0);
+  return pt != tokbuf ? 1 : ch == EOF ? -1 : 0;
 }
 
 static int
@@ -3493,9 +3493,9 @@ gethexints (FILE *sfd, uint32_t *val, int cnt)
             ungetc (ch, sfd);
         }
       if (!gethex (sfd, &val[i]))
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3504,7 +3504,7 @@ getsint (FILE *sfd, int16_t *val)
   int val2;
   int ret = getint (sfd, &val2);
   *val = val2;
-  return (ret);
+  return ret;
 }
 
 static int
@@ -3513,7 +3513,7 @@ getusint (FILE *sfd, uint16_t *val)
   int val2;
   int ret = getint (sfd, &val2);
   *val = val2;
-  return (ret);
+  return ret;
 }
 
 //-------------------------------------------------------------------------
@@ -3524,13 +3524,13 @@ getusint (FILE *sfd, uint16_t *val)
 static bool
 may_start_a_real (int c)
 {
-  return (isdigit (c) || strchr ("-+,.", c) != NULL);
+  return isdigit (c) || strchr ("-+,.", c) != NULL;
 }
 
 static bool
 may_appear_in_real (int c)
 {
-  return (isdigit (c) || strchr ("-+,.eE", c) != NULL);
+  return isdigit (c) || strchr ("-+,.eE", c) != NULL;
 }
 
 static int
@@ -3856,7 +3856,7 @@ SFDGetImage (FILE *sfd)
   if (base->image_type == it_index && base->clut != NULL
       && base->clut->clut_len == 2)
     img->image = ImageAlterClut (img->image);
-  return (img);
+  return img;
 }
 
 static void
@@ -3973,7 +3973,7 @@ SFDGetTtfTable (FILE *sfd, SplineFont *sf, struct ttf_table *lasttab[2])
   else
     sf->ttf_tab_saved = tab;
   lasttab[which] = tab;
-  return (tab);
+  return tab;
 }
 
 static struct ttf_table *
@@ -4033,7 +4033,7 @@ SFDGetShortTable (FILE *sfd, SplineFont *sf, struct ttf_table *lasttab[2])
   else
     sf->ttf_tab_saved = tab;
   lasttab[which] = tab;
-  return (tab);
+  return tab;
 }
 
 static struct ttf_table *
@@ -4086,7 +4086,7 @@ SFDGetTtTable (FILE *sfd, SplineFont *sf, struct ttf_table *lasttab[2])
   else
     sf->ttf_tab_saved = tab;
   lasttab[which] = tab;
-  return (tab);
+  return tab;
 }
 
 static int
@@ -4105,9 +4105,9 @@ SFDCloseCheck (SplinePointList * spl, int order2)
       free (oldlast);
       SplineMake (spl->last, spl->first, order2);
       spl->last = spl->first;
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -4368,7 +4368,7 @@ SFDGetSplineSet (SplineFont *sf, FILE *sfd, int order2)
   if (lastacceptable && cur->last->prev != NULL)
     cur->last->prev->acceptableextrema = true;
   copy_to_tok (tok, getname (sfd));
-  return (head);
+  return head;
 }
 
 /* MinimumDistance hinting is gone, this code just parses them and does nothing
@@ -4446,7 +4446,7 @@ SFDReadHintInstances (FILE *sfd, StemInfo * stem)
   if (ch != '<')
     {
       ungetc (ch, sfd);
-      return (NULL);
+      return NULL;
     }
   while (getreal (sfd, &begin) == 1 && getreal (sfd, &end))
     {
@@ -4462,7 +4462,7 @@ SFDReadHintInstances (FILE *sfd, StemInfo * stem)
   while ((ch = nlgetc (sfd)) == ' ' || ch == '\t');
   if (ch != '>')
     ungetc (ch, sfd);
-  return (head);
+  return head;
 }
 
 static StemInfo *
@@ -4483,7 +4483,7 @@ SFDReadHints (FILE *sfd)
         last->next = cur;
       last = cur;
     }
-  return (head);
+  return head;
 }
 
 static DStemInfo *
@@ -4553,7 +4553,7 @@ SFDReadDHints (SplineFont *sf, FILE *sfd, int old)
           last = cur;
         }
     }
-  return (head);
+  return head;
 }
 
 static DeviceTable *
@@ -4566,7 +4566,7 @@ SFDReadDeviceTable (FILE *sfd, DeviceTable * adjust)
     {
       while ((ch = nlgetc (sfd)) == ' ');
       if (ch == '}')
-        return (NULL);
+        return NULL;
       else
         ungetc (ch, sfd);
       if (adjust == NULL)
@@ -4578,7 +4578,7 @@ SFDReadDeviceTable (FILE *sfd, DeviceTable * adjust)
       if (len <= 0)
         {
           IError ("Bad device table, invalid length.\n");
-          return (NULL);
+          return NULL;
         }
       adjust->first_pixel_size = first;
       adjust->last_pixel_size = last;
@@ -4597,7 +4597,7 @@ SFDReadDeviceTable (FILE *sfd, DeviceTable * adjust)
     }
   else
     ungetc (ch, sfd);
-  return (adjust);
+  return adjust;
 }
 
 static ValDevTab *
@@ -4640,12 +4640,12 @@ SFDReadValDevTab (FILE *sfd)
         {
           ValDevTab *v = xzalloc (sizeof (ValDevTab));
           *v = vdt;
-          return (v);
+          return v;
         }
     }
   else
     ungetc (ch, sfd);
-  return (NULL);
+  return NULL;
 }
 
 static AnchorPoint *
@@ -4661,7 +4661,7 @@ SFDReadAnchorPoints (FILE *sfd, SplineChar *sc, AnchorPoint *lastap)
   if (name == NULL)
     {
       LogError (_("Anchor Point with no class name: %s"), sc->name);
-      return (lastap);
+      return lastap;
     }
   for (an = sc->parent->anchor; an != NULL && strcmp (an->name, name) != 0;
        an = an->next);
@@ -4704,13 +4704,13 @@ SFDReadAnchorPoints (FILE *sfd, SplineChar *sc, AnchorPoint *lastap)
     {
       LogError (_("Bad Anchor Point: %s"), sc->name);
       AnchorPointsFree (ap);
-      return (lastap);
+      return lastap;
     }
   if (lastap == NULL)
     sc->anchor = ap;
   else
     lastap->next = ap;
-  return (ap);
+  return ap;
 }
 
 static RefChar *
@@ -4752,7 +4752,7 @@ SFDGetRef (FILE *sfd, int was_enc)
             ungetc (ch, sfd);
         }
     }
-  return (rf);
+  return rf;
 }
 
 /* I used to create multiple ligatures by putting ";" between them */
@@ -4772,7 +4772,7 @@ LigaCreateFromOldStyleMultiple (PST1 * liga)
       last = new;
       *pt = '\0';
     }
-  return (last);
+  return last;
 }
 
 static void
@@ -4856,7 +4856,7 @@ SFDParseGlyphComposition (FILE *sfd, struct glyphvariants *gv, char *tok)
       getint (sfd, &temp);
       gv->parts[i].fullAdvance = temp;
     }
-  return (gv);
+  return gv;
 }
 
 static void
@@ -4921,7 +4921,7 @@ SFDParseGradient (FILE *sfd, char *tok)
       if (ch != '}')
         ungetc (ch, sfd);
     }
-  return (grad);
+  return grad;
 }
 
 static struct pattern *
@@ -4951,7 +4951,7 @@ SFDParsePattern (FILE *sfd, char *tok)
   while (isspace (ch = nlgetc (sfd)));
   if (ch != ']')
     ungetc (ch, sfd);
-  return (pat);
+  return pat;
 }
 
 static int orig_pos;
@@ -4975,9 +4975,9 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
   int oldback = false;
 
   if (copy_to_tok (tok, getname (sfd)) != 1)
-    return (NULL);
+    return NULL;
   if (strcmp (tok, "StartChar:") != 0)
-    return (NULL);
+    return NULL;
   while (isspace (ch = nlgetc (sfd)));
   ungetc (ch, sfd);
   sc = SFSplineCharCreate (sf);
@@ -4986,7 +4986,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
       if (copy_to_tok (tok, getname (sfd)) != 1)
         {
           SplineCharFree (sc);
-          return (NULL);
+          return NULL;
         }
       sc->name = xstrdup_or_null (tok);
     }
@@ -4996,7 +4996,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
       if (sc->name == NULL)
         {
           SplineCharFree (sc);
-          return (NULL);
+          return NULL;
         }
     }
   sc->vwidth = sf->ascent + sf->descent;
@@ -5006,7 +5006,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
       if (copy_to_tok (tok, getname (sfd)) != 1)
         {
           SplineCharFree (sc);
-          return (NULL);
+          return NULL;
         }
       if (strcasecmp (tok, "Encoding:") == 0)
         {
@@ -5793,7 +5793,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                                       false, true);
           if (sc->layers[ly_fore].order2)
             SCDefaultInterpolation (sc);
-          return (sc);
+          return sc;
         }
       else
         {
@@ -5809,7 +5809,7 @@ SFDGetBitmapProps (FILE *sfd, BDFFont *bdf, char *tok)
   int i;
 
   if (getint (sfd, &pcnt) != 1 || pcnt <= 0)
-    return (0);
+    return 0;
   bdf->prop_cnt = pcnt;
   bdf->props = xmalloc (pcnt * sizeof (BDFProperties));
   for (i = 0; i < pcnt; ++i)
@@ -5836,7 +5836,7 @@ SFDGetBitmapProps (FILE *sfd, BDFFont *bdf, char *tok)
         }
     }
   bdf->prop_cnt = i;
-  return (1);
+  return 1;
 }
 
 static int
@@ -5854,17 +5854,17 @@ SFDGetBitmapChar (FILE *sfd, BDFFont *bdf)
   map = bdf->sf->map;
 
   if (getint (sfd, &orig) != 1 || orig < 0)
-    return (0);
+    return 0;
   if (getint (sfd, &enc) != 1)
-    return (0);
+    return 0;
   if (getint (sfd, &width) != 1)
-    return (0);
+    return 0;
   if (getint (sfd, &xmin) != 1)
-    return (0);
+    return 0;
   if (getint (sfd, &xmax) != 1)
-    return (0);
+    return 0;
   if (getint (sfd, &ymin) != 1)
-    return (0);
+    return 0;
   while ((ch = nlgetc (sfd)) == ' ');
   ungetc (ch, sfd);
   if (ch == '\n' || ch == '\r' || getint (sfd, &ymax) != 1)
@@ -5886,7 +5886,7 @@ SFDGetBitmapChar (FILE *sfd, BDFFont *bdf)
         getint (sfd, &vwidth);
     }
   if (enc < 0 || xmax < xmin || ymax < ymin)
-    return (0);
+    return 0;
   if (orig == -1)
     {
       bfc->sc = SFMakeChar (bdf->sf, map, enc);
@@ -5944,7 +5944,7 @@ SFDGetBitmapChar (FILE *sfd, BDFFont *bdf)
 /*  for that. Eventually we should have good sfd files and can remove this */
   else if (bfc->sc->width != bdf->sf->ascent + bdf->sf->descent)
     bfc->sc->widthset = true;
-  return (1);
+  return 1;
 }
 
 static int
@@ -5960,13 +5960,13 @@ SFDGetBitmapReference (FILE *sfd, BDFFont *bdf)
   /* available. So we will find them later */
   if (getint (sfd, &gid) != 1 || gid <= 0 || gid >= bdf->glyphcnt
       || (bc = bdf->glyphs[gid]) == NULL)
-    return (0);
+    return 0;
   if (getint (sfd, &rgid) != 1 || rgid < 0)
-    return (0);
+    return 0;
   if (getint (sfd, &xoff) != 1)
-    return (0);
+    return 0;
   if (getint (sfd, &yoff) != 1)
-    return (0);
+    return 0;
   while (isspace (ch = nlgetc (sfd)) && ch != '\r' && ch != '\n');
 
   ref = xcalloc (1, sizeof (BDFRefChar));
@@ -5980,7 +5980,7 @@ SFDGetBitmapReference (FILE *sfd, BDFFont *bdf)
     bc->refs = ref;
   else
     head->next = ref;
-  return (1);
+  return 1;
 }
 
 static void
@@ -6029,17 +6029,17 @@ SFDGetBitmapFont (FILE *sfd, SplineFont *sf, int fromdir, char *dirname)
   bdf = xcalloc (1, sizeof (BDFFont));
 
   if (getint (sfd, &pixelsize) != 1 || pixelsize <= 0)
-    return (0);
+    return 0;
   if (getint (sfd, &enc_limit) != 1 || enc_limit < 0)
-    return (0);
+    return 0;
   if (getint (sfd, &ascent) != 1 || ascent < 0)
-    return (0);
+    return 0;
   if (getint (sfd, &descent) != 1 || descent < 0)
-    return (0);
+    return 0;
   if (getint (sfd, &depth) != 1)
     depth = 1;                  /* old sfds don't have a depth here */
   else if (depth != 1 && depth != 2 && depth != 4 && depth != 8)
-    return (0);
+    return 0;
   while ((ch = nlgetc (sfd)) == ' ');
   ungetc (ch, sfd);             /* old sfds don't have a foundry */
   if (ch != '\n' && ch != '\r')
@@ -6087,7 +6087,7 @@ SFDGetBitmapFont (FILE *sfd, SplineFont *sf, int fromdir, char *dirname)
 
       dir = opendir (dirname);
       if (dir == NULL)
-        return (0);
+        return 0;
       name = xmalloc (strlen (dirname) + NAME_MAX + 3);
 
       while ((ent = readdir (dir)) != NULL)
@@ -6113,7 +6113,7 @@ SFDGetBitmapFont (FILE *sfd, SplineFont *sf, int fromdir, char *dirname)
       closedir (dir);
     }
   SFDFixupBitmapRefs (bdf);
-  return (1);
+  return 1;
 }
 
 static void
@@ -6166,10 +6166,10 @@ SCDuplicate (SplineChar *sc)
   SplineChar *matched = sc;
 
   if (sc == NULL || sc->parent == NULL || sc->parent->cidmaster != NULL)
-    return (sc);                /* Can't do this in CID keyed fonts */
+    return sc;                /* Can't do this in CID keyed fonts */
 
   if (sc->layer_cnt != 2)
-    return (sc);
+    return sc;
 
   while (sc->layers[ly_fore].refs != NULL && sc->layers[ly_fore].refs->sc != NULL &&    /* Can happen if we are called during font loading before references are fixed up */
          sc->layers[ly_fore].refs->next == NULL
@@ -6186,7 +6186,7 @@ SCDuplicate (SplineChar *sc)
       matched = sc->layers[ly_fore].refs->sc;
       sc = sc->layers[ly_fore].refs->sc;
     }
-  return (matched);
+  return matched;
 }
 
 static void
@@ -6445,10 +6445,10 @@ SFDGetLangName (FILE *sfd, struct ttflangname *old)
   for (i = 0; i < ttf_namemax; ++i)
     cur->names[i] = SFDReadUTF7Str (sfd);
   if (old == NULL)
-    return (cur);
+    return cur;
   for (prev = old; prev->next != NULL; prev = prev->next);
   prev->next = cur;
-  return (old);
+  return old;
 }
 
 static void
@@ -6545,7 +6545,7 @@ SFDGetEncoding (FILE *sfd, char *tok, SplineFont *sf)
   if (enc->is_compact)
     sf->compacted = true;
 #endif
-  return (enc);
+  return enc;
 }
 
 static enum uni_interp
@@ -6578,7 +6578,7 @@ SFDGetUniInterp (FILE *sfd, char *tok, SplineFont *sf)
       uniinterp = ui_none;
     }
 
-  return (uniinterp);
+  return uniinterp;
 }
 
 static void
@@ -6605,22 +6605,22 @@ SFD_ParseNestedLookup (FILE *sfd, SplineFont *sf, int old)
 
   while ((ch = nlgetc (sfd)) == ' ');
   if (ch == '~')
-    return (NULL);
+    return NULL;
   else if (old)
     {
       if (ch != '\'')
-        return (NULL);
+        return NULL;
 
       ungetc (ch, sfd);
       tag = gettag (sfd);
-      return ((OTLookup *) (intptr_t) tag);
+      return (OTLookup *) (intptr_t) tag;
     }
   else
     {
       ungetc (ch, sfd);
       name = SFDReadUTF7Str (sfd);
       if (name == NULL)
-        return (NULL);
+        return NULL;
       for (isgpos = 0; isgpos < 2; ++isgpos)
         {
           for (otl = isgpos ? sf->gpos_lookups : sf->gsub_lookups;
@@ -6632,7 +6632,7 @@ SFD_ParseNestedLookup (FILE *sfd, SplineFont *sf, int old)
         }
     break2:
       free (name);
-      return (otl);
+      return otl;
     }
 }
 
@@ -6868,7 +6868,7 @@ SFDParseMMSubroutine (FILE *sfd)
     }
   if (len > 0 && sofar[len - 1] == '\n')
     sofar[len - 1] = '\0';
-  return (sofar);
+  return sofar;
 }
 
 static void
@@ -6900,7 +6900,7 @@ SFD_FigureDirType (SplineFont *sf, char *tok, char *dirname, Encoding * enc,
 
   dir = opendir (dirname);
   if (dir == NULL)
-    return (sf);
+    return sf;
   sf->save_to_dir = true;
   while ((ent = readdir (dir)) != NULL)
     {
@@ -7070,7 +7070,7 @@ SFD_FigureDirType (SplineFont *sf, char *tok, char *dirname, Encoding * enc,
   closedir (dir);
   free (name);
   free (props);
-  return (sf);
+  return sf;
 }
 
 static void
@@ -7339,9 +7339,9 @@ ParseBaseLang (FILE *sfd)
         }
       if (ch != '}')
         ungetc (ch, sfd);
-      return (bl);
+      return bl;
     }
-  return (NULL);
+  return NULL;
 }
 
 static struct basescript *
@@ -7352,7 +7352,7 @@ SFDParseBaseScript (FILE *sfd, struct Base *base, char *tok)
   struct baselangextent *last, *cur;
 
   if (base == NULL)
-    return (NULL);
+    return NULL;
 
   bs = xzalloc (sizeof (struct basescript));
 
@@ -7377,7 +7377,7 @@ SFDParseBaseScript (FILE *sfd, struct Base *base, char *tok)
       last = cur;
       while ((ch = nlgetc (sfd)) == ' ');
     }
-  return (bs);
+  return bs;
 }
 
 static struct Base *
@@ -7393,7 +7393,7 @@ SFDParseBase (FILE *sfd)
       for (i = 0; i < base->baseline_cnt; ++i)
         base->baseline_tags[i] = gettag (sfd);
     }
-  return (base);
+  return base;
 }
 
 static OTLookup **
@@ -7429,12 +7429,12 @@ SFDLookupList (FILE *sfd, SplineFont *sf)
         }
     }
   if (lcnt == 0)
-    return (NULL);
+    return NULL;
 
   ret = xmalloc ((lcnt + 1) * sizeof (OTLookup *));
   memcpy (ret, buf, lcnt * sizeof (OTLookup *));
   ret[lcnt] = NULL;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -8858,7 +8858,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
     SFD_AssignLookups ((SplineFont1 *) sf);
   if (!hadtimes)
     SFTimesFromFile (sf, sfd);
-  return (sf);
+  return sf;
 }
 
 #include <sys/types.h>
@@ -8881,11 +8881,11 @@ SFDStartsCorrectly (FILE *sfd, char *tok)
   int ch;
 
   if (copy_to_tok (tok, getname (sfd)) != 1)
-    return (-1);
+    return -1;
   if (strcmp (tok, "SplineFontDB:") != 0)
-    return (-1);
+    return -1;
   if (getreal (sfd, &dval) != 1)
-    return (-1);
+    return -1;
   /* We don't yet generate version 4 of sfd. It will contain backslash */
   /*  newline in the middle of very long lines. I've put in code to parse */
   /*  this sequence, but I don't yet generate it. I want the parser to */
@@ -8901,14 +8901,14 @@ SFDStartsCorrectly (FILE *sfd, char *tok)
   if (dval != 0 && dval != 1 && dval != 2.0 && dval != 3.0 && dval != 4.0)
     {
       LogError (_("Bad SFD Version number %.1f"), dval);
-      return (-1);
+      return -1;
     }
   ch = nlgetc (sfd);
   ungetc (ch, sfd);
   if (ch != '\r' && ch != '\n')
-    return (-1);
+    return -1;
 
-  return (dval);
+  return dval;
 }
 
 static SplineFont *
@@ -8929,7 +8929,7 @@ SFD_Read (char *filename, FILE *sfd, int fromdir)
         sfd = fopen (filename, "r");
     }
   if (sfd == NULL)
-    return (NULL);
+    return NULL;
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
   ff_progress_change_stages (2);
@@ -8962,25 +8962,25 @@ SFD_Read (char *filename, FILE *sfd, int fromdir)
         }
     }
   fclose (sfd);
-  return (sf);
+  return sf;
 }
 
 SplineFont *
 SFDRead (char *filename)
 {
-  return (SFD_Read (filename, NULL, false));
+  return SFD_Read (filename, NULL, false);
 }
 
 SplineFont *
 _SFDRead (char *filename, FILE *sfd)
 {
-  return (SFD_Read (filename, sfd, false));
+  return SFD_Read (filename, sfd, false);
 }
 
 SplineFont *
 SFDirRead (char *filename)
 {
-  return (SFD_Read (filename, NULL, true));
+  return SFD_Read (filename, NULL, true);
 }
 
 SplineChar *
@@ -9004,7 +9004,7 @@ SFDReadOneChar (SplineFont *cur_sf, const char *name)
   else
     sfd = fopen (cur_sf->filename, "r");
   if (sfd == NULL)
-    return (NULL);
+    return NULL;
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
 
@@ -9111,7 +9111,7 @@ SFDReadOneChar (SplineFont *cur_sf, const char *name)
   if (sf.layers != layers)
     free (sf.layers);
   setlocale (LC_NUMERIC, oldloc);
-  return (sc);
+  return sc;
 }
 
 static int
@@ -9142,15 +9142,15 @@ ModSF (FILE *asfd, SplineFont *sf)
 
   if (copy_to_tok (tok, getname (asfd)) != 1
       || strcmp (tok, "Encoding:") != 0)
-    return (false);
+    return false;
   newmap = SFDGetEncoding (asfd, tok, &temp);
   if (copy_to_tok (tok, getname (asfd)) != 1)
-    return (false);
+    return false;
   if (strcmp (tok, "UnicodeInterp:") == 0)
     {
       sf->uni_interp = SFDGetUniInterp (asfd, tok, sf);
       if (copy_to_tok (tok, getname (asfd)) != 1)
-        return (false);
+        return false;
     }
   if (sf->map->enc != newmap)
     {
@@ -9170,7 +9170,7 @@ ModSF (FILE *asfd, SplineFont *sf)
         }
       sf->layer_cnt = layercnt;
       if (copy_to_tok (tok, getname (asfd)) != 1)
-        return (false);
+        return false;
     }
   while (strcmp (tok, "Layer:") == 0)
     {
@@ -9184,13 +9184,13 @@ ModSF (FILE *asfd, SplineFont *sf)
           sf->layers[layer].name = SFDReadUTF7Str (asfd);
         }
       if (copy_to_tok (tok, getname (asfd)) != 1)
-        return (false);
+        return false;
     }
   if (strcmp (tok, "MultiLayer:") == 0)
     {
       getint (asfd, &multilayer);
       if (copy_to_tok (tok, getname (asfd)) != 1)
-        return (false);
+        return false;
     }
   if (multilayer != sf->multilayer)
     {
@@ -9200,7 +9200,7 @@ ModSF (FILE *asfd, SplineFont *sf)
       /* SFLayerChange(sf); *//* Shouldn't have any open windows, should not be needed */
     }
   if (strcmp (tok, "BeginChars:") != 0)
-    return (false);
+    return false;
   SFRemoveDependencies (sf);
 
   getint (asfd, &cnt);
@@ -9234,7 +9234,7 @@ ModSF (FILE *asfd, SplineFont *sf)
     }
   sf->changed = true;
   SFDFixupRefs (sf);
-  return (true);
+  return true;
 }
 
 static SplineFont *
@@ -9249,9 +9249,9 @@ SlurpRecovery (FILE *asfd, char *tok, int sizetok)
   if (ch == 'B')
     {
       if (copy_to_tok (tok, getname (asfd)) != 1)
-        return (NULL);
+        return NULL;
       if (strcmp (tok, "Base:") != 0)
-        return (NULL);
+        return NULL;
       while (isspace (ch = nlgetc (asfd)) && ch != EOF && ch != '\n');
       for (pt = tok; ch != EOF && ch != '\n'; ch = nlgetc (asfd))
         if (pt < tok + sizetok - 2)
@@ -9266,14 +9266,14 @@ SlurpRecovery (FILE *asfd, char *tok, int sizetok)
       strcpy (tok, "<New File>");
     }
   if (sf == NULL)
-    return (NULL);
+    return NULL;
 
   if (!ModSF (asfd, sf))
     {
       SplineFontFree (sf);
-      return (NULL);
+      return NULL;
     }
-  return (sf);
+  return sf;
 }
 
 static int
@@ -9284,11 +9284,11 @@ ask_about_file (FILE *asfd, int *state, char *filename)
   char buffer[800], *pt;
 
   if (*state & 1)
-    return (true);
+    return true;
   else if (*state & 2)
     {
       unlink (filename);
-      return (false);
+      return false;
     }
 
   fgets (buffer, sizeof (buffer), asfd);
@@ -9317,20 +9317,20 @@ ask_about_file (FILE *asfd, int *state, char *filename)
   switch (ret)
     {
     case 0:
-      return (true);
+      return true;
     case 1:
       *state = 1;
-      return (true);
+      return true;
     case 2:
-      return (false);
+      return false;
     case 3:
       *state = 2;
       /* Fall through */
     case 4:
       unlink (filename);
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 SplineFont *
@@ -9341,11 +9341,11 @@ SFRecoverFile (char *autosavename, int inquire, int *state)
   char oldloc[24], tok[1025];
 
   if (asfd == NULL)
-    return (NULL);
+    return NULL;
   if (inquire && !ask_about_file (asfd, state, autosavename))
     {
       fclose (asfd);
-      return (NULL);
+      return NULL;
     }
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
@@ -9367,7 +9367,7 @@ SFRecoverFile (char *autosavename, int inquire, int *state)
   fclose (asfd);
   if (ret)
     ret->autosavename = xstrdup_or_null (autosavename);
-  return (ret);
+  return ret;
 }
 
 void
@@ -9468,7 +9468,7 @@ NamesReadSFD (char *filename)
   int eof;
 
   if (sfd == NULL)
-    return (NULL);
+    return NULL;
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
   if (SFDStartsCorrectly (sfd, tok) != -1)
@@ -9494,5 +9494,5 @@ NamesReadSFD (char *filename)
     }
   setlocale (LC_NUMERIC, oldloc);
   fclose (sfd);
-  return (ret);
+  return ret;
 }

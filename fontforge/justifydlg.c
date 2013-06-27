@@ -633,7 +633,7 @@ Str2Tag (char *str)
             }
         }
     }
-  return ((foo[0] << 24) | (foo[1] << 16) | (foo[2] << 8) | foo[3]);
+  return (foo[0] << 24) | (foo[1] << 16) | (foo[2] << 8) | foo[3];
 }
 
 static char *
@@ -693,7 +693,7 @@ Str2OTLList (SplineFont *sf, char *str)
                          pt);
           *ept = ',';
           free (ret);
-          return ((OTLookup **) -1);
+          return (OTLookup **) -1;
         }
       *ept = ',';
       ++cnt;
@@ -711,7 +711,7 @@ Str2OTLList (SplineFont *sf, char *str)
           ff_post_error (_("Unknown lookup"), _("Unknown lookup name: %60.60s"),
                          pt);
           free (ret);
-          return ((OTLookup **) -1);
+          return (OTLookup **) -1;
         }
       ++cnt;
     }

@@ -91,7 +91,7 @@ pdf_addobject (PI * pi)
     }
   pi->object_offsets[pi->next_object] = ftell (pi->out);
   fprintf (pi->out, "%d 0 obj\n", pi->next_object++);
-  return (pi->next_object - 1);
+  return pi->next_object - 1;
 }
 
 static void
@@ -152,16 +152,16 @@ pfb_getsectionlength (FILE *pfb, int sec_type, int skip_sec)
         {
           ungetc (ch, pfb);
           if (len != 0)
-            return (len);
-          return (-1);
+            return len;
+          return -1;
         }
       ch = getc (pfb);
       if (ch != sec_type)
         {
           fseek (pfb, -2, SEEK_CUR);
           if (len != 0)
-            return (len);
-          return (-1);
+            return len;
+          return -1;
         }
       ch = getc (pfb);
       sublen = ch;
@@ -172,7 +172,7 @@ pfb_getsectionlength (FILE *pfb, int sec_type, int skip_sec)
       ch = getc (pfb);
       sublen += (ch << 24);
       if (!skip_sec)
-        return (sublen);
+        return sublen;
       len += sublen;
       fseek (pfb, sublen, SEEK_CUR);
     }
@@ -365,7 +365,7 @@ figure_fontdesc (PI * pi, int sfid, struct fontdesc *fd, int fonttype,
     fprintf (pi->out, "    /FontFile3 %d 0 R\n", fontstream);
   fprintf (pi->out, "  >>\n");
   fprintf (pi->out, "endobj\n\n");
-  return (fd_num);
+  return fd_num;
 }
 
 static void
@@ -926,7 +926,7 @@ PdfDumpGlyphResources (PI * pi, SplineChar *sc)
     }
   fprintf (pi->out, ">>\n");
   fprintf (pi->out, "endobj\n\n");
-  return (resobj);
+  return resobj;
 }
 
 static int
@@ -1010,7 +1010,7 @@ PdfDumpSFResources (PI * pi, SplineFont *sf)
     }
   fprintf (pi->out, ">>\n");
   fprintf (pi->out, "endobj\n\n");
-  return (resobj);
+  return resobj;
 }
 
 static int
@@ -1100,7 +1100,7 @@ pdf_charproc (PI * pi, SplineChar *sc)
   pdf_addobject (pi);
   fprintf (pi->out, " %ld\n", streamlength);
   fprintf (pi->out, "endobj\n\n");
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1819,7 +1819,7 @@ PIDownloadFont (PI * pi, SplineFont *sf, EncMap *map)
     {
       ff_post_error (_("Failed to open temporary output file"),
                      _("Failed to open temporary output file"));
-      return (false);
+      return false;
     }
   if (pi->sfid == 0)
     ff_progress_start_indicator (10, _("Printing Font"), _("Printing Font"),
@@ -1856,12 +1856,12 @@ PIDownloadFont (PI * pi, SplineFont *sf, EncMap *map)
       ff_post_error (_("Failed to generate postscript font"),
                      _("Failed to generate postscript font"));
       fclose (sfbit->fontfile);
-      return (false);
+      return false;
     }
 
   rewind (sfbit->fontfile);
   ++pi->sfcnt;
-  return (true);
+  return true;
 }
 
 static void
@@ -1975,7 +1975,7 @@ DumpLine (PI * pi)
         }
     }
   if (line + i >= sfbit->cidcnt)        /* Nothing more */
-    return (0);
+    return 0;
 
   if (sfbit->iscid)
     /* No encoding worries */ ;
@@ -2119,7 +2119,7 @@ DumpLine (PI * pi)
     }
   pi->ypos -= pi->pointsize + pi->extravspace;
   pi->chline += pi->max;
-  return (true);
+  return true;
 }
 
 static void
@@ -3336,7 +3336,7 @@ AllChars (SplineFont *sf, const char *str)
                   break;
               }
           if (i == sf->glyphcnt || !SCWorthOutputting (sf->glyphs[i]))
-            return (false);
+            return false;
         }
     }
   else
@@ -3358,10 +3358,10 @@ AllChars (SplineFont *sf, const char *str)
                   break;
             }
           if (i == max || !SCWorthOutputting (sf->subfonts[j]->glyphs[i]))
-            return (false);
+            return false;
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3371,9 +3371,9 @@ ScriptInList (uint32_t script, uint32_t *scripts, int scnt)
 
   for (s = 0; s < scnt; ++s)
     if (script == scripts[s])
-      return (true);
+      return true;
 
-  return (false);
+  return false;
 }
 
 uint32_t *
@@ -3510,12 +3510,12 @@ PrtBuildDef (SplineFont *sf, void *tf,
       if (ret)
         {
           ret[len] = '\0';
-          return (ret);
+          return ret;
         }
       if (len == 0)
         {
           /* Er... We didn't find anything?! */
-          return (xcalloc (1, sizeof (uint32_t)));
+          return xcalloc (1, sizeof (uint32_t));
         }
       ret = xmalloc ((len + 1) * sizeof (uint32_t));
     }
@@ -3752,7 +3752,7 @@ FileToUString (char *filename, int max)
 
   file = fopen (filename, "rb");
   if (file == NULL)
-    return (NULL);
+    return NULL;
   ch = getc (file);
   ch2 = getc (file);
   if (ch == 0xfe && ch2 == 0xff)
@@ -3791,7 +3791,7 @@ FileToUString (char *filename, int max)
     }
   *upt = 0;
   fclose (file);
-  return (space);
+  return space;
 }
 
 void

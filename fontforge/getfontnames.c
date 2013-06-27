@@ -120,5 +120,5 @@ GetFontNames (char *filename)
             ret = NamesReadMacBinary (filename);
         }
     }
-  return (ret);
+  return ret;
 }

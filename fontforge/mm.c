@@ -52,15 +52,15 @@ char *
 MMAxisAbrev (char *axis_name)
 {
   if (strcmp (axis_name, "Weight") == 0)
-    return ("wt");
+    return "wt";
   if (strcmp (axis_name, "Width") == 0)
-    return ("wd");
+    return "wd";
   if (strcmp (axis_name, "OpticalSize") == 0)
-    return ("op");
+    return "op";
   if (strcmp (axis_name, "Slant") == 0)
-    return ("sl");
+    return "sl";
 
-  return (axis_name);
+  return axis_name;
 }
 
 bigreal
@@ -70,7 +70,7 @@ MMAxisUnmap (MMSet *mm, int axis, bigreal ncv)
   int j;
 
   if (ncv <= axismap->blends[0])
-    return (axismap->designs[0]);
+    return axismap->designs[0];
 
   for (j = 1; j < axismap->points; ++j)
     {
@@ -84,7 +84,7 @@ MMAxisUnmap (MMSet *mm, int axis, bigreal ncv)
         }
     }
 
-  return (axismap->designs[axismap->points - 1]);
+  return axismap->designs[axismap->points - 1];
 }
 
 static char *
@@ -118,7 +118,7 @@ _MMMakeFontname (MMSet *mm, real *normalized, char **fullname)
     else if (*pt != ' ')
       *pt2++ = *pt;
   *pt2 = '\0';
-  return (ret);
+  return ret;
 }
 
 char *
@@ -141,10 +141,10 @@ _MMGuessWeight (MMSet *mm, real *normalized, char *def)
         break;
     }
   if (i == mm->axis_count)
-    return (def);
+    return def;
   design = MMAxisUnmap (mm, i, normalized[i]);
   if (design < 50 || design > 1500)     /* Er... Probably not the 0...1000 range I expect */
-    return (def);
+    return def;
   ret = NULL;
   if (design < 150)
     ret = "Thin";
@@ -161,13 +161,13 @@ _MMGuessWeight (MMSet *mm, real *normalized, char *def)
   else
     ret = "Black";
   free (def);
-  return (xstrdup_or_null (ret));
+  return xstrdup_or_null (ret);
 }
 
 char *
 MMGuessWeight (MMSet *mm, int ipos, char *def)
 {
-  return (_MMGuessWeight (mm, &mm->positions[ipos * mm->axis_count], def));
+  return _MMGuessWeight (mm, &mm->positions[ipos * mm->axis_count], def);
 }
 
 /* Given a postscript array of scalars, what's the ipos'th element? */
@@ -186,13 +186,13 @@ MMExtractNth (char *pt, int ipos)
       while (*pt == ' ')
         ++pt;
       if (*pt == ']' || *pt == '\0')
-        return (NULL);
+        return NULL;
       for (end = pt; *end != ' ' && *end != ']' && *end != '\0'; ++end);
       if (i == ipos)
-        return (xstrndup (pt, end - pt));
+        return xstrndup (pt, end - pt);
       pt = end;
     }
-  return (NULL);
+  return NULL;
 }
 
 /* Given a postscript array of arrays, such as those found in Blend Private BlueValues */
@@ -224,14 +224,14 @@ MMExtractArrayNth (char *pt, int ipos)
         ++pt;
     }
   if (i == 0)
-    return (NULL);
+    return NULL;
   for (j = len = 0; j < i; ++j)
     {
       if (hold[j] == NULL)
         {
           for (j = 0; j < i; ++j)
             free (hold[j]);
-          return (NULL);
+          return NULL;
         }
       len += strlen (hold[j]) + 1;
     }
@@ -248,7 +248,7 @@ MMExtractArrayNth (char *pt, int ipos)
     }
   *pt++ = ']';
   *pt++ = '\0';
-  return (ret);
+  return ret;
 }
 
 void
@@ -317,7 +317,7 @@ SFMakeGlyphLike (SplineFont *sf, int gid, SplineFont *base)
   free (sc->name);
   sc->name = xstrdup_or_null (bsc->name);
   sc->unicodeenc = bsc->unicodeenc;
-  return (sc);
+  return sc;
 }
 
 static char *
@@ -370,7 +370,7 @@ _MMBlendChar (MMSet *mm, int gid)
     }
 
   if (!worthit)
-    return (0);
+    return 0;
 
   if (sc == NULL)
     sc = SFMakeGlyphLike (mm->normal, gid, mm->instances[0]);
@@ -618,7 +618,7 @@ _MMBlendChar (MMSet *mm, int gid)
       kplast = kp;
       kp0 = kp0->next;
     }
-  return (0);
+  return 0;
 }
 
 char *
@@ -640,7 +640,7 @@ MMBlendChar (MMSet *mm, int gid)
           SCMakeDependent (sc, ref->sc);
         }
     }
-  return (ret);
+  return ret;
 }
 
 static struct psdict *
@@ -654,7 +654,7 @@ BlendPrivate (struct psdict *private, MMSet *mm)
 
   other = mm->instances[0]->private;
   if (other == NULL)
-    return (private);
+    return private;
 
   if (private == NULL)
     private = xcalloc (1, sizeof (struct psdict));
@@ -745,7 +745,7 @@ BlendPrivate (struct psdict *private, MMSet *mm)
         }
     }
 
-  return (private);
+  return private;
 }
 
 int
@@ -798,7 +798,7 @@ MMReblend (FontViewBase *fv, MMSet *mm)
   sf->private = BlendPrivate (sf->private, mm);
 
   if (olderr == NULL)           /* No Errors */
-    return (true);
+    return true;
 
   if (fv != NULL)
     {
@@ -812,7 +812,7 @@ MMReblend (FontViewBase *fv, MMSet *mm)
                        ("The following error occurred on the selected glyphs: %.100s"),
                        olderr);
     }
-  return (false);
+  return false;
 }
 
 void
@@ -910,7 +910,7 @@ _MMNewFont (MMSet *mm, int index, char *familyname, real *normalized)
     }
   sf->onlybitmaps = false;
   sf->mm = mm;
-  return (sf);
+  return sf;
 }
 
 SplineFont *
@@ -966,7 +966,7 @@ MMCreateBlendedFont (MMSet *mm, FontViewBase *fv, real blends[MmMax], int tonew)
       mm->changed = true;
       MMReblend (fv, mm);
     }
-  return (fv);
+  return fv;
 }
 
 /******************************************************************************/
@@ -981,7 +981,7 @@ ContourCount (SplineChar *sc)
 
   for (spl = sc->layers[ly_fore].splines, i = 0; spl != NULL;
        spl = spl->next, ++i);
-  return (i);
+  return i;
 }
 
 static int
@@ -996,12 +996,12 @@ ContourPtMatch (SplineChar *sc1, SplineChar *sc2)
       for (sp1 = spl1->first, sp2 = spl2->first;;)
         {
           if (sp1->nonextcp != sp2->nonextcp || sp1->noprevcp != sp2->noprevcp)
-            return (false);
+            return false;
           if (sp1->next == NULL || sp2->next == NULL)
             {
               if (sp1->next == NULL && sp2->next == NULL)
                 break;
-              return (false);
+              return false;
             }
           sp1 = sp1->next->to;
           sp2 = sp2->next->to;
@@ -1009,11 +1009,11 @@ ContourPtMatch (SplineChar *sc1, SplineChar *sc2)
             {
               if (sp1 == spl1->first && sp2 == spl2->first)
                 break;
-              return (false);
+              return false;
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1026,9 +1026,9 @@ ContourDirMatch (SplineChar *sc1, SplineChar *sc2)
     {
       if (SplinePointListIsClockwise (spl1) !=
           SplinePointListIsClockwise (spl2))
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1043,15 +1043,15 @@ ContourHintMaskMatch (SplineChar *sc1, SplineChar *sc2)
       for (sp1 = spl1->first, sp2 = spl2->first;;)
         {
           if ((sp1->hintmask == NULL) != (sp2->hintmask == NULL))
-            return (false);
+            return false;
           if (sp1->hintmask != NULL
               && memcmp (sp1->hintmask, sp2->hintmask, sizeof (HintMask)) != 0)
-            return (false);
+            return false;
           if (sp1->next == NULL || sp2->next == NULL)
             {
               if (sp1->next == NULL && sp2->next == NULL)
                 break;
-              return (false);
+              return false;
             }
           sp1 = sp1->next->to;
           sp2 = sp2->next->to;
@@ -1059,11 +1059,11 @@ ContourHintMaskMatch (SplineChar *sc1, SplineChar *sc2)
             {
               if (sp1 == spl1->first && sp2 == spl2->first)
                 break;
-              return (false);
+              return false;
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1076,7 +1076,7 @@ RefMatch (SplineChar *sc1, SplineChar *sc2)
        ref1 != NULL && ref2 != NULL; ref1 = ref1->next, ref2 = ref2->next)
     ref2->checked = false;
   if (ref1 != NULL || ref2 != NULL)
-    return (false);
+    return false;
 
   for (ref1 = sc1->layers[ly_fore].refs; ref1 != NULL; ref1 = ref1->next)
     {
@@ -1086,11 +1086,11 @@ RefMatch (SplineChar *sc1, SplineChar *sc2)
             break;
         }
       if (ref2 == NULL)
-        return (false);
+        return false;
       ref2->checked = true;
     }
 
-  return (true);
+  return true;
 }
 
 static int
@@ -1100,15 +1100,15 @@ HintsMatch (StemInfo * h1, StemInfo * h2)
     {
 #if 0                           /* Nope. May conflict in one instance and not in another */
       if (h1->hasconflicts != h2->hasconflicts)
-        return (false);
+        return false;
 #endif
       h1 = h1->next;
       h2 = h2->next;
     }
   if (h1 != NULL || h2 != NULL)
-    return (false);
+    return false;
 
-  return (true);
+  return true;
 }
 
 static int
@@ -1122,7 +1122,7 @@ KernsMatch (SplineChar *sc1, SplineChar *sc2)
        k1 = k1->next, k2 = k2->next)
     k2->kcid = false;
   if (k1 != NULL || k2 != NULL)
-    return (false);
+    return false;
 
   for (k1 = sc1->kerns; k1 != NULL; k1 = k1->next)
     {
@@ -1132,11 +1132,11 @@ KernsMatch (SplineChar *sc1, SplineChar *sc2)
             break;
         }
       if (k2 == NULL)
-        return (false);
+        return false;
       k2->kcid = true;
     }
 
-  return (true);
+  return true;
 }
 
 static int
@@ -1146,7 +1146,7 @@ ArrayCount (const char *val)
   int cnt;
 
   if (val == NULL)
-    return (0);
+    return 0;
   while (*val == ' ')
     ++val;
   if (*val == '[')
@@ -1160,7 +1160,7 @@ ArrayCount (const char *val)
       ++cnt;
       val = end;
     }
-  return (cnt);
+  return cnt;
 }
 
 int
@@ -1173,7 +1173,7 @@ MMValid (MMSet *mm, int complain)
 "StdVW", "StemSnapH", "StemSnapV", NULL };
 
   if (mm == NULL)
-    return (false);
+    return false;
 
   for (i = 0; i < mm->instance_count; ++i)
     if (mm->instances[i]->layers[ly_fore].order2)
@@ -1185,7 +1185,7 @@ MMValid (MMSet *mm, int complain)
                            ("The font %.30s contains quadratic splines. It must be converted to cubic splines before it can be used in a multiple master"),
                            mm->instances[i]->fontname);
           }
-        return (false);
+        return false;
       }
 
   sf = mm->instances[0];
@@ -1198,7 +1198,7 @@ MMValid (MMSet *mm, int complain)
                        _
                        ("There is no ForceBoldThreshold entry in the weighted font, but there is a ForceBold entry in font %30s"),
                        sf->fontname);
-      return (false);
+      return false;
     }
 
   for (j = 1; j < mm->instance_count; ++j)
@@ -1210,7 +1210,7 @@ MMValid (MMSet *mm, int complain)
                            _
                            ("The fonts %1$.30s and %2$.30s have a different number of glyphs or different encodings"),
                            sf->fontname, mm->instances[j]->fontname);
-          return (false);
+          return false;
         }
       else if (sf->layers[ly_fore].order2 !=
                mm->instances[j]->layers[ly_fore].order2)
@@ -1220,7 +1220,7 @@ MMValid (MMSet *mm, int complain)
                            _
                            ("The fonts %1$.30s and %2$.30s use different types of splines (one quadratic, one cubic)"),
                            sf->fontname, mm->instances[j]->fontname);
-          return (false);
+          return false;
         }
       if (PSDictHasEntry (mm->instances[j]->private, "ForceBold") != NULL &&
           PSDictHasEntry (mm->normal->private, "ForceBoldThreshold") == NULL)
@@ -1230,7 +1230,7 @@ MMValid (MMSet *mm, int complain)
                            _
                            ("There is no ForceBoldThreshold entry in the weighted font, but there is a ForceBold entry in font %30s"),
                            mm->instances[j]->fontname);
-          return (false);
+          return false;
         }
       for (i = 0; arrnames[i] != NULL; ++i)
         {
@@ -1244,7 +1244,7 @@ MMValid (MMSet *mm, int complain)
                                ("The entry \"%1$.20s\" is not present in the private dictionary of both %2$.30s and %3$.30s"),
                                arrnames[i], sf->fontname,
                                mm->instances[j]->fontname);
-              return (false);
+              return false;
             }
         }
     }
@@ -1272,7 +1272,7 @@ MMValid (MMSet *mm, int complain)
                                    mm->instances[j]->glyphs[i]->name,
                                    mm->instances[j]->fontname, sf->fontname);
                 }
-              return (false);
+              return false;
             }
         }
       if (SCWorthOutputting (sf->glyphs[i]))
@@ -1291,7 +1291,7 @@ MMValid (MMSet *mm, int complain)
                                      sf->glyphs[i]->name, sf->fontname,
                                      mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
               else
                 if (!ContourPtMatch
@@ -1306,7 +1306,7 @@ MMValid (MMSet *mm, int complain)
                                      sf->glyphs[i]->name, sf->fontname,
                                      mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
               else
                 if (!ContourDirMatch
@@ -1321,7 +1321,7 @@ MMValid (MMSet *mm, int complain)
                                      sf->glyphs[i]->name, sf->fontname,
                                      mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
               else if (!RefMatch (sf->glyphs[i], mm->instances[j]->glyphs[i]))
                 {
@@ -1334,7 +1334,7 @@ MMValid (MMSet *mm, int complain)
                                      sf->glyphs[i]->name, sf->fontname,
                                      mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
               else if (!KernsMatch (sf->glyphs[i], mm->instances[j]->glyphs[i]))
                 {
@@ -1347,7 +1347,7 @@ MMValid (MMSet *mm, int complain)
                                      "vertical", sf->glyphs[i]->name,
                                      sf->fontname, mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
             }
           for (j = 1; j < mm->instance_count; ++j)
@@ -1364,7 +1364,7 @@ MMValid (MMSet *mm, int complain)
                                      "horizontal", sf->glyphs[i]->name,
                                      sf->fontname, mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
               else
                 if (!HintsMatch
@@ -1379,7 +1379,7 @@ MMValid (MMSet *mm, int complain)
                                      "vertical", sf->glyphs[i]->name,
                                      sf->fontname, mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
             }
           for (j = 1; j < mm->instance_count; ++j)
@@ -1396,7 +1396,7 @@ MMValid (MMSet *mm, int complain)
                                      sf->glyphs[i]->name, sf->fontname,
                                      mm->instances[j]->fontname);
                     }
-                  return (false);
+                  return false;
                 }
             }
         }
@@ -1404,5 +1404,5 @@ MMValid (MMSet *mm, int complain)
 
   if (complain)
     ff_post_notice (_("OK"), _("No problems detected"));
-  return (true);
+  return true;
 }

@@ -176,7 +176,7 @@ CreatePalette (GWindow w, GRect *pos, int (*eh) (GWindow, GEvent *),
   gw = GDrawCreateTopWindow (NULL, &newpos, eh, user_data, wattrs);
   if (palettes_docked)
     ReparentFixup (gw, v, 0, pos->y, pos->width, pos->height);
-  return (gw);
+  return gw;
 }
 
 /* Return screen coordinates of the palette in off, relative to the root window origin. */
@@ -1023,19 +1023,19 @@ static StrokeInfo expand = {
 real
 CVRoundRectRadius (void)
 {
-  return (rr_radius);
+  return rr_radius;
 }
 
 int
 CVRectElipseCenter (void)
 {
-  return (center_out[rectelipse]);
+  return center_out[rectelipse];
 }
 
 int
 CVPolyStarPoints (void)
 {
-  return (ps_pointcnt);
+  return ps_pointcnt;
 }
 
 real
@@ -1045,13 +1045,13 @@ CVStarRatio (void)
     return (sin (M_PI / ps_pointcnt) *
             tan (2 * M_PI / ps_pointcnt) + cos (M_PI / ps_pointcnt));
 
-  return (star_percent);
+  return star_percent;
 }
 
 StrokeInfo *
 CVFreeHandInfo (void)
 {
-  return (&expand);
+  return &expand;
 }
 
 struct ask_info
@@ -1143,7 +1143,7 @@ TA_OK (GGadget *g, GEvent *e)
           d->co[re] = !GGadgetIsChecked (d->reg);
         }
       if (err)
-        return (true);
+        return true;
       if (d->haspos)
         {
           real x, y, radx, rady, ang;
@@ -1153,7 +1153,7 @@ TA_OK (GGadget *g, GEvent *e)
           rady = GetInt8 (d->gw, CID_RadDiamY, _("Radius:   "), &err);
           ang = GetInt8 (d->gw, CID_Angle, _("Angle:"), &err);
           if (err)
-            return (true);
+            return true;
           d->cv->p.x = d->cv->info.x = x;
           d->cv->p.y = d->cv->info.y = y;
           raddiam_x = radx;
@@ -1170,7 +1170,7 @@ TA_OK (GGadget *g, GEvent *e)
         star_percent = val2 / 100;
       SavePrefs (true);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1181,7 +1181,7 @@ TA_Cancel (GGadget *g, GEvent *e)
       struct ask_info *d = GDrawGetUserData (GGadgetGetWindow (g));
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1196,7 +1196,7 @@ TA_CenRadChange (GGadget *g, GEvent *e)
       GGadgetSetTitle8 (GWidgetGetControl (d->gw, CID_RadDiamLab),
                         is_bb ? _("Diameter:") : _("Radius:   "));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1212,7 +1212,7 @@ TA_RadChange (GGadget *g, GEvent *e)
       if (d->haspos)
         TA_CenRadChange (g, e);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1228,7 +1228,7 @@ toolask_e_h (GWindow gw, GEvent *event)
       /* Above palettes */
       GDrawRaise (gw);
     }
-  return (event->type != et_char);
+  return event->type != et_char;
 }
 
 static int
@@ -1508,7 +1508,7 @@ Ask (char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
   while (!d.done)
     GDrawProcessOneEvent (NULL);
   GDrawDestroyWindow (d.gw);
-  return (d.ret);
+  return d.ret;
 }
 
 static void
@@ -1669,12 +1669,12 @@ TrueCharState (GEvent *event)
       if (event->type == et_char)
         {
           set_on_last_down = (event->u.chr.state ^ ksm_capslock) & ksm_capslock;
-          return (event->u.chr.state ^ ksm_capslock);
+          return event->u.chr.state ^ ksm_capslock;
         }
       else if (!(event->u.chr.state & ksm_capslock) || set_on_last_down)
-        return (event->u.chr.state);
+        return event->u.chr.state;
       else
-        return (event->u.chr.state & ~ksm_capslock);
+        return event->u.chr.state & ~ksm_capslock;
     }
 
   if (keysym == GK_Meta_L || keysym == GK_Meta_R ||
@@ -1689,12 +1689,12 @@ TrueCharState (GEvent *event)
   else if (keysym == GK_Hyper_L || keysym == GK_Hyper_L)
     bit = ksm_hyper;
   else
-    return (event->u.chr.state);
+    return event->u.chr.state;
 
   if (event->type == et_char)
-    return (event->u.chr.state | bit);
+    return event->u.chr.state | bit;
   else
-    return (event->u.chr.state & ~bit);
+    return event->u.chr.state & ~bit;
 }
 
 void
@@ -1800,28 +1800,28 @@ CVCurrentTool (CharView *cv, GEvent *event)
 {
   if (event->u.mouse.device != NULL
       && strcmp (event->u.mouse.device, "eraser") == 0)
-    return (cv->er_tool);
+    return cv->er_tool;
   else if (event->u.mouse.device != NULL
            && strcmp (event->u.mouse.device, "stylus") == 0)
     {
       if (event->u.mouse.button == 2)
         /* Only thing that matters is touch which maps to button 1 */ ;
       else if (cv->had_control)
-        return (cv->s2_tool);
+        return cv->s2_tool;
       else
-        return (cv->s1_tool);
+        return cv->s1_tool;
     }
   if (cv->had_control && event->u.mouse.button == 2)
-    return (cv->cb2_tool);
+    return cv->cb2_tool;
   else if (event->u.mouse.button == 2)
-    return (cv->b2_tool);
+    return cv->b2_tool;
   else if (cv->had_control)
     {
-      return (cv->cb1_tool);
+      return cv->cb1_tool;
     }
   else
     {
-      return (cv->b1_tool);
+      return cv->b1_tool;
     }
 }
 
@@ -2050,11 +2050,11 @@ cvtools_e_h (GWindow gw, GEvent *event)
   if (event->type == et_destroy)
     {
       cvtools = NULL;
-      return (true);
+      return true;
     }
 
   if (cv == NULL)
-    return (true);
+    return true;
 
   GGadgetPopupExternalEvent (event);
   switch (event->type)
@@ -2085,7 +2085,7 @@ cvtools_e_h (GWindow gw, GEvent *event)
       GDrawSetVisible (gw, false);
       break;
     }
-  return (true);
+  return true;
 }
 
 GWindow
@@ -2095,7 +2095,7 @@ CVMakeTools (CharView *cv)
   GWindowAttrs wattrs;
 
   if (cvtools != NULL)
-    return (cvtools);
+    return cvtools;
 
   memset (&wattrs, 0, sizeof (wattrs));
   wattrs.mask =
@@ -2132,7 +2132,7 @@ CVMakeTools (CharView *cv)
 
   if (cvvisible[1])
     GDrawSetVisible (cvtools, true);
-  return (cvtools);
+  return cvtools;
 }
 
 
@@ -2175,7 +2175,7 @@ BDFCharFromLayer (SplineChar *sc, int layer)
   dummy.layer_cnt = 2;
   dummy.layers = sc->layers + layer - 1;
   dummy.parent = sc->parent;
-  return (SplineCharAntiAlias (&dummy, ly_fore, 24, 4));
+  return SplineCharAntiAlias (&dummy, ly_fore, 24, 4);
 }
 
 /* Update the type3 layers palette to the given character view */
@@ -2496,11 +2496,11 @@ cvlayers2_e_h (GWindow gw, GEvent *event)
   if (event->type == et_destroy)
     {
       cvlayers2 = NULL;
-      return (true);
+      return true;
     }
 
   if (cv == NULL)
-    return (true);
+    return true;
 
   switch (event->type)
     {
@@ -2532,7 +2532,7 @@ cvlayers2_e_h (GWindow gw, GEvent *event)
                   Layer2Menu (cv, event, true);
                 else
                   GDrawBeep (NULL);
-                return (true);
+                return true;
               }
             else
               {
@@ -2589,7 +2589,7 @@ cvlayers2_e_h (GWindow gw, GEvent *event)
         Layer2Scroll (cv, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 /* This is used for Type 3 fonts. CVMakeLayers is used for other fonts. */
@@ -2958,11 +2958,11 @@ cvlayers_e_h (GWindow gw, GEvent *event)
   if (event->type == et_destroy)
     {
       cvlayers = NULL;
-      return (true);
+      return true;
     }
 
   if (cv == NULL)
-    return (true);
+    return true;
 
   switch (event->type)
     {
@@ -3060,7 +3060,7 @@ cvlayers_e_h (GWindow gw, GEvent *event)
         LayerScroll (cv, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 /* Set to true the editable field for the current layer, and false for the other layers. */
@@ -3123,7 +3123,7 @@ CVPaletteMnemonicCheck (GEvent *event)
   SplineFont *parent;
 
   if (cvtools == NULL)
-    return (false);
+    return false;
   cv = GDrawGetUserData (cvtools);
   parent = cv->b.sc->parent;
 
@@ -3140,7 +3140,7 @@ CVPaletteMnemonicCheck (GEvent *event)
           fake.u.control.subtype = et_radiochanged;
           fake.u.control.g = g;
           cvlayers_e_h (cvlayers, &fake);
-          return (true);
+          return true;
         }
     }
 
@@ -3202,11 +3202,11 @@ CVPaletteMnemonicCheck (GEvent *event)
                       cvlayers_e_h (cvlayers, &fake);
                     }
                 }
-              return (true);
+              return true;
             }
         }
     }
-  return (false);
+  return false;
 }
 
 /* This is used for fonts other than Type 3 fonts. CVMakeLayers2() is used for Type 3.
@@ -3223,7 +3223,7 @@ CVMakeLayers (CharView *cv)
   extern int _GScrollBar_Width;
 
   if (cvlayers != NULL)
-    return (cvlayers);
+    return cvlayers;
 
   /* Initialize palette window */
   memset (&wattrs, 0, sizeof (wattrs));
@@ -3373,7 +3373,7 @@ CVMakeLayers (CharView *cv)
   layers_max = 2;
   layers_cur = 0;
 
-  return (cvlayers);
+  return cvlayers;
 }
 
 
@@ -3583,12 +3583,12 @@ CVPaletteIsVisible (CharView *cv, int which)
 {
   CVPaletteCheck (cv);
   if (which == 1)
-    return (cvtools != NULL && GDrawIsVisible (cvtools));
+    return cvtools != NULL && GDrawIsVisible (cvtools);
 
   if (cv->b.sc->parent->multilayer)
-    return (cvlayers2 != NULL && GDrawIsVisible (cvlayers2));
+    return cvlayers2 != NULL && GDrawIsVisible (cvlayers2);
 
-  return (cvlayers != NULL && GDrawIsVisible (cvlayers));
+  return cvlayers != NULL && GDrawIsVisible (cvlayers);
 }
 
 void
@@ -3798,7 +3798,7 @@ CVPalettesHideIfMine (CharView *cv)
 int
 CVPalettesWidth (void)
 {
-  return (GGadgetScale (CV_LAYERS2_WIDTH));
+  return GGadgetScale (CV_LAYERS2_WIDTH);
 }
 
 /* ************************************************************************** */
@@ -3821,11 +3821,11 @@ bvlayers_e_h (GWindow gw, GEvent *event)
   if (event->type == et_destroy)
     {
       bvlayers = NULL;
-      return (true);
+      return true;
     }
 
   if (bv == NULL)
-    return (true);
+    return true;
 
   switch (event->type)
     {
@@ -3858,7 +3858,7 @@ bvlayers_e_h (GWindow gw, GEvent *event)
         }
       break;
     }
-  return (true);
+  return true;
 }
 
 GWindow
@@ -3871,7 +3871,7 @@ BVMakeLayers (BitmapView *bv)
   int i;
 
   if (bvlayers != NULL)
-    return (bvlayers);
+    return bvlayers;
   memset (&wattrs, 0, sizeof (wattrs));
   wattrs.mask =
     wam_events | wam_cursor | wam_utf8_wtitle | wam_positioned | wam_isdlg;
@@ -3992,7 +3992,7 @@ BVMakeLayers (BitmapView *bv)
 
   if (bvvisible[0])
     GDrawSetVisible (bvlayers, true);
-  return (bvlayers);
+  return bvlayers;
 }
 
 struct shades_layout
@@ -4104,11 +4104,11 @@ bvshades_e_h (GWindow gw, GEvent *event)
   if (event->type == et_destroy)
     {
       bvshades = NULL;
-      return (true);
+      return true;
     }
 
   if (bv == NULL)
-    return (true);
+    return true;
 
   switch (event->type)
     {
@@ -4131,7 +4131,7 @@ bvshades_e_h (GWindow gw, GEvent *event)
       GDrawSetVisible (gw, false);
       break;
     }
-  return (true);
+  return true;
 }
 
 static GWindow
@@ -4141,7 +4141,7 @@ BVMakeShades (BitmapView *bv)
   GWindowAttrs wattrs;
 
   if (bvshades != NULL)
-    return (bvshades);
+    return bvshades;
   memset (&wattrs, 0, sizeof (wattrs));
   wattrs.mask =
     wam_events | wam_cursor | wam_utf8_wtitle | wam_positioned | wam_isdlg
@@ -4171,7 +4171,7 @@ BVMakeShades (BitmapView *bv)
   bv->shades_hidden = BDFDepth (bv->bdf) == 1;
   if (bvvisible[2] && !bv->shades_hidden)
     GDrawSetVisible (bvshades, true);
-  return (bvshades);
+  return bvshades;
 }
 
 static char *bvpopups[] = { N_("Pointer"), N_("Magnify (Minify with alt)"),
@@ -4396,11 +4396,11 @@ bvtools_e_h (GWindow gw, GEvent *event)
   if (event->type == et_destroy)
     {
       bvtools = NULL;
-      return (true);
+      return true;
     }
 
   if (bv == NULL)
-    return (true);
+    return true;
 
   switch (event->type)
     {
@@ -4430,7 +4430,7 @@ bvtools_e_h (GWindow gw, GEvent *event)
       GDrawSetVisible (gw, false);
       break;
     }
-  return (true);
+  return true;
 }
 
 GWindow
@@ -4440,7 +4440,7 @@ BVMakeTools (BitmapView *bv)
   GWindowAttrs wattrs;
 
   if (bvtools != NULL)
-    return (bvtools);
+    return bvtools;
   memset (&wattrs, 0, sizeof (wattrs));
   wattrs.mask =
     wam_events | wam_cursor | wam_utf8_wtitle | wam_positioned | wam_isdlg;
@@ -4462,7 +4462,7 @@ BVMakeTools (BitmapView *bv)
   bvtools = CreatePalette (bv->gw, &r, bvtools_e_h, bv, &wattrs, bv->v);
   if (bvvisible[1])
     GDrawSetVisible (bvtools, true);
-  return (bvtools);
+  return bvtools;
 }
 
 static void
@@ -4578,11 +4578,11 @@ BVPaletteIsVisible (BitmapView *bv, int which)
 {
   BVPaletteCheck (bv);
   if (which == 1)
-    return (bvtools != NULL && GDrawIsVisible (bvtools));
+    return bvtools != NULL && GDrawIsVisible (bvtools);
   if (which == 2)
-    return (bvshades != NULL && GDrawIsVisible (bvshades));
+    return bvshades != NULL && GDrawIsVisible (bvshades);
 
-  return (bvlayers != NULL && GDrawIsVisible (bvlayers));
+  return bvlayers != NULL && GDrawIsVisible (bvlayers);
 }
 
 void
@@ -4826,5 +4826,5 @@ PalettesChangeDocking (void)
 int
 BVPalettesWidth (void)
 {
-  return (GGadgetScale (BV_LAYERS_WIDTH));
+  return GGadgetScale (BV_LAYERS_WIDTH);
 }

@@ -79,7 +79,7 @@ RefCharsCopy (RefChar *ref)
       last = cur;
       ref = ref->next;
     }
-  return (rhead);
+  return rhead;
 }
 
 static OTLookup *
@@ -89,7 +89,7 @@ MCConvertLookup (struct sfmergecontext *mc, OTLookup *otl)
   OTLookup *newotl;
 
   if (mc == NULL || mc->sf_from == mc->sf_to)
-    return (otl);               /* No translation needed */
+    return otl;               /* No translation needed */
 
   for (l = 0; l < mc->lcnt; ++l)
     {
@@ -97,9 +97,9 @@ MCConvertLookup (struct sfmergecontext *mc, OTLookup *otl)
         break;
     }
   if (l == mc->lcnt)
-    return (NULL);
+    return NULL;
   if (mc->lks[l].to != NULL)
-    return (mc->lks[l].to);
+    return mc->lks[l].to;
 
   mc->lks[l].to = newotl = xzalloc (sizeof (OTLookup));
   newotl->lookup_name = strconcat (mc->prefix, otl->lookup_name);
@@ -107,7 +107,7 @@ MCConvertLookup (struct sfmergecontext *mc, OTLookup *otl)
   newotl->lookup_flags = otl->lookup_flags;
   newotl->features = FeatureListCopy (otl->features);
   newotl->store_in_afm = otl->store_in_afm;
-  return (newotl);
+  return newotl;
 }
 
 struct lookup_subtable *
@@ -117,7 +117,7 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
   struct lookup_subtable *newsub;
 
   if (mc == NULL || mc->sf_from == mc->sf_to)
-    return (sub);               /* No translation needed */
+    return sub;               /* No translation needed */
   if (mc->prefix == NULL)
     {
       int lcnt, scnt;
@@ -136,7 +136,7 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
       else if (mc->sf_to->mm != NULL)
         mc->sf_to = mc->sf_to->mm->normal;
       if (mc->sf_from == mc->sf_to)
-        return (sub);
+        return sub;
       mc->prefix = strconcat (mc->sf_from->fontname, "-");
       for (doit = 0; doit < 2; ++doit)
         {
@@ -187,9 +187,9 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
         break;
     }
   if (s == mc->scnt)
-    return (NULL);
+    return NULL;
   if (mc->subs[s].to != NULL)
-    return (mc->subs[s].to);
+    return mc->subs[s].to;
 
   mc->subs[s].to = newsub =
     xzalloc (sizeof (struct lookup_subtable));
@@ -199,7 +199,7 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
   newsub->per_glyph_pst_or_kern = sub->per_glyph_pst_or_kern;
   newsub->separation = sub->separation;
   newsub->minkern = sub->minkern;
-  return (newsub);
+  return newsub;
 }
 
 AnchorClass *
@@ -209,7 +209,7 @@ MCConvertAnchorClass (struct sfmergecontext *mc, AnchorClass *ac)
   AnchorClass *newac;
 
   if (mc == NULL || mc->sf_from == mc->sf_to)
-    return (ac);                /* No translation needed */
+    return ac;                /* No translation needed */
   if (mc->acnt == 0)
     {
       int acnt;
@@ -252,16 +252,16 @@ MCConvertAnchorClass (struct sfmergecontext *mc, AnchorClass *ac)
         break;
     }
   if (a == mc->acnt)
-    return (NULL);
+    return NULL;
   if (mc->acs[a].to != NULL)
-    return (mc->acs[a].to);
+    return mc->acs[a].to;
 
   mc->acs[a].to = newac = xzalloc (sizeof (AnchorClass));
   newac->name = strconcat (mc->prefix, ac->name);
   newac->subtable = MCConvertSubtable (mc, ac->subtable);
   newac->next = mc->sf_to->anchor;
   mc->sf_to->anchor = newac;
-  return (newac);
+  return newac;
 }
 
 void
@@ -366,7 +366,7 @@ PSTCopy (PST *base, SplineChar *sc, struct sfmergecontext *mc)
         last->next = cur;
       last = cur;
     }
-  return (head);
+  return head;
 }
 
 static AnchorPoint *
@@ -398,7 +398,7 @@ AnchorPointsDuplicate (AnchorPoint *base, SplineChar *sc)
           last = cur;
         }
     }
-  return (head);
+  return head;
 }
 
 static void
@@ -480,7 +480,7 @@ _KernClassCopy (KernClass *kc, SplineFont *into, SplineFont *from,
   nkc = KernClassCopy (kc);
   nkc->subtable = MCConvertSubtable (mc, kc->subtable);
   nkc->subtable->kc = nkc;
-  return (nkc);
+  return nkc;
 }
 
 static void
@@ -540,7 +540,7 @@ AltUniCopy (struct altuni *altuni, SplineFont *noconflicts)
         }
       altuni = altuni->next;
     }
-  return (head);
+  return head;
 }
 
 SplineChar *
@@ -605,7 +605,7 @@ SplineCharCopy (SplineChar *sc, SplineFont *into, struct sfmergecontext *mc)
   nsc->altuni = AltUniCopy (nsc->altuni, into);
   nsc->charinfo = NULL;
   nsc->views = NULL;
-  return (nsc);
+  return nsc;
 }
 
 static int _SFFindExistingSlot (SplineFont *sf, int unienc, const char *name);
@@ -636,7 +636,7 @@ KernsCopy (KernPair *kp, int *mapping, SplineFont *into,
         }
       kp = kp->next;
     }
-  return (head);
+  return head;
 }
 
 BDFChar *
@@ -652,7 +652,7 @@ BDFCharCopy (BDFChar *bc)
   nbc->bitmap = xmalloc ((nbc->ymax - nbc->ymin + 1) * nbc->bytes_per_line);
   memcpy (nbc->bitmap, bc->bitmap,
           (nbc->ymax - nbc->ymin + 1) * nbc->bytes_per_line);
-  return (nbc);
+  return nbc;
 }
 
 void
@@ -789,9 +789,9 @@ SFHashName (SplineFont *sf, const char *name)
   for (test = sf->glyphnames->table[hashname (name)]; test != NULL;
        test = test->next)
     if (strcmp (test->sc->name, name) == 0)
-      return (test->sc);
+      return test->sc;
 
-  return (NULL);
+  return NULL;
 }
 
 static int
@@ -800,12 +800,12 @@ SCUniMatch (SplineChar *sc, int unienc)
   struct altuni *alt;
 
   if (sc->unicodeenc == unienc)
-    return (true);
+    return true;
   for (alt = sc->altuni; alt != NULL; alt = alt->next)
     if (alt->unienc == unienc)
-      return (true);
+      return true;
 
-  return (false);
+  return false;
 }
 
 /* Find the position in the glyph list where this code point/name is found. */
@@ -822,17 +822,17 @@ SFFindGID (SplineFont *sf, int unienc, const char *name)
         if (sf->glyphs[gid] != NULL)
           {
             if (SCUniMatch (sf->glyphs[gid], unienc))
-              return (gid);
+              return gid;
           }
     }
   if (name != NULL)
     {
       sc = SFHashName (sf, name);
       if (sc != NULL)
-        return (sc->orig_pos);
+        return sc->orig_pos;
     }
 
-  return (-1);
+  return -1;
 }
 
 /* Find the position in the current encoding where this code point/name should*/
@@ -894,18 +894,18 @@ SFFindSlot (SplineFont *sf, EncMap *map, int unienc, const char *name)
         {
           unienc = UniFromName (name, sf->uni_interp, map->enc);
           if (unienc != -1)
-            return (SFFindSlot (sf, map, unienc, NULL));
+            return SFFindSlot (sf, map, unienc, NULL);
           if (map->enc->psnames != NULL)
             {
               for (index = map->enc->char_cnt - 1; index >= 0; --index)
                 if (map->enc->psnames[index] != NULL &&
                     strcmp (map->enc->psnames[index], name) == 0)
-                  return (index);
+                  return index;
             }
         }
     }
 
-  return (index);
+  return index;
 }
 
 int
@@ -914,13 +914,13 @@ SFCIDFindExistingChar (SplineFont *sf, int unienc, const char *name)
   int j, ret;
 
   if (sf->subfonts == NULL && sf->cidmaster == NULL)
-    return (SFFindExistingSlot (sf, unienc, name));
+    return SFFindExistingSlot (sf, unienc, name);
   if (sf->cidmaster != NULL)
     sf = sf->cidmaster;
   for (j = 0; j < sf->subfontcnt; ++j)
     if ((ret = SFFindExistingSlot (sf, unienc, name)) != -1)
-      return (ret);
-  return (-1);
+      return ret;
+  return -1;
 }
 
 int
@@ -936,19 +936,19 @@ SFCIDFindCID (SplineFont *sf, int unienc, const char *name)
       cidmap = FindCidMap (sf->cidregistry, sf->ordering, sf->supplement, sf);
       ret = NameUni2CID (cidmap, unienc, name);
       if (ret != -1)
-        return (ret);
+        return ret;
     }
 
   if (sf->subfonts == NULL && sf->cidmaster == NULL)
-    return (SFFindGID (sf, unienc, name));
+    return SFFindGID (sf, unienc, name);
 
   if (sf->cidmaster != NULL)
     sf = sf->cidmaster;
   for (j = 0; j < sf->subfontcnt; ++j)
     if ((ret = SFFindGID (sf, unienc, name)) != -1)
-      return (ret);
+      return ret;
 
-  return (-1);
+  return -1;
 }
 
 int
@@ -961,12 +961,12 @@ SFHasCID (SplineFont *sf, int cid)
   for (i = 0; i < sf->subfontcnt; ++i)
     if (cid < sf->subfonts[i]->glyphcnt &&
         SCWorthOutputting (sf->subfonts[i]->glyphs[cid]))
-      return (i);
+      return i;
   for (i = 0; i < sf->subfontcnt; ++i)
     if (cid < sf->subfonts[i]->glyphcnt && sf->subfonts[i]->glyphs[cid] != NULL)
-      return (i);
+      return i;
 
-  return (-1);
+  return -1;
 }
 
 SplineChar *
@@ -994,19 +994,19 @@ SFGetChar (SplineFont *sf, int unienc, const char *name)
         }
     }
   if (ind == -1)
-    return (NULL);
+    return NULL;
 
   if (sf->subfonts == NULL && sf->cidmaster == NULL)
-    return (sf->glyphs[ind]);
+    return sf->glyphs[ind];
 
   if (sf->cidmaster != NULL)
     sf = sf->cidmaster;
 
   j = SFHasCID (sf, ind);
   if (j == -1)
-    return (NULL);
+    return NULL;
 
-  return (sf->subfonts[j]->glyphs[ind]);
+  return sf->subfonts[j]->glyphs[ind];
 }
 
 SplineChar *
@@ -1042,7 +1042,7 @@ SFGetOrMakeChar (SplineFont *sf, int unienc, const char *name)
       SFAddGlyphAndEncode (sf, sc, NULL, -1);
       /*SCLigDefault(sc); */
     }
-  return (sc);
+  return sc;
 }
 
 static int
@@ -1069,15 +1069,15 @@ _SFFindExistingSlot (SplineFont *sf, int unienc, const char *name)
     {
       SplineChar *sc = SFHashName (sf, name);
       if (sc == NULL)
-        return (-1);
+        return -1;
       gid = sc->orig_pos;
       if (gid < 0 || gid >= sf->glyphcnt)
         {
           IError ("Invalid glyph location when searching for %s", name);
-          return (-1);
+          return -1;
         }
     }
-  return (gid);
+  return gid;
 }
 
 int
@@ -1086,9 +1086,9 @@ SFFindExistingSlot (SplineFont *sf, int unienc, const char *name)
   int gid = _SFFindExistingSlot (sf, unienc, name);
 
   if (gid == -1 || !SCWorthOutputting (sf->glyphs[gid]))
-    return (-1);
+    return -1;
 
-  return (gid);
+  return gid;
 }
 
 static void
@@ -1167,7 +1167,7 @@ SFHasChar (SplineFont *sf, int unienc, const char *name)
 {
   SplineChar *sc = SFGetChar (sf, unienc, name);
 
-  return (SCWorthOutputting (sc));
+  return SCWorthOutputting (sc);
 }
 
 static void
@@ -1501,7 +1501,7 @@ InterpRefs (RefChar *base, RefChar *other, real amount, SplineChar *sc)
       if (test == other && other != NULL)
         other = other->next;
     }
-  return (head);
+  return head;
 }
 
 static void
@@ -1569,13 +1569,13 @@ InterpSplineSet (SplineSet *base, SplineSet *other, real amount, SplineChar *sc)
     {
       InterpPoint (cur, bp, op, amount);
       if (bp->next == NULL && op->next == NULL)
-        return (cur);
+        return cur;
       if (bp->next != NULL && op->next != NULL &&
           bp->next->to == base->first && op->next->to == other->first)
         {
           SplineMake (cur->last, cur->first, bp->next->order2);
           cur->last = cur->first;
-          return (cur);
+          return cur;
         }
       if (bp->next == NULL || bp->next->to == base->first)
         {
@@ -1594,7 +1594,7 @@ InterpSplineSet (SplineSet *base, SplineSet *other, real amount, SplineChar *sc)
               SplineMake (cur->last, cur->first, bp->next->order2);
               cur->last = cur->first;
             }
-          return (cur);
+          return cur;
         }
       else if (op->next == NULL || op->next->to == other->first)
         {
@@ -1618,7 +1618,7 @@ InterpSplineSet (SplineSet *base, SplineSet *other, real amount, SplineChar *sc)
               SplineMake (cur->last, cur->first, bp->next->order2);
               cur->last = cur->first;
             }
-          return (cur);
+          return cur;
         }
       bp = bp->next->to;
       op = op->next->to;
@@ -1646,16 +1646,16 @@ SplineSetsInterpolate (SplineSet *base, SplineSet *other, real amount,
       base = base->next;
       other = other->next;
     }
-  return (head);
+  return head;
 }
 
 static int
 SCSameChar (SplineChar *sc1, SplineChar *sc2)
 {
   if (sc1->unicodeenc != -1)
-    return (sc1->unicodeenc == sc2->unicodeenc);
+    return sc1->unicodeenc == sc2->unicodeenc;
 
-  return (strcmp (sc1->name, sc2->name) == 0);
+  return strcmp (sc1->name, sc2->name) == 0;
 }
 
 static KernPair *
@@ -1665,7 +1665,7 @@ InterpKerns (KernPair *kp1, KernPair *kp2, real amount,
   KernPair *head = NULL, *last, *nkp, *k;
 
   if (kp1 == NULL || kp2 == NULL)
-    return (NULL);
+    return NULL;
   while (kp1 != NULL)
     {
       for (k = kp2; k != NULL && !SCSameChar (k->sc, kp1->sc); k = k->next);
@@ -1687,7 +1687,7 @@ InterpKerns (KernPair *kp1, KernPair *kp2, real amount,
         }
       kp1 = kp1->next;
     }
-  return (head);
+  return head;
 }
 
 static uint32_t
@@ -1704,7 +1704,7 @@ InterpColor (uint32_t col1, uint32_t col2, real amount)
   r1 += amount * (r2 - r1);
   g1 += amount * (g2 - g1);
   b1 += amount * (b2 - b1);
-  return ((r1 << 16) | (g1 << 8) | b1);
+  return (r1 << 16) | (g1 << 8) | b1;
 }
 
 static void
@@ -1833,7 +1833,7 @@ SplineCharInterpolate (SplineChar *base, SplineChar *other,
   int i;
 
   if (base == NULL || other == NULL)
-    return (NULL);
+    return NULL;
   sc = SFSplineCharCreate (newfont);
   sc->unicodeenc = base->unicodeenc;
   sc->changed = true;
@@ -1885,7 +1885,7 @@ SplineCharInterpolate (SplineChar *base, SplineChar *other,
   sc->changedsincelasthinted = true;
   sc->widthset = base->widthset;
   sc->glyph_class = base->glyph_class;
-  return (sc);
+  return sc;
 }
 
 static void
@@ -1947,21 +1947,21 @@ InterpolateFont (SplineFont *base, SplineFont *other, real amount,
     {
       ff_post_error (_("Interpolating Problem"),
                      _("Interpolating a font with itself achieves nothing"));
-      return (NULL);
+      return NULL;
     }
   else if (base->layers[ly_fore].order2 != other->layers[ly_fore].order2)
     {
       ff_post_error (_("Interpolating Problem"),
                      _
                      ("Interpolating between fonts with different spline orders (i.e. between postscript and truetype)"));
-      return (NULL);
+      return NULL;
     }
   else if (base->multilayer && other->multilayer)
     {
       ff_post_error (_("Interpolating Problem"),
                      _
                      ("Interpolating between fonts with different editing types (ie. between type3 and type1)"));
-      return (NULL);
+      return NULL;
     }
   new_ = SplineFontBlank (base->glyphcnt);
   new_->ascent = base->ascent + amount * (other->ascent - base->ascent);
@@ -2006,5 +2006,5 @@ InterpolateFont (SplineFont *base, SplineFont *other, real amount,
   InterpFixupRefChars (new_);
   new_->changed = true;
   new_->map = EncMapFromEncoding (new_, enc);
-  return (new_);
+  return new_;
 }

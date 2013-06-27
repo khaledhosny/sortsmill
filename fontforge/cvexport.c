@@ -157,7 +157,7 @@ _ExportEPS (FILE *eps, SplineChar *sc, int layer, int preview)
   fprintf (eps, "%%%%EOF\n");
   ret = !ferror (eps);
   setlocale (LC_NUMERIC, oldloc);
-  return (ret);
+  return ret;
 }
 
 int
@@ -169,11 +169,11 @@ ExportEPS (char *filename, SplineChar *sc, int layer)
   eps = fopen (filename, "w");
   if (eps == NULL)
     {
-      return (0);
+      return 0;
     }
   ret = _ExportEPS (eps, sc, layer, true);
   fclose (eps);
-  return (ret);
+  return ret;
 }
 
 int
@@ -302,7 +302,7 @@ _ExportPDF (FILE *pdf, SplineChar *sc, int layer)
 
   ret = !ferror (pdf);
   setlocale (LC_NUMERIC, oldloc);
-  return (ret);
+  return ret;
 }
 
 int
@@ -314,11 +314,11 @@ ExportPDF (char *filename, SplineChar *sc, int layer)
   eps = fopen (filename, "w");
   if (eps == NULL)
     {
-      return (0);
+      return 0;
     }
   ret = _ExportPDF (eps, sc, layer);
   fclose (eps);
-  return (ret);
+  return ret;
 }
 
 
@@ -371,7 +371,7 @@ _ExportPlate (FILE *plate, SplineChar *sc, int layer)
   fprintf (plate, ")\n");
   ret = !ferror (plate);
   setlocale (LC_NUMERIC, oldloc);
-  return (ret);
+  return ret;
 }
 
 int
@@ -383,11 +383,11 @@ ExportPlate (char *filename, SplineChar *sc, int layer)
   plate = fopen (filename, "w");
   if (plate == NULL)
     {
-      return (0);
+      return 0;
     }
   ret = _ExportPlate (plate, sc, layer);
   fclose (plate);
-  return (ret);
+  return ret;
 }
 
 int
@@ -399,11 +399,11 @@ ExportSVG (char *filename, SplineChar *sc, int layer)
   svg = fopen (filename, "w");
   if (svg == NULL)
     {
-      return (0);
+      return 0;
     }
   ret = _ExportSVG (svg, sc, layer);
   fclose (svg);
-  return (ret);
+  return ret;
 }
 
 int
@@ -415,10 +415,10 @@ ExportGlif (char *filename, SplineChar *sc, int layer)
   glif = fopen (filename, "w");
   if (glif == NULL)
     {
-      return (0);
+      return 0;
     }
   ret = _ExportGlif (glif, sc, layer);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -534,7 +534,7 @@ ExportFig (char *filename, SplineChar *sc, int layer)
   fig = fopen (filename, "w");
   if (fig == NULL)
     {
-      return (0);
+      return 0;
     }
 
   fprintf (fig, "#FIG 3.2\n");
@@ -551,7 +551,7 @@ ExportFig (char *filename, SplineChar *sc, int layer)
     FigSplineSet (fig, rf->layers[0].splines, spmax, sc->parent->ascent);
   ret = !ferror (fig);
   fclose (fig);
-  return (ret);
+  return ret;
 }
 
 int
@@ -660,7 +660,7 @@ ExportImage (char *filename, SplineChar *sc, int layer, int format,
         ret = GImageWriteBmp (&gi, filename);
       BDFCharFree (bdfc);
     }
-  return (ret);
+  return ret;
 }
 
 int
@@ -721,7 +721,7 @@ BCExportXBM (char *filename, BDFChar *bdfc, int format)
       else
         ret = GImageWriteBmp (&gi, filename);
     }
-  return (ret);
+  return ret;
 }
 
 static void

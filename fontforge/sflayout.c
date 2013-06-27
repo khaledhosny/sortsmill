@@ -105,9 +105,9 @@ StdFeaturesOfScript (uint32_t script)
 
   for (i = 0; script_2_std[i].script != 0; ++i)
     if (script_2_std[i].script == script)
-      return (script_2_std[i].stdfeatures);
+      return script_2_std[i].stdfeatures;
 
-  return (simple_stdfeatures);
+  return simple_stdfeatures;
 }
 
 int
@@ -122,7 +122,7 @@ LI_FDDrawChar (void *data,
   SplineChar *sc;
 
   if (osc == NULL)
-    return (x);
+    return x;
   sc = osc->sc;
   fd = ((struct fontlist *) (osc->fl))->fd;
 
@@ -170,7 +170,7 @@ LI_FDDrawChar (void *data,
       if (fd->fonttype == sftf_bitmap)
         BDFCharFree (bdfc);
     }
-  return (x);
+  return x;
 }
 
 uint32_t *
@@ -180,13 +180,13 @@ LI_TagsCopy (uint32_t *tags)
   uint32_t *ret;
 
   if (tags == NULL)
-    return (NULL);
+    return NULL;
   for (i = 0; tags[i] != 0; ++i);
   ret = xmalloc ((i + 1) * sizeof (uint32_t));
   for (i = 0; tags[i] != 0; ++i)
     ret[i] = tags[i];
   ret[i] = 0;
-  return (ret);
+  return ret;
 }
 
 static int
@@ -195,11 +195,11 @@ TagsSame (uint32_t *tags1, uint32_t *tags2)
   int i;
 
   if (tags1 == NULL || tags2 == NULL)
-    return (tags1 == NULL && tags2 == NULL);
+    return tags1 == NULL && tags2 == NULL;
 
   for (i = 0; tags1[i] != 0 && tags1[i] == tags2[i]; ++i);
-  return (tags1[i] == tags2[i]);
-  return (false);
+  return tags1[i] == tags2[i];
+  return false;
 }
 
 static int
@@ -209,12 +209,12 @@ _FDMap (FontData * fd, int uenc)
   int gid;
 
   if (uenc >= fd->sfmap->map->enc_limit)
-    return (-1);
+    return -1;
   gid = enc_to_gid (fd->sfmap->map, uenc);
   if (gid == -1 || fd->sf->glyphs[gid] == NULL)
-    return (-1);
+    return -1;
 
-  return (gid);
+  return gid;
 }
 
 static SplineChar *
@@ -228,12 +228,12 @@ FDMap (FontData * fd, int uenc)
 
   gid = _FDMap (fd, uenc);
   if (gid != -1 && fd->sf->glyphs[gid] != NULL)
-    return (fd->sf->glyphs[gid]);
+    return fd->sf->glyphs[gid];
   gid = fd->sfmap->notdef_gid;
   if (gid != -1 && fd->sf->glyphs[gid] != NULL)
-    return (fd->sf->glyphs[gid]);
+    return fd->sf->glyphs[gid];
 
-  return (fd->sfmap->fake_notdef);
+  return fd->sfmap->fake_notdef;
 }
 
 static int
@@ -243,12 +243,12 @@ LinesInPara (LayoutInfo * li, struct opentype_str **paratext, int width)
   int len, pos;
 
   if (paratext == NULL)
-    return (1);
+    return 1;
   if (!li->wrap)
     {
       for (start = 0; paratext[start] != NULL; ++start);
       paratext[start - 1]->line_break_after = true;
-      return (1);
+      return 1;
     }
   cnt = 0;
   for (start = 0; paratext[start] != NULL;)
@@ -281,7 +281,7 @@ LinesInPara (LayoutInfo * li, struct opentype_str **paratext, int width)
     }
   if (cnt == 0)
     cnt = 1;
-  return (cnt);
+  return cnt;
 }
 
 static struct opentype_str **
@@ -303,7 +303,7 @@ LineFromPara (struct opentype_str **str, int *_pos)
       ++len;
     }
   ret[len] = NULL;
-  return (ret);
+  return ret;
 }
 
 static struct basescript *
@@ -318,7 +318,7 @@ FindBS (struct Base *base, struct opentype_str *ch, LayoutInfo * li)
       script = SCScriptFromUnicode (sc);
     }
   for (bs = base->scripts; bs != NULL && bs->script != script; bs = bs->next);
-  return (bs);
+  return bs;
 }
 
 static uint32_t
@@ -329,13 +329,13 @@ FigureBaselineTag (struct opentype_str *ch, LayoutInfo * li,
 
   bs = FindBS (cur_base, ch, li);
   if (bs != NULL)
-    return (cur_base->baseline_tags[bs->def_baseline]);
+    return cur_base->baseline_tags[bs->def_baseline];
 
   bs = FindBS (start_base, ch, li);
   if (bs != NULL)
-    return (start_base->baseline_tags[bs->def_baseline]);
+    return start_base->baseline_tags[bs->def_baseline];
 
-  return (0);
+  return 0;
 }
 
 static int
@@ -347,9 +347,9 @@ BaselineOffset (struct Base *base, struct basescript *bs, uint32_t cur_bsln_tag)
     if (base->baseline_tags[i] == cur_bsln_tag)
       break;
   if (i == base->baseline_cnt)  /* No info on this baseline in this font */
-    return (0);
+    return 0;
 
-  return (bs->baseline_pos[i]);
+  return bs->baseline_pos[i];
 }
 
 static void
@@ -522,7 +522,7 @@ ot_strlen (struct opentype_str *str)
 {
   int i;
   for (i = 0; str[i].sc != NULL; ++i);
-  return (i);
+  return i;
 }
 
 void
@@ -764,7 +764,7 @@ LI_fontlistcopy (struct fontlist *fl)
         last->next = nfl;
       last = nfl;
     }
-  return (nhead);
+  return nhead;
 }
 
 static void
@@ -996,7 +996,7 @@ LayoutInfoReplace (LayoutInfo * li, const uint32_t *str, int sel_start,
 
   LI_fontlistmergecheck (li);
   LayoutInfoRefigureLines (li, sel_start, sel_start + rpllen, width);
-  return (rpllen);
+  return rpllen;
 }
 
 void
@@ -1055,14 +1055,14 @@ SFMapOfSF (LayoutInfo * li, SplineFont *sf)
 
   for (sfmaps = li->sfmaps; sfmaps != NULL; sfmaps = sfmaps->next)
     if (sfmaps->sf == sf)
-      return (sfmaps);
+      return sfmaps;
 
   sfmaps = xzalloc (sizeof (struct sfmaps));
   sfmaps->sf = sf;
   sfmaps->next = li->sfmaps;
   li->sfmaps = sfmaps;
   SFMapFill (sfmaps, sf);
-  return (sfmaps);
+  return sfmaps;
 }
 
 FontData *
@@ -1153,7 +1153,7 @@ LI_RegenFontData (LayoutInfo * li, FontData * ret)
               free (ret);
               ret = NULL;
             }
-          return (ret);
+          return ret;
         }
       ret->bdf =
         SplineFontPieceMeal (ret->sf, ret->layer, ret->pointsize, li->dpi,
@@ -1183,7 +1183,7 @@ LI_RegenFontData (LayoutInfo * li, FontData * ret)
       ret->clut.clut[0] = default_background;
       ret->base.trans = 0;
     }
-  return (ret);
+  return ret;
 }
 
 FontData *
@@ -1196,7 +1196,7 @@ LI_FindFontData (LayoutInfo * li, SplineFont *sf, int layer,
     if (test->sf == sf && test->fonttype == fonttype
         && test->pointsize == size && test->antialias == antialias
         && test->layer == layer)
-      return (test);
+      return test;
 
   ret = xcalloc (1, sizeof (FontData));
   ret->sf = sf;
@@ -1206,12 +1206,12 @@ LI_FindFontData (LayoutInfo * li, SplineFont *sf, int layer,
   ret->layer = layer;
   ret = LI_RegenFontData (li, ret);
   if (ret == NULL)
-    return (NULL);
+    return NULL;
 
   ret->sfmap = SFMapOfSF (li, sf);
   ret->next = li->generated;
   li->generated = ret;
-  return (ret);
+  return ret;
 }
 
 static FontData *
@@ -1235,7 +1235,7 @@ FontDataCopyNoBDF (LayoutInfo * print_li, FontData * source)
       last = cur;
       source = source->next;
     }
-  return (head);
+  return head;
 }
 
 void
@@ -1291,7 +1291,7 @@ LIConvertToPrint (LayoutInfo * li, int width, int height, int dpi)
     }
   print->ps = -1;
   LayoutInfoRefigureLines (print, 0, -1, width);
-  return (print);
+  return print;
 }
 
 SplineSet *
@@ -1337,7 +1337,7 @@ LIConvertToSplines (LayoutInfo * li, double dpi, int order2)
           x += line[i]->advance_width + line[i]->vr.h_adv_off;
         }
     }
-  return (head);
+  return head;
 }
 
 #include "fontimage.h"
@@ -1490,7 +1490,7 @@ SFDefaultScriptsLines (Array *arr, SplineFont *sf)
       ret->vals[2 * i + 1].u.sval = lines[i];
     }
   ret->vals[0].u.ival = 3 * pixelsize / 2;      /* Use as a title, make bigger */
-  return (ret);
+  return ret;
 }
 
 VISIBLE void
@@ -1635,7 +1635,7 @@ SFDefaultImage (SplineFont *sf, char *filename)
                getpid (), ++cnt);
     }
   FontImage (sf, filename, NULL, -1, -1);
-  return (filename);
+  return filename;
 }
 
 void
@@ -1672,7 +1672,7 @@ LI_NormalizeStartEnd (LayoutInfo * li, int start, int *_end)
   if (start > end)
     start = end;
   *_end = end;
-  return (start);
+  return start;
 }
 
 struct fontlist *
@@ -1689,7 +1689,7 @@ LI_BreakFontList (LayoutInfo * li, int start, int end)
       new->start = start;
       new->end = end;
       li->fontlist = new;
-      return (new);
+      return new;
     }
 
   prev = next = NULL;
@@ -1738,7 +1738,7 @@ LI_BreakFontList (LayoutInfo * li, int start, int end)
       prev->end = end;
       prev->next = new;
     }
-  return (first);
+  return first;
 }
 
 static void
@@ -1764,7 +1764,7 @@ LI_SetFontData (LayoutInfo * li, int start, int end, SplineFont *sf,
 
   cur = LI_FindFontData (li, sf, layer, fonttype, size, antialias);
   if (cur == NULL)
-    return (false);
+    return false;
 
   start = LI_NormalizeStartEnd (li, start, &end);
   fl = LI_BreakFontList (li, start, end);
@@ -1775,5 +1775,5 @@ LI_SetFontData (LayoutInfo * li, int start, int end, SplineFont *sf,
     }
 
   LI_MetaChangeCleanup (li, start, end, width);
-  return (true);
+  return true;
 }

@@ -201,7 +201,7 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
   if (maxu != 0)
     fprintf (file, "    unicode-range=\"U+%04X-%04X\"\n", minu, maxu);
   fprintf (file, "  />\n");
-  return (defwid);
+  return defwid;
 }
 
 static int
@@ -313,7 +313,7 @@ svg_pathdump (FILE *file, SplineSet *spl, int lineout,
         }
       spl = spl->next;
     }
-  return (lineout);
+  return lineout;
 }
 
 static void
@@ -457,7 +457,7 @@ TransBy (SplineSet *ss, real trans[4])
   real inversetrans[6], transform[6];
 
   if (trans[0] == 1.0 && trans[3] == 1.0 && trans[1] == 0 && trans[2] == 0)
-    return (ss);
+    return ss;
   memcpy (transform, trans, 4 * sizeof (real));
   transform[4] = transform[5] = 0;
   MatInverse (inversetrans, transform);
@@ -484,7 +484,7 @@ svg_sc_any (SplineChar *sc, int layer)
         for (j = 0; j < ref->layer_cnt && !any; ++j)
           any = ref->layers[j].splines != NULL;
     }
-  return (any);
+  return any;
 }
 
 static int base64tab[] = {
@@ -926,9 +926,9 @@ LigCnt (SplineFont *sf, PST *lig, int32_t *univals, int max)
   SplineChar *sc;
 
   if (lig->type != pst_ligature)
-    return (0);
+    return 0;
   else if (!lig->subtable->lookup->store_in_afm)
-    return (0);
+    return 0;
   pt = lig->u.lig.components;
   while (true)
     {
@@ -939,12 +939,12 @@ LigCnt (SplineFont *sf, PST *lig, int32_t *univals, int max)
       if (end != NULL)
         *end = ' ';
       if (sc == NULL || sc->unicodeenc == -1)
-        return (0);
+        return 0;
       if (c >= max)
-        return (0);
+        return 0;
       univals[c++] = sc->unicodeenc;
       if (end == NULL)
-        return (c);
+        return c;
       pt = end + 1;
       while (*pt == ' ')
         ++pt;
@@ -972,7 +972,7 @@ HasLigature (SplineChar *sc)
             }
         }
     }
-  return (best);
+  return best;
 }
 
 SplineChar *
@@ -984,9 +984,9 @@ SCHasSubs (SplineChar *sc, uint32_t tag)
     {
       if (pst->type == pst_substitution &&
           FeatureTagInFeatureScriptList (tag, pst->subtable->lookup->features))
-        return (SFGetChar (sc->parent, -1, pst->u.subs.variant));
+        return SFGetChar (sc->parent, -1, pst->u.subs.variant);
     }
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -1184,16 +1184,16 @@ AnyArabicForm (SplineChar *sc)
       (isarabinitial (sc->unicodeenc) ||
        isarabmedial (sc->unicodeenc) ||
        isarabfinal (sc->unicodeenc) || isarabisolated (sc->unicodeenc)))
-    return (sc->unicodeenc);
+    return sc->unicodeenc;
   for (altuni = sc->altuni; altuni != NULL; altuni = altuni->next)
     if (altuni->unienc != -1 && altuni->unienc < 0x10000 &&
         altuni->vs == -1 && altuni->fid == 0 &&
         (isarabinitial (altuni->unienc) ||
          isarabmedial (altuni->unienc) ||
          isarabfinal (altuni->unienc) || isarabisolated (altuni->unienc)))
-      return (altuni->unienc);
+      return altuni->unienc;
 
-  return (-1);
+  return -1;
 }
 
 static int
@@ -1305,7 +1305,7 @@ _WriteSVGFont (FILE *file, SplineFont *sf, enum fontformat format, int flags,
   ret = true;
   if (ferror (file))
     ret = false;
-  return (ret);
+  return ret;
 }
 
 int
@@ -1318,12 +1318,12 @@ WriteSVGFont (char *fontname, SplineFont *sf, enum fontformat format, int flags,
   if (strstr (fontname, "://") != NULL)
     {
       if ((file = tmpfile ()) == NULL)
-        return (0);
+        return 0;
     }
   else
     {
       if ((file = fopen (fontname, "w+")) == NULL)
-        return (0);
+        return 0;
     }
   svg_sfdump (file, sf, layer);
   ret = true;
@@ -1332,8 +1332,8 @@ WriteSVGFont (char *fontname, SplineFont *sf, enum fontformat format, int flags,
   if (strstr (fontname, "://") != NULL && ret)
     ret = URLFromFile (fontname, file);
   if (fclose (file) == -1)
-    return (0);
-  return (ret);
+    return 0;
+  return ret;
 }
 
 int
@@ -1388,7 +1388,7 @@ _ExportSVG (FILE *svg, SplineChar *sc, int layer)
   fprintf (svg, "</svg>\n");
 
   setlocale (LC_NUMERIC, oldloc);
-  return (!ferror (svg));
+  return !ferror (svg);
 }
 
 /* ************************************************************************** */
@@ -1409,7 +1409,7 @@ XmlFindID (xmlNodePtr xml, char *name)
   if (id != NULL && xmlStrcmp (id, name) == 0)
     {
       xmlFree (id);
-      return (xml);
+      return xml;
     }
   if (id != NULL)
     xmlFree (id);
@@ -1418,9 +1418,9 @@ XmlFindID (xmlNodePtr xml, char *name)
     {
       ret = XmlFindID (child, name);
       if (ret != NULL)
-        return (ret);
+        return ret;
     }
-  return (NULL);
+  return NULL;
 }
 
 static xmlNodePtr
@@ -1430,14 +1430,14 @@ XmlFindURI (xmlNodePtr xml, char *name)
   char *pt, ch;
 
   if (strncmp (name, "url(#", 5) != 0)
-    return (NULL);
+    return NULL;
   name += 5;
   for (pt = name; *pt != ')' && *pt != '\0'; ++pt);
   ch = *pt;
   *pt = '\0';
   ret = XmlFindID (xml, name);
   *pt = ch;
-  return (ret);
+  return ret;
 }
 
 /* We want to look for "font" nodes within "svg" nodes. Since "svg" nodes may */
@@ -1455,7 +1455,7 @@ _FindSVGFontNodes (xmlNodePtr node, xmlNodePtr * fonts, int cnt, int max,
         {
           fonts[cnt++] = node;
           if (cnt >= max)
-            return (cnt);
+            return cnt;
         }
     }
 
@@ -1463,9 +1463,9 @@ _FindSVGFontNodes (xmlNodePtr node, xmlNodePtr * fonts, int cnt, int max,
     {
       cnt = _FindSVGFontNodes (node, fonts, cnt, max, nodename);
       if (cnt >= max)
-        return (cnt);
+        return cnt;
     }
-  return (cnt);
+  return cnt;
 }
 
 static xmlNodePtr *
@@ -1486,9 +1486,9 @@ FindSVGFontNodes (xmlDocPtr doc)
   if (cnt == 0)
     {
       free (fonts);
-      return (NULL);
+      return NULL;
     }
-  return (fonts);
+  return fonts;
 }
 
 static xmlNodePtr
@@ -1553,9 +1553,9 @@ SVGPickFont (xmlNodePtr * fonts, char *filename)
     free (names[cnt]);
   free (names);
   if (choice != -1)
-    return (fonts[choice]);
+    return fonts[choice];
 
-  return (NULL);
+  return NULL;
 }
 
 // I don't see where the spec says that the separator between numbers
@@ -1568,7 +1568,7 @@ skipcomma (char *pt)
     ++pt;
   if (*pt == ',')
     ++pt;
-  return (pt);
+  return pt;
 }
 
 static void
@@ -2063,7 +2063,7 @@ SVGParsePath (xmlChar *path)
         }
       path = skipcomma (end);
     }
-  return (head);
+  return head;
 }
 
 #if 0
@@ -2177,7 +2177,7 @@ SVGAddSpiros (xmlChar *path, SplineSet *base)
         }
       path = skipcomma (end);
     }
-  return (base);
+  return base;
 }
 #endif
 
@@ -2239,7 +2239,7 @@ SVGParseExtendedPath (xmlNodePtr svg, xmlNodePtr top)
   if (spirooutline != NULL)
     xmlFree (spirooutline);
 #endif
-  return (head);
+  return head;
 }
 
 static SplineSet *
@@ -2266,7 +2266,7 @@ SVGParseRect (xmlNodePtr rect)
       xmlFree (num);
     }
   else
-    return (NULL);
+    return NULL;
   num = (char *) xmlGetProp (rect, "y");
   if (num != NULL)
     {
@@ -2282,7 +2282,7 @@ SVGParseRect (xmlNodePtr rect)
       xmlFree (num);
     }
   else
-    return (NULL);
+    return NULL;
 
   rx = ry = 0;
   num = (char *) xmlGetProp (rect, "rx");
@@ -2318,7 +2318,7 @@ SVGParseRect (xmlNodePtr rect)
       SplineMake (cur->last, sp, true);
       SplineMake (sp, cur->first, true);
       cur->last = cur->first;
-      return (cur);
+      return cur;
     }
   else
     {
@@ -2379,7 +2379,7 @@ SVGParseRect (xmlNodePtr rect)
         }
       SplineMake (cur->last, cur->first, false);
       cur->first = cur->last;
-      return (cur);
+      return cur;
     }
 }
 
@@ -2431,7 +2431,7 @@ SVGParseLine (xmlNodePtr line)
   cur = xzalloc (sizeof (SplineSet));
   cur->first = sp1;
   cur->last = sp2;
-  return (cur);
+  return cur;
 }
 
 static SplineSet *
@@ -2468,7 +2468,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
           xmlFree (num);
         }
       else
-        return (NULL);
+        return NULL;
     }
   else
     {
@@ -2479,7 +2479,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
           xmlFree (num);
         }
       else
-        return (NULL);
+        return NULL;
       num = (char *) xmlGetProp (ellipse, "ry");
       if (num != NULL)
         {
@@ -2487,7 +2487,7 @@ SVGParseEllipse (xmlNodePtr ellipse, int iscircle)
           xmlFree (num);
         }
       else
-        return (NULL);
+        return NULL;
     }
 
   rx = fabs (rx);
@@ -2540,7 +2540,7 @@ SVGParsePoly (xmlNodePtr poly, int isgon)
 
   pts = (char *) xmlGetProp (poly, "points");
   if (pts == NULL)
-    return (NULL);
+    return NULL;
 
   x = strtod (pts, &end);
   while (isspace (*end) || *end == ',')
@@ -2576,7 +2576,7 @@ SVGParsePoly (xmlNodePtr poly, int isgon)
         SplineMake (cur->last, cur->first, false);
       cur->last = cur->first;
     }
-  return (cur);
+  return cur;
 }
 
 struct svg_state
@@ -2777,7 +2777,7 @@ parseGCoord (xmlChar *prop, int bb_units, real bb_low, real bb_high)
 
   if (bb_units)
     val = bb_low + val * (bb_high - bb_low);
-  return (val);
+  return val;
 }
 
 static int xmlParseColor (xmlChar *name, uint32_t *color, char **url,
@@ -3185,26 +3185,26 @@ xmlParseColor (xmlChar *name, uint32_t *color, char **url, struct svg_state *st)
           *color = COLOR_INHERITED;
         }
     }
-  return (doit);
+  return doit;
 }
 
 static int
 base64ch (int ch)
 {
   if (ch >= 'A' && ch <= 'Z')
-    return (ch - 'A');
+    return ch - 'A';
   if (ch >= 'a' && ch <= 'z')
-    return (ch - 'a' + 26);
+    return ch - 'a' + 26;
   if (ch >= '0' && ch <= '9')
-    return (ch - '0' + 52);
+    return ch - '0' + 52;
   if (ch == '+')
-    return (62);
+    return 62;
   if (ch == '/')
-    return (63);
+    return 63;
   if (ch == '=')
-    return (64);
+    return 64;
 
-  return (-1);
+  return -1;
 }
 
 static void
@@ -3246,16 +3246,16 @@ GImageFromDataURI (char *uri)
   GImage *img;
 
   if (uri == NULL)
-    return (NULL);
+    return NULL;
   if (strncmp (uri, "data:", 5) != 0)
-    return (NULL);
+    return NULL;
   uri += 5;
 
   mimetype = uri;
   while (*uri != ',' && *uri != ';' && *uri != '\0')
     ++uri;
   if (*uri == '\0')
-    return (NULL);
+    return NULL;
   ch = *uri;
   *uri = '\0';
   if (ch == ';' && strncmp (uri + 1, "base64,", 7) == 0)
@@ -3265,7 +3265,7 @@ GImageFromDataURI (char *uri)
       ch = ',';
     }
   else if (ch == ';')           /* Can't deal with other encoding methods */
-    return (NULL);
+    return NULL;
 
   ++uri;
   if (strcmp (mimetype, "image/png") == 0 ||
@@ -3275,7 +3275,7 @@ GImageFromDataURI (char *uri)
   else
     {
       LogError (_("Unsupported mime type in data URI: %s\n"), mimetype);
-      return (NULL);
+      return NULL;
     }
   tmp = tmpfile ();
   if (is_base64)
@@ -3302,7 +3302,7 @@ GImageFromDataURI (char *uri)
   else
     img = NULL;
   fclose (tmp);
-  return (img);
+  return img;
 }
 
 static Entity *
@@ -3342,17 +3342,17 @@ SVGParseImage (xmlNodePtr svg)
 
   val = xmlGetProp (svg, /*"xlink:href" */ "href");
   if (val == NULL)
-    return (NULL);
+    return NULL;
   if (strncmp ((char *) val, "data:", 5) != 0)
     {
       LogError (_("FontForge only supports embedded images in data: URIs\n"));
       free (val);
-      return (NULL);            /* I can only handle data URIs */
+      return NULL;            /* I can only handle data URIs */
     }
   img = GImageFromDataURI ((char *) val);
   free (val);
   if (img == NULL)
-    return (NULL);
+    return NULL;
   base = img->list_len == 0 ? img->u.image : img->u.images[0];
 
   ent = xzalloc (sizeof (Entity));
@@ -3364,7 +3364,7 @@ SVGParseImage (xmlNodePtr svg)
   ent->u.image.transform[4] = x;
   ent->u.image.transform[5] = y;
   ent->u.image.col = 0xffffffff;
-  return (ent);
+  return ent;
 }
 
 static Entity *
@@ -3384,7 +3384,7 @@ EntityCreate (SplinePointList *head, struct svg_state *state)
   ent->u.splines.stroke.opacity = state->strokeopacity;
   memcpy (ent->u.splines.transform, state->transform, 6 * sizeof (real));
   ent->clippath = SplinePointListCopy (state->clippath);
-  return (ent);
+  return ent;
 }
 
 static void
@@ -3528,7 +3528,7 @@ _SVGParseSVG (xmlNodePtr svg, xmlNodePtr top, struct svg_state *inherit)
   char *stroke_colour_source = NULL;
 
   if (svg == NULL)
-    return (NULL);
+    return NULL;
 
   st = *inherit;
   st.free_clip = false;
@@ -3539,7 +3539,7 @@ tail_recurse:
       int hide = xmlStrcmp (name, "none") == 0;
       xmlFree (name);
       if (hide)
-        return (NULL);
+        return NULL;
     }
   name = xmlGetProp (svg, "visibility");
   if (name != NULL)
@@ -3684,7 +3684,7 @@ tail_recurse:
       if (fill_colour_source != NULL || stroke_colour_source != NULL)
         xmlApplyColourSources (top, ehead, &st, fill_colour_source,
                                stroke_colour_source);
-      return (ehead);
+      return ehead;
     }
   else if (xmlStrcmp (svg->name, "use") == 0)
     {
@@ -3702,13 +3702,13 @@ tail_recurse:
       if (svg != NULL)
         goto tail_recurse;
       SvgStateFree (&st);
-      return (NULL);
+      return NULL;
     }
 
   if (!st.isvisible)
     {
       SvgStateFree (&st);
-      return (NULL);
+      return NULL;
     }
 
   /* basic shapes */
@@ -3732,12 +3732,12 @@ tail_recurse:
       eret = SVGParseImage (svg);
       if (eret != NULL)
         eret->clippath = st.clippath;
-      return (eret);
+      return eret;
     }
   else
-    return (NULL);
+    return NULL;
   if (head == NULL)
-    return (NULL);
+    return NULL;
 
   SPLCategorizePoints (head);
 
@@ -3748,7 +3748,7 @@ tail_recurse:
     xmlApplyColourSources (top, eret, &st, fill_colour_source,
                            stroke_colour_source);
   SvgStateFree (&st);
-  return (eret);
+  return eret;
 }
 
 static Entity *
@@ -3814,7 +3814,7 @@ SVGParseSVG (xmlNodePtr svg, int em_size, int ascent)
             }
         }
     }
-  return (_SVGParseSVG (svg, svg, &st));
+  return _SVGParseSVG (svg, svg, &st);
 }
 
 static void
@@ -3923,7 +3923,7 @@ SVGParseGlyphArgs (xmlNodePtr glyph, int defh, int defv, SplineFont *sf)
     xmlFree (form);
   if (orientation != NULL)
     xmlFree (orientation);
-  return (sc);
+  return sc;
 }
 
 static SplineChar *
@@ -3935,7 +3935,7 @@ SVGParseMissing (SplineFont *sf, xmlNodePtr notdef, int defh, int defv, int enc,
   sc->name = xstrdup (".notdef");
   sc->unicodeenc = 0;
   SVGParseGlyphBody (sc, notdef, flags);
-  return (sc);
+  return sc;
 }
 
 static SplineChar *
@@ -3958,7 +3958,7 @@ SVGParseGlyph (SplineFont *sf, xmlNodePtr glyph, int defh, int defv, int enc,
                            (buffer, sc->unicodeenc, ui_none, NULL));
     }
   SVGParseGlyphBody (sc, glyph, flags);
-  return (sc);
+  return sc;
 }
 
 static void
@@ -4125,7 +4125,7 @@ SVGGetNames (SplineFont *sf, xmlChar *g, xmlChar *utf8, SplineChar **sc)
   if (pt > names && pt[-1] == ' ')
     --pt;
   *pt = '\0';
-  return (names);
+  return names;
 }
 
 static void
@@ -4295,7 +4295,7 @@ SVGParseFont (xmlNodePtr font)
             {
               LogError (_("This font does not specify units-per-em\n"));
               SplineFontFree (sf);
-              return (NULL);
+              return NULL;
             }
           name = xmlGetProp (kids, "font-family");
           if (name != NULL)
@@ -4482,7 +4482,7 @@ SVGParseFont (xmlNodePtr font)
     {
       LogError (_("This font does not specify font-face\n"));
       SplineFontFree (sf);
-      return (NULL);
+      return NULL;
     }
   if (sf->weight == NULL)
     sf->weight = xstrdup ("Regular");
@@ -4562,7 +4562,7 @@ SVGParseFont (xmlNodePtr font)
     }
   sf->map = map;
 
-  return (sf);
+  return sf;
 }
 
 static int
@@ -4578,11 +4578,11 @@ SPLFindOrder (SplineSet *ss)
           if (first == NULL)
             first = s;
           if (!s->knownlinear)
-            return (s->order2);
+            return s->order2;
         }
       ss = ss->next;
     }
-  return (-1);
+  return -1;
 }
 
 static int
@@ -4596,11 +4596,11 @@ EntFindOrder (Entity * ent)
         {
           ret = SPLFindOrder (ent->u.splines.splines);
           if (ret != -1)
-            return (ret);
+            return ret;
         }
       ent = ent->next;
     }
-  return (-1);
+  return -1;
 }
 
 int
@@ -4613,9 +4613,9 @@ SFFindOrder (SplineFont *sf)
       {
         ret = SPLFindOrder (sf->glyphs[i]->layers[ly_fore].splines);
         if (ret != -1)
-          return (ret);
+          return ret;
       }
-  return (0);
+  return 0;
 }
 
 static void
@@ -4720,7 +4720,7 @@ _SFReadSVG (xmlDocPtr doc, char *filename)
     {
       LogError (_("This file contains no SVG fonts.\n"));
       xmlFreeDoc (doc);
-      return (NULL);
+      return NULL;
     }
   font = fonts[0];
   if (fonts[1] != NULL)
@@ -4755,7 +4755,7 @@ _SFReadSVG (xmlDocPtr doc, char *filename)
           sf->creationtime = b.st_mtime;
         }
     }
-  return (sf);
+  return sf;
 }
 
 SplineFont *
@@ -4780,9 +4780,9 @@ SFReadSVG (char *filename, int flags)
   if (doc == NULL)
     {
       /* Can I get an error message from libxml? */
-      return (NULL);
+      return NULL;
     }
-  return (_SFReadSVG (doc, filename));
+  return _SFReadSVG (doc, filename);
 }
 
 SplineFont *
@@ -4794,9 +4794,9 @@ SFReadSVGMem (char *data, int flags)
   if (doc == NULL)
     {
       /* Can I get an error message from libxml? */
-      return (NULL);
+      return NULL;
     }
-  return (_SFReadSVG (doc, NULL));
+  return _SFReadSVG (doc, NULL);
 }
 
 char **
@@ -4812,14 +4812,14 @@ NamesReadSVG (char *filename)
   if (doc == NULL)
     {
       /* Can I get an error message from libxml? */
-      return (NULL);
+      return NULL;
     }
 
   fonts = FindSVGFontNodes (doc);
   if (fonts == NULL || fonts[0] == NULL)
     {
       xmlFreeDoc (doc);
-      return (NULL);
+      return NULL;
     }
 
   for (cnt = 0; fonts[cnt] != NULL; ++cnt);
@@ -4842,7 +4842,7 @@ NamesReadSVG (char *filename)
   free (fonts);
   xmlFreeDoc (doc);
 
-  return (ret);
+  return ret;
 }
 
 Entity *
@@ -4862,7 +4862,7 @@ EntityInterpretSVG (char *filename, char *memory, int memlen, int em_size,
   if (doc == NULL)
     {
       /* Can I get an error message from libxml???? */
-      return (NULL);
+      return NULL;
     }
 
   top = xmlDocGetRootElement (doc);
@@ -4871,7 +4871,7 @@ EntityInterpretSVG (char *filename, char *memory, int memlen, int em_size,
       LogError (_("%s does not contain an <svg> element at the top\n"),
                 filename);
       xmlFreeDoc (doc);
-      return (NULL);
+      return NULL;
     }
 
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
@@ -4888,7 +4888,7 @@ EntityInterpretSVG (char *filename, char *memory, int memlen, int em_size,
     order2 = 0;
   EntSetOrder (ret, order2);
 
-  return (ret);
+  return ret;
 }
 
 SplineSet *
@@ -4897,5 +4897,5 @@ SplinePointListInterpretSVG (char *filename, char *memory, int memlen,
 {
   Entity *ret = EntityInterpretSVG (filename, memory, memlen, em_size, ascent);
   int flags = -1;
-  return (SplinesFromEntities (ret, &flags, is_stroked));
+  return SplinesFromEntities (ret, &flags, is_stroked);
 }

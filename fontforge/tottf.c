@@ -595,7 +595,7 @@ getuint32 (FILE *ttf)
   int ch4 = getc (ttf);
   if (ch4 == EOF)
     return EOF;
-  return ((ch1 << 24) | (ch2 << 16) | (ch3 << 8) | ch4);
+  return (ch1 << 24) | (ch2 << 16) | (ch3 << 8) | ch4;
 }
 
 void
@@ -1221,7 +1221,7 @@ RefDepth (RefChar *ref, int layer)
             rd = temp;
         }
     }
-  return (rd + 1);
+  return rd + 1;
 }
 
 static void
@@ -1867,7 +1867,7 @@ storesid (struct alltabs *at, char *str)
       for (pt = str; *pt; ++pt)
         putc (*pt, at->sidf);
     }
-  return (at->sidcnt++ + nStdStrings);
+  return at->sidcnt++ + nStdStrings;
 }
 
 static void
@@ -3802,7 +3802,7 @@ AlreadyMSSymbolArea (SplineFont *sf, EncMap *map)
             ++acnt;
         }
     }
-  return (pcnt > acnt);
+  return pcnt > acnt;
 }
 
 void
@@ -4727,13 +4727,13 @@ compare_entry (const void *_mn1, const void *_mn2)
   const NameEntry *mn1 = _mn1, *mn2 = _mn2;
 
   if (mn1->platform != mn2->platform)
-    return (mn1->platform - mn2->platform);
+    return mn1->platform - mn2->platform;
   if (mn1->specific != mn2->specific)
-    return (mn1->specific - mn2->specific);
+    return mn1->specific - mn2->specific;
   if (mn1->lang != mn2->lang)
-    return (mn1->lang - mn2->lang);
+    return mn1->lang - mn2->lang;
 
-  return (mn1->strid - mn2->strid);
+  return mn1->strid - mn2->strid;
 }
 
 static const char *
@@ -6374,7 +6374,7 @@ tagcomp (const void *_t1, const void *_t2)
 {
   struct taboff *t1 = *((struct taboff **) _t1), *t2 =
     *((struct taboff **) _t2);
-  return ((int) (t1->tag - t2->tag));
+  return (int) (t1->tag - t2->tag);
 }
 
 static int
@@ -6382,7 +6382,7 @@ tcomp (const void *_t1, const void *_t2)
 {
   struct taboff *t1 = *((struct taboff **) _t1), *t2 =
     *((struct taboff **) _t2);
-  return (t1->orderingval - t2->orderingval);
+  return t1->orderingval - t2->orderingval;
 }
 
 static int
@@ -7582,7 +7582,7 @@ hashname (char *name)
       hash ^= extra;
       ++name;
     }
-  return (hash % 257);
+  return hash % 257;
 }
 
 static int

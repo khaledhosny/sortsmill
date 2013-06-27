@@ -122,7 +122,7 @@ BoldSSStroke (SplineSet *ss, StrokeInfo *si, int order2, int ro)
   temp = SplineSetStroke (ss, si, order2);
   if (ro && temp != NULL && SplineSetIntersect (temp, &s1, &s2))
     temp = SplineSetRemoveOverlap (NULL, temp, over_remove);
-  return (temp);
+  return temp;
 }
 
 /* ************************************************************************** */
@@ -138,7 +138,7 @@ IsAnglePoint (SplinePoint *sp)
 
   if (sp->next == NULL || sp->prev == NULL ||
       sp->pointtype != pt_corner || sp->ttfindex == 0xffff)
-    return (false);
+    return false;
 
   psp = sp->prev->from;
   nsp = sp->next->to;
@@ -155,7 +155,7 @@ IsExtremum (SplinePoint *sp, int xdir)
   real val = (&sp->me.x)[xdir];
 
   if (sp->next == NULL || sp->prev == NULL)
-    return (false);
+    return false;
 
   psp = sp->prev->from;
   nsp = sp->next->to;
@@ -166,7 +166,7 @@ IsExtremum (SplinePoint *sp, int xdir)
 static double
 InterpolateVal (double a, double b, double a1, double b1, double val)
 {
-  return (a1 + (val - a) * (b1 - a1) / (b - a));
+  return a1 + (val - a) * (b1 - a1) / (b - a);
 }
 
 static int
@@ -182,11 +182,11 @@ active_cmp (const void *_s1, const void *_s2)
 {
   const struct segment *s1 = _s1, *s2 = _s2;
   if (s1->start < s2->start)
-    return (-1);
+    return -1;
   else if (s1->start > s2->start)
-    return (1);
+    return 1;
 
-  return (0);
+  return 0;
 }
 
 static int
@@ -194,11 +194,11 @@ fixed_cmp (const void *_s1, const void *_s2)
 {
   const struct position_maps *s1 = _s1, *s2 = _s2;
   if (s1->current < s2->current)
-    return (-1);
+    return -1;
   else if (s1->current > s2->current)
-    return (1);
+    return 1;
 
-  return (0);
+  return 0;
 }
 
 static int
@@ -210,11 +210,11 @@ ds_cmp (const void *_s1, const void *_s2)
   bp1 = (*s1)->unit.y > 0 ? &(*s1)->keypts[0]->base : &(*s1)->keypts[2]->base;
   bp2 = (*s2)->unit.y > 0 ? &(*s2)->keypts[0]->base : &(*s2)->keypts[2]->base;
   if (bp1->x < bp2->x || (bp1->x == bp2->x && bp1->y < bp2->y))
-    return (-1);
+    return -1;
   else if (bp2->x < bp1->x || (bp2->x == bp1->x && bp2->y < bp1->y))
-    return (1);
+    return 1;
 
-  return (0);
+  return 0;
 }
 
 #define czone_top 2
@@ -227,7 +227,7 @@ GetStemCounterZone (StemData * stem, DBounds *orig_b)
   double min, max, middle, fudge, s, e;
 
   if (stem == NULL)
-    return (czone_top | czone_bot);
+    return czone_top | czone_bot;
   by_x = (stem->unit.x > stem->unit.y);
   min = by_x ? orig_b->minx : orig_b->miny;
   max = by_x ? orig_b->maxx : orig_b->maxy;
@@ -244,7 +244,7 @@ GetStemCounterZone (StemData * stem, DBounds *orig_b)
       if (e > middle + fudge || s > middle + fudge)
         ret |= czone_top;
     }
-  return (ret);
+  return ret;
 }
 
 static double
@@ -363,7 +363,7 @@ GetCounterBlackSpace (GlyphData * gd, StemData ** dstems, int dcnt,
       j = i;
     }
   free (inters);
-  return (black);
+  return black;
 }
 
 /* As with expanding/condensing, we are going to assume that LCG glyphs have 
@@ -396,7 +396,7 @@ ScaleCounter (GlyphData * gd, StemData ** dstems, int dcnt,
   cstart = (pstem != NULL) ? x_dir ? pstem->right.x : pstem->left.y : min;
   cend = (nstem != NULL) ? x_dir ? nstem->left.x : nstem->right.y : max;
   if (cend == cstart)
-    return (0);
+    return 0;
 
   pczone = GetStemCounterZone (pstem, orig_b);
   nczone = GetStemCounterZone (nstem, orig_b);
@@ -426,7 +426,7 @@ ScaleCounter (GlyphData * gd, StemData ** dstems, int dcnt,
   gen75 = white75 * cntr_scale + black75;
   ret = (gen25 > gen75) ? gen25 : gen75;
 
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1049,7 +1049,7 @@ InterpolateBetweenEdges (GlyphData * gd, double coord, double min, double max,
     ret = InterpolateVal (min, next_pos, min_new, next_new, coord);
   else
     ret = InterpolateVal (min, max, min_new, max_new, coord);
-  return (ret);
+  return ret;
 }
 
 static void
@@ -1325,7 +1325,7 @@ PrepareDStemList (GlyphData * gd, StemData ** dstems)
       dstems[dcnt++] = stem;
     }
   qsort (dstems, dcnt, sizeof (StemData *), ds_cmp);
-  return (dcnt);
+  return dcnt;
 }
 
 static void
@@ -1478,13 +1478,13 @@ CorrectDPointPos (GlyphData * gd, PointData * pd, StemData * stem,
   PointData *npd;
 
   if (IsPointFixed (pd))
-    return (false);
+    return false;
   ns = next ? pd->sp->next : pd->sp->prev;
   if (ns == NULL)
-    return (false);
+    return false;
   npd = next ? &gd->points[ns->to->ptindex] : &gd->points[ns->from->ptindex];
   if (IsStemAssignedToPoint (npd, stem, !next) != -1)
-    return (false);
+    return false;
   ndot = pd->nextunit.x * npd->nextunit.x + pd->nextunit.y * npd->nextunit.y;
   pdot = pd->prevunit.x * npd->prevunit.x + pd->prevunit.y * npd->prevunit.y;
 
@@ -1520,7 +1520,7 @@ CorrectDPointPos (GlyphData * gd, PointData * pd, StemData * stem,
         pd->prevunit.x * npd->prevunit.x + pd->prevunit.y * npd->prevunit.y;
     }
   if (!found)
-    return (false);
+    return false;
 
   coord_orig = (&pd->base.x)[!x_dir];
   coord_new = (&pd->newpos.x)[!x_dir];
@@ -1542,9 +1542,9 @@ CorrectDPointPos (GlyphData * gd, PointData * pd, StemData * stem,
             stem->newunit.x * ((coord_new - pd->newpos.y) / stem->newunit.y);
           pd->newpos.y = coord_new;
         }
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -1675,9 +1675,9 @@ PreferredDStem (PointData * pd, StemData * stem, int next)
           (tstem->unit.y < -.05 || tstem->unit.y > .05) &&
           (tstem->unit.x < -.05 || tstem->unit.x > .05)
           && tstem->clen > stem->clen)
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -2281,7 +2281,7 @@ NumberLayerPoints (SplineSet *ss)
             break;
         }
     }
-  return (cnt);
+  return cnt;
 }
 
 static double
@@ -2362,7 +2362,7 @@ CaseMajorVerticalStemWidth (SplineFont *sf, int layer,
         SCClearContents (&dummy, ly_fore);
     }
   if (cnt == 0)
-    return (-1);
+    return -1;
 
   /* Is there a width that occurs significantly more often than any other? */
   for (i = 0; i < cnt; ++i)
@@ -2419,7 +2419,7 @@ CaseMajorVerticalStemWidth (SplineFont *sf, int layer,
         }
       width = bestwidth;
     }
-  return (width);
+  return width;
 }
 
 void
@@ -2670,7 +2670,7 @@ MakeSmallCapName (char *buffer, int bufsize, SplineFont *sf,
       strcat (buffer, ".");
       strcat (buffer, ext);
     }
-  return (lc_sc);
+  return lc_sc;
 }
 
 static SplineChar *
@@ -2691,7 +2691,7 @@ MakeSmallCapGlyphSlot (SplineFont *sf, SplineChar *cap_sc,
     {
       SCPreserveLayer (sc_sc, fv->active_layer, false);
       SCClearLayer (sc_sc, fv->active_layer);
-      return (sc_sc);
+      return sc_sc;
     }
   enc = SFFindSlot (sf, fv->map, -1, buffer);
   if (enc == -1)
@@ -2722,7 +2722,7 @@ MakeSmallCapGlyphSlot (SplineFont *sf, SplineChar *cap_sc,
       pst->type = pst_substitution;
       pst->u.subs.variant = xstrdup_or_null (buffer);
     }
-  return (sc_sc);
+  return sc_sc;
 }
 
 struct overlaps
@@ -2786,7 +2786,7 @@ SCFindHintOverlaps (StemInfo * hints, double min_coord,
 
   *_tot = tot;
   *_counter_len = counter_len;
-  return (overlaps);
+  return overlaps;
 }
 
 static double
@@ -2799,7 +2799,7 @@ SCFindCounterLen (StemInfo * hints, double min_coord, double max_coord)
   overlaps =
     SCFindHintOverlaps (hints, min_coord, max_coord, &tot, &counter_len);
   free (overlaps);
-  return (counter_len);
+  return counter_len;
 }
 
 static void
@@ -3138,7 +3138,7 @@ SmallCapsRemoveSpace (SplineSet *ss, AnchorPoint *aps, StemInfo * hints,
   double counter_len, shrink;
 
   if (remove > max_coord - min_coord)
-    return (0);
+    return 0;
 
   /* Coalesce overlapping hint zones. These won't shrink, but the counters */
   /*  between them will */
@@ -3148,7 +3148,7 @@ SmallCapsRemoveSpace (SplineSet *ss, AnchorPoint *aps, StemInfo * hints,
   if (counter_len == 0)
     {
       free (overlaps);
-      return (0);
+      return 0;
     }
 
   if (1.5 * remove > counter_len)
@@ -3201,7 +3201,7 @@ SmallCapsRemoveSpace (SplineSet *ss, AnchorPoint *aps, StemInfo * hints,
 
   SmallCapsPlacePoints (ss, aps, coord, hints, overlaps, tot);
   free (overlaps);
-  return (remove);
+  return remove;
 }
 
 static void
@@ -3620,7 +3620,7 @@ MakeSupSupLookup (SplineFont *sf, uint32_t feature_tag,
         }
     }
 
-  return (found->subtables);
+  return found->subtables;
 }
 
 static SplineChar *
@@ -3640,7 +3640,7 @@ MakeSubSupGlyphSlot (SplineFont *sf, SplineChar *sc,
     {
       SCPreserveLayer (sc_sc, fv->active_layer, false);
       SCClearLayer (sc_sc, fv->active_layer);
-      return (sc_sc);
+      return sc_sc;
     }
   enc = SFFindSlot (sf, fv->map, -1, buffer);
   if (enc == -1)
@@ -3657,7 +3657,7 @@ MakeSubSupGlyphSlot (SplineFont *sf, SplineChar *sc,
   pst->type = pst_substitution;
   pst->u.subs.variant = xstrdup_or_null (buffer);
 
-  return (sc_sc);
+  return sc_sc;
 }
 
 void
@@ -3943,7 +3943,7 @@ SSControlStems (SplineSet *ss, double stemwidthscale, double stemheightscale,
   genchange.lsb_scale = genchange.rsb_scale = genchange.hcounter_scale;
 
   ChangeGlyph (&dummy, &dummy, ly_fore, &genchange);
-  return (ss);
+  return ss;
 }
 
 /* ************************************************************************** */
@@ -3986,7 +3986,7 @@ SFStdVW (SplineFont *sf)
 
   if (stdvw <= 0)
     stdvw = (sf->ascent + sf->descent) / 12.5;
-  return (stdvw);
+  return stdvw;
 }
 
 static void
@@ -4026,14 +4026,14 @@ SpOnEdge (SplinePoint *sp, double y, int dir, struct counterinfo *ci, int z)
   SplinePoint *nsp, *nnsp, *psp;
 
   if (sp->me.y <= y - 1 || sp->me.y > y + 1)
-    return (false);
+    return false;
 
   /* We've already checked that we have a closed contour, so we don't need */
   /*  to worry that something might be NULL */
   psp = sp->prev->from;         /* the previous point must not be near the y value */
   if ((psp->me.y > y - 1 && psp->me.y <= y + 1) ||
       (dir > 0 && psp->me.y <= y) || (dir < 0 && psp->me.y >= y))
-    return (true);              /* But the point itself was on the edge */
+    return true;              /* But the point itself was on the edge */
 
   /* Either the next point is on the edge too, or we can have a dished */
   /*  serif, where the next point is off the edge, but the one after is on */
@@ -4045,19 +4045,19 @@ SpOnEdge (SplinePoint *sp, double y, int dir, struct counterinfo *ci, int z)
           (dir < 0 && nsp->me.y < y - 1 && nsp->me.y > y - 10)))
     nsp = nsp->next->to;
   if (nsp == sp)
-    return (true);
+    return true;
   if (nsp->me.y <= y - 1 || nsp->me.y > y + 1)
-    return (true);
+    return true;
   nnsp = nsp->next->to;
   if ((nnsp->me.y > y - 1 && nnsp->me.y <= y + 1) ||
       (dir > 0 && nnsp->me.y <= y) || (dir < 0 && nnsp->me.y >= y))
-    return (true);
+    return true;
 
   if (nsp->me.x - sp->me.x > 3.5 * ci->stdvw
       || nsp->me.x - sp->me.x < -3.5 * ci->stdvw)
-    return (true);
+    return true;
   CIAdd (ci, z, sp->me.x, nsp->me.x - sp->me.x);
-  return (true);
+  return true;
 }
 
 static int
@@ -4068,9 +4068,9 @@ HintActiveAt (StemInfo * h, double y)
   for (hi = h->where; hi != NULL; hi = hi->next)
     {
       if (y >= hi->begin && y <= hi->end)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -4466,7 +4466,7 @@ MaxContourCount (SplineSet *ss)
       if (cnt > ccnt)
         ccnt = cnt;
     }
-  return (ccnt);
+  return ccnt;
 }
 
 static int
@@ -4532,7 +4532,7 @@ PtMovesInitToContour (struct ptmoves *ptmoves, SplineSet *ss)
         break;
     }
   ptmoves[cnt] = ptmoves[0];    /* Life is easier if we don't have to worry about edge effects */
-  return (cnt);
+  return cnt;
 }
 
 static void
@@ -4615,13 +4615,13 @@ FindMatchingPoint (int ptindex, SplineSet *ss)
   SplinePoint *sp;
 
   if (ptindex == 0)
-    return (NULL);
+    return NULL;
   for (; ss != NULL; ss = ss->next)
     {
       for (sp = ss->first;;)
         {
           if (sp->ptindex == ptindex)
-            return (sp);
+            return sp;
           if (sp->next == NULL)
             break;
           sp = sp->next->to;
@@ -4629,7 +4629,7 @@ FindMatchingPoint (int ptindex, SplineSet *ss)
             break;
         }
     }
-  return (NULL);
+  return NULL;
 }
 
 static StemInfo *
@@ -4642,12 +4642,12 @@ OnHint (StemInfo * stems, double searchy, double *othery)
       if (h->start == searchy)
         {
           *othery = h->start + h->width;
-          return (h);
+          return h;
         }
       else if (h->start + h->width == searchy)
         {
           *othery = h->start;
-          return (h);
+          return h;
         }
     }
 
@@ -4656,17 +4656,17 @@ OnHint (StemInfo * stems, double searchy, double *othery)
       if (searchy >= h->start - 2 && searchy <= h->start + 2)
         {
           *othery = h->start + h->width;
-          return (h);
+          return h;
         }
       else if (searchy >= h->start + h->width - 2
                && searchy <= h->start + h->width + 2)
         {
           *othery = h->start;
-          return (h);
+          return h;
         }
     }
 
-  return (NULL);
+  return NULL;
 }
 
 static StemInfo *
@@ -4676,12 +4676,12 @@ MightBeOnHint (StemInfo * stems, struct lcg_zones *zones,
   double offset;
 
   if (pt->ndir.y != 0 && pt->pdir.y != 0)
-    return (NULL);              /* Not horizontal, not on a stem */
+    return NULL;              /* Not horizontal, not on a stem */
 
   offset = (pt->ndir.y == 0 && pt->ndir.x > 0) ||
     (pt->pdir.y == 0 && pt->pdir.x < 0) ? zones->stroke_width / 2
     : -zones->stroke_width / 2;
-  return (OnHint (stems, pt->sp->me.y - offset, othery));
+  return OnHint (stems, pt->sp->me.y - offset, othery);
 }
 
 static int
@@ -4693,9 +4693,9 @@ InHintAroundZone (StemInfo * stems, double searchy, double contains_y)
     {
       if (h->start >= searchy && h->start + h->width <= searchy &&
           h->start >= contains_y && h->start + h->width <= contains_y)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -4704,13 +4704,13 @@ IsStartPoint (SplinePoint *sp, SplineChar *sc, int layer)
   SplineSet *ss;
 
   if (sp->ptindex == 0)
-    return (false);
+    return false;
   for (ss = sc->layers[layer].splines; ss != NULL; ss = ss->next)
     {
       if (ss->first->ptindex == sp->ptindex)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -4778,7 +4778,7 @@ LCG_EmboldenHook (SplineSet *ss_expanded, struct lcg_zones *zones,
 
   ccnt = MaxContourCount (ss_expanded);
   if (ccnt == 0)
-    return (ss_expanded);       /* No points? Nothing to do */
+    return ss_expanded;       /* No points? Nothing to do */
   ptmoves = xmalloc ((ccnt + 1) * sizeof (struct ptmoves));
   for (ss = ss_expanded; ss != NULL; ss = ss->next)
     {
@@ -4845,7 +4845,7 @@ LCG_EmboldenHook (SplineSet *ss_expanded, struct lcg_zones *zones,
   if (zones->counter_type == ct_retain
       || (sc->width != 0 && zones->counter_type == ct_auto))
     CorrectLeftSideBearing (ss_expanded, sc, layer);
-  return (ss_expanded);
+  return ss_expanded;
 }
 
 static SplineSet *
@@ -4871,12 +4871,12 @@ LCG_HintedEmboldenHook (SplineSet *ss_expanded, struct lcg_zones *zones,
   /* Other points between baseline/x-height follow IUP rules */
 
   if (layer != ly_fore || sc->hstem == NULL)
-    return (LCG_EmboldenHook (ss_expanded, zones, sc, layer));
+    return LCG_EmboldenHook (ss_expanded, zones, sc, layer);
 
   FindStartPoint (ss_expanded, sc, layer);
   ccnt = MaxContourCount (ss_expanded);
   if (ccnt == 0)
-    return (ss_expanded);       /* No points? Nothing to do */
+    return ss_expanded;       /* No points? Nothing to do */
   ptmoves = xmalloc ((ccnt + 1) * sizeof (struct ptmoves));
   for (ss = ss_expanded; ss != NULL; ss = ss->next)
     {
@@ -5091,7 +5091,7 @@ LCG_HintedEmboldenHook (SplineSet *ss_expanded, struct lcg_zones *zones,
   if (zones->counter_type == ct_retain
       || (sc->width != 0 && zones->counter_type == ct_auto))
     CorrectLeftSideBearing (ss_expanded, sc, layer);
-  return (ss_expanded);
+  return ss_expanded;
 }
 
 static void
@@ -5274,7 +5274,7 @@ BlueSearch (const char *bluestring, double value, double bestvalue)
     {
       try = strtod (bluestring, &end);
       if (bluestring == end)
-        return (bestvalue);
+        return bestvalue;
       if ((diff = try - value) < 0)
         diff = -diff;
       if (diff < bestdiff)
@@ -5312,9 +5312,9 @@ SearchBlues (SplineFont *sf, int type, double value)
   if (others != NULL)
     bestvalue = BlueSearch (others, value, bestvalue);
   if (bestvalue == 0x100000)
-    return (value);
+    return value;
 
-  return (bestvalue);
+  return bestvalue;
 }
 
 double
@@ -5326,7 +5326,7 @@ SFSerifHeight (SplineFont *sf)
   DBounds b;
 
   if (sf->strokedfont || sf->multilayer)
-    return (0);
+    return 0;
 
   isc = SFGetChar (sf, 'I', NULL);
   if (isc == NULL)
@@ -5334,13 +5334,13 @@ SFSerifHeight (SplineFont *sf)
   if (isc == NULL)
     isc = SFGetChar (sf, 0x0406, NULL);
   if (isc == NULL)
-    return (0);
+    return 0;
 
   ss = isc->layers[ly_fore].splines;
   if (ss == NULL || ss->next != NULL)   /* Too complicated, probably doesn't have simple serifs (black letter?) */
-    return (0);
+    return 0;
   if (ss->first->prev == NULL)
-    return (0);
+    return 0;
   for (sp = ss->first;;)
     {
       if (sp->me.y == 0)
@@ -5350,39 +5350,39 @@ SFSerifHeight (SplineFont *sf)
         break;
     }
   if (sp->me.y != 0)
-    return (0);
+    return 0;
   SplineCharFindBounds (isc, &b);
   if (sp->next->to->me.y == 0 || sp->next->to->next->to->me.y == 0)
     {
       SplinePoint *psp = sp->prev->from;
       if (psp->me.y >= b.maxy / 3)
-        return (0);             /* Sans Serif, probably */
+        return 0;             /* Sans Serif, probably */
       if (!psp->nonextcp && psp->nextcp.x == psp->me.x)
         {
           /* A curve point half-way up the serif? */
           psp = psp->prev->from;
           if (psp->me.y >= b.maxy / 3)
-            return (0);         /* I give up, I don't understand this */
+            return 0;         /* I give up, I don't understand this */
         }
-      return (psp->me.y);
+      return psp->me.y;
     }
   else if (sp->prev->from->me.y == 0 || sp->prev->from->prev->from->me.y == 0)
     {
       SplinePoint *nsp = sp->next->to;
       if (nsp->me.y >= b.maxy / 3)
-        return (0);             /* Sans Serif, probably */
+        return 0;             /* Sans Serif, probably */
       if (!nsp->nonextcp && nsp->nextcp.x == nsp->me.x)
         {
           /* A curve point half-way up the serif? */
           nsp = nsp->next->to;
           if (nsp->me.y >= b.maxy / 3)
-            return (0);         /* I give up, I don't understand this */
+            return 0;         /* I give up, I don't understand this */
         }
-      return (nsp->me.y);
+      return nsp->me.y;
     }
 
   /* Too complex for me */
-  return (0);
+  return 0;
 }
 
 static void
@@ -5574,7 +5574,7 @@ FigureCase (SplineChar *sc)
     return (islower (sc->unicodeenc) ? cs_lc : isupper (sc->unicodeenc) ? cs_uc
             : cs_neither);
   else if (sc->unicodeenc != -1)
-    return (cs_neither);
+    return cs_neither;
 
   under = strchr (sc->name, '_');
   dot = strchr (sc->name, '.');
@@ -5583,18 +5583,18 @@ FigureCase (SplineChar *sc)
   if (under != NULL && (dot == NULL || dot > under))
     dot = under;
   if (dot == NULL)
-    return (cs_neither);
+    return cs_neither;
   ch = *dot;
   *dot = '\0';
   uni = UniFromName (sc->name, ui_none, &custom);
   *dot = ch;
   if (uni == -1 || uni >= 0x10000)
-    return (cs_neither);
+    return cs_neither;
 
   if (smallcaps && (islower (uni) || isupper (uni)))
-    return (cs_smallcaps);
+    return cs_smallcaps;
 
-  return (islower (uni) ? cs_lc : isupper (uni) ? cs_uc : cs_neither);
+  return islower (uni) ? cs_lc : isupper (uni) ? cs_uc : cs_neither;
 }
 
 static int
@@ -5607,10 +5607,10 @@ LikeAnF (SplineChar *sc)
       sc->unicodeenc == 0xfb /* longs-s ligature (es-zet) */  ||
       sc->unicodeenc == 0xfb01 || sc->unicodeenc == 0xfb02 ||   /* fi, fl */
       sc->unicodeenc == 0xfb05 /*longs_t */ )
-    return (true);
+    return true;
   if (sc->unicodeenc == 0xfb00 || sc->unicodeenc == 0xfb03
       || sc->unicodeenc == 0xfb04)
-    return (2);                 /* ff, ffi, ffl */
+    return 2;                 /* ff, ffi, ffl */
 
   cnt = 0;
   for (start = sc->name; (under = strchr (start, '_')) != NULL;)
@@ -5620,14 +5620,14 @@ LikeAnF (SplineChar *sc)
       else if (under - start == 5 && strncmp (start, "longs", 5) == 0)
         ++cnt;                  /* longs ligature */
       else
-        return (cnt);
+        return cnt;
       start = under + 1;
     }
   if (*start == 'f' && start[1] == '\0')
     ++cnt;
   else if (strcmp (start, "longs") == 0)
     ++cnt;
-  return (cnt);
+  return cnt;
 }
 
 static int
@@ -5637,9 +5637,9 @@ LikePQ (SplineChar *sc)
 
   for (i = 0; descender_str[i] != 0; ++i)
     if (sc->unicodeenc == descender_str[i])
-      return (true);
+      return true;
 
-  return (false);
+  return false;
 }
 
 static void
@@ -5907,7 +5907,7 @@ MakeBottomItalicSerif (double stemwidth, double endx,
     if (seriftype == 0 && !RealWithin (temp, stemwidth, .1))
       IError ("Stem width doesn't match serif");
   }
-  return (ss);
+  return ss;
 }
 
 static SplineSet *
@@ -5920,7 +5920,7 @@ MakeTopItalicSerif (double stemwidth, double endx, ItalicInfo * ii, int at_xh)
   trans[0] = trans[3] = -1;
   trans[4] = endx;
   trans[5] = at_xh ? ii->x_height : ii->ascender_height;
-  return (SplinePointListTransform (ss, trans, tpt_AllPoints));
+  return SplinePointListTransform (ss, trans, tpt_AllPoints);
 }
 
 static SplineSet *
@@ -6109,7 +6109,7 @@ MakeItalicDSerif (DStemInfo * d, double stemwidth,
     {
       SPLCategorizePoints (ss);
     }
-  return (ss);
+  return ss;
 }
 
 static int
@@ -6119,9 +6119,9 @@ InHintRange (HintInstance * hi, double pos)
   for (; hi != NULL; hi = hi->next)
     {
       if (pos >= hi->begin && pos <= hi->end)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static double
@@ -6137,17 +6137,17 @@ ValidBottomSerif (SplinePoint *start, SplinePoint *end,
   /*  going significantly up, it must continue going up until the end.  */
 
   if (start == end)
-    return (false);
+    return false;
 
   last = NULL;
   for (sp = start;;)
     {
       if (sp->me.x < minbound || sp->me.x > maxbound)
-        return (false);
+        return false;
       if (sp->me.y > max + fuzz)
-        return (false);
+        return false;
       if (sp->me.y < depth - fuzz)
-        return (false);
+        return false;
       if (sp->me.y < depth + fuzz / 2 + 1)
         got_down = true;
       else if (got_down && sp->me.y > depth + fuzz / 2)
@@ -6155,15 +6155,15 @@ ValidBottomSerif (SplinePoint *start, SplinePoint *end,
       if (last != NULL)
         {
           if (!got_down && sp->me.y > last->me.y + fuzz / 10)
-            return (false);
+            return false;
           else if (got_up && sp->me.y < last->me.y - fuzz / 10)
-            return (false);
+            return false;
         }
       last = sp;
       if (sp == end)
-        return (got_down);
+        return got_down;
       if (sp->next == NULL)
-        return (false);
+        return false;
       sp = sp->next->to;
     }
 }
@@ -6252,7 +6252,7 @@ ValidBottomDSerif (SplinePoint *start, SplinePoint *end,
   double dlpos, drpos;
 
   if (start == end)
-    return (false);
+    return false;
 
   last = NULL;
   for (sp = start;;)
@@ -6264,11 +6264,11 @@ ValidBottomDSerif (SplinePoint *start, SplinePoint *end,
                                                d->right.y) * d->unit.x;
       if (dlpos < -1.5 * ii->serif_extent - fuzz
           || drpos > 1.5 * ii->serif_extent + fuzz)
-        return (false);
+        return false;
       if (sp->me.y > max + fuzz)
-        return (false);
+        return false;
       if (sp->me.y < depth - fuzz)
-        return (false);
+        return false;
       if (sp->me.y < depth + fuzz / 2 + 1)
         got_down = true;
       else if (got_down && sp->me.y > depth + fuzz / 2)
@@ -6276,15 +6276,15 @@ ValidBottomDSerif (SplinePoint *start, SplinePoint *end,
       if (last != NULL)
         {
           if (!got_down && sp->me.y > last->me.y + fuzz / 10)
-            return (false);
+            return false;
           else if (got_up && sp->me.y < last->me.y - fuzz / 10)
-            return (false);
+            return false;
         }
       last = sp;
       if (sp == end)
-        return (got_down);
+        return got_down;
       if (sp->next == NULL)
-        return (false);
+        return false;
       sp = sp->next->to;
     }
 }
@@ -6299,7 +6299,7 @@ ValidTopDSerif (SplinePoint *start, SplinePoint *end,
   double dlpos, drpos;
 
   if (start == end)
-    return (false);
+    return false;
 
   last = NULL;
   for (sp = start;;)
@@ -6311,11 +6311,11 @@ ValidTopDSerif (SplinePoint *start, SplinePoint *end,
                                                d->right.y) * d->unit.x;
       if (dlpos < -1.5 * ii->serif_extent - fuzz
           || drpos > 1.5 * ii->serif_extent + fuzz)
-        return (false);
+        return false;
       if (sp->me.y < min - fuzz)
-        return (false);
+        return false;
       if (sp->me.y > height + 2 * fuzz)
-        return (false);
+        return false;
       if (sp->me.y > height - fuzz / 2)
         got_up = true;
       else if (got_up && sp->me.y < height - fuzz / 2 - 1)
@@ -6323,15 +6323,15 @@ ValidTopDSerif (SplinePoint *start, SplinePoint *end,
       if (last != NULL)
         {
           if (!got_up && sp->me.y < last->me.y - fuzz / 2)
-            return (false);
+            return false;
           else if (got_down && sp->me.y > last->me.y + fuzz / 2)
-            return (false);
+            return false;
         }
       last = sp;
       if (sp == end)
-        return (got_up);
+        return got_up;
       if (sp->next == NULL)
-        return (false);
+        return false;
       sp = sp->next->to;
     }
 }
@@ -6358,7 +6358,7 @@ RoughlyParallel (SplinePoint *sp, BasePoint *unit)
       if ((off = (diff.x * unit->y - diff.y * unit->x) / len) < 0)
         off = -off;
       if (off < .04)
-        return (true);
+        return true;
     }
 
   if (sp->noprevcp && sp->prev != NULL)
@@ -6377,9 +6377,9 @@ RoughlyParallel (SplinePoint *sp, BasePoint *unit)
       if ((off = (diff.x * unit->y - diff.y * unit->x) / len) < 0)
         off = -off;
       if (off < .04)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -6601,7 +6601,7 @@ StemMoveBottomEndTo (SplinePoint *sp, double y, int is_start)
           sp = other;
         }
     }
-  return (sp);
+  return sp;
 }
 
 static SplinePoint *
@@ -6651,7 +6651,7 @@ StemMoveDBottomEndTo (SplinePoint *sp, double y, DStemInfo * d, int is_start)
           sp = other;
         }
     }
-  return (sp);
+  return sp;
 }
 
 static SplinePoint *
@@ -6691,7 +6691,7 @@ StemMoveBottomEndCarefully (SplinePoint *sp, SplineSet *oldss,
                 newend->next->to->prevcp = newend->nextcp;
               newend->me.x = sp->me.x;
               ss->first = newend;
-              return (sp);
+              return sp;
             }
         }
     }
@@ -6723,14 +6723,14 @@ StemMoveBottomEndCarefully (SplinePoint *sp, SplineSet *oldss,
                 newend->prev->from->nextcp = newend->prevcp;
               newend->me.x = sp->me.x;
               ss->last = newend;
-              return (sp);
+              return sp;
             }
         }
     }
   if (d == NULL)
-    return (StemMoveBottomEndTo (sp, other->me.y, is_start));
+    return StemMoveBottomEndTo (sp, other->me.y, is_start);
   else
-    return (StemMoveDBottomEndTo (sp, other->me.y, d, is_start));
+    return StemMoveDBottomEndTo (sp, other->me.y, d, is_start);
 }
 
 static void
@@ -6855,17 +6855,17 @@ ValidTopSerif (SplinePoint *start, SplinePoint *end,
   /*  going significantly up, it must continue going up until the end.  */
 
   if (start == end)
-    return (false);
+    return false;
 
   last = NULL;
   for (sp = start;;)
     {
       if (sp->me.x < minbound || sp->me.x > maxbound)
-        return (false);
+        return false;
       if (sp->me.y < min - fuzz)
-        return (false);
+        return false;
       if (sp->me.y > height + 2 * fuzz)
-        return (false);
+        return false;
       if (sp->me.y > height - fuzz / 2)
         got_up = true;
       else if (got_up && sp->me.y < height - fuzz / 2 - 1)
@@ -6873,15 +6873,15 @@ ValidTopSerif (SplinePoint *start, SplinePoint *end,
       if (last != NULL)
         {
           if (!got_up && sp->me.y < last->me.y - fuzz / 2)
-            return (false);
+            return false;
           else if (got_down && sp->me.y > last->me.y + fuzz / 2)
-            return (false);
+            return false;
         }
       last = sp;
       if (sp == end)
-        return (got_up);
+        return got_up;
       if (sp->next == NULL)
-        return (false);
+        return false;
       sp = sp->next->to;
     }
 }
@@ -6896,11 +6896,11 @@ IsLeftHalfSerif (SplinePoint *start, SplinePoint *end, StemInfo * h)
   for (sp = start; sp != end; sp = sp->next->to)
     {
       if (sp->me.x > h->start + h->width + fuzz)
-        return (false);
+        return false;
       if (sp->me.x < h->start)
         wentleft = true;
     }
-  return (wentleft);
+  return wentleft;
 }
 
 static void
@@ -7016,7 +7016,7 @@ StemMoveTopEndTo (SplinePoint *sp, double y, int is_start)
           sp = other;
         }
     }
-  return (sp);
+  return sp;
 }
 
 static SplinePoint *
@@ -7040,7 +7040,7 @@ StemMoveDTopEndTo (SplinePoint *sp, double y, DStemInfo * d, int is_start)
       SplineMake (other, sp, sp->next->order2);
       sp = other;
     }
-  return (sp);
+  return sp;
 }
 
 static SplinePoint *
@@ -7080,7 +7080,7 @@ StemMoveTopEndCarefully (SplinePoint *sp, SplineSet *oldss,
                 newend->next->to->prevcp = newend->nextcp;
               newend->me.x = sp->me.x;
               ss->first = newend;
-              return (sp);
+              return sp;
             }
         }
     }
@@ -7112,14 +7112,14 @@ StemMoveTopEndCarefully (SplinePoint *sp, SplineSet *oldss,
                 newend->prev->from->nextcp = newend->prevcp;
               newend->me.x = sp->me.x;
               ss->last = newend;
-              return (sp);
+              return sp;
             }
         }
     }
   if (d == NULL)
-    return (StemMoveTopEndTo (sp, other->me.y, is_start));
+    return StemMoveTopEndTo (sp, other->me.y, is_start);
   else
-    return (StemMoveDTopEndTo (sp, other->me.y, d, is_start));
+    return StemMoveDTopEndTo (sp, other->me.y, d, is_start);
 }
 
 static void
@@ -7309,12 +7309,12 @@ NearBottomRightSide (DStemInfo * d, DBounds *b, ItalicInfo * ii)
 
   x = d->left.x - d->left.y * d->unit.x / d->unit.y;
   if (x + 1.5 * ii->serif_extent + 30 > b->maxx)
-    return (true);
+    return true;
   x = d->right.x - d->right.y * d->unit.x / d->unit.y;
   if (x + 1.5 * ii->serif_extent + 30 > b->maxx)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static int
@@ -7324,12 +7324,12 @@ NearBottomLeftSide (DStemInfo * d, DBounds *b, ItalicInfo * ii)
 
   x = d->left.x - d->left.y * d->unit.x / d->unit.y;
   if (x - 1.5 * ii->serif_extent - 30 < b->minx)
-    return (true);
+    return true;
   x = d->right.x - d->right.y * d->unit.x / d->unit.y;
   if (x - 1.5 * ii->serif_extent - 30 < b->minx)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static int
@@ -7339,12 +7339,12 @@ NearXHeightRightSide (DStemInfo * d, DBounds *b, ItalicInfo * ii)
 
   x = d->left.x - (d->left.y - ii->x_height) * d->unit.x / d->unit.y;
   if (x + 1.5 * ii->serif_extent + 30 > b->maxx)
-    return (true);
+    return true;
   x = d->right.x - (d->right.y - ii->x_height) * d->unit.x / d->unit.y;
   if (x + 1.5 * ii->serif_extent + 30 > b->maxx)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static int
@@ -7354,12 +7354,12 @@ NearXHeightLeftSide (DStemInfo * d, DBounds *b, ItalicInfo * ii)
 
   x = d->left.x - (d->left.y - ii->x_height) * d->unit.x / d->unit.y;
   if (x - 1.5 * ii->serif_extent - 30 < b->minx)
-    return (true);
+    return true;
   x = d->right.x - (d->right.y - ii->x_height) * d->unit.x / d->unit.y;
   if (x - 1.5 * ii->serif_extent - 30 < b->minx)
-    return (true);
+    return true;
 
-  return (false);
+  return false;
 }
 
 static void
@@ -7587,7 +7587,7 @@ FFCopyTrans (ItalicInfo * ii, real *transform,
     {
       *ff_end2 = last;
     }
-  return (touches);
+  return touches;
 }
 
 static void
@@ -8416,9 +8416,9 @@ IsSelected (FontViewBase *fv, SplineChar *sc)
 {
   int enc = gid_to_enc (fv->map, sc->orig_pos);
   if (enc == -1)
-    return (false);
+    return false;
 
-  return (fv->selected[enc]);
+  return fv->selected[enc];
 }
 
 static int
@@ -8432,11 +8432,11 @@ FVMakeAllItalic (FontViewBase *fv, SplineChar *sc, int layer, ItalicInfo * ii)
       if (!ref->sc->ticked && IsSelected (fv, ref->sc))
         {
           if (!FVMakeAllItalic (fv, ref->sc, layer, ii))
-            return (false);
+            return false;
         }
     }
   SCMakeItalic (sc, layer, ii);
-  return (ff_progress_next ());
+  return ff_progress_next ();
 }
 
 static double
@@ -8449,7 +8449,7 @@ SerifExtent (SplineChar *sc, int layer, int is_bottom)
   ItalicInfo tempii;
 
   if (sc == NULL)
-    return (0);
+    return 0;
   memset (&tempii, 0, sizeof (tempii));
   tempii.serif_extent = 1000;
 
@@ -8479,11 +8479,11 @@ SerifExtent (SplineChar *sc, int layer, int is_bottom)
               min = h->start - sp->me.x;
           }
         if (min > max)
-          return (min);
+          return min;
         if (max != 0)
-          return (max);
+          return max;
       }
-  return (0);
+  return 0;
 }
 
 static double
@@ -8495,7 +8495,7 @@ SCSerifHeight (SplineChar *sc, int layer)
   ItalicInfo tempii;
 
   if (sc == NULL)
-    return (0);
+    return 0;
   memset (&tempii, 0, sizeof (tempii));
   tempii.serif_extent = 1000;
 
@@ -8514,10 +8514,10 @@ SCSerifHeight (SplineChar *sc, int layer)
             nsp = sp->next->to;
             if (sp->me.y > 5 && sp->me.y >= nsp->me.y - 1
                 && sp->me.y <= nsp->me.y + 1)
-              return (sp->me.y);
+              return sp->me.y;
           }
       }
-  return (0);
+  return 0;
 }
 
 static void
@@ -8709,11 +8709,11 @@ FVChangeXHeight (FontViewBase *fv, SplineChar *sc, int layer,
       if (!ref->sc->ticked && IsSelected (fv, ref->sc))
         {
           if (!FVChangeXHeight (fv, ref->sc, layer, xi))
-            return (false);
+            return false;
         }
     }
   SCChangeXHeight (sc, layer, xi);
-  return (ff_progress_next ());
+  return ff_progress_next ();
 }
 
 void

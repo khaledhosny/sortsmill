@@ -123,7 +123,7 @@ MakeContainer (struct font *fn, char *family, char *style)
   sc->name = xstrdup (".notdef");
   sc->width = fn->chars[i].width * em / fn->frectheight;
   sc->widthset = true;
-  return (sf);
+  return sf;
 }
 
 /* scale all metric info by density/72. Not clear what happens for non-integral results */
@@ -234,7 +234,7 @@ PalmTestFont (FILE *file, int end, char *family, char *style)
       type = type << 8;
     }
   if ((type & 0x9000) != 0x9000)
-    return (NULL);
+    return NULL;
   memset (&fn, 0, sizeof (fn));
   fn.first = getushort (file);
   fn.last = getushort (file);
@@ -252,22 +252,22 @@ PalmTestFont (FILE *file, int end, char *family, char *style)
   if (feof (file) || ftell (file) >= end || fn.first > fn.last || fn.last > 255
       || pos + (fn.last - fn.first + 2) * 2 + 2 * fn.rowwords * fn.frectheight >
       end || owtloc + 2 * (fn.last - fn.first + 2) > end)
-    return (NULL);
+    return NULL;
   dencount = 0;
   if (type & 0x200)
     {
       if (getushort (file) != 1)        /* Extended data version number */
-        return (NULL);
+        return NULL;
       dencount = getushort (file);
       if (dencount > 6)         /* only a few sizes allowed */
-        return (NULL);
+        return NULL;
       for (i = 0; i < dencount; ++i)
         {
           density[i].density = getushort (file);
           density[i].offset = getlong (file);
           if (ftell (file) > end || (density[i].density != 72 && density[i].density != 108 && density[i].density != 144 && density[i].density != 216 && /*Documented, but not supported */
                                      density[i].density != 288))        /*Documented, but not supported */
-            return (NULL);
+            return NULL;
         }
     }
   else
@@ -284,7 +284,7 @@ PalmTestFont (FILE *file, int end, char *family, char *style)
       fn.chars[i].start = getushort (file);
       if (fn.chars[i].start > maxbit
           || (i != 0 && fn.chars[i].start < fn.chars[i - 1].start))
-        return (NULL);
+        return NULL;
     }
 
   fseek (file, owtloc, SEEK_SET);
@@ -296,11 +296,11 @@ PalmTestFont (FILE *file, int end, char *family, char *style)
       if (offset == -1 && width == -1)
         /* Skipped glyph */ ;
       else if (offset != 0)
-        return (NULL);
+        return NULL;
       fn.chars[i].width = width;
     }
   if (feof (file) || ftell (file) > end)
-    return (NULL);
+    return NULL;
 
   sf = MakeContainer (&fn, family, style);
   if (type & 0x200)
@@ -313,7 +313,7 @@ PalmTestFont (FILE *file, int end, char *family, char *style)
     {
       PalmReadBitmaps (sf, file, imagepos, &fn, 72);
     }
-  return (sf);
+  return sf;
 }
 
 static char *
@@ -329,7 +329,7 @@ palmreadstring (FILE *file)
   while ((ch = getc (file)) != 0 && ch != EOF)
     *pt++ = ch;
   *pt = '\0';
-  return (str);
+  return str;
 }
 
 static SplineFont *
@@ -342,7 +342,7 @@ PalmTestRecord (FILE *file, int start, int end, char *name)
   int version;
 
   if (end <= start)
-    return (NULL);
+    return NULL;
 
   fseek (file, start, SEEK_SET);
   type = getushort (file);
@@ -384,7 +384,7 @@ ret:
   free (family);
   free (style);
   fseek (file, here, SEEK_SET);
-  return (sf);
+  return sf;
 }
 
 SplineFont *
@@ -398,7 +398,7 @@ SFReadPalmPdb (char *filename, int toback)
 
   file = fopen (filename, "rb");
   if (file == NULL)
-    return (NULL);
+    return NULL;
 
   fseek (file, 0, SEEK_END);
   file_end = ftell (file);
@@ -424,7 +424,7 @@ SFReadPalmPdb (char *filename, int toback)
       if (sf != NULL)
         {
           fclose (file);
-          return (sf);
+          return sf;
         }
       offset = next_offset;
     }
@@ -432,12 +432,12 @@ SFReadPalmPdb (char *filename, int toback)
   if (sf != NULL)
     {
       fclose (file);
-      return (sf);
+      return sf;
     }
 
 fail:
   fclose (file);
-  return (NULL);                /* failed */
+  return NULL;                /* failed */
 }
 
 static FILE *
@@ -464,7 +464,7 @@ MakeFewRecordPdb (char *filename, int cnt)
       ff_post_error (_("Couldn't open file"), _("Couldn't open file %.200s"),
                      fn);
       free (fn);
-      return (NULL);
+      return NULL;
     }
 
   *pt2 = '\0';
@@ -500,7 +500,7 @@ MakeFewRecordPdb (char *filename, int cnt)
       putlong (file, 0);
       putlong (file, 0);
     }
-  return (file);
+  return file;
 }
 
 static BDFFont *
@@ -511,7 +511,7 @@ getbdfsize (SplineFont *sf, int32_t size)
   for (bdf = sf->bitmaps;
        bdf != NULL && (bdf->pixelsize != (size & 0xffff)
                        || BDFDepth (bdf) != (size >> 16)); bdf = bdf->next);
-  return (bdf);
+  return bdf;
 }
 
 struct FontTag
@@ -541,7 +541,7 @@ ValidMetrics (BDFFont *test, BDFFont *base, EncMap *map, int den)
   IBounds ib;
 
   if (test == NULL)
-    return (true);
+    return true;
 
   if (test == base && map->enc->char_cnt >= 256)
     ff_post_notice (_("Bad Metrics"),
@@ -558,7 +558,7 @@ ValidMetrics (BDFFont *test, BDFFont *base, EncMap *map, int den)
                            _
                            ("One of the fonts %1$d,%2$d is missing glyph %3$d"),
                            test->pixelsize, base->pixelsize, i);
-            return (false);
+            return false;
           }
         /* Can't just use the glyph's max/min properties at this point, as some glyphs may contain */
         /* references, in which case those properties would be mostly irrelevant */
@@ -588,10 +588,10 @@ ValidMetrics (BDFFont *test, BDFFont *base, EncMap *map, int den)
                            _
                            ("Advance width of glyph %.30s must be less than 127"),
                            test->pixelsize, test->glyphs[gid]->sc->name);
-            return (false);
+            return false;
           }
       }
-  return (true);
+  return true;
 }
 
 static void
@@ -631,7 +631,7 @@ BDF2Image (struct FontTag *fn, BDFFont *bdf, int **offsets,
   BDFChar *bdfc;
 
   if (bdf == NULL)
-    return (NULL);
+    return NULL;
   for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCPrepareForOutput (bdfc, true);
@@ -711,7 +711,7 @@ BDF2Image (struct FontTag *fn, BDFFont *bdf, int **offsets,
   for (i = 0; i < map->enc_limit; i++)
     if ((gid = enc_to_gid (map, i)) != -1 && (bdfc = bdf->glyphs[gid]) != NULL)
       BCRestoreAfterOutput (bdfc);
-  return (image);
+  return image;
 }
 
 int
@@ -730,12 +730,12 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
   int notdefpos = -1;
 
   if (sizes == NULL || sizes[0] == 0)
-    return (false);
+    return false;
   for (i = 0; sizes[i] != 0; ++i)
     {
       temp = getbdfsize (sf, sizes[i]);
       if (temp == NULL || BDFDepth (temp) != 1)
-        return (false);
+        return false;
       if (base == NULL || base->pixelsize > temp->pixelsize)
         base = temp;
     }
@@ -750,7 +750,7 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
                          _
                          ("One of the bitmap fonts specified, %1$d, is not an integral scale up of the smallest font, %2$d (or is too large a factor)"),
                          temp->pixelsize, base->pixelsize);
-          return (false);
+          return false;
         }
       densities[den - 1] = temp;
     }
@@ -759,7 +759,7 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
   for (i = 0; i < 4; ++i)
     {
       if (!ValidMetrics (densities[i], base, map, i + 1))
-        return (false);
+        return false;
       if (densities[i])
         ++dencnt;
     }
@@ -779,7 +779,7 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
         ff_choose (_("Choose a file format..."), (const char **) choices, 4, 3,
                    _("What type(s) of palm font records do you want?"));
       if (fonttype == -1)
-        return (false);
+        return false;
       if (fonttype >= 2)
         fontcnt = 2;
     }
@@ -813,7 +813,7 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
 
   file = MakeFewRecordPdb (filename, fontcnt);
   if (file == NULL)
-    return (false);
+    return false;
 
   images[0] =
     BDF2Image (&fn, base, &offsets, &widths, &fn.rowWords, base, map,
@@ -918,5 +918,5 @@ WritePalmBitmaps (char *filename, SplineFont *sf, int32_t *sizes, EncMap *map)
   free (widths);
   for (i = 0; i < 4; ++i)
     free (images[i]);
-  return (true);
+  return true;
 }

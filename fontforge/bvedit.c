@@ -460,9 +460,9 @@ BCHasOutputtableBitmap (BDFChar *bc)
   for (i = 0; i < bc->bytes_per_line * (bc->ymax - bc->ymin + 1); i++)
     {
       if (bc->bitmap[i] != 0)
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 void
@@ -522,13 +522,13 @@ BDFFloatCopy (BDFFloat * sel)
 {
   BDFFloat *new;
   if (sel == NULL)
-    return (NULL);
+    return NULL;
   new = xmalloc (sizeof (BDFFloat));
   *new = *sel;
   new->bitmap = xmalloc (sel->bytes_per_line * (sel->ymax - sel->ymin + 1));
   memcpy (new->bitmap, sel->bitmap,
           sel->bytes_per_line * (sel->ymax - sel->ymin + 1));
-  return (new);
+  return new;
 }
 
 BDFFloat *
@@ -537,10 +537,10 @@ BDFFloatConvert (BDFFloat * sel, int todepth, int fromdepth)
   BDFFloat *new;
   int i, j, fdiv, tdiv;
   if (sel == NULL)
-    return (NULL);
+    return NULL;
 
   if (todepth == fromdepth)
-    return (BDFFloatCopy (sel));
+    return BDFFloatCopy (sel);
 
   new = xmalloc (sizeof (BDFFloat));
   *new = *sel;
@@ -585,7 +585,7 @@ BDFFloatConvert (BDFFloat * sel, int todepth, int fromdepth)
       for (i = 0; i < sel->bytes_per_line * (sel->ymax - sel->ymin + 1); ++i)
         new->bitmap[i] = (sel->bitmap[i] * fdiv + tdiv / 2) / tdiv;
     }
-  return (new);
+  return new;
 }
 
 /* Creates a floating selection, and clears out the underlying bitmap */
@@ -624,7 +624,7 @@ BDFFloatCreate (BDFChar *bc, int xmin, int xmax, int ymin, int ymax, int clear)
   if (ymax > bc->ymax)
     ymax = bc->ymax;
   if (xmin > xmax || ymin > ymax)
-    return (NULL);
+    return NULL;
   new = xmalloc (sizeof (BDFFloat));
   new->xmin = xmin;
   new->xmax = xmax;
@@ -669,7 +669,7 @@ BDFFloatCreate (BDFChar *bc, int xmin, int xmax, int ymin, int ymax, int clear)
     }
   if (clear)
     bc->selection = new;
-  return (new);
+  return new;
 }
 
 void
@@ -779,7 +779,7 @@ BDFGetMergedChar (BDFChar *bc)
   BDFChar *ret;
 
   if (bc == NULL)
-    return (NULL);
+    return NULL;
   ret = xzalloc (sizeof (BDFChar));
   memcpy (ret, bc, sizeof (BDFChar));
   ret->bitmap =
@@ -796,7 +796,7 @@ BDFGetMergedChar (BDFChar *bc)
       BCFlattenFloat (ret);
       BCCompressBitmap (ret);
     }
-  return (ret);
+  return ret;
 }
 
 int
@@ -851,7 +851,7 @@ BDFCharQuickBounds (BDFChar *bc, IBounds * bb, int8_t xoff, int8_t yoff,
                             head->yoff + yoff, has_bitmap || use_backup, first
                             && !has_bitmap);
     }
-  return (first && !has_bitmap);
+  return first && !has_bitmap;
 }
 
 void
@@ -1118,7 +1118,7 @@ BCScale (BDFChar *old, int from, int to)
   real dto = to;
 
   if (old == NULL || old->byte_data)
-    return (NULL);
+    return NULL;
   new = xzalloc (sizeof (BDFChar));
   new->sc = old->sc;
   new->xmin = rint (old->xmin * dto / from);
@@ -1191,7 +1191,7 @@ BCScale (BDFChar *old, int from, int to)
             (1 << (7 - (x & 7)));
       }
 
-  return (new);
+  return new;
 }
 
 /* Scale a greymap character to either another greymap or a bitmap */
@@ -1206,7 +1206,7 @@ BCScaleGrey (BDFChar *old, int from, int from_depth, int to, int to_depth)
   real max = (1 << to_depth);
 
   if (old == NULL || !old->byte_data)
-    return (NULL);
+    return NULL;
   new = xzalloc (sizeof (BDFChar));
   new->sc = old->sc;
   new->xmin = rint (old->xmin * dto / from);
@@ -1297,7 +1297,7 @@ BCScaleGrey (BDFChar *old, int from, int from_depth, int to, int to_depth)
           }
       }
 
-  return (new);
+  return new;
 }
 
 BDFFont *
@@ -1339,5 +1339,5 @@ BitmapFontScaleTo (BDFFont *old, int to)
     }
   if (linear_scale != 1)
     BDFClut (new, linear_scale);
-  return (new);
+  return new;
 }

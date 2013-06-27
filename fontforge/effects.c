@@ -181,7 +181,7 @@ SpMove (SplinePoint *sp, real offset,
       lines = line;
     }
 
-  return (lines);
+  return lines;
 }
 
 static void
@@ -268,7 +268,7 @@ AddVerticalExtremaAndMove (SplineSet *base, real shadow_length,
   int p;
 
   if (shadow_length == 0)
-    return (NULL);
+    return NULL;
 
   t[0] = t[1] = 0;
   for (spl = base; spl != NULL; spl = spl->next)
@@ -408,7 +408,7 @@ AddVerticalExtremaAndMove (SplineSet *base, real shadow_length,
             *_lines = lines;
           }
       }
-  return (head);
+  return head;
 }
 
 static void
@@ -527,7 +527,7 @@ IntersectLine (Spline *spline1, Spline *spline2)
   int i;
 
   if (!SplinesIntersect (spline1, spline2, pts, t1s, t2s))
-    return (-1);
+    return -1;
   for (i = 0; i < 10 && t1s[i] != -1; ++i)
     {
       if (t1s[i] < .001 && t1s[i] > .999)
@@ -536,9 +536,9 @@ IntersectLine (Spline *spline1, Spline *spline2)
         mint = t1s[i];
     }
   if (mint == 1)
-    return (-1);
+    return -1;
 
-  return (mint);
+  return mint;
 }
 
 static int
@@ -568,9 +568,9 @@ ClipLineTo3D (Spline *line, SplineSet *spl)
       SplinePointFree (line->to->next->to);
       SplineFree (line->to->next);
       line->to->next = NULL;
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 /* finds all intersections between this spline and all the other splines in the */
@@ -638,7 +638,7 @@ BottomFindIntersections (Spline *bottom, SplineSet *lines, SplineSet *spl)
   if (tcnt == 0)
     {
       free (ts);
-      return (NULL);
+      return NULL;
     }
   for (i = 0; i < tcnt; ++i)
     for (j = i + 1; j < tcnt; ++j)
@@ -654,7 +654,7 @@ BottomFindIntersections (Spline *bottom, SplineSet *lines, SplineSet *spl)
     if (ts[i] != ts[i - 1])
       ts[j++] = ts[i];
   ts[j] = -1;
-  return (ts);
+  return ts;
 }
 
 static int
@@ -663,10 +663,10 @@ LineAtPointCompletes (SplineSet *lines, BasePoint *pt)
   while (lines != NULL)
     {
       if (lines->last->me.x == pt->x && lines->last->me.y == pt->y)
-        return (true);
+        return true;
       lines = lines->next;
     }
-  return (false);
+  return false;
 }
 
 static SplinePoint *
@@ -690,7 +690,7 @@ MidLineCompetes (Spline *s, bigreal t, bigreal shadow_length, SplineSet *spl)
   SplinePointFree (line->to);   /* This might not be the same as to */
   SplinePointFree (line->from); /* This will be the same as from */
   SplineFree (line);
-  return (!ret);
+  return !ret;
 }
 
 static void
@@ -771,7 +771,7 @@ MergeLinesToBottoms (SplineSet *bottoms, SplineSet *lines)
         }
       bottoms = bottoms->next;
     }
-  return (lines);
+  return lines;
 }
 
 static SplineSet *
@@ -854,7 +854,7 @@ ClipBottomTo3D (SplineSet *bottom, SplineSet *lines, SplineSet *spl,
       SplinePointListFree (bottom);
       bottom = next;
     }
-  return (head);
+  return head;
 }
 
 static SplineSet *
@@ -875,10 +875,10 @@ ClipTo3D (SplineSet *bottoms, SplineSet *lines, SplineSet *spl,
     {
       for (temp = lines; temp->next != NULL; temp = temp->next);
       temp->next = head;
-      return (lines);
+      return lines;
     }
   else
-    return (head);
+    return head;
 }
 
 SplineSet *
@@ -892,7 +892,7 @@ SSShadow (SplineSet *spl, real angle, real outline_width,
   int order2 = false;
 
   if (spl == NULL)
-    return (NULL);
+    return NULL;
   for (temp = spl; temp != NULL; temp = temp->next)
     {
       if (temp->first->next != NULL)
@@ -969,7 +969,7 @@ SSShadow (SplineSet *spl, real angle, real outline_width,
         }
     }
 
-  return (spl);
+  return spl;
 }
 
 void

@@ -131,9 +131,9 @@ node_alphabetize (const void *_n1, const void *_n2)
 
   ret = strcasecmp (n1->label, n2->label);
   if (ret != 0)
-    return (ret);
+    return ret;
 
-  return (strcmp (n1->label, n2->label));
+  return strcmp (n1->label, n2->label);
 }
 
 static void
@@ -493,7 +493,7 @@ PSTAllComponentsExist (SplineFont *sf, char *glyphnames)
   int ret;
 
   if (glyphnames == NULL)
-    return (false);
+    return false;
   for (start = glyphnames; *start; start = end)
     {
       while (*start == ' ')
@@ -506,9 +506,9 @@ PSTAllComponentsExist (SplineFont *sf, char *glyphnames)
       ret = SCWorthOutputting (SFGetChar (sf, -1, start));
       *end = ch;
       if (!ret)
-        return (false);
+        return false;
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -2144,7 +2144,7 @@ _SizeCnt (struct att_dlg *att, struct node *node, int lpos, int depth)
       for (i = 0; i < node->cnt; ++i)
         lpos = _SizeCnt (att, &node->children[i], lpos, depth + 1);
     }
-  return (lpos);
+  return lpos;
 }
 
 static int
@@ -2161,7 +2161,7 @@ SizeCnt (struct att_dlg *att, struct node *node, int lpos)
   GScrollBarSetBounds (att->vsb, 0, lpos, att->lines_page);
   GScrollBarSetBounds (att->hsb, 0, att->maxl, att->page_width);
   att->open_cnt = lpos;
-  return (lpos);
+  return lpos;
 }
 
 static struct node *
@@ -2170,11 +2170,11 @@ NodeFindLPos (struct node *node, int lpos, int *depth)
   while (true)
     {
       if (node->lpos == lpos)
-        return (node);
+        return node;
       if (node[1].label != NULL && node[1].lpos <= lpos)
         ++node;
       else if (node->children == NULL || !node->open)
-        return (NULL);
+        return NULL;
       else
         {
           node = node->children;
@@ -2189,16 +2189,16 @@ NodeNext (struct node *node, int *depth)
   if (node->open && node->children && node->children[0].label)
     {
       ++*depth;
-      return (node->children);
+      return node->children;
     }
   while (true)
     {
       if (node[1].label)
-        return (node + 1);
+        return node + 1;
       node = node->parent;
       --*depth;
       if (node == NULL)
-        return (NULL);
+        return NULL;
     }
 }
 
@@ -2211,14 +2211,14 @@ NodePrev (struct att_dlg *att, struct node *node, int *depth)
       --*depth;
     }
   if (node->parent == NULL && node == att->tables)
-    return (NULL);
+    return NULL;
   --node;
   while (node->open)
     {
       node = &node->children[node->cnt - 1];
       ++*depth;
     }
-  return (node);
+  return node;
 }
 
 static char *
@@ -2234,9 +2234,9 @@ findstartquote (char *str)
       ch = u8_get_next ((const uint8_t **) &cur);
       for (i = 0; quotes[i] != 0; ++i)
         if (ch == quotes[i])
-          return (last);
+          return last;
     }
-  return (NULL);
+  return NULL;
 }
 
 static char *
@@ -2252,12 +2252,12 @@ findendquote (char *str)
       last = cur;
       ch = u8_get_next ((const uint8_t **) &cur);
       if (ch == ' ')
-        return (NULL);
+        return NULL;
       for (i = 0; endquotes[i] != 0; ++i)
         if (ch == endquotes[i])
-          return (last);
+          return last;
     }
-  return (NULL);
+  return NULL;
 }
 
 static void
@@ -2469,7 +2469,7 @@ FVVerify (FontView *fv)
 
   for (test = fv_list; test != NULL && test != fv;
        test = (FontView *) test->b.next);
-  return (test);
+  return test;
 }
 
 static void
@@ -2550,7 +2550,7 @@ _ATT_PopupImage (const void *_att)
   int isliga;
 
   if (att->popup_node == NULL || att->popup_node->label == NULL)
-    return (NULL);
+    return NULL;
   for (start = att->popup_node->label; *start == ' ' || isdigit (*start);
        ++start);
   for (pt = start; *pt != '\0' && *pt != ' '; ++pt);
@@ -2559,7 +2559,7 @@ _ATT_PopupImage (const void *_att)
   sc = SFGetChar (att->sf, -1, start);
   *pt = ch;
   if (sc == NULL)
-    return (NULL);
+    return NULL;
 
   isliga = -1;
   while (*pt == ' ' || *pt == '=' || *pt == '>' || *pt == '<')
@@ -2572,7 +2572,7 @@ _ATT_PopupImage (const void *_att)
     }
   if (!isalpha (*pt))           /* If alphabetic, then show the glyph names that follow too. Otherwise show nothing for gpos lookups */
     pt = "";
-  return (NameList_GetImage (att->sf, sc, att->def_layer, pt, isliga));
+  return NameList_GetImage (att->sf, sc, att->def_layer, pt, isliga);
 }
 
 static void
@@ -2767,7 +2767,7 @@ AttChar (struct att_dlg *att, GEvent *event)
     case GK_F1:
     case GK_Help:
       help ("showatt.html");
-      return (true);
+      return true;
     case GK_Return:
     case GK_KP_Enter:
       att->current->open = !att->current->open;
@@ -2776,7 +2776,7 @@ AttChar (struct att_dlg *att, GEvent *event)
       GScrollBarSetBounds (att->vsb, 0, att->open_cnt, att->lines_page);
 
       GDrawRequestExpose (att->v, NULL, false);
-      return (true);
+      return true;
     case GK_Page_Down:
     case GK_KP_Page_Down:
       pos = att->off_top + (att->lines_page <= 1 ? 1 : att->lines_page - 1);
@@ -2787,15 +2787,15 @@ AttChar (struct att_dlg *att, GEvent *event)
       att->off_top = pos;
       GScrollBarSetPos (att->vsb, pos);
       GDrawRequestExpose (att->v, NULL, false);
-      return (true);
+      return true;
     case GK_Down:
     case GK_KP_Down:
       ATTChangeCurrent (att, NodeNext (att->current, &depth));
-      return (true);
+      return true;
     case GK_Up:
     case GK_KP_Up:
       ATTChangeCurrent (att, NodePrev (att, att->current, &depth));
-      return (true);
+      return true;
     case GK_Page_Up:
     case GK_KP_Page_Up:
       pos = att->off_top - (att->lines_page <= 1 ? 1 : att->lines_page - 1);
@@ -2804,11 +2804,11 @@ AttChar (struct att_dlg *att, GEvent *event)
       att->off_top = pos;
       GScrollBarSetPos (att->vsb, pos);
       GDrawRequestExpose (att->v, NULL, false);
-      return (true);
+      return true;
     case GK_Left:
     case GK_KP_Left:
       ATTChangeCurrent (att, att->current->parent);
-      return (true);
+      return true;
     case GK_Right:
     case GK_KP_Right:
       if (!att->current->open)
@@ -2824,23 +2824,23 @@ AttChar (struct att_dlg *att, GEvent *event)
         }
       else
         ATTChangeCurrent (att, att->current->children);
-      return (true);
+      return true;
     case GK_Home:
     case GK_KP_Home:
       ATTChangeCurrent (att, att->tables);
-      return (true);
+      return true;
     case GK_End:
     case GK_KP_End:
       ATTChangeCurrent (att,
                         NodeFindLPos (att->tables, att->open_cnt - 1, &depth));
-      return (true);
+      return true;
     case 'S':
     case 's':
       if (event->u.mouse.state & ksm_control)
         AttSave (att);
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -2851,7 +2851,7 @@ attv_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown) &&
       (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (att->vsb, event));
+      return GGadgetDispatchEvent (att->vsb, event);
     }
 
   switch (event->type)
@@ -2860,14 +2860,14 @@ attv_e_h (GWindow gw, GEvent *event)
       AttExpose (att, gw, &event->u.expose.rect);
       break;
     case et_char:
-      return (AttChar (att, event));
+      return AttChar (att, event);
     case et_mousedown:
     case et_mousemove:
     case et_mouseup:
       AttMouse (att, event);
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2878,7 +2878,7 @@ att_e_h (GWindow gw, GEvent *event)
   if ((event->type == et_mouseup || event->type == et_mousedown) &&
       (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
     {
-      return (GGadgetDispatchEvent (att->vsb, event));
+      return GGadgetDispatchEvent (att->vsb, event);
     }
 
   switch (event->type)
@@ -2886,7 +2886,7 @@ att_e_h (GWindow gw, GEvent *event)
     case et_expose:
       break;
     case et_char:
-      return (AttChar (att, event));
+      return AttChar (att, event);
       break;
     case et_resize:
       if (event->u.resize.sized)
@@ -2920,7 +2920,7 @@ att_e_h (GWindow gw, GEvent *event)
           free (att);
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -3069,7 +3069,7 @@ ReadNestedLine (struct nested_file *nf)
   if (ch == EOF)
     {
       nf->read_nest = -1;
-      return (-1);
+      return -1;
     }
   while (ch != EOF && ch != '\n')
     {
@@ -3086,7 +3086,7 @@ ReadNestedLine (struct nested_file *nf)
     }
   *pt = '\0';
   nf->read_nest = nest;
-  return (nest);
+  return nest;
 }
 
 static void
@@ -3280,7 +3280,7 @@ FC_OK (GGadget *g, GEvent *e)
         FontCmpDlg (d->fv, fv, flags);
       d->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3293,7 +3293,7 @@ FC_Cancel (GGadget *g, GEvent *e)
       d->done = true;
       GDrawDestroyWindow (gw);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3307,9 +3307,9 @@ fc_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
-  return (true);
+  return true;
 }
 
 void

@@ -3129,12 +3129,12 @@ UI_TTFNameIds (int id)
   FontInfoInit ();
   for (i = 0; ttfnameids[i].text != NULL; ++i)
     if (ttfnameids[i].userdata == (void *) (intptr_t) id)
-      return ((char *) ttfnameids[i].text);
+      return (char *) ttfnameids[i].text;
 
   if (id == 6)
-    return ("PostScript");
+    return "PostScript";
 
-  return (_("Unknown"));
+  return _("Unknown");
 }
 
 const char *
@@ -3145,14 +3145,14 @@ UI_MSLangString (int language)
   FontInfoInit ();
   for (i = 0; mslanguages[i].text != NULL; ++i)
     if (mslanguages[i].userdata == (void *) (intptr_t) language)
-      return ((char *) mslanguages[i].text);
+      return (char *) mslanguages[i].text;
 
   language &= 0xff;
   for (i = 0; mslanguages[i].text != NULL; ++i)
     if (((intptr_t) mslanguages[i].userdata & 0xff) == language)
-      return ((char *) mslanguages[i].text);
+      return (char *) mslanguages[i].text;
 
-  return (_("Unknown"));
+  return _("Unknown");
 }
 
 /* These are PostScript names, and as such should not be translated */
@@ -3300,8 +3300,8 @@ rpldecimal (const char *orig, const char *decimal_point, const char *oldloc)
       while (isspace (*end))
         ++end;
       if (*end != '\0')
-        return (NULL);
-      return (xstrdup_or_null (orig));
+        return NULL;
+      return xstrdup_or_null (orig);
     }
 
   npt = new = xmalloc (2 * strlen (orig) + 10);
@@ -3332,7 +3332,7 @@ rpldecimal (const char *orig, const char *decimal_point, const char *oldloc)
     {
       char *ret = xstrdup_or_null (new);
       free (new);
-      return (ret);
+      return ret;
     }
 
   /* OK, can we parse the number in the original local? */
@@ -3342,13 +3342,13 @@ rpldecimal (const char *orig, const char *decimal_point, const char *oldloc)
   if (*end != '\0')
     {
       free (new);
-      return (NULL);
+      return NULL;
     }
   free (new);
   setlocale (LC_NUMERIC, "C");
   sprintf (buffer, "%g", dval);
   setlocale (LC_NUMERIC, oldloc);
-  return (xstrdup_or_null (buffer));
+  return xstrdup_or_null (buffer);
 }
 
 static char *
@@ -3381,7 +3381,7 @@ rplarraydecimal (const char *orig, const char *decimal_point,
                               "Failed to parse \"%.*s\" as a number."),
                             pt - start, start);
           free (new);
-          return (NULL);
+          return NULL;
         }
       if (npt - new + strlen (rpl) + 2 > nlen)
         {
@@ -3401,7 +3401,7 @@ rplarraydecimal (const char *orig, const char *decimal_point,
   *npt = '\0';
   rpl = xstrdup_or_null (new);
   free (new);
-  return (rpl);
+  return rpl;
 }
 
 static void
@@ -3555,7 +3555,7 @@ GFI_ParsePrivate (struct gfi_data *d)
         }
     }
   ret->next = j;
-  return (ret);
+  return ret;
 }
 
 static void
@@ -3613,7 +3613,7 @@ PI_Guess (GGadget *g, GEvent *e)
         }
       PSDictFree (tempdict);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3644,7 +3644,7 @@ PI_Hist (GGadget *g, GEvent *e)
       else if (strcmp (key, "StdVW") == 0 || strcmp (key, "StemSnapV") == 0)
         h = hist_vstem;
       else
-        return (true);          /* can't happen */
+        return true;          /* can't happen */
       tempdict = GFI_ParsePrivate (d);
       SFHistogram (d->sf, ly_fore, tempdict, NULL, NULL, h);
       ret = xstrdup_or_null (PSDictHasEntry (tempdict, key));
@@ -3656,7 +3656,7 @@ PI_Hist (GGadget *g, GEvent *e)
         }
       PSDictFree (tempdict);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3741,7 +3741,7 @@ GFI_NameChange (GGadget *g, GEvent *e)
           GGadgetSetTitle (GWidgetGetControl (gw, CID_Family), temp);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3752,7 +3752,7 @@ GFI_FamilyChange (GGadget *g, GEvent *e)
       struct gfi_data *gfi = GDrawGetUserData (GGadgetGetWindow (g));
       gfi->family_untitled = false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3766,7 +3766,7 @@ GFI_DefBaseChange (GGadget *g, GEvent *e)
                           *_GGadgetGetTitle (g) !=
                           '\0' ? CID_HasDefBase : CID_SameAsFontname), true);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3777,7 +3777,7 @@ GFI_HumanChange (GGadget *g, GEvent *e)
       struct gfi_data *gfi = GDrawGetUserData (GGadgetGetWindow (g));
       gfi->human_untitled = false;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3793,7 +3793,7 @@ GFI_VMetricsCheck (GGadget *g, GEvent *e)
                          (GDrawGetParentWindow (gw), CID_VLineGapLab),
                          checked);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3808,7 +3808,7 @@ GFI_EmChanged (GGadget *g, GEvent *e)
       uint32_t *end;
       int val = u32_strtol (ret, &end, 10), ascent, descent;
       if (*end)
-        return (true);
+        return true;
       switch (GGadgetGetCid (g))
         {
         case CID_Em:
@@ -3822,14 +3822,14 @@ GFI_EmChanged (GGadget *g, GEvent *e)
           ret = _GGadgetGetTitle (GWidgetGetControl (d->gw, CID_Descent));
           descent = u32_strtol (ret, &end, 10);
           if (*end)
-            return (true);
+            return true;
           break;
         case CID_Descent:
           descent = val;
           ret = _GGadgetGetTitle (GWidgetGetControl (d->gw, CID_Ascent));
           ascent = u32_strtol (ret, &end, 10);
           if (*end)
-            return (true);
+            return true;
           break;
         }
       sprintf (buf, "%d", ascent);
@@ -3848,7 +3848,7 @@ GFI_EmChanged (GGadget *g, GEvent *e)
       u32_strcpy (ubuf, x_gc_u8_to_u32 (buf));
       GGadgetSetTitle (GWidgetGetControl (d->gw, CID_Em), ubuf);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -3864,7 +3864,7 @@ GFI_GuessItalic (GGadget *g, GEvent *e)
       u32_strcpy (ubuf, x_gc_u8_to_u32 (buf));
       GGadgetSetTitle (GWidgetGetControl (d->gw, CID_ItalicAngle), ubuf);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -3944,7 +3944,7 @@ GFI_Mark_PickGlyphsForClass (GGadget *g, int r, int c)
   char *new =
     GlyphSetFromSelection (d->sf, d->def_layer,
                            classes[r * cols + c].u.md_str);
-  return (new);
+  return new;
 }
 
 static void
@@ -4012,7 +4012,7 @@ GFI_GlyphListCompletion (GGadget *t, int from_tab)
     GDrawGetUserData (GDrawGetParentWindow (GGadgetGetWindow (t)));
   SplineFont *sf = d->sf;
 
-  return (SFGlyphNameCompletion (sf, t, from_tab, true));
+  return SFGlyphNameCompletion (sf, t, from_tab, true);
 }
 
 static void
@@ -4060,7 +4060,7 @@ OtfNameFromStyleNames (GGadget *me)
         last->next = cur;
       last = cur;
     }
-  return (head);
+  return head;
 }
 
 void
@@ -4155,7 +4155,7 @@ GListChangeLine (GGadget *list, int pos, const uint32_t *line)
   new[i] = xcalloc (1, sizeof (GTextInfo));
   GGadgetSetList (list, new, false);
   GGadgetScrollListToPos (list, pos);
-  return (new[pos]);
+  return new[pos];
 }
 
 GTextInfo *
@@ -4182,7 +4182,7 @@ GListAppendLine (GGadget *list, const uint32_t *line, int select)
   new[i + 1] = xcalloc (1, sizeof (GTextInfo));
   GGadgetSetList (list, new, false);
   GGadgetScrollListToPos (list, i);
-  return (new[i]);
+  return new[i];
 }
 
 GTextInfo *
@@ -4205,7 +4205,7 @@ GListChangeLine8 (GGadget *list, int pos, const char *line)
   new[i] = xcalloc (1, sizeof (GTextInfo));
   GGadgetSetList (list, new, false);
   GGadgetScrollListToPos (list, pos);
-  return (new[pos]);
+  return new[pos];
 }
 
 GTextInfo *
@@ -4232,7 +4232,7 @@ GListAppendLine8 (GGadget *list, const char *line, int select)
   new[i + 1] = xcalloc (1, sizeof (GTextInfo));
   GGadgetSetList (list, new, false);
   GGadgetScrollListToPos (list, i);
-  return (new[i]);
+  return new[i];
 }
 
 static int
@@ -4243,7 +4243,7 @@ GFI_Cancel (GGadget *g, GEvent *e)
       struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       GFI_CancelClose (d);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -4275,7 +4275,7 @@ SetFontName (GWindow gw, SplineFont *sf)
   sf->fontname = x_u32_to_u8 (u32_force_valid (ufont));
   sf->weight = x_u32_to_u8 (u32_force_valid (uweight));
   sf->fullname = x_u32_to_u8 (u32_force_valid (uhum));
-  return (diff);
+  return diff;
 }
 
 static int
@@ -4296,21 +4296,21 @@ CheckNames (struct gfi_data *d)
       ff_post_error (_("Bad Font Name"),
                      _
                      ("A PostScript name should be ASCII\nand must not contain (){}[]<>%%/ or space\nand must be shorter than 63 characters"));
-      return (false);
+      return false;
     }
 
   if (*ufamily == '\0')
     {
       ff_post_error (_("A Font Family name is required"),
                      _("A Font Family name is required"));
-      return (false);
+      return false;
     }
   // A PostScript name must not be a PostScript number.
   if (is_postscript_number (x_gc_u32_to_u8 (ufamily)))
     {
       ff_post_error (_("Bad Font Family Name"),
                      _("A PostScript name must not be a PostScript number"));
-      return (false);
+      return false;
     }
   if (u32_strlen (ufamily) > 31)
     {
@@ -4319,7 +4319,7 @@ CheckNames (struct gfi_data *d)
            _
            ("Some versions of Windows will refuse to install postscript fonts if the familyname is longer than 31 characters. Do you want to continue anyway?"))
           == 1)
-        return (false);
+        return false;
     }
   else
     {
@@ -4330,7 +4330,7 @@ CheckNames (struct gfi_data *d)
                _
                ("Some versions of Windows will refuse to install postscript fonts if the fontname is longer than 31 characters. Do you want to continue anyway?"))
               == 1)
-            return (false);
+            return false;
         }
       else if (u32_strlen (ufont) > 29)
         {
@@ -4339,7 +4339,7 @@ CheckNames (struct gfi_data *d)
                _
                ("Adobe's fontname spec (5088.FontNames.pdf) says that fontnames should not be longer than 29 characters. Do you want to continue anyway?"))
               == 1)
-            return (false);
+            return false;
         }
     }
   while (*ufamily)
@@ -4349,7 +4349,7 @@ CheckNames (struct gfi_data *d)
           ff_post_error (_("Bad Font Family Name"),
                          _
                          ("A PostScript name should be ASCII\nand must not contain (){}[]<>%%/ or space"));
-          return (false);
+          return false;
         }
       ++ufamily;
     }
@@ -4359,7 +4359,7 @@ CheckNames (struct gfi_data *d)
     {
       ff_post_error (_("Bad Font Name"),
                      _("A PostScript name must not be a PostScript number"));
-      return (false);
+      return false;
     }
   for (pt = ufont; *pt; ++pt)
     {
@@ -4371,10 +4371,10 @@ CheckNames (struct gfi_data *d)
           ff_post_error (_("Bad Font Name"),
                          _
                          ("A PostScript name should be ASCII\nand must not contain (){}[]<>%%/ or space"));
-          return (false);
+          return false;
         }
     }
-  return (true);
+  return true;
 }
 
 static int ttfspecials[] = { ttf_copyright, ttf_family, ttf_fullname,
@@ -4389,11 +4389,11 @@ tn_recalculatedef (struct gfi_data *d, int cur_id)
   switch (cur_id)
     {
     case ttf_copyright:
-      return (GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Notice)));
+      return GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Notice));
     case ttf_family:
-      return (GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Family)));
+      return GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Family));
     case ttf_fullname:
-      return (GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Human)));
+      return GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Human));
     case ttf_subfamily:
       {
         const uint32_t *temp =
@@ -4409,9 +4409,9 @@ tn_recalculatedef (struct gfi_data *d, int cur_id)
       sprintf (versionbuf, _("Version %.20s"),
                v = GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Version)));
       free (v);
-      return (xstrdup_or_null (versionbuf));
+      return xstrdup_or_null (versionbuf);
     default:
-      return (NULL);
+      return NULL;
     }
 }
 
@@ -4423,9 +4423,9 @@ TN_DefaultName (GGadget *g, int r, int c)
   struct matrix_data *strings = GMatrixEditGet (g, &rows);
 
   if (strings == NULL || !strings[3 * r + 2].user_bits)
-    return (NULL);
+    return NULL;
 
-  return (tn_recalculatedef (d, strings[3 * r + 1].u.md_ival));
+  return tn_recalculatedef (d, strings[3 * r + 1].u.md_ival);
 }
 
 static const char *
@@ -4434,10 +4434,10 @@ langname (int lang, char *buffer)
   int i;
   for (i = 0; mslanguages[i].text != NULL; ++i)
     if (mslanguages[i].userdata == (void *) (intptr_t) lang)
-      return ((char *) mslanguages[i].text);
+      return (char *) mslanguages[i].text;
 
   sprintf (buffer, "%04X", lang);
-  return (buffer);
+  return buffer;
 }
 
 static int
@@ -4448,11 +4448,11 @@ strid_sorter (const void *pt1, const void *pt2)
   const char *l1, *l2;
 
   if (n1[1].u.md_ival != n2[1].u.md_ival)
-    return (n1[1].u.md_ival - n2[1].u.md_ival);
+    return n1[1].u.md_ival - n2[1].u.md_ival;
 
   l1 = langname (n1[0].u.md_ival, buf1);
   l2 = langname (n2[0].u.md_ival, buf2);
-  return (strcoll (l1, l2));
+  return strcoll (l1, l2);
 }
 
 static int
@@ -4463,11 +4463,11 @@ lang_sorter (const void *pt1, const void *pt2)
   const char *l1, *l2;
 
   if (n1[0].u.md_ival == n2[0].u.md_ival)
-    return (n1[1].u.md_ival - n2[1].u.md_ival);
+    return n1[1].u.md_ival - n2[1].u.md_ival;
 
   l1 = langname (n1[0].u.md_ival, buf1);
   l2 = langname (n2[0].u.md_ival, buf2);
-  return (strcoll (l1, l2));
+  return strcoll (l1, l2);
 }
 
 static int ms_thislocale = 0;
@@ -4475,15 +4475,15 @@ static int
 specialvals (const struct matrix_data *n)
 {
   if (n[0].u.md_ival == ms_thislocale)
-    return (-10000000);
+    return -10000000;
   else if ((n[0].u.md_ival & 0x3ff) == (ms_thislocale & 0x3ff))
-    return (-10000000 + (n[0].u.md_ival & ~0x3ff));
+    return -10000000 + (n[0].u.md_ival & ~0x3ff);
   if (n[0].u.md_ival == 0x409)  /* English */
-    return (-1000000);
+    return -1000000;
   else if ((n[0].u.md_ival & 0x3ff) == 9)
-    return (-1000000 + (n[0].u.md_ival & ~0x3ff));
+    return -1000000 + (n[0].u.md_ival & ~0x3ff);
 
-  return (1);
+  return 1;
 }
 
 static int
@@ -4497,15 +4497,15 @@ speciallang_sorter (const void *pt1, const void *pt2)
   /* sort so that entries for the current language are first, then English */
   /*  then alphabetical order */
   if (n1[0].u.md_ival == n2[0].u.md_ival)
-    return (n1[1].u.md_ival - n2[1].u.md_ival);
+    return n1[1].u.md_ival - n2[1].u.md_ival;
 
   pos1 = specialvals (n1);
   pos2 = specialvals (n2);
   if (pos1 < 0 || pos2 < 0)
-    return (pos1 - pos2);
+    return pos1 - pos2;
   l1 = langname (n1[0].u.md_ival, buf1);
   l2 = langname (n2[0].u.md_ival, buf2);
-  return (strcoll (l1, l2));
+  return strcoll (l1, l2);
 }
 
 static void
@@ -4535,24 +4535,24 @@ GFI_Char (struct gfi_data *d, GEvent *event)
   if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
     {
       help ("fontinfo.html");
-      return (true);
+      return true;
     }
   else if (GMenuIsCommand (event, H_ ("Save All|Alt+Ctl+S")))
     {
       MenuSaveAll (NULL, NULL, NULL);
-      return (true);
+      return true;
     }
   else if (GMenuIsCommand (event, H_ ("Quit|Ctl+Q")))
     {
       MenuExit (NULL, NULL, NULL);
-      return (true);
+      return true;
     }
   else if (GMenuIsCommand (event, H_ ("Close|Ctl+Shft+Q")))
     {
       GFI_CancelClose (d);
-      return (true);
+      return true;
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -4624,7 +4624,7 @@ CheckActiveStyleTranslation (struct gfi_data *d,
                       else
                         strings[3 * r + 2].u.md_str =
                           xstrdup_or_null (stylelist[i][other_pos].str);
-                      return (true);
+                      return true;
                     }
                   temp = xmalloc ((strlen (new)
                                    + strlen (stylelist[i][other_pos].str)
@@ -4658,7 +4658,7 @@ CheckActiveStyleTranslation (struct gfi_data *d,
     }
   else
     free (new);
-  return (changed);
+  return changed;
 }
 
 #define MID_ToggleBase	1
@@ -4881,9 +4881,9 @@ TN_CanDelete (GGadget *g, int row)
   int rows;
   struct matrix_data *strings = GMatrixEditGet (g, &rows);
   if (strings == NULL)
-    return (false);
+    return false;
 
-  return (!strings[3 * row + 2].user_bits);
+  return !strings[3 * row + 2].user_bits;
 }
 
 static void
@@ -4936,7 +4936,7 @@ TN_PopupMenu (GGadget *g, GEvent *event, int r, int c)
 static int
 TN_PassChar (GGadget *g, GEvent *e)
 {
-  return (GFI_Char (GGadgetGetUserData (g), e));
+  return GFI_Char (GGadgetGetUserData (g), e);
 }
 
 static char *
@@ -4955,7 +4955,7 @@ TN_BigEditTitle (GGadget *g, int r, int c)
        (void *) (intptr_t) strings[3 * r + 1].u.md_ival; ++k);
   snprintf (buf, sizeof (buf), _("%1$.30s string for %2$.30s"), lang,
             (char *) ttfnameids[k].text);
-  return (xstrdup_or_null (buf));
+  return xstrdup_or_null (buf);
 }
 
 static void
@@ -5045,7 +5045,7 @@ GFI_SortBy (GGadget *g, GEvent *e)
       TTFNames_Resort (d);
       GGadgetRedraw (GWidgetGetControl (d->gw, CID_TNames));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -5055,7 +5055,7 @@ GFI_HelpOFL (GGadget *g, GEvent *e)
     {
       help ("http://scripts.sil.org/OFL");
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -5183,7 +5183,7 @@ GFI_AddOFL (GGadget *g, GEvent *e)
                         "you have the right to do so and remember to add your\n"
                         "additional notice with any Reserved Font Name(s)."));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -5198,9 +5198,9 @@ ss_cmp (const void *_md1, const void *_md2)
     {
       l1 = langname (md1[0].u.md_ival, buf1);
       l2 = langname (md2[0].u.md_ival, buf2);
-      return (strcoll (l1, l2));
+      return strcoll (l1, l2);
     }
-  return (md1[1].u.md_ival - md2[1].u.md_ival);
+  return md1[1].u.md_ival - md2[1].u.md_ival;
 }
 
 static void
@@ -5245,7 +5245,7 @@ size_cmp (const void *_md1, const void *_md2)
 
   l1 = langname (md1[0].u.md_ival, buf1);
   l2 = langname (md2[0].u.md_ival, buf2);
-  return (strcoll (l1, l2));
+  return strcoll (l1, l2);
 }
 
 static void
@@ -5315,7 +5315,7 @@ Gasp_Default (GGadget *g, GEvent *e)
         }
       GMatrixEditSet (gg, gasp, rows, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -5324,18 +5324,18 @@ Gasp_CanDelete (GGadget *g, int row)
   int rows;
   struct matrix_data *gasp = GMatrixEditGet (g, &rows);
   if (gasp == NULL)
-    return (false);
+    return false;
 
   /* Only allow them to delete the sentinal entry if that would give us an */
   /* empty gasp table */
-  return (gasp[5 * row].u.md_ival != 0xffff || rows == 1);
+  return gasp[5 * row].u.md_ival != 0xffff || rows == 1;
 }
 
 static int
 gasp_comp (const void *_md1, const void *_md2)
 {
   const struct matrix_data *md1 = _md1, *md2 = _md2;
-  return (md1->u.md_ival - md2->u.md_ival);
+  return md1->u.md_ival - md2->u.md_ival;
 }
 
 static void
@@ -5406,7 +5406,7 @@ GFI_GaspVersion (GGadget *g, GEvent *e)
         }
       GGadgetRedraw (gasp);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -5420,7 +5420,7 @@ Layers_BackgroundEnable (GGadget *g, GMenuItem * mi, int r, int c)
 static int
 Layers_CanDelete (GGadget *g, int row)
 {
-  return (row > ly_fore);
+  return row > ly_fore;
 }
 
 static void
@@ -5482,7 +5482,7 @@ GFI_Type3Change (GGadget *g, GEvent *e)
                          && mixed);
       GGadgetSetEnabled (GWidgetGetControl (gw, CID_Backgrounds), !type3);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -5511,7 +5511,7 @@ GFI_OrderChange (GGadget *g, GEvent *e)
         }
       GGadgetRedraw (backs);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -5562,7 +5562,7 @@ ParseTeX (struct gfi_data *d)
     d->texdata.type = tex_math;
   else
     d->texdata.type = tex_mathext;
-  return (!err);
+  return !err;
 }
 
 static int
@@ -5581,7 +5581,7 @@ ttfmultuniqueids (SplineFont *sf, struct gfi_data *d)
         if (strings[3 * i + 1].u.md_ival == ttf_uniqueid)
           {
             if (found)
-              return (true);
+              return true;
             found = true;
           }
     }
@@ -5591,11 +5591,11 @@ ttfmultuniqueids (SplineFont *sf, struct gfi_data *d)
         if (tln->names[ttf_uniqueid] != NULL)
           {
             if (found)
-              return (true);
+              return true;
             found = true;
           }
     }
-  return (false);
+  return false;
 }
 
 static int
@@ -5605,13 +5605,13 @@ ttfuniqueidmatch (SplineFont *sf, struct gfi_data *d)
   int i;
 
   if (sf->names == NULL)
-    return (false);
+    return false;
 
   if (!d->names_set)
     {
       for (tln = sf->names; tln != NULL; tln = tln->next)
         if (tln->names[ttf_uniqueid] != NULL)
-          return (true);
+          return true;
     }
   else
     {
@@ -5632,10 +5632,10 @@ ttfuniqueidmatch (SplineFont *sf, struct gfi_data *d)
             continue;           /* removed. That's a change */
           if (strcmp (tln->names[ttf_uniqueid], strings[3 * i + 2].u.md_str)
               == 0)
-            return (true);      /* name unchanged */
+            return true;      /* name unchanged */
         }
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -5778,11 +5778,11 @@ SSNameValidate (struct gfi_data *d)
                              tag >> 24, tag >> 16, tag >> 8, tag,
                              mslanguages[k].text, strings[3 * i + 2].u.md_str,
                              strings[3 * j + 2].u.md_str);
-              return (false);
+              return false;
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -5950,9 +5950,9 @@ GFI_AnyLayersRemoved (struct gfi_data *d)
 
   for (l = sf->layer_cnt - 1; l > ly_fore; --l)
     if (!sf->layers[l].ticked)
-      return (1 | (anytrue_before && !anytrue_after ? 2 : 0));
+      return 1 | (anytrue_before && !anytrue_after ? 2 : 0);
 
-  return (0 | (anytrue_before && !anytrue_after ? 2 : 0));
+  return 0 | (anytrue_before && !anytrue_after ? 2 : 0);
 }
 
 static int
@@ -6016,7 +6016,7 @@ GFI_SetLayers (struct gfi_data *d)
       }
   if (changed)
     CVLayerPaletteCheck (sf);
-  return (changed);
+  return changed;
 }
 
 static int
@@ -6073,13 +6073,13 @@ GFI_OK (GGadget *g, GEvent *e)
         woffUnset;
 
       if (strings == NULL || gasp == NULL || layers == NULL)
-        return (true);
+        return true;
       if (gasprows > 0 && gasp[5 * gasprows - 5].u.md_ival != 65535)
         {
           ff_post_error (_("Bad Grid Fitting table"),
                          _
                          ("The 'gasp' (Grid Fit) table must end with a pixel entry of 65535"));
-          return (true);
+          return true;
         }
       {
         int i;
@@ -6113,7 +6113,7 @@ GFI_OK (GGadget *g, GEvent *e)
               (_GGadgetGetTitle (GWidgetGetControl (d->gw, msgs[i].cid))))
             {
               ff_post_error (_(msgs[i].tit), _(msgs[i].msg));
-              return (true);
+              return true;
             }
       }
       if ((layer_flags = GFI_AnyLayersRemoved (d)) != 0)
@@ -6133,7 +6133,7 @@ GFI_OK (GGadget *g, GEvent *e)
                      "lose all truetype instructions.\n\n"
                      "Deleting a layer cannot be undone.\n\n"
                      "Is this really your intent?")) == 1)
-                return (true);
+                return true;
             }
           else if (layer_flags & 2)
             {
@@ -6145,7 +6145,7 @@ GFI_OK (GGadget *g, GEvent *e)
                      "will remove all truetype instructions.\n\n"
                      "This cannot be undone.\n\n"
                      "Is this really your intent?")) == 1)
-                return (true);
+                return true;
             }
         }
       if (layer_cnt >= BACK_LAYER_MAX - 2)
@@ -6153,10 +6153,10 @@ GFI_OK (GGadget *g, GEvent *e)
           ff_post_error (_("Too many layers"),
                          _("FontForge supports at most %d layers"),
                          BACK_LAYER_MAX - 2);
-          return (true);
+          return true;
         }
       if (!CheckNames (d))
-        return (true);
+        return true;
 
       if (ttfmultuniqueids (sf, d))
         {
@@ -6170,20 +6170,20 @@ GFI_OK (GGadget *g, GEvent *e)
                  "Identification string in one language. This font "
                  "has more. Do you want to continue anyway?"))
               == 1)
-            return (true);
+            return true;
         }
       txt = _GGadgetGetTitle (GWidgetGetControl (gw, CID_Family));
       if (!isalpha (*txt))
         {
           BadFamily ();
-          return (true);
+          return true;
         }
       txt = _GGadgetGetTitle (GWidgetGetControl (gw, CID_ItalicAngle));
       ia = u32_strtod (txt, &end);
       if (*end != '\0')
         {
           GGadgetProtest8 (_("_Italic Angle:"));
-          return (true);
+          return true;
         }
       guideorder2 =
         GGadgetIsChecked (GWidgetGetControl (gw, CID_GuideOrder2));
@@ -6218,49 +6218,49 @@ GFI_OK (GGadget *g, GEvent *e)
           ff_post_error (_("Bad Design Size Info"),
                          _("If the design size is 0, then all other fields on "
                            "that pane must be zero (or unspecified) too."));
-          return (true);
+          return true;
         }
       else if (styleid != 0 && fontstyle_name == NULL)
         {
           ff_post_error (_("Bad Design Size Info"),
                          _("If you specify a style id for the design size, "
                            "then you must specify a style name"));
-          return (true);
+          return true;
         }
       else if (fontstyle_name == NULL && styleid != 0)
         {
           ff_post_error (_("Bad Design Size Info"),
                          _("If you specify a style name for the design size, "
                            "then you must specify a style id"));
-          return (true);
+          return true;
         }
       else if (design_size < 0)
         {
           ff_post_error (_("Bad Design Size Info"),
                          _("If you specify a design size, "
                            "it must be positive"));
-          return (true);
+          return true;
         }
       else if (size_bottom != 0 && size_bottom > design_size)
         {
           ff_post_error (_("Bad Design Size Info"),
                          _("In the design size range, the bottom field must be "
                            "less than the design size."));
-          return (true);
+          return true;
         }
       else if (size_top != 0 && size_top < design_size)
         {
           ff_post_error (_("Bad Design Size Info"),
                          _("In the design size range, the bottom top must be "
                            "more than the design size."));
-          return (true);
+          return true;
         }
       else if (styleid != 0 && size_top == 0)
         {
           ff_post_error (_("Bad Design Size Info"),
                          _("If you specify a style id for the design size, "
                            "then you must specify a size range"));
-          return (true);
+          return true;
         }
       else if (size_top != 0 && styleid == 0)
         {
@@ -6287,7 +6287,7 @@ GFI_OK (GGadget *g, GEvent *e)
               GetInt8 (gw, CID_WoffMinor, _("Woff Minor Version:"), &err);
         }
       if (err)
-        return (true);
+        return true;
 
       memset (codepages, 0, sizeof (codepages));
       memset (uranges, 0, sizeof (uranges));
@@ -6298,13 +6298,13 @@ GFI_OK (GGadget *g, GEvent *e)
         hexparse (gw, CID_UnicodeRanges, _("Unicode Ranges"), uranges, 4,
                   &err);
       if (err)
-        return (true);
+        return true;
 
       if (sf->subfontcnt != 0)
         {
           cidversion = GetReal8 (gw, CID_Version, _("_Version"), &err);
           if (err)
-            return (true);
+            return true;
         }
       os2version = sf->os2_version;
       if (d->ttf_set)
@@ -6384,7 +6384,7 @@ GFI_OK (GGadget *g, GEvent *e)
                      hdoff ? _("HHead De_scent Offset:") :
                      _("HHead Descent:"), &err);
           if (err)
-            return (true);
+            return true;
 
           if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_SubSuperDefault)))
             {
@@ -6412,7 +6412,7 @@ GFI_OK (GGadget *g, GEvent *e)
               else
                 ff_post_error (_("Bad IBM Family"),
                                _("A tag must be 4 ASCII characters"));
-              return (true);
+              return true;
             }
           os2_vendor[0] = txt[0] == 0 ? ' ' : txt[0];
           os2_vendor[1] = txt[0] == 0 || txt[1] == '\0' ? ' ' : txt[1];
@@ -6422,18 +6422,18 @@ GFI_OK (GGadget *g, GEvent *e)
             || txt[3] == '\0' ? ' ' : txt[3];
         }
       if (err)
-        return (true);
+        return true;
       if (d->tex_set)
         {
           if (!ParseTeX (d))
-            return (true);
+            return true;
         }
       if (as + des > 16384 || des < 0 || as < 0)
         {
           ff_post_error (_("Bad Ascent/Descent"),
                          _("Ascent and Descent must be positive "
                            "and their sum less than 16384"));
-          return (true);
+          return true;
         }
       mcs = -1;
       if (!GGadgetIsChecked (GWidgetGetControl (d->gw, CID_MacAutomatic)))
@@ -6449,7 +6449,7 @@ GFI_OK (GGadget *g, GEvent *e)
               ff_post_error (_("Bad Style"),
                              _("A style may not have both condense and "
                                "extend set (it makes no sense)"));
-              return (true);
+              return true;
             }
         }
 
@@ -6469,10 +6469,10 @@ GFI_OK (GGadget *g, GEvent *e)
 						   "but there are names in this namelist which use "
 						   "characters outside\n"
 						   "that range."));
-          return (true);
+          return true;
         }
       if (!SSNameValidate (d))
-        return (true);
+        return true;
       if (strokedfont != sf->strokedfont || multilayer != sf->multilayer)
         {
           if (sf->strokedfont && multilayer)
@@ -6526,7 +6526,7 @@ GFI_OK (GGadget *g, GEvent *e)
           if (ans == 2)
             {
               GDrawSetCursor (gw, ct_pointer);
-              return (true);
+              return true;
             }
           if (ans == 0)
             {
@@ -6830,7 +6830,7 @@ GFI_OK (GGadget *g, GEvent *e)
       MVReFeatureAll (sf);
       MVReKernAll (sf);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -6932,7 +6932,7 @@ GFI_AsDesIsOff (GGadget *g, GEvent *e)
       struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       GFI_AsDsLab (d, GGadgetGetCid (g), false);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -6980,7 +6980,7 @@ GFI_PanoseDefault (GGadget *g, GEvent *e)
       struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       _GFI_PanoseDefault (d);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -6990,7 +6990,7 @@ GFI_ShowPanoseDocs (GGadget *g, GEvent *e)
     {
       help ("http://panose.com/");
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -7033,7 +7033,7 @@ GFI_ChangePanoseFamily (GGadget *g, GEvent *e)
       struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       GFI_SetPanoseLists (d);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -7127,7 +7127,7 @@ GFI_SubSuperDefault (GGadget *g, GEvent *e)
       struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       _GFI_SubSuperDefault (d);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -7375,7 +7375,7 @@ mp_e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (false);
+      return false;
     }
   else if (event->type == et_controlevent
            && event->u.control.subtype == et_buttonactivate)
@@ -7402,7 +7402,7 @@ mp_e_h (GWindow gw, GEvent *event)
       else
         d->mpdone = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7422,7 +7422,7 @@ GFI_MoreParams (GGadget *g, GEvent *e)
     {
       struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       if (GGadgetIsChecked (GWidgetGetControl (d->gw, CID_TeXText)))
-        return (true);
+        return true;
       else if (GGadgetIsChecked (GWidgetGetControl (d->gw, CID_TeXMathSym)))
         {
           tot = 22 - 7;
@@ -7544,7 +7544,7 @@ GFI_MoreParams (GGadget *g, GEvent *e)
         GDrawProcessOneEvent (NULL);
       GDrawDestroyWindow (gw);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7571,7 +7571,7 @@ GFI_TeXChanged (GGadget *g, GEvent *e)
       /* In Polish we need to reflow the text after changing the label */
       GHVBoxReflow (GWidgetGetControl (d->gw, CID_TeXBox));
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -7620,7 +7620,7 @@ GFI_MacAutomatic (GGadget *g, GEvent *e)
         GGadgetIsChecked (GWidgetGetControl (d->gw, CID_MacAutomatic));
       GGadgetSetEnabled (GWidgetGetControl (d->gw, CID_MacStyles), !autom);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -7679,11 +7679,11 @@ GFI_UnicodeRangeChange (GGadget *g, GEvent *e)
   int i, enc;
 
   if (ti == NULL)
-    return (true);
+    return true;
   if (e->type != et_controlevent ||
       (e->u.control.subtype != et_listselected
        && e->u.control.subtype != et_listdoubleclick))
-    return (true);
+    return true;
 
   r = ti->userdata;
 
@@ -7741,7 +7741,7 @@ GFI_UnicodeRangeChange (GGadget *g, GEvent *e)
       FVScrollToChar (fv, first);
     }
   GDrawRequestExpose (fv->v, NULL, false);
-  return (true);
+  return true;
 }
 
 static int
@@ -7752,7 +7752,7 @@ GFI_UnicodeEmptiesChange (GGadget *g, GEvent *e)
       struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       FigureUnicode (d);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7781,7 +7781,7 @@ GFI_AspectChange (GGadget *g, GEvent *e)
         FigureUnicode (d);
       d->old_aspect = new_aspect;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7794,7 +7794,7 @@ GFI_URangeAspectChange (GGadget *g, GEvent *e)
       GFI_AspectChange (GWidgetGetControl (d->gw, CID_Tabs), NULL);
       GTabSetSetSel (GWidgetGetControl (d->gw, CID_TTFTabs), 4);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7812,9 +7812,9 @@ e_h (GWindow gw, GEvent *event)
     }
   else if (event->type == et_char)
     {
-      return (GFI_Char (GDrawGetUserData (gw), event));
+      return GFI_Char (GDrawGetUserData (gw), event);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7875,7 +7875,7 @@ OS2_UnicodeChange (GGadget *g, GEvent *e)
                flags[0]);
       GGadgetSetTitle8 (field, ranges);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7904,7 +7904,7 @@ OS2_URangesDefault (GGadget *g, GEvent *e)
                              NULL);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7958,7 +7958,7 @@ OS2_CodePageChange (GGadget *g, GEvent *e)
       sprintf (ranges, "%08x.%08x", flags[1], flags[0]);
       GGadgetSetTitle8 (field, ranges);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7985,7 +7985,7 @@ OS2_CPageDefault (GGadget *g, GEvent *e)
                               NULL);
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -7998,7 +7998,7 @@ GFI_UseUniqueIDChanged (GGadget *g, GEvent *e)
       GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_UniqueID),
                          GGadgetIsChecked (g));
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8011,7 +8011,7 @@ GFI_UseXUIDChanged (GGadget *g, GEvent *e)
       GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_XUID),
                          GGadgetIsChecked (g));
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -8150,7 +8150,7 @@ LookupsImportable (SplineFont *sf, int isgpos)
           || (!isgpos && osf->gsub_lookups != NULL))
         break;
     }
-  return (ofv != NULL);
+  return ofv != NULL;
 }
 
 void
@@ -8270,7 +8270,7 @@ LookupsHScroll (GGadget *g, GEvent *event)
 
   if (event->type != et_controlevent
       || event->u.control.subtype != et_scrollbarchange)
-    return (true);
+    return true;
 
   GScrollBarGetBounds (event->u.control.g, &sb_min, &sb_max, &sb_pagesize);
   switch (event->u.control.u.sb.type)
@@ -8316,7 +8316,7 @@ LookupsHScroll (GGadget *g, GEvent *event)
                           (GWidgetGetControl
                            (gfi->gw, CID_LookupWin + isgpos)), NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8330,7 +8330,7 @@ LookupsVScroll (GGadget *g, GEvent *event)
 
   if (event->type != et_controlevent
       || event->u.control.subtype != et_scrollbarchange)
-    return (true);
+    return true;
 
   GScrollBarGetBounds (event->u.control.g, &sb_min, &sb_max, &sb_pagesize);
   switch (event->u.control.u.sb.type)
@@ -8372,7 +8372,7 @@ LookupsVScroll (GGadget *g, GEvent *event)
                           (GWidgetGetControl
                            (gfi->gw, CID_LookupWin + isgpos)), NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8522,7 +8522,7 @@ GFI_LookupOrder (GGadget *g, GEvent *e)
       GFI_LookupEnableButtons (gfi, isgpos);
       GDrawRequestExpose (gw, NULL, false);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8558,7 +8558,7 @@ GFI_LookupSort (GGadget *g, GEvent *e)
                            (gfi->gw, CID_LookupWin + isgpos)), NULL, false);
       GFI_LookupEnableButtons (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
          /* ??? *//* How about a series of buttons to show only by lookup_type, feat-tag, script-tag */
@@ -8640,7 +8640,7 @@ GFI_LookupEditSubtableContents (GGadget *g, GEvent *e)
       int isgpos = GTabSetGetSel (GWidgetGetControl (gfi->gw, CID_Lookups));
       LookupSubtableContents (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8664,7 +8664,7 @@ GFI_LookupAddLookup (GGadget *g, GEvent *e)
       if (!EditLookup (otl, isgpos, gfi->sf))
         {
           free (otl);
-          return (true);
+          return true;
         }
       for (i = lk->cnt - 1; i >= 0; --i)
         {
@@ -8730,7 +8730,7 @@ GFI_LookupAddLookup (GGadget *g, GEvent *e)
       GFI_LookupScrollbars (gfi, isgpos, true);
       GFI_LookupEnableButtons (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8765,7 +8765,7 @@ GFI_LookupAddSubtable (GGadget *g, GEvent *e)
         }
     break_2_loops:
       if (i == lk->cnt)
-        return (true);
+        return true;
 
       sub =
         xzalloc (sizeof (struct lookup_subtable));
@@ -8773,7 +8773,7 @@ GFI_LookupAddSubtable (GGadget *g, GEvent *e)
       if (!EditSubtable (sub, isgpos, gfi->sf, NULL, gfi->def_layer))
         {
           free (sub);
-          return (true);
+          return true;
         }
       if (lk->all[i].subtable_cnt >= lk->all[i].subtable_max)
         lk->all[i].subtables =
@@ -8797,7 +8797,7 @@ GFI_LookupAddSubtable (GGadget *g, GEvent *e)
       GFI_LookupScrollbars (gfi, isgpos, true);
       GFI_LookupEnableButtons (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8822,7 +8822,7 @@ GFI_LookupEditMetadata (GGadget *g, GEvent *e)
                                   (GWidgetGetControl
                                    (gfi->gw, CID_LookupWin + isgpos)), NULL,
                                   false);
-              return (true);
+              return true;
             }
           else if (lk->all[i].open)
             {
@@ -8838,13 +8838,13 @@ GFI_LookupEditMetadata (GGadget *g, GEvent *e)
                                           (GWidgetGetControl
                                            (gfi->gw, CID_LookupWin + isgpos)),
                                           NULL, false);
-                      return (true);
+                      return true;
                     }
                 }
             }
         }
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8865,7 +8865,7 @@ GFI_LookupMergeLookup (GGadget *g, GEvent *e)
 
       LookupParseSelection (lk, &sel);
       if (!sel.sub_table_mergeable && !sel.lookup_mergeable)
-        return (true);
+        return true;
 
       buts[0] = _("Do it");
       buts[1] = _("_Cancel");
@@ -8873,7 +8873,7 @@ GFI_LookupMergeLookup (GGadget *g, GEvent *e)
       if (gwwv_ask
           (_("Cannot be Undone"), (const char **) buts, 0, 1,
            _("The Merge operation cannot be reverted.\nDo it anyway?")) == 1)
-        return (true);
+        return true;
       if (sel.lookup_mergeable)
         {
           lkfirst = NULL;
@@ -8948,7 +8948,7 @@ GFI_LookupMergeLookup (GGadget *g, GEvent *e)
       GFI_LookupScrollbars (gfi, isgpos, true);
       GFI_LookupEnableButtons (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -8984,7 +8984,7 @@ GFI_LookupDeleteLookup (GGadget *g, GEvent *e)
       GFI_LookupEnableButtons (gfi, isgpos);
     }
 
-  return (true);
+  return true;
 }
 
 static int
@@ -9026,7 +9026,7 @@ GFI_LookupRevertLookup (GGadget *g, GEvent *e)
       GFI_LookupScrollbars (gfi, isgpos, true);
       GFI_LookupEnableButtons (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -9043,9 +9043,9 @@ import_e_h (GWindow gw, GEvent *event)
       if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
         {
           help ("fontinfo.html#Lookups");
-          return (true);
+          return true;
         }
-      return (false);
+      return false;
     }
   else if (event->type == et_controlevent)
     {
@@ -9064,7 +9064,7 @@ import_e_h (GWindow gw, GEvent *event)
       else if (event->u.control.subtype == et_listdoubleclick)
         *done = 2;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -9264,7 +9264,7 @@ GFI_LookupImportLookup (GGadget *g, GEvent *e)
       GFI_LookupScrollbars (gfi, isgpos, true);
       GFI_LookupEnableButtons (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -9277,7 +9277,7 @@ GFI_LookupAspectChange (GGadget *g, GEvent *e)
       int isgpos = GTabSetGetSel (GWidgetGetControl (gfi->gw, CID_Lookups));
       GFI_LookupEnableButtons (gfi, isgpos);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -10166,7 +10166,7 @@ LookupIndex (struct gfi_data *othergfi, int isgpos, GWindow gw,
   if (l < 0)
     {
       *subindex = -1;
-      return (-1);
+      return -1;
     }
 
   lcnt = 0;
@@ -10177,7 +10177,7 @@ LookupIndex (struct gfi_data *othergfi, int isgpos, GWindow gw,
       if (l == lcnt)
         {
           *subindex = -1;
-          return (i);
+          return i;
         }
       ++lcnt;
       if (otherlk->all[i].open)
@@ -10189,7 +10189,7 @@ LookupIndex (struct gfi_data *othergfi, int isgpos, GWindow gw,
               if (l == lcnt)
                 {
                   *subindex = j;
-                  return (i);
+                  return i;
                 }
               ++lcnt;
             }
@@ -10197,7 +10197,7 @@ LookupIndex (struct gfi_data *othergfi, int isgpos, GWindow gw,
     }
   /* drop after last lookup */
   *subindex = -1;
-  return (i);
+  return i;
 }
 
 static int
@@ -10209,14 +10209,14 @@ LookupsDropable (struct gfi_data *gfi, struct gfi_data *othergfi,
   struct lkdata *otherlk = &othergfi->tables[isgpos];
 
   if (gfi->first_sel_subtable == -1)
-    return (true);              /* Lookups can be dropped anywhere */
+    return true;              /* Lookups can be dropped anywhere */
 
   lookup = LookupIndex (othergfi, isgpos, gw, othergw, event, &subtable);
   if (lookup < 0 || lookup >= lk->cnt)
-    return (false);             /* Subtables must be dropped in a lookup */
+    return false;             /* Subtables must be dropped in a lookup */
 
   if (gfi != othergfi /* || lookup!=gfi->first_sel_lookup */ )
-    return (false);             /* Can't merge subtables from one lookup to another */
+    return false;             /* Can't merge subtables from one lookup to another */
 
   /* Subtables can only be dropped in a lookup with the same type */
   /* At the moment we don't need this test, as we only allow subtables to be dropped within their original lookup */
@@ -10470,7 +10470,7 @@ LookupDragDropable (struct gfi_data *gfi, struct lkdata *lk)
       if (lk->all[i].selected)
         {
           if (first_s != -1)
-            return (false);     /* Can't have mixed lookups and subtables */
+            return false;     /* Can't have mixed lookups and subtables */
           if (first_l == -1)
             first_l = i;
         }
@@ -10485,7 +10485,7 @@ LookupDragDropable (struct gfi_data *gfi, struct lkdata *lk)
                   if (first_l == i || first_l == -1)
                     first_l = i;
                   else
-                    return (false);     /* Mixed lookups and subtables */
+                    return false;     /* Mixed lookups and subtables */
                   if (first_s == -1)
                     first_s = j;
                 }
@@ -10494,7 +10494,7 @@ LookupDragDropable (struct gfi_data *gfi, struct lkdata *lk)
     }
   gfi->first_sel_lookup = first_l;
   gfi->first_sel_subtable = first_s;
-  return (true);
+  return true;
 }
 
 static void
@@ -10670,7 +10670,7 @@ lookups_e_h (GWindow gw, GEvent *event, int isgpos)
   switch (event->type)
     {
     case et_char:
-      return (GFI_Char (gfi, event));
+      return GFI_Char (gfi, event);
     case et_expose:
       LookupExpose (gw, gfi, isgpos);
       break;
@@ -10690,19 +10690,19 @@ lookups_e_h (GWindow gw, GEvent *event, int isgpos)
       }
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
 gposlookups_e_h (GWindow gw, GEvent *event)
 {
-  return (lookups_e_h (gw, event, true));
+  return lookups_e_h (gw, event, true);
 }
 
 static int
 gsublookups_e_h (GWindow gw, GEvent *event)
 {
-  return (lookups_e_h (gw, event, false));
+  return lookups_e_h (gw, event, false);
 }
 
 void

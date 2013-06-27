@@ -82,7 +82,7 @@ BDFNew (SplineFont *sf, int pixel_size, int depth)
   new->res = -1;
   if (linear_scale != 1)
     BDFClut (new, linear_scale);
-  return (new);
+  return new;
 }
 
 static void
@@ -179,9 +179,9 @@ SizeExists (BDFFont *list, int size)
   for (bdf = list; bdf != NULL; bdf = bdf->next)
     {
       if ((size & 0xffff) == bdf->pixelsize && (size >> 16) == BDFDepth (bdf))
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -295,7 +295,7 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
                           _
                           ("Attempt to regenerate a pixel size that has not been created (%d@%d)"),
                           sizes[i] & 0xffff, sizes[i] >> 16);
-          return (false);
+          return false;
         }
     }
   if (bd->which == bd_current && bd->sc != NULL)
@@ -351,7 +351,7 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
     }
   sf->changed = true;
   FVRefreshAll (fv->sf);
-  return (true);
+  return true;
 }
 
 static void
@@ -414,7 +414,7 @@ FVRemoveBitmaps (CreateBitmapData * bd, int32_t *sizes)
     }
   sf->changed = true;
   FVRefreshAll (fv->sf);
-  return (true);
+  return true;
 }
 
 void
@@ -467,5 +467,5 @@ BitmapControl (FontViewBase *fv, int32_t *sizes, int isavail, int rasterize)
   bd.rasterize = rasterize;
   bd.layer = fv->active_layer;
   BitmapsDoIt (&bd, sizes, hasFreeType ());
-  return (bd.done);
+  return bd.done;
 }

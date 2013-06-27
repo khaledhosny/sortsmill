@@ -248,7 +248,7 @@ BVMakeTitles (BitmapView *bv, BDFChar *bc, char *buf)
           strcpy (buf + strlen (buf), uniname);
         }
     }
-  return (title);
+  return title;
 }
 
 void
@@ -424,9 +424,9 @@ static int
 BVCurEnc (BitmapView *bv)
 {
   if (bv->map_of_enc == bv->fv->b.map && bv->enc != -1)
-    return (bv->enc);
+    return bv->enc;
 
-  return (gid_to_enc (bv->fv->b.map, bv->bc->orig_pos));
+  return gid_to_enc (bv->fv->b.map, bv->bc->orig_pos);
 }
 
 static void
@@ -1306,7 +1306,7 @@ BVRecalc (GGadget *g, GEvent *e)
       BDFCharFree (bdfc);
       BCCharChangedUpdate (bv->bc);
     }
-  return (true);
+  return true;
 }
 
 static void
@@ -1373,7 +1373,7 @@ int
 BVColor (BitmapView *bv)
 {
   int div = 255 / ((1 << BDFDepth (bv->bdf)) - 1);
-  return ((bv->color + div / 2) / div);
+  return (bv->color + div / 2) / div;
 }
 
 static int
@@ -1384,7 +1384,7 @@ IsReferenceTouched (BitmapView *bv, BDFRefChar * ref, int x, int y)
   int nx, ny;
 
   if (ref == NULL)
-    return (false);
+    return false;
 
   rbc = ref->bdfc;
   ny = rbc->ymax - y + ref->yoff;
@@ -1395,14 +1395,14 @@ IsReferenceTouched (BitmapView *bv, BDFRefChar * ref, int x, int y)
        ((!rbc->byte_data &&
          rbc->bitmap[ny * rbc->bytes_per_line +
                      (nx >> 3)] & (1 << (7 - (nx & 7)))))))
-    return (true);
+    return true;
 
   for (head = rbc->refs; head != NULL; head = head->next)
     {
       if (IsReferenceTouched (bv, head, x, y))
-        return (true);
+        return true;
     }
-  return (false);
+  return false;
 }
 
 static void
@@ -1784,9 +1784,9 @@ v_e_h (GWindow gw, GEvent *event)
       if (event->u.mouse.state & ksm_shift)
         ish = !ish;
       if (ish)                  /* bind shift to vertical scrolling */
-        return (GGadgetDispatchEvent (bv->hsb, event));
+        return GGadgetDispatchEvent (bv->hsb, event);
       else
-        return (GGadgetDispatchEvent (bv->vsb, event));
+        return GGadgetDispatchEvent (bv->vsb, event);
     }
 
   switch (event->type)
@@ -1828,7 +1828,7 @@ v_e_h (GWindow gw, GEvent *event)
     default:
       break;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -1844,9 +1844,9 @@ bv_e_h (GWindow gw, GEvent *event)
       if (event->u.mouse.state & ksm_shift)
         ish = !ish;
       if (ish)                  /* bind shift to vertical scrolling */
-        return (GGadgetDispatchEvent (bv->hsb, event));
+        return GGadgetDispatchEvent (bv->hsb, event);
       else
-        return (GGadgetDispatchEvent (bv->vsb, event));
+        return GGadgetDispatchEvent (bv->vsb, event);
     }
 
   switch (event->type)
@@ -1907,7 +1907,7 @@ bv_e_h (GWindow gw, GEvent *event)
 #endif
       break;
     }
-  return (true);
+  return true;
 }
 
 #define MID_Fit		2001
@@ -2215,12 +2215,12 @@ SCofBV (BitmapView *bv)
       for (i = 0; i < sf->subfontcnt; ++i)
         if (cid < sf->subfonts[i]->glyphcnt
             && sf->subfonts[i]->glyphs[cid] != NULL)
-          return (sf->subfonts[i]->glyphs[cid]);
+          return sf->subfonts[i]->glyphs[cid];
 
-      return (NULL);
+      return NULL;
     }
   else
-    return (sf->glyphs[cid]);
+    return sf->glyphs[cid];
 }
 
 VISIBLE void
@@ -2470,7 +2470,7 @@ askfraction (int *xoff, int *yoff)
   sprintf (buffer, "%d:%d", lastx, lasty);
   ret = ff_ask_string (_("Skew"), buffer, _("Skew Ratio"));
   if (ret == NULL)
-    return (0);
+    return 0;
   xv = strtol (ret, &end, 10);
   yv = strtol (end + 1, &end2, 10);
   if (xv == 0 || xv > 10 || xv < -10 || yv <= 0 || yv > 10 || *end != ':'
@@ -2478,12 +2478,12 @@ askfraction (int *xoff, int *yoff)
     {
       ff_post_error (_("Bad Number"), _("Bad Number"));
       free (ret);
-      return (0);
+      return 0;
     }
   free (ret);
   *xoff = lastx = xv;
   *yoff = lasty = yv;
-  return (1);
+  return 1;
 }
 
 void
@@ -3953,7 +3953,7 @@ BitmapViewCreate (BDFChar *bc, BDFFont *bdf, FontView *fv, int enc)
   BVFit (bv);
   GDrawSetVisible (bv->v, true);
   GDrawSetVisible (gw, true);
-  return (bv);
+  return bv;
 }
 
 BitmapView *
@@ -3975,7 +3975,7 @@ BitmapViewCreatePick (int enc, FontView *fv)
   if (bdf == NULL)
     bdf = sf->bitmaps;
 
-  return (BitmapViewCreate (BDFMakeChar (bdf, map, enc), bdf, fv, enc));
+  return BitmapViewCreate (BDFMakeChar (bdf, map, enc), bdf, fv, enc);
 }
 
 void

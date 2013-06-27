@@ -76,5 +76,5 @@ static unsigned long binhex_updcrc(icrc, icp, icnt)
 }
 
 unsigned long binhex_crc(unsigned char *buffer,int size) {
-return ( binhex_updcrc(binhex_crcinit,buffer,size));
+return  binhex_updcrc(binhex_crcinit,buffer,size);
 }

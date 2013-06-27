@@ -107,7 +107,7 @@ gettoken (struct context *c, real *val)
       if (ch == op_value)
         *val = c->backed_val;
       c->backed_token = op_base;
-      return (ch);
+      return ch;
     }
 
   while ((ch = *(c->cur++)) == ' ');
@@ -117,7 +117,7 @@ gettoken (struct context *c, real *val)
       --(c->cur);
       *val = strtod (c->cur, &end);
       c->cur = end;
-      return (op_value);
+      return op_value;
     }
   else if (isalpha (ch))
     {
@@ -133,106 +133,106 @@ gettoken (struct context *c, real *val)
       for (i = 0; builtins[i].name != NULL; ++i)
         {
           if (strcmp (buffer, builtins[i].name) == 0)
-            return (builtins[i].op);
+            return builtins[i].op;
         }
       ff_post_error (_("Bad Token"), _("Bad token \"%.30s\"\nnear ...%40s"),
                      buffer, c->cur);
       c->had_error = true;
       while ((ch = *(c->cur++)) == ' ');
       if (ch == '(')
-        return (op_abs);
+        return op_abs;
       *val = 0;
-      return (op_value);
+      return op_value;
     }
   else
     switch (ch)
       {
       case '\0':
         --(c->cur);
-        return (0);
+        return 0;
       case '!':
         if (*c->cur == '=')
           {
             ++c->cur;
-            return (op_ne);
+            return op_ne;
           }
-        return (op_not);
+        return op_not;
       case '-':
-        return (op_sub);
+        return op_sub;
       case '+':
-        return (op_add);
+        return op_add;
       case '*':
-        return (op_times);
+        return op_times;
       case '/':
-        return (op_div);
+        return op_div;
       case '%':
-        return (op_mod);
+        return op_mod;
       case '^':
-        return (op_pow);
+        return op_pow;
       case '>':
         if (*c->cur == '=')
           {
             ++c->cur;
-            return (op_ge);
+            return op_ge;
           }
-        return (op_gt);
+        return op_gt;
       case '<':
         if (*c->cur == '=')
           {
             ++c->cur;
-            return (op_le);
+            return op_le;
           }
-        return (op_lt);
+        return op_lt;
       case '=':
         if (*c->cur == '=')
           {
             ++c->cur;
-            return (op_eq);
+            return op_eq;
           }
         ff_post_error (_("Bad Token"),
                        _
                        ("Bad token. Expected \"%.10s\" got \"%.10s\"\nnear ...%40s"),
                        "==", "=", c->cur);
         c->had_error = true;
-        return (op_eq);
+        return op_eq;
       case '|':
         if (*c->cur == '|')
           {
             ++c->cur;
-            return (op_or);
+            return op_or;
           }
         ff_post_error (_("Bad Token"),
                        _
                        ("Bad token. Expected \"%.10s\" got \"%.10s\"\nnear ...%40s"),
                        "||", "|", c->cur);
         c->had_error = true;
-        return (op_or);
+        return op_or;
       case '&':
         if (*c->cur == '&')
           {
             ++c->cur;
-            return (op_and);
+            return op_and;
           }
         ff_post_error (_("Bad Token"),
                        _
                        ("Bad token. Expected \"%.10s\" got \"%.10s\"\nnear ...%40s"),
                        "&&", "&", c->cur);
         c->had_error = true;
-        return (op_and);
+        return op_and;
       case '?':
-        return (op_if);
+        return op_if;
       case '(':
       case ')':
       case ':':
       case ',':
-        return (ch);
+        return ch;
       default:
         ff_post_error (_("Bad Token"),
                        _("Bad token. got \"%1$c\"\nnear ...%2$40s"), ch,
                        c->cur);
         c->had_error = true;
         *val = 0;
-        return (op_value);
+        return op_value;
       }
 }
 
@@ -266,7 +266,7 @@ gete0 (struct context *c)
       ret = xcalloc (1, sizeof (struct expr));
       ret->operator = op;
       ret->value = val;
-      return (ret);
+      return ret;
     case '(':
       ret = getexpr (c);
       op = gettoken (c, &val);
@@ -277,7 +277,7 @@ gete0 (struct context *c)
                          c->cur);
           c->had_error = true;
         }
-      return (ret);
+      return ret;
     case op_log:
     case op_exp:
     case op_sqrt:
@@ -319,16 +319,16 @@ gete0 (struct context *c)
                          c->cur);
           c->had_error = true;
         }
-      return (ret);
+      return ret;
     case op_add:
       /* Just ignore a unary plus */ ;
-      return (gete0 (c));
+      return gete0 (c);
     case op_sub:
     case op_not:
       ret = xcalloc (1, sizeof (struct expr));
       ret->operator = op;
       ret->op1 = gete0 (c);
-      return (ret);
+      return ret;
     default:
       ff_post_error (_("Bad Token"), _("Unexpected token.\nbefore ...%40s"),
                      c->cur);
@@ -336,7 +336,7 @@ gete0 (struct context *c)
       ret = xcalloc (1, sizeof (struct expr));
       ret->operator = op_value;
       ret->value = val;
-      return (ret);
+      return ret;
     }
 }
 
@@ -359,7 +359,7 @@ gete1 (struct context *c)
       op = gettoken (c, &val);
     }
   backup (c, op, val);
-  return (op1);
+  return op1;
 }
 
 static struct expr *
@@ -381,7 +381,7 @@ gete2 (struct context *c)
       op = gettoken (c, &val);
     }
   backup (c, op, val);
-  return (op1);
+  return op1;
 }
 
 static struct expr *
@@ -403,7 +403,7 @@ gete3 (struct context *c)
       op = gettoken (c, &val);
     }
   backup (c, op, val);
-  return (op1);
+  return op1;
 }
 
 static struct expr *
@@ -426,7 +426,7 @@ gete4 (struct context *c)
       op = gettoken (c, &val);
     }
   backup (c, op, val);
-  return (op1);
+  return op1;
 }
 
 static struct expr *
@@ -448,7 +448,7 @@ gete5 (struct context *c)
       op = gettoken (c, &val);
     }
   backup (c, op, val);
-  return (op1);
+  return op1;
 }
 
 static struct expr *
@@ -475,12 +475,12 @@ getexpr (struct context *c)
           c->had_error = true;
         }
       ret->op3 = getexpr (c);
-      return (ret);
+      return ret;
     }
   else
     {
       backup (c, op, val);
-      return (op1);
+      return op1;
     }
 }
 
@@ -503,9 +503,9 @@ nlt_parseexpr (struct context *c, char *str)
   if (c->had_error)
     {
       nlt_exprfree (ret);
-      return (NULL);
+      return NULL;
     }
-  return (ret);
+  return ret;
 }
 
 static real
@@ -516,15 +516,15 @@ evaluate_expr (struct context *c, struct expr *e)
   switch (e->operator )
     {
     case op_value:
-      return (e->value);
+      return e->value;
     case op_x:
-      return (c->x);
+      return c->x;
     case op_y:
-      return (c->y);
+      return c->y;
     case op_negate:
-      return (-evaluate_expr (c, e->op1));
+      return -evaluate_expr (c, e->op1);
     case op_not:
-      return (!evaluate_expr (c, e->op1));
+      return !evaluate_expr (c, e->op1);
     case op_log:
     case op_exp:
     case op_sqrt:
@@ -545,9 +545,9 @@ evaluate_expr (struct context *c, struct expr *e)
                              _("Attempt to take logarithm of %1$g in %2$.30s"),
                              val1, c->sc->name);
               c->had_error = true;
-              return (0);
+              return 0;
             }
-          return (log (val1));
+          return log (val1);
         case op_sqrt:
           if (val1 < 0)
             {
@@ -556,32 +556,32 @@ evaluate_expr (struct context *c, struct expr *e)
                              ("Attempt to take the square root of %1$g in %2$.30s"),
                              val1, c->sc->name);
               c->had_error = true;
-              return (0);
+              return 0;
             }
-          return (sqrt (val1));
+          return sqrt (val1);
         case op_exp:
-          return (exp (val1));
+          return exp (val1);
         case op_sin:
-          return (sin (val1));
+          return sin (val1);
         case op_cos:
-          return (cos (val1));
+          return cos (val1);
         case op_tan:
-          return (tan (val1));
+          return tan (val1);
         case op_abs:
-          return (val1 < 0 ? -val1 : val1);
+          return val1 < 0 ? -val1 : val1;
         case op_rint:
-          return (rint (val1));
+          return rint (val1);
         case op_floor:
-          return (floor (val1));
+          return floor (val1);
         case op_ceil:
-          return (ceil (val1));
+          return ceil (val1);
         }
     case op_atan2:
-      return (atan2 (evaluate_expr (c, e->op1), evaluate_expr (c, e->op2)));
+      return atan2 (evaluate_expr (c, e->op1), evaluate_expr (c, e->op2));
     case op_pow:
-      return (pow (evaluate_expr (c, e->op1), evaluate_expr (c, e->op2)));
+      return pow (evaluate_expr (c, e->op1), evaluate_expr (c, e->op2));
     case op_times:
-      return (evaluate_expr (c, e->op1) * evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) * evaluate_expr (c, e->op2);
     case op_div:
     case op_mod:
       val2 = evaluate_expr (c, e->op2);
@@ -590,47 +590,47 @@ evaluate_expr (struct context *c, struct expr *e)
           ff_post_error (_("Bad Value"), _("Attempt to divide by 0 in %.30s"),
                          c->sc->name);
           c->had_error = true;
-          return (0);
+          return 0;
         }
       if (e->operator== op_div)
-        return (evaluate_expr (c, e->op1) / val2);
-      return (fmod (evaluate_expr (c, e->op1), val2));
+        return evaluate_expr (c, e->op1) / val2;
+      return fmod (evaluate_expr (c, e->op1), val2);
     case op_add:
-      return (evaluate_expr (c, e->op1) + evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) + evaluate_expr (c, e->op2);
     case op_sub:
-      return (evaluate_expr (c, e->op1) - evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) - evaluate_expr (c, e->op2);
     case op_eq:
-      return (evaluate_expr (c, e->op1) == evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) == evaluate_expr (c, e->op2);
     case op_ne:
-      return (evaluate_expr (c, e->op1) != evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) != evaluate_expr (c, e->op2);
     case op_le:
-      return (evaluate_expr (c, e->op1) <= evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) <= evaluate_expr (c, e->op2);
     case op_lt:
-      return (evaluate_expr (c, e->op1) < evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) < evaluate_expr (c, e->op2);
     case op_ge:
-      return (evaluate_expr (c, e->op1) >= evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) >= evaluate_expr (c, e->op2);
     case op_gt:
-      return (evaluate_expr (c, e->op1) > evaluate_expr (c, e->op2));
+      return evaluate_expr (c, e->op1) > evaluate_expr (c, e->op2);
     case op_and:
       val1 = evaluate_expr (c, e->op1);
       if (val1 == 0)
-        return (0);
-      return (evaluate_expr (c, e->op1) != 0);
+        return 0;
+      return evaluate_expr (c, e->op1) != 0;
     case op_or:
       val1 = evaluate_expr (c, e->op1);
       if (val1 != 0)
-        return (1);
-      return (evaluate_expr (c, e->op1) != 0);
+        return 1;
+      return evaluate_expr (c, e->op1) != 0;
     case op_if:
       val1 = evaluate_expr (c, e->op1);
       if (val1 != 0)
-        return (evaluate_expr (c, e->op2));
+        return evaluate_expr (c, e->op2);
       else
-        return (evaluate_expr (c, e->op3));
+        return evaluate_expr (c, e->op3);
     default:
       IError ("Bad operator %d in %s\n", e->operator, c->sc->name);
       c->had_error = true;
-      return (0);
+      return 0;
     }
 }
 
@@ -639,13 +639,13 @@ NL_expr (struct context *c, struct expr *e)
 {
   real val = evaluate_expr (c, e);
   if (isnan (val))
-    return (0);
+    return 0;
   if (val >= 32768)
-    return (32767);
+    return 32767;
   else if (val < -32768)
-    return (-32768);
+    return -32768;
 
-  return (val);
+  return val;
 }
 
 static void
@@ -894,18 +894,18 @@ SFNLTrans (FontViewBase *fv, char *x_expr, char *y_expr)
 
   memset (&c, 0, sizeof (c));
   if ((c.x_expr = nlt_parseexpr (&c, x_expr)) == NULL)
-    return (false);
+    return false;
   if ((c.y_expr = nlt_parseexpr (&c, y_expr)) == NULL)
     {
       nlt_exprfree (c.x_expr);
-      return (false);
+      return false;
     }
 
   _SFNLTrans (fv, &c);
 
   nlt_exprfree (c.x_expr);
   nlt_exprfree (c.y_expr);
-  return (true);
+  return true;
 }
 
 int
@@ -915,11 +915,11 @@ SSNLTrans (SplineSet *ss, char *x_expr, char *y_expr)
 
   memset (&c, 0, sizeof (c));
   if ((c.x_expr = nlt_parseexpr (&c, x_expr)) == NULL)
-    return (false);
+    return false;
   if ((c.y_expr = nlt_parseexpr (&c, y_expr)) == NULL)
     {
       nlt_exprfree (c.x_expr);
-      return (false);
+      return false;
     }
 
   while (ss != NULL)
@@ -930,7 +930,7 @@ SSNLTrans (SplineSet *ss, char *x_expr, char *y_expr)
 
   nlt_exprfree (c.x_expr);
   nlt_exprfree (c.y_expr);
-  return (true);
+  return true;
 }
 
 int
@@ -940,18 +940,18 @@ SCNLTrans (SplineChar *sc, int layer, char *x_expr, char *y_expr)
 
   memset (&c, 0, sizeof (c));
   if ((c.x_expr = nlt_parseexpr (&c, x_expr)) == NULL)
-    return (false);
+    return false;
   if ((c.y_expr = nlt_parseexpr (&c, y_expr)) == NULL)
     {
       nlt_exprfree (c.x_expr);
-      return (false);
+      return false;
     }
 
   _SCNLTrans (sc, &c, layer);
 
   nlt_exprfree (c.x_expr);
   nlt_exprfree (c.y_expr);
-  return (true);
+  return true;
 }
 
 void
