@@ -232,7 +232,7 @@ FONTFORGE_ARG_ENABLE([tile-path],
 FONTFORGE_ATOMIC_OPS
 FONTFORGE_CONFIG_X_LIBRARIES
 FONTFORGE_LIBPCRE
-PKG_CHECK_MODULES([ZLIB],[zlib])
+FONTFORGE_CHECK_MODULES([ZLIB],[zlib],[inflate],[z])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6 gio-2.0])
 PKG_CHECK_MODULES([LIBPNG],[libpng])
 PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
@@ -352,9 +352,9 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
          -Wstrict-aliasing
          -Wcast-align
          -Wsizeof-pointer-memaccess
-         -Werror=pointer-arith
-         -Werror=missing-prototypes
-         -Werror=implicit])
+         -Wpointer-arith
+         -Wmissing-prototypes
+         -Wimplicit])
 
 ## Some clang flags to turn off for now.
 #FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
