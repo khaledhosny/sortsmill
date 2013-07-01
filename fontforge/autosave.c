@@ -49,6 +49,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <dirent.h>
 #include <ustring.h>
 #include "gfile.h"
@@ -124,7 +125,8 @@ MakeAutoSaveName (SplineFont *sf)
     return;
   while (1)
     {
-      sprintf (buffer, "%s/auto%06x-%d.asfd", autosavedir, getpid (), ++cnt);
+      sprintf (buffer, "%s/auto%06jx-%d.asfd", autosavedir,
+               (uintmax_t) getpid (), ++cnt);
       if (access (buffer, F_OK) == -1)
         {
           sf->autosavename = xstrdup_or_null (buffer);
