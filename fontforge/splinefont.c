@@ -991,7 +991,7 @@ Unarchive (char *name, char **_archivedir)
   if (dir == NULL)
     dir = P_tmpdir;
   archivedir = xmalloc (strlen (dir) + 100);
-  sprintf (archivedir, "%s/ffarchive-%d-%d", dir, getpid (), ++cnt);
+  sprintf (archivedir, "%s/ffarchive-%jd-%d", dir, (intmax_t) getpid (), ++cnt);
   if (GFileMkDir (archivedir) != 0)
     {
       free (archivedir);
@@ -1091,7 +1091,8 @@ ForceFileToHaveName (FILE *file, char *exten)
 
   while (true)
     {
-      sprintf (tmpfilename, P_tmpdir "/fontforge%d-%d", getpid (), try++);
+      sprintf (tmpfilename, P_tmpdir "/fontforge%jd-%d", (intmax_t) getpid (),
+               try++);
       if (exten != NULL)
         strcat (tmpfilename, exten);
       if (access (tmpfilename, F_OK) == -1 &&
@@ -1996,7 +1997,7 @@ SPLMaxHeight (SplineSet *spl, enum flatness *isflat)
   enum flatness f = mt_unknown;
   bigreal max = -1.0e23;
   Spline *s, *first;
-  extended ts[2];
+  my_extended ts[2];
   int i;
 
   for (; spl != NULL; spl = spl->next)
@@ -2094,7 +2095,7 @@ SPLMinHeight (SplineSet *spl, enum flatness *isflat)
   enum flatness f = mt_unknown;
   bigreal min = 1.0e23;
   Spline *s, *first;
-  extended ts[2];
+  my_extended ts[2];
   int i;
 
   for (; spl != NULL; spl = spl->next)

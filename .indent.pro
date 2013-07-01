@@ -70,7 +70,7 @@
 -T real
 -T bigreal
 -T enc_iter_t
--T extended
+-T my_extended
 -T menu_info
 -T spiro_cp
 -T spiro_seg

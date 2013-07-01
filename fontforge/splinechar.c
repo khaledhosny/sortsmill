@@ -1835,7 +1835,7 @@ SCValidate (SplineChar *sc, int layer, int force)
   StemInfo *h;
   SplineSet *base;
   bigreal len2, bound2, x, y;
-  extended extrema[4];
+  my_extended extrema[4];
   PST *pst;
   struct ttf_table *tab;
   extern int allow_utf8_glyphnames;
@@ -2393,7 +2393,7 @@ CutCircle (SplineSet *spl, BasePoint *me, int first)
 {
   Spline *s, *firsts;
   SplinePoint *end;
-  extended ts[3];
+  my_extended ts[3];
   int i;
   bigreal best_t = -1;
   Spline *best_s = NULL;

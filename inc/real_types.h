@@ -64,10 +64,7 @@ typedef float real;
 typedef double bigreal;
 #endif
 
-typedef double extended;
-
-/* Solaris wants to define extended to be unsigned [3] unless we do this*/
-#define _EXTENDED
+typedef double my_extended;
 
 #if 0
 {

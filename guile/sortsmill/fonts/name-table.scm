@@ -618,9 +618,9 @@
            (if decode?
                (let-values ([(name-table errors)
                              (encoded-name-table->name-table encoded-name-table)])
-;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (vector-ref (name-table:prune-and-prepare name-table) 0))
+;;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (vector-ref (name-table:prune-and-prepare name-table) 0))
 ;;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (map (match-lambda [#(p g n v e) `#(,p ,g ,e)])(vector-ref encoded-name-table 0)))
-                 ((@ (ice-9 pretty-print) pretty-print) (name-table->encoded-name-table (name-table:prune-and-prepare name-table)))
+;;;;;;;;;                 ((@ (ice-9 pretty-print) pretty-print) (name-table->encoded-name-table (name-table:prune-and-prepare name-table)))
                  (values name-table (append fix-up-errors errors)))
                (values encoded-name-table (append fix-up-errors))))))))
 

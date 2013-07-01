@@ -1531,7 +1531,7 @@ _SplineSetFindXRangeAtYExtremum (SplinePointList *spl, DBounds *bounds,
                                  int findymax, real yextreme, real ia)
 {
   Spline *spline;
-  extended t0, t1, t2, t3;
+  my_extended t0, t1, t2, t3;
   bigreal y0, y1, y2, y3, x;
 
   for (; spl != NULL; spl = spl->next)

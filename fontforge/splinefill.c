@@ -520,7 +520,7 @@ AddSpline (EdgeList * es, Spline *sp)
   if (es->interesting)
     {
       /* Also store up points of extrema in X as interesting (we got the endpoints, just internals now) */
-      extended ot1, ot2;
+      my_extended ot1, ot2;
       int mpos;
       SplineFindExtrema (osp, &ot1, &ot2);
       if (ot1 > 0 && ot1 < 1)

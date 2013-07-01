@@ -43,29 +43,31 @@
 #define _EDGELIST2_H
 #include "splinefont.h"
 
-typedef struct monotonic {
-    Spline *s;
-    extended tstart, tend;
-    struct monotonic *next, *prev;	/* along original contour */
-    uint8_t xup;				/* increasing t => increasing x */
-    uint8_t yup;
-    bool isneeded;
-    bool isunneeded;
-    bool mutual_collapse;
-    bool exclude;
-    struct intersection *start;
-    struct intersection *end;
-    DBounds b;
-    extended other, t;
-    struct monotonic *linked;		/* singly linked list of all monotonic*/
-    					/*  segments, no contour indication */
-    double when_set;			/* Debugging */
-    struct preintersection *pending;
+typedef struct monotonic
+{
+  Spline *s;
+  my_extended tstart, tend;
+  struct monotonic *next, *prev;        /* along original contour */
+  uint8_t xup;                  /* increasing t => increasing x */
+  uint8_t yup;
+  bool isneeded;
+  bool isunneeded;
+  bool mutual_collapse;
+  bool exclude;
+  struct intersection *start;
+  struct intersection *end;
+  DBounds b;
+  my_extended other, t;
+  struct monotonic *linked;     /* singly linked list of all monotonic */
+  /*  segments, no contour indication */
+  double when_set;              /* Debugging */
+  struct preintersection *pending;
 } Monotonic;
 
-extern void FreeMonotonics(Monotonic *m);
-extern Monotonic *SSsToMContours(SplineSet *spl, enum overlap_type ot);
-	/* overlap_type controls whether we look at selected splinesets or all splinesets */
-extern int MonotonicFindAt(Monotonic *ms,int which, extended test, Monotonic **space );
+extern void FreeMonotonics (Monotonic * m);
+extern Monotonic *SSsToMContours (SplineSet *spl, enum overlap_type ot);
+        /* overlap_type controls whether we look at selected splinesets or all splinesets */
+extern int MonotonicFindAt (Monotonic * ms, int which, my_extended test,
+                            Monotonic ** space);
 
 #endif /* _EDGELIST2_H */

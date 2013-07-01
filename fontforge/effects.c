@@ -521,7 +521,7 @@ SSCleanup (SplineSet *spl)
 static bigreal
 IntersectLine (Spline *spline1, Spline *spline2)
 {
-  extended t1s[10], t2s[10];
+  my_extended t1s[10], t2s[10];
   BasePoint pts[9];
   bigreal mint = 1;
   int i;
@@ -575,18 +575,18 @@ ClipLineTo3D (Spline *line, SplineSet *spl)
 
 /* finds all intersections between this spline and all the other splines in the */
 /*  character */
-static extended *
+static my_extended *
 BottomFindIntersections (Spline *bottom, SplineSet *lines, SplineSet *spl)
 {
-  extended *ts;
+  my_extended *ts;
   int tcnt, tmax;
-  extended t1s[26], t2s[26];
+  my_extended t1s[26], t2s[26];
   BasePoint pts[25];
   Spline *first, *s;
   int i, j;
 
   tmax = 100;
-  ts = xmalloc (tmax * sizeof (extended));
+  ts = xmalloc (tmax * sizeof (my_extended));
   tcnt = 0;
 
   while (spl != NULL)
@@ -602,7 +602,7 @@ BottomFindIntersections (Spline *bottom, SplineSet *lines, SplineSet *spl)
                     if (tcnt >= tmax)
                       {
                         tmax += 100;
-                        ts = xrealloc (ts, tmax * sizeof (extended));
+                        ts = xrealloc (ts, tmax * sizeof (my_extended));
                       }
                     ts[tcnt++] = t1s[i];
                   }
@@ -625,7 +625,7 @@ BottomFindIntersections (Spline *bottom, SplineSet *lines, SplineSet *spl)
                     if (tcnt >= tmax)
                       {
                         tmax += 100;
-                        ts = xrealloc (ts, tmax * sizeof (extended));
+                        ts = xrealloc (ts, tmax * sizeof (my_extended));
                       }
                     ts[tcnt++] = t1s[i];
                   }
@@ -645,7 +645,7 @@ BottomFindIntersections (Spline *bottom, SplineSet *lines, SplineSet *spl)
       {
         if (ts[i] > ts[j])
           {
-            extended temp = ts[i];
+            my_extended temp = ts[i];
             ts[i] = ts[j];
             ts[j] = temp;
           }
@@ -780,7 +780,7 @@ ClipBottomTo3D (SplineSet *bottom, SplineSet *lines, SplineSet *spl,
 {
   SplineSet *head = NULL, *last = NULL, *cur, *next;
   Spline *s;
-  extended *ts;
+  my_extended *ts;
   SplinePoint *sp;
   int i;
 

@@ -761,7 +761,7 @@ MonotonicOrder (Spline ** sspace, Spline * line, struct st *stspace)
   Spline *s;
   int i, j, k, cnt;
   BasePoint pts[9];
-  extended lts[10], sts[10];
+  my_extended lts[10], sts[10];
 
   for (i = j = 0; (s = sspace[j]) != NULL; ++j)
     {
@@ -3293,7 +3293,7 @@ FixupT (struct pointdata *pd, int stemidx, int isnext, int eidx)
   SplinePoint end1, end2;
   double width, t, sign, len, dot;
   BasePoint pts[9];
-  extended lts[10], sts[10];
+  my_extended lts[10], sts[10];
   BasePoint diff;
   struct stemdata *stem;
 

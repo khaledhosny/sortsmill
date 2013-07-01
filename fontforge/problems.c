@@ -2376,7 +2376,7 @@ restart:
       Spline *s, *first;
       double len2, bound2 = p->sc->parent->extrema_bound;
       double x, y;
-      extended extrema[4];
+      my_extended extrema[4];
 
       if (bound2 <= 0)
         bound2 = (p->sc->parent->ascent + p->sc->parent->descent) / 32.0;

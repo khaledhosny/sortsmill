@@ -1037,7 +1037,7 @@ static void
 CVMarkInterestingLocations (CharView *cv, GWindow pixmap, SplinePointList *spl)
 {
   Spline *s, *first;
-  extended interesting[6];
+  my_extended interesting[6];
   int i, ecnt, cnt;
   GRect r;
 
@@ -10166,7 +10166,7 @@ IOSA_OK (GGadget *g, GEvent *e)
       int err = false;
       struct insertonsplineat *iosa = GDrawGetUserData (GGadgetGetWindow (g));
       double val;
-      extended ts[3];
+      my_extended ts[3];
       int which;
       SplinePoint *sp;
 

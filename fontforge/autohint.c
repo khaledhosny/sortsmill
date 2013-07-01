@@ -207,10 +207,9 @@ FindBlues (SplineFont *sf, int layer, real blues[14], real otherblues[10])
                        || enc == 'k' || enc == 'l' || enc == 0xf0 || enc == 0xfe
                        || enc == 0xdf || enc == 0x3b2 || enc == 0x3b6
                        || enc == 0x3b8 || enc == 0x3bb || enc == 0x3be
-                       || enc ==
-                       0x431
+                       || enc == 0x431
                        /* cyr be *//* || enc == 0x444 - ef may have varible height */
-                       )
+                )
                 {
                   ascenth[0] += b.maxy;
                   ascenth[1] += b.maxy * b.maxy;
@@ -957,7 +956,7 @@ EIAddEdge (Spline *spline, real tmin, real tmax, EIList * el)
 static void
 EIAddSpline (Spline *spline, EIList * el)
 {
-  extended ts[6], temp;
+  my_extended ts[6], temp;
   int i, j, base, last;
 
   ts[0] = 0;
@@ -1193,9 +1192,9 @@ HintCleanup (StemInfo * stem, int dosort, int instance_count)
               if (instance_count > 1 &&
                   t->u.unblended != NULL && s->u.unblended != NULL)
                 {
-                  int temp =
-                    UnblendedCompare ((*t->u.unblended)[0],
-                                      (*s->u.unblended)[0], instance_count);
+                  int temp = UnblendedCompare ((*t->u.unblended)[0],
+                                               (*s->u.unblended)[0],
+                                               instance_count);
                   if (temp == 0)
                     swap =
                       UnblendedCompare ((*t->u.unblended)[1],
@@ -4107,7 +4106,7 @@ IsFlexSmooth (SplinePoint *sp)
   double proj_same, proj_normal;
 
   if (sp->nonextcp || sp->noprevcp)
-    return false;             /* No continuity of slopes */
+    return false;               /* No continuity of slopes */
 
   nvec.x = sp->nextcp.x - sp->me.x;
   nvec.y = sp->nextcp.y - sp->me.y;

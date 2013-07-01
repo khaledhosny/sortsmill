@@ -69,10 +69,10 @@ VISIBLE int snaptoint = 0;
 static int
 MinMaxWithin (Spline *spline)
 {
-  extended dx, dy;
+  my_extended dx, dy;
   int which;
-  extended t1, t2;
-  extended w;
+  my_extended t1, t2;
+  my_extended w;
   /* We know that this "spline" is basically one dimensional. As long as its */
   /*  extrema are between the start and end points on that line then we can */
   /*  treat it as a line. If the extrema are way outside the line segment */
@@ -832,7 +832,7 @@ ClosestSplineSolve (Spline1D *sp, bigreal sought, bigreal close_to_t)
   /* We want to find t so that spline(t) = sought */
   /*  find the value which is closest to close_to_t */
   /* on error return closetot */
-  extended ts[3];
+  my_extended ts[3];
   int i;
   bigreal t, best, test;
 
@@ -869,7 +869,7 @@ SigmaDeltas (Spline *spline, TPoint * mid, int cnt, DBounds *b,
   int i;
   bigreal xdiff, ydiff, sum, temp, t;
   SplinePoint *to = spline->to, *from = spline->from;
-  extended ts[2], x, y;
+  my_extended ts[2], x, y;
   struct dotbounds db2;
   bigreal dot;
   int near_vert, near_horiz;
@@ -3258,7 +3258,7 @@ static int
 SplineCloseToLinear (Spline *s, bigreal err)
 {
   bigreal angle;
-  extended co, si, t1, t2, y;
+  my_extended co, si, t1, t2, y;
   SplinePoint from, to;
   Spline sp;
   BasePoint bp;
@@ -4618,7 +4618,7 @@ SplineAddExtrema (Spline *s, int always, real lenbound, real offsetbound,
             4 * 3 * s->splines[0].a * s->splines[0].c;
           if (d > 0)
             {
-              extended t1, t2;
+              my_extended t1, t2;
               d = sqrt (d);
               t1 = (-2 * s->splines[0].b + d) / (2 * 3 * s->splines[0].a);
               t2 = (-2 * s->splines[0].b - d) / (2 * 3 * s->splines[0].a);
@@ -4687,7 +4687,7 @@ SplineAddExtrema (Spline *s, int always, real lenbound, real offsetbound,
             4 * 3 * s->splines[1].a * s->splines[1].c;
           if (d > 0)
             {
-              extended t1, t2;
+              my_extended t1, t2;
               d = sqrt (d);
               t1 = (-2 * s->splines[1].b + d) / (2 * 3 * s->splines[1].a);
               t2 = (-2 * s->splines[1].b - d) / (2 * 3 * s->splines[1].a);
@@ -4921,7 +4921,7 @@ SplineSetAddSpiroExtrema (SplineChar *sc, SplineSet *ss,
 {
   int i, j, cnt, found, k;
   Spline *s;
-  extended extrema[4];
+  my_extended extrema[4];
   BasePoint bp;
   bigreal test;
 

@@ -320,6 +320,7 @@
                  (float ufo_ascent)
                  (float ufo_descent)
                  ((* FontViewBase) fv)
+                 (SCM name_table)
                  ((* AnchorClass) anchor anchor_classes)
                  ;; There are many more fields.
                  ))

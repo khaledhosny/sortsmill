@@ -5931,7 +5931,7 @@ MakeItalicDSerif (DStemInfo * d, double stemwidth,
   real trans[6];
   int i;
   double spos, epos, dpos;
-  extended t1, t2;
+  my_extended t1, t2;
   SplinePoint *sp;
   Spline *s;
   double cur_sw;
@@ -6668,7 +6668,7 @@ StemMoveBottomEndCarefully (SplinePoint *sp, SplineSet *oldss,
         {
           /* We need to move sp up, but we can't because it turns down */
           /*  So instead, move "other" down to sp */
-          extended ts[3];
+          my_extended ts[3];
           /* Well, we might be able to move it up a little... */
           if (sp->prev->from->me.x == sp->me.x)
             {
@@ -6701,7 +6701,7 @@ StemMoveBottomEndCarefully (SplinePoint *sp, SplineSet *oldss,
           ((sp->nonextcp && other->me.y > sp->next->to->me.y) ||
            (!sp->nonextcp && other->me.y > sp->nextcp.y)))
         {
-          extended ts[3];
+          my_extended ts[3];
           if (sp->next->to->me.x == sp->me.x)
             {
               SplinePoint *newsp = sp->next->to;
@@ -7057,7 +7057,7 @@ StemMoveTopEndCarefully (SplinePoint *sp, SplineSet *oldss,
         {
           /* We need to move sp up, but we can't because it turns down */
           /*  So instead, move "other" down to sp */
-          extended ts[3];
+          my_extended ts[3];
           /* Well, we might be able to move it up a little... */
           if (sp->prev->from->me.x == sp->me.x)
             {
@@ -7090,7 +7090,7 @@ StemMoveTopEndCarefully (SplinePoint *sp, SplineSet *oldss,
           ((sp->nonextcp && other->me.y < sp->next->to->me.y) ||
            (!sp->nonextcp && other->me.y < sp->nextcp.y)))
         {
-          extended ts[3];
+          my_extended ts[3];
           if (sp->next->to->me.x == sp->me.x)
             {
               SplinePoint *newsp = sp->next->to;
@@ -8145,7 +8145,7 @@ Ital_a_From_d (SplineChar *sc, int layer, ItalicInfo * ii)
   SplinePoint *start, *end, *ltemp, *rtemp;
   int scnt, left_is_start;
   double stemwidth, drop, min;
-  extended ts[3];
+  my_extended ts[3];
 
   if (d == NULL)
     return;

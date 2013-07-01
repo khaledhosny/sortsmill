@@ -56,6 +56,7 @@
 #include <stdlib.h>             /* for getenv */
 #include <errno.h>              /* for errors */
 #include <dirent.h>             /* for opendir,etc. */
+#include <stdint.h>             /* for uintmax_t */
 
 VISIBLE int preferpotrace = false;
 
@@ -272,7 +273,7 @@ mytempdir (void)
   eon = buffer + strlen (buffer);
   while (1)
     {
-      sprintf (eon, "%04X_mf%d", getpid (), ++cnt);
+      sprintf (eon, "%04jX_mf%d", (uintmax_t) getpid (), ++cnt);
       if (mkdir (buffer, 0770) == 0)
         return xstrdup_or_null (buffer);
       else if (errno != EEXIST)

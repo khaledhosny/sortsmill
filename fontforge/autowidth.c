@@ -410,7 +410,7 @@ AW_AutoKern (WidthInfo * wi)
 static real
 SplineFindMinXAtY (Spline *spline, real y, real min)
 {
-  extended t, t1, t2, tbase, val;
+  my_extended t, t1, t2, tbase, val;
   Spline1D *xsp;
 
   if (y > spline->from->me.y && y > spline->from->nextcp.y &&
@@ -483,7 +483,7 @@ static void
 SplineFindEdges (Spline *spline, struct charone *ch, WidthInfo * wi)
 {
   Spline1D *xsp, *ysp;
-  extended t1, t2;
+  my_extended t1, t2;
   double t, toff, ymin, ymax;
 
   /* first try the end points */
@@ -1750,8 +1750,7 @@ VSubtableFromH (struct lookupmap *lookupmap, struct lookup_subtable *sub)
 
   sc = lookupmap->sc++;
   lookupmap->smap[sc].from = sub;
-  lookupmap->smap[sc].to = nsub =
-    xzalloc (sizeof (struct lookup_subtable));
+  lookupmap->smap[sc].to = nsub = xzalloc (sizeof (struct lookup_subtable));
   nsub->subtable_name = strconcat ("V", sub->subtable_name);
   nsub->per_glyph_pst_or_kern = sub->per_glyph_pst_or_kern;
   nsub->vertical_kerning = true;

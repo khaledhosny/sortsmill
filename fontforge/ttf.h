@@ -108,7 +108,9 @@ struct ttfinfo
   short os2_version;
   short gasp_version;
   int dupnamestate;
-  struct ttflangname *names;
+  struct ttflangname *names; // FIXME: This is to be replaced with the
+                             // name_table field.
+  SCM name_table;
   char *fontcomments, *fontlog;
   char **cvt_names;
   SplineChar **chars;           /* from all over, glyf table for contours */

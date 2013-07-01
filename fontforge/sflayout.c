@@ -50,6 +50,7 @@
 #include <ustring.h>
 #include <utype.h>
 #include <chardata.h>
+#include <stdint.h>
 
 static uint32_t simple_stdfeatures[] = {
   CHR ('c', 'c', 'm', 'p'), CHR ('l', 'o', 'c', 'a'),
@@ -1631,8 +1632,8 @@ SFDefaultImage (SplineFont *sf, char *filename)
       if (dir == NULL)
         dir = P_tmpdir;
       filename = xmalloc (strlen (dir) + strlen (sf->fontname) + 100);
-      sprintf (filename, "%s/ff-preview-%s-%d-%d.png", dir, sf->fontname,
-               getpid (), ++cnt);
+      sprintf (filename, "%s/ff-preview-%s-%jd-%d.png", dir, sf->fontname,
+               (intmax_t) getpid (), ++cnt);
     }
   FontImage (sf, filename, NULL, -1, -1);
   return filename;

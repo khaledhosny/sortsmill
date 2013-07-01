@@ -197,7 +197,7 @@ void CVMouseUpKnife(CharView *cv, GEvent *event) {
     Spline dummy;
     SplinePoint dummyfrom, dummyto, *mid, *mid2;
     BasePoint inters[9];
-    extended t1s[10], t2s[10];
+    my_extended t1s[10], t2s[10];
     int foundsomething = true, ever = false;
     int i;
     int spiro_index = 0;

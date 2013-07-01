@@ -349,7 +349,7 @@ static int GetIntersections(CharView *cv,BasePoint from,BasePoint to,BasePoint *
     Spline dummy;
     SplinePoint dummyfrom, dummyto;
     BasePoint inters[9];	/* These bounds are hard coded in the SplinesIntersect function */
-    extended t1s[10], t2s[10];
+    my_extended t1s[10], t2s[10];
     int i;
     int total_intersections = 0;
 

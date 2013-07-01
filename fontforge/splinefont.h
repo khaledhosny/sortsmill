@@ -2394,7 +2394,9 @@ typedef struct splinefont
   struct psdict *private;       /* read in from type1 file or provided by user */
   char *xuid;
   struct pfminfo pfminfo;
-  struct ttflangname *names;
+  struct ttflangname *names;    // FIXME: This is to be replaced with the
+  // name_table field.
+  SCM name_table;
   char *cidregistry, *ordering;
   int supplement;
   int subfontcnt;
@@ -3217,31 +3219,32 @@ VISIBLE void XLFD_CreateComponents (BDFFont *bdf, EncMap *map, int res,
 /* Two cubics intersect in at most 9 points */
 /* Plus an extra space for a trailing -1 */
 VISIBLE int SplinesIntersect (const Spline *s1, const Spline *s2,
-                              BasePoint pts[9], extended t1s[10],
-                              extended t2s[10]);
+                              BasePoint pts[9], my_extended t1s[10],
+                              my_extended t2s[10]);
 VISIBLE SplineSet *LayerAllSplines (Layer *layer);
 VISIBLE SplineSet *LayerUnAllSplines (Layer *layer);
 VISIBLE int SplineSetIntersect (SplineSet *spl, Spline **_spline,
                                 Spline **_spline2);
 int LineTangentToSplineThroughPt (Spline *s, BasePoint *pt,
-                                  extended ts[4], extended tmin, extended tmax);
-VISIBLE int _CubicSolve (const Spline1D *sp, bigreal sought, extended ts[3]);
-VISIBLE int CubicSolve (const Spline1D *sp, bigreal sought, extended ts[3]);
+                                  my_extended ts[4], my_extended tmin,
+                                  my_extended tmax);
+VISIBLE int _CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3]);
+VISIBLE int CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3]);
 /* Uses an algebraic solution */
-extended SplineSolve (const Spline1D *sp, real tmin, real tmax,
-                      extended sought_y);
+my_extended SplineSolve (const Spline1D *sp, real tmin, real tmax,
+                         my_extended sought_y);
 /* Tries to fixup rounding errors that crept in to the solution */
-extended SplineSolveFixup (const Spline1D *sp, real tmin, real tmax,
-                           extended sought_y);
+my_extended SplineSolveFixup (const Spline1D *sp, real tmin, real tmax,
+                              my_extended sought_y);
 /* Uses an iterative approximation */
-extended IterateSplineSolve (const Spline1D *sp, extended tmin,
-                             extended tmax, extended sought_y);
+my_extended IterateSplineSolve (const Spline1D *sp, my_extended tmin,
+                                my_extended tmax, my_extended sought_y);
 /* Uses an iterative approximation and then tries to fix things up */
-extended IterateSplineSolveFixup (const Spline1D *sp, extended tmin,
-                                  extended tmax, extended sought_y);
-void SplineFindExtrema (const Spline1D *sp, extended *_t1, extended *_t2);
-int SSBoundsWithin (SplineSet *ss, bigreal z1, bigreal z2,
-                    bigreal *wmin, bigreal *wmax, int major);
+my_extended IterateSplineSolveFixup (const Spline1D *sp, my_extended tmin,
+                                     my_extended tmax, my_extended sought_y);
+void SplineFindExtrema (const Spline1D *sp, my_extended *_t1, my_extended *_t2);
+int SSBoundsWithin (SplineSet *ss, bigreal z1, bigreal z2, bigreal *wmin,
+                    bigreal *wmax, int major);
 bigreal SplineMinDistanceToPoint (Spline *s, BasePoint *p);
 
 SplineSet *SplineSetsInterpolate (SplineSet *base, SplineSet *other,
@@ -3271,17 +3274,19 @@ VISIBLE bigreal SplineCurvature (Spline *s, bigreal t);
 
 double CheckExtremaForSingleBitErrors (const Spline1D *sp, double t,
                                        double othert);
-VISIBLE int Spline2DFindExtrema (const Spline *sp, extended extrema[4]);
-VISIBLE int Spline2DFindPointsOfInflection (const Spline *sp, extended poi[2]);
+VISIBLE int Spline2DFindExtrema (const Spline *sp, my_extended extrema[4]);
+VISIBLE int Spline2DFindPointsOfInflection (const Spline *sp,
+                                            my_extended poi[2]);
 int SplineAtInflection (Spline1D *sp, bigreal t);
 int SplineAtMinMax (Spline1D *sp, bigreal t);
-void SplineRemoveExtremaTooClose (Spline1D *sp, extended *_t1, extended *_t2);
+void SplineRemoveExtremaTooClose (Spline1D *sp, my_extended *_t1,
+                                  my_extended *_t2);
 VISIBLE int NearSpline (struct findsel *fs, Spline *spline);
 real SplineNearPoint (Spline *spline, BasePoint *bp, real fudge);
 VISIBLE int SplineT2SpiroIndex (Spline *spline, bigreal t, SplineSet *spl);
 VISIBLE void SCMakeDependent (SplineChar *dependent, SplineChar *base);
-VISIBLE SplinePoint *SplineBisect (Spline *spline, extended t);
-VISIBLE Spline *SplineSplit (Spline *spline, extended ts[3]);
+VISIBLE SplinePoint *SplineBisect (Spline *spline, my_extended t);
+VISIBLE Spline *SplineSplit (Spline *spline, my_extended ts[3]);
 VISIBLE Spline *ApproximateSplineFromPoints (SplinePoint *from,
                                              SplinePoint *to,
                                              TPoint * mid, int cnt, int order2);

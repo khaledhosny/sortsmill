@@ -2256,6 +2256,21 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
   int i, cnt, tableoff;
   int platform, specific, language, name, str_len, stroff;
 
+  SCM name_table_and_errors =
+    scm_call_2 (scm_c_public_ref ("sortsmill",
+                                  "name-table:read-from-sfnt-at-offset"),
+                scm_from_int (fileno (ttf)),
+                scm_from_uintmax (info->copyright_start));
+  SCM name_table = scm_c_value_ref (name_table_and_errors, 0);
+  SCM errors = scm_c_value_ref (name_table_and_errors, 1);
+
+  SCM prepped_name_table =
+    scm_call_1 (scm_c_public_ref ("sortsmill",
+                                  "name-table:prune-and-prepare"),
+                name_table);
+
+  info->name_table = prepped_name_table;
+
 #if 0
   // FIXME: Temporary code for activation during name table reimplementation.
   //???????????????????????????????????????????????????????????????????????????????????????????????????????????
@@ -7495,6 +7510,8 @@ SFFillFromTTF (struct ttfinfo *info)
   sf->possub = info->possub;
   sf->gpos_lookups = info->gpos_lookups;
   sf->gsub_lookups = info->gsub_lookups;
+
+  sf->name_table = scm_gc_protect_object (info->name_table);
 
   last[0] = sf->ttf_tables;
   last[1] = NULL;

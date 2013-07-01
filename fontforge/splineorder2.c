@@ -77,7 +77,7 @@ static int comparespline(Spline *ps, Spline *ttf, real tmin, real tmax, real err
     real d, o;
     real ttf_t, sq, val;
     DBounds bb;
-    extended ts[3];
+    my_extended ts[3];
     int i;
 
     /* Are all points on ttf near points on ps? */
@@ -436,7 +436,7 @@ return( sp );
 }
 
 static SplinePoint *__ttfApprox(Spline *ps,real tmin, real tmax, SplinePoint *start) {
-    extended inflect[2];
+    my_extended inflect[2];
     int i=0;
 #if 1
     SplinePoint *end;
@@ -779,7 +779,7 @@ return( NULL );
 
 static SplinePoint *ttfApprox(Spline *ps, SplinePoint *start) {
 #if !FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION
-    extended magicpoints[6], last;
+    my_extended magicpoints[6], last;
     int cnt, i, j, qcnt, test_level;
     QPoint data[8*10];
     int round_to_int =
