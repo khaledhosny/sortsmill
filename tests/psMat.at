@@ -2,6 +2,7 @@ m4_defun([check_psMat],
 [
 AT_SETUP([$1])
 AT_KEYWORDS([psMat python scripting])
+AT_SKIP_IF([${skip_python}])
 AT_CHECK_UNQUOTED([${PYTHON} "${abs_srcdir}"/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
