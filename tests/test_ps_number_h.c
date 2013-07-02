@@ -19,7 +19,7 @@ main (int argc, char **argv)
 
   setlocale (LC_ALL, "");
 
-  char *s = argv[1];
+  char *s = (argc < 2) ? "" : argv[1];
 
   printf ("%s", truth_val (is_postscript_integer (s)));
   printf ("%s", truth_val (is_postscript_real (s)));
