@@ -86,6 +86,8 @@ AC_LINK_IFELSE(
 $4
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <math.h>
 ],
 [
   printf (($3), ($1));
