@@ -4,7 +4,10 @@ dnl FONTFORGE_LIBPCRE
 dnl -----------------
 AC_DEFUN([FONTFORGE_LIBPCRE],
 [
-PKG_CHECK_MODULES([LIBPCRE],[libpcre])
+# Require at least the first version of libpcre to have the PCRE_UCP
+# macro.
+PKG_CHECK_MODULES([LIBPCRE],[libpcre >= 8.10])
+
 FONTFORGE_LIBPCRE_PROPERTY([PCRE_CONFIG_UTF8],[support for UTF-8])
 FONTFORGE_LIBPCRE_PROPERTY([PCRE_CONFIG_UNICODE_PROPERTIES],[support for Unicode properties])
 FONTFORGE_LIBPCRE_CHECK_PCRE_FREE_STUDY
