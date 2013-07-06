@@ -162,6 +162,12 @@ GFileMkDir (const char *name)
 }
 
 int
+GFileMkDirP (const char *name)
+{
+  return g_mkdir_with_parents (name, 0755);
+}
+
+int
 GFileUnlink (const char *name)
 {
   return g_unlink (name);

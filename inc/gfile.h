@@ -65,6 +65,7 @@ VISIBLE extern bool GFileIsDir (const char *file);
 VISIBLE extern bool GFileExists (const char *file);
 VISIBLE extern bool GFileReadable (const char *file);
 VISIBLE extern int GFileMkDir (const char *name);
+VISIBLE extern int GFileMkDirP (const char *name);
 VISIBLE extern int GFileUnlink (const char *name);
 
 VISIBLE inline uint8_t *u8_GFileGetUserConfigDir (void);

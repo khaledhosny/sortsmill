@@ -65,7 +65,7 @@ getUserCacheDir (void)
   if (dir == NULL)
     return NULL;
   if (access (dir, F_OK) == -1)
-    if (GFileMkDir (dir) == -1)
+    if (GFileMkDirP (dir) == -1)
       return NULL;
   return dir;
 }
@@ -78,7 +78,7 @@ getUserConfigDir (void)
   if (dir == NULL)
     return NULL;
   if (access (dir, F_OK) == -1)
-    if (GFileMkDir (dir) == -1)
+    if (GFileMkDirP (dir) == -1)
       return NULL;
   return dir;
 }
@@ -91,7 +91,7 @@ getUserDataDir (void)
   if (dir == NULL)
     return NULL;
   if (access (dir, F_OK) == -1)
-    if (GFileMkDir (dir) == -1)
+    if (GFileMkDirP (dir) == -1)
       return NULL;
   return dir;
 }
@@ -105,7 +105,7 @@ getAutoDirName (char *buffer)
     return NULL;
   sprintf (buffer, "%s/autosave", dir);
   if (access (buffer, F_OK) == -1)
-    if (GFileMkDir (buffer) == -1)
+    if (GFileMkDirP (buffer) == -1)
       return NULL;
   dir = xstrdup_or_null (buffer);
   return dir;
