@@ -1072,7 +1072,6 @@ PyFF_printSetup (PyObject *UNUSED (self), PyObject *args)
 /* ************************* Import/Export routines ************************* */
 /* ************************************************************************** */
 
-VISIBLE struct python_import_export *py_ie;
 static int ie_cnt, ie_max;
 
 void

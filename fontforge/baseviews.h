@@ -755,7 +755,9 @@ struct python_import_export
   char *name;
   char *extension;
   char *all_extensions;
-} *py_ie;
+};
+
+extern struct python_import_export *py_ie;
 
 VISIBLE void PyFF_SCExport (SplineChar *sc, int ie_index,
                             char *filename, int layer);

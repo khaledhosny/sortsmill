@@ -81,7 +81,7 @@ struct cvshows
   int hvoffset;
   int checkselfintersects;      /* Not really something shown, but convenient to keep it here */
   int showdebugchanges;         /* Changes the way changing rasters are displayed in tt debug mode */
-} CVShows;
+};
 
 struct bvshows
 {
@@ -89,7 +89,10 @@ struct bvshows
   int showoutline;
   int showgrid;
   int lastpixelsize;
-} BVShows;
+};
+
+extern struct cvshows CVShows;
+extern struct bvshows BVShows;
 
 enum debug_wins
 {
@@ -1322,7 +1325,7 @@ void QGRmCharView (struct qg_data *qg, CharView *cv);
 
 struct hslrgb *SFFontCols (SplineFont *sf, struct hslrgb fontcols[6]);
 
-Color view_bgcol;               /* Background color for views */
+extern Color view_bgcol;        /* Background color for views */
 void MVColInit (void);
 void CVColInit (void);
 

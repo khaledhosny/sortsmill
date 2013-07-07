@@ -345,7 +345,8 @@ AX_PTHREAD
 
 AC_SUBST([WARNING_CFLAGS])
 WARNING_CFLAGS=""
-FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
+if test x"${GCC}" = xyes; then
+   FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type
          -Wparentheses -Wformat -Wchar-subscripts
          -Wno-unused-but-set-variable -Wno-unused-result
@@ -355,6 +356,11 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
          -Wpointer-arith
          -Wmissing-prototypes
          -Wimplicit])
+   if test x"${with_gnu_ld}" == xyes; then
+      FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
+        [-Wl,--warn-common])
+   fi
+fi
 
 ## Some clang flags to turn off for now.
 #FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
@@ -362,23 +368,31 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
 
 AC_SUBST([CYTHON_EXTRA_CFLAGS])
 CYTHON_EXTRA_CFLAGS=""
-FONTFORGE_COMPILER_FLAGS([CYTHON_EXTRA_CFLAGS],
+if test x"${GCC}" = xyes; then
+   FONTFORGE_COMPILER_FLAGS([CYTHON_EXTRA_CFLAGS],
         [-Wno-unused -fwrapv -fno-strict-aliasing -Wno-strict-aliasing])
+fi
 
 AC_SUBST([VISIBILITY_DEFAULT_EXTRA_CFLAGS])
 VISIBILITY_DEFAULT_EXTRA_CFLAGS=""
-FONTFORGE_COMPILER_FLAGS([VISIBILITY_DEFAULT_EXTRA_CFLAGS],
+if test x"${GCC}" = xyes; then
+   FONTFORGE_COMPILER_FLAGS([VISIBILITY_DEFAULT_EXTRA_CFLAGS],
         [-fvisibility=default])
+fi
 
 AC_SUBST([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS])
 NO_MISSING_PROTOTYPES_EXTRA_CFLAGS=""
-FONTFORGE_COMPILER_FLAGS([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],
+if test x"${GCC}" = xyes; then
+   FONTFORGE_COMPILER_FLAGS([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],
         [-Wno-missing-prototypes])
+fi
 
 AC_SUBST([NO_UNUSED_EXTRA_CFLAGS])
 NO_UNUSED_EXTRA_CFLAGS=""
-FONTFORGE_COMPILER_FLAGS([NO_UNUSED_EXTRA_CFLAGS],
+if test x"${GCC}" = xyes; then
+   FONTFORGE_COMPILER_FLAGS([NO_UNUSED_EXTRA_CFLAGS],
         [-Wno-unused])
+fi
 
 FONTFORGE_C_CONST_FLT_EPSILON
 AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
