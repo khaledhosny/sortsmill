@@ -63,20 +63,7 @@ VISIBLE int old_psotb_flags = ps_flag_afm;
 
 VISIBLE int oldformatstate = ff_pfb;
 VISIBLE int oldbitmapstate = 0;
-#if __Mac
-char *generatefont_extensions[] =
-  { ".pfa", ".pfb", ".res", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
-  ".cid", ".cff", ".cid.cff",
-  ".t42", ".t11",
-  ".ttf", ".ttf", ".suit", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
-  ".otf.dfont", ".svg", ".ufo", ".woff", NULL
-};
 
-char *bitmapextensions[] =
-  { "-*.bdf", ".ttf", ".dfont", ".ttf", ".otb", ".bmap", ".dfont", ".fon",
-  "-*.fnt", ".pdb", "-*.pt3", ".none", NULL
-};
-#else
 char *generatefont_extensions[] =
   { ".pfa", ".pfb", ".bin", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
   ".cid", ".cff", ".cid.cff",
@@ -89,7 +76,6 @@ char *bitmapextensions[] =
   { "-*.bdf", ".ttf", ".dfont", ".ttf", ".otb", ".bmap.bin", ".fon", "-*.fnt",
   ".pdb", "-*.pt3", ".none", NULL
 };
-#endif
 
 static int
 WriteAfmFile (char *filename, SplineFont *sf, int formattype,

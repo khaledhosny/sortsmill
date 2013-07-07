@@ -57,14 +57,7 @@
 #include "ttf.h"
 #include "psfont.h"
 #include <xunistring.h>
-#if __Mac
-#include <ctype.h>
-#include <Developer/Headers/FlatCarbon/Files.h>
-#else
 #include <utype.h>
-#undef __Mac
-#define __Mac 0
-#endif
 
 const int mac_dpi = 72;
 /* I had always assumed that the mac still believed in 72dpi screens, but I */
@@ -1713,7 +1706,6 @@ mactime (void)
 static int
 DumpMacBinaryHeader (FILE *res, struct macbinaryheader *mb)
 {
-#if !__Mac
   uint8_t header[128], *hpt;
   char buffer[256], *pt, *dpt;
   uint32_t len;
@@ -1821,83 +1813,6 @@ DumpMacBinaryHeader (FILE *res, struct macbinaryheader *mb)
   fseek (res, 0, SEEK_SET);
   fwrite (header, 1, sizeof (header), res);
   return true;
-#else
-  int ret;
-  FSRef ref, parentref;
-#if __LP64__
-  FSIORefNum macfile;
-#else
-  short macfile;
-#endif
-  char *buf, *dirname, *pt, *fname;
-  HFSUniStr255 resforkname;
-  FSCatalogInfo info;
-  long len;
-  uint32_t *filename;
-  ByteCount whocares;
-  /* When on the mac let's just create a real resource fork. We do this by */
-  /*  creating a mac file with a resource fork, opening that fork, and */
-  /*  dumping all the data in the temporary file after the macbinary header */
-
-  /* The mac file routines are really lovely. I can't convert a pathspec to */
-  /*  an FSRef unless the file exists.  That is incredibly stupid and annoying of them */
-  /* But the directory should exist... */
-  fname = mb->macfilename ? mb->macfilename : mb->binfilename;
-  dirname = xstrdup_or_null (fname);
-  pt = strrchr (dirname, '/');
-  if (pt != NULL)
-    pt[1] = '\0';
-  else
-    {
-      free (dirname);
-      dirname = xstrdup (".");
-    }
-  ret = FSPathMakeRef ((uint8_t *) dirname, &parentref, NULL);
-  free (dirname);
-  if (ret != noErr)
-    return false;
-
-  memset (&info, 0, sizeof (info));
-  ((FInfo *) (info.finderInfo))->fdType = mb->type;
-  ((FInfo *) (info.finderInfo))->fdCreator = mb->creator;
-  pt = strrchr (fname, '/');
-  filename = x_u32_strconv_from_locale (pt == NULL ? fname : pt + 1);
-  {
-    UniChar *ucs2fn = xmalloc ((u32_strlen (filename) + 1) * sizeof (UniChar));
-    int i;
-    for (i = 0; filename[i] != 0; ++i)
-      ucs2fn[i] = filename[i];
-    ucs2fn[i] = 0;
-    ret = FSCreateFileUnicode (&parentref, u32_strlen (filename), ucs2fn,
-                               kFSCatInfoFinderInfo, &info, &ref, NULL);
-    free (ucs2fn);
-  }
-  free (filename);
-  if (ret == dupFNErr)
-    {
-      /* File already exists, create failed, didn't get an FSRef */
-      ret = FSPathMakeRef ((uint8_t *) fname, &ref, NULL);
-    }
-  if (ret != noErr)
-    return false;
-
-  FSGetResourceForkName (&resforkname);
-  FSCreateFork (&ref, resforkname.length, resforkname.unicode); /* I don't think this is needed, but it doesn't hurt... */
-  ret =
-    FSOpenFork (&ref, resforkname.length, resforkname.unicode, fsWrPerm,
-                &macfile);
-  if (ret != noErr)
-    return false;
-  FSSetForkSize (macfile, fsFromStart, 0);      /* Truncate it just in case it existed... */
-  fseek (res, 128, SEEK_SET);   /* Everything after the mac binary header in */
-  /* the temp file is resource fork */
-  buf = xmalloc (8 * 1024);
-  while ((len = fread (buf, 1, 8 * 1024, res)) > 0)
-    FSWriteFork (macfile, fsAtMark, 0, len, buf, &whocares);
-  FSCloseFork (macfile);
-  free (buf);
-  return true;
-#endif
 }
 
 static void
@@ -1963,9 +1878,6 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
   struct macbinaryheader header;
   int lcfn = false, lcfam = false;
   char buffer[63];
-#if __Mac
-  char *pt;
-#endif
 
   temppfb = tmpfile ();
   if (temppfb == NULL)
@@ -2005,10 +1917,7 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
       return 0;
     }
 
-  if (__Mac && format == ff_pfbmacbin)
-    res = tmpfile ();
-  else
-    res = fopen (filename, "wb+");
+  res = fopen (filename, "wb+");
   if (res == NULL)
     {
       fclose (temppfb);
@@ -2025,16 +1934,8 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
   DumpResourceMap (res, resources, format);
   free (resources[0].res);
 
-#if __Mac
-  header.macfilename = xmalloc (strlen (filename) + strlen (buffer) + 1);
-  strcpy (header.macfilename, filename);
-  pt = strrchr (header.macfilename, '/');
-  if (pt == NULL)
-    pt = header.macfilename - 1;
-  strcpy (pt + 1, buffer);
-#else
   header.macfilename = buffer;
-#endif
+
   /* Adobe uses a creator of ASPF (Adobe Systems PostScript Font I assume) */
   /* Fontographer uses ACp1 (Altsys Corp. PostScript type 1???) */
   /* Both include an FREF, BNDL, ICON* and comment */
@@ -2046,9 +1947,7 @@ WriteMacPSFont (char *filename, SplineFont *sf, enum fontformat format,
     ret = 0;
   if (fclose (res) == -1)
     ret = 0;
-#if __Mac
-  free (header.macfilename);
-#endif
+
   return ret;
 }
 
@@ -2078,10 +1977,7 @@ WriteMacTTFFont (char *filename, SplineFont *sf, enum fontformat format,
   if (bf != bf_ttf && bf != bf_sfnt_dfont)
     bsizes = NULL;              /* as far as the FOND for the truetype is concerned anyway */
 
-  if ((__Mac && format == ff_ttfmacbin) || strstr (filename, "://") != NULL)
-    res = tmpfile ();
-  else
-    res = fopen (filename, "wb+");
+  res = fopen (filename, "wb+");
   if (res == NULL)
     {
       fclose (tempttf);
@@ -2167,12 +2063,9 @@ WriteMacBitmaps (char *filename, SplineFont *sf, int32_t *sizes, int is_dfont,
       if (dpt == NULL)
         dpt = pt + strlen (pt);
     }
-  strcpy (dpt, is_dfont ? ".bmap.dfont" : __Mac ? ".bmap" : ".bmap.bin");
+  strcpy (dpt, is_dfont ? ".bmap.dfont" : ".bmap.bin");
 
-  if (__Mac && !is_dfont)
-    res = tmpfile ();
-  else
-    res = fopen (binfilename, "wb+");
+  res = fopen (binfilename, "wb+");
   if (res == NULL)
     {
       free (binfilename);
@@ -2242,9 +2135,7 @@ WriteMacFamily (char *filename, struct sflist *sfs, enum fontformat format,
         {
           char *tempname;
           MakeMacPSName (buffer, sfi->sf);
-#if !__Mac
           strcat (buffer, ".bin");
-#endif
           tempname = xmalloc (strlen (filename) + strlen (buffer) + 1);
           strcpy (tempname, filename);
           pt = strrchr (tempname, '/');
@@ -2260,11 +2151,7 @@ WriteMacFamily (char *filename, struct sflist *sfs, enum fontformat format,
               pt = strrchr (filename, '.');
               if (pt == NULL || pt < strrchr (filename, '/'))
                 pt = filename + strlen (filename) + 1;
-#if __Mac
-              strcpy (pt - 1, ".fam");
-#else
               strcpy (pt - 1, ".fam.bin");
-#endif
             }
           if (WriteMacPSFont (tempname, sfi->sf, format, flags, sfi->map, layer)
               == 0)
@@ -2292,11 +2179,7 @@ WriteMacFamily (char *filename, struct sflist *sfs, enum fontformat format,
         }
     }
 
-  if (__Mac && (format == ff_ttfmacbin || format == ff_pfbmacbin ||
-                (format == ff_none && bf == bf_nfntmacbin)))
-    res = tmpfile ();
-  else
-    res = fopen (filename, "wb+");
+  res = fopen (filename, "wb+");
   if (res == NULL)
     {
       for (sfsub = sfs; sfsub != NULL; sfsub = sfsub->next)
@@ -2522,7 +2405,7 @@ SearchPostScriptResources (FILE *f, long rlistpos, int subcnt, long rdata_pos,
   fseek (f, here, SEEK_SET);
   rewind (pfb);
   if (flags & ttf_onlynames)
-    return (SplineFont *) _NamesReadPostScript (pfb); /* This closes the font for us */
+    return (SplineFont *) _NamesReadPostScript (pfb);   /* This closes the font for us */
 
   fd = _ReadPSFont (pfb);
   sf = NULL;
@@ -3555,47 +3438,8 @@ IsResourceFork (FILE *f, long offset, char *filename, int flags,
       if (sf != NULL)
         return sf;
     }
-  return (SplineFont *) -1;   /* It's a valid resource file, but just has no fonts */
+  return (SplineFont *) -1;     /* It's a valid resource file, but just has no fonts */
 }
-
-#if __Mac
-static SplineFont *
-HasResourceFork (char *filename, int flags, enum openflags openflags,
-                 SplineFont *into, EncMap *map)
-{
-  /* If we're on a mac, we can try to see if we've got a real resource fork */
-  /* (if we do, copy it into a temporary data file and then manipulate that) */
-  SplineFont *ret;
-  FILE *resfork;
-  char *tempfn = filename, *pt, *lparen, *respath;
-
-  if ((pt = strrchr (filename, '/')) == NULL)
-    pt = filename;
-  if ((lparen = strchr (pt, '(')) != NULL && strchr (lparen, ')') != NULL)
-    {
-      tempfn = xstrdup_or_null (filename);
-      tempfn[lparen - filename] = '\0';
-    }
-  respath = xmalloc (strlen (tempfn) + strlen ("/..namedfork/rsrc") + 1);
-  strcpy (respath, tempfn);
-  strcat (respath, "/..namedfork/rsrc");
-  resfork = fopen (respath, "r");
-  if (resfork == NULL)
-    {
-      strcpy (respath, tempfn);
-      strcat (respath, "/rsrc");
-      resfork = fopen (respath, "r");
-    }
-  free (respath);
-  if (tempfn != filename)
-    free (tempfn);
-  if (resfork == NULL)
-    return NULL;
-  ret = IsResourceFork (resfork, 0, filename, flags, openflags, into, map);
-  fclose (resfork);
-  return ret;
-}
-#endif
 
 static SplineFont *
 IsResourceInBinary (FILE *f, char *filename, int flags,
@@ -3821,10 +3665,6 @@ IsResourceInFile (char *filename, int flags, enum openflags openflags,
 
   sf = IsResourceFork (f, 0, filename, flags, openflags, into, map);
   fclose (f);
-#if __Mac
-  if (sf == NULL)
-    sf = HasResourceFork (filename, flags, openflags, into, map);
-#endif
   return sf;
 }
 

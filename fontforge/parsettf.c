@@ -2806,13 +2806,13 @@ readttfcompositglyph (FILE *ttf, struct ttfinfo *info, SplineChar *sc,
         }
       if (flags & _ARGS_ARE_XY)
         {                       /* Only muck with these guys if they are real offsets and not point matching */
-#ifdef __Mac
-          /* On mac assume scaled offsets unless told unscaled explicitly */
-          if (!(flags & _UNSCALED_OFFSETS) &&
-#else
+//#ifdef __Mac
+//          /* On mac assume scaled offsets unless told unscaled explicitly */
+//          if (!(flags & _UNSCALED_OFFSETS) &&
+//#else
           /* everywhere else assume unscaled offsets unless told scaled explicitly */
           if ((flags & _SCALED_OFFSETS) &&
-#endif
+//#endif
               (flags & _ARGS_ARE_XY)
               && (flags & (_SCALE | _XY_SCALE | _MATRIX)))
             {

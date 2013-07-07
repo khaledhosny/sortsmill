@@ -139,13 +139,8 @@ static GTextInfo formattypes[] = {
    0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) N_("PS Type 1 (Binary)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
-#if __Mac
-  {(uint32_t *) N_("PS Type 1 (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
-   0, 0, 0, 1, 0, 0, '\0'},
-#else
   {(uint32_t *) N_("PS Type 1 (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
-#endif
   {(uint32_t *) N_("PS Type 1 (Multiple)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) N_("PS Multiple Master(A)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
@@ -174,13 +169,8 @@ static GTextInfo formattypes[] = {
    0, 0, '\0'},
   {(uint32_t *) N_("TrueType (Symbol)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
-#if __Mac
-  {(uint32_t *) N_("TrueType (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
-   0, 0, 0, 1, 0, 0, '\0'},
-#else
   {(uint32_t *) N_("TrueType (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
-#endif
   {(uint32_t *) N_("TrueType (TTC)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
   {(uint32_t *) N_("TrueType (Mac dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
@@ -215,13 +205,8 @@ static GTextInfo bitmaptypes[] = {
    NULL, 1, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) N_("X11 bitmap only sfnt (otb)"), NULL, 0, 0, NULL, NULL, 0,
    0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-#if __Mac
-  {(uint32_t *) N_("NFNT (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
-   0, 1, 0, 0, '\0'},
-#else
   {(uint32_t *) N_("NFNT (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-#endif
 /* OS/X doesn't seem to support NFNTs, so there's no point in putting them in a dfont */
 /*  { (uint32_t *) "NFNT (dfont)", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },*/
   {(uint32_t *) N_("Win FON"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
@@ -2285,17 +2270,6 @@ GFD_Format (GGadget *g, GEvent *e)
                    || bf == bf_sfnt_ms || bf == bf_otb)
             GGadgetSelectOneListItem (d->bmptype, bf_ttf);
         }
-#if __Mac
-      {
-        GGadget *pulldown, *list, *tf;
-        /* The name of the postscript file is fixed and depends solely on */
-        /*  the font name. If the user tried to change it, the font would */
-        /*  not be found */
-        /* See MakeMacPSName for a full description */
-        GFileChooserGetChildren (d->gfc, &pulldown, &list, &tf);
-        GGadgetSetVisible (tf, format != ff_pfbmacbin);
-      }
-#endif
       GGadgetSetEnabled (d->bmptype, format != ff_multiple);
     }
   return true;
@@ -3368,12 +3342,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   }
   GFileChooserGetChildren (gcd[0].ret, &pulldown, &files, &tf);
   GWidgetIndicateFocusGadget (tf);
-#if __Mac
-  /* The name of the postscript file is fixed and depends solely on */
-  /*  the font name. If the user tried to change it, the font would */
-  /*  not be found */
-  GGadgetSetVisible (tf, ofs != ff_pfbmacbin);
-#endif
 
   d.sf = sf;
   d.map = map;
