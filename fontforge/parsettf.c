@@ -1547,7 +1547,7 @@ readttfheader (FILE *ttf, struct ttfinfo *info, char *filename,
      arphic fonts.  See discussion on freetype list, July 2004. */
   else if (version != 0x00010000 && version != CHR ('t', 'r', 'u', 'e')
            && version != 0x00020000 && version != CHR ('O', 'T', 'T', 'O'))
-    return 0;                 /* Not version 1 of true type, nor Open Type */
+    return 0;                   /* Not version 1 of true type, nor Open Type */
 
   if (info->openflags & of_fontlint)
     ValidateTTFHead (ttf, info);
@@ -1940,11 +1940,11 @@ ValidatePostScriptFontName (struct ttfinfo *info, char *str)
           if (!complained)
             {
               ff_post_error (_("Bad Font Name"),
-                             _("The PostScript font name \"%.63s\" is invalid.\n"
-                               "It should be printable ASCII,\n"
-                               "must not contain (){}[]<>%%/ or space\n"
-                               "and must be shorter than 63 characters"),
-                             str);
+                             _
+                             ("The PostScript font name \"%.63s\" is invalid.\n"
+                              "It should be printable ASCII,\n"
+                              "must not contain (){}[]<>%%/ or space\n"
+                              "and must be shorter than 63 characters"), str);
               info->bad_ps_fontname = true;
             }
           complained = true;
@@ -1960,8 +1960,7 @@ ValidatePostScriptFontName (struct ttfinfo *info, char *str)
                      _("The PostScript font name \"%.63s\" is invalid.\n"
                        "It should be printable ASCII,\n"
                        "must not contain (){}[]<>%%/ or space\n"
-                       "and must be shorter than 63 characters"),
-                     str);
+                       "and must be shorter than 63 characters"), str);
       info->bad_ps_fontname = true;
       str[63] = '\0';
     }
@@ -2162,42 +2161,51 @@ TTFAddLangStr (FILE *ttf, struct ttfinfo *info, int id,
     }
 }
 
-static int
-is_ascii (char *str)
-{                               /* isascii is in ctype */
-  if (str == NULL)
-    return false;
-  while (*str && *str < 127 && *str >= ' ')
-    ++str;
-  return *str == '\0';
-}
+//static int
+//is_ascii (char *str)
+//{                               /* isascii is in ctype */
+//  if (str == NULL)
+//    return false;
+//  while (*str && *str < 127 && *str >= ' ')
+//    ++str;
+//  return *str == '\0';
+//}
+
+//static char *
+//FindLangEntry (struct ttfinfo *info, int id)
+//{
+//  /* Look for an entry with string id */
+//  /* we prefer english, if we can't find english look for something in ascii */
+//  struct ttflangname *cur;
+//  char *ret;
+//
+//  for (cur = info->names; cur != NULL && cur->lang != 0x409; cur = cur->next);
+//  if (cur != NULL && cur->names[id] == NULL)
+//    cur = NULL;
+//  if (cur == NULL)
+//    for (cur = info->names; cur != NULL && (cur->lang & 0xf) != 0x09;
+//         cur = cur->next);
+//  if (cur != NULL && cur->names[id] == NULL)
+//    cur = NULL;
+//  if (cur == NULL)
+//    for (cur = info->names; cur != NULL && !is_ascii (cur->names[id]);
+//         cur = cur->next);
+//  if (cur == NULL)
+//    for (cur = info->names; cur != NULL && cur->names[id] == NULL;
+//         cur = cur->next);
+//  if (cur == NULL)
+//    return NULL;
+//  ret = xstrdup_or_null (cur->names[id]);
+//  return ret;
+//}
 
 static char *
-FindLangEntry (struct ttfinfo *info, int id)
+find_lang_entry (SCM name_table, int name_id)
 {
-  /* Look for an entry with string id */
-  /* we prefer english, if we can't find english look for something in ascii */
-  struct ttflangname *cur;
-  char *ret;
-
-  for (cur = info->names; cur != NULL && cur->lang != 0x409; cur = cur->next);
-  if (cur != NULL && cur->names[id] == NULL)
-    cur = NULL;
-  if (cur == NULL)
-    for (cur = info->names; cur != NULL && (cur->lang & 0xf) != 0x09;
-         cur = cur->next);
-  if (cur != NULL && cur->names[id] == NULL)
-    cur = NULL;
-  if (cur == NULL)
-    for (cur = info->names; cur != NULL && !is_ascii (cur->names[id]);
-         cur = cur->next);
-  if (cur == NULL)
-    for (cur = info->names; cur != NULL && cur->names[id] == NULL;
-         cur = cur->next);
-  if (cur == NULL)
-    return NULL;
-  ret = xstrdup_or_null (cur->names[id]);
-  return ret;
+  SCM string = scm_call_2 (scm_c_public_ref ("sortsmill",
+                                             "name-table:font-name-entry-english-preferred"),
+                           name_table, scm_from_int (name_id));
+  return (scm_is_true (string)) ? scm_to_utf8_stringn (string, NULL) : NULL;
 }
 
 /////
@@ -2256,18 +2264,17 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
   int i, cnt, tableoff;
   int platform, specific, language, name, str_len, stroff;
 
-  SCM name_table_and_errors =
-    scm_call_2 (scm_c_public_ref ("sortsmill",
-                                  "name-table:read-from-sfnt-at-offset"),
-                scm_from_int (fileno (ttf)),
-                scm_from_uintmax (info->copyright_start));
+  SCM name_table_and_errors = scm_call_2 (scm_c_public_ref ("sortsmill",
+                                                            "name-table:read-from-sfnt-at-offset"),
+                                          scm_from_int (fileno (ttf)),
+                                          scm_from_uintmax
+                                          (info->copyright_start));
   SCM name_table = scm_c_value_ref (name_table_and_errors, 0);
   //SCM errors = scm_c_value_ref (name_table_and_errors, 1);
 
-  SCM prepped_name_table =
-    scm_call_1 (scm_c_public_ref ("sortsmill",
-                                  "name-table:prune-and-prepare"),
-                name_table);
+  SCM prepped_name_table = scm_call_1 (scm_c_public_ref ("sortsmill",
+                                                         "name-table:prune-and-prepare"),
+                                       name_table);
 
   info->name_table = prepped_name_table;
 
@@ -2287,8 +2294,7 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
                            "name-table:read-from-sfnt-at-offset"),
                           scm_from_int (fileno (ttf)),
                           scm_from_uintmax (info->copyright_start),
-                          SCM_BOOL_T),
-                         0)))));
+                          SCM_BOOL_T), 0)))));
   //???????????????????????????????????????????????????????????????????????????????????????????????????????????
 #endif
 
@@ -2313,15 +2319,16 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
     }
 
   if (info->copyright == NULL)
-    info->copyright = FindLangEntry (info, ttf_copyright);
+
+    info->copyright = find_lang_entry (prepped_name_table, ttf_copyright);
   if (info->familyname == NULL)
-    info->familyname = FindLangEntry (info, ttf_family);
+    info->familyname = find_lang_entry (prepped_name_table, ttf_family);
   if (info->fullname == NULL)
-    info->fullname = FindLangEntry (info, ttf_fullname);
+    info->fullname = find_lang_entry (prepped_name_table, ttf_fullname);
   if (info->version == NULL)
-    info->version = FindLangEntry (info, ttf_version);
+    info->version = find_lang_entry (prepped_name_table, ttf_version);
   if (info->fontname == NULL)
-    info->fontname = FindLangEntry (info, ttf_postscriptname);
+    info->fontname = find_lang_entry (prepped_name_table, ttf_postscriptname);
 
   if (info->fontname != NULL && *info->fontname == '\0')
     {
@@ -2358,7 +2365,17 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
       if (info->fontname == NULL && info->familyname != NULL)
         info->fontname = stripspaces (xstrdup_or_null (info->familyname));
       if (info->fontname != NULL)
-        ValidatePostScriptFontName (info, info->fontname);
+        {
+          SCM psname_and_errors = scm_call_3 (scm_c_public_ref ("sortsmill",
+                                                                "repair-postscript-font-name"),
+                                              scm_from_utf8_string
+                                              (info->fontname),
+                                              scm_from_latin1_keyword ("warn?"),
+                                              SCM_BOOL_F);
+          SCM psname = scm_c_value_ref (psname_and_errors, 0);
+          free (info->fontname);
+          info->fontname = scm_to_utf8_stringn (psname, NULL);
+        }
     }
 }
 
@@ -6775,7 +6792,7 @@ ttfFindPointInSC (SplineChar *sc, int layer, int pnum, BasePoint *pos,
           return 0x800000;
         }
     }
-  return last;                /* Count of number of points in the character */
+  return last;                  /* Count of number of points in the character */
 }
 
 static void

@@ -81,6 +81,11 @@
    encoded-name-table-entry<?
 
    name-table:prune-and-prepare
+
+   ;; FIXME: Does this belong somewhere else?
+   repair-postscript-font-name
+
+   name-table:font-name-entry-english-preferred
    )
 
   (import (sortsmill dynlink)
@@ -855,7 +860,21 @@
 
   ;;-------------------------------------------------------------------------
 
-  (define* (validate-postscript-font-name font-name)
+  (define/kwargs (repair-postscript-font-name font-name [warn? #f])
+
+    (define (warn-bad-postscript-font-name value)
+      (post-fontforge-error
+       (_ "Bad Font Name")
+       (format #f
+               (_ "The PostScript font name \"~a\" is invalid.\nThe PostScript name should be printable ASCII,\nmust not contain (){}[]<>%%/, space,\nor a byte order mark,\nmust be no longer than 63 characters,\nand cannot be a PostScript number.")
+               value)))
+
+    (let-values ([(name errors) (validate-postscript-font-name font-name)])
+      (unless (null? errors)
+        (warn-bad-postscript-font-name font-name))
+      (values name errors)))
+
+  (define (validate-postscript-font-name font-name)
     (let*-values
         ([(name errors) (values font-name '())]
          [(name errors) (check-for-byte-order-mark name errors)]
@@ -1096,6 +1115,29 @@
                          prior))
                '()
                name-tables))
+
+  ;;-------------------------------------------------------------------------
+
+  (define (name-table:font-name-entry-english-preferred name-table name-id)
+    ;; First look for US English. If that fails, look for ASCII. If
+    ;; that fails, take anything.
+    (let-values ([(name-id-matches unmatches)
+                  (name-table-partition name-table #:name-id name-id)])
+      (if (or (not name-id-matches) (null? (vector-ref name-id-matches 0)))
+          #f
+          (let ([in-english (name-table-ref name-id-matches
+                                            #:platform-id 3
+                                            #:language-id #x409
+                                            #:name-id #t)])
+            (if in-english
+                (vector-ref in-english 3)
+                (let ([ascii-entry
+                       (memp (lambda (nrec)
+                               (string-every char-set:ascii (vector-ref nrec 3)))
+                             (vector-ref name-id-matches 0))])
+                  (if ascii-entry
+                      (vector-ref (car ascii-entry) 3)
+                      (vector-ref (car (vector-ref name-id-matches 0)) 3))))))))
 
   ;;-------------------------------------------------------------------------
 
