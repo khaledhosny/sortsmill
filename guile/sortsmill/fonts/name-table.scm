@@ -82,6 +82,8 @@
 
    name-table:prune-and-prepare
 
+   name-table-error:bad-postcript-name?
+
    ;; FIXME: Does this belong somewhere else?
    repair-postscript-font-name
 
@@ -860,6 +862,15 @@
 
   ;;-------------------------------------------------------------------------
 
+  (define (name-table-error:bad-postcript-name? errors)
+    ;; Is there a ‘postscript-name:<something>’ symbol in the errors list?
+    (not (not (memp (lambda (entry)
+                      (let ([s (symbol->string (car entry))])
+                        (string-prefix? "postscript-name:" s)))
+                    errors))))
+
+  ;;-------------------------------------------------------------------------
+
   (define/kwargs (repair-postscript-font-name font-name [warn? #f])
 
     (define (warn-bad-postscript-font-name value)
@@ -887,13 +898,13 @@
     (if (and (positive? (string-length font-name))
              (char=? #\xFEFF (string-ref font-name 0)))
         (values (substring font-name 1)
-                (cons (list 'byte-order-mark font-name) errors))
+                (cons (list 'postscript-name:byte-order-mark font-name) errors))
         (values font-name errors)))
 
   (define (check-for-postscript-number font-name errors)
     (if (postscript-number? font-name)
         (values (string-append "font-" font-name)
-                (cons (list 'postscript-number font-name) errors))
+                (cons (list 'postscript-name:postscript-number font-name) errors))
         (values font-name errors)))
 
   (define char-set:postscript-name-legal-chars
@@ -911,12 +922,12 @@
       (values mapped-name
               (if (string=? font-name mapped-name)
                   errors
-                  (cons (list 'illegal-characters font-name) errors)))))
+                  (cons (list 'postscript-name:illegal-characters font-name) errors)))))
 
   (define (check-for-font-name-too-long font-name errors)
     (if (< 63 (string-length font-name))
         (values (substring font-name 0 63)
-                (cons (list 'too-long font-name) errors))
+                (cons (list 'postscript-name:too-long font-name) errors))
         (values font-name errors)))
 
   ;;-------------------------------------------------------------------------

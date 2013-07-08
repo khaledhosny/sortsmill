@@ -107,7 +107,8 @@ struct ttfinfo
   struct pfminfo pfminfo;
   short os2_version;
   short gasp_version;
-  int dupnamestate;
+  int dupnamestate;          // FIXME: I believe this value ends up
+                             // not being used for anything.
   struct ttflangname *names; // FIXME: This is to be replaced with the
                              // name_table field.
   SCM name_table;

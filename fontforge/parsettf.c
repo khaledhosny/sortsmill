@@ -2270,7 +2270,7 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
                                           scm_from_uintmax
                                           (info->copyright_start));
   SCM name_table = scm_c_value_ref (name_table_and_errors, 0);
-  //SCM errors = scm_c_value_ref (name_table_and_errors, 1);
+  SCM errors = scm_c_value_ref (name_table_and_errors, 1);
 
   SCM prepped_name_table = scm_call_1 (scm_c_public_ref ("sortsmill",
                                                          "name-table:prune-and-prepare"),
@@ -2318,8 +2318,13 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
         }
     }
 
-  if (info->copyright == NULL)
+  info->bad_ps_fontname =
+    scm_is_true (scm_call_1
+                 (scm_c_public_ref
+                  ("sortsmill", "name-table-error:bad-postcript-name?"),
+                  errors));
 
+  if (info->copyright == NULL)
     info->copyright = find_lang_entry (prepped_name_table, ttf_copyright);
   if (info->familyname == NULL)
     info->familyname = find_lang_entry (prepped_name_table, ttf_family);
