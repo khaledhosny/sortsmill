@@ -211,7 +211,6 @@ VISIBLE extern GImage *GImageRead(char *filename);
 
 VISIBLE extern void GImageDrawRect(GImage *img,GRect *r,Color col);
 VISIBLE extern void GImageDrawImage(GImage *dest,GImage *src,GRect *junk,int x, int y);
-extern void GImageBlendOver(GImage *dest,GImage *src,GRect *from,int x, int y);
 
 extern void gRGB2HSL(struct hslrgb *col);
 VISIBLE extern void gHSL2RGB(struct hslrgb *col);
