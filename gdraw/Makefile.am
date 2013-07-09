@@ -46,7 +46,7 @@ include $(top_srcdir)/mk/flags.am
 lib_LTLIBRARIES = libsortsmill_gdraw.la
 
 libsortsmill_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c gaskdlg.c	\
-	gbuttons.c gcolor.c gcontainer.c gdraw.c gdrawerror.c gdrawtxt.c	\
+	gbuttons.c gcontainer.c gdraw.c gdrawerror.c gdrawtxt.c				\
 	gfilechooser.c gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c		\
 	gimagecvt.c gdrawgimage.c gkeysym.c glist.c gmenu.c gprogress.c		\
 	gradio.c gresource.c gresourceimage.c gresedit.c gsavefiledlg.c		\
