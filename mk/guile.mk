@@ -35,7 +35,7 @@ GUILE_ENV = GUILE_AUTO_COMPILE=0																		\
 	GUILE_LOAD_COMPILED_PATH='$(abs_top_builddir)/guile$(MY_GUILE_LOAD_COMPILED_PATH)'					\
 	LTDL_LIBRARY_PATH='$(abs_top_builddir)/guile:$(abs_top_builddir)/auxiliary$(MY_LTDL_LIBRARY_PATH)'	\
 	LD_LIBRARY_PATH='$(abs_top_builddir)/guile:$(abs_top_builddir)/auxiliary:$(abs_top_builddir)/fontforge:$(abs_top_builddir)/guile/$(LT_OBJDIR):$(abs_top_builddir)/auxiliary/$(LT_OBJDIR):$(abs_top_builddir)/fontforge/$(LT_OBJDIR)$(MY_LD_LIBRARY_PATH)'	\
-	DYLD_LIBRARY_PATH='$(abs_top_builddir)/guile:$(abs_top_builddir)/auxiliary:$(abs_top_builddir)/fontforge/$(LT_OBJDIR):$(abs_top_builddir)/guile:$(abs_top_builddir)/auxiliary/$(LT_OBJDIR):$(abs_top_builddir)/fontforge/$(LT_OBJDIR)$(MY_DYLD_LIBRARY_PATH)'
+	DYLD_LIBRARY_PATH='$(abs_top_builddir)/guile:$(abs_top_builddir)/auxiliary:$(abs_top_builddir)/fontforge/$(LT_OBJDIR):$(abs_top_builddir)/guile/$(LTOBJDIR):$(abs_top_builddir)/auxiliary/$(LT_OBJDIR):$(abs_top_builddir)/fontforge/$(LT_OBJDIR)$(MY_DYLD_LIBRARY_PATH)'
 
 GUILE_INSTALLED_ENV = GUILE_AUTO_COMPILE=0									\
 	GUILE_LOAD_PATH='$(guilemoduledir)$(MY_GUILE_LOAD_COMPILED_PATH)'		\
