@@ -48,12 +48,12 @@ lib_LTLIBRARIES = libsortsmill_gdraw.la
 libsortsmill_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c gaskdlg.c	\
 	gbuttons.c gcontainer.c gdraw.c gdrawerror.c gdrawtxt.c				\
 	gfilechooser.c gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c		\
-	gimagecvt.c gdrawgimage.c gkeysym.c glist.c gmenu.c gprogress.c		\
-	gradio.c gresource.c gresourceimage.c gresedit.c gsavefiledlg.c		\
-	gscrollbar.c gtabset.c gtextfield.c gtextinfo.c gwidgets.c			\
-	gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c gspacer.c		\
-	xkeysyms_unicode.c colorP.h gdrawP.h gresourceP.h gxcdrawP.h		\
-	fontP.h ggadgetP.h gwidgetP.h gxdrawP.h
+	gkeysym.c glist.c gmenu.c gprogress.c gradio.c gresource.c			\
+	gresourceimage.c gresedit.c gsavefiledlg.c gscrollbar.c gtabset.c	\
+	gtextfield.c gtextinfo.c gwidgets.c gxdraw.c gxcdraw.c ghvbox.c		\
+	gmatrixedit.c gdrawable.c gspacer.c xkeysyms_unicode.c colorP.h		\
+	gdrawP.h gresourceP.h gxcdrawP.h fontP.h ggadgetP.h gwidgetP.h		\
+	gxdrawP.h
 
 libsortsmill_gdraw_la_LIBADD =						\
 	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
