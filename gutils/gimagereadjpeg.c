@@ -99,17 +99,18 @@ static void
 transferBufferToImage (struct jpegState *js, int ypos)
 {
   struct jpeg_decompress_struct *cinfo = js->cinfo;
-  JSAMPLE *pt, *end;
-  Color *ppt;
 
-  ppt = (Color *) (js->base->data + ypos * js->base->bytes_per_line);
-  for (pt = js->buffer, end = pt + 3 * cinfo->image_width; pt < end;)
+  uint8_t *ppt = js->base->data + ypos * js->base->bytes_per_line;
+  JSAMPLE *const end = js->buffer + 3 * cinfo->image_width;
+  JSAMPLE *pt = js->buffer;
+  while (pt < end)
     {
-      register int r, g, b;
-      r = *(pt++);
-      g = *(pt++);
-      b = *(pt++);
-      *(ppt++) = COLOR_CREATE (r, g, b);
+      const int r = *(pt++);
+      const int g = *(pt++);
+      const int b = *(pt++);
+      const Color c = COLOR_CREATE (r, g, b);
+      memcpy (ppt, &c, sizeof (Color));
+      ppt += sizeof (Color);
     }
 }
 
