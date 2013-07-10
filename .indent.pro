@@ -107,7 +107,6 @@
 -T GGadget
 -T GGadgetCreateData
 -T GImage
--T _GImage
 -T GMenuItem
 -T GMenuItem2
 -T GResStruct
