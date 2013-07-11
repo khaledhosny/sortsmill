@@ -5042,6 +5042,7 @@ SplineFontEmpty (void)
   SplineFont *sf;
 
   sf = xcalloc (1, sizeof (SplineFont));
+  sf->name_table = scm_gc_protect_object (SCM_BOOL_F);
   sf->pfminfo.fstype = -1;
   sf->top_enc = -1;
   sf->macstyle = -1;

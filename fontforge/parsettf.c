@@ -7533,6 +7533,7 @@ SFFillFromTTF (struct ttfinfo *info)
   sf->gpos_lookups = info->gpos_lookups;
   sf->gsub_lookups = info->gsub_lookups;
 
+  scm_gc_unprotect_object (sf->name_table);
   sf->name_table = scm_gc_protect_object (info->name_table);
 
   last[0] = sf->ttf_tables;
