@@ -24,7 +24,7 @@
 
 #--------------------------------------------------------------------------
 
-import fontforge
+import sortsmill.ffcompat as fontforge
 import optparse
 import os
 import subprocess
