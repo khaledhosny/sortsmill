@@ -61,6 +61,23 @@ AC_SUBST([PYTHON_COMPATIBILITY])
 ])
 
 
+dnl FONTFORGE_ARG_ENABLE_LEGACY_SORTSMILL_TOOLS
+dnl -------------------------------------------
+AC_DEFUN([FONTFORGE_ARG_ENABLE_LEGACY_SORTSMILL_TOOLS],
+[
+AC_ARG_ENABLE([legacy-sortsmill-tools],
+        [AS_HELP_STRING([--enable-legacy-sortsmill-tools],
+                        [install Python modules corresponding to
+                         so-called Sorts Mill Tools version 0.x;
+                         these are needed, for now, to build
+                         Sorts Mill fonts from source])],
+        [i_do_have_legacy_sortsmill_tools="${enableval}"],
+        [i_do_have_legacy_sortsmill_tools=yes])
+LEGACY_SORTSMILL_TOOLS="${i_do_have_legacy_sortsmill_tools}"
+AC_SUBST([LEGACY_SORTSMILL_TOOLS])
+])
+
+
 dnl FONTFORGE_ARG_ENABLE_FORTRAN_API
 dnl --------------------------------
 AC_DEFUN([FONTFORGE_ARG_ENABLE_FORTRAN_API],

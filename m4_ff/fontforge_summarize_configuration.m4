@@ -26,6 +26,7 @@ Optional features:
   programs           ${i_do_have_programs}
   python API         ${i_do_have_python_api}  	${python_url}
   python compat.     ${i_do_have_python_compatibility}
+  legacy tools       ${i_do_have_legacy_sortsmill_tools}
   fortran API        ${i_do_have_fortran_api}
   pure API           ${i_do_have_pure_api}  	${pure_url}
   freetype debugger  ${i_do_have_freetype_debugger}

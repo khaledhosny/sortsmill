@@ -195,6 +195,7 @@ AC_SUBST([THE_PROGRAMS],["${i_do_have_programs}"])
 
 FONTFORGE_ARG_DISABLE_PYTHON_API
 FONTFORGE_ARG_DISABLE_PYTHON_COMPATIBILITY
+FONTFORGE_ARG_ENABLE_LEGACY_SORTSMILL_TOOLS
 FONTFORGE_ARG_ENABLE_FORTRAN_API
 FONTFORGE_ARG_ENABLE_PURE_API
 
@@ -488,6 +489,7 @@ AC_SUBST([endifmk],[endif])
 
 AM_CONDITIONAL([HAVE_PYTHON_API],[test x"${i_do_have_python_api}" = xyes])
 AM_CONDITIONAL([HAVE_PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}" = xyes])
+AM_CONDITIONAL([HAVE_LEGACY_SORTSMILL_TOOLS],[test x"${i_do_have_legacy_sortsmill_tools}" = xyes])
 AM_CONDITIONAL([HAVE_PURE_API],[test x"${i_do_have_pure_api}" = xyes])
 AM_CONDITIONAL([HAVE_FORTRAN_API],[test x"${i_do_have_fortran_api}" = xyes])
 AM_CONDITIONAL([HAVE_GUI],[test x"${i_do_have_gui}" = xyes])

@@ -50,6 +50,14 @@ EXTRA_DIST =
 
 #--------------------------------------------------------------------------
 
+if HAVE_LEGACY_SORTSMILL_TOOLS
+aclocaldir = ${datadir}/aclocal
+dist_aclocal_DATA = sortsmill.m4
+dist_bin_SCRIPTS = make-fonts make-eot
+endif HAVE_LEGACY_SORTSMILL_TOOLS
+
+#--------------------------------------------------------------------------
+
 BASELIBADD = $(top_builddir)/lib/libgnu.la
 
 # This pulls in the Guile libraries, PCRE, etc.
@@ -77,9 +85,23 @@ nobase_dist_python_PYTHON = ffContrib/__init__.py					\
 	ffContrib/excepthook.py ffContrib/allow_core.py					\
 	sortsmill/psMat.py sortsmill/ffcompat.py sortsmill/pyguile.py	\
 	sortsmill/contours.py sortsmill/conditions.py
+
 if HAVE_GUI
 nobase_dist_python_PYTHON += sortsmill/usermenu.py
 endif HAVE_GUI
+
+if HAVE_LEGACY_SORTSMILL_TOOLS
+nobase_dist_python_PYTHON += sortsmill/cap_spacing.py
+nobase_dist_python_PYTHON += sortsmill/glyphbuild.py
+nobase_dist_python_PYTHON += sortsmill/make_tt_font.py
+nobase_dist_python_PYTHON += sortsmill/tools.py
+nobase_dist_python_PYTHON += sortsmill/persistent_data.py
+nobase_dist_python_PYTHON += sortsmill/licensing.py
+nobase_dist_python_PYTHON += sortsmill/readfeatures.py
+nobase_dist_python_PYTHON += sortsmill/font_db.py
+nobase_dist_python_PYTHON += sortsmill/loadbuild.py
+nobase_dist_python_PYTHON += sortsmill/spacing_by_anchors.py
+endif HAVE_LEGACY_SORTSMILL_TOOLS
 
 nobase_nodist_python_PYTHON = __sortsmill__/__init__.py	\
 	sortsmill/__init__.py sortsmill/legacy/__init__.py

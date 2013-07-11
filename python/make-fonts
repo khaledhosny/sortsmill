@@ -1,0 +1,134 @@
+#!/usr/bin/env python
+
+# Copyright (C) 2009, 2010, 2011, 2013 Khaled Hosny and Barry Schwartz
+# This file is part of the Sorts Mill Tools.
+# 
+# Sorts Mill Tools is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+# 
+# Sorts Mill Tools is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+#--------------------------------------------------------------------------
+
+import fontforge
+import optparse
+import os
+import re
+import subprocess
+import sys
+
+from sortsmill import licensing
+from sortsmill import make_tt_font
+from sortsmill import readfeatures
+
+layer_to_use = "Fore"
+unwanted_glyphs = ['DONT_KEEP', 'NOTUSED']
+generation_flags = ("opentype", "round")
+font_extension = ".otf"
+ofl_prefix = 'OFL'
+
+def remove_glyph(glyph):
+    sys.stdout.write("(Removing " + glyph.glyphname + ") ")
+    glyph.font.removeGlyph(glyph.glyphname)
+
+#--------------------------------------------------------------------------
+
+parser = optparse.OptionParser(usage='%prog [OPTIONS] FONTNAME...')
+parser.set_defaults(licensing_inferred=False, no_hints=False, no_instructions=False)
+parser.add_option('-C', '--input-directory', dest='input_dir', metavar='DIR',
+                  help='where to read source files')
+parser.add_option('--output-directory', dest='output_dir', metavar='DIR',
+                  help='where to put generated fonts')
+parser.add_option('--infer-licensing', dest='licensing_inferred', action='store_true',
+                  help='set license (MIT or OFL) inferred from font name')
+parser.add_option('--no-hints', dest='no_hints', action='store_true',
+                  help='omit PostScript hints')
+parser.add_option('--ttf-emsize', dest='ttf_emsize', metavar='UNITS',
+                  help='set the units-per-em in TrueType versions')
+parser.add_option('--no-instructions', dest='no_instructions', action='store_true',
+                  help='omit TrueType instructions')
+parser.add_option('--graphite', '--enable-graphite', dest='graphite_enabled', action='store_true',
+                  help='enables inclusion of Graphite tables')
+(options, args) = parser.parse_args()
+
+input_dir = os.path.abspath(options.input_dir if options.input_dir else '.')
+output_dir = os.path.abspath(options.output_dir if options.output_dir else '.')
+licensing_inferred = options.licensing_inferred
+no_hints = options.no_hints
+ttf_emsize = int(options.ttf_emsize) if options.ttf_emsize != None else None
+no_instructions = options.no_instructions
+graphite_enabled = options.graphite_enabled
+
+os.chdir(input_dir)
+
+for sfd_filename in args:
+
+    is_ofl = (sfd_filename[:len(ofl_prefix)] == ofl_prefix)
+    if is_ofl:
+        sfd_filename = sfd_filename[len(ofl_prefix):]
+
+    tt_match = re.match('(^.*)TT(-[^-]*)?$', sfd_filename)
+    if tt_match:
+        sfd_filename = tt_match.group(1)
+        if tt_match.group(2):
+            sfd_filename += tt_match.group(2)
+
+    if sfd_filename[-4:] != ".sfd":
+        sfd_filename += ".sfd"
+
+    f = fontforge.open(sfd_filename)
+
+    if licensing_inferred:
+        if is_ofl:
+            licensing.apply_license(f, licensing.ofl_notice, licensing.ofl_url, name_prefix = 'OFL')
+        else:
+            licensing.apply_license(f, licensing.mit_notice, licensing.mit_url)
+
+    for glyph_name in f:
+        for suffix in unwanted_glyphs:
+            if glyph_name[-len(suffix) - 1:] == "." + suffix:
+                remove_glyph(f[glyph_name])
+
+    sys.stdout.write("\n")
+    sys.stdout.flush()
+
+    # The anchors are for development only.
+    for lookup in f.gpos_lookups:
+        if f.getLookupInfo(lookup)[0] == 'gpos_mark2base':
+            f.removeLookup(lookup)
+
+    f.selection.all()
+    f.canonicalStart()
+    f.canonicalContours()
+    if tt_match:
+        f.replaceWithReference()
+        f.correctReferences()
+    f.selection.none()
+
+    readfeatures.merge_pair_positioning_subtables(f)
+
+    if tt_match:
+        make_tt_font.generate_tt_font(f, sfd_filename[:-4], 'TT',
+                                      output_dir = output_dir,
+                                      emsize = ttf_emsize,
+                                      no_instructions = no_instructions,
+                                      graphite_enabled = graphite_enabled)
+    else:
+        font_file = os.path.join(output_dir, f.fontname + font_extension)
+        hints_flags = ('no-hints', 'no-flex') if no_hints else ()
+        print("Generating", font_file)
+        f.generate(font_file, flags = generation_flags + hints_flags, layer = layer_to_use)
+        print("Validating", font_file)
+        subprocess.call(["sortsmill-lint", font_file])
+
+    f.close()
+
+#--------------------------------------------------------------------------
