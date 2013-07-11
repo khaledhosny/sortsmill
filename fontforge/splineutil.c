@@ -8045,7 +8045,8 @@ SplineFontFree (SplineFont *sf)
   UndoesFree (sf->grid.redoes);
   PSDictFree (sf->private);
   TTFLangNamesFree (sf->names);
-  scm_gc_unprotect_object (sf->name_table);
+  if (sf->name_table != NULL)
+    scm_gc_unprotect_object (sf->name_table);
   for (i = 0; i < sf->subfontcnt; ++i)
     SplineFontFree (sf->subfonts[i]);
   free (sf->subfonts);
