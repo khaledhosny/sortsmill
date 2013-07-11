@@ -16,8 +16,8 @@
 
 #--------------------------------------------------------------------------
 
-import fontforge
-import psMat
+import sortsmill.ffcompat as fontforge
+import sortsmill.psMat as psMat
 import unicodedata
 import sys
 from math import pi

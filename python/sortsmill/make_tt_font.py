@@ -18,9 +18,9 @@
 
 #--------------------------------------------------------------------------
 
-import fontforge
+import sortsmill.ffcompat as fontforge
 import os
-import psMat
+import sortsmill.psMat as psMat
 import re
 import subprocess
 import sys
