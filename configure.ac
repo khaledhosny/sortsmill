@@ -45,7 +45,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([Sorts Mill Tools],
-        [2.0.0_alpha1],
+        [2.1.0_alpha1],
         [http://bitbucket.org/sortsmill/sortsmill-tools/issues],
         [sortsmill-tools],
         [http://bitbucket.org/sortsmill/sortsmill-tools])
@@ -61,7 +61,6 @@ AC_CONFIG_HEADERS([inc/config.h])  dnl Where autoheader puts macros.
 AC_USE_SYSTEM_EXTENSIONS           dnl Define such macros as _GNU_SOURCE.
 
 AM_INIT_AUTOMAKE([1.12.2 dist-xz subdir-objects -Wall -Wno-portability -Werror])
-AM_MAINTAINER_MODE([enable])
 
 # I am going to enable silent-rules by default, so builders are
 # more likely to see warnings. Use --disable-silent-rules or "make
