@@ -48,6 +48,7 @@
 #include <ustring.h>
 #include <utype.h>
 #include <gresource.h>
+#include <c-strtod.h>
 #include "ttf.h"
 
 int adjustwidth = true;
@@ -1449,7 +1450,7 @@ CheckBluePair (const char *blues, const char *others, int bluefuzz,
             ++others;
           if (*others == ']' || *others == '}')
             break;
-          temp = strtod (others, &end);
+          temp = c_strtod (others, &end);
           if (temp != rint (temp))
             err |= pds_notintegral;
           else if (end == others)
@@ -1478,7 +1479,7 @@ CheckBluePair (const char *blues, const char *others, int bluefuzz,
         ++blues;
       if (*blues == ']' || *blues == '}')
         break;
-      temp = strtod (blues, &end);
+      temp = c_strtod (blues, &end);
       if (temp != rint (temp))
         err |= pds_notintegral;
       else if (end == blues)
@@ -1533,7 +1534,7 @@ CheckStdW (struct psdict *dict, char *key)
     return false;
   ++str_val;
 
-  val = strtod (str_val, &end);
+  val = c_strtod (str_val, &end);
   while (*end == ' ')
     ++end;
   if (*end != ']' && *end != '}')
@@ -1563,7 +1564,7 @@ CheckStemSnap (struct psdict *dict, char *snapkey, char *stdkey)
         ++str_val;
       if (*str_val == '[' && *str_val != '{')
         ++str_val;
-      std_val = strtod (str_val, &end);
+      std_val = c_strtod (str_val, &end);
     }
 
   if ((str_val = PSDictHasEntry (dict, snapkey)) == NULL)
@@ -1581,7 +1582,7 @@ CheckStemSnap (struct psdict *dict, char *snapkey, char *stdkey)
         ++str_val;
       if (*str_val == ']' && *str_val != '}')
         break;
-      temp = strtod (str_val, &end);
+      temp = c_strtod (str_val, &end);
       if (end == str_val)
         return false;
       str_val = end;
@@ -1623,7 +1624,7 @@ ValidatePrivate (SplineFont *sf)
 
   if ((test = PSDictHasEntry (sf->private, "BlueScale")) != NULL)
     {
-      bluescale = strtod (test, &end);
+      bluescale = c_strtod (test, &end);
       if (*end != '\0' || end == test || bluescale < 0)
         errs |= pds_badbluescale;
     }
