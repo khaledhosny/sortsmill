@@ -53,6 +53,8 @@
 #include "ttf.h"
 #include <sortsmill/xgc.h>
 #include <sortsmill/guile.h>
+#include <c-strtod.h>
+#include <c-vasprintf.h>
 
 VISIBLE char *SaveTablesPref;
 VISIBLE int ask_user_for_cmap = false;
@@ -1920,7 +1922,7 @@ ValidatePostScriptFontName (struct ttfinfo *info, char *str)
       for (pt = str + 3; *pt; ++pt)
         pt[-3] = *pt;           /* ANSI says we can't strcpy overlapping strings */
     }
-  strtod (str, &end);
+  c_strtod (str, &end);
   if ((*end == '\0' || (isdigit (str[0]) && strchr (str, '#') != NULL)) &&
       *str != '\0')
     {
@@ -1974,7 +1976,7 @@ EnforcePostScriptName (char *old)
   if (old == NULL)
     return old;
 
-  strtod (str, &end);
+  c_strtod (str, &end);
   if ((*end == '\0' || (isdigit (str[0]) && strchr (str, '#') != NULL)) &&
       *str != '\0')
     {
@@ -3554,7 +3556,7 @@ readcffthing (FILE *ttf, int *_ival, real *dval, int *operand,
             }
         }
       while (pt[-1] != '\0');
-      *dval = strtod (buffer, NULL);
+      *dval = c_strtod (buffer, NULL);
       return 2;
     }
   else if (ch >= 32 && ch <= 246)
@@ -4464,19 +4466,26 @@ static char *
 intarray2str (int *array, int size)
 {
   int i, j;
-  char *pt, *ret;
 
   for (i = size - 1; i >= 0 && array[i] == 0; --i);
   if (i == -1)
     return NULL;
-  ret = pt = xmalloc ((i + 1) * 12 + 12);
-  *pt++ = '[';
+
+  char *str = NULL;
   for (j = 0; j <= i; ++j)
     {
-      sprintf (pt, "%d ", array[j]);
-      pt += strlen (pt);
+      char *buf;
+      asprintf (&buf, "%d", array[j]);
+      if (str)
+        str = x_gc_strjoin (str, " ", buf, NULL);
+      else
+        str = xstrdup (buf);
+      free (buf);
     }
-  pt[-1] = ']';
+
+  char *ret;
+  asprintf (&ret, "[%s]", str);
+
   return ret;
 }
 
@@ -4484,7 +4493,6 @@ static char *
 realarray2str (real *array, int size, int must_be_even)
 {
   int i, j;
-  char *pt, *ret;
 
   for (i = size - 1; i >= 0 && array[i] == 0; --i);
   if (i == -1)
@@ -4493,14 +4501,22 @@ realarray2str (real *array, int size, int must_be_even)
     return xstrdup ("[]");
   if (must_be_even && !(i & 1) && array[i] < 0)
     ++i;                        /* Someone gave us a bluevalues of [-20 0] and we reported [-20] */
-  ret = pt = xmalloc ((i + 1) * 20 + 12);
-  *pt++ = '[';
+
+  char *str = NULL;
   for (j = 0; j <= i; ++j)
     {
-      sprintf (pt, "%g ", (double) array[j]);
-      pt += strlen (pt);
+      char *buf;
+      c_asprintf (&buf, "%g", (double) array[j]);
+      if (str)
+        str = x_gc_strjoin (str, " ", buf, NULL);
+      else
+        str = xstrdup (buf);
+      free (buf);
     }
-  pt[-1] = ']';
+
+  char *ret;
+  asprintf (&ret, "[%s]", str);
+
   return ret;
 }
 
@@ -4516,31 +4532,34 @@ privateadd (struct psdict *private, char *key, char *value)
 static void
 privateaddint (struct psdict *private, char *key, int val)
 {
-  char buf[20];
+  char *buf;
   if (val == 0)
     return;
-  sprintf (buf, "%d", val);
+  asprintf (&buf, "%d", val);
   privateadd (private, key, xstrdup_or_null (buf));
+  free (buf);
 }
 
 static void
 privateaddintarray (struct psdict *private, char *key, int val)
 {
-  char buf[20];
+  char *buf;
   if (val == 0)
     return;
-  sprintf (buf, "[%d]", val);
-  privateadd (private, key, xstrdup (buf));
+  asprintf (&buf, "[%d]", val);
+  privateadd (private, key, xstrdup_or_null (buf));
+  free (buf);
 }
 
 static void
 privateaddreal (struct psdict *private, char *key, double val, double def)
 {
-  char buf[40];
+  char *buf;
   if (val == def)
     return;
-  sprintf (buf, "%g", val);
-  privateadd (private, key, xstrdup (buf));
+  c_asprintf (&buf, "%g", val);
+  privateadd (private, key, xstrdup_or_null (buf));
+  free (buf);
 }
 
 static void
@@ -4598,9 +4617,10 @@ cffsffillup (struct topdicts *subdict, char **strings,
     utf8_verify_copy (get_sid (subdict->sid_fontname, strings, scnt, info));
   if (sf->fontname == NULL)
     {
-      char buffer[40];
-      sprintf (buffer, "UntitledSubFont_%d", ++nameless);
+      char *buffer;
+      asprintf (&buffer, "UntitledSubFont_%d", ++nameless);
       sf->fontname = xstrdup_or_null (buffer);
+      free (buffer);
     }
 
   if (subdict->fontmatrix[0] == 0)
@@ -5504,9 +5524,10 @@ ApplyVariationSequenceSubtable (FILE *ttf, uint32_t vs_map,
                   if (curgid < info->glyph_cnt && curgid >= 0 &&
                       (sc = info->chars[curgid]) != NULL && sc->name == NULL)
                     {
-                      char buffer[32];
-                      sprintf (buffer, "u%04X.vs%04X", uni, vs_data[i].vs);
+                      char *buffer;
+                      asprintf (&buffer, "u%04X.vs%04X", uni, vs_data[i].vs);
                       sc->name = xstrdup_or_null (buffer);
+		      free (buffer);
                     }
                 }
               else
@@ -5565,7 +5586,6 @@ amscheck (struct ttfinfo *info, EncMap *map)
 static int
 PickCMap (struct cmap_encs *cmap_encs, int enccnt, int def)
 {
-  char buffer[500];
   char **choices;
   const char *encname;
   int i, ret;
@@ -5623,29 +5643,31 @@ PickCMap (struct cmap_encs *cmap_encs, int enccnt, int def)
       if (encname == NULL)
         encname = cmap_encs[i].enc->enc_name;
 
-      sprintf (buffer, "%d (%s) %d %s %s  %s",
-               cmap_encs[i].platform,
-               cmap_encs[i].platform == 0 ? _("Unicode") :
-               cmap_encs[i].platform == 1 ? _("Apple") :
-               cmap_encs[i].platform == 2 ? _("ISO (Deprecated)") :
-               cmap_encs[i].platform == 3 ? _("MicroSoft") :
-               cmap_encs[i].platform == 4 ? _("Custom") :
-               cmap_encs[i].platform == 7 ? _("FreeType internals") :
-               _("Unknown"),
-               cmap_encs[i].specific,
-               encname,
-               cmap_encs[i].platform == 1
-               && cmap_encs[i].lang !=
-               0 ? MacLanguageFromCode (cmap_encs[i].lang - 1) : "",
-               cmap_encs[i].format ==
-               0 ? "Byte encoding table" : cmap_encs[i].format ==
-               2 ? "High-byte mapping through table" : cmap_encs[i].format ==
-               4 ? "Segment mapping to delta values" : cmap_encs[i].format ==
-               6 ? "Trimmed table mapping" : cmap_encs[i].format ==
-               8 ? "mixed 16-bit and 32-bit coverage" : cmap_encs[i].format ==
-               10 ? "Trimmed array" : cmap_encs[i].format ==
-               12 ? "Segmented coverage" : "Unknown format");
+      char *buffer;
+      asprintf (&buffer, "%d (%s) %d %s %s  %s",
+                cmap_encs[i].platform,
+                cmap_encs[i].platform == 0 ? _("Unicode") :
+                cmap_encs[i].platform == 1 ? _("Apple") :
+                cmap_encs[i].platform == 2 ? _("ISO (Deprecated)") :
+                cmap_encs[i].platform == 3 ? _("MicroSoft") :
+                cmap_encs[i].platform == 4 ? _("Custom") :
+                cmap_encs[i].platform == 7 ? _("FreeType internals") :
+                _("Unknown"),
+                cmap_encs[i].specific,
+                encname,
+                cmap_encs[i].platform == 1
+                && cmap_encs[i].lang !=
+                0 ? MacLanguageFromCode (cmap_encs[i].lang - 1) : "",
+                cmap_encs[i].format ==
+                0 ? "Byte encoding table" : cmap_encs[i].format ==
+                2 ? "High-byte mapping through table" : cmap_encs[i].format ==
+                4 ? "Segment mapping to delta values" : cmap_encs[i].format ==
+                6 ? "Trimmed table mapping" : cmap_encs[i].format ==
+                8 ? "mixed 16-bit and 32-bit coverage" : cmap_encs[i].format ==
+                10 ? "Trimmed array" : cmap_encs[i].format ==
+                12 ? "Segmented coverage" : "Unknown format");
       choices[i] = xstrdup_or_null (buffer);
+      free (buffer);
     }
   ret =
     ff_choose (_("Pick a CMap subtable"), (const char **) choices, enccnt, def,
@@ -6492,7 +6514,6 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
   int i, j;
   int format, len, gc, gcbig, val;
   const char *name;
-  char buffer[30];
   uint16_t *indexes;
   extern const char *ttfstandardnames[];
   int notdefwarned = false;
@@ -6503,10 +6524,7 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
   /* Give ourselves an xuid, just in case they want to convert to PostScript */
   /*  (even type42)                                                         */
   if (xuid != NULL && info->fd == NULL && info->xuid == NULL)
-    {
-      info->xuid = xmalloc (strlen (xuid) + 20);
-      sprintf (info->xuid, "[%s %d]", xuid, (rand () & 0xffffff));
-    }
+    asprintf (&info->xuid, "[%s %d]", xuid, (rand () & 0xffffff));
 
   if (info->postscript_start != 0)
     {
@@ -6642,6 +6660,7 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
           }
         else
           {
+            char buffer[30];
             name =
               StdGlyphName (buffer, info->chars[i]->unicodeenc,
                             info->uni_interp, NULL);
@@ -6681,20 +6700,22 @@ readttfpostnames (FILE *ttf, struct ttfinfo *info)
 
   for (i = 0; i < info->glyph_cnt; ++i)
     {
+      char *buffer;
       /* info->chars[i] can be null in some TTC files */
       if (info->chars[i] == NULL)
         continue;
       if (info->chars[i]->name != NULL)
         continue;
       if (info->ordering != NULL)
-        sprintf (buffer, "%.20s-%d", info->ordering, i);
+        asprintf (&buffer, "%.20s-%d", info->ordering, i);
       else if (info->map != NULL && gid_to_enc (info->map, i) != -1)
-        sprintf (buffer, "nounicode.%d.%d.%zx", info->platform, info->specific,
-                 (size_t) gid_to_enc (info->map, i));
+        asprintf (&buffer, "nounicode.%d.%d.%zx", info->platform, info->specific,
+                  (size_t) gid_to_enc (info->map, i));
       else
-        sprintf (buffer, "glyph%d", i);
+        asprintf (&buffer, "glyph%d", i);
       info->chars[i]->name = xstrdup_or_null (buffer);
       ff_progress_next ();
+      free (buffer);
     }
   ff_progress_next_stage ();
 }
@@ -6915,7 +6936,6 @@ LookupListHasFeature (OTLookup *otl, uint32_t tag)
 static int
 readttf (FILE *ttf, struct ttfinfo *info, char *filename)
 {
-  char oldloc[24];
   int i;
 
   ff_progress_change_stages (3);
@@ -6923,9 +6943,6 @@ readttf (FILE *ttf, struct ttfinfo *info, char *filename)
     {
       return 0;
     }
-  /* TrueType doesn't need this but opentype dictionaries do */
-  strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
-  setlocale (LC_NUMERIC, "C");
   readttfpreglyph (ttf, info);
   ff_progress_change_total (info->glyph_cnt);
 
@@ -6951,7 +6968,6 @@ readttf (FILE *ttf, struct ttfinfo *info, char *filename)
                 ("This font contains both a TrueType 'glyf' table and an OpenType 'CFF ' table. FontForge can only deal with one at a time, please pick which one you want to use"));
       if (choice == 2)
         {
-          setlocale (LC_NUMERIC, oldloc);
           return 0;
         }
       else if (choice == 0)
@@ -6976,7 +6992,6 @@ readttf (FILE *ttf, struct ttfinfo *info, char *filename)
       info->to_order2 = (loaded_fonts_same_as_new && new_fonts_are_order2);
       if (!readcffglyphs (ttf, info))
         {
-          setlocale (LC_NUMERIC, oldloc);
           return 0;
         }
     }
@@ -6984,13 +6999,11 @@ readttf (FILE *ttf, struct ttfinfo *info, char *filename)
     {
       if (!readtyp1glyphs (ttf, info))
         {
-          setlocale (LC_NUMERIC, oldloc);
           return 0;
         }
     }
   else
     {
-      setlocale (LC_NUMERIC, oldloc);
       return 0;
     }
   if (info->bitmapdata_start != 0 && info->bitmaploc_start != 0)
@@ -7002,7 +7015,6 @@ readttf (FILE *ttf, struct ttfinfo *info, char *filename)
   if (info->onlystrikes && info->bitmaps == NULL)
     {
       free (info->chars);
-      setlocale (LC_NUMERIC, oldloc);
       return 0;
     }
   if (info->hmetrics_start != 0)
@@ -7066,7 +7078,6 @@ readttf (FILE *ttf, struct ttfinfo *info, char *filename)
     tex_read (ttf, info);
   if (info->math_start != 0)
     otf_read_math (ttf, info);
-  setlocale (LC_NUMERIC, oldloc);
   if (!info->onlystrikes && info->glyphlocations_start != 0
       && info->glyph_start != 0)
     ttfFixupReferences (info);
@@ -7319,7 +7330,6 @@ void
 TTF_PSDupsDefault (SplineFont *sf)
 {
   struct ttflangname *english;
-  char versionbuf[40];
 
   /* Ok, if we've just loaded a ttf file then we've got a bunch of langnames */
   /*  we copied some of them (copyright, family, fullname, etc) into equiv */
@@ -7351,16 +7361,18 @@ TTF_PSDupsDefault (SplineFont *sf)
     }
   if (sf->subfontcnt != 0 || sf->version != NULL)
     {
+      char *versionbuf;
       if (sf->subfontcnt != 0)
-        sprintf (versionbuf, "Version %f", sf->cidversion);
+        c_asprintf (&versionbuf, "Version %f", sf->cidversion);
       else
-        sprintf (versionbuf, "Version %.20s ", sf->version);
+        c_asprintf (&versionbuf, "Version %.20s ", sf->version);
       if (english->names[ttf_version] != NULL &&
           strcmp (english->names[ttf_version], versionbuf) == 0)
         {
           free (english->names[ttf_version]);
           english->names[ttf_version] = NULL;
         }
+        free (versionbuf);
     }
   char *modifiers = SFGetModifiers (sf);
   if (english->names[ttf_subfamily] != NULL &&
