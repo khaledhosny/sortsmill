@@ -27,7 +27,7 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files arpa_inet atan2 byteswap c-ctype c-strtod canonicalize cos ctype dirent dirname dosname dup2 errno fcntl filename filenamecat findprog floor fma frexp getcwd gettext-h gettimeofday host-os hostent hypot iconv_open ignore-value include_next inttypes langinfo lib-symbol-visibility libunistring locale localeconv malloc-gnu math mkdir netdb netinet_in nl_langinfo obstack perl pmccabe2html pow progname putenv random realloc-gnu rint rmdir select setenv setlocale sin snprintf sqrt stdalign stdarg stddef stdint stdio stdlib strcase strcasestr string strings strncat strstr strtod sys_socket sys_time tan trim tzset uname unistd verify vsnprintf wchar xalloc xconcat-filename xgetcwd xsetenv xstriconv xstrndup
+#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files arpa_inet atan2 byteswap c-ctype c-strtod c-vasprintf canonicalize cos ctype dirent dirname dosname dup2 errno fcntl filename filenamecat findprog floor fma frexp getcwd gettext-h gettimeofday host-os hostent hypot iconv_open ignore-value include_next inttypes langinfo lib-symbol-visibility libunistring locale localeconv malloc-gnu math mkdir netdb netinet_in nl_langinfo obstack perl pmccabe2html pow progname putenv random realloc-gnu rint rmdir select setenv setlocale sin snprintf sqrt stdalign stdarg stddef stdint stdio stdlib strcase strcasestr string strings strncat strstr strtod sys_socket sys_time tan trim tzset uname unistd vasprintf verify vsnprintf wchar xalloc xconcat-filename xgetcwd xsetenv xstriconv xstrndup
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
@@ -37,6 +37,7 @@ gl_MODULES([
   byteswap
   c-ctype
   c-strtod
+  c-vasprintf
   canonicalize
   cos
   ctype
@@ -109,6 +110,7 @@ gl_MODULES([
   tzset
   uname
   unistd
+  vasprintf
   verify
   vsnprintf
   wchar
