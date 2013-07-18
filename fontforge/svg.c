@@ -73,7 +73,7 @@ c_fprintf (FILE *file, const char *format, ...)
   va_list ap;
   va_start (ap, format);
   result = c_vasprintf (&buffer, format, ap);
-  if (result)
+  if (result != -1)
     {
       fputs (buffer, file);
       free (buffer);
