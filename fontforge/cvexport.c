@@ -51,6 +51,7 @@
 #include "gio.h"
 #include "print.h"              /* For pdf output routines */
 #include <utype.h>
+#include <sortsmill/x_printf.h>
 
 static void
 EpsGeneratePreview (FILE *eps, SplineChar *sc, int layer, DBounds *b)
@@ -77,20 +78,20 @@ EpsGeneratePreview (FILE *eps, SplineChar *sc, int layer, DBounds *b)
   if (bdfc == NULL)
     return;
 
-  fprintf (eps, "%%%%BeginPreview: %d %d %d %d\n",
-           bdfc->xmax - bdfc->xmin + 1, bdfc->ymax - bdfc->ymin + 1, depth,
-           bdfc->ymax - bdfc->ymin + 1);
+  x_fprintf (eps, "%%%%BeginPreview: %d %d %d %d\n",
+             bdfc->xmax - bdfc->xmin + 1, bdfc->ymax - bdfc->ymin + 1, depth,
+             bdfc->ymax - bdfc->ymin + 1);
   for (i = 0; i <= bdfc->ymax - bdfc->ymin; ++i)
     {
       putc ('%', eps);
       for (j = 0; j <= bdfc->xmax - bdfc->xmin; ++j)
-        fprintf (eps, "%X", bdfc->bitmap[i * bdfc->bytes_per_line + j]);
+        x_fprintf (eps, "%X", bdfc->bitmap[i * bdfc->bytes_per_line + j]);
       if (!((bdfc->xmax - bdfc->xmin) & 1))
         putc ('0', eps);
       putc ('\n', eps);
     }
   BDFCharFree (bdfc);
-  fprintf (eps, "%%%%EndPreview\n");
+  x_fprintf (eps, "%%%%EndPreview\n");
 }
 
 int
@@ -100,25 +101,21 @@ _ExportEPS (FILE *eps, SplineChar *sc, int layer, int preview)
   time_t now;
   struct tm *tm;
   int ret;
-  char oldloc[24];
   const char *author = GetAuthor ();
 
-  strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
-  setlocale (LC_NUMERIC, "C");
-
-  fprintf (eps, "%%!PS-Adobe-3.0 EPSF-3.0\n");
+  x_fprintf (eps, "%%!PS-Adobe-3.0 EPSF-3.0\n");
   SplineCharLayerFindBounds (sc, layer, &b);
-  fprintf (eps, "%%%%BoundingBox: %g %g %g %g\n", (double) b.minx,
-           (double) b.miny, (double) b.maxx, (double) b.maxy);
-  fprintf (eps, "%%%%Pages: 0\n");
-  fprintf (eps, "%%%%Title: %s from %s\n", sc->name, sc->parent->fontname);
-  fprintf (eps, "%%%%Creator: FontForge\n");
+  x_fprintf (eps, "%%%%BoundingBox: %g %g %g %g\n", (double) b.minx,
+             (double) b.miny, (double) b.maxx, (double) b.maxy);
+  x_fprintf (eps, "%%%%Pages: 0\n");
+  x_fprintf (eps, "%%%%Title: %s from %s\n", sc->name, sc->parent->fontname);
+  x_fprintf (eps, "%%%%Creator: FontForge\n");
   if (author != NULL)
-    fprintf (eps, "%%%%Author: %s\n", author);
+    x_fprintf (eps, "%%%%Author: %s\n", author);
   time (&now);
   tm = localtime (&now);
-  fprintf (eps, "%%%%CreationDate: %d:%02d %d-%d-%d\n", tm->tm_hour, tm->tm_min,
-           tm->tm_mday, tm->tm_mon + 1, 1900 + tm->tm_year);
+  x_fprintf (eps, "%%%%CreationDate: %d:%02d %d-%d-%d\n", tm->tm_hour,
+             tm->tm_min, tm->tm_mday, tm->tm_mon + 1, 1900 + tm->tm_year);
   if (sc->parent->multilayer)
     {
       int ly, had_grad = 0, had_pat = 0;
@@ -135,28 +132,27 @@ _ExportEPS (FILE *eps, SplineChar *sc, int layer, int preview)
             had_pat = true;
         }
       if (had_grad)
-        fprintf (eps, "%%%%LanguageLevel: 3\n");
+        x_fprintf (eps, "%%%%LanguageLevel: 3\n");
       else if (had_pat)
-        fprintf (eps, "%%%%LanguageLevel: 2\n");
+        x_fprintf (eps, "%%%%LanguageLevel: 2\n");
     }
-  fprintf (eps, "%%%%EndComments\n");
+  x_fprintf (eps, "%%%%EndComments\n");
   if (preview)
     EpsGeneratePreview (eps, sc, layer, &b);
-  fprintf (eps, "%%%%EndProlog\n");
-  fprintf (eps, "%%%%Page \"%s\" 1\n", sc->name);
+  x_fprintf (eps, "%%%%EndProlog\n");
+  x_fprintf (eps, "%%%%Page \"%s\" 1\n", sc->name);
 
-  fprintf (eps, "gsave newpath\n");
+  x_fprintf (eps, "gsave newpath\n");
   SC_PSDump ((void (*)(int, void *)) fputc, eps, sc, true, false, layer);
   if (sc->parent->multilayer)
-    fprintf (eps, "grestore\n");
+    x_fprintf (eps, "grestore\n");
   else if (sc->parent->strokedfont)
-    fprintf (eps, "%g setlinewidth stroke grestore\n",
-             (double) sc->parent->strokewidth);
+    x_fprintf (eps, "%g setlinewidth stroke grestore\n",
+               (double) sc->parent->strokewidth);
   else
-    fprintf (eps, "fill grestore\n");
-  fprintf (eps, "%%%%EOF\n");
+    x_fprintf (eps, "fill grestore\n");
+  x_fprintf (eps, "%%%%EOF\n");
   ret = !ferror (eps);
-  setlocale (LC_NUMERIC, oldloc);
   return ret;
 }
 
@@ -183,84 +179,81 @@ _ExportPDF (FILE *pdf, SplineChar *sc, int layer)
   time_t now;
   struct tm *tm;
   int ret;
-  char oldloc[24];
   int _objlocs[8], xrefloc, streamstart, streamlength, resid, nextobj;
   int *objlocs = _objlocs;
   const char *author = GetAuthor ();
   int i;
 
   SFUntickAll (sc->parent);
-  strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
-  setlocale (LC_NUMERIC, "C");
 
-  fprintf (pdf, "%%PDF-1.4\n%%\201\342\202\203\n");     /* Header comment + binary comment */
+  x_fprintf (pdf, "%%PDF-1.4\n%%\201\342\202\203\n");   /* Header comment + binary comment */
   /* Every document contains a catalog which points to a page tree, which */
   /*  in our case, points to a single page */
   objlocs[1] = ftell (pdf);
-  fprintf (pdf,
-           "1 0 obj\n << /Type /Catalog\n    /Pages 2 0 R\n    /PageMode /UseNone\n >>\nendobj\n");
+  x_fprintf (pdf,
+             "1 0 obj\n << /Type /Catalog\n    /Pages 2 0 R\n    /PageMode /UseNone\n >>\nendobj\n");
   objlocs[2] = ftell (pdf);
-  fprintf (pdf,
-           "2 0 obj\n << /Type /Pages\n    /Kids [ 3 0 R ]\n    /Count 1\n >>\nendobj\n");
+  x_fprintf (pdf,
+             "2 0 obj\n << /Type /Pages\n    /Kids [ 3 0 R ]\n    /Count 1\n >>\nendobj\n");
   /* And our single page points to its contents */
   objlocs[3] = ftell (pdf);
-  fprintf (pdf, "3 0 obj\n");
-  fprintf (pdf, " << /Type /Page\n");
-  fprintf (pdf, "    /Parent 2 0 R\n");
-  fprintf (pdf, "    /Resources ");
+  x_fprintf (pdf, "3 0 obj\n");
+  x_fprintf (pdf, " << /Type /Page\n");
+  x_fprintf (pdf, "    /Parent 2 0 R\n");
+  x_fprintf (pdf, "    /Resources ");
   if (sc->parent->multilayer)
     {
       resid = ftell (pdf);
-      fprintf (pdf, "000000 0 R\n");
+      x_fprintf (pdf, "000000 0 R\n");
     }
   else
-    fprintf (pdf, "<< >>\n");
+    x_fprintf (pdf, "<< >>\n");
   SplineCharLayerFindBounds (sc, layer, &b);
-  fprintf (pdf, "    /MediaBox [%g %g %g %g]\n", (double) b.minx,
-           (double) b.miny, (double) b.maxx, (double) b.maxy);
-  fprintf (pdf, "    /Contents 4 0 R\n");
-  fprintf (pdf, " >>\n");
-  fprintf (pdf, "endobj\n");
+  x_fprintf (pdf, "    /MediaBox [%g %g %g %g]\n", (double) b.minx,
+             (double) b.miny, (double) b.maxx, (double) b.maxy);
+  x_fprintf (pdf, "    /Contents 4 0 R\n");
+  x_fprintf (pdf, " >>\n");
+  x_fprintf (pdf, "endobj\n");
   /* And the contents are the interesting stuff */
   objlocs[4] = ftell (pdf);
-  fprintf (pdf, "4 0 obj\n");
-  fprintf (pdf, " << /Length 5 0 R >> \n");
-  fprintf (pdf, " stream \n");
+  x_fprintf (pdf, "4 0 obj\n");
+  x_fprintf (pdf, " << /Length 5 0 R >> \n");
+  x_fprintf (pdf, " stream \n");
   streamstart = ftell (pdf);
   SC_PSDump ((void (*)(int, void *)) fputc, pdf, sc, true, true, layer);
   if (sc->parent->multilayer)
     /* Already filled or stroked */ ;
   else if (sc->parent->strokedfont)
-    fprintf (pdf, "%g w S\n", (double) sc->parent->strokewidth);
+    x_fprintf (pdf, "%g w S\n", (double) sc->parent->strokewidth);
   else
-    fprintf (pdf, "f\n");
+    x_fprintf (pdf, "f\n");
   streamlength = ftell (pdf) - streamstart;
-  fprintf (pdf, " endstream\n");
-  fprintf (pdf, "endobj\n");
+  x_fprintf (pdf, " endstream\n");
+  x_fprintf (pdf, "endobj\n");
   objlocs[5] = ftell (pdf);
-  fprintf (pdf, "5 0 obj\n");
-  fprintf (pdf, " %d\n", (int) streamlength);
-  fprintf (pdf, "endobj\n");
+  x_fprintf (pdf, "5 0 obj\n");
+  x_fprintf (pdf, " %d\n", (int) streamlength);
+  x_fprintf (pdf, "endobj\n");
 
   /* Optional Info dict */
   objlocs[6] = ftell (pdf);
-  fprintf (pdf, "6 0 obj\n");
-  fprintf (pdf, " <<\n");
-  fprintf (pdf, "    /Creator (FontForge)\n");
+  x_fprintf (pdf, "6 0 obj\n");
+  x_fprintf (pdf, " <<\n");
+  x_fprintf (pdf, "    /Creator (FontForge)\n");
   time (&now);
   tm = localtime (&now);
-  fprintf (pdf, "    /CreationDate (D:%04d%02d%02d%02d%2d%02d",
-           1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
-           tm->tm_hour, tm->tm_min, tm->tm_sec);
+  x_fprintf (pdf, "    /CreationDate (D:%04d%02d%02d%02d%2d%02d",
+             1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
+             tm->tm_hour, tm->tm_min, tm->tm_sec);
   tzset ();
   if (timezone == 0)
-    fprintf (pdf, "Z)\n");
+    x_fprintf (pdf, "Z)\n");
   else
-    fprintf (pdf, "%+02d')\n", (int) timezone / 3600);  /* doesn't handle half-hour zones */
-  fprintf (pdf, "    /Title (%s from %s)\n", sc->name, sc->parent->fontname);
+    x_fprintf (pdf, "%+02d')\n", (int) timezone / 3600);        /* doesn't handle half-hour zones */
+  x_fprintf (pdf, "    /Title (%s from %s)\n", sc->name, sc->parent->fontname);
   if (author != NULL)
-    fprintf (pdf, "    /Author (%s)\n", author);
-  fprintf (pdf, " >>\n");
+    x_fprintf (pdf, "    /Author (%s)\n", author);
+  x_fprintf (pdf, " >>\n");
 
   nextobj = 7;
   if (sc->parent->multilayer)
@@ -277,31 +270,30 @@ _ExportPDF (FILE *pdf, SplineChar *sc, int layer)
       nextobj = pi.next_object;
       objlocs = pi.object_offsets;
       fseek (pdf, resid, SEEK_SET);
-      fprintf (pdf, "%06d", resobj);
+      x_fprintf (pdf, "%06d", resobj);
       fseek (pdf, 0, SEEK_END);
     }
 
   xrefloc = ftell (pdf);
-  fprintf (pdf, "xref\n");
-  fprintf (pdf, " 0 %d\n", nextobj);
-  fprintf (pdf, "0000000000 65535 f \n");
+  x_fprintf (pdf, "xref\n");
+  x_fprintf (pdf, " 0 %d\n", nextobj);
+  x_fprintf (pdf, "0000000000 65535 f \n");
   for (i = 1; i < nextobj; ++i)
-    fprintf (pdf, "%010d %05d n \n", (int) objlocs[i], 0);
-  fprintf (pdf, "trailer\n");
-  fprintf (pdf, " <<\n");
-  fprintf (pdf, "    /Size %d\n", nextobj);
-  fprintf (pdf, "    /Root 1 0 R\n");
-  fprintf (pdf, "    /Info 6 0 R\n");
-  fprintf (pdf, " >>\n");
-  fprintf (pdf, "startxref\n");
-  fprintf (pdf, "%d\n", (int) xrefloc);
-  fprintf (pdf, "%%%%EOF\n");
+    x_fprintf (pdf, "%010d %05d n \n", (int) objlocs[i], 0);
+  x_fprintf (pdf, "trailer\n");
+  x_fprintf (pdf, " <<\n");
+  x_fprintf (pdf, "    /Size %d\n", nextobj);
+  x_fprintf (pdf, "    /Root 1 0 R\n");
+  x_fprintf (pdf, "    /Info 6 0 R\n");
+  x_fprintf (pdf, " >>\n");
+  x_fprintf (pdf, "startxref\n");
+  x_fprintf (pdf, "%d\n", (int) xrefloc);
+  x_fprintf (pdf, "%%%%EOF\n");
 
   if (objlocs != _objlocs)
     free (objlocs);
 
   ret = !ferror (pdf);
-  setlocale (LC_NUMERIC, oldloc);
   return ret;
 }
 
@@ -325,17 +317,14 @@ ExportPDF (char *filename, SplineChar *sc, int layer)
 int
 _ExportPlate (FILE *plate, SplineChar *sc, int layer)
 {
-  char oldloc[24];
   int do_open;
   SplineSet *ss;
   spiro_cp *spiros;
   int i, ret;
 
-  strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
-  setlocale (LC_NUMERIC, "C");
   /* Output closed contours first, then open. Plate files can only handle */
   /*  one open contour (I think) and it must be at the end */
-  fprintf (plate, "(plate\n");
+  x_fprintf (plate, "(plate\n");
   for (do_open = 0; do_open < 2; ++do_open)
     {
       for (ss = sc->layers[layer].splines; ss != NULL; ss = ss->next)
@@ -356,21 +345,20 @@ _ExportPlate (FILE *plate, SplineChar *sc, int layer)
           for (i = 0; spiros[i].ty != 'z'; ++i)
             {
               if (spiros[i].ty == SPIRO_OPEN_CONTOUR)
-                fprintf (plate, "  (o ");
+                x_fprintf (plate, "  (o ");
               else
-                fprintf (plate, "  (%c ", spiros[i].ty & ~0x80);
+                x_fprintf (plate, "  (%c ", spiros[i].ty & ~0x80);
               /* Raph's plate files have the baseline way up in the air */
-              fprintf (plate, "%g %g)\n", spiros[i].x, 800. - spiros[i].y);
+              x_fprintf (plate, "%g %g)\n", spiros[i].x, 800. - spiros[i].y);
             }
           if (ss->first->prev != NULL)
-            fprintf (plate, "  (z)\n");
+            x_fprintf (plate, "  (z)\n");
           if (spiros != ss->spiros)
             free (spiros);
         }
     }
-  fprintf (plate, ")\n");
+  x_fprintf (plate, ")\n");
   ret = !ferror (plate);
-  setlocale (LC_NUMERIC, oldloc);
   return ret;
 }
 
@@ -424,8 +412,8 @@ ExportGlif (char *filename, SplineChar *sc, int layer)
 static void
 FigDumpPt (FILE *fig, BasePoint *me, real scale, real ascent)
 {
-  fprintf (fig, "%d %d ", (int) rint (me->x * scale),
-           (int) rint (ascent - me->y * scale));
+  x_fprintf (fig, "%d %d ", (int) rint (me->x * scale),
+             (int) rint (ascent - me->y * scale));
 }
 
 static void
@@ -462,8 +450,8 @@ FigSplineSet (FILE *fig, SplineSet *spl, int spmax, int asc)
           /* Must end with the start point if it's closed */
           ++cnt;
         }
-      fprintf (fig, "3 %d 0 1 0 0 0 0 -1 0.0 0 0 0 %d\n",
-               spl->first->prev == NULL ? 4 : 5, cnt);
+      x_fprintf (fig, "3 %d 0 1 0 0 0 0 -1 0.0 0 0 0 %d\n",
+                 spl->first->prev == NULL ? 4 : 5, cnt);
       /* line of coordinates pairs */
       sp = spl->first;
       putc ('\t', fig);
@@ -494,13 +482,13 @@ FigSplineSet (FILE *fig, SplineSet *spl, int spmax, int asc)
       while (1)
         {
           if (!sp->noprevcp && sp->prev != NULL && sp != spl->first)
-            fprintf (fig, "1 ");
+            x_fprintf (fig, "1 ");
           if ((sp->noprevcp && sp->nonextcp) || sp->pointtype == pt_corner)
-            fprintf (fig, "0 ");
+            x_fprintf (fig, "0 ");
           else
-            fprintf (fig, "-1 ");
+            x_fprintf (fig, "-1 ");
           if (!sp->nonextcp && sp->next != NULL)
-            fprintf (fig, "1 ");
+            x_fprintf (fig, "1 ");
           if (sp->next == NULL)
             break;
           sp = sp->next->to;
@@ -511,11 +499,11 @@ FigSplineSet (FILE *fig, SplineSet *spl, int spmax, int asc)
         {
           /* Must end with the start point if it's closed */
           if (!sp->noprevcp && sp->prev != NULL)
-            fprintf (fig, "1 ");
+            x_fprintf (fig, "1 ");
           if ((sp->noprevcp && sp->nonextcp) || sp->pointtype == pt_corner)
-            fprintf (fig, "0 ");
+            x_fprintf (fig, "0 ");
           else
-            fprintf (fig, "-1 ");
+            x_fprintf (fig, "-1 ");
         }
       putc ('\n', fig);
       spl = spl->next;
@@ -537,15 +525,15 @@ ExportFig (char *filename, SplineChar *sc, int layer)
       return 0;
     }
 
-  fprintf (fig, "#FIG 3.2\n");
-  fprintf (fig, "Portrait\n");
-  fprintf (fig, "Center\n");
-  fprintf (fig, "Inches\n");
-  fprintf (fig, "Letter\n");
-  fprintf (fig, "100.00\n");
-  fprintf (fig, "Single\n");
-  fprintf (fig, "-2\n");
-  fprintf (fig, "1200 2\n");
+  x_fprintf (fig, "#FIG 3.2\n");
+  x_fprintf (fig, "Portrait\n");
+  x_fprintf (fig, "Center\n");
+  x_fprintf (fig, "Inches\n");
+  x_fprintf (fig, "Letter\n");
+  x_fprintf (fig, "100.00\n");
+  x_fprintf (fig, "Single\n");
+  x_fprintf (fig, "-2\n");
+  x_fprintf (fig, "1200 2\n");
   FigSplineSet (fig, sc->layers[layer].splines, spmax, sc->parent->ascent);
   for (rf = sc->layers[layer].refs; rf != NULL; rf = rf->next)
     FigSplineSet (fig, rf->layers[0].splines, spmax, sc->parent->ascent);
