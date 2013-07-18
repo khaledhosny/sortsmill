@@ -98,6 +98,7 @@ nobase_include_HEADERS += sortsmill/null_passthru.h
 nobase_include_HEADERS += sortsmill/xdie_on_null.h
 nobase_include_HEADERS += sortsmill/xgc.h
 nobase_include_HEADERS += sortsmill/x_alloc.h
+nobase_include_HEADERS += sortsmill/x_printf.h
 
 # Extensions to GNU libunistring.
 nobase_include_HEADERS += sortsmill/xunicase.h

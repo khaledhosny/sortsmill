@@ -57,31 +57,12 @@
 #include <sd.h>
 #include <xalloc.h>
 #include <sortsmill/guile.h>
-#include "c-strtod.h"
-#include "c-vasprintf.h"
+#include <sortsmill/x_printf.h>
+#include <c-strtod.h>
 
 /* ************************************************************************** */
 /* ****************************    SVG Output    **************************** */
 /* ************************************************************************** */
-
-// XXX: move to a common place
-static int
-c_fprintf (FILE *file, const char *format, ...)
-{
-  int result;
-  char *buffer;
-  va_list ap;
-  va_start (ap, format);
-  result = c_vasprintf (&buffer, format, ap);
-  if (result != -1)
-    {
-      fputs (buffer, file);
-      free (buffer);
-    }
-  va_end (ap);
-
-  return result;
-}
 
 static char *
 skip_spaces (char *p)
@@ -98,7 +79,7 @@ latin1ToUtf8Out (FILE *file, char *str)
   while (*str)
     {
       if (*str == '&' || *str == '<' || *str == '>' || (*str & 0x80))
-        c_fprintf (file, "&#%d;", (uint8_t) *str);
+        x_fprintf (file, "&#%d;", (uint8_t) *str);
       else
         putc (*str, file);
       ++str;
@@ -127,62 +108,62 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
   SplineFontLayerFindBounds (sf, layer, &bb);
   QuickBlues (sf, layer, &bd);
 
-  c_fprintf (file, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
-  c_fprintf (file,
-           "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n");
+  x_fprintf (file, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+  x_fprintf (file,
+             "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n");
   if (sf->comments != NULL)
     {
-      c_fprintf (file, "<!--\n");
+      x_fprintf (file, "<!--\n");
       latin1ToUtf8Out (file, sf->comments);
-      c_fprintf (file, "\n-->\n");
+      x_fprintf (file, "\n-->\n");
     }
-  c_fprintf (file, "<svg>\n");
+  x_fprintf (file, "<svg>\n");
   time (&now);
-  c_fprintf (file, "<metadata>\nCreated by %s at %s", PACKAGE_STRING,
-           ctime (&now));
+  x_fprintf (file, "<metadata>\nCreated by %s at %s", PACKAGE_STRING,
+             ctime (&now));
   if (author != NULL)
-    c_fprintf (file, " By %s\n", author);
+    x_fprintf (file, " By %s\n", author);
   else
-    c_fprintf (file, "\n");
+    x_fprintf (file, "\n");
   if (sf->copyright != NULL)
     {
       latin1ToUtf8Out (file, sf->copyright);
       putc ('\n', file);
     }
-  c_fprintf (file, "</metadata>\n");
-  c_fprintf (file, "<defs>\n");
-  c_fprintf (file, "<font id=\"%s\" horiz-adv-x=\"%d\" ", sf->fontname, defwid);
+  x_fprintf (file, "</metadata>\n");
+  x_fprintf (file, "<defs>\n");
+  x_fprintf (file, "<font id=\"%s\" horiz-adv-x=\"%d\" ", sf->fontname, defwid);
   if (sf->hasvmetrics)
-    c_fprintf (file, "vert-adv-y=\"%d\" ", sf->ascent + sf->descent);
+    x_fprintf (file, "vert-adv-y=\"%d\" ", sf->ascent + sf->descent);
   putc ('>', file);
   putc ('\n', file);
-  c_fprintf (file, "  <font-face \n");
-  c_fprintf (file, "    font-family=\"%s\"\n", sf->familyname);
-  c_fprintf (file, "    font-weight=\"%d\"\n", info.weight);
+  x_fprintf (file, "  <font-face \n");
+  x_fprintf (file, "    font-family=\"%s\"\n", sf->familyname);
+  x_fprintf (file, "    font-weight=\"%d\"\n", info.weight);
   if (strcasestr (sf->fontname, "obli") || strcasestr (sf->fontname, "slanted"))
-    c_fprintf (file, "    font-style=\"oblique\"\n");
+    x_fprintf (file, "    font-style=\"oblique\"\n");
   else if (MacStyleCode (sf, NULL) & sf_italic)
-    c_fprintf (file, "    font-style=\"italic\"\n");
+    x_fprintf (file, "    font-style=\"italic\"\n");
   if (strcasestr (sf->fontname, "small") || strcasestr (sf->fontname, "cap"))
-    c_fprintf (file, "    font-variant=\"small-caps\"\n");
-  c_fprintf (file, "    font-stretch=\"%s\"\n", condexp[info.width]);
-  c_fprintf (file, "    units-per-em=\"%d\"\n", sf->ascent + sf->descent);
-  c_fprintf (file, "    panose-1=\"%d %d %d %d %d %d %d %d %d %d\"\n",
-           info.panose[0], info.panose[1], info.panose[2], info.panose[3],
-           info.panose[4], info.panose[5], info.panose[6], info.panose[7],
-           info.panose[8], info.panose[9]);
-  c_fprintf (file, "    ascent=\"%d\"\n", sf->ascent);
-  c_fprintf (file, "    descent=\"%d\"\n", -sf->descent);
+    x_fprintf (file, "    font-variant=\"small-caps\"\n");
+  x_fprintf (file, "    font-stretch=\"%s\"\n", condexp[info.width]);
+  x_fprintf (file, "    units-per-em=\"%d\"\n", sf->ascent + sf->descent);
+  x_fprintf (file, "    panose-1=\"%d %d %d %d %d %d %d %d %d %d\"\n",
+             info.panose[0], info.panose[1], info.panose[2], info.panose[3],
+             info.panose[4], info.panose[5], info.panose[6], info.panose[7],
+             info.panose[8], info.panose[9]);
+  x_fprintf (file, "    ascent=\"%d\"\n", sf->ascent);
+  x_fprintf (file, "    descent=\"%d\"\n", -sf->descent);
   if (bd.xheight > 0)
-    c_fprintf (file, "    x-height=\"%g\"\n", (double) bd.xheight);
+    x_fprintf (file, "    x-height=\"%g\"\n", (double) bd.xheight);
   if (bd.caph > 0)
-    c_fprintf (file, "    cap-height=\"%g\"\n", (double) bd.caph);
-  c_fprintf (file, "    bbox=\"%g %g %g %g\"\n", (double) bb.minx,
-           (double) bb.miny, (double) bb.maxx, (double) bb.maxy);
-  c_fprintf (file, "    underline-thickness=\"%g\"\n", (double) sf->uwidth);
-  c_fprintf (file, "    underline-position=\"%g\"\n", (double) sf->upos);
+    x_fprintf (file, "    cap-height=\"%g\"\n", (double) bd.caph);
+  x_fprintf (file, "    bbox=\"%g %g %g %g\"\n", (double) bb.minx,
+             (double) bb.miny, (double) bb.maxx, (double) bb.maxy);
+  x_fprintf (file, "    underline-thickness=\"%g\"\n", (double) sf->uwidth);
+  x_fprintf (file, "    underline-position=\"%g\"\n", (double) sf->upos);
   if (sf->italicangle != 0)
-    c_fprintf (file, "    slope=\"%g\"\n", (double) sf->italicangle);
+    x_fprintf (file, "    slope=\"%g\"\n", (double) sf->italicangle);
   const char *const_hash = PSDictHasEntry (sf->private, "StdHW");
   const char *const_hasv = PSDictHasEntry (sf->private, "StdVW");
   if (const_hash != NULL)
@@ -193,7 +174,7 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
       ch = hash[strlen (hash) - 1];
       if (ch == ']')
         hash[strlen (hash) - 1] = '\0';
-      c_fprintf (file, "    stemh=\"%s\"\n", hash);
+      x_fprintf (file, "    stemh=\"%s\"\n", hash);
       if (ch == ']')
         hash[strlen (hash)] = ch;
     }
@@ -205,7 +186,7 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
       ch = hasv[strlen (hasv) - 1];
       if (ch == ']')
         hasv[strlen (hasv) - 1] = '\0';
-      c_fprintf (file, "    stemv=\"%s\"\n", hasv);
+      x_fprintf (file, "    stemv=\"%s\"\n", hasv);
       if (ch == ']')
         hasv[strlen (hasv)] = ch;
     }
@@ -220,8 +201,8 @@ svg_outfontheader (FILE *file, SplineFont *sf, int layer)
           maxu = sf->glyphs[i]->unicodeenc;
       }
   if (maxu != 0)
-    c_fprintf (file, "    unicode-range=\"U+%04X-%04X\"\n", minu, maxu);
-  c_fprintf (file, "  />\n");
+    x_fprintf (file, "    unicode-range=\"U+%04X-%04X\"\n", minu, maxu);
+  x_fprintf (file, "  />\n");
   return defwid;
 }
 
@@ -370,35 +351,35 @@ svg_dumpstroke (FILE *file, struct pen *cpen, struct pen *fallback,
 
   if (pen.brush.gradient != NULL)
     {
-      c_fprintf (file, "stroke=\"url(#%s", scname);
+      x_fprintf (file, "stroke=\"url(#%s", scname);
       if (nested != NULL)
-        c_fprintf (file, "-%s", nested->name);
-      c_fprintf (file, "-ly%d-stroke-grad)\" ", layer);
+        x_fprintf (file, "-%s", nested->name);
+      x_fprintf (file, "-ly%d-stroke-grad)\" ", layer);
     }
   else if (pen.brush.pattern != NULL && istop)
     {
-      c_fprintf (file, "stroke=\"url(#%s", scname);
+      x_fprintf (file, "stroke=\"url(#%s", scname);
       if (nested != NULL)
-        c_fprintf (file, "-%s", nested->name);
-      c_fprintf (file, "-ly%d-stroke-pattern)\" ", layer);
+        x_fprintf (file, "-%s", nested->name);
+      x_fprintf (file, "-ly%d-stroke-pattern)\" ", layer);
     }
   else
     {
       if (pen.brush.col != COLOR_INHERITED)
-        c_fprintf (file, "stroke=\"#%02x%02x%02x\" ",
-                 COLOR_RED (pen.brush.col), COLOR_GREEN (pen.brush.col),
-                 COLOR_BLUE (pen.brush.col));
+        x_fprintf (file, "stroke=\"#%02x%02x%02x\" ",
+                   COLOR_RED (pen.brush.col), COLOR_GREEN (pen.brush.col),
+                   COLOR_BLUE (pen.brush.col));
       else
-        c_fprintf (file, "stroke=\"currentColor\" ");
+        x_fprintf (file, "stroke=\"currentColor\" ");
       if (pen.brush.opacity >= 0)
-        c_fprintf (file, "stroke-opacity=\"%g\" ", pen.brush.opacity);
+        x_fprintf (file, "stroke-opacity=\"%g\" ", pen.brush.opacity);
     }
   if (pen.width != WIDTH_INHERITED)
-    c_fprintf (file, "stroke-width=\"%g\" ", pen.width);
+    x_fprintf (file, "stroke-width=\"%g\" ", pen.width);
   if (pen.linecap != lc_inherited)
-    c_fprintf (file, "stroke-linecap=\"%s\" ", caps[pen.linecap]);
+    x_fprintf (file, "stroke-linecap=\"%s\" ", caps[pen.linecap]);
   if (pen.linejoin != lc_inherited)
-    c_fprintf (file, "stroke-linejoin=\"%s\" ", joins[pen.linejoin]);
+    x_fprintf (file, "stroke-linejoin=\"%s\" ", joins[pen.linejoin]);
 /* the current transformation matrix will not affect the fill, but it will */
 /*  affect the way stroke looks. So we must include it here. BUT the spline */
 /*  set has already been transformed, so we must apply the inverse transform */
@@ -406,25 +387,25 @@ svg_dumpstroke (FILE *file, struct pen *cpen, struct pen *fallback,
 /*  will give us the splines we desire. */
   if (pen.trans[0] != 1.0 || pen.trans[3] != 1.0 || pen.trans[1] != 0
       || pen.trans[2] != 0)
-    c_fprintf (file, "transform=\"matrix(%g, %g, %g, %g, 0, 0)\" ",
-             (double) pen.trans[0], (double) pen.trans[1],
-             (double) pen.trans[2], (double) pen.trans[3]);
+    x_fprintf (file, "transform=\"matrix(%g, %g, %g, %g, 0, 0)\" ",
+               (double) pen.trans[0], (double) pen.trans[1],
+               (double) pen.trans[2], (double) pen.trans[3]);
   if (pen.dashes[0] == 0 && pen.dashes[1] == DASH_INHERITED)
     {
-      c_fprintf (file, "stroke-dasharray=\"inherit\" ");
+      x_fprintf (file, "stroke-dasharray=\"inherit\" ");
     }
   else if (pen.dashes[0] != 0)
     {
       int i;
-      c_fprintf (file, "stroke-dasharray=\"");
+      x_fprintf (file, "stroke-dasharray=\"");
       for (i = 0; i < DASH_MAX && pen.dashes[i] != 0; ++i)
-        c_fprintf (file, "%d ", pen.dashes[i]);
-      c_fprintf (file, "\" ");
+        x_fprintf (file, "%d ", pen.dashes[i]);
+      x_fprintf (file, "\" ");
     }
   else
     {
       /* That's the default, don't need to say it */
-      /* c_fprintf( file, "stroke-dasharray=\"none\" " ) */
+      /* x_fprintf( file, "stroke-dasharray=\"none\" " ) */
       ;
     }
 }
@@ -438,7 +419,7 @@ svg_dumpfill (FILE *file, struct brush *cbrush, struct brush *fallback,
 
   if (!dofill)
     {
-      c_fprintf (file, "fill=\"none\" ");
+      x_fprintf (file, "fill=\"none\" ");
       return;
     }
 
@@ -453,28 +434,28 @@ svg_dumpfill (FILE *file, struct brush *cbrush, struct brush *fallback,
 
   if (brush.gradient != NULL)
     {
-      c_fprintf (file, "fill=\"url(#%s", scname);
+      x_fprintf (file, "fill=\"url(#%s", scname);
       if (nested != NULL)
-        c_fprintf (file, "-%s", nested->name);
-      c_fprintf (file, "-ly%d-fill-grad)\" ", layer);
+        x_fprintf (file, "-%s", nested->name);
+      x_fprintf (file, "-ly%d-fill-grad)\" ", layer);
     }
   else if (brush.pattern != NULL && istop)
     {
-      c_fprintf (file, "fill=\"url(#%s", scname);
+      x_fprintf (file, "fill=\"url(#%s", scname);
       if (nested != NULL)
-        c_fprintf (file, "-%s", nested->name);
-      c_fprintf (file, "-ly%d-fill-pattern)\" ", layer);
+        x_fprintf (file, "-%s", nested->name);
+      x_fprintf (file, "-ly%d-fill-pattern)\" ", layer);
     }
   else
     {
       if (brush.col != COLOR_INHERITED)
-        c_fprintf (file, "fill=\"#%02x%02x%02x\" ",
-                 COLOR_RED (brush.col), COLOR_GREEN (brush.col),
-                 COLOR_BLUE (brush.col));
+        x_fprintf (file, "fill=\"#%02x%02x%02x\" ",
+                   COLOR_RED (brush.col), COLOR_GREEN (brush.col),
+                   COLOR_BLUE (brush.col));
       else
-        c_fprintf (file, "fill=\"currentColor\" ");
+        x_fprintf (file, "fill=\"currentColor\" ");
       if (brush.opacity >= 0)
-        c_fprintf (file, "fill-opacity=\"%g\" ", brush.opacity);
+        x_fprintf (file, "fill-opacity=\"%g\" ", brush.opacity);
     }
 }
 
@@ -554,7 +535,7 @@ DataURI_ImageDump (FILE *file, struct gimage *img)
       mimetype = "image/bmp";
     }
 
-  c_fprintf (file, "%s;base64,", mimetype);
+  x_fprintf (file, "%s;base64,", mimetype);
   rewind (imgf);
 
   /* Now do base64 output conversion */
@@ -605,37 +586,37 @@ svg_dumpgradient (FILE *file, struct gradient *gradient,
   Color csame;
   float osame;
 
-  c_fprintf (file, "    <%s ",
-           gradient->radius == 0 ? "linearGradient" : "radialGradient");
+  x_fprintf (file, "    <%s ",
+             gradient->radius == 0 ? "linearGradient" : "radialGradient");
   if (nested == NULL)
-    c_fprintf (file, " id=\"%s-ly%d-%s-grad\"", scname, layer,
-             is_fill ? "fill" : "stroke");
+    x_fprintf (file, " id=\"%s-ly%d-%s-grad\"", scname, layer,
+               is_fill ? "fill" : "stroke");
   else
-    c_fprintf (file, " id=\"%s-%s-ly%d-%s-grad\"", scname, nested->name, layer,
-             is_fill ? "fill" : "stroke");
-  c_fprintf (file, "\n\tgradientUnits=\"userSpaceOnUse\"");
+    x_fprintf (file, " id=\"%s-%s-ly%d-%s-grad\"", scname, nested->name, layer,
+               is_fill ? "fill" : "stroke");
+  x_fprintf (file, "\n\tgradientUnits=\"userSpaceOnUse\"");
   if (gradient->radius == 0)
     {
-      c_fprintf (file, "\n\tx1=\"%g\" y1=\"%g\" x2=\"%g\" y2=\"%g\"",
-               (double) gradient->start.x, (double) gradient->start.y,
-               (double) gradient->stop.x, (double) gradient->stop.y);
+      x_fprintf (file, "\n\tx1=\"%g\" y1=\"%g\" x2=\"%g\" y2=\"%g\"",
+                 (double) gradient->start.x, (double) gradient->start.y,
+                 (double) gradient->stop.x, (double) gradient->stop.y);
     }
   else
     {
       if (gradient->start.x == gradient->stop.x
           && gradient->start.y == gradient->stop.y)
-        c_fprintf (file, "\n\tcx=\"%g\" cy=\"%g\" r=\"%g\"",
-                 (double) gradient->stop.x, (double) gradient->stop.y,
-                 (double) gradient->radius);
+        x_fprintf (file, "\n\tcx=\"%g\" cy=\"%g\" r=\"%g\"",
+                   (double) gradient->stop.x, (double) gradient->stop.y,
+                   (double) gradient->radius);
       else
-        c_fprintf (file, "\n\tfx=\"%g\" fy=\"%g\" cx=\"%g\" cy=\"%g\" r=\"%g\"",
-                 (double) gradient->start.x, (double) gradient->start.y,
-                 (double) gradient->stop.x, (double) gradient->stop.y,
-                 (double) gradient->radius);
+        x_fprintf (file, "\n\tfx=\"%g\" fy=\"%g\" cx=\"%g\" cy=\"%g\" r=\"%g\"",
+                   (double) gradient->start.x, (double) gradient->start.y,
+                   (double) gradient->stop.x, (double) gradient->stop.y,
+                   (double) gradient->radius);
     }
-  c_fprintf (file, "\n\tspreadMethod=\"%s\">\n",
-           gradient->sm == sm_pad ? "pad" :
-           gradient->sm == sm_reflect ? "reflect" : "repeat");
+  x_fprintf (file, "\n\tspreadMethod=\"%s\">\n",
+             gradient->sm == sm_pad ? "pad" :
+             gradient->sm == sm_reflect ? "reflect" : "repeat");
 
   csame = -1;
   osame = -1;
@@ -652,28 +633,28 @@ svg_dumpgradient (FILE *file, struct gradient *gradient,
     }
   for (i = 0; i < gradient->stop_cnt; ++i)
     {
-      c_fprintf (file, "      <stop offset=\"%g\"",
-               (double) gradient->grad_stops[i].offset);
+      x_fprintf (file, "      <stop offset=\"%g\"",
+                 (double) gradient->grad_stops[i].offset);
       if (csame == -2)
         {
           if (gradient->grad_stops[i].col == COLOR_INHERITED)
-            c_fprintf (file, " stop-color=\"inherit\"");
+            x_fprintf (file, " stop-color=\"inherit\"");
           else
-            c_fprintf (file, " stop-color=\"#%06x\"",
-                     gradient->grad_stops[i].col);
+            x_fprintf (file, " stop-color=\"#%06x\"",
+                       gradient->grad_stops[i].col);
         }
       if (osame < 0)
         {
           if (gradient->grad_stops[i].opacity == COLOR_INHERITED)
-            c_fprintf (file, " stop-opacity=\"inherit\"");
+            x_fprintf (file, " stop-opacity=\"inherit\"");
           else
-            c_fprintf (file, " stop-opacity=\"%g\"",
-                     (double) gradient->grad_stops[i].opacity);
+            x_fprintf (file, " stop-opacity=\"%g\"",
+                       (double) gradient->grad_stops[i].opacity);
         }
-      c_fprintf (file, "/>\n");
+      x_fprintf (file, "/>\n");
     }
-  c_fprintf (file, "    </%s>\n",
-           gradient->radius == 0 ? "linearGradient" : "radialGradient");
+  x_fprintf (file, "    </%s>\n",
+             gradient->radius == 0 ? "linearGradient" : "radialGradient");
 }
 
 static void svg_dumpscdefs (FILE *file, SplineChar *sc, char *name, int istop);
@@ -696,36 +677,37 @@ svg_dumppattern (FILE *file, struct pattern *pattern,
     LogError (_("No glyph named %s, used as a pattern in %s\n"),
               pattern->pattern, scname);
 
-  c_fprintf (file, "    <pattern ");
+  x_fprintf (file, "    <pattern ");
   if (nested == NULL)
-    c_fprintf (file, " id=\"%s-ly%d-%s-pattern\"", scname, layer,
-             is_fill ? "fill" : "stroke");
+    x_fprintf (file, " id=\"%s-ly%d-%s-pattern\"", scname, layer,
+               is_fill ? "fill" : "stroke");
   else
-    c_fprintf (file, " id=\"%s-%s-ly%d-%s-pattern\"", scname, nested->name, layer,
-             is_fill ? "fill" : "stroke");
-  c_fprintf (file, "\n\tpatternUnits=\"userSpaceOnUse\"");
+    x_fprintf (file, " id=\"%s-%s-ly%d-%s-pattern\"", scname, nested->name,
+               layer, is_fill ? "fill" : "stroke");
+  x_fprintf (file, "\n\tpatternUnits=\"userSpaceOnUse\"");
   if (pattern_sc != NULL)
     {
       DBounds b;
       PatternSCBounds (pattern_sc, &b);
-      c_fprintf (file, "\n\tviewBox=\"%g %g %g %g\"",
-               (double) b.minx, (double) b.miny,
-               (double) (b.maxx - b.minx), (double) (b.maxy - b.miny));
+      x_fprintf (file, "\n\tviewBox=\"%g %g %g %g\"",
+                 (double) b.minx, (double) b.miny,
+                 (double) (b.maxx - b.minx), (double) (b.maxy - b.miny));
     }
-  c_fprintf (file, "\n\twidth=\"%g\" height=\"%g\"",
-           (double) pattern->width, (double) pattern->height);
+  x_fprintf (file, "\n\twidth=\"%g\" height=\"%g\"",
+             (double) pattern->width, (double) pattern->height);
   if (pattern->transform[0] != 1 || pattern->transform[1] != 0 ||
       pattern->transform[2] != 0 || pattern->transform[3] != 1 ||
       pattern->transform[4] != 0 || pattern->transform[5] != 0)
     {
-      c_fprintf (file, "\n\tpatternTransform=\"matrix(%g %g %g %g %g %g)\"",
-               (double) pattern->transform[0], (double) pattern->transform[1],
-               (double) pattern->transform[2], (double) pattern->transform[3],
-               (double) pattern->transform[4], (double) pattern->transform[5]);
+      x_fprintf (file, "\n\tpatternTransform=\"matrix(%g %g %g %g %g %g)\"",
+                 (double) pattern->transform[0], (double) pattern->transform[1],
+                 (double) pattern->transform[2], (double) pattern->transform[3],
+                 (double) pattern->transform[4],
+                 (double) pattern->transform[5]);
     }
   if (pattern_sc != NULL)
     svg_dumpscdefs (file, pattern_sc, patsubname, false);
-  c_fprintf (file, "    </pattern>\n");
+  x_fprintf (file, "    </pattern>\n");
   free (patsubname);
 }
 
@@ -737,14 +719,14 @@ svg_layer_defs (FILE *file, SplineSet *splines, struct brush *fill_brush,
   if (SSHasClip (splines))
     {
       if (nested == NULL)
-        c_fprintf (file, "    <clipPath id=\"%s-ly%d-clip\">\n", scname, layer);
+        x_fprintf (file, "    <clipPath id=\"%s-ly%d-clip\">\n", scname, layer);
       else
-        c_fprintf (file, "    <clipPath id=\"%s-%s-ly%d-clip\">\n", scname,
-                 nested->name, layer);
-      c_fprintf (file, "      <path d=\"\n");
+        x_fprintf (file, "    <clipPath id=\"%s-%s-ly%d-clip\">\n", scname,
+                   nested->name, layer);
+      x_fprintf (file, "      <path d=\"\n");
       svg_pathdump (file, sc->layers[layer].splines, 16, true, true);
-      c_fprintf (file, "\"/>\n");
-      c_fprintf (file, "    </clipPath>\n");
+      x_fprintf (file, "\"/>\n");
+      x_fprintf (file, "    </clipPath>\n");
     }
   if (fill_brush->gradient != NULL)
     svg_dumpgradient (file, fill_brush->gradient, scname, nested, layer, true);
@@ -795,9 +777,9 @@ svg_dumptype3 (FILE *file, SplineChar *sc, char *name, int istop)
     {
       if (SSHasDrawn (sc->layers[i].splines))
         {
-          c_fprintf (file, "  <g ");
+          x_fprintf (file, "  <g ");
           if (SSHasClip (sc->layers[i].splines))
-            c_fprintf (file, "clip-path=\"url(#%s-ly%d-clip)\" ", name, i);
+            x_fprintf (file, "clip-path=\"url(#%s-ly%d-clip)\" ", name, i);
           transed = sc->layers[i].splines;
           if (sc->layers[i].dostroke)
             {
@@ -807,24 +789,24 @@ svg_dumptype3 (FILE *file, SplineChar *sc, char *name, int istop)
             }
           svg_dumpfill (file, &sc->layers[i].fill_brush, NULL,
                         sc->layers[i].dofill, name, NULL, i, istop);
-          c_fprintf (file, ">\n");
-          c_fprintf (file, "    <path d=\"\n");
+          x_fprintf (file, ">\n");
+          x_fprintf (file, "    <path d=\"\n");
           svg_pathdump (file, transed, 12, !sc->layers[i].dostroke, false);
-          c_fprintf (file, "\"/>\n");
+          x_fprintf (file, "\"/>\n");
           if (transed != sc->layers[i].splines)
             SplinePointListsFree (transed);
-          c_fprintf (file, "  </g>\n");
+          x_fprintf (file, "  </g>\n");
         }
       for (ref = sc->layers[i].refs; ref != NULL; ref = ref->next)
         {
           for (j = 0; j < ref->layer_cnt; ++j)
             if (ref->layers[j].splines != NULL)
               {
-                c_fprintf (file, "   <g ");
+                x_fprintf (file, "   <g ");
                 transed = ref->layers[j].splines;
                 if (SSHasClip (transed))
-                  c_fprintf (file, "clip-path=\"url(#%s-%s-ly%d-clip)\" ", name,
-                           ref->sc->name, j);
+                  x_fprintf (file, "clip-path=\"url(#%s-%s-ly%d-clip)\" ", name,
+                             ref->sc->name, j);
                 if (ref->layers[j].dostroke)
                   {
                     svg_dumpstroke (file, &ref->layers[j].stroke_pen,
@@ -836,30 +818,30 @@ svg_dumptype3 (FILE *file, SplineChar *sc, char *name, int istop)
                 svg_dumpfill (file, &ref->layers[j].fill_brush,
                               &sc->layers[i].fill_brush, ref->layers[j].dofill,
                               sc->name, ref->sc, j, istop);
-                c_fprintf (file, ">\n");
-                c_fprintf (file, "  <path d=\"\n");
+                x_fprintf (file, ">\n");
+                x_fprintf (file, "  <path d=\"\n");
                 svg_pathdump (file, transed, 12, !ref->layers[j].dostroke,
                               false);
-                c_fprintf (file, "\"/>\n");
+                x_fprintf (file, "\"/>\n");
                 if (transed != ref->layers[j].splines)
                   SplinePointListsFree (transed);
-                c_fprintf (file, "   </g>\n");
+                x_fprintf (file, "   </g>\n");
               }
         }
       for (images = sc->layers[i].images; images != NULL; images = images->next)
         {
           struct _GImage *base;
-          c_fprintf (file, "      <image\n");
+          x_fprintf (file, "      <image\n");
           base = images->image->list_len == 0 ? images->image->u.image :
             images->image->u.images[0];
-          c_fprintf (file, "\twidth=\"%g\"\n\theight=\"%g\"\n",
-                   (double) (base->width * images->xscale),
-                   (double) (base->height * images->yscale));
-          c_fprintf (file, "\tx=\"%g\"\n\ty=\"%g\"\n", (double) images->xoff,
-                   (double) images->yoff);
-          c_fprintf (file, "\txlink:href=\"data:");
+          x_fprintf (file, "\twidth=\"%g\"\n\theight=\"%g\"\n",
+                     (double) (base->width * images->xscale),
+                     (double) (base->height * images->yscale));
+          x_fprintf (file, "\tx=\"%g\"\n\ty=\"%g\"\n", (double) images->xoff,
+                     (double) images->yoff);
+          x_fprintf (file, "\txlink:href=\"data:");
           DataURI_ImageDump (file, images->image);
-          c_fprintf (file, "\" />\n");
+          x_fprintf (file, "\" />\n");
         }
     }
 }
@@ -881,10 +863,10 @@ svg_scpathdump (FILE *file, SplineChar *sc, char *endpath, int layer)
   else if (sc->parent->strokedfont)
     {
       /* Can't be done with a path, requires nested elements (I think) */
-      c_fprintf (file,
-               ">\n  <g stroke=\"currentColor\" stroke-width=\"%g\" fill=\"none\">\n",
-               (double) sc->parent->strokewidth);
-      c_fprintf (file, "    <path d=\"");
+      x_fprintf (file,
+                 ">\n  <g stroke=\"currentColor\" stroke-width=\"%g\" fill=\"none\">\n",
+                 (double) sc->parent->strokewidth);
+      x_fprintf (file, "    <path d=\"");
       lineout = svg_pathdump (file, sc->layers[layer].splines, 3, false, false);
       for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
         lineout =
@@ -897,7 +879,7 @@ svg_scpathdump (FILE *file, SplineChar *sc, char *endpath, int layer)
     }
   else if (!sc->parent->multilayer)
     {
-      c_fprintf (file, "d=\"");
+      x_fprintf (file, "d=\"");
       lineout = svg_pathdump (file, sc->layers[layer].splines, 3, true, false);
       for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
         lineout =
@@ -936,9 +918,9 @@ svg_scpathdump (FILE *file, SplineChar *sc, char *endpath, int layer)
         }
       if (needs_defs)
         {
-          c_fprintf (file, "  <defs>\n");
+          x_fprintf (file, "  <defs>\n");
           svg_dumpscdefs (file, sc, sc->name, true);
-          c_fprintf (file, "  </defs>\n");
+          x_fprintf (file, "  </defs>\n");
         }
       svg_dumptype3 (file, sc, sc->name, true);
       fputs (endpath, file);
@@ -1028,9 +1010,9 @@ svg_scdump (FILE *file, SplineChar *sc, int defwid, int encuni, int vs,
   best = HasLigature (sc);
   if (sc->comment != NULL)
     {
-      c_fprintf (file, "\n<!--\n%s\n-->\n", sc->comment);
+      x_fprintf (file, "\n<!--\n%s\n-->\n", sc->comment);
     }
-  c_fprintf (file, "    <glyph glyph-name=\"%s\" ", sc->name);
+  x_fprintf (file, "    <glyph glyph-name=\"%s\" ", sc->name);
   if (best != NULL)
     {
       c =
@@ -1041,7 +1023,7 @@ svg_scdump (FILE *file, SplineChar *sc, int defwid, int encuni, int vs,
         if (univals[i] >= 'A' && univals[i] < 'z')
           putc (univals[i], file);
         else
-          c_fprintf (file, "&#x%x;", (unsigned int) univals[i]);
+          x_fprintf (file, "&#x%x;", (unsigned int) univals[i]);
       fputs ("\" ", file);
     }
   else if (encuni != -1 && encuni < 0x110000)
@@ -1060,7 +1042,7 @@ svg_scdump (FILE *file, SplineChar *sc, int defwid, int encuni, int vs,
         /* Not recommended in XML */ ;
       else if (encuni >= 32 && encuni < 127 &&
                encuni != '"' && encuni != '&' && encuni != '<' && encuni != '>')
-        c_fprintf (file, "unicode=\"%c\" ", encuni);
+        x_fprintf (file, "unicode=\"%c\" ", encuni);
       else if (encuni < 0x10000 &&
                (isarabisolated (encuni) || isarabinitial (encuni)
                 || isarabmedial (encuni) || isarabfinal (encuni))
@@ -1068,29 +1050,29 @@ svg_scdump (FILE *file, SplineChar *sc, int defwid, int encuni, int vs,
                && (alt = unicode_alternates[encuni >> 8][encuni & 0xff]) != NULL
                && alt[1] == '\0')
         /* For arabic forms use the base representation in the 0600 block */
-        c_fprintf (file, "unicode=\"&#x%x;\" ", alt[0]);
+        x_fprintf (file, "unicode=\"&#x%x;\" ", alt[0]);
       else
-        c_fprintf (file, "unicode=\"&#x%x;\" ", encuni);
+        x_fprintf (file, "unicode=\"&#x%x;\" ", encuni);
       if (vs != -1)
-        c_fprintf (file, "unicode=\"&#x%x;\" ", vs);
+        x_fprintf (file, "unicode=\"&#x%x;\" ", vs);
     }
   if (sc->width != defwid)
-    c_fprintf (file, "horiz-adv-x=\"%d\" ", sc->width);
+    x_fprintf (file, "horiz-adv-x=\"%d\" ", sc->width);
   if (sc->parent->hasvmetrics
       && sc->vwidth != sc->parent->ascent + sc->parent->descent)
-    c_fprintf (file, "vert-adv-y=\"%d\" ", sc->vwidth);
+    x_fprintf (file, "vert-adv-y=\"%d\" ", sc->vwidth);
   if (strstr (sc->name, ".vert") != NULL || strstr (sc->name, ".vrt2") != NULL)
-    c_fprintf (file, "orientation=\"v\" ");
+    x_fprintf (file, "orientation=\"v\" ");
   if (encuni != -1 && encuni < 0x10000)
     {
       if (isarabinitial (encuni))
-        c_fprintf (file, "arabic-form=\"initial\" ");
+        x_fprintf (file, "arabic-form=\"initial\" ");
       else if (isarabmedial (encuni))
-        c_fprintf (file, "arabic-form=\"medial\" ");
+        x_fprintf (file, "arabic-form=\"medial\" ");
       else if (isarabfinal (encuni))
-        c_fprintf (file, "arabic-form=\"final\" ");
+        x_fprintf (file, "arabic-form=\"final\" ");
       else if (isarabisolated (encuni))
-        c_fprintf (file, "arabic-form=\"isolated\" ");
+        x_fprintf (file, "arabic-form=\"isolated\" ");
     }
   putc ('\n', file);
   svg_scpathdump (file, sc, " </glyph>\n", layer);
@@ -1108,12 +1090,12 @@ svg_notdefdump (FILE *file, SplineFont *sf, int defwid, int layer)
     {
       SplineChar *sc = sf->glyphs[notdefpos];
 
-      c_fprintf (file, "<missing-glyph ");
+      x_fprintf (file, "<missing-glyph ");
       if (sc->width != defwid)
-        c_fprintf (file, "horiz-adv-x=\"%d\" ", sc->width);
+        x_fprintf (file, "horiz-adv-x=\"%d\" ", sc->width);
       if (sc->parent->hasvmetrics
           && sc->vwidth != sc->parent->ascent + sc->parent->descent)
-        c_fprintf (file, "vert-adv-y=\"%d\" ", sc->vwidth);
+        x_fprintf (file, "vert-adv-y=\"%d\" ", sc->vwidth);
       putc ('\n', file);
       svg_scpathdump (file, sc, " </glyph>\n", layer);
     }
@@ -1122,7 +1104,7 @@ svg_notdefdump (FILE *file, SplineFont *sf, int defwid, int layer)
       /* We'll let both the horiz and vert advances default to the values */
       /*  specified by the font, and I think a space is done by omitting */
       /*  d (the path) altogether */
-      c_fprintf (file, "    <missing-glyph />\n");        /* Is this a blank space? */
+      x_fprintf (file, "    <missing-glyph />\n");      /* Is this a blank space? */
     }
 }
 
@@ -1157,22 +1139,22 @@ svg_dumpkerns (FILE *file, SplineFont *sf, int isv)
              kp != NULL; kp = kp->next)
           if (kp->off != 0 && SCWorthOutputting (kp->sc))
             {
-              c_fprintf (file, isv ? "    <vkern " : "    <hkern ");
+              x_fprintf (file, isv ? "    <vkern " : "    <hkern ");
               if (sf->glyphs[i]->unicodeenc == -1
                   || HasLigature (sf->glyphs[i]))
-                c_fprintf (file, "g1=\"%s\" ", sf->glyphs[i]->name);
+                x_fprintf (file, "g1=\"%s\" ", sf->glyphs[i]->name);
               else if (sf->glyphs[i]->unicodeenc >= 'A'
                        && sf->glyphs[i]->unicodeenc <= 'z')
-                c_fprintf (file, "u1=\"%c\" ", sf->glyphs[i]->unicodeenc);
+                x_fprintf (file, "u1=\"%c\" ", sf->glyphs[i]->unicodeenc);
               else
-                c_fprintf (file, "u1=\"&#x%x;\" ", sf->glyphs[i]->unicodeenc);
+                x_fprintf (file, "u1=\"&#x%x;\" ", sf->glyphs[i]->unicodeenc);
               if (kp->sc->unicodeenc == -1 || HasLigature (kp->sc))
-                c_fprintf (file, "g2=\"%s\" ", kp->sc->name);
+                x_fprintf (file, "g2=\"%s\" ", kp->sc->name);
               else if (kp->sc->unicodeenc >= 'A' && kp->sc->unicodeenc <= 'z')
-                c_fprintf (file, "u2=\"%c\" ", kp->sc->unicodeenc);
+                x_fprintf (file, "u2=\"%c\" ", kp->sc->unicodeenc);
               else
-                c_fprintf (file, "u2=\"&#x%x;\" ", kp->sc->unicodeenc);
-              c_fprintf (file, "k=\"%d\" />\n", -kp->off);
+                x_fprintf (file, "u2=\"&#x%x;\" ", kp->sc->unicodeenc);
+              x_fprintf (file, "k=\"%d\" />\n", -kp->off);
             }
       }
 
@@ -1184,12 +1166,12 @@ svg_dumpkerns (FILE *file, SplineFont *sf, int isv)
             if (kc->offsets[i * kc->second_cnt + j] != 0 &&
                 *kc->firsts[i] != '\0' && *kc->seconds[j] != '\0')
               {
-                c_fprintf (file, isv ? "    <vkern g1=\"" : "    <hkern g1=\"");
+                x_fprintf (file, isv ? "    <vkern g1=\"" : "    <hkern g1=\"");
                 fputkerns (file, kc->firsts[i]);
-                c_fprintf (file, "\"\n\tg2=\"");
+                x_fprintf (file, "\"\n\tg2=\"");
                 fputkerns (file, kc->seconds[j]);
-                c_fprintf (file, "\"\n\tk=\"%d\" />\n",
-                         -kc->offsets[i * kc->second_cnt + j]);
+                x_fprintf (file, "\"\n\tk=\"%d\" />\n",
+                           -kc->offsets[i * kc->second_cnt + j]);
               }
           }
     }
@@ -1198,8 +1180,8 @@ svg_dumpkerns (FILE *file, SplineFont *sf, int isv)
 static void
 svg_outfonttrailer (FILE *file, SplineFont *sf)
 {
-  c_fprintf (file, "  </font>\n");
-  c_fprintf (file, "</defs></svg>\n");
+  x_fprintf (file, "  </font>\n");
+  x_fprintf (file, "</defs></svg>\n");
 }
 
 static int
@@ -1376,36 +1358,36 @@ _ExportSVG (FILE *svg, SplineChar *sc, int layer)
   if (b.maxy < em_size)
     b.maxy = em_size;
 
-  c_fprintf (svg, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
-  c_fprintf (svg,
-           "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n");
-  c_fprintf (svg, "<svg viewBox=\"%d %d %d %d\">\n", (int) floor (b.minx),
-           (int) floor (b.miny), (int) ceil (b.maxx), (int) ceil (b.maxy));
-  c_fprintf (svg, "  <g transform=\"matrix(1 0 0 -1 0 %d)\">\n",
-           sc->parent->ascent);
+  x_fprintf (svg, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+  x_fprintf (svg,
+             "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n");
+  x_fprintf (svg, "<svg viewBox=\"%d %d %d %d\">\n", (int) floor (b.minx),
+             (int) floor (b.miny), (int) ceil (b.maxx), (int) ceil (b.maxy));
+  x_fprintf (svg, "  <g transform=\"matrix(1 0 0 -1 0 %d)\">\n",
+             sc->parent->ascent);
 #if 0                           /* Used to show the advance width, but as I don't in eps, probably should be consistent */
-  c_fprintf (svg, "   <g stroke=\"green\" stroke-width=\"1\">\n");
-  c_fprintf (svg, "     <line x1=\"0\" y1=\"0\" x2=\"%d\" y2=\"0\" />\n",
-           sc->width);
-  c_fprintf (svg, "     <line x1=\"0\" y1=\"10\" x2=\"0\" y2=\"-10\" />\n");
-  c_fprintf (svg, "     <line x1=\"%d\" y1=\"10\" x2=\"%d\" y2=\"-10\" />\n",
-           sc->width, sc->width);
-  c_fprintf (svg, "   </g>\n\n");
+  x_fprintf (svg, "   <g stroke=\"green\" stroke-width=\"1\">\n");
+  x_fprintf (svg, "     <line x1=\"0\" y1=\"0\" x2=\"%d\" y2=\"0\" />\n",
+             sc->width);
+  x_fprintf (svg, "     <line x1=\"0\" y1=\"10\" x2=\"0\" y2=\"-10\" />\n");
+  x_fprintf (svg, "     <line x1=\"%d\" y1=\"10\" x2=\"%d\" y2=\"-10\" />\n",
+             sc->width, sc->width);
+  x_fprintf (svg, "   </g>\n\n");
 #endif
   if (sc->parent->multilayer || sc->parent->strokedfont
       || !svg_sc_any (sc, layer))
     {
-      c_fprintf (svg, "   <g ");
+      x_fprintf (svg, "   <g ");
       end = "   </g>\n";
     }
   else
     {
-      c_fprintf (svg, "   <path fill=\"currentColor\"\n");
+      x_fprintf (svg, "   <path fill=\"currentColor\"\n");
       end = "   </path>\n";
     }
   svg_scpathdump (svg, sc, end, layer);
-  c_fprintf (svg, "  </g>\n\n");
-  c_fprintf (svg, "</svg>\n");
+  x_fprintf (svg, "  </g>\n\n");
+  x_fprintf (svg, "</svg>\n");
 
   return !ferror (svg);
 }
@@ -2694,13 +2676,15 @@ SVGFigureTransform (struct svg_state *st, char *name)
         {
           trans[0] = trans[3] = 1;
           trans[1] = trans[2] = trans[4] = trans[5] = 0;
-          trans[2] = tan (c_strtod (paren + 1, &end) * 3.1415926535897932 / 180);
+          trans[2] =
+            tan (c_strtod (paren + 1, &end) * 3.1415926535897932 / 180);
         }
       else if (strncmp (pt, "skewY", paren - pt) == 0)
         {
           trans[0] = trans[3] = 1;
           trans[1] = trans[2] = trans[4] = trans[5] = 0;
-          trans[1] = tan (c_strtod (paren + 1, &end) * 3.1415926535897932 / 180);
+          trans[1] =
+            tan (c_strtod (paren + 1, &end) * 3.1415926535897932 / 180);
         }
       else
         break;
@@ -3366,7 +3350,7 @@ SVGParseImage (xmlNodePtr svg)
     {
       LogError (_("FontForge only supports embedded images in data: URIs\n"));
       free (val);
-      return NULL;            /* I can only handle data URIs */
+      return NULL;              /* I can only handle data URIs */
     }
   img = GImageFromDataURI ((char *) val);
   free (val);
