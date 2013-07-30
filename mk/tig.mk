@@ -20,7 +20,7 @@ AM_V_TIG = $(AM_V_TIG_$(V))
 AM_V_TIG_ = $(AM_V_TIG_$(AM_DEFAULT_VERBOSITY))
 AM_V_TIG_0 = @echo "  TIG     " $@;
 
-%.c: %.tig $(top_srcdir)/guile/tig.scm
+%.c: %.tig
 	$(AM_V_TIG)
-	$(AM_V_at)$(GUILE_INTERPRET) $(top_srcdir)/guile/tig.scm < $< > $@-tmp
+	$(AM_V_at)$(SORTSMILL_TIG) --include-config --output=$@-tmp $<
 	$(AM_V_at)mv $@-tmp $@

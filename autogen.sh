@@ -1,11 +1,17 @@
 #!/bin/sh
-# Run this to generate all the initial makefiles, etc.
+# Run this to generate or regenerate the `configure' script, etc.
 
 test -n "$srcdir" || srcdir=`dirname "$0"`
 test -n "$srcdir" || srcdir=.
 
 olddir=`pwd`
 cd $srcdir
+
+echo -n "checking for sortsmill-tig... "
+which sortsmill-tig || {
+	echo "*** No sortsmill-tig <https://bitbucket.org/sortsmill/sortsmill-tig> found, please install it ***"
+	exit 1
+}
 
 echo -n "checking for gnulib-tool... "
 which gnulib-tool || {
