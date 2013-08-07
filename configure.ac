@@ -43,7 +43,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.68])
 AC_INIT([Sorts Mill Tools],
         [2.1.0_alpha1],
         [http://bitbucket.org/sortsmill/sortsmill-tools/issues],
@@ -61,10 +61,6 @@ AC_CONFIG_HEADERS([inc/config.h])  dnl Where autoheader puts macros.
 AC_USE_SYSTEM_EXTENSIONS           dnl Define such macros as _GNU_SOURCE.
 
 AM_INIT_AUTOMAKE([1.11 dist-xz subdir-objects -Wall -Wno-portability -Werror])
-
-# I am going to enable silent-rules by default, so builders are
-# more likely to see warnings. Use --disable-silent-rules or "make
-# V=1" if you need to see the rules.
 AM_SILENT_RULES([yes])
 
 # Libtool-related configuration.
@@ -72,6 +68,8 @@ AM_PROG_AR                          dnl Support for Microsoft linker.
 LT_INIT([dlopen])                   dnl Initialize libtool.
 LT_OBJDIR="${lt_cv_objdir}/"
 AC_SUBST([LT_OBJDIR])
+
+StM_ANALYZE_PACKAGE_VERSION
 
 AC_PATH_XTRA
 i_do_have_x="${have_x}"
@@ -86,18 +84,6 @@ AC_SUBST([HAVE_GUI])
 AC_SUBST([HOST],["$host"])
 
 FONTFORGE_PLATFORM_SPECIFICS
-
-VERSION_MAJOR=`AS_ECHO(["${PACKAGE_VERSION}"]) | sed -e 's/^\([[0-9]][[0-9]]*\).*/\1/'`
-VERSION_MINOR=`AS_ECHO(["${PACKAGE_VERSION}"]) | sed -e 's/^[[0-9]][[0-9]]*\.\([[0-9]][[0-9]]*\).*/\1/'`
-VERSION_PATCH=`AS_ECHO(["${PACKAGE_VERSION}"]) | sed -e 's/^[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.\([[0-9]][[0-9]]*\).*/\1/'`
-VERSION_EXTRA=`AS_ECHO(["${PACKAGE_VERSION}"]) | sed -e 's/^[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\(.*\)/\1/' \
-                                                     -e 's/^_//'`
-VERSION_EXTRA_SHORT=`AS_ECHO(["${VERSION_EXTRA}"]) | sed -e 's/alpha/a/' -e 's/beta/b/'`
-AC_SUBST([VERSION_MAJOR])
-AC_SUBST([VERSION_MINOR])
-AC_SUBST([VERSION_PATCH])
-AC_SUBST([VERSION_EXTRA])
-AC_SUBST([VERSION_EXTRA_SHORT])
 
 GUILE_API="2.0"
 AC_SUBST([GUILE_API])
@@ -155,7 +141,9 @@ PKG_PROG_PKG_CONFIG
 m4_ifdef([AM_PATH_PYTHON],[AM_PATH_PYTHON])
 
 # Code quality programs.
-FONTFORGE_PATH_PROG([INDENT],[indent],[GNU `indent' command])
+StM_PROG_GNU_INDENT
+test -z "${GNU_INDENT}" && GNU_INDENT=indent
+AC_SUBST([INDENT],["${GNU_INDENT}"])dnl FIXME: Change the calls to use GNU_INDENT.
 FONTFORGE_PATH_PROG([TIDY],[tidy],[HTML Tidy command])
 
 # Gettext programs.
@@ -179,7 +167,8 @@ if test `${GUILE} -c "(import (system foreign)) (write (defined? 'procedure->poi
 fi
 
 # Assorted programs.
-FONTFORGE_PATH_PROG([WGET],[wget],[GNU `wget' command])
+StM_PROG_WGET
+test -z "${WGET}" && WGET=wget
 
 #--------------------------------------------------------------------------
 
@@ -344,56 +333,34 @@ test 4 -le ${ac_cv_sizeof_unsigned_int} || \
 
 AX_PTHREAD
 
-AC_SUBST([WARNING_CFLAGS])
-WARNING_CFLAGS=""
-if test x"${GCC}" = xyes; then
-   FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
-        [-Wunused -Wreturn-type
-         -Wparentheses -Wformat -Wchar-subscripts
-         -Wno-unused-but-set-variable -Wno-unused-result
-         -Wstrict-aliasing
-         -Wcast-align
-         -Wsizeof-pointer-memaccess
-         -Wpointer-arith
-         -Wmissing-prototypes
-         -Wimplicit])
-   if test x"${with_gnu_ld}" == xyes; then
-      FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
-        [-Wl,--warn-common])
-   fi
-fi
+AC_SUBST([WARNING_CFLAGS],[])
+StM_GNU_C_FLAGS([WARNING_CFLAGS],
+   [-Wunused -Wreturn-type
+    -Wparentheses -Wformat -Wchar-subscripts
+    -Wno-unused-but-set-variable -Wno-unused-result
+    -Wstrict-aliasing
+    -Wcast-align
+    -Wsizeof-pointer-memaccess
+    -Wpointer-arith
+    -Wmissing-prototypes
+    -Wimplicit],
+   [-Wl,--warn-common])
 
-## Some clang flags to turn off for now.
-#FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
-#        [-Wno-switch -Wno-tautological-compare -Wno-conversion])
+AC_SUBST([CYTHON_EXTRA_CFLAGS],[])
+StM_GNU_C_FLAGS([CYTHON_EXTRA_CFLAGS],
+   [-Wno-unused -fwrapv -fno-strict-aliasing -Wno-strict-aliasing])
 
-AC_SUBST([CYTHON_EXTRA_CFLAGS])
-CYTHON_EXTRA_CFLAGS=""
-if test x"${GCC}" = xyes; then
-   FONTFORGE_COMPILER_FLAGS([CYTHON_EXTRA_CFLAGS],
-        [-Wno-unused -fwrapv -fno-strict-aliasing -Wno-strict-aliasing])
-fi
+AC_SUBST([VISIBILITY_DEFAULT_EXTRA_CFLAGS],[])
+StM_GNU_C_FLAGS([VISIBILITY_DEFAULT_EXTRA_CFLAGS],
+   [-fvisibility=default])
 
-AC_SUBST([VISIBILITY_DEFAULT_EXTRA_CFLAGS])
-VISIBILITY_DEFAULT_EXTRA_CFLAGS=""
-if test x"${GCC}" = xyes; then
-   FONTFORGE_COMPILER_FLAGS([VISIBILITY_DEFAULT_EXTRA_CFLAGS],
-        [-fvisibility=default])
-fi
+AC_SUBST([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],[])
+StM_GNU_C_FLAGS([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],
+   [-Wno-missing-prototypes])
 
-AC_SUBST([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS])
-NO_MISSING_PROTOTYPES_EXTRA_CFLAGS=""
-if test x"${GCC}" = xyes; then
-   FONTFORGE_COMPILER_FLAGS([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],
-        [-Wno-missing-prototypes])
-fi
-
-AC_SUBST([NO_UNUSED_EXTRA_CFLAGS])
-NO_UNUSED_EXTRA_CFLAGS=""
-if test x"${GCC}" = xyes; then
-   FONTFORGE_COMPILER_FLAGS([NO_UNUSED_EXTRA_CFLAGS],
-        [-Wno-unused])
-fi
+AC_SUBST([NO_UNUSED_EXTRA_CFLAGS],[])
+StM_GNU_C_FLAGS([NO_UNUSED_EXTRA_CFLAGS],
+   [-Wno-unused])
 
 FONTFORGE_C_CONST_FLT_EPSILON
 AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
