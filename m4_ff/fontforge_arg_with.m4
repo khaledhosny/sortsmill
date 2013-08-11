@@ -86,7 +86,8 @@ if test x"${i_do_have_giflib}" = xyes -a x"${GIFLIB_CFLAGS}" = x; then
    if test x"${i_do_have_giflib}" = xyes; then
       AC_CACHE_CHECK([for ExtensionBlock.Function in gif_lib.h],
         ac_cv_extensionblock_in_giflib,
-        [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <gif_lib.h>],[ExtensionBlock foo; foo.Function=3;])],
+        [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <gif_lib.h>],[ExtensionBlock foo; foo.Function=3;])],
           [ac_cv_extensionblock_in_giflib=yes],[ac_cv_extensionblock_in_giflib=no])])
       if test x"${ac_cv_extensionblock_in_giflib}" != xyes; then
          AC_MSG_WARN([FontForge found giflib or libungif but cannot use this version. We will build without it.])
