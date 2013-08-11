@@ -18,7 +18,7 @@
 # Sorts Mill developers: please increase the serial number when you
 # make any significant change to this script in its own repository:
 #
-# serial 2
+# serial 3
 
 #
 # FIXME: Accept a command line and provide help and version messages
@@ -106,12 +106,8 @@ need_gperf_for_gnulib() {
 }
 
 need_intltoolize() {
-    if test -d po -a -f po/Makefile.in.in; then
-        grep '^#[ 	]*INTLTOOL_MAKEFILE[ 	]*$' po/Makefile.in.in \
-            2> /dev/null > /dev/null
-    else
-        false
-    fi
+    test -f configure.ac && \
+        grep_word_quietly 'IT_PROG_INTLTOOL' configure.ac
 }
 
 need_autoreconf() {
