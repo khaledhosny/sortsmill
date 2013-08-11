@@ -85,11 +85,12 @@ if test x"${i_do_have_giflib}" = xyes -a x"${GIFLIB_CFLAGS}" = x; then
    AC_CHECK_HEADER(gif_lib.h,[AC_SUBST([GIFLIB_CFLAGS],[""])],[i_do_have_giflib=no])
    if test x"${i_do_have_giflib}" = xyes; then
       AC_CACHE_CHECK([for ExtensionBlock.Function in gif_lib.h],
-        ac_cv_extensionblock_in_giflib,
+        ac_cv_lib_giflib_has_extensionblock,
         [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <gif_lib.h>],[ExtensionBlock foo; foo.Function=3;])],
-          [ac_cv_extensionblock_in_giflib=yes],[ac_cv_extensionblock_in_giflib=no])])
-      if test x"${ac_cv_extensionblock_in_giflib}" != xyes; then
+          [ac_cv_lib_giflib_has_extensionblock=yes],
+          [ac_cv_lib_giflib_has_extensionblock=no])])
+      if test x"${ac_cv_lib_giflib_has_extensionblock}" != xyes; then
          AC_MSG_WARN([FontForge found giflib or libungif but cannot use this version. We will build without it.])
          i_do_have_giflib=no
       fi
@@ -98,6 +99,18 @@ fi
 if test x"${i_do_have_giflib}" != xyes; then
    FONTFORGE_WARN_PKG_NOT_FOUND([GIFLIB])
    AC_DEFINE([_NO_LIBUNGIF],1,[Define if not using giflib or libungif.)])
+else
+   AC_CACHE_CHECK([whether DGifOpenFileName takes an error return parameter],
+     ac_cv_func_dgifopenfilename_error_return,
+     [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <gif_lib.h>],[int error; (void) DGifOpenFileName("filename", &error);])],
+       [ac_cv_func_dgifopenfilename_error_return=yes],
+       [ac_cv_func_dgifopenfilename_error_return=no])])
+   D_GIF_OPEN_FILE_NAME_ERROR_RETURN=0
+   test x"${ac_cv_func_dgifopenfilename_error_return}" = xyes && D_GIF_OPEN_FILE_NAME_ERROR_RETURN=1
+   AC_DEFINE_UNQUOTED([D_GIF_OPEN_FILE_NAME_ERROR_RETURN],
+                      [${D_GIF_OPEN_FILE_NAME_ERROR_RETURN}],
+                      [Does DGifOpenFileName take an error return parameter?])
 fi
 ])
 

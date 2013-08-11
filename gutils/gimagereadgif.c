@@ -113,7 +113,7 @@ GImage *GImageReadGif(char *filename) {
     GifFileType *gif;
     int i;
 
-    if ((gif = DGifOpenFileName(filename)) == NULL) {
+    if ((gif = D_GIF_OPEN_FILE_NAME(filename)) == NULL) {
 	fprintf( stderr, "can't open %s\n", filename);
 return( NULL );
     }

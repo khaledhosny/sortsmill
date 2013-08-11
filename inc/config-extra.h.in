@@ -104,4 +104,10 @@
 #define PCRE_STUDY_JIT_COMPILE 0
 #endif
 
+#if D_GIF_OPEN_FILE_NAME_ERROR_RETURN
+#define D_GIF_OPEN_FILE_NAME(filename) DGifOpenFileName (filename, NULL)
+#else
+#define D_GIF_OPEN_FILE_NAME(filename) DGifOpenFileName (filename)
+#endif
+
 #endif // _CONFIG_EXTRA_H
