@@ -109,8 +109,8 @@ else
    D_GIF_OPEN_FILE_NAME_ERROR_RETURN=0
    test x"${ac_cv_func_dgifopenfilename_error_return}" = xyes && D_GIF_OPEN_FILE_NAME_ERROR_RETURN=1
    AC_DEFINE_UNQUOTED([D_GIF_OPEN_FILE_NAME_ERROR_RETURN],
-                      [${D_GIF_OPEN_FILE_NAME_ERROR_RETURN}],
-                      [Does DGifOpenFileName take an error return parameter?])
+      [${D_GIF_OPEN_FILE_NAME_ERROR_RETURN}],
+      [Define as 1 if DGifOpenFileName takes an error return parameter (giflib 5); otherwise define as 0.])
 fi
 ])
 
