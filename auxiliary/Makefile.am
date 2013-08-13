@@ -73,7 +73,7 @@ dist_libsortsmill_aux_la_SOURCES += nearness.c
 dist_libsortsmill_aux_la_SOURCES += ps_number.c
 
 # Extensions to xalloc and Boehm GC.
-dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c
+#dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c
 dist_libsortsmill_aux_la_SOURCES += x_alloc.c
 dist_libsortsmill_aux_la_SOURCES += x_printf.c
 dist_libsortsmill_aux_la_SOURCES += xgc.c
@@ -175,9 +175,9 @@ dist_libsortsmill_aux_la_SOURCES += guile_strings_rexp.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
 dist_libsortsmill_aux_la_SOURCES += guile_types.c
 
-libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'
+libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) $(SORTSMILL_CORE_CFLAGS) '-I$(srcdir)'
 libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
-libsortsmill_aux_la_LDFLAGS = $(call ldflags) -export-dynamic
+libsortsmill_aux_la_LDFLAGS = $(SORTSMILL_CORE_LIBS) $(call ldflags) -export-dynamic
 libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 
 # The GMP_MATRIX_EXTRAS files are included by math_gmp_matrix.c rather

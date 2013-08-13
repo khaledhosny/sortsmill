@@ -34,38 +34,38 @@ extern "C"
 }
 #endif
 
-_FF_ATTRIBUTE_NORETURN void x_alloc_die (void);
+_STM_ATTRIBUTE_NORETURN void x_alloc_die (void);
 
 /* *INDENT-OFF* */
 
 void *x_malloc (size_t s)
-     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1));
+     _STM_ATTRIBUTE_MALLOC _STM_ATTRIBUTE_ALLOC_SIZE ((1));
 
 void *x_zalloc (size_t s)
-     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1));
+     _STM_ATTRIBUTE_MALLOC _STM_ATTRIBUTE_ALLOC_SIZE ((1));
 
 void *x_calloc (size_t n, size_t s)
-     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1, 2));
+     _STM_ATTRIBUTE_MALLOC _STM_ATTRIBUTE_ALLOC_SIZE ((1, 2));
 
-void *x_realloc (void *p, size_t s) _FF_ATTRIBUTE_ALLOC_SIZE ((2));
+void *x_realloc (void *p, size_t s) _STM_ATTRIBUTE_ALLOC_SIZE ((2));
 
 void *x_2realloc (void *p, size_t *pn);
 
 void *x_memdup (const void *p, size_t s)
-     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((2));
+     _STM_ATTRIBUTE_MALLOC _STM_ATTRIBUTE_ALLOC_SIZE ((2));
 
-char *x_strdup (const char *str) _FF_ATTRIBUTE_MALLOC;
+char *x_strdup (const char *str) _STM_ATTRIBUTE_MALLOC;
 
 void *x_nmalloc (size_t n, size_t s)
-     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1, 2));
+     _STM_ATTRIBUTE_MALLOC _STM_ATTRIBUTE_ALLOC_SIZE ((1, 2));
 
 void *x_nrealloc (void *p, size_t n, size_t s)
-     _FF_ATTRIBUTE_ALLOC_SIZE ((2, 3));
+     _STM_ATTRIBUTE_ALLOC_SIZE ((2, 3));
 
 void *x_2nrealloc (void *p, size_t *pn, size_t s);
 
 char *x_charalloc (size_t n)
-     _FF_ATTRIBUTE_MALLOC _FF_ATTRIBUTE_ALLOC_SIZE ((1));
+     _STM_ATTRIBUTE_MALLOC _STM_ATTRIBUTE_ALLOC_SIZE ((1));
 
 /* *INDENT-ON* */
 

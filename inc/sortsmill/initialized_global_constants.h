@@ -88,7 +88,7 @@
 void scm_c_initialize_from_eval_string (SCM *proc, const char *s);
 
 #define SCM_SYMBOL_CONSTANT(MODIFIER, C_NAME, SCM_NAME)                 \
-  INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE MODIFIER, SCM, C_NAME,       \
+  INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE MODIFIER, SCM, C_NAME,       \
                         scm_c_initialize_from_eval_string,              \
                         "(quote " SCM_NAME ")");
 

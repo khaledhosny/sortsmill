@@ -66,7 +66,7 @@
 
 // FIXME: This could be made reusable, but first it needs a better
 // name.
-INITIALIZED_CONSTANT (_FF_ATTRIBUTE_PURE static, SCM, something_by_n_mapfunc,
+INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, something_by_n_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (n) (lambda (i j) `[,(+ (* i n) j)]))");
 

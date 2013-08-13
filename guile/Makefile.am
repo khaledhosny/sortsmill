@@ -116,15 +116,6 @@ EXTRA_DIST += generate-reexporter.scm ff-internal/find-exports.scm	\
 
 #--------------------------------------------------------------------------
 #
-# The Type Inspector Generator.
-#
-# This program generates C programs that generate ‘API instructions’
-# (.apii files).
-
-EXTRA_DIST += tig.scm
-
-#--------------------------------------------------------------------------
-#
 # The ‘site initialization’ script for sortsmill-editor.
 
 dist_pkgguiledata_DATA = site-init.scm
