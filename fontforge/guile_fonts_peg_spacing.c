@@ -44,7 +44,7 @@ static const uint8_t peg_name_re_string[] =
 
 static rexp_buffer_t peg_name_re_buf = REXP_BUFFER_T_INITIALIZER;
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, rexp_t,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, rexp_t,
                       peg_name_re, initialize_u8_re, &peg_name_re_buf,
                       peg_name_re_string);
 

@@ -44,30 +44,30 @@ extern "C"
 }
 #endif
 
-_STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc (size_t sz);
-_STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_atomic (size_t sz);
-_STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_uncollectable (size_t sz);
-_STM_ATTRIBUTE_WARN_UNUSED_RESULT inline void *x_gc_realloc (void *old_pointer,
+STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc (size_t sz);
+STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_atomic (size_t sz);
+STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_uncollectable (size_t sz);
+STM_ATTRIBUTE_WARN_UNUSED_RESULT inline void *x_gc_realloc (void *old_pointer,
                                                             size_t sz);
-_STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_ignore_off_page (size_t sz);
-_STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_atomic_ignore_off_page (size_t
+STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_ignore_off_page (size_t sz);
+STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_atomic_ignore_off_page (size_t
                                                                       sz);
-_STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_stubborn (size_t sz);
-_STM_ATTRIBUTE_MALLOC inline char *x_gc_strdup (const char *s);
+STM_ATTRIBUTE_MALLOC inline void *x_gc_malloc_stubborn (size_t sz);
+STM_ATTRIBUTE_MALLOC inline char *x_gc_strdup (const char *s);
 
-_STM_ATTRIBUTE_MALLOC char *x_gc_strndup (const char *s, size_t n);
+STM_ATTRIBUTE_MALLOC char *x_gc_strndup (const char *s, size_t n);
 
-_STM_ATTRIBUTE_SENTINEL
-  _STM_ATTRIBUTE_MALLOC char *x_gc_strjoin (const char *s1, ...);
-_STM_ATTRIBUTE_MALLOC char *x_gc_vstrjoin (const char *s1, va_list ap);
+STM_ATTRIBUTE_SENTINEL
+  STM_ATTRIBUTE_MALLOC char *x_gc_strjoin (const char *s1, ...);
+STM_ATTRIBUTE_MALLOC char *x_gc_vstrjoin (const char *s1, va_list ap);
 
 /* In the current implementation, the 'x_gc_grabstr' functions can be
    marked as __attribute__((__malloc__)), because they copy to freshly
    allocated memory. */
-_STM_ATTRIBUTE_MALLOC inline char *x_gc_grabstr (char *s);
-_STM_ATTRIBUTE_MALLOC uint8_t *x_gc_u8_grabstr (uint8_t *s);
-_STM_ATTRIBUTE_MALLOC uint16_t *x_gc_u16_grabstr (uint16_t *s);
-_STM_ATTRIBUTE_MALLOC uint32_t *x_gc_u32_grabstr (uint32_t *s);
+STM_ATTRIBUTE_MALLOC inline char *x_gc_grabstr (char *s);
+STM_ATTRIBUTE_MALLOC uint8_t *x_gc_u8_grabstr (uint8_t *s);
+STM_ATTRIBUTE_MALLOC uint16_t *x_gc_u16_grabstr (uint16_t *s);
+STM_ATTRIBUTE_MALLOC uint32_t *x_gc_u32_grabstr (uint32_t *s);
 
 /*
  * For example:

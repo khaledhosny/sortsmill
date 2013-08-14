@@ -23,11 +23,11 @@
 
 //-------------------------------------------------------------------------
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _pointer_to_rbmapi,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _pointer_to_rbmapi,
                       scm_c_initialize_from_eval_string,
                       "(@@ (sortsmill containers rbmap) pointer->rbmapi)");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _rbmapi_to_pointer,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _rbmapi_to_pointer,
                       scm_c_initialize_from_eval_string,
                       "(@@ (sortsmill containers rbmap) rbmapi->pointer)");
 
@@ -61,7 +61,7 @@ rbmapi_cmp (rbmapi_node_t *a_node, rbmapi_node_t *a_other)
   return cmp;
 }
 
-rb_gen (_STM_MAYBE_UNUSED static, rbmapi_, rbmapi_t, rbmapi_node_t, rbmapi_link,
+rb_gen (STM_MAYBE_UNUSED static, rbmapi_, rbmapi_t, rbmapi_node_t, rbmapi_link,
         rbmapi_cmp);
 
 static SCM

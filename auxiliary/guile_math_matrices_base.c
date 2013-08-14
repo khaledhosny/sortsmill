@@ -27,88 +27,88 @@
 //-------------------------------------------------------------------------
 
 // FIXME: This looks reusable if given a better name.
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _scm_zero,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _scm_zero,
                       scm_c_initialize_from_eval_string, "0");
 
 // FIXME: This looks reusable if given a better name.
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _scm_one,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _scm_one,
                       scm_c_initialize_from_eval_string, "1");
 
 // FIXME: This looks reusable if given a better name.
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _scm_zero_p,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _scm_zero_p,
                       scm_c_initialize_from_eval_string, "zero?");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _scm_I_element_p,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _scm_I_element_p,
                       scm_c_initialize_from_eval_string,
                       "(lambda (x i j) (if (= i j) (= x 1) (zero? x)))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _num_eq_0ij,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _num_eq_0ij,
                       scm_c_initialize_from_eval_string,
                       "(lambda (B)"
                       "  (lambda (x i j) (= x (matrix-0ref B i j))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _eq_0ij,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _eq_0ij,
                       scm_c_initialize_from_eval_string,
                       "(lambda (B)"
                       "  (lambda (x i j) (eq? x (matrix-0ref B i j))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _eqv_0ij,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _eqv_0ij,
                       scm_c_initialize_from_eval_string,
                       "(lambda (B)"
                       "  (lambda (x i j) (eqv? x (matrix-0ref B i j))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _equal_0ij,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _equal_0ij,
                       scm_c_initialize_from_eval_string,
                       "(lambda (B)"
                       "  (lambda (x i j) (equal? x (matrix-0ref B i j))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM,
                       vector_as_rank2_array_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i j) (list j))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM,
                       vector_to_column_matrix_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i j) (list i))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, matrix_diagonal_mapfunc,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, matrix_diagonal_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (rows_lbnd cols_lbnd)"
                       "  (lambda (i) (list (+ rows_lbnd i)"
                       "                    (+ cols_lbnd i))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, vector_diagonal_mapfunc,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, vector_diagonal_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (lbnd) (lambda (i) (list (+ lbnd i))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, matrix_block_mapfunc,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, matrix_block_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (rows_offset cols_offset)"
                       "  (lambda (i j) (list (+ rows_offset i)"
                       "                      (+ cols_offset j))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM,
                       vector_in_matrix_block_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (rows_offset cols_offset)"
                       "  (lambda (j) (list rows_offset (+ cols_offset j))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, vector_block_mapfunc,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, vector_block_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (offset) (lambda (i) (list (+ offset i))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, column_to_vector_mapfunc,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, column_to_vector_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (i) (list i 0))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, matrix_n_based_mapfunc,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, matrix_n_based_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (rows_offset cols_offset)"
                       "  (lambda (i j) (list (+ rows_offset i)"
                       "                      (+ cols_offset j))))");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, vector_n_based_mapfunc,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, vector_n_based_mapfunc,
                       scm_c_initialize_from_eval_string,
                       "(lambda (offset) (lambda (i) (list (+ offset i))))");
 

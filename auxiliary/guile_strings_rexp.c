@@ -24,23 +24,23 @@
 
 #define _REXP_MODULE_NAME "sortsmill strings rexp"
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _pointer_to_rexp,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _pointer_to_rexp,
                       scm_c_initialize_from_eval_string,
                       "(@ (" _REXP_MODULE_NAME ") pointer->rexp)");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _rexp_to_pointer,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _rexp_to_pointer,
                       scm_c_initialize_from_eval_string,
                       "(@ (" _REXP_MODULE_NAME ") rexp->pointer)");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _pointer_to_rexp_match,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _pointer_to_rexp_match,
                       scm_c_initialize_from_eval_string,
                       "(@ (" _REXP_MODULE_NAME ") pointer->rexp-match)");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _rexp_match_to_pointer,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _rexp_match_to_pointer,
                       scm_c_initialize_from_eval_string,
                       "(@ (" _REXP_MODULE_NAME ") rexp-match->pointer)");
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _rexp_buffers,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _rexp_buffers,
                       scm_c_initialize_from_eval_string,
                       "(make-fluid (make-hash-table))");
 

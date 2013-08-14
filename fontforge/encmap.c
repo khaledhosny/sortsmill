@@ -21,7 +21,7 @@
 
 //-------------------------------------------------------------------------
 
-INITIALIZED_CONSTANT (_STM_ATTRIBUTE_PURE static, SCM, _greater_than,
+INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE static, SCM, _greater_than,
                       scm_c_initialize_from_eval_string, ">");
 
 //-------------------------------------------------------------------------
