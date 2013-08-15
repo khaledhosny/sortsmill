@@ -29,6 +29,7 @@
 #include <sortsmill/guile/nearness.h>
 #include <sortsmill/guile/notices.h>
 #include <sortsmill/guile/postscript.h>
+#include <sortsmill/guile/ps_number.h>
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/strings.h>
 #include <sortsmill/guile/symbols.h>

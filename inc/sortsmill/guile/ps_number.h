@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Khaled Hosny and Barry Schwartz
+ * Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
  * This file is part of the Sorts Mill Tools.
  * 
  * Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -16,27 +16,15 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILL_GUILE_POSTSCRIPT_H
-#define _SORTSMILL_GUILE_POSTSCRIPT_H
+#ifndef _SORTSMILL_GUILE_PS_NUMBER_H
+#define _SORTSMILL_GUILE_PS_NUMBER_H
 
 #include <libguile.h>
-#include <sortsmill/guile/ps_number.h>
+#include <sortsmill/ps_number.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-#if 0
-}
-#endif
-
-SCM scm_to_postscript (SCM value);
-
-SCM scm_postscript_boolean_p (SCM s);
-SCM scm_postscript_to_boolean (SCM s);
-
-SCM scm_postscript_number_list_p (SCM s);
-SCM scm_postscript_to_number_list (SCM s);
+SCM scm_c_postscript_to_number (const char *s);
+SCM scm_postscript_to_number (SCM s);
+SCM scm_postscript_number_p (SCM s);
 
 #if 0
 {
@@ -45,4 +33,4 @@ SCM scm_postscript_to_number_list (SCM s);
 }
 #endif
 
-#endif /* _SORTSMILL_GUILE_POSTSCRIPT_H */
+#endif /* _SORTSMILL_GUILE_PS_NUMBER_H */
