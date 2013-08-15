@@ -4,7 +4,6 @@ data/sortsmill-editor.desktop.in
 data/fontforge.xml.in
 
 auxiliary/copy_with_strides.c
-auxiliary/ps_number.c
 auxiliary/rexp.c
 auxiliary/rnrs_conditions.c
 
