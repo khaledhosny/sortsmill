@@ -111,7 +111,7 @@ nobase_include_HEADERS += sortsmill/xunistring.h
 nobase_include_HEADERS += sortsmill/rexp.h
 
 # Parsing of PostScript-style numerals.
-nobase_include_HEADERS += sortsmill/ps_number.h
+#nobase_include_HEADERS += sortsmill/ps_number.h
 
 # Left-leaning 2-3 red-black trees.
 #nobase_include_HEADERS += sortsmill/rb.h

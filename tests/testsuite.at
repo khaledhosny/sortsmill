@@ -7,7 +7,7 @@ m4_include([xunicase_h.at])
 m4_include([xuniconv_h.at])
 m4_include([xuninorm_h.at])
 m4_include([xunistr_h.at])
-m4_include([ps_number_h.at])
+#m4_include([ps_number_h.at]) <-- Moved to Core Library.
 m4_include([rexp_h.at])
 #m4_include([precomputed_data.at]) dnl FIXME: Tests for the new polyspline data implementation.
 #m4_include([bernstein.at]) dnl FIXME: Tests for conversions of multiple splines at once.

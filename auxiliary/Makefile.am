@@ -70,7 +70,7 @@ dist_libsortsmill_aux_la_SOURCES += combiners.h
 dist_libsortsmill_aux_la_SOURCES += nearness.c
 
 # Recognition of numbers written in PostScript’s notation.
-dist_libsortsmill_aux_la_SOURCES += ps_number.c
+#dist_libsortsmill_aux_la_SOURCES += ps_number.c
 
 # Extensions to xalloc and Boehm GC.
 #dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c
