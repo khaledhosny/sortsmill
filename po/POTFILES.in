@@ -20,6 +20,7 @@ auxiliary/math_polyspline_ellipses.c
 auxiliary/math_polyspline_intersection.c
 auxiliary/math_polyspline_reduce.c
 
+auxiliary/guile_ps_number.c
 auxiliary/guile_python.c
 auxiliary/guile_types.c
 
