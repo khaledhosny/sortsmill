@@ -137,19 +137,19 @@ x_gc_u32_strdup (const uint32_t *string)
 static inline uint8_t *
 x_u8_strdup_or_null (const uint8_t *string)
 {
-  return _FF_NULL_PASSTHRU (string, x_u8_strdup (string));
+  return STM_NULL_PASSTHRU (string, x_u8_strdup (string));
 }
 
 static inline uint16_t *
 x_u16_strdup_or_null (const uint16_t *string)
 {
-  return _FF_NULL_PASSTHRU (string, x_u16_strdup (string));
+  return STM_NULL_PASSTHRU (string, x_u16_strdup (string));
 }
 
 static inline uint32_t *
 x_u32_strdup_or_null (const uint32_t *string)
 {
-  return _FF_NULL_PASSTHRU (string, x_u32_strdup (string));
+  return STM_NULL_PASSTHRU (string, x_u32_strdup (string));
 }
 
 /*-----------------------------------------------------------------------*/

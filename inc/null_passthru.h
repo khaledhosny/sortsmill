@@ -21,6 +21,6 @@
 
 #include <sortsmill/null_passthru.h>
 
-#define NULL_PASSTHRU _FF_NULL_PASSTHRU
+#define NULL_PASSTHRU STM_NULL_PASSTHRU
 
 #endif // _INTERNAL_NULL_PASSTHRU_H
