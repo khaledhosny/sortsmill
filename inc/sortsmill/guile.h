@@ -25,6 +25,7 @@
 #include <sortsmill/guile/fonts.h>
 #include <sortsmill/guile/format.h>
 #include <sortsmill/guile/iconv.h>
+#include <sortsmill/guile/initialized_global_constants.h>
 #include <sortsmill/guile/math.h>
 #include <sortsmill/guile/nearness.h>
 #include <sortsmill/guile/notices.h>

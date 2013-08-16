@@ -92,6 +92,7 @@ nobase_include_HEADERS += sortsmill/c_version.h
 # Automatic, thread-safe initialization of nontrivial global
 # constants.
 nobase_include_HEADERS += sortsmill/initialized_global_constants.h
+nobase_include_HEADERS += sortsmill/guile/initialized_global_constants.h
 
 # Allocation.
 #nobase_include_HEADERS += sortsmill/null_passthru.h

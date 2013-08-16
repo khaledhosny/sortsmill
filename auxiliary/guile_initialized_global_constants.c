@@ -16,8 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <libguile.h>
-#include <sortsmill/initialized_global_constants.h>
+#include <sortsmill/guile/initialized_global_constants.h>
 
 VISIBLE void
 scm_c_initialize_from_eval_string (SCM *proc, const char *s)

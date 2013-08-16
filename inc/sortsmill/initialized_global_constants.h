@@ -20,14 +20,13 @@
 #ifndef _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H
 #define _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H
 
+#include <stdbool.h>
 #include <atomic_ops.h>
 #include <sortsmill/xgc.h>      /* Includes pthread.h and gc.h in the
                                    correct order. */
-#include <libguile.h>
-#include <stdbool.h>
-#include <sortsmill/c_version.h>
+#include <sortsmill/attributes.h>
 
-#if _FF_C99_OR_GREATER          /* For standard variadic macros support. */
+#if STM_AT_LEAST_C99       /* For standard variadic macros support. */
 
 /*
  * We use "double-checked locking".
@@ -81,15 +80,6 @@
     return __##NAME##__data__.value;                                    \
   }
 
-#endif /* _FF_C99_OR_GREATER */
-
-/* An INITIALIZER function for Guile data specified as Scheme source
-   code in a C string. */
-void scm_c_initialize_from_eval_string (SCM *proc, const char *s);
-
-#define SCM_SYMBOL_CONSTANT(MODIFIER, C_NAME, SCM_NAME)                 \
-  INITIALIZED_CONSTANT (STM_ATTRIBUTE_PURE MODIFIER, SCM, C_NAME,       \
-                        scm_c_initialize_from_eval_string,              \
-                        "(quote " SCM_NAME ")");
+#endif /* STM_AT_LEAST_C99 */
 
 #endif /* _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H */
