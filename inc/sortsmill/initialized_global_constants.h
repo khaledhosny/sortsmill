@@ -20,11 +20,14 @@
 #ifndef _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H
 #define _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H
 
-#include <stdbool.h>
+#include <libguile.h>
 #include <atomic_ops.h>
 #include <sortsmill/xgc.h>      /* Includes pthread.h and gc.h in the
                                    correct order. */
+#include <sortsmill/one_time_initialization.h>
 #include <sortsmill/attributes.h>
+
+void scm_dynwind_pthread_mutex_unlock (void *mutex_ptr);
 
 #if STM_AT_LEAST_C99       /* For standard variadic macros support. */
 
@@ -36,49 +39,26 @@
  * initialized until the first time they are used.
  */
 
+#define __INITIALIZED_CONSTANT_THREAD_LOCK(MUTEX)       \
+  scm_dynwind_begin (0);                                \
+  pthread_mutex_lock (&MUTEX);                          \
+  scm_dynwind_pthread_mutex_unlock (&MUTEX)
+
+#define __INITIALIZED_CONSTANT_THREAD_UNLOCK(MUTEX)     \
+  scm_dynwind_end ()
+
 /* Unfortunately, in a C99-conforming program, the
    INITIALIZER_FUNCTION must take at least one extra argument, even if
    unused. GCC is more permissive. */
 #define INITIALIZED_CONSTANT(MODIFIERS, TYPE, NAME,                     \
                              INITIALIZER_FUNCTION, ...)                 \
                                                                         \
-  static struct __##NAME##__data_t__                                    \
-  {                                                                     \
-    volatile AO_t is_initialized;                                       \
-    pthread_mutex_t mutex;                                              \
-    TYPE value;                                                         \
-  } __##NAME##__data__ = { false, PTHREAD_MUTEX_INITIALIZER };          \
+  pthread_mutex_t __##NAME##__mutex = PTHREAD_MUTEX_INITIALIZER;        \
                                                                         \
-  /* Use dynamic wind, to unlock the mutex regardless of exceptions. */ \
-  static void                                                           \
-  __##NAME##__unwind_handler__ (void *p)                                \
-  {                                                                     \
-    struct __##NAME##__data_t__ *data_ptr =                             \
-      ((struct __##NAME##__data_t__ *) p);                              \
-    pthread_mutex_unlock (&data_ptr->mutex);                            \
-  }                                                                     \
-                                                                        \
-  MODIFIERS TYPE                                                        \
-  NAME (void)                                                           \
-  {                                                                     \
-    if (!AO_load_acquire_read (&__##NAME##__data__.is_initialized))     \
-      {                                                                 \
-        scm_dynwind_begin (0);                                          \
-        pthread_mutex_lock (&__##NAME##__data__.mutex);                 \
-        scm_dynwind_unwind_handler (__##NAME##__unwind_handler__,       \
-                                    &__##NAME##__data__,                \
-                                    SCM_F_WIND_EXPLICITLY);             \
-        if (!__##NAME##__data__.is_initialized)                         \
-          {                                                             \
-            INITIALIZER_FUNCTION (&__##NAME##__data__.value,            \
-                                  __VA_ARGS__);                         \
-            AO_store_release_write (&__##NAME##__data__.is_initialized, \
-                                    true);                              \
-          }                                                             \
-        scm_dynwind_end ();                                             \
-      }                                                                 \
-    return __##NAME##__data__.value;                                    \
-  }
+  STM_ONE_TIME_INITIALIZE(MODIFIERS, TYPE, NAME,                        \
+                          __INITIALIZED_CONSTANT_THREAD_LOCK(__##NAME##__mutex), \
+                          __INITIALIZED_CONSTANT_THREAD_UNLOCK(__##NAME##__mutex), \
+                          INITIALIZER_FUNCTION (&NAME##__Value, __VA_ARGS__))
 
 #endif /* STM_AT_LEAST_C99 */
 
