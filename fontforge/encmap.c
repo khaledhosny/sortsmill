@@ -17,7 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <splinefont.h>
-#include <sortsmill/initialized_global_constants.h>
+#include <sortsmill/guile/initialized_global_constants.h>
 
 //-------------------------------------------------------------------------
 
