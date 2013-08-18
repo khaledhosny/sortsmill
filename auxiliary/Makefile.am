@@ -75,9 +75,9 @@ dist_libsortsmill_aux_la_SOURCES += nearness.c
 # Extensions to xalloc and Boehm GC.
 #dist_libsortsmill_aux_la_SOURCES += xdie_on_null.c
 #dist_libsortsmill_aux_la_SOURCES += x_alloc.c
+#dist_libsortsmill_aux_la_SOURCES += xgc.c
+#dist_libsortsmill_aux_la_SOURCES += xgc_strjoin.c
 dist_libsortsmill_aux_la_SOURCES += x_printf.c
-dist_libsortsmill_aux_la_SOURCES += xgc.c
-dist_libsortsmill_aux_la_SOURCES += xgc_strjoin.c
 
 # Extensions to PCRE.
 dist_libsortsmill_aux_la_SOURCES += rexp.c
