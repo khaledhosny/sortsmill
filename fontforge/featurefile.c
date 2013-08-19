@@ -54,7 +54,7 @@
 #include <ustring.h>
 #include <locale.h>
 #include <c-strtod.h>
-#include <sortsmill/x_printf.h>
+#include <sortsmill/c-fprintf.h>
 
 /* Adobe's opentype feature file */
 /* Which suffers incompatible changes according to Adobe's whim */
@@ -100,9 +100,9 @@ static void
 dump_glyphname (FILE *out, SplineChar *sc)
 {
   if (sc->parent->cidmaster != NULL)
-    x_fprintf (out, "\\%d", sc->orig_pos /* That's the CID */ );
+    c_fprintf (out, "\\%d", sc->orig_pos /* That's the CID */ );
   else
-    x_fprintf (out, "\\%s", sc->name);
+    c_fprintf (out, "\\%s", sc->name);
 }
 
 static void
@@ -113,9 +113,9 @@ dump_glyphbyname (FILE *out, SplineFont *sf, char *name)
   if (sc == NULL)
     LogError (_("No glyph named %s."), name);
   if (sc == NULL || sc->parent->cidmaster == NULL)
-    x_fprintf (out, "\\%s", name);
+    c_fprintf (out, "\\%s", name);
   else
-    x_fprintf (out, "\\%s", sc->name);
+    c_fprintf (out, "\\%s", sc->name);
 }
 
 static void
@@ -140,10 +140,10 @@ dump_glyphnamelist (FILE *out, SplineFont *sf, char *names)
           *pt = '\0';
           if (pt - start + len + 1 > 72)
             {
-              x_fprintf (out, "\n\t");
+              c_fprintf (out, "\n\t");
               len = 8;
             }
-          x_fprintf (out, "\\%s ", start);
+          c_fprintf (out, "\\%s ", start);
           len += strlen (start) + 1;
           *pt = ch;
         }
@@ -172,10 +172,10 @@ dump_glyphnamelist (FILE *out, SplineFont *sf, char *names)
             }
           if (strlen (nm) + len + 1 > 72)
             {
-              x_fprintf (out, "\n\t");
+              c_fprintf (out, "\n\t");
               len = 8;
             }
-          x_fprintf (out, "%s ", nm);
+          c_fprintf (out, "%s ", nm);
           len += strlen (nm) + 1;
           *pt = ch;
         }
@@ -258,7 +258,7 @@ gdef_markclass_check (FILE *out, SplineFont *sf, OTLookup *otl)
   if (any & 1)
     {
       int i;
-      x_fprintf (out, "# GDEF Mark Attachment Classes\n");
+      c_fprintf (out, "# GDEF Mark Attachment Classes\n");
       for (i = 1; i < sf->mark_class_cnt; ++i)
         if (needed[i])
           {
@@ -267,14 +267,14 @@ gdef_markclass_check (FILE *out, SplineFont *sf, OTLookup *otl)
             putc ('=', out);
             putc ('[', out);
             dump_glyphnamelist (out, sf, sf->mark_classes[i]);
-            x_fprintf (out, "];\n");
+            c_fprintf (out, "];\n");
           }
-      x_fprintf (out, "\n");
+      c_fprintf (out, "\n");
     }
   if (any & 2)
     {
       int i;
-      x_fprintf (out, "# GDEF Mark Attachment Sets\n");
+      c_fprintf (out, "# GDEF Mark Attachment Sets\n");
       for (i = 0; i < sf->mark_set_cnt; ++i)
         if (setsneeded[i])
           {
@@ -283,9 +283,9 @@ gdef_markclass_check (FILE *out, SplineFont *sf, OTLookup *otl)
             putc ('=', out);
             putc ('[', out);
             dump_glyphnamelist (out, sf, sf->mark_sets[i]);
-            x_fprintf (out, "];\n");
+            c_fprintf (out, "];\n");
           }
-      x_fprintf (out, "\n");
+      c_fprintf (out, "\n");
     }
   free (needed);
   free (setsneeded);
@@ -364,17 +364,17 @@ dump_fpst_everythingelse (FILE *out, SplineFont *sf, char **classes,
             if ((text == NULL && len + 6 > 72) ||
                 (text != NULL && strlen (text) + len + 2 > 72))
               {
-                x_fprintf (out, "\n\t");
+                c_fprintf (out, "\n\t");
                 len = 8;
               }
             if (text == NULL)
               {
-                x_fprintf (out, "NULL ");
+                c_fprintf (out, "NULL ");
                 len += 5;
               }
             else
               {
-                x_fprintf (out, "\\%s ", text);
+                c_fprintf (out, "\\%s ", text);
                 len += strlen (text) + 2;
               }
           }
@@ -399,17 +399,17 @@ dump_fpst_everythingelse (FILE *out, SplineFont *sf, char **classes,
                   }
                 if (len + 8 > 76)
                   {
-                    x_fprintf (out, "\n\t");
+                    c_fprintf (out, "\n\t");
                     len = 8;
                   }
                 if (sc != NULL)
                   {
-                    x_fprintf (out, "\\%d ", sc->orig_pos);
+                    c_fprintf (out, "\\%d ", sc->orig_pos);
                     len += 8;
                   }
                 else
                   {
-                    x_fprintf (out, "NULL ");
+                    c_fprintf (out, "NULL ");
                     len += 5;
                   }
               }
@@ -441,7 +441,7 @@ dump_device (FILE *out, DeviceTable *devtab)
 {
   int i, any = false;
 
-  x_fprintf (out, "<device ");
+  c_fprintf (out, "<device ");
   if (devtab != NULL && devtab->corrections != NULL)
     {
       for (i = devtab->first_pixel_size; i <= devtab->last_pixel_size; ++i)
@@ -451,20 +451,20 @@ dump_device (FILE *out, DeviceTable *devtab)
               putc (',', out);
             else
               any = true;
-            x_fprintf (out, "%d %d", i,
+            c_fprintf (out, "%d %d", i,
                        devtab->corrections[i - devtab->first_pixel_size]);
           }
     }
   if (any)
-    x_fprintf (out, ">");
+    c_fprintf (out, ">");
   else
-    x_fprintf (out, "NULL>");
+    c_fprintf (out, "NULL>");
 }
 
 static void
 dump_valuerecord (FILE *out, struct vr *vr)
 {
-  x_fprintf (out, "<%d %d %d %d", vr->xoff, vr->yoff, vr->h_adv_off,
+  c_fprintf (out, "<%d %d %d %d", vr->xoff, vr->yoff, vr->h_adv_off,
              vr->v_adv_off);
   if (vr->adjust != NULL)
     {
@@ -486,13 +486,13 @@ dump_anchorpoint (FILE *out, AnchorPoint *ap)
 
   if (ap == NULL)
     {
-      x_fprintf (out, "<anchor NULL>");
+      c_fprintf (out, "<anchor NULL>");
       return;
     }
 
-  x_fprintf (out, "<anchor %g %g", rint (ap->me.x), rint (ap->me.y));
+  c_fprintf (out, "<anchor %g %g", rint (ap->me.x), rint (ap->me.y));
   if (ap->has_ttf_pt)
-    x_fprintf (out, " contourpoint %d", ap->ttf_pt_index);
+    c_fprintf (out, " contourpoint %d", ap->ttf_pt_index);
   else if (ap->xadjust.corrections != NULL || ap->yadjust.corrections != NULL)
     {
       putc (' ', out);
@@ -512,16 +512,16 @@ dump_kernclass (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
   for (i = 0; i < kc->first_cnt; ++i)
     if (kc->firsts[i] != NULL)
       {
-        x_fprintf (out, "    @kc%d_first_%d = [", sub->subtable_offset, i);
+        c_fprintf (out, "    @kc%d_first_%d = [", sub->subtable_offset, i);
         dump_glyphnamelist (out, sf, kc->firsts[i]);
-        x_fprintf (out, "];\n");
+        c_fprintf (out, "];\n");
       }
   for (i = 0; i < kc->second_cnt; ++i)
     if (kc->seconds[i] != NULL)
       {
-        x_fprintf (out, "    @kc%d_second_%d = [", sub->subtable_offset, i);
+        c_fprintf (out, "    @kc%d_second_%d = [", sub->subtable_offset, i);
         dump_glyphnamelist (out, sf, kc->seconds[i]);
-        x_fprintf (out, "];\n");
+        c_fprintf (out, "];\n");
       }
   for (i = 0; i < kc->first_cnt; ++i)
     if (kc->firsts[i] != NULL)
@@ -530,7 +530,7 @@ dump_kernclass (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
           if (kc->seconds[j] != NULL)
             {
               if (kc->offsets[i * kc->second_cnt + j] != 0)
-                x_fprintf (out, "    pos @kc%d_first_%d @kc%d_second_%d %d;\n",
+                c_fprintf (out, "    pos @kc%d_first_%d @kc%d_second_%d %d;\n",
                            sub->subtable_offset, i,
                            sub->subtable_offset, j,
                            kc->offsets[i * kc->second_cnt + j]);
@@ -753,9 +753,9 @@ dump_contextpstglyphs (FILE *out, SplineFont *sf,
       if (otl != NULL && !otl->ticked)
         {
           if (otl->lookup_type == gpos_cursive)
-            x_fprintf (out, "cursive ");
+            c_fprintf (out, "cursive ");
           else if (otl->lookup_type == gpos_mark2mark)
-            x_fprintf (out, "mark ");
+            c_fprintf (out, "mark ");
         }
       dump_glyphbyname (out, sf, start);
       putc ('\'', out);
@@ -763,7 +763,7 @@ dump_contextpstglyphs (FILE *out, SplineFont *sf,
         {
           if (otl->ticked)
             {
-              x_fprintf (out, "lookup %s ", lookupname (otl));
+              c_fprintf (out, "lookup %s ", lookupname (otl));
               uses_lookups = true;
             }
           else if (otl->lookup_type == gpos_single)
@@ -816,7 +816,7 @@ dump_contextpstglyphs (FILE *out, SplineFont *sf,
               putc (' ', out);
             }
           else if (otl->lookup_type > gpos_start && otl->ticked)
-            x_fprintf (out, "<lookup %s> ", lookupname (otl));
+            c_fprintf (out, "<lookup %s> ", lookupname (otl));
         }
       last_start = start;
       last_end = pt;
@@ -831,7 +831,7 @@ dump_contextpstglyphs (FILE *out, SplineFont *sf,
   if (r->lookup_cnt != 0 && sub->lookup->lookup_type < gpos_start
       && !uses_lookups)
     {
-      x_fprintf (out, " by ");
+      c_fprintf (out, " by ");
       for (i = 0; i < r->lookup_cnt; ++i)
         {
           otl = r->lookups[i].lookup;
@@ -858,7 +858,7 @@ dump_contextpstglyphs (FILE *out, SplineFont *sf,
               putc (' ', out);
             }
           else if (otl->lookup_type < gpos_start && otl->ticked)
-            x_fprintf (out, "<lookup %s> ", lookupname (otl));
+            c_fprintf (out, "<lookup %s> ", lookupname (otl));
         }
     }
   putc (';', out);
@@ -883,7 +883,7 @@ dump_contextpstcoverage (FILE *out, SplineFont *sf,
     {
       putc ('[', out);
       dump_glyphnamelist (out, sf, r->u.coverage.bcovers[i]);
-      x_fprintf (out, "] ");
+      c_fprintf (out, "] ");
     }
   for (i = 0; i < r->u.coverage.ncnt; ++i)
     {
@@ -905,7 +905,7 @@ dump_contextpstcoverage (FILE *out, SplineFont *sf,
               *pt = '\0';
               if (otl->ticked)
                 {
-                  x_fprintf (out, "lookup %s ", lookupname (otl));
+                  c_fprintf (out, "lookup %s ", lookupname (otl));
                   uses_lookups = true;
                 }
               else if (otl->lookup_type == gpos_single)
@@ -958,11 +958,11 @@ dump_contextpstcoverage (FILE *out, SplineFont *sf,
     {
       putc ('[', out);
       dump_glyphnamelist (out, sf, r->u.coverage.fcovers[i]);
-      x_fprintf (out, "] ");
+      c_fprintf (out, "] ");
     }
   if (sub->lookup->lookup_type == gsub_reversecchain)
     {
-      x_fprintf (out, " by ");
+      c_fprintf (out, " by ");
       if (strchr (r->u.rcoverage.replacements, ' ') == NULL)
         dump_glyphnamelist (out, sf, r->u.rcoverage.replacements);
       else
@@ -975,7 +975,7 @@ dump_contextpstcoverage (FILE *out, SplineFont *sf,
   else if (r->lookup_cnt != 0 && sub->lookup->lookup_type < gpos_start
            && !uses_lookups)
     {
-      x_fprintf (out, " by ");
+      c_fprintf (out, " by ");
       for (i = 0; i < r->lookup_cnt; ++i)
         {
           int len;
@@ -997,7 +997,7 @@ dump_contextpstcoverage (FILE *out, SplineFont *sf,
                   if (len + (pst == NULL ? 4 : strlen (pst->u.subs.variant)) >
                       80)
                     {
-                      x_fprintf (out, "\n\t");
+                      c_fprintf (out, "\n\t");
                       len = 8;
                     }
                   if (pst != NULL)
@@ -1007,7 +1007,7 @@ dump_contextpstcoverage (FILE *out, SplineFont *sf,
                     }
                   else
                     {
-                      x_fprintf (out, "NULL");
+                      c_fprintf (out, "NULL");
                       len += 4;
                     }
                   *pt = ch;
@@ -1085,13 +1085,13 @@ dump_contextpstclass (FILE *out, SplineFont *sf,
   int ch, ch2, uses_lookups = false;
 
   for (i = 0; i < r->u.class.bcnt; ++i)
-    x_fprintf (out, "@cc%d_back_%d ", sub->subtable_offset,
+    c_fprintf (out, "@cc%d_back_%d ", sub->subtable_offset,
                r->u.class.bclasses[i]);
   for (i = 0; i < r->u.class.ncnt; ++i)
     {
       if (i == 0 && fpst->nclass[r->u.class.nclasses[i]] == NULL)
         continue;
-      x_fprintf (out, "@cc%d_match_%d", sub->subtable_offset,
+      c_fprintf (out, "@cc%d_match_%d", sub->subtable_offset,
                  r->u.class.nclasses[i]);
       if (in_ignore)
         putc ('\'', out);
@@ -1109,7 +1109,7 @@ dump_contextpstclass (FILE *out, SplineFont *sf,
               *pt = '\0';
               if (otl->ticked)
                 {
-                  x_fprintf (out, "lookup %s ", lookupname (otl));
+                  c_fprintf (out, "lookup %s ", lookupname (otl));
                   uses_lookups = true;
                 }
               else if (otl->lookup_type == gpos_single)
@@ -1154,12 +1154,12 @@ dump_contextpstclass (FILE *out, SplineFont *sf,
       putc (' ', out);
     }
   for (i = 0; i < r->u.class.fcnt; ++i)
-    x_fprintf (out, "@cc%d_ahead_%d ", sub->subtable_offset,
+    c_fprintf (out, "@cc%d_ahead_%d ", sub->subtable_offset,
                r->u.class.fclasses[i]);
   if (r->lookup_cnt != 0 && sub->lookup->lookup_type < gpos_start
       && !uses_lookups)
     {
-      x_fprintf (out, " by ");
+      c_fprintf (out, " by ");
       for (i = 0; i < r->lookup_cnt; ++i)
         {
           otl = r->lookups[i].lookup;
@@ -1182,7 +1182,7 @@ dump_contextpstclass (FILE *out, SplineFont *sf,
                       if (pst != NULL)
                         dump_glyphbyname (out, sf, pst->u.subs.variant);
                       else
-                        x_fprintf (out, "NULL");
+                        c_fprintf (out, "NULL");
                       *pt = ch;
                       putc (' ', out);
                     }
@@ -1229,14 +1229,14 @@ dump_contextpst (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
             {
               if (fpst->nclass[i] != NULL || (i == 0 && ClassUsed (fpst, 0, 0)))
                 {
-                  x_fprintf (out, "    @cc%d_match_%d = [",
+                  c_fprintf (out, "    @cc%d_match_%d = [",
                              sub->subtable_offset, i);
                   if (fpst->nclass[i] != NULL)
                     dump_glyphnamelist (out, sf, fpst->nclass[i]);
                   else
                     dump_fpst_everythingelse (out, sf, fpst->nclass,
                                               fpst->nccnt, NULL);
-                  x_fprintf (out, "];\n");
+                  c_fprintf (out, "];\n");
                 }
             }
         }
@@ -1246,14 +1246,14 @@ dump_contextpst (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
             {
               if (fpst->bclass[i] != NULL || (i == 0 && ClassUsed (fpst, 1, 0)))
                 {
-                  x_fprintf (out, "    @cc%d_back_%d = [", sub->subtable_offset,
+                  c_fprintf (out, "    @cc%d_back_%d = [", sub->subtable_offset,
                              i);
                   if (fpst->bclass[i] != NULL)
                     dump_glyphnamelist (out, sf, fpst->bclass[i]);
                   else
                     dump_fpst_everythingelse (out, sf, fpst->bclass,
                                               fpst->bccnt, NULL);
-                  x_fprintf (out, "];\n");
+                  c_fprintf (out, "];\n");
                 }
             }
         }
@@ -1263,14 +1263,14 @@ dump_contextpst (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
             {
               if (fpst->fclass[i] != NULL || (i == 0 && ClassUsed (fpst, 2, 0)))
                 {
-                  x_fprintf (out, "    @cc%d_ahead_%d = [",
+                  c_fprintf (out, "    @cc%d_ahead_%d = [",
                              sub->subtable_offset, i);
                   if (fpst->fclass[i] != NULL)
                     dump_glyphnamelist (out, sf, fpst->fclass[i]);
                   else
                     dump_fpst_everythingelse (out, sf, fpst->fclass,
                                               fpst->fccnt, NULL);
-                  x_fprintf (out, "];\n");
+                  c_fprintf (out, "];\n");
                 }
             }
         }
@@ -1292,13 +1292,13 @@ dump_contextpst (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
               }
           }
       if (sub->lookup->lookup_type >= gpos_start)
-        x_fprintf (out, r->lookup_cnt == 0 ? "    ignore pos " : "    pos ");
+        c_fprintf (out, r->lookup_cnt == 0 ? "    ignore pos " : "    pos ");
       else if (sub->lookup->lookup_type == gsub_reversecchain)
-        x_fprintf (out,
+        c_fprintf (out,
                    r->lookup_cnt ==
                    0 ? "    ignore reversesub " : "    reversesub ");
       else
-        x_fprintf (out, r->lookup_cnt == 0 ? "    ignore sub " : "    sub ");
+        c_fprintf (out, r->lookup_cnt == 0 ? "    ignore sub " : "    sub ");
       if (fpst->format == pst_class)
         {
           dump_contextpstclass (out, sf, sub, r, r->lookup_cnt == 0);
@@ -1390,7 +1390,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                           }
                       if (ap_entry != NULL || ap_exit != NULL)
                         {
-                          x_fprintf (out, "    pos cursive ");
+                          c_fprintf (out, "    pos cursive ");
                           dump_glyphname (out, sc);
                           putc (' ', out);
                           dump_anchorpoint (out, ap_entry);
@@ -1449,7 +1449,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                 {
                   SplineChar *osc;
                   ap = marks[k].ap;
-                  x_fprintf (out, "  markClass [");
+                  c_fprintf (out, "  markClass [");
                   for (j = k; j < cnt; ++j)
                     if (!(osc = marks[j].sc)->ticked)
                       {
@@ -1465,11 +1465,11 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                             osc->ticked = true;
                           }
                       }
-                  x_fprintf (out, "] ");
+                  c_fprintf (out, "] ");
                   dump_anchorpoint (out, ap);
-                  x_fprintf (out, " @");
+                  c_fprintf (out, " @");
                   dump_ascii (out, ac->name);
-                  x_fprintf (out, ";\n");
+                  c_fprintf (out, ";\n");
                 }
             /* When positioning, we dump out all of a base glyph's anchors */
             /*  for the sub-table at once rather than class by class */
@@ -1500,7 +1500,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
           if ((sc = sfglyph (_sf, i)) != NULL && !sc->ticked
               && HasBaseAP (sc, sub))
             {
-              x_fprintf (out, "  pos %s ",
+              c_fprintf (out, "  pos %s ",
                          sub->lookup->lookup_type == gpos_mark2base ? "base" :
                          sub->lookup->lookup_type == gpos_mark2mark ? "mark" :
                          "ligature");
@@ -1518,7 +1518,7 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                           putc (' ', out);
                         }
                     }
-                  x_fprintf (out, "] ");
+                  c_fprintf (out, "] ");
                 }
               else
                 {
@@ -1532,13 +1532,13 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                     if (ap->anchor->subtable == sub && ap->type != at_mark)
                       {
                         if (!first)
-                          x_fprintf (out, "\n\t");
+                          c_fprintf (out, "\n\t");
                         first = false;
                         dump_anchorpoint (out, ap);
-                        x_fprintf (out, " mark @");
+                        c_fprintf (out, " mark @");
                         dump_ascii (out, ap->anchor->name);
                       }
-                  x_fprintf (out, ";\n");
+                  c_fprintf (out, ";\n");
                 }
               else
                 {
@@ -1554,11 +1554,11 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                             else if (ap->lig_index == li)
                               {
                                 if (li != 0 && !any)
-                                  x_fprintf (out, "\n    ligComponent\n      ");
+                                  c_fprintf (out, "\n    ligComponent\n      ");
                                 else
-                                  x_fprintf (out, "\n      ");
+                                  c_fprintf (out, "\n      ");
                                 dump_anchorpoint (out, ap);
-                                x_fprintf (out, " mark @");
+                                c_fprintf (out, " mark @");
                                 dump_ascii (out, ap->anchor->name);
                                 any = true;
                               }
@@ -1566,13 +1566,13 @@ dump_anchors (FILE *out, SplineFont *sf, struct lookup_subtable *sub)
                       if (!any && anymore)
                         {
                           if (li != 0)
-                            x_fprintf (out, "\n    ligComponent\n      ");
+                            c_fprintf (out, "\n    ligComponent\n      ");
                           else
-                            x_fprintf (out, "\n      ");
-                          x_fprintf (out, "<anchor NULL>");     /* In adobe's example no anchor class is given */
+                            c_fprintf (out, "\n      ");
+                          c_fprintf (out, "<anchor NULL>");     /* In adobe's example no anchor class is given */
                         }
                     }
-                  x_fprintf (out, ";\n");
+                  c_fprintf (out, ";\n");
                 }
             }
         }
@@ -1774,12 +1774,12 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
     sf = sf->cidmaster;
   number_subtables (sf);
 
-  x_fprintf (out, "\nlookup %s {\n", lookupname (otl));
+  c_fprintf (out, "\nlookup %s {\n", lookupname (otl));
   if (otl->lookup_flags == 0 || (otl->lookup_flags & 0xe0) != 0)
-    x_fprintf (out, "  lookupflag %d;\n", otl->lookup_flags);
+    c_fprintf (out, "  lookupflag %d;\n", otl->lookup_flags);
   else
     {
-      x_fprintf (out, "  lookupflag");
+      c_fprintf (out, "  lookupflag");
       first = true;
       for (i = 0; i < 4; ++i)
         if (otl->lookup_flags & (1 << i))
@@ -1788,7 +1788,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
               putc (',', out);
             else
               first = false;
-            x_fprintf (out, " %s", flagnames[i]);
+            c_fprintf (out, " %s", flagnames[i]);
           }
       if ((otl->lookup_flags & 0xff00) != 0)
         {
@@ -1797,7 +1797,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
             {
               if (!first)
                 putc (',', out);
-              x_fprintf (out, " MarkAttachmentType @");
+              c_fprintf (out, " MarkAttachmentType @");
               dump_ascii (out, sf->mark_class_names[index]);
             }
         }
@@ -1808,7 +1808,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
             {
               if (!first)
                 putc (',', out);
-              x_fprintf (out, " UseMarkFilteringSet @");
+              c_fprintf (out, " UseMarkFilteringSet @");
               dump_ascii (out, sf->mark_set_names[index]);
             }
         }
@@ -1818,7 +1818,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
   for (sub = otl->subtables; sub != NULL; sub = sub->next)
     {
       if (sub != otl->subtables)
-        x_fprintf (out, "  subtable;\n");
+        c_fprintf (out, "  subtable;\n");
       if (sub->kc != NULL)
         dump_kernclass (out, sf, sub);
       else if (sub->fpst != NULL)
@@ -1841,37 +1841,37 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                             {
                             case gsub_single:
                             case gsub_multiple:
-                              x_fprintf (out, "    sub ");
+                              c_fprintf (out, "    sub ");
                               dump_glyphname (out, sc);
-                              x_fprintf (out, " by ");
+                              c_fprintf (out, " by ");
                               dump_glyphnamelist (out, sf, pst->u.subs.variant);
-                              x_fprintf (out, ";\n");
+                              c_fprintf (out, ";\n");
                               break;
                             case gsub_alternate:
-                              x_fprintf (out, "    sub ");
+                              c_fprintf (out, "    sub ");
                               dump_glyphname (out, sc);
-                              x_fprintf (out, " from [");
+                              c_fprintf (out, " from [");
                               dump_glyphnamelist (out, sf,
                                                   pst->u.alt.components);
-                              x_fprintf (out, "];\n");
+                              c_fprintf (out, "];\n");
                               break;
                             case gsub_ligature:
-                              x_fprintf (out, "    sub ");
+                              c_fprintf (out, "    sub ");
                               dump_glyphnamelist (out, sf,
                                                   pst->u.lig.components);
-                              x_fprintf (out, " by ");
+                              c_fprintf (out, " by ");
                               dump_glyphname (out, sc);
-                              x_fprintf (out, ";\n");
+                              c_fprintf (out, ";\n");
                               break;
                             case gpos_single:
-                              x_fprintf (out, "    pos ");
+                              c_fprintf (out, "    pos ");
                               dump_glyphname (out, sc);
                               putc (' ', out);
                               dump_valuerecord (out, &pst->u.pos);
-                              x_fprintf (out, ";\n");
+                              c_fprintf (out, ";\n");
                               break;
                             case gpos_pair:
-                              x_fprintf (out, "    pos ");
+                              c_fprintf (out, "    pos ");
                               dump_glyphname (out, sc);
                               putc (' ', out);
                               dump_valuerecord (out, &pst->u.pair.vr[0]);
@@ -1879,7 +1879,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                               dump_glyphnamelist (out, sf, pst->u.pair.paired);
                               putc (' ', out);
                               dump_valuerecord (out, &pst->u.pair.vr[0]);
-                              x_fprintf (out, ";\n");
+                              c_fprintf (out, ";\n");
                               break;
                             default:
                               /* Eh? How'd we get here? An anchor class with */
@@ -1893,7 +1893,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                              kp = kp->next)
                           if (kp->subtable == sub)
                             {
-                              x_fprintf (out, "    pos ");
+                              c_fprintf (out, "    pos ");
                               dump_glyphname (out, sc);
                               putc (' ', out);
                               if (kp->adjust != NULL)
@@ -1902,46 +1902,46 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                                   /* format */
                                   if (isv)
                                     {
-                                      x_fprintf (out,
+                                      c_fprintf (out,
                                                  " < 0 0 0 %d <device NULL> <device NULL> <device NULL> ",
                                                  kp->off);
                                       dump_device (out, kp->adjust);
-                                      x_fprintf (out, " > ");
+                                      c_fprintf (out, " > ");
                                       dump_glyphname (out, kp->sc);
-                                      x_fprintf (out, " < 0 0 0 0 >;\n");
+                                      c_fprintf (out, " < 0 0 0 0 >;\n");
                                     }
                                   else if (otl->lookup_flags & pst_r2l)
                                     {
-                                      x_fprintf (out, " < 0 0 0 0 > ");
+                                      c_fprintf (out, " < 0 0 0 0 > ");
                                       dump_glyphname (out, kp->sc);
-                                      x_fprintf (out,
+                                      c_fprintf (out,
                                                  " < 0 0 %d 0 <device NULL> <device NULL> ",
                                                  kp->off);
                                       dump_device (out, kp->adjust);
-                                      x_fprintf (out, " <device NULL>>;\n");
+                                      c_fprintf (out, " <device NULL>>;\n");
                                     }
                                   else
                                     {
-                                      x_fprintf (out,
+                                      c_fprintf (out,
                                                  " < 0 0 %d 0 <device NULL> <device NULL> ",
                                                  kp->off);
                                       dump_device (out, kp->adjust);
-                                      x_fprintf (out, " <device NULL>> ");
+                                      c_fprintf (out, " <device NULL>> ");
                                       dump_glyphname (out, kp->sc);
-                                      x_fprintf (out, " < 0 0 0 0 >;\n");
+                                      c_fprintf (out, " < 0 0 0 0 >;\n");
                                     }
                                 }
                               else if (otl->lookup_flags & pst_r2l)
                                 {
-                                  x_fprintf (out, " < 0 0 0 0 > ");
+                                  c_fprintf (out, " < 0 0 0 0 > ");
                                   dump_glyphname (out, kp->sc);
-                                  x_fprintf (out, " < 0 0 %d 0 >;\n", kp->off);
+                                  c_fprintf (out, " < 0 0 %d 0 >;\n", kp->off);
                                 }
                               else
                                 {
                                   dump_glyphname (out, kp->sc);
                                   putc (' ', out);
-                                  x_fprintf (out, "%d;\n", kp->off);
+                                  c_fprintf (out, "%d;\n", kp->off);
                                 }
                             }
                       }         /* End isv/kp loops */
@@ -1951,7 +1951,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
           while (k < sf->subfontcnt);
         }
     }                           /* End subtables */
-  x_fprintf (out, "} %s;\n", lookupname (otl));
+  c_fprintf (out, "} %s;\n", lookupname (otl));
 }
 
 static void
@@ -2012,24 +2012,24 @@ FeatDumpOneLookup (FILE *out, SplineFont *sf, OTLookup *otl)
 
   for (fl = otl->features; fl != NULL; fl = fl->next)
     {
-      x_fprintf (out, "\nfeature %c%c%c%c {\n", fl->featuretag >> 24,
+      c_fprintf (out, "\nfeature %c%c%c%c {\n", fl->featuretag >> 24,
                  fl->featuretag >> 16, fl->featuretag >> 8, fl->featuretag);
       for (sl = fl->scripts; sl != NULL; sl = sl->next)
         {
-          x_fprintf (out, "  script %c%c%c%c;\n",
+          c_fprintf (out, "  script %c%c%c%c;\n",
                      sl->script >> 24, sl->script >> 16, sl->script >> 8,
                      sl->script);
           for (l = 0; l < sl->lang_cnt; ++l)
             {
               uint32_t lang =
                 l < MAX_LANG ? sl->langs[l] : sl->morelangs[l - MAX_LANG];
-              x_fprintf (out, "     language %c%c%c%c %s;\n", lang >> 24,
+              c_fprintf (out, "     language %c%c%c%c %s;\n", lang >> 24,
                          lang >> 16, lang >> 8, lang,
                          lang != DEFAULT_LANG ? "exclude_dflt" : "");
-              x_fprintf (out, "      lookup %s;\n", lookupname (otl));
+              c_fprintf (out, "      lookup %s;\n", lookupname (otl));
             }
         }
-      x_fprintf (out, "\n} %c%c%c%c;\n", fl->featuretag >> 24,
+      c_fprintf (out, "\n} %c%c%c%c;\n", fl->featuretag >> 24,
                  fl->featuretag >> 16, fl->featuretag >> 8, fl->featuretag);
     }
 }
@@ -2107,13 +2107,13 @@ dump_gdef (FILE *out, SplineFont *sf)
 
   if (sf->mark_class_cnt != 0)
     {
-      x_fprintf (out,
+      c_fprintf (out,
                  "#Mark attachment classes (defined in GDEF, used in lookupflags)\n");
       for (i = 1; i < sf->mark_class_cnt; ++i)
         {
           putc ('@', out);
           dump_ascii (out, sf->mark_class_names[i]);
-          x_fprintf (out, " = [ %s ];\n", sf->mark_classes[i]);
+          c_fprintf (out, " = [ %s ];\n", sf->mark_classes[i]);
         }
     }
 
@@ -2129,7 +2129,7 @@ dump_gdef (FILE *out, SplineFont *sf)
           if (hasclass[i])
             {
               k = 0;
-              x_fprintf (out, "%s = [", clsnames[i]);
+              c_fprintf (out, "%s = [", clsnames[i]);
               do
                 {
                   _sf = sf->subfontcnt == 0 ? sf : _sf;
@@ -2154,15 +2154,15 @@ dump_gdef (FILE *out, SplineFont *sf)
                   ++k;
                 }
               while (k < sf->subfontcnt);
-              x_fprintf (out, "];\n");
+              c_fprintf (out, "];\n");
             }
         }
     }
-  x_fprintf (out, "\ntable GDEF {\n");
+  c_fprintf (out, "\ntable GDEF {\n");
   if (needsclasses)
     {
       /* AFDKO does't like empty classes, there should be just a placeholder */
-      x_fprintf (out, "  GlyphClassDef %s, %s, %s, %s;\n\n",
+      c_fprintf (out, "  GlyphClassDef %s, %s, %s, %s;\n\n",
                  hasclass[0] ? clsnames[0] : "",
                  hasclass[1] ? clsnames[1] : "",
                  hasclass[2] ? clsnames[2] : "",
@@ -2172,19 +2172,19 @@ dump_gdef (FILE *out, SplineFont *sf)
   for (i = 0; i < lcnt; ++i)
     {
       PST *pst = glyphs[i].pst;
-      x_fprintf (out, "  LigatureCaretByPos ");
+      c_fprintf (out, "  LigatureCaretByPos ");
       dump_glyphname (out, glyphs[i].sc);
       for (k = 0; k < pst->u.lcaret.cnt; ++k)
         {
-          x_fprintf (out, " %d", pst->u.lcaret.carets[k]);
+          c_fprintf (out, " %d", pst->u.lcaret.carets[k]);
         }
-      x_fprintf (out, ";\n");
+      c_fprintf (out, ";\n");
     }
   free (glyphs);
 
   /* no way to specify mark classes */
 
-  x_fprintf (out, "} GDEF;\n\n");
+  c_fprintf (out, "} GDEF;\n\n");
 }
 
 static void
@@ -2195,29 +2195,29 @@ dump_baseaxis (FILE *out, SplineFont *sf, struct Base *axis, char *key)
 
   if (axis == NULL)
     return;
-  x_fprintf (out, "  %sAxis.BaseTagList", key);
+  c_fprintf (out, "  %sAxis.BaseTagList", key);
   for (i = 0; i < axis->baseline_cnt; ++i)
     {
       uint32_t tag = axis->baseline_tags[i];
-      x_fprintf (out, " %c%c%c%c", tag >> 24, tag >> 16, tag >> 8, tag);
+      c_fprintf (out, " %c%c%c%c", tag >> 24, tag >> 16, tag >> 8, tag);
     }
-  x_fprintf (out, ";\n");
+  c_fprintf (out, ";\n");
 
-  x_fprintf (out, "  %sAxis.BaseScriptList\n", key);
+  c_fprintf (out, "  %sAxis.BaseScriptList\n", key);
   for (script = axis->scripts; script != NULL; script = script->next)
     {
       uint32_t scrtag = script->script;
       uint32_t tag = axis->baseline_tags[script->def_baseline];
-      x_fprintf (out, "\t%c%c%c%c", scrtag >> 24, scrtag >> 16, scrtag >> 8,
+      c_fprintf (out, "\t%c%c%c%c", scrtag >> 24, scrtag >> 16, scrtag >> 8,
                  scrtag);
-      x_fprintf (out, " %c%c%c%c", tag >> 24, tag >> 16, tag >> 8, tag);
+      c_fprintf (out, " %c%c%c%c", tag >> 24, tag >> 16, tag >> 8, tag);
       for (i = 0; i < axis->baseline_cnt; ++i)
-        x_fprintf (out, " %d", script->baseline_pos[i]);
+        c_fprintf (out, " %d", script->baseline_pos[i]);
       if (script->next != NULL)
-        x_fprintf (out, ",");
+        c_fprintf (out, ",");
       else
-        x_fprintf (out, ";");
-      x_fprintf (out, "\n");
+        c_fprintf (out, ";");
+      c_fprintf (out, "\n");
     };
 
   /* The spec for MinMax only allows for one script, and only one language */
@@ -2236,11 +2236,11 @@ dump_baseaxis (FILE *out, SplineFont *sf, struct Base *axis, char *key)
     }
   if (any)
     {
-      x_fprintf (out, "  %sAxis.MinMax\n", key);
+      c_fprintf (out, "  %sAxis.MinMax\n", key);
       for (script = axis->scripts; script != NULL; script = script->next)
         {
           uint32_t scrtag = script->script;
-          x_fprintf (out, "\t%c%c%c%c", scrtag >> 24, scrtag >> 16, scrtag >> 8,
+          c_fprintf (out, "\t%c%c%c%c", scrtag >> 24, scrtag >> 16, scrtag >> 8,
                      scrtag);
         }
     }
@@ -2253,10 +2253,10 @@ dump_base (FILE *out, SplineFont *sf)
   if (sf->horiz_base == NULL && sf->vert_base == NULL)
     return;
 
-  x_fprintf (out, "table BASE {\n");
+  c_fprintf (out, "table BASE {\n");
   dump_baseaxis (out, sf, sf->horiz_base, "Horiz");
   dump_baseaxis (out, sf, sf->vert_base, "Vert");
-  x_fprintf (out, "} BASE;\n\n");
+  c_fprintf (out, "} BASE;\n\n");
 }
 
 static void
@@ -2267,7 +2267,7 @@ UniOut (FILE *out, char *name)
   while ((ch = u8_get_next ((const uint8_t **) &name)) != 0)
     {
       if (ch < ' ' || ch >= '\177' || ch == '\\' || ch == '"')
-        x_fprintf (out, "\\%04x", ch);
+        c_fprintf (out, "\\%04x", ch);
       else
         putc (ch, out);
     }
@@ -2291,7 +2291,7 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
       if (feats[0] != 0)
         {
           uint32_t *scripts = SFScriptsInLookups (sf, isgpos);
-          x_fprintf (out, "\n# %s \n\n", isgpos ? "GPOS" : "GSUB");
+          c_fprintf (out, "\n# %s \n\n", isgpos ? "GPOS" : "GSUB");
           note_nested_lookups_used_twice (isgpos ? sf->gpos_lookups : sf->
                                           gsub_lookups);
           for (otl = isgpos ? sf->gpos_lookups : sf->gsub_lookups; otl != NULL;
@@ -2300,35 +2300,35 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
               dump_lookup (out, sf, otl);
           for (i = 0; feats[i] != 0; ++i)
             {
-              x_fprintf (out, "\nfeature %c%c%c%c {\n", feats[i] >> 24,
+              c_fprintf (out, "\nfeature %c%c%c%c {\n", feats[i] >> 24,
                          feats[i] >> 16, feats[i] >> 8, feats[i]);
               if (feats[i] >= CHR ('s', 's', '0', '1')
                   && feats[i] <= CHR ('s', 's', '2', '0')
                   && (fn = findotffeatname (feats[i], sf)) != NULL)
                 {
-                  x_fprintf (out, "  featureNames {\n");
+                  c_fprintf (out, "  featureNames {\n");
                   for (on = fn->names; on != NULL; on = on->next)
                     {
-                      x_fprintf (out, "    name 3 1 0x%x \"", on->lang);
+                      c_fprintf (out, "    name 3 1 0x%x \"", on->lang);
                       UniOut (out, on->name);
-                      x_fprintf (out, "\";\n");
+                      c_fprintf (out, "\";\n");
                     }
-                  x_fprintf (out, "  };\n");
+                  c_fprintf (out, "  };\n");
                 }
               if (feats[i] == CHR ('s', 'i', 'z', 'e'))
                 {
                   struct otfname *nm;
-                  x_fprintf (out, "  parameters %.1f", sf->design_size / 10.0);
+                  c_fprintf (out, "  parameters %.1f", sf->design_size / 10.0);
                   if (sf->fontstyle_id != 0)
                     {
-                      x_fprintf (out, " %d %.1f %.1f;\n",
+                      c_fprintf (out, " %d %.1f %.1f;\n",
                                  sf->fontstyle_id,
                                  sf->design_range_bottom / 10.0,
                                  sf->design_range_top / 10.0);
                       for (nm = sf->fontstyle_name; nm != NULL; nm = nm->next)
                         {
                           char *pt;
-                          x_fprintf (out, "  sizemenuname 3 1 0x%x \"",
+                          c_fprintf (out, "  sizemenuname 3 1 0x%x \"",
                                      nm->lang);
                           for (pt = nm->name;;)
                             {
@@ -2339,13 +2339,13 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
                                   && ch != '\\')
                                 putc (ch, out);
                               else
-                                x_fprintf (out, "\\%04x", ch);
+                                c_fprintf (out, "\\%04x", ch);
                             }
-                          x_fprintf (out, "\";\n");
+                          c_fprintf (out, "\";\n");
                         }
                     }
                   else
-                    x_fprintf (out, " 0 0 0;\n");
+                    c_fprintf (out, " 0 0 0;\n");
                 }
               else
                 for (s = 0; scripts[s] != 0; ++s)
@@ -2382,7 +2382,7 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
                               {
                                 if (firsts)
                                   {
-                                    x_fprintf (out, "\n  script %c%c%c%c;\n",
+                                    c_fprintf (out, "\n  script %c%c%c%c;\n",
                                                scripts[s] >> 24,
                                                scripts[s] >> 16,
                                                scripts[s] >> 8, scripts[s]);
@@ -2390,7 +2390,7 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
                                   }
                                 if (first)
                                   {
-                                    x_fprintf (out,
+                                    c_fprintf (out,
                                                "     language %c%c%c%c %s;\n",
                                                langs[l] >> 24, langs[l] >> 16,
                                                langs[l] >> 8, langs[l],
@@ -2399,14 +2399,14 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
                                                "");
                                     first = false;
                                   }
-                                x_fprintf (out, "      lookup %s;\n",
+                                c_fprintf (out, "      lookup %s;\n",
                                            lookupname (otl));
                               }
                           }
                       }
                     free (langs);
                   }
-              x_fprintf (out, "} %c%c%c%c;\n", feats[i] >> 24, feats[i] >> 16,
+              c_fprintf (out, "} %c%c%c%c;\n", feats[i] >> 24, feats[i] >> 16,
                          feats[i] >> 8, feats[i]);
             }
           free (scripts);

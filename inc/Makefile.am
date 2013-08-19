@@ -86,20 +86,10 @@ nobase_include_HEADERS += sortsmill/usermenu.h
 # What version of C is in use?
 nobase_include_HEADERS += sortsmill/c_version.h
 
-## Attribute tags to put in the code for the benefit of the compiler.
-#nobase_include_HEADERS += sortsmill/attributes.h
-
 # Automatic, thread-safe initialization of nontrivial global
 # constants.
 nobase_include_HEADERS += sortsmill/initialized_global_constants.h
 nobase_include_HEADERS += sortsmill/guile/initialized_global_constants.h
-
-# Allocation.
-#nobase_include_HEADERS += sortsmill/null_passthru.h
-#nobase_include_HEADERS += sortsmill/xdie_on_null.h
-#nobase_include_HEADERS += sortsmill/xgc.h
-#nobase_include_HEADERS += sortsmill/x_alloc.h
-nobase_include_HEADERS += sortsmill/x_printf.h
 
 # Extensions to GNU libunistring.
 nobase_include_HEADERS += sortsmill/xunicase.h
@@ -110,12 +100,6 @@ nobase_include_HEADERS += sortsmill/xunistring.h
 
 # `Easy' regular expression processing, based on PCRE.
 nobase_include_HEADERS += sortsmill/rexp.h
-
-# Parsing of PostScript-style numerals.
-#nobase_include_HEADERS += sortsmill/ps_number.h
-
-# Left-leaning 2-3 red-black trees.
-#nobase_include_HEADERS += sortsmill/rb.h
 
 # Different kinds of approximate equality, mostly inherited from
 # FontForge.

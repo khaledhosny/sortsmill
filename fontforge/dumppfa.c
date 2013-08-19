@@ -60,7 +60,7 @@
 #include "splinefont.h"
 #include <gdraw.h>              /* For image defn */
 #include "print.h"              /* For makePatName */
-#include <sortsmill/x_printf.h>
+#include <sortsmill/c-fprintf.h>
 #include <c-strtod.h>
 
 extern int autohint_before_generate;
@@ -2695,14 +2695,14 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
 
   if (format == ff_type42cid)
     {
-      x_fprintf (out, "%%!PS-Adobe-3.0 Resource-CIDFont\n");
-      x_fprintf (out, "%%%%DocumentNeededResources: ProcSet (CIDInit)\n");
-      x_fprintf (out, "%%%%IncludeResource: ProcSet (CIDInit)\n");
-      x_fprintf (out, "%%%%BeginResource: CIDFont %s\n",
+      c_fprintf (out, "%%!PS-Adobe-3.0 Resource-CIDFont\n");
+      c_fprintf (out, "%%%%DocumentNeededResources: ProcSet (CIDInit)\n");
+      c_fprintf (out, "%%%%IncludeResource: ProcSet (CIDInit)\n");
+      c_fprintf (out, "%%%%BeginResource: CIDFont %s\n",
                  (cidmaster != NULL ? cidmaster : sf)->fontname);
     }
   else
-    x_fprintf (out, "%%!PS-TrueTypeFont\n");    /* Ignore the ttf version info */
+    c_fprintf (out, "%%!PS-TrueTypeFont\n");    /* Ignore the ttf version info */
   /* Too hard to do right, and if done right doesn't mean much to */
   /* a human observer */
   dumpfontcomments ((DumpChar) fputc, out, cidmaster != NULL ? cidmaster : sf,
@@ -2710,41 +2710,41 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
 
   if (format == ff_type42cid)
     {
-      x_fprintf (out, "/CIDInit /ProcSet findresource begin\n\n");
-      x_fprintf (out, "16 dict begin\n");
+      c_fprintf (out, "/CIDInit /ProcSet findresource begin\n\n");
+      c_fprintf (out, "16 dict begin\n");
     }
   else
-    x_fprintf (out, "12 dict begin\n");
-  x_fprintf (out, "  /FontName /%s def\n", sf->fontname);
+    c_fprintf (out, "12 dict begin\n");
+  c_fprintf (out, "  /FontName /%s def\n", sf->fontname);
   if (format == ff_type42cid)
     {
-      x_fprintf (out, "  /CIDFontType 2 def\n");
+      c_fprintf (out, "  /CIDFontType 2 def\n");
       /* Adobe Technical Note 5012.Type42_Spec.pdf Sec 5 CIDFontType 2 CID Fonts */
       /*  page 12 says that the FontType (not CIDFontType) of a TrueType CID font */
       /*  should be 42. The PLRM (v3) Chap 5 page 370 says the FontType should */
       /*  11.  Ain't that just grand? */
-      x_fprintf (out, "  /FontType 11 def\n");
-      x_fprintf (out, "  /CIDFontName /%s def\n", sf->fontname);
+      c_fprintf (out, "  /FontType 11 def\n");
+      c_fprintf (out, "  /CIDFontName /%s def\n", sf->fontname);
       /* 5012 doesn't mention this, but we probably need these... */
-      x_fprintf (out, "  /CIDSystemInfo 3 dict dup begin\n");
+      c_fprintf (out, "  /CIDSystemInfo 3 dict dup begin\n");
       if (cidmaster != NULL)
         {
-          x_fprintf (out, "    /Registry (%s) def\n", cidmaster->cidregistry);
-          x_fprintf (out, "    /Ordering (%s) def\n", cidmaster->ordering);
-          x_fprintf (out, "    /Supplement %d def\n", cidmaster->supplement);
+          c_fprintf (out, "    /Registry (%s) def\n", cidmaster->cidregistry);
+          c_fprintf (out, "    /Ordering (%s) def\n", cidmaster->ordering);
+          c_fprintf (out, "    /Supplement %d def\n", cidmaster->supplement);
         }
       else
         {
-          x_fprintf (out, "    /Registry (Adobe) def\n");
-          x_fprintf (out, "    /Ordering (Identity) def\n");
-          x_fprintf (out, "    /Supplement 0 def\n");
+          c_fprintf (out, "    /Registry (Adobe) def\n");
+          c_fprintf (out, "    /Ordering (Identity) def\n");
+          c_fprintf (out, "    /Supplement 0 def\n");
         }
-      x_fprintf (out, "  end def\n\n");
+      c_fprintf (out, "  end def\n\n");
     }
   else
-    x_fprintf (out, "  /FontType 42 def\n");
-  x_fprintf (out, "  /FontMatrix [1 0 0 1 0 0] def\n");
-  x_fprintf (out, "  /PaintType 0 def\n");
+    c_fprintf (out, "  /FontType 42 def\n");
+  c_fprintf (out, "  /FontMatrix [1 0 0 1 0 0] def\n");
+  c_fprintf (out, "  /PaintType 0 def\n");
   SplineFontLayerFindBounds (sf, layer, &b);
 /* The Type42 spec says that the bounding box should be scaled by the */
 /*  1/emsize (to be numbers near 1.0). The example in the spec does not do */
@@ -2753,7 +2753,7 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
   fm[1] = b.miny / (sf->ascent + sf->descent);
   fm[2] = b.maxx / (sf->ascent + sf->descent);
   fm[3] = b.maxy / (sf->ascent + sf->descent);
-  x_fprintf (out, "  ");
+  c_fprintf (out, "  ");
   dumpdblarray ((DumpChar) fputc, out, "FontBBox", fm, 4, "readonly ", true);
   dumpfontinfo ((DumpChar) fputc, out, sf, format);
 
@@ -2763,28 +2763,28 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
     uniqueid = sf->uniqueid;
   sf->tempuniqueid = uniqueid;
   if (uniqueid != -1 && sf->use_uniqueid)
-    x_fprintf (out, "  /UniqueID %d def\n", uniqueid);
+    c_fprintf (out, "  /UniqueID %d def\n", uniqueid);
   if (sf->xuid != NULL && sf->use_xuid)
     {
-      x_fprintf (out, "  /XUID %s def\n", sf->xuid);
+      c_fprintf (out, "  /XUID %s def\n", sf->xuid);
       if (sf->changed_since_xuidchanged)
         SFIncrementXUID (sf);
     }
   if (format == ff_type42)
     {
-      x_fprintf (out, "  /Encoding 256 array\n");
+      c_fprintf (out, "  /Encoding 256 array\n");
       /* older versions of dvipdfm assume the following line is present. */
       /*  Perhaps others do too? */
-      x_fprintf (out, "   0 1 255 { 1 index exch /.notdef put} for\n");
+      c_fprintf (out, "   0 1 255 { 1 index exch /.notdef put} for\n");
       for (i = 0; i < 256 && i < map->enc_limit; ++i)
         if ((gid = enc_to_gid (map, i)) != -1)
           if (SCWorthOutputting (sfglyph (sf, gid)))
-            x_fprintf (out, "    dup %d/%s put\n", i, sfglyph (sf, gid)->name);
-      x_fprintf (out, "  readonly def\n");
+            c_fprintf (out, "    dup %d/%s put\n", i, sfglyph (sf, gid)->name);
+      c_fprintf (out, "  readonly def\n");
     }
-  x_fprintf (out, "  /sfnts [\n");
+  c_fprintf (out, "  /sfnts [\n");
   _WriteType42SFNTS (out, sf, format, flags, map, layer);
-  x_fprintf (out, "  ] def\n");
+  c_fprintf (out, "  ] def\n");
   if (format == ff_type42)
     {
       hasnotdef = false;
@@ -2797,18 +2797,18 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
                 hasnotdef = true;
             }
         }
-      x_fprintf (out, "  /CharStrings %d dict dup begin\n", cnt + 1);
+      c_fprintf (out, "  /CharStrings %d dict dup begin\n", cnt + 1);
       /* Why check to see if there's a notdef char in the font? If there is */
       /*  we can define the dictionary entry twice */
       /* We can, yes, but FreeType gets confused if we do. So let's check */
       if (!hasnotdef)
-        x_fprintf (out, "    /.notdef 0 def\n");
+        c_fprintf (out, "    /.notdef 0 def\n");
       for (i = 0; i < sf->glyphcnt; ++i)
         if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i)))
-          x_fprintf (out, "    /%s %d def\n", sfglyph (sf, i)->name,
+          c_fprintf (out, "    /%s %d def\n", sfglyph (sf, i)->name,
                      sfglyph (sf, i)->ttf_glyph);
-      x_fprintf (out, "  end readonly def\n");
-      x_fprintf (out, "FontName currentdict end definefont pop\n");
+      c_fprintf (out, "  end readonly def\n");
+      c_fprintf (out, "FontName currentdict end definefont pop\n");
     }
   else
     {
@@ -2817,22 +2817,22 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
           for (i = cnt = 0; i < sf->glyphcnt; ++i)
             if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i)))
               ++cnt;
-          x_fprintf (out, "  /CIDMap %d dict dup begin\n", cnt);
+          c_fprintf (out, "  /CIDMap %d dict dup begin\n", cnt);
           for (i = 0; i < sf->glyphcnt; ++i)
             if (sfglyph (sf, i) != NULL && SCWorthOutputting (sfglyph (sf, i)))
-              x_fprintf (out, "    %d %d def\n", i, sfglyph (sf, i)->ttf_glyph);
-          x_fprintf (out, "  end readonly def\n");
-          x_fprintf (out, "  /CIDCount %d def\n", sf->glyphcnt);
-          x_fprintf (out, "  /GDBytes %d def\n", sf->glyphcnt > 65535 ? 3 : 2);
+              c_fprintf (out, "    %d %d def\n", i, sfglyph (sf, i)->ttf_glyph);
+          c_fprintf (out, "  end readonly def\n");
+          c_fprintf (out, "  /CIDCount %d def\n", sf->glyphcnt);
+          c_fprintf (out, "  /GDBytes %d def\n", sf->glyphcnt > 65535 ? 3 : 2);
         }
       else if (flags & ps_flag_identitycidmap)
         {
           for (i = cnt = 0; i < sf->glyphcnt; ++i)
             if (sfglyph (sf, i) != NULL && cnt < sfglyph (sf, i)->ttf_glyph)
               cnt = sfglyph (sf, i)->ttf_glyph;
-          x_fprintf (out, "  /CIDCount %d def\n", cnt + 1);
-          x_fprintf (out, "  /GDBytes %d def\n", cnt + 1 > 65535 ? 3 : 2);
-          x_fprintf (out, "  /CIDMap 0 def\n");
+          c_fprintf (out, "  /CIDCount %d def\n", cnt + 1);
+          c_fprintf (out, "  /GDBytes %d def\n", cnt + 1 > 65535 ? 3 : 2);
+          c_fprintf (out, "  /CIDMap 0 def\n");
         }
       else
         {                       /* Use unicode */
@@ -2846,15 +2846,15 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
                 if (sfglyph (sf, i)->unicodeenc > maxu)
                   maxu = sfglyph (sf, i)->unicodeenc;
               }
-          x_fprintf (out, "  /CIDMap %d dict dup begin\n", cnt);
-          x_fprintf (out, "    0 0 def\n");     /* .notdef doesn't have a unicode enc, will be missed. Needed */
+          c_fprintf (out, "  /CIDMap %d dict dup begin\n", cnt);
+          c_fprintf (out, "    0 0 def\n");     /* .notdef doesn't have a unicode enc, will be missed. Needed */
           if (map->enc->is_unicodebmp || map->enc->is_unicodefull)
             {
               for (i = 0; i < map->enc_limit && i < 0x10000; ++i)
                 if ((gid = enc_to_gid (map, i)) != -1)
                   {
                     if (SCWorthOutputting (sfglyph (sf, gid)))
-                      x_fprintf (out, "    %d %d def\n", i,
+                      c_fprintf (out, "    %d %d def\n", i,
                                  sfglyph (sf, gid)->ttf_glyph);
                   }
             }
@@ -2865,19 +2865,19 @@ dumptype42 (FILE *out, SplineFont *sf, int format, int flags,
                     && SCWorthOutputting (sfglyph (sf, i))
                     && sfglyph (sf, i)->unicodeenc != -1
                     && sfglyph (sf, i)->unicodeenc < 0x10000)
-                  x_fprintf (out, "    %d %d def\n",
+                  c_fprintf (out, "    %d %d def\n",
                              sfglyph (sf, i)->unicodeenc, sfglyph (sf,
                                                                    i)->
                              ttf_glyph);
             }
-          x_fprintf (out, "  end readonly def\n");
-          x_fprintf (out, "  /GDBytes %d def\n", maxu > 65535 ? 3 : 2);
-          x_fprintf (out, "  /CIDCount %d def\n", maxu + 1);
+          c_fprintf (out, "  end readonly def\n");
+          c_fprintf (out, "  /GDBytes %d def\n", maxu > 65535 ? 3 : 2);
+          c_fprintf (out, "  /CIDCount %d def\n", maxu + 1);
         }
-      x_fprintf (out,
+      c_fprintf (out,
                  "currentdict end dup /CIDFontName get exch /CIDFont defineresource pop\nend\n");
-      x_fprintf (out, "%%%%EndResource\n");
-      x_fprintf (out, "%%%%EOF\n");
+      c_fprintf (out, "%%%%EndResource\n");
+      c_fprintf (out, "%%%%EOF\n");
     }
 }
 
@@ -2928,25 +2928,25 @@ static void
 dumpreencodeproc (FILE *out)
 {
 
-  x_fprintf (out, "\n/reencodedict 10 dict def\n");
-  x_fprintf (out, "/ReEncode\n");
-  x_fprintf (out, "  { reencodedict begin\n");
-  x_fprintf (out, "\t/newencoding exch def\n");
-  x_fprintf (out, "\t/newfontname exch def\n");
-  x_fprintf (out, "\tfindfont /basefontdict exch def\n");
-  x_fprintf (out, "\t/newfont basefontdict maxlength dict def\n");
-  x_fprintf (out, "\tbasefontdict\n");
-  x_fprintf (out, "\t  { exch dup dup /FID ne exch /Encoding ne and\n");
-  x_fprintf (out, "\t\t{ exch newfont 3 1 roll put }\n");
-  x_fprintf (out, "\t\t{ pop pop }\n");
-  x_fprintf (out, "\t\tifelse\n");
-  x_fprintf (out, "\t  } forall\n");
-  x_fprintf (out, "\tnewfont /FontName newfontname put\n");
-  x_fprintf (out, "\tnewfont /Encoding newencoding put\n");
-  x_fprintf (out, "\tnewfontname newfont definefont pop\n");
-  x_fprintf (out, "\tend\n");
-  x_fprintf (out, "  } def\n");
-  x_fprintf (out, "\n");
+  c_fprintf (out, "\n/reencodedict 10 dict def\n");
+  c_fprintf (out, "/ReEncode\n");
+  c_fprintf (out, "  { reencodedict begin\n");
+  c_fprintf (out, "\t/newencoding exch def\n");
+  c_fprintf (out, "\t/newfontname exch def\n");
+  c_fprintf (out, "\tfindfont /basefontdict exch def\n");
+  c_fprintf (out, "\t/newfont basefontdict maxlength dict def\n");
+  c_fprintf (out, "\tbasefontdict\n");
+  c_fprintf (out, "\t  { exch dup dup /FID ne exch /Encoding ne and\n");
+  c_fprintf (out, "\t\t{ exch newfont 3 1 roll put }\n");
+  c_fprintf (out, "\t\t{ pop pop }\n");
+  c_fprintf (out, "\t\tifelse\n");
+  c_fprintf (out, "\t  } forall\n");
+  c_fprintf (out, "\tnewfont /FontName newfontname put\n");
+  c_fprintf (out, "\tnewfont /Encoding newencoding put\n");
+  c_fprintf (out, "\tnewfontname newfont definefont pop\n");
+  c_fprintf (out, "\tend\n");
+  c_fprintf (out, "  } def\n");
+  c_fprintf (out, "\n");
 }
 
 static char *
@@ -2963,10 +2963,10 @@ dumpnotdefenc (FILE *out, SplineFont *sf)
   else
 #endif
     notdefname = ".notdef";
-  x_fprintf (out, "/%sBase /%sNotDef [\n", sf->fontname, sf->fontname);
+  c_fprintf (out, "/%sBase /%sNotDef [\n", sf->fontname, sf->fontname);
   for (i = 0; i < 256; ++i)
-    x_fprintf (out, " /%s\n", notdefname);
-  x_fprintf (out, "] ReEncode\n\n");
+    c_fprintf (out, " /%s\n", notdefname);
+  c_fprintf (out, "] ReEncode\n\n");
   return notdefname;
 }
 
@@ -2998,27 +2998,27 @@ dumptype0stuff (FILE *out, SplineFont *sf, EncMap *map)
     {
       if (somecharsused (sf, i << 8, (i << 8) + 0xff, map))
         {
-          x_fprintf (out, "/%sBase /%s%d [\n", sf->fontname, sf->fontname, i);
+          c_fprintf (out, "/%sBase /%s%d [\n", sf->fontname, sf->fontname, i);
           for (j = 0; j < 256 && (i << 8) + j < map->enc_limit; ++j)
             if (enc_to_gid (map, (i << 8) + j) != -1 &&
                 SCWorthOutputting (sfglyph
                                    (sf, enc_to_gid (map, (i << 8) + j))))
-              x_fprintf (out, " /%s\n",
+              c_fprintf (out, " /%s\n",
                          sfglyph (sf, enc_to_gid (map, (i << 8) + j))->name);
             else
-              x_fprintf (out, "/%s\n", notdefname);
+              c_fprintf (out, "/%s\n", notdefname);
           for (; j < 256; ++j)
-            x_fprintf (out, " /%s\n", notdefname);
-          x_fprintf (out, "] ReEncode\n\n");
+            c_fprintf (out, " /%s\n", notdefname);
+          c_fprintf (out, "] ReEncode\n\n");
         }
       else if (i == 0x27
                && (map->enc->is_unicodebmp || map->enc->is_unicodefull))
         {
-          x_fprintf (out, "%% Add Zapf Dingbats to unicode font at 0x2700\n");
-          x_fprintf (out, "%%  But only if on the printer, else use notdef\n");
-          x_fprintf (out,
+          c_fprintf (out, "%% Add Zapf Dingbats to unicode font at 0x2700\n");
+          c_fprintf (out, "%%  But only if on the printer, else use notdef\n");
+          c_fprintf (out,
                      "%%  gv, which has no Zapf, maps courier to the name\n");
-          x_fprintf (out,
+          c_fprintf (out,
                      "%%  so we must check a bit more than is it null or not...\n");
 /* gv with no ZapfDingbats installed does weird stuff. */
 /*  If I do "/ZapfDingbats findfont" then it returns "/Courier findfont" the */
@@ -3026,49 +3026,49 @@ dumptype0stuff (FILE *out, SplineFont *sf, EncMap *map)
 /* So even if the printer thinks it's got Zapf we must check to make sure it's*/
 /*  the real Zapf. We do that by examining the name. If it's ZapfDingbats all*/
 /*  should be well, if it's Courier, then that counts as non-existant */
-          x_fprintf (out, "/ZapfDingbats findfont pop\n");
-          x_fprintf (out, "/ZapfDingbats findfont null eq\n");
-          x_fprintf (out, "{ true }\n");
-          x_fprintf (out,
+          c_fprintf (out, "/ZapfDingbats findfont pop\n");
+          c_fprintf (out, "/ZapfDingbats findfont null eq\n");
+          c_fprintf (out, "{ true }\n");
+          c_fprintf (out,
                      " { /ZapfDingbats findfont /FontName get (ZapfDingbats) ne }\n");
-          x_fprintf (out, " ifelse\n");
-          x_fprintf (out, "{ /%s%d /%sNotDef findfont definefont pop }\n",
+          c_fprintf (out, " ifelse\n");
+          c_fprintf (out, "{ /%s%d /%sNotDef findfont definefont pop }\n",
                      sf->fontname, i, sf->fontname);
-          x_fprintf (out, " { /ZapfDingbats /%s%d [\n", sf->fontname, i);
+          c_fprintf (out, " { /ZapfDingbats /%s%d [\n", sf->fontname, i);
           for (j = 0; j < 0xc0; ++j)
-            x_fprintf (out, " /%s\n", zapfexists[j] ? zapfnomen[j] : ".notdef");
+            c_fprintf (out, " /%s\n", zapfexists[j] ? zapfnomen[j] : ".notdef");
           for (; j < 256; ++j)
-            x_fprintf (out, " /%s\n", ".notdef");
-          x_fprintf (out, "] ReEncode\n\n");
-          x_fprintf (out, "  } ifelse\n\n");
+            c_fprintf (out, " /%s\n", ".notdef");
+          c_fprintf (out, "] ReEncode\n\n");
+          c_fprintf (out, "  } ifelse\n\n");
         }
     }
 
-  x_fprintf (out, "/%s 21 dict dup begin\n", sf->fontname);
-  x_fprintf (out, "/FontInfo /%sBase findfont /FontInfo get def\n",
+  c_fprintf (out, "/%s 21 dict dup begin\n", sf->fontname);
+  c_fprintf (out, "/FontInfo /%sBase findfont /FontInfo get def\n",
              sf->fontname);
-  x_fprintf (out, "/PaintType %d def\n", sf->strokedfont ? 2 : 0);
+  c_fprintf (out, "/PaintType %d def\n", sf->strokedfont ? 2 : 0);
   if (sf->strokedfont)
-    x_fprintf (out, "/StrokeWidth %g def\n", (double) sf->strokewidth);
-  x_fprintf (out, "/FontType 0 def\n");
-  x_fprintf (out, "/LanguageLevel 2 def\n");
-  x_fprintf (out, "/FontMatrix [1 0 0 1 0 0] readonly def\n");
-  x_fprintf (out, "/FMapType 2 def\n");
-  x_fprintf (out, "/Encoding [\n");
+    c_fprintf (out, "/StrokeWidth %g def\n", (double) sf->strokewidth);
+  c_fprintf (out, "/FontType 0 def\n");
+  c_fprintf (out, "/LanguageLevel 2 def\n");
+  c_fprintf (out, "/FontMatrix [1 0 0 1 0 0] readonly def\n");
+  c_fprintf (out, "/FMapType 2 def\n");
+  c_fprintf (out, "/Encoding [\n");
   for (i = 0; i < 256; ++i)
-    x_fprintf (out, " %d\n", i);
-  x_fprintf (out, "] readonly def\n");
-  x_fprintf (out, "/FDepVector [\n");
-  x_fprintf (out, " /%sBase findfont\n", sf->fontname);
+    c_fprintf (out, " %d\n", i);
+  c_fprintf (out, "] readonly def\n");
+  c_fprintf (out, "/FDepVector [\n");
+  c_fprintf (out, " /%sBase findfont\n", sf->fontname);
   for (i = 1; i < 256; ++i)
     if (somecharsused (sf, i << 8, (i << 8) + 0xff, map) ||
         (i == 0x27 && (map->enc->is_unicodebmp || map->enc->is_unicodefull)))
-      x_fprintf (out, " /%s%d findfont\n", sf->fontname, i);
+      c_fprintf (out, " /%s%d findfont\n", sf->fontname, i);
     else
-      x_fprintf (out, " /%sNotDef findfont\n", sf->fontname);
-  x_fprintf (out, "  ] readonly def\n");
-  x_fprintf (out, "end definefont pop\n");
-  x_fprintf (out, "%%%%EOF\n");
+      c_fprintf (out, " /%sNotDef findfont\n", sf->fontname);
+  c_fprintf (out, "  ] readonly def\n");
+  c_fprintf (out, "end definefont pop\n");
+  c_fprintf (out, "%%%%EOF\n");
 }
 
 static void
@@ -3251,41 +3251,41 @@ dumpcidstuff (FILE *out, SplineFont *cidmaster, int flags, EncMap *map,
   char buffer[4096];
   long len;
 
-  x_fprintf (out, "%%!PS-Adobe-3.0 Resource-CIDFont\n");
-  x_fprintf (out, "%%%%DocumentNeededResources: ProcSet (CIDInit)\n");
-/*  x_fprintf( out, "%%%%DocumentSuppliedResources: CIDFont (%s)\n", cidmaster->fontname ); */
+  c_fprintf (out, "%%!PS-Adobe-3.0 Resource-CIDFont\n");
+  c_fprintf (out, "%%%%DocumentNeededResources: ProcSet (CIDInit)\n");
+/*  c_fprintf( out, "%%%%DocumentSuppliedResources: CIDFont (%s)\n", cidmaster->fontname ); */
 /* Werner says this is inappropriate */
-  x_fprintf (out, "%%%%IncludeResource: ProcSet (CIDInit)\n");
-  x_fprintf (out, "%%%%BeginResource: CIDFont (%s)\n", cidmaster->fontname);
+  c_fprintf (out, "%%%%IncludeResource: ProcSet (CIDInit)\n");
+  c_fprintf (out, "%%%%BeginResource: CIDFont (%s)\n", cidmaster->fontname);
   dumpfontcomments ((DumpChar) fputc, out, cidmaster, ff_cid);
 
-  x_fprintf (out, "/CIDInit /ProcSet findresource begin\n\n");
+  c_fprintf (out, "/CIDInit /ProcSet findresource begin\n\n");
 
-  x_fprintf (out, "20 dict begin\n\n");
+  c_fprintf (out, "20 dict begin\n\n");
 
-  x_fprintf (out, "/CIDFontName /%s def\n", cidmaster->fontname);
-  x_fprintf (out, "/CIDFontVersion %g def\n", cidmaster->cidversion);
-  x_fprintf (out, "/CIDFontType 0 def\n\n");
+  c_fprintf (out, "/CIDFontName /%s def\n", cidmaster->fontname);
+  c_fprintf (out, "/CIDFontVersion %g def\n", cidmaster->cidversion);
+  c_fprintf (out, "/CIDFontType 0 def\n\n");
 
-  x_fprintf (out, "/CIDSystemInfo 3 dict dup begin\n");
-  x_fprintf (out, "  /Registry (%s) def\n", cidmaster->cidregistry);
-  x_fprintf (out, "  /Ordering (%s) def\n", cidmaster->ordering);
-  x_fprintf (out, "  /Supplement %d def\n", cidmaster->supplement);
-  x_fprintf (out, "end def\n\n");
+  c_fprintf (out, "/CIDSystemInfo 3 dict dup begin\n");
+  c_fprintf (out, "  /Registry (%s) def\n", cidmaster->cidregistry);
+  c_fprintf (out, "  /Ordering (%s) def\n", cidmaster->ordering);
+  c_fprintf (out, "  /Supplement %d def\n", cidmaster->supplement);
+  c_fprintf (out, "end def\n\n");
 
   CIDLayerFindBounds (cidmaster, layer, &res);
-  x_fprintf (out, "/FontBBox [ %g %g %g %g ] def\n",
+  c_fprintf (out, "/FontBBox [ %g %g %g %g ] def\n",
              floor (res.minx), floor (res.miny),
              ceil (res.maxx), ceil (res.maxy));
 
   if (cidmaster->use_uniqueid)
     {
-      x_fprintf (out, "/UIDBase %d def\n",
+      c_fprintf (out, "/UIDBase %d def\n",
                  cidmaster->uniqueid ? cidmaster->uniqueid : 4000000 +
                  (rand () & 0x3ffff));
       if (cidmaster->xuid != NULL && cidmaster->use_xuid)
         {
-          x_fprintf (out, "/XUID %s def\n", cidmaster->xuid);
+          c_fprintf (out, "/XUID %s def\n", cidmaster->xuid);
           /* SFIncrementXUID(cidmaster); *//* Unique ID managment in CID fonts is too complex for this simple trick to work */
         }
     }
@@ -3296,12 +3296,12 @@ dumpcidstuff (FILE *out, SplineFont *cidmaster, int flags, EncMap *map,
        gencidbinarydata (cidmaster, &cidbytes, flags, map, layer)) == NULL)
     return 0;
 
-  x_fprintf (out, "\n/CIDMapOffset %d def\n", cidbytes.cidmapoffset);
-  x_fprintf (out, "/FDBytes %d def\n", cidbytes.fdbytes);
-  x_fprintf (out, "/GDBytes %d def\n", cidbytes.gdbytes);
-  x_fprintf (out, "/CIDCount %d def\n\n", cidbytes.cidcnt);
+  c_fprintf (out, "\n/CIDMapOffset %d def\n", cidbytes.cidmapoffset);
+  c_fprintf (out, "/FDBytes %d def\n", cidbytes.fdbytes);
+  c_fprintf (out, "/GDBytes %d def\n", cidbytes.gdbytes);
+  c_fprintf (out, "/CIDCount %d def\n\n", cidbytes.cidcnt);
 
-  x_fprintf (out, "/FDArray %d array\n", cidbytes.fdcnt);
+  c_fprintf (out, "/FDArray %d array\n", cidbytes.fdcnt);
   for (i = 0; i < cidbytes.fdcnt; ++i)
     {
       double factor;
@@ -3309,28 +3309,28 @@ dumpcidstuff (FILE *out, SplineFont *cidmaster, int flags, EncMap *map,
       /* According to the PSRef Man, v3. only FontName, FontMatrix & Private */
       /*  should be defined here. But adobe's example fonts have a few */
       /*  extra entries, so I'll put them in */
-      x_fprintf (out, "dup %d\n", i);
-      x_fprintf (out, "\n%%ADOBeginFontDict\n");
-      x_fprintf (out, "15 dict\n  begin\n");
-      x_fprintf (out, "  /FontName /%s def\n", sf->fontname);
-      x_fprintf (out, "  /FontType 1 def\n");
+      c_fprintf (out, "dup %d\n", i);
+      c_fprintf (out, "\n%%ADOBeginFontDict\n");
+      c_fprintf (out, "15 dict\n  begin\n");
+      c_fprintf (out, "  /FontName /%s def\n", sf->fontname);
+      c_fprintf (out, "  /FontType 1 def\n");
       factor = 1.0 / (sf->ascent + sf->descent);
-      x_fprintf (out, "  /FontMatrix [ %g 0 0 %g 0 0 ] def\n", factor, factor);
-      x_fprintf (out, "/PaintType %d def\n", sf->strokedfont ? 2 : 0);
+      c_fprintf (out, "  /FontMatrix [ %g 0 0 %g 0 0 ] def\n", factor, factor);
+      c_fprintf (out, "/PaintType %d def\n", sf->strokedfont ? 2 : 0);
       if (sf->strokedfont)
-        x_fprintf (out, "/StrokeWidth %g def\n", (double) sf->strokewidth);
-      x_fprintf (out, "\n  %%ADOBeginPrivateDict\n");
+        c_fprintf (out, "/StrokeWidth %g def\n", (double) sf->strokewidth);
+      c_fprintf (out, "\n  %%ADOBeginPrivateDict\n");
       dumpprivatestuff ((DumpChar) fputc, out, sf, &cidbytes.fds[i], flags,
                         ff_cid, map, layer);
-      x_fprintf (out, "\n  %%ADOEndPrivateDict\n");
-      x_fprintf (out, "  currentdict end\n%%ADOEndFontDict\n put\n\n");
+      c_fprintf (out, "\n  %%ADOEndPrivateDict\n");
+      c_fprintf (out, "  currentdict end\n%%ADOEndFontDict\n put\n\n");
     }
-  x_fprintf (out, "def\n\n");
+  c_fprintf (out, "def\n\n");
 
   fseek (binary, 0, SEEK_END);
   len = ftell (binary);
   sprintf (buffer, "(Binary) %ld StartData ", len);
-  x_fprintf (out, "%%%%BeginData: %ld Binary Bytes\n",
+  c_fprintf (out, "%%%%BeginData: %ld Binary Bytes\n",
              (long) (len + strlen (buffer)));
   fputs (buffer, out);
 
@@ -3341,7 +3341,7 @@ dumpcidstuff (FILE *out, SplineFont *cidmaster, int flags, EncMap *map,
   fclose (binary);
   free (cidbytes.fds);
 
-  x_fprintf (out, "\n%%%%EndData\n%%%%EndResource\n%%%%EOF\n");
+  c_fprintf (out, "\n%%%%EndData\n%%%%EndResource\n%%%%EOF\n");
   return !cidbytes.errors;
 }
 
@@ -3410,12 +3410,12 @@ dumpimageproc (FILE *file, BDFChar *bdfc, BDFFont *font)
   struct psfilter ps;
 
   /*                     wx wy ix iy urx ury setcachdevice */
-  x_fprintf (file, "  /%s { %d 0 %d %d %d %d setcachedevice \n",
+  c_fprintf (file, "  /%s { %d 0 %d %d %d %d setcachedevice \n",
              bdfc->sc->name, (int) rint (bdfc->width * scale),
              (int) rint (bdfc->xmin * scale), (int) rint (bdfc->ymin * scale),
              (int) rint ((1 + bdfc->xmax) * scale),
              (int) rint ((1 + bdfc->ymax) * scale));
-  x_fprintf (file, "\t%g %g translate %g %g scale %d %d true [%d 0 0 %d 0 0] {<~\n", bdfc->xmin * scale, bdfc->ymax * scale,    /* tx tx Translate */
+  c_fprintf (file, "\t%g %g translate %g %g scale %d %d true [%d 0 0 %d 0 0] {<~\n", bdfc->xmin * scale, bdfc->ymax * scale,    /* tx tx Translate */
              width * scale, height * scale,     /* x y Scale */
              width, height, width, -height);
   InitFilter (&ps, (DumpChar) fputc, file);
@@ -3426,7 +3426,7 @@ dumpimageproc (FILE *file, BDFChar *bdfc, BDFFont *font)
       FilterStr (&ps, (uint8_t *) (bdfc->bitmap + i * bdfc->bytes_per_line),
                  (width + 7) / 8);
   FlushFilter (&ps);
-  x_fprintf (file, "} imagemask } bind def\n");
+  c_fprintf (file, "} imagemask } bind def\n");
 }
 
 int
@@ -3464,12 +3464,12 @@ PSBitmapDump (char *filename, BDFFont *font, EncMap *map)
           }
       ++cnt;                    /* one notdef entry */
 
-      x_fprintf (file, "/CharProcs %d dict def\nCharProcs begin\n", cnt);
+      c_fprintf (file, "/CharProcs %d dict def\nCharProcs begin\n", cnt);
 
       if (notdefpos != -1 && font->glyphs[notdefpos] != NULL)
         dumpimageproc (file, font->glyphs[notdefpos], font);
       else
-        x_fprintf (file,
+        c_fprintf (file,
                    "  /.notdef { %d 0 0 0 0 0 setcachedevice } bind def\n",
                    sf->ascent + sf->descent);
 
@@ -3479,8 +3479,8 @@ PSBitmapDump (char *filename, BDFFont *font, EncMap *map)
             if (font->glyphs[i] != NULL)
               dumpimageproc (file, font->glyphs[i], font);
           }
-      x_fprintf (file, "end\ncurrentdict end\n");
-      x_fprintf (file, "/%s exch definefont\n", sf->fontname);
+      c_fprintf (file, "end\ncurrentdict end\n");
+      c_fprintf (file, "/%s exch definefont\n", sf->fontname);
       ret = ferror (file) == 0;
       if (fclose (file) != 0)
         ret = false;
