@@ -84,13 +84,6 @@ dist_libsortsmill_aux_la_SOURCES += math_scm_matrix.c math_scm_lu.c
 # routines in GSL.)
 dist_libsortsmill_aux_la_SOURCES += math_f64_matrix.c
 
-# Extensions to libunistring.
-dist_libsortsmill_aux_la_SOURCES += xunicase.c
-dist_libsortsmill_aux_la_SOURCES += xuniconv.c
-dist_libsortsmill_aux_la_SOURCES += xuninorm.c
-dist_libsortsmill_aux_la_SOURCES += xunistr.c
-dist_libsortsmill_aux_la_SOURCES += xunistr_strjoin.c
-
 # Mathematical functions.
 dist_libsortsmill_aux_la_SOURCES += bincoef.c
 dist_libsortsmill_aux_la_SOURCES += floor_mod.c

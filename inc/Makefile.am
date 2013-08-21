@@ -91,13 +91,6 @@ nobase_include_HEADERS += sortsmill/c_version.h
 nobase_include_HEADERS += sortsmill/initialized_global_constants.h
 nobase_include_HEADERS += sortsmill/guile/initialized_global_constants.h
 
-# Extensions to GNU libunistring.
-nobase_include_HEADERS += sortsmill/xunicase.h
-nobase_include_HEADERS += sortsmill/xuniconv.h
-nobase_include_HEADERS += sortsmill/xuninorm.h
-nobase_include_HEADERS += sortsmill/xunistr.h
-nobase_include_HEADERS += sortsmill/xunistring.h
-
 # `Easy' regular expression processing, based on PCRE.
 nobase_include_HEADERS += sortsmill/rexp.h
 
