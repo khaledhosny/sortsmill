@@ -91,9 +91,6 @@ nobase_include_HEADERS += sortsmill/c_version.h
 nobase_include_HEADERS += sortsmill/initialized_global_constants.h
 nobase_include_HEADERS += sortsmill/guile/initialized_global_constants.h
 
-# `Easy' regular expression processing, based on PCRE.
-nobase_include_HEADERS += sortsmill/rexp.h
-
 # Different kinds of approximate equality, mostly inherited from
 # FontForge.
 nobase_include_HEADERS += sortsmill/nearness.h

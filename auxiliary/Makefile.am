@@ -69,9 +69,6 @@ dist_libsortsmill_aux_la_SOURCES += combiners.h
 # splineutil2.c.
 dist_libsortsmill_aux_la_SOURCES += nearness.c
 
-# Extensions to PCRE.
-dist_libsortsmill_aux_la_SOURCES += rexp.c
-
 # Extensions to GNU MP.
 dist_libsortsmill_aux_la_SOURCES += gmp_constants.c
 dist_libsortsmill_aux_la_SOURCES += math_gmp_matrix.c
