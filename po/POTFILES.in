@@ -3,8 +3,6 @@
 data/sortsmill-editor.desktop.in
 data/fontforge.xml.in
 
-auxiliary/copy_with_strides.c
-auxiliary/rexp.c
 auxiliary/rnrs_conditions.c
 
 auxiliary/guile_math_functions.c
@@ -20,6 +18,7 @@ auxiliary/math_polyspline_ellipses.c
 auxiliary/math_polyspline_intersection.c
 auxiliary/math_polyspline_reduce.c
 
+auxiliary/guile_copy_with_strides.c
 auxiliary/guile_ps_number.c
 auxiliary/guile_python.c
 auxiliary/guile_types.c

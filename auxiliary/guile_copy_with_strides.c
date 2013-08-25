@@ -16,54 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmill/copy_with_strides.h>
 #include <sortsmill/guile.h>
+#include <sortsmill/copy_with_strides_macros.h>
 #include <intl.h>
 #include <assert.h>
 
-#define _FF_COPY_WITH_STRIDES(NAME, TYPE)       \
-  void                                          \
-  NAME (ssize_t dest_stride, TYPE *dest,        \
-        ssize_t src_stride, const TYPE *src,    \
-        size_t count)                           \
-  {                                             \
-    for (size_t k = 0; k < count; k++)          \
-      {                                         \
-        *dest = *src;                           \
-        dest += dest_stride;                    \
-        src += src_stride;                      \
-      }                                         \
-  }
-
-#define _FF_COPY_COMPLEX_WITH_STRIDES(NAME,             \
-                                      COMPONENT_TYPE)   \
-  void                                                  \
-  NAME (ssize_t dest_stride, COMPONENT_TYPE *dest,      \
-        ssize_t src_stride, const COMPONENT_TYPE *src,  \
-        size_t count)                                   \
-  {                                                     \
-    for (size_t k = 0; k < count; k++)                  \
-      {                                                 \
-        dest[0] = src[0];                               \
-        dest[1] = src[1];                               \
-        dest += 2 * dest_stride;                        \
-        src += 2 * src_stride;                          \
-      }                                                 \
-  }
-
-VISIBLE _FF_COPY_WITH_STRIDES (copy_scm_with_strides, SCM);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_u8_with_strides, uint8_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_s8_with_strides, int8_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_u16_with_strides, uint16_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_s16_with_strides, int16_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_u32_with_strides, uint32_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_s32_with_strides, int32_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_u64_with_strides, uint64_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_s64_with_strides, int64_t);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_f32_with_strides, float);
-VISIBLE _FF_COPY_WITH_STRIDES (copy_f64_with_strides, double);
-VISIBLE _FF_COPY_COMPLEX_WITH_STRIDES (copy_c32_with_strides, float);
-VISIBLE _FF_COPY_COMPLEX_WITH_STRIDES (copy_c64_with_strides, double);
+VISIBLE void
+copy_scm_with_strides (ssize_t dest_stride,
+                       SCM *dest,
+                       ssize_t src_stride,
+                       const SCM *src,
+                       size_t count)
+{
+  COPY_WITH_STRIDES (SCM, dest, src, dest_stride, src_stride, count);
+};
 
 #define _FF_VOID_COPY_WITH_STRIDES(ELEMTYPE, TYPE)                      \
   void                                                                  \

@@ -86,7 +86,7 @@ dist_libsortsmill_aux_la_SOURCES += bincoef.c
 dist_libsortsmill_aux_la_SOURCES += floor_mod.c
 
 # Moving data around, taking into account non-unit strides.
-dist_libsortsmill_aux_la_SOURCES += copy_with_strides.c
+dist_libsortsmill_aux_la_SOURCES += guile_copy_with_strides.c
 
 # Polynomial splines.
 dist_libsortsmill_aux_la_SOURCES += math_polyspline_add.c

@@ -119,9 +119,6 @@ nobase_include_HEADERS += sortsmill/math/f64_matrix.h
 # Brent’s method for root-finding.
 nobase_include_HEADERS += sortsmill/math/brentroot.h
 
-# Moving data around, taking into account non-unit strides.
-nobase_include_HEADERS += sortsmill/copy_with_strides.h
-
 # Polynomial splines.
 nobase_include_HEADERS += sortsmill/math/polyspline.h
 nobase_include_HEADERS += sortsmill/math/polyspline/add.h
@@ -149,6 +146,7 @@ nobase_include_HEADERS += sortsmill/guile/notices.h
 
 nobase_include_HEADERS += sortsmill/guile.h
 
+nobase_include_HEADERS += sortsmill/guile/copy_with_strides.h
 nobase_include_HEADERS += sortsmill/guile/iconv.h
 nobase_include_HEADERS += sortsmill/guile/arrays.h
 nobase_include_HEADERS += sortsmill/guile/rnrs_conditions.h
