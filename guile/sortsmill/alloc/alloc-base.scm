@@ -30,7 +30,6 @@
   (eval-when (compile load eval)
 
     (define libsortsmill-core (dynamic-link "libsortsmill_core"))
-    (define this-program (dynamic-link))
 
     (define c:zalloc
       (pointer->procedure '*
@@ -39,7 +38,7 @@
 
     (define c:free
       (pointer->procedure void
-                          (dynamic-func "free" this-program)
+                          (dynamic-func "x_free" libsortsmill-core)
                           '(*)))
 
     (define c:gc-zalloc
