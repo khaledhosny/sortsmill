@@ -19,10 +19,31 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (ff-internal generate-types)
-        (sortsmill machine)
         (rnrs)
         (ice-9 match)
         (ice-9 format))
+
+(define (c:int-type n)
+  (case n
+    ((1) 'int8_t)
+    ((2) 'int16_t)
+    ((4) 'int32_t)
+    ((8) 'int64_t)))
+
+(define (c:uint-type n)
+  (case n
+    ((1) 'uint8_t)
+    ((2) 'uint16_t)
+    ((4) 'uint32_t)
+    ((8) 'uint64_t)))
+
+(define float-size @SIZEOF_FLOAT@)
+(define double-size @SIZEOF_DOUBLE@)
+
+(define (c:float-type n)
+  (cond
+   ((= n float-size) 'float)
+   ((= n double-size) 'double)))
 
 (define (write-instruction instruction)
   (match instruction

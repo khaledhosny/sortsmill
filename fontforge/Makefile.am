@@ -133,13 +133,13 @@ AM_V_HAPI_ = $(AM_V_HAPI_$(AM_DEFAULT_VERBOSITY))
 AM_V_HAPI_0 = @echo "  GENHAPI " $@;
 
 sortsmill/fontforge_api.h: fontforge.types.apii			\
-		$(srcdir)/generate-c-api.h.scm						\
+		$(builddir)/generate-c-api.h.scm				\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_HAPI)
-	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.h.scm $(filter %.apii, $^) > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(builddir)/generate-c-api.h.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-EXTRA_DIST += generate-c-api.h.scm
+#EXTRA_DIST += generate-c-api.h.scm.in
 
 #--------------------------------------------------------------------------
 
@@ -299,13 +299,13 @@ AM_V_CAPI_ = $(AM_V_CAPI_$(AM_DEFAULT_VERBOSITY))
 AM_V_CAPI_0 = @echo "  GENCAPI " $@;
 
 fontforge_api.c: fontforge.types.apii sortsmill/fontforge_api.h	\
-		$(srcdir)/generate-c-api.c.scm							\
+		$(builddir)/generate-c-api.c.scm						\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_CAPI)
-	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.c.scm $(filter %.apii, $^) > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(builddir)/generate-c-api.c.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-EXTRA_DIST += generate-c-api.c.scm
+#EXTRA_DIST += generate-c-api.c.scm.in
 
 CLEANFILES += fontforge_api.c
 

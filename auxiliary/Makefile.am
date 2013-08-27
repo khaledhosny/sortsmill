@@ -43,13 +43,13 @@
 include $(top_srcdir)/mk/flags.am
 @includemk@ $(top_srcdir)/mk/guile.mk
 
-lib_LTLIBRARIES =
+noinst_LTLIBRARIES =
 EXTRA_DIST =
 MOSTLYCLEANFILES =
 
 #--------------------------------------------------------------------------
 
-lib_LTLIBRARIES += libsortsmill_aux.la
+noinst_LTLIBRARIES += libsortsmill_aux.la
 
 dist_libsortsmill_aux_la_SOURCES =
 nodist_libsortsmill_aux_la_SOURCES =
@@ -143,7 +143,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_permutations.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gmp.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_matrices_base.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_multivariate_polynomials.c
-dist_libsortsmill_aux_la_SOURCES += guile_alloc_base.c
 dist_libsortsmill_aux_la_SOURCES += guile_arrays.c
 dist_libsortsmill_aux_la_SOURCES += guile_iconv.c
 dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
@@ -152,15 +151,17 @@ dist_libsortsmill_aux_la_SOURCES += guile_format.c
 dist_libsortsmill_aux_la_SOURCES += guile_postscript.c
 dist_libsortsmill_aux_la_SOURCES += guile_ps_number.c
 dist_libsortsmill_aux_la_SOURCES += guile_scm_type.c
-dist_libsortsmill_aux_la_SOURCES += guile_strings_gc.c
 dist_libsortsmill_aux_la_SOURCES += guile_strings_rexp.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
 dist_libsortsmill_aux_la_SOURCES += guile_types.c
 
+# FIXME: Be rid of these. We are using foreign interface to Core
+# Library, instead.
+dist_libsortsmill_aux_la_SOURCES += guile_alloc_base.c
+dist_libsortsmill_aux_la_SOURCES += guile_strings_gc.c
+
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) $(SORTSMILL_CORE_CFLAGS) '-I$(srcdir)'
-libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
-libsortsmill_aux_la_LDFLAGS = $(SORTSMILL_CORE_LIBS) $(call ldflags) -export-dynamic
-libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
+libsortsmill_aux_la_DEPENDENCIES = Makefile
 
 # The GMP_MATRIX_EXTRAS files are included by math_gmp_matrix.c rather
 # than compiled directly.
@@ -184,11 +185,12 @@ gmp_matrix.lo: $(GMP_MATRIX_EXTRAS)
 # loading auxiliary library functions in Guile programs that cannot
 # load libguile-sortsmill_symbols.la.
 
-lib_LTLIBRARIES += libguile-sortsmill_aux.la
-libguile_sortsmill_aux_la_SOURCES = libguile_sortsmill_aux.c
-libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la
-libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
-	$(AM_LDFLAGS)
+# FIXME: Be rid of this:
+#lib_LTLIBRARIES = libguile-sortsmill_aux.la
+#libguile_sortsmill_aux_la_SOURCES = libguile_sortsmill_aux.c
+#libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la
+#libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
+#	$(AM_LDFLAGS)
 
 #--------------------------------------------------------------------------
 #

@@ -7,7 +7,7 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# serial 2
+# serial 3
 
 # StM_PROG_WGET
 # -------------
@@ -17,14 +17,14 @@
 # ac_cv_path_WGET. The test may be overridden by setting WGET or the
 # cache variable.
 #
-AC_DEFUN([StM_PROG_WGET],[
+AC_DEFUN([StM_PROG_WGET],[{ :
    AC_REQUIRE([AC_PROG_EGREP])
    StM_PATH_PROGS_CACHED_AND_PRECIOUS([WGET],[GNU Wget command],
       [wget],[         
          if LC_ALL=C LANG=C ${ac_path_WGET} --version | \
-                 LC_ALL=C LANG=C ${EGREP} -q '^Wgetrc:'; then
+                 LC_ALL=C LANG=C ${EGREP} '^Wgetrc:' 2> /dev/null > /dev/null; then
             ac_cv_path_WGET=${ac_path_WGET}
             ac_path_WGET_found=:
          fi
       ])
-])
+}])

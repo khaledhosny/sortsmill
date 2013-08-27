@@ -7,11 +7,38 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# serial 3
+# serial 4
 
-# FIXME: Document this macro.
-
-AC_DEFUN([StM_ANALYZE_PACKAGE_VERSION],[
+# StM_ANALYZE_PACKAGE_VERSION
+# ---------------------------
+#
+# Analyze PACKAGE_VERSION, deriving from it and AC_SUBSTing
+# VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_EXTRA,
+# VERSION_EXTRA_SHORT, and PACKAGE_VERSION_SHORT, if PACKAGE_VERSION
+# is done according to Sorts Mill practices. (Which are to use a
+# certain subset of valid Gentoo ebuild version strings.)
+#
+# For example,
+#
+#     PACKAGE_VERSION = 1.2.3_beta4
+#
+# yields
+#
+#     VERSION_MAJOR = 1
+#     VERSION_MINOR = 2
+#     VERSION_PATCH = 3
+#     VERSION_EXTRA = beta4
+#     VERSION_EXTRA_SHORT = b4
+#     PACKAGE_VERSION_SHORT = 1.2.3b4
+#
+# The alphabetic part of a `VERSION_EXTRA' may be either `alpha' or
+# `beta'. However, a `VERSION_EXTRA' (along with its separating
+# underscore) may be left out.
+#
+# FIXME: This macro and the package version conventions need better
+# documentation.
+#
+AC_DEFUN([StM_ANALYZE_PACKAGE_VERSION],[{ :;
    AC_REQUIRE([AC_PROG_SED])
    VERSION_MAJOR=`AS_ECHO(["${PACKAGE_VERSION}"]) | \
       ${SED} -e 's/^\([[0-9]][[0-9]]*\).*/\1/'`
@@ -31,5 +58,5 @@ AC_DEFUN([StM_ANALYZE_PACKAGE_VERSION],[
    AC_SUBST([VERSION_EXTRA])
    AC_SUBST([VERSION_EXTRA_SHORT])
    AC_SUBST([PACKAGE_VERSION_SHORT])
-])
+}])
 

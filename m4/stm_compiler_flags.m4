@@ -7,9 +7,9 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# serial 2
+# serial 3
 
-m4_define([__stm_gnu_compiler_flags],[
+m4_define([__stm_gnu_compiler_flags],[{ :;
    if test x"${$2}" = xyes; then
       AC_LANG_PUSH([$1])
       StM_COMPILER_FLAGS([$3],[$4])
@@ -20,17 +20,17 @@ m4_define([__stm_gnu_compiler_flags],[
       ])
       AC_LANG_POP
    fi
-])
+}])
 
 # StM_COMPILER_FLAGS(variable, -flag1 -flag2 ...)
 # -----------------------------------------------
 #
 # Repeated calls to GNU Autoconf Archive macro AX_CHECK_COMPILE_FLAG.
 #
-AC_DEFUN([StM_COMPILER_FLAGS],[
+AC_DEFUN([StM_COMPILER_FLAGS],[{ :;
    m4_foreach_w([__flag],[$2],
                 [AX_CHECK_COMPILE_FLAG(__flag,[$1="[$]{$1} __flag"])])
-])
+}])
 
 # StM_GNU_C_FLAGS(variable, -flag1 -flag2 ..., [-lflag1 -lflag2 ...])
 # -------------------------------------------------------------------

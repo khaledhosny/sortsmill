@@ -332,6 +332,11 @@ AC_CHECK_SIZEOF([unsigned int])
 test 4 -le ${ac_cv_sizeof_unsigned_int} || \
      AC_MSG_ERROR([${PACKAGE_NAME} requires that 'unsigned int' be at least 32 bits wide.])
 
+AC_CHECK_SIZEOF([float])
+AC_CHECK_SIZEOF([double])
+AC_SUBST([SIZEOF_FLOAT],[${ac_cv_sizeof_float}])
+AC_SUBST([SIZEOF_DOUBLE],[${ac_cv_sizeof_double}])
+
 AX_PTHREAD
 
 AC_SUBST([WARNING_CFLAGS],[])
@@ -505,6 +510,9 @@ AC_CONFIG_FILES([sfd2sxml/Makefile])
 AC_CONFIG_FILES([fortran/Makefile])
 AC_CONFIG_FILES([pure/Makefile])
 AC_CONFIG_FILES([examples/Makefile])
+
+AC_CONFIG_FILES([fontforge/generate-c-api.h.scm])
+AC_CONFIG_FILES([fontforge/generate-c-api.c.scm])
 
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([inc/sortsmill/cython/config.pxi])

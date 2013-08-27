@@ -56,8 +56,8 @@
           (ice-9 match)
           (system foreign))
 
-  (eval-when (compile load eval)
-    (load-extension "libguile-sortsmill_aux" "init_libguile_sortsmill_aux"))
+;;;  (eval-when (compile load eval)
+;;;    (load-extension "libguile-sortsmill_fontforge" "init_libguile_sortsmill_aux"))
 
   (define-syntax _Bool-size
     (identifier-syntax @SIZEOF__BOOL@))
@@ -69,18 +69,24 @@
     (identifier-syntax @SIZEOF_UINTPTR_T@))
 
   (define-syntax float-size
-    (make-variable-transformer
-     (lambda (x)
-       (syntax-case x ()
-         (ident (identifier? #'ident)
-                (datum->syntax x (sizeof float)))))))
+    (identifier-syntax @SIZEOF_FLOAT@))
 
   (define-syntax double-size
-    (make-variable-transformer
-     (lambda (x)
-       (syntax-case x ()
-         (ident (identifier? #'ident)
-                (datum->syntax x (sizeof double)))))))
+    (identifier-syntax @SIZEOF_DOUBLE@))
+
+;;;  (define-syntax float-size
+;;;    (make-variable-transformer
+;;;     (lambda (x)
+;;;       (syntax-case x ()
+;;;         (ident (identifier? #'ident)
+;;;                (datum->syntax x (sizeof float)))))))
+;;;
+;;;  (define-syntax double-size
+;;;    (make-variable-transformer
+;;;     (lambda (x)
+;;;       (syntax-case x ()
+;;;         (ident (identifier? #'ident)
+;;;                (datum->syntax x (sizeof double)))))))
 
   (define (c:float-type n)
     (cond

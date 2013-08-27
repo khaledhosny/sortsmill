@@ -20,9 +20,22 @@
 
   (export string->pointer-gc-utf8)
 
-  (import (only (guile) eval-when load-extension))
+  (import (rnrs)
+          (except (guile) error)
+          (system foreign))
 
   (eval-when (compile load eval)
-    (load-extension "libguile-sortsmill_aux" "init_sortsmill_guile_strings_gc"))
+
+    (define libsortsmill-core (dynamic-link "libsortsmill_core"))
+
+    (define x-gc-strdup
+      (pointer->procedure '*
+                          (dynamic-func "x_gc_strdup" libsortsmill-core)
+                          '(*)))
+
+    ) ;; end of eval-when
+
+  (define (string->pointer-gc-utf8 s)
+    (x-gc-strdup (string->pointer s "UTF-8")))
 
   ) ;; end of library.

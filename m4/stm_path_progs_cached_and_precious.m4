@@ -7,13 +7,13 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# serial 3
+# serial 4
 
 # FIXME: Document this macro.
 
 # StM_PATH_PROGS_CACHED_AND_PRECIOUS(variable, message, progs-to-check-for, feature-test)
 # ---------------------------------------------------------------------------------------
-AC_DEFUN([StM_PATH_PROGS_CACHED_AND_PRECIOUS],[
+AC_DEFUN([StM_PATH_PROGS_CACHED_AND_PRECIOUS],[{ :;
 AC_ARG_VAR([$1],[$2])
 # Override the cache if the precious variable $1 is set.
 test -n "${$1}" && unset ac_cv_path_$1
@@ -42,4 +42,4 @@ else
    # clear a cache entry.
    unset ac_cv_path_$1
 fi
-])
+}])

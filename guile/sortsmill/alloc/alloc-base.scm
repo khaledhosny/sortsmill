@@ -23,9 +23,86 @@
           c:gc-zalloc ;; Garbage-collected.
           c:gc-free)
 
-  (import (only (guile) eval-when load-extension))
+  (import (rnrs)
+          (except (guile) error)
+          (system foreign))
 
   (eval-when (compile load eval)
-    (load-extension "libguile-sortsmill_aux" "init_libguile_sortsmill_aux"))
+
+    (define libsortsmill-core (dynamic-link "libsortsmill_core"))
+    (define this-program (dynamic-link))
+
+    (define c:zalloc
+      (pointer->procedure '*
+                          (dynamic-func "x_zalloc" libsortsmill-core)
+                          `(,size_t)))
+
+    (define c:free
+      (pointer->procedure void
+                          (dynamic-func "free" this-program)
+                          '(*)))
+
+    (define c:gc-zalloc
+      (pointer->procedure '*
+                          (dynamic-func "x_gc_malloc" libsortsmill-core)
+                          `(,size_t)))
+
+    (define c:gc-free
+      (pointer->procedure void
+                          (dynamic-func "x_gc_free" libsortsmill-core)
+                          '(*)))
+
+    ) ;; end eval-when
+
+;;;  A version using libguile-2.0.
+;;;  
+;;;  ;; NOTE: The definitions of c:gc-zalloc and c:gc-free assume Guile
+;;;  ;; 2.x, where the GC routines are wrappers around Boehm GC, and so a
+;;;  ;; bunch of parameters are for backwards compatibility and ignored.
+;;;
+;;;  (eval-when (compile load eval)
+;;;
+;;;    (define libguile
+;;;      (dynamic-link (string-append "libguile-" (effective-version))))
+;;;
+;;;    (define this-program (dynamic-link))
+;;;
+;;;    (define scm-calloc
+;;;      (pointer->procedure '*
+;;;                          (dynamic-func "scm_calloc" libguile)
+;;;                          `(,size_t)))
+;;;
+;;;    (define free
+;;;      (pointer->procedure void
+;;;                          (dynamic-func "free" this-program)
+;;;                          '(*)))
+;;;
+;;;    (define scm-gc-malloc
+;;;      (pointer->procedure '*
+;;;                          (dynamic-func "scm_gc_calloc" libguile)
+;;;                          `(,size_t *)))
+;;;
+;;;    (define scm-gc-free
+;;;      (pointer->procedure void
+;;;                          (dynamic-func "scm_gc_free" libguile)
+;;;                          `(* ,size_t *)))
+;;;
+;;;    ) ;; end eval-when
+;;;
+;;;  (define (c:zalloc size)
+;;;    (scm-calloc (max 1 size)))
+;;;
+;;;  (define (c:free p)
+;;;    (free p))
+;;;
+;;;  ;; The ‘what’ parameter is not used with Boehm GC, but the Guile
+;;;  ;; library routines still expect it.
+;;;  (define what (string->pointer "c:gc-zalloc"))
+;;;
+;;;  (define (c:gc-zalloc size)
+;;;    (scm-gc-malloc (max 1 size) what))
+;;;
+;;;  (define (c:gc-free p)
+;;;    (scm-gc-free p 0 what))
 
   ) ;; end of library.
