@@ -14,6 +14,7 @@
 
 (define (library-is-sortsmill? lib-name)
   (match lib-name
+    [('sortsmill 'core ...) #f]
     [('sortsmill _ ...) #t]
     [('ff-internal _ ...) #t]
     [_ #f] ))

@@ -87,30 +87,15 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
-MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at		\
-	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at					\
-	sortsmill_precompute.at precomputed_data.at math_functions.at		\
-	bernstein.at monomial.at gmp_constants.at brentroot.at linalg.at	\
-	polyspline.at sortsmill_iconv.at psMat.at old_python_tests.at
+MY_AT_FILES = gfile_c.at sortsmill_precompute.at precomputed_data.at	\
+	math_functions.at bernstein.at monomial.at gmp_constants.at			\
+	brentroot.at linalg.at polyspline.at sortsmill_iconv.at psMat.at	\
+	old_python_tests.at
 #sortsmill_linalg.at <-- Needs to be adapted to newer modules.
-
-TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
-
-TESTS_XUNISTRING_H = test_xunicase_compare test_xunicase_ncompare	\
-	test_xuniconv_h test_xuninorm_h test_xunistr_h					\
-	test_xunistr_strtol_NULL test_xunistr_strtol_nonNULL			\
-	test_xunistr_strtoul_NULL test_xunistr_strtoul_nonNULL			\
-	test_xunistr_strtod_NULL test_xunistr_strtod_nonNULL			\
-	test_xunistr_valid_prefix test_xunistr_get_next					\
-	test_x_gc_uNN_strjoin test_uNN_to_uMM_boundaries
 
 TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\
 	test_GFileBaseName test_GFileAppendFile
-
-TESTS_PS_NUMBER_H = test_ps_number_h
-
-TESTS_REXP_H = test_rexp_h test_rexp_h_u8
 
 TESTS_PRECOMPUTEDDATA = #test_precomputed_data
 TESTS_BERNSTEIN = #test_bernstein
@@ -168,11 +153,7 @@ TESTS_LINALG_SCM = test_scm_matrix_set_all test_scm_matrix_set_zero	\
 TESTS_LINALG_F64 = test_f64_matrix_mul_diagonal
 
 check_PROGRAMS =
-check_PROGRAMS += $(TESTS_XGC_H)
-check_PROGRAMS += $(TESTS_XUNISTRING_H)
 check_PROGRAMS += $(TESTS_GFILE_C)
-check_PROGRAMS += $(TESTS_PS_NUMBER_H)
-check_PROGRAMS += $(TESTS_REXP_H)
 #check_PROGRAMS += $(TESTS_PRECOMPUTEDDATA)
 #check_PROGRAMS += $(TESTS_BERNSTEIN)
 #check_PROGRAMS += $(TESTS_MONOMIAL)
@@ -198,8 +179,6 @@ AM_LDFLAGS = -export-dynamic -avoid-version $(MY_CFLAGS) $(MY_LIBS)	\
 EXTRA_DIST += main_with_guile.x
 
 EXTRA_DIST += $(MY_AT_FILES)
-
-EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 
 EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm			\
 	test_guile_polyspline_bases.scm test_guile_polyspline_eval.scm	\
