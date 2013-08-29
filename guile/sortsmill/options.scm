@@ -44,13 +44,13 @@
           option-error-bad-value
           option-error-failed)
 
-  (import (sortsmill dynlink)
+  (import (sortsmill core)
+          (sortsmill dynlink)
           (sortsmill kwargs)
           (sortsmill pkg-info)
           (sortsmill api-syntax)
           (sortsmill strings)
           (sortsmill argv)
-          (sortsmill alloc)
           (sortsmill machine)
           (rnrs)
           (except (guile) error)
@@ -320,7 +320,7 @@ object!"
                  '*
                  (sortsmill-dynlink-func "g_option_context_new")
                  '(*))])
-      (compose pointer->option-context c:alloc-die-on-null proc string->pointer)))
+      (compose pointer->option-context x-alloc-die-on-null proc string->pointer)))
 
   (define option-context-free
     (let ([proc (pointer->procedure

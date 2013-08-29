@@ -23,8 +23,8 @@
         expand-api-syntax
         expand-api)
 
-(import (sortsmill machine)
-        (sortsmill alloc alloc-base)
+(import (sortsmill core)
+        (sortsmill machine)
         (sortsmill pkg-info package)
         (rnrs)
         (only (system foreign)
@@ -265,7 +265,7 @@
       #`(define #,(malloc-<type> type-name)
           (case-lambda
             (() (cons '#,tag
-                      (pointer->bytevector (c:zalloc #,size) #,size)))
+                      (pointer->bytevector (x-zalloc #,size) #,size)))
             ((n)
              ;; Allocate a contiguous array of n structs, with the
              ;; tagged bytevector pointing at the first struct in the
@@ -274,20 +274,20 @@
                (assertion-violation #,(gc-malloc-<type> type-name)
                                     "the argument must be >= 1" n))
              (cons '#,tag
-                   (pointer->bytevector (c:zalloc (* n #,size)) #,size)))))
+                   (pointer->bytevector (x-zalloc (* n #,size)) #,size)))))
 
       #`(define #,(unchecked-free-<type> type-name)
           (lambda (obj)
-            (c:free (#,(unchecked-<type>->pointer type-name) obj))))
+            (x-free (#,(unchecked-<type>->pointer type-name) obj))))
 
       #`(define #,(free-<type> type-name)
           (lambda (obj)
-            (c:free (#,(<type>->pointer type-name) obj))))
+            (x-free (#,(<type>->pointer type-name) obj))))
 
       #`(define #,(gc-malloc-<type> type-name)
           (case-lambda
             (() (cons '#,tag
-                      (pointer->bytevector (c:gc-zalloc #,size) #,size)))
+                      (pointer->bytevector (x-gc-malloc #,size) #,size)))
             ((n)
              ;; Allocate a contiguous array of n structs, with the
              ;; tagged bytevector pointing at the first struct in the
@@ -296,15 +296,15 @@
                (assertion-violation #,(gc-malloc-<type> type-name)
                                     "the argument must be >= 1" n))
              (cons '#,tag
-                   (pointer->bytevector (c:gc-zalloc (* n #,size)) #,size)))))
+                   (pointer->bytevector (x-gc-malloc (* n #,size)) #,size)))))
 
       #`(define #,(unchecked-gc-free-<type> type-name)
           (lambda (obj)
-            (c:gc-free (#,(unchecked-<type>->pointer type-name) obj))))
+            (x-gc-free (#,(unchecked-<type>->pointer type-name) obj))))
 
       #`(define #,(gc-free-<type> type-name)
           (lambda (obj)
-            (c:gc-free (#,(<type>->pointer type-name) obj))))
+            (x-gc-free (#,(<type>->pointer type-name) obj))))
       ))))
 
 (define (expand-<struct>:<field>->pointer struct-name field-name offset size)

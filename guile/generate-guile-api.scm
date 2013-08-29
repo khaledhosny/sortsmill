@@ -49,7 +49,7 @@
       (pretty-print
        `(library ,(call-with-input-string module-name read)
                  (export ,@exports)
-                 (import (sortsmill alloc alloc-base)
+                 (import (sortsmill core)
                          (sortsmill pkg-info package)
                          (sortsmill machine)
                          (rnrs)

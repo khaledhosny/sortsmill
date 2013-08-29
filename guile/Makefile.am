@@ -185,34 +185,6 @@ __INTERNALS___REEXPORTED_SCM_FILES += sortsmill/__internals__/lookups.scm
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill alloc)
-
-MAKEFILE_GENERATED_SCM_FILES += sortsmill/alloc.scm
-GO_FILES += sortsmill/alloc.go
-ALLOC_REEXPORTED_SCM_FILES = 
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/alloc.scm
-
-sortsmill/alloc.scm: $(ALLOC_REEXPORTED_SCM_FILES)
-	$(AM_V_REEXPORT)
-	$(AM_V_at)$(call generate_reexporter, (sortsmill alloc), #t, $(^:%="%")) > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
-
-
-# (sortsmill alloc alloc-base)
-
-DIST_SCM_FILES += sortsmill/alloc/alloc-base.scm
-GO_FILES += sortsmill/alloc/alloc-base.go
-ALLOC_REEXPORTED_SCM_FILES += sortsmill/alloc/alloc-base.scm
-
-
-# (sortsmill alloc alloc-die)
-
-DIST_SCM_FILES += sortsmill/alloc/alloc-die.scm
-GO_FILES += sortsmill/alloc/alloc-die.go
-ALLOC_REEXPORTED_SCM_FILES += sortsmill/alloc/alloc-die.scm
-
-#--------------------------------------------------------------------------
-#
 # (sortsmill api-syntax)
 
 DIST_SCM_FILES += sortsmill/api-syntax.scm
@@ -1006,7 +978,8 @@ libguile_sortsmill_symbols_la_CPPFLAGS = $(AM_CPPFLAGS) $(FFINCLDIRS)
 libguile_sortsmill_symbols_la_LIBADD =						\
 	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la
+	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
+	$(top_builddir)/lib/libgnu.la
 
 CLEANFILES += libguile_sortsmill_symbols.c
 

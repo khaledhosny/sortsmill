@@ -21,7 +21,7 @@
   (export pointer->grabbed-string
           pointer->grabbed-string-list)
 
-  (import (sortsmill alloc)
+  (import (sortsmill core)
           (rnrs)
           (except (guile) error)
           (system foreign)
@@ -30,7 +30,7 @@
   (define (pointer->grabbed-string p . length-and/or-encoding)
     "Grab a freeable C string, freeing the original storage."
     (let ([s (apply pointer->string p length-and/or-encoding)])
-      (c:free p)
+      (x-free p)
       s))
 
   (define (pointer->grabbed-string-list p . length-and/or-encoding)
@@ -42,7 +42,7 @@ calling g_strfreev.)"
                              pointer->grabbed-string <>
                              length-and/or-encoding)
                         (get-string-pointers p))])
-      (c:free p)
+      (x-free p)
       strings))
 
   (define (get-string-pointers p)

@@ -55,10 +55,10 @@
           view:font-comment-set!
           )
 
-  (import (sortsmill fonts views)
+  (import (sortsmill core)
+          (sortsmill fonts views)
           (sortsmill fonts fontinfo-dict) ; For reëxportation.
           (sortsmill fontforge-api)
-          (sortsmill alloc)
           (rnrs)
           (except (guile) error)
           (system foreign))
@@ -104,11 +104,11 @@
     (let ([bv (if value (string->utf8 value) #f)])
 
       (let ([sf (view->SplineFont view)])
-        (c:free (SplineFont:comment-ref sf))
+        (x-free (SplineFont:comment-ref sf))
         (SplineFont:comment-set! sf %null-pointer)
         (when bv
           (let* ([n (+ (bytevector-length bv) 1)]
-                 [ptr (c:zalloc n)]
+                 [ptr (x-zalloc n)]
                  [target (pointer->bytevector ptr n)])
             (bytevector-copy! bv 0 target 0 (bytevector-length bv))
             (SplineFont:comment-set! sf ptr))))))
