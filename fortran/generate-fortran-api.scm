@@ -1,8 +1,10 @@
-#! @GUILE@ \ -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
---no-auto-compile -s
+#!/bin/sh
+# -*- mode: scheme; coding: utf-8 -*-
+test -z "${GUILE}" && GUILE=guile
+GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
 !#
 
-;; Copyright (C) 2012 Khaled Hosny and Barry Schwartz
+;; Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 ;; This file is part of the Sorts Mill Tools.
 ;; 
 ;; Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -19,16 +21,17 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (ff-internal generate-types)
+        (sortsmill core)
         (sortsmill machine)
         (rnrs)
         (ice-9 match)
         (ice-9 format))
 
-(case intptr_t-size
+(case (sizeof intptr)
   [(4 8) (lambda () *unspecified*)]
   [else
    (error "Only sizeof(intptr_t) equal to 4 or 8 is supported. Your sizeof(intptr_t) = ~d."
-          intptr_t-size)])
+          (sizeof intptr))])
 
 (define (write-declarations instructions)
   (for-each
@@ -265,7 +268,7 @@
   (format #t "integer(c_intptr_t) function get_~a_~a (p) result(q)\n" struct-name field-name)
   (format #t "  type(~a), intent(in) :: p\n" struct-name)
   (format #t "  q = uint~d_to_uint~d (transfer (p%bv(~d:~d), 1_c_int~d_t))\n"
-          (* 8 size) (* 8 intptr_t-size) (1+ offset) (+ offset size) (* 8 size))
+          (* 8 size) (* 8 (sizeof intptr)) (1+ offset) (+ offset size) (* 8 size))
   (format #t "end function get_~a_~a\n" struct-name field-name)
   (format #t "\n"))
 
@@ -274,7 +277,7 @@
   (format #t "  type(~a), intent(inout) :: p\n" struct-name)
   (format #t "  integer(c_intptr_t), intent(in) :: v\n")
   (format #t "  p%bv(~d:~d) = transfer (uint~d_to_uint~d (v), p%bv)\n"
-          (1+ offset) (+ offset size) (* 8 intptr_t-size) (* 8 size))
+          (1+ offset) (+ offset size) (* 8 (sizeof intptr)) (* 8 size))
   (format #t "end subroutine set_~a_~a\n" struct-name field-name)
   (format #t "\n"))
 

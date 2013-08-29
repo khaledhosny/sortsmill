@@ -27,7 +27,7 @@
           running_script-ref
           running_script-set!)
 
-  (import (sortsmill machine)
+  (import (sortsmill core)
           (sortsmill dynlink)
           (system foreign)
           (rnrs)

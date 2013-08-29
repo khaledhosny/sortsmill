@@ -34,11 +34,12 @@
           ;; Legacy Python support.
           registerMenuItem)
 
-  (import (sortsmill python)
+  (import (sortsmill core)
+          (sortsmill machine)
+          (sortsmill python)
           (sortsmill usermenu)
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
-          (sortsmill machine)
           (sortsmill fonts views)
           (sortsmill dynlink)
           (sortsmill pkg-info)

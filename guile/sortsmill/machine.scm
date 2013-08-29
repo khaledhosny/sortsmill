@@ -18,17 +18,9 @@
 
 (library (sortsmill machine)
 
-  (export _Bool-size                    ; sizeof (_Bool)
-          intptr_t-size                 ; sizeof (intptr_t)
-          uintptr_t-size                ; sizeof (uintptr_t)
-          float-size                    ; sizeof (float)
-          double-size                   ; sizeof (double)
-
-          c:float-type
+  (export c:float-type
           c:int-type
           c:uint-type
-
-          _Bool
 
           bytevector-address-native-set!
           bytevector-pointer-native-set!
@@ -48,8 +40,7 @@
           c:flt-epsilon-exact
           c:dbl-epsilon-exact)
 
-  (import (sortsmill core)              ; For _Bool.
-          (only (sortsmill math math-constants)
+  (import (only (sortsmill math math-constants)
                 c:flt-epsilon c:dbl-epsilon
                 c:flt-epsilon-exact c:dbl-epsilon-exact)
           (rnrs)
@@ -57,47 +48,10 @@
           (ice-9 match)
           (system foreign))
 
-;;;  (eval-when (compile load eval)
-;;;    (load-extension "libguile-sortsmill_fontforge" "init_libguile_sortsmill_aux"))
-
-  ;; FIXME: This is redundant.
-  (define-syntax _Bool-size
-    (identifier-syntax @SIZEOF__BOOL@))
-
-  ;; FIXME: This is redundant if we have an ‘intptr’ type.
-  (define-syntax intptr_t-size
-    (identifier-syntax @SIZEOF_INTPTR_T@))
-
-  ;; FIXME: This is redundant if we have a ‘uintptr’ type.
-  (define-syntax uintptr_t-size
-    (identifier-syntax @SIZEOF_UINTPTR_T@))
-
-  ;; FIXME: This is redundant.
-  (define-syntax float-size
-    (identifier-syntax @SIZEOF_FLOAT@))
-
-  ;; FIXME: This is redundant.
-  (define-syntax double-size
-    (identifier-syntax @SIZEOF_DOUBLE@))
-
-;;;  (define-syntax float-size
-;;;    (make-variable-transformer
-;;;     (lambda (x)
-;;;       (syntax-case x ()
-;;;         (ident (identifier? #'ident)
-;;;                (datum->syntax x (sizeof float)))))))
-;;;
-;;;  (define-syntax double-size
-;;;    (make-variable-transformer
-;;;     (lambda (x)
-;;;       (syntax-case x ()
-;;;         (ident (identifier? #'ident)
-;;;                (datum->syntax x (sizeof double)))))))
-
   (define (c:float-type n)
     (cond
-     ((= n float-size) 'float)
-     ((= n double-size) 'double)))
+     ((= n (sizeof float)) 'float)
+     ((= n (sizeof double)) 'double)))
 
   (define (c:int-type n)
     (case n
@@ -112,21 +66,6 @@
       ((2) 'uint16_t)
       ((4) 'uint32_t)
       ((8) 'uint64_t)))
-
-;;;  (define-syntax _Bool
-;;;    (make-variable-transformer
-;;;     (lambda (x)
-;;;       (syntax-case x ()
-;;;         (var (identifier? #'var)
-;;;              (case _Bool-size
-;;;                [(1) #'uint8]             ; Probably.
-;;;                [(2) #'uint16]            ; Very unlikely.
-;;;                [(4) #'uint32]            ; Very, very unlikely.
-;;;                [else (error
-;;;                       '_Bool
-;;;                       ;; Do not bother putting this in translation files.
-;;;                       "we do not know how to handle _Bool of this size"
-;;;                       _Bool-size)] ))))))
 
   (define-syntax bytevector-address-native-set!
     (lambda (x)

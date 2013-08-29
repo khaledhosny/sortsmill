@@ -37,11 +37,12 @@
           register-fontforge-menu-entry ; FIXME: Get rid of this or make it private.
           )
 
-  (import (sortsmill dynlink)
+  (import (sortsmill core)
+          (sortsmill machine)
+          (sortsmill dynlink)
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
-          (sortsmill i18n)
-          (sortsmill machine)
+          (sortsmill i18n)          
           (sortsmill notices)
           (sortsmill fonts views)
           (sortsmill strings)

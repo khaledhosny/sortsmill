@@ -27,9 +27,7 @@
         (sortsmill machine)
         (sortsmill pkg-info package)
         (rnrs)
-        (only (system foreign)
-              pointer->bytevector bytevector->pointer
-              make-pointer pointer-address)
+        (system foreign)
         (only (srfi :26) cut cute)
         (only (srfi :39) make-parameter parameterize)
         (ice-9 format)
@@ -41,20 +39,20 @@
 ;; only machines for which this is true, but these tests should not
 ;; hurt.
 (cond
- [(not (= 4 float-size))
+ [(not (= 4 (sizeof float)))
   (error
    #f
    (format
     #f
     "The size of a C float is required to be 4 bytes, but on this machine it is ~a bytes."
-    (number->string float-size)))]
- [(not (= 8 double-size))
+    (number->string (sizeof float))))]
+ [(not (= 8 (sizeof double)))
   (error
    #f
    (format
     #f
     "The size of a C double is required to be 8 bytes, but on this machine it is ~a bytes."
-    (number->string double-size)))])
+    (number->string (sizeof double))))])
 
 ;; Dynamically scoped bindings to avoid passing around a lot of
 ;; syntax context.

@@ -512,9 +512,6 @@ AC_CONFIG_FILES([fortran/Makefile])
 AC_CONFIG_FILES([pure/Makefile])
 AC_CONFIG_FILES([examples/Makefile])
 
-AC_CONFIG_FILES([fontforge/generate-c-api.h.scm])
-AC_CONFIG_FILES([fontforge/generate-c-api.c.scm])
-
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([inc/sortsmill/cython/config.pxi])
 
@@ -531,7 +528,6 @@ AC_CONFIG_COMMANDS([guile/sortsmill/math/gsl],[AS_MKDIR_P([guile/sortsmill/math/
 AC_CONFIG_COMMANDS([guile/sortsmill/math/matrices],[AS_MKDIR_P([guile/sortsmill/math/matrices])])
 AC_CONFIG_COMMANDS([guile/sortsmill/pkg-info],[AS_MKDIR_P([guile/sortsmill/pkg-info])])
 AC_CONFIG_COMMANDS([guile/sortsmill/strings],[AS_MKDIR_P([guile/sortsmill/strings])])
-AC_CONFIG_FILES([guile/sortsmill/machine.scm])
 AC_CONFIG_FILES([guile/sortsmill/math/math-constants.scm])
 AC_CONFIG_FILES([guile/sortsmill/math/gsl/error.scm])
 

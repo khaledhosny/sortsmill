@@ -1,8 +1,10 @@
-#! @GUILE@ \ -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
---no-auto-compile -s
+#!/bin/sh
+# -*- mode: scheme; coding: utf-8 -*-
+test -z "${GUILE}" && GUILE=guile
+GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
 !#
 
-;; Copyright (C) 2012 Khaled Hosny and Barry Schwartz
+;; Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 ;; This file is part of the Sorts Mill Tools.
 ;; 
 ;; Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -190,8 +192,8 @@
     [('bool . 4) "__get_bool32"]
     [('bool . 8) "__get_bool64"]
     [('float . n) (cond
-                   ((= n float-size) "__get_float")
-                   ((= n double-size) "__get_double"))]
+                   ((= n (sizeof float)) "__get_float")
+                   ((= n (sizeof double)) "__get_double"))]
     [('* . 1) "__get_ptr8"]
     [('* . 2) "__get_ptr16"]
     [('* . 4) "__get_ptr32"]
@@ -215,8 +217,8 @@
     [('bool . 4) "__set_bool32"]
     [('bool . 8) "__set_bool64"]
     [('float . n) (cond
-                   ((= n float-size) "__set_float")
-                   ((= n double-size) "__set_double"))]
+                   ((= n (sizeof float)) "__set_float")
+                   ((= n (sizeof double)) "__set_double"))]
     [('* . 1) "__set_ptr8"]
     [('* . 2) "__set_ptr16"]
     [('* . 4) "__set_ptr32"]

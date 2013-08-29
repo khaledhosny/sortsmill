@@ -1,8 +1,10 @@
-#! @GUILE@ \ -*- mode: scheme; coding: utf-8 -*-
---no-auto-compile -s
+#!/bin/sh
+# -*- mode: scheme; coding: utf-8 -*-
+test -z "${GUILE}" && GUILE=guile
+GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
 !#
 
-;; Copyright (C) 2012 Barry Schwartz
+;; Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 ;; This file is part of the Sorts Mill Tools.
 ;; 
 ;; Sorts Mill Tools is free software; you can redistribute it and/or modify

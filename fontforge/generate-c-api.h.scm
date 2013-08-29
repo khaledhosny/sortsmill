@@ -1,8 +1,10 @@
-#! @GUILE@ \ -*- mode: scheme; coding: utf-8 -*-
---no-auto-compile -s
+#!/bin/sh
+# -*- mode: scheme; coding: utf-8 -*-
+test -z "${GUILE}" && GUILE=guile
+GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
 !#
 
-;; Copyright (C) 2012 Barry Schwartz
+;; Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 ;; This file is part of the Sorts Mill Tools.
 ;; 
 ;; Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -21,7 +23,8 @@
 (import (ff-internal generate-types)
         (rnrs)
         (ice-9 match)
-        (ice-9 format))
+        (ice-9 format)
+        (system foreign))
 
 (define (c:int-type n)
   (case n
@@ -37,13 +40,10 @@
     ((4) 'uint32_t)
     ((8) 'uint64_t)))
 
-(define float-size @SIZEOF_FLOAT@)
-(define double-size @SIZEOF_DOUBLE@)
-
 (define (c:float-type n)
   (cond
-   ((= n float-size) 'float)
-   ((= n double-size) 'double)))
+   ((= n (sizeof float)) 'float)
+   ((= n (sizeof double)) 'double)))
 
 (define (write-instruction instruction)
   (match instruction

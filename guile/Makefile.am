@@ -470,8 +470,7 @@ SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/mac-encodings.scm
 #
 # (sortsmill machine)
 
-DIST_SCM_IN_FILES += sortsmill/machine.scm.in
-CONFIGURE_GENERATED_SCM_FILES += sortsmill/machine.scm
+DIST_SCM_FILES += sortsmill/machine.scm
 GO_FILES += sortsmill/machine.go
 SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/machine.scm
 

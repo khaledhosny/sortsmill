@@ -6,7 +6,7 @@ sortsmill/arrays.go: sortsmill/dynlink.go
 sortsmill/containers/rbmap.go: sortsmill/dynlink.go
 sortsmill/editor/main.go: sortsmill/dynlink.go sortsmill/argv.go
 sortsmill/editor/main-loop.go: sortsmill/editor/finalization.go sortsmill/dynlink.go sortsmill/kwargs.go
-sortsmill/ffcompat.go: sortsmill/machine.go sortsmill/dynlink.go
+sortsmill/ffcompat.go: sortsmill/dynlink.go
 sortsmill/fonts/anchors.go: sortsmill/fonts/views.go sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill/__internals__.go
 sortsmill/fonts/contours.go: sortsmill/svg/path-data.go sortsmill/nearness.go sortsmill/fontforge-api.go sortsmill/dynlink.go sortsmill/i18n.go sortsmill/kwargs.go
 sortsmill/fonts/font-formats.go: sortsmill/dynlink.go
@@ -61,7 +61,7 @@ sortsmill/sfd-to-sxml.go: sortsmill/math/math-constants.go sortsmill/i18n.go sor
 sortsmill/strings/ietf-language-tags.go: sortsmill/strings/rexp.go sortsmill/i18n.go
 sortsmill/strings/rexp.go: sortsmill/dynlink.go
 sortsmill/svg/path-data.go: sortsmill/kwargs.go sortsmill/math/polyspline.go sortsmill/math/matrices.go sortsmill/math/geometry.go sortsmill/math/math-constants.go sortsmill/nearness.go
-sortsmill/usermenu.go: sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/machine.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
+sortsmill/usermenu.go: sortsmill/machine.go sortsmill/dynlink.go sortsmill/fontforge-api.go sortsmill/gdraw-api.go sortsmill/i18n.go sortsmill/notices.go sortsmill/fonts/views.go sortsmill/strings.go sortsmill/strings/hash-guillemet.go
 sortsmill/machine.go: sortsmill/math/math-constants.go
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go sortsmill/kwargs.go
 sortsmill.go: sortsmill/argv.go sortsmill/arrays.go sortsmill/containers.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/kwargs.go sortsmill/mac-encodings.go sortsmill/machine.go sortsmill/math.go sortsmill/nearness.go sortsmill/notices.go sortsmill/postscript.go sortsmill/pkg-info.go sortsmill/strings.go sortsmill/svg.go
