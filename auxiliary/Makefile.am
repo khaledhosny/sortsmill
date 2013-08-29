@@ -155,11 +155,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_strings_rexp.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
 dist_libsortsmill_aux_la_SOURCES += guile_types.c
 
-# FIXME: Be rid of these. We are using foreign interface to Core
-# Library, instead.
-dist_libsortsmill_aux_la_SOURCES += guile_alloc_base.c
-dist_libsortsmill_aux_la_SOURCES += guile_strings_gc.c
-
 libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) $(SORTSMILL_CORE_CFLAGS) '-I$(srcdir)'
 libsortsmill_aux_la_DEPENDENCIES = Makefile
 

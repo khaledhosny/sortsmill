@@ -48,7 +48,8 @@
           c:flt-epsilon-exact
           c:dbl-epsilon-exact)
 
-  (import (only (sortsmill math math-constants)
+  (import (sortsmill core)              ; For _Bool.
+          (only (sortsmill math math-constants)
                 c:flt-epsilon c:dbl-epsilon
                 c:flt-epsilon-exact c:dbl-epsilon-exact)
           (rnrs)
@@ -59,18 +60,23 @@
 ;;;  (eval-when (compile load eval)
 ;;;    (load-extension "libguile-sortsmill_fontforge" "init_libguile_sortsmill_aux"))
 
+  ;; FIXME: This is redundant.
   (define-syntax _Bool-size
     (identifier-syntax @SIZEOF__BOOL@))
 
+  ;; FIXME: This is redundant if we have an ‘intptr’ type.
   (define-syntax intptr_t-size
     (identifier-syntax @SIZEOF_INTPTR_T@))
 
+  ;; FIXME: This is redundant if we have a ‘uintptr’ type.
   (define-syntax uintptr_t-size
     (identifier-syntax @SIZEOF_UINTPTR_T@))
 
+  ;; FIXME: This is redundant.
   (define-syntax float-size
     (identifier-syntax @SIZEOF_FLOAT@))
 
+  ;; FIXME: This is redundant.
   (define-syntax double-size
     (identifier-syntax @SIZEOF_DOUBLE@))
 
@@ -107,20 +113,20 @@
       ((4) 'uint32_t)
       ((8) 'uint64_t)))
 
-  (define-syntax _Bool
-    (make-variable-transformer
-     (lambda (x)
-       (syntax-case x ()
-         (var (identifier? #'var)
-              (case _Bool-size
-                [(1) #'uint8]             ; Probably.
-                [(2) #'uint16]            ; Very unlikely.
-                [(4) #'uint32]            ; Very, very unlikely.
-                [else (error
-                       '_Bool
-                       ;; Do not bother putting this in translation files.
-                       "we do not know how to handle _Bool of this size"
-                       _Bool-size)] ))))))
+;;;  (define-syntax _Bool
+;;;    (make-variable-transformer
+;;;     (lambda (x)
+;;;       (syntax-case x ()
+;;;         (var (identifier? #'var)
+;;;              (case _Bool-size
+;;;                [(1) #'uint8]             ; Probably.
+;;;                [(2) #'uint16]            ; Very unlikely.
+;;;                [(4) #'uint32]            ; Very, very unlikely.
+;;;                [else (error
+;;;                       '_Bool
+;;;                       ;; Do not bother putting this in translation files.
+;;;                       "we do not know how to handle _Bool of this size"
+;;;                       _Bool-size)] ))))))
 
   (define-syntax bytevector-address-native-set!
     (lambda (x)

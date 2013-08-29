@@ -19,7 +19,6 @@
 #ifndef _SORTSMILL_GUILE_STRINGS_H
 #define _SORTSMILL_GUILE_STRINGS_H
 
-#include <sortsmill/guile/strings/gc.h>
 #include <sortsmill/guile/strings/rexp.h>
 
 #endif /* _SORTSMILL_GUILE_STRINGS_H */

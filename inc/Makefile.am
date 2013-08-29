@@ -193,7 +193,6 @@ nobase_include_HEADERS += sortsmill/guile/ps_number.h
 nobase_include_HEADERS += sortsmill/guile/postscript.h
 
 nobase_include_HEADERS += sortsmill/guile/strings.h
-nobase_include_HEADERS += sortsmill/guile/strings/gc.h
 nobase_include_HEADERS += sortsmill/guile/strings/rexp.h
 
 nobase_include_HEADERS += sortsmill/guile/symbols.h
