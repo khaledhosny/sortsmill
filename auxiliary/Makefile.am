@@ -150,7 +150,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_options.c
 dist_libsortsmill_aux_la_SOURCES += guile_format.c
 dist_libsortsmill_aux_la_SOURCES += guile_postscript.c
 dist_libsortsmill_aux_la_SOURCES += guile_ps_number.c
-dist_libsortsmill_aux_la_SOURCES += guile_scm_type.c
 dist_libsortsmill_aux_la_SOURCES += guile_strings_rexp.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
 dist_libsortsmill_aux_la_SOURCES += guile_types.c

@@ -51,7 +51,6 @@
                  (export ,@exports)
                  (import (sortsmill core)
                          (sortsmill pkg-info package)
-                         (sortsmill machine)
                          (rnrs)
                          (system foreign)
                          (ice-9 format))

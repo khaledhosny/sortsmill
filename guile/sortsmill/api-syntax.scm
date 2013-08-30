@@ -24,7 +24,6 @@
         expand-api)
 
 (import (sortsmill core)
-        (sortsmill machine)
         (sortsmill pkg-info package)
         (rnrs)
         (system foreign)

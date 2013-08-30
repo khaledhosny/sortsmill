@@ -468,14 +468,6 @@ SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/mac-encodings.scm
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill machine)
-
-DIST_SCM_FILES += sortsmill/machine.scm
-GO_FILES += sortsmill/machine.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/machine.scm
-
-#--------------------------------------------------------------------------
-#
 # (sortsmill math)
 
 MAKEFILE_GENERATED_SCM_FILES += sortsmill/math.scm

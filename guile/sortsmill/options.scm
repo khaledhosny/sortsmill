@@ -51,7 +51,6 @@
           (sortsmill api-syntax)
           (sortsmill strings)
           (sortsmill argv)
-          (sortsmill machine)
           (rnrs)
           (except (guile) error)
           (only (srfi :26) cut)
@@ -405,7 +404,7 @@ the kind of option it handles."
                 [error-bv (make-bytevector (sizeof '*) 0)])
             (bytevector-sint-set! argc-bv 0 argc (native-endianness)
                                   (sizeof int))
-            (set-pointer! argv-bv (bytevector->pointer argv))
+            (pointer-set! argv-bv (bytevector->pointer argv))
             (let* ([success?-int (parse (option-context->pointer context)
                                         (bytevector->pointer argc-bv)
                                         (bytevector->pointer argv-bv)
@@ -414,14 +413,14 @@ the kind of option it handles."
               (if success?
                   [values
                    (argv/argc->string-list
-                    (get-pointer argv-bv)
+                    (pointer-ref argv-bv)
                     (bytevector-sint-ref argc-bv 0 (native-endianness)
                                          (sizeof int)))
                    #f]
                   [values
                    #f
                    (gerror->list
-                    (pointer->grabbed-gerror (get-pointer error-bv)))] )))))))
+                    (pointer->grabbed-gerror (pointer-ref error-bv)))] )))))))
 
   ;;;; FIXME FIXME FIXME FIXME: This has no way to set default values
   ;;;; for flags or to tell us it was not set at all.

@@ -21,7 +21,7 @@
   (export string-list->argv-and-argc
           argv/argc->string-list)
 
-  (import (sortsmill machine)
+  (import (sortsmill core)
           (sortsmill kwargs)
           (rnrs)
           (only (srfi :1) iota)

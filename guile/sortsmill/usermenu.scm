@@ -38,7 +38,6 @@
           )
 
   (import (sortsmill core)
-          (sortsmill machine)
           (sortsmill dynlink)
           (sortsmill fontforge-api)
           (sortsmill gdraw-api)
@@ -255,14 +254,14 @@
                  (GMenuItem->pointer
                   (menu-entry-list->menu-items "glyph" glyph-view-tools))
                  %null-pointer)))
-      (set-pointer! glyph-view-tools-internal p)))
+      (pointer-set! glyph-view-tools-internal p)))
 
   (define (activate-font-view-tools)
     (let ((p (if font-view-tools
                  (GMenuItem->pointer
                   (menu-entry-list->menu-items "font" font-view-tools))
                  %null-pointer)))
-      (set-pointer! font-view-tools-internal p)))
+      (pointer-set! font-view-tools-internal p)))
 
   ;;
   ;; FIXME: More thorough and better modularized error checking.

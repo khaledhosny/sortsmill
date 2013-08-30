@@ -21,10 +21,6 @@
 
 #include <libguile.h>
 
-/* Include <sortsmill/guile/scm_type.h>, mainly because the name may
-   be similar enough to create confusion if we do not include it. */
-#include <sortsmill/guile/scm_type.h>
-
 #ifdef __cplusplus
 extern "C"
 {

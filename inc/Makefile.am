@@ -197,7 +197,6 @@ nobase_include_HEADERS += sortsmill/guile/strings/rexp.h
 
 nobase_include_HEADERS += sortsmill/guile/symbols.h
 
-nobase_include_HEADERS += sortsmill/guile/scm_type.h
 nobase_include_HEADERS += sortsmill/guile/types.h
 
 if HAVE_PURE_API

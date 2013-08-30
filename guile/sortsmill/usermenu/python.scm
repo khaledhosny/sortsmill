@@ -157,11 +157,11 @@ always a boolean."
                   [fvb   (view->FontViewBase v)])
 
              ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
-             (set-pointer! sc-active-in-ui (SplineChar->pointer sc))
+             (pointer-set! sc-active-in-ui (SplineChar->pointer sc))
              (bytevector-sint-set! layer-active-in-ui 0 layer
                                    (native-endianness) (sizeof int))
              (prepare-python-fv-object (FontViewBase->pointer fvb))
-             (set-pointer! fv-active-in-ui (FontViewBase->pointer fvb))
+             (pointer-set! fv-active-in-ui (FontViewBase->pointer fvb))
 
              (borrowed-pointer->pyobject (SC->PySC (SplineChar->pointer sc))))]
 
@@ -171,7 +171,7 @@ always a boolean."
 
              ;; ULTRA-SUPER-MEGA-WARNING: SIDE EFFECTS!
              (prepare-python-fv-object (FontViewBase->pointer fvb))
-             (set-pointer! fv-active-in-ui (FontViewBase->pointer fvb))
+             (pointer-set! fv-active-in-ui (FontViewBase->pointer fvb))
              (bytevector-sint-set! layer-active-in-ui 0 layer
                                    (native-endianness) (sizeof int))
 
@@ -181,12 +181,12 @@ always a boolean."
   (define (reset-legacy-python-globals! v)
     (assert (view? v))
     (cond [(glyph-view? v)
-           (set-pointer! sc-active-in-ui %null-pointer)
+           (pointer-set! sc-active-in-ui %null-pointer)
            (bytevector-sint-set! layer-active-in-ui 0 ly-fore
                                  (native-endianness) (sizeof int))
-           (set-pointer! fv-active-in-ui %null-pointer)]
+           (pointer-set! fv-active-in-ui %null-pointer)]
           [(font-view? v)
-           (set-pointer! fv-active-in-ui %null-pointer)]))
+           (pointer-set! fv-active-in-ui %null-pointer)]))
 
   (define (legacy-python-callable->procedure data callable)
     (assert (pyobject? data))
