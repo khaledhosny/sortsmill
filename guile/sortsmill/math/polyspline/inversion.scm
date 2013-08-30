@@ -25,7 +25,6 @@
           (sortsmill math polyspline reduce)
           (sortsmill math polyspline roots)
           (sortsmill math matrices)
-          (sortsmill math math-constants)
           (sortsmill kwargs)
           (sortsmill i18n)
           (rnrs)

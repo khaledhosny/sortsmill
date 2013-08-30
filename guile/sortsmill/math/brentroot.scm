@@ -29,8 +29,7 @@
           brentroot-mpq
           brentroot-mpq-values)
 
-  (import (sortsmill math math-constants)
-          (sortsmill dynlink)
+  (import (sortsmill dynlink)
           (rnrs)
           (except (guile) error))
 

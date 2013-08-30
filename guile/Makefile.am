@@ -553,14 +553,6 @@ MATH_GSL_REEXPORTED_SCM_FILES += sortsmill/math/gsl/matrices.scm
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# (sortsmill math math-constants)
-
-DIST_SCM_IN_FILES += sortsmill/math/math-constants.scm.in
-CONFIGURE_GENERATED_SCM_FILES += sortsmill/math/math-constants.scm
-GO_FILES += sortsmill/math/math-constants.go
-MATH_REEXPORTED_SCM_FILES += sortsmill/math/math-constants.scm
-
-
 # (sortsmill math multivariate-polynomials)
 
 DIST_SCM_FILES += sortsmill/math/multivariate-polynomials.scm

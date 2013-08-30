@@ -72,11 +72,11 @@
    svg:expand-elliptic-arcs!
    )
 
-  (import (sortsmill kwargs)
+  (import (sortsmill core)
+          (sortsmill kwargs)
           (sortsmill math polyspline)
           (sortsmill math matrices)
           (sortsmill math geometry)
-          (sortsmill math math-constants)
           (sortsmill nearness)
           (rnrs)
           (except (guile) error)

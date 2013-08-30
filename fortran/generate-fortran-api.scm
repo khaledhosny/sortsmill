@@ -247,7 +247,7 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
   (format #t "real(c_double) function get_~a_~a (p) result(q)\n" struct-name field-name)
   (format #t "  type(~a), intent(in) :: p\n" struct-name)
   (format #t "  q = real (transfer (p%bv(~d:~d), 1.0_c_~a), kind=c_double)\n"
-          (1+ offset) (+ offset size) (c:float-type size))
+          (1+ offset) (+ offset size) (float_t-of-size size))
   (format #t "end function get_~a_~a\n" struct-name field-name)
   (format #t "\n"))
 
@@ -256,7 +256,7 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
   (format #t "  type(~a), intent(inout) :: p\n" struct-name)
   (format #t "  real(c_double), intent(in) :: v\n")
   (format #t "  p%bv(~d:~d) = transfer (real (v, kind=c_~a), p%bv)\n"
-          (1+ offset) (+ offset size) (c:float-type size))
+          (1+ offset) (+ offset size) (float_t-of-size size))
   (format #t "end subroutine set_~a_~a\n" struct-name field-name)
   (format #t "\n"))
 

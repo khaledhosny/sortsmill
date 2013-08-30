@@ -171,7 +171,7 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
     [('uint . 4) "uint32_t"]
     [('uint . 8) "uint64_t"]
     [('bool . _) "bint"]
-    [('float . n) (symbol->string (c:float-type n))]
+    [('float . n) (symbol->string (float_t-of-size n))]
     [('* . _) "uintptr_t"]
     [('SCM . _) "object"]
     [('struct . _) (error "NOT YET IMPLEMENTED")]

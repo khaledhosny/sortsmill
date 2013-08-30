@@ -26,21 +26,21 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
         (ice-9 format)
         (system foreign))
 
-(define (c:int-type n)
+(define (int_t-of-size n)
   (case n
     ((1) 'int8_t)
     ((2) 'int16_t)
     ((4) 'int32_t)
     ((8) 'int64_t)))
 
-(define (c:uint-type n)
+(define (uint_t-of-size n)
   (case n
     ((1) 'uint8_t)
     ((2) 'uint16_t)
     ((4) 'uint32_t)
     ((8) 'uint64_t)))
 
-(define (c:float-type n)
+(define (float_t-of-size n)
   (cond
    ((= n (sizeof float)) 'float)
    ((= n (sizeof double)) 'double)))
@@ -130,11 +130,11 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
   (let ((address (format #f "((void *) &((char *) (~a))[~d])"
                          pointer-expression offset)))
     (match (cons field-type size)
-      [('int . n) (format #f "(*(~a *) ~a)" (c:int-type n) address)]
-      [('uint . n) (format #f "(*(~a *) ~a)" (c:uint-type n) address)]
-      [('bool . n) (format #f "((bool) (*(~a *) ~a != 0))" (c:uint-type n) address)]
-      [('float . n) (format #f "(*(~a *) ~a)" (c:float-type n) address)]
-      [('* . n) (format #f "((void *) *(~a *) ~a)" (c:uint-type n) address)]
+      [('int . n) (format #f "(*(~a *) ~a)" (int_t-of-size n) address)]
+      [('uint . n) (format #f "(*(~a *) ~a)" (uint_t-of-size n) address)]
+      [('bool . n) (format #f "((bool) (*(~a *) ~a != 0))" (uint_t-of-size n) address)]
+      [('float . n) (format #f "(*(~a *) ~a)" (float_t-of-size n) address)]
+      [('* . n) (format #f "((void *) *(~a *) ~a)" (uint_t-of-size n) address)]
       [('SCM . _) (format #f "(*(SCM *) ~a)" address)]
       [('struct . _) (error "NOT YET IMPLEMENTED")]
       [('array . _) (error "NOT YET IMPLEMENTED")] )))
@@ -145,15 +145,15 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
                          pointer-expression offset)))
     (match (cons field-type size)
       [('int . n) (format #f "(*(~a *) ~a = (~a))"
-                          (c:int-type n) address value-expression)]
+                          (int_t-of-size n) address value-expression)]
       [('uint . n) (format #f "(*(~a *) ~a = (~a))"
-                           (c:uint-type n) address value-expression)]
+                           (uint_t-of-size n) address value-expression)]
       [('bool . n) (format #f "(*(~a *) ~a = ((~a) != 0))"
-                           (c:uint-type n) address value-expression)]
+                           (uint_t-of-size n) address value-expression)]
       [('float . n) (format #f "(*(~a *) ~a = (~a))"
-                            (c:float-type n)  address value-expression)]
+                            (float_t-of-size n)  address value-expression)]
       [('* . n) (format #f "(*(~a *) ~a = (uint8_t) (uintptr_t) (~a))"
-                        (c:uint-type n) address value-expression)]
+                        (uint_t-of-size n) address value-expression)]
       [('SCM . _) (format #f "(*(SCM *) ~a = (~a))" address value-expression)]
       [('struct . _) (error "NOT YET IMPLEMENTED")]
       [('array . _) (error "NOT YET IMPLEMENTED")] )))

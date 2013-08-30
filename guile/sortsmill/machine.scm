@@ -18,11 +18,7 @@
 
 (library (sortsmill machine)
 
-  (export c:float-type
-          c:int-type
-          c:uint-type
-
-          bytevector-address-native-set!
+  (export bytevector-address-native-set!
           bytevector-pointer-native-set!
           bytevector-address-native-ref
           bytevector-pointer-native-ref
@@ -33,39 +29,12 @@
           SCM-set!
           bytevector-SCM-ref
           bytevector-SCM-set!
+          )
 
-          ;; Re-exported from (sortsmill math math-constants).
-          c:flt-epsilon
-          c:dbl-epsilon
-          c:flt-epsilon-exact
-          c:dbl-epsilon-exact)
-
-  (import (only (sortsmill math math-constants)
-                c:flt-epsilon c:dbl-epsilon
-                c:flt-epsilon-exact c:dbl-epsilon-exact)
-          (rnrs)
+  (import (rnrs)
           (except (guile) error)
           (ice-9 match)
           (system foreign))
-
-  (define (c:float-type n)
-    (cond
-     ((= n (sizeof float)) 'float)
-     ((= n (sizeof double)) 'double)))
-
-  (define (c:int-type n)
-    (case n
-      ((1) 'int8_t)
-      ((2) 'int16_t)
-      ((4) 'int32_t)
-      ((8) 'int64_t)))
-
-  (define (c:uint-type n)
-    (case n
-      ((1) 'uint8_t)
-      ((2) 'uint16_t)
-      ((4) 'uint32_t)
-      ((8) 'uint64_t)))
 
   (define-syntax bytevector-address-native-set!
     (lambda (x)

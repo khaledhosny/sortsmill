@@ -77,11 +77,11 @@
    matrix-inv
    )
 
-  (import (sortsmill math matrices base)
+  (import (sortsmill core)
+          (sortsmill math matrices base)
           (sortsmill math matrices arithmetic)
           (sortsmill math gsl matrices)
           (sortsmill arrays)
-          (sortsmill math math-constants)
           (sortsmill i18n)
           (sortsmill kwargs)
           (rnrs)
@@ -120,8 +120,8 @@
                           (lambda () body body* ...)))] )))
 
   (define (svd-rcond-value rcond)
-    (cond [(not rcond)       (* 100 c:dbl-epsilon-exact)]
-          [(negative? rcond) (* 100 c:dbl-epsilon-exact)]
+    (cond [(not rcond)       (* 100 dbl-epsilon)]
+          [(negative? rcond) (* 100 dbl-epsilon)]
           [else              (inexact->exact rcond)] ))
 
   (define current-matrix-svd-rcond-fluid

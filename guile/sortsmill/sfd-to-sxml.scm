@@ -23,14 +23,16 @@
           (ice-9 rdelim)
           (ice-9 regex)
           (ice-9 format)
-          (only (sortsmill math math-constants) c:dbl-epsilon)
           (sortsmill i18n)
           (sortsmill iconv)
+          (sortsmill core)
           (guile)
           (only (rnrs) assert))
 
-  (define (fuzzy= a b)
-    (<= (abs (- a b)) (* (max (abs a) (abs b)) c:dbl-epsilon)))
+  (define fuzzy=
+    (let ([eps (exact->inexact dbl-epsilon)])
+      (lambda (a b)
+        (<= (abs (- a b)) (* eps (max (abs a) (abs b)))))))
 
   (define (remove-embedded-nul-chars s)
     (list->string (filter (lambda (c) (not (char=? c #\nul)))
