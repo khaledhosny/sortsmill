@@ -51,8 +51,6 @@ MOSTLYCLEANFILES =
 
 noinst_LTLIBRARIES += libsortsmill_aux.la
 
-libsortsmill_aux_la_CFLAGS = -I$(srcdir)
-
 dist_libsortsmill_aux_la_SOURCES =
 nodist_libsortsmill_aux_la_SOURCES =
 

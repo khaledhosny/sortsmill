@@ -74,11 +74,9 @@ StM_ANALYZE_PACKAGE_VERSION
 AC_PATH_XTRA
 i_do_have_x="${have_x}"
 i_do_have_gui="${i_do_have_x}"
-HAVE_GUI=0
-if test x"${i_do_have_x}" = xyes; then
-   HAVE_GUI=1
-fi
-AC_DEFINE_UNQUOTED([HAVE_GUI],[${HAVE_GUI}],[Define as 1 if building with the GUI; otherwise define as 0.])
+HAVE_GUI=0; test x"${i_do_have_x}" = xyes && HAVE_GUI=1
+AC_DEFINE_UNQUOTED([HAVE_GUI],[${HAVE_GUI}],
+   [Define as 1 if building with the GUI; otherwise define as 0.])
 AC_SUBST([HAVE_GUI])
 
 AC_SUBST([HOST],["$host"])
@@ -156,10 +154,7 @@ FONTFORGE_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],
 FONTFORGE_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],
                     [`update-desktop-database' command])
 
-# Guile 2.0.
-m4_ifdef([GUILE_PROGS],[GUILE_PROGS],
-         [AC_MSG_ERROR([I could not find a usable installation of Guile ${GUILE_API}.
-                  ${PACKAGE_NAME} requires Guile >= ${GUILE_VERSION_MIN} from http://www.gnu.org/software/guile/])])
+GUILE_PROGS
 if test `${GUILE} -c "(import (system foreign)) (write (defined? 'procedure->pointer))"` != "#t"; then
    AC_MSG_ERROR([${PACKAGE_NAME} requires that Guile support `procedure->pointer'.
                  The Guile found by configure seems not to. See
@@ -219,41 +214,145 @@ FONTFORGE_ARG_ENABLE([tile-path],
 #
 # Checks for libraries.
 
+# Found by Gnulib macros.
+test -n "${ATAN2_LIBM}" && LIBS="${ATAN2_LIBM} ${LIBS}"
+test -n "${COS_LIBM}" && LIBS="${COS_LIBM} ${LIBS}"
+test -n "${FABS_LIBM}" && LIBS="${FABS_LIBM} ${LIBS}"
+test -n "${FLOOR_LIBM}" && LIBS="${FLOOR_LIBM} ${LIBS}"
+test -n "${FMA_LIBM}" && LIBS="${FMA_LIBM} ${LIBS}"
+test -n "${FREXP_LIBM}" && LIBS="${FREXP_LIBM} ${LIBS}"
+test -n "${GETHOSTNAME_LIB}" && LIBS="${GETHOSTNAME_LIB} ${LIBS}"
+test -n "${HOSTENT_LIB}" && LIBS="${HOSTENT_LIB} ${LIBS}"
+test -n "${HYPOT_LIBM}" && LIBS="${HYPOT_LIBM} ${LIBS}"
+test -n "${LDEXP_LIBM}" && LIBS="${LDEXP_LIBM} ${LIBS}"
+test -n "${LIBSOCKET}" && LIBS="${LIBSOCKET} ${LIBS}"
+test -n "${LIB_SELECT}" && LIBS="${LIB_SELECT} ${LIBS}"
+test -n "${LTLIBICONV}" && LIBS="${LTLIBICONV} ${LIBS}"
+test -n "${LTLIBINTL}" && LIBS="${LTLIBINTL} ${LIBS}"
+test -n "${LTLIBTHREAD}" && LIBS="${LTLIBTHREAD} ${LIBS}"
+test -n "${LTLIBUNISTRING}" && LIBS="${LTLIBUNISTRING} ${LIBS}"
+test -n "${POW_LIBM}" && LIBS="${POW_LIBM} ${LIBS}"
+test -n "${RINT_LIBM}" && LIBS="${RINT_LIBM} ${LIBS}"
+test -n "${SIN_LIBM}" && LIBS="${SIN_LIBM} ${LIBS}"
+test -n "${SQRT_LIBM}" && LIBS="${SQRT_LIBM} ${LIBS}"
+test -n "${TAN_LIBM}" && LIBS="${TAN_LIBM} ${LIBS}"
+test -n "${INTL_MACOSX_LIBS}" && LIBS="${INTL_MACOSX_LIBS} ${LIBS}"
+
+StM_LIB_ZLIB
+if test x"${HAVE_LIBZ}" != xyes; then
+   AC_MSG_ERROR([Necessary library libz was not found.
+           Consider installing zlib: <http://zlib.net/>])
+fi
+test -n "${LTLIBZ}" && LIBS="${LTLIBZ} ${LIBS}"
+
+if test x"${i_do_have_x}" = xyes; then
+   PKG_CHECK_MODULES([X11], [x11],
+      [test -n "${X11_CFLAGS}" && CFLAGS="${X11_CFLAGS} ${CFLAGS}"
+       test -n "${X11_LIBS}" && LIBS="${X11_LIBS} ${LIBS}"])
+
+   PKG_CHECK_MODULES([XI], [xi],
+      [test -n "${XI_CFLAGS}" && CFLAGS="${XI_CFLAGS} ${CFLAGS}"
+       test -n "${XI_LIBS}" && LIBS="${XI_LIBS} ${LIBS}"],
+      [AC_DEFINE([_NO_XINPUT], [1], [Define to 1 if not using XInput.])])
+
+   PKG_CHECK_MODULES([XKBUI], [xkbui],
+      [test -n "${XKBUI_CFLAGS}" && CFLAGS="${XKBUI_CFLAGS} ${CFLAGS}"
+       test -n "${XKBUI_LIBS}" && LIBS="${XKBUI_LIBS} ${LIBS}"],
+      [AC_DEFINE([_NO_XKB], [1], [Define to 1 if not using xkbui.])])
+fi
+
+# FIXME: All instances of atomic_ops should be replaced with Core
+# Library routines.
+with_atomic_ops=yes
+unset ac_cv_header_atomic_ops_h
+StM_LIB_ATOMIC_OPS
+if test x"${with_atomic_ops}" = xyes; then
+   if test ${HAVE_ATOMIC_OPS_H} -eq 0; then
+      if test x"${enable_threads}" = xyes; then
+         AC_MSG_ERROR([the header file <atomic_ops.h> was not found;
+           to build without it (sacrificing thread-safety in some
+           operations), add --without-atomic_ops to configure])
+      fi
+   elif test ${HAVE_ATOMIC_OPS_LIB} -eq 0; then
+      AC_MSG_WARN([the support library for atomic_ops was not found;
+           it is possible you will not need it, so we will continue
+           tentatively, but linking may fail.])
+   fi
+   test -n "${ATOMIC_OPS_CFLAGS}" && CFLAGS="${ATOMIC_OPS_CFLAGS} ${CFLAGS}"
+   test -n "${ATOMIC_OPS_LIBS}" && LIBS="${ATOMIC_OPS_LIBS} ${LIBS}"
+fi
+
+PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
+if test x"${enable_threads}" = xyes; then
+   AC_DEFINE([GC_THREADS],[1],
+      [Define to 1 if Boehm GC has to co-exist with POSIX threads.])
+fi
+test -n "${BOEHM_GC_CFLAGS}" && CFLAGS="${BOEHM_GC_CFLAGS} ${CFLAGS}"
+test -n "${BOEHM_GC_LIBS}" && LIBS="${BOEHM_GC_LIBS} ${LIBS}"
+
 PKG_CHECK_MODULES([SORTSMILL_CORE],[sortsmill_core >= 1.0.0])
 test -n "${SORTSMILL_CORE_CFLAGS}" && CFLAGS="${SORTSMILL_CORE_CFLAGS} ${CFLAGS}"
-test -n "${SORTSMILL_CORE_LIBS}" && CFLAGS="${SORTSMILL_CORE_LIBS} ${LIBS}"
+test -n "${SORTSMILL_CORE_LIBS}" && LIBS="${SORTSMILL_CORE_LIBS} ${LIBS}"
 PKG_CHECK_VAR([SORTSMILL_CORE_LIBDIR],[sortsmill_core],[libdir])
 
-PKG_CHECK_MODULES([SORTSMILL_CORE_GUILE],[sortsmill-core-guile-${GUILE_API} >= 1.0.0])
-FONTFORGE_ATOMIC_OPS
-FONTFORGE_CONFIG_X_LIBRARIES
-FONTFORGE_LIBPCRE
-FONTFORGE_CHECK_MODULES([ZLIB],[zlib],[inflate],[z])
-PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.8 gio-2.0])
+# FIXME: Get rid of all direct use of pcre.
+#FONTFORGE_LIBPCRE
+
 PKG_CHECK_MODULES([LIBPNG],[libpng])
+test -n "${LIBPNG_CFLAGS}" && CFLAGS="${LIBPNG_CFLAGS} ${CFLAGS}"
+test -n "${LIBPNG_LIBS}" && LIBS="${LIBPNG_LIBS} ${LIBS}"
+
 PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
-PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API} >= ${GUILE_VERSION_MIN}])
-PKG_CHECK_MODULES([GSL],[gsl])
+test -n "${LIBXML_CFLAGS}" && CFLAGS="${LIBXML_CFLAGS} ${CFLAGS}"
+test -n "${LIBXML_LIBS}" && LIBS="${LIBXML_LIBS} ${LIBS}"
 
 # FIXME: Do a more sophisticated GMP check.
 AC_CHECK_LIB([gmp],[__gmpz_init],[],
   [AC_MSG_ERROR([${PACKAGE_NAME} requires GNU MP, but it was not found. See http://gmplib.org/])])
 
-PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
-AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
+PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.8 gio-2.0])
+test -n "${GLIB_CFLAGS}" && CFLAGS="${GLIB_CFLAGS} ${CFLAGS}"
+test -n "${GLIB_LIBS}" && LIBS="${GLIB_LIBS} ${LIBS}"
+
+PKG_CHECK_MODULES([GSL],[gsl])
+test -n "${GSL_CFLAGS}" && CFLAGS="${GSL_CFLAGS} ${CFLAGS}"
+test -n "${GSL_LIBS}" && LIBS="${GSL_LIBS} ${LIBS}"
+
+PKG_CHECK_MODULES([GUILE],[guile-2.0 >= 2.0.6])
+GUILE_PKG([2.0])
+GUILE_FLAGS
+test -n "${GUILE_CFLAGS}" && CFLAGS="${GUILE_CFLAGS} ${CFLAGS}"
+test -n "${GUILE_LTLIBS}" && LIBS="${GUILE_LTLIBS} ${LIBS}"
+
+PKG_CHECK_MODULES([SORTSMILL_CORE_GUILE],[sortsmill-core-guile-${GUILE_API} >= 1.0.0])
+test -n "${SORTSMILL_CORE_GUILE_CFLAGS}" && CFLAGS="${SORTSMILL_CORE_GUILE_CFLAGS} ${CFLAGS}"
+test -n "${SORTSMILL_CORE_GUILE_LIBS}" && LIBS="${SORTSMILL_CORE_GUILE_LIBS} ${LIBS}"
 
 # FIXME: Do we really want this if there is no GUI?
 # 11.0.5 is the "libtool" version corresponding to 2.4.0 release as reported by pkg-config
 # check doc/VERSION.DLL for mapping between libtool and release versions
 PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
+test -n "${FREETYPE_CFLAGS}" && CFLAGS="${FREETYPE_CFLAGS} ${CFLAGS}"
+test -n "${FREETYPE_LIBS}" && LIBS="${FREETYPE_LIBS} ${LIBS}"
 
 if test x"${i_do_have_gui}" = xyes; then
    # 11.0.5 is the "libtool" version corresponding to 2.4.0 release as reported by pkg-config
    # check doc/VERSION.DLL for mapping between libtool and release versions
-   PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
+   #PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
+   #test -n "${FREETYPE_CFLAGS}" && CFLAGS="${FREETYPE_CFLAGS} ${CFLAGS}"
+   #test -n "${FREETYPE_LIBS}" && LIBS="${FREETYPE_LIBS} ${LIBS}"
+
    PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])
+   test -n "${CAIRO_CFLAGS}" && CFLAGS="${CAIRO_CFLAGS} ${CFLAGS}"
+   test -n "${CAIRO_LIBS}" && LIBS="${CAIRO_LIBS} ${LIBS}"
+
    PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangocairo])
+   test -n "${PANGO_CFLAGS}" && CFLAGS="${PANGO_CFLAGS} ${CFLAGS}"
+   test -n "${PANGO_LIBS}" && LIBS="${PANGO_LIBS} ${LIBS}"
+
    PKG_CHECK_MODULES([XCURS],[xcursor])
+   test -n "${XCURS_CFLAGS}" && CFLAGS="${XCURS_CFLAGS} ${CFLAGS}"
+   test -n "${XCURS_LIBS}" && LIBS="${XCURS_LIBS} ${LIBS}"
 fi
 
 if test x"${HAVE_LIBUNISTRING}" != xyes; then
@@ -264,6 +363,9 @@ AC_ARG_VAR([FREETYPE_SOURCE],
         [directory where freetype source code is located for --enable-freetype-debugger;
          however, if --enable-freetype-debugger=DIR is specified, then DIR overrides
          the setting of FREETYPE_SOURCE])
+test x"${i_do_have_freetype_debugger}" != xno && \
+   CFLAGS="-I${FREETYPE_SOURCE}/src/truetype -I${FREETYPE_SOURCE}/include -I${FREETYPE_SOURCE}/include/freetype ${CFLAGS}"
+
 FONTFORGE_ARG_WITH_GIFLIB
 FONTFORGE_ARG_WITH_LIBJPEG
 FONTFORGE_ARG_WITH_LIBTIFF
@@ -358,6 +460,7 @@ if test -z "${WARNING_CFLAGS}"; then
        -Wimplicit],
       [-Wl,--warn-common])
 fi
+test -n "${WARNING_CFLAGS}" && CFLAGS="${WARNING_CFLAGS} ${CFLAGS}"
 
 AC_SUBST([CYTHON_EXTRA_CFLAGS])
 if test -z "${CYTHON_EXTRA_CFLAGS}"; then
@@ -380,40 +483,38 @@ if test -z "${NO_UNUSED_EXTRA_CFLAGS}"; then
    StM_GNU_C_FLAGS([NO_UNUSED_EXTRA_CFLAGS],[-Wno-unused])
 fi
 
-FONTFORGE_C_CONST_FLT_EPSILON
-AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
-FONTFORGE_C_CONST_DBL_EPSILON
-AC_SUBST([C_CONST_DBL_EPSILON],["${fontforge_cv_c_const_dbl_epsilon}"])
+StM_DEFINE_ATTR_VISIBLE([VISIBLE])
+test -n "${CFLAG_VISIBILITY}" && CFLAGS="${CFLAG_VISIBILITY} ${CFLAGS}"
 
-if test x"${i_do_have_fortran_api}" = xyes; then
-   AC_FC_SRCEXT([f90])
-   AC_FC_PP_SRCEXT([F90])
-   AC_FC_LINE_LENGTH([132])
-   AC_FC_IMPLICIT_NONE([],[:])
-   AC_FC_MAIN
-   AC_FC_LIBRARY_LDFLAGS
-   AC_FC_PP_DEFINE
-   AC_FC_FREEFORM
-   AC_FC_MODULE_EXTENSION
-   AC_FC_MODULE_FLAG
-   FONTFORGE_FC_MODULE_CASE
-fi
-
-# How to get mangled Fortran names here in configure, for instance to
-# use them from Pure, Guile, or Python ctypes code:
-#
-#AC_FC_FUNC([some_fortran_function])
-#AC_SUBST([some_fortran_function])
-#
-# In code that goes through the C preprocessor you can use the
-# FC_FUNC() and FC_FUNC_() macros defined in inc/config.h by:
-
-if test x"${i_do_have_fortran_api}" = xyes; then
-   AC_FC_WRAPPERS
-fi
-
-# With recent Fortran specifications, you can use BIND(C) in your
-# Fortran code and thus avoid name mangling. This method is the best.
+# if test x"${i_do_have_fortran_api}" = xyes; then
+#    AC_FC_SRCEXT([f90])
+#    AC_FC_PP_SRCEXT([F90])
+#    AC_FC_LINE_LENGTH([132])
+#    AC_FC_IMPLICIT_NONE([],[:])
+#    AC_FC_MAIN
+#    AC_FC_LIBRARY_LDFLAGS
+#    AC_FC_PP_DEFINE
+#    AC_FC_FREEFORM
+#    AC_FC_MODULE_EXTENSION
+#    AC_FC_MODULE_FLAG
+#    FONTFORGE_FC_MODULE_CASE
+# fi
+# 
+# # How to get mangled Fortran names here in configure, for instance to
+# # use them from Pure, Guile, or Python ctypes code:
+# #
+# #AC_FC_FUNC([some_fortran_function])
+# #AC_SUBST([some_fortran_function])
+# #
+# # In code that goes through the C preprocessor you can use the
+# # FC_FUNC() and FC_FUNC_() macros defined in inc/config.h by:
+# 
+# if test x"${i_do_have_fortran_api}" = xyes; then
+#    AC_FC_WRAPPERS
+# fi
+# 
+# # With recent Fortran specifications, you can use BIND(C) in your
+# # Fortran code and thus avoid name mangling. This method is the best.
 
 #--------------------------------------------------------------------------
 # Checks for library functions.
@@ -436,6 +537,7 @@ CFLAGS="${CFLAGS} ${GUILE_CFLAGS}"
 LIBS="${LIBS} ${GUILE_LIBS}"
 AC_CHECK_FUNCS([scm_init_guile])
 if test x"${i_do_have_python_api}" = xyes -a x"${ac_cv_func_scm_init_guile}" != xyes; then
+   # FIXME: It would be better not to have this requirement.
    AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires that Guile support the scm_init_guile() function,
                   which was not found.])
 fi
@@ -510,7 +612,7 @@ AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([mackeys/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([htdocs/Makefile])
-AC_CONFIG_FILES([python/Makefile])
+#AC_CONFIG_FILES([python/Makefile])
 AC_CONFIG_FILES([tests/Makefile])
 AC_CONFIG_FILES([data/Makefile])
 AC_CONFIG_FILES([data/cidmap/Makefile])
@@ -518,21 +620,21 @@ AC_CONFIG_FILES([data/cursors/Makefile])
 AC_CONFIG_FILES([data/pixmaps/Makefile])
 AC_CONFIG_FILES([fonttools/Makefile])
 AC_CONFIG_FILES([guile/Makefile])
-AC_CONFIG_FILES([sfd2sxml/Makefile])
-AC_CONFIG_FILES([fortran/Makefile])
-AC_CONFIG_FILES([pure/Makefile])
-AC_CONFIG_FILES([examples/Makefile])
+#AC_CONFIG_FILES([sfd2sxml/Makefile])
+#AC_CONFIG_FILES([fortran/Makefile])
+#AC_CONFIG_FILES([pure/Makefile])
+#AC_CONFIG_FILES([examples/Makefile])
 
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([inc/sortsmill/cython/config.pxi])
 
 AC_CONFIG_COMMANDS([fontforge/sortsmill],[AS_MKDIR_P([fontforge/sortsmill])])
 
-AC_CONFIG_FILES([python/fontforge.py])
-AC_CONFIG_FILES([python/psMat.py])
-AC_CONFIG_FILES([python/sortsmill/__init__.py])
-AC_CONFIG_FILES([python/__sortsmill__/__init__.py])
-AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
+#AC_CONFIG_FILES([python/fontforge.py])
+#AC_CONFIG_FILES([python/psMat.py])
+#AC_CONFIG_FILES([python/sortsmill/__init__.py])
+#AC_CONFIG_FILES([python/__sortsmill__/__init__.py])
+#AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
 
 AC_CONFIG_COMMANDS([guile/sortsmill/math],[AS_MKDIR_P([guile/sortsmill/math])])
 AC_CONFIG_COMMANDS([guile/sortsmill/math/gsl],[AS_MKDIR_P([guile/sortsmill/math/gsl])])

@@ -45,6 +45,8 @@
 #ifndef _CONFIG_EXTRA_H
 #define _CONFIG_EXTRA_H
 
+// FIXME: Move this to the future Python package.
+//
 // Cython code declared ‘cdef public’ is translated to C code
 // declared DL_EXPORT().
 #if ! defined DL_EXPORT
@@ -56,6 +58,8 @@
 #error @PACKAGE_STRING@ requires that malloc(0) return non-NULL.
 #endif
 
+// FIXME: Use <sortsmill/attributes.h>
+//
 // A macro to mark unused function parameters with. We often
 // have such parameters, because of extensive use of callbacks.
 #if ! defined UNUSED
@@ -78,12 +82,6 @@
 # define MY_ICONV_STRING_UNICHAR_T MY_ICONV_UCS4LE_STRING
 #endif
 
-#if defined HAVE_VISIBILITY && HAVE_VISIBILITY
-#define VISIBLE __attribute__((__visibility__("default")))
-#else
-#define VISIBLE
-#endif
-
 #if defined HAVE_TYPEOF
 // Override the API-compatible declarations in
 // sortsmill/attributes.h
@@ -92,17 +90,17 @@
 #define _FF_CAST_TYPEOF(x) (typeof (x))
 #endif
 
-#if !defined HAVE_PCRE_FREE_STUDY
-// Older versions of PCRE do not have a special free function for the
-// results of studying.
-#define pcre_free_study(p) pcre_free (p)
-#endif
-
-#if !defined HAVE_PCRE_STUDY_JIT_COMPILE
-// Older versions of PCRE do not support JIT compilation. Make them do
-// ordinary studying whenever JIT is requested.
-#define PCRE_STUDY_JIT_COMPILE 0
-#endif
+// #if !defined HAVE_PCRE_FREE_STUDY
+// // Older versions of PCRE do not have a special free function for the
+// // results of studying.
+// #define pcre_free_study(p) pcre_free (p)
+// #endif
+// 
+// #if !defined HAVE_PCRE_STUDY_JIT_COMPILE
+// // Older versions of PCRE do not support JIT compilation. Make them do
+// // ordinary studying whenever JIT is requested.
+// #define PCRE_STUDY_JIT_COMPILE 0
+// #endif
 
 #if D_GIF_OPEN_FILE_NAME_ERROR_RETURN
 #define D_GIF_OPEN_FILE_NAME(filename) DGifOpenFileName (filename, NULL)

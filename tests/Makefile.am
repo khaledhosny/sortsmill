@@ -68,7 +68,8 @@ check-local: atconfig atlocal $(TESTSUITE)
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
 installcheck-local: atconfig atlocal $(TESTSUITE)
-	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' $(TESTSUITEFLAGS)
+	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)'	\
+	$(TESTSUITEFLAGS)
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
@@ -167,11 +168,7 @@ check_PROGRAMS += $(TESTS_LINALG)
 $(check_PROGRAMS): main_with_guile.x
 
 AM_DEFAULT_SOURCE_EXT = .c
-LDADD = $(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
-	$(top_builddir)/gdraw/libsortsmill_gdraw.la					\
-	$(top_builddir)/fontforge/libsortsmill_fontforge.la			\
-	$(top_builddir)/gutils/libsortsmill_gutils.la				\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la				\
+LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la	\
 	$(top_builddir)/lib/libgnu.la
 AM_LDFLAGS = -export-dynamic -avoid-version $(MY_CFLAGS) $(MY_LIBS)	\
 	$(GNULIB_LD_FLAGS)

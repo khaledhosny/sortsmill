@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+#
+# FIXME FIXME FIXME: Rewrite this in Guile. This Python code won’t
+# even run now that I have deprecated python-libunicodenames.
+#
+
 import unicodenames
 import locale, re, sys
 

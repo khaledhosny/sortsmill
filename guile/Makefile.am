@@ -959,9 +959,7 @@ lib_LTLIBRARIES += libguile-sortsmill_symbols.la
 libguile_sortsmill_symbols_la_SOURCES = libguile_sortsmill_symbols.c
 libguile_sortsmill_symbols_la_CPPFLAGS = $(AM_CPPFLAGS) $(FFINCLDIRS)
 libguile_sortsmill_symbols_la_LIBADD =						\
-	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/fontforge/libsortsmill_fontforge.la		\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la			\
 	$(top_builddir)/lib/libgnu.la
 
 CLEANFILES += libguile_sortsmill_symbols.c

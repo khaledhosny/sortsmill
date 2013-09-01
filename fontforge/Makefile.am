@@ -42,6 +42,11 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# See
+# http://www.gnu.org/software/libtool/manual/libtool.html#Versioning
+#VERSION_INFO = -version-info 0:0:0
+VERSION_INFO = -release $(VERSION)
+
 include $(top_srcdir)/mk/flags.am
 @includemk@ $(top_srcdir)/mk/tig.mk
 
@@ -60,36 +65,26 @@ DISTCLEANFILES =
 
 dist_libsortsmill_fontforge_la_SOURCES =
 nodist_libsortsmill_fontforge_la_SOURCES =
-dist_libsortsmill_fontforgeexe_la_SOURCES =
-nodist_libsortsmill_fontforgeexe_la_SOURCES =
 
 #--------------------------------------------------------------------------
 
 lib_LTLIBRARIES += libsortsmill_fontforge.la
-lib_LTLIBRARIES += libsortsmill_fontforgeexe.la
-
-libsortsmill_fontforge_la_LIBADD = \
-	$(top_builddir)/gutils/libsortsmill_gutils.la \
-	$(top_builddir)/auxiliary/libsortsmill_aux.la \
-	$(top_builddir)/lib/libgnu.la
 
 if HAVE_GUI
-libsortsmill_fontforgeexe_la_LIBADD = \
-	libsortsmill_fontforge.la \
-	$(top_builddir)/gutils/libsortsmill_gdraw.la \
+libsortsmill_fontforge_la_LIBADD = \
+	$(top_builddir)/gdraw/libsortsmill_gdraw.la \
 	$(top_builddir)/gutils/libsortsmill_gutils.la \
 	$(top_builddir)/auxiliary/libsortsmill_aux.la \
 	$(top_builddir)/lib/libgnu.la
 else !HAVE_GUI
-libsortsmill_fontforgeexe_la_LIBADD = \
-	libsortsmill_fontforge.la \
+libsortsmill_fontforge_la_LIBADD = \
 	$(top_builddir)/gutils/libsortsmill_gutils.la \
 	$(top_builddir)/auxiliary/libsortsmill_aux.la \
 	$(top_builddir)/lib/libgnu.la
 endif !HAVE_GUI
 
-libsortsmill_fontforge_la_LDFLAGS = $(call ldflags) -export-dynamic
-libsortsmill_fontforgeexe_la_LDFLAGS = $(call ldflags) -export-dynamic
+libsortsmill_fontforge_la_LDFLAGS = $(MY_CFLAGS) -export-dynamic	\
+	$(VERSION_INFO) $(MY_LIBS)
 
 #--------------------------------------------------------------------------
 
@@ -233,7 +228,6 @@ dist_libsortsmill_fontforge_la_SOURCES += zapfnomen.c
 dist_libsortsmill_fontforge_la_SOURCES += groups.c
 dist_libsortsmill_fontforge_la_SOURCES += langfreq.c
 dist_libsortsmill_fontforge_la_SOURCES += autowidth2.c
-dist_libsortsmill_fontforge_la_SOURCES += views.c
 dist_libsortsmill_fontforge_la_SOURCES += woff.c
 dist_libsortsmill_fontforge_la_SOURCES += activeinui.c
 dist_libsortsmill_fontforge_la_SOURCES += is_LIGATURE.c
@@ -270,77 +264,75 @@ nodist_libsortsmill_fontforge_la_SOURCES += fontforge_api.c
 CLEANFILES += fontforge_api.c
 
 if HAVE_GUI
-dist_libsortsmill_fontforgeexe_la_SOURCES += alignment.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += anchorsaway.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += autowidth2dlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += basedlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += bdfinfo.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += bitmapdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += bitmapview.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += charinfo.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += charview.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += clipui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += combinations.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += contextchain.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cursors.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvaddpoints.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvdebug.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvdgloss.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvexportdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvfreehand.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvgetinfo.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvgridfit.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvhand.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvhints.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvimportdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvknife.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvpalettes.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvpointer.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvruler.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvshapes.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvstroke.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += cvtranstools.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += displayfonts.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += effectsui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += encodingui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += fontinfo.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += fontview.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += freetypeui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += fvfontsdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += fvmetricsdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += gotodlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += groupsdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += histograms.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += kernclass.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += layer2layer.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += lookupui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += math.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += metricsview.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += mmdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += nonlineartransui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += openfontdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += prefs.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += problems.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += generatefontdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += scriptingdlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += scstylesui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += searchview.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += sftextfield.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += showatt.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += simplifydlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += startui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += tilepath.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += transform.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += ttfinstrsui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += uiutil.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += windowmenu.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += justifydlg.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += deltaui.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += usermenu.c
-dist_libsortsmill_fontforgeexe_la_SOURCES += guile_editor_main_loop.c
-else !HAVE_GUI
-dist_libsortsmill_fontforgeexe_la_SOURCES += fontforgeexe_stub.c
-endif !HAVE_GUI
+dist_libsortsmill_fontforge_la_SOURCES += alignment.c
+dist_libsortsmill_fontforge_la_SOURCES += anchorsaway.c
+dist_libsortsmill_fontforge_la_SOURCES += autowidth2dlg.c
+dist_libsortsmill_fontforge_la_SOURCES += basedlg.c
+dist_libsortsmill_fontforge_la_SOURCES += bdfinfo.c
+dist_libsortsmill_fontforge_la_SOURCES += bitmapdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += bitmapview.c
+dist_libsortsmill_fontforge_la_SOURCES += charinfo.c
+dist_libsortsmill_fontforge_la_SOURCES += charview.c
+dist_libsortsmill_fontforge_la_SOURCES += clipui.c
+dist_libsortsmill_fontforge_la_SOURCES += combinations.c
+dist_libsortsmill_fontforge_la_SOURCES += contextchain.c
+dist_libsortsmill_fontforge_la_SOURCES += cursors.c
+dist_libsortsmill_fontforge_la_SOURCES += cvaddpoints.c
+dist_libsortsmill_fontforge_la_SOURCES += cvdebug.c
+dist_libsortsmill_fontforge_la_SOURCES += cvdgloss.c
+dist_libsortsmill_fontforge_la_SOURCES += cvexportdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += cvfreehand.c
+dist_libsortsmill_fontforge_la_SOURCES += cvgetinfo.c
+dist_libsortsmill_fontforge_la_SOURCES += cvgridfit.c
+dist_libsortsmill_fontforge_la_SOURCES += cvhand.c
+dist_libsortsmill_fontforge_la_SOURCES += cvhints.c
+dist_libsortsmill_fontforge_la_SOURCES += cvimportdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += cvknife.c
+dist_libsortsmill_fontforge_la_SOURCES += cvpalettes.c
+dist_libsortsmill_fontforge_la_SOURCES += cvpointer.c
+dist_libsortsmill_fontforge_la_SOURCES += cvruler.c
+dist_libsortsmill_fontforge_la_SOURCES += cvshapes.c
+dist_libsortsmill_fontforge_la_SOURCES += cvstroke.c
+dist_libsortsmill_fontforge_la_SOURCES += cvtranstools.c
+dist_libsortsmill_fontforge_la_SOURCES += displayfonts.c
+dist_libsortsmill_fontforge_la_SOURCES += effectsui.c
+dist_libsortsmill_fontforge_la_SOURCES += encodingui.c
+dist_libsortsmill_fontforge_la_SOURCES += fontinfo.c
+dist_libsortsmill_fontforge_la_SOURCES += fontview.c
+dist_libsortsmill_fontforge_la_SOURCES += freetypeui.c
+dist_libsortsmill_fontforge_la_SOURCES += fvfontsdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += fvmetricsdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += gotodlg.c
+dist_libsortsmill_fontforge_la_SOURCES += groupsdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += histograms.c
+dist_libsortsmill_fontforge_la_SOURCES += kernclass.c
+dist_libsortsmill_fontforge_la_SOURCES += layer2layer.c
+dist_libsortsmill_fontforge_la_SOURCES += lookupui.c
+dist_libsortsmill_fontforge_la_SOURCES += math.c
+dist_libsortsmill_fontforge_la_SOURCES += metricsview.c
+dist_libsortsmill_fontforge_la_SOURCES += mmdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += nonlineartransui.c
+dist_libsortsmill_fontforge_la_SOURCES += openfontdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += prefs.c
+dist_libsortsmill_fontforge_la_SOURCES += problems.c
+dist_libsortsmill_fontforge_la_SOURCES += generatefontdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += scriptingdlg.c
+dist_libsortsmill_fontforge_la_SOURCES += scstylesui.c
+dist_libsortsmill_fontforge_la_SOURCES += searchview.c
+dist_libsortsmill_fontforge_la_SOURCES += sftextfield.c
+dist_libsortsmill_fontforge_la_SOURCES += showatt.c
+dist_libsortsmill_fontforge_la_SOURCES += simplifydlg.c
+dist_libsortsmill_fontforge_la_SOURCES += startui.c
+dist_libsortsmill_fontforge_la_SOURCES += tilepath.c
+dist_libsortsmill_fontforge_la_SOURCES += transform.c
+dist_libsortsmill_fontforge_la_SOURCES += ttfinstrsui.c
+dist_libsortsmill_fontforge_la_SOURCES += uiutil.c
+dist_libsortsmill_fontforge_la_SOURCES += windowmenu.c
+dist_libsortsmill_fontforge_la_SOURCES += justifydlg.c
+dist_libsortsmill_fontforge_la_SOURCES += deltaui.c
+dist_libsortsmill_fontforge_la_SOURCES += usermenu.c
+dist_libsortsmill_fontforge_la_SOURCES += guile_editor_main_loop.c
+endif HAVE_GUI
 
 #--------------------------------------------------------------------------
 
@@ -350,7 +342,7 @@ fontforge.types.apii: fontforge_type_inspector
 	./$< > $@
 
 noinst_PROGRAMS += fontforge_type_inspector
-fontforge_type_inspector_LDADD = $(libsortsmill_fontforgeexe_la_LIBADD)
+fontforge_type_inspector_LDADD = $(libsortsmill_fontforge_la_LIBADD)
 nodist_noinst_DATA += fontforge.types.apii
 EXTRA_DIST += fontforge_type_inspector.tig
 CLEANFILES += fontforge_type_inspector.c fontforge.types.apii

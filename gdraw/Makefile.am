@@ -45,8 +45,6 @@ include $(top_srcdir)/mk/flags.am
 
 noinst_LTLIBRARIES = libsortsmill_gdraw.la
 
-libsortsmill_gdraw_la_CFLAGS = -I$(srcdir)
-
 dist_libsortsmill_gdraw_la_SOURCES =
 nodist_libsortsmill_gdraw_la_SOURCES =
 
