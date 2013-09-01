@@ -1,4 +1,4 @@
-# Copyright (C) 2012 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 # This file is part of the Sorts Mill Tools.
 # 
 # Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -43,24 +43,58 @@
 include $(top_srcdir)/mk/flags.am
 @includemk@ $(top_srcdir)/mk/tig.mk
 
-lib_LTLIBRARIES = libsortsmill_gdraw.la
+noinst_LTLIBRARIES = libsortsmill_gdraw.la
 
-libsortsmill_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c gaskdlg.c	\
-	gbuttons.c gcolor.c gcontainer.c gdraw.c gdrawerror.c gdrawtxt.c	\
-	gfilechooser.c gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c		\
-	gimagecvt.c gdrawgimage.c gkeysym.c glist.c gmenu.c gprogress.c		\
-	gradio.c gresource.c gresourceimage.c gresedit.c gsavefiledlg.c		\
-	gscrollbar.c gtabset.c gtextfield.c gtextinfo.c gwidgets.c			\
-	gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c gspacer.c		\
-	xkeysyms_unicode.c colorP.h gdrawP.h gresourceP.h gxcdrawP.h		\
-	fontP.h ggadgetP.h gwidgetP.h gxdrawP.h
+libsortsmill_gdraw_la_CFLAGS = -I$(srcdir)
 
-libsortsmill_gdraw_la_LIBADD =						\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
-	$(top_builddir)/gutils/libsortsmill_gutils.la	\
-	$(top_builddir)/lib/libgnu.la
-libsortsmill_gdraw_la_LDFLAGS = $(call ldflags) $(XINPUT_LIBS) $(XKB_LIBS)
-libsortsmill_gdraw_la_DEPENDENCIES = Makefile $(libsortsmill_gdraw_la_LIBADD)
+dist_libsortsmill_gdraw_la_SOURCES =
+nodist_libsortsmill_gdraw_la_SOURCES =
+
+dist_libsortsmill_gdraw_la_SOURCES += ctlvalues.c
+dist_libsortsmill_gdraw_la_SOURCES += drawboxborder.c
+dist_libsortsmill_gdraw_la_SOURCES += gaskdlg.c
+dist_libsortsmill_gdraw_la_SOURCES += gbuttons.c
+dist_libsortsmill_gdraw_la_SOURCES += gcolor.c
+dist_libsortsmill_gdraw_la_SOURCES += gcontainer.c
+dist_libsortsmill_gdraw_la_SOURCES += gdraw.c
+dist_libsortsmill_gdraw_la_SOURCES += gdrawerror.c
+dist_libsortsmill_gdraw_la_SOURCES += gdrawtxt.c
+dist_libsortsmill_gdraw_la_SOURCES += gfilechooser.c
+dist_libsortsmill_gdraw_la_SOURCES += gfiledlg.c
+dist_libsortsmill_gdraw_la_SOURCES += ggadgets.c
+dist_libsortsmill_gdraw_la_SOURCES += ggroupbox.c
+dist_libsortsmill_gdraw_la_SOURCES += gimageclut.c
+dist_libsortsmill_gdraw_la_SOURCES += gimagecvt.c
+dist_libsortsmill_gdraw_la_SOURCES += gdrawgimage.c
+dist_libsortsmill_gdraw_la_SOURCES += gkeysym.c
+dist_libsortsmill_gdraw_la_SOURCES += glist.c
+dist_libsortsmill_gdraw_la_SOURCES += gmenu.c
+dist_libsortsmill_gdraw_la_SOURCES += gprogress.c
+dist_libsortsmill_gdraw_la_SOURCES += gradio.c
+dist_libsortsmill_gdraw_la_SOURCES += gresource.c
+dist_libsortsmill_gdraw_la_SOURCES += gresourceimage.c
+dist_libsortsmill_gdraw_la_SOURCES += gresedit.c
+dist_libsortsmill_gdraw_la_SOURCES += gsavefiledlg.c
+dist_libsortsmill_gdraw_la_SOURCES += gscrollbar.c
+dist_libsortsmill_gdraw_la_SOURCES += gtabset.c
+dist_libsortsmill_gdraw_la_SOURCES += gtextfield.c
+dist_libsortsmill_gdraw_la_SOURCES += gtextinfo.c
+dist_libsortsmill_gdraw_la_SOURCES += gwidgets.c
+dist_libsortsmill_gdraw_la_SOURCES += gxdraw.c
+dist_libsortsmill_gdraw_la_SOURCES += gxcdraw.c
+dist_libsortsmill_gdraw_la_SOURCES += ghvbox.c
+dist_libsortsmill_gdraw_la_SOURCES += gmatrixedit.c
+dist_libsortsmill_gdraw_la_SOURCES += gdrawable.c
+dist_libsortsmill_gdraw_la_SOURCES += gspacer.c
+dist_libsortsmill_gdraw_la_SOURCES += xkeysyms_unicode.c
+dist_libsortsmill_gdraw_la_SOURCES += colorP.h
+dist_libsortsmill_gdraw_la_SOURCES += gdrawP.h
+dist_libsortsmill_gdraw_la_SOURCES += gresourceP.h
+dist_libsortsmill_gdraw_la_SOURCES += gxcdrawP.h
+dist_libsortsmill_gdraw_la_SOURCES += fontP.h
+dist_libsortsmill_gdraw_la_SOURCES += ggadgetP.h
+dist_libsortsmill_gdraw_la_SOURCES += gwidgetP.h
+dist_libsortsmill_gdraw_la_SOURCES += gxdrawP.h
 
 #--------------------------------------------------------------------------
 #
@@ -74,8 +108,7 @@ gdraw.types.apii: gdraw_type_inspector
 	./$< > $@
 
 noinst_PROGRAMS = gdraw_type_inspector
-gdraw_type_inspector_LDADD = $(AM_LDADD)		\
-	$(top_builddir)/lib/libgnu.la
+gdraw_type_inspector_LDADD = $(AM_LDADD) $(top_builddir)/lib/libgnu.la
 
 nodist_noinst_DATA = gdraw.types.apii
 

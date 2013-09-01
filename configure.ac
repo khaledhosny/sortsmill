@@ -220,6 +220,10 @@ FONTFORGE_ARG_ENABLE([tile-path],
 # Checks for libraries.
 
 PKG_CHECK_MODULES([SORTSMILL_CORE],[sortsmill_core >= 1.0.0])
+test -n "${SORTSMILL_CORE_CFLAGS}" && CFLAGS="${SORTSMILL_CORE_CFLAGS} ${CFLAGS}"
+test -n "${SORTSMILL_CORE_LIBS}" && CFLAGS="${SORTSMILL_CORE_LIBS} ${LIBS}"
+PKG_CHECK_VAR([SORTSMILL_CORE_LIBDIR],[sortsmill_core],[libdir])
+
 PKG_CHECK_MODULES([SORTSMILL_CORE_GUILE],[sortsmill-core-guile-${GUILE_API} >= 1.0.0])
 FONTFORGE_ATOMIC_OPS
 FONTFORGE_CONFIG_X_LIBRARIES
@@ -340,34 +344,41 @@ AC_SUBST([SIZEOF_DOUBLE],[${ac_cv_sizeof_double}])
 
 AX_PTHREAD
 
-AC_SUBST([WARNING_CFLAGS],[])
-StM_GNU_C_FLAGS([WARNING_CFLAGS],
-   [-Wunused -Wreturn-type
-    -Wparentheses -Wformat -Wchar-subscripts
-    -Wno-unused-but-set-variable -Wno-unused-result
-    -Wstrict-aliasing
-    -Wcast-align
-    -Wsizeof-pointer-memaccess
-    -Wpointer-arith
-    -Wmissing-prototypes
-    -Wimplicit],
-   [-Wl,--warn-common])
+AC_SUBST([WARNING_CFLAGS])
+if test -z "${WARNING_CFLAGS}"; then
+   StM_GNU_C_FLAGS([WARNING_CFLAGS],
+      [-Wunused -Wreturn-type
+       -Wparentheses -Wformat -Wchar-subscripts
+       -Wno-unused-but-set-variable -Wno-unused-result
+       -Wstrict-aliasing
+       -Wcast-align
+       -Wsizeof-pointer-memaccess
+       -Wpointer-arith
+       -Wmissing-prototypes
+       -Wimplicit],
+      [-Wl,--warn-common])
+fi
 
-AC_SUBST([CYTHON_EXTRA_CFLAGS],[])
-StM_GNU_C_FLAGS([CYTHON_EXTRA_CFLAGS],
-   [-Wno-unused -fwrapv -fno-strict-aliasing -Wno-strict-aliasing])
+AC_SUBST([CYTHON_EXTRA_CFLAGS])
+if test -z "${CYTHON_EXTRA_CFLAGS}"; then
+   StM_GNU_C_FLAGS([CYTHON_EXTRA_CFLAGS],
+      [-Wno-unused -fwrapv -fno-strict-aliasing -Wno-strict-aliasing])
+fi
 
-AC_SUBST([VISIBILITY_DEFAULT_EXTRA_CFLAGS],[])
-StM_GNU_C_FLAGS([VISIBILITY_DEFAULT_EXTRA_CFLAGS],
-   [-fvisibility=default])
+AC_SUBST([VISIBILITY_DEFAULT_EXTRA_CFLAGS])
+if test -z "${VISIBILITY_DEFAULT_EXTRA_CFLAGS}"; then
+   StM_GNU_C_FLAGS([VISIBILITY_DEFAULT_EXTRA_CFLAGS],[-fvisibility=default])
+fi
 
-AC_SUBST([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],[])
-StM_GNU_C_FLAGS([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],
-   [-Wno-missing-prototypes])
+AC_SUBST([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS])
+if test -z "${NO_MISSING_PROTOTYPES_EXTRA_CFLAGS}"; then
+   StM_GNU_C_FLAGS([NO_MISSING_PROTOTYPES_EXTRA_CFLAGS],[-Wno-missing-prototypes])
+fi
 
-AC_SUBST([NO_UNUSED_EXTRA_CFLAGS],[])
-StM_GNU_C_FLAGS([NO_UNUSED_EXTRA_CFLAGS],
-   [-Wno-unused])
+AC_SUBST([NO_UNUSED_EXTRA_CFLAGS])
+if test -z "${NO_UNUSED_EXTRA_CFLAGS}"; then
+   StM_GNU_C_FLAGS([NO_UNUSED_EXTRA_CFLAGS],[-Wno-unused])
+fi
 
 FONTFORGE_C_CONST_FLT_EPSILON
 AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
@@ -528,7 +539,6 @@ AC_CONFIG_COMMANDS([guile/sortsmill/math/gsl],[AS_MKDIR_P([guile/sortsmill/math/
 AC_CONFIG_COMMANDS([guile/sortsmill/math/matrices],[AS_MKDIR_P([guile/sortsmill/math/matrices])])
 AC_CONFIG_COMMANDS([guile/sortsmill/pkg-info],[AS_MKDIR_P([guile/sortsmill/pkg-info])])
 AC_CONFIG_COMMANDS([guile/sortsmill/strings],[AS_MKDIR_P([guile/sortsmill/strings])])
-AC_CONFIG_FILES([guile/sortsmill/math/math-constants.scm])
 AC_CONFIG_FILES([guile/sortsmill/math/gsl/error.scm])
 
 FONTFORGE_CONFIG_TESTSUITE

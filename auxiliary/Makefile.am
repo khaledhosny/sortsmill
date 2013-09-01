@@ -51,10 +51,14 @@ MOSTLYCLEANFILES =
 
 noinst_LTLIBRARIES += libsortsmill_aux.la
 
+libsortsmill_aux_la_CFLAGS = -I$(srcdir)
+
 dist_libsortsmill_aux_la_SOURCES =
 nodist_libsortsmill_aux_la_SOURCES =
 
-# Source files inherited from FontForge.
+# Source files inherited from FontForge. Try to avoid using them and
+# PLEASE FIXME by doing away with them. Use libunistring and such,
+# instead.
 dist_libsortsmill_aux_la_SOURCES += ArabicForms.c
 dist_libsortsmill_aux_la_SOURCES += alphabet.c
 dist_libsortsmill_aux_la_SOURCES += backtrns.c
@@ -108,7 +112,11 @@ dist_libsortsmill_aux_la_SOURCES += math_polyspline_subdiv.c
 # interface.
 dist_libsortsmill_aux_la_SOURCES += guile_fonts_contours.c
 
-# Brent’s root-finding algorithm.
+# Brent’s root-finding algorithm. FIXME: No matter the effort I put
+# into them, I do not feel like testing these routines, so switch to
+# using the GSL routines instead. And do away with the
+# non-floating-point versions, because we are going to avoid them like
+# the plague, anyway.
 dist_libsortsmill_aux_la_SOURCES += math_brentroot.c
 dist_libsortsmill_aux_la_SOURCES += math_mpq_brentroot.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_brentroot.c
@@ -132,9 +140,11 @@ dist_libsortsmill_aux_la_SOURCES += guile_python.c
 endif HAVE_PYTHON_API
 
 # Maps of Guile SCM objects, implemented with <sortsmill/rb.h>.
+# FIXME: Move this to Sorts Mill Core Guile.
 dist_libsortsmill_aux_la_SOURCES += guile_containers_rbmap.c
 
 # Miscellaneous C interface to Guile and Guile extensions.
+# FIXME: Move some of these to Sorts Mill Core Guile.
 dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_functions.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_error.c
@@ -154,9 +164,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_strings_rexp.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
 dist_libsortsmill_aux_la_SOURCES += guile_types.c
 
-libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) $(SORTSMILL_CORE_CFLAGS) '-I$(srcdir)'
-libsortsmill_aux_la_DEPENDENCIES = Makefile
-
 # The GMP_MATRIX_EXTRAS files are included by math_gmp_matrix.c rather
 # than compiled directly.
 GMP_MATRIX_EXTRAS =
@@ -172,19 +179,6 @@ GMP_MATRIX_EXTRAS += math_gmp_matrix_trsv.c
 EXTRA_DIST += $(GMP_MATRIX_EXTRAS)
 
 gmp_matrix.lo: $(GMP_MATRIX_EXTRAS)
-
-#--------------------------------------------------------------------------
-#
-# A module version of the auxiliary library. This is mostly for
-# loading auxiliary library functions in Guile programs that cannot
-# load libguile-sortsmill_symbols.la.
-
-# FIXME: Be rid of this:
-#lib_LTLIBRARIES = libguile-sortsmill_aux.la
-#libguile_sortsmill_aux_la_SOURCES = libguile_sortsmill_aux.c
-#libguile_sortsmill_aux_la_LIBADD = libsortsmill_aux.la
-#libguile_sortsmill_aux_la_LDFLAGS = -module -release $(VERSION)	\
-#	$(AM_LDFLAGS)
 
 #--------------------------------------------------------------------------
 #

@@ -1,4 +1,4 @@
-# Copyright (C) 2012 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 # This file is part of the Sorts Mill Tools.
 # 
 # Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -42,21 +42,46 @@
 
 include $(top_srcdir)/mk/flags.am
 
-lib_LTLIBRARIES = libsortsmill_gutils.la
+noinst_LTLIBRARIES =
+EXTRA_DIST =
+MOSTLYCLEANFILES =
 
 #--------------------------------------------------------------------------
 
-libsortsmill_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c		\
-	gimagereadbmp.c gimageread.c gimagereadgif.c gimagereadjpeg.c		\
-	gimagereadpng.c gimagereadras.c gimagereadrgb.c gimagereadtiff.c	\
-	gimagereadxbm.c gimagereadxpm.c gimagewritebmp.c					\
-	gimagewritegimage.c gimagewritejpeg.c gimagewritepng.c				\
-	gimagewritexbm.c gimagewritexpm.c gio.c giofile.c giohosts.c		\
-	giomime.c giotrans.c gimagebmpP.h giofuncP.h gioP.h
+noinst_LTLIBRARIES += libsortsmill_gutils.la
 
-libsortsmill_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmill_aux.la	\
-	$(top_builddir)/lib/libgnu.la
-libsortsmill_gutils_la_LDFLAGS = $(call ldflags)
-libsortsmill_gutils_la_DEPENDENCIES = Makefile $(libsortsmill_gutils_la_LIBADD)
+libsortsmill_gutils_la_CFLAGS = -I$(srcdir)
+
+dist_libsortsmill_gutils_la_SOURCES =
+nodist_libsortsmill_gutils_la_SOURCES =
+
+dist_libsortsmill_gutils_la_SOURCES += divisors.c
+dist_libsortsmill_gutils_la_SOURCES += gfile.c
+dist_libsortsmill_gutils_la_SOURCES += gcol.c
+dist_libsortsmill_gutils_la_SOURCES += gimage.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadbmp.c
+dist_libsortsmill_gutils_la_SOURCES += gimageread.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadgif.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadjpeg.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadpng.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadras.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadrgb.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadtiff.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadxbm.c
+dist_libsortsmill_gutils_la_SOURCES += gimagereadxpm.c
+dist_libsortsmill_gutils_la_SOURCES += gimagewritebmp.c
+dist_libsortsmill_gutils_la_SOURCES += gimagewritegimage.c
+dist_libsortsmill_gutils_la_SOURCES += gimagewritejpeg.c
+dist_libsortsmill_gutils_la_SOURCES += gimagewritepng.c
+dist_libsortsmill_gutils_la_SOURCES += gimagewritexbm.c
+dist_libsortsmill_gutils_la_SOURCES += gimagewritexpm.c
+dist_libsortsmill_gutils_la_SOURCES += gio.c
+dist_libsortsmill_gutils_la_SOURCES += giofile.c
+dist_libsortsmill_gutils_la_SOURCES += giohosts.c
+dist_libsortsmill_gutils_la_SOURCES += giomime.c
+dist_libsortsmill_gutils_la_SOURCES += giotrans.c
+dist_libsortsmill_gutils_la_SOURCES += gimagebmpP.h
+dist_libsortsmill_gutils_la_SOURCES += giofuncP.h
+dist_libsortsmill_gutils_la_SOURCES += gioP.h
 
 #--------------------------------------------------------------------------
