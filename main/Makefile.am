@@ -52,10 +52,8 @@ CLEANFILES =
 DISTCLEANFILES =
 
 AM_CPPFLAGS += -I$(top_builddir)/fontforge -I$(top_srcdir)/fontforge
-AM_LDFLAGS = -export-dynamic $(MY_CFLAGS) $(MY_LIBS)
+AM_LDFLAGS = -export-dynamic -dlopen -lsortsmill_core
 LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la	\
-		$(top_builddir)/auxiliary/libsortsmill_aux.la		\
-		$(top_builddir)/gutils/libsortsmill_gutils.la		\
 		$(top_builddir)/lib/libgnu.la
 
 #--------------------------------------------------------------------------
@@ -65,19 +63,7 @@ if HAVE_GUI
 
 bin_PROGRAMS += sortsmill-editor smed
 sortsmill_editor_SOURCES = sortsmill-editor.c
-sortsmill_editor_LDFLAGS = $(GUILE_LIBS) $(GLIB_LIBS)
-sortsmill_editor_LDADD = $(top_builddir)/lib/libgnu.la
-
-if HAVE_PYTHON_API
-# Python extensions often depend on the main program to export the
-# symbols from libpython, so we should link the main program, no
-# matter how trivial it is, with libpython.
-sortsmill_editor_LDFLAGS += -export-dynamic $(PYTHON_LIBS)
-endif HAVE_PYTHON_API
-
-smed_SOURCES = $(sortsmill_editor_SOURCES)
-smed_LDFLAGS = $(sortsmill_editor_LDFLAGS)
-smed_LDADD = $(sortsmill_editor_LDADD)
+smed_SOURCES = sortsmill-editor.c
 
 endif HAVE_GUI
 endif THE_PROGRAMS
@@ -90,13 +76,13 @@ bin_PROGRAMS += sortsmill-lint sortsmill-image sortsmill-compare
 bin_PROGRAMS += smlint smimage smcompare
 
 dist_sortsmill_lint_SOURCES = lint.c
-dist_smlint_SOURCES = $(dist_sortsmill_lint_SOURCES)
+dist_smlint_SOURCES = lint.c
 
 dist_sortsmill_image_SOURCES = image.c
-dist_smimage_SOURCES = $(dist_sortsmill_image_SOURCES)
+dist_smimage_SOURCES = image.c
 
 dist_sortsmill_compare_SOURCES = compare.c
-dist_smcompare_SOURCES = $(dist_sortsmill_compare_SOURCES)
+dist_smcompare_SOURCES = compare.c
 
 endif THE_PROGRAMS
 

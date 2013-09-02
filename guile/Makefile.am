@@ -988,8 +988,8 @@ libguile_sortsmill_cython_la_CFLAGS = $(AM_CFLAGS)	\
 	$(CYTHON_EXTRA_CFLAGS)
 libguile_sortsmill_cython_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PYTHON_LIBS)
-libguile_sortsmill_cython_la_LIBADD =				\
-	$(top_builddir)/auxiliary/libsortsmill_aux.la	\
+libguile_sortsmill_cython_la_LIBADD =					\
+	$(top_builddir)/fontforge/libsortsmill_fontforge.la	\
 	$(top_builddir)/lib/libgnu.la
 
 libguile_sortsmill_cython.c: libguile_sortsmill_cython.pyx	\

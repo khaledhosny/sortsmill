@@ -386,4 +386,6 @@ fontforge_api.c: fontforge.types.apii sortsmill/fontforge_api.h	\
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.c.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
+EXTRA_DIST += generate-c-api.h.scm generate-c-api.c.scm
+
 #--------------------------------------------------------------------------

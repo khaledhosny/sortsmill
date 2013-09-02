@@ -48,6 +48,11 @@ include $(top_srcdir)/mk/flags.am
 
 EXTRA_DIST =
 
+AM_CFLAGS = $(CYTHON_EXTRA_CFLAGS)
+AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
+	'-I$(top_builddir)/python' '-I$(top_srcdir)/python'
+
+AM_LDFLAGS = -prefer-pic -module -shared -avoid-version $(LIBS)
 LIBADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la	\
 	$(top_builddir)/lib/libgnu.la
 
@@ -97,23 +102,28 @@ nobase_pyexec_LTLIBRARIES =
 nobase_pyexec_LTLIBRARIES += sortsmill/ffcompat.la
 sortsmill_ffcompat_la_SOURCES = sortsmill/ffcompat.c
 sortsmill_ffcompat_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-sortsmill_ffcompat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+#sortsmill_ffcompat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+sortsmill_ffcompat_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/legacy/fontforge.la
 sortsmill_legacy_fontforge_la_SOURCES =		\
 	sortsmill/legacy/fontforgepyhook.c
 sortsmill_legacy_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-sortsmill_legacy_fontforge_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+#sortsmill_legacy_fontforge_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+sortsmill_legacy_fontforge_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/psMat.la
 sortsmill_psMat_la_SOURCES = sortsmill/psMat.c
-sortsmill_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+sortsmill_psMat_la_LIBADD = $(LIBADD)
+#sortsmill_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/conditions.la
 sortsmill_conditions_la_SOURCES = sortsmill/conditions.c
+sortsmill_conditions_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/fontforge_api.la
 sortsmill_fontforge_api_la_SOURCES = sortsmill/fontforge_api.c
+sortsmill_fontforge_api_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/views.la
 sortsmill_views_la_SOURCES = sortsmill/views.c
@@ -123,35 +133,45 @@ if HAVE_GUI
 nobase_pyexec_LTLIBRARIES += sortsmill/usermenu.la
 sortsmill_usermenu_la_SOURCES = sortsmill/usermenu.c
 sortsmill_usermenu_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+sortsmill_usermenu_la_LIBADD = $(LIBADD)
 endif HAVE_GUI
 
 nobase_pyexec_LTLIBRARIES += sortsmill/notices.la
 sortsmill_notices_la_SOURCES = sortsmill/notices.c
 sortsmill_notices_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+sortsmill_notices_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/pkg_info.la
 sortsmill_pkg_info_la_SOURCES = sortsmill/pkg_info.c
+sortsmill_pkg_info_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/guile.la
 sortsmill_guile_la_SOURCES = sortsmill/guile.c
+sortsmill_guile_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/linalg.la
 sortsmill_linalg_la_SOURCES = sortsmill/linalg.c
+sortsmill_linalg_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/polyspline.la
 sortsmill_polyspline_la_SOURCES = sortsmill/polyspline.c
+sortsmill_polyspline_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/brentroot.la
 sortsmill_brentroot_la_SOURCES = sortsmill/brentroot.c
+sortsmill_brentroot_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/pyguile.la
 sortsmill_pyguile_la_SOURCES = sortsmill/pyguile.c
+sortsmill_pyguile_la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += __sortsmill__/__pyguile__.la
 __sortsmill_____pyguile___la_SOURCES = __sortsmill__/__pyguile__.c
+__sortsmill_____pyguile___la_LIBADD = $(LIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/contours.la
 sortsmill_contours_la_SOURCES = sortsmill/contours.c
+sortsmill_contours_la_LIBADD = $(LIBADD)
 
 PYX_FILES = __sortsmill__/__pyguile__.pyx sortsmill/views.pyx			\
 	sortsmill/pkg_info.pyx sortsmill/notices.pyx sortsmill/guile.pyx	\
@@ -201,12 +221,7 @@ MOSTLYCLEANFILES = __sortsmill__/__pyguile__.c sortsmill/conditions.c	\
 	sortsmill/linalg.c sortsmill/polyspline.c sortsmill/brentroot.c		\
 	sortsmill/pyguile.c sortsmill/contours.c sortsmill/usermenu.c
 
-AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
-AM_CFLAGS = $(CYTHON_EXTRA_CFLAGS)
-AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
-	'-I$(top_builddir)/python' '-I$(top_srcdir)/python'
-
-# FIXME: Maybe support extensions other than .so.
+# FIXME FIXME FIXME: Support extensions other than .so.
 sortsmill/legacy/%.so: sortsmill/legacy/%.la
 	-rm -f $@
 	cp sortsmill/legacy/$(LT_OBJDIR)$*.so $@

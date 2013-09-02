@@ -76,11 +76,11 @@ clean-local:
 
 check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no	\
 	LC_ALL="C" PYTHONPATH="$(abs_top_builddir)/python"			\
-	$(GUILE_ENV)
+	$(GUILE_ENV) LTDL_LIBRARY_PATH='$(SORTSMILL_CORE_LIBDIR)'
 
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
 	LC_ALL="C" PYTHONPATH="$(pythondir)"								\
-	$(GUILE_INSTALLED_ENV)
+	$(GUILE_INSTALLED_ENV) LTDL_LIBRARY_PATH='$(SORTSMILL_CORE_LIBDIR)'
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
@@ -170,8 +170,7 @@ $(check_PROGRAMS): main_with_guile.x
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la	\
 	$(top_builddir)/lib/libgnu.la
-AM_LDFLAGS = -export-dynamic -avoid-version $(MY_CFLAGS) $(MY_LIBS)	\
-	$(GNULIB_LD_FLAGS)
+AM_LDFLAGS = -export-dynamic -avoid-version
 
 EXTRA_DIST += main_with_guile.x
 
