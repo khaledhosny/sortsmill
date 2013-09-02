@@ -22,7 +22,7 @@
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
 #include <sortsmill/guile/math/gsl.h>
-#include <atomic_ops.h>
+#include <sortsmill/double_checked_locking.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -68,16 +68,16 @@ scm_t_array_type_index scm_to_array_type_index (SCM obj);
 
 /*-----------------------------------------------------------------------*/
 
-#define _FF_GUILE_VECTAG_DECL(NAME)                             \
-  static inline SCM                                             \
-  NAME (void)                                                   \
-  {                                                             \
-    extern SCM _##NAME;                                         \
-    extern volatile AO_t _##NAME##_is_initialized;              \
-    extern void _initialize_##NAME (void);                      \
-    if (!AO_load_acquire_read (&_##NAME##_is_initialized))      \
-      _initialize_##NAME ();                                    \
-    return _##NAME;                                             \
+#define _FF_GUILE_VECTAG_DECL(NAME)                                     \
+  static inline SCM                                                     \
+  NAME (void)                                                           \
+  {                                                                     \
+    extern SCM _##NAME;                                                 \
+    extern volatile stm_dcl_indicator_t _##NAME##_is_initialized;       \
+    extern void _initialize_##NAME (void);                              \
+    if (!stm_dcl_load_indicator (&_##NAME##_is_initialized))            \
+      _initialize_##NAME ();                                            \
+    return _##NAME;                                                     \
   }
 
 _FF_GUILE_VECTAG_DECL (scm_symbol_u8);

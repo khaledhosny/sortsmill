@@ -28,11 +28,11 @@ extern "C"
 #endif
 
 #include <gmp.h>
-#include <atomic_ops.h>
+#include <sortsmill/double_checked_locking.h>
 
 #define _FF_GMP_CONSTANT_DECL(TYPE, NAME)				\
   extern TYPE##_t _##NAME;						\
-  extern volatile AO_t _##NAME##_is_initialized;			\
+  extern volatile stm_dcl_indicator_t _##NAME##_is_initialized;         \
 									\
   static inline const __##TYPE##_struct *				\
   NAME (void)								\
@@ -40,7 +40,7 @@ extern "C"
     void _initialize_##NAME (void);					\
     /* "Double-checked locking"; see                                */	\
     /* http://www.hpl.hp.com/research/linux/atomic_ops/example.php4 */	\
-    if (!AO_load_acquire_read (&_##NAME##_is_initialized))		\
+    if (!stm_dcl_load_indicator (&_##NAME##_is_initialized))		\
       _initialize_##NAME ();						\
     return _##NAME;							\
   }

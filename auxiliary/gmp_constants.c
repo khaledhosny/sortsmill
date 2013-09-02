@@ -1,6 +1,6 @@
 #include <config.h>
 
-// Copyright (C) 2012 Khaled Hosny and Barry Schwartz
+// Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -30,7 +30,8 @@ mpz_canonicalize (mpz_t UNUSED (_))
 #define _FF_GMP_CONSTANT_DEFN(TYPE, NAME, VALUE, RADIX)			\
 									\
   VISIBLE TYPE##_t _##NAME;						\
-  VISIBLE volatile AO_t _##NAME##_is_initialized = false;		\
+  VISIBLE volatile stm_dcl_indicator_t _##NAME##_is_initialized =       \
+    false;                                                              \
   static pthread_mutex_t _##NAME##_mutex = PTHREAD_MUTEX_INITIALIZER;	\
   void _initialize_##NAME (void);					\
 									\
@@ -47,7 +48,7 @@ mpz_canonicalize (mpz_t UNUSED (_))
 	TYPE##_set_str ((_##NAME), (VALUE), (RADIX));			\
 	TYPE##_canonicalize (_##NAME);					\
 									\
-	AO_store_release_write (&_##NAME##_is_initialized, true);	\
+	stm_dcl_store_indicator (&_##NAME##_is_initialized, true);	\
       }									\
     pthread_mutex_unlock (&_##NAME##_mutex);				\
   }

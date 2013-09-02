@@ -18,6 +18,7 @@
 
 #include <sortsmill/math/gmp_matrix.h>
 #include <sortsmill/math/gmp_constants.h>
+#include <assert.h>
 
 VISIBLE void
 _GMP_TYPE (_matrix_scale) (size_t m, size_t n,

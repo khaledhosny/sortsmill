@@ -221,30 +221,33 @@ FONTFORGE_ARG_ENABLE([tile-path],
 #
 # Checks for libraries.
 
-# Found by Gnulib macros.
-test -n "${LIB_PTHREAD}" && LIBS="${LIB_PTHREAD} ${LIBS}"
-test -n "${LTLIBTHREAD}" && LIBS="${LTLIBTHREAD} ${LIBS}"
+# Found by Gnulib macros (and way big overkill, while at the same time
+# no doubt missing several functions we use).
 test -n "${ATAN2_LIBM}" && LIBS="${ATAN2_LIBM} ${LIBS}"
 test -n "${COS_LIBM}" && LIBS="${COS_LIBM} ${LIBS}"
 test -n "${FABS_LIBM}" && LIBS="${FABS_LIBM} ${LIBS}"
 test -n "${FLOOR_LIBM}" && LIBS="${FLOOR_LIBM} ${LIBS}"
 test -n "${FMA_LIBM}" && LIBS="${FMA_LIBM} ${LIBS}"
 test -n "${FREXP_LIBM}" && LIBS="${FREXP_LIBM} ${LIBS}"
-test -n "${GETHOSTNAME_LIB}" && LIBS="${GETHOSTNAME_LIB} ${LIBS}"
-test -n "${HOSTENT_LIB}" && LIBS="${HOSTENT_LIB} ${LIBS}"
 test -n "${HYPOT_LIBM}" && LIBS="${HYPOT_LIBM} ${LIBS}"
 test -n "${LDEXP_LIBM}" && LIBS="${LDEXP_LIBM} ${LIBS}"
+test -n "${POW_LIBM}" && LIBS="${POW_LIBM} ${LIBS}"
+test -n "${RINT_LIBM}" && LIBS="${RINT_LIBM} ${LIBS}"
+test -n "${SIN_LIBM}" && LIBS="${SIN_LIBM} ${LIBS}"
+test -n "${SQRT_LIBM}" && LIBS="${SQRT_LIBM} ${LIBS}"
+test -n "${TAN_LIBM}" && LIBS="${TAN_LIBM} ${LIBS}"
+
+# Found by Gnulib macros.
+test -n "${LIB_PTHREAD}" && LIBS="${LIB_PTHREAD} ${LIBS}"
+test -n "${LTLIBTHREAD}" && LIBS="${LTLIBTHREAD} ${LIBS}"
+test -n "${GETHOSTNAME_LIB}" && LIBS="${GETHOSTNAME_LIB} ${LIBS}"
+test -n "${HOSTENT_LIB}" && LIBS="${HOSTENT_LIB} ${LIBS}"
 test -n "${LIBSOCKET}" && LIBS="${LIBSOCKET} ${LIBS}"
 test -n "${LIB_SELECT}" && LIBS="${LIB_SELECT} ${LIBS}"
 test -n "${LTLIBICONV}" && LIBS="${LTLIBICONV} ${LIBS}"
 test -n "${LTLIBINTL}" && LIBS="${LTLIBINTL} ${LIBS}"
 test -n "${LTLIBTHREAD}" && LIBS="${LTLIBTHREAD} ${LIBS}"
 test -n "${LTLIBUNISTRING}" && LIBS="${LTLIBUNISTRING} ${LIBS}"
-test -n "${POW_LIBM}" && LIBS="${POW_LIBM} ${LIBS}"
-test -n "${RINT_LIBM}" && LIBS="${RINT_LIBM} ${LIBS}"
-test -n "${SIN_LIBM}" && LIBS="${SIN_LIBM} ${LIBS}"
-test -n "${SQRT_LIBM}" && LIBS="${SQRT_LIBM} ${LIBS}"
-test -n "${TAN_LIBM}" && LIBS="${TAN_LIBM} ${LIBS}"
 test -n "${INTL_MACOSX_LIBS}" && LIBS="${INTL_MACOSX_LIBS} ${LIBS}"
 
 StM_LIB_ZLIB
@@ -268,27 +271,6 @@ if test x"${i_do_have_x}" = xyes; then
       [test -n "${XKBUI_CFLAGS}" && CFLAGS="${CFLAGS} ${XKBUI_CFLAGS}"
        test -n "${XKBUI_LIBS}" && LIBS="${XKBUI_LIBS} ${LIBS}"],
       [AC_DEFINE([_NO_XKB], [1], [Define to 1 if not using xkbui.])])
-fi
-
-# FIXME: All instances of atomic_ops should be replaced with Core
-# Library routines.
-with_atomic_ops=yes
-unset ac_cv_header_atomic_ops_h
-StM_LIB_ATOMIC_OPS
-if test x"${with_atomic_ops}" = xyes; then
-   if test ${HAVE_ATOMIC_OPS_H} -eq 0; then
-      if test x"${enable_threads}" = xyes; then
-         AC_MSG_ERROR([the header file <atomic_ops.h> was not found;
-           to build without it (sacrificing thread-safety in some
-           operations), add --without-atomic_ops to configure])
-      fi
-   elif test ${HAVE_ATOMIC_OPS_LIB} -eq 0; then
-      AC_MSG_WARN([the support library for atomic_ops was not found;
-           it is possible you will not need it, so we will continue
-           tentatively, but linking may fail.])
-   fi
-   test -n "${ATOMIC_OPS_CFLAGS}" && CFLAGS="${CFLAGS} ${ATOMIC_OPS_CFLAGS}"
-   test -n "${ATOMIC_OPS_LIBS}" && LIBS="${ATOMIC_OPS_LIBS} ${LIBS}"
 fi
 
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])

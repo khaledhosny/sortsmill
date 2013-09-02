@@ -21,7 +21,6 @@
 #define _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H
 
 #include <libguile.h>
-#include <atomic_ops.h>
 #include <sortsmill/xgc.h>      /* Includes pthread.h and gc.h in the
                                    correct order. */
 #include <sortsmill/one_time_initialization.h>

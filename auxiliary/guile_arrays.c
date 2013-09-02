@@ -40,7 +40,8 @@ scm_dynwind_array_handle_release (scm_t_array_handle *handlep)
 #define _FF_GUILE_VECTAG_DEFN(NAME, VECTAG_NAME)                        \
 									\
   VISIBLE SCM _##NAME = SCM_UNDEFINED;                                  \
-  VISIBLE volatile AO_t _##NAME##_is_initialized = false;		\
+  VISIBLE volatile stm_dcl_indicator_t _##NAME##_is_initialized =       \
+    false;                                                              \
   static pthread_mutex_t _##NAME##_mutex = PTHREAD_MUTEX_INITIALIZER;	\
                                                                         \
   void _initialize_##NAME (void);                                       \
@@ -52,7 +53,7 @@ scm_dynwind_array_handle_release (scm_t_array_handle *handlep)
     if (!_##NAME##_is_initialized)					\
       {									\
         _##NAME = scm_from_latin1_symbol (#VECTAG_NAME);                \
-	AO_store_release_write (&_##NAME##_is_initialized, true);	\
+	stm_dcl_store_indicator (&_##NAME##_is_initialized, true);	\
       }									\
     pthread_mutex_unlock (&_##NAME##_mutex);				\
   }

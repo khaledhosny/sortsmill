@@ -25,27 +25,26 @@
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/python.h>
 #include <intl.h>
-
-#include <atomic_ops.h>
+#include <sortsmill/double_checked_locking.h>
 #include <sortsmill/xgc.h>      // Includes gc.h and pthreads.h in the right order.
 
 void init_guile_sortsmill_python (void);
 
 //-------------------------------------------------------------------------
 
-static volatile AO_t gmpy_pymodule_is_initialized = false;
+static volatile stm_dcl_indicator_t gmpy_pymodule_is_initialized = false;
 static pthread_mutex_t gmpy_pymodule_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void
 initialize_gmpy_pymodule_if_necessary (void)
 {
-  if (!AO_load_acquire_read (&gmpy_pymodule_is_initialized))
+  if (!stm_dcl_load_indicator (&gmpy_pymodule_is_initialized))
     {
       pthread_mutex_lock (&gmpy_pymodule_mutex);
       if (!gmpy_pymodule_is_initialized)
         {
           import_gmpy ();
-          AO_store_release_write (&gmpy_pymodule_is_initialized, true);
+          stm_dcl_store_indicator (&gmpy_pymodule_is_initialized, true);
         }
       pthread_mutex_unlock (&gmpy_pymodule_mutex);
     }
