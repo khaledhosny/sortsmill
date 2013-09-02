@@ -215,7 +215,10 @@ FONTFORGE_ARG_ENABLE([tile-path],
 #
 # Checks for libraries.
 
+gl_PTHREAD_CHECK
+
 # Found by Gnulib macros.
+test -n "${LIB_PTHREAD}" && LIBS="${LIB_PTHREAD} ${LIBS}"
 test -n "${ATAN2_LIBM}" && LIBS="${ATAN2_LIBM} ${LIBS}"
 test -n "${COS_LIBM}" && LIBS="${COS_LIBM} ${LIBS}"
 test -n "${FABS_LIBM}" && LIBS="${FABS_LIBM} ${LIBS}"
@@ -368,11 +371,26 @@ test x"${i_do_have_freetype_debugger}" != xno && \
    CFLAGS="-I${FREETYPE_SOURCE}/src/truetype -I${FREETYPE_SOURCE}/include -I${FREETYPE_SOURCE}/include/freetype ${CFLAGS}"
 
 FONTFORGE_ARG_WITH_GIFLIB
+test -n "${GIFLIB_CFLAGS}" && CFLAGS="${GIFLIB_CFLAGS} ${CFLAGS}"
+test -n "${GIFLIB_LIBS}" && LIBS="${GIFLIB_LIBS} ${LIBS}"
+
 FONTFORGE_ARG_WITH_LIBJPEG
+test -n "${LIBJPEG_CFLAGS}" && CFLAGS="${LIBJPEG_CFLAGS} ${CFLAGS}"
+test -n "${LIBJPEG_LIBS}" && LIBS="${LIBJPEG_LIBS} ${LIBS}"
+
 FONTFORGE_ARG_WITH_LIBTIFF
+test -n "${LIBTIFF_CFLAGS}" && CFLAGS="${LIBTIFF_CFLAGS} ${CFLAGS}"
+test -n "${LIBTIFF_LIBS}" && LIBS="${LIBTIFF_LIBS} ${LIBS}"
+
 FONTFORGE_ARG_WITH_LIBUNICODENAMES
+test -n "${LIBUNICODENAMES_CFLAGS}" && CFLAGS="${LIBUNICODENAMES_CFLAGS} ${CFLAGS}"
+test -n "${LIBUNICODENAMES_LIBS}" && LIBS="${LIBUNICODENAMES_LIBS} ${LIBS}"
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER
+if test x"${i_do_have_freetype_debugger}" != xno -a x"${ac_cv_header_pthread_h}" != yes; then
+   AC_MSG_ERROR([I cannot find <pthread.h>;
+           consider configure option --disable-freetype-debugger (--without-freetype-source)])
+fi
 
 if test x"${i_do_have_python_api}" = xyes; then
    if test x"${PYTHON_VERSION}" != x"2.7"; then
@@ -444,8 +462,6 @@ AC_CHECK_SIZEOF([float])
 AC_CHECK_SIZEOF([double])
 AC_SUBST([SIZEOF_FLOAT],[${ac_cv_sizeof_float}])
 AC_SUBST([SIZEOF_DOUBLE],[${ac_cv_sizeof_double}])
-
-AX_PTHREAD
 
 AC_SUBST([WARNING_CFLAGS])
 if test -z "${WARNING_CFLAGS}"; then
