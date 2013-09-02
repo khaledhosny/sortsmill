@@ -160,6 +160,7 @@ if test `${GUILE} -c "(import (system foreign)) (write (defined? 'procedure->poi
                  The Guile found by configure seems not to. See
                  http://www.gnu.org/software/guile/manual/guile.html@%:@Dynamic-FFI])
 fi
+StM_PROG_SORTSMILL_CORE_GUILE
 
 # Assorted programs.
 StM_PROG_WGET

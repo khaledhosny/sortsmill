@@ -7,7 +7,7 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# serial 1
+# serial 2
 
 # StM_LIB_ZLIB
 # ------------

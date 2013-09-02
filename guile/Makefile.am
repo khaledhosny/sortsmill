@@ -840,12 +840,6 @@ sortsmill/strings.scm: $(STRINGS_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill strings), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-# (sortsmill strings gc)
-
-DIST_SCM_FILES += sortsmill/strings/gc.scm
-GO_FILES += sortsmill/strings/gc.go
-STRINGS_REEXPORTED_SCM_FILES += sortsmill/strings/gc.scm
-
 # (sortsmill strings grabbed-strings)
 
 DIST_SCM_FILES += sortsmill/strings/grabbed-strings.scm

@@ -64,6 +64,9 @@
                 procedure->pointer pointer->procedure
                 pointer->bytevector))
 
+  (define (string->pointer-gc-utf8 s)
+    (x-gc-strdup (string->pointer s "UTF-8")))
+
   ;;-------------------------------------------------------------------------
   ;;
   ;; A container where the ‘action’ and ‘enabled’ functions are stored.
