@@ -35,7 +35,6 @@
           registerMenuItem)
 
   (import (sortsmill core)
-          (sortsmill machine)
           (sortsmill python)
           (sortsmill usermenu)
           (sortsmill fontforge-api)

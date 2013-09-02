@@ -181,8 +181,14 @@ AC_SUBST([THE_PROGRAMS],["${i_do_have_programs}"])
 FONTFORGE_ARG_DISABLE_PYTHON_API
 FONTFORGE_ARG_DISABLE_PYTHON_COMPATIBILITY
 FONTFORGE_ARG_ENABLE_LEGACY_SORTSMILL_TOOLS
-FONTFORGE_ARG_ENABLE_FORTRAN_API
-FONTFORGE_ARG_ENABLE_PURE_API
+
+# Fortran and pure are disabled. The Pure support may come back some
+# day as a set of packages.
+#
+#FONTFORGE_ARG_ENABLE_FORTRAN_API
+#FONTFORGE_ARG_ENABLE_PURE_API
+AC_SUBST([i_do_have_fortran_api],[no])
+AC_SUBST([i_do_have_pure_api],[no])
 
 AC_ARG_ENABLE([freetype-debugger],
         [AS_HELP_STRING([--enable-freetype-debugger[[=DIR]]],
@@ -215,10 +221,9 @@ FONTFORGE_ARG_ENABLE([tile-path],
 #
 # Checks for libraries.
 
-gl_PTHREAD_CHECK
-
 # Found by Gnulib macros.
 test -n "${LIB_PTHREAD}" && LIBS="${LIB_PTHREAD} ${LIBS}"
+test -n "${LTLIBTHREAD}" && LIBS="${LTLIBTHREAD} ${LIBS}"
 test -n "${ATAN2_LIBM}" && LIBS="${ATAN2_LIBM} ${LIBS}"
 test -n "${COS_LIBM}" && LIBS="${COS_LIBM} ${LIBS}"
 test -n "${FABS_LIBM}" && LIBS="${FABS_LIBM} ${LIBS}"
@@ -251,16 +256,16 @@ test -n "${LTLIBZ}" && LIBS="${LTLIBZ} ${LIBS}"
 
 if test x"${i_do_have_x}" = xyes; then
    PKG_CHECK_MODULES([X11], [x11],
-      [test -n "${X11_CFLAGS}" && CFLAGS="${X11_CFLAGS} ${CFLAGS}"
+      [test -n "${X11_CFLAGS}" && CFLAGS="${CFLAGS} ${X11_CFLAGS}"
        test -n "${X11_LIBS}" && LIBS="${X11_LIBS} ${LIBS}"])
 
    PKG_CHECK_MODULES([XI], [xi],
-      [test -n "${XI_CFLAGS}" && CFLAGS="${XI_CFLAGS} ${CFLAGS}"
+      [test -n "${XI_CFLAGS}" && CFLAGS="${CFLAGS} ${XI_CFLAGS}"
        test -n "${XI_LIBS}" && LIBS="${XI_LIBS} ${LIBS}"],
       [AC_DEFINE([_NO_XINPUT], [1], [Define to 1 if not using XInput.])])
 
    PKG_CHECK_MODULES([XKBUI], [xkbui],
-      [test -n "${XKBUI_CFLAGS}" && CFLAGS="${XKBUI_CFLAGS} ${CFLAGS}"
+      [test -n "${XKBUI_CFLAGS}" && CFLAGS="${CFLAGS} ${XKBUI_CFLAGS}"
        test -n "${XKBUI_LIBS}" && LIBS="${XKBUI_LIBS} ${LIBS}"],
       [AC_DEFINE([_NO_XKB], [1], [Define to 1 if not using xkbui.])])
 fi
@@ -282,7 +287,7 @@ if test x"${with_atomic_ops}" = xyes; then
            it is possible you will not need it, so we will continue
            tentatively, but linking may fail.])
    fi
-   test -n "${ATOMIC_OPS_CFLAGS}" && CFLAGS="${ATOMIC_OPS_CFLAGS} ${CFLAGS}"
+   test -n "${ATOMIC_OPS_CFLAGS}" && CFLAGS="${CFLAGS} ${ATOMIC_OPS_CFLAGS}"
    test -n "${ATOMIC_OPS_LIBS}" && LIBS="${ATOMIC_OPS_LIBS} ${LIBS}"
 fi
 
@@ -291,11 +296,11 @@ if test x"${enable_threads}" = xyes; then
    AC_DEFINE([GC_THREADS],[1],
       [Define to 1 if Boehm GC has to co-exist with POSIX threads.])
 fi
-test -n "${BOEHM_GC_CFLAGS}" && CFLAGS="${BOEHM_GC_CFLAGS} ${CFLAGS}"
+test -n "${BOEHM_GC_CFLAGS}" && CFLAGS="${CFLAGS} ${BOEHM_GC_CFLAGS}"
 test -n "${BOEHM_GC_LIBS}" && LIBS="${BOEHM_GC_LIBS} ${LIBS}"
 
 PKG_CHECK_MODULES([SORTSMILL_CORE],[sortsmill_core >= 1.0.0])
-test -n "${SORTSMILL_CORE_CFLAGS}" && CFLAGS="${SORTSMILL_CORE_CFLAGS} ${CFLAGS}"
+test -n "${SORTSMILL_CORE_CFLAGS}" && CFLAGS="${CFLAGS} ${SORTSMILL_CORE_CFLAGS}"
 test -n "${SORTSMILL_CORE_LIBS}" && LIBS="${SORTSMILL_CORE_LIBS} ${LIBS}"
 PKG_CHECK_VAR([SORTSMILL_CORE_LIBDIR],[sortsmill_core],[libdir])
 
@@ -303,11 +308,11 @@ PKG_CHECK_VAR([SORTSMILL_CORE_LIBDIR],[sortsmill_core],[libdir])
 #FONTFORGE_LIBPCRE
 
 PKG_CHECK_MODULES([LIBPNG],[libpng])
-test -n "${LIBPNG_CFLAGS}" && CFLAGS="${LIBPNG_CFLAGS} ${CFLAGS}"
+test -n "${LIBPNG_CFLAGS}" && CFLAGS="${CFLAGS} ${LIBPNG_CFLAGS}"
 test -n "${LIBPNG_LIBS}" && LIBS="${LIBPNG_LIBS} ${LIBS}"
 
 PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
-test -n "${LIBXML_CFLAGS}" && CFLAGS="${LIBXML_CFLAGS} ${CFLAGS}"
+test -n "${LIBXML_CFLAGS}" && CFLAGS="${CFLAGS} ${LIBXML_CFLAGS}"
 test -n "${LIBXML_LIBS}" && LIBS="${LIBXML_LIBS} ${LIBS}"
 
 # FIXME: Do a more sophisticated GMP check.
@@ -315,47 +320,47 @@ AC_CHECK_LIB([gmp],[__gmpz_init],[],
   [AC_MSG_ERROR([${PACKAGE_NAME} requires GNU MP, but it was not found. See http://gmplib.org/])])
 
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.8 gio-2.0])
-test -n "${GLIB_CFLAGS}" && CFLAGS="${GLIB_CFLAGS} ${CFLAGS}"
+test -n "${GLIB_CFLAGS}" && CFLAGS="${CFLAGS} ${GLIB_CFLAGS}"
 test -n "${GLIB_LIBS}" && LIBS="${GLIB_LIBS} ${LIBS}"
 
 PKG_CHECK_MODULES([GSL],[gsl])
-test -n "${GSL_CFLAGS}" && CFLAGS="${GSL_CFLAGS} ${CFLAGS}"
+test -n "${GSL_CFLAGS}" && CFLAGS="${CFLAGS} ${GSL_CFLAGS}"
 test -n "${GSL_LIBS}" && LIBS="${GSL_LIBS} ${LIBS}"
 
 PKG_CHECK_MODULES([GUILE],[guile-2.0 >= 2.0.6])
 GUILE_PKG([2.0])
 GUILE_FLAGS
-test -n "${GUILE_CFLAGS}" && CFLAGS="${GUILE_CFLAGS} ${CFLAGS}"
+test -n "${GUILE_CFLAGS}" && CFLAGS="${CFLAGS} ${GUILE_CFLAGS}"
 test -n "${GUILE_LTLIBS}" && LIBS="${GUILE_LTLIBS} ${LIBS}"
 
 PKG_CHECK_MODULES([SORTSMILL_CORE_GUILE],[sortsmill-core-guile-${GUILE_API} >= 1.0.0])
-test -n "${SORTSMILL_CORE_GUILE_CFLAGS}" && CFLAGS="${SORTSMILL_CORE_GUILE_CFLAGS} ${CFLAGS}"
+test -n "${SORTSMILL_CORE_GUILE_CFLAGS}" && CFLAGS="${CFLAGS} ${SORTSMILL_CORE_GUILE_CFLAGS}"
 test -n "${SORTSMILL_CORE_GUILE_LIBS}" && LIBS="${SORTSMILL_CORE_GUILE_LIBS} ${LIBS}"
 
 # FIXME: Do we really want this if there is no GUI?
 # 11.0.5 is the "libtool" version corresponding to 2.4.0 release as reported by pkg-config
 # check doc/VERSION.DLL for mapping between libtool and release versions
 PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
-test -n "${FREETYPE_CFLAGS}" && CFLAGS="${FREETYPE_CFLAGS} ${CFLAGS}"
+test -n "${FREETYPE_CFLAGS}" && CFLAGS="${CFLAGS} ${FREETYPE_CFLAGS}"
 test -n "${FREETYPE_LIBS}" && LIBS="${FREETYPE_LIBS} ${LIBS}"
 
 if test x"${i_do_have_gui}" = xyes; then
    # 11.0.5 is the "libtool" version corresponding to 2.4.0 release as reported by pkg-config
    # check doc/VERSION.DLL for mapping between libtool and release versions
    #PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
-   #test -n "${FREETYPE_CFLAGS}" && CFLAGS="${FREETYPE_CFLAGS} ${CFLAGS}"
+   #test -n "${FREETYPE_CFLAGS}" && CFLAGS="${CFLAGS} ${FREETYPE_CFLAGS}"
    #test -n "${FREETYPE_LIBS}" && LIBS="${FREETYPE_LIBS} ${LIBS}"
 
    PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])
-   test -n "${CAIRO_CFLAGS}" && CFLAGS="${CAIRO_CFLAGS} ${CFLAGS}"
+   test -n "${CAIRO_CFLAGS}" && CFLAGS="${CFLAGS} ${CAIRO_CFLAGS}"
    test -n "${CAIRO_LIBS}" && LIBS="${CAIRO_LIBS} ${LIBS}"
 
    PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangocairo])
-   test -n "${PANGO_CFLAGS}" && CFLAGS="${PANGO_CFLAGS} ${CFLAGS}"
+   test -n "${PANGO_CFLAGS}" && CFLAGS="${CFLAGS} ${PANGO_CFLAGS}"
    test -n "${PANGO_LIBS}" && LIBS="${PANGO_LIBS} ${LIBS}"
 
    PKG_CHECK_MODULES([XCURS],[xcursor])
-   test -n "${XCURS_CFLAGS}" && CFLAGS="${XCURS_CFLAGS} ${CFLAGS}"
+   test -n "${XCURS_CFLAGS}" && CFLAGS="${CFLAGS} ${XCURS_CFLAGS}"
    test -n "${XCURS_LIBS}" && LIBS="${XCURS_LIBS} ${LIBS}"
 fi
 
@@ -371,32 +376,30 @@ test x"${i_do_have_freetype_debugger}" != xno && \
    CFLAGS="-I${FREETYPE_SOURCE}/src/truetype -I${FREETYPE_SOURCE}/include -I${FREETYPE_SOURCE}/include/freetype ${CFLAGS}"
 
 FONTFORGE_ARG_WITH_GIFLIB
-test -n "${GIFLIB_CFLAGS}" && CFLAGS="${GIFLIB_CFLAGS} ${CFLAGS}"
+test -n "${GIFLIB_CFLAGS}" && CFLAGS="${CFLAGS} ${GIFLIB_CFLAGS}"
 test -n "${GIFLIB_LIBS}" && LIBS="${GIFLIB_LIBS} ${LIBS}"
 
 FONTFORGE_ARG_WITH_LIBJPEG
-test -n "${LIBJPEG_CFLAGS}" && CFLAGS="${LIBJPEG_CFLAGS} ${CFLAGS}"
+test -n "${LIBJPEG_CFLAGS}" && CFLAGS="${CFLAGS} ${LIBJPEG_CFLAGS}"
 test -n "${LIBJPEG_LIBS}" && LIBS="${LIBJPEG_LIBS} ${LIBS}"
 
 FONTFORGE_ARG_WITH_LIBTIFF
-test -n "${LIBTIFF_CFLAGS}" && CFLAGS="${LIBTIFF_CFLAGS} ${CFLAGS}"
+test -n "${LIBTIFF_CFLAGS}" && CFLAGS="${CFLAGS} ${LIBTIFF_CFLAGS}"
 test -n "${LIBTIFF_LIBS}" && LIBS="${LIBTIFF_LIBS} ${LIBS}"
 
 FONTFORGE_ARG_WITH_LIBUNICODENAMES
-test -n "${LIBUNICODENAMES_CFLAGS}" && CFLAGS="${LIBUNICODENAMES_CFLAGS} ${CFLAGS}"
+test -n "${LIBUNICODENAMES_CFLAGS}" && CFLAGS="${CFLAGS} ${LIBUNICODENAMES_CFLAGS}"
 test -n "${LIBUNICODENAMES_LIBS}" && LIBS="${LIBUNICODENAMES_LIBS} ${LIBS}"
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER
-if test x"${i_do_have_freetype_debugger}" != xno -a x"${ac_cv_header_pthread_h}" != yes; then
-   AC_MSG_ERROR([I cannot find <pthread.h>;
-           consider configure option --disable-freetype-debugger (--without-freetype-source)])
-fi
 
 if test x"${i_do_have_python_api}" = xyes; then
    if test x"${PYTHON_VERSION}" != x"2.7"; then
       AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires Python 2.7.x. You are using Python ${PYTHON_VERSION}.])
    fi
-
+   test -n "${PYTHON_CFLAGS}" && CFLAGS="${CFLAGS} ${PYTHON_CFLAGS}"
+   test -n "${PYTHON_LIBS}" && LIBS="${PYTHON_LIBS} ${LIBS}"
+   
    FONTFORGE_REQUIRE_PYTHON_MODULE([gmpy])
    FONTFORGE_PROG_CYTHON_WORKS
    FONTFORGE_PYTHON_CONSTANTS
@@ -410,6 +413,11 @@ FONTFORGE_GSL_CONSTANTS
 # Checks for header files.
 
 AC_CHECK_HEADERS([libintl.h limits.h memory.h pthread.h])
+
+if test x"${i_do_have_freetype_debugger}" != xno -a x"${ac_cv_header_pthread_h}" != xyes; then
+   AC_MSG_ERROR([I cannot find <pthread.h>;
+           consider configure option --disable-freetype-debugger (--without-freetype-source)])
+fi
 
 #--------------------------------------------------------------------------
 #
@@ -477,7 +485,7 @@ if test -z "${WARNING_CFLAGS}"; then
        -Wimplicit],
       [-Wl,--warn-common])
 fi
-test -n "${WARNING_CFLAGS}" && CFLAGS="${WARNING_CFLAGS} ${CFLAGS}"
+test -n "${WARNING_CFLAGS}" && CFLAGS="${CFLAGS} ${WARNING_CFLAGS}"
 
 AC_SUBST([CYTHON_EXTRA_CFLAGS])
 if test -z "${CYTHON_EXTRA_CFLAGS}"; then
@@ -501,7 +509,7 @@ if test -z "${NO_UNUSED_EXTRA_CFLAGS}"; then
 fi
 
 StM_DEFINE_ATTR_VISIBLE([VISIBLE])
-test -n "${CFLAG_VISIBILITY}" && CFLAGS="${CFLAG_VISIBILITY} ${CFLAGS}"
+test -n "${CFLAG_VISIBILITY}" && CFLAGS="${CFLAGS} ${CFLAG_VISIBILITY}"
 
 # if test x"${i_do_have_fortran_api}" = xyes; then
 #    AC_FC_SRCEXT([f90])
@@ -613,9 +621,6 @@ AC_SUBST(GETTEXT_PACKAGE)
 IT_PROG_INTLTOOL(0.41)
 AM_GLIB_GNU_GETTEXT
 
-FONTFORGE_SET_MY_CFLAGS
-FONTFORGE_SET_MY_LIBS
-
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([mk/Makefile])
 AC_CONFIG_FILES([lib/Makefile])
@@ -629,7 +634,7 @@ AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([mackeys/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([htdocs/Makefile])
-#AC_CONFIG_FILES([python/Makefile])
+AC_CONFIG_FILES([python/Makefile])
 AC_CONFIG_FILES([tests/Makefile])
 AC_CONFIG_FILES([data/Makefile])
 AC_CONFIG_FILES([data/cidmap/Makefile])
@@ -637,21 +642,21 @@ AC_CONFIG_FILES([data/cursors/Makefile])
 AC_CONFIG_FILES([data/pixmaps/Makefile])
 AC_CONFIG_FILES([fonttools/Makefile])
 AC_CONFIG_FILES([guile/Makefile])
-#AC_CONFIG_FILES([sfd2sxml/Makefile])
+AC_CONFIG_FILES([sfd2sxml/Makefile])
 #AC_CONFIG_FILES([fortran/Makefile])
 #AC_CONFIG_FILES([pure/Makefile])
-#AC_CONFIG_FILES([examples/Makefile])
+AC_CONFIG_FILES([examples/Makefile])
 
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([inc/sortsmill/cython/config.pxi])
 
 AC_CONFIG_COMMANDS([fontforge/sortsmill],[AS_MKDIR_P([fontforge/sortsmill])])
 
-#AC_CONFIG_FILES([python/fontforge.py])
-#AC_CONFIG_FILES([python/psMat.py])
-#AC_CONFIG_FILES([python/sortsmill/__init__.py])
-#AC_CONFIG_FILES([python/__sortsmill__/__init__.py])
-#AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
+AC_CONFIG_FILES([python/fontforge.py])
+AC_CONFIG_FILES([python/psMat.py])
+AC_CONFIG_FILES([python/sortsmill/__init__.py])
+AC_CONFIG_FILES([python/__sortsmill__/__init__.py])
+AC_CONFIG_FILES([python/sortsmill/legacy/__init__.py])
 
 AC_CONFIG_COMMANDS([guile/sortsmill/math],[AS_MKDIR_P([guile/sortsmill/math])])
 AC_CONFIG_COMMANDS([guile/sortsmill/math/gsl],[AS_MKDIR_P([guile/sortsmill/math/gsl])])

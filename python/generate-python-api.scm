@@ -21,8 +21,9 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (ff-internal generate-types)
-        (sortsmill machine)
+        (sortsmill core)
         (rnrs)
+        (system foreign)
         (ice-9 match)
         (ice-9 format))
 
@@ -171,7 +172,7 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
     [('uint . 4) "uint32_t"]
     [('uint . 8) "uint64_t"]
     [('bool . _) "bint"]
-    [('float . n) (symbol->string (float_t-of-size n))]
+    [('float . n) (symbol->string (float_t-at-size n))]
     [('* . _) "uintptr_t"]
     [('SCM . _) "object"]
     [('struct . _) (error "NOT YET IMPLEMENTED")]

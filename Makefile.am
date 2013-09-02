@@ -65,19 +65,19 @@ endif THE_PROGRAMS
 SUBDIRS += po doc htdocs
 
 if THE_PROGRAMS
-#SUBDIRS += sfd2sxml
+SUBDIRS += sfd2sxml
 endif THE_PROGRAMS
 
 if HAVE_PYTHON_API
-#SUBDIRS += python
+SUBDIRS += python
 endif HAVE_PYTHON_API
 
 if HAVE_FORTRAN_API
-#SUBDIRS += fortran
+SUBDIRS += fortran
 endif HAVE_FORTRAN_API
 
 if HAVE_PURE_API
-#SUBDIRS += pure
+SUBDIRS += pure
 endif HAVE_PURE_API
 
 if MACINTOSH
@@ -89,7 +89,7 @@ SUBDIRS += fonttools
 endif FONTTOOLS
 
 if EXAMPLES
-#SUBDIRS += examples
+SUBDIRS += examples
 endif EXAMPLES
 
 SUBDIRS += tests

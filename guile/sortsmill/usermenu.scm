@@ -56,13 +56,9 @@
           (except (srfi :1) map)
           (only (srfi :26) cut)
           (only (srfi :27) random-integer)
-          (only (ice-9 match) match match-lambda)
-          (only (ice-9 format) format)
-          (only (system foreign) sizeof void int
-                %null-pointer null-pointer?
-                pointer? pointer-address
-                procedure->pointer pointer->procedure
-                pointer->bytevector))
+          (ice-9 match)
+          (ice-9 format)
+          (system foreign))
 
   (define (string->pointer-gc-utf8 s)
     (x-gc-strdup (string->pointer s "UTF-8")))

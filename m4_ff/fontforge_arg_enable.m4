@@ -78,50 +78,50 @@ AC_SUBST([LEGACY_SORTSMILL_TOOLS])
 ])
 
 
-dnl FONTFORGE_ARG_ENABLE_FORTRAN_API
-dnl --------------------------------
-AC_DEFUN([FONTFORGE_ARG_ENABLE_FORTRAN_API],
-[
-AC_ARG_ENABLE([fortran-api],
-        [AS_HELP_STRING([--enable-fortran-api],[build the API for Fortran])],
-        [i_do_have_fortran_api="${enableval}"],
-        [i_do_have_fortran_api=no])
-])
-
-
-dnl FONTFORGE_ARG_ENABLE_PURE_API
-dnl -----------------------------
-AC_DEFUN([FONTFORGE_ARG_ENABLE_PURE_API],
-[
-AC_ARG_VAR([PURE],[Pure interpreter command])
-AC_ARG_VAR([PURE_INCLUDEDIR],[directory for Pure-language included source scripts [DIR=LIBDIR/pure]])
-AC_ARG_VAR([PURE_LIBDIR],[directory for Pure-language dynamic libraries [DIR=LIBDIR/pure]])
-
-AC_SUBST([pure_includedir], ['${libdir}/pure'])
-test x"$PURE_INCLUDEDIR" = x || AC_SUBST([pure_includedir],['${PURE_INCLUDEDIR}'])
-
-AC_SUBST([pure_libdir], ['${libdir}/pure'])
-test x"$PURE_LIBDIR" = x || AC_SUBST([pure_libdir],['${PURE_LIBDIR}'])
-
-AC_ARG_ENABLE([pure-api],
-        [AS_HELP_STRING([--enable-pure-api],[build the API for Pure (http://pure-lang.googlecode.com/)])],
-        [i_do_have_pure_api="${enableval}"],
-        [i_do_have_pure_api=no])
-if test x"${i_do_have_pure_api}" = xyes; then
-   PKG_CHECK_MODULES([PURE],[pure])
-fi
-if test x"${i_do_have_pure_api}" = xyes; then
-   if test x"${PURE}" = x; then
-      AC_MSG_CHECKING([for the `pure' command])
-      AC_PATH_PROG([PURE],[pure])
-      if test x"${PURE}" = x; then
-         AC_MSG_ERROR([could not find `pure'])
-      fi
-      AC_MSG_RESULT([${PURE}])
-   fi
-fi
-AC_SUBST([i_do_have_pure_api])
-])
+dnl dnl FONTFORGE_ARG_ENABLE_FORTRAN_API
+dnl dnl --------------------------------
+dnl AC_DEFUN([FONTFORGE_ARG_ENABLE_FORTRAN_API],
+dnl [
+dnl AC_ARG_ENABLE([fortran-api],
+dnl         [AS_HELP_STRING([--enable-fortran-api],[build the API for Fortran])],
+dnl         [i_do_have_fortran_api="${enableval}"],
+dnl         [i_do_have_fortran_api=no])
+dnl ])
+dnl 
+dnl 
+dnl dnl FONTFORGE_ARG_ENABLE_PURE_API
+dnl dnl -----------------------------
+dnl AC_DEFUN([FONTFORGE_ARG_ENABLE_PURE_API],
+dnl [
+dnl AC_ARG_VAR([PURE],[Pure interpreter command])
+dnl AC_ARG_VAR([PURE_INCLUDEDIR],[directory for Pure-language included source scripts [DIR=LIBDIR/pure]])
+dnl AC_ARG_VAR([PURE_LIBDIR],[directory for Pure-language dynamic libraries [DIR=LIBDIR/pure]])
+dnl 
+dnl AC_SUBST([pure_includedir], ['${libdir}/pure'])
+dnl test x"$PURE_INCLUDEDIR" = x || AC_SUBST([pure_includedir],['${PURE_INCLUDEDIR}'])
+dnl 
+dnl AC_SUBST([pure_libdir], ['${libdir}/pure'])
+dnl test x"$PURE_LIBDIR" = x || AC_SUBST([pure_libdir],['${PURE_LIBDIR}'])
+dnl 
+dnl AC_ARG_ENABLE([pure-api],
+dnl         [AS_HELP_STRING([--enable-pure-api],[build the API for Pure (http://pure-lang.googlecode.com/)])],
+dnl         [i_do_have_pure_api="${enableval}"],
+dnl         [i_do_have_pure_api=no])
+dnl if test x"${i_do_have_pure_api}" = xyes; then
+dnl    PKG_CHECK_MODULES([PURE],[pure])
+dnl fi
+dnl if test x"${i_do_have_pure_api}" = xyes; then
+dnl    if test x"${PURE}" = x; then
+dnl       AC_MSG_CHECKING([for the `pure' command])
+dnl       AC_PATH_PROG([PURE],[pure])
+dnl       if test x"${PURE}" = x; then
+dnl          AC_MSG_ERROR([could not find `pure'])
+dnl       fi
+dnl       AC_MSG_RESULT([${PURE}])
+dnl    fi
+dnl fi
+dnl AC_SUBST([i_do_have_pure_api])
+dnl ])
 
 
 dnl FONTFORGE_ARG_ENABLE_REAL

@@ -48,6 +48,9 @@ include $(top_srcdir)/mk/flags.am
 
 EXTRA_DIST =
 
+LIBADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la	\
+	$(top_builddir)/lib/libgnu.la
+
 #--------------------------------------------------------------------------
 
 if HAVE_LEGACY_SORTSMILL_TOOLS
@@ -55,25 +58,6 @@ aclocaldir = ${datadir}/aclocal
 dist_aclocal_DATA = sortsmill.m4
 dist_bin_SCRIPTS = make-fonts make-eot
 endif HAVE_LEGACY_SORTSMILL_TOOLS
-
-#--------------------------------------------------------------------------
-
-BASELIBADD = $(top_builddir)/lib/libgnu.la
-
-# This pulls in the Guile libraries, PCRE, etc.
-AUXLIBADD = $(BASELIBADD) $(top_builddir)/auxiliary/libsortsmill_aux.la
-
-FFLIBADD = $(AUXLIBADD)									\
-	$(top_builddir)/fontforge/libsortsmill_fontforge.la	\
-	$(top_builddir)/gutils/libsortsmill_gutils.la
-
-if HAVE_GUI
-FFLIBADD += $(top_builddir)/gdraw/libsortsmill_gdraw.la	\
-	$(XINPUT_LIBS) $(XKB_LIBS)
-endif HAVE_GUI
-
-EXELIBADD = $(FFLIBADD)										\
-	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la
 
 #--------------------------------------------------------------------------
 
@@ -114,76 +98,60 @@ nobase_pyexec_LTLIBRARIES += sortsmill/ffcompat.la
 sortsmill_ffcompat_la_SOURCES = sortsmill/ffcompat.c
 sortsmill_ffcompat_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmill_ffcompat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
-sortsmill_ffcompat_la_LIBADD = $(EXELIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/legacy/fontforge.la
 sortsmill_legacy_fontforge_la_SOURCES =		\
 	sortsmill/legacy/fontforgepyhook.c
 sortsmill_legacy_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmill_legacy_fontforge_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
-sortsmill_legacy_fontforge_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/psMat.la
 sortsmill_psMat_la_SOURCES = sortsmill/psMat.c
 sortsmill_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
-sortsmill_psMat_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/conditions.la
 sortsmill_conditions_la_SOURCES = sortsmill/conditions.c
-sortsmill_conditions_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/fontforge_api.la
 sortsmill_fontforge_api_la_SOURCES = sortsmill/fontforge_api.c
-sortsmill_fontforge_api_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/views.la
 sortsmill_views_la_SOURCES = sortsmill/views.c
 sortsmill_views_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-sortsmill_views_la_LIBADD = $(FFLIBADD)
 
 if HAVE_GUI
 nobase_pyexec_LTLIBRARIES += sortsmill/usermenu.la
 sortsmill_usermenu_la_SOURCES = sortsmill/usermenu.c
 sortsmill_usermenu_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-sortsmill_usermenu_la_LIBADD = $(EXELIBADD)
 endif HAVE_GUI
 
 nobase_pyexec_LTLIBRARIES += sortsmill/notices.la
 sortsmill_notices_la_SOURCES = sortsmill/notices.c
 sortsmill_notices_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
-sortsmill_notices_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/pkg_info.la
 sortsmill_pkg_info_la_SOURCES = sortsmill/pkg_info.c
-sortsmill_pkg_info_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/guile.la
 sortsmill_guile_la_SOURCES = sortsmill/guile.c
-sortsmill_guile_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/linalg.la
 sortsmill_linalg_la_SOURCES = sortsmill/linalg.c
-sortsmill_linalg_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/polyspline.la
 sortsmill_polyspline_la_SOURCES = sortsmill/polyspline.c
-sortsmill_polyspline_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/brentroot.la
 sortsmill_brentroot_la_SOURCES = sortsmill/brentroot.c
-sortsmill_brentroot_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/pyguile.la
 sortsmill_pyguile_la_SOURCES = sortsmill/pyguile.c
-sortsmill_pyguile_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += __sortsmill__/__pyguile__.la
 __sortsmill_____pyguile___la_SOURCES = __sortsmill__/__pyguile__.c
-__sortsmill_____pyguile___la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmill/contours.la
 sortsmill_contours_la_SOURCES = sortsmill/contours.c
-sortsmill_contours_la_LIBADD = $(AUXLIBADD)
 
 PYX_FILES = __sortsmill__/__pyguile__.pyx sortsmill/views.pyx			\
 	sortsmill/pkg_info.pyx sortsmill/notices.pyx sortsmill/guile.pyx	\
@@ -234,7 +202,7 @@ MOSTLYCLEANFILES = __sortsmill__/__pyguile__.c sortsmill/conditions.c	\
 	sortsmill/pyguile.c sortsmill/contours.c sortsmill/usermenu.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
-AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
+AM_CFLAGS = $(CYTHON_EXTRA_CFLAGS)
 AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
 	'-I$(top_builddir)/python' '-I$(top_srcdir)/python'
 
