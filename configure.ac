@@ -286,9 +286,6 @@ test -n "${SORTSMILL_CORE_CFLAGS}" && CFLAGS="${CFLAGS} ${SORTSMILL_CORE_CFLAGS}
 test -n "${SORTSMILL_CORE_LIBS}" && LIBS="${SORTSMILL_CORE_LIBS} ${LIBS}"
 PKG_CHECK_VAR([SORTSMILL_CORE_LIBDIR],[sortsmill_core],[libdir])
 
-# FIXME: Get rid of all direct use of pcre.
-#FONTFORGE_LIBPCRE
-
 PKG_CHECK_MODULES([LIBPNG],[libpng])
 test -n "${LIBPNG_CFLAGS}" && CFLAGS="${CFLAGS} ${LIBPNG_CFLAGS}"
 test -n "${LIBPNG_LIBS}" && LIBS="${LIBPNG_LIBS} ${LIBS}"
