@@ -18,7 +18,7 @@
 
 #include <sortsmill/math.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/copy_with_strides.h>
+#include <sortsmill/core.h>
 
 static const char *my_module = "sortsmill math polyspline roots";
 

@@ -238,7 +238,7 @@ GUILE_AUTO_COMPILE=0 exec ${GUILE} ${GUILE_FLAGS} -s "${0}" ${1+"$@"}
 (format #t "from libc.stdint cimport uint8_t, uint16_t, uint32_t, uint64_t\n")
 (format #t "cimport sortsmill.cython.guile\n")
 (format #t "\n")
-(format #t "cdef extern from 'sortsmill/xgc.h':\n")
+(format #t "cdef extern from 'sortsmill/core.h':\n")
 (format #t "  void *x_gc_malloc (size_t sz)\n")
 (format #t "  void GC_free (void *)\n")
 (format #t "\n")

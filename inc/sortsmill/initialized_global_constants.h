@@ -21,10 +21,10 @@
 #define _SORTSMILL_INITIALIZED_GLOBAL_CONSTANTS_H
 
 #include <libguile.h>
-#include <sortsmill/xgc.h>      /* Includes pthread.h and gc.h in the
+#include <sortsmill/core.h>      /* Includes pthread.h and gc.h in the
                                    correct order. */
-#include <sortsmill/one_time_initialization.h>
-#include <sortsmill/attributes.h>
+#include <sortsmill/core.h>
+#include <sortsmill/core.h>
 
 void scm_dynwind_pthread_mutex_unlock (void *mutex_ptr);
 

@@ -83,7 +83,7 @@
           (sortsmill math gsl matrices)
           (sortsmill arrays)
           (sortsmill i18n)
-          (sortsmill kwargs)
+          (sortsmill core)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) take)

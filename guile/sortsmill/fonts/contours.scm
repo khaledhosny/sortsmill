@@ -43,7 +43,7 @@
           (sortsmill fontforge-api)
           (sortsmill dynlink)
           (sortsmill i18n)
-          (sortsmill kwargs)
+          (sortsmill core)
           (rnrs)
           (except (guile) error
                   make-record-type      ; Use R⁶RS records instead.

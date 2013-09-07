@@ -17,7 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/copy_with_strides_macros.h>
+#include <sortsmill/core.h>
 #include <intl.h>
 #include <assert.h>
 

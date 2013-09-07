@@ -18,7 +18,7 @@
 
 #include <sortsmill/guile.h>
 #include <sortsmill/initialized_global_constants.h>
-#include <sortsmill/copy_with_strides.h>
+#include <sortsmill/core.h>
 #include <intl.h>
 #include <basics.h>
 #include <stdint.h>

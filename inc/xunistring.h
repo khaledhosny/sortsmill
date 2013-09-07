@@ -22,7 +22,7 @@
 #include <config.h>
 
 #include <xalloc.h>
-#include <sortsmill/xunistring.h>
+#include <sortsmill/core.h>
 #include <unistring/version.h>
 
 #endif // _INTERNAL_XUNISTRING_H

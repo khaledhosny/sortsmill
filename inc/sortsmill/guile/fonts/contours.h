@@ -21,7 +21,7 @@
 
 #include <libguile.h>
 #include <stdbool.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 
 #ifdef __cplusplus
 extern "C"

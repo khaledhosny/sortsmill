@@ -19,7 +19,7 @@
 #ifndef _SORTSMILL_GUILE_COPY_WITH_STRIDES_H
 #define _SORTSMILL_GUILE_COPY_WITH_STRIDES_H
 
-#include <sortsmill/copy_with_strides.h>
+#include <sortsmill/core.h>
 #include <sortsmill/guile/arrays.h>
 #include <unistd.h>
 #include <libguile.h>

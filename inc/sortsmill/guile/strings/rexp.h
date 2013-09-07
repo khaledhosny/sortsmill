@@ -20,7 +20,7 @@
 #define _SORTSMILL_GUILE_STRINGS_REXP_H
 
 #include <libguile.h>
-#include <sortsmill/rexp.h>
+#include <sortsmill/core.h>
 
 #ifdef __cplusplus
 extern "C"

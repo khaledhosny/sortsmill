@@ -58,7 +58,7 @@
 
 #include <sortsmill/math/polyspline/ellipses.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 #include <sortsmill/initialized_global_constants.h>
 #include <intl.h>
 #include <math.h>

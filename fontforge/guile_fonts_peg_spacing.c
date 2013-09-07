@@ -17,7 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/rexp.h>
+#include <sortsmill/core.h>
 #include <sortsmill/initialized_global_constants.h>
 #include <intl.h>
 #include <assert.h>

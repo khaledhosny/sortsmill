@@ -21,8 +21,8 @@
 #include <sortsmill/math/gmp_constants.h>
 #include <sortsmill/math/gmp_matrix.h>
 #include <sortsmill/math/scm_matrix.h>
-#include <sortsmill/xgc.h>
-#include <sortsmill/xdie_on_null.h>
+#include <sortsmill/core.h>
+#include <sortsmill/core.h>
 #include <intl.h>
 
 void init_guile_sortsmill_math_gsl_matrices (void);

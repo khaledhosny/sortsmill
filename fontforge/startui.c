@@ -48,7 +48,7 @@
 #endif
 
 #include <sortsmill/fontforge_main.h>
-#include <sortsmill/xdie_on_null.h>
+#include <sortsmill/core.h>
 #include "fontforgeui.h"
 #include "annotations.h"
 #include <xalloc.h>

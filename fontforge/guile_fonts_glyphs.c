@@ -17,7 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 #include <xalloc.h>
 #include <baseviews.h>
 #include <splinefont.h>

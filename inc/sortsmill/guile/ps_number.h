@@ -20,7 +20,7 @@
 #define _SORTSMILL_GUILE_PS_NUMBER_H
 
 #include <libguile.h>
-#include <sortsmill/ps_number.h>
+#include <sortsmill/core.h>
 
 SCM scm_c_postscript_to_number (const char *s);
 SCM scm_postscript_to_number (SCM s);

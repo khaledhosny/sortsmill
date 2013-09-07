@@ -58,7 +58,7 @@
 #include <stdlib.h>
 #include <xstriconv.h>
 #include <xunistring.h>
-#include <sortsmill/xdie_on_null.h>
+#include <sortsmill/core.h>
 
 #include "ttf.h"
 

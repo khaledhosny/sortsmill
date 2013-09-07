@@ -18,7 +18,7 @@
 
 #include <libguile.h>
 #include <glib.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 
 void init_guile_sortsmill_options (void);
 

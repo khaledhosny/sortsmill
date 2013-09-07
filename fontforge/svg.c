@@ -57,7 +57,7 @@
 #include <sd.h>
 #include <xalloc.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/c-fprintf.h>
+#include <sortsmill/core.h>
 #include <c-strtod.h>
 #include <c-vasprintf.h>
 

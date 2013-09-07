@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 #include <locale.h>
 #include <float.h>
 #include <math.h>

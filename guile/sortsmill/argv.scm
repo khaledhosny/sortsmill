@@ -22,7 +22,6 @@
           argv/argc->string-list)
 
   (import (sortsmill core)
-          (sortsmill kwargs)
           (rnrs)
           (only (srfi :1) iota)
           (only (srfi :26) cut)

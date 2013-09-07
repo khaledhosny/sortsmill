@@ -53,7 +53,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <gkeysym.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 #include "psfont.h"
 #include "generatefont.h"
 

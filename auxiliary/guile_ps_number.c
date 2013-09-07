@@ -17,7 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <c-ctype.h>
-#include <sortsmill/ps_number.h>
+#include <sortsmill/core.h>
 #include <sortsmill/guile.h>
 #include <intl.h>
 

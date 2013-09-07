@@ -24,7 +24,7 @@
 
   (import (sortsmill editor finalization)
           (sortsmill dynlink)
-          (sortsmill kwargs)
+          (sortsmill core)
           (rnrs)
           (except (guile) error)
           (system foreign))

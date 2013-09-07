@@ -28,7 +28,7 @@ extern "C"
 #endif
 
 #include <gmp.h>
-#include <sortsmill/double_checked_locking.h>
+#include <sortsmill/core.h>
 
 #define _FF_GMP_CONSTANT_DECL(TYPE, NAME)				\
   extern TYPE##_t _##NAME;						\

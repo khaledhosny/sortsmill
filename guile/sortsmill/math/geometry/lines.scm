@@ -27,8 +27,8 @@
           line:normal-through-point)
 
   (import (sortsmill math matrices)
-          (sortsmill kwargs)
           (sortsmill i18n)
+          (sortsmill core)
           (rnrs)
           (except (guile) error)
           (ice-9 match))

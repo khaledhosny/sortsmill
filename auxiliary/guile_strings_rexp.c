@@ -18,7 +18,7 @@
 
 #include <sortsmill/guile/strings/rexp.h>
 #include <sortsmill/guile/initialized_global_constants.h>
-#include <sortsmill/attributes.h>
+#include <sortsmill/core.h>
 
 //-------------------------------------------------------------------------
 

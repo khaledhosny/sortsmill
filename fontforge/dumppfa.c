@@ -60,7 +60,7 @@
 #include "splinefont.h"
 #include <gdraw.h>              /* For image defn */
 #include "print.h"              /* For makePatName */
-#include <sortsmill/c-fprintf.h>
+#include <sortsmill/core.h>
 #include <c-strtod.h>
 
 extern int autohint_before_generate;

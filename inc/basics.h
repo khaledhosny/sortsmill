@@ -67,7 +67,7 @@
 #error You must define FF_MACSHORTCUTSDOMAIN.
 #endif
 
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 #include <xstrndup.h>
 #include <xunistring.h>
 #include <stdio.h>

@@ -51,7 +51,7 @@
 #include "gio.h"
 #include "print.h"              /* For pdf output routines */
 #include <utype.h>
-#include <sortsmill/c-fprintf.h>
+#include <sortsmill/core.h>
 
 static void
 EpsGeneratePreview (FILE *eps, SplineChar *sc, int layer, DBounds *b)

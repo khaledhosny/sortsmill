@@ -64,7 +64,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <libguile.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 
 #if PY_MAJOR_VERSION >= 3
 #include <wchar.h>

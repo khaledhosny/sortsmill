@@ -29,7 +29,7 @@
           (sortsmill math multivariate-polynomials)
           (sortsmill math matrices)
           (sortsmill dynlink)
-          (sortsmill kwargs)
+          (sortsmill core)
           (rnrs)
           (except (guile) error)
           (only (srfi :1) iota list-tabulate take zip)

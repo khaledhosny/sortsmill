@@ -17,9 +17,9 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/rb.h>
+#include <sortsmill/core.h>
 #include <sortsmill/initialized_global_constants.h>
-#include <sortsmill/attributes.h>
+#include <sortsmill/core.h>
 
 //-------------------------------------------------------------------------
 

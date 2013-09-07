@@ -67,7 +67,7 @@
 #include <stdlib.h>
 #include <xalloc.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/xdie_on_null.h>
+#include <sortsmill/core.h>
 #include <canonicalize.h>
 #include <xunistring.h>
 #include <moveto_funcs.h>

@@ -54,7 +54,7 @@
 #include <ustring.h>
 #include <locale.h>
 #include <c-strtod.h>
-#include <sortsmill/c-fprintf.h>
+#include <sortsmill/core.h>
 
 /* Adobe's opentype feature file */
 /* Which suffers incompatible changes according to Adobe's whim */

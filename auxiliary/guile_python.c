@@ -25,8 +25,8 @@
 #include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/python.h>
 #include <intl.h>
-#include <sortsmill/double_checked_locking.h>
-#include <sortsmill/xgc.h>      // Includes gc.h and pthreads.h in the right order.
+#include <sortsmill/core.h>
+#include <sortsmill/core.h>      // Includes gc.h and pthreads.h in the right order.
 
 void init_guile_sortsmill_python (void);
 

@@ -22,7 +22,7 @@
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
 #include <sortsmill/guile/math/gsl.h>
-#include <sortsmill/double_checked_locking.h>
+#include <sortsmill/core.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus

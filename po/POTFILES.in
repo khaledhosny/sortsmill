@@ -185,7 +185,6 @@ gdraw/gtextinfo.c
 
 guile/site-init.scm
 
-guile/sortsmill/kwargs.scm
 guile/sortsmill/sfd-to-sxml.scm
 guile/sortsmill/usermenu.scm
 guile/sortsmill/pure.scm

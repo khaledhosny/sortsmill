@@ -79,8 +79,8 @@ check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no	\
 	$(GUILE_ENV) LTDL_LIBRARY_PATH='$(SORTSMILL_CORE_LIBDIR)'
 
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
-	LC_ALL="C" PYTHONPATH="$(pythondir)"								\
-	$(GUILE_INSTALLED_ENV) LTDL_LIBRARY_PATH='$(SORTSMILL_CORE_LIBDIR)'
+	LC_ALL="C" PYTHONPATH="$(pythondir)" $(GUILE_INSTALLED_ENV)			\
+	LTDL_LIBRARY_PATH='$(libdir):$(SORTSMILL_CORE_LIBDIR)'
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest

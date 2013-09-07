@@ -91,7 +91,7 @@
           gsl:errno->strerror)
 
   (import (sortsmill dynlink)
-          (sortsmill kwargs)
+          (sortsmill core)
           (rnrs)
           (except (guile) error)
           (system foreign)

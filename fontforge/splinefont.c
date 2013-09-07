@@ -59,7 +59,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <xalloc.h>
-#include <sortsmill/xdie_on_null.h>
+#include <sortsmill/core.h>
 #include <canonicalize.h>
 
 void

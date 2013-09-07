@@ -20,7 +20,7 @@
 
 from libc.stdint cimport uint8_t, uint16_t, uint32_t
 
-cdef extern from "sortsmill/xgc.h":
+cdef extern from "sortsmill/core.h":
 
   ctypedef struct va_list
 

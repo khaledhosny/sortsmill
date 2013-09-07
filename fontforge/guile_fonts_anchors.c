@@ -17,7 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/xgc.h>
+#include <sortsmill/core.h>
 
 static const char my_module[] = "sortsmill fonts anchors";
 

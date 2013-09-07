@@ -452,14 +452,6 @@ SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/iconv.scm
 
 #--------------------------------------------------------------------------
 #
-# (sortsmill kwargs)
-
-DIST_SCM_FILES += sortsmill/kwargs.scm
-GO_FILES += sortsmill/kwargs.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/kwargs.scm
-
-#--------------------------------------------------------------------------
-#
 # (sortsmill mac-encodings)
 
 DIST_SCM_FILES += sortsmill/mac-encodings.scm

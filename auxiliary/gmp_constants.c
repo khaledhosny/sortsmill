@@ -17,7 +17,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/math/gmp_constants.h>
-#include <sortsmill/xgc.h>    /* Includes gc.h and pthreads.h in the
+#include <sortsmill/core.h>    /* Includes gc.h and pthreads.h in the
                                    right order. */
 #include <stdbool.h>
 

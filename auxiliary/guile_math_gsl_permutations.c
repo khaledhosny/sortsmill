@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmill/guile.h>
-#include <sortsmill/xdie_on_null.h>
+#include <sortsmill/core.h>
 #include <intl.h>
 
 void init_guile_sortsmill_math_gsl_permutations (void);

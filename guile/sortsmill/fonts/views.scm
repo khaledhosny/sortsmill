@@ -65,7 +65,7 @@
   (import (sortsmill fontforge-api)
           (sortsmill i18n)
           (sortsmill dynlink)
-          (sortsmill kwargs)
+          (sortsmill core)
           (rnrs)
           (only (guile) compose eval-when)
           (system foreign)

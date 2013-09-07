@@ -25,8 +25,8 @@
 
   (import (sortsmill math matrices base)
           (sortsmill math polyspline elev)
-          (sortsmill kwargs)
           (sortsmill i18n)
+          (sortsmill core)
           (rnrs)
           (except (guile) error))
 

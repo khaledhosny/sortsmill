@@ -19,7 +19,7 @@
 #ifndef _INTERNAL_NULL_PASSTHRU_H
 #define _INTERNAL_NULL_PASSTHRU_H
 
-#include <sortsmill/null_passthru.h>
+#include <sortsmill/core.h>
 
 #define NULL_PASSTHRU STM_NULL_PASSTHRU
 

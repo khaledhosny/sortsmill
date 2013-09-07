@@ -73,7 +73,6 @@
    )
 
   (import (sortsmill core)
-          (sortsmill kwargs)
           (sortsmill math polyspline)
           (sortsmill math matrices)
           (sortsmill math geometry)
