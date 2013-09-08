@@ -18,12 +18,17 @@
 
 (library (sortsmill postscript)
 
+;;; FIXME: This module is going to go away in favor of a Core Guile
+;;; equivalent.
+
   (export
    ;; (scm->postscript various-types) → string
    scm->postscript
 
+   ;; These currently are reëxported from Core Guile.
+   ;;
    ;; (postscript-number? string) → boolean
-   ;; (postscript->number string) → number
+   ;; (postscript->number string) → real
    postscript-number?
    postscript->number
 
@@ -38,15 +43,12 @@
    postscript->number-list
    )
 
-  (import (sortsmill dynlink)
+  (import (sortsmill core)
           (sortsmill i18n)
           (rnrs)
           (except (guile) error)
           (ice-9 format)
           (ice-9 match))
-
-  (eval-when (compile load eval)
-    (sortsmill-dynlink-load-extension "init_guile_ps_number"))
 
   (define (scm->postscript value)
     (cond

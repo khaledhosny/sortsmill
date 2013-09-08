@@ -20,7 +20,7 @@
 #define _SORTSMILL_GUILE_POSTSCRIPT_H
 
 #include <libguile.h>
-#include <sortsmill/guile/ps_number.h>
+#include <sortsmill/guile/core.h>
 
 #ifdef __cplusplus
 extern "C"

@@ -19,6 +19,7 @@
 #ifndef _SORTSMILL_GUILE_H
 #define _SORTSMILL_GUILE_H
 
+#include <sortsmill/guile/core.h>
 #include <sortsmill/guile/arrays.h>
 #include <sortsmill/guile/containers.h>
 #include <sortsmill/guile/copy_with_strides.h>
@@ -31,8 +32,7 @@
 #include <sortsmill/guile/nearness.h>
 #include <sortsmill/guile/notices.h>
 #include <sortsmill/guile/postscript.h>
-#include <sortsmill/guile/ps_number.h>
-#include <sortsmill/guile/rnrs_conditions.h>
+#include <sortsmill/guile/core.h>
 #include <sortsmill/guile/strings.h>
 #include <sortsmill/guile/symbols.h>
 #include <sortsmill/guile/types.h>

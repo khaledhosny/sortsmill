@@ -22,11 +22,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-#include <sortsmill/guile/rnrs_conditions.h>
 #include <sortsmill/guile/python.h>
 #include <intl.h>
-#include <sortsmill/core.h>
-#include <sortsmill/core.h>      // Includes gc.h and pthreads.h in the right order.
+#include <sortsmill/guile/core.h>
 
 void init_guile_sortsmill_python (void);
 

@@ -149,7 +149,6 @@ nobase_include_HEADERS += sortsmill/guile.h
 nobase_include_HEADERS += sortsmill/guile/copy_with_strides.h
 nobase_include_HEADERS += sortsmill/guile/iconv.h
 nobase_include_HEADERS += sortsmill/guile/arrays.h
-nobase_include_HEADERS += sortsmill/guile/rnrs_conditions.h
 nobase_include_HEADERS += sortsmill/guile/fonts.h
 nobase_include_HEADERS += sortsmill/guile/format.h
 nobase_include_HEADERS += sortsmill/guile/wrap.h
@@ -189,7 +188,6 @@ nobase_include_HEADERS += sortsmill/guile/math/multivariate_polynomials.h
 nobase_include_HEADERS += sortsmill/guile/math/polyspline.h
 nobase_include_HEADERS += sortsmill/guile/math/polyspline/ellipses.h
 
-nobase_include_HEADERS += sortsmill/guile/ps_number.h
 nobase_include_HEADERS += sortsmill/guile/postscript.h
 
 nobase_include_HEADERS += sortsmill/guile/strings.h
@@ -221,15 +219,5 @@ nobase_include_HEADERS += sortsmill/cython/gsl.pxd
 nobase_include_HEADERS += sortsmill/cython/polyspline.pxd
 nobase_include_HEADERS += sortsmill/guile/python.h
 endif HAVE_PYTHON_API
-
-#--------------------------------------------------------------------------
-
-extract_text = $(PERL) -n -e											\
-	'print $$_ if (s|^\s*(//\|[*])\s*$(1)--\s*(.*)\s*|\2\n|)'
-
-$(top_srcdir)/doc/%.visible.texi: sortsmill/%.h
-	$(call extract_text,vis) $< > $@
-
-extract-text: $(top_srcdir)/doc/ps_number.visible.texi
 
 #--------------------------------------------------------------------------

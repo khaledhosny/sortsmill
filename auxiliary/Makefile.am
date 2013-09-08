@@ -143,7 +143,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_containers_rbmap.c
 
 # Miscellaneous C interface to Guile and Guile extensions.
 # FIXME: Move some of these to Sorts Mill Core Guile.
-dist_libsortsmill_aux_la_SOURCES += rnrs_conditions.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_functions.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_error.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_matrices.c
@@ -157,7 +156,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
 dist_libsortsmill_aux_la_SOURCES += guile_options.c
 dist_libsortsmill_aux_la_SOURCES += guile_format.c
 dist_libsortsmill_aux_la_SOURCES += guile_postscript.c
-dist_libsortsmill_aux_la_SOURCES += guile_ps_number.c
 dist_libsortsmill_aux_la_SOURCES += guile_strings_rexp.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
 dist_libsortsmill_aux_la_SOURCES += guile_types.c

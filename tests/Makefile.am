@@ -74,13 +74,13 @@ installcheck-local: atconfig atlocal $(TESTSUITE)
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
 
-check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no	\
-	LC_ALL="C" PYTHONPATH="$(abs_top_builddir)/python"			\
-	$(GUILE_ENV) LTDL_LIBRARY_PATH='$(SORTSMILL_CORE_LIBDIR)'
+check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no				\
+	LC_ALL="C" PYTHONPATH="$(abs_top_builddir)/python" $(GUILE_ENV)			\
+	LTDL_LIBRARY_PATH='$(SORTSMILL_CORE_LIBDIR):$(SORTSMILL_CORE_GUILE)'
 
-installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
-	LC_ALL="C" PYTHONPATH="$(pythondir)" $(GUILE_INSTALLED_ENV)			\
-	LTDL_LIBRARY_PATH='$(libdir):$(SORTSMILL_CORE_LIBDIR)'
+installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes				\
+	LC_ALL="C" PYTHONPATH="$(pythondir)" $(GUILE_INSTALLED_ENV)						\
+	LTDL_LIBRARY_PATH='$(libdir):$(SORTSMILL_CORE_LIBDIR):$(SORTSMILL_CORE_GUILE)'
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
