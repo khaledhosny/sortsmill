@@ -7323,11 +7323,6 @@ CVMenuPreview (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   int checked = mi->ti.checked;
 
-  if (!cv_auto_goto)
-    {
-      if (!HaveModifiers)
-        return;
-    }
   CVPreviewModeSet (gw, checked);
 }
 
