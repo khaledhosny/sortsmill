@@ -1518,7 +1518,7 @@ SFDummyUpCIDs (struct glyphinfo *gi, SplineFont *sf)
 }
 
 static void
-AssignNotdefNull (SplineFont *sf, int *bygid, int iscff)
+AssignNotdefNull (SplineFont *sf, int *bygid, bool iscff)
 {
   int i;
 
@@ -1553,7 +1553,7 @@ AssignNotdefNull (SplineFont *sf, int *bygid, int iscff)
 }
 
 static int
-AssignTTFGlyph (struct glyphinfo *gi, SplineFont *sf, EncMap *map, int iscff)
+AssignTTFGlyph (struct glyphinfo *gi, SplineFont *sf, EncMap *map, bool iscff)
 {
   int *bygid = xmalloc ((sf->glyphcnt + 3) * sizeof (int));
   int i, j;
