@@ -32,12 +32,15 @@
   (put 'in-python-module 'scheme-indent-function 1)
   (put 'pydefun 'scheme-indent-function 1)
   (put 'pydefun-in 'scheme-indent-function 1)
+  (put 'lambda-scm-procedure 'scheme-indent-function 1)
+  (put 'call-with-uninm-names-db 'scheme-indent-function 1)
 
   ;;; FIXME: Maybe we can let these be handled by Scheme mode itself,
   ;;; someday.
   (put 'library 'scheme-indent-function 1)
   (put 'eval-when 'scheme-indent-function 1)
   (put 'lambda* 'scheme-indent-function 1)
+  (put 'rec 'scheme-indent-function 1)
   (put 'sxml-match 'scheme-indent-function 1)
   )
 
