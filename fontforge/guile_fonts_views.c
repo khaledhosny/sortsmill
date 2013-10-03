@@ -250,6 +250,14 @@ scm_c_open_font (const char *file_name, SCM flags)
     flags = SCM_EOL;
   int openflags = scm_symbol_list_to_openflags (who, flags);
   SplineFont *sf = LoadSplineFont (file_name, openflags);
+  if (sf == NULL)
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_error (),
+        rnrs_c_make_who_condition (who),
+        rnrs_c_make_message_condition (_("cannot open font file")),
+        rnrs_make_irritants_condition
+        (scm_list_1 (scm_from_utf8_string (file_name)))));
   return scm_c_SFAdd (sf, ((openflags & of_hidewindow) != 0));
 }
 
