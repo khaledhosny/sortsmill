@@ -155,12 +155,21 @@ FONTFORGE_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],
                     [`update-desktop-database' command])
 
 GUILE_PROGS
-if test `${GUILE} -c "(import (system foreign)) (write (defined? 'procedure->pointer))"` != "#t"; then
+if test `${GUILE} -c "(import (system foreign)) (write (defined? 'procedure->pointer))"` != "#t"
+then
    AC_MSG_ERROR([${PACKAGE_NAME} requires that Guile support `procedure->pointer'.
                  The Guile found by configure seems not to. See
                  http://www.gnu.org/software/guile/manual/guile.html@%:@Dynamic-FFI])
 fi
 StM_PROG_SORTSMILL_CORE_GUILE
+
+StM_PROG_SORTSMILL_APII_TO_GUILE
+if test -z "${SORTSMILL_APII_TO_GUILE}"
+then
+   AC_MSG_ERROR([`sortsmill-apii-to-guile' the program is needed but was not found.
+           At the time of this writing, sortsmill-apii-to-guile is installed by Sorts Mill Core Guile.
+           Sorts Mill Core Guile homepage: <https://bitbucket.org/sortsmill/sortsmill-core-guile>])
+fi
 
 # Assorted programs.
 StM_PROG_WGET

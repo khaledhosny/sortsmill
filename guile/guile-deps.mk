@@ -52,7 +52,7 @@ sortsmill/math/polyspline/roots.go: sortsmill/math/polyspline/bases.go sortsmill
 sortsmill/math/polyspline/subdiv.go: sortsmill/dynlink.go
 sortsmill/nearness.go: sortsmill/dynlink.go
 sortsmill/notices.go: sortsmill/dynlink.go
-sortsmill/options.go: sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/api-syntax.go sortsmill/strings.go sortsmill/argv.go
+sortsmill/options.go: sortsmill/dynlink.go sortsmill/pkg-info.go sortsmill/strings.go sortsmill/argv.go
 sortsmill/postscript.go: sortsmill/i18n.go
 sortsmill/pkg-info/directory-layout.go: sortsmill/dynlink.go
 sortsmill/python.go: sortsmill/dynlink.go sortsmill/i18n.go sortsmill/pkg-info.go sortsmill/ffcompat.go sortsmill/editor/finalization.go sortsmill/strings.go

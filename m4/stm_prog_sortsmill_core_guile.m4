@@ -7,7 +7,7 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# serial 1
+# serial 2
 
 # StM_PROG_SORTSMILL_CORE_GUILE
 # -----------------------------
@@ -18,7 +18,7 @@
 # ac_cv_path_SORTSMILL_CORE_GUILE. The test may be overridden by
 # setting SORTSMILL_CORE_GUILE or the cache variable.
 #
-AC_DEFUN([StM_PROG_SORTSMILL_CORE_GUILE],[{ :
+AC_DEFUN([StM_PROG_SORTSMILL_CORE_GUILE],[if :; then
    AC_REQUIRE([AC_PROG_AWK])
    StM_PATH_PROGS_CACHED_AND_PRECIOUS([SORTSMILL_CORE_GUILE],
       [sortsmill-core-guile the program],
@@ -29,4 +29,4 @@ AC_DEFUN([StM_PROG_SORTSMILL_CORE_GUILE],[{ :
             ac_path_SORTSMILL_CORE_GUILE_found=:
          fi
       ])
-}])
+fi])

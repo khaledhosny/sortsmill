@@ -47,7 +47,6 @@
   (import (sortsmill core)
           (sortsmill dynlink)
           (sortsmill pkg-info)
-          (sortsmill api-syntax)
           (sortsmill strings)
           (sortsmill argv)
           (rnrs)

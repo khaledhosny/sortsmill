@@ -3,8 +3,6 @@
 data/sortsmill-editor.desktop.in
 data/fontforge.xml.in
 
-auxiliary/rnrs_conditions.c
-
 auxiliary/guile_math_functions.c
 auxiliary/guile_math_gsl_matrices.c
 auxiliary/guile_math_gsl_permutations.c

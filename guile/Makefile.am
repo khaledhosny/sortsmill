@@ -187,9 +187,9 @@ __INTERNALS___REEXPORTED_SCM_FILES += sortsmill/__internals__/lookups.scm
 #
 # (sortsmill api-syntax)
 
-DIST_SCM_FILES += sortsmill/api-syntax.scm
-GO_FILES += sortsmill/api-syntax.go
-SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/api-syntax.scm
+#DIST_SCM_FILES += sortsmill/api-syntax.scm
+#GO_FILES += sortsmill/api-syntax.go
+#SORTSMILL_REEXPORTED_SCM_FILES += sortsmill/api-syntax.scm
 
 #--------------------------------------------------------------------------
 #
@@ -912,24 +912,38 @@ endif HAVE_GUI
 #
 # Guile sources generated from ‘API instructions’ (.apii files).
 
-sortsmill/fontforge-api.scm:							\
-		$(top_builddir)/fontforge/fontforge.types.apii	\
-		$(srcdir)/generate-guile-api.scm				\
-		ff-internal/generate-types.scm
-	$(AM_V_GUILEAPI)
-	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
-			'(sortsmill fontforge-api)' $(filter %.apii, $^) > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
+#sortsmill/fontforge-api.scm:							\
+#		$(top_builddir)/fontforge/fontforge.types.apii	\
+#		$(srcdir)/generate-guile-api.scm				\
+#		ff-internal/generate-types.scm
+#	$(AM_V_GUILEAPI)
+#	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
+#			'(sortsmill fontforge-api)' $(filter %.apii, $^) > $@-tmp
+#	$(AM_V_at)mv $@-tmp $@
+#
+#sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
+#		$(srcdir)/generate-guile-api.scm						\
+#		ff-internal/generate-types.scm
+#	$(AM_V_GUILEAPI)
+#	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
+#			'(sortsmill gdraw-api)' $< > $@-tmp
+#	$(AM_V_at)mv $@-tmp $@
+#
+#EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
 
-sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
-		$(srcdir)/generate-guile-api.scm						\
-		ff-internal/generate-types.scm
-	$(AM_V_GUILEAPI)
-	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
-			'(sortsmill gdraw-api)' $< > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
+# This is still used by generators other than the obsoleted
+# generate-guile-api.scm.
+EXTRA_DIST += ff-internal/generate-types.scm
 
-EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
+sortsmill/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii
+	$(AM_V_GUILEAPI) \
+		$(SORTSMILL_APII_TO_GUILE) '(sortsmill gdraw-api)' $(<) > $(@)-tmp \
+		&& mv $(@)-tmp $(@)
+
+sortsmill/fontforge-api.scm: $(top_builddir)/fontforge/fontforge.types.apii
+	$(AM_V_GUILEAPI) \
+		$(SORTSMILL_APII_TO_GUILE) '(sortsmill fontforge-api)' $(<) > $(@)-tmp \
+		&& mv $(@)-tmp $(@)
 
 #--------------------------------------------------------------------------
 #
