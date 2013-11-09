@@ -34,6 +34,7 @@
   (put 'pydefun-in 'scheme-indent-function 1)
   (put 'lambda-scm-procedure 'scheme-indent-function 1)
   (put 'call-with-uninm-names-db 'scheme-indent-function 1)
+  (put 'call-with-po-file 'scheme-indent-function 1)
 
   ;;; FIXME: Maybe we can let these be handled by Scheme mode itself,
   ;;; someday.
