@@ -13817,6 +13817,23 @@ static int PyFF_Font_set_OS2_##name(PyFF_Font *self,PyObject *value, void *UNUSE
 return( PyFF_Font_set_int2(self,value,#name,offsetof(SplineFont,pfminfo)+offsetof(struct pfminfo,name)) );\
 }
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
+#define ff_gs_os2real(name) \
+static PyObject *PyFF_Font_get_OS2_##name(PyFF_Font *self, void *UNUSED(closure)) { \
+    SplineFont *sf;					\
+    if ( CheckIfFontClosed(self) ) return NULL;		\
+    sf = self->fv->sf;					\
+    SFDefaultOS2(sf);					\
+return( Py_BuildValue("d", sf->pfminfo.name ));		\
+}							\
+							\
+static int PyFF_Font_set_OS2_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) {\
+    SplineFont *sf;					\
+    if ( CheckIfFontClosed(self) ) return -1;		\
+    sf = self->fv->sf;					\
+    SFDefaultOS2(sf);					\
+return( PyFF_Font_set_real(self,value,#name,offsetof(SplineFont,pfminfo)+offsetof(struct pfminfo,name)) );\
+}
+/* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_os2bit(name) \
 static PyObject *PyFF_Font_get_OS2_##name(PyFF_Font *self, void *UNUSED(closure)) { \
     SplineFont *sf;					\
@@ -13867,6 +13884,7 @@ ff_gs_os2int2 (os2_supxsize) ff_gs_os2int2 (os2_supxoff)
 ff_gs_os2int2 (os2_supysize) ff_gs_os2int2 (os2_supyoff)
 ff_gs_os2int2 (os2_strikeysize) ff_gs_os2int2 (os2_strikeypos)
 ff_gs_os2int2 (os2_family_class) ff_gs_os2bit (winascent_add)
+ff_gs_os2real (os2_loweropticalsize) ff_gs_os2real (os2_upperopticalsize)
 ff_gs_os2bit (windescent_add) ff_gs_os2bit (hheadascent_add)
 ff_gs_os2bit (hheaddescent_add) ff_gs_os2bit (typoascent_add)
 ff_gs_os2bit (typodescent_add) ff_gs_bit (changed) ff_gs_ro_bit (multilayer)
@@ -15855,6 +15873,14 @@ static PyGetSetDef PyFF_Font_getset[] = {
    (getter) PyFF_Font_get_os2unicoderanges,
    (setter) PyFF_Font_set_os2unicoderanges,
    "The 4 element OS/2 unicode ranges tuple", NULL},
+  {"os2_loweropticalsize",
+   (getter) PyFF_Font_get_OS2_os2_loweropticalsize,
+   (setter) PyFF_Font_set_OS2_os2_loweropticalsize,
+   "OS/2 lower optical point size", NULL},
+  {"os2_upperopticalsize",
+   (getter) PyFF_Font_get_OS2_os2_upperopticalsize,
+   (setter) PyFF_Font_set_OS2_os2_upperopticalsize,
+   "OS/2 upper optical point size", NULL},
   {"os2_panose",
    (getter) PyFF_Font_get_OS2_panose, (setter) PyFF_Font_set_OS2_panose,
    "The 10 element OS/2 Panose tuple", NULL},

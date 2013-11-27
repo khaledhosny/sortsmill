@@ -507,6 +507,10 @@ struct os2
 
   int v1_avgCharWid;            /* 1&2 Weighted average of the lower case letters and space */
   int v3_avgCharWid;            /* 3&4 average over all non-zero width glyphs */
+
+  /* V5 */
+  short lowerOpticalPointSize;  /* in twips (1/20th points) */
+  short upperOpticalPointSize;  /* in twips (1/20th points) */
 };
 
 struct post

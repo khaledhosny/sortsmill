@@ -6502,6 +6502,22 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
       info->pfminfo.hascodepages = true;
     }
 
+  if (info->os2_version >= 2)
+    {
+      /* xHeight */ getushort (ttf);
+      /* capHeight */ getushort (ttf);
+      /* defChar */ getushort (ttf);
+      /* breakChar */ getushort (ttf);
+      /* maxContext */ getushort (ttf);
+    }
+
+  if (info->os2_version >= 5)
+    {
+      /* OS/2 optical sizes are in twips, we convert them to points */
+      info->pfminfo.os2_loweropticalsize = getushort (ttf) / 20.0;
+      info->pfminfo.os2_upperopticalsize = getushort (ttf) / 20.0;
+    }
+
   if (info->os2_version == 0)
     {
       LogError (_

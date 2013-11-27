@@ -65,6 +65,9 @@ typedef enum
   //_os2_usBreakChar, ← not supported here
   //_os2_usMaxContext, ← not supported here
 
+  _os2_usLowerOpticalPointSize,
+  _os2_usUpperOpticalPointSize,
+
   // These ‘offset’ flags are FontForge/Sorts Mill Tools-specific.
   _os2_sTypoAscender_is_offset,
   _os2_sTypoDescender_is_offset,
@@ -114,6 +117,9 @@ static const char *os2_key_table[] = {
   //[_os2_usDefaultChar] = "usDefaultChar", ← not supported here
   //[_os2_usBreakChar] = "usBreakChar", ← not supported here
   //[_os2_usMaxContext] = "usMaxContext" ← not supported here
+
+  [_os2_usLowerOpticalPointSize] = "usLowerOpticalPointSize",
+  [_os2_usUpperOpticalPointSize] = "usUpperOpticalPointSize",
 
   // These ‘offset’ flags are FontForge/Sorts Mill
   // Tools-specific. They correspond to the ‘Offset’ checkboxes for
@@ -406,6 +412,13 @@ scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value,
       set_code_page_range (who, sf, value);
       break;
 
+    case _os2_usLowerOpticalPointSize:
+      sf->pfminfo.os2_loweropticalsize = scm_to_double (value);
+      break;
+    case _os2_usUpperOpticalPointSize:
+      sf->pfminfo.os2_upperopticalsize = scm_to_double (value);
+      break;
+
     case _os2_sTypoAscender_is_offset:
       sf->pfminfo.typoascent_add = scm_is_true (value);
       break;
@@ -523,6 +536,13 @@ scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset)
       break;
     case _os2_ulCodePageRange:
       result = get_code_page_range (sf);
+      break;
+
+    case _os2_usLowerOpticalPointSize:
+      result = scm_from_double (sf->pfminfo.os2_loweropticalsize);
+      break;
+    case _os2_usUpperOpticalPointSize:
+      result = scm_from_double (sf->pfminfo.os2_upperopticalsize);
       break;
 
     case _os2_sTypoAscender_is_offset:

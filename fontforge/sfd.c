@@ -2393,6 +2393,12 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
     fprintf (sfd, "OS2UnicodeRanges: %08x.%08x.%08x.%08x\n",
              sf->pfminfo.unicoderanges[0], sf->pfminfo.unicoderanges[1],
              sf->pfminfo.unicoderanges[2], sf->pfminfo.unicoderanges[3]);
+  if (sf->pfminfo.os2_loweropticalsize != -1)
+    c_fprintf (sfd, "OS2LowerOpticalPointSize: %g\n",
+               sf->pfminfo.os2_loweropticalsize);
+  if (sf->pfminfo.os2_upperopticalsize != -1)
+    c_fprintf (sfd, "OS2UpperOpticalPointSize: %g\n",
+               sf->pfminfo.os2_upperopticalsize);
   if (sf->macstyle != -1)
     fprintf (sfd, "MacStyle: %d\n", sf->macstyle);
   /* Must come before any kerning classes, anchor classes, conditional psts */
@@ -7878,6 +7884,18 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
         {
           gethexints (sfd, sf->pfminfo.unicoderanges, 4);
           sf->pfminfo.hasunicoderanges = true;
+        }
+      else if (strcasecmp (tok, "OS2LowerOpticalPointSize:") == 0)
+        {
+          real temp;
+          getreal (sfd, &temp);
+          sf->pfminfo.os2_loweropticalsize = temp;
+        }
+      else if (strcasecmp (tok, "OS2UpperOpticalPointSize:") == 0)
+        {
+          real temp;
+          getreal (sfd, &temp);
+          sf->pfminfo.os2_upperopticalsize = temp;
         }
       else if (strcasecmp (tok, "DisplaySize:") == 0)
         {

@@ -4061,6 +4061,9 @@ setos2 (struct os2 *os2, struct alltabs *at, SplineFont *sf,
     os2->version = 3;
   if (sf->use_typo_metrics || sf->weight_width_slope_only)
     os2->version = 4;
+  if (sf->pfminfo.os2_loweropticalsize != -1 ||
+      sf->pfminfo.os2_upperopticalsize != -1)
+    os2->version = 5;
   if (sf->os2_version != 0)
     os2->version = sf->os2_version;
   if ((format >= ff_ttf && format <= ff_otfdfont)
@@ -4102,6 +4105,21 @@ setos2 (struct os2 *os2, struct alltabs *at, SplineFont *sf,
         os2->fsSel |= 128;      /* Don't use win ascent/descent for line spacing */
       if (sf->weight_width_slope_only)
         os2->fsSel |= 256;
+    }
+  if (os2->version >= 5)
+    {
+      /* OS/2 optical sizes are in twips, but we store them in points */
+      if (sf->pfminfo.os2_loweropticalsize != -1)
+        os2->lowerOpticalPointSize =
+                umin(rint(sf->pfminfo.os2_loweropticalsize * 20), 0xFFFF);
+      else
+        os2->lowerOpticalPointSize = 0;
+
+      if (sf->pfminfo.os2_upperopticalsize != -1)
+        os2->upperOpticalPointSize =
+                umin(rint(sf->pfminfo.os2_upperopticalsize * 20), 0xFFFF);
+      else
+        os2->upperOpticalPointSize = 0xFFFF;
     }
 /* David Lemon @Adobe.COM
 1)  The sTypoAscender and sTypoDescender values should sum to 2048 in 
@@ -4518,6 +4536,11 @@ redoos2 (struct alltabs *at)
       putshort (at->os2f, at->os2.defChar);
       putshort (at->os2f, at->os2.breakChar);
       putshort (at->os2f, at->os2.maxContext);
+    }
+  if (at->os2.version >= 5)
+    {
+      putshort (at->os2f, at->os2.lowerOpticalPointSize);
+      putshort (at->os2f, at->os2.upperOpticalPointSize);
     }
 
   at->os2len = ftell (at->os2f);

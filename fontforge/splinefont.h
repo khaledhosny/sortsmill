@@ -2278,6 +2278,8 @@ struct pfminfo
   int16_t os2_family_class;
   uint32_t codepages[2];
   uint32_t unicoderanges[4];
+  float os2_loweropticalsize;
+  float os2_upperopticalsize;
 };
 
 struct ttf_table
