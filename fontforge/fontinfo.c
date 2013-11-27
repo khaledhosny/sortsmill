@@ -344,6 +344,8 @@ static GTextInfo os2versions[] = {
    0, '\0'},
   {(uint32_t *) N_("4"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
+  {(uint32_t *) N_("5"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+   0, '\0'},
   GTEXTINFO_EMPTY
 };
 
@@ -3120,6 +3122,9 @@ static struct langstyle *stylelist[] =
 #define CID_CPageDefault	16120
 #define CID_CodePageRanges	16121
 #define CID_CodePageList	16122
+
+#define CID_LowerOpticalSize	16123
+#define CID_UpperOpticalSize	16124
 
 const char *
 UI_TTFNameIds (int id)
@@ -6034,6 +6039,7 @@ GFI_OK (GGadget *g, GEvent *e)
       int tlinegap = 0, tascent = 0, tdescent = 0, hascent = 0, hdescent = 0;
       int winaoff = true, windoff = true;
       int taoff = true, tdoff = true, haoff = true, hdoff = true;
+      real loweroptsize = -1, upperoptsize = -1;
       real ia, cidversion;
       const uint32_t *txt, *fond;
       uint32_t *end;
@@ -6341,6 +6347,25 @@ GFI_OK (GGadget *g, GEvent *e)
             }
           if (weight == 0)
             weight = GetInt8 (gw, CID_WeightClass, _("_Weight Class"), &err);
+
+          loweroptsize = GetReal8 (gw, CID_LowerOpticalSize,
+                                   _("_Lower Optical Point Size"), &err);
+          if (loweroptsize < 0 || loweroptsize > 0xFFFF * 20)
+            {
+              ff_post_error (_("Bad Lower Optical Point Size"),
+                             _("Must be between 0 and 3276.75pt"));
+              return true;
+            }
+
+          upperoptsize = GetReal8 (gw, CID_UpperOpticalSize,
+                                   _("_Upper Optical Point Size"), &err);
+          if (upperoptsize < 0 || upperoptsize > 0xFFFF * 20)
+            {
+              ff_post_error (_("Bad Upper Optical Point Size"),
+                             _("Must be between 0 and 3276.75pt"));
+              return true;
+            }
+
           linegap = GetInt8 (gw, CID_LineGap, _("HHead _Line Gap:"), &err);
           tlinegap =
             GetInt8 (gw, CID_TypoLineGap, _("Typo Line _Gap:"), &err);
@@ -6715,6 +6740,8 @@ GFI_OK (GGadget *g, GEvent *e)
                           userdata);
           sf->pfminfo.panose_set =
             !GGadgetIsChecked (GWidgetGetControl (gw, CID_PanDefault));
+          sf->pfminfo.os2_loweropticalsize = loweroptsize;
+          sf->pfminfo.os2_upperopticalsize = upperoptsize;
           sf->pfminfo.os2_typolinegap = tlinegap;
           sf->pfminfo.linegap = linegap;
           if (vmetrics)
@@ -7251,6 +7278,11 @@ TTFSetup (struct gfi_data *d)
             GFI_SetPanoseLists (d);
         }
     }
+
+  sprintf (buffer, "%g", info.os2_loweropticalsize);
+  GGadgetSetTitle8 (GWidgetGetControl (d->gw, CID_LowerOpticalSize), buffer);
+  sprintf (buffer, "%g", info.os2_upperopticalsize);
+  GGadgetSetTitle8 (GWidgetGetControl (d->gw, CID_UpperOpticalSize), buffer);
 
   GGadgetSetChecked (GWidgetGetControl (d->gw, CID_SubSuperDefault),
                      !info.subsuper_set);
@@ -10713,7 +10745,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   GWindowAttrs wattrs;
   GTabInfo aspects[25], vaspects[6], lkaspects[3];
   GGadgetCreateData mgcd[10], ngcd[19], psgcd[30], tngcd[8],
-    pgcd[12], vgcd[19], pangcd[23], comgcd[4], txgcd[23], floggcd[4],
+    pgcd[12], vgcd[23], pangcd[23], comgcd[4], txgcd[23], floggcd[4],
     mcgcd[8], szgcd[19], mkgcd[7], metgcd[29], vagcd[3], ssgcd[23],
     xugcd[8], dgcd[6], ugcd[6], gaspgcd[5], gaspgcd_def[2], lksubgcd[2][4],
     lkgcd[2], lkbuttonsgcd[15], cgcd[12], lgcd[20], msgcd[7], ssngcd[8],
@@ -10735,7 +10767,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     *charray3[4], *cvarray[9], *cvarray2[4], *larray[16], *larray2[25],
     *larray3[6], *larray4[5], *uharray[4], *ssvarray[4], *woffarray[16];
   GTextInfo mlabel[10], nlabel[18], pslabel[30], tnlabel[7], plabel[12],
-    vlabel[19], panlabel[22], comlabel[3], txlabel[23],
+    vlabel[21], panlabel[22], comlabel[3], txlabel[23],
     mclabel[8], szlabel[17], mklabel[7], metlabel[28], sslabel[23],
     xulabel[8], dlabel[5], ulabel[3], gasplabel[5], lkbuttonslabel[14],
     clabel[11], floglabel[3], llabel[20], mslabel[7], ssnlabel[7],
@@ -11949,6 +11981,40 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[16].gd.u.list = os2versions;
   vgcd[16].creator = GListFieldCreate;
 
+  vgcd[17].gd.pos.x = 10;
+  vgcd[17].gd.pos.y = vgcd[1].gd.pos.y + 26 + 6;
+  vlabel[17].text = (uint32_t *) _("_Lower Optical Point Size");
+  vlabel[17].text_is_1byte = true;
+  vlabel[17].text_has_mnemonic = true;
+  vgcd[17].gd.label = &vlabel[17];
+  vgcd[17].gd.flags = gg_visible | gg_enabled;
+  vgcd[17].creator = GLabelCreate;
+
+  vgcd[18].gd.pos.x = 90;
+  vgcd[18].gd.pos.y = vgcd[17].gd.pos.y - 6;
+  vgcd[18].gd.pos.width = 50;
+  vgcd[18].gd.flags = gg_visible | gg_enabled;
+  /* value set later */
+  vgcd[18].gd.cid = CID_LowerOpticalSize;
+  vgcd[18].creator = GTextFieldCreate;
+
+  vgcd[19].gd.pos.x = 10;
+  vgcd[19].gd.pos.y = vgcd[1].gd.pos.y + 26 + 6;
+  vlabel[19].text = (uint32_t *) _("_Upper Optical Point Size");
+  vlabel[19].text_is_1byte = true;
+  vlabel[19].text_has_mnemonic = true;
+  vgcd[19].gd.label = &vlabel[19];
+  vgcd[19].gd.flags = gg_visible | gg_enabled;
+  vgcd[19].creator = GLabelCreate;
+
+  vgcd[20].gd.pos.x = 90;
+  vgcd[20].gd.pos.y = vgcd[19].gd.pos.y - 6;
+  vgcd[20].gd.pos.width = 50;
+  vgcd[20].gd.flags = gg_visible | gg_enabled;
+  /* value set later */
+  vgcd[20].gd.cid = CID_UpperOpticalSize;
+  vgcd[20].creator = GTextFieldCreate;
+
   vradio[0] = GCD_Glue;
   vradio[1] = &vgcd[8];
   vradio[2] = &vgcd[9];
@@ -11982,11 +12048,11 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   varray[24] = &vgcd[14];
   varray[25] = GCD_ColSpan;
   varray[26] = NULL;
-  varray[27] = GCD_Glue;
-  varray[28] = GCD_Glue;
+  varray[27] = &vgcd[17];
+  varray[28] = &vgcd[18];
   varray[29] = NULL;
-  varray[30] = GCD_Glue;
-  varray[31] = GCD_Glue;
+  varray[30] = &vgcd[19];
+  varray[31] = &vgcd[20];
   varray[32] = NULL;
   varray[33] = varray[37] = NULL;
 
