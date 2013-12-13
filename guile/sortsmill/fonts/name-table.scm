@@ -739,7 +739,7 @@
       (post-fontforge-error
        (_ "Bad Font Name")
        (format #f
-               (_ "Their is a PostScript font name entry\n(Naming Table entry 6) for platform ~a is missing.\nIf a PostScript font name is included,\nthere must be entries for both platforms 1 and 3.")
+               (_ "There is a PostScript font name entry\n(Naming Table entry 6) for platform ~a is missing.\nIf a PostScript font name is included,\nthere must be entries for both platforms 1 and 3.")
                platform-id)))
 
     (define (warn-nonidentical-values value1 value3)
@@ -753,7 +753,7 @@
       (post-fontforge-error
        (_ "Bad Font Name")
        (format #f
-               (_ "Their is more than one PostScript font name entry\n(Naming Table entry 6) for platform ~a.")
+               (_ "There is more than one PostScript font name entry\n(Naming Table entry 6) for platform ~a.")
                platform-id)))
 
     (define (fix-individual-entries namerecs)
