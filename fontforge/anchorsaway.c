@@ -895,7 +895,8 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
 {
   int ly;
 
-  free (ap->xadjust.corrections);
+  if (&ap->xadjust != NULL)
+    free (ap->xadjust.corrections);
   if (xadjust->corrections == NULL)
     {
       memset (&ap->xadjust, 0, sizeof (DeviceTable));
@@ -905,7 +906,9 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
       ap->xadjust = *xadjust;
       xadjust->corrections = NULL;
     }
-  free (ap->yadjust.corrections);
+
+  if (&ap->yadjust != NULL)
+    free (ap->yadjust.corrections);
   if (yadjust->corrections == NULL)
     {
       memset (&ap->yadjust, 0, sizeof (DeviceTable));
