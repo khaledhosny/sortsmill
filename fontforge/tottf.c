@@ -1284,7 +1284,11 @@ dumpcomposite (SplineChar *sc, struct glyphinfo *gi)
     IError ("max glyph count wrong in ttf output");
   gi->loca[gi->next_glyph] = ftell (gi->glyphs);
 
-  SplineCharLayerQuickBounds (sc, gi->layer, &bb);
+  /* We used to compute non "Conservative" bounds here (i.e. the bounding box
+   * of the splines not on-curve points), but this is not what other tools
+   * does, and not how other read the spec.
+   */
+  SplineCharLayerQuickConservativeBounds (sc, gi->layer, &bb);
   gh.numContours = -1;
   gh.xmin = floor (bb.minx);
   gh.ymin = floor (bb.miny);
@@ -1437,7 +1441,11 @@ dumpglyph (SplineChar *sc, struct glyphinfo *gi)
     }
   origptcnt = ptcnt;
 
-  SplineSetQuickBounds (ttfss, &bb);
+  /* We used to compute non "Conservative" bounds here (i.e. the bounding box
+   * of the splines not on-curve points), but this is not what other tools
+   * does, and not how other read the spec.
+   */
+  SplineSetQuickConservativeBounds (ttfss, &bb);
   gh.numContours = contourcnt;
   gh.xmin = floor (bb.minx);
   gh.ymin = floor (bb.miny);

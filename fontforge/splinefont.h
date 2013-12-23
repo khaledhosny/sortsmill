@@ -3054,8 +3054,10 @@ VISIBLE void SplineSetQuickBounds (SplineSet *ss, DBounds *b);
 VISIBLE void SplineCharLayerQuickBounds (SplineChar *sc, int layer,
                                          DBounds *bounds);
 VISIBLE void SplineCharQuickBounds (SplineChar *sc, DBounds *b);
-void SplineSetQuickConservativeBounds (SplineSet *ss, DBounds *b);
-void SplineCharQuickConservativeBounds (SplineChar *sc, DBounds *b);
+VISIBLE void SplineSetQuickConservativeBounds (SplineSet *ss, DBounds *b);
+VISIBLE void SplineCharQuickConservativeBounds (SplineChar *sc, DBounds *b);
+VISIBLE void SplineCharLayerQuickConservativeBounds (SplineChar *sc, int layer,
+                                                     DBounds *bounds);
 void SplineFontQuickConservativeBounds (SplineFont *sf, DBounds *b);
 VISIBLE void SplinePointCategorize (SplinePoint *sp);
 int SplinePointIsACorner (SplinePoint *sp);

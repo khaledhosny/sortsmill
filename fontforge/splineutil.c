@@ -1309,6 +1309,43 @@ SplineCharQuickConservativeBounds (SplineChar *sc, DBounds *b)
 }
 
 void
+SplineCharLayerQuickConservativeBounds (SplineChar *sc, int layer, DBounds *bounds)
+{
+  RefChar *ref;
+  DBounds temp;
+
+  if (sc->parent != NULL && sc->parent->multilayer)
+    {
+      SplineCharQuickConservativeBounds (sc, bounds);
+      return;
+    }
+
+  memset (bounds, 0, sizeof (*bounds));
+
+  SplineSetQuickConservativeBounds (sc->layers[layer].splines, bounds);
+
+  for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
+    {
+      SplineSetQuickConservativeBounds (ref->layers[0].splines, &temp);
+      if (bounds->minx == 0 && bounds->maxx == 0 && bounds->miny == 0
+          && bounds->maxy == 0)
+        *bounds = temp;
+      else if (temp.minx != 0 || temp.maxx != 0 || temp.maxy != 0
+               || temp.miny != 0)
+        {
+          if (temp.minx < bounds->minx)
+            bounds->minx = temp.minx;
+          if (temp.miny < bounds->miny)
+            bounds->miny = temp.miny;
+          if (temp.maxx > bounds->maxx)
+            bounds->maxx = temp.maxx;
+          if (temp.maxy > bounds->maxy)
+            bounds->maxy = temp.maxy;
+        }
+    }
+}
+
+void
 SplineFontQuickConservativeBounds (SplineFont *sf, DBounds *b)
 {
   DBounds bb;
