@@ -25,7 +25,6 @@
 #include <sortsmill/guile/copy_with_strides.h>
 #include <sortsmill/guile/editor.h>
 #include <sortsmill/guile/fonts.h>
-#include <sortsmill/guile/format.h>
 #include <sortsmill/guile/iconv.h>
 #include <sortsmill/guile/initialized_global_constants.h>
 #include <sortsmill/guile/math.h>

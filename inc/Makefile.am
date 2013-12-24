@@ -150,7 +150,6 @@ nobase_include_HEADERS += sortsmill/guile/copy_with_strides.h
 nobase_include_HEADERS += sortsmill/guile/iconv.h
 nobase_include_HEADERS += sortsmill/guile/arrays.h
 nobase_include_HEADERS += sortsmill/guile/fonts.h
-nobase_include_HEADERS += sortsmill/guile/format.h
 nobase_include_HEADERS += sortsmill/guile/wrap.h
 
 nobase_include_HEADERS += sortsmill/guile/containers.h

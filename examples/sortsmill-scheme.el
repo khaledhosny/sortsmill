@@ -33,6 +33,7 @@
   (put 'pydefun 'scheme-indent-function 1)
   (put 'pydefun-in 'scheme-indent-function 1)
   (put 'lambda-scm-procedure 'scheme-indent-function 1)
+  (put 'lambda/kwargs 'scheme-indent-function 1)
   (put 'call-with-uninm-names-db 'scheme-indent-function 1)
   (put 'call-with-po-file 'scheme-indent-function 1)
 

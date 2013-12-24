@@ -154,7 +154,6 @@ dist_libsortsmill_aux_la_SOURCES += guile_arrays.c
 dist_libsortsmill_aux_la_SOURCES += guile_iconv.c
 dist_libsortsmill_aux_la_SOURCES += guile_directory_layout.c
 dist_libsortsmill_aux_la_SOURCES += guile_options.c
-dist_libsortsmill_aux_la_SOURCES += guile_format.c
 dist_libsortsmill_aux_la_SOURCES += guile_postscript.c
 dist_libsortsmill_aux_la_SOURCES += guile_strings_rexp.c
 dist_libsortsmill_aux_la_SOURCES += guile_symbols.c
