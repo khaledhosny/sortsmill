@@ -2163,52 +2163,54 @@ TTFAddLangStr (FILE *ttf, struct ttfinfo *info, int id,
     }
 }
 
-//static int
-//is_ascii (char *str)
-//{                               /* isascii is in ctype */
-//  if (str == NULL)
-//    return false;
-//  while (*str && *str < 127 && *str >= ' ')
-//    ++str;
-//  return *str == '\0';
-//}
+static int
+is_ascii (char *str)
+{                               /* isascii is in ctype */
+  if (str == NULL)
+    return false;
+  while (*str && *str < 127 && *str >= ' ')
+    ++str;
+  return *str == '\0';
+}
 
-//static char *
-//FindLangEntry (struct ttfinfo *info, int id)
-//{
-//  /* Look for an entry with string id */
-//  /* we prefer english, if we can't find english look for something in ascii */
-//  struct ttflangname *cur;
-//  char *ret;
-//
-//  for (cur = info->names; cur != NULL && cur->lang != 0x409; cur = cur->next);
-//  if (cur != NULL && cur->names[id] == NULL)
-//    cur = NULL;
-//  if (cur == NULL)
-//    for (cur = info->names; cur != NULL && (cur->lang & 0xf) != 0x09;
-//         cur = cur->next);
-//  if (cur != NULL && cur->names[id] == NULL)
-//    cur = NULL;
-//  if (cur == NULL)
-//    for (cur = info->names; cur != NULL && !is_ascii (cur->names[id]);
-//         cur = cur->next);
-//  if (cur == NULL)
-//    for (cur = info->names; cur != NULL && cur->names[id] == NULL;
-//         cur = cur->next);
-//  if (cur == NULL)
-//    return NULL;
-//  ret = xstrdup_or_null (cur->names[id]);
-//  return ret;
-//}
+typedef char *FindLangEntry_t (struct ttfinfo *info, int id);
 
 static char *
-find_lang_entry (SCM name_table, int name_id)
+FindLangEntry (struct ttfinfo *info, int id)
 {
-  SCM string = scm_call_2 (scm_c_public_ref ("sortsmill",
-                                             "name-table:font-name-entry-english-preferred"),
-                           name_table, scm_from_int (name_id));
-  return (scm_is_true (string)) ? scm_to_utf8_stringn (string, NULL) : NULL;
+  /* Look for an entry with string id */
+  /* we prefer english, if we can't find english look for something in ascii */
+  struct ttflangname *cur;
+  char *ret;
+
+  for (cur = info->names; cur != NULL && cur->lang != 0x409; cur = cur->next);
+  if (cur != NULL && cur->names[id] == NULL)
+    cur = NULL;
+  if (cur == NULL)
+    for (cur = info->names; cur != NULL && (cur->lang & 0xf) != 0x09;
+         cur = cur->next);
+  if (cur != NULL && cur->names[id] == NULL)
+    cur = NULL;
+  if (cur == NULL)
+    for (cur = info->names; cur != NULL && !is_ascii (cur->names[id]);
+         cur = cur->next);
+  if (cur == NULL)
+    for (cur = info->names; cur != NULL && cur->names[id] == NULL;
+         cur = cur->next);
+  if (cur == NULL)
+    return NULL;
+  ret = xstrdup_or_null (cur->names[id]);
+  return ret;
 }
+
+//static char *
+//find_lang_entry (SCM name_table, int name_id)
+//{
+//  SCM string = scm_call_2 (scm_c_public_ref ("sortsmill",
+//                                             "name-table:font-name-entry-english-preferred"),
+//                           name_table, scm_from_int (name_id));
+//  return (scm_is_true (string)) ? scm_to_utf8_stringn (string, NULL) : NULL;
+//}
 
 /////
 ///// FIXME FIXME FIXME: Support name table format 1.
@@ -2266,6 +2268,7 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
   int i, cnt, tableoff;
   int platform, specific, language, name, str_len, stroff;
 
+#if 0 // DISABLED FOR NOW.
   SCM name_table_and_errors = scm_call_2 (scm_c_public_ref ("sortsmill",
                                                             "name-table:read-from-sfnt-at-offset"),
                                           scm_from_int (fileno (ttf)),
@@ -2279,6 +2282,13 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
                                        name_table);
 
   info->name_table = prepped_name_table;
+#else
+  // Use only the old name table implementation, for now, by cleverly
+  // setting some variables.
+  info->name_table = SCM_UNDEFINED;
+  struct ttfinfo *prepped_name_table = info;
+  FindLangEntry_t *find_lang_entry = FindLangEntry;
+#endif
 
 #if 0
   // FIXME: Temporary code for activation during name table reimplementation.
@@ -2320,11 +2330,13 @@ readttfcopyrights (FILE *ttf, struct ttfinfo *info)
         }
     }
 
+#if 0 // What the heck was I doing here?
   info->bad_ps_fontname =
     scm_is_true (scm_call_1
                  (scm_c_public_ref
-                  ("sortsmill", "name-table-error:bad-postcript-name?"),
+                  ("sortsmill", "name-table-error:bad-postscript-name?"),
                   errors));
+#endif
 
   if (info->copyright == NULL)
     info->copyright = find_lang_entry (prepped_name_table, ttf_copyright);

@@ -42,8 +42,11 @@
   (put 'library 'scheme-indent-function 1)
   (put 'eval-when 'scheme-indent-function 1)
   (put 'lambda* 'scheme-indent-function 1)
+  (put 'stream-lambda 'scheme-indent-function 1)
+  (put 'stream-of 'scheme-indent-function 1)
   (put 'rec 'scheme-indent-function 1)
   (put 'sxml-match 'scheme-indent-function 1)
+  (put 'guard 'scheme-indent-function 1)
   )
 
 (provide 'sortsmill-scheme)
