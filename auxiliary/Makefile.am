@@ -1,4 +1,5 @@
-# Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013, 2014 Khaled Hosny and Barry Schwartz
+#
 # This file is part of the Sorts Mill Tools.
 # 
 # Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -136,10 +137,6 @@ if HAVE_PYTHON_API
 dist_libsortsmill_aux_la_SOURCES += scm_python.c
 dist_libsortsmill_aux_la_SOURCES += guile_python.c
 endif HAVE_PYTHON_API
-
-# Maps of Guile SCM objects, implemented with <sortsmill/rb.h>.
-# FIXME: Move this to Sorts Mill Core Guile.
-dist_libsortsmill_aux_la_SOURCES += guile_containers_rbmap.c
 
 # Miscellaneous C interface to Guile and Guile extensions.
 # FIXME: Move some of these to Sorts Mill Core Guile.

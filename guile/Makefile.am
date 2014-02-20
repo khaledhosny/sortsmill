@@ -222,13 +222,6 @@ sortsmill/containers.scm: $(CONTAINERS_REEXPORTED_SCM_FILES)
 	$(AM_V_at)mv $@-tmp $@
 
 
-# (sortsmill containers rbmap)
-
-DIST_SCM_FILES += sortsmill/containers/rbmap.scm
-GO_FILES += sortsmill/containers/rbmap.go
-CONTAINERS_REEXPORTED_SCM_FILES += sortsmill/containers/rbmap.scm
-
-
 # (sortsmill containers rnrs-hashtable)
 
 DIST_SCM_FILES += sortsmill/containers/rnrs-hashtable.scm

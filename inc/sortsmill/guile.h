@@ -21,7 +21,6 @@
 
 #include <sortsmill/guile/core.h>
 #include <sortsmill/guile/arrays.h>
-#include <sortsmill/guile/containers.h>
 #include <sortsmill/guile/copy_with_strides.h>
 #include <sortsmill/guile/editor.h>
 #include <sortsmill/guile/fonts.h>

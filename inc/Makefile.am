@@ -1,6 +1,7 @@
 # -*- tab-width: 4 -*-
 
-# Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013, 2014 Khaled Hosny and Barry Schwartz
+#
 # This file is part of the Sorts Mill Tools.
 # 
 # Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -151,9 +152,6 @@ nobase_include_HEADERS += sortsmill/guile/iconv.h
 nobase_include_HEADERS += sortsmill/guile/arrays.h
 nobase_include_HEADERS += sortsmill/guile/fonts.h
 nobase_include_HEADERS += sortsmill/guile/wrap.h
-
-nobase_include_HEADERS += sortsmill/guile/containers.h
-nobase_include_HEADERS += sortsmill/guile/containers/rbmap.h
 
 nobase_include_HEADERS += sortsmill/guile/editor.h
 nobase_include_HEADERS += sortsmill/guile/editor/main_loop.h

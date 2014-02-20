@@ -1,4 +1,5 @@
-// Copyright (C) 2013 Khaled Hosny and Barry Schwartz
+// Copyright (C) 2013, 2014 Khaled Hosny and Barry Schwartz
+//
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -49,7 +50,7 @@
 #include <real_types.h>
 #include <iconv.h>
 #include <sortsmill/nearness.h>
-#include <sortsmill/guile/containers.h>
+#include <sortsmill/guile/core.h>
 #include <assert.h>
 
 #define CHR(ch1,ch2,ch3,ch4) (((ch1)<<24)|((ch2)<<16)|((ch3)<<8)|(ch4))
