@@ -47,6 +47,10 @@
   (put 'rec 'scheme-indent-function 1)
   (put 'sxml-match 'scheme-indent-function 1)
   (put 'guard 'scheme-indent-function 1)
+  (put 'let-optional 'scheme-indent-function 1)
+  (put 'let-optional* 'scheme-indent-function 1)
+  (put 'let-keywords 'scheme-indent-function 2)
+  (put 'let-keywords* 'scheme-indent-function 2)
   )
 
 (provide 'sortsmill-scheme)
