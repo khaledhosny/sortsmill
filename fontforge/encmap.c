@@ -93,7 +93,7 @@ add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
       SCM scm_enc = scm_from_ssize_t (enc);
       SCM key = scm_from_ssize_t (gid);
 
-      SCM value = scm_rbmaps_ref (map->_gid_to_enc, key, SCM_BOOL_F);
+      SCM value = scm_rbmapssz_ref (map->_gid_to_enc, key, SCM_BOOL_F);
 
       SCM new_value;
       if (scm_is_false (value))
@@ -106,7 +106,7 @@ add_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
         new_value = ((scm_to_ssize_t (value) != enc) ?
                      scm_list_2 (value, scm_enc) : value);
 
-      scm_rbmaps_set_x (map->_gid_to_enc, key, new_value);
+      scm_rbmapssz_set_x (map->_gid_to_enc, key, new_value);
     }
 }
 
@@ -116,7 +116,7 @@ remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
   SCM scm_enc = scm_from_ssize_t (enc);
   SCM key = scm_from_ssize_t (gid);
 
-  SCM value = scm_rbmaps_ref (map->_gid_to_enc, key, SCM_BOOL_F);
+  SCM value = scm_rbmapssz_ref (map->_gid_to_enc, key, SCM_BOOL_F);
 
   if (scm_is_true (value))
     {
@@ -137,10 +137,10 @@ remove_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
           assert (!scm_is_null (lst));
 
           SCM new_value = ((scm_is_null (SCM_CDR (lst))) ? SCM_CAR (lst) : lst);
-          scm_rbmaps_set_x (map->_gid_to_enc, key, new_value);
+          scm_rbmapssz_set_x (map->_gid_to_enc, key, new_value);
         }
       else if (scm_to_ssize_t (value) == enc)
-        scm_rbmaps_delete_x (map->_gid_to_enc, key);
+        scm_rbmapssz_delete_x (map->_gid_to_enc, key);
     }
 }
 

@@ -1164,13 +1164,13 @@ typedef struct encmap
 typedef struct
 {
   SCM _enc_to_gid;
-  scm_t_rbmaps_iter _iter;
+  scm_t_rbmapssz_iter _iter;
 } enc_iter_t;
 
 typedef struct
 {
   SCM _gid_to_enc;
-  scm_t_rbmaps_iter _iter;
+  scm_t_rbmapssz_iter _iter;
 } gid_iter_t;
 
 inline void make_enc_to_gid (EncMap *map);
@@ -1221,7 +1221,7 @@ make_enc_to_gid (EncMap *map)
   // FIXME: Eliminate the need to protect these objects, or at least
   // keep track of the protected objects for release when we leave the
   // GUI, etc. Likely there are minor memory leaks.
-  map->_enc_to_gid = scm_gc_protect_object (scm_make_rbmaps ());
+  map->_enc_to_gid = scm_gc_protect_object (scm_make_rbmapssz ());
 }
 
 inline void
@@ -1242,22 +1242,22 @@ set_enc_to_gid (EncMap *map, ssize_t enc, ssize_t gid)
 {
   SCM key = scm_from_ssize_t (enc);
   if (gid == -1)
-    scm_rbmaps_delete_x (map->_enc_to_gid, key);
+    scm_rbmapssz_delete_x (map->_enc_to_gid, key);
   else
-    scm_rbmaps_set_x (map->_enc_to_gid, key, scm_from_ssize_t (gid));
+    scm_rbmapssz_set_x (map->_enc_to_gid, key, scm_from_ssize_t (gid));
 }
 
 inline void
 remove_enc_to_gid (EncMap *map, ssize_t enc)
 {
-  scm_rbmaps_delete_x (map->_enc_to_gid, scm_from_ssize_t (enc));
+  scm_rbmapssz_delete_x (map->_enc_to_gid, scm_from_ssize_t (enc));
 }
 
 inline ssize_t
 enc_to_gid (EncMap *map, ssize_t enc)
 {
   return
-    scm_to_ssize_t (scm_rbmaps_ref
+    scm_to_ssize_t (scm_rbmapssz_ref
                     (map->_enc_to_gid, scm_from_ssize_t (enc),
                      scm_from_int (-1)));
 }
@@ -1273,7 +1273,7 @@ enc_iter (EncMap *map)
 {
   enc_iter_t iter = {
     ._enc_to_gid = map->_enc_to_gid,
-    ._iter = scm_c_rbmaps_first (map->_enc_to_gid)
+    ._iter = scm_c_rbmapssz_first (map->_enc_to_gid)
   };
   return iter;
 }
@@ -1283,7 +1283,7 @@ enc_iter_last (EncMap *map)
 {
   enc_iter_t iter = {
     ._enc_to_gid = map->_enc_to_gid,
-    ._iter = scm_c_rbmaps_last (map->_enc_to_gid)
+    ._iter = scm_c_rbmapssz_last (map->_enc_to_gid)
   };
   return iter;
 }
@@ -1297,27 +1297,27 @@ enc_done (enc_iter_t iter)
 inline enc_iter_t
 enc_next (enc_iter_t iter)
 {
-  iter._iter = scm_c_rbmaps_next (iter._enc_to_gid, iter._iter);
+  iter._iter = scm_c_rbmapssz_next (iter._enc_to_gid, iter._iter);
   return iter;
 }
 
 inline enc_iter_t
 enc_prev (enc_iter_t iter)
 {
-  iter._iter = scm_c_rbmaps_prev (iter._enc_to_gid, iter._iter);
+  iter._iter = scm_c_rbmapssz_prev (iter._enc_to_gid, iter._iter);
   return iter;
 }
 
 inline ssize_t
 enc_enc (enc_iter_t iter)
 {
-  return (ssize_t) scm_rbmaps_iter_key (iter._iter);
+  return (ssize_t) scm_rbmapssz_iter_key (iter._iter);
 }
 
 inline ssize_t
 enc_gid (enc_iter_t iter)
 {
-  return scm_to_ssize_t (scm_rbmaps_iter_value (iter._iter));
+  return scm_to_ssize_t (scm_rbmapssz_iter_value (iter._iter));
 }
 
 inline void
@@ -1326,7 +1326,7 @@ make_gid_to_enc (EncMap *map)
   // FIXME: Eliminate the need to protect these objects, or at least
   // keep track of the protected objects for release when we leave the
   // GUI, etc. Likely there are minor memory leaks.
-  map->_gid_to_enc = scm_gc_protect_object (scm_make_rbmaps ());
+  map->_gid_to_enc = scm_gc_protect_object (scm_make_rbmapssz ());
 }
 
 inline void
@@ -1347,30 +1347,30 @@ set_gid_to_enc (EncMap *map, ssize_t gid, ssize_t enc)
 {
   SCM key = scm_from_ssize_t (gid);
   if (enc == -1)
-    scm_rbmaps_delete_x (map->_gid_to_enc, key);
+    scm_rbmapssz_delete_x (map->_gid_to_enc, key);
   else
-    scm_rbmaps_set_x (map->_gid_to_enc, key, scm_from_ssize_t (enc));
+    scm_rbmapssz_set_x (map->_gid_to_enc, key, scm_from_ssize_t (enc));
 }
 
 inline void
 remove_all_gid_to_enc (EncMap *map, ssize_t gid)
 {
-  scm_rbmaps_delete_x (map->_gid_to_enc, scm_from_ssize_t (gid));
+  scm_rbmapssz_delete_x (map->_gid_to_enc, scm_from_ssize_t (gid));
 }
 
 inline ssize_t
 gid_to_enc (EncMap *map, ssize_t gid)
 {
-  SCM value = scm_rbmaps_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
-                              scm_from_int (-1));
+  SCM value = scm_rbmapssz_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
+                                scm_from_int (-1));
   return scm_to_ssize_t ((scm_is_pair (value)) ? SCM_CAR (value) : value);
 }
 
 inline SCM
 gid_to_enc_list (EncMap *map, ssize_t gid)
 {
-  SCM value = scm_rbmaps_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
-                              scm_from_int (-1));
+  SCM value = scm_rbmapssz_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
+                                scm_from_int (-1));
   SCM lst;
   if (scm_is_pair (value))
     lst = value;
@@ -1384,8 +1384,8 @@ gid_to_enc_list (EncMap *map, ssize_t gid)
 inline bool
 gid_to_enc_is_set (EncMap *map, ssize_t gid)
 {
-  SCM value = scm_rbmaps_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
-                              SCM_BOOL_F);
+  SCM value = scm_rbmapssz_ref (map->_gid_to_enc, scm_from_ssize_t (gid),
+                                SCM_BOOL_F);
   return scm_is_true (value);
 }
 
@@ -1394,7 +1394,7 @@ gid_iter (EncMap *map)
 {
   gid_iter_t iter = {
     ._gid_to_enc = map->_gid_to_enc,
-    ._iter = scm_c_rbmaps_first (map->_gid_to_enc)
+    ._iter = scm_c_rbmapssz_first (map->_gid_to_enc)
   };
   return iter;
 }
@@ -1404,7 +1404,7 @@ gid_iter_last (EncMap *map)
 {
   gid_iter_t iter = {
     ._gid_to_enc = map->_gid_to_enc,
-    ._iter = scm_c_rbmaps_last (map->_gid_to_enc)
+    ._iter = scm_c_rbmapssz_last (map->_gid_to_enc)
   };
   return iter;
 }
@@ -1418,33 +1418,33 @@ gid_done (gid_iter_t iter)
 inline gid_iter_t
 gid_next (gid_iter_t iter)
 {
-  iter._iter = scm_c_rbmaps_next (iter._gid_to_enc, iter._iter);
+  iter._iter = scm_c_rbmapssz_next (iter._gid_to_enc, iter._iter);
   return iter;
 }
 
 inline gid_iter_t
 gid_prev (gid_iter_t iter)
 {
-  iter._iter = scm_c_rbmaps_prev (iter._gid_to_enc, iter._iter);
+  iter._iter = scm_c_rbmapssz_prev (iter._gid_to_enc, iter._iter);
   return iter;
 }
 
 inline ssize_t
 gid_gid (gid_iter_t iter)
 {
-  return (ssize_t) scm_rbmaps_iter_key (iter._iter);
+  return (ssize_t) scm_rbmapssz_iter_key (iter._iter);
 }
 
 inline ssize_t
 gid_enc (gid_iter_t iter)
 {
-  return scm_to_ssize_t (scm_rbmaps_iter_value (iter._iter));
+  return scm_to_ssize_t (scm_rbmapssz_iter_value (iter._iter));
 }
 
 inline SCM
 gid_enc_list (gid_iter_t iter)
 {
-  SCM value = scm_rbmaps_iter_value (iter._iter);
+  SCM value = scm_rbmapssz_iter_value (iter._iter);
   SCM lst;
   if (scm_is_pair (value))
     lst = value;
