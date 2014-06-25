@@ -56,116 +56,158 @@
 
 /* the initial space is so that these guys will come first in ordered error */
 /*  lists in the file chooser */
-static uint32_t err401[] = { ' ','U','n','a','u','t','h','o','r','i','z','e','d', '\0' };
-static uint32_t err403[] = { ' ','F','o','r','b','i','d','d','e','n', '\0' };
-static uint32_t err404[] = { ' ','N','o','t',' ','F','o','u','n','d', '\0' };
-static uint32_t err405[] = { ' ','M','e','t','h','o','d',' ','N','o','t',' ','A','l','l','o','w','e','d', '\0' };
-static uint32_t err406[] = { ' ','N','o','t',' ','A','c','c','e','p','t','a','b','l','e', '\0' };
-static uint32_t err409[] = { ' ','C','o','n','f','l','i','c','t', '\0' };
-static uint32_t err412[] = { ' ','P','r','e','c','o','n','d','i','t','i','o','n',' ','F','a','i','l','e','d', '\0' };
-static uint32_t err414[] = { ' ','R','e','q','u','e','s','t','-','U','R','I',' ','T','o','o',' ','L','o','n','g', '\0' };
-static uint32_t err500[] = { ' ','I','n','t','e','r','n','a','l',' ','S','e','r','v','e','r',' ','E','r','r','o','r', '\0' };
+static uint32_t err401[] =
+  { ' ', 'U', 'n', 'a', 'u', 't', 'h', 'o', 'r', 'i', 'z', 'e', 'd', '\0' };
+static uint32_t err403[] =
+  { ' ', 'F', 'o', 'r', 'b', 'i', 'd', 'd', 'e', 'n', '\0' };
+static uint32_t err404[] =
+  { ' ', 'N', 'o', 't', ' ', 'F', 'o', 'u', 'n', 'd', '\0' };
+static uint32_t err405[] =
+  { ' ', 'M', 'e', 't', 'h', 'o', 'd', ' ', 'N', 'o', 't', ' ', 'A', 'l', 'l',
+'o', 'w', 'e', 'd', '\0' };
+static uint32_t err406[] =
+  { ' ', 'N', 'o', 't', ' ', 'A', 'c', 'c', 'e', 'p', 't', 'a', 'b', 'l', 'e',
+'\0' };
+static uint32_t err409[] =
+  { ' ', 'C', 'o', 'n', 'f', 'l', 'i', 'c', 't', '\0' };
+static uint32_t err412[] =
+  { ' ', 'P', 'r', 'e', 'c', 'o', 'n', 'd', 'i', 't', 'i', 'o', 'n', ' ', 'F',
+'a', 'i', 'l', 'e', 'd', '\0' };
+static uint32_t err414[] =
+  { ' ', 'R', 'e', 'q', 'u', 'e', 's', 't', '-', 'U', 'R', 'I', ' ', 'T', 'o',
+'o', ' ', 'L', 'o', 'n', 'g', '\0' };
+static uint32_t err500[] =
+  { ' ', 'I', 'n', 't', 'e', 'r', 'n', 'a', 'l', ' ', 'S', 'e', 'r', 'v', 'e',
+'r', ' ', 'E', 'r', 'r', 'o', 'r', '\0' };
 
-static void GIOReporterror(GIOControl *gc, int errn) {
+static void
+GIOReporterror (GIOControl * gc, int errn)
+{
 
 #if 1
-    uc_strncpy(gc->status,strerror(errn),sizeof(gc->status)/sizeof(uint32_t));
+  uc_strncpy (gc->status, strerror (errn),
+              sizeof (gc->status) / sizeof (uint32_t));
 #else
-    if ( errn<sys_nerr )
-	uc_strncpy(gc->status,sys_errlist[errn],sizeof(gc->status)/sizeof(uint32_t));
-    else
-	gc->status[0] = '\0';
+  if (errn < sys_nerr)
+    uc_strncpy (gc->status, sys_errlist[errn],
+                sizeof (gc->status) / sizeof (uint32_t));
+  else
+    gc->status[0] = '\0';
 #endif
 
-    if ( errn==ENOENT || (gc->gf!=gf_dir && errn==ENOTDIR) ) {
-	gc->return_code = 404;
-	gc->error = err404;
-    } else if ( errn==EACCES || errn==EPERM ) {
-	gc->return_code = 401;
-	gc->error = err401;
-    } else if ( errn==EROFS || errn==ENOTEMPTY || errn==EBUSY ) {
-	gc->return_code = 403;
-	gc->error = err403;
-    } else if ( errn==ENOTDIR || errn==EISDIR ) {
-	gc->return_code = 405;
-	gc->error = err405;
-    } else if ( errn==EINVAL ) {
-	gc->return_code = 406;
-	gc->error = err406;
-    } else if ( errn==EEXIST ) {
-	gc->return_code = 409;
-	gc->error = err409;
-    } else if ( errn==ENOSPC || errn==EXDEV || errn==EMLINK) {
-	gc->return_code = 412;
-	gc->error = err412;
-    } else if ( errn==ENAMETOOLONG ) {
-	gc->return_code = 414;
-	gc->error = err414;
-    } else {
-	gc->return_code = 500;
-	gc->error = err500;
+  if (errn == ENOENT || (gc->gf != gf_dir && errn == ENOTDIR))
+    {
+      gc->return_code = 404;
+      gc->error = err404;
     }
-    gc->done = true;
-    (gc->receiveerror)(gc);
+  else if (errn == EACCES || errn == EPERM)
+    {
+      gc->return_code = 401;
+      gc->error = err401;
+    }
+  else if (errn == EROFS || errn == ENOTEMPTY || errn == EBUSY)
+    {
+      gc->return_code = 403;
+      gc->error = err403;
+    }
+  else if (errn == ENOTDIR || errn == EISDIR)
+    {
+      gc->return_code = 405;
+      gc->error = err405;
+    }
+  else if (errn == EINVAL)
+    {
+      gc->return_code = 406;
+      gc->error = err406;
+    }
+  else if (errn == EEXIST)
+    {
+      gc->return_code = 409;
+      gc->error = err409;
+    }
+  else if (errn == ENOSPC || errn == EXDEV || errn == EMLINK)
+    {
+      gc->return_code = 412;
+      gc->error = err412;
+    }
+  else if (errn == ENAMETOOLONG)
+    {
+      gc->return_code = 414;
+      gc->error = err414;
+    }
+  else
+    {
+      gc->return_code = 500;
+      gc->error = err500;
+    }
+  gc->done = true;
+  (gc->receiveerror) (gc);
 }
 
-static void _gio_file_dir(GIOControl *gc,char *path) {
-    DIR *dir;
-    struct dirent *ent;
-    GDirEntry *head=NULL, *last=NULL, *cur;
-    char *buffer, *ept;
-    struct stat statb;
+static void
+_gio_file_dir (GIOControl * gc, char *path)
+{
+  DIR *dir;
+  struct dirent *ent;
+  GDirEntry *head = NULL, *last = NULL, *cur;
+  char *buffer, *ept;
+  struct stat statb;
 
-    dir = opendir(path);
-    if ( dir==NULL ) {
-	GIOReporterror(gc,errno);
-return;
+  dir = opendir (path);
+  if (dir == NULL)
+    {
+      GIOReporterror (gc, errno);
+      return;
     }
 
-    buffer = (char *) xmalloc(strlen(path)+FILENAME_MAX+3);
-    strcpy(buffer,path);
-    ept = buffer+strlen(buffer);
-    if ( ept[-1]!='/' )
-	*ept++ = '/';
+  buffer = (char *) xmalloc (strlen (path) + FILENAME_MAX + 3);
+  strcpy (buffer, path);
+  ept = buffer + strlen (buffer);
+  if (ept[-1] != '/')
+    *ept++ = '/';
 
-    while (( ent = readdir(dir))!=NULL ) {
-	cur = xcalloc(1,sizeof(GDirEntry));
-	cur->name = x_u32_strconv_from_locale (ent->d_name);
-	strcpy(ept,ent->d_name);
-	stat(buffer,&statb);
-	cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
-	cur->size    = statb.st_size;
-	cur->mode    = statb.st_mode;
-	cur->modtime = statb.st_mtime;
-	cur->isdir   = S_ISDIR(cur->mode);
-	cur->isexe   = !cur->isdir && (cur->mode & 0100);
-	cur->mimetype= x_u8_strdup_or_null (GIOGetMimeType (buffer));
-	if ( last==NULL )
-	    head = last = cur;
-	else {
-	    last->next = cur;
-	    last = cur;
-	}
+  while ((ent = readdir (dir)) != NULL)
+    {
+      cur = xcalloc (1, sizeof (GDirEntry));
+      cur->name = x_u32_strconv_from_locale (ent->d_name);
+      strcpy (ept, ent->d_name);
+      stat (buffer, &statb);
+      cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime =
+        true;
+      cur->size = statb.st_size;
+      cur->mode = statb.st_mode;
+      cur->modtime = statb.st_mtime;
+      cur->isdir = S_ISDIR (cur->mode);
+      cur->isexe = !cur->isdir && (cur->mode & 0100);
+      cur->mimetype = x_u8_strdup_or_null (GIOGetMimeType (buffer));
+      if (last == NULL)
+        head = last = cur;
+      else
+        {
+          last->next = cur;
+          last = cur;
+        }
     }
-    closedir(dir);
-    free(buffer);
-    gc->iodata = head;
-    gc->direntrydata = true;
-    gc->return_code = 200;
-    gc->done = true;
-    (gc->receivedata)(gc);
+  closedir (dir);
+  free (buffer);
+  gc->iodata = head;
+  gc->direntrydata = true;
+  gc->return_code = 200;
+  gc->done = true;
+  (gc->receivedata) (gc);
 }
 
-static void _gio_file_statfile(GIOControl *gc,char *path)
+static void
+_gio_file_statfile (GIOControl * gc, char *path)
 {
   GDirEntry *cur;
   struct stat statb;
 
-  if ( stat(path,&statb)==-1 )
-    GIOReporterror(gc,errno);
+  if (stat (path, &statb) == -1)
+    GIOReporterror (gc, errno);
   else
     {
-      cur = xcalloc(1,sizeof(GDirEntry));
+      cur = xcalloc (1, sizeof (GDirEntry));
       errno = 0;
 
       // FIXME: This is likely wrong, but we do _not_ want to allow
@@ -173,74 +215,88 @@ static void _gio_file_statfile(GIOControl *gc,char *path)
       // If UTF-8, why is it passed directly to 'stat', above? Is it
       // provably valid?
       if (u8_valid (path))
-	{
-	  cur->name = x_u8_to_u32 (u8_GFileBaseName(path));
-	  cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
-	  cur->size    = statb.st_size;
-	  cur->mode    = statb.st_mode;
-	  cur->modtime = statb.st_mtime;
-	  cur->isdir   = S_ISDIR(cur->mode);
-	  cur->isexe   = !cur->isdir && (cur->mode & 0100);
-	  gc->iodata = cur;
-	  gc->direntrydata = true;
-	  gc->return_code = 200;
-	  gc->done = true;
-	  (gc->receivedata)(gc);
-	}
+        {
+          cur->name = x_u8_to_u32 (u8_GFileBaseName (path));
+          cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize =
+            cur->hastime = true;
+          cur->size = statb.st_size;
+          cur->mode = statb.st_mode;
+          cur->modtime = statb.st_mtime;
+          cur->isdir = S_ISDIR (cur->mode);
+          cur->isexe = !cur->isdir && (cur->mode & 0100);
+          gc->iodata = cur;
+          gc->direntrydata = true;
+          gc->return_code = 200;
+          gc->done = true;
+          (gc->receivedata) (gc);
+        }
       else
-	GIOReporterror(gc,errno);
+        GIOReporterror (gc, errno);
     }
 }
 
-static void _gio_file_mkdir(GIOControl *gc,char *path) {
-    if ( GFileMkDir(path)==-1 ) {
-	GIOReporterror(gc,errno);
-    } else {
-	gc->return_code = 201;
-	gc->done = true;
-	(gc->receivedata)(gc);
+static void
+_gio_file_mkdir (GIOControl * gc, char *path)
+{
+  if (GFileMkDir (path) == -1)
+    {
+      GIOReporterror (gc, errno);
+    }
+  else
+    {
+      gc->return_code = 201;
+      gc->done = true;
+      (gc->receivedata) (gc);
     }
 }
 
-void _GIO_localDispatch(GIOControl *gc) {
-    char *path = u2def_copy(gc->path);
-    char *topath;
+void
+_GIO_localDispatch (GIOControl * gc)
+{
+  char *path = u2def_copy (gc->path);
+  char *topath;
 
-    switch ( gc->gf ) {
-      case gf_dir:
-	_gio_file_dir(gc,path);
+  switch (gc->gf)
+    {
+    case gf_dir:
+      _gio_file_dir (gc, path);
       break;
-      case gf_statfile:
-	_gio_file_statfile(gc,path);
+    case gf_statfile:
+      _gio_file_statfile (gc, path);
       break;
-      case gf_mkdir:
-	_gio_file_mkdir(gc,path);
+    case gf_mkdir:
+      _gio_file_mkdir (gc, path);
       break;
-	free(topath);
+      free (topath);
       break;
     }
-    free(path);
+  free (path);
 }
 
 /* pathname preceded by "file://" just strip off the "file://" and treat as a */
 /*  filename */
-void *_GIO_fileDispatch(GIOControl *gc) {
-    char *username, *password, *host, *path;
-    int port;
+void *
+_GIO_fileDispatch (GIOControl * gc)
+{
+  char *username, *password, *host, *path;
+  int port;
 
-    path = GIODecomposeURL(gc->path,&host,&port,&username,&password);
-    free(host); free(username); free(password);
-    switch ( gc->gf ) {
-      case gf_dir:
-	_gio_file_dir(gc,path);
+  path = GIODecomposeURL (gc->path, &host, &port, &username, &password);
+  free (host);
+  free (username);
+  free (password);
+  switch (gc->gf)
+    {
+    case gf_dir:
+      _gio_file_dir (gc, path);
       break;
-      case gf_statfile:
-	_gio_file_statfile(gc,path);
+    case gf_statfile:
+      _gio_file_statfile (gc, path);
       break;
-      case gf_mkdir:
-	_gio_file_mkdir(gc,path);
+    case gf_mkdir:
+      _gio_file_mkdir (gc, path);
       break;
     }
-    free(path);
-return( NULL );
+  free (path);
+  return (NULL);
 }

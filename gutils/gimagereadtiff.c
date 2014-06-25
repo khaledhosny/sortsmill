@@ -44,7 +44,7 @@
 
 #ifdef _NO_LIBTIFF
 
-static int a_file_must_define_something=0;	/* ANSI says so */
+static int a_file_must_define_something = 0;    /* ANSI says so */
 
 #else
 
@@ -61,42 +61,49 @@ static int a_file_must_define_something=0;	/* ANSI says so */
 
 #undef uint32
 
-GImage *GImageReadTiff(char *filename) {
-    TIFF* tif;
-    uint32_t w, h, i,j;
-    uint32_t *ipt, *fpt;
-    size_t npixels;
-    uint32* raster;
-    GImage *ret=NULL;
-    struct _GImage *base;
+GImage *
+GImageReadTiff (char *filename)
+{
+  TIFF *tif;
+  uint32_t w, h, i, j;
+  uint32_t *ipt, *fpt;
+  size_t npixels;
+  uint32 *raster;
+  GImage *ret = NULL;
+  struct _GImage *base;
 
-    tif = TIFFOpen(filename, "r");
+  tif = TIFFOpen (filename, "r");
 
-    if (tif==NULL )
-return( ret );
+  if (tif == NULL)
+    return (ret);
 
-    TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
-    TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
-    npixels = w * h;
-    raster = (uint32_t*) xmalloc(szmax(1, npixels * sizeof (uint32_t)));
-    if (raster != NULL) {
-	if (TIFFReadRGBAImage(tif, w, h, raster, 0)) {
-	    ret = GImageCreate(it_true,w,h);
-	    if ( ret!=NULL ) {
-		base = ret->u.image;
-		for ( i=0; i<h; ++i ) {
-		    ipt = (uint32_t *) (base->data+i*base->bytes_per_line);
-		    fpt = raster+(h-1-i)*w;
-		    for ( j=0; j<w; ++j )
-			*ipt++ = COLOR_CREATE(
-				TIFFGetR(fpt[j]), TIFFGetG(fpt[j]), TIFFGetB(fpt[j]));
-		}
-	    }
-	} 
-	free(raster);
+  TIFFGetField (tif, TIFFTAG_IMAGEWIDTH, &w);
+  TIFFGetField (tif, TIFFTAG_IMAGELENGTH, &h);
+  npixels = w * h;
+  raster = (uint32_t *) xmalloc (szmax (1, npixels * sizeof (uint32_t)));
+  if (raster != NULL)
+    {
+      if (TIFFReadRGBAImage (tif, w, h, raster, 0))
+        {
+          ret = GImageCreate (it_true, w, h);
+          if (ret != NULL)
+            {
+              base = ret->u.image;
+              for (i = 0; i < h; ++i)
+                {
+                  ipt = (uint32_t *) (base->data + i * base->bytes_per_line);
+                  fpt = raster + (h - 1 - i) * w;
+                  for (j = 0; j < w; ++j)
+                    *ipt++ =
+                      COLOR_CREATE (TIFFGetR (fpt[j]), TIFFGetG (fpt[j]),
+                                    TIFFGetB (fpt[j]));
+                }
+            }
+        }
+      free (raster);
     }
-    TIFFClose(tif);
-return( ret );
+  TIFFClose (tif);
+  return (ret);
 }
 
 #endif

@@ -44,54 +44,62 @@
 
 #include "gimage.h"
 
-GImage *GImageReadXbm(char * filename) {
-    FILE *file;
-    int width, height;
-    GImage *gi = NULL;
-    struct _GImage *base;
-    int i,j,k,pixels,val,val2, ch;
-    uint8_t *scanline;
+GImage *
+GImageReadXbm (char *filename)
+{
+  FILE *file;
+  int width, height;
+  GImage *gi = NULL;
+  struct _GImage *base;
+  int i, j, k, pixels, val, val2, ch;
+  uint8_t *scanline;
 
-    file = fopen(filename,"r");
-    if ( file==NULL )
-return NULL;
-    if ( fscanf(file, "#define %*s %d\n", &width )!=1 )
-	goto bad;
-    if ( fscanf(file, "#define %*s %d\n", &height )!=1 )
-	goto bad;
-    if ( (ch = getc(file))=='#' ) {
-	fscanf(file, "define %*s %*d\n" );	/* x hotspot */
-	fscanf(file, "#define %*s %*d\n" );	/* y hotspot */
-    } else
-	ungetc(ch,file);
-    fscanf(file,"static ");
-    ungetc(ch=fgetc(file),file);
-    if ( ch=='u' )
-	fscanf(file,"unsigned ");
-    ch = ch;		/* Compiler bug work-arround */
-    fscanf(file,"char %*s = {");
-    gi = GImageCreate(it_mono,width,height);
-    base = gi->u.image;
-    for ( i=0; i<height; ++i ) {
-	scanline = base->data + i*base->bytes_per_line;
-	for ( j=0; j<base->bytes_per_line; ++j ) {
-	    fscanf(file," 0x%x",(unsigned *) &pixels);
-	    val = pixels; val2=0;
-	    for ( k=0; k<8 ; ++k ) {
-		if ( (val&(1<<k)) )
-		    val2 |= (0x80>>k);
-	    }
-	    *scanline++ = val2^0xff;		/* I default black the other way */
-	    fscanf(file,",");
-	}
+  file = fopen (filename, "r");
+  if (file == NULL)
+    return NULL;
+  if (fscanf (file, "#define %*s %d\n", &width) != 1)
+    goto bad;
+  if (fscanf (file, "#define %*s %d\n", &height) != 1)
+    goto bad;
+  if ((ch = getc (file)) == '#')
+    {
+      fscanf (file, "define %*s %*d\n");        /* x hotspot */
+      fscanf (file, "#define %*s %*d\n");       /* y hotspot */
     }
-    fclose(file);
-return(gi);
+  else
+    ungetc (ch, file);
+  fscanf (file, "static ");
+  ungetc (ch = fgetc (file), file);
+  if (ch == 'u')
+    fscanf (file, "unsigned ");
+  ch = ch;                      /* Compiler bug work-arround */
+  fscanf (file, "char %*s = {");
+  gi = GImageCreate (it_mono, width, height);
+  base = gi->u.image;
+  for (i = 0; i < height; ++i)
+    {
+      scanline = base->data + i * base->bytes_per_line;
+      for (j = 0; j < base->bytes_per_line; ++j)
+        {
+          fscanf (file, " 0x%x", (unsigned *) &pixels);
+          val = pixels;
+          val2 = 0;
+          for (k = 0; k < 8; ++k)
+            {
+              if ((val & (1 << k)))
+                val2 |= (0x80 >> k);
+            }
+          *scanline++ = val2 ^ 0xff;    /* I default black the other way */
+          fscanf (file, ",");
+        }
+    }
+  fclose (file);
+  return (gi);
 
 bad:
-    if ( gi!=NULL )
-	GImageDestroy(gi);
-    if ( file!=NULL )
-	fclose(file);
-return(NULL);
+  if (gi != NULL)
+    GImageDestroy (gi);
+  if (file != NULL)
+    fclose (file);
+  return (NULL);
 }
