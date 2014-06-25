@@ -96,4 +96,10 @@
 #define D_GIF_OPEN_FILE_NAME(filename) DGifOpenFileName (filename)
 #endif
 
+#if D_GIF_CLOSE_FILE_ERROR_RETURN
+#define D_GIF_CLOSE_FILE(filename) DGifCloseFile (filename, NULL)
+#else
+#define D_GIF_CLOSE_FILE(filename) DGifCloseFile (filename)
+#endif
+
 #endif // _CONFIG_EXTRA_H

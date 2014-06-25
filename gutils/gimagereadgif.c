@@ -137,7 +137,7 @@ GImageReadGif (char *filename)
 
   if (DGifSlurp (gif) == GIF_ERROR)
     {
-      DGifCloseFile (gif);
+      D_GIF_CLOSE_FILE (gif);
       fprintf (stderr, "Bad gif file %s\n", filename);
       return (NULL);
     }
@@ -149,7 +149,7 @@ GImageReadGif (char *filename)
     ret = images[0];
   else
     ret = GImageCreateAnimation (images, gif->ImageCount);
-  DGifCloseFile (gif);
+  D_GIF_CLOSE_FILE (gif);
   free (images);
   return (ret);
 }
