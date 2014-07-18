@@ -33,12 +33,36 @@
   (put 'pydefun 'scheme-indent-function 1)
   (put 'pydefun-in 'scheme-indent-function 1)
   (put 'lambda-scm-procedure 'scheme-indent-function 1)
+  (put 'lambda*-scm-procedure 'scheme-indent-function 1)
   (put 'lambda/kwargs 'scheme-indent-function 1)
   (put 'call-with-uninm-names-db 'scheme-indent-function 1)
   (put 'call-with-po-file 'scheme-indent-function 1)
 
-  ;;; FIXME: Maybe we can let these be handled by Scheme mode itself,
-  ;;; someday.
+  ;; SRFI-42.
+  ;;
+  ;; These syntax forms actually allow variable numbers of
+  ;; <qualifier>. Is there a simple way to deal with this in Emacs
+  ;; Lisp?
+  (put 'do-ec 'scheme-indent-function 1)
+  (put 'list-ec 'scheme-indent-function 1)
+  (put 'append-ec 'scheme-indent-function 1)
+  (put 'string-ec 'scheme-indent-function 1)
+  (put 'string-append-ec 'scheme-indent-function 1)
+  (put 'vector-ec 'scheme-indent-function 1)
+  (put 'vector-of-length-ec 'scheme-indent-function 2)
+  (put 'sum-ec 'scheme-indent-function 1)
+  (put 'product-ec 'scheme-indent-function 1)
+  (put 'min-ec 'scheme-indent-function 1)
+  (put 'max-ec 'scheme-indent-function 1)
+  (put 'any?-ec 'scheme-indent-function 1)
+  (put 'every?-ec 'scheme-indent-function 1)
+  (put 'first-ec 'scheme-indent-function 2)
+  (put 'last-ec 'scheme-indent-function 2)
+  (put 'fold-ec 'scheme-indent-function 2)
+  (put 'fold3-ec 'scheme-indent-function 2)
+
+  ;; FIXME: Maybe we can let these be handled by Scheme mode itself,
+  ;; someday.
   (put 'library 'scheme-indent-function 1)
   (put 'eval-when 'scheme-indent-function 1)
   (put 'lambda* 'scheme-indent-function 1)
