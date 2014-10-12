@@ -825,7 +825,7 @@ LineJoin (StrokeContext * c, int atbreak)
       was_neg = false;
       while (true)
         {
-          if (c->cur >= c->max)
+          if (c->cur + 10 >= c->max)
             {
               int extras = 400;
               int off = pp - c->all;
