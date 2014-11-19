@@ -913,7 +913,7 @@ NameUni2CID (struct cidmap *map, int uni, const char *name)
         if (alts->uni == uni)
           return alts->cid;
     }
-  else
+  else if (name != NULL)
     {
       for (i = 0; i < map->namemax; ++i)
         if (map->name[i] != NULL && strcmp (map->name[i], name) == 0)
