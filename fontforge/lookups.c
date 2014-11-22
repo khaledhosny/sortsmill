@@ -4805,6 +4805,7 @@ LookupUsedNested (SplineFont *sf, OTLookup *checkme)
                 }
             }
         }
+      otl = otl->next;
     }
   return false;
 }
