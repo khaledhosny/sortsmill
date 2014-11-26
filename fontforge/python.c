@@ -9831,7 +9831,8 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
                        && SCRightToLeft (sc))
                 off = temp.u.pair.vr[1].h_adv_off;
               else if (temp.u.pair.vr[0].v_adv_off == 0
-                       && temp.u.pair.vr[1].h_adv_off == 0)
+                       && temp.u.pair.vr[1].h_adv_off == 0
+                       && !SCRightToLeft (sc))
                 off = temp.u.pair.vr[0].h_adv_off;
             }
         }
