@@ -611,7 +611,7 @@ NameListByName (char *name)
 
   /* ΤεΧ is hard tp type e.g. from scripting, so accept TeX as alias */
   if (strcmp (name, "TeX Names") == 0)
-    name = xstrdup ("ΤεΧ Names");
+    name = "ΤεΧ Names";
 
   for (nl = &agl; nl != NULL; nl = nl->next)
     {
