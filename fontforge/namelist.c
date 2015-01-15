@@ -1098,40 +1098,34 @@ DoReplacements (struct bits *bits, int bc, char **_src, char *start)
 }
 
 static void
-ReplaceByHash (char **_src, struct glyphnamehash *hash)
+ReplaceByHash (char **src, struct glyphnamehash *hash)
 {
-  struct bits bits[40];
-  int bc, ch;
-  char *start, *end;
+  SplineChar *replacement;
+  char *token, *glyphname, *state;
+  char delim[] = " ";
+  char *ret = NULL;
 
-  start = *_src;
-  if (start == NULL)
+  if (*src == NULL)
     return;
-  while (*start == ' ')
-    ++start;
 
-  bc = 0;
-  for (; *start; start = end)
+  for (token = strtok_r (*src, delim, &state);
+       token != NULL;
+       token = strtok_r (NULL, delim, &state))
     {
-      if (bc >= 40)
-        {
-          start = DoReplacements (bits, bc, _src, start);
-          bc = 0;
-        }
-      for (end = start; *end != '\0' && *end != ' '; ++end);
-      ch = *end;
-      *end = '\0';
-      bits[bc].start = start;
-      bits[bc].end = end;
-      bits[bc].rpl = HashFind (hash, start);
-      if (bits[bc].rpl != NULL)
-        ++bc;
-      *end = ch;
-      while (*end == ' ')
-        ++end;
+      glyphname = token;
+      replacement = HashFind (hash, token);
+
+      if (replacement)
+        glyphname = replacement->name;
+
+      if (ret)
+        ret = x_gc_strjoin (ret, " ", glyphname, NULL);
+      else
+        ret = x_gc_strdup (glyphname);
     }
-  if (bc != 0)
-    (void) DoReplacements (bits, bc, _src, start);
+
+  free(*src);
+  *src = ret;
 }
 
 static void
