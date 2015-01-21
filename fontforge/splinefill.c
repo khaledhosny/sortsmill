@@ -2434,8 +2434,6 @@ SplineFontPieceMeal (SplineFont *sf, int layer, int ptsize, int dpi,
       ascent *= 1.2;
       descent *= 1.2;
 
-      printf ("%f:%f\n", ascent, descent);
-
       scale = pixelsize / (real) (ascent - descent);
       bdf->ascent = rint (ascent * scale);
     }
