@@ -63,7 +63,7 @@ VISIBLE int default_fv_row_count = 4;
 VISIBLE int default_fv_col_count = 16;
 int default_fv_font_size = 24;
 int default_fv_antialias = true;
-int default_fv_bbsized = true;
+int default_fv_bbsized = false;
 VISIBLE int snaptoint = 0;
 
 static int

@@ -1760,7 +1760,7 @@ FVMenuCondense (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 #define MID_Ligatures	2020
 #define MID_KernPairs	2021
 #define MID_AnchorPairs	2022
-#define MID_FitToEm	2023
+#define MID_FitToBbox	2023
 #define MID_DisplaySubs	2024
 #define MID_32x8	2025
 #define MID_16x4	2026
@@ -4227,7 +4227,7 @@ FVMenuSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     default_fv_font_size = dspsize = 72;
   else if (mi->mid == MID_96)
     default_fv_font_size = dspsize = 96;
-  else if (mi->mid == MID_FitToEm)
+  else if (mi->mid == MID_FitToBbox)
     {
       default_fv_bbsized = fv->bbsized = !fv->bbsized;
       fv->b.sf->display_bbsized = fv->bbsized;
@@ -9258,7 +9258,7 @@ static GMenuItem vwlist[] = {
 
   {
     .ti = {
-      .text = (uint32_t *) N_("_Fit to em"),
+      .text = (uint32_t *) N_("_Fit to font bounding box"),
       .fg = COLOR_DEFAULT,
       .bg = COLOR_DEFAULT,
       .checkable = true,
@@ -9266,9 +9266,9 @@ static GMenuItem vwlist[] = {
       .text_is_1byte = true,
       .text_has_mnemonic = true,
       .mnemonic = 'F'},
-    .shortcut = H_ ("Fit to em|Ctl+6"),
+    .shortcut = H_ ("Fit to font bounding box|Ctl+6"),
     .invoke = FVMenuSize,
-    .mid = MID_FitToEm},
+    .mid = MID_FitToBbox},
 
   GMENUITEM_LINE,
 
@@ -9452,8 +9452,8 @@ vwlistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           mi->ti.checked = (fv->show != NULL && fv->show->clut != NULL);
           mi->ti.disabled = sf->onlybitmaps && fv->show != fv->filled;
           break;
-        case MID_FitToEm:
-          mi->ti.checked = (fv->show != NULL && !fv->show->bbsized);
+        case MID_FitToBbox:
+          mi->ti.checked = (fv->show != NULL && fv->show->bbsized);
           mi->ti.disabled = sf->onlybitmaps && fv->show != fv->filled;
           break;
         case MID_Layers:
