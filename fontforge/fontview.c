@@ -3766,6 +3766,7 @@ FVShowSubFont (FontView *fv, SplineFont *new)
   MetricsView *mv, *mvnext;
   BDFFont *newbdf;
   int wascompact = fv->b.normal != NULL;
+  int flags = 0;
   extern int use_freetype_to_rasterize_fv;
 
   for (mv = fv->b.sf->metrics; mv != NULL; mv = mvnext)
@@ -3791,15 +3792,13 @@ FVShowSubFont (FontView *fv, SplineFont *new)
       FontViewReformatOne (&fv->b);
       FVSetTitle (&fv->b);
     }
+  flags |= fv->antialias ? pf_antialias : 0;
+  flags |= fv->bbsized ? pf_bbsized : 0;
+  flags |= use_freetype_to_rasterize_fv && !fv->b.sf->strokedfont
+    && !fv->b.sf->multilayer ? pf_ft_nohints : 0;
   newbdf =
     SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, fv->filled->pixelsize,
-                         72,
-                         (fv->antialias ? pf_antialias : 0) | (fv->bbsized ?
-                                                               pf_bbsized : 0)
-                         | (use_freetype_to_rasterize_fv
-                            && !fv->b.sf->strokedfont
-                            && !fv->b.sf->multilayer ? pf_ft_nohints : 0),
-                         NULL);
+                         72, flags, NULL);
   BDFFontFree (fv->filled);
   if (fv->filled == fv->show)
     fv->show = newbdf;
@@ -4245,15 +4244,14 @@ FVMenuSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       || changedmodifier)
     {
       BDFFont *new, *old;
+      int flags = 0;
       old = fv->filled;
+      flags |= fv->antialias ? pf_antialias : 0;
+      flags |= fv->bbsized ? pf_bbsized : 0;
+      flags |= use_freetype_to_rasterize_fv && !fv->b.sf->strokedfont
+        && !fv->b.sf->multilayer ? pf_ft_nohints : 0;
       new =
-        SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, dspsize, 72,
-                             (fv->antialias ? pf_antialias : 0) | (fv->bbsized ?
-                                                                   pf_bbsized :
-                                                                   0) |
-                             (use_freetype_to_rasterize_fv
-                              && !fv->b.sf->strokedfont
-                              && !fv->b.sf->multilayer ? pf_ft_nohints : 0),
+        SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, dspsize, 72, flags,
                              NULL);
       fv->filled = new;
       FVChangeDisplayFont (fv, new);
@@ -4282,20 +4280,19 @@ FVSetUIToMatch (FontView *destfv, FontView *srcfv)
       || destfv->filled->pixelsize != srcfv->filled->pixelsize)
     {
       BDFFont *new, *old;
+      int flags = 0;
       destfv->magnify = srcfv->magnify;
       destfv->user_requested_magnify = srcfv->user_requested_magnify;
       destfv->bbsized = srcfv->bbsized;
       destfv->antialias = srcfv->antialias;
       old = destfv->filled;
+      flags |= destfv->antialias ? pf_antialias : 0;
+      flags |= destfv->bbsized ? pf_bbsized : 0;
+      flags |= use_freetype_to_rasterize_fv && !destfv->b.sf->strokedfont
+        && !destfv->b.sf->multilayer ? pf_ft_nohints : 0;
       new =
         SplineFontPieceMeal (destfv->b.sf, destfv->b.active_layer,
-                             srcfv->filled->pixelsize, 72,
-                             (destfv->antialias ? pf_antialias : 0) |
-                             (destfv->bbsized ? pf_bbsized : 0) |
-                             (use_freetype_to_rasterize_fv
-                              && !destfv->b.sf->strokedfont
-                              && !destfv->b.sf->multilayer ? pf_ft_nohints : 0),
-                             NULL);
+                             srcfv->filled->pixelsize, 72, flags, NULL);
       destfv->filled = new;
       FVChangeDisplayFont (destfv, new);
       BDFFontFree (old);
@@ -4307,20 +4304,19 @@ FV_LayerChanged (FontView *fv)
 {
   extern int use_freetype_to_rasterize_fv;
   BDFFont *new, *old;
+  int flags = 0;
 
   fv->magnify = 1;
   fv->user_requested_magnify = -1;
 
   old = fv->filled;
+  flags |= fv->antialias ? pf_antialias : 0;
+  flags |= fv->bbsized ? pf_bbsized : 0;
+  flags |= use_freetype_to_rasterize_fv && !fv->b.sf->strokedfont
+    && !fv->b.sf->multilayer ? pf_ft_nohints : 0;
   new =
     SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, fv->filled->pixelsize,
-                         72,
-                         (fv->antialias ? pf_antialias : 0) | (fv->bbsized ?
-                                                               pf_bbsized : 0)
-                         | (use_freetype_to_rasterize_fv
-                            && !fv->b.sf->strokedfont
-                            && !fv->b.sf->multilayer ? pf_ft_nohints : 0),
-                         NULL);
+                         72, flags, NULL);
   fv->filled = new;
   FVChangeDisplayFont (fv, new);
   fv->b.sf->display_size = -fv->filled->pixelsize;
@@ -12792,17 +12788,17 @@ FontView_ReformatAll (SplineFont *sf)
   for (fv = (FontView *) (sf->fv); fv != NULL;
        fv = (FontView *) (fv->b.nextsame))
     {
+      int flags = 0;
       GDrawSetCursor (fv->v, ct_watch);
       old = fv->filled;
+      flags |= fv->antialias ? pf_antialias : 0;
+      flags |= fv->bbsized ? pf_bbsized : 0;
+      flags |= use_freetype_to_rasterize_fv && !sf->strokedfont
+        && !sf->multilayer ? pf_ft_nohints : 0;
       /* In CID fonts fv->b.sf may not be same as sf */
       new =
         SplineFontPieceMeal (fv->b.sf, fv->b.active_layer,
-                             fv->filled->pixelsize, 72,
-                             (fv->antialias ? pf_antialias : 0) | (fv->bbsized ?
-                                                                   pf_bbsized :
-                                                                   0) |
-                             (use_freetype_to_rasterize_fv && !sf->strokedfont
-                              && !sf->multilayer ? pf_ft_nohints : 0), NULL);
+                             fv->filled->pixelsize, 72, flags, NULL);
       fv->filled = new;
       if (fv->show == old)
         fv->show = new;
@@ -12834,11 +12830,12 @@ FontView_ReformatAll (SplineFont *sf)
     if (mvs->bdf == NULL)
       {
         BDFFontFree (mvs->show);
+        int flags = 0;
+        flags |=
+          mvs->antialias ? (pf_antialias | pf_ft_recontext) : pf_ft_recontext;
         mvs->show =
-          SplineFontPieceMeal (sf, mvs->layer, mvs->ptsize, mvs->dpi,
-                               mvs->antialias ? (pf_antialias |
-                                                 pf_ft_recontext) :
-                               pf_ft_recontext, NULL);
+          SplineFontPieceMeal (sf, mvs->layer, mvs->ptsize, mvs->dpi, flags,
+                               NULL);
         GDrawRequestExpose (mvs->gw, NULL, false);
       }
 }
@@ -13090,6 +13087,8 @@ FVCreateInnards (FontView *fv, GRect *pos)
   int as, ds, ld;
   extern int use_freetype_to_rasterize_fv;
   SplineFont *sf = fv->b.sf;
+  int flags = 0;
+  int ptsize;
 
   fv->lab_height = FV_LAB_HEIGHT - 13 + GDrawPointsToPixels (NULL, fv_fontsize);
 
@@ -13124,14 +13123,16 @@ FVCreateInnards (FontView *fv, GRect *pos)
   fv->lab_as = as;
   fv->showhmetrics = default_fv_showhmetrics;
   fv->showvmetrics = default_fv_showvmetrics && sf->hasvmetrics;
+  flags |= fv->antialias ? pf_antialias : 0;
+  flags |= fv->bbsized ? pf_bbsized : 0;
+  flags |= use_freetype_to_rasterize_fv && !sf->strokedfont
+    && !sf->multilayer ? pf_ft_nohints : 0;
+  if (sf->display_size < 0)
+    ptsize = -sf->display_size;
+  else
+    ptsize = default_fv_font_size;
   bdf =
-    SplineFontPieceMeal (fv->b.sf, fv->b.active_layer,
-                         sf->display_size <
-                         0 ? -sf->display_size : default_fv_font_size, 72,
-                         (fv->antialias ? pf_antialias : 0) | (fv->bbsized ?
-                                                               pf_bbsized : 0)
-                         | (use_freetype_to_rasterize_fv && !sf->strokedfont
-                            && !sf->multilayer ? pf_ft_nohints : 0), NULL);
+    SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, ptsize, 72, flags, NULL);
   fv->filled = bdf;
   if (sf->display_size > 0)
     {
