@@ -6558,7 +6558,7 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
     GGadgetSetFont (psgcd[i][0].ret, font);
   for (i = 0; i < 2; ++i)
     {
-      GCompletionFieldSetCompletion (vargcd[i][1].ret, CI_GlyphNameCompletion);
+      GCompletionFieldSetCompletion (vargcd[i][1].ret, CI_GlyphListCompletion);
       GCompletionFieldSetCompletionMode (vargcd[i][1].ret, true);
       GMatrixEditSetColumnCompletion (vargcd[i][6].ret, 0,
                                       CI_GlyphNameCompletion);
