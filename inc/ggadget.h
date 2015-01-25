@@ -350,6 +350,7 @@ GGadgetHandler GGadgetGetHandler(GGadget *g);
 VISIBLE void GTextFieldSelect(GGadget *g,int sel_start, int sel_end);
 VISIBLE void GTextFieldShow(GGadget *g,int pos);
 VISIBLE void GTextFieldReplace(GGadget *g,const uint32_t *txt);
+VISIBLE void GTextFieldSetMouseMoveReporter(GGadget *g, void (*rmm)(GGadget *g, int r, int c));
 VISIBLE void GCompletionFieldSetCompletion(GGadget *g,GTextCompletionHandler completion);
 VISIBLE void GCompletionFieldSetCompletionMode(GGadget *g,int enabled);
 VISIBLE void GGadgetClearList(GGadget *g);

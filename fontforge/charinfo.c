@@ -4251,6 +4251,20 @@ CI_GetConstructedImage (const void *_ci)
   return ret;
 }
 
+static GImage *
+CI_MathVariantsImage (const void *_g)
+{
+  GGadget *g = (GGadget *) _g;
+  CharInfo *ci = GDrawGetUserData (GGadgetGetWindow (g));
+  char *text = GGadgetGetTitle8 (g);
+
+  GImage *image = NameList_GetImage (ci->sc->parent, ci->sc,
+                                     ci->def_layer, text, false);
+  free (text);
+
+  return image;
+}
+
 GImage *
 NameList_GetImage (SplineFont *sf, SplineChar *sc, int def_layer,
                    char *namelist, int isliga)
@@ -4503,6 +4517,13 @@ CI_ConstructionPopupPrepare (GGadget *g, int r, int c)
     return;
   GGadgetPreparePopupImage (GGadgetGetWindow (g), NULL, ci,
                             CI_GetConstructedImage, CI_FreeKernedImage);
+}
+
+static void
+CI_MathVariantsPopupPrepare (GGadget *g, int r, int c)
+{
+  GGadgetPreparePopupImage (GGadgetGetWindow (g), NULL, g,
+                            CI_MathVariantsImage, CI_FreeKernedImage);
 }
 
 static uint32_t **
@@ -6560,6 +6581,8 @@ SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc)
     {
       GCompletionFieldSetCompletion (vargcd[i][1].ret, CI_GlyphListCompletion);
       GCompletionFieldSetCompletionMode (vargcd[i][1].ret, true);
+      GTextFieldSetMouseMoveReporter (vargcd[i][1].ret,
+                                      CI_MathVariantsPopupPrepare);
       GMatrixEditSetColumnCompletion (vargcd[i][6].ret, 0,
                                       CI_GlyphNameCompletion);
       GMatrixEditSetMouseMoveReporter (vargcd[i][6].ret,

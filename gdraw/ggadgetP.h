@@ -319,6 +319,7 @@ typedef struct gtextfield {
     GDTimer *numeric_scroll;
     char *utf8_text;		/* For Pango */
     int32_t *lines8;		/* offsets in utf8_text */
+    void (*reportmousemove)(GGadget *g, int r, int c);
 } GTextField;
 
 typedef struct glistfield {

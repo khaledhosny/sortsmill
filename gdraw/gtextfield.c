@@ -1725,9 +1725,13 @@ return( GGadgetDispatchEvent(&gt->hsb->g,event));
 return( true );
     }
 
-    if ( gt->pressed==NULL && event->type == et_mousemove && g->popup_msg!=NULL &&
-	    GGadgetWithin(g,event->u.mouse.x,event->u.mouse.y))
-	GGadgetPreparePopup(g->base,g->popup_msg);
+    if ( gt->pressed==NULL && event->type == et_mousemove &&
+	    GGadgetWithin(g,event->u.mouse.x,event->u.mouse.y)) {
+	if (gt->reportmousemove!=NULL)
+	    (gt->reportmousemove)(&gt->g,event->u.mouse.x,event->u.mouse.y);
+        else if (g->popup_msg!=NULL)
+	    GGadgetPreparePopup(g->base,g->popup_msg);
+    }
 
     if ( event->type == et_mousedown || gt->pressed ) {
 	i = (event->u.mouse.y-g->inner.y)/gt->fh + gt->loff_top;
@@ -1828,6 +1832,12 @@ return( true );
 return( true );
     }
 return( false );
+}
+
+void GTextFieldSetMouseMoveReporter(GGadget *g, void (*rmm)(GGadget *g, int r, int c)) {
+    GTextField *gt = (GTextField *) g;
+
+    gt->reportmousemove = rmm;
 }
 
 static int gtextfield_key(GGadget *g, GEvent *event) {
