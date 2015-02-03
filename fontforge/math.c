@@ -542,9 +542,8 @@ MATH_Init (MathDlg * math)
               h ? sc->horiz_variants : sc->vert_variants;
             if (gv != NULL && gv->variants != NULL)
               {
-                mds[cols * cnt + 0].u.md_str = SCNameUniStr (sc);
-                mds[cols * cnt + 1].u.md_str =
-                  SFNameList2NameUni (sf, gv->variants);
+                mds[cols * cnt + 0].u.md_str = xstrdup_or_null (sc->name);
+                mds[cols * cnt + 1].u.md_str = xstrdup_or_null (gv->variants);
                 ++cnt;
               }
           }

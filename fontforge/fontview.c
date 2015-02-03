@@ -82,7 +82,6 @@ char *script_filenames[SCRIPT_MENU_MAX];
 extern int onlycopydisplayed;
 extern int copymetadata;
 extern int copyttfinstr;
-extern int add_char_to_name_list;
 int home_char = 'A';
 int compact_font_on_open = 0;
 int navigation_mask = 0;        /* Initialized in startui.c */
@@ -13912,7 +13911,7 @@ GlyphSetFromSelection (SplineFont *sf, int def_layer, char *current)
                       if (sf->glyphs[gid] != NULL)
                         {
                           sc = sf->glyphs[gid];
-                          char *repr = SCNameUniStr (sc);
+                          char *repr = xstrdup_or_null (sc->name);
                           if (ret == NULL)
                             len += strlen (repr) + 2;
                           else

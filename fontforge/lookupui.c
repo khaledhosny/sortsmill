@@ -55,7 +55,6 @@
 #include "lookups.h"
 #include <assert.h>
 
-int add_char_to_name_list = true;
 int default_autokern_dlg = true;
 
 /* ************************************************************************** */
@@ -3703,23 +3702,22 @@ PSTMatrixInit (struct matrixinit *mi, SplineFont *_sf,
                       {
                         if (j)
                           {
-                            md[cnt * mi->col_cnt].u.md_str = SCNameUniStr (sc);
+                            md[cnt * mi->col_cnt].u.md_str =
+                              xstrdup_or_null (sc->name);
                             switch (lookup_type)
                               {
                               case gsub_single:
                                 md[cnt * mi->col_cnt + 1].u.md_str =
-                                  SFNameList2NameUni (sf, pst->u.subs.variant);
+                                  xstrdup_or_null (pst->u.subs.variant);
                                 break;
                               case gsub_multiple:
                               case gsub_alternate:
                                 md[cnt * mi->col_cnt + 1].u.md_str =
-                                  SFNameList2NameUni (sf,
-                                                      pst->u.mult.components);
+                                  xstrdup_or_null (pst->u.mult.components);
                                 break;
                               case gsub_ligature:
                                 md[cnt * mi->col_cnt + 1].u.md_str =
-                                  SFNameList2NameUni (sf,
-                                                      pst->u.lig.components);
+                                  xstrdup_or_null (pst->u.lig.components);
                                 break;
                               case gpos_single:
                                 md[cnt * mi->col_cnt + SIM_DX].u.md_ival =
@@ -3736,7 +3734,7 @@ PSTMatrixInit (struct matrixinit *mi, SplineFont *_sf,
                                 break;
                               case gpos_pair:
                                 md[cnt * mi->col_cnt + 1].u.md_str =
-                                  SFNameList2NameUni (sf, pst->u.pair.paired);
+                                  xstrdup_or_null (pst->u.pair.paired);
                                 md[cnt * mi->col_cnt + PAIR_DX1].u.md_ival =
                                   pst->u.pair.vr[0].xoff;
                                 md[cnt * mi->col_cnt + PAIR_DY1].u.md_ival =
@@ -3779,9 +3777,9 @@ PSTMatrixInit (struct matrixinit *mi, SplineFont *_sf,
                                 if (j)
                                   {
                                     md[cnt * mi->col_cnt + 0].u.md_str =
-                                      SCNameUniStr (sc);
+                                      xstrdup_or_null (sc->name);
                                     md[cnt * mi->col_cnt + 1].u.md_str =
-                                      SCNameUniStr (kp->sc);
+                                      xstrdup_or_null (kp->sc->name);
                                     if (isv)
                                       {
                                         md[cnt * mi->col_cnt +
@@ -5295,112 +5293,6 @@ GlyphNameListDeUnicode (char *str)
   return ret;
 }
 
-char *
-SFNameList2NameUni (SplineFont *sf, char *str)
-{
-  char *start, *pt, *ret, *rpt;
-  int cnt, ch;
-  SplineChar *sc;
-
-  if (str == NULL)
-    return NULL;
-  if (!add_char_to_name_list)
-    return xstrdup_or_null (str);
-
-  cnt = 0;
-  for (pt = str; *pt != '\0'; ++pt)
-    if (*pt == ' ')
-      ++cnt;
-  rpt = ret = xmalloc (strlen (str) + (cnt + 1) * 7 + 1);
-  for (start = str; *start != '\0';)
-    {
-      while (*start == ' ')
-        ++start;
-      if (*start == '\0')
-        break;
-      for (pt = start; *pt != '\0' && *pt != ' ' && *pt != '('; ++pt);
-      ch = *pt;
-      *pt = '\0';
-      sc = SFGetChar (sf, -1, start);
-      strcpy (rpt, start);
-      rpt += strlen (rpt);
-      *pt = ch;
-      /* don't show control characters, or space or parens, or */
-      /*  latin letters (their names are themselves, no need to duplicate) */
-      /*  or things in the private use area */
-      if (sc != NULL && sc->unicodeenc > 32 && sc->unicodeenc != ')'
-          && !(sc->unicodeenc < 0x7f && isalpha (sc->unicodeenc))
-          && !isprivateuse (sc->unicodeenc))
-        {
-          *rpt++ = '(';
-          rpt = utf8_idpb (rpt, sc->unicodeenc);
-          *rpt++ = ')';
-        }
-      *rpt++ = ' ';
-      if (ch == '(')
-        while (*pt != ')' && *pt != '\0')
-          ++pt;
-      while (*pt == ' ')
-        ++pt;
-      start = pt;
-    }
-  if (rpt > ret)
-    rpt[-1] = '\0';
-  else
-    ret[0] = '\0';
-  return ret;
-}
-
-char *
-SCNameUniStr (SplineChar *sc)
-{
-  char *temp, *pt;
-  int len;
-
-  if (sc == NULL)
-    return NULL;
-  if (!add_char_to_name_list)
-    return xstrdup_or_null (sc->name);
-
-  len = strlen (sc->name);
-  temp = xmalloc (len + 8);
-  strcpy (temp, sc->name);
-  if (sc->unicodeenc > 32 && sc->unicodeenc != ')' && add_char_to_name_list
-      && !(sc->unicodeenc < 0x7f && isalpha (sc->unicodeenc))
-      && !isprivateuse (sc->unicodeenc))
-    {
-      pt = temp + len;
-      *pt++ = '(';
-      pt = utf8_idpb (pt, sc->unicodeenc);
-      *pt++ = ')';
-      *pt = '\0';
-    }
-  return temp;
-}
-
-uint32_t *
-uSCNameUniStr (SplineChar *sc)
-{
-  uint32_t *temp;
-  int len;
-
-  if (sc == NULL)
-    return NULL;
-  temp = xmalloc ((strlen (sc->name) + 5) * sizeof (uint32_t));
-  utf82u_strcpy (temp, sc->name);
-  if (sc->unicodeenc > 32 && sc->unicodeenc != ')' && add_char_to_name_list
-      && !(sc->unicodeenc < 0x7f && isalpha (sc->unicodeenc))
-      && !isprivateuse (sc->unicodeenc))
-    {
-      len = u32_strlen (temp);
-      temp[len] = '(';
-      temp[len + 1] = sc->unicodeenc;
-      temp[len + 2] = ')';
-      temp[len + 3] = '\0';
-    }
-  return temp;
-}
-
 uint32_t **
 SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
                        int new_name_after_space)
@@ -5440,7 +5332,7 @@ SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
       if (sc != NULL)
         {
           ret = xmalloc ((2) * sizeof (uint32_t *));
-          ret[0] = uSCNameUniStr (sc);
+          ret[0] = x_u8_to_u32 (sc->name);
           ret[1] = NULL;
           return ret;
         }
@@ -5483,7 +5375,7 @@ SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
                   {
                     if (spt == basept)
                       {
-                        ret[cnt] = uSCNameUniStr (sc);
+                        ret[cnt] = x_u8_to_u32 (sc->name);
                       }
                     else
                       {
@@ -5494,16 +5386,6 @@ SFGlyphNameCompletion (SplineFont *sf, GGadget *t, int from_tab,
                         u32_strncpy (temp, basept, spt - basept);
                         utf82u_strcpy (temp + (spt - basept), sc->name);
                         len = u32_strlen (temp);
-                        if (sc->unicodeenc > 32 && add_char_to_name_list
-                            && !(sc->unicodeenc < 0x7f
-                                 && isalpha (sc->unicodeenc))
-                            && !isprivateuse (sc->unicodeenc))
-                          {
-                            temp[len] = '(';
-                            temp[len + 1] = sc->unicodeenc;
-                            temp[len + 2] = ')';
-                            temp[len + 3] = '\0';
-                          }
                         ret[cnt] = temp;
                       }
                   }

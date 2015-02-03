@@ -13456,7 +13456,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
       markc_md[2 * (i - 1) + 0].u.md_str =
         xstrdup_or_null (sf->mark_class_names[i]);
       markc_md[2 * (i - 1) + 1].u.md_str =
-        SFNameList2NameUni (sf, sf->mark_classes[i]);
+        xstrdup_or_null (sf->mark_classes[i]);
     }
   markc_mi.matrix_data = markc_md;
   markc_mi.initial_row_cnt =
@@ -13507,8 +13507,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   for (i = 0; i < sf->mark_set_cnt; ++i)
     {
       marks_md[2 * i + 0].u.md_str = xstrdup_or_null (sf->mark_set_names[i]);
-      marks_md[2 * i + 1].u.md_str =
-        SFNameList2NameUni (sf, sf->mark_sets[i]);
+      marks_md[2 * i + 1].u.md_str = xstrdup_or_null (sf->mark_sets[i]);
     }
   marks_mi.matrix_data = marks_md;
   marks_mi.initial_row_cnt = sf->mark_set_cnt;

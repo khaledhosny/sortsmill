@@ -156,7 +156,6 @@ static char *othersubrsfile = NULL;
 extern int updateflex;          /* in charview.c */
 extern int default_autokern_dlg;        /* in lookupui.c */
 extern int allow_utf8_glyphnames;       /* in lookupui.c */
-extern int add_char_to_name_list;       /* in charinfo.c */
 extern int clear_tt_instructions_when_needed;   /* in cvundoes.c */
 extern int export_clipboard;    /* in cvundoes.c */
 extern int default_cv_width;    /* in charview.c */
@@ -491,11 +490,6 @@ N_("MfShowErr"), pr_bool, &mf_showerrors, NULL, NULL, '\0', NULL, 0,
       NULL, 0,
       N_
       ("Allow the full unicode character set in glyph names.\nThis does not conform to adobe's glyph name standard.\nSuch names should be for internal use only and\nshould NOT end up in production fonts.")},
-  {
-N_("AddCharToNameList"), pr_bool, &add_char_to_name_list, NULL, NULL, 'O',
-      NULL, 0,
-      N_
-      ("When displaying a list of glyph names\n(or sometimes just a single glyph name)\nFontForge will add the unicode character\nthe name refers to in parenthesis after\nthe name. It does this because some names\nare obscure.\nSome people would prefer not to see this,\nso this preference item lets you turn off\n this behavior")},
     PREFS_LIST_EMPTY}, generate_list[] =
 {
   {

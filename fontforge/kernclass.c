@@ -2933,7 +2933,7 @@ AddClassList (GGadgetCreateData *gcd, GTextInfo *label, int k, int off,
             md[i + 0].frozen = true;
         }
       else
-        md[i + 0].u.md_str = SFNameList2NameUni (sf, classes[i]);
+        md[i + 0].u.md_str = xstrdup_or_null (classes[i]);
     }
   mi->matrix_data = md;
   mi->initial_row_cnt = cnt;

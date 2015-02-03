@@ -1275,9 +1275,6 @@ int EditSubtable (struct lookup_subtable *sub, int isgpos,
 void _LookupSubtableContents (SplineFont *sf,
                               struct lookup_subtable *sub,
                               struct subtable_data *sd, int def_layer);
-char *SCNameUniStr (SplineChar *sc);
-uint32_t *uSCNameUniStr (SplineChar *sc);
-char *SFNameList2NameUni (SplineFont *sf, char *str);
 uint32_t **SFGlyphNameCompletion (SplineFont *sf, GGadget *t,
                                   int from_tab, int new_name_after_space);
 char *GlyphNameListDeUnicode (char *str);

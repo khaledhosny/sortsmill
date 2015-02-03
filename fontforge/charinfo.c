@@ -5130,7 +5130,7 @@ CIFillup (CharInfo * ci)
         else
           {
             mds[pst->type][j + 1].u.md_str =
-              SFNameList2NameUni (sf, pst->u.subs.variant);
+              xstrdup_or_null (pst->u.subs.variant);
           }
       }
   for (isv = 0; isv < 2; ++isv)
@@ -5139,7 +5139,7 @@ CIFillup (CharInfo * ci)
         {
           j = (cnts[pst_pair]++ * mi[pst_pair - 1].col_cnt);
           mds[pst_pair][j + 0].u.md_ival = (intptr_t) kp->subtable;
-          mds[pst_pair][j + 1].u.md_str = SCNameUniStr (kp->sc);
+          mds[pst_pair][j + 1].u.md_str = xstrdup_or_null (kp->sc->name);
           if (isv)
             {
               mds[pst_pair][j + PAIR_DY_ADV1].u.md_ival = kp->off;

@@ -3360,7 +3360,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
           md = xcalloc (cnt, sizeof (struct matrix_data));
           for (j = 0; j < cnt; ++j)
             {
-              md[j].u.md_str = SFNameList2NameUni (sf, names[j]);
+              md[j].u.md_str = xstrdup_or_null (names[j]);
             }
           coverage_mi[i].matrix_data = md;
         }
@@ -3465,9 +3465,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
               if (r != NULL && r->u.rcoverage.replacements != NULL)
                 {
                   clabel[i][k].text =
-                    (uint32_t *) SFNameList2NameUni (sf,
-                                                     r->u.rcoverage.
-                                                     replacements);
+                    (uint32_t *) xstrdup_or_null (r->u.rcoverage.replacements);
                   clabel[i][k].text_is_1byte = true;
                   cgcd[i][k].gd.label = &clabel[i][k];
                 }
@@ -3566,15 +3564,14 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
                  sizeof (struct matrix_data));
       for (i = 0, j = fpst->rules[0].u.coverage.bcnt - 1; j >= 0; --j, ++i)
         md[i * coveragesimple_mi.col_cnt].u.md_str =
-          SFNameList2NameUni (sf, fpst->rules[0].u.coverage.bcovers[j]);
+          xstrdup_or_null (fpst->rules[0].u.coverage.bcovers[j]);
       for (j = 0; j < fpst->rules[0].u.coverage.ncnt; ++j, ++i)
         {
           md[coveragesimple_mi.col_cnt * i + 0].u.md_str =
-            SFNameList2NameUni (sf, fpst->rules[0].u.coverage.ncovers[j]);
+            xstrdup_or_null (fpst->rules[0].u.coverage.ncovers[j]);
           if (fpst->format == pst_reversecoverage)
             md[i * 2 + 1].u.md_str =
-              SFNameList2NameUni (sf,
-                                  fpst->rules[0].u.rcoverage.replacements);
+              xstrdup_or_null (fpst->rules[0].u.rcoverage.replacements);
           else
             {
               md[4 * i + 2].u.md_ival = j == 0;
@@ -3592,7 +3589,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
       for (j = 0; j < fpst->rules[0].u.coverage.fcnt; ++j, ++i)
         {
           md[coveragesimple_mi.col_cnt * i].u.md_str =
-            SFNameList2NameUni (sf, fpst->rules[0].u.coverage.fcovers[j]);
+            xstrdup_or_null (fpst->rules[0].u.coverage.fcovers[j]);
           if (fpst->format == pst_coverage)
             md[4 * i + 2].u.md_ival = j == 0;
         }
@@ -3749,7 +3746,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
               }
             else
               md[3 * j + 0].u.md_str = xstrdup_or_null (classnames[j]);
-            md[3 * j + 1].u.md_str = SFNameList2NameUni (sf, classes[j]);
+            md[3 * j + 1].u.md_str = xstrdup_or_null (classes[j]);
             md[3 * j + 2].u.md_str = xstrdup_or_null (md[3 * j + 0].u.md_str);
           }
         class_mi[i].matrix_data = md;
@@ -3967,7 +3964,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
               }
             else
               md[3 * j + 0].u.md_str = xstrdup_or_null (classnames[j]);
-            md[3 * j + 1].u.md_str = SFNameList2NameUni (sf, classes[j]);
+            md[3 * j + 1].u.md_str = xstrdup_or_null (classes[j]);
             md[3 * j + 2].u.md_str = xstrdup_or_null (md[3 * j + 0].u.md_str);
           }
         class_mi[i].matrix_data = md;

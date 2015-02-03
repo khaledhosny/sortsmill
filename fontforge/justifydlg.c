@@ -167,9 +167,7 @@ GlyphMatrixInit (struct matrixinit *mi, char *glyphstr, SplineFont *sf)
                  ++end);
             if (k)
               {
-                char *str = xstrndup (start, end - start);
-                md[1 * cnt + 0].u.md_str = SFNameList2NameUni (sf, str);
-                free (str);
+                md[1 * cnt + 0].u.md_str = xstrndup_or_null (start, end - start);
               }
             ++cnt;
             while (*end == ' ' || *end == ',')
