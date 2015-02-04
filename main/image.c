@@ -227,7 +227,9 @@ initialize (void)
   no_windowing_ui = true;
   running_script = false;
 
+#if !defined(GLIB_VERSION_2_36)
   g_type_init ();               // for glib
+#endif
 
 #ifndef _NO_PYTHON
   /* This ugly hack initializes the SFD unpickler. */
