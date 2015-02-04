@@ -1202,7 +1202,7 @@ MATH_OK (GGadget *g, GEvent *e)
                       *gvp =
                         (struct glyphvariants *)
                         xzalloc (sizeof (struct glyphvariants));
-                      (*gvp)->variants = GlyphNameListDeUnicode (str);
+                      (*gvp)->variants = xstrdup_or_null (str);
                     }
                 }
               else if (cid == CID_VGlyphConst || cid == CID_HGlyphConst)

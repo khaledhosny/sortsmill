@@ -202,7 +202,7 @@ JSTF_Glyph_OK (GGadget *g, GEvent *e)
               ret = x_gc_strjoin (ret, separator, strings[i].u.md_str, NULL);
               separator = " ";
             }
-          gld->ret = GlyphNameListDeUnicode (ret);
+          gld->ret = xstrdup_or_null (ret);
         }
       gld->done = true;
     }

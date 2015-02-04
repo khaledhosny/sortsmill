@@ -1263,8 +1263,7 @@ CI_ProcessPosSubs (CharInfo * ci)
           else
             free (pst->u.subs.variant);
           pst->ticked = true;
-          pst->u.subs.variant =
-            GlyphNameListDeUnicode (possub[cols * i + 1].u.md_str);
+          pst->u.subs.variant = xstrdup (possub[cols * i + 1].u.md_str);
           if (pstt == pst_ligature)
             pst->u.lig.lig = sc;
         }

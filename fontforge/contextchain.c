@@ -469,7 +469,7 @@ static void
 gruleitem2rule (SplineFont *sf, const char *ruletext, struct fpst_rule *r)
 {
   const char *pt, *pt2;
-  char *temp, *freeme;
+  char *temp;
   int ch;
 
   if (ruletext == NULL)
@@ -479,22 +479,15 @@ gruleitem2rule (SplineFont *sf, const char *ruletext, struct fpst_rule *r)
     return;
   if (pt > ruletext)
     {
-      temp = GlyphNameListDeUnicode (freeme =
-                                     xstrndup_or_null (ruletext,
-                                                       pt - 1 - ruletext));
+      temp = xstrndup_or_null (ruletext, pt - 1 - ruletext);
       r->u.glyph.back = reversenames (temp);
       free (temp);
-      free (freeme);
     }
   ruletext = pt + 2;
   for (pt = ruletext; *pt != '\0' && *pt != '|'; ++pt);
   if (*pt == '\0')
     return;
-  r->u.glyph.names = GlyphNameListDeUnicode (freeme =
-                                             xstrndup_or_null (ruletext,
-                                                               pt - 1 -
-                                                               ruletext));
-  free (freeme);
+  r->u.glyph.names = xstrndup_or_null (ruletext, pt - 1 - ruletext);
   ruletext = pt + 2;
   for (pt2 = ruletext;
        (ch = u8_get_next ((const uint8_t **) &pt2)) != '\0' && ch != 0x21d2;);
@@ -502,11 +495,7 @@ gruleitem2rule (SplineFont *sf, const char *ruletext, struct fpst_rule *r)
     return;
   if (pt2 != ruletext)
     {
-      r->u.glyph.fore = GlyphNameListDeUnicode (freeme =
-                                                xstrndup_or_null (ruletext,
-                                                                  pt2 - 3 -
-                                                                  ruletext));
-      free (freeme);
+      r->u.glyph.fore = xstrndup_or_null (ruletext, pt2 - 3 - ruletext);
     }
   parseseqlookups (sf, pt2 + 2, r);
 }
@@ -914,7 +903,7 @@ CCD_FinishRule (struct contextchaindlg *ccd)
     }
   else if (ccd->aw == aw_glyphs)
     {                           /* It's from glyph list */
-      char *ret, *temp, *freeme;
+      char *ret, *temp;
 
       memset (&dummy, 0, sizeof (dummy));
       CCD_ParseLookupList (ccd->sf, &dummy,
@@ -928,9 +917,8 @@ CCD_FinishRule (struct contextchaindlg *ccd)
           if (ans == 1)
             return;
         }
-      temp = GGadgetGetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList));
-      dummy.u.glyph.names = GlyphNameListDeUnicode (temp);
-      free (temp);
+      dummy.u.glyph.names =
+        GGadgetGetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList));
       tot = CCD_GlyphNameCnt (temp =
                               GGadgetGetTitle8 (GWidgetGetControl
                                                 (ccd->gw, CID_GlyphList)));
@@ -948,14 +936,10 @@ CCD_FinishRule (struct contextchaindlg *ccd)
         }
       temp =
         GGadgetGetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList + 20));
-      freeme = GlyphNameListDeUnicode (temp);
-      dummy.u.glyph.back = reversenames (freeme);
+      dummy.u.glyph.back = reversenames (temp);
       free (temp);
-      free (freeme);
-      temp =
+      dummy.u.glyph.fore =
         GGadgetGetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList + 40));
-      dummy.u.glyph.fore = GlyphNameListDeUnicode (temp);
-      free (temp);
       ret = gruleitem (&dummy);
       FPSTRuleContentsFree (&dummy, pst_glyphs);
       list = GWidgetGetControl (ccd->gw, CID_GList + 0);
@@ -1228,7 +1212,7 @@ CCD_ParseCoverageList (struct contextchaindlg *ccd, int cid, int *cnt)
     return NULL;
   ret = xmalloc (*cnt * sizeof (char *));
   for (i = 0; i < _cnt; ++i)
-    ret[i] = GlyphNameListDeUnicode (covers[i].u.md_str);
+    ret[i] = xstrdup (covers[i].u.md_str);
   return ret;
 }
 
@@ -1321,7 +1305,7 @@ _CCD_Ok (struct contextchaindlg *ccd)
             had_class0 = i == 0 && !isEverythingElse (classes[i][0].u.md_str);
             for (k = had_class0 ? 0 : 1; k < clen[i]; ++k)
               (&fpst->nclass)[i][k] =
-                GlyphNameListDeUnicode (classes[i][ccols * k + 1].u.md_str);
+                xstrdup_or_null (classes[i][ccols * k + 1].u.md_str);
             for (k = 0; k < clen[i]; ++k)
               (&fpst->nclassnames)[i][k] =
                 xstrdup_or_null (classes[i][ccols * k + 0].u.md_str);
@@ -1359,7 +1343,7 @@ _CCD_Ok (struct contextchaindlg *ccd)
                              ("In a Reverse Chaining Substitution there must be exactly as many replacements as there are glyph names in the match coverage table"));
               return;
             }
-          dummy.u.rcoverage.replacements = GlyphNameListDeUnicode (temp);
+          dummy.u.rcoverage.replacements = xstrdup (temp);
           free (temp);
         }
       else
@@ -1471,7 +1455,7 @@ _CCD_Ok (struct contextchaindlg *ccd)
                           xstrdup_or_null (classes_simple[3 * k + 0].u.
                                            md_str);
                         (&dummyfpst->nclass)[i][k] =
-                          GlyphNameListDeUnicode (classes_simple[3 * k + 1].u.
+                          xstrdup_or_null (classes_simple[3 * k + 1].u.
                                                   md_str);
                       }
                   }
@@ -1488,14 +1472,9 @@ _CCD_Ok (struct contextchaindlg *ccd)
         dummyfpst->rules = xcalloc (len, sizeof (struct fpst_rule));
         for (i = 0; i < len; ++i)
           {
-            char *temp = old[i].u.md_str;
-            if (ccd->aw == aw_glyphs_simple)
-              temp = GlyphNameListDeUnicode (temp);
             msg =
               FPSTRule_From_Str (ccd->sf, dummyfpst, &dummyfpst->rules[i],
-                                 temp, &iswarning);
-            if (temp != old[i].u.md_str)
-              free (temp);
+                                 old[i].u.md_str, &iswarning);
             if (msg != NULL)
               {
                 if (!iswarning)
@@ -1687,13 +1666,13 @@ _CCD_Ok (struct contextchaindlg *ccd)
           xmalloc (dummy.u.coverage.fcnt * sizeof (char *));
       for (i = 0; i < first; ++i)
         dummy.u.coverage.bcovers[first - 1 - i] =
-          GlyphNameListDeUnicode (old[cols * i + 0].u.md_str);
+          xstrdup_or_null (old[cols * i + 0].u.md_str);
       for (i = 0; i < dummy.u.coverage.ncnt; ++i)
         dummy.u.coverage.ncovers[i] =
-          GlyphNameListDeUnicode (old[cols * (first + i) + 0].u.md_str);
+          xstrdup_or_null (old[cols * (first + i) + 0].u.md_str);
       for (i = forward_start; i < len; ++i)
         dummy.u.coverage.fcovers[i - forward_start] =
-          GlyphNameListDeUnicode (old[cols * i + 0].u.md_str);
+          xstrdup_or_null (old[cols * i + 0].u.md_str);
       FPSTClassesFree (fpst);
       FPSTRulesFree (fpst->rules, fpst->format, fpst->rule_cnt);
       fpst->format =

@@ -1505,13 +1505,13 @@ KC_OK (GGadget *g, GEvent *e)
       classes =
         GMatrixEditGet (GWidgetGetControl (kcd->gw, CID_ClassList), &len);
       if (!isEverythingElse (classes[0].u.md_str))
-        kc->firsts[0] = GlyphNameListDeUnicode (classes[0].u.md_str);
+        kc->firsts[0] = xstrdup_or_null (classes[0].u.md_str);
       for (i = 1; i < kc->first_cnt; ++i)
-        kc->firsts[i] = GlyphNameListDeUnicode (classes[i].u.md_str);
+        kc->firsts[i] = xstrdup_or_null (classes[i].u.md_str);
       classes =
         GMatrixEditGet (GWidgetGetControl (kcd->gw, CID_ClassList + 100), &len);
       for (i = 1; i < kc->second_cnt; ++i)
-        kc->seconds[i] = GlyphNameListDeUnicode (classes[i].u.md_str);
+        kc->seconds[i] = xstrdup_or_null (classes[i].u.md_str);
       kc->offsets = kcd->offsets;
       kc->adjusts = kcd->adjusts;
       kcd->sf->changed = true;

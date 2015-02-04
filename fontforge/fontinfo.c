@@ -6835,7 +6835,7 @@ GFI_OK (GGadget *g, GEvent *e)
           sf->mark_class_names[i + 1] =
             xstrdup_or_null (markclasses[2 * i + 0].u.md_str);
           sf->mark_classes[i + 1] =
-            GlyphNameListDeUnicode (markclasses[2 * i + 1].u.md_str);
+            xstrdup_or_null (markclasses[2 * i + 1].u.md_str);
         }
 
       /* Set 0 is used */
@@ -6848,7 +6848,7 @@ GFI_OK (GGadget *g, GEvent *e)
           sf->mark_set_names[i] =
             xstrdup_or_null (marksets[2 * i + 0].u.md_str);
           sf->mark_sets[i] =
-            GlyphNameListDeUnicode (marksets[2 * i + 1].u.md_str);
+            xstrdup_or_null (marksets[2 * i + 1].u.md_str);
         }
 
       GFI_Close (d);

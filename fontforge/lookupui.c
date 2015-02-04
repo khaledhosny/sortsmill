@@ -5144,8 +5144,7 @@ PSTKD_Ok (GGadget *g, GEvent *e)
                 }
               else
                 {
-                  pst->u.subs.variant =
-                    GlyphNameListDeUnicode (psts[cols * r + 1].u.md_str);
+                  pst->u.subs.variant = xstrdup (psts[cols * r + 1].u.md_str);
                   if (lookup_type == gsub_ligature)
                     pst->u.lig.lig = sc;
                 }
@@ -5260,37 +5259,6 @@ PSTKD_Cancel (GGadget *g, GEvent *e)
       PSTKD_DoCancel (pstkd);
     }
   return true;
-}
-
-char *
-GlyphNameListDeUnicode (char *str)
-{
-  char *pt;
-  char *ret, *rpt;
-
-  rpt = ret = xmalloc (strlen (str) + 1);
-  while (*str == ' ')
-    ++str;
-  for (pt = str; *pt != '\0';)
-    {
-      if (*pt == ' ')
-        {
-          while (*pt == ' ')
-            ++pt;
-          --pt;
-        }
-      if (*pt == '(')
-        {
-          while (*pt != ')' && *pt != '\0')
-            ++pt;
-          if (*pt == ')')
-            ++pt;
-        }
-      else
-        *rpt++ = *pt++;
-    }
-  *rpt = '\0';
-  return ret;
 }
 
 uint32_t **
@@ -7643,10 +7611,8 @@ MRD_OK (GGadget *g, GEvent *e)
           ++sel_cnt;
       if (!themselves)
         {
-          char *freeme =
+          start_name =
             GGadgetGetTitle8 (GWidgetGetControl (mrd->gw, CID_StartName));
-          start_name = GlyphNameListDeUnicode (freeme);
-          free (freeme);
           enc_start =
             SFFindSlot (mrd->fv->b.sf, mrd->fv->b.map, -1, start_name);
           if (enc_start == -1)

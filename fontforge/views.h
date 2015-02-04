@@ -1277,7 +1277,6 @@ void _LookupSubtableContents (SplineFont *sf,
                               struct subtable_data *sd, int def_layer);
 uint32_t **SFGlyphNameCompletion (SplineFont *sf, GGadget *t,
                                   int from_tab, int new_name_after_space);
-char *GlyphNameListDeUnicode (char *str);
 void AddRmLang (SplineFont *sf, struct lkdata *lk, int add_lang);
 void FVMassGlyphRename (FontView *fv);
 
