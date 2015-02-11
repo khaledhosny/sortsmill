@@ -19081,6 +19081,25 @@ PyFFFont_MergeKern (PyFF_Font *self, PyObject *args)
 }
 
 static PyObject *
+PyFFFont_MergeFeatureString (PyFF_Font *self, PyObject *args)
+{
+  char *features;
+  FontViewBase *fv;
+
+  if (CheckIfFontClosed (self))
+    return NULL;
+  fv = self->fv;
+  if (!PyArg_ParseTuple (args, "s", &features))
+    return NULL;
+  if (!SFApplyFeatureString (fv->sf, features))
+    {
+      PyErr_Format (PyExc_EnvironmentError, "features have not been applied");
+      return NULL;
+    }
+  Py_RETURN (self);
+}
+
+static PyObject *
 PyFFFont_MergeFonts (PyFF_Font *self, PyObject *args)
 {
   char *filename;
@@ -20597,6 +20616,8 @@ static PyMethodDef PyFF_Font_methods[] = {
    "Merge feature data into the current font from an external file"},
   {"mergeFeature", (PyCFunction) PyFFFont_MergeKern, METH_VARARGS,
    "Merge feature data into the current font from an external file"},
+  {"mergeFeatureString", (PyCFunction) PyFFFont_MergeFeatureString, METH_VARARGS,
+   "Merge feature data into the current font from a string"},
   {"mergeFonts", (PyCFunction) PyFFFont_MergeFonts, METH_VARARGS,
    "Merge two fonts"},
   {"revert", (PyCFunction) PyFFFont_revert, METH_NOARGS,
