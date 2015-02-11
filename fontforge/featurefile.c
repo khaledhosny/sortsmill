@@ -2546,6 +2546,8 @@ FeatDumpFontLookups (FILE *out, SplineFont *sf)
 #include <gfile.h>
 
 static bool is_blank (const char *s);
+struct feat_item;
+static void fea_featitemFree (struct feat_item *item);
 
 struct nameid
 {
@@ -5628,6 +5630,15 @@ fea_AddAGlyphSet (char **covers, char **ncovers, int i, struct markedglyphs *g)
   return i;
 }
 
+static bool
+is_blank_coverage (char **coverage, int cnt)
+{
+  for (int i = 0; i < cnt; i++)
+    if (!is_blank (coverage[i]))
+      return false;
+  return true;
+}
+
 static FPST *
 fea_markedglyphs_to_fpst (struct parseState *tok, struct markedglyphs *glyphs,
                           int is_pos, int is_ignore, int is_reverse)
@@ -5729,6 +5740,15 @@ fea_markedglyphs_to_fpst (struct parseState *tok, struct markedglyphs *glyphs,
       g = fea_glyphs_to_names (glyphs, bcnt, &r->u.glyph.back);
       g = fea_glyphs_to_names (g, ncnt, &r->u.glyph.names);
       g = fea_glyphs_to_names (g, fcnt, &r->u.glyph.fore);
+      if ((r->u.glyph.back && is_blank (r->u.glyph.back)) ||
+          (r->u.glyph.names && is_blank (r->u.glyph.names)) ||
+          (r->u.glyph.fore && is_blank (r->u.glyph.fore)))
+        {
+          // There is at least one empty coverage (from parsing non-existent
+          // glyph names), so ignore the whole rule.
+          FPSTFree (fpst);
+          return NULL;
+        }
     }
   else
     {
@@ -5755,6 +5775,16 @@ fea_markedglyphs_to_fpst (struct parseState *tok, struct markedglyphs *glyphs,
         i = fea_AddAGlyphSet (r->u.coverage.ncovers, NULL, i, g);
       for (i = 0; i < fcnt; ++i, g = g->next)
         i = fea_AddAGlyphSet (r->u.coverage.fcovers, NULL, i, g);
+
+      if (is_blank_coverage (r->u.coverage.bcovers, bcnt) ||
+          is_blank_coverage (r->u.coverage.ncovers, ncnt) ||
+          is_blank_coverage (r->u.coverage.fcovers, fcnt))
+        {
+          // There is at least one empty coverage (from parsing non-existent
+          // glyph names), so ignore the whole rule.
+          FPSTFree (fpst);
+          return NULL;
+        }
     }
 
   item = xzalloc (sizeof (struct feat_item));
@@ -5859,7 +5889,7 @@ fea_ParseIgnore (struct parseState *tok)
         fea_ParseMarkedGlyphs (tok, false /* don't parse value records, etc */ ,
                                true /*allow marks */ , false /* no lookups */ );
       fpst = fea_markedglyphs_to_fpst (tok, glyphs, false, true, false);
-      if (is_pos)
+      if (fpst && is_pos)
         fpst->type = pst_chainpos;
       fea_markedglyphsFree (glyphs);
       fea_ParseTok (tok);
@@ -6042,7 +6072,11 @@ fea_ParseSubstitute (struct parseState *tok)
       /* Contextual */
       FPST *fpst =
         fea_markedglyphs_to_fpst (tok, glyphs, false, false, is_reverse);
-      struct fpst_rule *r = fpst->rules;
+      struct fpst_rule *r = NULL;
+      // fea_markedglyphs_to_fpst can return NULL if the glyphs has an empty
+      // class or non existent glyph.
+      if (fpst)
+        r = fpst->rules;
       if (tok->type != tk_by)
         {
           /* In the old syntax this would be an error, but in the new lookups */
@@ -6074,7 +6108,7 @@ fea_ParseSubstitute (struct parseState *tok)
                             tok->filename[tok->inc_depth]);
                   ++tok->err_count;
                 }
-              else
+              else if (r)
                 {
                   r->u.rcoverage.replacements =
                     xstrdup_or_null (rpl->name_or_class);
@@ -6121,7 +6155,10 @@ fea_ParseSubstitute (struct parseState *tok)
                                     tok->filename[tok->inc_depth]);
                           ++tok->err_count;
                         }
-                      r->lookups[i].lookup = (OTLookup *) head;
+                      if (r)
+                        r->lookups[i].lookup = (OTLookup *) head;
+                      else
+                        fea_featitemFree (head);
                       cnt = g->mark_count;
                       while (g != NULL && g->mark_count == cnt) /* skip everything involved here */
                         g = g->next;
