@@ -3723,10 +3723,9 @@ fea_glyphname_validate (struct parseState *tok, char *name)
 
   if (sc == NULL)
     {
-      LogError (_("Reference to a non-existent glyph name on line %d of %s:"
-                  " %s\n"),
-                tok->line[tok->inc_depth], tok->filename[tok->inc_depth],
-                name);
+      LogError (_("Reference to a non-existent glyph name, %s, "
+                  "on line %d of %s."), name,
+                tok->line[tok->inc_depth], tok->filename[tok->inc_depth]);
       return NULL;
     }
 
