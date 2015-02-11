@@ -55,6 +55,7 @@
 #include <locale.h>
 #include <c-strtod.h>
 #include <sortsmill/core.h>
+#include <xgetcwd.h>
 
 /* Adobe's opentype feature file */
 /* Which suffers incompatible changes according to Adobe's whim */
@@ -2539,6 +2540,9 @@ FeatDumpFontLookups (FILE *out, SplineFont *sf)
 /* ******************************* Parse feat ******************************* */
 /* ************************************************************************** */
 
+// Used as filename when parsing features from string instead of file.
+#define FEAT_STRING "features string"
+
 #include <gfile.h>
 
 struct nameid
@@ -3113,10 +3117,15 @@ fea_handle_include (struct parseState *tok)
     filename = xstrdup_or_null (namebuf);
   else
     {
+      char *temp;
+      if (strcmp (tok->filename[tok->inc_depth], FEAT_STRING) == 0)
+        temp = xgetcwd ();
+      else
+        temp = xstrdup (tok->filename[tok->inc_depth]);
       *pt = '\0';
-      filename =
-        GFileAppendFile (tok->filename[tok->inc_depth], namebuf, false);
+      filename = GFileAppendFile (temp, namebuf, false);
       *pt = '/';
+      free (temp);
     }
   in = fopen (filename, "r");
   if (in == NULL)
@@ -9169,5 +9178,20 @@ SFApplyFeatureFilename (SplineFont *sf, char *filename)
       return;
     }
   SFApplyFeatureFile (sf, in, filename);
+  fclose (in);
+}
+
+void
+SFApplyFeatureString (SplineFont *sf, char *features)
+{
+  FILE *in = fmemopen (features, strlen (features), "r");
+
+  if (in == NULL)
+    {
+      ff_post_error (_("Error reading features"),
+                     _("Error reading %s"), FEAT_STRING);
+      return;
+    }
+  SFApplyFeatureFile (sf, in, FEAT_STRING);
   fclose (in);
 }
