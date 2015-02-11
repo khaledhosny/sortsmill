@@ -4240,8 +4240,7 @@ LoadKerningDataFromMetricsFile (SplineFont *sf, char *filename, EncMap *map)
       ret = LoadKerningDataFromPfm (sf, filename, map);
       break;
     case mf_feat:
-      SFApplyFeatureFilename (sf, filename);
-      ret = true;
+      ret = SFApplyFeatureFilename (sf, filename);
       break;
     case mf_none:
     default:

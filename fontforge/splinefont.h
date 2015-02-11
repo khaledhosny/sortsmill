@@ -2685,9 +2685,9 @@ VISIBLE int LoadKerningDataFromMetricsFile (SplineFont *sf,
                                             char *filename, EncMap *map);
 VISIBLE void FeatDumpFontLookups (FILE *out, SplineFont *sf);
 VISIBLE void FeatDumpOneLookup (FILE *out, SplineFont *sf, OTLookup *otl);
-void SFApplyFeatureFile (SplineFont *sf, FILE *file, char *filename);
-void SFApplyFeatureFilename (SplineFont *sf, char *filename);
-void SFApplyFeatureString (SplineFont *sf, char *features);
+bool SFApplyFeatureFile (SplineFont *sf, FILE *file, char *filename);
+bool SFApplyFeatureFilename (SplineFont *sf, char *filename);
+bool SFApplyFeatureString (SplineFont *sf, char *features);
 void SubsNew (SplineChar *to, enum possub_type type, int tag,
               char *components, SplineChar *default_script);
 void PosNew (SplineChar *to, int tag, int dx, int dy, int dh, int dv);

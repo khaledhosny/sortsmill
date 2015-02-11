@@ -9104,7 +9104,7 @@ fea_NameLookups (struct parseState *tok)
   FVRefreshAll (sf);
 }
 
-void
+bool
 SFApplyFeatureFile (SplineFont *sf, FILE *file, char *filename)
 {
   struct parseState tok;
@@ -9112,6 +9112,7 @@ SFApplyFeatureFile (SplineFont *sf, FILE *file, char *filename)
   struct namedanchor *nap, *napnext;
   struct namedvalue *nvr, *nvrnext;
   int i, j;
+  bool ret;
 
   memset (&tok, 0, sizeof (tok));
   tok.line[0] = 1;
@@ -9128,10 +9129,14 @@ SFApplyFeatureFile (SplineFont *sf, FILE *file, char *filename)
       tok.sofar = fea_reverseList (tok.sofar);
       fea_ApplyFile (&tok, tok.sofar);
       fea_NameLookups (&tok);
+      ret = true;
     }
   else
-    ff_post_error ("Not applied",
-                   "There were errors when parsing the feature file and the features have not been applied");
+    {
+      ff_post_error ("Not applied",
+                     "There were errors when parsing the feature file and the features have not been applied");
+      ret = false;
+    }
   fea_featitemFree (tok.sofar);
   ScriptLangListFree (tok.def_langsyses);
   for (gc = tok.classes; gc != NULL; gc = gcnext)
@@ -9164,34 +9169,40 @@ SFApplyFeatureFile (SplineFont *sf, FILE *file, char *filename)
         }
       free (tok.gdef_mark[j]);
     }
+
+  return ret;
 }
 
-void
+bool
 SFApplyFeatureFilename (SplineFont *sf, char *filename)
 {
   FILE *in = fopen (filename, "r");
+  bool ret;
 
   if (in == NULL)
     {
       ff_post_error (_("Cannot open file"),
                      _("Cannot open feature file %.120s"), filename);
-      return;
+      return false;
     }
-  SFApplyFeatureFile (sf, in, filename);
+  ret = SFApplyFeatureFile (sf, in, filename);
   fclose (in);
+  return ret;
 }
 
-void
+bool
 SFApplyFeatureString (SplineFont *sf, char *features)
 {
   FILE *in = fmemopen (features, strlen (features), "r");
+  bool ret;
 
   if (in == NULL)
     {
       ff_post_error (_("Error reading features"),
                      _("Error reading %s"), FEAT_STRING);
-      return;
+      return false;
     }
-  SFApplyFeatureFile (sf, in, FEAT_STRING);
+  ret = SFApplyFeatureFile (sf, in, FEAT_STRING);
   fclose (in);
+  return ret;
 }
