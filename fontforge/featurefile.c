@@ -2545,6 +2545,8 @@ FeatDumpFontLookups (FILE *out, SplineFont *sf)
 
 #include <gfile.h>
 
+static bool is_blank (const char *s);
+
 struct nameid
 {
   uint16_t strid;
@@ -3699,9 +3701,7 @@ static SplineChar *
 fea_glyphname_get (struct parseState *tok, char *name)
 {
   SplineFont *sf = tok->sf;
-  EncMap *map = sf->fv == NULL ? sf->map : sf->fv->map;
   SplineChar *sc = SFGetChar (sf, -1, name);
-  int enc, gid;
 
   if (sf->subfontcnt != 0)
     {
@@ -3709,56 +3709,8 @@ fea_glyphname_get (struct parseState *tok, char *name)
                   "on line %d of %s"),
                 tok->line[tok->inc_depth], tok->filename[tok->inc_depth]);
       ++tok->err_count;
-      return sc;
     }
 
-  if (sc != NULL || strcmp (name, "NULL") == 0)
-    return sc;
-  enc = SFFindSlot (sf, map, -1, name);
-  if (enc != -1)
-    {
-      sc = SFMakeChar (sf, map, enc);
-      if (sc != NULL)
-        {
-          sc->widthset = true;
-          free (sc->name);
-          sc->name = xstrdup_or_null (name);
-        }
-      return sc;
-    }
-
-  for (gid = sf->glyphcnt - 1; gid >= 0; --gid)
-    if ((sc = sfglyph (sf, gid)) != NULL)
-      {
-        if (strcmp (sc->name, name) == 0)
-          return sc;
-      }
-
-/* Not in the encoding, so add it */
-#if 1
-  enc = map->enc_limit;
-  sc = SFMakeChar (sf, map, enc);
-  if (sc != NULL)
-    {
-      sc->widthset = true;
-      free (sc->name);
-      sc->name = xstrdup_or_null (name);
-      sc->unicodeenc = UniFromName (name, ui_none, &custom);
-    }
-#else
-/* Don't encode it (not in current encoding), just add it, so we needn't */
-/*  mess with maps or selections */
-  SFExpandGlyphCount (sf, sf->glyphcnt + 1);
-  sc = SFSplineCharCreate (sf);
-  sc->name = xstrdup_or_null (name);
-  sc->unicodeenc = UniFromName (name, ui_none, &custom);
-  sc->parent = sf;
-  sc->vwidth = (sf->ascent + sf->descent);
-  sc->width = 6 * sc->vwidth / 10;
-  sc->widthset = true;          /* So we don't lose the glyph */
-  sc->orig_pos = sf->glyphcnt - 1;
-  sf->glyphs[sc->orig_pos] = sc;
-#endif
   return sc;
 }
 
@@ -3768,7 +3720,13 @@ fea_glyphname_validate (struct parseState *tok, char *name)
   SplineChar *sc = fea_glyphname_get (tok, name);
 
   if (sc == NULL)
-    return NULL;
+    {
+      LogError (_("Reference to a non-existent glyph name on line %d of %s:"
+                  " %s\n"),
+                tok->line[tok->inc_depth], tok->filename[tok->inc_depth],
+                name);
+      return NULL;
+    }
 
   return xstrdup_or_null (sc->name);
 }
@@ -4739,13 +4697,10 @@ fea_parseCursiveSequence (struct parseState *tok,
         contents = fea_glyphname_validate (tok, tok->tokbuf);
       else
         contents = fea_cid_validate (tok, tok->value);
-      if (contents != NULL)
-        {
-          cur = xzalloc (sizeof (struct markedglyphs));
-          cur->is_cursive = true;
-          cur->is_name = true;
-          cur->name_or_class = contents;
-        }
+      cur = xzalloc (sizeof (struct markedglyphs));
+      cur->is_cursive = true;
+      cur->is_name = true;
+      cur->name_or_class = contents ? contents : xstrdup ("");
     }
   else if (tok->type == tk_class
            || (tok->type == tk_char && tok->tokbuf[0] == '['))
@@ -4809,12 +4764,9 @@ fea_parseBaseMarkSequence (struct parseState *tok,
         contents = fea_glyphname_validate (tok, tok->tokbuf);
       else
         contents = fea_cid_validate (tok, tok->value);
-      if (contents != NULL)
-        {
-          cur = xzalloc (sizeof (struct markedglyphs));
-          cur->is_name = true;
-          cur->name_or_class = contents;
-        }
+      cur = xzalloc (sizeof (struct markedglyphs));
+      cur->is_name = true;
+      cur->name_or_class = contents ? contents : xstrdup ("");
     }
   else if (tok->type == tk_class
            || (tok->type == tk_char && tok->tokbuf[0] == '['))
@@ -4891,12 +4843,9 @@ fea_parseLigatureSequence (struct parseState *tok,
         contents = fea_glyphname_validate (tok, tok->tokbuf);
       else
         contents = fea_cid_validate (tok, tok->value);
-      if (contents != NULL)
-        {
-          cur = xzalloc (sizeof (struct markedglyphs));
-          cur->is_name = true;
-          cur->name_or_class = contents;
-        }
+      cur = xzalloc (sizeof (struct markedglyphs));
+      cur->is_name = true;
+      cur->name_or_class = contents ? contents : xstrdup ("");
     }
   else if (tok->type == tk_class
            || (tok->type == tk_char && tok->tokbuf[0] == '['))
@@ -5020,12 +4969,9 @@ fea_ParseMarkedGlyphs (struct parseState *tok,
             contents = fea_glyphname_validate (tok, tok->tokbuf);
           else
             contents = fea_cid_validate (tok, tok->value);
-          if (contents != NULL)
-            {
-              cur = xzalloc (sizeof (struct markedglyphs));
-              cur->is_name = true;
-              cur->name_or_class = contents;
-            }
+          cur = xzalloc (sizeof (struct markedglyphs));
+          cur->is_name = true;
+          cur->name_or_class = contents ? contents : xstrdup ("");
         }
       else if (tok->type == tk_class
                || (tok->type == tk_char && tok->tokbuf[0] == '['))
@@ -5997,7 +5943,7 @@ fea_ParseSubstitute (struct parseState *tok)
           fea_ParseTok (tok);
           alts = fea_ParseGlyphClassGuarded (tok);
           sc = fea_glyphname_get (tok, glyphs->name_or_class);
-          if (sc != NULL)
+          if (sc != NULL && !is_blank (alts))
             {
               item = xzalloc (sizeof (struct feat_item));
               item->type = ft_pst;
@@ -8127,7 +8073,7 @@ fea_ApplyLookupListMark2 (struct parseState *tok,
 }
 
 
-static int
+static bool
 is_blank (const char *s)
 {
   int i;
