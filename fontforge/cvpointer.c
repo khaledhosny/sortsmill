@@ -210,10 +210,10 @@ CVClearSel (CharView *cv)
         img->selected = false;
       }
   if (cv->p.nextcp || cv->p.prevcp || cv->widthsel || cv->vwidthsel ||
-      cv->icsel || cv->tah_sel)
+      cv->icsel || cv->tahsel)
     needsupdate = true;
   cv->p.nextcp = cv->p.prevcp = false;
-  cv->widthsel = cv->vwidthsel = cv->icsel = cv->tah_sel = false;
+  cv->widthsel = cv->vwidthsel = cv->icsel = cv->tahsel = false;
   return needsupdate;
 }
 
@@ -794,7 +794,7 @@ CVMouseDownPointer (CharView *cv, FindSel *fs, GEvent *event)
       (!dowidth || !cv->widthsel) &&
       (!dovwidth || !cv->vwidthsel) &&
       (!doic || !cv->icsel) &&
-      (!dotah || !cv->tah_sel) && !(event->u.mouse.state & ksm_shift))
+      (!dotah || !cv->tahsel) && !(event->u.mouse.state & ksm_shift))
     needsupdate = CVClearSel (cv);
   if (!fs->p->anysel)
     {
@@ -860,10 +860,10 @@ CVMouseDownPointer (CharView *cv, FindSel *fs, GEvent *event)
       else if (dotah)
         {
           if (event->u.mouse.state & ksm_shift)
-            cv->tah_sel = !cv->tah_sel;
+            cv->tahsel = !cv->tahsel;
           else
-            cv->tah_sel = true;
-          if (cv->tah_sel)
+            cv->tahsel = true;
+          if (cv->tahsel)
             {
               cv->oldtah = cv->b.sc->top_accent_horiz;
               fs->p->cx = cv->b.sc->top_accent_horiz;
@@ -1499,7 +1499,7 @@ CVMoveSelection (CharView *cv, real dx, real dy, uint32_t input_state)
         cv->b.sc->italic_correction = 0;
       changed = true;
     }
-  if (cv->tah_sel)
+  if (cv->tahsel)
     {
       if (cv->b.sc->top_accent_horiz + dx > 0
           && ((int16_t) (cv->b.sc->top_accent_horiz + dx)) < 0)
@@ -1565,7 +1565,7 @@ CVMouseMovePointer (CharView *cv, GEvent *event)
   /* I used to have special cases for moving width lines, but that's now */
   /*  done by move selection */
   if (cv->expandedge != ee_none && !cv->widthsel && !cv->vwidthsel &&
-      cv->nearcaret == -1 && !cv->icsel && !cv->tah_sel)
+      cv->nearcaret == -1 && !cv->icsel && !cv->tahsel)
     needsupdate = CVExpandEdge (cv);
   else if (cv->nearcaret != -1 && cv->lcarets != NULL)
     {

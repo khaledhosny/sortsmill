@@ -228,7 +228,7 @@ typedef struct charview
   bool widthsel;
   bool vwidthsel;
   bool icsel;
-  bool tah_sel;
+  bool tahsel;
   bool inactive;                /* When in a search view */
   bool show_ft_results;         /* 32 */
   unsigned int coderange:2;     /* For the debugger */

@@ -3065,7 +3065,7 @@ CVExpose (CharView *cv, GWindow pixmap, GEvent *event)
       if (cv->b.sc->top_accent_horiz != TEX_UNDEF)
         DrawVLine (cv, pixmap, cv->b.sc->top_accent_horiz,
                    (!cv->inactive
-                    && cv->tah_sel) ? widthselcol : anchorcol, true, NULL,
+                    && cv->tahsel) ? widthselcol : anchorcol, true, NULL,
                    _("TopAccent"));
     }
   if (cv->showvmetrics)
@@ -7816,7 +7816,7 @@ CVChar (CharView *cv, GEvent *event)
               SCUpdateAll (cv->b.sc);
             }
           else if (CVAnySel (cv, NULL, NULL, NULL, &anya) || cv->widthsel
-                   || cv->vwidthsel || cv->icsel || cv->tah_sel)
+                   || cv->vwidthsel || cv->icsel || cv->tahsel)
             {
               CVPreserveState (&cv->b);
               CVMoveSelection (cv, dx * arrowAmount, dy * arrowAmount,
