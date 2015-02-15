@@ -19058,6 +19058,50 @@ PyFFFont_GenerateFeature (PyFF_Font *self, PyObject *args)
 }
 
 static PyObject *
+PyFFFont_GenerateFeatureString (PyFF_Font *self, PyObject *args)
+{
+  char *lookup_name = NULL;
+  FontViewBase *fv;
+  OTLookup *otl = NULL;
+  char *feat;
+  PyObject *ret;
+
+  if (CheckIfFontClosed (self))
+    return NULL;
+
+  fv = self->fv;
+  if (!PyArg_ParseTuple (args, "|s", &lookup_name))
+    return NULL;
+
+  if (lookup_name != NULL)
+    {
+      otl = SFFindLookup (fv->sf, lookup_name);
+      if (otl == NULL)
+        {
+          PyErr_Format (PyExc_EnvironmentError, "No lookup named %s",
+                        lookup_name);
+          return NULL;
+        }
+    }
+
+  if (otl != NULL)
+    feat = FeatDumpOneLookupString (fv->sf, otl);
+  else
+    feat = FeatDumpFontLookupsString (fv->sf);
+
+  if (feat == NULL)
+    {
+      PyErr_Format (PyExc_EnvironmentError, "Error generating feature string");
+      return NULL;
+    }
+
+  ret = Py_BuildValue ("s", feat);
+  free (feat);
+
+  return ret;
+}
+
+static PyObject *
 PyFFFont_MergeKern (PyFF_Font *self, PyObject *args)
 {
   char *filename;
@@ -20612,6 +20656,9 @@ static PyMethodDef PyFF_Font_methods[] = {
   {"generateFeatureFile", (PyCFunction) PyFFFont_GenerateFeature,
    METH_VARARGS,
    "Creates an adobe feature file containing all features and lookups"},
+  {"generateFeatureString", (PyCFunction) PyFFFont_GenerateFeatureString,
+   METH_VARARGS,
+   "Creates an adobe feature string containing all features and lookups"},
   {"mergeKern", (PyCFunction) PyFFFont_MergeKern, METH_VARARGS,
    "Merge feature data into the current font from an external file"},
   {"mergeFeature", (PyCFunction) PyFFFont_MergeKern, METH_VARARGS,

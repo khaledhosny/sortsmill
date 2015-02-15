@@ -2035,6 +2035,24 @@ FeatDumpOneLookup (FILE *out, SplineFont *sf, OTLookup *otl)
     }
 }
 
+char *
+FeatDumpOneLookupString (SplineFont *sf, OTLookup *otl)
+{
+  FILE *stream;
+  char *buf;
+  size_t len;
+
+  stream = open_memstream (&buf, &len);
+  if (stream != NULL)
+    {
+      FeatDumpOneLookup (stream, sf, otl);
+      fclose (stream);
+      return buf;
+    }
+  else
+    return NULL;
+}
+
 static void
 dump_gdef (FILE *out, SplineFont *sf)
 {
@@ -2533,6 +2551,24 @@ FeatDumpFontLookups (FILE *out, SplineFont *sf)
   dump_gdef (out, sf);
   dump_base (out, sf);
   cleanup_names (sf);
+}
+
+char *
+FeatDumpFontLookupsString (SplineFont *sf)
+{
+  FILE *stream;
+  char *buf;
+  size_t len;
+
+  stream = open_memstream (&buf, &len);
+  if (stream != NULL)
+    {
+      FeatDumpFontLookups (stream, sf);
+      fclose (stream);
+      return buf;
+    }
+  else
+    return NULL;
 }
 
 
