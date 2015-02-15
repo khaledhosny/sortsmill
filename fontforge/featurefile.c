@@ -5668,6 +5668,9 @@ fea_AddAGlyphSet (char **covers, char **ncovers, int i, struct markedglyphs *g)
 static bool
 is_blank_coverage (char **coverage, int cnt)
 {
+  if (cnt == 0)
+    return false;
+
   for (int i = 0; i < cnt; i++)
     if (!is_blank (coverage[i]))
       return false;
