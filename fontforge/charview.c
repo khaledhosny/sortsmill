@@ -7816,7 +7816,7 @@ CVChar (CharView *cv, GEvent *event)
               SCUpdateAll (cv->b.sc);
             }
           else if (CVAnySel (cv, NULL, NULL, NULL, &anya) || cv->widthsel
-                   || cv->vwidthsel)
+                   || cv->vwidthsel || cv->icsel || cv->tah_sel)
             {
               CVPreserveState (&cv->b);
               CVMoveSelection (cv, dx * arrowAmount, dy * arrowAmount,
