@@ -60,7 +60,7 @@ VISIBLE int export_clipboard = 1;
 
 /* ********************************* Undoes ********************************* */
 
-VISIBLE int maxundoes = 12;     /* -1 is infinite */
+VISIBLE int maxundoes = -1;     /* -1 is infinite */
 int preserve_hint_undoes = true;
 
 static uint8_t *
