@@ -1,6 +1,8 @@
 #include <config.h>
 
-// This file is part of the Sorts Mill Tools.
+// Copyright (C) 2015 Khaled Hosny and Barry Schwartz
+//
+// This file is part of Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,12 +47,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <glib.h>
+#include <libguile.h>
 #include "gdraw.h"
 #include "ggadgetP.h"
 #include "gfile.h"
 #include "utype.h"
 #include "ustring.h"
 #include "gresource.h"
+
+#define _SHORTCUTS_MODULE "sortsmill editor keyboard-shortcuts"
 
 int
 GTextInfoGetWidth (GWindow base, GTextInfo *ti, FontInstance * font)
@@ -1111,16 +1116,28 @@ GMenuItemParseMask (char *shortcut)
     }
 }
 
+static const char *
+get_keyboard_shortcut (const char *key)
+{
+  SCM proc = scm_c_public_ref (_SHORTCUTS_MODULE, "shortcut-ref");
+  SCM k = scm_from_utf8_string (key);
+  SCM v = scm_call_1 (proc, k);
+  return
+    (scm_is_true (v)) ? (x_gc_grabstr (scm_to_utf8_stringn (v, NULL))) : NULL;
+}
+
 void
 GMenuItemParseShortCut (GMenuItem *mi, char *shortcut)
 {
-  char *pt, *sh;
+  const char *pt, *sh;
   int mask, temp, i;
 
   mi->short_mask = 0;
   mi->shortcut_char = '\0';
 
-  sh = dgettext (shortcut_domain, shortcut);
+  sh = get_keyboard_shortcut (shortcut);
+  if (sh == NULL)
+    sh = dgettext (shortcut_domain, shortcut);
   /* shortcut might be "Open|Ctl+O" meaning the Open menu item is bound to ^O */
   /*  or "CV*Open|Ctl+O" meaning that in the charview the Open menu item ... */
   /*  but if CV*Open|Ctl+O isn't found then check simple "Open|Ctl+O" as a default */

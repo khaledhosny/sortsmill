@@ -64,7 +64,7 @@ sortsmill/usermenu/python.go: sortsmill/python.go sortsmill/usermenu.go sortsmil
 sortsmill/math/gsl/error.go: sortsmill/dynlink.go
 sortsmill.go: sortsmill/argv.go sortsmill/arrays.go sortsmill/editor.go sortsmill/fonts.go sortsmill/i18n.go sortsmill/iconv.go sortsmill/mac-encodings.go sortsmill/math.go sortsmill/nearness.go sortsmill/notices.go sortsmill/postscript.go sortsmill/pkg-info.go sortsmill/strings.go sortsmill/svg.go
 sortsmill/__internals__.go: sortsmill/__internals__/anchors.go sortsmill/__internals__/glyphs.go sortsmill/__internals__/lookups.go
-sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go
+sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go sortsmill/editor/main-loop.go sortsmill/editor/keyboard-shortcuts.go
 sortsmill/fontforge-api.go: sortsmill/pkg-info/package.go
 sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/font-formats.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/general.go sortsmill/fonts/glyphs.go sortsmill/fonts/head-table.go sortsmill/fonts/hhea-table.go sortsmill/fonts/name-table.go sortsmill/fonts/opentype-io.go sortsmill/fonts/os2-table.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/private-dict.go sortsmill/fonts/psmat.go sortsmill/fonts/t1font-dict.go sortsmill/fonts/ufo.go sortsmill/fonts/views.go
 sortsmill/gdraw-api.go: sortsmill/pkg-info/package.go

@@ -255,6 +255,12 @@ DIST_SCM_FILES += sortsmill/editor/finalization.scm
 GO_FILES += sortsmill/editor/finalization.go
 EDITOR_REEXPORTED_SCM_FILES += sortsmill/editor/finalization.scm
 
+# (sortsmill editor keyboard-shortcuts)
+
+DIST_SCM_FILES += sortsmill/editor/keyboard-shortcuts.scm
+GO_FILES += sortsmill/editor/keyboard-shortcuts.go
+EDITOR_REEXPORTED_SCM_FILES += sortsmill/editor/keyboard-shortcuts.scm
+
 # (sortsmill editor main)
 
 DIST_SCM_FILES += sortsmill/editor/main.scm
