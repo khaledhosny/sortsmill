@@ -7,7 +7,7 @@
 # Sorts Mill Autogen
 # <https://bitbucket.org/sortsmill/sortsmill-autogen>
 #
-# Copyright (C) 2013 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2013, 2015 Khaled Hosny and Barry Schwartz
 # 
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -93,7 +93,7 @@ need_pkg_config() {
 }
 
 need_gnulib_tool() {
-    test -f m4/gnulib-cache.m4
+    test -f m4/gnulib-cache.m4 -a ! -f lib/Makefile.am
 }
 
 need_gperf_for_gnulib() {
@@ -180,8 +180,8 @@ run_intltoolize() {
 }
 
 run_autoreconf() {
-    echo "Running autoreconf --install --verbose"
-    autoreconf --install --verbose || exit $?
+    echo "Running autoreconf --force --install --verbose"
+    autoreconf --force --install --verbose || exit $?
 }
 
 # Run everything in a subshell, so the user does not get stuck in a
