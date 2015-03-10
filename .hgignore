@@ -19,11 +19,17 @@ syntax: regexp
 \.pyc$
 \.pyo$
 \.info$
-^lib/
+#^lib/
+^lib/(M|m|GNUm)akefile\.in$
 ^\.libs/
 ^\.deps/
-^m4/(?!gnulib-cache\.m4|(stm|ax)_.*\.m4)
-^config/(?!config\.rpath)
+#^m4/(?!gnulib-cache\.m4|(stm|ax)_.*\.m4)
+#^config/(?!config\.rpath)
+^config/ar-lib$
+^config/compile$
+^config/depcomp$
+^config/install-sh$
+^config/missing$
 ^po/Makefile\.in\.in
 
 \.gitignore$
