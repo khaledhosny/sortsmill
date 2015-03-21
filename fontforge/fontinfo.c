@@ -6350,19 +6350,20 @@ GFI_OK (GGadget *g, GEvent *e)
 
           loweroptsize = GetReal8 (gw, CID_LowerOpticalSize,
                                    _("_Lower Optical Point Size"), &err);
-          if (loweroptsize < 0 || loweroptsize > 0xFFFF * 20)
+          if (loweroptsize < 0 || point_to_twip (loweroptsize) > 0xFFFE)
             {
               ff_post_error (_("Bad Lower Optical Point Size"),
-                             _("Must be between 0 and 3276.75pt"));
+                             _("Must be between 0 and 3276.7pt"));
               return true;
             }
 
           upperoptsize = GetReal8 (gw, CID_UpperOpticalSize,
                                    _("_Upper Optical Point Size"), &err);
-          if (upperoptsize < 0 || upperoptsize > 0xFFFF * 20)
+          if (point_to_twip (upperoptsize) < 2 ||
+              point_to_twip (upperoptsize) > 0xFFFF)
             {
               ff_post_error (_("Bad Upper Optical Point Size"),
-                             _("Must be between 0 and 3276.75pt"));
+                             _("Must be between 0.1 and 3276.75pt"));
               return true;
             }
 
@@ -6740,8 +6741,8 @@ GFI_OK (GGadget *g, GEvent *e)
                           userdata);
           sf->pfminfo.panose_set =
             !GGadgetIsChecked (GWidgetGetControl (gw, CID_PanDefault));
-          sf->pfminfo.os2_loweropticalsize = loweroptsize;
-          sf->pfminfo.os2_upperopticalsize = upperoptsize;
+          sf->pfminfo.os2_loweropticalsize = point_to_twip (loweroptsize);
+          sf->pfminfo.os2_upperopticalsize = point_to_twip (upperoptsize);
           sf->pfminfo.os2_typolinegap = tlinegap;
           sf->pfminfo.linegap = linegap;
           if (vmetrics)
@@ -7279,9 +7280,9 @@ TTFSetup (struct gfi_data *d)
         }
     }
 
-  sprintf (buffer, "%g", info.os2_loweropticalsize);
+  sprintf (buffer, "%g", twip_to_point (info.os2_loweropticalsize));
   GGadgetSetTitle8 (GWidgetGetControl (d->gw, CID_LowerOpticalSize), buffer);
-  sprintf (buffer, "%g", info.os2_upperopticalsize);
+  sprintf (buffer, "%g", twip_to_point (info.os2_upperopticalsize));
   GGadgetSetTitle8 (GWidgetGetControl (d->gw, CID_UpperOpticalSize), buffer);
 
   GGadgetSetChecked (GWidgetGetControl (d->gw, CID_SubSuperDefault),

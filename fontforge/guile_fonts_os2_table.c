@@ -413,10 +413,10 @@ scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value,
       break;
 
     case _os2_usLowerOpticalPointSize:
-      sf->pfminfo.os2_loweropticalsize = scm_to_double (value);
+      sf->pfminfo.os2_loweropticalsize = point_to_twip (scm_to_double (value));
       break;
     case _os2_usUpperOpticalPointSize:
-      sf->pfminfo.os2_upperopticalsize = scm_to_double (value);
+      sf->pfminfo.os2_upperopticalsize = point_to_twip (scm_to_double (value));
       break;
 
     case _os2_sTypoAscender_is_offset:
@@ -539,10 +539,10 @@ scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset)
       break;
 
     case _os2_usLowerOpticalPointSize:
-      result = scm_from_double (sf->pfminfo.os2_loweropticalsize);
+      result = scm_from_double (twip_to_point (sf->pfminfo.os2_loweropticalsize));
       break;
     case _os2_usUpperOpticalPointSize:
-      result = scm_from_double (sf->pfminfo.os2_upperopticalsize);
+      result = scm_from_double (twip_to_point (sf->pfminfo.os2_upperopticalsize));
       break;
 
     case _os2_sTypoAscender_is_offset:

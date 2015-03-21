@@ -2279,8 +2279,8 @@ struct pfminfo
   int16_t os2_family_class;
   uint32_t codepages[2];
   uint32_t unicoderanges[4];
-  float os2_loweropticalsize;
-  float os2_upperopticalsize;
+  uint16_t os2_loweropticalsize;
+  uint16_t os2_upperopticalsize;
 };
 
 struct ttf_table
@@ -4252,4 +4252,16 @@ bigreal SFDescender (SplineFont *sf, int layer, int return_error);
 
 SplineChar ***GlyphClassesFromNames (SplineFont *sf, char **classnames,
                                      int class_cnt);
+
+inline real
+twip_to_point (int value)
+{
+  return (real) value / 20.0;
+}
+
+inline int
+point_to_twip (real value)
+{
+  return rint (value * 20);
+}
 #endif
