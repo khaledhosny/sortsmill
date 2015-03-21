@@ -1173,7 +1173,7 @@ static GTextInfo panserifvar[] = {
   {(uint32_t *) N_("PanoseSerifs|Thin"), NULL, 0, 0, (void *) 7, NULL, 0, 0,
    0, 0, 0, 0, 1, 0, 0, '\0'},
 /*!*/ {(uint32_t *) N_("Oval"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0,
-         0, 1, 0, 0, '\0'},
+       0, 1, 0, 0, '\0'},
   {(uint32_t *) N_("Exaggerated"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) N_("Triangle"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0,
@@ -1190,7 +1190,7 @@ static GTextInfo panserifvar[] = {
    0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /* Um, these guys are only supposed to go up to 15, so why does this have a 16? */
 /*!*/ {(uint32_t *) N_("PanoseSerivfs|Script"), NULL, 0, 0, (void *) 16,
-         NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+       NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   GTEXTINFO_EMPTY
 };
 
@@ -2550,8 +2550,8 @@ static GTextInfo codepagenames[] = {
 };
 
 static char *TN_DefaultName (GGadget *g, int r, int c);
-static void TN_StrIDEnable (GGadget *g, GMenuItem * mi, int r, int c);
-static void TN_LangEnable (GGadget *g, GMenuItem * mi, int r, int c);
+static void TN_StrIDEnable (GGadget *g, GMenuItem *mi, int r, int c);
+static void TN_LangEnable (GGadget *g, GMenuItem *mi, int r, int c);
 static struct col_init ci[] = {
   {me_enum, NULL, mslanguages, TN_LangEnable, N_("Language")},
   {me_enum, NULL, ttfnameids, TN_StrIDEnable, N_("String ID")},
@@ -2625,8 +2625,7 @@ static GTextInfo layertype[] = {
   GTEXTINFO_EMPTY
 };
 
-static void Layers_BackgroundEnable (GGadget *g, GMenuItem * mi, int r,
-                                     int c);
+static void Layers_BackgroundEnable (GGadget *g, GMenuItem *mi, int r, int c);
 static struct col_init layersci[] = {
   {me_string, NULL, NULL, NULL, N_("Layer Name")},
   {me_enum, NULL, splineorder, NULL, N_("Curve Type")},
@@ -2818,11 +2817,11 @@ static const char bookpl[] = "zwykła";
 static struct langstyle regs[] =
   { {0x409, regulareng}, {0x40c, regularfren}, {0x410, regularital}, {0x407,
                                                                       regulargerm},
-  {0x40a, regularspan}, {0x419, regularru}, {0x40e, regularhu},
+{0x40a, regularspan}, {0x419, regularru}, {0x40e, regularhu},
 {0x413, regulardutch}, {0x41d, regularswed}, {0x414, regularnor},
 {0x406, regulardanish}, {0x415, regularpl}, {0x804, "正常"},
 {0x408, "κανονική"}, {0x42a, "Chuẩn"}, {0x418, "Normal"},
-  LANGSTYLE_EMPTY
+LANGSTYLE_EMPTY
 };
 static struct langstyle meds[] = { {0x409, mediumeng}, {0x410, mediumital},
 {0x40c, mediumfren}, {0x407, mediumgerm}, {0x40e, mediumhu},
@@ -2837,8 +2836,8 @@ static struct langstyle books[] = { {0x409, bookeng}, {0x410, bookital},
 };
 static struct langstyle bolds[] =
   { {0x409, boldeng}, {0x410, boldital}, {0x40c, boldfren}, {0x407, boldgerm},
-  {0x407, boldgerm2}, {0x40a, boldspan}, {0x419, boldru}, {0x40e, boldhu},
-  {0x40e, boldhu2},
+{0x407, boldgerm2}, {0x40a, boldspan}, {0x419, boldru}, {0x40e, boldhu},
+{0x40e, boldhu2},
 {0x413, bolddutch}, {0x41d, boldswed}, {0x414, boldnor},
 {0x406, bolddanish}, {0x415, boldpl}, {0x804, "粗体"},
 {0x408, "έντονη"}, {0x42a, "Đậm"}, {0x418, "Aldin"}, LANGSTYLE_EMPTY
@@ -2846,12 +2845,12 @@ static struct langstyle bolds[] =
 static struct langstyle italics[] =
   { {0x409, italiceng}, {0x410, italicital}, {0x40c, italicfren}, {0x407,
                                                                    italicgerm},
-  {0x40a, italicspan}, {0x419, italicru}, {0x40e, italichu},
+{0x40a, italicspan}, {0x419, italicru}, {0x40e, italichu},
 {0x413, italicdutch}, {0x413, italicdutch2}, {0x41d, italicswed}, {0x414,
                                                                    italicnor},
 {0x406, italicdanish}, {0x415, italicpl}, {0x804, "斜体"},
 {0x408, "Λειψίας"}, {0x42a, "Nghiêng"}, {0x418, "Cursiv"},
-  LANGSTYLE_EMPTY
+LANGSTYLE_EMPTY
 };
 static struct langstyle obliques[] =
   { {0x409, obliqueeng}, {0x410, obliqueital},
@@ -2865,7 +2864,7 @@ static struct langstyle demibolds[] =
   { {0x409, demiboldeng}, {0x409, demiboldeng3}, {0x409, demiboldeng5},
 {0x410, demiboldital}, {0x40c, demiboldfren}, {0x40c, demiboldfren2}, {0x407,
                                                                        demiboldgerm},
-  {0x407, demiboldgerm2},
+{0x407, demiboldgerm2},
 {0x419, demiboldru}, {0x40e, demiboldhu}, {0x40e, demiboldhu2},
 {0x406, demibolddanish}, {0x415, demiboldpl},
 {0x804, "略粗"}, {0x408, "ηµιέντονη"},
@@ -2879,7 +2878,7 @@ static struct langstyle heavys[] = { {0x409, heavyeng}, {0x410, heavyital},
 static struct langstyle blacks[] =
   { {0x409, blackeng}, {0x410, blackital}, {0x40c, blackfren}, {0x407,
                                                                 blackgerm},
-  {0x419, blackru}, {0x40e, blackhu}, {0x40e, blackhu2}, {0x40a, blackspan},
+{0x419, blackru}, {0x40e, blackhu}, {0x40e, blackhu2}, {0x40a, blackspan},
 {0x413, blackdutch}, {0x41d, blackswed}, {0x414, blacknor}, {0x406,
                                                              blackdanish},
 {0x415, heavypl}, {0x804, "黑"}, {0x408, "µαύρα"},
@@ -2896,15 +2895,15 @@ static struct langstyle extralights[] =
 static struct langstyle lights[] =
   { {0x409, lighteng}, {0x410, lightital}, {0x40c, lightfren}, {0x407,
                                                                 lightgerm},
-  {0x419, lightru}, {0x40e, lighthu}, {0x40a, lightspan},
+{0x419, lightru}, {0x40e, lighthu}, {0x40a, lightspan},
 {0x413, lightdutch}, {0x41d, lightswed}, {0x414, lightnor},
 {0x406, lightdanish}, {0x415, lightpl}, {0x804, "细"},
 {0x408, "λεπτή"}, {0x42a, "Nhẹ"}, {0x418, "Subțire"}, LANGSTYLE_EMPTY
 };
 static struct langstyle condenseds[] =
   { {0x409, condensedeng}, {0x410, condensedital}, {0x40c, condensedfren},
-  {0x407, condensedgerm}, {0x419, condensedru}, {0x40e, condensedhu}, {0x40a,
-                                                                       condensedspan},
+{0x407, condensedgerm}, {0x419, condensedru}, {0x40e, condensedhu}, {0x40a,
+                                                                     condensedspan},
 {0x413, condenseddutch}, {0x41d, condensedswed},
 {0x414, condensednor}, {0x406, condenseddanish},
 {0x415, condensedpl}, {0x804, "压缩"},
@@ -2912,8 +2911,8 @@ static struct langstyle condenseds[] =
 };
 static struct langstyle expandeds[] =
   { {0x409, expandedeng}, {0x410, expandedital}, {0x40c, expandedfren},
-  {0x407, expandedgerm}, {0x419, expandedru}, {0x40e, expandedhu}, {0x40a,
-                                                                    expandedspan},
+{0x407, expandedgerm}, {0x419, expandedru}, {0x40e, expandedhu}, {0x40a,
+                                                                  expandedspan},
 {0x413, expandeddutch}, {0x41d, expandedswed}, {0x414, expandednor},
 {0x406, expandeddanish}, {0x415, expandedpl}, {0x804, "加宽"},
 {0x408, "αραιή"}, {0x42a, "Rộng"}, {0x418, "Expandat"}, LANGSTYLE_EMPTY
@@ -2923,13 +2922,13 @@ static struct langstyle outlines[] =
 {0x407, outlinegerm}, {0x40e, outlinehu}, {0x406, outlinedanish},
 {0x415, outlinepl}, {0x804, "轮廓"}, {0x408, "περιγράμματος"},
 {0x42a, "Nét ngoài"}, {0x413, outlinedutch}, {0x418, "Contur"},
-  LANGSTYLE_EMPTY
+LANGSTYLE_EMPTY
 };
 
 static struct langstyle *stylelist[] =
   { regs, meds, books, demibolds, bolds, heavys, blacks,
   extralights, lights, thins, italics, obliques, condenseds, expandeds,
-    outlines, NULL
+  outlines, NULL
 };
 
 #define CID_Family	1002
@@ -3250,7 +3249,7 @@ static GTextInfo psprivate_nameids[] = {
 };
 
 static void
-PI_KeyEnable (GGadget *g, GMenuItem * mi, int r, int c)
+PI_KeyEnable (GGadget *g, GMenuItem *mi, int r, int c)
 {
   int i, j, rows;
   struct matrix_data *strings = _GMatrixEditGet (g, &rows);
@@ -3649,7 +3648,7 @@ PI_Hist (GGadget *g, GEvent *e)
       else if (strcmp (key, "StdVW") == 0 || strcmp (key, "StemSnapV") == 0)
         h = hist_vstem;
       else
-        return true;          /* can't happen */
+        return true;            /* can't happen */
       tempdict = GFI_ParsePrivate (d);
       SFHistogram (d->sf, ly_fore, tempdict, NULL, NULL, h);
       ret = xstrdup_or_null (PSDictHasEntry (tempdict, key));
@@ -3795,8 +3794,7 @@ GFI_VMetricsCheck (GGadget *g, GEvent *e)
       GGadgetSetEnabled (GWidgetGetControl
                          (GDrawGetParentWindow (gw), CID_VLineGap), checked);
       GGadgetSetEnabled (GWidgetGetControl
-                         (GDrawGetParentWindow (gw), CID_VLineGapLab),
-                         checked);
+                         (GDrawGetParentWindow (gw), CID_VLineGapLab), checked);
     }
   return true;
 }
@@ -3902,8 +3900,7 @@ GFI_Mark_FinishEdit (GGadget *g, int r, int c, int wasnew)
           || *classes[r * cols + c].u.md_str == '\0')
         {
           ff_post_error (_("No Name"),
-                         _
-                         ("Please specify a name for this mark class or set"));
+                         _("Please specify a name for this mark class or set"));
           return;
         }
       for (pt = classes[r * cols + c].u.md_str; *pt != '\0'; ++pt)
@@ -3946,9 +3943,8 @@ GFI_Mark_PickGlyphsForClass (GGadget *g, int r, int c)
   struct gfi_data *d = GDrawGetUserData (GGadgetGetWindow (g));
   int rows, cols = GMatrixEditGetColCnt (g);
   struct matrix_data *classes = _GMatrixEditGet (g, &rows);
-  char *new =
-    GlyphSetFromSelection (d->sf, d->def_layer,
-                           classes[r * cols + c].u.md_str);
+  char *new = GlyphSetFromSelection (d->sf, d->def_layer,
+                                     classes[r * cols + c].u.md_str);
   return new;
 }
 
@@ -4610,8 +4606,7 @@ CheckActiveStyleTranslation (struct gfi_data *d,
               if (stylelist[i][j].lang == 0x409 &&
                   (pt = strcasestr (new, stylelist[i][j].str)) != NULL)
                 {
-                  if (pt == new
-                      && strlen (stylelist[i][j].str) == strlen (new))
+                  if (pt == new && strlen (stylelist[i][j].str) == strlen (new))
                     {
                       free (new);
                       free (strings[3 * r + 2].u.md_str);
@@ -4620,8 +4615,7 @@ CheckActiveStyleTranslation (struct gfi_data *d,
                           /* polish needs a word before the translation */
                           strings[3 * r + 2].u.md_str =
                             xmalloc (strlen ("odmiana ") +
-                                     strlen (stylelist[i][other_pos].str) +
-                                     1);
+                                     strlen (stylelist[i][other_pos].str) + 1);
                           strcpy (strings[3 * r + 2].u.md_str, "odmiana ");
                           strcat (strings[3 * r + 2].u.md_str,
                                   stylelist[i][other_pos].str);
@@ -4636,8 +4630,7 @@ CheckActiveStyleTranslation (struct gfi_data *d,
                                    - strlen (stylelist[i][j].str) + 1));
                   strncpy (temp, new, pt - new);
                   strcpy (temp + (pt - new), stylelist[i][other_pos].str);
-                  strcat (temp + (pt - new),
-                          pt + strlen (stylelist[i][j].str));
+                  strcat (temp + (pt - new), pt + strlen (stylelist[i][j].str));
                   free (new);
                   new = temp;
                   changed = true;
@@ -4671,7 +4664,7 @@ CheckActiveStyleTranslation (struct gfi_data *d,
 #define MID_Delete	3
 
 static void
-TN_StrPopupDispatch (GWindow gw, GMenuItem * mi, GEvent *e)
+TN_StrPopupDispatch (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   struct gfi_data *d = GDrawGetUserData (GDrawGetParentWindow (gw));
   GGadget *g = GWidgetGetControl (d->gw, CID_TNames);
@@ -4726,7 +4719,7 @@ menusort (const void *m1, const void *m2)
 }
 
 static void
-TN_StrIDEnable (GGadget *g, GMenuItem * mi, int r, int c)
+TN_StrIDEnable (GGadget *g, GMenuItem *mi, int r, int c)
 {
   int rows, i, j;
   struct matrix_data *strings = GMatrixEditGet (g, &rows);
@@ -4747,7 +4740,7 @@ TN_StrIDEnable (GGadget *g, GMenuItem * mi, int r, int c)
 }
 
 static void
-TN_LangEnable (GGadget *g, GMenuItem * mi, int r, int c)
+TN_LangEnable (GGadget *g, GMenuItem *mi, int r, int c)
 {
   int i;
 
@@ -4857,8 +4850,7 @@ TN_FinishEdit (GGadget *g, int row, int col, int wasnew)
                   /* Copy the normal family */
                   for (i = rows - 1; i >= 0; --i)
                     if (strings[3 * i + 1].u.md_ival == ttf_family &&
-                        strings[3 * i].u.md_ival ==
-                        strings[3 * row].u.md_ival)
+                        strings[3 * i].u.md_ival == strings[3 * row].u.md_ival)
                       {
                         strings[3 * row + 2].u.md_str =
                           xstrdup_or_null (strings[3 * i + 2].u.md_str);
@@ -4992,8 +4984,7 @@ TNMatrixInit (struct matrixinit *mi, struct gfi_data *d)
                   {
                     md[3 * cnt].u.md_ival = tln->lang;
                     md[3 * cnt + 1].u.md_ival = i;
-                    md[3 * cnt + 2].u.md_str =
-                      xstrdup_or_null (tln->names[i]);
+                    md[3 * cnt + 2].u.md_str = xstrdup_or_null (tln->names[i]);
                   }
                 ++cnt;
                 if (tln->lang == 0x409)
@@ -5093,8 +5084,7 @@ GFI_AddOFL (GGadget *g, GEvent *e)
               for (j = rows - 1; j >= 0; --j)
                 {
                   if (tns[j * 3 + 1].u.md_ival == ofl_str_lang_data[i].strid
-                      && tns[j * 3 + 0].u.md_ival ==
-                      ofl_str_lang_data[i].lang)
+                      && tns[j * 3 + 0].u.md_ival == ofl_str_lang_data[i].lang)
                     {
                       if (k)
                         {
@@ -5415,7 +5405,7 @@ GFI_GaspVersion (GGadget *g, GEvent *e)
 }
 
 static void
-Layers_BackgroundEnable (GGadget *g, GMenuItem * mi, int r, int c)
+Layers_BackgroundEnable (GGadget *g, GMenuItem *mi, int r, int c)
 {
   int disable = r <= ly_fore;
   mi[0].ti.disabled = disable;
@@ -5637,7 +5627,7 @@ ttfuniqueidmatch (SplineFont *sf, struct gfi_data *d)
             continue;           /* removed. That's a change */
           if (strcmp (tln->names[ttf_uniqueid], strings[3 * i + 2].u.md_str)
               == 0)
-            return true;      /* name unchanged */
+            return true;        /* name unchanged */
         }
     }
   return false;
@@ -6174,8 +6164,7 @@ GFI_OK (GGadget *g, GEvent *e)
               (_("Too many Unique Font IDs"), (const char **) buts, 0, 1,
                _("You should only specify the TrueType Unique Font "
                  "Identification string in one language. This font "
-                 "has more. Do you want to continue anyway?"))
-              == 1)
+                 "has more. Do you want to continue anyway?")) == 1)
             return true;
         }
       txt = _GGadgetGetTitle (GWidgetGetControl (gw, CID_Family));
@@ -6191,19 +6180,16 @@ GFI_OK (GGadget *g, GEvent *e)
           GGadgetProtest8 (_("_Italic Angle:"));
           return true;
         }
-      guideorder2 =
-        GGadgetIsChecked (GWidgetGetControl (gw, CID_GuideOrder2));
+      guideorder2 = GGadgetIsChecked (GWidgetGetControl (gw, CID_GuideOrder2));
       strokedfont =
         GGadgetIsChecked (GWidgetGetControl (gw, CID_IsStrokedFont));
       strokewidth = GetReal8 (gw, CID_StrokeWidth, _("Stroke _Width:"), &err);
-      multilayer =
-        GGadgetIsChecked (GWidgetGetControl (gw, CID_IsMultiLayer));
+      multilayer = GGadgetIsChecked (GWidgetGetControl (gw, CID_IsMultiLayer));
       vmetrics =
         GGadgetIsChecked (GWidgetGetControl (gw, CID_HasVerticalMetrics));
       upos = GetReal8 (gw, CID_UPos, _("Underline _Position:"), &err);
       uwid =
-        GetReal8 (gw, CID_UWidth, (char *) C_ ("Underline", "_Height:"),
-                  &err);
+        GetReal8 (gw, CID_UWidth, (char *) C_ ("Underline", "_Height:"), &err);
       GetInt8 (gw, CID_Em, _("_Em Size:"), &err);       /* just check for errors. redundant info */
       as = GetInt8 (gw, CID_Ascent, _("_Ascent:"), &err);
       des = GetInt8 (gw, CID_Descent, _("_Descent:"), &err);
@@ -6287,8 +6273,7 @@ GFI_OK (GGadget *g, GEvent *e)
           woffMajor =
             GetInt8 (gw, CID_WoffMajor, _("Woff Major Version:"), &err);
           woffMinor = 0;
-          if (*_GGadgetGetTitle (GWidgetGetControl (gw, CID_WoffMinor)) !=
-              '\0')
+          if (*_GGadgetGetTitle (GWidgetGetControl (gw, CID_WoffMinor)) != '\0')
             woffMinor =
               GetInt8 (gw, CID_WoffMinor, _("Woff Minor Version:"), &err);
         }
@@ -6301,8 +6286,7 @@ GFI_OK (GGadget *g, GEvent *e)
         hexparse (gw, CID_CodePageRanges, _("MS Code Pages"), codepages, 2,
                   &err);
       if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_URangesDefault)))
-        hexparse (gw, CID_UnicodeRanges, _("Unicode Ranges"), uranges, 4,
-                  &err);
+        hexparse (gw, CID_UnicodeRanges, _("Unicode Ranges"), uranges, 4, &err);
       if (err)
         return true;
 
@@ -6368,8 +6352,7 @@ GFI_OK (GGadget *g, GEvent *e)
             }
 
           linegap = GetInt8 (gw, CID_LineGap, _("HHead _Line Gap:"), &err);
-          tlinegap =
-            GetInt8 (gw, CID_TypoLineGap, _("Typo Line _Gap:"), &err);
+          tlinegap = GetInt8 (gw, CID_TypoLineGap, _("Typo Line _Gap:"), &err);
           if (vmetrics)
             vlinegap =
               GetInt8 (gw, CID_VLineGap, _("VHead _Column Spacing:"), &err);
@@ -6415,8 +6398,7 @@ GFI_OK (GGadget *g, GEvent *e)
           if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_SubSuperDefault)))
             {
               for (i = 0; i < 4; ++i)
-                subs[i] =
-                  GetInt8 (gw, CID_SubXSize + i, _("Subscript"), &err);
+                subs[i] = GetInt8 (gw, CID_SubXSize + i, _("Subscript"), &err);
               for (i = 0; i < 4; ++i)
                 super[i] =
                   GetInt8 (gw, CID_SuperXSize + i, _("Superscript"), &err);
@@ -6465,8 +6447,7 @@ GFI_OK (GGadget *g, GEvent *e)
       if (!GGadgetIsChecked (GWidgetGetControl (d->gw, CID_MacAutomatic)))
         {
           mcs = 0;
-          ti =
-            GGadgetGetList (GWidgetGetControl (d->gw, CID_MacStyles), &len);
+          ti = GGadgetGetList (GWidgetGetControl (d->gw, CID_MacStyles), &len);
           for (i = 0; i < len; ++i)
             if (ti[i]->selected)
               mcs |= (int) (intptr_t) ti[i]->userdata;
@@ -6491,10 +6472,9 @@ GFI_OK (GGadget *g, GEvent *e)
         {
           ff_post_error (_("Namelist contains non-ASCII names"),
                          _("Glyph names should be limited to characters "
-						   "in the ASCII character set,\n"
-						   "but there are names in this namelist which use "
-						   "characters outside\n"
-						   "that range."));
+                           "in the ASCII character set,\n"
+                           "but there are names in this namelist which use "
+                           "characters outside\n" "that range."));
           return true;
         }
       if (!SSNameValidate (d))
@@ -6523,8 +6503,7 @@ GFI_OK (GGadget *g, GEvent *e)
       if (namechange)
         retitle_fv = true;
       usexuid = GGadgetIsChecked (GWidgetGetControl (gw, CID_UseXUID));
-      useuniqueid =
-        GGadgetIsChecked (GWidgetGetControl (gw, CID_UseUniqueID));
+      useuniqueid = GGadgetIsChecked (GWidgetGetControl (gw, CID_UseUniqueID));
       txt = _GGadgetGetTitle (GWidgetGetControl (gw, CID_XUID));
       xuidchanged = (sf->xuid == NULL && *txt != '\0') ||
         (sf->xuid != NULL
@@ -6572,8 +6551,7 @@ GFI_OK (GGadget *g, GEvent *e)
       else
         {
           free (sf->xuid);
-          sf->xuid =
-            *txt == '\0' ? NULL : x_u32_to_u8 (u32_force_valid (txt));
+          sf->xuid = *txt == '\0' ? NULL : x_u32_to_u8 (u32_force_valid (txt));
         }
       sf->use_xuid = usexuid;
       sf->use_uniqueid = useuniqueid;
@@ -6582,8 +6560,7 @@ GFI_OK (GGadget *g, GEvent *e)
 
       free (sf->woffMetadata);
       sf->woffMetadata = NULL;
-      if (*_GGadgetGetTitle (GWidgetGetControl (gw, CID_WoffMetadata)) !=
-          '\0')
+      if (*_GGadgetGetTitle (GWidgetGetControl (gw, CID_WoffMetadata)) != '\0')
         sf->woffMetadata =
           GGadgetGetTitle8 (GWidgetGetControl (gw, CID_WoffMetadata));
       sf->woffMajor = woffMajor;
@@ -6703,22 +6680,19 @@ GFI_OK (GGadget *g, GEvent *e)
           sf->use_typo_metrics =
             GGadgetIsChecked (GWidgetGetControl (gw, CID_UseTypoMetrics));
           sf->weight_width_slope_only =
-            GGadgetIsChecked (GWidgetGetControl
-                              (gw, CID_WeightWidthSlopeOnly));
+            GGadgetIsChecked (GWidgetGetControl (gw, CID_WeightWidthSlopeOnly));
           sf->pfminfo.weight = weight;
           sf->pfminfo.width =
             GGadgetGetFirstListSelectedItem (GWidgetGetControl
                                              (gw, CID_WidthClass)) + 1;
           pfmfam =
-            GGadgetGetListItemSelected (GWidgetGetControl
-                                        (gw, CID_PFMFamily));
+            GGadgetGetListItemSelected (GWidgetGetControl (gw, CID_PFMFamily));
           if (pfmfam != NULL)
             sf->pfminfo.pfmfamily = (intptr_t) (pfmfam->userdata);
           else
             sf->pfminfo.pfmfamily = 0x11;
           ibmfam =
-            GGadgetGetListItemSelected (GWidgetGetControl
-                                        (gw, CID_IBMFamily));
+            GGadgetGetListItemSelected (GWidgetGetControl (gw, CID_IBMFamily));
           if (pfmfam != NULL)
             sf->pfminfo.os2_family_class = (intptr_t) (ibmfam->userdata);
           else
@@ -6737,8 +6711,8 @@ GFI_OK (GGadget *g, GEvent *e)
           for (i = 0; i < 10; ++i)
             sf->pfminfo.panose[i] =
               (intptr_t) (GGadgetGetListItemSelected
-                          (GWidgetGetControl (gw, CID_PanFamily + i))->
-                          userdata);
+                          (GWidgetGetControl
+                           (gw, CID_PanFamily + i))->userdata);
           sf->pfminfo.panose_set =
             !GGadgetIsChecked (GWidgetGetControl (gw, CID_PanDefault));
           sf->pfminfo.os2_loweropticalsize = point_to_twip (loweroptsize);
@@ -6848,8 +6822,7 @@ GFI_OK (GGadget *g, GEvent *e)
         {
           sf->mark_set_names[i] =
             xstrdup_or_null (marksets[2 * i + 0].u.md_str);
-          sf->mark_sets[i] =
-            xstrdup_or_null (marksets[2 * i + 1].u.md_str);
+          sf->mark_sets[i] = xstrdup_or_null (marksets[2 * i + 1].u.md_str);
         }
 
       GFI_Close (d);
@@ -6918,8 +6891,7 @@ GFI_AsDsLab (struct gfi_data *d, int cid, int onlylabel)
       return;
     }
 
-  GGadgetSetTitle8 (GWidgetGetControl (d->gw, labcid),
-                    isoffset ? offt : baret);
+  GGadgetSetTitle8 (GWidgetGetControl (d->gw, labcid), isoffset ? offt : baret);
   if (onlylabel)
     return;
 
@@ -6967,8 +6939,7 @@ static void
 _GFI_PanoseDefault (struct gfi_data *d)
 {
   int i;
-  int isdefault =
-    GGadgetIsChecked (GWidgetGetControl (d->gw, CID_PanDefault));
+  int isdefault = GGadgetIsChecked (GWidgetGetControl (d->gw, CID_PanDefault));
 
   for (i = 0; i < 10; ++i)
     {
@@ -7025,8 +6996,7 @@ static void
 GFI_SetPanoseLists (struct gfi_data *d)
 {
   int kind =
-    GGadgetGetFirstListSelectedItem (GWidgetGetControl
-                                     (d->gw, CID_PanFamily));
+    GGadgetGetFirstListSelectedItem (GWidgetGetControl (d->gw, CID_PanFamily));
   int i;
 
   if (kind != d->last_panose_family)
@@ -7046,8 +7016,8 @@ GFI_SetPanoseLists (struct gfi_data *d)
             temp = 16;          /* Decorative.serifvar has 17 elements */
           GGadgetSetTitle8WithMn (lab, panoses[kind][i - 1].name);
           GGadgetSetList (list,
-                          GTextInfoArrayFromList (panoses[kind][i - 1].
-                                                  variants, NULL), false);
+                          GTextInfoArrayFromList (panoses[kind][i - 1].variants,
+                                                  NULL), false);
           GGadgetSelectOneListItem (list, temp);
         }
     }
@@ -7121,8 +7091,7 @@ _GFI_SubSuperDefault (struct gfi_data *d)
     GGadgetIsChecked (GWidgetGetControl (d->gw, CID_SubSuperDefault));
 
   for (i = 0; i < 10; ++i)
-    GGadgetSetEnabled (GWidgetGetControl (d->gw, CID_SubXSize + i),
-                       !isdefault);
+    GGadgetSetEnabled (GWidgetGetControl (d->gw, CID_SubXSize + i), !isdefault);
   if (isdefault)
     {
       const uint32_t *as =
@@ -7165,8 +7134,7 @@ TTFSetup (struct gfi_data *d)
   char buffer[10];
   uint32_t ubuf[10];
   int i, lg, vlg, tlg;
-  const uint32_t *as =
-    _GGadgetGetTitle (GWidgetGetControl (d->gw, CID_Ascent));
+  const uint32_t *as = _GGadgetGetTitle (GWidgetGetControl (d->gw, CID_Ascent));
   const uint32_t *ds =
     _GGadgetGetTitle (GWidgetGetControl (d->gw, CID_Descent));
   uint32_t *aend, *dend;
@@ -7221,8 +7189,7 @@ TTFSetup (struct gfi_data *d)
   for (i = 0; pfmfamily[i].text != NULL; ++i)
     if ((intptr_t) (pfmfamily[i].userdata) == info.pfmfamily)
       {
-        GGadgetSelectOneListItem (GWidgetGetControl (d->gw, CID_PFMFamily),
-                                  i);
+        GGadgetSelectOneListItem (GWidgetGetControl (d->gw, CID_PFMFamily), i);
         break;
       }
 
@@ -7242,8 +7209,7 @@ TTFSetup (struct gfi_data *d)
   for (i = 0; ibmfamily[i].text != NULL; ++i)
     if ((intptr_t) (ibmfamily[i].userdata) == info.os2_family_class)
       {
-        GGadgetSelectOneListItem (GWidgetGetControl (d->gw, CID_IBMFamily),
-                                  i);
+        GGadgetSelectOneListItem (GWidgetGetControl (d->gw, CID_IBMFamily), i);
         break;
       }
   if (info.os2_vendor[0] != '\0')
@@ -7349,9 +7315,9 @@ static char *mathparams[] = {
   N_("Num1:"),
   N_("Num2:"), N_("Num3:"), N_("Denom1:"),
   N_("Denom2:"), N_("Sup1:"), N_("Sup2:"), N_("Sup3:"), N_("Sub1:"),
-    N_("Sub2:"),
+  N_("Sub2:"),
   N_("SupDrop:"), N_("SubDrop:"), N_("Delim1:"), N_("Delim2:"),
-    N_("Axis Ht:"),
+  N_("Axis Ht:"),
   0
 };
 
@@ -7386,8 +7352,7 @@ static char *extparams[] = { N_("Def Rule Thick:"),
   N_("Big Op Space5:"), 0
 };
 
-static char *extpopups[] =
-  { N_("Default thickness of over and overline bars"),
+static char *extpopups[] = { N_("Default thickness of over and overline bars"),
   N_("The minimum glue space above a large displayed operator"),
   N_("The minimum glue space below a large displayed operator"),
   N_("The minimum distance between a limit's baseline and a large displayed\noperator when the limit is above the operator"),
@@ -7593,8 +7558,7 @@ GFI_TeXChanged (GGadget *g, GEvent *e)
           GGadgetSetTitle8 (extrasp,
 /* TRANSLATORS: Extra Space */
                             _("Extra Sp:"));
-          GGadgetSetEnabled (GWidgetGetControl (d->gw, CID_MoreParams),
-                             false);
+          GGadgetSetEnabled (GWidgetGetControl (d->gw, CID_MoreParams), false);
         }
       else
         {
@@ -7670,8 +7634,7 @@ FigureUnicode (struct gfi_data *d)
   GGadgetClearList (list);
   ri =
     SFUnicodeRanges (d->sf,
-                     (includeempties ? ur_includeempty : 0) |
-                     ur_sortbyunicode);
+                     (includeempties ? ur_includeempty : 0) | ur_sortbyunicode);
   if (ri == NULL)
     cnt = 0;
   else
@@ -7857,8 +7820,7 @@ OS2_UnicodeChange (GGadget *g, GEvent *e)
   int len, i, bit, set;
 
   if (e == NULL
-      || (e->type == et_controlevent
-          && e->u.control.subtype == et_textchanged))
+      || (e->type == et_controlevent && e->u.control.subtype == et_textchanged))
     {
       const uint32_t *ret;
       uint32_t *end;
@@ -7919,8 +7881,7 @@ OS2_URangesDefault (GGadget *g, GEvent *e)
     {
       struct gfi_data *gfi = GDrawGetUserData (GGadgetGetWindow (g));
       int def = GGadgetIsChecked (g);
-      GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_UnicodeRanges),
-                         !def);
+      GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_UnicodeRanges), !def);
       GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_UnicodeList), !def);
       if (def)
         {
@@ -7929,8 +7890,7 @@ OS2_URangesDefault (GGadget *g, GEvent *e)
           OS2FigureUnicodeRanges (sf, sf->pfminfo.unicoderanges);
           sprintf (ranges, "%08x.%08x.%08x.%08x",
                    sf->pfminfo.unicoderanges[3], sf->pfminfo.unicoderanges[2],
-                   sf->pfminfo.unicoderanges[1],
-                   sf->pfminfo.unicoderanges[0]);
+                   sf->pfminfo.unicoderanges[1], sf->pfminfo.unicoderanges[0]);
           GGadgetSetTitle8 (GWidgetGetControl (gfi->gw, CID_UnicodeRanges),
                             ranges);
           OS2_UnicodeChange (GWidgetGetControl (gfi->gw, CID_UnicodeRanges),
@@ -7947,8 +7907,7 @@ OS2_CodePageChange (GGadget *g, GEvent *e)
   int len, i, bit, set;
 
   if (e == NULL
-      || (e->type == et_controlevent
-          && e->u.control.subtype == et_textchanged))
+      || (e->type == et_controlevent && e->u.control.subtype == et_textchanged))
     {
       const uint32_t *ret;
       uint32_t *end;
@@ -8002,8 +7961,7 @@ OS2_CPageDefault (GGadget *g, GEvent *e)
     {
       struct gfi_data *gfi = GDrawGetUserData (GGadgetGetWindow (g));
       int def = GGadgetIsChecked (g);
-      GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_CodePageRanges),
-                         !def);
+      GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_CodePageRanges), !def);
       GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_CodePageList), !def);
       if (def)
         {
@@ -8048,7 +8006,7 @@ GFI_UseXUIDChanged (GGadget *g, GEvent *e)
 }
 
 static void
-LookupSetup (struct lkdata *lk, OTLookup * lookups)
+LookupSetup (struct lkdata *lk, OTLookup *lookups)
 {
   int cnt, subcnt;
   OTLookup *otl;
@@ -8218,11 +8176,9 @@ GFI_LookupEnableButtons (struct gfi_data *gfi, int isgpos)
                      (sel.lookup_cnt >= 2 && sel.sub_cnt == 0
                       && sel.lookup_mergeable) || (sel.lookup_cnt == 0
                                                    && sel.sub_cnt >= 2
-                                                   && sel.
-                                                   sub_table_mergeable));
+                                                   && sel.sub_table_mergeable));
   GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_RevertLookups), true);
-  GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_LookupSort),
-                     lk->cnt > 1);
+  GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_LookupSort), lk->cnt > 1);
 
   GGadgetSetEnabled (GWidgetGetControl (gfi->gw, CID_ImportLookups),
                      LookupsImportable (gfi->sf, isgpos));
@@ -8259,16 +8215,15 @@ GFI_LookupScrollbars (struct gfi_data *gfi, int isgpos, int refresh)
               ++lcnt;
               wmax =
                 gfi->fh + GDrawGetText8Width (gw,
-                                              lk->all[i].subtables[j].
-                                              subtable->subtable_name, -1);
+                                              lk->all[i].subtables[j].subtable->
+                                              subtable_name, -1);
               if (wmax > width)
                 width = wmax;
             }
         }
     }
   width += gfi->fh;
-  GScrollBarSetBounds (vsb, 0, lcnt,
-                       (gfi->lkheight - 2 * LK_MARGIN) / gfi->fh);
+  GScrollBarSetBounds (vsb, 0, lcnt, (gfi->lkheight - 2 * LK_MARGIN) / gfi->fh);
   GScrollBarSetBounds (hsb, 0, width, gfi->lkwidth - 2 * LK_MARGIN);
   off_top = lk->off_top;
   if (off_top + ((gfi->lkheight - 2 * LK_MARGIN) / gfi->fh) > lcnt)
@@ -8513,8 +8468,7 @@ GFI_LookupOrder (GGadget *g, GEvent *e)
                       if (lk->all[i].subtables[j].selected && j != 0)
                         {
                           temp2 = lk->all[i].subtables[j];
-                          lk->all[i].subtables[j] =
-                            lk->all[i].subtables[j - 1];
+                          lk->all[i].subtables[j] = lk->all[i].subtables[j - 1];
                           lk->all[i].subtables[j - 1] = temp2;
                         }
                     }
@@ -8543,8 +8497,7 @@ GFI_LookupOrder (GGadget *g, GEvent *e)
                           && j != lk->all[i].subtable_cnt - 1)
                         {
                           temp2 = lk->all[i].subtables[j];
-                          lk->all[i].subtables[j] =
-                            lk->all[i].subtables[j + 1];
+                          lk->all[i].subtables[j] = lk->all[i].subtables[j + 1];
                           lk->all[i].subtables[j + 1] = temp2;
                         }
                     }
@@ -8575,8 +8528,7 @@ GFI_LookupSort (GGadget *g, GEvent *e)
           int order = FeatureOrderId (isgpos, lk->all[i].lookup->features);
           for (j = i + 1; j < lk->cnt; ++j)
             {
-              int jorder =
-                FeatureOrderId (isgpos, lk->all[j].lookup->features);
+              int jorder = FeatureOrderId (isgpos, lk->all[j].lookup->features);
               if (order > jorder)
                 {
                   temp = lk->all[i];
@@ -8594,10 +8546,10 @@ GFI_LookupSort (GGadget *g, GEvent *e)
   return true;
 }
 
-         /* ??? *//* How about a series of buttons to show only by lookup_type, feat-tag, script-tag */
+                  /* ??? *//* How about a series of buttons to show only by lookup_type, feat-tag, script-tag */
 
 void
-GFI_FinishContextNew (struct gfi_data *d, FPST * fpst, int success)
+GFI_FinishContextNew (struct gfi_data *d, FPST *fpst, int success)
 {
   OTLookup *otl;
   struct lookup_subtable *sub, *prev;
@@ -8720,8 +8672,7 @@ GFI_LookupAddLookup (GGadget *g, GEvent *e)
             }
         }
       if (lk->cnt >= lk->max)
-        lk->all =
-          xrealloc (lk->all, (lk->max += 10) * sizeof (struct lkinfo));
+        lk->all = xrealloc (lk->all, (lk->max += 10) * sizeof (struct lkinfo));
       for (k = lk->cnt; k > i + 1; --k)
         lk->all[k] = lk->all[k - 1];
       memset (&lk->all[k], 0, sizeof (struct lkinfo));
@@ -8800,8 +8751,7 @@ GFI_LookupAddSubtable (GGadget *g, GEvent *e)
       if (i == lk->cnt)
         return true;
 
-      sub =
-        xzalloc (sizeof (struct lookup_subtable));
+      sub = xzalloc (sizeof (struct lookup_subtable));
       sub->lookup = lk->all[i].lookup;
       if (!EditSubtable (sub, isgpos, gfi->sf, NULL, gfi->def_layer))
         {
@@ -8967,8 +8917,8 @@ GFI_LookupMergeLookup (GGadget *g, GEvent *e)
                           else
                             {
                               SFSubTablesMerge (gfi->sf, sbfirst->subtable,
-                                                lk->all[i].subtables[j].
-                                                subtable);
+                                                lk->all[i].
+                                                subtables[j].subtable);
                               lk->all[i].subtables[j].deleted = true;
                               lk->all[i].subtables[j].selected = false;
                             }
@@ -9053,8 +9003,7 @@ GFI_LookupRevertLookup (GGadget *g, GEvent *e)
       /*  regenerate it */
 
       LookupInfoFree (lk);
-      LookupSetup (lk,
-                   isgpos ? gfi->sf->gpos_lookups : gfi->sf->gsub_lookups);
+      LookupSetup (lk, isgpos ? gfi->sf->gpos_lookups : gfi->sf->gsub_lookups);
 
       GFI_LookupScrollbars (gfi, isgpos, true);
       GFI_LookupEnableButtons (gfi, isgpos);
@@ -9139,9 +9088,9 @@ GFI_LookupImportLookup (GGadget *g, GEvent *e)
                 osf = osf->cidmaster;
               if (osf->ticked || osf == gfi->sf || osf == gfi->sf->cidmaster
                   || (isgpos && osf->gpos_lookups == NULL) || (!isgpos
-                                                               && osf->
-                                                               gsub_lookups ==
-                                                               NULL))
+                                                               &&
+                                                               osf->gsub_lookups
+                                                               == NULL))
                 continue;
               osf->ticked = true;
               if (cnt != 0)
@@ -9353,8 +9302,7 @@ LookupExpose (GWindow pixmap, struct gfi_data *gfi, int isgpos)
             GDrawDrawLine (pixmap, r.x + (r.width / 2), r.y + 2,
                            r.x + (r.width / 2), r.y + r.height - 2, 0x000000);
           GDrawDrawText8 (pixmap, r.x + gfi->fh, r.y + gfi->as,
-                          lk->all[i].lookup->lookup_name, -1,
-                          MAIN_FOREGROUND);
+                          lk->all[i].lookup->lookup_name, -1, MAIN_FOREGROUND);
         }
       ++lcnt;
       if (lk->all[i].open)
@@ -9376,8 +9324,8 @@ LookupExpose (GWindow pixmap, struct gfi_data *gfi, int isgpos)
                   r.x = LK_MARGIN + 2 * gfi->fh - lk->off_left;
                   r.y = LK_MARGIN + (lcnt - lk->off_top) * gfi->fh;
                   GDrawDrawText8 (pixmap, r.x, r.y + gfi->as,
-                                  lk->all[i].subtables[j].subtable->
-                                  subtable_name, -1, MAIN_FOREGROUND);
+                                  lk->all[i].subtables[j].
+                                  subtable->subtable_name, -1, MAIN_FOREGROUND);
                 }
               ++lcnt;
             }
@@ -9400,7 +9348,7 @@ LookupDeselect (struct lkdata *lk)
 }
 
 static void
-LookupPopup (GWindow gw, OTLookup * otl, struct lookup_subtable *sub,
+LookupPopup (GWindow gw, OTLookup *otl, struct lookup_subtable *sub,
              struct lkdata *lk)
 {
   static char popup_msg[600];
@@ -9508,7 +9456,7 @@ LookupPopup (GWindow gw, OTLookup * otl, struct lookup_subtable *sub,
 }
 
 static void
-AddDFLT (OTLookup * otl)
+AddDFLT (OTLookup *otl)
 {
   FeatureScriptLangList *fl;
   struct scriptlanglist *sl;
@@ -9608,8 +9556,7 @@ AALTCreateNew (SplineFont *sf, struct lkdata *lk)
         continue;
       otl = NewAALTLookup (sf, sllk, sllk_cnt, i);
       if (lk->cnt >= lk->max)
-        lk->all =
-          xrealloc (lk->all, (lk->max += 10) * sizeof (struct lkinfo));
+        lk->all = xrealloc (lk->all, (lk->max += 10) * sizeof (struct lkinfo));
       for (k = lk->cnt; k > 0; --k)
         lk->all[k] = lk->all[k - 1];
       memset (&lk->all[0], 0, sizeof (struct lkinfo));
@@ -9628,7 +9575,7 @@ AALTCreateNew (SplineFont *sf, struct lkdata *lk)
 }
 
 VISIBLE void
-lookupmenu_dispatch (GWindow v, GMenuItem * mi, GEvent *e)
+lookupmenu_dispatch (GWindow v, GMenuItem *mi, GEvent *e)
 {
   GEvent dummy;
   struct gfi_data *gfi = GDrawGetUserData (v);
@@ -9667,8 +9614,7 @@ lookupmenu_dispatch (GWindow v, GMenuItem * mi, GEvent *e)
       out = fopen (filename, "w");
       if (out == NULL)
         {
-          ff_post_error (_("Cannot open file"), _("Cannot open %s"),
-                         filename);
+          ff_post_error (_("Cannot open file"), _("Cannot open %s"), filename);
           free (filename);
           return;
         }
@@ -10076,8 +10022,7 @@ static GMenuItem lookuppopupmenu[] = {
 // *INDENT-ON*
 
 static void
-LookupMenu (struct gfi_data *gfi, struct lkdata *lk, int isgpos,
-            GEvent *event)
+LookupMenu (struct gfi_data *gfi, struct lkdata *lk, int isgpos, GEvent *event)
 {
   struct selection_bits sel;
   int i;
@@ -10156,8 +10101,7 @@ LookupMenu (struct gfi_data *gfi, struct lkdata *lk, int isgpos,
                                                  && sel.sub_table_mergeable));
           break;
         case CID_ImportLookups:
-          lookuppopupmenu[i].ti.disabled =
-            !LookupsImportable (gfi->sf, isgpos);
+          lookuppopupmenu[i].ti.disabled = !LookupsImportable (gfi->sf, isgpos);
           break;
         case CID_RevertLookups:
           lookuppopupmenu[i].ti.disabled = false;
@@ -10242,14 +10186,14 @@ LookupsDropable (struct gfi_data *gfi, struct gfi_data *othergfi,
   struct lkdata *otherlk = &othergfi->tables[isgpos];
 
   if (gfi->first_sel_subtable == -1)
-    return true;              /* Lookups can be dropped anywhere */
+    return true;                /* Lookups can be dropped anywhere */
 
   lookup = LookupIndex (othergfi, isgpos, gw, othergw, event, &subtable);
   if (lookup < 0 || lookup >= lk->cnt)
-    return false;             /* Subtables must be dropped in a lookup */
+    return false;               /* Subtables must be dropped in a lookup */
 
   if (gfi != othergfi /* || lookup!=gfi->first_sel_lookup */ )
-    return false;             /* Can't merge subtables from one lookup to another */
+    return false;               /* Can't merge subtables from one lookup to another */
 
   /* Subtables can only be dropped in a lookup with the same type */
   /* At the moment we don't need this test, as we only allow subtables to be dropped within their original lookup */
@@ -10471,8 +10415,7 @@ LookupDragDrop (struct gfi_data *gfi, int isgpos, GEvent *event)
                   if (lookup < 0)
                     lookup = 0;
                   before =
-                    lookup >=
-                    otherlk->cnt ? NULL : otherlk->all[lookup].lookup;
+                    lookup >= otherlk->cnt ? NULL : otherlk->all[lookup].lookup;
                   OTLookupsCopyInto (othergfi->sf, gfi->sf, list, before);
                   free (list);
                 }
@@ -10503,7 +10446,7 @@ LookupDragDropable (struct gfi_data *gfi, struct lkdata *lk)
       if (lk->all[i].selected)
         {
           if (first_s != -1)
-            return false;     /* Can't have mixed lookups and subtables */
+            return false;       /* Can't have mixed lookups and subtables */
           if (first_l == -1)
             first_l = i;
         }
@@ -10518,7 +10461,7 @@ LookupDragDropable (struct gfi_data *gfi, struct lkdata *lk)
                   if (first_l == i || first_l == -1)
                     first_l = i;
                   else
-                    return false;     /* Mixed lookups and subtables */
+                    return false;       /* Mixed lookups and subtables */
                   if (first_s == -1)
                     first_s = j;
                 }
@@ -10654,8 +10597,8 @@ LookupMouse (struct gfi_data *gfi, int isgpos, GEvent *event)
                       else
                         {
                           if (!
-                              (event->u.mouse.
-                               state & (ksm_shift | ksm_control)))
+                              (event->u.
+                               mouse.state & (ksm_shift | ksm_control)))
                             {
                               /* If line is selected, and we're going to pop up a menu */
                               /*  then don't clear other selected lines */
@@ -10902,8 +10845,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   ngcd[5].gd.cid = CID_Human;
   ngcd[5].gd.handle_controlevent = GFI_HumanChange;
   ngcd[5].creator = GTextFieldCreate;
-  if (sf->fullname == NULL
-      || strstr (sf->fullname, "Untitled") == sf->fullname)
+  if (sf->fullname == NULL || strstr (sf->fullname, "Untitled") == sf->fullname)
     d->human_untitled = true;
 
   nlabel[6].text = (uint32_t *) _("_Weight");
@@ -10980,8 +10922,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   ngcd[12].gd.label = &nlabel[12];
   ngcd[12].gd.popup_msg =
     (uint32_t *)
-    _
-    ("Use this as the default base for the filename\nwhen generating a font.");
+    _("Use this as the default base for the filename\nwhen generating a font.");
   ngcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   ngcd[12].creator = GLabelCreate;
 
@@ -11550,10 +11491,9 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags =
     ltype !=
-    0 ? (gg_visible | gg_utf8_popup | gg_rad_continueold) : sf->
-    multilayer ? (gg_visible | gg_enabled | gg_utf8_popup | gg_cb_on |
-                  gg_rad_continueold) : (gg_visible | gg_enabled |
-                                         gg_utf8_popup | gg_rad_continueold);
+    0 ? (gg_visible | gg_utf8_popup | gg_rad_continueold) : sf->multilayer
+    ? (gg_visible | gg_enabled | gg_utf8_popup | gg_cb_on | gg_rad_continueold)
+    : (gg_visible | gg_enabled | gg_utf8_popup | gg_rad_continueold);
   lgcd[k].gd.cid = CID_IsMultiLayer;
   lgcd[k].gd.handle_controlevent = GFI_Type3Change;
   lgcd[k].creator = GRadioCreate;
@@ -11574,8 +11514,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags =
-    sf->
-    strokedfont ? (gg_visible | gg_enabled | gg_utf8_popup | gg_cb_on)
+    sf->strokedfont ? (gg_visible | gg_enabled | gg_utf8_popup | gg_cb_on)
     : (gg_visible | gg_enabled | gg_utf8_popup);
   lgcd[k].gd.cid = CID_IsStrokedFont;
   lgcd[k].gd.handle_controlevent = GFI_Type3Change;
@@ -11907,8 +11846,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     (uint32_t *)
     _("Only Bitmaps may be embedded.\n"
       "Outline descriptions may not be\n"
-      "(if font file contains no bitmaps\n"
-      "then nothing may be embedded).");
+      "(if font file contains no bitmaps\n" "then nothing may be embedded).");
   vgcd[9].gd.cid = CID_OnlyBitmaps;
   vgcd[9].creator = GCheckBoxCreate;
 
@@ -12379,8 +12317,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
-    (uint32_t *)
-    _("Sets the linegap field in the hhea table, used on the mac");
+    (uint32_t *) _("Sets the linegap field in the hhea table, used on the mac");
   metarray[j++] = &metgcd[i];
   metgcd[i++].creator = GLabelCreate;
 
@@ -13372,8 +13309,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   comgcd[0].gd.flags = gg_visible | gg_enabled;
   comlabel[0].text =
-    (uint32_t *)
-    _("The font comment can contain whatever you feel it should");
+    (uint32_t *) _("The font comment can contain whatever you feel it should");
   comlabel[0].text_is_1byte = true;
   comgcd[0].gd.label = &comlabel[0];
   comgcd[0].creator = GLabelCreate;
@@ -13382,8 +13318,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   comgcd[1].gd.pos.y = 10;
   comgcd[1].gd.pos.width = ngcd[11].gd.pos.width;
   comgcd[1].gd.pos.height = 230;
-  comgcd[1].gd.flags =
-    gg_visible | gg_enabled | gg_textarea_wrap;
+  comgcd[1].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap;
   comgcd[1].gd.cid = CID_Comment;
   comlabel[1].text = (uint32_t *) sf->comments;
   comlabel[1].text_is_1byte = true;
@@ -13413,8 +13348,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   floggcd[0].gd.label = &floglabel[0];
   floggcd[0].creator = GLabelCreate;
 
-  floggcd[1].gd.flags =
-    gg_visible | gg_enabled | gg_textarea_wrap;
+  floggcd[1].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap;
   floggcd[1].gd.cid = CID_FontLog;
   floglabel[1].text = (uint32_t *) sf->fontlog;
   floglabel[1].text_is_1byte = true;
@@ -13450,8 +13384,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   markc_mi.col_init = markc_ci;
 
   /* Class 0 is unused */
-  markc_md =
-    xcalloc (sf->mark_class_cnt + 1, 2 * sizeof (struct matrix_data));
+  markc_md = xcalloc (sf->mark_class_cnt + 1, 2 * sizeof (struct matrix_data));
   for (i = 1; i < sf->mark_class_cnt; ++i)
     {
       markc_md[2 * (i - 1) + 0].u.md_str =
@@ -13909,7 +13842,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   szbox[2].creator = GHBoxCreate;
 
   szbox[3].gd.flags = gg_enabled | gg_visible;
-  szbox[3].gd.label = (GTextInfo *) & szgcd[3];
+  szbox[3].gd.label = (GTextInfo *) &szgcd[3];
   szbox[3].gd.u.boxelements = szarray3;
   szbox[3].creator = GHVGroupCreate;
 
@@ -14221,8 +14154,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
       lksubgcd[i][0].gd.pos.width = ngcd[15].gd.pos.width;
       lksubgcd[i][0].gd.pos.height = 150;
       lksubgcd[i][0].gd.flags = gg_visible | gg_enabled;
-      lksubgcd[i][0].gd.u.drawable_e_h =
-        i ? gposlookups_e_h : gsublookups_e_h;
+      lksubgcd[i][0].gd.u.drawable_e_h = i ? gposlookups_e_h : gsublookups_e_h;
       lksubgcd[i][0].gd.cid = CID_LookupWin + i;
       lksubgcd[i][0].creator = GDrawableCreate;
 
@@ -14837,8 +14769,7 @@ FontInfoInit (void)
   for (j = 0; needswork[j] != NULL; ++j)
     {
       for (i = 0; needswork[j][i].text != NULL; ++i)
-        needswork[j][i].text =
-          (uint32_t *) S_ ((char *) needswork[j][i].text);
+        needswork[j][i].text = (uint32_t *) S_ ((char *) needswork[j][i].text);
     }
   for (j = 0; needswork2[j] != NULL; ++j)
     {
@@ -14855,8 +14786,8 @@ FontInfoInit (void)
             {
               for (k = 0; needswork3[j].ci[i].enum_vals[k].text != NULL; ++k)
                 needswork3[j].ci[i].enum_vals[k].text =
-                  (uint32_t *) S_ ((char *) needswork3[j].ci[i].enum_vals[k].
-                                   text);
+                  (uint32_t *) S_ ((char *) needswork3[j].ci[i].
+                                   enum_vals[k].text);
             }
         }
     }
