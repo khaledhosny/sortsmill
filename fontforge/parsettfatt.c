@@ -610,69 +610,17 @@ addPairPos (struct ttfinfo *info, int glyph1, int glyph2,
     }
 }
 
-static int
-addKernPair (struct ttfinfo *info, int glyph1, int glyph2,
-             int16_t offset, uint32_t devtab, struct lookup *l,
-             struct lookup_subtable *subtable, int isv, FILE *ttf)
-{
-  KernPair *kp;
-  if (glyph1 < info->glyph_cnt && glyph2 < info->glyph_cnt &&
-      info->chars[glyph1] != NULL && info->chars[glyph2] != NULL)
-    {
-      for (kp = isv ? info->chars[glyph1]->vkerns : info->chars[glyph1]->kerns;
-           kp != NULL; kp = kp->next)
-        {
-          if (kp->sc == info->chars[glyph2])
-            break;
-        }
-      if (kp == NULL)
-        {
-          kp = xzalloc (sizeof (KernPair));
-          kp->sc = info->chars[glyph2];
-          kp->off = offset;
-          kp->subtable = subtable;
-          if (devtab != 0)
-            {
-              kp->adjust = xzalloc (sizeof (DeviceTable));
-              ReadDeviceTable (ttf, kp->adjust, devtab, info);
-            }
-          if (isv)
-            {
-              kp->next = info->chars[glyph1]->vkerns;
-              info->chars[glyph1]->vkerns = kp;
-            }
-          else
-            {
-              kp->next = info->chars[glyph1]->kerns;
-              info->chars[glyph1]->kerns = kp;
-            }
-        }
-      else if (kp->subtable != subtable)
-        return true;
-    }
-  else if (glyph1 >= info->glyph_cnt || glyph2 >= info->glyph_cnt)
-    {
-      /* Might be NULL in a ttc file where we omit glyphs */
-      LogError (_("Bad kern pair: glyphs %d & %d should have been < %d\n"),
-                glyph1, glyph2, info->glyph_cnt);
-      info->bad_ot = true;
-    }
-  return false;
-}
-
 static void
 gposKernSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
                   struct lookup *l, struct lookup_subtable *subtable)
 {
-  int coverage, cnt, i, j, pair_cnt, vf1, vf2, glyph2;
+  int coverage, cnt, pair_cnt, vf1, vf2, glyph2;
   int cd1, cd2, c1_cnt, c2_cnt;
   uint16_t format;
   uint16_t *ps_offsets;
   uint16_t *glyphs, *class1, *class2;
   struct valuerecord vr1, vr2;
   long foffset;
-  KernClass *kc;
-  int isv, r2l;
 
   format = getushort (ttf);
   if (format != 1 && format != 2)       /* Unknown subtable format */
@@ -680,28 +628,12 @@ gposKernSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
   coverage = getushort (ttf);
   vf1 = getushort (ttf);
   vf2 = getushort (ttf);
-  r2l = 0;
-
-  /* Accept forms both with and without device tables */
-  if ((vf1 == 0x0008 || vf1 == 0x0088) && vf2 == 0x0000)
-    isv = 1;                    /* Top to bottom */
-  else if (vf1 == 0x0000 && (vf2 == 0x0004 || vf2 == 0x0044)
-           && (l->flags & pst_r2l))
-    {
-      isv = 0;                  /* Right to left */
-      r2l = 1;
-    }
-  else if ((vf1 == 0x0004 || vf1 == 0x0044) && vf2 == 0x0000
-           && !(l->flags & pst_r2l))
-    isv = 0;                    /* Left to right */
-  else
-    isv = 2;                    /* Can't optimize, store all 8 settings */
   if (format == 1)
     {
       subtable->per_glyph_pst_or_kern = true;
       cnt = getushort (ttf);
       ps_offsets = xmalloc (cnt * sizeof (uint16_t));
-      for (i = 0; i < cnt; ++i)
+      for (int i = 0; i < cnt; ++i)
         ps_offsets[i] = getushort (ttf);
       glyphs = getCoverageTable (ttf, stoffset + coverage, info);
       if (glyphs == NULL)
@@ -710,49 +642,18 @@ gposKernSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
           LogError (_(" Bad pairwise kerning table, ignored\n"));
           return;
         }
-      for (i = 0; i < cnt; ++i)
+      for (int i = 0; i < cnt; ++i)
         if (glyphs[i] < info->glyph_cnt)
           {
             fseek (ttf, stoffset + ps_offsets[i], SEEK_SET);
             pair_cnt = getushort (ttf);
-            for (j = 0; j < pair_cnt; ++j)
+            for (int j = 0; j < pair_cnt; ++j)
               {
                 glyph2 = getushort (ttf);
                 readvaluerecord (&vr1, vf1, ttf);
                 readvaluerecord (&vr2, vf2, ttf);
-                if (isv == 2)
-                  addPairPos (info, glyphs[i], glyph2, l, subtable, &vr1, &vr2,
-                              stoffset, ttf);
-                else if (isv)
-                  {
-                    if (addKernPair (info, glyphs[i], glyph2, vr1.yadvance,
-                                     vr1.offYadvanceDev ==
-                                     0 ? 0 : stoffset + vr1.offYadvanceDev, l,
-                                     subtable, isv, ttf))
-                      addPairPos (info, glyphs[i], glyph2, l, subtable, &vr1,
-                                  &vr2, stoffset, ttf);
-                    /* If we've already got kern data for this pair of */
-                    /*  glyphs, then we can't make it be a true KernPair */
-                    /*  but we can save the info as a pst_pair */
-                  }
-                else if (r2l)
-                  {             /* R2L */
-                    if (addKernPair (info, glyphs[i], glyph2, vr2.xadvance,
-                                     vr2.offXadvanceDev ==
-                                     0 ? 0 : stoffset + vr2.offXadvanceDev, l,
-                                     subtable, isv, ttf))
-                      addPairPos (info, glyphs[i], glyph2, l, subtable, &vr1,
-                                  &vr2, stoffset, ttf);
-                  }
-                else
-                  {
-                    if (addKernPair (info, glyphs[i], glyph2, vr1.xadvance,
-                                     vr1.offXadvanceDev ==
-                                     0 ? 0 : stoffset + vr1.offXadvanceDev, l,
-                                     subtable, isv, ttf))
-                      addPairPos (info, glyphs[i], glyph2, l, subtable, &vr1,
-                                  &vr2, stoffset, ttf);
-                  }
+                addPairPos (info, glyphs[i], glyph2, l, subtable, &vr1, &vr2,
+                            stoffset, ttf);
               }
           }
       free (ps_offsets);
@@ -775,93 +676,23 @@ gposKernSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
       fseek (ttf, foffset, SEEK_SET);   /* come back */
       c1_cnt = getushort (ttf);
       c2_cnt = getushort (ttf);
-      if (isv != 2)
+      subtable->per_glyph_pst_or_kern = true;
+      for (int i = 0; i < c1_cnt; ++i)
         {
-          if (isv)
+          for (int j = 0; j < c2_cnt; ++j)
             {
-              if (info->vkhead == NULL)
-                info->vkhead = kc = xzalloc (sizeof (KernClass));
-              else
-                kc = info->vklast->next =
-                  xzalloc (sizeof (KernClass));
-              info->vklast = kc;
-            }
-          else
-            {
-              if (info->khead == NULL)
-                info->khead = kc = xzalloc (sizeof (KernClass));
-              else
-                kc = info->klast->next =
-                  xzalloc (sizeof (KernClass));
-              info->klast = kc;
-            }
-          subtable->vertical_kerning = isv;
-          subtable->kc = kc;
-          kc->first_cnt = c1_cnt;
-          kc->second_cnt = c2_cnt;
-          kc->subtable = subtable;
-          kc->offsets = xmalloc (c1_cnt * c2_cnt * sizeof (int16_t));
-          kc->adjusts = xcalloc (c1_cnt * c2_cnt, sizeof (DeviceTable));
-          kc->firsts = ClassToNames (info, c1_cnt, class1, info->glyph_cnt);
-          kc->seconds = ClassToNames (info, c2_cnt, class2, info->glyph_cnt);
-          /* Now if the coverage table contains entries which are not in */
-          /*  the list of first classes, then those glyphs are the real */
-          /*  values for kc->firsts[0] */
-          kc->firsts[0] = CoverageMinusClasses (glyphs, class1, info);
-          for (i = 0; i < c1_cnt; ++i)
-            {
-              for (j = 0; j < c2_cnt; ++j)
-                {
-                  readvaluerecord (&vr1, vf1, ttf);
-                  readvaluerecord (&vr2, vf2, ttf);
-                  if (isv)
-                    kc->offsets[i * c2_cnt + j] = vr1.yadvance;
-                  else if (r2l)
-                    kc->offsets[i * c2_cnt + j] = vr2.xadvance;
-                  else
-                    kc->offsets[i * c2_cnt + j] = vr1.xadvance;
-                  if (isv)
-                    {
-                      if (vr1.offYadvanceDev != 0)
-                        ReadDeviceTable (ttf, &kc->adjusts[i * c2_cnt + j],
-                                         stoffset + vr1.offYadvanceDev, info);
-                    }
-                  else if (r2l)
-                    {
-                      if (vr2.offXadvanceDev != 0)
-                        ReadDeviceTable (ttf, &kc->adjusts[i * c2_cnt + j],
-                                         stoffset + vr2.offXadvanceDev, info);
-                    }
-                  else
-                    {
-                      if (vr1.offXadvanceDev != 0)
-                        ReadDeviceTable (ttf, &kc->adjusts[i * c2_cnt + j],
-                                         stoffset + vr1.offXadvanceDev, info);
-                    }
-                }
-            }
-        }
-      else
-        {                       /* This happens when we have a feature which is neither 'kern' nor 'vkrn' we don't know what to do with it so we make it into kern pairs */
-          int k, m;
-          subtable->per_glyph_pst_or_kern = true;
-          for (i = 0; i < c1_cnt; ++i)
-            {
-              for (j = 0; j < c2_cnt; ++j)
-                {
-                  readvaluerecord (&vr1, vf1, ttf);
-                  readvaluerecord (&vr2, vf2, ttf);
-                  if (vr1.xadvance != 0 || vr1.xplacement != 0
-                      || vr1.yadvance != 0 || vr1.yplacement != 0
-                      || vr2.xadvance != 0 || vr2.xplacement != 0
-                      || vr2.yadvance != 0 || vr2.yplacement != 0)
-                    for (k = 0; k < info->glyph_cnt; ++k)
-                      if (class1[k] == i)
-                        for (m = 0; m < info->glyph_cnt; ++m)
-                          if (class2[m] == j)
-                            addPairPos (info, k, m, l, subtable, &vr1, &vr2,
-                                        stoffset, ttf);
-                }
+              readvaluerecord (&vr1, vf1, ttf);
+              readvaluerecord (&vr2, vf2, ttf);
+              if (vr1.xadvance != 0 || vr1.xplacement != 0
+                  || vr1.yadvance != 0 || vr1.yplacement != 0
+                  || vr2.xadvance != 0 || vr2.xplacement != 0
+                  || vr2.yadvance != 0 || vr2.yplacement != 0)
+                for (int k = 0; k < info->glyph_cnt; ++k)
+                  if (class1[k] == i)
+                    for (int m = 0; m < info->glyph_cnt; ++m)
+                      if (class2[m] == j)
+                        addPairPos (info, k, m, l, subtable, &vr1, &vr2,
+                                    stoffset, ttf);
             }
         }
       free (class1);
