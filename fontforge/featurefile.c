@@ -624,8 +624,6 @@ pst_from_pos_pair_lookup (SplineFont *sf, OTLookup *otl, char *name1,
               /* !!! Bug. Lose device tables here */
               if (isv)
                 space->u.pair.vr[0].v_adv_off = kp->off;
-              else if (otl->lookup_flags & pst_r2l)
-                space->u.pair.vr[1].h_adv_off = kp->off;
               else
                 space->u.pair.vr[0].h_adv_off = kp->off;
               return space;
@@ -1911,16 +1909,6 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                                       dump_glyphname (out, kp->sc);
                                       c_fprintf (out, " < 0 0 0 0 >;\n");
                                     }
-                                  else if (otl->lookup_flags & pst_r2l)
-                                    {
-                                      c_fprintf (out, " < 0 0 0 0 > ");
-                                      dump_glyphname (out, kp->sc);
-                                      c_fprintf (out,
-                                                 " < 0 0 %d 0 <device NULL> <device NULL> ",
-                                                 kp->off);
-                                      dump_device (out, kp->adjust);
-                                      c_fprintf (out, " <device NULL>>;\n");
-                                    }
                                   else
                                     {
                                       c_fprintf (out,
@@ -1931,12 +1919,6 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                                       dump_glyphname (out, kp->sc);
                                       c_fprintf (out, " < 0 0 0 0 >;\n");
                                     }
-                                }
-                              else if (otl->lookup_flags & pst_r2l)
-                                {
-                                  c_fprintf (out, " < 0 0 0 0 > ");
-                                  dump_glyphname (out, kp->sc);
-                                  c_fprintf (out, " < 0 0 %d 0 >;\n", kp->off);
                                 }
                               else
                                 {
@@ -8391,18 +8373,8 @@ fea_ApplyLookupListPair (struct parseState *tok,
                   pst->u.pair.vr[1].xoff == 0 && pst->u.pair.vr[1].yoff == 0 &&
                   pst->u.pair.vr[1].v_adv_off == 0 && other != NULL)
                 {
-                  if ((otl->lookup_flags & pst_r2l) &&
-                      (pst->u.pair.vr[0].h_adv_off == 0
-                       && pst->u.pair.vr[0].v_adv_off == 0))
-                    {
-                      kp = xzalloc (sizeof (KernPair));
-                      kp->off = pst->u.pair.vr[1].h_adv_off;
-                      if (pst->u.pair.vr[1].adjust != NULL)
-                        KPFillDevTab (kp, &pst->u.pair.vr[1].adjust->xadv);
-                    }
-                  else if (!(otl->lookup_flags & pst_r2l) &&
-                           (pst->u.pair.vr[1].h_adv_off == 0
-                            && pst->u.pair.vr[0].v_adv_off == 0))
+                  if (pst->u.pair.vr[1].h_adv_off == 0
+                      && pst->u.pair.vr[0].v_adv_off == 0)
                     {
                       kp = xzalloc (sizeof (KernPair));
                       kp->off = pst->u.pair.vr[0].h_adv_off;
@@ -8410,8 +8382,8 @@ fea_ApplyLookupListPair (struct parseState *tok,
                         KPFillDevTab (kp, &pst->u.pair.vr[0].adjust->xadv);
                     }
                   else
-                    if ((pst->u.pair.vr[0].h_adv_off == 0
-                         && pst->u.pair.vr[1].h_adv_off == 0))
+                    if (pst->u.pair.vr[0].h_adv_off == 0
+                        && pst->u.pair.vr[1].h_adv_off == 0)
                     {
                       vkern = sub->vertical_kerning = true;
                       kp = xzalloc (sizeof (KernPair));

@@ -3971,13 +3971,6 @@ ApplyPairPosAtPos (struct lookup_subtable *sub, struct lookup_data *data,
           data->str[pos].vr.v_adv_off +=
             FigureDeviceTable (&sub->kc->adjusts[within], data->pixelsize);
         }
-      else if (sub->lookup->lookup_flags & pst_r2l)
-        {
-          data->str[npos].vr.h_adv_off +=
-            rint (sub->kc->offsets[within] * data->scale);
-          data->str[npos].vr.h_adv_off +=
-            FigureDeviceTable (&sub->kc->adjusts[within], data->pixelsize);
-        }
       else
         {
           data->str[pos].vr.h_adv_off +=
@@ -4035,13 +4028,6 @@ ApplyPairPosAtPos (struct lookup_subtable *sub, struct lookup_data *data,
                       data->str[pos].vr.v_adv_off +=
                         rint (kp->off * data->scale);
                       data->str[pos].vr.v_adv_off +=
-                        FigureDeviceTable (kp->adjust, data->pixelsize);
-                    }
-                  else if (sub->lookup->lookup_flags & pst_r2l)
-                    {
-                      data->str[npos].vr.h_adv_off +=
-                        rint (kp->off * data->scale);
-                      data->str[npos].vr.h_adv_off +=
                         FigureDeviceTable (kp->adjust, data->pixelsize);
                     }
                   else
@@ -4136,28 +4122,15 @@ ApplyAnchorPosAtPos (struct lookup_subtable *sub, struct lookup_data *data,
     rint ((ap1->me.y - ap2->me.y) * data->scale);
   data->str[pos].vr.yoff += FigureDeviceTable (&ap1->yadjust, data->pixelsize) -
     FigureDeviceTable (&ap2->yadjust, data->pixelsize);
-  if (sub->lookup->lookup_flags & pst_r2l)
-    {
-      data->str[pos].vr.xoff = data->str[bpos].vr.xoff +
-        rint (-(ap1->me.x - ap2->me.x) * data->scale);
-      data->str[pos].vr.xoff -=
-        FigureDeviceTable (&ap1->xadjust,
-                           data->pixelsize) - FigureDeviceTable (&ap2->xadjust,
-                                                                 data->
-                                                                 pixelsize);
-    }
-  else
-    {
-      data->str[pos].vr.xoff = data->str[bpos].vr.xoff +
-        rint ((ap1->me.x - ap2->me.x -
-               data->str[bpos].sc->width) * data->scale -
-              data->str[bpos].vr.h_adv_off);
-      data->str[pos].vr.xoff +=
-        FigureDeviceTable (&ap1->xadjust,
-                           data->pixelsize) - FigureDeviceTable (&ap2->xadjust,
-                                                                 data->
-                                                                 pixelsize);
-    }
+  data->str[pos].vr.xoff = data->str[bpos].vr.xoff +
+    rint ((ap1->me.x - ap2->me.x -
+           data->str[bpos].sc->width) * data->scale -
+          data->str[bpos].vr.h_adv_off);
+  data->str[pos].vr.xoff +=
+    FigureDeviceTable (&ap1->xadjust,
+                       data->pixelsize) - FigureDeviceTable (&ap2->xadjust,
+                                                             data->
+                                                             pixelsize);
 
   return pos + 1;
 }

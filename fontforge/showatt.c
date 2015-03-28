@@ -914,9 +914,6 @@ BuildKern2 (struct node *node, struct att_dlg *att)
                       if (isv)
                         sprintf (buffer, "%.80s  ∆y_adv¹=%d", kp->sc->name,
                                  kp->off);
-                      else if (sub->lookup->lookup_flags & pst_r2l)
-                        sprintf (buffer, "%.80s  ∆x_adv²=%d", kp->sc->name,
-                                 kp->off);
                       else
                         sprintf (buffer, "%.80s  ∆x_adv¹=%d", kp->sc->name,
                                  kp->off);

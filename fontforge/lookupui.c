@@ -3896,12 +3896,6 @@ PSTKD_AddKP (void *data, SplineChar *left, SplineChar *right, int off)
   int i;
   SplineChar *first = left, *second = right;
 
-  if (pstkd->sub->lookup->lookup_flags & pst_r2l)
-    {
-      first = right;
-      second = left;
-    }
-
   for (i = 0; i < pstkd->rows_at_start; ++i)
     {
       /* If the user has already got this combination in the lookup */
@@ -3921,12 +3915,7 @@ PSTKD_AddKP (void *data, SplineChar *left, SplineChar *right, int off)
   memset (psts + i * cols, 0, cols * sizeof (struct matrix_data));
   psts[i * cols + 0].u.md_str = xstrdup_or_null (first->name);
   psts[i * cols + 1].u.md_str = xstrdup_or_null (second->name);
-  if (pstkd->sub->lookup->lookup_flags & pst_r2l)
-    psts[i * cols + PAIR_DX_ADV1].u.md_ival =
-      psts[i * cols + PAIR_DX1].u.md_ival = off;
-  /* else if ( pstkd->sub->vertical_kerning ) *//* We don't do vertical stuff */
-  else
-    psts[i * cols + PAIR_DX_ADV1].u.md_ival = off;
+  psts[i * cols + PAIR_DX_ADV1].u.md_ival = off;
   if (strcmp (psts[0 + 0].u.md_str, "T") != 0)
     second = left;
 }
@@ -3953,16 +3942,8 @@ PSTKD_FinishKernEdit (GGadget *g, int row, int col, int wasnew)
   if (sc1 == NULL || sc2 == NULL)
     return;
   lefts[1] = rights[1] = NULL;
-  if (pstkd->sub->lookup->lookup_flags & pst_r2l)
-    {
-      lefts[0] = sc2;
-      rights[0] = sc1;
-    }
-  else
-    {
-      lefts[0] = sc1;
-      rights[0] = sc2;
-    }
+  lefts[0] = sc1;
+  rights[0] = sc2;
 
   err = false;
   touch = GGadgetIsChecked (GWidgetGetControl (pstkd->gw, CID_Touched));
@@ -4055,8 +4036,6 @@ PSTKD_DoHideUnused (PSTKernDlg * pstkd)
             {
               if (pstkd->sub->vertical_kerning)
                 cols_used[PAIR_DY_ADV1] = true;
-              else if (pstkd->sub->lookup->lookup_flags & pst_r2l)
-                cols_used[PAIR_DX_ADV1] = cols_used[PAIR_DX1] = true;
               else
                 cols_used[PAIR_DX_ADV1] = true;
             }
@@ -4287,23 +4266,6 @@ PSTKern_Expose (GWindow pixmap, PSTKernDlg * pstkd)
                          yorig + vwidth1 + vwidth2 + vr1.v_adv_off - vr2.yoff,
                          bc2, mag);
     }
-  else if (pstkd->sub->lookup->lookup_flags & pst_r2l)
-    {
-      xorig = 9 * size.width / 10;
-      yorig =
-        pstkd->sf->ascent * size.height / (pstkd->sf->ascent +
-                                           pstkd->sf->descent);
-      GDrawDrawLine (pixmap, xorig + vr1.h_adv_off - vr1.xoff, 0,
-                     xorig + vr1.h_adv_off - vr1.xoff, size.height, 0x808080);
-      GDrawDrawLine (pixmap, 0, yorig, size.width, yorig, 0x808080);
-      xorig /= mag;
-      yorig /= mag;
-      PSTKern_DrawGlyph (pixmap, xorig - bc1->width, yorig - vr1.yoff, bc1,
-                         mag);
-      PSTKern_DrawGlyph (pixmap,
-                         xorig - bc1->width - bc2->width - vr2.h_adv_off -
-                         vr2.xoff - vr1.xoff, yorig - vr2.yoff, bc2, mag);
-    }
   else
     {
       xorig = size.width / 10;
@@ -4331,8 +4293,7 @@ PSTKern_Mouse (PSTKernDlg * pstkd, GEvent *event)
   GGadget *tf = _GMatrixEditGetActiveTextField (pstk);
   double scale =
     pstkd->pixelsize / (double) (pstkd->sf->ascent + pstkd->sf->descent);
-  int diff, col, col2;
-  int r2l = pstkd->sub->lookup->lookup_flags & pst_r2l;
+  int diff, col;
   char buffer[20];
   GCursor ct = ct_pointer;
   GRect size;
@@ -4344,12 +4305,6 @@ PSTKern_Mouse (PSTKernDlg * pstkd, GEvent *event)
     {
       diff = event->u.mouse.y - pstkd->orig_pos;
       col = PAIR_DY_ADV1;
-    }
-  else if (r2l)
-    {
-      diff = pstkd->orig_pos - event->u.mouse.x;
-      col = PAIR_DX_ADV1;
-      col2 = PAIR_DX1;
     }
   else
     {
@@ -4378,20 +4333,6 @@ PSTKern_Mouse (PSTKernDlg * pstkd, GEvent *event)
           old[r * cols + col].u.md_ival = pstkd->orig_value + diff;
           GGadgetRedraw (pstk);
         }
-      if (r2l)
-        {
-          if (col2 == c && tf != NULL)
-            {
-              sprintf (buffer, "%d", pstkd->orig_value + diff);
-              GGadgetSetTitle8 (tf, buffer);
-              GGadgetRedraw (tf);
-            }
-          else
-            {
-              old[r * cols + col2].u.md_ival = pstkd->orig_value + diff;
-              GGadgetRedraw (pstk);
-            }
-        }
       GGadgetRedraw (GWidgetGetControl (pstkd->gw, CID_KernDisplay));
       if (event->type == et_mouseup)
         pstkd->down = false;
@@ -4402,12 +4343,7 @@ PSTKern_Mouse (PSTKernDlg * pstkd, GEvent *event)
       if (sc1 != NULL)
         {
           GDrawGetSize (event->w, &size);
-          if (r2l)
-            {
-              if (event->u.mouse.x < 9 * size.width / 10 - sc1->width * scale)
-                ct = ct_kerning;
-            }
-          else if (col == PAIR_DX_ADV1
+          if (col == PAIR_DX_ADV1
                    && event->u.mouse.x - size.width / 10 > sc1->width * scale)
             {
               ct = ct_kerning;
@@ -7104,16 +7040,8 @@ _LookupSubtableContents (SplineFont *sf, struct lookup_subtable *sub,
           if (results.autokern)
             {
               SplineChar **lefts, **rights;
-              if (sub->lookup->lookup_flags & pst_r2l)
-                {
-                  lefts = results.secondglyphs;
-                  rights = results.firstglyphs;
-                }
-              else
-                {
-                  lefts = results.firstglyphs;
-                  rights = results.secondglyphs;
-                }
+              lefts = results.firstglyphs;
+              rights = results.secondglyphs;
               AutoKern2 (sf, def_layer, lefts, rights, sub,
                          /* If separation==0 and !touch then use default values */
                          0, 0, 0, 0, 0, NULL, NULL);

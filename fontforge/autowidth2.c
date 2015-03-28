@@ -733,7 +733,6 @@ AutoKern2 (SplineFont *sf, int layer, SplineChar **left, SplineChar **right,
   int i, cnt, k, kern;
   SplineChar *sc;
   KernPair *last, *kp, *next;
-  int is_l2r = !(into->lookup->lookup_flags & pst_r2l);
   /* Normally, kerning is based on some sort of average distance between */
   /*  two glyphs, but sometimes it is useful to kern so much that the glyphs */
   /*  just touch. If that is desired then set from_closest_approach. */
@@ -851,18 +850,9 @@ AutoKern2 (SplineFont *sf, int layer, SplineChar **left, SplineChar **right,
                   kp = xzalloc (sizeof (KernPair));
                   kp->subtable = into;
                   kp->off = kern;
-                  if (is_l2r)
-                    {
-                      kp->sc = g2->sc;
-                      kp->next = g1->sc->kerns;
-                      g1->sc->kerns = kp;
-                    }
-                  else
-                    {
-                      kp->sc = g1->sc;
-                      kp->next = g2->sc->kerns;
-                      g2->sc->kerns = kp;
-                    }
+                  kp->sc = g2->sc;
+                  kp->next = g1->sc->kerns;
+                  g1->sc->kerns = kp;
                 }
               else
                 (*addkp) (data, g1->sc, g2->sc, kern);
@@ -1006,12 +996,7 @@ kc2AddOffset (void *data, int left_index, int right_index, int offset)
 {
   KernClass *kc = data;
 
-  if (kc->subtable->lookup->lookup_flags & pst_r2l)
-    {
-      kc->offsets[right_index * kc->first_cnt + left_index] = offset;
-    }
-  else
-    kc->offsets[left_index * kc->second_cnt + right_index] = offset;
+  kc->offsets[left_index * kc->second_cnt + right_index] = offset;
 }
 
 void
@@ -1251,14 +1236,4 @@ AutoKern2BuildClasses (SplineFont *sf, int layer,
                        kc2AddOffset, kc,
                        separation, min_kern, touching, only_closer,
                        chunk_height);
-
-  if (sub->lookup->lookup_flags & pst_r2l)
-    {
-      char **temp = kc->seconds;
-      int tempsize = kc->second_cnt;
-      kc->seconds = kc->firsts;
-      kc->second_cnt = kc->first_cnt;
-      kc->firsts = temp;
-      kc->first_cnt = tempsize;
-    }
 }

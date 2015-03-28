@@ -16777,14 +16777,7 @@ pyAddOffsetAsIs (void *data, int left_index, int right_index, int kern)
   struct lookup_subtable *sub = data;
   KernClass *kc = sub->kc;
 
-  if (!(sub->lookup->lookup_flags & pst_r2l))
-    {
-      kc->offsets[left_index * kc->second_cnt + right_index] = kern;
-    }
-  else
-    {
-      kc->offsets[right_index * kc->second_cnt + left_index] = kern;
-    }
+  kc->offsets[right_index * kc->second_cnt + left_index] = kern;
 }
 
 static void
@@ -16794,20 +16787,10 @@ pyAutoKernAll (FontViewBase *fv, struct lookup_subtable *sub)
   int lcnt, rcnt;
   KernClass *kc = sub->kc;
 
-  if (!(sub->lookup->lookup_flags & pst_r2l))
-    {
-      lefts = kc->firsts;
-      lcnt = kc->first_cnt;
-      rights = kc->seconds;
-      rcnt = kc->second_cnt;
-    }
-  else
-    {
-      lefts = kc->seconds;
-      lcnt = kc->second_cnt;
-      rights = kc->firsts;
-      rcnt = kc->first_cnt;
-    }
+  lefts = kc->firsts;
+  lcnt = kc->first_cnt;
+  rights = kc->seconds;
+  rcnt = kc->second_cnt;
   AutoKern2NewClass (fv->sf, fv->active_layer, lefts, rights, lcnt, rcnt,
                      pyAddOffsetAsIs, sub, sub->separation, 0,
                      sub->kerning_by_touch, sub->onlyCloser, 0);
@@ -17307,16 +17290,8 @@ PyFFFont_autoKern (PyFF_Font *self, PyObject *args, PyObject *keywds)
     }
   if (first == NULL || second == NULL)
     return NULL;
-  if (sub->lookup->lookup_flags & pst_r2l)
-    {
-      left = second;
-      right = first;
-    }
-  else
-    {
-      left = first;
-      right = second;
-    }
+  left = first;
+  right = second;
   AutoKern2 (sf, fv->active_layer, left, right, sub, separation, minkern,
              touch, onlyCloser, height, NULL, NULL);
   free (first);

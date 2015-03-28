@@ -941,32 +941,6 @@ KpMDParse (SplineChar *sc, struct lookup_subtable *sub,
                 || *possub[cols * i + PAIR_DY_ADV2 + 1].u.md_str == 0);
           dvstr = possub[cols * i + PAIR_DY1 + 1].u.md_str;
         }
-      else if (sub->lookup->lookup_flags & pst_r2l)
-        {
-          iskpable = possub[cols * i + PAIR_DX1].u.md_ival == 0 &&
-            possub[cols * i + PAIR_DY1].u.md_ival == 0 &&
-            possub[cols * i + PAIR_DX_ADV1].u.md_ival == 0 &&
-            possub[cols * i + PAIR_DY_ADV1].u.md_ival == 0 &&
-            possub[cols * i + PAIR_DX2].u.md_ival == 0 &&
-            possub[cols * i + PAIR_DY2].u.md_ival == 0 &&
-            possub[cols * i + PAIR_DY_ADV2].u.md_ival == 0;
-          offset = possub[cols * i + PAIR_DX_ADV2].u.md_ival;
-          iskpable &= (possub[cols * i + PAIR_DX1 + 1].u.md_str == NULL
-                       || *possub[cols * i + PAIR_DX1 + 1].u.md_str == 0)
-            && (possub[cols * i + PAIR_DY1 + 1].u.md_str == 0
-                || *possub[cols * i + PAIR_DY1 + 1].u.md_str == 0)
-            && (possub[cols * i + PAIR_DX_ADV1 + 1].u.md_str == 0
-                || *possub[cols * i + PAIR_DX_ADV1 + 1].u.md_str == 0)
-            && (possub[cols * i + PAIR_DY_ADV1 + 1].u.md_str == 0
-                || *possub[cols * i + PAIR_DY_ADV1 + 1].u.md_str == 0)
-            && (possub[cols * i + PAIR_DX2 + 1].u.md_str == 0
-                || *possub[cols * i + PAIR_DX2 + 1].u.md_str == 0)
-            && (possub[cols * i + PAIR_DY2 + 1].u.md_str == 0
-                || *possub[cols * i + PAIR_DY2 + 1].u.md_str == 0)
-            && (possub[cols * i + PAIR_DY_ADV2 + 1].u.md_str == 0
-                || *possub[cols * i + PAIR_DY_ADV2 + 1].u.md_str == 0);
-          dvstr = possub[cols * i + PAIR_DX_ADV2 + 1].u.md_str;
-        }
       else
         {
           iskpable = possub[cols * i + PAIR_DX1].u.md_ival == 0 &&
@@ -3416,16 +3390,8 @@ kernfinishedit (GGadget *g, int r, int c, int wasnew)
                       possub[r * cols + 1].u.md_str)) != NULL)
         {
           lefts[1] = rights[1] = NULL;
-          if (sub->lookup->lookup_flags & pst_r2l)
-            {
-              lefts[0] = osc;
-              rights[0] = ci->sc;
-            }
-          else
-            {
-              lefts[0] = ci->sc;
-              rights[0] = osc;
-            }
+          lefts[0] = ci->sc;
+          rights[0] = osc;
           touch = sub->kerning_by_touch;
           separation = sub->separation;
           if (separation == 0 && !touch)
@@ -3739,14 +3705,6 @@ CI_GetKernedImage (const void *_ci)
   else
     {
       coff1 = coff2 = 0;
-      if (sub->lookup->lookup_flags & pst_r2l)
-        {
-          BDFChar *temp = me;
-          me = other;
-          other = temp;
-          coff1 = 8;
-          coff2 = -8;
-        }
       kern = rint (old[cols * ci->r + PAIR_DX_ADV1 + coff1].u.md_ival * scale);
       minx =
         me->xmin +
@@ -5143,12 +5101,6 @@ CIFillup (CharInfo * ci)
             {
               mds[pst_pair][j + PAIR_DY_ADV1].u.md_ival = kp->off;
               DevTabToString (&mds[pst_pair][j + PAIR_DY_ADV1 + 1].u.md_str,
-                              kp->adjust);
-            }
-          else if (kp->subtable->lookup->lookup_flags & pst_r2l)
-            {
-              mds[pst_pair][j + PAIR_DX_ADV2].u.md_ival = kp->off;
-              DevTabToString (&mds[pst_pair][j + PAIR_DX_ADV2 + 1].u.md_str,
                               kp->adjust);
             }
           else

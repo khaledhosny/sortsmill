@@ -81,7 +81,7 @@ typedef struct kernclassdlg
   SplineFont *sf;
   int layer;
   int isv;
-  int first_class_new, r2l, index;
+  int first_class_new, index;
   int orig_kern_offset;
 /* For the kern pair dlg */
   int done;
@@ -223,25 +223,15 @@ KCD_AddOffset (void *data, int left_index, int right_index, int kern)
 {
   KernClassDlg *kcd = data;
 
-  if (kcd->first_class_new && !kcd->r2l)
+  if (kcd->first_class_new)
     {
       left_index = kcd->index;
-      kcd->offsets[left_index * kcd->second_cnt + right_index] = kern;
-    }
-  else if (kcd->first_class_new)
-    {
-      right_index = kcd->index;
-      kcd->offsets[right_index * kcd->second_cnt + left_index] = kern;
-    }
-  else if (!kcd->r2l)
-    {
-      right_index = kcd->index;
       kcd->offsets[left_index * kcd->second_cnt + right_index] = kern;
     }
   else
     {
-      left_index = kcd->index;
-      kcd->offsets[right_index * kcd->second_cnt + left_index] = kern;
+      right_index = kcd->index;
+      kcd->offsets[left_index * kcd->second_cnt + right_index] = kern;
     }
 }
 
@@ -249,15 +239,7 @@ static void
 KCD_AddOffsetAsIs (void *data, int left_index, int right_index, int kern)
 {
   KernClassDlg *kcd = data;
-
-  if (!kcd->r2l)
-    {
-      kcd->offsets[left_index * kcd->second_cnt + right_index] = kern;
-    }
-  else
-    {
-      kcd->offsets[right_index * kcd->second_cnt + left_index] = kern;
-    }
+  kcd->offsets[left_index * kcd->second_cnt + right_index] = kern;
 }
 
 static void
@@ -273,7 +255,7 @@ KCD_AutoKernAClass (KernClassDlg * kcd, int index, int is_first)
   struct matrix_data *otherdata = GMatrixEditGet (otherlist, &ocnt);
   struct matrix_data *activedata = GMatrixEditGet (activelist, &acnt);
   int err, touch = 0, separation = 0, minkern = 0, onlyCloser;
-  int r2l, i;
+  int i;
 
   if (kcd->isv)
     return;
@@ -296,10 +278,9 @@ KCD_AutoKernAClass (KernClassDlg * kcd, int index, int is_first)
         others[i] = xstrdup_or_null (otherdata[i].u.md_str);
     }
   kcd->first_class_new = is_first;
-  kcd->r2l = r2l = (kcd->subtable->lookup->lookup_flags & pst_r2l) ? 1 : 0;
   kcd->index = index;
 
-  if ((is_first && !r2l) || (!is_first && r2l))
+  if (is_first)
     {
       lefts = space;
       lcnt = 1;
@@ -333,7 +314,7 @@ KCD_AutoKernAll (KernClassDlg * kcd)
   struct matrix_data *seconddata = GMatrixEditGet (secondlist, &scnt);
   struct matrix_data *firstdata = GMatrixEditGet (firstlist, &fcnt);
   int err, touch = 0, separation = 0, minkern = 0, onlyCloser;
-  int r2l, i;
+  int i;
 
   if (kcd->isv)
     return;
@@ -362,22 +343,11 @@ KCD_AutoKernAll (KernClassDlg * kcd)
       else
         seconds[i] = xstrdup_or_null (seconddata[i].u.md_str);
     }
-  kcd->r2l = r2l = (kcd->subtable->lookup->lookup_flags & pst_r2l) ? 1 : 0;
 
-  if (!r2l)
-    {
-      lefts = firsts;
-      lcnt = fcnt;
-      rights = seconds;
-      rcnt = scnt;
-    }
-  else
-    {
-      lefts = seconds;
-      lcnt = scnt;
-      rights = firsts;
-      rcnt = fcnt;
-    }
+  lefts = firsts;
+  lcnt = fcnt;
+  rights = seconds;
+  rcnt = scnt;
   AutoKern2NewClass (kcd->sf, kcd->layer, lefts, rights, lcnt, rcnt,
                      KCD_AddOffsetAsIs, kcd, separation, minkern, touch,
                      onlyCloser, 0);
@@ -520,27 +490,6 @@ KCD_DrawGlyph (GWindow pixmap, int x, int baseline, BDFChar *bdfc, int mag)
                              base.width * mag, base.height * mag);
 }
 
-static int
-KCD_RightToLeft (KernClassDlg * kcd)
-{
-  if (kcd->subtable != NULL)
-    return kcd->subtable->lookup->lookup_flags & pst_r2l;
-
-  if (kcd->scf != NULL)
-    {
-      uint32_t script = SCScriptFromUnicode (kcd->scf);
-      if (script != DEFAULT_SCRIPT)
-        return ScriptIsRightToLeft (script);
-    }
-  if (kcd->scs != NULL)
-    {
-      uint32_t script = SCScriptFromUnicode (kcd->scs);
-      if (script != DEFAULT_SCRIPT)
-        return ScriptIsRightToLeft (script);
-    }
-  return false;
-}
-
 static void
 KCD_KernMouse (KernClassDlg * kcd, GEvent *event)
 {
@@ -564,18 +513,10 @@ KCD_KernMouse (KernClassDlg * kcd, GEvent *event)
                           (kcd->ssc != NULL ? kcd->ssc->width : 0)) + pkern;
       x = (kcd->subwidth - width) / 2;
 
-      if (KCD_RightToLeft (kcd))
+      if (kcd->fsc != NULL)
         {
-          if (kcd->ssc != NULL)
-            width -= kcd->magfactor * kcd->ssc->width;
-        }
-      else
-        {
-          if (kcd->fsc != NULL)
-            {
-              x += kcd->magfactor * kcd->fsc->width + pkern;
-              width -= kcd->magfactor * kcd->fsc->width + pkern;
-            }
+          x += kcd->magfactor * kcd->fsc->width + pkern;
+          width -= kcd->magfactor * kcd->fsc->width + pkern;
         }
 
       if (event->u.mouse.y > 2 * kcd->pixelsize * kcd->magfactor ||
@@ -757,26 +698,13 @@ KCD_KernExpose (KernClassDlg * kcd, GWindow pixmap, GEvent *event)
           kcd->magfactor * (kcd->ssc !=
                             NULL ? kcd->ssc->width : 0) + kern)) / 2;
       baseline = 0 + as + kcd->magfactor * kcd->pixelsize / 2;
-      if (KCD_RightToLeft (kcd))
+      if (kcd->fsc != NULL)
         {
-          if (kcd->ssc != NULL)
-            {
-              KCD_DrawGlyph (pixmap, x, baseline, kcd->ssc, kcd->magfactor);
-              x += kcd->magfactor * kcd->ssc->width + kern;
-            }
-          if (kcd->fsc != NULL)
-            KCD_DrawGlyph (pixmap, x, baseline, kcd->fsc, kcd->magfactor);
+          KCD_DrawGlyph (pixmap, x, baseline, kcd->fsc, kcd->magfactor);
+          x += kcd->fsc->width * kcd->magfactor + kern;
         }
-      else
-        {
-          if (kcd->fsc != NULL)
-            {
-              KCD_DrawGlyph (pixmap, x, baseline, kcd->fsc, kcd->magfactor);
-              x += kcd->fsc->width * kcd->magfactor + kern;
-            }
-          if (kcd->ssc != NULL)
-            KCD_DrawGlyph (pixmap, x, baseline, kcd->ssc, kcd->magfactor);
-        }
+      if (kcd->ssc != NULL)
+        KCD_DrawGlyph (pixmap, x, baseline, kcd->ssc, kcd->magfactor);
     }
   else
     {
