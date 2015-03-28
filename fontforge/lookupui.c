@@ -3658,7 +3658,7 @@ PSTMatrixInit (struct matrixinit *mi, SplineFont *_sf,
   };
   static int initted = false;
   int lookup_type = sub->lookup->lookup_type;
-  int isv, r2l = sub->lookup->lookup_flags & pst_r2l;
+  int isv;
   int i, j, gid, k;
   SplineFont *sf;
   SplineChar *sc;
@@ -3788,22 +3788,6 @@ PSTMatrixInit (struct matrixinit *mi, SplineFont *_sf,
                                                         [cnt * mi->col_cnt +
                                                          PAIR_DY_ADV1 +
                                                          1].u.md_str,
-                                                        kp->adjust);
-                                      }
-                                    else if (r2l)
-                                      {
-                                        md[cnt * mi->col_cnt +
-                                           PAIR_DX_ADV1].u.md_ival = kp->off;
-                                        DevTabToString (&md
-                                                        [cnt * mi->col_cnt +
-                                                         PAIR_DX_ADV1 +
-                                                         1].u.md_str,
-                                                        kp->adjust);
-                                        md[cnt * mi->col_cnt +
-                                           PAIR_DX1].u.md_ival = kp->off;
-                                        DevTabToString (&md
-                                                        [cnt * mi->col_cnt +
-                                                         PAIR_DX1 + 1].u.md_str,
                                                         kp->adjust);
                                       }
                                     else
