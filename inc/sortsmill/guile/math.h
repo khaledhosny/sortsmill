@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Khaled Hosny and Barry Schwartz
+ * Copyright (C) 2013, 2015 Khaled Hosny and Barry Schwartz
  * This file is part of the Sorts Mill Tools.
  * 
  * Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -21,7 +21,6 @@
 
 #include <math.h>
 
-#include <sortsmill/guile/math/brentroot.h>
 #include <sortsmill/guile/math/functions.h>
 #include <sortsmill/guile/math/gmp.h>
 #include <sortsmill/guile/math/gsl.h>

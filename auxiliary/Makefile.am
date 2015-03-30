@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013, 2014 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013, 2014, 2015 Khaled Hosny and Barry Schwartz
 #
 # This file is part of the Sorts Mill Tools.
 # 
@@ -110,15 +110,6 @@ dist_libsortsmill_aux_la_SOURCES += math_polyspline_subdiv.c
 # ‘Contours’ similar to those in the original FontForge’s Python
 # interface.
 dist_libsortsmill_aux_la_SOURCES += guile_fonts_contours.c
-
-# Brent’s root-finding algorithm. FIXME: No matter the effort I put
-# into them, I do not feel like testing these routines, so switch to
-# using the GSL routines instead. And do away with the
-# non-floating-point versions, because we are going to avoid them like
-# the plague, anyway.
-dist_libsortsmill_aux_la_SOURCES += math_brentroot.c
-dist_libsortsmill_aux_la_SOURCES += math_mpq_brentroot.c
-dist_libsortsmill_aux_la_SOURCES += guile_math_brentroot.c
 
 # Initialized global constants implemented as small functions, using
 # atomic_ops.

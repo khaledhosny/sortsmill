@@ -1,6 +1,6 @@
 # -*- tab-width: 4 -*-
 
-# Copyright (C) 2012, 2013, 2014 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013, 2014, 2015 Khaled Hosny and Barry Schwartz
 #
 # This file is part of the Sorts Mill Tools.
 # 
@@ -117,9 +117,6 @@ nobase_include_HEADERS += sortsmill/math/scm_matrix.h
 # Floating point matrix operations supplementary to those of GSL.
 nobase_include_HEADERS += sortsmill/math/f64_matrix.h
 
-# Brent’s method for root-finding.
-nobase_include_HEADERS += sortsmill/math/brentroot.h
-
 # Polynomial splines.
 nobase_include_HEADERS += sortsmill/math/polyspline.h
 nobase_include_HEADERS += sortsmill/math/polyspline/add.h
@@ -172,7 +169,6 @@ nobase_include_HEADERS += sortsmill/guile/fonts/views.h
 nobase_include_HEADERS += sortsmill/guile/nearness.h
 
 nobase_include_HEADERS += sortsmill/guile/math.h
-nobase_include_HEADERS += sortsmill/guile/math/brentroot.h
 nobase_include_HEADERS += sortsmill/guile/math/functions.h
 nobase_include_HEADERS += sortsmill/guile/math/gmp.h
 nobase_include_HEADERS += sortsmill/guile/math/gsl.h
@@ -204,7 +200,6 @@ if HAVE_PYTHON_API
 nobase_include_HEADERS += sortsmill/__init__.pxd
 nobase_include_HEADERS += sortsmill/cython/__init__.pxd
 nobase_include_HEADERS += sortsmill/cython/const_pointers.pxd
-nobase_include_HEADERS += sortsmill/cython/brentroot.pxd
 nobase_include_HEADERS += sortsmill/cython/gmpy.pxi
 nobase_include_HEADERS += sortsmill/cython/guile.pxd
 nobase_include_HEADERS += sortsmill/cython/linalg.pxd

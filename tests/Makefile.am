@@ -1,4 +1,4 @@
-# Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013, 2015 Khaled Hosny and Barry Schwartz
 # This file is part of the Sorts Mill Tools.
 # 
 # Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -90,7 +90,7 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 
 MY_AT_FILES = gfile_c.at sortsmill_precompute.at precomputed_data.at	\
 	math_functions.at bernstein.at monomial.at gmp_constants.at			\
-	brentroot.at linalg.at polyspline.at sortsmill_iconv.at psMat.at	\
+	linalg.at polyspline.at sortsmill_iconv.at psMat.at					\
 	old_python_tests.at
 #sortsmill_linalg.at <-- Needs to be adapted to newer modules.
 
@@ -105,8 +105,6 @@ TESTS_MONOMIAL = #test_monomial
 TESTS_GMP_CONSTANTS = test_gmp_constants
 
 TESTS_MATH_FUNCTIONS = test_bincoef
-
-TESTS_BRENTROOT = test_brentroot test_mpq_brentroot
 
 TESTS_LINALG = $(TESTS_LINALG_MPZ) $(TESTS_LINALG_MPQ)	\
 	$(TESTS_LINALG_SCM) $(TESTS_LINALG_F64)
@@ -160,7 +158,6 @@ check_PROGRAMS += $(TESTS_GFILE_C)
 #check_PROGRAMS += $(TESTS_MONOMIAL)
 check_PROGRAMS += $(TESTS_GMP_CONSTANTS)
 check_PROGRAMS += $(TESTS_MATH_FUNCTIONS)
-check_PROGRAMS += $(TESTS_BRENTROOT)
 check_PROGRAMS += $(TESTS_LINALG)
 
 # Just make all C programs dependent, rather than sort out who really
@@ -182,8 +179,6 @@ EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm			\
 
 EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
 	test_guile_monomial.scm test_python_monomial.py				\
-	test_guile_brentroot.scm test_python_brentroot.py			\
-	test_python_qbrentroot.py test_python_qbrentroot_c.py		\
 	test_python_mpz_matrix_set_all.py							\
 	test_python_mpq_matrix_set_all.py							\
 	test_python_mpz_matrix_set_zero.py							\

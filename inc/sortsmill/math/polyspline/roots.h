@@ -54,12 +54,15 @@ SCM scm_isolate_roots_scm_mono (SCM poly, SCM a, SCM b);
 
 /* Find an isolated root that has been bracketed by a sign
    variation. */
-void find_bracketed_root_f64 (double (*eval) (size_t degree, ssize_t stride,
+/*
+  void find_bracketed_root_f64 (double (*eval) (size_t degree, ssize_t stride,
                                               const double *spline, double t),
                               size_t degree, ssize_t stride,
                               const double *spline, double a, double b,
                               double tolerance, double epsilon, double *root,
                               int *err, unsigned int *iter_no);
+*/
+
 void
 find_bracketed_root_scm_exact (SCM (*eval)
                                (size_t degree, ssize_t stride,

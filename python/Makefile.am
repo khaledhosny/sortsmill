@@ -1,6 +1,6 @@
 # -*- tab-width: 4 -*-
 
-# Copyright (C) 2012, 2013 Khaled Hosny and Barry Schwartz
+# Copyright (C) 2012, 2013, 2015 Khaled Hosny and Barry Schwartz
 # This file is part of the Sorts Mill Tools.
 # 
 # Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -157,10 +157,6 @@ nobase_pyexec_LTLIBRARIES += sortsmill/polyspline.la
 sortsmill_polyspline_la_SOURCES = sortsmill/polyspline.c
 sortsmill_polyspline_la_LIBADD = $(LIBADD)
 
-nobase_pyexec_LTLIBRARIES += sortsmill/brentroot.la
-sortsmill_brentroot_la_SOURCES = sortsmill/brentroot.c
-sortsmill_brentroot_la_LIBADD = $(LIBADD)
-
 nobase_pyexec_LTLIBRARIES += sortsmill/pyguile.la
 sortsmill_pyguile_la_SOURCES = sortsmill/pyguile.c
 sortsmill_pyguile_la_LIBADD = $(LIBADD)
@@ -175,8 +171,7 @@ sortsmill_contours_la_LIBADD = $(LIBADD)
 
 PYX_FILES = __sortsmill__/__pyguile__.pyx sortsmill/views.pyx			\
 	sortsmill/pkg_info.pyx sortsmill/notices.pyx sortsmill/guile.pyx	\
-	sortsmill/linalg.pyx sortsmill/polyspline.pyx						\
-	sortsmill/brentroot.pyx
+	sortsmill/linalg.pyx sortsmill/polyspline.pyx
 
 NODIST_PYX_FILES = sortsmill/fontforge_api.pyx
 
@@ -185,8 +180,7 @@ cythonsrcinc = $(top_srcdir)/inc/sortsmill/cython
 
 PXD_FILES = $(cythonsrcinc)/xgc.pxd $(cythonsrcinc)/guile.pxd	\
 	$(cythonsrcinc)/gsl.pxd $(cythonsrcinc)/linalg.pxd			\
-	$(cythonsrcinc)/brentroot.pxd $(cythonsrcinc)/gmpy.pxd		\
-	$(cythonsrcinc)/polyspline.pxd								\
+	$(cythonsrcinc)/gmpy.pxd $(cythonsrcinc)/polyspline.pxd		\
 	$(cythonsrcinc)/splinefont.pxd
 
 PXI_FILES = $(cythonsrcinc)/gmpy.pxi
@@ -218,8 +212,8 @@ MOSTLYCLEANFILES = __sortsmill__/__pyguile__.c sortsmill/conditions.c	\
 	sortsmill/fontforge_api.pyx sortsmill/fontforge_api.c				\
 	sortsmill/views.c sortsmill/ffcompat.c sortsmill/psMat.c			\
 	sortsmill/pkg_info.c sortsmill/notices.c sortsmill/guile.c			\
-	sortsmill/linalg.c sortsmill/polyspline.c sortsmill/brentroot.c		\
-	sortsmill/pyguile.c sortsmill/contours.c sortsmill/usermenu.c
+	sortsmill/linalg.c sortsmill/polyspline.c sortsmill/pyguile.c		\
+	sortsmill/contours.c sortsmill/usermenu.c
 
 # FIXME FIXME FIXME: Support extensions other than .so.
 sortsmill/legacy/%.so: sortsmill/legacy/%.la
@@ -240,8 +234,8 @@ all-local: $(HAVE_GUI_SO) __sortsmill__/__pyguile__.so					\
 	sortsmill/fontforge_api.so sortsmill/views.so						\
 	sortsmill/pkg_info.so sortsmill/notices.so sortsmill/guile.so		\
 	sortsmill/linalg.so sortsmill/polyspline.so							\
-	sortsmill/brentroot.so sortsmill/legacy/fontforge.so				\
-	sortsmill/pyguile.so sortsmill/contours.so
+	sortsmill/legacy/fontforge.so sortsmill/pyguile.so					\
+	sortsmill/contours.so
 HAVE_GUI_SO = sortsmill/usermenu.so
 
 check-local: all-local

@@ -380,6 +380,7 @@ f64_eval (double t, void *eval_struct)
   return e->eval (e->degree, e->stride, e->spline, t);
 }
 
+/*
 VISIBLE void
 find_bracketed_root_f64 (_f64_evaluator_t * eval,
                          size_t degree, ssize_t stride,
@@ -393,6 +394,19 @@ find_bracketed_root_f64 (_f64_evaluator_t * eval,
   brentroot (-1, tolerance, epsilon, a, b, f64_eval, &e, root, err, iter_no);
   if (*err != 0)
     *root = nan ("");
+}
+*/
+
+static double
+find_bracketed_root_f64 (_f64_evaluator_t * eval,
+                         size_t degree, ssize_t stride,
+                         const double *spline, double a, double b,
+                         double tolerance, double epsilon)
+{
+  _f64_evaluator_and_spline_t e = {
+    .eval = eval,.degree = degree,.stride = stride,.spline = spline
+  };
+  return dbrentroot (a, b, f64_eval, &e, tolerance, epsilon);
 }
 
 static SCM
@@ -416,20 +430,20 @@ scm_find_bracketed_root_f64 (const char *who,
                                               &stride);
   const double *_spline = scm_array_handle_f64_elements (&handle);
 
-  double root;
-  int err;
-  unsigned int iter_no;
-  find_bracketed_root_f64 (eval, dim - 1, stride, _spline, scm_to_double (a),
-                           scm_to_double (b), tol, eps, &root, &err, &iter_no);
+  const double root =
+    find_bracketed_root_f64 (eval, dim - 1, stride, _spline, scm_to_double (a),
+                             scm_to_double (b), tol, eps);
 
   scm_dynwind_end ();
 
-  SCM values[3] = {
-    ((err == 0) ? scm_from_double (root) : SCM_BOOL_F),
-    scm_from_int (err),
-    scm_from_uint (iter_no)
-  };
-  return scm_c_values (values, 3);
+/////  SCM values[3] = {
+/////    ((err == 0) ? scm_from_double (root) : SCM_BOOL_F),
+/////    scm_from_int (err),
+/////    scm_from_uint (iter_no)
+/////  };
+/////  return scm_c_values (values, 3);
+
+  return scm_from_double (root);
 }
 
 VISIBLE SCM
@@ -491,6 +505,13 @@ scm_find_bracketed_root_f64_spower (SCM spline, SCM a, SCM b, SCM tolerance,
 }
 
 //-------------------------------------------------------------------------
+
+/*
+ * FIXME: WE’LL LIKELY GET RID OF ‘EXACT’ ROOTFINDING.
+ *
+ * In any case, we do not have mpq_brentroot() anymore.
+ */
+#if 0
 
 typedef SCM _scm_evaluator_t (size_t degree, ssize_t stride,
                               const SCM *spline, SCM t);
@@ -632,6 +653,8 @@ scm_find_bracketed_root_scm_spower_exact (SCM spline, SCM a, SCM b,
      tolerance, epsilon);
 }
 
+#endif
+
 //-------------------------------------------------------------------------
 
 VISIBLE SCM
@@ -671,14 +694,14 @@ init_math_polyspline_roots (void)
                       0, scm_find_bracketed_root_f64_sbern_de_casteljau);
   scm_c_define_gsubr ("poly:find-bracketed-root-f64-spower", 3, 2, 0,
                       scm_find_bracketed_root_f64_spower);
-  scm_c_define_gsubr ("poly:find-bracketed-root-scm-mono-exact", 3, 2, 0,
-                      scm_find_bracketed_root_scm_mono_exact);
-  scm_c_define_gsubr ("poly:find-bracketed-root-scm-bern-exact", 3, 2, 0,
-                      scm_find_bracketed_root_scm_bern_exact);
-  scm_c_define_gsubr ("poly:find-bracketed-root-scm-sbern-exact", 3, 2, 0,
-                      scm_find_bracketed_root_scm_sbern_exact);
-  scm_c_define_gsubr ("poly:find-bracketed-root-scm-spower-exact", 3, 2, 0,
-                      scm_find_bracketed_root_scm_spower_exact);
+/////  scm_c_define_gsubr ("poly:find-bracketed-root-scm-mono-exact", 3, 2, 0,
+/////                      scm_find_bracketed_root_scm_mono_exact);
+/////  scm_c_define_gsubr ("poly:find-bracketed-root-scm-bern-exact", 3, 2, 0,
+/////                      scm_find_bracketed_root_scm_bern_exact);
+/////  scm_c_define_gsubr ("poly:find-bracketed-root-scm-sbern-exact", 3, 2, 0,
+/////                      scm_find_bracketed_root_scm_sbern_exact);
+/////  scm_c_define_gsubr ("poly:find-bracketed-root-scm-spower-exact", 3, 2, 0,
+/////                      scm_find_bracketed_root_scm_spower_exact);
 }
 
 //-------------------------------------------------------------------------

@@ -16,7 +16,6 @@ AT_BANNER([auxiliary (and equivalents for Guile and Python)])
 #                           dnl FIXME: Test that Python preserves container type; etc.
 m4_include([gmp_constants.at])
 m4_include([math_functions.at])
-#m4_include([brentroot.at]) <-- FIXME: Come up with a more machine-independent brentroot test.
 m4_include([linalg.at])
 m4_include([polyspline.at])
 

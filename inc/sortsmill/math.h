@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Khaled Hosny and Barry Schwartz
+ * Copyright (C) 2013, 2015 Khaled Hosny and Barry Schwartz
  * This file is part of the Sorts Mill Tools.
  * 
  * Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 #define _SORTSMILL_MATH_H
 
 #include <sortsmill/math/bincoef.h>
-#include <sortsmill/math/brentroot.h>
 #include <sortsmill/math/floor_mod.h>
 #include <sortsmill/math/gmp_constants.h>
 #include <sortsmill/math/polyspline.h>  /* FIXME: Make polyspline.h
