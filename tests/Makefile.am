@@ -89,9 +89,8 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	mv $@.tmp $@
 
 MY_AT_FILES = gfile_c.at sortsmill_precompute.at precomputed_data.at	\
-	math_functions.at bernstein.at monomial.at gmp_constants.at			\
-	linalg.at polyspline.at sortsmill_iconv.at psMat.at					\
-	old_python_tests.at
+	bernstein.at monomial.at gmp_constants.at linalg.at polyspline.at	\
+	sortsmill_iconv.at psMat.at old_python_tests.at
 #sortsmill_linalg.at <-- Needs to be adapted to newer modules.
 
 TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
@@ -103,8 +102,6 @@ TESTS_BERNSTEIN = #test_bernstein
 TESTS_MONOMIAL = #test_monomial
 
 TESTS_GMP_CONSTANTS = test_gmp_constants
-
-TESTS_MATH_FUNCTIONS = test_bincoef
 
 TESTS_LINALG = $(TESTS_LINALG_MPZ) $(TESTS_LINALG_MPQ)	\
 	$(TESTS_LINALG_SCM) $(TESTS_LINALG_F64)
@@ -157,7 +154,6 @@ check_PROGRAMS += $(TESTS_GFILE_C)
 #check_PROGRAMS += $(TESTS_BERNSTEIN)
 #check_PROGRAMS += $(TESTS_MONOMIAL)
 check_PROGRAMS += $(TESTS_GMP_CONSTANTS)
-check_PROGRAMS += $(TESTS_MATH_FUNCTIONS)
 check_PROGRAMS += $(TESTS_LINALG)
 
 # Just make all C programs dependent, rather than sort out who really

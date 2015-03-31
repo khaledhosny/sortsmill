@@ -85,7 +85,6 @@ dist_libsortsmill_aux_la_SOURCES += math_scm_matrix.c math_scm_lu.c
 dist_libsortsmill_aux_la_SOURCES += math_f64_matrix.c
 
 # Mathematical functions.
-dist_libsortsmill_aux_la_SOURCES += bincoef.c
 dist_libsortsmill_aux_la_SOURCES += floor_mod.c
 
 # Moving data around, taking into account non-unit strides.

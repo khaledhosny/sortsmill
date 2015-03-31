@@ -19,7 +19,6 @@
 #ifndef _SORTSMILL_MATH_H
 #define _SORTSMILL_MATH_H
 
-#include <sortsmill/math/bincoef.h>
 #include <sortsmill/math/floor_mod.h>
 #include <sortsmill/math/gmp_constants.h>
 #include <sortsmill/math/polyspline.h>  /* FIXME: Make polyspline.h
