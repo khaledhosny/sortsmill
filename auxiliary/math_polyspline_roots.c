@@ -380,33 +380,29 @@ f64_eval (double t, void *eval_struct)
   return e->eval (e->degree, e->stride, e->spline, t);
 }
 
-/*
-VISIBLE void
+static void
 find_bracketed_root_f64 (_f64_evaluator_t * eval,
                          size_t degree, ssize_t stride,
                          const double *spline, double a, double b,
-                         double tolerance, double epsilon, double *root,
-                         int *err, unsigned int *iter_no)
+                         double tolerance, double epsilon,
+                         double *root, int *info)
 {
   _f64_evaluator_and_spline_t e = {
     .eval = eval,.degree = degree,.stride = stride,.spline = spline
   };
-  brentroot (-1, tolerance, epsilon, a, b, f64_eval, &e, root, err, iter_no);
-  if (*err != 0)
-    *root = nan ("");
-}
-*/
 
-static double
-find_bracketed_root_f64 (_f64_evaluator_t * eval,
-                         size_t degree, ssize_t stride,
-                         const double *spline, double a, double b,
-                         double tolerance, double epsilon)
-{
-  _f64_evaluator_and_spline_t e = {
-    .eval = eval,.degree = degree,.stride = stride,.spline = spline
-  };
-  return dbrentroot (a, b, f64_eval, &e, tolerance, epsilon);
+  double root_val;
+  int info_val;
+  dbrentroot (a, b, f64_eval, &e, tolerance, epsilon, &root_val, &info_val);
+  if (root != NULL)
+    {
+      if (info_val != 0)
+        *root = nan ("");
+      else
+        *root = root_val;
+    }
+  if (info != NULL)
+    *info = info_val;
 }
 
 static SCM
@@ -430,20 +426,19 @@ scm_find_bracketed_root_f64 (const char *who,
                                               &stride);
   const double *_spline = scm_array_handle_f64_elements (&handle);
 
-  const double root =
-    find_bracketed_root_f64 (eval, dim - 1, stride, _spline, scm_to_double (a),
-                             scm_to_double (b), tol, eps);
+  double root;
+  int info;
+  find_bracketed_root_f64 (eval, dim - 1, stride, _spline, scm_to_double (a),
+                           scm_to_double (b), tol, eps, &root, &info);
 
   scm_dynwind_end ();
 
-/////  SCM values[3] = {
-/////    ((err == 0) ? scm_from_double (root) : SCM_BOOL_F),
-/////    scm_from_int (err),
-/////    scm_from_uint (iter_no)
-/////  };
-/////  return scm_c_values (values, 3);
+  SCM values[2] = {
+    ((info == 0) ? scm_from_double (root) : SCM_BOOL_F),
+    scm_from_int (info)
+  };
 
-  return scm_from_double (root);
+  return scm_c_values (values, 2);
 }
 
 VISIBLE SCM
