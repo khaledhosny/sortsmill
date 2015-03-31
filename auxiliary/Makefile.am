@@ -130,7 +130,6 @@ endif HAVE_PYTHON_API
 
 # Miscellaneous C interface to Guile and Guile extensions.
 # FIXME: Move some of these to Sorts Mill Core Guile.
-dist_libsortsmill_aux_la_SOURCES += guile_math_functions.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_error.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_matrices.c
 dist_libsortsmill_aux_la_SOURCES += guile_math_gsl_permutations.c

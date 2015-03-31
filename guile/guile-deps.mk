@@ -25,7 +25,6 @@ sortsmill/fonts/views.go: sortsmill/fontforge-api.go sortsmill/i18n.go sortsmill
 sortsmill/i18n.go: sortsmill/pkg-info.go sortsmill/dynlink.go
 sortsmill/iconv.go: sortsmill/dynlink.go
 sortsmill/mac-encodings.go: sortsmill/dynlink.go
-sortsmill/math/functions.go: sortsmill/dynlink.go
 sortsmill/math/geometry/lines.go: sortsmill/math/matrices.go sortsmill/i18n.go
 sortsmill/math/gsl/matrices.go: sortsmill/arrays.go sortsmill/dynlink.go sortsmill/i18n.go
 sortsmill/math/multivariate-polynomials.go: sortsmill/math/matrices.go sortsmill/dynlink.go
@@ -67,7 +66,7 @@ sortsmill/editor.go: sortsmill/editor/finalization.go sortsmill/editor/main.go s
 sortsmill/fontforge-api.go: sortsmill/pkg-info/package.go
 sortsmill/fonts.go: sortsmill/fonts/anchors.go sortsmill/fonts/contours.go sortsmill/fonts/font-formats.go sortsmill/fonts/fontinfo-dict.go sortsmill/fonts/general.go sortsmill/fonts/glyphs.go sortsmill/fonts/head-table.go sortsmill/fonts/hhea-table.go sortsmill/fonts/name-table.go sortsmill/fonts/opentype-io.go sortsmill/fonts/os2-table.go sortsmill/fonts/peg-spacing.go sortsmill/fonts/private-dict.go sortsmill/fonts/psmat.go sortsmill/fonts/t1font-dict.go sortsmill/fonts/ufo.go sortsmill/fonts/views.go
 sortsmill/gdraw-api.go: sortsmill/pkg-info/package.go
-sortsmill/math.go: sortsmill/math/functions.go sortsmill/math/geometry.go sortsmill/math/gsl.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
+sortsmill/math.go: sortsmill/math/geometry.go sortsmill/math/gsl.go sortsmill/math/multivariate-polynomials.go sortsmill/math/matrices.go sortsmill/math/polyspline.go
 sortsmill/math/geometry.go: sortsmill/math/geometry/lines.go
 sortsmill/math/gsl.go: sortsmill/math/gsl/error.go sortsmill/math/gsl/matrices.go
 sortsmill/math/matrices.go: sortsmill/math/matrices/arithmetic.go sortsmill/math/matrices/base.go sortsmill/math/matrices/bezout.go sortsmill/math/matrices/linalg.go

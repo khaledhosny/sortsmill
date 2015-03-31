@@ -471,20 +471,6 @@ sortsmill/math.scm: $(MATH_REEXPORTED_SCM_FILES)
 	$(AM_V_at)$(call generate_reexporter, (sortsmill math), #t, $(^:%="%")) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-
-##### # (sortsmill math brentroot)
-##### 
-##### DIST_SCM_FILES += sortsmill/math/brentroot.scm
-##### GO_FILES += sortsmill/math/brentroot.go
-##### MATH_REEXPORTED_SCM_FILES += sortsmill/math/brentroot.scm
-
-
-# (sortsmill math functions)
-
-DIST_SCM_FILES += sortsmill/math/functions.scm
-GO_FILES += sortsmill/math/functions.go
-MATH_REEXPORTED_SCM_FILES += sortsmill/math/functions.scm
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # (sortsmill math geometry)
