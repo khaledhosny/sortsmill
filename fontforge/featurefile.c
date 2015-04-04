@@ -2624,7 +2624,11 @@ struct feat_item
     int exclude_dflt;           /* for lang tags */
     struct nameid *names;       /* size params */
     struct tablevalues *tvals;
-    int16_t *lcaret;
+    struct
+    {
+      int16_t *carets;
+      int cnt;
+    } lcaret;
     struct otffeatname *featnames;
   } u2;
   struct gpos_mark *mclass;     /* v1.8 For mark to base-ligature-mark, names of all marks which attach to this anchor */
@@ -7297,9 +7301,9 @@ fea_ParseGDEFTable (struct parseState *tok)
               ++tok->err_count;
               fea_skip_to_semi (tok);
             }
-          item->u2.lcaret = xmalloc ((len + 1) * sizeof (int16_t));
-          memcpy (item->u2.lcaret, carets, len * sizeof (int16_t));
-          item->u2.lcaret[len] = 0;
+          item->u2.lcaret.carets = xmalloc (len * sizeof (int16_t));
+          item->u2.lcaret.cnt = len;
+          memcpy (item->u2.lcaret.carets, carets, len * sizeof (int16_t));
         }
       else if (strcmp (tok->tokbuf, "LigatureCaretByIndex") == 0)
         {
@@ -7694,7 +7698,7 @@ fea_featitemFree (struct feat_item *item)
           free (item->u1.gdef_classes);
           break;
         case ft_lcaret:
-          free (item->u2.lcaret);
+          free (item->u2.lcaret.carets);
           break;
         case ft_tablekeys:
           TableValsFree (item->u2.tvals);
@@ -8712,7 +8716,7 @@ fea_GDefGlyphClasses (SplineFont *sf, struct feat_item *f)
 static void
 fea_GDefLigCarets (SplineFont *sf, struct feat_item *f)
 {
-  int i, ch;
+  int ch;
   char *pt, *start;
   SplineChar *sc;
   PST *pst, *prev, *next;
@@ -8745,14 +8749,14 @@ fea_GDefLigCarets (SplineFont *sf, struct feat_item *f)
                   PSTFree (pst);
                 }
             }
-          for (i = 0; f->u2.lcaret[i] != 0; ++i);
           pst = xzalloc (sizeof (PST));
           pst->next = sc->possub;
           sc->possub = pst;
           pst->type = pst_lcaret;
-          pst->u.lcaret.cnt = i;
-          pst->u.lcaret.carets = xmalloc (i * sizeof (int16_t));
-          memcpy (pst->u.lcaret.carets, f->u2.lcaret, i * sizeof (int16_t));
+          pst->u.lcaret.cnt = f->u2.lcaret.cnt;
+          pst->u.lcaret.carets = xmalloc (pst->u.lcaret.cnt * sizeof (int16_t));
+          memcpy (pst->u.lcaret.carets, f->u2.lcaret.carets,
+                  pst->u.lcaret.cnt * sizeof (int16_t));
         }
     }
 }
