@@ -7230,7 +7230,10 @@ fea_ParseGDEFTable (struct parseState *tok)
         break;
       if (strcmp (tok->tokbuf, "Attach") == 0)
         {
-          // Unsupported, will be parsed and ignored.
+          LogError (_("Unsupported keyword on line %d of %s, will be ignored: %s"),
+                    tok->line[tok->inc_depth],
+                    tok->filename[tok->inc_depth],
+                    tok->tokbuf);
           fea_ParseTok (tok);
           /* Bug. Not parsing inline classes */
           if (tok->type != tk_class && tok->type != tk_name)
@@ -7301,7 +7304,10 @@ fea_ParseGDEFTable (struct parseState *tok)
       else if (strcmp (tok->tokbuf, "LigatureCaretByIndex") == 0)
         {
           // Ligature carets by contour point index (format 2).
-          // Unsupported, will be parsed and ignored.
+          LogError (_("Unsupported keyword on line %d of %s, will be ignored: %s"),
+                    tok->line[tok->inc_depth],
+                    tok->filename[tok->inc_depth],
+                    tok->tokbuf);
           fea_ParseTok (tok);
           if (tok->type != tk_class && tok->type != tk_name
               && tok->type != tk_cid)
