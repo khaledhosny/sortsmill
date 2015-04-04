@@ -8751,8 +8751,8 @@ fea_GDefLigCarets (SplineFont *sf, struct feat_item *f)
           sc->possub = pst;
           pst->type = pst_lcaret;
           pst->u.lcaret.cnt = i;
-          pst->u.lcaret.carets = f->u2.lcaret;
-          f->u2.lcaret = NULL;
+          pst->u.lcaret.carets = xmalloc (i * sizeof (int16_t));
+          memcpy (pst->u.lcaret.carets, f->u2.lcaret, i * sizeof (int16_t));
         }
     }
 }
