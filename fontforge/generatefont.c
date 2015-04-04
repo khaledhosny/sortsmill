@@ -928,6 +928,7 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
   int iscid = oldformatstate == ff_cid || oldformatstate == ff_cffcid ||
     oldformatstate == ff_otfcid || oldformatstate == ff_otfciddfont;
   int flags = 0;
+  char *buf;
 
   if (oldformatstate == ff_multiple)
     return (WriteMultiplePSFont
@@ -944,25 +945,39 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
   if (oldformatstate <= ff_cffcid && oldbitmapstate == bf_otb)
     flags = old_psotb_flags;
 
-  ff_progress_start_indicator (10, _("Generating font"),
-                               oldformatstate == ff_ttf
-                               || oldformatstate == ff_ttfsym
-                               || oldformatstate ==
-                               ff_ttfmacbin ? _("Generating TrueType Font") :
-                               oldformatstate == ff_otf
-                               || oldformatstate ==
-                               ff_otfdfont ? _("Generating OpenType Font") :
-                               oldformatstate == ff_cid
-                               || oldformatstate == ff_cffcid
-                               || oldformatstate == ff_otfcid
-                               || oldformatstate ==
-                               ff_otfciddfont ? _("Generating CID keyed font") :
-                               oldformatstate == ff_mma
-                               || oldformatstate ==
-                               ff_mmb ? _("Generating multi-master font") :
-                               oldformatstate ==
-                               ff_ufo ? _("Generating Unified Font Object") :
-                               _("Generating PostScript Font"),
+  switch (oldformatstate)
+    {
+    case ff_ttf:
+    case ff_ttfsym:
+    case ff_ttfmacbin:
+      buf = x_gc_strdup (_("Generating TrueType Font"));
+      break;
+    case ff_otf:
+    case ff_otfdfont:
+      buf = x_gc_strdup (_("Generating OpenType Font"));
+      break;
+    case ff_cid:
+    case ff_cffcid:
+    case ff_otfcid:
+    case ff_otfciddfont:
+      buf = x_gc_strdup (_("Generating CID keyed font"));
+      break;
+    case ff_woff:
+      buf = x_gc_strdup (_("Generating WOFF Font"));
+      break;
+    case ff_mma:
+    case ff_mmb:
+      buf = x_gc_strdup (_("Generating multi-master font"));
+      break;
+    case ff_ufo:
+      buf = x_gc_strdup (_("Generating Unified Font Object"));
+      break;
+    default:
+      buf = x_gc_strdup (_("Generating PostScript Font"));
+      break;
+    }
+
+  ff_progress_start_indicator (10, _("Generating font"), buf,
                                x_gc_u8_strconv_from_locale (newname),
                                sf->glyphcnt, 1, true);
   if (oldformatstate != ff_none)
