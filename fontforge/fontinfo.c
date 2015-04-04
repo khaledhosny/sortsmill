@@ -11500,7 +11500,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k++].gd.popup_msg =
     (uint32_t *)
     _("Allow editing of multiple colors and shades, fills and strokes.\n"
-      "Multi layered fonts can only be output as type3 or svg fonts.");
+      "Multi layered fonts can only be output as Type 3 fonts.");
   larray2[j++] = GCD_HPad10;
   larray2[j++] = &lgcd[k - 1];
   larray2[j++] = GCD_ColSpan;

@@ -114,7 +114,6 @@ SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf, "otf");
 SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf_dfont, "otf-dfont");
 SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf_cid, "otf-cid");
 SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__otf_cid_dfont, "otf-cid-dfont");
-SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__svg, "svg");
 SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__ufo, "ufo");
 SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__woff, "woff");
 SCM_SYMBOL_CONSTANT (VISIBLE, scm_symbol__no_font, "no-font");

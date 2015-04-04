@@ -1659,82 +1659,6 @@ out:
   return ret;
 }
 
-/* When a selection contains multiple glyphs, save them into an svg font */
-static void *
-copybuffer2svgmult (void *_copybuffer, int32_t *len)
-{
-  Undoes *cur = &copybuffer, *c, *c2;
-  SplineFont *sf;
-  int cnt, i;
-  char *ret;
-  Layer *ly;
-  SplineChar *sc = NULL;
-  int old_order2, o2 = false;
-  FILE *svg;
-
-  if (cur->undotype != ut_multiple || !CopyContainsVectors ()
-      || FontViewFirst () == NULL)
-    {
-      *len = 0;
-      return xstrdup ("");
-    }
-
-  svg = tmpfile ();
-  if (svg == NULL)
-    {
-      *len = 0;
-      return xstrdup ("");
-    }
-
-  cur = cur->u.multiple.mult;
-  for (cnt = 0, c = cur; c != NULL; c = c->next, ++cnt);
-
-  sf = SplineFontBlank (cnt);
-  sf->glyphcnt = cnt;
-  for (i = 0, c = cur; c != NULL; c = c->next, ++i)
-    {
-      sc = SFSplineCharCreate (sf);
-      set_sfglyph (sf, i, sc);
-      sc->orig_pos = i;
-      ly = sc->layers;
-      if ((c2 = c)->undotype == ut_composit)
-        c2 = c2->u.composit.state;
-      FFClipToSC (sc, c2);
-      if (ly != sc->layers)
-        free (ly);
-      o2 = c2->was_order2;
-    }
-
-  if (sc != NULL)
-    {
-      old_order2 = sc->parent->layers[ly_fore].order2;
-      sc->parent->layers[ly_fore].order2 = o2;
-      sc->layers[ly_fore].order2 = o2;
-      sf->ascent = sc->parent->ascent;
-      sf->descent = sc->parent->descent;
-    }
-  _WriteSVGFont (svg, sf, ff_svg, 0, NULL, ly_fore);
-  if (sc != NULL)
-    sc->parent->layers[ly_fore].order2 = old_order2;
-
-  for (i = 0, c = cur; c != NULL; c = c->next, ++i)
-    {
-      sc = sfglyph (sf, i);
-      sc->layers[ly_fore].splines = NULL;
-      sc->layers[ly_fore].refs = NULL;
-      sc->name = NULL;
-    }
-  SplineFontFree (sf);
-
-  fseek (svg, 0, SEEK_END);
-  *len = ftell (svg);
-  ret = xmalloc (*len);
-  rewind (svg);
-  fread (ret, 1, *len, svg);
-  fclose (svg);
-  return ret;
-}
-
 static void *
 copybuffer2eps (void *_copybuffer, int32_t *len)
 {
@@ -1862,9 +1786,6 @@ XClipCheckEps (void)
       switch (cur->undotype)
         {
         case ut_multiple:
-          if (CopyContainsVectors ())
-            ClipboardAddDataType ("application/x-font-svg", &copybuffer, 0,
-                                  sizeof (char), copybuffer2svgmult, noop);
           cur = cur->u.multiple.mult;
           break;
         case ut_composit:
@@ -2549,50 +2470,6 @@ SCCheckXClipboard (SplineChar *sc, int layer, int doclear)
       fclose (temp);
     }
   free (paste);
-}
-
-static void
-XClipFontToFFClip (void)
-{
-  int32_t len;
-  int i;
-  char *paste;
-  SplineFont *sf;
-  SplineChar *sc;
-  Undoes *head = NULL, *last = NULL, *cur;
-
-  paste = ClipboardRequest ("application/x-font-svg", &len);
-  if (paste == NULL)
-    return;
-  sf = SFReadSVGMem (paste, 0);
-  if (sf == NULL)
-    return;
-  for (i = 0; i < sf->glyphcnt; ++i)
-    if ((sc = sfglyph (sf, i)) != NULL)
-      {
-        if (strcmp (sc->name, ".notdef") == 0)
-          continue;
-        cur = SCCopyAll (sc, ly_fore, ct_fullcopy);
-        if (cur != NULL)
-          {
-            if (head == NULL)
-              head = cur;
-            else
-              last->next = cur;
-            last = cur;
-          }
-      }
-
-  SplineFontFree (sf);
-  free (paste);
-
-  if (head == NULL)
-    return;
-
-  CopyBufferFree ();
-  copybuffer.undotype = ut_multiple;
-  copybuffer.u.multiple.mult = head;
-  copybuffer.copied_from = NULL;
 }
 
 static double
@@ -4479,10 +4356,6 @@ PasteIntoFV (FontViewBase *fv, int pasteinto, real trans[6])
       if (list == NULL)
         return;
     }
-
-  if (copybuffer.undotype == ut_none
-      && ClipboardHasType ("application/x-font-svg"))
-    XClipFontToFFClip ();
 
   if (copybuffer.undotype == ut_none)
     {

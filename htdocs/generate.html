@@ -133,8 +133,6 @@
       <a href="cidmenu.html">CID font</a>. It produces an OpenType
       CID-keyed font.</li>
 
-      <li><a href="#svg">SVG font</a></li>
-
       <li>None</li>
     </ul>
 
@@ -361,9 +359,6 @@
     this is useful if you wish to extract a sub-font from a CID
     font).</p>
 
-    <p>SVG fonts don't really have the concept of an encoding other
-    than Unicode.</p>
-
     <p>TTF (and OpenType) fonts will produce vertical metrics
     tables if the font has vertical metrics enabled. PostScript
     type1 fonts will not produce Metrics2 dictionaries (If someone
@@ -512,24 +507,6 @@
 
     <p><br clear="all" /></p>
     <hr />
-
-    <h2><a name="svg" id="svg">SVG</a> fonts</h2>
-
-    <p>SVG (Scalable Vector Graphics) fonts, come in two forms, one
-    corresponds roughly to a PostScript Type1 font, and one to a
-    PostScript Type 3 font.</p>
-
-    <p>In the first format a set of contours is specified for each
-    glyph. There is no indication given whether the font should be
-    stroked or filled -- that informaton will have inherited from
-    the graphical environment when the font is used on text.</p>
-
-    <p>In the second format each glyph may contain the stroke and
-    fill commands needed to draw it.</p>
-
-    <p>FontForge usually generates the first format, but for multi
-    layered or stroked fonts it will generate the second
-    format.</p>
 
     <p class="c3">-- <a href="filemenu.html">Prev</a> -- <a href=
     "overview.html">TOC</a> -- <a href="filemenu.html">Next</a>

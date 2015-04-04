@@ -370,7 +370,7 @@ SCNumberPoints (SplineChar *sc, int layer)
   RefChar *ref;
 
   if (sc->layers[layer].order2)
-    {                           /* TrueType and its complexities. I ignore svg here */
+    {                           /* TrueType and its complexities.*/
       if (sc->layers[layer].refs != NULL)
         {
           /* if there are references there can't be splines. So if we've got */
@@ -398,7 +398,7 @@ SCNumberPoints (SplineChar *sc, int layer)
         }
     }
   else
-    {                           /* cubic (PostScript/SVG) splines */
+    {                           /* cubic (PostScript) splines */
       int first, last;
       if (sc->parent->multilayer)
         {
@@ -2306,8 +2306,6 @@ VSMaskFromFormat (SplineFont *sf, int layer, enum fontformat format)
     return vs_maskttf;
   else if (format <= ff_otfdfont)
     return vs_maskps;
-  else if (format == ff_svg)
-    return vs_maskttf;
   else
     return (sf->subfontcnt != 0 || sf->cidmaster != NULL ? vs_maskcid :
             sf->layers[layer].order2 ? vs_maskttf : vs_maskps);

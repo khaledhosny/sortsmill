@@ -69,7 +69,7 @@ char *generatefont_extensions[] =
   ".cid", ".cff", ".cid.cff",
   ".t42", ".t11",
   ".ttf", ".ttf", ".ttf.bin", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
-  ".otf.dfont", ".svg", ".ufo", ".woff", NULL
+  ".otf.dfont", ".ufo", ".woff", NULL
 };
 
 char *bitmapextensions[] =
@@ -961,8 +961,6 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
                                || oldformatstate ==
                                ff_mmb ? _("Generating multi-master font") :
                                oldformatstate ==
-                               ff_svg ? _("Generating SVG font") :
-                               oldformatstate ==
                                ff_ufo ? _("Generating Unified Font Object") :
                                _("Generating PostScript Font"),
                                x_gc_u8_strconv_from_locale (newname),
@@ -1032,10 +1030,6 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
           case ff_otfciddfont:
             oerr = !WriteMacTTFFont (newname, sf, oldformatstate, sizes,
                                      bmap, flags, map, layer);
-            break;
-          case ff_svg:
-            oerr =
-              !WriteSVGFont (newname, sf, oldformatstate, flags, map, layer);
             break;
           case ff_ufo:
             oerr =

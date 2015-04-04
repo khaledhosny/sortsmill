@@ -74,7 +74,6 @@ static char *default_ext_list[] = {
 #ifdef TEST_FREETYPE
 #else
   "sfd",
-  "svg",
   "pt3",
 #endif
   NULL
@@ -159,19 +158,6 @@ figurefiletype (struct fontlist *item)
         {
           /* Bare CFF */
           item->isbinary = true;
-        }
-      else if (ch1 == '<' && ch2 == '?' && (ch3 == 'x' || ch3 == 'X')
-               && (ch4 == 'm' || ch4 == 'M'))
-        {
-          /* SVG */
-          item->isascii = true;
-        }
-      else if (ch1 == 0xef && ch2 == 0xbb && ch3 == 0xbf &&
-               ch4 == '<' && ch5 == '?' && (ch6 == 'x' || ch6 == 'X')
-               && (ch7 == 'm' || ch7 == 'M'))
-        {
-          /* UTF-8 SVG with initial byte ordering mark */
-          item->isascii = true;
         }
       else if (ch1 == 'S' && ch2 == 'p' && ch3 == 'l' && ch4 == 'i')
         {

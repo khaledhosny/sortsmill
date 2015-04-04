@@ -118,7 +118,6 @@ SCM scm_symbol__otf (void);     /* otf */
 SCM scm_symbol__otf_dfont (void);       /* otf-dfont */
 SCM scm_symbol__otf_cid (void); /* otf-cid */
 SCM scm_symbol__otf_cid_dfont (void);   /* otf-cid-dfont */
-SCM scm_symbol__svg (void);     /* svg */
 SCM scm_symbol__ufo (void);     /* ufo */
 SCM scm_symbol__woff (void);    /* woff */
 SCM scm_symbol__no_font (void); /* no-font */
