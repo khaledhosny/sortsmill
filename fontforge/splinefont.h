@@ -3231,7 +3231,6 @@ VISIBLE int SplineSetIntersect (SplineSet *spl, Spline **_spline,
 int LineTangentToSplineThroughPt (Spline *s, BasePoint *pt,
                                   my_extended ts[4], my_extended tmin,
                                   my_extended tmax);
-VISIBLE int _CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3]);
 VISIBLE int CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3]);
 /* Uses an algebraic solution */
 my_extended SplineSolve (const Spline1D *sp, real tmin, real tmax,
