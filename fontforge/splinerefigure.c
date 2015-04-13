@@ -1,5 +1,7 @@
 #include <config.h>             // -*- coding: utf-8 -*- (contains mathematical comments)
 
+// Copyright (C) 2015 Khaled Hosny and Barry Schwartz
+//
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -43,89 +45,10 @@
 
 #include "fontforge.h"
 #include "splinefont.h"
-#include <sortsmill/math.h>
 #include <sortsmill/guile.h>
-#include <sortsmill/initialized_global_constants.h>
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
-
-static mpq_t T_storage[4][4];
-
-static void
-initialize_T (mpq_t **T, void *UNUSED (_))
-{
-  // *INDENT-OFF*
-  const int T_data[4][4] = {
-    {1, -3,  3, -1},
-    {0,  3, -6,  3},
-    {0,  0,  3, -3},
-    {0,  0,  0,  1}
-  };
-  // *INDENT-ON*
-
-  mpq_matrix_init (4, 4, T_storage);
-  for (unsigned int i = 0; i < 4; i++)
-    for (unsigned int j = 0; j < 4; j++)
-      mpq_set_si (T_storage[i][j], T_data[i][j], 1);
-  *T = (mpq_t *) &T_storage[0][0];
-}
-
-INITIALIZED_CONSTANT (static, mpq_t *, T, initialize_T, NULL);
-
-static void
-bernstein_to_monomial (const double b[4], double m[4])
-{
-  // In exact arithmetic, because the transformation is unstable,
-  // multiply
-  //
-  //   (b[0] b[1] b[2] b[3]) T = (d c b a)
-  //
-  // where
-  //
-  //        ⎛1 -3  3 -1⎞
-  //   T =  ⎜0  3 -6  3⎟
-  //        ⎜0  0  3 -3⎟
-  //        ⎝0  0  0  1⎠
-  //
-  // Here T = T₁T₂ where
-  //
-  //   T₁ =
-  //         ⎛1  0  0  0⎞
-  //         ⎜0  3  0  0⎟
-  //         ⎜0  0  3  0⎟
-  //         ⎝0  0  0  1⎠
-  //
-  // (row-wise multiplication by binomial coefficients) is the
-  // coefficient transformation from the Bernstein basis to ‘scaled
-  // Bernstein’ basis, and
-  //
-  //   T₂ =
-  //         ⎛1 -3  3 -1⎞
-  //         ⎜0  1 -2  1⎟
-  //         ⎜0  0  1 -1⎟
-  //         ⎝0  0  0  1⎠
-  //
-  // is the coefficient transformation from scaled Bernstein basis to
-  // the ordinary monomial (power series) basis.
-  //
-  // The scaled Bernstein basis is very useful in itself, but that is
-  // another topic.
-
-  mpq_t x[1][4];
-  mpq_matrix_init (1, 4, x);
-
-  for (int i = 0; i < 4; i++)
-    mpq_set_d (x[0][i], b[i]);
-
-  mpq_matrix_trmm (CblasRight, CblasUpper, CblasNoTrans, CblasNonUnit,
-                   1, 4, mpq_one (), (mpq_t (*)[4]) T (), x);
-
-  for (int i = 0; i < 4; i++)
-    m[i] = mpq_get_d (x[0][i]);
-
-  mpq_matrix_clear (1, 4, x);
-}
 
 void
 SplineRefigure3 (Spline *spline)
@@ -210,20 +133,9 @@ SplineRefigure3 (Spline *spline)
       // See also http://en.wikipedia.org/wiki/Bernstein_polynomial
       //
 
-#if 0                           // The old code.
-
-      xsp->c = 3 * (from->nextcp.x - from->me.x);
-      ysp->c = 3 * (from->nextcp.y - from->me.y);
-      xsp->b = 3 * (to->prevcp.x - from->nextcp.x) - xsp->c;
-      ysp->b = 3 * (to->prevcp.y - from->nextcp.y) - ysp->c;
-      xsp->a = to->me.x - from->me.x - xsp->c - xsp->b;
-      ysp->a = to->me.y - from->me.y - ysp->c - ysp->b;
-
-#else // The new code. Please report if there are problems. (FIXME)
-
       double bx[4] = { from->me.x, from->nextcp.x, to->prevcp.x, to->me.x };
       double mx[4];
-      bernstein_to_monomial (bx, mx);
+      dpoly_bern_to_mono (3, 1, bx, 1, mx);
 
       xsp->c = mx[1];
       xsp->b = mx[2];
@@ -231,58 +143,11 @@ SplineRefigure3 (Spline *spline)
 
       double by[4] = { from->me.y, from->nextcp.y, to->prevcp.y, to->me.y };
       double my[4];
-      bernstein_to_monomial (by, my);
+      dpoly_bern_to_mono (3, 1, by, 1, my);
 
       ysp->c = my[1];
       ysp->b = my[2];
       ysp->a = my[3];
-
-#if 0
-      // An experiment: try implicitizing every spline we get, to see
-      // how this affects performance.
-
-#warning Including expensive experimental code of no use to users.
-
-      SCM xspline = scm_vector (scm_list_4 (scm_from_double (xsp->d),
-                                            scm_from_double (xsp->c),
-                                            scm_from_double (xsp->b),
-                                            scm_from_double (xsp->a)));
-      SCM yspline = scm_vector (scm_list_4 (scm_from_double (ysp->d),
-                                            scm_from_double (ysp->c),
-                                            scm_from_double (ysp->b),
-                                            scm_from_double (ysp->a)));
-      SCM bezmat =
-        scm_call_4 (scm_c_public_ref ("sortsmill math polyspline implicit",
-                                      "poly:bezout-matrix"),
-                    xspline, yspline,
-                    scm_from_utf8_keyword ("allow-inexact?"), SCM_BOOL_F);
-      SCM implicit_eq =
-        scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
-                                      "poly:implicit-equation"),
-                    bezmat);
-      SCM UNUSED (by_degrees) =
-        scm_call_1 (scm_c_public_ref ("sortsmill math polyspline implicit",
-                                      "poly:implicit-equation-by-degrees"),
-                    implicit_eq);
-#endif
-
-#if 0                           // FIXME: A temporary double-check.
-      double _xc = 3 * (from->nextcp.x - from->me.x);
-      double _yc = 3 * (from->nextcp.y - from->me.y);
-      double _xb = 3 * (to->prevcp.x - from->nextcp.x) - xsp->c;
-      double _yb = 3 * (to->prevcp.y - from->nextcp.y) - ysp->c;
-      double _xa = to->me.x - from->me.x - xsp->c - xsp->b;
-      double _ya = to->me.y - from->me.y - ysp->c - ysp->b;
-      double my_eps = 1e-6;
-      assert (fabs (xsp->c - _xc) < my_eps);
-      assert (fabs (ysp->c - _yc) < my_eps);
-      assert (fabs (xsp->b - _xb) < my_eps);
-      assert (fabs (ysp->b - _yb) < my_eps);
-      assert (fabs (xsp->a - _xa) < my_eps);
-      assert (fabs (ysp->a - _ya) < my_eps);
-#endif
-
-#endif
 
       if (RealNear (xsp->c, 0))
         xsp->c = 0;
