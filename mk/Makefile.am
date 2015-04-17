@@ -16,3 +16,5 @@
 
 EXTRA_DIST = cython.mk fortran.mk guile.mk scheme.mk tig.mk	\
 	xgettext_search.mk
+
+-include $(top_srcdir)/git.mk

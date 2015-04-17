@@ -27,3 +27,5 @@ EXTRA_DIST = sfd2sxml.in sfd2xml.in
 	chmod +x $@
 
 CLEANFILES = $(nodist_bin_SCRIPTS)
+
+-include $(top_srcdir)/git.mk

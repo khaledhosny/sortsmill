@@ -50,3 +50,5 @@ gb12345_la_CPPFLAGS = 										\
 gb12345_la_LDFLAGS = -module -avoid-version
 gb12345_la_DEPENDENCIES = Makefile
 
+
+-include $(top_srcdir)/git.mk

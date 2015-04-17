@@ -81,3 +81,5 @@ EXTRA_DIST = icons/src/icon-16x16-apps-fontforge.svg	\
 
 DISTCLEANFILES = $(nodist_desktop_DATA) \
 	$(nodist_mimepackages_DATA)
+
+-include $(top_srcdir)/git.mk

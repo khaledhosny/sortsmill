@@ -87,3 +87,5 @@ dist_smcompare_SOURCES = compare.c
 endif THE_PROGRAMS
 
 #--------------------------------------------------------------------------
+
+-include $(top_srcdir)/git.mk

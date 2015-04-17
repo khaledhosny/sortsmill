@@ -202,3 +202,5 @@ DISTCLEANFILES = LineBreak.txt NamesList.txt PropList.txt	\
 	UnicodeData.txt
 
 #--------------------------------------------------------------------------
+
+-include $(top_srcdir)/git.mk

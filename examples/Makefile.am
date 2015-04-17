@@ -103,3 +103,5 @@ mostlyclean-modules:
 endif !HAVE_FORTRAN_API
 
 mostlyclean-local: mostlyclean-modules
+
+-include $(top_srcdir)/git.mk

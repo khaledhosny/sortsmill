@@ -347,3 +347,5 @@ PNG_LIST = \
 
 dist_pixmaps_DATA = $(PNG_LIST)
 
+
+-include $(top_srcdir)/git.mk

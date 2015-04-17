@@ -83,3 +83,5 @@ dist_libsortsmill_gutils_la_SOURCES += giofuncP.h
 dist_libsortsmill_gutils_la_SOURCES += gioP.h
 
 #--------------------------------------------------------------------------
+
+-include $(top_srcdir)/git.mk

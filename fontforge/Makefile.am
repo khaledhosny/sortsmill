@@ -389,3 +389,5 @@ fontforge_api.c: fontforge.types.apii sortsmill/fontforge_api.h	\
 EXTRA_DIST += generate-c-api.h.scm generate-c-api.c.scm
 
 #--------------------------------------------------------------------------
+
+-include $(top_srcdir)/git.mk

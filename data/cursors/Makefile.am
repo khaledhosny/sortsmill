@@ -55,3 +55,5 @@ CURSOR_LIST = \
 
 dist_cursors_DATA = $(CURSOR_LIST)
 
+
+-include $(top_srcdir)/git.mk

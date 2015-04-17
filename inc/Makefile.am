@@ -212,3 +212,5 @@ nobase_include_HEADERS += sortsmill/guile/python.h
 endif HAVE_PYTHON_API
 
 #--------------------------------------------------------------------------
+
+-include $(top_srcdir)/git.mk

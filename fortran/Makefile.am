@@ -73,3 +73,5 @@ uninstall-module-files:
 mostlyclean-module-files:
 
 endif !HAVE_FORTRAN_MODFILES
+
+-include $(top_srcdir)/git.mk

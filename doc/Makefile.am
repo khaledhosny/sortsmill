@@ -52,3 +52,5 @@ endif HAVE_GUI
 endif THE_PROGRAMS
 #--------------------------------------------------------------------------
 
+
+-include $(top_srcdir)/git.mk

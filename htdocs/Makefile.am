@@ -285,3 +285,5 @@ tidy:
 MOSTLYCLEANFILES = $(addsuffix .messages, $(filter %.html, $(DOC_LIST)))
 
 #--------------------------------------------------------------------------
+
+-include $(top_srcdir)/git.mk

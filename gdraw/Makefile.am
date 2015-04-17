@@ -115,3 +115,5 @@ EXTRA_DIST = gdraw_type_inspector.tig
 CLEANFILES = gdraw_type_inspector.c gdraw.types.apii
 
 #--------------------------------------------------------------------------
+
+-include $(top_srcdir)/git.mk

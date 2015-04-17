@@ -259,3 +259,5 @@ mostlyclean-local:
 	-rm -f $(builddir)/__sortsmill__/*.so
 	-rm -f $(builddir)/sortsmill/*.so
 	-rm -f $(builddir)/sortsmill/legacy/*.so
+
+-include $(top_srcdir)/git.mk
