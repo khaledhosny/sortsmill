@@ -28,8 +28,6 @@
 #include <sortsmill/math/polyspline/div.h>
 #include <sortsmill/math/polyspline/elev.h>
 #include <sortsmill/math/polyspline/eval.h>
-#include <sortsmill/math/polyspline/implicit.h>
-#include <sortsmill/math/polyspline/intersection.h>
 #include <sortsmill/math/polyspline/mul.h>
 #include <sortsmill/math/polyspline/reduce.h>
 #include <sortsmill/math/polyspline/roots.h>

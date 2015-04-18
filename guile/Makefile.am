@@ -642,27 +642,6 @@ GO_FILES += sortsmill/math/polyspline/eval.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/eval.scm
 
 
-# (sortsmill math polyspline implicit)
-
-DIST_SCM_FILES += sortsmill/math/polyspline/implicit.scm
-GO_FILES += sortsmill/math/polyspline/implicit.go
-MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/implicit.scm
-
-
-# (sortsmill math polyspline intersection)
-
-DIST_SCM_FILES += sortsmill/math/polyspline/intersection.scm
-GO_FILES += sortsmill/math/polyspline/intersection.go
-MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/intersection.scm
-
-
-# (sortsmill math polyspline inversion)
-
-DIST_SCM_FILES += sortsmill/math/polyspline/inversion.scm
-GO_FILES += sortsmill/math/polyspline/inversion.go
-MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/inversion.scm
-
-
 # (sortsmill math polyspline mul)
 
 DIST_SCM_FILES += sortsmill/math/polyspline/mul.scm
@@ -682,13 +661,6 @@ MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/reduce.scm
 DIST_SCM_FILES += sortsmill/math/polyspline/roots.scm
 GO_FILES += sortsmill/math/polyspline/roots.go
 MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/roots.scm
-
-
-## (sortsmill math polyspline self-intersection)
-#
-#DIST_SCM_FILES += sortsmill/math/polyspline/self-intersection.scm
-#GO_FILES += sortsmill/math/polyspline/self-intersection.go
-#MATH_POLYSPLINE_REEXPORTED_SCM_FILES += sortsmill/math/polyspline/self-intersection.scm
 
 
 # (sortsmill math polyspline subdiv)
