@@ -1198,6 +1198,10 @@ void SCConvertLayerToOrder3(SplineChar *sc,int layer) {
     sc->layers[layer].redoes = NULL;
     sc->layers[layer].order2 = false;
 
+    // FIXME: Is there a possibility of memory leakage here?
+    sc->ttf_instrs = NULL;
+    sc->ttf_instrs_len = 0;
+
     /* OpenType/PostScript fonts don't support point matching to position */
     /*  references or anchors */
     for ( ref = sc->layers[layer].refs; ref!=NULL; ref=ref->next )
