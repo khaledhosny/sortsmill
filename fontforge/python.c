@@ -19175,31 +19175,45 @@ PyFFFont_MergeFonts (PyFF_Font *self, PyObject *args)
   char *filename;
   char *locfilename = NULL;
   FontViewBase *fv;
+  PyFF_Font *other = NULL;
   SplineFont *sf;
   int openflags = 0;
-  int preserveCrossFontKerning = 0;
+  int cfk = 0;                  // preserve cross font kerning
 
   if (CheckIfFontClosed (self))
     return NULL;
   fv = self->fv;
-  if (!PyArg_ParseTuple
-      (args, "es|ii", "UTF-8", &filename, &preserveCrossFontKerning,
-       &openflags))
-    return NULL;
-  locfilename = utf82def_copy (filename);
-  free (filename);
-  sf = LoadSplineFont (locfilename, openflags);
-  if (sf == NULL)
+  if (!PyArg_ParseTuple (args, "es|ii", "UTF-8", &filename, &cfk, &openflags))
     {
-      PyErr_Format (PyExc_EnvironmentError, "No font found in file \"%s\"",
-                    locfilename);
-      free (locfilename);
-      return NULL;
+      PyErr_Clear ();
+      if (!PyArg_ParseTuple (args, "O|i", &other, &cfk) ||
+          !PyType_IsSubtype (&PyFF_FontType, ((PyObject *) other)->ob_type))
+        return NULL;
     }
-  free (locfilename);
+
+  if (other != NULL)
+    {
+      if (CheckIfFontClosed (other))
+        return NULL;
+      sf = other->fv->sf;
+    }
+  else
+    {
+      locfilename = utf82def_copy (filename);
+      free (filename);
+      sf = LoadSplineFont (locfilename, openflags);
+      if (sf == NULL)
+        {
+          PyErr_Format (PyExc_EnvironmentError, "No font found in file \"%s\"",
+                        locfilename);
+          free (locfilename);
+          return NULL;
+        }
+      free (locfilename);
+    }
   if (sf->fv == NULL)
     EncMapFree (sf->map);
-  MergeFont (fv, sf, preserveCrossFontKerning);
+  MergeFont (fv, sf, cfk);
   Py_RETURN (self);
 }
 
