@@ -19178,15 +19178,16 @@ PyFFFont_MergeFonts (PyFF_Font *self, PyObject *args)
   PyFF_Font *other = NULL;
   SplineFont *sf;
   int openflags = 0;
-  int cfk = 0;                  // preserve cross font kerning
+  int preserve = 0;             // preserve cross font kerning
 
   if (CheckIfFontClosed (self))
     return NULL;
   fv = self->fv;
-  if (!PyArg_ParseTuple (args, "es|ii", "UTF-8", &filename, &cfk, &openflags))
+  if (!PyArg_ParseTuple
+      (args, "es|ii", "UTF-8", &filename, &preserve, &openflags))
     {
       PyErr_Clear ();
-      if (!PyArg_ParseTuple (args, "O|i", &other, &cfk) ||
+      if (!PyArg_ParseTuple (args, "O|i", &other, &preserve) ||
           !PyType_IsSubtype (&PyFF_FontType, ((PyObject *) other)->ob_type))
         return NULL;
     }
@@ -19213,7 +19214,7 @@ PyFFFont_MergeFonts (PyFF_Font *self, PyObject *args)
     }
   if (sf->fv == NULL)
     EncMapFree (sf->map);
-  MergeFont (fv, sf, cfk);
+  MergeFont (fv, sf, preserve);
   Py_RETURN (self);
 }
 
