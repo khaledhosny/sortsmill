@@ -1040,8 +1040,6 @@ MVRemetric (MetricsView *mv)
   mv->glyphs =
     ApplyTickedFeatures (sf, feats, script, lang, mv->pixelsize, mv->chars);
   free (feats);
-  if (goodsc != NULL)
-    mv->right_to_left = SCRightToLeft (goodsc) ? 1 : 0;
 
   for (cnt = 0; mv->glyphs[cnt].sc != NULL; ++cnt);
   if (cnt >= mv->max)
@@ -2292,6 +2290,19 @@ MV_FriendlyFeatures (GGadget *g, int pos)
 }
 
 static int
+MV_RightToLeftChanged (GGadget *g, GEvent *e)
+{
+  if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
+    {
+      MetricsView *mv = GGadgetGetUserData (g);
+      mv->right_to_left = GGadgetIsChecked (g);
+      GDrawRequestExpose (mv->v, NULL, false);
+    }
+
+  return true;
+}
+
+static int
 MV_SubtableChanged (GGadget *g, GEvent *e)
 {
 
@@ -3460,6 +3471,7 @@ MVMenuShowBitmap (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 #define CID_DPI		1002
 #define CID_Size	1003
+#define CID_RightToLeft 1004
 
 struct pxsz
 {
@@ -7414,6 +7426,15 @@ MetricsViewCreate (FontView *fv, SplineChar *sc, BDFFont *bdf)
   gd.u.list = NULL;
   mv->subtable_list = GListButtonCreate (gw, &gd, mv);
   MVSetSubtables (master);
+
+  gd.pos.x = gd.pos.x + gd.pos.width + 10;
+  --gd.pos.y;
+  gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels;
+  gd.handle_controlevent = MV_RightToLeftChanged;
+  gd.cid = CID_RightToLeft;
+  label.text = (uint32_t *) _("Right To Left");
+  gd.label = &label;
+  GCheckBoxCreate (gw, &gd, mv);
 
   gd.pos.y = mv->topend;
   gd.pos.x = 0;
