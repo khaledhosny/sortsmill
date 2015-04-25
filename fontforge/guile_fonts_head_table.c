@@ -123,29 +123,6 @@ scm_c_view_head_table_set_x (SCM view, const char *key, SCM value)
     }
 }
 
-static void
-analyze_directionality (SplineFont *sf, bool *lr, bool *rl, bool *arabic)
-{
-  *lr = false;
-  *rl = false;
-  *arabic = false;
-  for (size_t i = 0; i < sf->glyphcnt; i++)
-    {
-      SplineChar *sc = sf->glyphs[i];
-      if (SCWorthOutputting (sc))
-        {
-          int uni = sc->unicodeenc;
-          if (SCRightToLeft (sc))
-            *rl = true;
-          else if ((uni != -1 && uni < 0x10000 && islefttoright (uni))
-                   || (uni >= 0x10300 && uni < 0x107ff))
-            *lr = true;
-          if (SCScriptFromUnicode (sc) == CHR ('a', 'r', 'a', 'b'))
-            *arabic = true;
-        }
-    }
-}
-
 VISIBLE SCM
 scm_c_view_head_table_ref (SCM view, const char *key)
 {
@@ -158,12 +135,8 @@ scm_c_view_head_table_ref (SCM view, const char *key)
     {
     case _head_flags:
       {
-        bool lr;
-        bool rl;
-        bool arabic;
-        analyze_directionality (sf, &lr, &rl, &arabic);
         result =
-          scm_from_uint16 (head_table_flags (sf, ff_none, NULL, arabic, rl));
+          scm_from_uint16 (head_table_flags (sf, ff_none, NULL));
       }
       break;
     case _head_created:

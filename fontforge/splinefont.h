@@ -2837,7 +2837,7 @@ void SFDefaultOS2Simple (struct pfminfo *pfminfo, SplineFont *sf);
 VISIBLE void SFDefaultOS2SubSuper (struct pfminfo *pfminfo, int emsize,
                                    double italicangle);
 uint16_t head_table_flags (SplineFont *sf, enum fontformat format,
-                           int32_t *bsizes, bool arabic, bool rl);
+                           int32_t *bsizes);
 void VerifyLanguages (SplineFont *sf);
 VISIBLE int ScriptIsRightToLeft (uint32_t script);
 void ScriptMainRange (uint32_t script, int *start, int *end);

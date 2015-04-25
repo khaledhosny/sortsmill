@@ -3325,7 +3325,7 @@ cvt_unix_to_1904 (long time, int32_t result[2])
 
 uint16_t
 head_table_flags (SplineFont *sf, enum fontformat format,
-                  int32_t *bsizes, bool arabic, bool rl)
+                  int32_t *bsizes)
 {
   uint16_t flags = 8 | 2 | 1;   /* baseline at 0, lsbline at 0, round
                                    ppem */
@@ -3347,16 +3347,6 @@ head_table_flags (SplineFont *sf, enum fontformat format,
   // have a different advance width from that expected by scaling,
   // then will only notice the fact if the 0x10 bit is set (even
   // though this has nothing to do with instructions).
-
-  // Apple flags.
-  if (sf->hasvmetrics)
-    flags |= (1 << 5);          // Designed to be layed out vertically.
-  // Bit 6 must be zero.
-  if (arabic)
-    flags |= (1 << 7);
-  if (rl)
-    flags |= (1 << 9);
-  // End Apple flags.
 
   if (sf->head_optimized_for_cleartype)
     flags |= (1 << 13);
@@ -3400,8 +3390,6 @@ sethead (struct head *head, SplineFont *sf, struct alltabs *at,
         else if ((uni != -1 && uni < 0x10000 && islefttoright (uni)) ||
                  (uni >= 0x10300 && uni < 0x107ff))
           lr = 1;
-        if (SCScriptFromUnicode (sc) == CHR ('a', 'r', 'a', 'b'))
-          arabic = 1;
       }
 
   head->version = 0x00010000;
@@ -3442,7 +3430,7 @@ sethead (struct head *head, SplineFont *sf, struct alltabs *at,
     }
   head->checksumAdj = 0;
   head->magicNum = 0x5f0f3cf5;
-  head->flags = head_table_flags (sf, format, bsizes, arabic, rl);
+  head->flags = head_table_flags (sf, format, bsizes);
   head->emunits = sf->ascent + sf->descent;
   head->macstyle = MacStyleCode (sf, NULL);
   head->lowestreadable = 8;
