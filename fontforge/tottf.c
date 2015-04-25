@@ -2507,14 +2507,6 @@ dumpcffprivate (SplineFont *sf, struct alltabs *at, int subfont, int subrcnt)
     {
       dumpintoper (private, *pt == 't' || *pt == 'T', (12 << 8) | 14);
     }
-  else if (sf->weight != NULL &&
-           (strcasestr (sf->weight, "Bold") != NULL ||
-            strcasestr (sf->weight, "Demi") != NULL ||
-            strcasestr (sf->weight, "Fett") != NULL ||
-            strcasestr (sf->weight, "Gras") != NULL ||
-            strcasestr (sf->weight, "Heavy") != NULL ||
-            strcasestr (sf->weight, "Black") != NULL))
-    dumpintoper (private, 1, (12 << 8) | 14);
   if ((pt = PSDictHasEntry (sf->private, "LanguageGroup")) != NULL)
     DumpStrDouble (pt, private, (12 << 8) + 17);
   else if (map == NULL)
