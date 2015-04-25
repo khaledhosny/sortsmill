@@ -340,7 +340,6 @@ struct head
   int16_t ymax;
   uint16_t macstyle;            /* 1=>Bold, 2=>Italic */
   uint16_t lowestreadable;      /* size in pixels. Say about 10? */
-  int16_t dirhint;              /* 0=>mixed directional characters, */
   int16_t locais32;             /* is the location table 32bits or 16, 0=>16, 1=>32 */
   int16_t glyphformat;          /* 0 */
   uint16_t mbz;                 /* padding */

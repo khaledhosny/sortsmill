@@ -3359,7 +3359,6 @@ sethead (struct head *head, SplineFont *sf, struct alltabs *at,
          enum fontformat format, int32_t *bsizes)
 {
   time_t now;
-  int i, lr, rl, arabic;
   struct ttflangname *useng;
   float vn;
 
@@ -3378,19 +3377,6 @@ sethead (struct head *head, SplineFont *sf, struct alltabs *at,
   head->ymin = at->gi.ymin;
   head->xmax = at->gi.xmax;
   head->ymax = at->gi.ymax;
-
-  lr = rl = arabic = 0;
-  for (i = 0; i < at->gi.gcnt; ++i)
-    if (at->gi.bygid[i] != -1)
-      {
-        SplineChar *sc = sf->glyphs[at->gi.bygid[i]];
-        int uni = sc->unicodeenc;
-        if (SCRightToLeft (sc))
-          rl = 1;
-        else if ((uni != -1 && uni < 0x10000 && islefttoright (uni)) ||
-                 (uni >= 0x10300 && uni < 0x107ff))
-          lr = 1;
-      }
 
   head->version = 0x00010000;
   head->revision = sf->sfntRevision;
@@ -3437,17 +3423,6 @@ sethead (struct head *head, SplineFont *sf, struct alltabs *at,
   head->locais32 = 1;
   if (at->gi.glyph_len < 0x20000)
     head->locais32 = 0;
-
-  /* I assume we've always got some neutrals (spaces, punctuation) */
-  if (lr && rl)
-    head->dirhint = 0;
-  else if (rl)
-    head->dirhint = -2;
-  else
-    head->dirhint = 2;
-  if (rl)
-    head->flags |= (1 << 9);    /* Apple documents this */
-  /* if there are any indic characters, set bit 10 */
 
   time (&now);                  /* seconds since 1970, need to convert to seconds since 1904 */
   cvt_unix_to_1904 (now, head->modtime);
@@ -4390,7 +4365,8 @@ redohead (struct alltabs *at)
   putshort (at->headf, at->head.ymax);
   putshort (at->headf, at->head.macstyle);
   putshort (at->headf, at->head.lowestreadable);
-  putshort (at->headf, at->head.dirhint);
+  // fontDirectionHint, the spe says "Deprecated (Set to 2)"
+  putshort (at->headf, 2);
   putshort (at->headf, at->head.locais32);
   putshort (at->headf, at->head.glyphformat);
 
