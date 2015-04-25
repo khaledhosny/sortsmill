@@ -3912,28 +3912,14 @@ DumpLigCarets (FILE *gdef, SplineChar *sc)
   if (cnt == 0)
     return;
 
-  if (SCRightToLeft (sc))
-    {
-      for (i = 0; i < pst->u.lcaret.cnt - 1; ++i)
-        for (j = i + 1; j < pst->u.lcaret.cnt; ++j)
-          if (pst->u.lcaret.carets[i] < pst->u.lcaret.carets[j])
-            {
-              int16_t temp = pst->u.lcaret.carets[i];
-              pst->u.lcaret.carets[i] = pst->u.lcaret.carets[j];
-              pst->u.lcaret.carets[j] = temp;
-            }
-    }
-  else
-    {
-      for (i = 0; i < pst->u.lcaret.cnt - 1; ++i)
-        for (j = i + 1; j < pst->u.lcaret.cnt; ++j)
-          if (pst->u.lcaret.carets[i] > pst->u.lcaret.carets[j])
-            {
-              int16_t temp = pst->u.lcaret.carets[i];
-              pst->u.lcaret.carets[i] = pst->u.lcaret.carets[j];
-              pst->u.lcaret.carets[j] = temp;
-            }
-    }
+  for (i = 0; i < pst->u.lcaret.cnt - 1; ++i)
+    for (j = i + 1; j < pst->u.lcaret.cnt; ++j)
+      if (pst->u.lcaret.carets[i] > pst->u.lcaret.carets[j])
+        {
+          int16_t temp = pst->u.lcaret.carets[i];
+          pst->u.lcaret.carets[i] = pst->u.lcaret.carets[j];
+          pst->u.lcaret.carets[j] = temp;
+        }
 
   putshort (gdef, cnt);         /* this many carets */
   offset = sizeof (uint16_t) + sizeof (uint16_t) * cnt;
