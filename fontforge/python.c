@@ -9651,8 +9651,6 @@ PyFFGlyph_getPosSub (PyObject *self, PyObject *args)
                           xadv1 = yadv1 = xadv2 = 0;
                           if (j)
                             yadv1 = kp->off;
-                          else if (SCRightToLeft (sc))
-                            xadv2 = kp->off;
                           else
                             xadv1 = kp->off;
                           PyTuple_SetItem (ret, cnt,
@@ -9826,13 +9824,8 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
               if (temp.u.pair.vr[0].h_adv_off == 0
                   && temp.u.pair.vr[1].h_adv_off == 0 && sub->vertical_kerning)
                 off = temp.u.pair.vr[0].v_adv_off;
-              else if (temp.u.pair.vr[0].h_adv_off == 0
-                       && temp.u.pair.vr[0].v_adv_off == 0
-                       && SCRightToLeft (sc))
-                off = temp.u.pair.vr[1].h_adv_off;
               else if (temp.u.pair.vr[0].v_adv_off == 0
-                       && temp.u.pair.vr[1].h_adv_off == 0
-                       && !SCRightToLeft (sc))
+                       && temp.u.pair.vr[1].h_adv_off == 0)
                 off = temp.u.pair.vr[0].h_adv_off;
             }
         }
