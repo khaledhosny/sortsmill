@@ -1755,7 +1755,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
     { "RightToLeft", "IgnoreBaseGlyphs", "IgnoreLigatures", "IgnoreMarks",
     NULL
   };
-  int i, k, first;
+  int i, k;
   SplineFont *_sf;
   SplineChar *sc;
   PST *pst;
@@ -1779,14 +1779,9 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
   else
     {
       c_fprintf (out, "  lookupflag");
-      first = true;
       for (i = 0; i < 4; ++i)
         if (otl->lookup_flags & (1 << i))
           {
-            if (!first)
-              putc (',', out);
-            else
-              first = false;
             c_fprintf (out, " %s", flagnames[i]);
           }
       if ((otl->lookup_flags & 0xff00) != 0)
@@ -1794,8 +1789,6 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
           int index = (otl->lookup_flags >> 8) & 0xff;
           if (index < sf->mark_class_cnt)
             {
-              if (!first)
-                putc (',', out);
               c_fprintf (out, " MarkAttachmentType @");
               dump_ascii (out, sf->mark_class_names[index]);
             }
@@ -1805,8 +1798,6 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
           int index = (otl->lookup_flags >> 16) & 0xffff;
           if (index < sf->mark_set_cnt)
             {
-              if (!first)
-                putc (',', out);
               c_fprintf (out, " UseMarkFilteringSet @");
               dump_ascii (out, sf->mark_set_names[index]);
             }
@@ -4052,7 +4043,7 @@ fea_ParseLookupFlags (struct parseState *tok)
           fea_ParseTok (tok);
           if (tok->type == tk_char && tok->tokbuf[0] == ';')
             break;
-          else if (tok->type == tk_char && tok->tokbuf[0] != ',')
+          else if (tok->type == tk_char)
             {
               LogError (_("Expected ';' in lookupflags on line %d of %s"),
                         tok->line[tok->inc_depth],
@@ -4061,7 +4052,6 @@ fea_ParseLookupFlags (struct parseState *tok)
               fea_skip_to_semi (tok);
               break;
             }
-          fea_ParseTok (tok);
         }
       if (tok->type != tk_char || tok->tokbuf[0] != ';')
         {
