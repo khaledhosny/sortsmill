@@ -3534,8 +3534,6 @@ CI_DoHideUnusedPair (CharInfo * ci)
           if (strstr (ci->sc->name, ".vert") != NULL
               || strstr (ci->sc->name, ".vrt2") != NULL)
             cols_used[PAIR_DY_ADV1] = true;
-          else if (SCRightToLeft (ci->sc))
-            cols_used[PAIR_DX_ADV2] = true;
           else
             cols_used[PAIR_DX_ADV1] = true;
         }
