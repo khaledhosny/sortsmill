@@ -3481,41 +3481,6 @@ TeXDefaultParams (SplineFont *sf)
   sf->texdata.params[21] = rint (.25 * (1 << 20));
 }
 
-#if 0
-static int
-OfmGuessDirection (SplineFont *sf)
-{
-  /* I'm only going to worry about L2R or R2L. Japanese can be either L2R or */
-  /*  T2B so it seems stupid for the font to claim it is one or the other */
-  /* Ah. It appears that omega realized this. All ofm files have fontdir=0 */
-  /*  even if they are arabic only */
-  int i, l2rcnt = 0, r2lcnt = 0;
-  SplineChar *sc;
-
-  for (i = 0; i < sf->glyphcnt; ++i)
-    if ((sc = sf->glyphs[i]) != NULL && sc->unicodeenc != -1)
-      {
-        if (sc->unicodeenc > 0x10000)
-          {
-            if (SCRightToLeft (sc))
-              ++r2lcnt;
-            else
-              ++l2rcnt;
-          }
-        else if (isrighttoleft (sc->unicodeenc))
-          ++r2lcnt;
-        else if (islefttoright (sc->unicodeenc))
-          ++l2rcnt;
-        else
-          /* Neutrals, or weakly oriented characters. Don't count them */ ;
-      }
-  if (r2lcnt > l2rcnt)
-    return 2;                 /* In omega this means Top, Right */
-
-  return 0;                   /* In omega this means Top, Left */
-}
-#endif
-
 static int
 _OTfmSplineFont (FILE *tfm, SplineFont *sf, int formattype, EncMap *map,
                  int maxc, int layer)
