@@ -199,7 +199,6 @@ struct kerns
   SplineChar *first;
   SplineChar *second;
   int newoff, newyoff;
-  bool r2l;
   KernPair *kp;
   AnchorClass *ac;
 };
@@ -311,18 +310,6 @@ KPSortEm (KPData * kpd, enum sortby sort_func)
 }
 
 static void
-CheckLeftRight (struct kerns *k)
-{
-  /* flag any hebrew/arabic entries */
-
-  /* Figure that there won't be any mixed orientation kerns (no latin "A" with hebrew "Alef" kern) */
-  /*  but there might be some hebrew/arabic ligatures or something that */
-  /*  we don't recognize as right-to-left (ie. not in unicode) */
-  if (SCRightToLeft (k->first) || SCRightToLeft (k->second))
-    k->r2l = true;
-}
-
-static void
 KPBuildKernList (KPData * kpd)
 {
   int i, cnt;
@@ -342,7 +329,6 @@ KPBuildKernList (KPData * kpd)
                   kpd->kerns[cnt].newyoff = 0;
                   kpd->kerns[cnt].kp = kp;
                   kpd->kerns[cnt].ac = NULL;
-                  CheckLeftRight (&kpd->kerns[cnt]);
                 }
               ++cnt;
             }
@@ -361,7 +347,6 @@ KPBuildKernList (KPData * kpd)
                             kpd->kerns[cnt].newyoff = 0;
                             kpd->kerns[cnt].kp = kp;
                             kpd->kerns[cnt].ac = NULL;
-                            CheckLeftRight (&kpd->kerns[cnt]);
                           }
                         ++cnt;
                         break;
@@ -393,7 +378,6 @@ KPBuildKernList (KPData * kpd)
                         kpd->kerns[cnt].newyoff = 0;
                         kpd->kerns[cnt].kp = kp;
                         kpd->kerns[cnt].ac = NULL;
-                        CheckLeftRight (&kpd->kerns[cnt]);
                       }
                     ++cnt;
                   }
@@ -413,7 +397,6 @@ static void
 AnchorRefigure (KPData * kpd)
 {
   AnchorPoint *ap1, *ap2;
-  DBounds bb;
   int i;
 
   for (i = 0; i < kpd->kcnt; ++i)
@@ -425,13 +408,7 @@ AnchorRefigure (KPData * kpd)
            ap2 = ap2->next);
       if (ap1 != NULL && ap2 != NULL)
         {
-          if (k->r2l)
-            {
-              SplineCharQuickBounds (k->second, &bb);
-              k->newoff = k->second->width - ap1->me.x + ap2->me.x;
-            }
-          else
-            k->newoff = -k->first->width + ap1->me.x - ap2->me.x;
+          k->newoff = -k->first->width + ap1->me.x - ap2->me.x;
           k->newyoff = ap1->me.y - ap2->me.y;
         }
     }
@@ -444,7 +421,6 @@ KPBuildAnchorList (KPData * kpd)
   AnchorClass *ac;
   AnchorPoint *ap1, *ap2, *temp;
   SplineFont *sf = kpd->sf;
-  DBounds bb;
 
   if (kpd->sc != NULL)
     {
@@ -482,15 +458,7 @@ KPBuildAnchorList (KPData * kpd)
                             ap2 = temp;
                             break;
                           }
-                        CheckLeftRight (k);
-                        if (k->r2l)
-                          {
-                            SplineCharQuickBounds (k->second, &bb);
-                            k->newoff =
-                              k->second->width - ap1->me.x + ap2->me.x;
-                          }
-                        else
-                          k->newoff = -k->first->width + ap1->me.x - ap2->me.x;
+                        k->newoff = -k->first->width + ap1->me.x - ap2->me.x;
                         k->newyoff = ap1->me.y - ap2->me.y;
                         k->ac = ac;
                         k->kp = NULL;
@@ -534,16 +502,8 @@ KPBuildAnchorList (KPData * kpd)
                               struct kerns *k = &kpd->kerns[cnt];
                               k->first = sf->glyphs[i];
                               k->second = sf->glyphs[j];
-                              CheckLeftRight (k);
-                              if (k->r2l)
-                                {
-                                  SplineCharQuickBounds (k->second, &bb);
-                                  k->newoff =
-                                    k->second->width - ap1->me.x + ap2->me.x;
-                                }
-                              else
-                                k->newoff =
-                                  -k->first->width + ap1->me.x - ap2->me.x;
+                              k->newoff =
+                                -k->first->width + ap1->me.x - ap2->me.x;
                               k->newyoff = ap1->me.y - ap2->me.y;
                               k->ac = ac;
                               k->kp = NULL;
@@ -664,19 +624,10 @@ KP_ExposeKerns (KPData * kpd, GWindow pixmap, GRect *rect)
       base.trans = base.clut->trans_index = -1;
       /* the peculiar behavior concerning xmin/xmax is because the bitmaps */
       /*  don't contain the side-bearings, we have to add that spacing manually */
-      if (!kern->r2l)
-        {
-          GDrawDrawImage (pixmap, &gi, NULL, 10, subclip.y + as - bdfc1->ymax);
-          x = 10 + (bdfc1->width - bdfc1->xmin) + bdfc2->xmin +
-            (kern->newoff * kpd->bdf->pixelsize / em);
-        }
-      else
-        {
-          x = kpd->vwidth - 10 - (bdfc1->xmax - bdfc1->xmin);
-          GDrawDrawImage (pixmap, &gi, NULL, x, subclip.y + as - bdfc1->ymax);
-          x -= bdfc1->xmin + (bdfc2->width - bdfc2->xmin) +
-            (kern->newoff * kpd->bdf->pixelsize / em);
-        }
+      x = kpd->vwidth - 10 - (bdfc1->xmax - bdfc1->xmin);
+      GDrawDrawImage (pixmap, &gi, NULL, x, subclip.y + as - bdfc1->ymax);
+      x -= bdfc1->xmin + (bdfc2->width - bdfc2->xmin) +
+        (kern->newoff * kpd->bdf->pixelsize / em);
       BaseFillFromBDFC (&base, bdfc2);
       base.trans = base.clut->trans_index = 0;
       yoff = (kern->newyoff * kpd->bdf->pixelsize / em);
@@ -785,12 +736,8 @@ KP_Inside (KPData * kpd, GEvent *e)
   bdfc2 = kpd->bdf->glyphs[index2];
   if (bdfc1 == NULL || bdfc2 == NULL)
     return (NULL);
-  if (!kern->r2l)
-    x = 10 + (bdfc1->width - bdfc1->xmin) + bdfc2->xmin +
-      (kpd->kerns[i].newoff * kpd->bdf->pixelsize / em);
-  else
-    x = kpd->vwidth - 10 - (bdfc1->xmax - bdfc1->xmin) - bdfc1->xmin -
-      (bdfc2->width - bdfc2->xmin) - (kern->newoff * kpd->bdf->pixelsize / em);
+  x = kpd->vwidth - 10 - (bdfc1->xmax - bdfc1->xmin) - bdfc1->xmin -
+    (bdfc2->width - bdfc2->xmin) - (kern->newoff * kpd->bdf->pixelsize / em);
   if (e->u.mouse.x < x || e->u.mouse.x >= x + bdfc2->xmax - bdfc2->xmin)
     return (NULL);
 
