@@ -3471,7 +3471,6 @@ MVMenuShowBitmap (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 #define CID_DPI		1002
 #define CID_Size	1003
-#define CID_RightToLeft 1004
 
 struct pxsz
 {
@@ -7362,7 +7361,6 @@ MetricsViewCreate (FontView *fv, SplineChar *sc, BDFFont *bdf)
   --gd.pos.y;
   gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels;
   gd.handle_controlevent = MV_RightToLeftChanged;
-  gd.cid = CID_RightToLeft;
   label.text = (uint32_t *) _("Right To Left");
   gd.label = &label;
   GCheckBoxCreate (gw, &gd, mv);
