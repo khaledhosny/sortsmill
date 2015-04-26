@@ -8176,12 +8176,15 @@ ParseComponentTuple (PyObject *tuple, int *_cnt)
           parts[i].component = xstrdup_or_null (((PyFF_Glyph *) g)->sc->name);
         }
       else
-        if (!PyArg_ParseTuple
-            (obj, "s|iiii", &parts[i].component, &extender, &start, &end,
-             &full))
         {
-          free (parts);
-          return NULL;
+          char *name;
+          if (!PyArg_ParseTuple
+              (obj, "s|iiii", &name, &extender, &start, &end, &full))
+            {
+              free (parts);
+              return NULL;
+            }
+          parts[i].component = xstrdup_or_null (name);
         }
       parts[i].is_extender = extender;
       parts[i].startConnectorLength = start;
