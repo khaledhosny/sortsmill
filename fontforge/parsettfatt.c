@@ -677,6 +677,7 @@ gposKernSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
       c1_cnt = getushort (ttf);
       c2_cnt = getushort (ttf);
       subtable->per_glyph_pst_or_kern = true;
+      // TODO: read this as class kerning instead of expanding it as we do now.
       for (int i = 0; i < c1_cnt; ++i)
         {
           for (int j = 0; j < c2_cnt; ++j)
@@ -687,11 +688,11 @@ gposKernSubTable (FILE *ttf, int stoffset, struct ttfinfo *info,
                   || vr1.yadvance != 0 || vr1.yplacement != 0
                   || vr2.xadvance != 0 || vr2.xplacement != 0
                   || vr2.yadvance != 0 || vr2.yplacement != 0)
-                for (int k = 0; k < info->glyph_cnt; ++k)
-                  if (class1[k] == i)
+                for (int k = 0; glyphs[k] != 0xffff; ++k)
+                  if (class1[glyphs[k]] == i)
                     for (int m = 0; m < info->glyph_cnt; ++m)
                       if (class2[m] == j)
-                        addPairPos (info, k, m, l, subtable, &vr1, &vr2,
+                        addPairPos (info, glyphs[k], m, l, subtable, &vr1, &vr2,
                                     stoffset, ttf);
             }
         }
