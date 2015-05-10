@@ -682,7 +682,7 @@ typedef struct kernclass
   int first_cnt, second_cnt;    /* Count of classes for first and second chars */
   char **firsts;                /* list of a space separated list of char names */
   char **seconds;               /*  one entry for each class. Entry 0 is null */
-  /*  and means everything not specified elsewhere */
+                                /*  and means everything not specified elsewhere */
   struct lookup_subtable *subtable;
   uint16_t kcid;                /* Temporary value, used for many things briefly */
   int16_t *offsets;             /* array of first_cnt*second_cnt entries */
@@ -2489,12 +2489,6 @@ typedef struct splinefont
 #define woffUnset		0x4455
   int woffMinor;
   char *woffMetadata;
-  real ufo_ascent, ufo_descent; /* I don't know what these mean; they
-                                   don't seem to correspond to any
-                                   other ascent/descent pair, but
-                                   retain them, so round-trip ufo
-                                   input/output leaves them unchanged.
-                                   ufo_descent is negative. */
 } SplineFont;
 
 inline SplineChar *sfglyph (SplineFont *sf, ssize_t i);

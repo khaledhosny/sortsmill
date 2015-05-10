@@ -613,18 +613,8 @@ UFOOutputFontInfo (char *basedir, SplineFont *sf, int layer)
   test = SFCapHeight (sf, layer, true);
   if (test > 0)
     PListOutputInteger (plist, "capHeight", (int) rint (test));
-  if (sf->ufo_ascent == 0)
-    PListOutputInteger (plist, "ascender", sf->ascent);
-  else if (sf->ufo_ascent == floor (sf->ufo_ascent))
-    PListOutputInteger (plist, "ascender", sf->ufo_ascent);
-  else
-    PListOutputReal (plist, "ascender", sf->ufo_ascent);
-  if (sf->ufo_descent == 0)
-    PListOutputInteger (plist, "descender", -sf->descent);
-  else if (sf->ufo_descent == floor (sf->ufo_descent))
-    PListOutputInteger (plist, "descender", sf->ufo_descent);
-  else
-    PListOutputReal (plist, "descender", sf->ufo_descent);
+  PListOutputInteger (plist, "ascender", sf->ascent);
+  PListOutputInteger (plist, "descender", -sf->descent);
   PListOutputReal (plist, "italicAngle", sf->italicangle);
   PListOutputString (plist, "note", sf->comments);
   PListOutputDate (plist, "openTypeHeadCreated", sf->creationtime);
@@ -2309,7 +2299,7 @@ SFReadUFO (char *basedir, int flags)
               if (*end != '\0')
                 as = -1;
               else
-                sf->ufo_ascent = as;
+                sf->ascent = as;
               free (valname);
             }
           else if (xmlStrcmp (keyname, "descender") == 0)
@@ -2318,7 +2308,7 @@ SFReadUFO (char *basedir, int flags)
               if (*end != '\0')
                 ds = -1;
               else
-                sf->ufo_descent = -ds;
+                sf->descent = -ds;
               free (valname);
             }
           else if (xmlStrcmp (keyname, "italicAngle") == 0 ||

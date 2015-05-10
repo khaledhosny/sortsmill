@@ -2291,10 +2291,6 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
       SFDDumpUTF7Str (sfd, sf->woffMetadata);
       putc ('\n', sfd);
     }
-  if (sf->ufo_ascent != 0)
-    fprintf (sfd, "UFOAscent: %g\n", (double) sf->ufo_ascent);
-  if (sf->ufo_descent != 0)
-    fprintf (sfd, "UFODescent: %g\n", (double) sf->ufo_descent);
   fprintf (sfd, "LayerCount: %d\n", sf->layer_cnt);
   for (i = 0; i < sf->layer_cnt; ++i)
     {
@@ -7969,14 +7965,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strcasecmp (tok, "woffMetadata:") == 0)
         {
           sf->woffMetadata = SFDReadUTF7Str (sfd);
-        }
-      else if (strcasecmp (tok, "UFOAscent:") == 0)
-        {
-          getreal (sfd, &sf->ufo_ascent);
-        }
-      else if (strcasecmp (tok, "UFODescent:") == 0)
-        {
-          getreal (sfd, &sf->ufo_descent);
         }
       else if (strcasecmp (tok, "sfntRevision:") == 0)
         {
