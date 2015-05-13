@@ -4053,23 +4053,28 @@ setos2 (struct os2 *os2, struct alltabs *at, SplineFont *sf,
   os2->ysupYOff = sf->pfminfo.os2_supyoff;
   os2->yStrikeoutSize = sf->pfminfo.os2_strikeysize;
   os2->yStrikeoutPos = sf->pfminfo.os2_strikeypos;
-  os2->fsSel =
-    (at->head.macstyle & 1 ? 32 : 0) | (at->head.macstyle & 2 ? 1 : 0);
+  os2->fsSel = 0;
+  if (at->head.macstyle & 2)
+    os2->fsSel |= (1 << 0);        /* Italic */
+  if (at->head.macstyle & 1)
+    os2->fsSel |= (1 << 5);        /* Bold */
+  // XXX: let the user set this instead of guessing it
   if (sf->fullname != NULL && strcasestr (sf->fullname, "outline") != NULL)
-    os2->fsSel |= 8;
+    os2->fsSel |= (1 << 3);
   if (os2->fsSel == 0 && sf->pfminfo.weight >= 400 && sf->pfminfo.weight <= 500)
-    os2->fsSel = 64;            /* Regular */
+    os2->fsSel = (1 << 6);         /* Regular */
   if (os2->version >= 4)
     {
-      if (strcasestr (sf->fontname, "Obli") != NULL)
+      // XXX: let the user set this instead of guessing it
+      if (sf->fullname != NULL && strcasestr (sf->fontname, "obli") != NULL)
         {
-          os2->fsSel &= ~1;     /* Turn off Italic */
-          os2->fsSel |= 512;    /* Turn on Oblique */
+          os2->fsSel &= ~(1 << 0); /* Turn off Italic */
+          os2->fsSel |= (1 << 9);  /* Turn on Oblique */
         }
       if (sf->use_typo_metrics)
-        os2->fsSel |= 128;      /* Don't use win ascent/descent for line spacing */
+        os2->fsSel |= (1 << 7);    /* USE_TYPO_METRICS */
       if (sf->weight_width_slope_only)
-        os2->fsSel |= 256;
+        os2->fsSel |= (1 << 8);
     }
   if (os2->version >= 5)
     {
