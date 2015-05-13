@@ -6488,8 +6488,10 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
   sel = getushort (ttf);
   if (info->os2_version >= 4)
     {
-      info->use_typo_metrics = (sel & 128) ? 1 : 0;
-      info->weight_width_slope_only = (sel & 256) ? 1 : 0;
+      if (sel & (1 << 7))
+        info->use_typo_metrics = true;
+      if (sel & (1 << 8))
+        info->weight_width_slope_only = true;
     }
   /* firstchar */ getushort (ttf);
   /* lastchar */ getushort (ttf);
