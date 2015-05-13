@@ -6493,6 +6493,11 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
       if (sel & (1 << 8))
         info->weight_width_slope_only = true;
     }
+  else
+    {
+      info->use_typo_metrics = false;
+      info->weight_width_slope_only = false;
+    }
   /* firstchar */ getushort (ttf);
   /* lastchar */ getushort (ttf);
   info->pfminfo.os2_typoascent = getushort (ttf);
@@ -6517,6 +6522,10 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
       info->pfminfo.codepages[1] = getlong (ttf);
       info->pfminfo.hascodepages = true;
     }
+  else
+    {
+      info->pfminfo.hascodepages = false;
+    }
 
   if (info->os2_version >= 2)
     {
@@ -6531,6 +6540,11 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
     {
       info->pfminfo.os2_loweropticalsize = getushort (ttf);
       info->pfminfo.os2_upperopticalsize = getushort (ttf);
+    }
+  else
+    {
+      info->pfminfo.os2_loweropticalsize = 0;
+      info->pfminfo.os2_upperopticalsize = 0xFFFF;
     }
 
   if (info->os2_version == 0)
@@ -7807,7 +7821,6 @@ _SFReadTTF (FILE *ttf, int flags, enum openflags openflags, char *filename,
   memset (&info, '\0', sizeof (struct ttfinfo));
   info.onlystrikes = (flags & ttf_onlystrikes) ? 1 : 0;
   info.onlyonestrike = (flags & ttf_onlyonestrike) ? 1 : 0;
-  info.use_typo_metrics = true;
   info.openflags = openflags;
   info.fd = fd;
   ret = readttf (ttf, &info, filename);
