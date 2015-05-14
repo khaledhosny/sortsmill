@@ -2321,7 +2321,6 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
     SFDDumpBase (sfd, "BaseVert:", sf->vert_base);
   if (sf->pfminfo.fstype != -1)
     fprintf (sfd, "FSType: %d\n", sf->pfminfo.fstype);
-  fprintf (sfd, "OS2Version: %d\n", sf->os2_version);
   fprintf (sfd, "OS2_WeightWidthSlopeOnly: %d\n",
            sf->weight_width_slope_only);
   fprintf (sfd, "OS2_UseTypoMetrics: %d\n", sf->use_typo_metrics);
@@ -8094,10 +8093,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strcasecmp (tok, "FSType:") == 0)
         {
           getsint (sfd, &sf->pfminfo.fstype);
-        }
-      else if (strcasecmp (tok, "OS2Version:") == 0)
-        {
-          getsint (sfd, &sf->os2_version);
         }
       else if (strcasecmp (tok, "OS2_WeightWidthSlopeOnly:") == 0)
         {

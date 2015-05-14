@@ -6451,10 +6451,10 @@ readttfencodings (FILE *ttf, struct ttfinfo *info, int justinuse)
 static void
 readttfos2metrics (FILE *ttf, struct ttfinfo *info)
 {
-  int i, sel;
+  int i, sel, os2_version;
 
   fseek (ttf, info->os2_start, SEEK_SET);
-  info->os2_version = getushort (ttf);
+  os2_version = getushort (ttf);
   /* avgWidth */ getushort (ttf);
   info->pfminfo.weight = getushort (ttf);
   info->pfminfo.width = getushort (ttf);
@@ -6486,7 +6486,7 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
   info->pfminfo.os2_vendor[2] = getc (ttf);
   info->pfminfo.os2_vendor[3] = getc (ttf);
   sel = getushort (ttf);
-  if (info->os2_version >= 4)
+  if (os2_version >= 4)
     {
       if (sel & (1 << 7))
         info->use_typo_metrics = true;
@@ -6516,7 +6516,7 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
   info->pfminfo.pfmset = true;
   info->pfminfo.panose_set = true;
   info->pfminfo.subsuper_set = true;
-  if (info->os2_version >= 1)
+  if (os2_version >= 1)
     {
       info->pfminfo.codepages[0] = getlong (ttf);
       info->pfminfo.codepages[1] = getlong (ttf);
@@ -6527,7 +6527,7 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
       info->pfminfo.hascodepages = false;
     }
 
-  if (info->os2_version >= 2)
+  if (os2_version >= 2)
     {
       /* xHeight */ getushort (ttf);
       /* capHeight */ getushort (ttf);
@@ -6536,7 +6536,7 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
       /* maxContext */ getushort (ttf);
     }
 
-  if (info->os2_version >= 5)
+  if (os2_version >= 5)
     {
       info->pfminfo.os2_loweropticalsize = getushort (ttf);
       info->pfminfo.os2_upperopticalsize = getushort (ttf);
@@ -6547,13 +6547,13 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
       info->pfminfo.os2_upperopticalsize = 0xFFFF;
     }
 
-  if (info->os2_version == 0)
+  if (os2_version == 0)
     {
       LogError (_
                 ("Windows will reject fonts with an OS/2 version number of 0\n"));
       info->bad_os2_version = true;
     }
-  else if (info->os2_version == 1 && info->cff_start != 0)
+  else if (os2_version == 1 && info->cff_start != 0)
     {
       LogError (_
                 ("Windows will reject otf (cff) fonts with an OS/2 version number of 1\n"));
@@ -7622,7 +7622,6 @@ SFFillFromTTF (struct ttfinfo *info)
   sf->xuid = info->xuid;
   sf->uniqueid = info->uniqueid;
   sf->pfminfo = info->pfminfo;
-  sf->os2_version = info->os2_version;
   sf->sfntRevision = info->sfntRevision;
   sf->use_typo_metrics = info->use_typo_metrics;
   sf->weight_width_slope_only = info->weight_width_slope_only;

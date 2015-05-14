@@ -28,7 +28,6 @@ static const char my_module[] = "sortsmill fonts os2-table";
 
 typedef enum
 {
-  _os2_version = 0,
   //_os2_xAvgCharWidth, ← not supported here
   _os2_usWeightClass,
   _os2_usWidthClass,
@@ -78,7 +77,6 @@ typedef enum
 } _os2_key_t;
 
 static const char *os2_key_table[] = {
-  [_os2_version] = "version",
   //[_os2_xAvgCharWidth] = "xAvgCharWidth", ← not supported here
   [_os2_usWeightClass] = "usWeightClass",
   [_os2_usWidthClass] = "usWidthClass",
@@ -325,9 +323,6 @@ scm_c_view_os2_table_set_x (SCM view, const char *key, SCM value,
 
   switch (os2_key (who, key))
     {
-    case _os2_version:
-      sf->os2_version = scm_to_int (value);
-      break;
     case _os2_usWeightClass:
       sf->pfminfo.weight = scm_to_int (value);
       break;
@@ -449,9 +444,6 @@ scm_c_view_os2_table_ref (SCM view, const char *key, SCM value_is_offset)
   SCM result = SCM_UNDEFINED;
   switch (os2_key (who, key))
     {
-    case _os2_version:
-      result = scm_from_int (sf->os2_version);
-      break;
     case _os2_usWeightClass:
       result = scm_from_int (sf->pfminfo.weight);
       break;

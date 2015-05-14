@@ -333,22 +333,6 @@ static GTextInfo ibmfamily[] = {
   GTEXTINFO_EMPTY
 };
 
-static GTextInfo os2versions[] = {
-  {(uint32_t *) N_("OS2Version|Automatic"), NULL, 0, 0, (void *) 0, NULL, 0,
-   0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {(uint32_t *) N_("1"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) N_("2"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) N_("3"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) N_("4"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  {(uint32_t *) N_("5"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
-  GTEXTINFO_EMPTY
-};
-
 static GTextInfo gaspversions[] = {
   {(uint32_t *) N_("0"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
@@ -3005,7 +2989,6 @@ static struct langstyle *stylelist[] =
 #define CID_HHeadDescentIsOff	3028
 #define CID_Vendor		3029
 #define CID_IBMFamily		3030
-#define CID_OS2Version		3031
 #define CID_UseTypoMetrics	3032
 #define CID_WeightWidthSlopeOnly	3033
 
@@ -6048,7 +6031,6 @@ GFI_OK (GGadget *g, GEvent *e)
       char os2_vendor[4];
       NameList *nl;
       extern int allow_utf8_glyphnames;
-      int os2version;
       int rows, gasprows, mc_rows, ms_rows;
       struct matrix_data *strings =
         GMatrixEditGet (GWidgetGetControl (d->gw, CID_TNames), &rows);
@@ -6296,18 +6278,8 @@ GFI_OK (GGadget *g, GEvent *e)
           if (err)
             return true;
         }
-      os2version = sf->os2_version;
       if (d->ttf_set)
         {
-          char *os2v =
-            GGadgetGetTitle8 (GWidgetGetControl (gw, CID_OS2Version));
-          if (strcasecmp (os2v, (char *) os2versions[0].text) == 0)
-            os2version = 0;
-          else
-            os2version =
-              GetInt8 (gw, CID_OS2Version, _("Weight, Width, Slope Only"),
-                       &err);
-          free (os2v);
           /* Only use the normal routine if we get no value, because */
           /*  "400 Book" is a reasonable setting, but would cause GetInt */
           /*  to complain */
@@ -6676,7 +6648,6 @@ GFI_OK (GGadget *g, GEvent *e)
       StoreSSNames (d);
       if (d->ttf_set)
         {
-          sf->os2_version = os2version;
           sf->use_typo_metrics =
             GGadgetIsChecked (GWidgetGetControl (gw, CID_UseTypoMetrics));
           sf->weight_width_slope_only =
@@ -7193,14 +7164,6 @@ TTFSetup (struct gfi_data *d)
         break;
       }
 
-  if (d->sf->os2_version >= 0 && d->sf->os2_version <= 4)
-    GGadgetSelectOneListItem (GWidgetGetControl (d->gw, CID_OS2Version),
-                              d->sf->os2_version);
-  else
-    {
-      sprintf (buffer, "%d", d->sf->os2_version);
-      GGadgetSetTitle8 (GWidgetGetControl (d->gw, CID_OS2Version), buffer);
-    }
   GGadgetSetChecked (GWidgetGetControl (d->gw, CID_UseTypoMetrics),
                      d->sf->use_typo_metrics);
   GGadgetSetChecked (GWidgetGetControl (d->gw, CID_WeightWidthSlopeOnly),
@@ -11898,26 +11861,10 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[14].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   vgcd[14].creator = GCheckBoxCreate;
 
-  vgcd[15].gd.pos.x = 10;
-  vgcd[15].gd.pos.y = vgcd[11].gd.pos.y + 24 + 6;
-  vlabel[15].text = (uint32_t *) _("_OS/2 Version");
-  vlabel[15].text_is_1byte = true;
-  vlabel[15].text_has_mnemonic = true;
-  vgcd[15].gd.label = &vlabel[15];
-  vgcd[15].gd.popup_msg =
-    (uint32_t *)
-    _("The 'OS/2' table has changed slightly over the years.\n"
-      "Generally fields have been added, but occasionally their\n"
-      "meanings have been redefined.");
-  vgcd[15].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
+  // Those two were used for OS/2 version, we are still creating but not
+  // showing them because fixing all the arrays after removing them is just
+  // painful.
   vgcd[15].creator = GLabelCreate;
-
-  vgcd[16].gd.pos.x = 90;
-  vgcd[16].gd.pos.y = vgcd[15].gd.pos.y - 4;
-  vgcd[16].gd.pos.width = vgcd[7].gd.pos.width;
-  vgcd[16].gd.flags = gg_visible | gg_enabled;
-  vgcd[16].gd.cid = CID_OS2Version;
-  vgcd[16].gd.u.list = os2versions;
   vgcd[16].creator = GListFieldCreate;
 
   vgcd[17].gd.pos.x = 10;
@@ -14718,7 +14665,7 @@ FontInfoInit (void)
     panclass, panaspect, panserifvar, pantreatment, panlining,
     pantopology2, pancharrange, pancontrast3,
     pankind, panasprat2,
-    ttfnameids, interpretations, gridfit, antialias, os2versions,
+    ttfnameids, interpretations, gridfit, antialias,
     codepagenames, unicoderangenames, symsmooth, gfsymsmooth, splineorder,
     NULL
   };

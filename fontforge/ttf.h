@@ -105,7 +105,6 @@ struct ttfinfo
   EncMap *map;
   enum uni_interp uni_interp;
   struct pfminfo pfminfo;
-  short os2_version;
   short gasp_version;
   int dupnamestate;          // FIXME: I believe this value ends up
                              // not being used for anything.

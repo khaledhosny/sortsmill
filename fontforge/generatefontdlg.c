@@ -1663,15 +1663,6 @@ DoGenerate (struct gfc_data *d, uint32_t *path)
     end_of_loop:;
     }
 
-  if (d->sf->os2_version == 1
-      && (oldformatstate >= ff_otf && oldformatstate <= ff_otfciddfont))
-    {
-      ff_post_error (_("Bad OS/2 version"),
-                     _
-                     ("OpenType fonts must have a version greater than 1\nUse Element->Font Info->OS/2->Misc to change this."));
-      return;
-    }
-
   likecff = 0;
   if (oldformatstate == ff_ttc)
     {

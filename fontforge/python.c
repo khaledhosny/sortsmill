@@ -13852,7 +13852,7 @@ ff_gs_cidstrnull (cidregistry) ff_gs_cidstrnull (ordering)
 ff_gs_cidreal (cidversion) ff_gs_cidint (supplement) ff_gs_real (italicangle)
 ff_gs_real (upos) ff_gs_real (uwidth) ff_gs_real (strokewidth)
 ff_gs_int (ascent) ff_gs_int (descent) ff_gs_int (uniqueid)
-ff_gs_int2 (macstyle) ff_gs_int2 (os2_version) ff_gs_int2 (gasp_version)
+ff_gs_int2 (macstyle) ff_gs_int2 (gasp_version)
 ff_gs_os2int2 (weight) ff_gs_os2int2 (width) ff_gs_os2int2 (fstype)
 ff_gs_os2int2 (linegap) ff_gs_os2int2 (vlinegap) ff_gs_os2int2 (hhead_ascent)
 ff_gs_os2int2 (hhead_descent) ff_gs_os2int2 (os2_typoascent)
@@ -15781,9 +15781,6 @@ static PyGetSetDef PyFF_Font_getset[] = {
   {"maxp_IDEFs",
    (getter) PyFF_Font_get_maxp_IDEFs, (setter) PyFF_Font_set_maxp_IDEFs,
    "The number of instruction definitions used by the tt program", NULL},
-  {"os2_version",
-   (getter) PyFF_Font_get_os2_version, (setter) PyFF_Font_set_os2_version,
-   "OS/2 table version number", NULL},
   {"os2_weight",
    (getter) PyFF_Font_get_OS2_weight, (setter) PyFF_Font_set_OS2_weight,
    "OS/2 weight", NULL},

@@ -2459,7 +2459,6 @@ typedef struct splinefont
   long creationtime;
   long modificationtime;
 #endif
-  short os2_version;            /* 0 means default rather than the real version 0 */
   short compression;            /* If we opened a compressed sfd file, then save it out compressed too */
   short gasp_version;           /* 0/1 currently */
   short gasp_cnt;

@@ -4029,8 +4029,6 @@ setos2 (struct os2 *os2, struct alltabs *at, SplineFont *sf,
   if (sf->pfminfo.os2_loweropticalsize != 0 ||
       sf->pfminfo.os2_upperopticalsize != 0xFFFF)
     os2->version = 5;
-  if (sf->os2_version != 0)
-    os2->version = sf->os2_version;
   if ((format >= ff_ttf && format <= ff_otfdfont)
       && (at->gi.flags & ttf_flag_symbol))
     modformat = ff_ttfsym;
