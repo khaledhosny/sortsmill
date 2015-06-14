@@ -891,7 +891,7 @@ SCFindPoint (SplineChar *sc, int layer, int ptnum)
 
 static void
 SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
-           DeviceTable *yadjust, BasePoint *pos)
+           DeviceTable *yadjust, BasePoint *pos, bool changed)
 {
   int ly;
 
@@ -952,7 +952,8 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
   AnchorPoint *temp = AnchorPointsSort (sc->parent->anchor, sc->anchor);
   AnchorPointsFree (sc->anchor);
   sc->anchor = temp;
-  SCCharChangedUpdate (sc, ly);
+  if (changed)
+    SCCharChangedUpdate (sc, ly);
 }
 
 static void
@@ -963,7 +964,7 @@ AnchorD_DoCancel (AnchorDlg *a)
   for (old = a->orig_vals; old != NULL; old = old->next)
     {
       SetAnchor (old->sc, a->layer, old->ap_pt, &old->ap_vals.xadjust,
-                 &old->ap_vals.yadjust, &old->ap_vals.me);
+                 &old->ap_vals.yadjust, &old->ap_vals.me, false);
       old->ap_pt->has_ttf_pt = old->ap_vals.has_ttf_pt;
       old->sc->changed = old->changed;  /* Must come after the charchangedupdate */
     }
@@ -1117,7 +1118,7 @@ AnchorD_Cancel (GGadget *g, GEvent *e)
 static int
 AnchorD_Apply (AnchorDlg *a)
 {
-  SetAnchor (a->sc, a->layer, a->ap, &a->xadjust, &a->yadjust, &a->apos);
+  SetAnchor (a->sc, a->layer, a->ap, &a->xadjust, &a->yadjust, &a->apos, true);
   return true;
 }
 
