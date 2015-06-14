@@ -2517,8 +2517,8 @@ BDFFontFree (BDFFont *bdf)
   free (bdf->glyphs);
   if (bdf->clut != NULL)
     free (bdf->clut);
-  if (bdf->freetype_context != NULL)
-    FreeTypeFreeContext (bdf->freetype_context);
+  FreeTypeFreeContext (bdf->freetype_context);
+  bdf->freetype_context = NULL;
   BDFPropsFree (bdf);
   free (bdf->foundry);
   free (bdf);

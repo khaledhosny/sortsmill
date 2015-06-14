@@ -145,8 +145,8 @@ AnchorD_FreeChar (AnchorDlg *a)
     BDFCharFree (a->apmatch[i].bdfc);
   free (a->apmatch);
   a->apmatch = NULL;
-  if (a->freetypecontext != NULL)
-    FreeTypeFreeContext (a->freetypecontext);
+  FreeTypeFreeContext (a->freetypecontext);
+  a->freetypecontext = NULL;
 }
 
 static void

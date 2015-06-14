@@ -416,8 +416,8 @@ DebuggerTerminate (struct debugger_context *dc)
       pthread_mutex_unlock (&dc->parent_mutex); /* Is this actually needed? */
       pthread_mutex_destroy (&dc->parent_mutex);
     }
-  if (dc->ftc != NULL)
-    FreeTypeFreeContext (dc->ftc);
+  FreeTypeFreeContext (dc->ftc);
+  dc->ftc = NULL;
   if (dc->context != NULL)
     FT_Done_FreeType (dc->context);
   free (dc->watch);
@@ -445,8 +445,9 @@ DebuggerReset (struct debugger_context *dc, real ptsizey, real ptsizex, int dpi,
       pthread_join (dc->thread, NULL);
       dc->has_thread = false;
     }
-  if (dc->ftc != NULL)
-    FreeTypeFreeContext (dc->ftc);
+
+  FreeTypeFreeContext (dc->ftc);
+  dc->ftc = NULL;
 
   dc->debug_fpgm = dbg_fpgm;
   dc->ptsizey = ptsizey;

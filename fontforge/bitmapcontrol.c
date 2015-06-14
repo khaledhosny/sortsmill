@@ -164,8 +164,8 @@ SFFigureBitmaps (SplineFont *sf, int32_t *sizes, int usefreetype, int rasterize,
         sf->changed = true;
         first = false;
       }
-  if (freetypecontext)
-    FreeTypeFreeContext (freetypecontext);
+
+  FreeTypeFreeContext (freetypecontext);
 
   /* Order the list */
   SFOrderBitmapList (sf);
@@ -305,8 +305,8 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
           FreeTypeFontContext (bd->sc->parent, bd->sc, selfv, bd->layer);
       ReplaceBDFC (bd->sc->parent, sizes, bd->sc->orig_pos, freetypecontext,
                    usefreetype, bd->layer);
-      if (freetypecontext)
-        FreeTypeFreeContext (freetypecontext);
+      FreeTypeFreeContext (freetypecontext);
+      freetypecontext = NULL;
     }
   else
     {
@@ -326,8 +326,7 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
                                    usefreetype, bd->layer);
                     }
                 }
-              if (freetypecontext)
-                FreeTypeFreeContext (freetypecontext);
+              FreeTypeFreeContext (freetypecontext);
               freetypecontext = NULL;
             }
         }
@@ -344,8 +343,7 @@ FVRegenBitmaps (CreateBitmapData * bd, int32_t *sizes, int usefreetype)
                                freetypecontext, usefreetype, bd->layer);
                 }
             }
-          if (freetypecontext)
-            FreeTypeFreeContext (freetypecontext);
+          FreeTypeFreeContext (freetypecontext);
           freetypecontext = NULL;
         }
     }
