@@ -895,7 +895,7 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
 {
   int ly;
 
-  if (&ap->xadjust != NULL)
+  if (ap->xadjust.corrections != NULL)
     free (ap->xadjust.corrections);
   if (xadjust->corrections == NULL)
     {
@@ -907,7 +907,7 @@ SetAnchor (SplineChar *sc, int layer, AnchorPoint *ap, DeviceTable *xadjust,
       xadjust->corrections = NULL;
     }
 
-  if (&ap->yadjust != NULL)
+  if (ap->yadjust.corrections != NULL)
     free (ap->yadjust.corrections);
   if (yadjust->corrections == NULL)
     {
