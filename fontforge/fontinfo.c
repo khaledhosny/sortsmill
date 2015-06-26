@@ -9076,7 +9076,7 @@ GFI_LookupImportLookup (GGadget *g, GEvent *e)
                   if (ti)
                     {
                       ti[cnt].text =
-                        (uint32_t *) strconcat (" ", otl->lookup_name);
+                        (uint32_t *) xstrdup (x_gc_strjoin (" ", otl->lookup_name, NULL));
                       ti[cnt].text_is_1byte = true;
                       ti[cnt].userdata = otl;
                     }
@@ -9568,9 +9568,8 @@ lookupmenu_dispatch (GWindow v, GMenuItem *mi, GEvent *e)
               return;
             }
         }
-      defname = strconcat (gfi->sf->fontname, ".fea");
+      defname = x_gc_strjoin (gfi->sf->fontname, ".fea", NULL);
       filename = gwwv_save_filename (_("Feature file?"), defname, "*.fea");
-      free (defname);
       if (filename == NULL)
         return;
       /* Convert to def encoding !!! */

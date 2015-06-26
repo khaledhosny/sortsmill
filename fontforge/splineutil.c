@@ -54,27 +54,6 @@
 
 // #define DEBUG 1
 
-char *
-strconcat (const char *str1, const char *str2)
-{
-  int len1 = strlen (str1);
-  char *ret = xmalloc (len1 + strlen (str2) + 1);
-  strcpy (ret, str1);
-  strcpy (ret + len1, str2);
-  return ret;
-}
-
-char *
-strconcat3 (const char *str1, const char *str2, const char *str3)
-{
-  int len1 = strlen (str1), len2 = strlen (str2);
-  char *ret = xmalloc (len1 + len2 + strlen (str3) + 1);
-  strcpy (ret, str1);
-  strcpy (ret + len1, str2);
-  strcpy (ret + len1 + len2, str3);
-  return ret;
-}
-
 void
 LineListFree (LineList *ll)
 {

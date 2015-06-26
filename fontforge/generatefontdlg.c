@@ -1902,7 +1902,7 @@ DoGenerate (struct gfc_data *d, uint32_t *path)
                 d->sf->fontlog = new;
               else
                 {
-                  d->sf->fontlog = strconcat3 (d->sf->fontlog, "\n\n", new);
+                  d->sf->fontlog = xstrdup (x_gc_strjoin (d->sf->fontlog, "\n\n", new, NULL));
                   free (new);
                 }
               d->sf->changed = true;

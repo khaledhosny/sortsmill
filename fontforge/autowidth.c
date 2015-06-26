@@ -1741,7 +1741,7 @@ VSubtableFromH (struct lookupmap *lookupmap, struct lookup_subtable *sub)
       for (fl = otl->features; fl != NULL; fl = fl->next)
         if (fl->featuretag == CHR ('k', 'e', 'r', 'n'))
           fl->featuretag = CHR ('v', 'k', 'r', 'n');
-      otl->lookup_name = strconcat ("V", sub->lookup->lookup_name);
+      otl->lookup_name = xstrdup (x_gc_strjoin ("V", sub->lookup->lookup_name, NULL));
       otl->next = sub->lookup->next;
       sub->lookup->next = otl;
     }
@@ -1751,7 +1751,7 @@ VSubtableFromH (struct lookupmap *lookupmap, struct lookup_subtable *sub)
   sc = lookupmap->sc++;
   lookupmap->smap[sc].from = sub;
   lookupmap->smap[sc].to = nsub = xzalloc (sizeof (struct lookup_subtable));
-  nsub->subtable_name = strconcat ("V", sub->subtable_name);
+  nsub->subtable_name = xstrdup (x_gc_strjoin ("V", sub->subtable_name, NULL));
   nsub->per_glyph_pst_or_kern = sub->per_glyph_pst_or_kern;
   nsub->vertical_kerning = true;
   nsub->lookup = otl;

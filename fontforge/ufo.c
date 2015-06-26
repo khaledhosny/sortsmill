@@ -485,7 +485,7 @@ PListOutputString (FILE *plist, char *key, char *value)
 static void
 PListOutputNameString (FILE *plist, char *key, SplineFont *sf, int strid)
 {
-  char *value = NULL, *nonenglish = NULL, *freeme = NULL;
+  char *value = NULL, *nonenglish = NULL;
   struct ttflangname *nm;
 
   for (nm = sf->names; nm != NULL; nm = nm->next)
@@ -501,12 +501,11 @@ PListOutputNameString (FILE *plist, char *key, SplineFont *sf, int strid)
         }
     }
   if (value == NULL && strid == ttf_version && sf->version != NULL)
-    value = freeme = strconcat ("Version ", sf->version);
+    value = x_gc_strjoin ("Version ", sf->version, NULL);
   if (value == NULL)
     value = nonenglish;
   if (value != NULL)
     PListOutputString (plist, key, value);
-  free (freeme);
 }
 
 static void
@@ -2353,14 +2352,14 @@ SFReadUFO (char *basedir, int flags)
   if (sf->fontname == NULL)
     {
       if (stylename != NULL && sf->familyname != NULL)
-        sf->fontname = strconcat3 (sf->familyname, "-", stylename);
+        sf->fontname = xstrdup (x_gc_strjoin (sf->familyname, "-", stylename, NULL));
       else
         sf->fontname = "Untitled";
     }
   if (sf->fullname == NULL)
     {
       if (stylename != NULL && sf->familyname != NULL)
-        sf->fullname = strconcat3 (sf->familyname, " ", stylename);
+        sf->fullname = xstrdup (x_gc_strjoin (sf->familyname, " ", stylename, NULL));
       else
         sf->fullname = xstrdup_or_null (sf->fontname);
     }

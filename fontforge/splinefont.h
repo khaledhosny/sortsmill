@@ -2662,9 +2662,6 @@ struct findsel;
 struct charprocs;
 struct enc;
 
-VISIBLE char *strconcat (const char *str, const char *str2);
-VISIBLE char *strconcat3 (const char *str, const char *str2, const char *str3);
-
 char *XUIDFromFD (int xuid[20]);
 SplineFont *SplineFontFromPSFont (struct fontdict *fd);
 int CheckAfmOfPostScript (SplineFont *sf, char *psname, EncMap *map);

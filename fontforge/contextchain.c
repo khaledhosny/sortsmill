@@ -2344,7 +2344,7 @@ RenameClass (struct contextchaindlg *ccd, char *old, char *new, int sections)
               *end_match = '\0';
               temp = rpl (oldrule, old, new);
               *end_match = ch;
-              newrule = strconcat (temp, end_match);
+              newrule = xstrdup (x_gc_strjoin (temp, end_match, NULL));
               free (temp);
             }
           else if (sections == 0x6)
@@ -2352,7 +2352,7 @@ RenameClass (struct contextchaindlg *ccd, char *old, char *new, int sections)
               temp = rpl (end_back, old, new);
               ch = *end_back;
               *end_back = '\0';
-              newrule = strconcat (oldrule, temp);
+              newrule = xstrdup (x_gc_strjoin (oldrule, temp, NULL));
               *end_back = ch;
               free (temp);
             }
@@ -2366,7 +2366,7 @@ RenameClass (struct contextchaindlg *ccd, char *old, char *new, int sections)
                   *end_back = '\0';
                   temp = rpl (oldrule, old, new);
                   *end_back = ch;
-                  newrule = strconcat (temp, end_back);
+                  newrule = xstrdup (x_gc_strjoin (temp, end_back, NULL));
                   free (temp);
                 }
             }
@@ -2377,7 +2377,7 @@ RenameClass (struct contextchaindlg *ccd, char *old, char *new, int sections)
                   temp = rpl (end_back, old, new);      /* end_back is not NULL, checked above */
                   ch = *end_back;
                   *end_back = '\0';
-                  newrule = strconcat (oldrule, temp);
+                  newrule = xstrdup (x_gc_strjoin (oldrule, temp, NULL));
                   *end_back = ch;
                   free (temp);
                 }
@@ -2387,7 +2387,7 @@ RenameClass (struct contextchaindlg *ccd, char *old, char *new, int sections)
                   *end_match = '\0';
                   temp = rpl (oldrule, old, new);
                   *end_match = ch;
-                  newrule = strconcat (temp, end_match);
+                  newrule = xstrdup (x_gc_strjoin (temp, end_match, NULL));
                   free (temp);
                 }
               else
@@ -2398,7 +2398,7 @@ RenameClass (struct contextchaindlg *ccd, char *old, char *new, int sections)
                   *end_match = ch;
                   ch = *end_back;
                   *end_back = '\0';
-                  newrule = strconcat3 (oldrule, temp, end_match);
+                  newrule = xstrdup (x_gc_strjoin (oldrule, temp, end_match, NULL));
                   *end_back = ch;
                   free (temp);
                 }
@@ -2412,7 +2412,7 @@ RenameClass (struct contextchaindlg *ccd, char *old, char *new, int sections)
                   temp = rpl (end_match, old, new);
                   ch = *end_match;
                   *end_match = '\0';
-                  newrule = strconcat (oldrule, temp);
+                  newrule = xstrdup (x_gc_strjoin (oldrule, temp, NULL));
                   *end_match = ch;
                   free (temp);
                 }

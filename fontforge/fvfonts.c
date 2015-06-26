@@ -102,7 +102,7 @@ MCConvertLookup (struct sfmergecontext *mc, OTLookup *otl)
     return mc->lks[l].to;
 
   mc->lks[l].to = newotl = xzalloc (sizeof (OTLookup));
-  newotl->lookup_name = strconcat (mc->prefix, otl->lookup_name);
+  newotl->lookup_name = xstrdup (x_gc_strjoin (mc->prefix, otl->lookup_name, NULL));
   newotl->lookup_type = otl->lookup_type;
   newotl->lookup_flags = otl->lookup_flags;
   newotl->features = FeatureListCopy (otl->features);
@@ -137,7 +137,7 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
         mc->sf_to = mc->sf_to->mm->normal;
       if (mc->sf_from == mc->sf_to)
         return sub;
-      mc->prefix = strconcat (mc->sf_from->fontname, "-");
+      mc->prefix = xstrdup (x_gc_strjoin (mc->sf_from->fontname, "-", NULL));
       for (doit = 0; doit < 2; ++doit)
         {
           lcnt = scnt = 0;
@@ -150,9 +150,8 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
                   if (doit)
                     {
                       mc->lks[lcnt].from = otl;
-                      temp = strconcat (mc->prefix, otl->lookup_name);
+                      temp = x_gc_strjoin (mc->prefix, otl->lookup_name, NULL);
                       mc->lks[lcnt].to = SFFindLookup (mc->sf_to, temp);
-                      free (temp);
                       mc->lks[lcnt].old = mc->lks[lcnt].to != NULL;
                     }
                   ++lcnt;
@@ -161,10 +160,9 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
                       if (doit)
                         {
                           mc->subs[scnt].from = subs;
-                          temp = strconcat (mc->prefix, subs->subtable_name);
+                          temp = x_gc_strjoin (mc->prefix, subs->subtable_name, NULL);
                           mc->subs[scnt].to =
                             SFFindLookupSubtable (mc->sf_to, temp);
-                          free (temp);
                           mc->subs[scnt].old = mc->subs[scnt].to != NULL;
                         }
                       ++scnt;
@@ -193,7 +191,7 @@ MCConvertSubtable (struct sfmergecontext *mc, struct lookup_subtable *sub)
 
   mc->subs[s].to = newsub =
     xzalloc (sizeof (struct lookup_subtable));
-  newsub->subtable_name = strconcat (mc->prefix, sub->subtable_name);
+  newsub->subtable_name = xstrdup (x_gc_strjoin (mc->prefix, sub->subtable_name, NULL));
   newsub->lookup = MCConvertLookup (mc, sub->lookup);
   newsub->anchor_classes = sub->anchor_classes;
   newsub->per_glyph_pst_or_kern = sub->per_glyph_pst_or_kern;
@@ -227,13 +225,12 @@ MCConvertAnchorClass (struct sfmergecontext *mc, AnchorClass *ac)
               if (doit)
                 {
                   mc->acs[acnt].from = testac;
-                  temp = strconcat (mc->prefix, testac->name);
+                  temp = x_gc_strjoin (mc->prefix, testac->name, NULL);
                   for (testac2 = mc->sf_to->anchor; testac2 != NULL;
                        testac2 = testac2->next)
                     if (strcmp (testac2->name, temp) == 0)
                       break;
                   mc->acs[acnt].to = testac2;
-                  free (temp);
                   mc->acs[acnt].old = mc->acs[acnt].to != NULL;
                 }
               ++acnt;
@@ -257,7 +254,7 @@ MCConvertAnchorClass (struct sfmergecontext *mc, AnchorClass *ac)
     return mc->acs[a].to;
 
   mc->acs[a].to = newac = xzalloc (sizeof (AnchorClass));
-  newac->name = strconcat (mc->prefix, ac->name);
+  newac->name = xstrdup (x_gc_strjoin (mc->prefix, ac->name, NULL));
   newac->subtable = MCConvertSubtable (mc, ac->subtable);
   newac->next = mc->sf_to->anchor;
   mc->sf_to->anchor = newac;

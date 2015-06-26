@@ -2599,9 +2599,8 @@ OTLookupCopyNested (struct sfmergecontext *mc, OTLookup *from_otl)
         return mc->lks[l].to;
     }
 
-  newname = strconcat (mc->prefix, from_otl->lookup_name);
+  newname = x_gc_strjoin (mc->prefix, from_otl->lookup_name, NULL);
   to_nested_otl = SFFindLookup (mc->sf_to, newname);
-  free (newname);
   if (to_nested_otl == NULL)
     to_nested_otl = _OTLookupCopyInto (mc, from_otl, (OTLookup *) -1, true);
   return to_nested_otl;
@@ -2759,7 +2758,7 @@ SF_AddAnchorClasses (struct sfmergecontext *mc,
         nac = xzalloc (sizeof (AnchorClass));
         *nac = *ac;
         nac->subtable = sub;
-        nac->name = strconcat (mc->prefix, nac->name);
+        nac->name = xstrdup (x_gc_strjoin (mc->prefix, nac->name, NULL));
         nac->next = mc->sf_to->anchor;
         mc->sf_to->anchor = nac;
 
@@ -3132,7 +3131,7 @@ _OTLookupCopyInto (struct sfmergecontext *mc,
       mc->lks[l].from = from_otl;
       mc->lks[l].to = otl;
       ++mc->lcnt;
-      otl->lookup_name = strconcat (mc->prefix, from_otl->lookup_name);
+      otl->lookup_name = xstrdup (x_gc_strjoin (mc->prefix, from_otl->lookup_name, NULL));
       otl->features = FeatureListCopy (from_otl->features);
       otl->next = NULL;
       otl->subtables = NULL;
@@ -3154,7 +3153,7 @@ _OTLookupCopyInto (struct sfmergecontext *mc,
         xzalloc (sizeof (struct lookup_subtable));
       *sub = *from_sub;
       sub->lookup = otl;
-      sub->subtable_name = strconcat (mc->prefix, from_sub->subtable_name);
+      sub->subtable_name = xstrdup (x_gc_strjoin (mc->prefix, from_sub->subtable_name, NULL));
       sub->suffix = xstrdup_or_null (sub->suffix);
       if (last == NULL)
         otl->subtables = sub;
@@ -3225,10 +3224,9 @@ OTLookupCopyInto (SplineFont *into_sf, SplineFont *from_sf, OTLookup *from_otl)
   list[0] = from_otl;
   list[1] = NULL;
   mc.prefix = NeedsPrefix (into_sf, from_sf, list)
-    ? strconcat (from_sf->fontname, "-") : xstrdup ("");
+    ? x_gc_strjoin (from_sf->fontname, "-", NULL) : x_gc_strdup ("");
   newotl = _OTLookupCopyInto (&mc, from_otl, (OTLookup *) -2, true);
   free (mc.lks);
-  free (mc.prefix);
   return newotl;
 }
 
@@ -3244,7 +3242,7 @@ OTLookupsCopyInto (SplineFont *into_sf, SplineFont *from_sf,
   mc.sf_to = into_sf;
 
   mc.prefix = NeedsPrefix (into_sf, from_sf, list)
-    ? strconcat (from_sf->fontname, "-") : xstrdup ("");
+    ? x_gc_strjoin (from_sf->fontname, "-", NULL) : x_gc_strdup ("");
   for (i = 0; list[i] != NULL; ++i);
   mc.lks = xmalloc ((mc.lmax = i + 5) * sizeof (struct lookup_cvt));
   /* First create all the lookups and position them in the right order */
@@ -3255,7 +3253,6 @@ OTLookupsCopyInto (SplineFont *into_sf, SplineFont *from_sf,
     for (i = 0; list[i] != NULL; ++i)
       (void) _OTLookupCopyInto (&mc, list[i], before, do_contents);
   free (mc.lks);
-  free (mc.prefix);
 }
 
 /* ************************************************************************** */

@@ -536,7 +536,7 @@ svg_dumppattern (FILE *file, struct pattern *pattern,
 
   if (pattern_sc != NULL)
     {
-      patsubname = strconcat3 (scname, "-", pattern->pattern);
+      patsubname = x_gc_strjoin (scname, "-", pattern->pattern, NULL);
       svg_dumpscdefs (file, pattern_sc, patsubname, false);
     }
   else
@@ -574,7 +574,6 @@ svg_dumppattern (FILE *file, struct pattern *pattern,
   if (pattern_sc != NULL)
     svg_dumpscdefs (file, pattern_sc, patsubname, false);
   c_fprintf (file, "    </pattern>\n");
-  free (patsubname);
 }
 
 static void

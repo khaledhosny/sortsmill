@@ -21931,10 +21931,8 @@ PyFF_ErrorString (const char *msg, const char *str)
 {
   char *cond = (char *) msg;
   if (str != NULL)
-    cond = strconcat3 (msg, " ", str);
+    cond = x_gc_strjoin (msg, " ", str, NULL);
   PyErr_SetString (PyExc_ValueError, cond);
-  if (cond != msg)
-    free (cond);
 }
 
 void

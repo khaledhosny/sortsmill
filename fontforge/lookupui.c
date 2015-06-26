@@ -7583,7 +7583,7 @@ MRD_OK (GGadget *g, GEvent *e)
       if (*suffix != '.')
         {
           char *old = suffix;
-          suffix = strconcat (".", suffix);
+          suffix = xstrdup (x_gc_strjoin (".", suffix, NULL));
           free (old);
         }
 
@@ -7605,7 +7605,7 @@ MRD_OK (GGadget *g, GEvent *e)
                 sc->name = name;
               }
             else
-              sc->name = strconcat (sourcesc->name, suffix);
+              sc->name = xstrdup (x_gc_strjoin (sourcesc->name, suffix, NULL));
             free (oldname);
             sc->unicodeenc = -1;
             if (sub != NULL)

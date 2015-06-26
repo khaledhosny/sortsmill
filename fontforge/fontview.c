@@ -11383,7 +11383,7 @@ FVMakeChar (FontView *fv, int enc)
         }
       else if (fl == NULL)
         {
-          feat_sc->name = strconcat (base_sc->name, ".unknown");
+          feat_sc->name = xstrdup (x_gc_strjoin (base_sc->name, ".unknown", NULL));
         }
       else
         {
