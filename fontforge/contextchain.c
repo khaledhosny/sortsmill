@@ -2629,6 +2629,7 @@ static struct col_init classsimple_ci[] = {
 static int
 CanBeSimple (FPST * fpst)
 {
+  return false;
   int i, s, last_seq;
   for (i = 0; i < fpst->rule_cnt; ++i)
     {
@@ -3032,7 +3033,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
   hvarray[1][0] = &boxes[2];
   hvarray[1][1] = NULL;
 
-  rgcd[i].gd.flags = gg_visible | gg_enabled;
+  //rgcd[i].gd.flags = gg_visible | gg_enabled;
   rlabel[i].text =
     (uint32_t *) _("This dialog has two formats. A simpler one which\n"
                    " hides some of the complexities of these rules,\n"
@@ -3047,7 +3048,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
 
   rgcd[i].gd.pos.x = 5;
   rgcd[i].gd.pos.y = 5 + i * 13;
-  rgcd[i].gd.flags = gg_visible | gg_enabled;
+  //rgcd[i].gd.flags = gg_visible | gg_enabled;
   rlabel[i].text = (uint32_t *) _("Dialog Type:");
   rlabel[i].text_is_1byte = true;
   rgcd[i].gd.label = &rlabel[i];
@@ -3057,7 +3058,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
 
   rgcd[i].gd.pos.x = rgcd[i - 1].gd.pos.x;
   rgcd[i].gd.pos.y = rgcd[i - 1].gd.pos.y + 16;
-  rgcd[i].gd.flags = gg_visible | gg_enabled | (use_simple ? gg_cb_on : 0);
+  //rgcd[i].gd.flags = gg_visible | gg_enabled | (use_simple ? gg_cb_on : 0);
   rlabel[i].text = (uint32_t *) _("Simple");
   rlabel[i].text_is_1byte = true;
   rgcd[i].gd.label = &rlabel[i];
@@ -3067,7 +3068,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
 
   rgcd[i].gd.pos.x = rgcd[i - 1].gd.pos.x;
   rgcd[i].gd.pos.y = rgcd[i - 1].gd.pos.y + 16;
-  rgcd[i].gd.flags = gg_visible | gg_enabled | (!use_simple ? gg_cb_on : 0);
+  //rgcd[i].gd.flags = gg_visible | gg_enabled | (!use_simple ? gg_cb_on : 0);
   rlabel[i].text = (uint32_t *) _("Complex");
   rlabel[i].text_is_1byte = true;
   rgcd[i].gd.label = &rlabel[i];
@@ -3077,7 +3078,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
   barray2[4] = GCD_Glue;
   barray2[5] = NULL;
 
-  boxes[3].gd.flags = gg_enabled | gg_visible;
+  //boxes[3].gd.flags = gg_enabled | gg_visible;
   boxes[3].gd.u.boxelements = barray2;
   boxes[3].creator = GHBoxCreate;
   hvarray[4][0] = &boxes[3];
