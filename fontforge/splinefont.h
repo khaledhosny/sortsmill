@@ -2834,7 +2834,6 @@ void ScriptMainRange (uint32_t script, int *start, int *end);
 VISIBLE uint32_t ScriptFromUnicode (int u, SplineFont *sf);
 VISIBLE uint32_t SCScriptFromUnicode (SplineChar *sc);
 VISIBLE int SCRightToLeft (SplineChar *sc);
-int SLIContainsR2L (SplineFont *sf, int sli);
 void SFFindNearTop (SplineFont *);
 void SFRestoreNearTop (SplineFont *);
 VISIBLE int SFForceEncoding (SplineFont *sf, EncMap *old, Encoding *new_map);
