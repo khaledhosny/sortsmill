@@ -7128,7 +7128,7 @@ VWCheckup (struct val_data *vw)
           if (ff_ask
               (_("Not sure if this is an error..."), (const char **) buts, 0, 1,
                _("This font contains non-integral coordinates. That's OK\n"
-                 "in PostScript but causes problems in TrueType.\n"
+                 "in PostScript and SVG but causes problems in TrueType.\n"
                  "Should I consider that an error here?")) == 0)
             {
               a_change = true;

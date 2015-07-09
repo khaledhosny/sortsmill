@@ -183,6 +183,8 @@ static GTextInfo formattypes[] = {
    1, 0, 0, '\0'},
   {(uint32_t *) N_("OpenType CID (dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) N_("SVG font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
+   0, 0, '\0'},
   {(uint32_t *) N_("Unified Font Object"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) N_("Web Open Font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
@@ -1695,7 +1697,8 @@ DoGenerate (struct gfc_data *d, uint32_t *path)
           psfnlenwarned = true;
         }
     }
-  else if (oldformatstate != ff_none && oldformatstate != ff_ufo)
+  else if (oldformatstate != ff_none && oldformatstate != ff_svg &&
+           oldformatstate != ff_ufo)
     {
       int val = d->sf->ascent + d->sf->descent;
       int bit;
@@ -2849,7 +2852,8 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       formattypes[ff_otfcid].disabled = true;
       formattypes[ff_cffcid].disabled = true;
       formattypes[ff_ufo].disabled = true;
-      ofs = ff_ptype3;
+      if (ofs != ff_svg)
+        ofs = ff_ptype3;
     }
   else if (sf->strokedfont)
     {
@@ -2892,6 +2896,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       formattypes[ff_otfcid].disabled = true;
       formattypes[ff_cff].disabled = true;
       formattypes[ff_cffcid].disabled = true;
+      formattypes[ff_svg].disabled = true;
       formattypes[ff_ufo].disabled = true;
     }
   else if (family == gf_ttc)

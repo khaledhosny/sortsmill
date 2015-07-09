@@ -918,8 +918,10 @@ ArchiveParseTOC (char *listfile, enum archive_list_style ars, int *doall)
       pt = strrchr (files[i], '.');
       if (pt == NULL)
         continue;
-      if (strcasecmp (pt, ".pfb") == 0 || strcasecmp (pt, ".pfa") == 0 ||
-          strcasecmp (pt, ".cff") == 0 || strcasecmp (pt, ".cid") == 0)
+      if (strcasecmp (pt, ".svg") == 0)
+        prio = 10;
+      else if (strcasecmp (pt, ".pfb") == 0 || strcasecmp (pt, ".pfa") == 0 ||
+               strcasecmp (pt, ".cff") == 0 || strcasecmp (pt, ".cid") == 0)
         prio = 20;
       else if (strcasecmp (pt, ".otf") == 0 || strcasecmp (pt, ".ttf") == 0
                || strcasecmp (pt, ".ttc") == 0)
@@ -1267,6 +1269,7 @@ _ReadSplineFont (FILE *file, const char *const_filename,
 /* checked == 'p'   => pfb/general postscript */
 /* checked == 'P'   => pdf */
 /* checked == 'c'   => cff */
+/* checked == 'S'   => svg */
 /* checked == 'f'   => sfd */
 /* checked == 'F'   => sfdir */
 /* checked == 'b'   => bdf */
@@ -1303,6 +1306,9 @@ _ReadSplineFont (FILE *file, const char *const_filename,
       int ch2 = getc (file);
       int ch3 = getc (file);
       int ch4 = getc (file);
+      int ch5 = getc (file);
+      int ch6 = getc (file);
+      int ch7 = getc (file);
       int ch9, ch10;
       fseek (file, 98, SEEK_SET);
       ch9 = getc (file);
@@ -1340,12 +1346,31 @@ _ReadSplineFont (FILE *file, const char *const_filename,
           sf = _CFFParse (file, len, NULL);
           checked = 'c';
         }
+      else
+        if ((ch1 == '<' && ch2 == '?' && (ch3 == 'x' || ch3 == 'X')
+             && (ch4 == 'm' || ch4 == 'M')) ||
+            /* or UTF-8 SVG with initial byte ordering mark */
+            ((ch1 == 0xef && ch2 == 0xbb && ch3 == 0xbf &&
+              ch4 == '<' && ch5 == '?' && (ch6 == 'x' || ch6 == 'X')
+              && (ch7 == 'm' || ch7 == 'M'))))
+        {
+          if (nowlocal)
+            sf = SFReadSVG (fullname, 0);
+          else
+            {
+              char *spuriousname = ForceFileToHaveName (file, NULL);
+              sf = SFReadSVG (spuriousname, 0);
+              unlink (spuriousname);
+              free (spuriousname);
+            }
+          checked = 'S';
 #if 0                           /* I'm not sure if this is a good test for mf files... */
+        }
       else if (ch1 == '%' && ch2 == ' ')
         {
           sf = SFFromMF (fullname);
-        }
 #endif
+        }
       else if (ch1 == 'S' && ch2 == 'p' && ch3 == 'l' && ch4 == 'i')
         {
           sf = _SFDRead (fullname, file);
@@ -1390,6 +1415,11 @@ _ReadSplineFont (FILE *file, const char *const_filename,
            && checked != 't')
     {
       sf = SFReadTTF (fullname, 0, openflags);
+    }
+  else if (strcasecmp (fullname + strlen (strippedname) - 4, ".svg") == 0
+           && checked != 'S')
+    {
+      sf = SFReadSVG (fullname, 0);
     }
   else if (strcasecmp (fullname + strlen (fullname) - 4, ".ufo") == 0
            && checked != 'u')

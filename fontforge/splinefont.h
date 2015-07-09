@@ -1628,7 +1628,7 @@ typedef struct splinepointlist
   uint16_t spiro_cnt, spiro_max;
   uint8_t ticked;
   uint8_t beziers_need_optimizer;       /* If the spiros have changed in spiro mode, then reverting to bezier mode might, someday, run a simplifier */
-  uint8_t is_clip_path;         /* In type3 fonts */
+  uint8_t is_clip_path;         /* In type3/svg fonts */
   char *contour_name;
 } SplinePointList, SplineSet;
 
@@ -2715,6 +2715,7 @@ typedef enum fontformat
   ff_otfdfont,
   ff_otfcid,
   ff_otfciddfont,
+  ff_svg,
   ff_ufo,
   ff_woff,
   ff_none                       // ff_none comes last.
@@ -2811,6 +2812,10 @@ VISIBLE int WriteTTC (char *filename, struct sflist *sfs,
                       enum fontformat format, enum bitmapformat bf,
                       int flags, int layer, enum ttc_flags ttcflags);
 long mactime (void);
+int WriteSVGFont (char *fontname, SplineFont *sf,
+                  enum fontformat format, int flags, EncMap *enc, int layer);
+int _WriteSVGFont (FILE *file, SplineFont *sf, enum fontformat format,
+                   int flags, EncMap *enc, int layer);
 int WriteUFOFont (char *fontname, SplineFont *sf,
                   enum fontformat format, int flags, EncMap *enc, int layer);
 VISIBLE void SfListFree (struct sflist *sfs);
@@ -3568,6 +3573,8 @@ SplineFont *_SFReadWOFF (FILE *woff, int flags,
 SplineFont *_SFReadTTF (FILE *ttf, int flags, enum openflags openflags,
                         char *filename, struct fontdict *fd);
 SplineFont *SFReadTTF (char *filename, int flags, enum openflags openflags);
+SplineFont *SFReadSVG (char *filename, int flags);
+SplineFont *SFReadSVGMem (char *data, int flags);
 SplineFont *SFReadUFO (char *filename, int flags);
 SplineFont *_CFFParse (FILE *temp, int len, char *fontsetname);
 SplineFont *CFFParse (char *filename);
@@ -3601,6 +3608,7 @@ char **NamesReadTTF (char *filename);
 char **NamesReadCFF (char *filename);
 char **NamesReadPostScript (char *filename);
 char **_NamesReadPostScript (FILE *ps);
+char **NamesReadSVG (char *filename);
 char **NamesReadUFO (char *filename);
 char **NamesReadMacBinary (char *filename);
 
@@ -3954,6 +3962,8 @@ void SFTimesFromFile (SplineFont *sf, FILE *);
 
 VISIBLE int SFHasInstructions (SplineFont *sf);
 int RefDepth (RefChar *ref, int layer);
+
+SplineChar *SCHasSubs (SplineChar *sc, uint32_t tag);
 
 VISIBLE char *TagFullName (SplineFont *sf, uint32_t tag, int onlyifknown);
 
