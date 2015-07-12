@@ -1362,11 +1362,16 @@ void *
 FreeTypeFontContext (SplineFont *sf, SplineChar *sc, FontViewBase *fv,
                      int layer)
 {
-  return (_FreeTypeFontContext
-          (sf, sc, fv, layer,
-           sf->subfontcnt !=
-           0 ? ff_otfcid : sf->layers[layer].order2 ? ff_ttf : ff_pfb, 0,
-           NULL));
+  enum fontformat ff;
+
+  if (sf->subfontcnt != 0)
+    ff = ff_otfcid;
+  else if (sf->layers[layer].order2)
+    ff = ff_ttf;
+  else
+    ff = ff_pfb;
+
+  return _FreeTypeFontContext (sf, sc, fv, layer, ff, 0, NULL);
 }
 
 void
