@@ -1369,7 +1369,7 @@ FreeTypeFontContext (SplineFont *sf, SplineChar *sc, FontViewBase *fv,
   else if (sf->layers[layer].order2)
     ff = ff_ttf;
   else
-    ff = ff_pfb;
+    ff = ff_otf;
 
   return _FreeTypeFontContext (sf, sc, fv, layer, ff, 0, NULL);
 }
