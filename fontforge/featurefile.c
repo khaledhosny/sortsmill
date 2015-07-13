@@ -5751,9 +5751,15 @@ fea_markedglyphs_to_fpst (struct parseState *tok, struct markedglyphs *glyphs,
 
   if (all_single)
     {
-      g = fea_glyphs_to_names (glyphs, bcnt, &r->u.glyph.back);
+      char *temp = NULL;
+      // backtrack glyphs should be in reverse order, but they are in
+      // natural order in the feature file, so we reverse them
+      g = fea_glyphs_to_names (glyphs, bcnt, &temp);
+      r->u.glyph.back = reverseGlyphNames (temp);
+      free (temp);
       g = fea_glyphs_to_names (g, ncnt, &r->u.glyph.names);
       g = fea_glyphs_to_names (g, fcnt, &r->u.glyph.fore);
+
       if ((bcnt && is_blank (r->u.glyph.back)) ||
           (ncnt && is_blank (r->u.glyph.names)) ||
           (fcnt && is_blank (r->u.glyph.fore)))
