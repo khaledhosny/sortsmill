@@ -172,29 +172,6 @@ cu_copybetween (const uint32_t *start, const uint32_t *end)
 }
 
 static char *
-reversenames (char *str)
-{
-  char *ret;
-  char *rpt, *pt, *start, *spt;
-
-  if (str == NULL)
-    return NULL;
-
-  rpt = ret = xmalloc (strlen (str) + 1);
-  *ret = '\0';
-  for (pt = str + strlen (str); pt > str; pt = start)
-    {
-      for (start = pt - 1; start >= str && *start != ' '; --start);
-      for (spt = start + 1; spt < pt;)
-        *rpt++ = *spt++;
-      *rpt++ = ' ';
-    }
-  if (rpt > ret)
-    rpt[-1] = '\0';
-  return ret;
-}
-
-static char *
 rpl (const char *src, const char *find, const char *rpl)
 {
   const char *pt, *start;
@@ -442,7 +419,7 @@ gruleitem (struct fpst_rule *r)
   ret = pt = xmalloc (len + 8);
   if (r->u.glyph.back != NULL && *r->u.glyph.back != '\0')
     {
-      char *temp = reversenames (r->u.glyph.back);
+      char *temp = reverseGlyphNames (r->u.glyph.back);
       strcpy (pt, temp);
       pt += strlen (temp);
       free (temp);
@@ -480,7 +457,7 @@ gruleitem2rule (SplineFont *sf, const char *ruletext, struct fpst_rule *r)
   if (pt > ruletext)
     {
       temp = xstrndup_or_null (ruletext, pt - 1 - ruletext);
-      r->u.glyph.back = reversenames (temp);
+      r->u.glyph.back = reverseGlyphNames (temp);
       free (temp);
     }
   ruletext = pt + 2;
@@ -936,7 +913,7 @@ CCD_FinishRule (struct contextchaindlg *ccd)
         }
       temp =
         GGadgetGetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList + 20));
-      dummy.u.glyph.back = reversenames (temp);
+      dummy.u.glyph.back = reverseGlyphNames (temp);
       free (temp);
       dummy.u.glyph.fore =
         GGadgetGetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList + 40));
@@ -1038,7 +1015,7 @@ CCD_NewGlyphRule (GGadget *glyphrules, int r, int c)
                     dummy.u.glyph.names == NULL ? "" : dummy.u.glyph.names);
   GGadgetSetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList + 20),
                     (temp2 =
-                     reversenames (dummy.u.glyph.back)) == NULL ? "" : temp2);
+                     reverseGlyphNames (dummy.u.glyph.back)) == NULL ? "" : temp2);
   free (temp2);
   GGadgetSetTitle8 (GWidgetGetControl (ccd->gw, CID_GlyphList + 40),
                     dummy.u.glyph.fore != NULL ? dummy.u.glyph.fore : "");
