@@ -5754,9 +5754,9 @@ fea_markedglyphs_to_fpst (struct parseState *tok, struct markedglyphs *glyphs,
       g = fea_glyphs_to_names (glyphs, bcnt, &r->u.glyph.back);
       g = fea_glyphs_to_names (g, ncnt, &r->u.glyph.names);
       g = fea_glyphs_to_names (g, fcnt, &r->u.glyph.fore);
-      if ((r->u.glyph.back && is_blank (r->u.glyph.back)) ||
-          (r->u.glyph.names && is_blank (r->u.glyph.names)) ||
-          (r->u.glyph.fore && is_blank (r->u.glyph.fore)))
+      if ((bcnt && is_blank (r->u.glyph.back)) ||
+          (ncnt && is_blank (r->u.glyph.names)) ||
+          (fcnt && is_blank (r->u.glyph.fore)))
         {
           // There is at least one empty coverage (from parsing non-existent
           // glyph names), so ignore the whole rule.
@@ -5945,7 +5945,7 @@ fea_ParseSubstitute (struct parseState *tok)
   /* name from <class> => alternate subs */
   /* <glyph sequence> by name => ligature */
   /* <marked glyph sequence> by <name> => context chaining */
-  /* <marked glyph sequence> by <lookup name>* => context chaining */
+  /* <marked glyph sequence>' lookup <lookup name> => context chaining */
   /* [ignore sub] <marked glyph sequence> (, <marked g sequence>)* */
   /* reversesub <marked glyph sequence> by <name> => reverse context chaining */
   int is_reverse = tok->type == tk_reversesub;
