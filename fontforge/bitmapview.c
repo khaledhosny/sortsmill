@@ -49,7 +49,6 @@
 #include <math.h>
 #include <locale.h>
 #include <gresource.h>
-#include <gresedit.h>
 #include <moveto_funcs.h>
 #include <invoke_funcs.h>
 
@@ -2952,21 +2951,6 @@ static GMenuItem fllist[] = {
     },
     .shortcut = H_("Preferences...|No Shortcut"),
     .invoke = MenuPrefs,
-    .mid = 0
-  },
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_X Resource Editor..."),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'e'
-    },
-    .shortcut = H_("X Resource Editor...|No Shortcut"),
-    .invoke = MenuXRes,
     .mid = 0
   },
 

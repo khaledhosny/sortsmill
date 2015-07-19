@@ -974,38 +974,6 @@ static GBox list_box = GBOX_EMPTY; /* Don't initialize here */;
 static FontInstance *list_font = NULL;
 static int glist_inited = false;
 
-static GTextInfo list_choices[] = {
-    { (uint32_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    GTEXTINFO_EMPTY
-};
-static GGadgetCreateData list_gcd[] = {
-    { GListCreate, { { 0, 0, 0, 36 }, NULL, 0, 0, 0, 0, 0, &list_choices[0], { list_choices }, gg_visible, NULL, NULL }, NULL, NULL },
-    { GListCreate, { { 0, 0, 0, 36 }, NULL, 0, 0, 0, 0, 0, &list_choices[0], { list_choices }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
-};
-static GGadgetCreateData *tarray[] = { GCD_Glue, &list_gcd[0], GCD_Glue, &list_gcd[1], GCD_Glue, NULL, NULL };
-static GGadgetCreateData listhvbox =
-    { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) tarray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
-static GResInfo glist_ri = {
-    NULL, &ggadget_ri,NULL, NULL,
-    &list_box,
-    &list_font,
-    &listhvbox,
-    NULL,
-    N_("List"),
-    N_("List"),
-    "GList",
-    "Gdraw",
-    false,
-    box_foreground_border_outer,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-
 static void GListInit() {
     _GGadgetCopyDefaultBox(&list_box);
     list_box.border_type = bt_box;
@@ -1221,15 +1189,4 @@ void GListSetSBAlwaysVisible(GGadget *g,int always) {
 
 void GListSetPopupCallback(GGadget *g,void (*callback)(GGadget *,int)) {
     ((GDList *) g)->popup_callback = callback;
-}
-
-GResInfo *_GListRIHead(void) {
-    int as,ds,ld;
-
-    if ( !glist_inited )
-	GListInit();
-    /* bp = GBoxBorderWidth(GDrawGetRoot(NULL),&list_box);*/	/* This gives bizarre values */
-    GDrawGetFontMetrics(GDrawGetRoot(NULL),list_font,&as, &ds, &ld);	/* I don't have a window yet... */
-    list_gcd[0].gd.pos.height = list_gcd[1].gd.pos.height = 2*(as+ds)+4;
-return( &glist_ri );
 }

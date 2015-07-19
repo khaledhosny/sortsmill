@@ -173,7 +173,6 @@ gdraw/gmatrixedit.c
 gdraw/gmenu.c
 gdraw/gprogress.c
 gdraw/gradio.c
-gdraw/gresedit.c
 gdraw/gsavefiledlg.c
 gdraw/gscrollbar.c
 gdraw/gtabset.c

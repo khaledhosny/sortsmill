@@ -56,25 +56,6 @@ static GBox hvgroup_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox hvbox_box = GBOX_EMPTY; /* Don't initialize here */
 static int ghvbox_inited = false;
 
-GResInfo ghvgroupbox_ri = {
-    NULL, &ggadget_ri, NULL, NULL,
-    &hvgroup_box,
-    NULL,
-    NULL,
-    NULL,
-    N_("HV Group Box"),
-    N_("A box drawn around other gadgets"),
-    "GGroup",
-    "Gdraw",
-    false,
-    omf_border_type|omf_border_shape|omf_padding|omf_main_background|omf_disabled_background,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-
 static void _GHVBox_Init(void) {
     if ( ghvbox_inited )
 return;
@@ -710,10 +691,4 @@ void GHVBoxFitWindowCentered(GGadget *g) {
 
 void GHVBoxReflow(GGadget *g) {
     GHVBoxResize(g, g->r.width, g->r.height);
-}
-
-GResInfo *_GHVBoxRIHead(void) {
-
-    _GHVBox_Init();
-return( &ghvgroupbox_ri );
 }

@@ -61,55 +61,6 @@ static Color gmatrixedit_frozencol = 0xa40000,
 	gmatrixedit_activecol = 0x3465a4, gmatrixedit_activebg = 0x88b2de;
 static int gmatrixedit_inited = false;
 
-static struct resed gmatrixedit_re[] = {
-    {N_("Title Background"), "TitleBG", rt_color, &gmatrixedit_title_bg, N_("Background color of column headers at the top of a matrix edit"), NULL, { 0 }, 0, 0 },
-    {N_("Title Text Color"), "TitleFG", rt_color, &gmatrixedit_title_fg, N_("Text color of column headers at the top of a matrix edit"), NULL, { 0 }, 0, 0 },
-    {N_("Title Divider Color"), "TitleDivider", rt_color, &gmatrixedit_title_divider, N_("Color of column dividers in the title section of a matrix edit"), NULL, { 0 }, 0, 0 },
-    {N_("Rule Color"), "RuleCol", rt_color, &gmatrixedit_rules, N_("Color of column dividers in the main section of a matrix edit"), NULL, { 0 }, 0, 0 },
-    {N_("Frozen Color"), "FrozenCol", rt_color, &gmatrixedit_frozencol, N_("Color of frozen (unchangeable) entries in the main section of a matrix edit"), NULL, { 0 }, 0, 0 },
-    {N_("Active Color"), "ActiveCol", rt_color, &gmatrixedit_activecol, N_("Color of the active entry in the main section of a matrix edit"), NULL, { 0 }, 0, 0 },
-    {N_("Active Background"), "ActiveBG", rt_color, &gmatrixedit_activebg, N_("Background color of the active entry in the main section of a matrix edit"), NULL, { 0 }, 0, 0 },
-    {N_("Title Font"), "TitleFont", rt_font, &gmatrixedit_titfont, N_("Font used to draw titles of a matrix edit"), NULL, { 0 }, 0, 0 },
-    RESED_EMPTY
-};
-static GResInfo gmatrixedit_ri = {
-    NULL, &ggadget_ri, NULL,NULL,
-    &gmatrixedit_box,
-    &gmatrixedit_font,
-    NULL,
-    gmatrixedit_re,
-    N_("Matrix Edit"),
-    N_("Matrix Edit (sort of like a spreadsheet)"),
-    "GMatrixEdit",
-    "Gdraw",
-    false,
-    omf_border_type|omf_border_width|omf_border_shape|omf_padding|
-	omf_main_background|omf_disabled_background,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-static GResInfo gmatrixedit2_ri = {
-    NULL, &ggadget_ri, &gmatrixedit_ri,NULL,
-    NULL,
-    NULL,
-    NULL,
-    gmatrixedit_re,
-    N_("Matrix Edit Continued"),
-    N_("Matrix Edit (sort of like a spreadsheet)"),
-    "GMatrixEdit",
-    "Gdraw",
-    false,
-    0,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-
 static void _GMatrixEdit_Init(void) {
     FontRequest rq;
 
@@ -2499,18 +2450,4 @@ void GMatrixEditSetEditable(GGadget *g, int editable ) {
     GGadgetSetVisible(gme->del,editable);
     GMatrixEdit_Resize(&gme->g,gme->g.r.width,gme->g.r.height);
     GDrawRequestExpose(gme->nested,NULL,false);
-}
-
-GResInfo *_GMatrixEditRIHead(void) {
-    /* GRect size; */
-
-    _GMatrixEdit_Init();
-    /* GDrawGetSize(GDrawGetRoot(NULL),&size);*/
-    if ( true /* size.height<900*/ ) {
-	gmatrixedit_ri.next = &gmatrixedit2_ri;
-	gmatrixedit_ri.extras = NULL;
-	gmatrixedit_ri.seealso1 = &gmatrixedit2_ri;
-    }
-
-return( &gmatrixedit_ri );
 }

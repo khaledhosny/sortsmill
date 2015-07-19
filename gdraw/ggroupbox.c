@@ -49,31 +49,6 @@ GBox _GGroup_LineBox = GBOX_EMPTY; /* Don't initialize here */
 static GBox group_box = GBOX_EMPTY; /* Don't initialize here */
 static int ggroup_inited = false;
 
-static GGadgetCreateData gline_gcd[] = {
-    { GLineCreate, { { 0, 0, 100, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { NULL }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
-};
-static GGadgetCreateData *larray[] = { GCD_Glue, &gline_gcd[0], GCD_Glue, NULL, NULL };
-static GGadgetCreateData linebox =
-    { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) larray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
-GResInfo gline_ri = {
-    NULL, &ggadget_ri, NULL, NULL,
-    &_GGroup_LineBox,
-    NULL,
-    &linebox,
-    NULL,
-    N_("Line"),
-    N_("A separator line drawn across a dialog or in a menu"),
-    "GLine",
-    "Gdraw",
-    false,
-    omf_border_type|omf_border_shape|omf_padding,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-
 void _GGroup_Init(void) {
     if ( ggroup_inited )
 return;
@@ -301,10 +276,4 @@ GGadget *GGroupCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     GGroupFit(g);
     _GGadget_FinalPosition(g,base,gd);
 return( g );
-}
-
-GResInfo *_GLineRIHead(void) {
-
-    _GGroup_Init();
-return( &gline_ri );
 }

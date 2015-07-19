@@ -55,7 +55,6 @@
 #include "annotations.h"
 #include <gfile.h>
 #include <gio.h>
-#include <gresedit.h>
 #include <ustring.h>
 #include <gkeysym.h>
 #include <utype.h>
@@ -1149,13 +1148,6 @@ MenuPrefs (GWindow UNUSED (base), struct gmenuitem *UNUSED (mi),
            GEvent *UNUSED (e))
 {
   DoPrefs ();
-}
-
-void
-MenuXRes (GWindow UNUSED (base), struct gmenuitem *UNUSED (mi),
-          GEvent *UNUSED (e))
-{
-  DoXRes ();
 }
 
 void
@@ -5971,20 +5963,6 @@ static GMenuItem fllist[] = {
 
     .shortcut = H_ ("Preferences...|No Shortcut"),
     .invoke = MenuPrefs,
-    .mid = 0},
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_X Resource Editor..."),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = true,
-      .text_is_1byte = true,
-      .text_has_mnemonic = true,
-      .mnemonic = 'e'},
-
-    .shortcut = H_ ("X Resource Editor...|No Shortcut"),
-    .invoke = MenuXRes,
     .mid = 0},
 
   GMENUITEM_LINE,
@@ -13048,32 +13026,16 @@ FontViewInit (void)
   mbDoGetText (fvpopupmenu);
 }
 
-static struct resed fontview_re[] = {
-  {N_("Glyph Info Color"), "GlyphInfoColor", rt_color, &fvglyphinfocol,
-   N_("Color of the font used to display glyph information in the fontview"),
-   NULL, {0}, 0, 0},
-  {N_("Empty Slot FG Color"), "EmptySlotFgColor", rt_color, &fvemtpyslotfgcol,
-   N_("Color used to draw the foreground of empty slots"), NULL, {0}, 0, 0},
-  {N_("Selected BG Color"), "SelectedColor", rt_color, &fvselcol,
-   N_("Color used to draw the background of selected glyphs"), NULL, {0}, 0,
-   0},
-  {N_("Selected FG Color"), "SelectedFgColor", rt_color, &fvselfgcol,
-   N_("Color used to draw the foreground of selected glyphs"), NULL, {0}, 0,
-   0},
-  {N_("Changed Color"), "ChangedColor", rt_color, &fvchangedcol,
-   N_("Color used to mark a changed glyph"), NULL, {0}, 0, 0},
-  {N_("Hinting Needed Color"), "HintingNeededColor", rt_color,
-   &fvhintingneededcol, N_("Color used to mark glyphs that need hinting"),
-   NULL, {0}, 0, 0},
-  {N_("Font Size"), "FontSize", rt_int, &fv_fontsize,
-   N_
-   ("Size (in points) of the font used to display information and glyph labels in the fontview"),
-   NULL, {0}, 0, 0},
-  {N_("Font Family"), "FontFamily", rt_stringlong, &fv_fontnames,
-   N_
-   ("A comma separated list of font family names used to display small example images of glyphs over the user designed glyphs"),
-   NULL, {0}, 0, 0},
-  RESED_EMPTY
+static GResStruct fontview_re[] = {
+  {"GlyphInfoColor", rt_color, &fvglyphinfocol, NULL, 0},
+  {"EmptySlotFgColor", rt_color, &fvemtpyslotfgcol, NULL, 0},
+  {"SelectedColor", rt_color, &fvselcol, NULL, 0},
+  {"SelectedFgColor", rt_color, &fvselfgcol, NULL, 0},
+  {"ChangedColor", rt_color, &fvchangedcol, NULL, 0},
+  {"HintingNeededColor", rt_color, &fvhintingneededcol, NULL, 0},
+  {"FontSize", rt_int, &fv_fontsize, NULL, 0},
+  {"FontFamily", rt_string, &fv_fontnames, NULL, 0},
+  GRESSTRUCT_EMPTY
 };
 
 static void
@@ -13183,7 +13145,7 @@ FontView_Create (SplineFont *sf, int hide)
 
   if (!fv_fs_init)
     {
-      GResEditFind (fontview_re, "FontView.");
+      GResourceFind (fontview_re, "FontView.");
       view_bgcol =
         GResourceFindColor ("View.Background", COLOR_CREATE (0xff, 0xff, 0xff));
       fv_fs_init = true;
@@ -13396,51 +13358,6 @@ struct fv_interface gdraw_fv_interface = {
   (void (*)(FontViewBase *, int)) FVScrollToChar,
   (void (*)(FontViewBase *, int)) FV_ChangeGID,
   SF_CloseAllInstrs
-};
-
-extern GResInfo charview_ri;
-static struct resed view_re[] = {
-  {N_("Color|Background"), "Background", rt_color, &view_bgcol,
-   N_("Background color for the drawing area of all views"), NULL, {0}, 0, 0},
-  RESED_EMPTY
-};
-
-GResInfo view_ri = {
-  NULL, NULL, NULL, NULL,
-  NULL,
-  NULL,
-  NULL,
-  view_re,
-  N_("View"),
-  N_("This is an abstract class which defines common features of the\nFontView, CharView, BitmapView and MetricsView"),
-  "View",
-  "FontForge",
-  false,
-  0,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
-};
-
-GResInfo fontview_ri = {
-  &charview_ri, NULL, NULL, NULL,
-  NULL,
-  NULL,
-  NULL,
-  fontview_re,
-  N_("FontView"),
-  N_("This is the main fontforge window displaying a font"),
-  "FontView",
-  "FontForge",
-  false,
-  0,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
 };
 
 /* ************************************************************************** */

@@ -92,57 +92,6 @@ static enum
 /*  While in Suse PPC X, the command key is 0x8 (meta) and option is 0x2000 */
 /*  and the standard mac option conversions are done */
 
-static GResInfo gmenu_ri;
-
-static GResInfo gmenubar_ri = {
-  &gmenu_ri,
-  &ggadget_ri,
-  &gmenu_ri,
-  NULL,
-  &menubar_box,
-  &menubar_font,
-  NULL,
-  NULL,
-  N_("Menu Bar"),
-  N_("Menu Bar"),
-  "GMenuBar",
-  "Gdraw",
-  false,
-  omf_border_shape | omf_border_width | box_foreground_border_outer,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
-};
-
-static struct resed menu_re[] = {
-  {N_("MacIcons"), "MacIcons", rt_bool, &mac_menu_icons,
-   N_
-   ("Whether to use mac-like icons to indicate modifiers (for instance ^ for Control)\nor to use an abbreviation (for instance \"Cnt-\")"),
-   NULL, {0}, 0, 0},
-  RESED_EMPTY
-};
-
-static GResInfo gmenu_ri = {
-  NULL, &ggadget_ri, &gmenubar_ri, NULL,
-  &menu_box,
-  &menu_font,
-  NULL,
-  menu_re,
-  N_("Menu"),
-  N_("Menu"),
-  "GMenu",
-  "Gdraw",
-  false,
-  omf_border_shape | omf_padding | box_foreground_border_outer,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
-};
-
 static void GMenuBarChangeSelection (GMenuBar * mb, int newsel, GEvent *);
 static struct gmenu *GMenuCreateSubMenu (struct gmenu *parent, GMenuItem *mi,
                                          int disable);
@@ -2086,14 +2035,6 @@ VISIBLE int
 GMenuMask (void)
 {
   return menumask;
-}
-
-GResInfo *
-_GMenuRIHead (void)
-{
-  if (!gmenubar_inited)
-    GMenuInit ();
-  return &gmenubar_ri;
 }
 
 int

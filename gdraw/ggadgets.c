@@ -82,130 +82,6 @@ static int _ggadget_inited = 0;
 static Color popup_foreground = 0x222222, popup_background = 0xe7f3fd;
 static int popup_delay = 1000, popup_lifetime = 20000;
 
-static GResInfo popup_ri;
-static struct resed ggadget_re[] = {
-  {N_("Text Image Skip"), "TextImageSkip", rt_int, &_GGadget_TextImageSkip,
-   N_
-   ("Space (in points) left between images and text in labels, buttons, menu items, etc. which have both"),
-   NULL, {0}, 0, 0},
-  {N_("Image Path"), "ImagePath", rt_stringlong, &_GGadget_ImagePath,
-   N_("List of directories to search for images, separated by colons"), NULL,
-   {0}, 0, 0},
-  RESED_EMPTY
-};
-
-GResInfo ggadget_ri = {
-  &listmark_ri, NULL, NULL, NULL,
-  &_ggadget_Default_Box,
-  &_ggadget_default_font,
-  NULL,
-  ggadget_re,
-  N_("GGadget"),
-  N_("This is an \"abstract\" gadget. It will never appear on the screen\nbut it is the root of gadget tree from which all others inherit"),
-  "GGadget",
-  "Gdraw",
-  false,
-  0,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
-};
-
-static struct resed popup_re[] = {
-  {N_("Color|Foreground"), "Foreground", rt_color, &popup_foreground,
-   N_("Text color for popup windows"), NULL, {0}, 0, 0},
-  {N_("Color|Background"), "Background", rt_color, &popup_background,
-   N_("Background color for popup windows"), NULL, {0}, 0, 0},
-  {N_("Delay"), "Delay", rt_int, &popup_delay,
-   N_("Delay (in milliseconds) before popup windows appear"), NULL, {0}, 0,
-   0},
-  {N_("Life Time"), "LifeTime", rt_int, &popup_lifetime,
-   N_("Time (in milliseconds) that popup windows remain visible"), NULL, {0},
-   0, 0},
-  RESED_EMPTY
-};
-
-static void popup_refresh (void);
-static GResInfo popup_ri = {
-  &ggadget_ri, NULL, NULL, NULL,
-  NULL,                         /* No box */
-  &popup_font,
-  NULL,
-  popup_re,
-  N_("Popup"),
-  N_("Popup windows"),
-  "GGadget.Popup",
-  "Gdraw",
-  false,
-  omf_refresh,
-  NULL,
-  GBOX_EMPTY,
-  popup_refresh,
-  NULL,
-  NULL
-};
-
-static struct resed listmark_re[] = {
-  {N_("Image"), "Image", rt_image, &_GListMark_Image,
-   N_("Image used for enabled listmarks (overrides the box)"), NULL, {0}, 0,
-   0},
-  {N_("Disabled Image"), "DisabledImage", rt_image, &_GListMark_DisImage,
-   N_("Image used for disabled listmarks (overrides the box)"), NULL, {0}, 0,
-   0},
-  {N_("Width"), "Width", rt_int, &_GListMarkSize, N_("Size of the list mark"),
-   NULL, {0}, 0, 0},
-  RESED_EMPTY
-};
-
-static GTextInfo list_choices[] = {
-  {(uint32_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {(uint32_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {(uint32_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  GTEXTINFO_EMPTY
-};
-
-static GGadgetCreateData droplist_gcd[] = {
-  {GListFieldCreate,
-   {{0, 0, 80, 0}, NULL, 0, 0, 0, 0, 0, &list_choices[0], {list_choices},
-    gg_visible, NULL, NULL}, NULL, NULL},
-  {GListFieldCreate,
-   {{0, 0, 80, 0}, NULL, 0, 0, 0, 0, 0, &list_choices[1], {list_choices},
-    gg_visible | gg_enabled, NULL, NULL}, NULL, NULL}
-};
-
-static GGadgetCreateData *dlarray[] =
-  { GCD_Glue, &droplist_gcd[0], GCD_Glue, &droplist_gcd[1], GCD_Glue, NULL,
-  NULL
-};
-static GGadgetCreateData droplistbox =
-  { GHVGroupCreate, {{2, 2, 0, 0}, NULL, 0, 0, 0, 0, 0, NULL,
-                     {(GTextInfo *) dlarray}, gg_visible | gg_enabled, NULL,
-                     NULL}, NULL, NULL
-};
-
-GResInfo listmark_ri = {
-  NULL, &ggadget_ri, NULL, NULL,
-  &_GListMark_Box,              /* No box */
-  NULL,
-  &droplistbox,
-  listmark_re,
-  N_("List Mark"),
-  N_("This is the mark that differentiates ComboBoxes and ListButtons\n"
-     "from TextFields and normal Buttons."),
-  "GListMark",
-  "Gdraw",
-  false,
-  omf_border_width | omf_padding,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
-};
-
-
 static GWindow popup;
 static GDTimer *popup_timer, *popup_vanish_timer;
 static int popup_visible = false;
@@ -849,15 +725,6 @@ GGadgetPreparePopupImage (GWindow base, const uint32_t *msg, const void *data,
   popup_within.x = pt.x;
   popup_within.y = pt.y;
   popup_timer = GDrawRequestTimer (popup, popup_delay, 0, (void *) msg);
-}
-
-static void
-popup_refresh (void)
-{
-  if (popup != NULL)
-    {
-      GDrawSetWindowBackground (popup, popup_background);
-    }
 }
 
 void
@@ -1784,13 +1651,4 @@ void
 GGadgetTakesKeyboard (GGadget *g, int takes_keyboard)
 {
   g->takes_keyboard = takes_keyboard;
-}
-
-GResInfo *
-_GGadgetRIHead (void)
-{
-
-  if (!_ggadget_inited)
-    GGadgetInit ();
-  return (&popup_ri);
 }

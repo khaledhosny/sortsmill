@@ -65,7 +65,6 @@ noinst_HEADERS += gimage.h
 noinst_HEADERS += gio.h
 noinst_HEADERS += gkeysym.h
 noinst_HEADERS += gprogress.h
-noinst_HEADERS += gresedit.h
 noinst_HEADERS += gresource.h
 noinst_HEADERS += gwidget.h
 noinst_HEADERS += ustring.h

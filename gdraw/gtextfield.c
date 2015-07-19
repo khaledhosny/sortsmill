@@ -61,92 +61,6 @@ static GBox gnumericfield_box = GBOX_EMPTY; /* Don't initialize here */
 FontInstance *_gtextfield_font = NULL;
 static int gtextfield_inited = false;
 
-static GResInfo listfield_ri, numericfield_ri;
-static GTextInfo text_lab[] = {
-    { (uint32_t *) "Disabled", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) "Enabled" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
-};
-static GTextInfo list_choices[] = {
-    { (uint32_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    GTEXTINFO_EMPTY
-};
-static GGadgetCreateData text_gcd[] = {
-    { GTextFieldCreate, { { 0, 0, 70, 0 }, NULL, 0, 0, 0, 0, 0, &text_lab[0], { NULL }, gg_visible, NULL, NULL }, NULL, NULL },
-    { GTextFieldCreate, { { 0, 0, 70, 0 }, NULL, 0, 0, 0, 0, 0, &text_lab[1], { NULL }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
-};
-static GGadgetCreateData *tarray[] = { GCD_Glue, &text_gcd[0], GCD_Glue, &text_gcd[1], GCD_Glue, NULL, NULL };
-static GGadgetCreateData textbox =
-    { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) tarray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
-static GResInfo gtextfield_ri = {
-    &listfield_ri, &ggadget_ri,NULL, NULL,
-    &gtextfield_box,
-    &_gtextfield_font,
-    &textbox,
-    NULL,
-    N_("Text Field"),
-    N_("Text Field"),
-    "GTextField",
-    "Gdraw",
-    false,
-    omf_font|omf_padding,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-static GGadgetCreateData textlist_gcd[] = {
-    { GListFieldCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, &text_lab[0], { list_choices }, gg_visible, NULL, NULL }, NULL, NULL },
-    { GListFieldCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, &text_lab[1], { list_choices }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
-};
-static GGadgetCreateData *tlarray[] = { GCD_Glue, &textlist_gcd[0], GCD_Glue, &textlist_gcd[1], GCD_Glue, NULL, NULL };
-static GGadgetCreateData textlistbox =
-    { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) tlarray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
-static GResInfo listfield_ri = {
-    &numericfield_ri, &gtextfield_ri, &listmark_ri, NULL,
-    &glistfield_box,
-    NULL,
-    &textlistbox,
-    NULL,
-    N_("List Field"),
-    N_("List Field (Combo Box)"),
-    "GComboBox",
-    "Gdraw",
-    false,
-    0,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-static GGadgetCreateData num_gcd[] = {
-    { GNumericFieldCreate, { { 0, 0, 50, 0 }, NULL, 0, 0, 0, 0, 0, &list_choices[0], { NULL }, gg_visible, NULL, NULL }, NULL, NULL },
-    { GNumericFieldCreate, { { 0, 0, 50, 0 }, NULL, 0, 0, 0, 0, 0, &list_choices[0], { NULL }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
-};
-static GGadgetCreateData *narray[] = { GCD_Glue, &num_gcd[0], GCD_Glue, &num_gcd[1], GCD_Glue, NULL, NULL };
-static GGadgetCreateData numbox =
-    { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) narray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
-static GResInfo numericfield_ri = {
-    NULL, &gtextfield_ri, NULL, NULL,
-    &gnumericfield_box,
-    NULL,
-    &numbox,
-    NULL,
-    N_("Numeric Field"),
-    N_("Numeric Field (Spinner)"),
-    "GNumericField",
-    "Gdraw",
-    false,
-    0,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
 
 static uint32_t nullstr[] = { 0 }, nstr[] = { 'n', 0 },
 	newlinestr[] = { '\n', 0 }, tabstr[] = { '\t', 0 };
@@ -3144,11 +3058,4 @@ void GCompletionFieldSetCompletion(GGadget *g,GTextCompletionHandler completion)
 
 void GCompletionFieldSetCompletionMode(GGadget *g,int enabled) {
     ((GTextField *) g)->was_completing = enabled;
-}
-
-GResInfo *_GTextFieldRIHead(void) {
-
-    if ( !gtextfield_inited )
-	GTextFieldInit();
-return( &gtextfield_ri );
 }

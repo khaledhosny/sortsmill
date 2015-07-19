@@ -44,7 +44,6 @@
 #include "fontforgeui.h"
 #include <gkeysym.h>
 #include <gresource.h>
-#include <gresedit.h>
 #include <string.h>
 #include <ustring.h>
 #include <utype.h>
@@ -4089,19 +4088,6 @@ static GMenuItem fllist[] = {
     .invoke = MenuPrefs
   },
 
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_X Resource Editor..."),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = true,
-      .text_is_1byte = true,
-      .text_has_mnemonic = true,
-      .mnemonic = 'e' },
-    .shortcut = H_("X Resource Editor...|No Shortcut"),
-    .invoke = MenuXRes
-  },
-
   GMENUITEM_LINE,
 
   {
@@ -7480,39 +7466,4 @@ struct mv_interface gdraw_mv_interface = {
   MV_ReKernAll,
   MV_ReFeatureAll,
   MV_CloseAll
-};
-
-static struct resed metricsview_re[] = {
-  {N_("Advance Width Col"), "AdvanceWidthColor", rt_color, &widthcol,
-   N_("Color used to draw the advance width line of a glyph"), NULL, {0}, 0, 0},
-  {N_("Italic Advance Col"), "ItalicAdvanceColor", rt_color, &widthcol,
-   N_("Color used to draw the italic advance width line of a glyph"), NULL, {0},
-   0, 0},
-  {N_("Kern Line Color"), "KernLineColor", rt_color, &kernlinecol,
-   N_("Color used to draw the kerning line"), NULL, {0}, 0, 0},
-  {N_("Side Bearing Color"), "SideBearingLineColor", rt_color, &rbearinglinecol,
-   N_("Color used to draw the left side bearing"), NULL, {0}, 0, 0},
-  {N_("Selected Glyph Col"), "SelectedGlyphColor", rt_color, &selglyphcol,
-   N_("Color used to mark the selected glyph"), NULL, {0}, 0, 0},
-  RESED_EMPTY
-};
-
-extern GResInfo view_ri;
-GResInfo metricsview_ri = {
-  &view_ri, NULL, NULL, NULL,
-  NULL,
-  NULL,
-  NULL,
-  metricsview_re,
-  N_("MetricsView"),
-  N_("This window displays metrics information about a font"),
-  "MetricsView",
-  "FontForge",
-  false,
-  0,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
 };

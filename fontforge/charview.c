@@ -54,7 +54,6 @@
 #include <ustring.h>
 #include <utype.h>
 #include <gresource.h>
-#include <gresedit.h>
 #include <moveto_funcs.h>
 #include <invoke_funcs.h>
 extern int _GScrollBar_Width;
@@ -167,155 +166,61 @@ static Color rulerbigtickcol = 0x008000;
 static Color previewfillcol = 0x0f0f0f;
 
 static int cvcolsinited = false;
-static struct resed charview_re[] = {
-  {N_("Point Color"), "PointColor", rt_color, &pointcol,
-   N_("The color of an on-curve point"), NULL, {0}, 0, 0},
-  {N_("First Point Color"), "FirstPointColor", rt_color, &firstpointcol,
-   N_("The color of the point which is the start of a contour"), NULL, {0}, 0,
-   0},
-  {N_("Selected Point Color"), "SelectedPointColor", rt_color,
-   &selectedpointcol, N_("The color of a selected point"), NULL, {0}, 0, 0},
-  {N_("Selected Point Width"), "SelectedPointWidth", rt_int,
-   &selectedpointwidth,
-   N_("The width of the line used to draw selected points"), NULL, {0}, 0, 0},
-  {N_("Extrema Point Color"), "ExtremePointColor", rt_color, &extremepointcol,
-   N_("The color used to draw points at extrema (if that mode is active)"),
-   NULL, {0}, 0, 0},
-  {N_("Point of Inflection Color"), "PointOfInflectionColor", rt_color,
-   &pointofinflectioncol,
-   N_("The color used to draw points of inflection (if that mode is active)"),
-   NULL, {0}, 0, 0},
-  {N_("Almost H/V Color"), "AlmostHVColor", rt_color, &almosthvcol,
-   N_
-   ("The color used to draw markers for splines which are almost, but not quite horizontal or vertical at their end-points"),
-   NULL, {0}, 0, 0},
-  {N_("Next CP Color"), "NextCPColor", rt_color, &nextcpcol,
-   N_("The color used to draw the \"next\" control point of an on-curve point"),
-   NULL, {0}, 0, 0},
-  {N_("Prev CP Color"), "PrevCPColor", rt_color, &prevcpcol,
-   N_
-   ("The color used to draw the \"previous\" control point of an on-curve point"),
-   NULL, {0}, 0, 0},
-  {N_("Selected CP Color"), "SelectedCPColor", rt_color, &selectedcpcol,
-   N_("The color used to draw a selected control point of an on-curve point"),
-   NULL, {0}, 0, 0},
-  {N_("Coordinate Line Color"), "CoordinateLineColor", rt_color, &coordcol,
-   NULL, NULL, {0}, 0, 0},
-  {N_("Italic Coord. Color"), "ItalicCoordColor", rt_color, &italiccoordcol,
-   NULL, NULL, {0}, 0, 0},
-  {N_("Metrics Label Color"), "MetricsLabelColor", rt_color, &metricslabelcol,
-   NULL, NULL, {0}, 0, 0},
-  {N_("Hint Label Color"), "HintLabelColor", rt_color, &hintlabelcol, NULL,
-   NULL, {0}, 0, 0},
-  {N_("Blue Values Color"), "BlueValuesStippledColor", rt_coloralpha,
-   &bluevalstipplecol,
-   N_
-   ("The color used to mark blue zones in the blue values entry of the private dictionary"),
-   NULL, {0}, 0, 0},
-  {N_("Family Blue Color"), "FamilyBlueStippledColor", rt_coloralpha,
-   &fambluestipplecol,
-   N_
-   ("The color used to mark blue zones in the family blues entry of the private dictionary"),
-   NULL, {0}, 0, 0},
-  {N_("Diagonal Hint Color"), "DHintColor", rt_coloralpha, &dhintcol,
-   N_("The color used to draw diagonal hints"), NULL, {0}, 0, 0},
-  {N_("Horiz. Hint Color"), "HHintColor", rt_coloralpha, &hhintcol,
-   N_("The color used to draw horizontal hints"), NULL, {0}, 0, 0},
-  {N_("Vert. Hint Color"), "VHintColor", rt_coloralpha, &vhintcol,
-   N_("The color used to draw vertical hints"), NULL, {0}, 0, 0},
-  {N_("HFlex Hint Color"), "HFlexHintColor", rt_color, &hflexhintcol, NULL,
-   NULL, {0}, 0, 0},
-  {N_("VFlex Hint Color"), "VFlexHintColor", rt_color, &vflexhintcol, NULL,
-   NULL, {0}, 0, 0},
-  {N_("Conflict Hint Color"), "ConflictHintColor", rt_color, &conflicthintcol,
-   N_("The color used to draw a hint which conflicts with another"), NULL,
-   {0}, 0, 0},
-  {N_("HHint Active Color"), "HHintActiveColor", rt_color, &hhintactivecol,
-   N_
-   ("The color used to draw the active horizontal hint which the Review Hints dialog is examining"),
-   NULL, {0}, 0, 0},
-  {N_("VHint Active Color"), "VHintActiveColor", rt_color, &vhintactivecol,
-   N_
-   ("The color used to draw the active vertical hint which the Review Hints dialog is examining"),
-   NULL, {0}, 0, 0},
-  RESED_EMPTY
+static GResStruct charview_re[] = {
+  {"PointColor", rt_color, &pointcol, NULL, 0},
+  {"FirstPointColor", rt_color, &firstpointcol, NULL, 0},
+  {"SelectedPointColor", rt_color, &selectedpointcol, NULL, 0},
+  {"SelectedPointWidth", rt_int, &selectedpointwidth, NULL, 0},
+  {"ExtremePointColor", rt_color, &extremepointcol, NULL, 0},
+  {"PointOfInflectionColor", rt_color, &pointofinflectioncol, NULL, 0},
+  {"AlmostHVColor", rt_color, &almosthvcol, NULL, 0},
+  {"NextCPColor", rt_color, &nextcpcol, NULL, 0},
+  {"PrevCPColor", rt_color, &prevcpcol, NULL, 0},
+  {"SelectedCPColor", rt_color, &selectedcpcol, NULL, 0},
+  {"CoordinateLineColor", rt_color, &coordcol, NULL, 0},
+  {"ItalicCoordColor", rt_color, &italiccoordcol, NULL, 0},
+  {"MetricsLabelColor", rt_color, &metricslabelcol, NULL, 0},
+  {"HintLabelColor", rt_color, &hintlabelcol, NULL, 0},
+  {"BlueValuesStippledColor", rt_color, &bluevalstipplecol, NULL, 0},
+  {"FamilyBlueStippledColor", rt_color, &fambluestipplecol, NULL, 0},
+  {"DHintColor", rt_color, &dhintcol, NULL, 0},
+  {"HHintColor", rt_color, &hhintcol, NULL, 0},
+  {"VHintColor", rt_color, &vhintcol, NULL, 0},
+  {"HFlexHintColor", rt_color, &hflexhintcol, NULL, 0},
+  {"VFlexHintColor", rt_color, &vflexhintcol, NULL, 0},
+  {"ConflictHintColor", rt_color, &conflicthintcol, NULL, 0},
+  {"HHintActiveColor", rt_color, &hhintactivecol, NULL, 0},
+  {"VHintActiveColor", rt_color, &vhintactivecol, NULL, 0},
+  GRESSTRUCT_EMPTY
 };
 
-static struct resed charview2_re[] = {
-  {N_("Width Color"), "WidthColor", rt_color, &widthcol,
-   N_("The color of the line marking the advance width"), NULL, {0}, 0, 0},
-  {N_("Selected Width Color"), "WidthSelColor", rt_color, &widthselcol,
-   N_("The color of the line marking the advance width when it is selected"),
-   NULL, {0}, 0, 0},
-  {N_("Grid Fit Width Color"), "GridFitWidthColor", rt_color,
-   &widthgridfitcol,
-   N_("The color of the line marking the grid-fit advance width"), NULL, {0},
-   0, 0},
-  {N_("Ligature Caret Color"), "LigatureCaretColor", rt_color, &lcaretcol,
-   N_("The color of the line(s) marking ligature carets"), NULL, {0}, 0, 0},
-  {N_("Anchor Color"), "AnchorColor", rt_color, &anchorcol,
-   N_("The color of anchor stars"), NULL, {0}, 0, 0},
-  {N_("Anchored Line Color"), "AnchoredOutlineColor", rt_color,
-   &anchoredoutlinecol,
-   N_
-   ("The color of another glyph drawn in the current view to show where it would be placed by an anchor lookup"),
-   NULL, {0}, 0, 0},
-  {N_("Template Color"), "TemplateOutlineColor", rt_color,
-   &templateoutlinecol, NULL, NULL, {0}, 0, 0},
-  {N_("Old Outline Color"), "OldOutlineColor", rt_color, &oldoutlinecol, NULL,
-   NULL, {0}, 0, 0},
-  {N_("Original Color"), "TransformOriginColor", rt_color,
-   &transformorigincol, NULL, NULL, {0}, 0, 0},
-  {N_("Guide Layer Color"), "GuideOutlineColor", rt_color, &guideoutlinecol,
-   NULL, NULL, {0}, 0, 0},
-  {N_("Grid Fit Color"), "GridFitOutlineColor", rt_color, &gridfitoutlinecol,
-   N_("The color of grid-fit outlines"), NULL, {0}, 0, 0},
-  {N_("Inactive Layer Color"), "BackgroundOutlineColor", rt_color,
-   &backoutlinecol, N_("The color of outlines in inactive layers"), NULL, {0},
-   0, 0},
-  {N_("Active Layer Color"), "ForegroundOutlineColor", rt_color,
-   &foreoutlinecol, N_("The color of outlines in the active layer"), NULL,
-   {0}, 0, 0},
-  {N_("Clip Path Color"), "ClipPathColor", rt_color, &clippathcol,
-   N_("The color of the clip path"), NULL, {0}, 0, 0},
-  {N_("Background Image Color"), "BackgroundImageColor", rt_coloralpha,
-   &backimagecol,
-   N_
-   ("The color used to draw bitmap (single bit) images which do not specify a clut"),
-   NULL, {0}, 0, 0},
-  {N_("Fill Color"), "FillColor", rt_coloralpha, &fillcol,
-   N_("The color used to fill the outline if that mode is active"), NULL, {0},
-   0, 0},
-  {N_("Preview Fill Color"), "PreviewFillColor", rt_coloralpha,
-   &previewfillcol,
-   N_("The color used to fill the outline when in preview mode"), NULL, {0},
-   0, 0},
-  {N_("Trace Color"), "TraceColor", rt_color, &tracecol, NULL, NULL, {0}, 0,
-   0},
-  {N_("Raster Color"), "RasterColor", rt_coloralpha, &rastercol,
-   N_("The color of grid-fit (and other) raster blocks"), NULL, {0}, 0, 0},
-  {N_("Raster New Color"), "RasterNewColor", rt_coloralpha, &rasternewcol,
-   N_
-   ("The color of raster blocks which have just been turned on (in the debugger when an instruction moves a point)"),
-   NULL, {0}, 0, 0},
-  {N_("Raster Old Color"), "RasterOldColor", rt_coloralpha, &rasteroldcol,
-   N_
-   ("The color of raster blocks which have just been turned off (in the debugger when an instruction moves a point)"),
-   NULL, {0}, 0, 0},
-  {N_("Raster Grid Color"), "RasterGridColor", rt_coloralpha, &rastergridcol,
-   NULL, NULL, {0}, 0, 0},
-  {N_("Raster Dark Color"), "RasterDarkColor", rt_coloralpha, &rasterdarkcol,
-   N_
-   ("When debugging in grey-scale this is the color of a raster block which is fully covered."),
-   NULL, {0}, 0, 0},
-  {N_("Delta Grid Color"), "DeltaGridColor", rt_color, &deltagridcol,
-   N_("Indicates a notable grid pixel when suggesting deltas."), NULL, {0}, 0,
-   0},
-  {N_("Ruler Big Tick Color"), "RulerBigTickColor", rt_color,
-   &rulerbigtickcol,
-   N_("The color used to draw the large tick marks in rulers."), NULL, {0}, 0,
-   0},
-  RESED_EMPTY
+static GResStruct charview2_re[] = {
+  {"WidthColor", rt_color, &widthcol, NULL, 0},
+  {"WidthSelColor", rt_color, &widthselcol, NULL, 0},
+  {"GridFitWidthColor", rt_color, &widthgridfitcol, NULL, 0},
+  {"LigatureCaretColor", rt_color, &lcaretcol, NULL, 0},
+  {"AnchorColor", rt_color, &anchorcol, NULL, 0},
+  {"AnchoredOutlineColor", rt_color, &anchoredoutlinecol, NULL, 0},
+  {"TemplateOutlineColor", rt_color, &templateoutlinecol, NULL, 0},
+  {"OldOutlineColor", rt_color, &oldoutlinecol, NULL, 0},
+  {"TransformOriginColor", rt_color, &transformorigincol, NULL, 0},
+  {"GuideOutlineColor", rt_color, &guideoutlinecol, NULL, 0},
+  {"GridFitOutlineColor", rt_color, &gridfitoutlinecol, NULL, 0},
+  {"BackgroundOutlineColor", rt_color, &backoutlinecol, NULL, 0},
+  {"ForegroundOutlineColor", rt_color, &foreoutlinecol, NULL, 0},
+  {"ClipPathColor", rt_color, &clippathcol, NULL, 0},
+  {"BackgroundImageColor", rt_color, &backimagecol, NULL, 0},
+  {"FillColor", rt_color, &fillcol, NULL, 0},
+  {"PreviewFillColor", rt_color, &previewfillcol, NULL, 0},
+  {"TraceColor", rt_color, &tracecol, NULL, 0},
+  {"RasterColor", rt_color, &rastercol, NULL, 0},
+  {"RasterNewColor", rt_color, &rasternewcol, NULL, 0},
+  {"RasterOldColor", rt_color, &rasteroldcol, NULL, 0},
+  {"RasterGridColor", rt_color, &rastergridcol, NULL, 0},
+  {"RasterDarkColor", rt_color, &rasterdarkcol, NULL, 0},
+  {"DeltaGridColor", rt_color, &deltagridcol, NULL, 0},
+  {"RulerBigTickColor", rt_color, &rulerbigtickcol, NULL, 0},
+  GRESSTRUCT_EMPTY
 };
 
 /* return 1 if anything changed */
@@ -361,8 +266,8 @@ CVColInit (void)
 {
   if (cvcolsinited)
     return;
-  GResEditFind (charview_re, "CharView.");
-  GResEditFind (charview2_re, "CharView.");
+  GResourceFind (charview_re, "CharView.");
+  GResourceFind (charview2_re, "CharView.");
   cvcolsinited = true;
 
   if (GResourceFindColor ("CharView.PreviewFillColor", COLOR_UNKNOWN) ==
@@ -12337,21 +12242,6 @@ static GMenuItem fllist[] = {
     .mid = 0
   },
 
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_X Resource Editor..."),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'X'
-    },
-    .shortcut = H_ ("X Resource Editor...|No Shortcut"),
-    .invoke = MenuXRes,
-    .mid = 0
-  },
-
   GMENUITEM_LINE,
 
   {
@@ -17232,43 +17122,4 @@ struct cv_interface gdraw_cv_interface = {
   (void (*)(CharViewBase *, int)) _CV_CharChangedUpdate,
   UI_CVGlyphRenameFixup,
   CV_LayerPaletteCheck
-};
-
-extern GResInfo metricsview_ri;
-GResInfo charview2_ri = {
-  &metricsview_ri, NULL, NULL, NULL,
-  NULL,
-  NULL,
-  NULL,
-  charview2_re,
-  N_("Outline View 2"),
-  N_("This window displays a single outline glyph (more data)"),
-  "CharView",
-  "FontForge",
-  false,
-  0,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
-};
-
-GResInfo charview_ri = {
-  &charview2_ri, NULL, NULL, NULL,
-  NULL,
-  NULL,
-  NULL,
-  charview_re,
-  N_("Outline View"),
-  N_("This window displays a single outline glyph"),
-  "CharView",
-  "FontForge",
-  false,
-  0,
-  NULL,
-  GBOX_EMPTY,
-  NULL,
-  NULL,
-  NULL
 };

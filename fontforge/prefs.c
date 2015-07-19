@@ -46,7 +46,6 @@
 #include "groups.h"
 #include <gfile.h>
 #include <gresource.h>
-#include <gresedit.h>
 #include <ustring.h>
 #include <gkeysym.h>
 
@@ -2360,24 +2359,6 @@ struct prefs_interface gdraw_prefs_interface = {
   PrefsUI_getFontForgeShareDir,
   PrefsUI_SetDefaults
 };
-
-static void
-change_res_filename (const char *newname)
-{
-  free (xdefs_filename);
-  xdefs_filename = xstrdup_or_null (newname);
-  SavePrefs (true);
-}
-
-void
-DoXRes (void)
-{
-  extern GResInfo fontview_ri;
-
-  MVColInit ();
-  CVColInit ();
-  GResEdit (&fontview_ri, xdefs_filename, change_res_filename);
-}
 
 struct prefs_list pointer_dialog_list[] = {
   {N_("ArrowMoveSize"), pr_real, &arrowAmount, NULL, NULL, '\0', NULL, 0,

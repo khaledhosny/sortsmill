@@ -53,46 +53,6 @@ static GBox gvtabset_box = GBOX_EMPTY; /* Don't initialize here */
 static FontInstance *gtabset_font = NULL;
 static int gtabset_inited = false;
 
-static GResInfo gtabset_ri, gvtabset_ri;
-
-static GResInfo gtabset_ri = {
-    &gvtabset_ri, &ggadget_ri, &gvtabset_ri, NULL,
-    &gtabset_box,
-    NULL,
-    NULL,
-    NULL,
-    N_("TabSet"),
-    N_("Tab Set"),
-    "GTabSet",
-    "Gdraw",
-    false,
-    omf_border_width|omf_border_shape,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-
-/* Dummy gadget for styling vertical layout */
-static GResInfo gvtabset_ri = {
-    NULL, &gtabset_ri, &gtabset_ri, NULL,
-    &gvtabset_box,
-    NULL,
-    NULL,
-    NULL,
-    N_("VerticalTabSet"),
-    N_("Vertical Tab Set"),
-    "GVTabSet",
-    "Gdraw",
-    false,
-    0,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
 #define NEST_INDENT	4
 
 static void GTabSetInit() {
@@ -1036,10 +996,4 @@ void GTabSetRemoveTabByName(GGadget *g, char *name) {
     }
 
     free(uname);
-}
-
-GResInfo *_GTabSetRIHead(void) {
-    if ( !gtabset_inited )
-	GTabSetInit();
-return( &gtabset_ri );
 }

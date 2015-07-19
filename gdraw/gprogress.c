@@ -203,31 +203,6 @@ return( true );
 }
 
 /* ************************************************************************** */
-static struct resed progress_re[] = {
-    {N_("Color|Foreground"), "Foreground", rt_color, &progress_foreground, N_("Text color for progress windows"), NULL, { 0 }, 0, 0 },
-    {N_("Color|FillColor"), "FillColor", rt_color, &progress_fillcol, N_("Color used to draw the progress bar"), NULL, { 0 }, 0, 0 },
-    {N_("Color|Background"), "Background", rt_color, &progress_background, N_("Background color for progress windows"), NULL, { 0 }, 0, 0 },
-    RESED_EMPTY
-};
-static GResInfo progress_ri = {
-    NULL, NULL, NULL,NULL,
-    NULL,	/* No box */
-    &progress_font,
-    NULL,
-    progress_re,
-    N_("Progress"),
-    N_("Popup windows"),
-    "GProgress",
-    "Gdraw",
-    false,
-    0,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-
 static void GProgressResInit(void) {
     if ( !progress_init ) {
 	progress_foreground = GResourceFindColor("GProgress.Foreground",
@@ -502,11 +477,4 @@ void GProgressChangeLine2_8(const char *line2) {
     uint32_t *l2 = utf82u_copy(line2);
     GProgressChangeLine2(l2);
     free(l2);
-}
-
-GResInfo *_GProgressRIHead(void) {
-
-    if ( !progress_init )
-	GProgressResInit();
-return( &progress_ri );
 }

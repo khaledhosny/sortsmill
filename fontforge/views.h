@@ -860,7 +860,6 @@ void FVRegenChar (FontView *fv, SplineChar *sc);
 FontView *FontNew (void);
 void _MenuWarnings (GWindow gw, struct gmenuitem *mi, GEvent *e);
 void MenuPrefs (GWindow base, struct gmenuitem *mi, GEvent *e);
-void MenuXRes (GWindow base, struct gmenuitem *mi, GEvent *e);
 void MenuSaveAll (GWindow base, struct gmenuitem *mi, GEvent *e);
 void MenuExit (GWindow base, struct gmenuitem *mi, GEvent *e);
 void MenuOpen (GWindow base, struct gmenuitem *mi, GEvent *e);
@@ -1140,7 +1139,6 @@ void MV_FriendlyFeatures (GGadget *g, int pos);
 GTextInfo *SLOfFont (SplineFont *sf);
 
 void DoPrefs (void);
-void DoXRes (void);
 void PointerDlg (CharView *cv);
 void GListAddStr (GGadget *list, uint32_t *str, void *ud);
 void GListReplaceStr (GGadget *list, int index, uint32_t *str, void *ud);

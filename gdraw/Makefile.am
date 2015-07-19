@@ -71,7 +71,6 @@ dist_libsortsmill_gdraw_la_SOURCES += gprogress.c
 dist_libsortsmill_gdraw_la_SOURCES += gradio.c
 dist_libsortsmill_gdraw_la_SOURCES += gresource.c
 dist_libsortsmill_gdraw_la_SOURCES += gresourceimage.c
-dist_libsortsmill_gdraw_la_SOURCES += gresedit.c
 dist_libsortsmill_gdraw_la_SOURCES += gsavefiledlg.c
 dist_libsortsmill_gdraw_la_SOURCES += gscrollbar.c
 dist_libsortsmill_gdraw_la_SOURCES += gtabset.c
