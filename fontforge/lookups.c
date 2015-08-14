@@ -101,8 +101,6 @@ VISIBLE struct opentype_feature_friendlynames friendlies[] = {
    gsub_reversecchain_mask},
   {CHR ('c', 'u', 'r', 's'), "curs", N_("Cursive Attachment"),
    gpos_cursive_mask},
-  {CHR ('c', 'v', '0', '0'), "cv00", N_("Character Variants 00"),
-   gsub_single_mask},
   {CHR ('c', 'v', '0', '1'), "cv01", N_("Character Variants 01"),
    gsub_single_mask},
   {CHR ('c', 'v', '0', '2'), "cv02", N_("Character Variants 02"),
