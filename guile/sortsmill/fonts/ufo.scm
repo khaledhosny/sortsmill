@@ -92,8 +92,6 @@
            [descender (assoc-ref fontinfo 'descender)]
            [unitsPerEm (assoc-ref fontinfo 'unitsPerEm)])
       (when version (view:fontinfo-dict-set! view "version" version))
-      (when ascender (view:ufo-ascent-set! view ascender))
-      (when descender (view:ufo-descent-set! view (- descender)))
       (let-values ([(ascent descent) (compute-vertical-layout
                                       'view:apply-ufo-fontinfo!
                                       ascender descender unitsPerEm)])

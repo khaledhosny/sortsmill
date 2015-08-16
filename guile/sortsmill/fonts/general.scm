@@ -41,16 +41,6 @@
           view:UnderlineThickness-ref
           view:UnderlineThickness-set!
 
-          ;; Some values that appear in UFO files whose meaning is
-          ;; unclear. (These may go away; they are here because the
-          ;; author of FontForge did not know what else to do with
-          ;; some UFO fields except store them and write them back
-          ;; out. We do not recommend the use of UFO, anyway.)
-          view:ufo-ascent-ref
-          view:ufo-ascent-set!
-          view:ufo-descent-ref
-          view:ufo-descent-set!
-
           view:font-comment-ref
           view:font-comment-set!
           )
@@ -78,18 +68,6 @@
   (define (view:units-per-em view)
     (let ([sf (view->SplineFont view)])
       (+ (SplineFont:ascent-ref sf) (SplineFont:descent-ref sf))))
-
-  (define (view:ufo-ascent-ref view)
-    (SplineFont:ufo-ascent-ref (view->SplineFont view)))
-
-  (define (view:ufo-ascent-set! view value)
-    (SplineFont:ufo-ascent-set! (view->SplineFont view) value))
-
-  (define (view:ufo-descent-ref view)
-    (SplineFont:ufo-descent-ref (view->SplineFont view)))
-
-  (define (view:ufo-descent-set! view value)
-    (SplineFont:ufo-descent-set! (view->SplineFont view) value))
 
   (define (view:font-comment-ref view)
     (let ([ptr (SplineFont:comment-ref (view->SplineFont view))])
