@@ -7385,9 +7385,7 @@ CVMenuAPAttachSC (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   AnchorPoint *ap, *ap2;
 
-  ap = mi->ti.userdata;
-  if (ap == NULL)
-    for (ap = cv->b.sc->anchor; ap != NULL && !ap->selected; ap = ap->next);
+  for (ap = cv->b.sc->anchor; ap != NULL && !ap->selected; ap = ap->next);
   if (ap == NULL)
     ap = cv->b.sc->anchor;
   if (ap == NULL)
