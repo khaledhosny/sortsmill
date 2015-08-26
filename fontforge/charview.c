@@ -7361,13 +7361,29 @@ CVMenuAPDetach (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   GDrawRequestExpose (cv->v, NULL, false);
 }
 
+static bool
+APmatchesAP (AnchorPoint *ap1, AnchorPoint *ap2)
+{
+  if (ap1->anchor != ap2->anchor)
+    return false;
+  if (ap1->type == at_centry && ap2->type == at_cexit)
+    return true;
+  if (ap1->type == at_cexit && ap2->type == at_centry)
+    return true;
+  if (ap1->type == at_mark && ap2->type != at_mark)
+    return true;
+  if ((ap1->type == at_basechar || ap1->type == at_baselig
+       || ap1->type == at_basemark) && ap2->type == at_mark)
+    return true;
+
+  return false;
+}
+
 VISIBLE void
 CVMenuAPAttachSC (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  enum anchor_type type;
-  AnchorPoint *ap;
-  AnchorClass *ac;
+  AnchorPoint *ap, *ap2;
 
   ap = mi->ti.userdata;
   if (ap == NULL)
@@ -7376,22 +7392,14 @@ CVMenuAPAttachSC (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     ap = cv->b.sc->anchor;
   if (ap == NULL)
     return;
-  type = ap->type;
   cv->apmine = ap;
-  ac = ap->anchor;
   cv->apsc = mi->ti.userdata;
-  for (ap = cv->apsc->anchor; ap != NULL; ap = ap->next)
+  for (ap2 = cv->apsc->anchor; ap2 != NULL; ap2 = ap2->next)
     {
-      if (ap->anchor == ac
-          && ((type == at_centry && ap->type == at_cexit)
-              || (type == at_cexit && ap->type == at_centry)
-              || (type == at_mark && ap->type != at_mark)
-              ||
-              ((type == at_basechar || type == at_baselig
-                || type == at_basemark) && ap->type == at_mark)))
+      if (APmatchesAP (ap, ap2))
         break;
     }
-  cv->apmatch = ap;
+  cv->apmatch = ap2;
   GDrawRequestExpose (cv->v, NULL, false);
 }
 
@@ -7399,8 +7407,6 @@ static SplineChar **
 GlyphsMatchingAP (SplineFont *sf, AnchorPoint *ap)
 {
   SplineChar *sc;
-  AnchorClass *ac = ap->anchor;
-  enum anchor_type type = ap->type;
   int i, k, gcnt;
   SplineChar **glyphs;
 
@@ -7411,18 +7417,13 @@ GlyphsMatchingAP (SplineFont *sf, AnchorPoint *ap)
       for (i = 0; i < sf->glyphcnt; ++i)
         if ((sc = sf->glyphs[i]) != NULL)
           {
-            for (ap = sc->anchor; ap != NULL; ap = ap->next)
+            AnchorPoint *ap2;
+            for (ap2 = sc->anchor; ap2 != NULL; ap2 = ap2->next)
               {
-                if (ap->anchor == ac
-                    && ((type == at_centry && ap->type == at_cexit)
-                        || (type == at_cexit && ap->type == at_centry)
-                        || (type == at_mark && ap->type != at_mark)
-                        ||
-                        ((type == at_basechar || type == at_baselig
-                          || type == at_basemark) && ap->type == at_mark)))
+                if (APmatchesAP (ap, ap2))
                   break;
               }
-            if (ap != NULL)
+            if (ap2 != NULL)
               {
                 if (k)
                   glyphs[gcnt] = sc;
