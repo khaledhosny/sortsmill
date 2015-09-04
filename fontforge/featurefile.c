@@ -1870,7 +1870,7 @@ dump_lookup (FILE *out, SplineFont *sf, OTLookup *otl)
                               putc (' ', out);
                               dump_glyphnamelist (out, sf, pst->u.pair.paired);
                               putc (' ', out);
-                              dump_valuerecord (out, &pst->u.pair.vr[0]);
+                              dump_valuerecord (out, &pst->u.pair.vr[1]);
                               c_fprintf (out, ";\n");
                               break;
                             default:
