@@ -1696,10 +1696,7 @@ AI_Ok (GGadget *g, GEvent *e)
       ci->done = true;
       /* All the work has been done as we've gone along */
       /* Well, we should reorder the list... */
-      AnchorPoint *temp = AnchorPointsSort (ci->cv->b.sc->parent->anchor,
-                                            ci->cv->b.sc->anchor);
-      AnchorPointsFree (ci->cv->b.sc->anchor);
-      ci->cv->b.sc->anchor = temp;
+      SCOrderAP (ci->cv->b.sc);
     }
   return true;
 }
