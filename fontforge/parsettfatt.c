@@ -589,7 +589,7 @@ addPairPos (struct ttfinfo *info, int glyph1, int glyph2,
       pos->subtable = subtable;
       pos->next = info->chars[glyph1]->possub;
       info->chars[glyph1]->possub = pos;
-      pos->u.pair.vr = xzalloc (sizeof (struct vr[2]));
+      pos->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
       pos->u.pair.paired = xstrdup_or_null (info->chars[glyph2]->name);
       pos->u.pair.vr[0].xoff = vr1->xplacement;
       pos->u.pair.vr[0].yoff = vr1->yplacement;

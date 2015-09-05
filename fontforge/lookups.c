@@ -2801,8 +2801,8 @@ SF_SCAddPST (SplineChar *tosc, PST *pst, struct lookup_subtable *sub)
     {
     case pst_pair:
       newpst->u.pair.paired = xstrdup_or_null (pst->u.pair.paired);
-      newpst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
-      memcpy (newpst->u.pair.vr, pst->u.pair.vr, sizeof (struct vr[2]));
+      newpst->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
+      memcpy (newpst->u.pair.vr, pst->u.pair.vr, sizeof (ValueRecord[2]));
       break;
     case pst_ligature:
       newpst->u.lig.lig = tosc;

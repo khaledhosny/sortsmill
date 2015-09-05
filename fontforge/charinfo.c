@@ -809,7 +809,7 @@ DeviceTableParse (DeviceTable *dv, char *dvstr)
 }
 
 void
-VRDevTabParse (struct vr *vr, struct matrix_data *md)
+VRDevTabParse (ValueRecord *vr, struct matrix_data *md)
 {
   ValDevTab temp, *adjust;
   int any = false;
@@ -1003,7 +1003,7 @@ KpMDParse (SplineChar *sc, struct lookup_subtable *sub,
               pst->subtable = sub;
               pst->next = sc->possub;
               sc->possub = pst;
-              pst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
+              pst->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
               pst->u.pair.paired = xstrdup_or_null (start);
             }
           VRDevTabParse (&pst->u.pair.vr[0], &possub[cols * i + PAIR_DX1 + 1]);
@@ -1552,8 +1552,8 @@ CI_PSTCopy (PST *pst)
       else if (newpst->type == pst_pair)
         {
           newpst->u.pair.paired = xstrdup_or_null (pst->u.pair.paired);
-          newpst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
-          memcpy (newpst->u.pair.vr, pst->u.pair.vr, sizeof (struct vr[2]));
+          newpst->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
+          memcpy (newpst->u.pair.vr, pst->u.pair.vr, sizeof (ValueRecord[2]));
           newpst->u.pair.vr[0].adjust =
             ValDevTabCopy (pst->u.pair.vr[0].adjust);
           newpst->u.pair.vr[1].adjust =

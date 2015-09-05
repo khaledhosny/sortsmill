@@ -3122,7 +3122,7 @@ PasteToSC (SplineChar *sc, int layer, Undoes *paster, FontViewBase *fv,
 }
 
 static void
-DevTabInto (struct vr *vr)
+DevTabInto (ValueRecord *vr)
 {
   ValDevTab *adjust;
 
@@ -3199,14 +3199,14 @@ PSTInto (SplineChar *sc, PST *pst, PST *frompst, struct lookup_subtable *sub)
   else if (pst->type == pst_pair)
     {
       pst->u.pair.paired = xstrdup_or_null (frompst->u.pair.paired);
-      pst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
-      memcpy (pst->u.pair.vr, frompst->u.pair.vr, sizeof (struct vr[2]));
+      pst->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
+      memcpy (pst->u.pair.vr, frompst->u.pair.vr, sizeof (ValueRecord[2]));
       DevTabInto (&pst->u.pair.vr[0]);
       DevTabInto (&pst->u.pair.vr[1]);
     }
   else if (pst->type == pst_position)
     {
-      memcpy (&pst->u.pos, &frompst->u.pos, sizeof (struct vr));
+      memcpy (&pst->u.pos, &frompst->u.pos, sizeof (ValueRecord));
       DevTabInto (&pst->u.pos);
     }
 }

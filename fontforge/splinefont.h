@@ -621,6 +621,12 @@ typedef struct valdev
   DeviceTable yadv;
 } ValDevTab;
 
+typedef struct vr
+{
+  int16_t xoff, yoff, h_adv_off, v_adv_off;
+  ValDevTab *adjust;
+} ValueRecord;
+
 typedef struct anchorclass
 {
   char *name;                   /* in utf8 */
@@ -722,12 +728,6 @@ enum possub_type
   pst_vkernback
 };
 
-struct vr
-{
-  int16_t xoff, yoff, h_adv_off, v_adv_off;
-  ValDevTab *adjust;
-};
-
 typedef struct generic_pst
 {
   bool ticked;
@@ -737,11 +737,11 @@ typedef struct generic_pst
   struct generic_pst *next;
   union
   {
-    struct vr pos;
+    ValueRecord pos;
     struct
     {
       char *paired;
-      struct vr *vr;
+      ValueRecord *vr;
     } pair;
     struct
     {
@@ -912,7 +912,7 @@ typedef struct jstf_script
 struct opentype_str
 {
   struct splinechar *sc;
-  struct vr vr;                 /* Scaled and rounded gpos modifications (device table info included in xoff, etc. not in adjusts) */
+  ValueRecord vr;                 /* Scaled and rounded gpos modifications (device table info included in xoff, etc. not in adjusts) */
   struct kernpair *kp;
   struct kernclass *kc;
   bool prev_kc0;

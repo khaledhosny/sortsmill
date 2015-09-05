@@ -896,7 +896,7 @@ void CharInfoInit (void);
 void SCLigCaretCheck (SplineChar *sc, int clean);
 char *DevTab_Dlg (GGadget *g, int r, int c);
 int DeviceTableOK (char *dvstr, int *_low, int *_high);
-void VRDevTabParse (struct vr *vr, struct matrix_data *md);
+void VRDevTabParse (ValueRecord *vr, struct matrix_data *md);
 DeviceTable *DeviceTableParse (DeviceTable *dv, char *dvstr);
 void DevTabToString (char **str, DeviceTable *adjust);
 void ValDevTabToStrings (struct matrix_data *mds, int first_offset,

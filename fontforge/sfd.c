@@ -5715,7 +5715,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             {
               copy_to_tok (tok, getname (sfd));
               pst->u.pair.paired = xstrdup_or_null (tok);
-              pst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
+              pst->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
               fscanf (sfd, " dx=%hd dy=%hd dh=%hd dv=%hd",
                       &pst->u.pair.vr[0].xoff, &pst->u.pair.vr[0].yoff,
                       &pst->u.pair.vr[0].h_adv_off,

@@ -4145,7 +4145,7 @@ FigureValue (struct matrix_data *old, int rcol, int c, int startc, GGadget *tf,
 }
 
 static int
-ParsePSTKVR (PSTKernDlg * pstkd, GGadget *pstk, int startc, struct vr *vr)
+ParsePSTKVR (PSTKernDlg * pstkd, GGadget *pstk, int startc, ValueRecord *vr)
 {
   int rows, cols = GMatrixEditGetColCnt (pstk);
   struct matrix_data *old = _GMatrixEditGet (pstk, &rows);
@@ -4223,7 +4223,7 @@ PSTKern_Expose (GWindow pixmap, PSTKernDlg * pstkd)
   struct matrix_data *old = _GMatrixEditGet (pstk, &rows);
   SplineChar *sc1, *sc2;
   BDFChar *bc1, *bc2;
-  struct vr vr1, vr2;
+  ValueRecord vr1, vr2;
   int xorig, yorig;
   GRect size;
   int mag = pstkd->mag;

@@ -9806,7 +9806,7 @@ PyFFGlyph_addPosSub (PyObject *self, PyObject *args)
     {
       int off = 0x7fffffff;
       temp.type = pst_pair;
-      temp.u.pair.vr = xzalloc (sizeof (struct vr[2]));
+      temp.u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
       if (PyArg_ParseTuple (args, "ssi", &subname, &other, &off))
         /* Good */ ;
       else

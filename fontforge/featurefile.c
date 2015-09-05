@@ -463,7 +463,7 @@ dump_device (FILE *out, DeviceTable *devtab)
 }
 
 static void
-dump_valuerecord (FILE *out, struct vr *vr)
+dump_valuerecord (FILE *out, ValueRecord *vr)
 {
   c_fprintf (out, "<%d %d %d %d", vr->xoff, vr->yoff, vr->h_adv_off,
              vr->v_adv_off);
@@ -620,7 +620,7 @@ pst_from_pos_pair_lookup (SplineFont *sf, OTLookup *otl, char *name1,
         {
           if (kp->subtable->lookup == otl && kp->sc == sc2)
             {
-              memset (space->u.pair.vr, 0, 2 * sizeof (struct vr));
+              memset (space->u.pair.vr, 0, 2 * sizeof (ValueRecord));
               /* !!! Bug. Lose device tables here */
               if (isv)
                 space->u.pair.vr[0].v_adv_off = kp->off;
@@ -726,7 +726,7 @@ dump_contextpstglyphs (FILE *out, SplineFont *sf,
 {
   int i, j, pos, index;
   OTLookup *otl;
-  struct vr pairvr[2];
+  ValueRecord pairvr[2];
   PST *pst, space;
   char *start, *pt, *last_start, *last_end;
   int ch, ch2, uses_lookups = false;
@@ -2838,7 +2838,7 @@ struct namedanchor
 struct namedvalue
 {
   char *name;
-  struct vr *vr;
+  ValueRecord *vr;
   struct namedvalue *next;
 };
 
@@ -4196,7 +4196,7 @@ struct markedglyphs
   bool hidden_marked_glyphs;    /* for glyphs with marked marks in a mark2base sequence */
   uint16_t mark_count;          /* 0=>unmarked, 1=>first mark, etc. */
   char *name_or_class;          /* Glyph name / class contents */
-  struct vr *vr;                /* A value record. Only in position sequences */
+  ValueRecord *vr;                /* A value record. Only in position sequences */
   int ap_cnt;                   /* Number of anchor points */
   AnchorPoint **anchors;
   int apm_cnt;
@@ -4445,21 +4445,21 @@ fea_findLookup (struct parseState *tok, char *name)
   return false;
 }
 
-static struct vr *
-ValueRecordCopy (struct vr *ovr)
+static ValueRecord *
+ValueRecordCopy (ValueRecord *ovr)
 {
-  struct vr *nvr;
+  ValueRecord *nvr;
 
   nvr = xzalloc (sizeof (*nvr));
-  memcpy (nvr, ovr, sizeof (struct vr));
+  memcpy (nvr, ovr, sizeof (ValueRecord));
   nvr->adjust = ValDevTabCopy (ovr->adjust);
   return nvr;
 }
 
-static struct vr *
+static ValueRecord *
 fea_ParseValueRecord (struct parseState *tok)
 {
-  struct vr *vr = NULL;
+  ValueRecord *vr = NULL;
   struct namedvalue *nvr;
 
   if (tok->type == tk_name)
@@ -4484,7 +4484,7 @@ fea_ParseValueRecord (struct parseState *tok)
     }
   else if (tok->type == tk_int)
     {
-      vr = xzalloc (sizeof (struct vr));
+      vr = xzalloc (sizeof (ValueRecord));
       vr->xoff = tok->value;
       fea_ParseTok (tok);
       if (tok->type == tk_int)
@@ -4529,7 +4529,7 @@ fea_ParseValueRecord (struct parseState *tok)
 static void
 fea_ParseValueRecordDef (struct parseState *tok)
 {
-  struct vr *vr;
+  ValueRecord *vr;
   struct namedvalue *nvr;
 
   fea_ParseTok (tok);
@@ -5010,7 +5010,7 @@ fea_ParseMarkedGlyphs (struct parseState *tok,
       else if (is_pos && last != NULL && last->vr == NULL &&
                tok->type == tk_int)
         {
-          last->vr = xzalloc (sizeof (struct vr));
+          last->vr = xzalloc (sizeof (ValueRecord));
           if (tok->in_vkrn)
             last->vr->v_adv_off = tok->value;
           else
@@ -5235,7 +5235,7 @@ fea_process_pos_pair (struct parseState *tok,
 {
   char *start, *pt, ch, *start2, *pt2, ch2;
   struct feat_item *item;
-  struct vr vr[2];
+  ValueRecord vr[2];
   SplineChar *sc, *sc2;
   int i;
 
@@ -5300,7 +5300,7 @@ fea_process_pos_pair (struct parseState *tok,
                       item->u2.pst = xzalloc (sizeof (PST));
                       item->u2.pst->type = pst_pair;
                       item->u2.pst->u.pair.paired = xstrdup_or_null (sc2->name);
-                      item->u2.pst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
+                      item->u2.pst->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
                       memcpy (item->u2.pst->u.pair.vr, vr, sizeof (vr));
                     }
                 }
@@ -5318,7 +5318,7 @@ fea_process_pos_pair (struct parseState *tok,
       item->u2.pst->type = pst_pair;
       item->u2.pst->u.pair.paired =
         xstrdup_or_null (glyphs->next->name_or_class);
-      item->u2.pst->u.pair.vr = xzalloc (sizeof (struct vr[2]));
+      item->u2.pst->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
       memcpy (item->u2.pst->u.pair.vr, vr, sizeof (vr));
     }
   return sofar;

@@ -504,7 +504,7 @@ VISIBLE void TransHints (StemInfo * stem, real mul1, real off1,
                          real mul2, real off2, int round_to_int);
 VISIBLE void TransDStemHints (DStemInfo * ds, real xmul, real xoff,
                               real ymul, real yoff, int round_to_int);
-VISIBLE void VrTrans (struct vr *vr, real transform[6]);
+VISIBLE void VrTrans (ValueRecord *vr, real transform[6]);
 int SFNLTrans (FontViewBase *fv, char *x_expr, char *y_expr);
 int SSNLTrans (SplineSet *ss, char *x_expr, char *y_expr);
 int SCNLTrans (SplineChar *sc, int layer, char *x_expr, char *y_expr);

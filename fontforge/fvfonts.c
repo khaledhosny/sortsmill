@@ -342,8 +342,8 @@ PSTCopy (PST *base, SplineChar *sc, struct sfmergecontext *mc)
       else if (cur->type == pst_pair)
         {
           cur->u.pair.paired = xstrdup_or_null (cur->u.pair.paired);
-          cur->u.pair.vr = xzalloc (sizeof (struct vr[2]));
-          memcpy (cur->u.pair.vr, base->u.pair.vr, sizeof (struct vr[2]));
+          cur->u.pair.vr = xzalloc (sizeof (ValueRecord[2]));
+          memcpy (cur->u.pair.vr, base->u.pair.vr, sizeof (ValueRecord[2]));
           cur->u.pair.vr[0].adjust = ValDevTabCopy (base->u.pair.vr[0].adjust);
           cur->u.pair.vr[1].adjust = ValDevTabCopy (base->u.pair.vr[1].adjust);
         }

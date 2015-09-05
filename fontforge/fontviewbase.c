@@ -592,7 +592,7 @@ TransDStemHints (DStemInfo * ds, real xmul, real xoff, real ymul, real yoff,
 }
 
 void
-VrTrans (struct vr *vr, real transform[6])
+VrTrans (ValueRecord *vr, real transform[6])
 {
   /* I'm interested in scaling and skewing. I think translation should */
   /*  not affect these guys (they are offsets, so offsets should be */
