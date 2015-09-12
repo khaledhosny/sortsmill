@@ -18735,6 +18735,7 @@ struct flaglist gen_flags[] = {
   {"no-hints", 0x80000},
   {"round", 0x200000},
   {"composites-in-afm", 0x400000},
+  {"no-mac-names", 0x4000000},
   FLAGLIST_EMPTY                /* Sentinel */
 };
 

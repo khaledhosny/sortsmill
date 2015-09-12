@@ -4734,7 +4734,7 @@ to_encname_for_windows (Encoding *_encoding_name)
 }
 
 static void
-AddEncodedName (NamTab *nt, char *utf8name, uint16_t lang, uint16_t strid)
+AddEncodedName (NamTab *nt, char *utf8name, uint16_t lang, uint16_t strid, bool nomacnames)
 {
   NameEntry *ne;
   int maclang, macenc = -1, specific;
@@ -4778,7 +4778,7 @@ AddEncodedName (NamTab *nt, char *utf8name, uint16_t lang, uint16_t strid)
   maclang = WinLangToMac (lang);
   if (!nt->applemode && lang != 0x409)
     maclang = 0xffff;
-  if (maclang != 0xffff)
+  if (!nomacnames && maclang != 0xffff)
     {
 #if FONTFORGE_CONFIG_APPLE_UNICODE_NAMES
       if (strid != ttf_postscriptname)
@@ -4884,6 +4884,7 @@ dumpnames (struct alltabs *at, SplineFont *sf, enum fontformat format)
   NamTab nt;
   struct otfname *otfn;
   struct otffeatname *fn;
+  bool nomacnames = at->gi.flags & ttf_flag_nomacnames;
 
   memset (&nt, 0, sizeof (nt));
 
@@ -4921,26 +4922,26 @@ dumpnames (struct alltabs *at, SplineFont *sf, enum fontformat format)
 
   for (i = 0; i < ttf_namemax; ++i)
     if (dummy.names[i] != NULL)
-      AddEncodedName (&nt, dummy.names[i], 0x409, i);
+      AddEncodedName (&nt, dummy.names[i], 0x409, i, nomacnames);
   for (cur = sf->names; cur != NULL; cur = cur->next)
     {
       if (cur->lang != 0x409)
         for (i = 0; i < ttf_namemax; ++i)
           if (cur->names[i] != NULL)
-            AddEncodedName (&nt, cur->names[i], cur->lang, i);
+            AddEncodedName (&nt, cur->names[i], cur->lang, i, nomacnames);
     }
 
   /* Wow, the GPOS 'size' feature uses the name table in a very mac-like way */
   if (at->fontstyle_name_strid != 0 && sf->fontstyle_name != NULL)
     {
       for (otfn = sf->fontstyle_name; otfn != NULL; otfn = otfn->next)
-        AddEncodedName (&nt, otfn->name, otfn->lang, at->fontstyle_name_strid);
+        AddEncodedName (&nt, otfn->name, otfn->lang, at->fontstyle_name_strid, nomacnames);
     }
   /* As do some other features now */
   for (fn = sf->feat_names; fn != NULL; fn = fn->next)
     {
       for (otfn = fn->names; otfn != NULL; otfn = otfn->next)
-        AddEncodedName (&nt, otfn->name, otfn->lang, fn->nid);
+        AddEncodedName (&nt, otfn->name, otfn->lang, fn->nid, nomacnames);
     }
 
   qsort (nt.entries, nt.cur, sizeof (NameEntry), compare_entry);

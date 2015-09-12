@@ -1472,6 +1472,8 @@ GenerateScript (SplineFont *sf, char *filename, char *bitmaptype, int fmflags,
                 old_sfnt_flags |= ttf_flag_pfed_guides;
               if (fmflags & 0x2000000)
                 old_sfnt_flags |= ttf_flag_pfed_layers;
+              if (fmflags & 0x4000000)
+                old_sfnt_flags |= ttf_flag_nomacnames;
             }
         }
       else
@@ -1534,6 +1536,8 @@ GenerateScript (SplineFont *sf, char *filename, char *bitmaptype, int fmflags,
             old_sfnt_flags |= ttf_flag_pfed_guides;
           if (fmflags & 0x2000000)
             old_sfnt_flags |= ttf_flag_pfed_layers;
+          if (fmflags & 0x4000000)
+            old_sfnt_flags |= ttf_flag_nomacnames;
         }
     }
 

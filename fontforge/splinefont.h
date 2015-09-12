@@ -2592,7 +2592,8 @@ enum ttf_flags
   ttf_flag_pfed_guides      = 1 << 11,
   ttf_flag_pfed_layers      = 1 << 12,
   ttf_flag_symbol           = 1 << 13,
-  ttf_flag_dummyDSIG        = 1 << 14
+  ttf_flag_dummyDSIG        = 1 << 14,
+  ttf_flag_nomacnames       = 1 << 15
 };
 
 enum ttc_flags

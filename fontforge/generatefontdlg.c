@@ -92,7 +92,7 @@ static int nfnt_warned = false, post_warned = false;
 #define CID_TTF_OldKern		1109
 #define CID_TTF_GlyphMap	1110
 #define CID_TTF_OFM		1111
-/*#define CID_TTF_BrokenSize	1112*/
+#define CID_TTF_MacNames  	1112
 #define CID_TTF_PfEdLookups	1113
 #define CID_TTF_PfEdGuides	1114
 #define CID_TTF_PfEdLayers	1115
@@ -397,6 +397,8 @@ sod_e_h (GWindow gw, GEvent *event)
                 d->sfnt_flags |= ttf_flag_nohints;
               if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_TTF_FullPS)))
                 d->sfnt_flags |= ttf_flag_shortps;
+              if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_TTF_MacNames)))
+                d->sfnt_flags |= ttf_flag_nomacnames;
               if (GGadgetIsChecked
                   (GWidgetGetControl (gw, CID_TTF_AppleMode)))
                 d->sfnt_flags |= ttf_flag_applemode;
@@ -467,6 +469,8 @@ sod_e_h (GWindow gw, GEvent *event)
 
               if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_TTF_FullPS)))
                 d->psotb_flags |= ttf_flag_shortps;
+              if (!GGadgetIsChecked (GWidgetGetControl (gw, CID_TTF_MacNames)))
+                d->psotb_flags |= ttf_flag_nomacnames;
               if (GGadgetIsChecked
                   (GWidgetGetControl (gw, CID_TTF_PfEdComments)))
                 d->psotb_flags |= ttf_flag_pfed_comments;
@@ -528,6 +532,8 @@ OptSetDefaults (GWindow gw, struct gfc_data *d, int which, int iscid)
                      !(flags & ttf_flag_nohints));
   GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_FullPS),
                      !(flags & ttf_flag_shortps));
+  GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_MacNames),
+                     !(flags & ttf_flag_nomacnames));
   GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_OFM),
                      flags & ttf_flag_ofm);
   if (d->optset[which])
@@ -597,15 +603,13 @@ OptSetDefaults (GWindow gw, struct gfc_data *d, int which, int iscid)
 
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_Hints), which == 1);
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_FullPS), which != 0);
+  GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_MacNames), which != 0);
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_AppleMode), which != 0
                      && which != 3);
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_OpenTypeMode), which != 0
                      && which != 3);
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_OldKern), which != 0);
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_DummyDSIG), which != 0);
-#if 0
-  GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_BrokenSize), which != 0);
-#endif
 
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_PfEd), which != 0);
   GGadgetSetEnabled (GWidgetGetControl (gw, CID_TTF_PfEdComments),
@@ -631,10 +635,10 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   int k, fontlog_k, group, group2;
   GWindow gw;
   GWindowAttrs wattrs;
-  GGadgetCreateData gcd[32];
-  GTextInfo label[32];
+  GGadgetCreateData gcd[34];
+  GTextInfo label[34];
   GRect pos;
-  GGadgetCreateData *hvarray1[21], *hvarray2[42], *harray[7], *varray[11];
+  GGadgetCreateData *hvarray1[21], *hvarray2[47], *harray[7], *varray[11];
   GGadgetCreateData boxes[5];
 
   d->sod_done = false;
@@ -871,6 +875,21 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
+  label[k].text = (uint32_t *) _("Mac Names");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.popup_msg = (uint32_t *) _(
+      "Do you want the font file to contain duplicated name "
+      "entries for legacy Mac platform?"
+  );
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.cid = CID_TTF_MacNames;
+  gcd[k++].creator = GCheckBoxCreate;
+  hvarray2[10] = &gcd[k - 1];
+  hvarray2[11] = GCD_ColSpan;
+
+  gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
+  gcd[k].gd.flags = gg_visible | gg_utf8_popup;
   label[k].text = (uint32_t *) _("Apple");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
@@ -881,8 +900,8 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.cid = CID_TTF_AppleMode;
   gcd[k].gd.handle_controlevent = OPT_Applemode;
   gcd[k++].creator = GCheckBoxCreate;
-  hvarray2[10] = &gcd[k - 1];
-  hvarray2[11] = GCD_ColSpan;
+  hvarray2[15] = &gcd[k - 1];
+  hvarray2[16] = GCD_ColSpan;
 
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
@@ -896,8 +915,8 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_OpenTypeMode;
   gcd[k++].creator = GCheckBoxCreate;
-  hvarray2[15] = &gcd[k - 1];
-  hvarray2[16] = GCD_ColSpan;
+  hvarray2[20] = &gcd[k - 1];
+  hvarray2[21] = GCD_ColSpan;
 
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x + 4;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
@@ -912,8 +931,8 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.cid = CID_TTF_OldKern;
   gcd[k].gd.handle_controlevent = OPT_OldKern;
   gcd[k++].creator = GCheckBoxCreate;
-  hvarray2[20] = GCD_HPad10;
-  hvarray2[21] = &gcd[k - 1];
+  hvarray2[25] = GCD_HPad10;
+  hvarray2[26] = &gcd[k - 1];
 
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x + 4;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
@@ -929,8 +948,8 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_DummyDSIG;
   gcd[k++].creator = GCheckBoxCreate;
-  hvarray2[25] = GCD_HPad10;
-  hvarray2[26] = &gcd[k - 1];
+  hvarray2[30] = GCD_HPad10;
+  hvarray2[31] = &gcd[k - 1];
 
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
@@ -943,21 +962,6 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
     ("When generating a truetype or opentype font it is occasionally\nuseful to know the mapping between truetype glyph ids and\nglyph names. Setting this option will cause FontForge to\nproduce a file (with extension .g2n) containing those data.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_GlyphMap;
-  gcd[k++].creator = GCheckBoxCreate;
-  hvarray2[30] = &gcd[k - 1];
-  hvarray2[31] = GCD_ColSpan;
-
-  gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
-  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
-  gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (uint32_t *) _("Output OFM & CFG");
-  label[k].text_is_1byte = true;
-  gcd[k].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("The ofm and cfg files contain information Omega needs to process a font.");
-  gcd[k].gd.label = &label[k];
-  gcd[k].gd.cid = CID_TTF_OFM;
   gcd[k++].creator = GCheckBoxCreate;
   hvarray2[35] = &gcd[k - 1];
   hvarray2[36] = GCD_ColSpan;
@@ -1065,10 +1069,28 @@ GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
   hvarray2[32] = &gcd[k - 1];
   hvarray2[33] = GCD_ColSpan;
   hvarray2[34] = NULL;
-  hvarray2[37] = GCD_Glue;
-  hvarray2[38] = GCD_Glue;
+
+  gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
+  gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
+  gcd[k].gd.flags = gg_visible | gg_utf8_popup;
+  label[k].text = (uint32_t *) _("Output OFM & CFG");
+  label[k].text_is_1byte = true;
+  gcd[k].gd.popup_msg =
+    (uint32_t *)
+    _
+    ("The ofm and cfg files contain information Omega needs to process a font.");
+  gcd[k].gd.label = &label[k];
+  gcd[k].gd.cid = CID_TTF_OFM;
+  gcd[k++].creator = GCheckBoxCreate;
+  hvarray2[37] = &gcd[k - 1];
+  hvarray2[38] = GCD_ColSpan;
   hvarray2[39] = NULL;
-  hvarray2[40] = NULL;
+  hvarray2[40] = GCD_Glue;
+  hvarray2[41] = GCD_Glue;
+  hvarray2[42] = NULL;
+  hvarray2[43] = NULL;
+  hvarray2[44] = NULL;
+  hvarray2[45] = NULL;
 
   boxes[3].gd.flags = gg_enabled | gg_visible;
   boxes[3].gd.u.boxelements = hvarray2;
