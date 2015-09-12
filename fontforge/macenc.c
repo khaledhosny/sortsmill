@@ -1313,14 +1313,26 @@ Utf8ToMacStr_with_length (const char *ustr, int macenc, int maclang,
     return NULL;
 
   ret = xmalloc (strlen (ustr) + 1);
+  bool missing = false;
   for (rpt = ret; (ch = u8_get_next ((const uint8_t **) &ustr));)
     {
+      bool found = false;
       for (i = 0; i < 256; ++i)
         if (table[i] == ch)
           {
             *rpt++ = i;
+            found = true;
             break;
           }
+      if (!found)
+        missing = true;
+    }
+  // Not all characters were converted, return NULL instead of returning a
+  // partial string.
+  if (missing)
+    {
+      free (ret);
+      return NULL;
     }
   *length = rpt - ret;
   *rpt = '\0';
