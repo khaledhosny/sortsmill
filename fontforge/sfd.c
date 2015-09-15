@@ -6920,7 +6920,7 @@ SFD_FigureDirType (SplineFont *sf, char *tok, char *dirname, Encoding * enc,
   rewinddir (dir);
   name = xmalloc (strlen (dirname) + NAME_MAX + 3);
   props = xmalloc (strlen (dirname) + 2 * NAME_MAX + 4);
-  if (gc != 0)
+  if (gc != 0 || (sc == 0 && ic == 0))
     {
       sf->glyphcnt = 0;
       sf->glyphmax = gc;
