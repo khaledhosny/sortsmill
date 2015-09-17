@@ -6610,6 +6610,7 @@ fea_ParseNameId (struct parseState *tok, int strid)
         {
           specific = language = 0;
         }
+      platform = tok->value;
       fea_ParseTok (tok);
       if (tok->type == tk_int)
         {
@@ -6640,7 +6641,16 @@ fea_ParseNameId (struct parseState *tok, int strid)
           nm->language = language;
         }
       else
-        nm = NULL;
+        {
+          /* FontForge only supports windows strings. */
+          LogError (_("Unsupported name platform or encoding "
+                      "on line %d of %s: %d, %d"),
+                      tok->line[tok->inc_depth],
+                      tok->filename[tok->inc_depth],
+                      platform, specific);
+          ++tok->err_count;
+          nm = NULL;
+        }
       max = 0;
       pt = start = NULL;
       while ((ch = getc (in)) != EOF && ch != '"')
@@ -6743,8 +6753,6 @@ fea_ParseSizeMenuName (struct parseState *tok, struct feat_item *feat)
   /* Sizemenuname takes either 0, 1 or 3 numbers and a string */
   /* if no numbers are given (or the first number is 3) then the string is */
   /*  unicode. Otherwise a mac encoding, treated as single byte */
-  /* Since fontforge only supports windows strings here I shall parse and */
-  /*  ignore mac strings */
   struct nameid *string;
 
   string = fea_ParseNameId (tok, -1);
@@ -6884,14 +6892,21 @@ fea_ParseFeatureDef (struct parseState *tok)
               fea_ParseLangSys (tok, true);
               break;
             case tk_feature:
-              /* can appear inside an 'aalt' feature. I don't support it, but */
-              /*  just parse and ignore it */
+              /* Can appear inside an 'aalt' feature. I don't support it, yet. */
               if (feat_tag != CHR ('a', 'a', 'l', 't'))
                 {
                   LogError (_("Features inside of other features are only "
                               "permitted for 'aalt' features on line %d of %s"),
                             tok->line[tok->inc_depth],
                             tok->filename[tok->inc_depth]);
+                  ++tok->err_count;
+                }
+              else
+                {
+                  LogError (_("Unsupported keyword on line %d of %s: %s"),
+                            tok->line[tok->inc_depth],
+                            tok->filename[tok->inc_depth],
+                            tok->tokbuf);
                   ++tok->err_count;
                 }
               fea_ParseTok (tok);
@@ -6948,7 +6963,6 @@ fea_ParseFeatureDef (struct parseState *tok)
                 }
               break;
             case tk_featureNames:
-              /* I don't handle these yet, so ignore 'em */
               fea_TokenMustBe (tok, tk_char, '{');
               fea_ParseFeatureNames (tok, feat_tag);
               fea_end_statement (tok);
@@ -7232,10 +7246,11 @@ fea_ParseGDEFTable (struct parseState *tok)
         break;
       if (strcmp (tok->tokbuf, "Attach") == 0)
         {
-          LogError (_("Unsupported keyword on line %d of %s, will be ignored: %s"),
+          LogError (_("Unsupported keyword on line %d of %s: %s"),
                     tok->line[tok->inc_depth],
                     tok->filename[tok->inc_depth],
                     tok->tokbuf);
+          ++tok->err_count;
           fea_ParseTok (tok);
           /* Bug. Not parsing inline classes */
           if (tok->type != tk_class && tok->type != tk_name)
@@ -7306,10 +7321,11 @@ fea_ParseGDEFTable (struct parseState *tok)
       else if (strcmp (tok->tokbuf, "LigatureCaretByIndex") == 0)
         {
           // Ligature carets by contour point index (format 2).
-          LogError (_("Unsupported keyword on line %d of %s, will be ignored: %s"),
+          LogError (_("Unsupported keyword on line %d of %s: %s"),
                     tok->line[tok->inc_depth],
                     tok->filename[tok->inc_depth],
                     tok->tokbuf);
+          ++tok->err_count;
           fea_ParseTok (tok);
           if (tok->type != tk_class && tok->type != tk_name
               && tok->type != tk_cid)
