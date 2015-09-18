@@ -1882,6 +1882,7 @@ _CI_OK (CharInfo * ci)
       ci->cachedsc = xzalloc (sizeof (SplineChar));
       ci->cachedsc->orig_pos = ci->sc->orig_pos;
       ci->cachedsc->parent = ci->sc->parent;
+      ci->cachedsc->name = xstrdup_or_null (ci->sc->name);
       scl = xzalloc (sizeof (struct splinecharlist));
       scl->sc = ci->cachedsc;
       scl->next = ci->changes;
