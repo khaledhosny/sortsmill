@@ -1357,15 +1357,18 @@ SplinePointCategorize (SplinePoint *sp)
 
   sp->pointtype = pt_corner;
   if (sp->next == NULL && sp->prev == NULL)
-    ;
-  else
-    if ((sp->next != NULL && sp->next->to->me.x == sp->me.x
-         && sp->next->to->me.y == sp->me.y) || (sp->prev != NULL
-                                                && sp->prev->from->me.x ==
-                                                sp->me.x
-                                                && sp->prev->from->me.y ==
-                                                sp->me.y))
-    ;
+    {
+      /* do nothing */
+    }
+  else if ((sp->next != NULL &&
+            sp->next->to->me.x == sp->me.x &&
+            sp->next->to->me.y == sp->me.y) ||
+           (sp->prev != NULL &&
+            sp->prev->from->me.x == sp->me.x &&
+            sp->prev->from->me.y == sp->me.y))
+    {
+      /* do nothing */
+    }
   else if (sp->next == NULL)
     {
       sp->pointtype = sp->noprevcp ? pt_corner : pt_curve;
@@ -1376,7 +1379,7 @@ SplinePointCategorize (SplinePoint *sp)
     }
   else if (sp->nonextcp && sp->noprevcp)
     {
-      ;
+      /* do nothing */
     }
   else
     {
