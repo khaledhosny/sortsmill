@@ -3832,9 +3832,6 @@ dumpg___info (struct alltabs *at, SplineFont *sf, int is_gpos)
 void
 otf_dumpgpos (struct alltabs *at, SplineFont *sf)
 {
-  /* Open Type, bless its annoying little heart, doesn't store kern info */
-  /*  in the kern table. Of course not, how silly of me to think it might */
-  /*  be consistent. It stores it in the much more complicated gpos table */
   AnchorClass *ac;
 
   for (ac = sf->anchor; ac != NULL; ac = ac->next)
