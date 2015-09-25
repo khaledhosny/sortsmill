@@ -43,7 +43,7 @@
 include $(top_srcdir)/mk/layout.am
 
 ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
-	accented.html acenter.png acorn2sfd.html addlookup-kern.png			\
+	accented.html acenter.png addlookup-kern.png			\
 	AddLookup-Liga.png a_dieresis_macron.png agetinfo.png				\
 	agrave_anchored.png ahighest.png aItalic.png alignedBaselines.png	\
 	allgreek.png alphakappaiota.png alphakappaiotatheta.png				\
