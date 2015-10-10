@@ -827,10 +827,6 @@ uint8_t *DebuggerGetWatchCvts (struct debugger_context *dc, int *n);
 int DebuggingFpgm (struct debugger_context *dc);
 
 
-void PrintDlg (FontView *fv, SplineChar *sc, MetricsView *mv);
-void PrintWindowClose (void);
-void InsertTextDlg (CharView *cv);
-
 char *Kern2Text (SplineChar *other, KernPair *kp, int isv);
 char *PST2Text (PST *pst, SplineFont *sf);
 

@@ -407,17 +407,6 @@ static struct prefs_list
   {
   "DefaultPSflags", pr_int, &old_ps_flags, NULL, NULL, '\0', NULL, 1, NULL},
   {
-  "PageWidth", pr_int, &pagewidth, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PageHeight", pr_int, &pageheight, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PrintType", pr_int, &printtype, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PrintCommand", pr_string, &printcommand, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PageLazyPrinter", pr_string, &printlazyprinter, NULL, NULL, '\0', NULL,
-      1, NULL},
-  {
   "CoverageFormatsAllowed", pr_int, &coverageformatsallowed, NULL, NULL,
       '\0', NULL, 1, NULL},
   {

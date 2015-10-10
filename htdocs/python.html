@@ -225,48 +225,6 @@
 	an integer)</TD>
     </TR>
     <TR>
-      <TD><CODE><A name="printSetup">printSetup</A></CODE></TD>
-      <TD><CODE>(type[,printer|cmd|file,<BR>
-	width,height])</CODE></TD>
-      <TD>Prepare to <A href="#f-print">print a font sample</A>. The first argument
-	may be one of:
-	<DL>
-	  <DT>
-	    lp
-	  <DD>
-	    Queues postscript output to the printer using <CODE>lp</CODE>. You may use
-	    the optional second argument to specify the printer name.
-	  <DT>
-	    lpr
-	  <DD>
-	    Queues postscript output to the printer using <CODE>lpr</CODE>. You may use
-	    the optional second argument to specify the printer name.
-	  <DT>
-	    ghostview
-	  <DD>
-	    Displays the output using ghostview (or gv). The second argument is ignored.
-	  <DT>
-	    command
-	  <DD>
-	    Use a custom shell command to print the output. The second argument should
-	    contain the command and its arguments.
-	  <DT>
-	    ps-file
-	  <DD>
-	    Dump the postscript output to a file. The second argument specifies the filename.
-	  <DT>
-	    pdf-file
-	  <DD>
-	    Dump the output as pdf to a file. The second argument specifies the filename.
-	</DL>
-	<P>
-	The third and fourth arguments are optional and specify the page size (in
-	points) for the output. The third argument is the page width and the fourth
-	is the height.
-	<P>
-	These setting remain until changed</TD>
-    </TR>
-    <TR>
       <TD><CODE>nameFromUnicode</CODE></TD>
       <TD><CODE>(uni[,namelist])</CODE></TD>
       <TD>Finds the glyph name associated with a given unicode codepoint. If a
@@ -4632,41 +4590,6 @@ pen = None;				# Finalize the pen. This tells FontForge
 	their subtables to be merged (contextual subtables may not be merged, kerning
 	classes may not be (kerning pairs may be)). Any information bound to subtable2
 	will be bound to subtable1 and subtable2 will be removed.</TD>
-    </TR>
-    <TR>
-      <TD><CODE>printSample</CODE></TD>
-      <TD><CODE>(type,pointsize,<BR>
-	&nbsp;sample,output-file)</CODE></TD>
-      <TD>Type is a string which must be one of
-	<DL>
-	  <DT>
-	    fontdisplay
-	  <DD>
-	    Display all glyphs in the font in encoding order
-	  <DT>
-	    chars
-	  <DD>
-	    Display the selected glyphs scaled to fill a page<BR>
-	    Ignores the pointsize argument.
-	  <DT>
-	    waterfall
-	  <DD>
-	    Displays the selected glyphs at many pointsizes.<BR>
-	    The pointsize argument should be a tuple of pointsizes here.
-	  <DT>
-	    fontsample
-	  <DD>
-	    The third argument should contain a string which will be layed out and displayed
-	    as well as FontForge can.
-	  <DT>
-	    fontsampleinfile
-	  <DD>
-	    The third argument should contain the name of a file which contains text
-	    to be layed out and displayed.
-	</DL>
-	<P>
-	If output is to a file (see <A href="#printSetup">printSetup</A>) then the
-	last argument specifies a file name in which to store output.</TD>
     </TR>
     <TR>
       <TD><CODE>randomText</CODE></TD>

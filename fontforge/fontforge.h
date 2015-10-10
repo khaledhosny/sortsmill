@@ -80,9 +80,6 @@ VISIBLE extern int loaded_fonts_same_as_new;
 VISIBLE extern char *BDFFoundry, *TTFFoundry;
 VISIBLE extern char *xuid;
 
-VISIBLE extern int pagewidth, pageheight, printtype;	/* Printer defaults */
-VISIBLE extern char *printcommand, *printlazyprinter;
-
 VISIBLE extern Encoding *enclist;
 
 bool get_no_windowing_ui (void);

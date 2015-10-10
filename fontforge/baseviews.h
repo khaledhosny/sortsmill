@@ -495,8 +495,6 @@ VISIBLE int FVImportImages (FontViewBase *fv, char *path, int isimage,
                             int toback, int flags);
 VISIBLE int FVImportImageTemplate (FontViewBase *fv, char *path,
                                    int isimage, int toback, int flags);
-void ScriptPrint (FontViewBase *fv, int type, int32_t *pointsizes,
-                  char *samplefile, uint32_t *sample, char *outputfile);
 VISIBLE int FVBParseSelectByPST (FontViewBase *fv,
                                  struct lookup_subtable *sub, int search_type);
 VISIBLE int SFScaleToEm (SplineFont *sf, int ascent, int descent);
@@ -766,8 +764,6 @@ VISIBLE void PyFF_SCImport (SplineChar *sc, int ie_index,
 VISIBLE void PyFF_InitFontHook (FontViewBase *fv);
 
 VISIBLE void LookupInit (void);
-VISIBLE int UserFeaturesDiffer (void);
-VISIBLE uint32_t *StdFeaturesOfScript (uint32_t script);
 
 enum byte_types
 {

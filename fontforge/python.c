@@ -1036,38 +1036,6 @@ PyFF_unitShape (PyObject *UNUSED (self), PyObject *args)
   return ret;
 }
 
-static struct flaglist printmethod[] = {
-  {"lp", 0},
-  {"lpr", 1},
-  {"ghostview", 2},
-  {"ps-file", 3},
-  {"command", 4},
-  {"pdf-file", 5},
-  FLAGLIST_EMPTY                /* Sentinel */
-};
-
-static PyObject *
-PyFF_printSetup (PyObject *UNUSED (self), PyObject *args)
-{
-  char *ptype, *pcmd = NULL;
-  int iptype;
-
-  if (!PyArg_ParseTuple (args, "s|sii", &ptype, &pcmd, &pagewidth, &pageheight))
-    return NULL;
-  iptype = FlagsFromString (ptype, printmethod, "printing method");
-  if (iptype == FLAG_UNKNOWN)
-    {
-      return NULL;
-    }
-
-  printtype = iptype;
-  if (pcmd != NULL && iptype == 4)
-    printcommand = xstrdup_or_null (pcmd);
-  else if (pcmd != NULL && (iptype == 0 || iptype == 1))
-    printlazyprinter = xstrdup_or_null (pcmd);
-  Py_RETURN_NONE;
-}
-
 /* ************************************************************************** */
 /* ************************* Import/Export routines ************************* */
 /* ************************************************************************** */
@@ -19459,125 +19427,6 @@ PyFFFont_removeGlyph (PyFF_Font *self, PyObject *args)
   Py_RETURN (self);
 }
 
-/* Print sample flags */
-static struct flaglist printflags[] = {
-  {"fontdisplay", 0},
-  {"chars", 1},
-  {"waterfall", 2},
-  {"fontsample", 3},
-  {"fontsampleinfile", 4},
-  {"multisize", 2},
-  FLAGLIST_EMPTY                /* Sentinel */
-};
-
-static PyObject *
-PyFFFont_printSample (PyFF_Font *self, PyObject *args)
-{
-  int type, i, inlinesample = true;
-  int32_t *pointsizes = NULL;
-  char *samplefile = NULL, *output = NULL;
-  uint32_t *sample = NULL;
-  char *locfilename = NULL;
-  int arg_cnt;
-  PyObject *arg;
-  char *ptype;
-
-  if (CheckIfFontClosed (self))
-    return NULL;
-  arg_cnt = PyTuple_Size (args);
-  if (arg_cnt < 1 || arg_cnt > 4)
-    {
-      PyErr_Format (PyExc_ValueError, "Wrong number of arguments");
-      return NULL;
-    }
-
-  ptype = PyBytes_AsString (PyTuple_GetItem (args, 0));
-  if (ptype == NULL)
-    return NULL;
-  type = FlagsFromString (ptype, printflags, "print sample type");
-  if (type == FLAG_UNKNOWN)
-    {
-      return NULL;
-    }
-  if (type == 4)
-    {
-      type = 3;
-      inlinesample = false;
-    }
-  if (arg_cnt > 1)
-    {
-      arg = PyTuple_GetItem (args, 1);
-      if (PyInt_Check (arg))
-        {
-          int val = PyInt_AsLong (arg);
-          if (val > 0)
-            {
-              pointsizes = xcalloc (2, sizeof (int32_t));
-              pointsizes[0] = val;
-            }
-        }
-      else if (PySequence_Check (arg))
-        {
-          int subcnt = PySequence_Size (arg);
-          pointsizes = xmalloc ((subcnt + 1) * sizeof (int32_t));
-          for (i = 0; i < subcnt; ++i)
-            {
-              pointsizes[i] = PyInt_AsLong (PySequence_GetItem (arg, i));
-              if (PyErr_Occurred ())
-                {
-                  free (pointsizes);
-                  return NULL;
-                }
-            }
-          pointsizes[i] = 0;
-        }
-      else
-        {
-          PyErr_Format (PyExc_TypeError, "Unexpected type for pointsize");
-          return NULL;
-        }
-    }
-  if (arg_cnt > 2)
-    {
-      char *str = PyBytes_AsString (PyTuple_GetItem (args, 2));
-      if (str == NULL)
-        {
-          if (pointsizes != NULL)
-            free (pointsizes);
-          return NULL;
-        }
-      if (inlinesample)
-        {
-          sample = utf82u_copy (str);
-          samplefile = NULL;
-        }
-      else
-        {
-          samplefile = locfilename = utf82def_copy (str);
-          sample = NULL;
-        }
-    }
-  if (arg_cnt > 3)
-    {
-      output = PyBytes_AsString (PyTuple_GetItem (args, 3));
-      if (output == NULL)
-        {
-          if (pointsizes != NULL)
-            free (pointsizes);
-          if (locfilename != NULL)
-            free (locfilename);
-          if (sample != NULL)
-            free (sample);
-          return NULL;
-        }
-    }
-  ScriptPrint (self->fv, type, pointsizes, samplefile, sample, output);
-  free (pointsizes);
-  free (locfilename);
-  /* ScriptPrint frees sample for us */
-  Py_RETURN (self);
-}
-
 static PyObject *
 PyFFFont_randomText (PyFF_Font *self, PyObject *args)
 {
@@ -20790,8 +20639,6 @@ static PyMethodDef PyFF_Font_methods[] = {
    "Merges two lookups"},
   {"mergeLookupSubtables", (PyCFunction) PyFFFont_mergeLookupSubtables,
    METH_VARARGS, "Merges two lookup subtables"},
-  {"printSample", (PyCFunction) PyFFFont_printSample, METH_VARARGS,
-   "Produces a font sample printout"},
   {"randomText", (PyCFunction) PyFFFont_randomText, METH_VARARGS,
    "Produces a string with random text generated from the font using letter frequencies for the specified script and language"},
   {"regenBitmaps", (PyCFunction) PyFFFont_regenBitmaps, METH_VARARGS,
@@ -21653,8 +21500,6 @@ static PyMethodDef FontForge_methods[] = {
   {"fontsInFile", PyFF_FontsInFile, METH_VARARGS,
    "Returns a tuple containing the names of any fonts in an external file"},
   {"open", PyFF_OpenFont, METH_VARARGS, "Opens a font and returns it"},
-  {"printSetup", PyFF_printSetup, METH_VARARGS,
-   "Prepare to print a font sample (select default printer or file, page size, etc.)"},
   {"parseTTInstrs", PyFF_ParseTTFInstrs, METH_VARARGS,
    "Takes a string and parses it into a tuple of truetype instruction bytes"},
   {"unParseTTInstrs", PyFF_UnParseTTFInstrs, METH_VARARGS,

@@ -92,7 +92,7 @@ ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
 	cvtangenticon.png cvt-to-mac.png CyrilItalicComp.png				\
 	definegroups.png delta0.png delta1.png devaBaseline.png				\
 	devaHangBaseline.png devaLatinBaseline.png diffs.html				\
-	DisplayFonts.png displaygroups.png display.html donate.png			\
+	DisplayFonts.png displaygroups.png donate.png			\
 	doublestruck-B.png Eback.png EbackTtf.png editcvt.png				\
 	editexample2.html editexample3.html editexample4.html				\
 	editexample5.html editexample6-5.html editexample6.html				\
@@ -201,7 +201,7 @@ ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
 	prefs-generic.png prefs.html prefs-macfeat.png prefs-macmap.png		\
 	prefs-navigation.png prefs-newfont.png prefs-openfont.png			\
 	prefs-opentype.png prefs-pshints.png prefs-script.png				\
-	prefs-sync.png prefs-ttinstrs.png prefs-tt.png Print.png			\
+	prefs-sync.png prefs-ttinstrs.png prefs-tt.png			\
 	privatekeymenu.png privatekey.png problems.html python.html			\
 	QGDlg.png QGList.png quadbezier.gif quadbezier.png					\
 	quadraticspline.gif quadraticspline.png quotations.html				\

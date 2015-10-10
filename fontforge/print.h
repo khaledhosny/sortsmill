@@ -39,41 +39,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-enum { pt_lp, pt_lpr, pt_ghostview, pt_file, pt_other, pt_pdf, pt_unknown=-1 };
-VISIBLE extern int pagewidth, pageheight;
-VISIBLE extern char *printlazyprinter;
-VISIBLE extern char *printcommand;
 #include "baseviews.h"
-
-VISIBLE extern int printtype;
-VISIBLE extern int use_gv;
-
-static const int printdpi = 600;
-
-enum printtype { pt_fontdisplay, pt_chars, pt_multisize, pt_fontsample };
-
-struct sfbits {
-    /* If it's a CID font we'll only have one. Otherwise we might have */
-    /*  several different encodings to get all the glyphs we need. Each */
-    /*  one counts as a font */
-    SplineFont *sf;
-    EncMap *map;
-    char psfontname[300];
-    int *our_font_objs;
-    int next_font, max_font;
-    int *fonts;	/* An array of sf->charcnt/256 entries indicating */
-    		/* the font number of encodings on that page of   */
-    		/* the font. -1 => not mapped (no encodings) */
-    FILE *fontfile;
-    int cidcnt;
-    bool twobyte;
-    bool istype42cid;
-    bool iscid;
-    bool wastwobyte;
-    bool isunicode;
-    bool isunicodefull;
-    struct sfmaps *sfmap;
-};
 
 typedef struct printinfo {
     FontViewBase *fv;
@@ -81,7 +47,6 @@ typedef struct printinfo {
     SplineChar *sc;
     SplineFont *mainsf;
     EncMap *mainmap;
-    enum printtype pt;
     int pointsize;
     int32_t *pointsizes;
     int extrahspace, extravspace;
@@ -98,7 +63,6 @@ typedef struct printinfo {
     real xoff, yoff, scale;
     char *printer;
     int copies;
-    int pagewidth, pageheight, printtype;
   /* data for pdf files */
     int *object_offsets;
     int *page_objects;
@@ -108,7 +72,6 @@ typedef struct printinfo {
     /*  sample text there may be many logical fonts. And each one may need to */
     /*  be represented by many actual fonts to encode all our glyphs */
     int sfcnt, sfmax, sfid;
-    struct sfbits *sfbits;
     long start_cur_page;
     int lastfont, intext;
     struct layoutinfo *sample;
@@ -116,16 +79,6 @@ typedef struct printinfo {
     int lastx, lasty;
 } PI, DI;
 
-extern struct printdefaults {
-    Encoding *last_cs;
-    enum printtype pt;
-    int pointsize;
-    uint32_t *text;
-} pdefs[];
-/* defaults for print from fontview, charview, metricsview */
-
-VISIBLE extern void PI_Init(PI *pi,FontViewBase *fv,SplineChar *sc);
-VISIBLE extern void DoPrinting(PI *pi,char *filename);
 extern int PdfDumpGlyphResources(PI *pi,SplineChar *sc);
 extern void makePatName(char *buffer,
 	RefChar *ref,SplineChar *sc,int layer,int isstroke,int isgrad);

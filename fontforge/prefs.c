@@ -677,17 +677,6 @@ N_("UseNewIndicScripts"), pr_bool, &use_second_indic_scripts, NULL, NULL,
   {
   "DefaultPSflags", pr_int, &old_ps_flags, NULL, NULL, '\0', NULL, 1, NULL},
   {
-  "PageWidth", pr_int, &pagewidth, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PageHeight", pr_int, &pageheight, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PrintType", pr_int, &printtype, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PrintCommand", pr_string, &printcommand, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "PageLazyPrinter", pr_string, &printlazyprinter, NULL, NULL, '\0', NULL,
-      1, NULL},
-  {
   "RegularStar", pr_bool, &regular_star, NULL, NULL, '\0', NULL, 1, NULL},
   {
   "PolyStar", pr_bool, &polystar, NULL, NULL, '\0', NULL, 1, NULL},

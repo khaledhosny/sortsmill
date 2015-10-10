@@ -526,6 +526,58 @@ MVSetSubtables (SplineFont *sf)
     }
 }
 
+static uint32_t simple_stdfeatures[] = {
+  CHR ('c', 'c', 'm', 'p'), CHR ('l', 'o', 'c', 'a'),
+  CHR ('k', 'e', 'r', 'n'), CHR ('l', 'i', 'g', 'a'),
+  CHR ('c', 'a', 'l', 't'), CHR ('m', 'a', 'r', 'k'),
+  CHR ('m', 'k', 'm', 'k'),
+  REQUIRED_FEATURE, 0
+};
+
+static uint32_t arab_stdfeatures[] = {
+  CHR ('c', 'c', 'm', 'p'), CHR ('l', 'o', 'c', 'a'),
+  CHR ('i', 's', 'o', 'l'), CHR ('i', 'n', 'i', 't'),
+  CHR ('m', 'e', 'd', 'i'), CHR ('f', 'i', 'n', 'a'),
+  CHR ('r', 'l', 'i', 'g'), CHR ('l', 'i', 'g', 'a'),
+  CHR ('c', 'a', 'l', 't'), CHR ('k', 'e', 'r', 'n'),
+  CHR ('c', 'u', 'r', 's'), CHR ('m', 'a', 'r', 'k'),
+  CHR ('m', 'k', 'm', 'k'), REQUIRED_FEATURE, 0
+};
+
+static uint32_t hebrew_stdfeatures[] = {
+  CHR ('c', 'c', 'm', 'p'), CHR ('l', 'o', 'c', 'a'),
+  CHR ('l', 'i', 'g', 'a'), CHR ('c', 'a', 'l', 't'),
+  CHR ('k', 'e', 'r', 'n'), CHR ('m', 'a', 'r', 'k'),
+  CHR ('m', 'k', 'm', 'k'),
+  REQUIRED_FEATURE, 0
+};
+
+static struct
+{
+  uint32_t script, *stdfeatures;
+} script_2_std[] =
+{
+  {CHR ('l', 'a', 't', 'n'), simple_stdfeatures},
+  {CHR ('D', 'F', 'L', 'T'), simple_stdfeatures},
+  {CHR ('c', 'y', 'r', 'l'), simple_stdfeatures},
+  {CHR ('g', 'r', 'e', 'k'), simple_stdfeatures},
+  {CHR ('a', 'r', 'a', 'b'), arab_stdfeatures},
+  {CHR ('h', 'e', 'b', 'r'), hebrew_stdfeatures},
+  {0, NULL}
+};
+
+static uint32_t *
+StdFeaturesOfScript (uint32_t script)
+{
+  int i;
+
+  for (i = 0; script_2_std[i].script != 0; ++i)
+    if (script_2_std[i].script == script)
+      return script_2_std[i].stdfeatures;
+
+  return simple_stdfeatures;
+}
+
 static void
 MVSetFeatures (MetricsView *mv)
 {
@@ -2509,13 +2561,6 @@ MVMenuGenerateTTC (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 VISIBLE void
-MVMenuPrint (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
-{
-  MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
-  PrintDlg (NULL, NULL, mv);
-}
-
-VISIBLE void
 MVUndo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   MetricsView *mv = (MetricsView *) GDrawGetUserData (gw);
@@ -4054,22 +4099,6 @@ static GMenuItem fllist[] = {
       .mnemonic = 'M' },
     .shortcut = H_("Merge Kern Info...|Ctl+Shft+K"),
     .invoke = MVMenuMergeKern
-  },
-
-  GMENUITEM_LINE,
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_Print..."),
-      .image = (GImage *) "fileprint.png",
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = true,
-      .text_is_1byte = true,
-      .text_has_mnemonic = true,
-      .mnemonic = 'P' },
-    .shortcut = H_("Print...|Ctl+P"),
-    .invoke = MVMenuPrint
   },
 
   GMENUITEM_LINE,

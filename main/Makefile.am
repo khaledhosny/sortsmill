@@ -72,14 +72,11 @@ endif THE_PROGRAMS
 
 if THE_PROGRAMS
 
-bin_PROGRAMS += sortsmill-lint sortsmill-image sortsmill-compare
-bin_PROGRAMS += smlint smimage smcompare
+bin_PROGRAMS += sortsmill-lint sortsmill-compare
+bin_PROGRAMS += smlint smcompare
 
 dist_sortsmill_lint_SOURCES = lint.c
 dist_smlint_SOURCES = lint.c
-
-dist_sortsmill_image_SOURCES = image.c
-dist_smimage_SOURCES = image.c
 
 dist_sortsmill_compare_SOURCES = compare.c
 dist_smcompare_SOURCES = compare.c

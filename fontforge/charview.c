@@ -6382,7 +6382,6 @@ cv_e_h (GWindow gw, GEvent *event)
 #define MID_Align		2246
 #define MID_FontInfo		2247
 #define MID_FindProblems	2248
-#define MID_InsertText		2249
 #define MID_Italic		2250
 #define MID_ChangeXHeight	2251
 #define MID_ChangeGlyph		2252
@@ -6672,14 +6671,6 @@ CVMenuRevertGlyph (GWindow gw, struct gmenuitem *UNUSED (mi),
       RevertedGlyphReferenceFixup (cv->b.sc, temp.parent);
       _CV_CharChangedUpdate (cv, false);
     }
-}
-
-VISIBLE void
-CVMenuPrint (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
-{
-  CharView *cv = (CharView *) GDrawGetUserData (gw);
-
-  PrintDlg (NULL, cv->b.sc, NULL);
 }
 
 #if !defined(_NO_PYTHON)
@@ -10629,13 +10620,6 @@ CVMenuCorrectDir (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 
 VISIBLE void
-CVMenuInsertText (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
-{
-  CharView *cv = (CharView *) GDrawGetUserData (gw);
-  InsertTextDlg (cv);
-}
-
-VISIBLE void
 CVMenuGetInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
@@ -12182,24 +12166,6 @@ static GMenuItem fllist[] = {
     .shortcut = H_ ("Revert Glyph|Alt+Ctl+R"),
     .invoke = CVMenuRevertGlyph,
     .mid = MID_RevertGlyph
-  },
-
-  GMENUITEM_LINE,
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_Print..."),
-      .image = (GImage *) "fileprint.png",
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'P'
-    },
-    .shortcut = H_ ("Print...|Ctl+P"),
-    .invoke = CVMenuPrint,
-    .mid = 0
   },
 
   GMENUITEM_LINE,
@@ -14354,22 +14320,6 @@ static GMenuItem ellist[] = {
     .shortcut = H_ ("Reverse Direction|No Shortcut"),
     .invoke = CVMenuReverseDir,
     .mid = MID_ReverseDir},
-
-  GMENUITEM_LINE,
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("Insert Text Outlines..."),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'D'},
-
-    .shortcut = H_ ("Insert Text Outlines|No Shortcut"),
-    .invoke = CVMenuInsertText,
-    .mid = MID_InsertText},
 
   GMENUITEM_LINE,
 

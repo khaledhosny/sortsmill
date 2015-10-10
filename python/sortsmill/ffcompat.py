@@ -86,7 +86,6 @@ from sortsmill.legacy.fontforge import (
   contouriter,
   spiroOpen,
   askString,
-  printSetup,
   loadPrefs,
   layeriter,
   registerImportExport,

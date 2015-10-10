@@ -897,7 +897,6 @@ _FVCloseWindows (FontView *fv)
     fv->b.cidmaster ? fv->b.cidmaster : fv->b.sf->mm !=
     NULL ? fv->b.sf->mm->normal : fv->b.sf;
 
-  PrintWindowClose ();
   if (fv->b.nextsame == NULL && fv->b.sf->fv == &fv->b
       && fv->b.sf->kcld != NULL)
     KCLD_End (fv->b.sf->kcld);
@@ -1593,16 +1592,6 @@ FVMenuOpenMetrics (GWindow gw, struct gmenuitem *UNUSED (mi),
   MetricsViewCreate (fv, NULL, fv->filled == fv->show ? NULL : fv->show);
 }
 
-VISIBLE void
-FVMenuPrint (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
-{
-  FontView *fv = (FontView *) GDrawGetUserData (gw);
-
-  if (fv->b.container != NULL && fv->b.container->funcs->is_modal)
-    return;
-  PrintDlg (fv, NULL, NULL);
-}
-
 #if !defined(_NO_PYTHON)
 VISIBLE void
 FVMenuExecute (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
@@ -1836,7 +1825,6 @@ FVMenuCondense (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 #define MID_OpenOutline	2701
 #define MID_Revert	2702
 #define MID_Recent	2703
-#define MID_Print	2704
 #define MID_ScriptMenu	2705
 #define MID_RevertGlyph	2707
 #define MID_RevertToBackup 2708
@@ -5217,7 +5205,6 @@ fllistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   int anychars = FVAnyCharSelected (fv);
   FontView *fvs;
-  int in_modal = (fv->b.container != NULL && fv->b.container->funcs->is_modal);
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
     {
@@ -5278,10 +5265,6 @@ fllistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
         case MID_ScriptMenu:
           mi->ti.disabled = script_menu_names[0] == NULL;
-          break;
-
-        case MID_Print:
-          mi->ti.disabled = fv->b.sf->onlybitmaps || in_modal;
           break;
         }
     }
@@ -5909,23 +5892,6 @@ static GMenuItem fllist[] = {
     .shortcut = H_ ("Revert Glyph|Alt+Ctl+R"),
     .invoke = FVMenuRevertGlyph,
     .mid = MID_RevertGlyph},
-
-  GMENUITEM_LINE,
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_Print..."),
-      .image = (GImage *) "fileprint.png",
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = true,
-      .text_is_1byte = true,
-      .text_has_mnemonic = true,
-      .mnemonic = 'P'},
-
-    .shortcut = H_ ("Print...|Ctl+P"),
-    .invoke = FVMenuPrint,
-    .mid = MID_Print},
 
   GMENUITEM_LINE,
 
