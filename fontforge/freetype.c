@@ -235,15 +235,12 @@ __FreeTypeFontContext (FT_Library context,
       sf->internal_temp = true;
       switch (ff)
         {
-        case ff_pfb:
-        case ff_pfa:
-          if (!_WritePSFont (ftc->file, sf, ff, 0, map, NULL, layer))
-            goto fail;
-          break;
         case ff_ttf:
         case ff_ttfsym:
           ftc->isttf = true;
           /* Fall through.... */
+        case ff_pfb:
+        case ff_pfa:
         case ff_otf:
         case ff_otfcid:
           if (!_WriteTTFFont
