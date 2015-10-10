@@ -178,7 +178,7 @@ __FreeTypeFontContext (FT_Library context,
 
   if (context == NULL)
     return NULL;
-  if (sf->multilayer || sf->strokedfont)
+  if (sf->multilayer)
     return NULL;
 
   ftc = xcalloc (1, sizeof (FTC));
