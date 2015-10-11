@@ -11422,7 +11422,7 @@ CharsFromNameOrCID (SplineChar *sc, uint32_t *buf)
   int uni = UniFromNameOrCID (sc->name, fv);
   if (uni != -1)
     buf[0] = uni;
-  else
+  else if (strchr (sc->name, '_'))
     {
       char *tok;
       int i = 0;
