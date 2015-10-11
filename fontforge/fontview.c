@@ -11647,21 +11647,6 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
                 GDrawDrawLine (pixmap, r.x + r.width - 3, r.y,
                                r.x + r.width - 3, r.y + r.height - 1, hintcol);
               }
-            if (sc->unicodeenc != -1 &&
-                /* Pango complains if we try to draw non characters */
-                ((sc->unicodeenc & 0xffff) == 0xfffe ||
-                 (sc->unicodeenc & 0xffff) == 0xffff ||
-                 (sc->unicodeenc >= 0xfdd0 && sc->unicodeenc <= 0xfdef) ||
-                 (sc->unicodeenc >= 0xfe00 && sc->unicodeenc <= 0xfe0f) ||
-                 (sc->unicodeenc >= 0xe0110 && sc->unicodeenc <= 0xe01ff) ||
-                 (sc->unicodeenc >= 0xd800 && sc->unicodeenc <= 0xdfff)))
-              {
-                GDrawDrawLine (pixmap, r.x, r.y, r.x + r.width - 1,
-                               r.y + r.height - 1, 0x000000);
-                GDrawDrawLine (pixmap, r.x, r.y + r.height - 1,
-                               r.x + r.width - 1, r.y, 0x000000);
-              }
-            else
               {
                 if (styles != laststyles)
                   GDrawSetFont (pixmap, FVCheckFont (fv, styles));
