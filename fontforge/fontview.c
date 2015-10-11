@@ -11392,6 +11392,50 @@ do_Adobe_Pua (uint32_t *buf, int sob, int uni)
 }
 
 static int
+UniFromNameOrCID (char *name, FontView *fv)
+{
+  int i, uni = -1;
+  SplineFont *cm = fv->b.sf->cidmaster;
+  char *pt = strchr (name, '.');
+  if (pt != NULL)
+    *pt = '\0';
+  uni = UniFromName (name, fv->b.sf->uni_interp, fv->b.map->enc);
+  if (pt != NULL)
+    *pt = '.';
+  if (uni == -1 && cm != NULL && (i = CIDFromName (name, cm)) != -1)
+    {
+      struct cidmap *map;
+      map = FindCidMap (cm->cidregistry, cm->ordering, cm->supplement, cm);
+      uni = CID2Uni (map, i);
+    }
+
+  return uni;
+}
+
+static void
+CharsFromNameOrCID (SplineChar *sc, uint32_t *buf)
+{
+  FontView *fv = (FontView *) sc->parent->fv;
+  int uni = UniFromNameOrCID (sc->name, fv);
+  if (uni != -1)
+    buf[0] = uni;
+  else
+    {
+      char *tok;
+      int i = 0;
+      char *name = strdup (sc->name);
+      for (tok = strtok (name, "_"); tok != NULL; tok = strtok (NULL, "_"))
+        {
+          uni = UniFromNameOrCID (tok, fv);
+          if (uni != -1)
+            buf[i++] = uni;
+        }
+      free (name);
+      buf[i] = 0;
+    }
+}
+
+static int
 GetRepresentativeChars (SplineChar *sc, uint32_t *buf, Color *fg)
 {
   FontView *fv = (FontView *) sc->parent->fv;
@@ -11423,32 +11467,11 @@ GetRepresentativeChars (SplineChar *sc, uint32_t *buf, Color *fg)
       *fg = 0xff0000;
       if (pt != NULL)
         {
-          int i;
-          int found;
-          SplineFont *cm = fv->b.sf->cidmaster;
-          *pt = '\0';
-          found = UniFromName (sc->name, fv->b.sf->uni_interp,
-                               fv->b.map->enc);
-          *pt = '.';
-          if (found != -1)
-            buf[0] = found;
-          else if (cm != NULL && (i = CIDFromName (sc->name, cm)) != -1)
-            {
-              struct cidmap *map;
-              map = FindCidMap (cm->cidregistry, cm->ordering,
-                                cm->supplement, cm);
-              found = CID2Uni (map, i);
-              if (found != -1)
-                buf[0] = found;
-            }
-          if (strstr (pt, ".vert") != NULL)
+          CharsFromNameOrCID (sc, buf);
+          if (strstr (pt, ".italic") != NULL)
+            styles = _uni_italic;
+          else if (strstr (pt, ".vert") != NULL)
             styles = _uni_rotated;
-          if (buf[0] != '?')
-            {
-              *fg = def_fg;
-              if (strstr (pt, ".italic") != NULL)
-                styles = _uni_italic;
-            }
         }
       else if (strncmp (sc->name, "hwuni", 5) == 0)
         {
@@ -11473,6 +11496,13 @@ GetRepresentativeChars (SplineChar *sc, uint32_t *buf, Color *fg)
         {
           styles = _uni_rotated;
         }
+      else
+        {
+          CharsFromNameOrCID (sc, buf);
+        }
+
+      if (buf[0] != '?')
+        *fg = def_fg;
     }
 
   return styles;
