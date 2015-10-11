@@ -1318,6 +1318,11 @@ render_layout (GXWindow gw, int x, int y, Color fg)
               cairo_move_to (cr, rx, ry - rect.width / PANGO_SCALE);
               cairo_rotate (cr, M_PI / 2.0);
             }
+          if (fi->rq.style & fs_mirrored)
+            {
+              cairo_move_to (cr, rx + rect.width / PANGO_SCALE, ry);
+              cairo_scale (cr, -1, 1);
+            }
 
           pango_cairo_show_glyph_string (cr, run->item->analysis.font,
                                          run->glyphs);

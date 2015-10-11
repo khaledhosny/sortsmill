@@ -59,7 +59,8 @@ typedef enum font_style
   fs_smallcaps = 2,
   fs_condensed = 4,
   fs_extended = 8,
-  fs_rotated = 16
+  fs_rotated = 16,
+  fs_mirrored = 32
 } FontStyle;
 
 typedef struct

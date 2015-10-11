@@ -11349,7 +11349,8 @@ FVMakeChar (FontView *fv, int enc)
 /* we style some glyph names differently, see FVExpose() */
 #define _uni_italic	0x2
 #define _uni_rotated	(1<<2)
-#define _uni_fontmax	(2<<2)
+#define _uni_mirrored	(1<<3)
+#define _uni_fontmax	(3<<3)
 
 static GFont *
 FVCheckFont (FontView *fv, int type)
@@ -11361,6 +11362,8 @@ FVCheckFont (FontView *fv, int type)
         style |= fs_italic;
       if (type & _uni_rotated)
         style |= fs_rotated;
+      if (type & _uni_mirrored)
+        style |= fs_mirrored;
       fv->fontset[type] =
         GDrawNewFont (fv->v, fv_fontnames, fv_fontsize, 400, style);
     }
@@ -11472,6 +11475,8 @@ GetRepresentativeChars (SplineChar *sc, uint32_t *buf, Color *fg)
             styles = _uni_italic;
           else if (strstr (pt, ".vert") != NULL)
             styles = _uni_rotated;
+          else if (strstr (pt, ".rtlm") != NULL)
+            styles = _uni_mirrored;
         }
       else if (strncmp (sc->name, "hwuni", 5) == 0)
         {
