@@ -11452,8 +11452,6 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
           {
             uint32_t buf[60];
             char cbuf[8];
-            char utf8_buf[8];
-            int use_utf8 = false;
             Color fg;
             extern const int amspua[];
             int uni;
@@ -11510,7 +11508,6 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
                 else if (fv->b.sf->uni_interp == ui_adobe && uni >= 0xf600
                          && uni <= 0xf7ff && adobes_pua_alts[uni - 0xf600] != 0)
                   {
-                    use_utf8 = false;
                     do_Adobe_Pua (buf, sizeof (buf), uni);
                   }
                 else if (uni >= 0xe0020 && uni <= 0xe007e)
@@ -11519,10 +11516,7 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
                   }
                 else if (uni > 0 && uni < unicode4_size)
                   {
-                    char *pt = utf8_buf;
-                    use_utf8 = true;
-                    pt = utf8_idpb (pt, uni);
-                    *pt = '\0';
+                    buf[0] = uni;
                   }
                 else
                   {
@@ -11653,51 +11647,19 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
                 GDrawDrawLine (pixmap, r.x + r.width - 3, r.y,
                                r.x + r.width - 3, r.y + r.height - 1, hintcol);
               }
-            if (use_utf8 && sc->unicodeenc != -1 &&
+            if (sc->unicodeenc != -1 &&
                 /* Pango complains if we try to draw non characters */
-                /* These two are guaranteed "NOT A UNICODE CHARACTER" in all planes */
-                ((sc->unicodeenc & 0xffff) == 0xfffe || (sc->unicodeenc & 0xffff) == 0xffff || (sc->unicodeenc >= 0xfdd0 && sc->unicodeenc <= 0xfdef) ||        /* noncharacters */
-                 (sc->unicodeenc >= 0xfe00 && sc->unicodeenc <= 0xfe0f) ||      /* variation selectors */
-                 (sc->unicodeenc >= 0xe0110 && sc->unicodeenc <= 0xe01ff) ||    /* variation selectors */
-                 /*  The surrogates in BMP aren't valid either */
+                ((sc->unicodeenc & 0xffff) == 0xfffe ||
+                 (sc->unicodeenc & 0xffff) == 0xffff ||
+                 (sc->unicodeenc >= 0xfdd0 && sc->unicodeenc <= 0xfdef) ||
+                 (sc->unicodeenc >= 0xfe00 && sc->unicodeenc <= 0xfe0f) ||
+                 (sc->unicodeenc >= 0xe0110 && sc->unicodeenc <= 0xe01ff) ||
                  (sc->unicodeenc >= 0xd800 && sc->unicodeenc <= 0xdfff)))
-              {                 /* surrogates */
+              {
                 GDrawDrawLine (pixmap, r.x, r.y, r.x + r.width - 1,
                                r.y + r.height - 1, 0x000000);
                 GDrawDrawLine (pixmap, r.x, r.y + r.height - 1,
                                r.x + r.width - 1, r.y, 0x000000);
-              }
-            else if (use_utf8)
-              {
-                GTextBounds size;
-                if (styles != laststyles)
-                  GDrawSetFont (pixmap, FVCheckFont (fv, styles));
-                width = GDrawGetText8Bounds (pixmap, utf8_buf, -1, &size);
-                if (size.lbearing == 0 && size.rbearing == 0)
-                  {
-                    utf8_buf[0] = 0xe0 | (0xfffd >> 12);
-                    utf8_buf[1] = 0x80 | ((0xfffd >> 6) & 0x3f);
-                    utf8_buf[2] = 0x80 | (0xfffd & 0x3f);
-                    utf8_buf[3] = 0;
-                    width = GDrawGetText8Bounds (pixmap, utf8_buf, -1, &size);
-                  }
-                width = size.rbearing - size.lbearing + 1;
-                if (width >= fv->cbw - 1)
-                  {
-                    GDrawPushClip (pixmap, &r, &old2);
-                    width = fv->cbw - 1;
-                  }
-                if (sc->unicodeenc < 0x80 || sc->unicodeenc >= 0xa0)
-                  {
-                    GDrawDrawText8 (pixmap,
-                                    j * fv->cbw + (fv->cbw - 1 - width) / 2 -
-                                    size.lbearing,
-                                    i * fv->cbh + fv->lab_as + 1, utf8_buf,
-                                    -1, fg ^ fgxor);
-                  }
-                if (width >= fv->cbw - 1)
-                  GDrawPopClip (pixmap, &old2);
-                laststyles = styles;
               }
             else
               {
