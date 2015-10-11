@@ -11391,6 +11391,110 @@ do_Adobe_Pua (uint32_t *buf, int sob, int uni)
   buf[j] = 0;
 }
 
+static int
+GetRepresentativeChars (SplineChar *sc, uint32_t *buf, Color *fg)
+{
+  FontView *fv = (FontView *) sc->parent->fv;
+  int uni = sc->unicodeenc;
+  int styles = 0;
+  Color def_fg = GDrawGetDefaultForeground (NULL);
+
+  if (uni == 0xad)
+    {
+      buf[0] = '-';
+    }
+  else if (fv->b.sf->uni_interp == ui_adobe && uni >= 0xf600 && uni <= 0xf7ff
+           && adobes_pua_alts[uni - 0xf600] != 0)
+    {
+      do_Adobe_Pua (buf, sizeof (buf), uni);
+    }
+  else if (uni >= 0xe0020 && uni <= 0xe007e)
+    {
+      buf[0] = uni - 0xe0000;   /* A map of Ascii for language names */
+    }
+  else if (uni > 0 && uni < unicode4_size)
+    {
+      buf[0] = uni;
+    }
+  else
+    {
+      char *pt = strchr (sc->name, '.');
+      buf[0] = '?';
+      *fg = 0xff0000;
+      if (pt != NULL)
+        {
+          int i, n = pt - sc->name;
+          char *end;
+          SplineFont *cm = fv->b.sf->cidmaster;
+          if (n == 7 && sc->name[0] == 'u' && sc->name[1] == 'n'
+              && sc->name[2] == 'i'
+              && (i = strtol (sc->name + 3, &end, 16), end - sc->name == 7))
+            {
+              buf[0] = i;
+            }
+          else if (n >= 5 && n <= 7 && sc->name[0] == 'u'
+                   && (i =
+                       strtol (sc->name + 1, &end, 16), end - sc->name == n))
+            {
+              buf[0] = i;
+            }
+          else if (cm != NULL && (i = CIDFromName (sc->name, cm)) != -1)
+            {
+              int uni;
+              struct cidmap *map;
+              map = FindCidMap (cm->cidregistry, cm->ordering,
+                                cm->supplement, cm);
+              uni = CID2Uni (map, i);
+              if (uni != -1)
+                buf[0] = uni;
+            }
+          else
+            {
+              int uni;
+              *pt = '\0';
+              uni = UniFromName (sc->name, fv->b.sf->uni_interp,
+                                 fv->b.map->enc);
+              if (uni != -1)
+                buf[0] = uni;
+              *pt = '.';
+            }
+          if (strstr (pt, ".vert") != NULL)
+            styles = _uni_rotated;
+          if (buf[0] != '?')
+            {
+              *fg = def_fg;
+              if (strstr (pt, ".italic") != NULL)
+                styles = _uni_italic;
+            }
+        }
+      else if (strncmp (sc->name, "hwuni", 5) == 0)
+        {
+          int uni = -1;
+          sscanf (sc->name, "hwuni%x", (unsigned *) &uni);
+          if (uni != -1)
+            buf[0] = uni;
+        }
+      else if (strncmp (sc->name, "italicuni", 9) == 0)
+        {
+          int uni = -1;
+          sscanf (sc->name, "italicuni%x", (unsigned *) &uni);
+          if (uni != -1)
+            {
+              buf[0] = uni;
+              styles = _uni_italic;
+            }
+          *fg = def_fg;
+        }
+      else if (strncmp (sc->name, "vertcid_", 8) == 0 ||
+               strncmp (sc->name, "vertuni", 7) == 0)
+        {
+          styles = _uni_rotated;
+        }
+    }
+
+  return styles;
+}
+
 static void
 FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
 {
@@ -11456,25 +11560,26 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
             extern const int amspua[];
             int uni;
             struct cidmap *cidmap = NULL;
-            sc = (gid = enc_to_gid (fv->b.map, index)) != -1 ?
-              fv->b.sf->glyphs[gid] : NULL;
+            gid = enc_to_gid (fv->b.map, index);
+            if (gid != -1)
+              sc = fv->b.sf->glyphs[gid];
+            else
+              sc = SCBuildDummy (&dummy, fv->b.sf, fv->b.map, index);
 
             if (fv->b.cidmaster != NULL)
               cidmap =
                 FindCidMap (fv->b.cidmaster->cidregistry,
                             fv->b.cidmaster->ordering,
-                            fv->b.cidmaster->supplement, fv->b.cidmaster);
+                            fv->b.cidmaster->supplement,
+                            fv->b.cidmaster);
 
-            if ((fv->b.map->enc == &custom && index < 256)
-                || (fv->b.map->enc != &custom
-                    && index < fv->b.map->enc->char_cnt) || (cidmap != NULL
-                                                             && index <
-                                                             MaxCID (cidmap)))
+            if ((fv->b.map->enc == &custom && index < 256) ||
+                (fv->b.map->enc != &custom &&
+                 index < fv->b.map->enc->char_cnt) ||
+                (cidmap != NULL && index < MaxCID (cidmap)))
               fg = def_fg;
             else
               fg = 0x505050;
-            if (sc == NULL)
-              sc = SCBuildDummy (&dummy, fv->b.sf, fv->b.map, index);
             uni = sc->unicodeenc;
             buf[0] = buf[1] = 0;
             if (fv->b.sf->uni_interp == ui_ams && uni >= 0xe000
@@ -11495,105 +11600,15 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
                   u32_strcpy (buf, x_gc_u8_to_u32 ("?"));
                 break;
               case gl_encoding:
-                if (fv->b.map->enc->only_1byte
-                    || (fv->b.map->enc->has_1byte && index < 256))
+                if (fv->b.map->enc->only_1byte ||
+                    (fv->b.map->enc->has_1byte && index < 256))
                   sprintf (cbuf, "%02x", index);
                 else
                   sprintf (cbuf, "%04x", index);
                 u32_strcpy (buf, x_gc_u8_to_u32 (cbuf));
                 break;
               case gl_glyph:
-                if (uni == 0xad)
-                  buf[0] = '-';
-                else if (fv->b.sf->uni_interp == ui_adobe && uni >= 0xf600
-                         && uni <= 0xf7ff && adobes_pua_alts[uni - 0xf600] != 0)
-                  {
-                    do_Adobe_Pua (buf, sizeof (buf), uni);
-                  }
-                else if (uni >= 0xe0020 && uni <= 0xe007e)
-                  {
-                    buf[0] = uni - 0xe0000;     /* A map of Ascii for language names */
-                  }
-                else if (uni > 0 && uni < unicode4_size)
-                  {
-                    buf[0] = uni;
-                  }
-                else
-                  {
-                    char *pt = strchr (sc->name, '.');
-                    buf[0] = '?';
-                    fg = 0xff0000;
-                    if (pt != NULL)
-                      {
-                        int i, n = pt - sc->name;
-                        char *end;
-                        SplineFont *cm = fv->b.sf->cidmaster;
-                        if (n == 7 && sc->name[0] == 'u' && sc->name[1] == 'n'
-                            && sc->name[2] == 'i'
-                            && (i =
-                                strtol (sc->name + 3, &end, 16),
-                                end - sc->name == 7))
-                          buf[0] = i;
-                        else if (n >= 5 && n <= 7 && sc->name[0] == 'u'
-                                 && (i =
-                                     strtol (sc->name + 1, &end, 16),
-                                     end - sc->name == n))
-                          buf[0] = i;
-                        else if (cm != NULL
-                                 && (i = CIDFromName (sc->name, cm)) != -1)
-                          {
-                            int uni;
-                            uni =
-                              CID2Uni (FindCidMap
-                                       (cm->cidregistry, cm->ordering,
-                                        cm->supplement, cm), i);
-                            if (uni != -1)
-                              buf[0] = uni;
-                          }
-                        else
-                          {
-                            int uni;
-                            *pt = '\0';
-                            uni =
-                              UniFromName (sc->name, fv->b.sf->uni_interp,
-                                           fv->b.map->enc);
-                            if (uni != -1)
-                              buf[0] = uni;
-                            *pt = '.';
-                          }
-                        if (strstr (pt, ".vert") != NULL)
-                          styles = _uni_rotated;
-                        if (buf[0] != '?')
-                          {
-                            fg = def_fg;
-                            if (strstr (pt, ".italic") != NULL)
-                              styles = _uni_italic;
-                          }
-                      }
-                    else if (strncmp (sc->name, "hwuni", 5) == 0)
-                      {
-                        int uni = -1;
-                        sscanf (sc->name, "hwuni%x", (unsigned *) &uni);
-                        if (uni != -1)
-                          buf[0] = uni;
-                      }
-                    else if (strncmp (sc->name, "italicuni", 9) == 0)
-                      {
-                        int uni = -1;
-                        sscanf (sc->name, "italicuni%x", (unsigned *) &uni);
-                        if (uni != -1)
-                          {
-                            buf[0] = uni;
-                            styles = _uni_italic;
-                          }
-                        fg = def_fg;
-                      }
-                    else if (strncmp (sc->name, "vertcid_", 8) == 0
-                             || strncmp (sc->name, "vertuni", 7) == 0)
-                      {
-                        styles = _uni_rotated;
-                      }
-                  }
+                styles = GetRepresentativeChars (sc, buf, &fg);
                 break;
               }
             r.x = j * fv->cbw + 1;
