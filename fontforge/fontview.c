@@ -11647,26 +11647,24 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
                 GDrawDrawLine (pixmap, r.x + r.width - 3, r.y,
                                r.x + r.width - 3, r.y + r.height - 1, hintcol);
               }
+            if (styles != laststyles)
+              GDrawSetFont (pixmap, FVCheckFont (fv, styles));
+            width = GDrawGetTextWidth (pixmap, buf, -1);
+            if (width >= fv->cbw - 1)
               {
-                if (styles != laststyles)
-                  GDrawSetFont (pixmap, FVCheckFont (fv, styles));
-                width = GDrawGetTextWidth (pixmap, buf, -1);
-                if (width >= fv->cbw - 1)
-                  {
-                    GDrawPushClip (pixmap, &r, &old2);
-                    width = fv->cbw - 1;
-                  }
-                if (sc->unicodeenc < 0x80 || sc->unicodeenc >= 0xa0)
-                  {
-                    GDrawDrawText (pixmap,
-                                   j * fv->cbw + (fv->cbw - 1 - width) / 2,
-                                   i * fv->cbh + fv->lab_as + 1, buf, -1,
-                                   fg ^ fgxor);
-                  }
-                if (width >= fv->cbw - 1)
-                  GDrawPopClip (pixmap, &old2);
-                laststyles = styles;
+                GDrawPushClip (pixmap, &r, &old2);
+                width = fv->cbw - 1;
               }
+            if (sc->unicodeenc < 0x80 || sc->unicodeenc >= 0xa0)
+              {
+                GDrawDrawText (pixmap,
+                               j * fv->cbw + (fv->cbw - 1 - width) / 2,
+                               i * fv->cbh + fv->lab_as + 1, buf, -1,
+                               fg ^ fgxor);
+              }
+            if (width >= fv->cbw - 1)
+              GDrawPopClip (pixmap, &old2);
+            laststyles = styles;
           }
         FVDrawGlyph (pixmap, fv, index, false);
       }
