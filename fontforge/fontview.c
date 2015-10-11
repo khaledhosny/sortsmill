@@ -11423,40 +11423,23 @@ GetRepresentativeChars (SplineChar *sc, uint32_t *buf, Color *fg)
       *fg = 0xff0000;
       if (pt != NULL)
         {
-          int i, n = pt - sc->name;
-          char *end;
+          int i;
+          int found;
           SplineFont *cm = fv->b.sf->cidmaster;
-          if (n == 7 && sc->name[0] == 'u' && sc->name[1] == 'n'
-              && sc->name[2] == 'i'
-              && (i = strtol (sc->name + 3, &end, 16), end - sc->name == 7))
-            {
-              buf[0] = i;
-            }
-          else if (n >= 5 && n <= 7 && sc->name[0] == 'u'
-                   && (i =
-                       strtol (sc->name + 1, &end, 16), end - sc->name == n))
-            {
-              buf[0] = i;
-            }
+          *pt = '\0';
+          found = UniFromName (sc->name, fv->b.sf->uni_interp,
+                               fv->b.map->enc);
+          *pt = '.';
+          if (found != -1)
+            buf[0] = found;
           else if (cm != NULL && (i = CIDFromName (sc->name, cm)) != -1)
             {
-              int uni;
               struct cidmap *map;
               map = FindCidMap (cm->cidregistry, cm->ordering,
                                 cm->supplement, cm);
-              uni = CID2Uni (map, i);
-              if (uni != -1)
-                buf[0] = uni;
-            }
-          else
-            {
-              int uni;
-              *pt = '\0';
-              uni = UniFromName (sc->name, fv->b.sf->uni_interp,
-                                 fv->b.map->enc);
-              if (uni != -1)
-                buf[0] = uni;
-              *pt = '.';
+              found = CID2Uni (map, i);
+              if (found != -1)
+                buf[0] = found;
             }
           if (strstr (pt, ".vert") != NULL)
             styles = _uni_rotated;
