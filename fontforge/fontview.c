@@ -3745,7 +3745,6 @@ FVShowSubFont (FontView *fv, SplineFont *new)
   BDFFont *newbdf;
   int wascompact = fv->b.normal != NULL;
   int flags = 0;
-  extern int use_freetype_to_rasterize_fv;
 
   for (mv = fv->b.sf->metrics; mv != NULL; mv = mvnext)
     {
@@ -3772,8 +3771,7 @@ FVShowSubFont (FontView *fv, SplineFont *new)
     }
   flags |= fv->antialias ? pf_antialias : 0;
   flags |= fv->bbsized ? pf_bbsized : 0;
-  flags |= use_freetype_to_rasterize_fv
-    && !fv->b.sf->multilayer ? pf_ft_nohints : 0;
+  flags |= !fv->b.sf->multilayer ? pf_ft_nohints : 0;
   newbdf =
     SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, fv->filled->pixelsize,
                          72, flags, NULL);
@@ -4190,7 +4188,6 @@ FVMenuSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   int dspsize = fv->filled->pixelsize;
   int changedmodifier = false;
-  extern int use_freetype_to_rasterize_fv;
 
   fv->magnify = 1;
   fv->user_requested_magnify = -1;
@@ -4226,8 +4223,7 @@ FVMenuSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       old = fv->filled;
       flags |= fv->antialias ? pf_antialias : 0;
       flags |= fv->bbsized ? pf_bbsized : 0;
-      flags |= use_freetype_to_rasterize_fv
-        && !fv->b.sf->multilayer ? pf_ft_nohints : 0;
+      flags |= !fv->b.sf->multilayer ? pf_ft_nohints : 0;
       new =
         SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, dspsize, 72, flags,
                              NULL);
@@ -4247,8 +4243,6 @@ FVMenuSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 void
 FVSetUIToMatch (FontView *destfv, FontView *srcfv)
 {
-  extern int use_freetype_to_rasterize_fv;
-
   if (destfv->filled == NULL || srcfv->filled == NULL)
     return;
   if (destfv->magnify != srcfv->magnify
@@ -4266,8 +4260,7 @@ FVSetUIToMatch (FontView *destfv, FontView *srcfv)
       old = destfv->filled;
       flags |= destfv->antialias ? pf_antialias : 0;
       flags |= destfv->bbsized ? pf_bbsized : 0;
-      flags |= use_freetype_to_rasterize_fv
-        && !destfv->b.sf->multilayer ? pf_ft_nohints : 0;
+      flags |= !destfv->b.sf->multilayer ? pf_ft_nohints : 0;
       new =
         SplineFontPieceMeal (destfv->b.sf, destfv->b.active_layer,
                              srcfv->filled->pixelsize, 72, flags, NULL);
@@ -4280,7 +4273,6 @@ FVSetUIToMatch (FontView *destfv, FontView *srcfv)
 static void
 FV_LayerChanged (FontView *fv)
 {
-  extern int use_freetype_to_rasterize_fv;
   BDFFont *new, *old;
   int flags = 0;
 
@@ -4290,8 +4282,7 @@ FV_LayerChanged (FontView *fv)
   old = fv->filled;
   flags |= fv->antialias ? pf_antialias : 0;
   flags |= fv->bbsized ? pf_bbsized : 0;
-  flags |= use_freetype_to_rasterize_fv
-    && !fv->b.sf->multilayer ? pf_ft_nohints : 0;
+  flags |= !fv->b.sf->multilayer ? pf_ft_nohints : 0;
   new =
     SplineFontPieceMeal (fv->b.sf, fv->b.active_layer, fv->filled->pixelsize,
                          72, flags, NULL);
@@ -12700,7 +12691,6 @@ FontView_ReformatAll (SplineFont *sf)
   BDFFont *new, *old, *bdf;
   FontView *fv;
   MetricsView *mvs;
-  extern int use_freetype_to_rasterize_fv;
 
   if (((FontView *) (sf->fv))->v == NULL || ((FontView *) (sf->fv))->colcnt == 0)       /* Can happen in scripts */
     return;
@@ -12713,8 +12703,7 @@ FontView_ReformatAll (SplineFont *sf)
       old = fv->filled;
       flags |= fv->antialias ? pf_antialias : 0;
       flags |= fv->bbsized ? pf_bbsized : 0;
-      flags |= use_freetype_to_rasterize_fv
-        && !sf->multilayer ? pf_ft_nohints : 0;
+      flags |= !sf->multilayer ? pf_ft_nohints : 0;
       /* In CID fonts fv->b.sf may not be same as sf */
       new =
         SplineFontPieceMeal (fv->b.sf, fv->b.active_layer,
@@ -12989,7 +12978,6 @@ FVCreateInnards (FontView *fv, GRect *pos)
   GGadgetData gd;
   BDFFont *bdf;
   int as, ds, ld;
-  extern int use_freetype_to_rasterize_fv;
   SplineFont *sf = fv->b.sf;
   int flags = 0;
   int ptsize;
@@ -13029,8 +13017,7 @@ FVCreateInnards (FontView *fv, GRect *pos)
   fv->showvmetrics = default_fv_showvmetrics && sf->hasvmetrics;
   flags |= fv->antialias ? pf_antialias : 0;
   flags |= fv->bbsized ? pf_bbsized : 0;
-  flags |= use_freetype_to_rasterize_fv
-    && !sf->multilayer ? pf_ft_nohints : 0;
+  flags |= !sf->multilayer ? pf_ft_nohints : 0;
   if (sf->display_size < 0)
     ptsize = -sf->display_size;
   else

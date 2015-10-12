@@ -47,7 +47,6 @@
 #include <utype.h>
 #include <math.h>
 
-VISIBLE int use_freetype_to_rasterize_fv = 1;
 char *BDFFoundry = NULL;
 
 VISIBLE struct std_bdf_props StandardProps[] = {
@@ -1101,7 +1100,6 @@ BDFMakeGID (BDFFont *bdf, int gid)
   SplineChar *sc;
   BDFChar *bc;
   int i;
-  extern int use_freetype_to_rasterize_fv;
 
   if (gid == -1)
     return NULL;
@@ -1136,16 +1134,13 @@ BDFMakeGID (BDFFont *bdf, int gid)
     }
   if ((bc = bdf->glyphs[gid]) == NULL)
     {
-      if (use_freetype_to_rasterize_fv)
+      void *freetype_context = FreeTypeFontContext (sf, sc, NULL, ly_fore);
+      if (freetype_context != NULL)
         {
-          void *freetype_context = FreeTypeFontContext (sf, sc, NULL, ly_fore);
-          if (freetype_context != NULL)
-            {
-              bc = SplineCharFreeTypeRasterize (freetype_context,
-                                                sc->orig_pos, bdf->pixelsize,
-                                                72, bdf->clut ? 8 : 1);
-              FreeTypeFreeContext (freetype_context);
-            }
+          bc = SplineCharFreeTypeRasterize (freetype_context,
+                                            sc->orig_pos, bdf->pixelsize,
+                                            72, bdf->clut ? 8 : 1);
+          FreeTypeFreeContext (freetype_context);
         }
       if (bc != NULL)
         /* Done */ ;

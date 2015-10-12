@@ -3050,14 +3050,13 @@ CVRegenFill (CharView *cv)
   cv->filled = NULL;
   if (cv->showfilled)
     {
-      extern int use_freetype_to_rasterize_fv;
       int layer = CVLayer ((CharViewBase *) cv);
       int size = cv->scale * (cv->b.fv->sf->ascent + cv->b.fv->sf->descent);
       int clut_len = 16;
       /* Generally I don't think there's much point in doing an anti-aliased */
       /*  fill. But on the "M" (and "W") glyph of extravigant caps, ft won't */
       /*  do a mono fill */
-      if (use_freetype_to_rasterize_fv && hasFreeType ())
+      if (hasFreeType ())
         {
           cv->filled =
             SplineCharFreeTypeRasterizeNoHints (cv->b.sc, layer, size, 72, 4);

@@ -109,7 +109,6 @@ extern NameList *force_names_when_saving;
 extern NameList *namelist_for_new_fonts;
 extern int default_fv_row_count;        /* in splineutil2.c */
 extern int default_fv_col_count;        /* in splineutil2.c */
-extern int use_freetype_to_rasterize_fv;        /* in bitmapchar.c */
 
 /* UI preferences which we don't use, but will preserve to so we can read/write */
 /*  UI preference files without loss of data */
@@ -207,11 +206,6 @@ static struct prefs_list
       NULL, 0,
       N_
       ("Whether new fonts should contain splines of quadratic (truetype)\nor cubic (postscript & opentype).")},
-  {
-  N_("FreeTypeInFontView"), pr_bool, &use_freetype_to_rasterize_fv, NULL,
-      NULL, 'O', NULL, 0,
-      N_
-      ("Use the FreeType rasterizer (when available)\nto rasterize glyphs in the font view.\nThis generally results in better quality.")},
   {
   N_("LoadedFontsAsNew"), pr_bool, &loaded_fonts_same_as_new, NULL, NULL,
       'L', NULL, 0,
