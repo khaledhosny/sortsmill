@@ -11413,19 +11413,26 @@ CharsFromNameOrCID (SplineChar *sc, uint32_t *buf)
   int uni = UniFromNameOrCID (sc->name, fv);
   if (uni != -1)
     buf[0] = uni;
-  else if (strchr (sc->name, '_'))
+  else
     {
-      char *tok;
-      int i = 0;
-      char *name = strdup (sc->name);
-      for (tok = strtok (name, "_"); tok != NULL; tok = strtok (NULL, "_"))
+      char *pt = strchr (sc->name, '.');
+      if (pt != NULL)
+        *pt = '\0';
+      char *names = AdobeLigatureFormat (sc->name);
+      if (pt != NULL)
+        *pt = '.';
+      if (names)
         {
-          uni = UniFromNameOrCID (tok, fv);
-          if (uni != -1)
-            buf[i++] = uni;
+          char *tok;
+          int i = 0;
+          for (tok = strtok (names, " "); tok != NULL; tok = strtok (NULL, " "))
+            {
+              uni = UniFromNameOrCID (tok, fv);
+              if (uni != -1)
+                buf[i++] = uni;
+            }
+          buf[i] = 0;
         }
-      free (name);
-      buf[i] = 0;
     }
 }
 
