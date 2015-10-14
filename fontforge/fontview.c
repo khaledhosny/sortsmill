@@ -11563,142 +11563,146 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
        i <= fv->rowcnt
        && (event->u.expose.rect.y + event->u.expose.rect.height + fv->cbh -
            1) / fv->cbh; ++i)
-    for (j = 0; j < fv->colcnt; ++j)
-      {
-        int index = (i + fv->rowoff) * fv->colcnt + j;
-        SplineChar *sc;
-        styles = 0;
-        if (index < fv->b.map->enc_limit && index != -1)
-          {
-            uint32_t buf[60];
-            char cbuf[8];
-            Color fg;
-            extern const int amspua[];
-            int uni;
-            struct cidmap *cidmap = NULL;
-            gid = enc_to_gid (fv->b.map, index);
-            if (gid != -1)
-              sc = fv->b.sf->glyphs[gid];
-            else
-              sc = SCBuildDummy (&dummy, fv->b.sf, fv->b.map, index);
+    {
+      for (j = 0; j < fv->colcnt; ++j)
+        {
+          int index = (i + fv->rowoff) * fv->colcnt + j;
+          SplineChar *sc;
+          styles = 0;
+          if (index < fv->b.map->enc_limit && index != -1)
+            {
+              uint32_t buf[60];
+              char cbuf[8];
+              Color fg;
+              extern const int amspua[];
+              int uni;
+              struct cidmap *cidmap = NULL;
+              gid = enc_to_gid (fv->b.map, index);
+              if (gid != -1)
+                sc = fv->b.sf->glyphs[gid];
+              else
+                sc = SCBuildDummy (&dummy, fv->b.sf, fv->b.map, index);
 
-            if (fv->b.cidmaster != NULL)
-              cidmap =
-                FindCidMap (fv->b.cidmaster->cidregistry,
-                            fv->b.cidmaster->ordering,
-                            fv->b.cidmaster->supplement,
-                            fv->b.cidmaster);
+              if (fv->b.cidmaster != NULL)
+                cidmap =
+                  FindCidMap (fv->b.cidmaster->cidregistry,
+                              fv->b.cidmaster->ordering,
+                              fv->b.cidmaster->supplement, fv->b.cidmaster);
 
-            if ((fv->b.map->enc == &custom && index < 256) ||
-                (fv->b.map->enc != &custom &&
-                 index < fv->b.map->enc->char_cnt) ||
-                (cidmap != NULL && index < MaxCID (cidmap)))
-              fg = def_fg;
-            else
-              fg = 0x505050;
-            uni = sc->unicodeenc;
-            buf[0] = buf[1] = 0;
-            if (fv->b.sf->uni_interp == ui_ams && uni >= 0xe000
-                && uni <= 0xf8ff && amspua[uni - 0xe000] != 0)
-              uni = amspua[uni - 0xe000];
-            switch (fv->glyphlabel)
-              {
-              case gl_name:
-                uc_strncpy (buf, sc->name, sizeof (buf) / sizeof (buf[0]));
-                break;
-              case gl_unicode:
-                if (sc->unicodeenc != -1)
-                  {
-                    sprintf (cbuf, "%04x", sc->unicodeenc);
-                    u32_strcpy (buf, x_gc_u8_to_u32 (cbuf));
-                  }
-                else
-                  u32_strcpy (buf, x_gc_u8_to_u32 ("?"));
-                break;
-              case gl_encoding:
-                if (fv->b.map->enc->only_1byte ||
-                    (fv->b.map->enc->has_1byte && index < 256))
-                  sprintf (cbuf, "%02x", index);
-                else
-                  sprintf (cbuf, "%04x", index);
-                u32_strcpy (buf, x_gc_u8_to_u32 (cbuf));
-                break;
-              case gl_glyph:
-                styles = GetRepresentativeChars (sc, buf, &fg);
-                break;
-              }
-            r.x = j * fv->cbw + 1;
-            r.width = fv->cbw - 1;
-            r.y = i * fv->cbh + 1;
-            r.height = fv->lab_height - 1;
-            bg = view_bgcol;
-            fgxor = 0x000000;
-            changed = sc->changed;
-            if (fv->b.sf->onlybitmaps && gid < fv->show->glyphcnt)
-              changed = gid == -1
-                || fv->show->glyphs[gid] ==
-                NULL ? false : fv->show->glyphs[gid]->changed;
-            if (changed || sc->layers[ly_back].splines != NULL
-                || sc->layers[ly_back].images != NULL
-                || sc->color != COLOR_DEFAULT)
-              {
-                if (sc->layers[ly_back].splines != NULL
-                    || sc->layers[ly_back].images != NULL
-                    || sc->color != COLOR_DEFAULT)
-                  bg = sc->color != COLOR_DEFAULT ? sc->color : 0x808080;
-                if (sc->changed)
-                  {
-                    fgxor = bg ^ fvchangedcol;
-                    bg = fvchangedcol;
-                  }
-                GDrawFillRect (pixmap, &r, bg);
-              }
-            if ((!fv->b.sf->layers[fv->b.active_layer].order2
-                 && sc->changedsincelasthinted)
-                || (fv->b.sf->layers[fv->b.active_layer].order2
-                    && sc->layers[fv->b.active_layer].splines != NULL
-                    && sc->ttf_instrs_len <= 0)
-                || (fv->b.sf->layers[fv->b.active_layer].order2
-                    && sc->instructions_out_of_date))
-              {
-                Color hintcol = fvhintingneededcol;
-                if (fv->b.sf->layers[fv->b.active_layer].order2
-                    && sc->instructions_out_of_date && sc->ttf_instrs_len > 0)
-                  hintcol = 0xff0000;
-                GDrawDrawLine (pixmap, r.x, r.y, r.x, r.y + r.height - 1,
-                               hintcol);
-                GDrawDrawLine (pixmap, r.x + 1, r.y, r.x + 1,
-                               r.y + r.height - 1, hintcol);
-                GDrawDrawLine (pixmap, r.x + 2, r.y, r.x + 2,
-                               r.y + r.height - 1, hintcol);
-                GDrawDrawLine (pixmap, r.x + r.width - 1, r.y,
-                               r.x + r.width - 1, r.y + r.height - 1, hintcol);
-                GDrawDrawLine (pixmap, r.x + r.width - 2, r.y,
-                               r.x + r.width - 2, r.y + r.height - 1, hintcol);
-                GDrawDrawLine (pixmap, r.x + r.width - 3, r.y,
-                               r.x + r.width - 3, r.y + r.height - 1, hintcol);
-              }
-            if (styles != laststyles)
-              GDrawSetFont (pixmap, FVCheckFont (fv, styles));
-            width = GDrawGetTextWidth (pixmap, buf, -1);
-            if (width >= fv->cbw - 1)
-              {
-                GDrawPushClip (pixmap, &r, &old2);
-                width = fv->cbw - 1;
-              }
-            if (sc->unicodeenc < 0x80 || sc->unicodeenc >= 0xa0)
-              {
-                GDrawDrawText (pixmap,
-                               j * fv->cbw + (fv->cbw - 1 - width) / 2,
-                               i * fv->cbh + fv->lab_as + 1, buf, -1,
-                               fg ^ fgxor);
-              }
-            if (width >= fv->cbw - 1)
-              GDrawPopClip (pixmap, &old2);
-            laststyles = styles;
-          }
-        FVDrawGlyph (pixmap, fv, index, false);
-      }
+              if ((fv->b.map->enc == &custom && index < 256) ||
+                  (fv->b.map->enc != &custom &&
+                   index < fv->b.map->enc->char_cnt) ||
+                  (cidmap != NULL && index < MaxCID (cidmap)))
+                fg = def_fg;
+              else
+                fg = 0x505050;
+              uni = sc->unicodeenc;
+              buf[0] = buf[1] = 0;
+              if (fv->b.sf->uni_interp == ui_ams && uni >= 0xe000
+                  && uni <= 0xf8ff && amspua[uni - 0xe000] != 0)
+                uni = amspua[uni - 0xe000];
+              switch (fv->glyphlabel)
+                {
+                case gl_name:
+                  uc_strncpy (buf, sc->name, sizeof (buf) / sizeof (buf[0]));
+                  break;
+                case gl_unicode:
+                  if (sc->unicodeenc != -1)
+                    {
+                      sprintf (cbuf, "%04x", sc->unicodeenc);
+                      u32_strcpy (buf, x_gc_u8_to_u32 (cbuf));
+                    }
+                  else
+                    u32_strcpy (buf, x_gc_u8_to_u32 ("?"));
+                  break;
+                case gl_encoding:
+                  if (fv->b.map->enc->only_1byte ||
+                      (fv->b.map->enc->has_1byte && index < 256))
+                    sprintf (cbuf, "%02x", index);
+                  else
+                    sprintf (cbuf, "%04x", index);
+                  u32_strcpy (buf, x_gc_u8_to_u32 (cbuf));
+                  break;
+                case gl_glyph:
+                  styles = GetRepresentativeChars (sc, buf, &fg);
+                  break;
+                }
+              r.x = j * fv->cbw + 1;
+              r.width = fv->cbw - 1;
+              r.y = i * fv->cbh + 1;
+              r.height = fv->lab_height - 1;
+              bg = view_bgcol;
+              fgxor = 0x000000;
+              changed = sc->changed;
+              if (fv->b.sf->onlybitmaps && gid < fv->show->glyphcnt)
+                changed = gid == -1
+                  || fv->show->glyphs[gid] ==
+                  NULL ? false : fv->show->glyphs[gid]->changed;
+              if (changed || sc->layers[ly_back].splines != NULL
+                  || sc->layers[ly_back].images != NULL
+                  || sc->color != COLOR_DEFAULT)
+                {
+                  if (sc->layers[ly_back].splines != NULL
+                      || sc->layers[ly_back].images != NULL
+                      || sc->color != COLOR_DEFAULT)
+                    bg = sc->color != COLOR_DEFAULT ? sc->color : 0x808080;
+                  if (sc->changed)
+                    {
+                      fgxor = bg ^ fvchangedcol;
+                      bg = fvchangedcol;
+                    }
+                  GDrawFillRect (pixmap, &r, bg);
+                }
+              if ((!fv->b.sf->layers[fv->b.active_layer].order2
+                   && sc->changedsincelasthinted)
+                  || (fv->b.sf->layers[fv->b.active_layer].order2
+                      && sc->layers[fv->b.active_layer].splines != NULL
+                      && sc->ttf_instrs_len <= 0)
+                  || (fv->b.sf->layers[fv->b.active_layer].order2
+                      && sc->instructions_out_of_date))
+                {
+                  Color hintcol = fvhintingneededcol;
+                  if (fv->b.sf->layers[fv->b.active_layer].order2
+                      && sc->instructions_out_of_date && sc->ttf_instrs_len > 0)
+                    hintcol = 0xff0000;
+                  GDrawDrawLine (pixmap, r.x, r.y, r.x, r.y + r.height - 1,
+                                 hintcol);
+                  GDrawDrawLine (pixmap, r.x + 1, r.y, r.x + 1,
+                                 r.y + r.height - 1, hintcol);
+                  GDrawDrawLine (pixmap, r.x + 2, r.y, r.x + 2,
+                                 r.y + r.height - 1, hintcol);
+                  GDrawDrawLine (pixmap, r.x + r.width - 1, r.y,
+                                 r.x + r.width - 1, r.y + r.height - 1,
+                                 hintcol);
+                  GDrawDrawLine (pixmap, r.x + r.width - 2, r.y,
+                                 r.x + r.width - 2, r.y + r.height - 1,
+                                 hintcol);
+                  GDrawDrawLine (pixmap, r.x + r.width - 3, r.y,
+                                 r.x + r.width - 3, r.y + r.height - 1,
+                                 hintcol);
+                }
+              if (styles != laststyles)
+                GDrawSetFont (pixmap, FVCheckFont (fv, styles));
+              width = GDrawGetTextWidth (pixmap, buf, -1);
+              if (width >= fv->cbw - 1)
+                {
+                  GDrawPushClip (pixmap, &r, &old2);
+                  width = fv->cbw - 1;
+                }
+              if (sc->unicodeenc < 0x80 || sc->unicodeenc >= 0xa0)
+                {
+                  GDrawDrawText (pixmap,
+                                 j * fv->cbw + (fv->cbw - 1 - width) / 2,
+                                 i * fv->cbh + fv->lab_as + 1, buf, -1,
+                                 fg ^ fgxor);
+                }
+              if (width >= fv->cbw - 1)
+                GDrawPopClip (pixmap, &old2);
+              laststyles = styles;
+            }
+          FVDrawGlyph (pixmap, fv, index, false);
+        }
+    }
   if (fv->showhmetrics & fvm_baseline)
     {
       for (i = 0; i <= fv->rowcnt; ++i)
