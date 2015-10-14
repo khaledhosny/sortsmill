@@ -11514,7 +11514,6 @@ GetRepresentativeChars (SplineChar *sc, uint32_t *buf, Color *fg)
 static void
 FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
 {
-  int i, j, width, gid;
   int changed;
   GRect old, old2, r;
   GClut clut;
@@ -11551,20 +11550,20 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
   GDrawSetLineWidth (pixmap, 0);
   GDrawPushClip (pixmap, &event->u.expose.rect, &old);
   GDrawFillRect (pixmap, NULL, view_bgcol);
-  for (i = 0; i <= fv->rowcnt; ++i)
+  for (int i = 0; i <= fv->rowcnt; ++i)
     {
       GDrawDrawLine (pixmap, 0, i * fv->cbh, fv->width, i * fv->cbh, def_fg);
       GDrawDrawLine (pixmap, 0, i * fv->cbh + fv->lab_height, fv->width,
                      i * fv->cbh + fv->lab_height, 0x808080);
     }
-  for (i = 0; i <= fv->colcnt; ++i)
+  for (int i = 0; i <= fv->colcnt; ++i)
     GDrawDrawLine (pixmap, i * fv->cbw, 0, i * fv->cbw, fv->height, def_fg);
-  for (i = event->u.expose.rect.y / fv->cbh;
-       i <= fv->rowcnt
-       && (event->u.expose.rect.y + event->u.expose.rect.height + fv->cbh -
-           1) / fv->cbh; ++i)
+  int y = event->u.expose.rect.y;
+  int height = event->u.expose.rect.height;
+  for (int i = y / fv->cbh;
+       i <= fv->rowcnt && (y + height + fv->cbh - 1) / fv->cbh; ++i)
     {
-      for (j = 0; j < fv->colcnt; ++j)
+      for (int j = 0; j < fv->colcnt; ++j)
         {
           int index = (i + fv->rowoff) * fv->colcnt + j;
           SplineChar *sc;
@@ -11577,7 +11576,8 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
               extern const int amspua[];
               int uni;
               struct cidmap *cidmap = NULL;
-              gid = enc_to_gid (fv->b.map, index);
+              int width;
+              int gid = enc_to_gid (fv->b.map, index);
               if (gid != -1)
                 sc = fv->b.sf->glyphs[gid];
               else
@@ -11705,7 +11705,7 @@ FVExpose (FontView *fv, GWindow pixmap, GEvent *event)
     }
   if (fv->showhmetrics & fvm_baseline)
     {
-      for (i = 0; i <= fv->rowcnt; ++i)
+      for (int i = 0; i <= fv->rowcnt; ++i)
         GDrawDrawLine (pixmap, 0,
                        i * fv->cbh + fv->lab_height +
                        fv->magnify * fv->show->ascent + 1, fv->width,
