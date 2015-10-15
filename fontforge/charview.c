@@ -6549,43 +6549,11 @@ CVMenuExport (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   CVExport (cv);
 }
 
-static void
-CVInkscapeAdjust (CharView *cv)
-{
-  /* Inkscape considers different coordinates useful. That is to say, */
-  /*  Inkscape views the world as a blank sheet of paper and often */
-  /*  put things outside the [0,1000] range (especially in Y) that */
-  /*  FF uses. So after doing a Paste, or Import or something similar */
-  /*  check and see if the image is completely out of view, and if so */
-  /*  then adjust the view field */
-  DBounds b;
-  int layer = CVLayer ((CharViewBase *) cv);
-
-  if (layer != -1)
-    SplineCharLayerQuickBounds (cv->b.sc, layer, &b);
-  else
-    {
-      b.minx = b.miny = 1e10;
-      b.maxx = b.maxy = -1e10;
-      SplineSetQuickBounds (cv->b.sc->parent->grid.splines, &b);
-    }
-
-  b.minx *= cv->scale;
-  b.maxx *= cv->scale;
-  b.miny *= cv->scale;
-  b.maxy *= cv->scale;
-
-  if (b.minx + cv->xoff < 0 || b.miny + cv->yoff < 0
-      || b.maxx + cv->xoff > cv->width || b.maxy + cv->yoff > cv->height)
-    CVFit (cv);
-}
-
 VISIBLE void
 CVMenuImport (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   CVImport (cv);
-  CVInkscapeAdjust (cv);
 }
 
 VISIBLE void
@@ -8334,7 +8302,6 @@ CVPaste (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   _CVPaste (cv);
-  CVInkscapeAdjust (cv);
 }
 
 static void
