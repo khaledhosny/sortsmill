@@ -11359,73 +11359,6 @@ sllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 static void
-cv_cblistcheck_cv (CharView *cv, struct gmenuitem *mi)
-{
-  int i;
-  KernPair *kp;
-  SplineChar *sc = cv->b.sc;
-  SplineFont *sf = sc->parent;
-  PST *pst;
-  char *name;
-
-  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
-    {
-      switch (mi->mid)
-        {
-        case MID_AnchorPairs:
-          mi->ti.disabled = sc->anchor == NULL;
-          break;
-        case MID_AnchorControl:
-          mi->ti.disabled = sc->anchor == NULL;
-          break;
-        case MID_AnchorGlyph:
-          if (cv->apmine != NULL)
-            mi->ti.disabled = false;
-          else
-            mi->ti.disabled = sc->anchor == NULL;
-          break;
-        case MID_KernPairs:
-          mi->ti.disabled = sc->kerns == NULL;
-          if (sc->kerns == NULL)
-            {
-              for (i = 0; i < sf->glyphcnt; ++i)
-                if (sf->glyphs[i] != NULL)
-                  {
-                    for (kp = sf->glyphs[i]->kerns; kp != NULL; kp = kp->next)
-                      {
-                        if (kp->sc == sc)
-                          {
-                            mi->ti.disabled = false;
-                            goto out;
-                          }
-                      }
-                  }
-            out:;
-            }
-          break;
-        case MID_Ligatures:
-          name = sc->name;
-          for (i = 0; i < sf->glyphcnt; ++i)
-            if (sf->glyphs[i] != NULL)
-              {
-                for (pst = sf->glyphs[i]->possub; pst != NULL; pst = pst->next)
-                  {
-                    if (pst->type == pst_ligature
-                        && PSTContains (pst->u.lig.components, name))
-                      {
-                        mi->ti.disabled = false;
-                        goto break_out_2;
-                      }
-                  }
-              }
-          mi->ti.disabled = true;
-        break_out_2:;
-          break;
-        }
-    }
-}
-
-static void
 cv_nplistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   SplineChar *sc = cv->b.sc;
@@ -11582,8 +11515,10 @@ static void
 cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int pos, gid;
-  SplineFont *sf = cv->b.sc->parent;
+  SplineChar *sc = cv->b.sc;
+  SplineFont *sf = sc->parent;
   EncMap *map = cv->b.fv->map;
+  char *name;
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
     {
@@ -11648,15 +11583,57 @@ cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
         case MID_FindInFontView:
           mi->ti.disabled = cv->b.container != NULL;
           break;
+        case MID_AnchorPairs:
+          mi->ti.disabled = sc->anchor == NULL;
+          break;
+        case MID_AnchorControl:
+          mi->ti.disabled = sc->anchor == NULL;
+          break;
+        case MID_AnchorGlyph:
+          if (cv->apmine != NULL)
+            mi->ti.disabled = false;
+          else
+            mi->ti.disabled = sc->anchor == NULL;
+          break;
+        case MID_KernPairs:
+          mi->ti.disabled = sc->kerns == NULL;
+          if (sc->kerns == NULL)
+            {
+              for (int i = 0; i < sf->glyphcnt; ++i)
+                if (sf->glyphs[i] != NULL)
+                  {
+                    for (KernPair *kp = sf->glyphs[i]->kerns; kp != NULL; kp = kp->next)
+                      {
+                        if (kp->sc == sc)
+                          {
+                            mi->ti.disabled = false;
+                            goto out;
+                          }
+                      }
+                  }
+            out:;
+            }
+          break;
+        case MID_Ligatures:
+          name = sc->name;
+          for (int i = 0; i < sf->glyphcnt; ++i)
+            if (sf->glyphs[i] != NULL)
+              {
+                for (PST *pst = sf->glyphs[i]->possub; pst != NULL; pst = pst->next)
+                  {
+                    if (pst->type == pst_ligature
+                        && PSTContains (pst->u.lig.components, name))
+                      {
+                        mi->ti.disabled = false;
+                        goto break_out_2;
+                      }
+                  }
+              }
+          mi->ti.disabled = true;
+        break_out_2:;
+          break;
         }
     }
-}
-
-VISIBLE void
-cblistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
-{
-  CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_cblistcheck_cv (cv, mi);
 }
 
 VISIBLE void
@@ -14933,77 +14910,6 @@ aplistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem cblist[] = {
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_Kern Pairs"),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'K'},
-    .shortcut = H_ ("Kern Pairs|No Shortcut"),
-    .invoke = CVMenuKernPairs,
-    .mid = MID_KernPairs},
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_Anchored Pairs"),
-      NULL,
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'A'},
-
-    .shortcut = H_ ("Anchored Pairs|No Shortcut"),
-    .invoke = CVMenuAnchorPairs,
-    .mid = MID_AnchorPairs},
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_Anchor Control..."),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'V'},
-    .sub = ap2list,
-    .moveto = ap2listbuild_cv,
-    .mid = MID_AnchorControl},
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("Anchor _Glyph at Point"),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'A'},
-    .sub = aplist,
-    .moveto = aplistcheck_cv,
-    .mid = MID_AnchorGlyph},
-
-  {
-    .ti = {
-      .text = (uint32_t *) N_("_Ligatures"),
-      .fg = COLOR_DEFAULT,
-      .bg = COLOR_DEFAULT,
-      .image_precedes = 1,
-      .text_is_1byte = 1,
-      .text_has_mnemonic = 1,
-      .mnemonic = 'L'},
-    .shortcut = H_ ("Ligatures|No Shortcut"),
-    .invoke = CVMenuLigatures,
-    .mid = MID_Ligatures},
-
-  GMENUITEM_EMPTY
-};
-
 static GMenuItem nplist[] = {
   {
     .ti = {
@@ -15723,17 +15629,70 @@ static GMenuItem vwlist[] = {
 
   {
     .ti = {
-      .text = (uint32_t *) N_("Com_binations"),
+      .text = (uint32_t *) N_("_Kern Pairs"),
       .fg = COLOR_DEFAULT,
       .bg = COLOR_DEFAULT,
       .image_precedes = 1,
-      .checkable = 0,
       .text_is_1byte = 1,
       .text_has_mnemonic = 1,
-      .mnemonic = 'b'},
-    .sub = cblist,
-    .moveto = cblistcheck_cv,
-    .mid = 0},
+      .mnemonic = 'K'},
+    .shortcut = H_ ("Kern Pairs|No Shortcut"),
+    .invoke = CVMenuKernPairs,
+    .mid = MID_KernPairs},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Anchored Pairs"),
+      NULL,
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'A'},
+
+    .shortcut = H_ ("Anchored Pairs|No Shortcut"),
+    .invoke = CVMenuAnchorPairs,
+    .mid = MID_AnchorPairs},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Anchor Control..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'V'},
+    .sub = ap2list,
+    .moveto = ap2listbuild_cv,
+    .mid = MID_AnchorControl},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Anchor _Glyph at Point"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'A'},
+    .sub = aplist,
+    .moveto = aplistcheck_cv,
+    .mid = MID_AnchorGlyph},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Ligatures"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'L'},
+    .shortcut = H_ ("Ligatures|No Shortcut"),
+    .invoke = CVMenuLigatures,
+    .mid = MID_Ligatures},
 
   GMENUITEM_EMPTY
 };
