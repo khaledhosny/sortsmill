@@ -534,13 +534,9 @@ SCClearAll (SplineChar *sc, int layer)
     return;
   if (sc->layers[layer].splines == NULL && sc->layers[layer].refs == NULL
       && !sc->widthset && sc->hstem == NULL && sc->vstem == NULL
-      && sc->anchor == NULL && !sc->parent->multilayer && (!copymetadata
-                                                           || (sc->unicodeenc ==
-                                                               -1
-                                                               && strcmp (sc->
-                                                                          name,
-                                                                          ".notdef")
-                                                               == 0)))
+      && sc->anchor == NULL && !sc->parent->multilayer &&
+      (!copymetadata
+       || (sc->unicodeenc == -1 && strcmp (sc->name, ".notdef") == 0)))
     return;
   SCPreserveLayer (sc, layer, 2);
   if (copymetadata)
