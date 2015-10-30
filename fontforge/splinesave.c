@@ -2132,7 +2132,7 @@ SplineFont2FullSubrs1 (int flags, GlyphInfo * gi)
   RefChar *r;
 #endif /* FONTFORGE_CONFIG_PS_REFS_GET_SUBRS */
 
-  if (!autohint_before_generate && !(flags & ps_flag_nohints))
+  if (autohint_before_generate && !(flags & ps_flag_nohints))
     SplineFontAutoHintRefs (gi->sf, gi->layer);
   for (i = 0; i < gi->glyphcnt; ++i)
     if ((sc = gi->gb[i].sc) != NULL)
@@ -3813,7 +3813,7 @@ SplineFont2FullSubrs2 (int flags, GlyphInfo * gi)
   SplineSet *spl;
 #endif /* FONTFORGE_CONFIG_PS_REFS_GET_SUBRS */
 
-  if (!autohint_before_generate && !(flags & ps_flag_nohints))
+  if (autohint_before_generate && !(flags & ps_flag_nohints))
     SplineFontAutoHintRefs (gi->sf, gi->layer);
 
   for (i = 0; i < gi->glyphcnt; ++i)
@@ -3875,7 +3875,7 @@ SplineFont2ChrsSubrs2 (SplineFont *sf, int nomwid, int defwid,
   GlyphInfo gi;
   SplineChar dummynotdef;
 
-  if (!autohint_before_generate && !(flags & ps_flag_nohints))
+  if (autohint_before_generate && !(flags & ps_flag_nohints))
     SplineFontAutoHintRefs (sf, layer);
 
   memset (&gi, 0, sizeof (gi));
