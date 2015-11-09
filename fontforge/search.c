@@ -1867,59 +1867,67 @@ DListRemove (struct splinecharlist *dependents, SplineChar *this_sc)
 void
 FVCorrectReferences (FontViewBase *fv)
 {
-  int enc, gid, cnt;
   SplineFont *sf = fv->sf;
-  SplineChar *sc, *rsc;
+  SplineChar *sc;
   RefChar *ref;
   int layer = fv->active_layer;
-  int index;
+  int cnt = 0;
 
-  cnt = 0;
-  for (enc = 0; enc < fv->map->enc_limit; ++enc)
+  for (int enc = 0; enc < fv->map->enc_limit; ++enc)
     {
-      if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
-          && (sc = sf->glyphs[gid]) != NULL)
+      int gid = enc_to_gid (fv->map, enc);
+      if (gid != -1 && fv->selected[enc] && (sc = sf->glyphs[gid]) != NULL)
         ++cnt;
     }
-  ff_progress_start_indicator (10, _("Correcting References"),
-                               _
-                               ("Adding new glyphs and referring to them when a glyph contains a bad truetype reference"),
+  ff_progress_start_indicator (10,
+                               _("Correcting References"),
+                               _("Adding new glyphs and referring to them when "
+                                 "a glyph contains a bad truetype reference"),
                                NULL, cnt, 1, true);
-  for (enc = 0; enc < fv->map->enc_limit; ++enc)
+  for (int enc = 0; enc < fv->map->enc_limit; ++enc)
     {
-      if ((gid = enc_to_gid (fv->map, enc)) != -1 && fv->selected[enc]
-          && (sc = sf->glyphs[gid]) != NULL)
+      int gid = enc_to_gid (fv->map, enc);
+      if (gid != -1 && fv->selected[enc] && (sc = sf->glyphs[gid]) != NULL)
         {
-          index = 1;
+          int index = 1;
           if (sc->layers[layer].splines != NULL
               && sc->layers[layer].refs != NULL)
             {
+              SplineChar *rsc;
               SCPreserveLayer (sc, layer, false);
               rsc = RC_MakeNewGlyph (fv, sc, index++,
-                                     _
-                                     ("%s had both contours and references, so the contours were moved "
-                                      "into this glyph, and a reference to it was added in the original."),
-                                     "");
+                                     _("%s had both contours and references, "
+                                       "so the contours were moved into this "
+                                       "glyph, and a reference to it was added "
+                                       "in the original."), "");
               rsc->layers[layer].splines = sc->layers[layer].splines;
               sc->layers[layer].splines = NULL;
               AddRef (sc, rsc, layer);
               /* I don't bother to check for instructions because there */
               /*  shouldn't be any in a mixed outline and reference glyph */
             }
+
           for (ref = sc->layers[layer].refs; ref != NULL; ref = ref->next)
             {
-              if (ref->transform[0] > 0x7fff / 16384.0 || ref->transform[1] > 0x7fff / 16384.0 || ref->transform[2] > 0x7fff / 16384.0 || ref->transform[3] > 0x7fff / 16384.0 || ref->transform[0] < -2.0 ||   /* Numbers are asymetric, negative range slightly bigger */
+              if (ref->transform[0] > 0x7fff / 16384.0 ||
+                  ref->transform[1] > 0x7fff / 16384.0 ||
+                  ref->transform[2] > 0x7fff / 16384.0 ||
+                  ref->transform[3] > 0x7fff / 16384.0 ||
+                  ref->transform[0] < -2.0 ||   /* Numbers are asymetric, negative range slightly bigger */
                   ref->transform[1] < -2.0 ||
-                  ref->transform[2] < -2.0 || ref->transform[3] < -2.0)
+                  ref->transform[2] < -2.0 ||
+                  ref->transform[3] < -2.0)
                 {
+                  SplineChar *rsc;
                   if (index == 1)
                     SCPreserveLayer (sc, layer, false);
                   rsc = RC_MakeNewGlyph (fv, sc, index++,
-                                         _
-                                         ("%1$s had a reference, %2$s, with a bad transformation matrix (one of "
-                                          "the matrix elements was bigger than 2). I moved the transformed "
-                                          "contours into this glyph and made a reference to it, instead."),
-                                         ref->sc->name);
+                                         _("%1$s had a reference, %2$s, with a "
+                                           "bad transformation matrix (one of the "
+                                           "matrix elements was bigger than 2). "
+                                           "I moved the transformed contours into "
+                                           "this glyph and made a reference to it, "
+                                           "instead."), ref->sc->name);
                   rsc->layers[layer].splines = ref->layers[0].splines;
                   ref->layers[0].splines = NULL;
                   ref->sc->dependents = DListRemove (ref->sc->dependents, sc);
