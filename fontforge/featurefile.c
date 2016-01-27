@@ -3142,7 +3142,7 @@ fea_handle_include (struct parseState *tok)
       else
         temp = xstrdup (tok->filename[tok->inc_depth]);
       *pt = '\0';
-      filename = GFileAppendFile (temp, namebuf, false);
+      filename = GFileAppendFile (g_path_get_dirname (temp), namebuf, false);
       *pt = '/';
       free (temp);
     }
