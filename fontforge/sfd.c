@@ -6632,18 +6632,27 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok)
 {
   int i, j, k, temp;
 
-  fpst->type =
-    strncasecmp (tok, "ContextPos", 10) == 0 ?
-    pst_contextpos : strncasecmp (tok, "ContextSub", 10) == 0 ?
-    pst_contextsub : strncasecmp (tok, "ChainPos", 8) == 0 ?
-    pst_chainpos : strncasecmp (tok, "ChainSub", 8) == 0 ?
-    pst_chainsub : pst_reversesub;
+  if (strncasecmp (tok, "ContextPos", 10) == 0)
+    fpst->type = pst_contextpos;
+  else if (strncasecmp (tok, "ContextSub", 10) == 0)
+    fpst->type = pst_contextsub;
+  else if (strncasecmp (tok, "ChainPos", 8) == 0)
+    fpst->type = pst_chainpos;
+  else if (strncasecmp (tok, "ChainSub", 8) == 0)
+    fpst->type = pst_chainsub;
+  else
+    fpst->type = pst_reversesub;
+
   copy_to_tok (tok, getname (sfd));
-  fpst->format =
-    strcasecmp (tok, "glyph") == 0 ?
-    pst_glyphs : strcasecmp (tok, "class") == 0 ?
-    pst_class : strcasecmp (tok, "coverage") == 0 ?
-    pst_coverage : pst_reversecoverage;
+  if (strcasecmp (tok, "glyph") == 0)
+    fpst->format = pst_glyphs;
+  else if (strcasecmp (tok, "class") == 0)
+    fpst->format = pst_class;
+  else if (strcasecmp (tok, "coverage") == 0)
+    fpst->format = pst_coverage;
+  else
+    fpst->format = pst_reversecoverage;
+
   fpst->subtable = SFFindLookupSubtableAndFreeName (sf, SFDReadUTF7Str (sfd));
   fpst->subtable->fpst = fpst;
   fscanf (sfd, "%hu %hu %hu %hu", &fpst->nccnt, &fpst->bccnt, &fpst->fccnt,
@@ -6767,12 +6776,17 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok)
         }
     }
   copy_to_tok (tok, getname (sfd));     /* EndFPST, or one of the ClassName tokens (in newer sfds) */
-  while (strcmp (tok, "ClassNames:") == 0 || strcmp (tok, "BClassNames:") == 0
-         || strcmp (tok, "FClassNames:") == 0)
+  while (strcmp (tok, "ClassNames:") == 0 ||
+         strcmp (tok, "BClassNames:") == 0 ||
+         strcmp (tok, "FClassNames:") == 0)
     {
-      int which = strcmp (tok, "ClassNames:") == 0 ? 0 : strcmp (tok,
-                                                                 "BClassNames:")
-        == 0 ? 1 : 2;
+      int which;
+      if (strcmp (tok, "ClassNames:") == 0)
+        which = 0;
+      if (strcmp (tok, "BClassNames:") == 0)
+        which = 1;
+      else
+        which = 2;
       int cnt = (&fpst->nccnt)[which];
       char **classnames = (&fpst->nclassnames)[which];
       int i;
