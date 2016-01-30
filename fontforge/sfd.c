@@ -6597,9 +6597,8 @@ SFDGetNameList (FILE *sfd, char *tok, SplineFont *sf)
 
 
 static OTLookup *
-SFD_ParseNestedLookup (FILE *sfd, SplineFont *sf, int old)
+SFD_ParseNestedLookup (FILE *sfd, SplineFont *sf)
 {
-  uint32_t tag;
   int ch, isgpos;
   OTLookup *otl;
   char *name;
@@ -6607,15 +6606,6 @@ SFD_ParseNestedLookup (FILE *sfd, SplineFont *sf, int old)
   while ((ch = nlgetc (sfd)) == ' ');
   if (ch == '~')
     return NULL;
-  else if (old)
-    {
-      if (ch != '\'')
-        return NULL;
-
-      ungetc (ch, sfd);
-      tag = gettag (sfd);
-      return (OTLookup *) (intptr_t) tag;
-    }
   else
     {
       ungetc (ch, sfd);
@@ -6638,11 +6628,9 @@ SFD_ParseNestedLookup (FILE *sfd, SplineFont *sf, int old)
 }
 
 static void
-SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok,
-                      int old)
+SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok)
 {
-  int ch, i, j, k, temp;
-  SplineFont *sli_sf = sf->cidmaster ? sf->cidmaster : sf;
+  int i, j, k, temp;
 
   fpst->type =
     strncasecmp (tok, "ContextPos", 10) == 0 ?
@@ -6656,57 +6644,8 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok,
     pst_glyphs : strcasecmp (tok, "class") == 0 ?
     pst_class : strcasecmp (tok, "coverage") == 0 ?
     pst_coverage : pst_reversecoverage;
-  if (old)
-    {
-      fscanf (sfd, "%hu %hu", &((FPST1 *) fpst)->flags,
-              &((FPST1 *) fpst)->script_lang_index);
-      if (((FPST1 *) fpst)->script_lang_index >=
-          ((SplineFont1 *) sli_sf)->sli_cnt
-          && ((FPST1 *) fpst)->script_lang_index != SLI_NESTED)
-        {
-          static int complained = false;
-          if (((SplineFont1 *) sli_sf)->sli_cnt == 0)
-            IError
-              ("'%c%c%c%c' has a script index out of bounds: %d\nYou MUST fix this manually",
-               (((FPST1 *) fpst)->tag >> 24),
-               (((FPST1 *) fpst)->tag >> 16) & 0xff,
-               (((FPST1 *) fpst)->tag >> 8) & 0xff,
-               ((FPST1 *) fpst)->tag & 0xff,
-               ((FPST1 *) fpst)->script_lang_index);
-          else if (!complained)
-            IError ("'%c%c%c%c' has a script index out of bounds: %d",
-                    (((FPST1 *) fpst)->tag >> 24),
-                    (((FPST1 *) fpst)->tag >> 16) & 0xff,
-                    (((FPST1 *) fpst)->tag >> 8) & 0xff,
-                    ((FPST1 *) fpst)->tag & 0xff,
-                    ((FPST1 *) fpst)->script_lang_index);
-          else
-            IError ("'%c%c%c%c' has a script index out of bounds: %d\n",
-                    (((FPST1 *) fpst)->tag >> 24),
-                    (((FPST1 *) fpst)->tag >> 16) & 0xff,
-                    (((FPST1 *) fpst)->tag >> 8) & 0xff,
-                    ((FPST1 *) fpst)->tag & 0xff,
-                    ((FPST1 *) fpst)->script_lang_index);
-          if (((SplineFont1 *) sli_sf)->sli_cnt != 0)
-            ((FPST1 *) fpst)->script_lang_index =
-              ((SplineFont1 *) sli_sf)->sli_cnt - 1;
-          complained = true;
-        }
-      while ((ch = nlgetc (sfd)) == ' ' || ch == '\t');
-      if (ch == '\'')
-        {
-          ungetc (ch, sfd);
-          ((FPST1 *) fpst)->tag = gettag (sfd);
-        }
-      else
-        ungetc (ch, sfd);
-    }
-  else
-    {
-      fpst->subtable =
-        SFFindLookupSubtableAndFreeName (sf, SFDReadUTF7Str (sfd));
-      fpst->subtable->fpst = fpst;
-    }
+  fpst->subtable = SFFindLookupSubtableAndFreeName (sf, SFDReadUTF7Str (sfd));
+  fpst->subtable->fpst = fpst;
   fscanf (sfd, "%hu %hu %hu %hu", &fpst->nccnt, &fpst->bccnt, &fpst->fccnt,
           &fpst->rule_cnt);
   if (fpst->nccnt != 0 || fpst->bccnt != 0 || fpst->fccnt != 0)
@@ -6811,7 +6750,7 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok,
               copy_to_tok (tok, getname (sfd));
               getint (sfd, &fpst->rules[i].lookups[j].seq);
               fpst->rules[i].lookups[k].lookup =
-                SFD_ParseNestedLookup (sfd, sf, old);
+                SFD_ParseNestedLookup (sfd, sf);
               if (fpst->rules[i].lookups[k].lookup != NULL)
                 ++k;
             }
@@ -8417,36 +8356,24 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                || strcasecmp (tok, "ContextSub2:") == 0
                || strcasecmp (tok, "ChainPos2:") == 0
                || strcasecmp (tok, "ChainSub2:") == 0
-               || strcasecmp (tok, "ReverseChain2:") == 0
-               || strcasecmp (tok, "ContextPos:") == 0
-               || strcasecmp (tok, "ContextSub:") == 0
-               || strcasecmp (tok, "ChainPos:") == 0
-               || strcasecmp (tok, "ChainSub:") == 0
-               || strcasecmp (tok, "ReverseChain:") == 0)
+               || strcasecmp (tok, "ReverseChain2:") == 0)
         {
           FPST *fpst;
-          int old;
-          if (strchr (tok, '2') != NULL)
-            {
-              old = false;
               fpst = xzalloc (sizeof (FPST));
-            }
-          else
-            {
-              old = true;
-              fpst = xzalloc (sizeof (FPST1));
-            }
-          if ((sf->sfd_version < 2) != old)
-            {
-              IError ("Version mixup in FPST of sfd file.");
-              exit (1);
-            }
           if (lastfp == NULL)
             sf->possub = fpst;
           else
             lastfp->next = fpst;
           lastfp = fpst;
-          SFDParseChainContext (sfd, sf, fpst, tok, old);
+          SFDParseChainContext (sfd, sf, fpst, tok);
+        }
+      else if (strcasecmp (tok, "ContextPos:") == 0
+               || strcasecmp (tok, "ContextSub:") == 0
+               || strcasecmp (tok, "ChainPos:") == 0
+               || strcasecmp (tok, "ChainSub:") == 0
+               || strcasecmp (tok, "ReverseChain:") == 0)
+        {
+          LogError (_("Old style contextual lookups are no longer supported: \"%s\" ignored"), tok);
         }
       else if (strcasecmp (tok, "MacIndic2:") == 0
                || strcasecmp (tok, "MacContext2:") == 0
