@@ -2084,15 +2084,6 @@ return;
 	gevent.u.chr.time = event->xkey.time;
 	gevent.u.chr.state = event->xkey.state;
 	gevent.u.chr.autorepeat = 0;
-/*#ifdef __Mac*/
-	/* On mac os x, map the command key to the control key. So Comand-Q=>^Q=>Quit */
-	/* No... don't. Let the user have access to the command key as distinct from control */
-	/* I don't think it hurts to leave this enabled... */
-/*	if ( (event->xkey.state&ksm_cmdmacosx) && gdisp->macosx_cmd ) gevent.u.chr.state |= ksm_control; */
-/* Under 10.4 the option key generates the meta mask already */
-/* Under 10.6 it does not (change may have happened in 10.5.8) */
-	if ( (event->xkey.state&ksm_option) && gdisp->macosx_cmd ) gevent.u.chr.state |= ksm_meta;
-/*#endif*/
 	gevent.u.chr.x = event->xkey.x;
 	gevent.u.chr.y = event->xkey.y;
 	if ((redirect = InputRedirection(gdisp->input,gw))== (GWindow)(-1) ) {
@@ -3309,11 +3300,6 @@ static void GXResourceInit(GXDisplay *gdisp) {
     int dithertemp; double sizetemp, sizetempcm;
     int depth = -1, vc = -1, cm=-1, cmpos;
     int tbf = 1;
-#if __Mac
-    int mxc = 1;	/* Don't leave this on by default. The cmd key uses the same bit as numlock on other systems */
-#else
-    int mxc = 0;
-#endif
 
     rmatom = XInternAtom(gdisp->display,"RESOURCE_MANAGER",true);
     if ( rmatom!=None ) {
@@ -3348,7 +3334,6 @@ static void GXResourceInit(GXDisplay *gdisp) {
     res[i].resname = "Depth"; res[i].type = rt_int; res[i].val = &depth; ++i;
     res[i].resname = "VisualClass"; res[i].type = rt_string; res[i].val = &vc; res[i].cvt=vc_cvt; ++i;
     res[i].resname = "TwoButtonFixup"; res[i].type = rt_bool; res[i].val = &tbf; ++i;
-    res[i].resname = "MacOSXCmd"; res[i].type = rt_bool; res[i].val = &mxc; ++i;
     res[i].resname = "Colormap"; res[i].type = rt_string; res[i].val = &cm; res[i].cvt=cm_cvt; ++i;
     res[i].resname = NULL;
     GResourceFind(res,NULL);
@@ -3364,7 +3349,6 @@ static void GXResourceInit(GXDisplay *gdisp) {
 	gdisp->res = gdisp->groot->pos.width/sizetemp;
     gdisp->desired_depth = depth; gdisp->desired_vc = vc;
     gdisp->desired_cm = cm;
-    gdisp->macosx_cmd = mxc;
     gdisp->twobmouse_win = tbf;
 }
 

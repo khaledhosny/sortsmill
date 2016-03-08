@@ -239,7 +239,6 @@ typedef struct gxdisplay /* : GDisplay */ {
     bool wm_breaks_raiseabove;
     bool wm_raiseabove_tested;
     bool endian_mismatch;
-    bool macosx_cmd;		/* if set then map state=0x20 to control */
     bool twobmouse_win;	/* if set then map state=0x40 to mouse button 2 */
     bool devicesinit;	/* the devices structure has been initialized. Else call XListInputDevices */
     bool expecting_core_event;/* when we move an input extension device we generally get two events, one for the device, one later for the core device. eat the core event */

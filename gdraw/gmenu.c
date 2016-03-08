@@ -59,38 +59,11 @@ static FontInstance *menubar_font = NULL;
 
 static int gmenubar_inited = false;
 
-#ifdef __Mac
-static int mac_menu_icons = true;
-#else
-static int mac_menu_icons = false;
-#endif
-
 static int mask_set = 0;
 
 /* These are the modifier masks expected in menus. Will be overridden
    by what's actually there. */
 static int menumask = ksm_control | ksm_meta | ksm_shift;
-
-#ifndef _Keyboard
-#define _Keyboard 0
-#endif
-
-static enum
-{
-  kb_ibm,
-  kb_mac,
-  kb_sun,
-  kb_ppc
-} keyboard = _Keyboard;
-/* Sigh. In old XonX the command key is mapped to 0x20 and Option to 0x8 (meta) */
-/*  the option key conversions (option-c => ccedilla) are not done */
-/*  In the next X, the command key is mapped to 0x10 and Option to 0x2000 */
-/*  (again option key conversion are not done) */
-/*  In 10.3, the command key is mapped to 0x10 and Option to 0x8 */
-/*  In 10.5 the command key is mapped to 0x10 and Option to 0x8 */
-/*   (and option conversions are done) */
-/*  While in Suse PPC X, the command key is 0x8 (meta) and option is 0x2000 */
-/*  and the standard mac option conversions are done */
 
 static void GMenuBarChangeSelection (GMenuBar * mb, int newsel, GEvent *);
 static struct gmenu *GMenuCreateSubMenu (struct gmenu *parent, GMenuItem *mi,
@@ -130,23 +103,7 @@ GMenuInit ()
   menubar_font =
     _GGadgetInitDefaultBox ("GMenuBar.", &menubar_box, menubar_font);
   menu_font = _GGadgetInitDefaultBox ("GMenu.", &menu_box, menubar_font);
-  keystr = GResourceFindString ("Keyboard");
-  if (keystr != NULL)
-    {
-      if (strcasecmp (keystr, "mac") == 0)
-        keyboard = kb_mac;
-      else if (strcasecmp (keystr, "sun") == 0)
-        keyboard = kb_sun;
-      else if (strcasecmp (keystr, "ppc") == 0)
-        keyboard = kb_ppc;
-      else if (strcasecmp (keystr, "ibm") == 0
-               || strcasecmp (keystr, "pc") == 0)
-        keyboard = kb_ibm;
-      else if (strtol (keystr, &end, 10), *end == '\0')
-        keyboard = strtol (keystr, NULL, 10);
-    }
   menu_grabs = GResourceFindBool ("GMenu.Grab", menu_grabs);
-  mac_menu_icons = GResourceFindBool ("GMenu.MacIcons", mac_menu_icons);
   gmenubar_inited = true;
   _GGroup_Init ();
 }
@@ -237,34 +194,11 @@ shorttext (GMenuItem *gi, uint32_t *buf)
     {
       for (i = 0; i < 8; ++i)
         {
-          if (mac_menu_icons)
-            {
-              if (mods[i].mask == ksm_cmdmacosx)
-                mods[i].modifier = "⌘";
-              else if (mods[i].mask == ksm_control)
-                mods[i].modifier = "⌃";
-              else if (mods[i].mask == ksm_meta)
-                mods[i].modifier = "⎇";
-              else if (mods[i].mask == ksm_shift)
-                mods[i].modifier = "⇧";
-              else
-                translate_shortcut (i, mods[i].modifier);
-            }
-          else
-            {
-              translate_shortcut (i, mods[i].modifier);
-            }
+           translate_shortcut (i, mods[i].modifier);
         }
 
-      /* It used to be that the Command key was available to X on the mac */
-      /*  but no longer. So we used to use it, but we can't now */
-      /* It's sort of available. X11->Preferences->Input->Enable Keyboard shortcuts under X11 needs to be OFF */
-      /* if ( strcmp(mods[2].modifier,"Ctl+")==0 ) */
-      /* mods[2].modifier = keyboard!=kb_mac?"Ctl+":"Cmd+"; */
       if (strcmp (mods[3].modifier, "Alt+") == 0)
-        mods[3].modifier =
-          keyboard == kb_ibm ? "Alt+" : keyboard ==
-          kb_mac ? "Opt+" : keyboard == kb_ppc ? "Cmd+" : "Meta+";
+        mods[3].modifier = "Alt+";
     }
 
   if (gi->shortcut_char == 0)

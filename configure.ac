@@ -81,8 +81,6 @@ AC_SUBST([HAVE_GUI])
 
 AC_SUBST([HOST],["$host"])
 
-FONTFORGE_PLATFORM_SPECIFICS
-
 GUILE_API="2.0"
 AC_SUBST([GUILE_API])
 
@@ -593,7 +591,6 @@ AM_CONDITIONAL([HAVE_LEGACY_SORTSMILL_TOOLS],[test x"${i_do_have_legacy_sortsmil
 AM_CONDITIONAL([HAVE_PURE_API],[test x"${i_do_have_pure_api}" = xyes])
 AM_CONDITIONAL([HAVE_FORTRAN_API],[test x"${i_do_have_fortran_api}" = xyes])
 AM_CONDITIONAL([HAVE_GUI],[test x"${i_do_have_gui}" = xyes])
-AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 AM_CONDITIONAL([HAVE_FORTRAN_MODFILES],[test x"${FC_MODEXT}" != x])
 
 # The following conditionals are always false, so the directories

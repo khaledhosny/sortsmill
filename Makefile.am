@@ -80,10 +80,6 @@ endif HAVE_PYTHON_API
 #SUBDIRS += pure
 #endif HAVE_PURE_API
 
-if MACINTOSH
-SUBDIRS += mackeys
-endif MACINTOSH
-
 if FONTTOOLS
 SUBDIRS += fonttools
 endif FONTTOOLS
