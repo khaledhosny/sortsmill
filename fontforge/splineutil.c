@@ -4064,22 +4064,32 @@ SCRefToSplines (SplineChar *sc, RefChar *rf, int layer)
 }
 
 static void
-_remove_duplicate_roots (double roots[3])
+sort_cubic_solution (my_extended ts[3])
 {
-  if (roots[1] != -1 && roots[2] == roots[1])
-    roots[2] = -1;
-  if (roots[0] != -1 && roots[1] == roots[0])
+  if (ts[0] > ts[2] && ts[2] != -1)
     {
-      roots[1] = roots[2];
-      roots[2] = -1;
+      const my_extended t = ts[0];
+      ts[0] = ts[2];
+      ts[2] = t;
+    }
+  if (ts[0] > ts[1] && ts[1] != -1)
+    {
+      const my_extended t = ts[0];
+      ts[0] = ts[1];
+      ts[1] = t;
+    }
+  if (ts[1] > ts[2] && ts[2] != -1)
+    {
+      const my_extended t = ts[1];
+      ts[1] = ts[2];
+      ts[2] = t;
     }
 }
 
 int
 CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3])
 {
-  double poly[4] = { sp->d - sought, sp->c, sp->b, sp->a };
-  dpoly_mono_to_bern (3, 1, poly, 1, poly);
+  const double poly[4] = { sp->d - sought, sp->c, sp->b, sp->a };
 
   size_t root_count;
   double roots[3];
@@ -4088,18 +4098,21 @@ CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3])
   // in [-0.0001,1.0001] and rounded them to within [0,1], so let us
   // do the same.
   //
-  // Use de Casteljau’s method to evaluate the polynomial, for the
-  // greatest precision.
-  dpoly_findroots_berndc (3, 1, poly, -0.0001, 1.0001,
-                          NULL, &root_count, roots);
+  // FIXME: Is this behavior needed or even a good idea?
+  //
+  // FIXME: This implementation evaluates the polynomial in exact
+  // arithmetic. If this approach proves to be too slow, one can try
+  // adding a ‘fast evaluator’ to the parameters in the call to
+  // dpoly_findroots2().
+  dpoly_findroots2 (3, 1, poly, -0.0001, 1.0001, NULL, NULL, NULL,
+                    &root_count, roots, NULL);
+
   for (size_t i = 0; i < root_count; i++)
     ts[i] = fmax (0, fmin (1, roots[i]));
   for (size_t i = root_count; i < 3; i++)
     ts[i] = -1;
 
-  // The ‘fuzz’ around 0 and 1, which is implemented above, could have
-  // left us with duplicate roots equal to 0 or 1. Clean those out.
-  _remove_duplicate_roots (ts);
+  sort_cubic_solution (ts);
 
   return (root_count != 0);
 }
