@@ -1,6 +1,6 @@
 #include <config.h>
 
-// Copyright (C) 2013, 2015 Khaled Hosny and Barry Schwartz
+// Copyright (C) 2013 Khaled Hosny and Barry Schwartz
 // This file is part of the Sorts Mill Tools.
 // 
 // Sorts Mill Tools is free software; you can redistribute it and/or modify
@@ -53,6 +53,11 @@
 #include <sortsmill/guile.h>
 
 // #define DEBUG 1
+
+typedef struct quartic
+{
+  bigreal a, b, c, d, e;
+} Quartic;
 
 void
 LineListFree (LineList *ll)
@@ -4063,87 +4068,338 @@ SCRefToSplines (SplineChar *sc, RefChar *rf, int layer)
   SCRemoveDependent (sc, rf, layer);
 }
 
-static void
-sort_cubic_solution (my_extended ts[3])
+// FIXME: Replace this with the rootfinder using Bernstein
+// coefficients.
+//
+/* This returns all real solutions, even those out of bounds */
+/* I use -999999 as an error flag, since we're really only interested in */
+/*  solns near 0 and 1 that should be ok. -1 is perhaps a little too close */
+/* Sigh. When solutions are near 0, the rounding errors are appalling. */
+int
+_CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3])
 {
+  my_extended d, xN, yN, delta2, temp, delta, h, t2, t3, theta;
+  my_extended sa = sp->a, sb = sp->b, sc = sp->c, sd = sp->d - sought;
+  int i = 0;
+
+  ts[0] = ts[1] = ts[2] = -999999;
+  if (sd == 0 && sa != 0)
+    {
+      /* one of the roots is 0, the other two are the soln of a quadratic */
+      ts[0] = 0;
+      if (sc == 0)
+        {
+          ts[1] = -sb / (my_extended) sa;       /* two zero roots */
+        }
+      else
+        {
+          temp = sb * (my_extended) sb - 4 * (my_extended) sa *sc;
+          if (RealNear (temp, 0))
+            ts[1] = -sb / (2 * (my_extended) sa);
+          else if (temp >= 0)
+            {
+              temp = sqrt (temp);
+              ts[1] = (-sb + temp) / (2 * (my_extended) sa);
+              ts[2] = (-sb - temp) / (2 * (my_extended) sa);
+            }
+        }
+    }
+  else if (sa != 0)
+    {
+      /* http://www.m-a.org.uk/eb/mg/mg077ch.pdf */
+      /* this nifty solution to the cubic neatly avoids complex arithmatic */
+      xN = -sb / (3 * (my_extended) sa);
+      yN = ((sa * xN + sb) * xN + sc) * xN + sd;
+
+      delta2 =
+        (sb * (my_extended) sb -
+         3 * (my_extended) sa * sc) / (9 * (my_extended) sa * sa);
+      /*if ( RealWithin(delta2,0,.00000001) ) delta2 = 0; */
+
+      /* the descriminant is yN^2-h^2, but delta might be <0 so avoid using h */
+      d = yN * yN - 4 * sa * sa * delta2 * delta2 * delta2;
+      if (((yN > .01 || yN < -.01) && RealNear (d / yN, 0))
+          || ((yN <= .01 && yN >= -.01) && RealNear (d, 0)))
+        d = 0;
+      if (d > 0)
+        {
+          temp = sqrt (d);
+          t2 = (-yN - temp) / (2 * sa);
+          t2 =
+            (t2 == 0) ? 0 : (t2 < 0) ? -pow (-t2, 1. / 3.) : pow (t2, 1. / 3.);
+          t3 = (-yN + temp) / (2 * sa);
+          t3 = t3 == 0 ? 0 : (t3 < 0) ? -pow (-t3, 1. / 3.) : pow (t3, 1. / 3.);
+          ts[0] = xN + t2 + t3;
+        }
+      else if (d < 0)
+        {
+          if (delta2 >= 0)
+            {
+              delta = sqrt (delta2);
+              h = 2 * sa * delta2 * delta;
+              temp = -yN / h;
+              if (temp >= -1.0001 && temp <= 1.0001)
+                {
+                  if (temp < -1)
+                    temp = -1;
+                  else if (temp > 1)
+                    temp = 1;
+                  theta = acos (temp) / 3;
+                  ts[i++] = xN + 2 * delta * cos (theta);
+                  ts[i++] = xN + 2 * delta * cos (2.0943951 + theta);   /* 2*pi/3 */
+                  ts[i++] = xN + 2 * delta * cos (4.1887902 + theta);   /* 4*pi/3 */
+                }
+            }
+        }
+      else if ( /* d==0 && */ delta2 != 0)
+        {
+          delta = yN / (2 * sa);
+          delta =
+            (delta == 0) ? 0 :
+            ((delta > 0) ? pow (delta, 1. / 3.) : -pow (-delta, 1. / 3.));
+          ts[i++] = xN + delta; /* this root twice, but that's irrelevant to me */
+          ts[i++] = xN - 2 * delta;
+        }
+      else if ( /* d==0 && */ delta2 == 0)
+        {
+          if (xN >= -0.0001 && xN <= 1.0001)
+            ts[0] = xN;
+        }
+    }
+  else if (sb != 0)
+    {
+      my_extended d = sc * (my_extended) sc - 4 * (my_extended) sb * sd;
+      if (d < 0 && RealNear (d, 0))
+        d = 0;
+      if (d < 0)
+        return false;           /* All roots imaginary */
+      d = sqrt (d);
+      ts[0] = (-sc - d) / (2 * (my_extended) sb);
+      ts[1] = (-sc + d) / (2 * (my_extended) sb);
+    }
+  else if (sc != 0)
+    {
+      ts[0] = -sd / (my_extended) sc;
+    }
+  else
+    {
+      /* If it's a point then either everything is a solution, or nothing */
+    }
+  return ts[0] != -999999;
+}
+
+// FIXME: Replace this with the rootfinder using Bernstein
+// coefficients.
+int
+CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3])
+{
+  my_extended t;
+  my_extended ts2[3];
+  int i, j;
+  /* This routine gives us all solutions between [0,1] with -1 as an error flag */
+  /* http://mathforum.org/dr.math/faq/faq.cubic.equations.html */
+
+  ts[0] = ts[1] = ts[2] = -1;
+  if (!_CubicSolve (sp, sought, ts2))
+    {
+      return false;
+    }
+
+  for (i = j = 0; i < 3; ++i)
+    {
+      if (ts2[i] > -.0001 && ts2[i] < 1.0001)
+        {
+          if (ts2[i] < 0)
+            ts[j++] = 0;
+          else if (ts2[i] > 1)
+            ts[j++] = 1;
+          else
+            ts[j++] = ts2[i];
+        }
+    }
+  if (j == 0)
+    return false;
+
   if (ts[0] > ts[2] && ts[2] != -1)
     {
-      const my_extended t = ts[0];
+      t = ts[0];
       ts[0] = ts[2];
       ts[2] = t;
     }
   if (ts[0] > ts[1] && ts[1] != -1)
     {
-      const my_extended t = ts[0];
+      t = ts[0];
       ts[0] = ts[1];
       ts[1] = t;
     }
   if (ts[1] > ts[2] && ts[2] != -1)
     {
-      const my_extended t = ts[1];
+      t = ts[1];
       ts[1] = ts[2];
       ts[2] = t;
     }
+  return true;
 }
 
-int
-CubicSolve (const Spline1D *sp, bigreal sought, my_extended ts[3])
+// FIXME: Replace this with the rootfinder using Bernstein
+// coefficients.
+static int
+_QuarticSolve (Quartic * q, my_extended ts[4])
 {
-  const double poly[4] = { sp->d - sought, sp->c, sp->b, sp->a };
+  my_extended extrema[5];
+  Spline1D sp;
+  int ecnt = 0, i, zcnt;
 
-  size_t root_count;
-  double roots[3];
+  /* Two special cases */
+  if (q->a == 0)
+    {                           /* It's really a cubic */
+      sp.a = q->b;
+      sp.b = q->c;
+      sp.c = q->d;
+      sp.d = q->e;
+      ts[3] = -999999;
+      return _CubicSolve (&sp, 0, ts);
+    }
+  else if (q->e == 0)
+    {                           /* we can factor out a zero root */
+      sp.a = q->a;
+      sp.b = q->b;
+      sp.c = q->c;
+      sp.d = q->d;
+      ts[0] = 0;
+      return _CubicSolve (&sp, 0, ts + 1) + 1;
+    }
 
-  // The version of CubicSolve() in the old FontForge accepted roots
-  // in [-0.0001,1.0001] and rounded them to within [0,1], so let us
-  // do the same.
-  //
-  // FIXME: Is this behavior needed or even a good idea?
-  //
-  // FIXME: This implementation evaluates the polynomial in exact
-  // arithmetic. If this approach proves to be too slow, one can try
-  // adding a ‘fast evaluator’ to the parameters in the call to
-  // dpoly_findroots2().
-  dpoly_findroots2 (3, 1, poly, -0.0001, 1.0001, NULL, NULL, NULL,
-                    &root_count, roots, NULL);
+  sp.a = 4 * q->a;
+  sp.b = 3 * q->b;
+  sp.c = 2 * q->c;
+  sp.d = q->d;
+  if (_CubicSolve (&sp, 0, extrema))
+    {
+      ecnt = 1;
+      if (extrema[1] != -999999)
+        {
+          ecnt = 2;
+          if (extrema[1] < extrema[0])
+            {
+              my_extended temp = extrema[1];
+              extrema[1] = extrema[0];
+              extrema[0] = temp;
+            }
+          if (extrema[2] != -999999)
+            {
+              ecnt = 3;
+              if (extrema[2] < extrema[0])
+                {
+                  my_extended temp = extrema[2];
+                  extrema[2] = extrema[0];
+                  extrema[0] = temp;
+                }
+              if (extrema[2] < extrema[1])
+                {
+                  my_extended temp = extrema[2];
+                  extrema[2] = extrema[1];
+                  extrema[1] = temp;
+                }
+            }
+        }
+    }
+  for (i = ecnt - 1; i >= 0; --i)
+    extrema[i + 1] = extrema[i];
+  /* Upper and lower bounds within which we'll search */
+  extrema[0] = -999;
+  extrema[ecnt + 1] = 999;
+  ecnt += 2;
+  /* divide into monotonic sections & use binary search to find zeroes */
+  for (i = zcnt = 0; i < ecnt - 1; ++i)
+    {
+      my_extended top, bottom, val;
+      my_extended topt, bottomt, t;
+      topt = extrema[i + 1];
+      bottomt = extrema[i];
+      top = (((q->a * topt + q->b) * topt + q->c) * topt + q->d) * topt + q->e;
+      bottom =
+        (((q->a * bottomt + q->b) * bottomt + q->c) * bottomt +
+         q->d) * bottomt + q->e;
+      if (top < bottom)
+        {
+          my_extended temp = top;
+          top = bottom;
+          bottom = temp;
+          temp = topt;
+          topt = bottomt;
+          bottomt = temp;
+        }
+      if (bottom > .001)        /* this monotonic is all above 0 */
+        continue;
+      if (top < -.001)          /* this monotonic is all below 0 */
+        continue;
+      if (bottom > 0)
+        {
+          ts[zcnt++] = bottomt;
+          continue;
+        }
+      if (top < 0)
+        {
+          ts[zcnt++] = topt;
+          continue;
+        }
+      while (true)
+        {
+          t = (topt + bottomt) / 2;
+          if (t == topt || t == bottomt)
+            {
+              ts[zcnt++] = t;
+              break;
+            }
 
-  for (size_t i = 0; i < root_count; i++)
-    ts[i] = fmax (0, fmin (1, roots[i]));
-  for (size_t i = root_count; i < 3; i++)
-    ts[i] = -1;
-
-  sort_cubic_solution (ts);
-
-  return (root_count != 0);
+          val = (((q->a * t + q->b) * t + q->c) * t + q->d) * t + q->e;
+          if (val > -.0001 && val < .0001)
+            {
+              ts[zcnt++] = t;
+              break;
+            }
+          else if (val > 0)
+            {
+              top = val;
+              topt = t;
+            }
+          else
+            {
+              bottom = val;
+              bottomt = t;
+            }
+        }
+    }
+  for (i = zcnt; i < 4; ++i)
+    ts[i] = -999999;
+  return zcnt;
 }
 
+// FIXME: Replace this with the rootfinder using Bernstein
+// coefficients.
 my_extended
 SplineSolve (const Spline1D *sp, real tmin, real tmax, my_extended sought)
 {
+  /* We want to find t so that spline(t) = sought */
+  /*  the curve must be monotonic */
+  /* returns t which is near sought or -1 */
+  my_extended ts[3];
+  int i;
+  my_extended t;
+
+  CubicSolve (sp, sought, ts);
   if (tmax < tmin)
     {
-      const my_extended t = tmax;
+      t = tmax;
       tmax = tmin;
       tmin = t;
     }
+  for (i = 0; i < 3; ++i)
+    if (ts[i] >= tmin && ts[i] <= tmax)
+      return ts[i];
 
-  // For behavior more consistent with what the old FontForge
-  // did.
-  //
-  // FIXME: Is this behavior needed or even a good idea?
-  if (tmin == 0)
-    tmin = -0.0001;
-  if (tmax == 1)
-    tmax = 1.0001;
-
-  const double poly[4] = { sp->d - sought, sp->c, sp->b, sp->a };
-
-  size_t root_count;
-  double roots[3];
-  dpoly_findroots2 (3, 1, poly, tmin, tmax, NULL, NULL, NULL,
-                    &root_count, roots, NULL);
-
-  return (root_count == 0) ? (-1.0) : (fmax (0, fmin (roots[0], 1)));
+  return -1;
 }
 
 // An IEEE double has 52 bits of precision. So one unit of rounding
@@ -4153,7 +4409,13 @@ SplineSolve (const Spline1D *sp, real tmin, real tmax, my_extended sought)
 // about */ are [0,1], let's use 1.0/D_RE_Factor.
 
 
-// FIXME: Replace this with dpoly_findroots().
+// FIXME: Replace this with the rootfinder using Bernstein
+// coefficients. (Note that Brent’s method is bracketing and so does
+// not move roots out of bounds. However, we also take derivatives for
+// root isolation. Simplest way to deal with that may be to use exact
+// arithmetic, at least at some points in the algorithm. In general,
+// we may wish to use exact arithmetic except when we know it to be
+// too slow.)
 my_extended
 SplineSolveFixup (const Spline1D *sp, real tmin, real tmax, my_extended sought)
 {
@@ -4245,78 +4507,71 @@ SplineSolveFixup (const Spline1D *sp, real tmin, real tmax, my_extended sought)
   return -1;
 }
 
-static bool
-have_opposite_signs (my_extended x, my_extended y)
-{
-  return ((x < 0 && y > 0) || (x > 0 && y < 0));
-}
-
-static double
-eval_cubic_Spline1D (double t, void *spline)
-{
-  // FIXME FIXME FIXME FIXME FIXME:
-  //
-  // This will perform better numerically if the spline is evaluated
-  // in the Bernstein basis.
-  //
-  // :FIXME FIXME FIXME FIXME FIXME
-
-  const Spline1D *sp = spline;
-  return ((sp->a * t + sp->b) * t + sp->c) * t + sp->d;
-}
-
+// FIXME: Replace this with the rootfinder using Bernstein
+// coefficients.
 my_extended
 IterateSplineSolve (const Spline1D *sp, my_extended tmin, my_extended tmax,
                     my_extended sought)
 {
-  // IterateSplineSolve is for cases where the polynomial is monotonic
-  // in the interval of interest. Less processing is needed, because
-  // there will be at most one root.
-
-  // FIXME FIXME FIXME FIXME FIXME:
-  //
-  // This will perform better numerically if the spline is evaluated
-  // in the Bernstein basis.
-  //
-  // :FIXME FIXME FIXME FIXME FIXME
+  my_extended t, low, high, test;
+  Spline1D temp;
+  // Now the closed form CubicSolver can have rounding errors so if we
+  // know the spline to be monotonic, an iterative approach is more
+  // accurate.
 
   if (tmin > tmax)
     {
-      const my_extended t = tmin;
+      t = tmin;
       tmin = tmax;
       tmax = t;
     }
 
-  Spline1D temp;
   temp = *sp;
   temp.d -= sought;
 
-  my_extended solution;
-
-  const my_extended low =
-    ((temp.a * tmin + temp.b) * tmin + temp.c) * tmin + temp.d;
-  const my_extended high =
-    ((temp.a * tmax + temp.b) * tmax + temp.c) * tmax + temp.d;
-
-  if (low == 0)
-    solution = tmin;
-  else if (high == 0)
-    solution = tmax;
-  else if (have_opposite_signs (low, high))
+  if (temp.a == 0 && temp.b == 0 && temp.c != 0)
     {
-      double root;
-      int info;
-      dbrentroot (tmin, tmax, eval_cubic_Spline1D, &temp, -1, -1, &root, &info);
-      solution = (info == 0) ? root : (-1.0);
+      t = -temp.d / (my_extended) temp.c;
+      if (t < tmin || t > tmax)
+        return -1;
+      return t;
+    }
+
+  low = ((temp.a * tmin + temp.b) * tmin + temp.c) * tmin + temp.d;
+  high = ((temp.a * tmax + temp.b) * tmax + temp.c) * tmax + temp.d;
+  if (low == 0)
+    return tmin;
+  if (high == 0)
+    return tmax;
+  if ((low < 0 && high > 0) || (low > 0 && high < 0))
+    {
+
+      while (true)
+        {
+          t = (tmax + tmin) / 2;
+          if (t == tmax || t == tmin)
+            return t;
+          test = ((temp.a * t + temp.b) * t + temp.c) * t + temp.d;
+          if (test == 0)        /* someone complained that this test
+                                   relied on exact arithmetic. In fact
+                                   this test will almost never be hit.
+                                   The real exit test is the line
+                                   above, when tmin/tmax are so close
+                                   that there is no space between them
+                                   in the floating representation */
+            return t;
+          if ((low < 0 && test < 0) || (low > 0 && test > 0))
+            tmin = t;
+          else
+            tmax = t;
+        }
     }
   else if (low < .0001 && low > -.0001)
-    solution = tmin;            /* Rounding errors */
+    return tmin;                /* Rounding errors */
   else if (high < .0001 && high > -.0001)
-    solution = tmax;
-  else
-    solution = -1;
+    return tmax;
 
-  return solution;
+  return -1;
 }
 
 my_extended
@@ -5742,6 +5997,83 @@ SplineSetIntersect (SplineSet *spl, Spline **_spline, Spline **_spline2)
       *_spline2 = spline2;
     }
   return found;
+}
+
+int
+LineTangentToSplineThroughPt (Spline *s, BasePoint *pt, my_extended ts[4],
+                              my_extended tmin, my_extended tmax)
+{
+  /* attempt to find a line though the point pt which is tangent to the spline */
+  /*  we return t of the tangent point on the spline (if any)           */
+  /* So the slope of the line through pt&tangent point must match slope */
+  /*  at the tangent point on the spline. Or...                         */
+  /* (pt.x-xt)/(pt.y-yt) = (dx/dt)/(dy/dt)                              */
+  /* (pt.x-xt)*(dy/dt) = (pt.y-yt)*(dx/dt)                              */
+  /* (pt.x - ax*t^3 - bx*t^2 - cx*t - dx)(3ay*t^2 + 2by*t + cy) =       */
+  /*      (pt.y - ay*t^3 - by*t^2 - cy*t^2 - dy)(3ax*t^2 + 2bx*t + cx)  */
+  /* (-ax*3ay + ay*3ax) * t^5 +                                         */
+  /*   (-ax*2by - bx*3ay + ay*2bx + by*3ax) * t^4 +                     */
+  /*   (-ax*cy - bx*2by - cx*3ay + ay*cx + by*2bx + cy*3ax) * t^3 +     */
+  /*   (pt.x*3ay - bx*cy - cx*2by - dx*3ay - pt.y*3ax + by*cx + cy*2bx + dy*3ax) * t^2 +      */
+  /*   (pt.x*2by - cx*cy - dx*2by - pt.y*2bx + cy*cx + dy*2bx) * t +    */
+  /*   (pt.x*cy - dx*cy - pt.y*cx + dy*cx) = 0                          */
+  /* Yeah! The order 5 terms cancel out                                 */
+  /* (ax*by - bx*ay) * t^4 +                                            */
+  /*   (2*ax*cy - 2*cx*ay) * t^3 +                                      */
+  /*   (3*pt.x*ay + bx*cy - cx*by - 3*dx*ay - 3*pt.y*ax + 3*dy*ax) * t^2 +    */
+  /*   (2*pt.x*by - 2*dx*by - 2*pt.y*bx + 2*dy*bx) * t +                */
+  /*   (pt.x*cy - dx*cy - pt.y*cx + dy*cx) = 0                          */
+  Quartic quad;
+  int i, j, k;
+
+  if (!finite (pt->x) || !finite (pt->y))
+    {
+      IError ("Non-finite arguments passed to LineTangentToSplineThroughPt");
+      return -1;
+    }
+
+  quad.a =
+    s->splines[0].a * s->splines[1].b - s->splines[0].b * s->splines[1].a;
+  quad.b =
+    2 * s->splines[0].a * s->splines[1].c -
+    2 * s->splines[0].c * s->splines[1].a;
+  quad.c =
+    3 * pt->x * s->splines[1].a + s->splines[0].b * s->splines[1].c -
+    s->splines[0].c * s->splines[1].b -
+    3 * s->splines[0].d * s->splines[1].a - 3 * pt->y * s->splines[0].a +
+    3 * s->splines[1].d * s->splines[0].a;
+  quad.d =
+    2 * pt->x * s->splines[1].b - 2 * s->splines[0].d * s->splines[1].b -
+    2 * pt->y * s->splines[0].b + 2 * s->splines[1].d * s->splines[0].b;
+  quad.e =
+    pt->x * s->splines[1].c - s->splines[0].d * s->splines[1].c -
+    pt->y * s->splines[0].c + s->splines[1].d * s->splines[0].c;
+
+  if (_QuarticSolve (&quad, ts) == -1)
+    return -1;
+
+  for (i = 0; i < 4 && ts[i] != -999999; ++i)
+    {
+      if (ts[i] > tmin - .0001 && ts[i] < tmin)
+        ts[i] = tmin;
+      if (ts[i] > tmax && ts[i] < tmax + .001)
+        ts[i] = tmax;
+      if (ts[i] > tmax || ts[i] < tmin)
+        ts[i] = -999999;
+    }
+  for (i = 3; i >= 0 && ts[i] == -999999; --i);
+  if (i == -1)
+    return -1;
+  for (j = i; j >= 0; --j)
+    {
+      if (ts[j] < 0)
+        {
+          for (k = j + 1; k <= i; ++k)
+            ts[k - 1] = ts[k];
+          ts[i--] = -999999;
+        }
+    }
+  return i + 1;
 }
 
 static int

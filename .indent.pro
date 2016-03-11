@@ -130,7 +130,6 @@
 -T Spline
 -T Spline1
 -T Spline1D
--T TPoint
 -T KernPair
 -T KernPair1
 -T LineList

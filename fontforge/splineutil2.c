@@ -832,29 +832,22 @@ ClosestSplineSolve (Spline1D *sp, bigreal sought, bigreal close_to_t)
   /* We want to find t so that spline(t) = sought */
   /*  find the value which is closest to close_to_t */
   /* on error return closetot */
+  my_extended ts[3];
+  int i;
+  bigreal t, best, test;
 
-  const double poly[4] = { sp->d - sought, sp->c, sp->b, sp->a };
-  size_t root_count;
-  double roots[3];
-  // FIXME: This implementation evaluates the polynomial in exact
-  // arithmetic. If this approach proves to be too slow, one can try
-  // adding a ‘fast evaluator’ to the parameters in the call to
-  // dpoly_findroots2().
-  dpoly_findroots2 (3, 1, poly, -0.0001, 1.0001, NULL, NULL, NULL,
-                    &root_count, roots, NULL);
-
-  double best = HUGE_VAL;
-  double t = close_to_t;
-  for (size_t i = 0; i < 3; ++i)
-    if (roots[i] > -.0001 && roots[i] < 1.0001)
+  _CubicSolve (sp, sought, ts);
+  best = 9e20;
+  t = close_to_t;
+  for (i = 0; i < 3; ++i)
+    if (ts[i] > -.0001 && ts[i] < 1.0001)
       {
-        double test = roots[i] - close_to_t;
-        if (test < 0)
+        if ((test = ts[i] - close_to_t) < 0)
           test = -test;
         if (test < best)
           {
             best = test;
-            t = roots[i];
+            t = ts[i];
           }
       }
 
