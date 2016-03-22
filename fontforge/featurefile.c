@@ -2374,6 +2374,11 @@ dump_gsubgpos (FILE *out, SplineFont *sf)
                           found:
                             if (fl != NULL)
                               {
+                                // script and language are not allowed in
+                                // aalt feature
+                                if (feats[i] == CHR ('a', 'a', 'l', 't'))
+                                  firsts = first = false;
+
                                 if (firsts)
                                   {
                                     c_fprintf (out, "\n  script %c%c%c%c;\n",
