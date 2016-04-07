@@ -1493,6 +1493,8 @@ _GXPDraw_DoText (GWindow w, int32_t x, int32_t y,
                  const uint32_t *text, int32_t cnt, Color col,
                  enum text_funcs drawit, struct tf_arg *arg)
 {
+  if (u32_check (text, u32_strlen (text)) != NULL)
+    return 0;
   uint8_t *utf8;
   if (0 <= cnt)
     utf8 = x_gc_u32_to_u8 (x_gc_u32_strmbndup (text, cnt));
