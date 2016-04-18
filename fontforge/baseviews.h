@@ -409,8 +409,6 @@ enum fvformats
   fv_platetemplate,
   fv_svg,
   fv_svgtemplate,
-  fv_glif,
-  fv_gliftemplate,
   fv_fig,
   fv_pythonbase = 0x100
 };

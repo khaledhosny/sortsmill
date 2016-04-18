@@ -344,36 +344,6 @@ return;
     SCCharChangedUpdate(sc,layer);
 }
 
-void SCImportGlif(SplineChar *sc,int layer,char *path,char *memory, int memlen, int doclear) {
-    SplinePointList *spl, *espl, **head;
-
-    spl = SplinePointListInterpretGlif(path,memory,memlen,sc->parent->ascent+sc->parent->descent,
-	    sc->parent->ascent,sc->parent->strokedfont);
-    for ( espl = spl; espl!=NULL && espl->first->next==NULL; espl=espl->next );
-    if ( espl!=NULL )
-	if ( espl->first->next->order2!=sc->layers[layer].order2 )
-	    spl = SplineSetsConvertOrder(spl,sc->layers[layer].order2);
-    if ( spl==NULL ) {
-	ff_post_error(_("Too Complex or Bad"),_("I'm sorry this file is too complex for me to understand (or is erroneous)"));
-return;
-    }
-    for ( espl=spl; espl->next!=NULL; espl = espl->next );
-    if ( layer==ly_grid )
-	head = &sc->parent->grid.splines;
-    else {
-	SCPreserveLayer(sc,layer,false);
-	head = &sc->layers[layer].splines;
-    }
-    if ( doclear ) {
-	SplinePointListsFree(*head);
-	*head = NULL;
-    }
-    espl->next = *head;
-    *head = spl;
-
-    SCCharChangedUpdate(sc,layer);
-}
-
 /**************************** Fig File Import *********************************/
 
 static BasePoint *slurppoints(FILE *fig,SplineFont *sf,int cnt ) {
@@ -983,9 +953,6 @@ return(false);
 	} else if ( format==fv_svg ) {
 	    SCImportSVG(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
 	    ++tot;
-	} else if ( format==fv_glif ) {
-	    SCImportGlif(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
-	    ++tot;
 	} else if ( format==fv_eps ) {
 	    SCImportPS(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);
 	    ++tot;
@@ -1093,9 +1060,6 @@ return( false );
 	    SCAddScaleImage(sc,image,true,toback?ly_back:ly_fore);
 	} else if ( format==fv_svgtemplate ) {
 	    SCImportSVG(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
-	    ++tot;
-	} else if ( format==fv_gliftemplate ) {
-	    SCImportGlif(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
 	    ++tot;
 	} else if ( format==fv_pdftemplate ) {
 	    SCImportPDF(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);

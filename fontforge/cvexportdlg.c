@@ -312,8 +312,6 @@ static GTextInfo formats[] = {
    0, '\0'},
   {(uint32_t *) N_("SVG"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(uint32_t *) N_("Glif"), NULL, 0, 0, (void *) 3, 0, 0, 0, 0, 0, 0, 0, 1, 0,
-   0, '\0'},
   {(uint32_t *) N_("PDF"), NULL, 0, 0, (void *) 4, 0, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
   {(uint32_t *) N_("Raph's plate"), NULL, 0, 0, (void *) 5, 0, 0, 0, 0, 0, 0,
@@ -349,8 +347,6 @@ DoExport (struct gfc_data *d, uint32_t *path)
     good = ExportFig (temp, d->sc, d->layer);
   else if (format == 2)
     good = ExportSVG (temp, d->sc, d->layer);
-  else if (format == 3)
-    good = ExportGlif (temp, d->sc, d->layer);
   else if (format == 4)
     good = ExportPDF (temp, d->sc, d->layer);
   else if (format == 5)
@@ -458,7 +454,6 @@ GFD_Format (GGadget *g, GEvent *e)
         u32_strcpy (pt, x_gc_u8_to_u32 (format == 0 ? ".eps" :
                                         format == 1 ? ".fig" :
                                         format == 2 ? ".svg" :
-                                        format == 3 ? ".glif" :
                                         format == 4 ? ".pdf" :
                                         format == 5 ? ".plate" :
                                         format == 6 ? ".xbm" :
@@ -794,7 +789,6 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
 #endif
   else
     ext = _format == 0 ? "eps" : _format == 1 ? "fig" : _format == 2 ? "svg" :
-      _format == 3 ? "glif" :
       _format == 4 ? "pdf" : _format == 5 ? "plate" :
       _format == 6 ? "xbm" : _format == 7 ? "bmp" : "png";
   sprintf (buffer, "%.40s_%.40s.%s", sc->name, sc->parent->fontname, ext);

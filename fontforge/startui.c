@@ -416,18 +416,15 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
           if (GFileIsDir (path))
             {
-              GFile *sfdir, *ufo;
+              GFile *sfdir;
               sfdir = g_file_get_child (file, "font.props");
-              ufo = g_file_get_child (file, "fontinfo.plist");
-              if (g_file_query_exists (sfdir, NULL)
-                  || g_file_query_exists (ufo, NULL))
+              if (g_file_query_exists (sfdir, NULL))
                 {
-                  /* It's probably a Unified Font Object directory or sf dir collection */
+                  /* It's probably an sf dir collection */
                   if (ViewFont (path, openflags))
                     no_font_loaded = false;
 
                   g_object_unref (sfdir);
-                  g_object_unref (ufo);
                 }
               else
                 {

@@ -69,7 +69,7 @@ char *generatefont_extensions[] =
   ".cid", ".cff", ".cid.cff",
   ".t42", ".t11",
   ".ttf", ".ttf", ".ttf.bin", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
-  ".otf.dfont", ".svg", ".ufo", ".woff", NULL
+  ".otf.dfont", ".svg", ".woff", NULL
 };
 
 char *bitmapextensions[] =
@@ -972,9 +972,6 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
     case ff_svg:
       buf = x_gc_strdup (_("Generating SVG font"));
       break;
-    case ff_ufo:
-      buf = x_gc_strdup (_("Generating Unified Font Object"));
-      break;
     default:
       buf = x_gc_strdup (_("Generating PostScript Font"));
       break;
@@ -996,13 +993,6 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
               ff_post_error (_("Mac Resource Not Remote"),
                              _
                              ("You may not generate a mac resource file to a remote location"));
-              oerr = true;
-            }
-          else if (oldformatstate == ff_ufo)
-            {
-              ff_post_error (_("Directory Not Remote"),
-                             _
-                             ("You may not generate ufo directory to a remote location"));
               oerr = true;
             }
         }
@@ -1052,10 +1042,6 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
           case ff_svg:
             oerr =
               !WriteSVGFont (newname, sf, oldformatstate, flags, map, layer);
-            break;
-          case ff_ufo:
-            oerr =
-              !WriteUFOFont (newname, sf, oldformatstate, flags, map, layer);
             break;
           }
       if (oerr)

@@ -4538,8 +4538,6 @@ PyFFLayer_export (PyFF_Layer * self, PyObject *args)
     _ExportPDF (file, &sc, ly_fore);
   else if (strcasecmp (pt, ".svg") == 0)
     _ExportSVG (file, &sc, ly_fore);
-  else if (strcasecmp (pt, ".glif") == 0)
-    _ExportGlif (file, &sc, ly_fore);
   else if (strcasecmp (pt, ".plate") == 0)
     _ExportPlate (file, &sc, ly_fore);
   /* else if ( strcasecmp(pt,".fig")==0 ) */
@@ -9063,11 +9061,6 @@ PyFFGlyph_import (PyObject *self, PyObject *args)
       SCImportSVG (sc, ((PyFF_Glyph *) self)->layer, locfilename, NULL, 0,
                    false);
     }
-  else if (strcasecmp (pt, ".glif") == 0)
-    {
-      SCImportGlif (sc, ((PyFF_Glyph *) self)->layer, locfilename, NULL, 0,
-                    false);
-    }
   else if (strcasecmp (pt, ".plate") == 0)
     {
       FILE *plate = fopen (locfilename, "r");
@@ -9191,8 +9184,6 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
         _ExportPDF (file, sc, layer);
       else if (strcasecmp (pt, ".svg") == 0)
         _ExportSVG (file, sc, layer);
-      else if (strcasecmp (pt, ".glif") == 0)
-        _ExportGlif (file, sc, layer);
       else if (strcasecmp (pt, ".plate") == 0)
         _ExportPlate (file, sc, layer);
       /* else if ( strcasecmp(pt,".fig")==0 ) */

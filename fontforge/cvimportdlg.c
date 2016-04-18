@@ -81,10 +81,6 @@ static void ImportSVG(CharView *cv,char *path) {
     SCImportSVG(cv->b.sc,CVLayer((CharViewBase *) cv),path,NULL,0,false);
 }
 
-static void ImportGlif(CharView *cv,char *path) {
-    SCImportGlif(cv->b.sc,CVLayer((CharViewBase *) cv),path,NULL,0,false);
-}
-
 static void ImportFig(CharView *cv,char *path) {
     SCImportFig(cv->b.sc,CVLayer((CharViewBase *) cv),path,false);
 }
@@ -218,13 +214,11 @@ static uint32_t wildtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','
 static uint32_t wildepstemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', '{', 'p','s',',', 'e','p','s',',','a','r','t','}',  0 };
 static uint32_t wildpdftemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p', 'd','f',  0 };
 static uint32_t wildsvgtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 's', 'v','g',  0 };
-static uint32_t wildgliftemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'g', 'l','i','f',  0 };
 static uint32_t wildplatetemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p','l','a','t','e',  0 };
 static uint32_t wildps[] = { '*', '.', '{', 'p','s',',', 'e','p','s',',', 'a','r','t','}', '\0' };
 static uint32_t wildpdf[] = { '*', '.', 'p','d','f',  '\0' };
 static uint32_t wildsvg[] = { '*', '.', 's','v','g',  '\0' };
 static uint32_t wildplate[] = { '*', '.', 'p','l','a','t','e',  '\0' };
-static uint32_t wildglif[] = { '*', '.', 'g','l','i','f',  '\0' };
 static uint32_t wildfig[] = { '*', '.', '{', 'f','i','g',',','x','f','i','g','}',  '\0' };
 static uint32_t wildbdf[] = { '*', '.', 'b', 'd','{', 'f', ',','f','.','g','z',',','f','.','Z',',','f','.','b','z','2','}',  '\0' };
 static uint32_t wildpcf[] = { '*', '.', 'p', '{', 'c',',','m','}','{', 'f', ',','f','.','g','z',',','f','.','Z',',','f','.','b','z','2','}',  '\0' };
@@ -235,7 +229,6 @@ static uint32_t wildwin[] = { '*', '{', 'f', 'o', 'n', ',', 'f', 'n', 't', '}', 
 static uint32_t wildpalm[] = { '*', 'p', 'd', 'b',  '\0' };
 static uint32_t *wildchr[] = { wildimg, wildps, wildpdf,
 wildsvg,
-wildglif,
 wildplate,
 wildfig };
 static uint32_t *wildfnt[] = { wildbdf, wildttf, wildpk, wildpcf, wildmac,
@@ -244,7 +237,6 @@ wildimg, wildtemplate, wildps, wildepstemplate,
 wildpdf, wildpdftemplate,
 wildplate, wildplatetemplate,
 wildsvg, wildsvgtemplate,
-wildglif, wildgliftemplate,
 wildfig
 };
 
@@ -415,7 +407,6 @@ static GTextInfo formats[] = {
     { (uint32_t *) N_("EPS"), NULL, 0, 0, (void *) fv_eps, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("Glif"), NULL, 0, 0, (void *) fv_glif, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Raph's plate files"), NULL, 0, 0, (void *) fv_plate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("XFig"), NULL, 0, 0, (void *) fv_fig, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
@@ -436,8 +427,6 @@ static GTextInfo fvformats[] = {
     { (uint32_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("SVG Template"), NULL, 0, 0, (void *) fv_svgtemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("Glif"), NULL, 0, 0, (void *) fv_glif, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("Glif Template"), NULL, 0, 0, (void *) fv_gliftemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -493,12 +482,6 @@ return( true );
 		d->done = FVImportImages((FontViewBase *) d->fv,temp,format,toback,-1);
 	    else if ( format==fv_svgtemplate )
 		d->done = FVImportImageTemplate((FontViewBase *) d->fv,temp,format,toback,-1);
-	    else if ( format==fv_glif )
-		d->done = FVImportImages((FontViewBase *) d->fv,temp,format,toback,-1);
-	    else if ( format==fv_gliftemplate )
-		d->done = FVImportImageTemplate((FontViewBase *) d->fv,temp,format,toback,-1);
-	    else if ( format==fv_glif )
-		d->done = FVImportImages((FontViewBase *) d->fv,temp,format,toback,-1);
 	    else if ( format>=fv_pythonbase )
 		d->done = FVImportImages((FontViewBase *) d->fv,temp,format,toback,-1);
 	} else if ( d->bv!=NULL )
@@ -515,8 +498,6 @@ return( true );
 		ImportPlate(d->cv,temp);
 	    else if ( format==fv_svg )
 		ImportSVG(d->cv,temp);
-	    else if ( format==fv_glif )
-		ImportGlif(d->cv,temp);
 	    else if ( format==fv_fig )
 		ImportFig(d->cv,temp);
 #ifndef _NO_PYTHON
@@ -573,7 +554,6 @@ static int GFD_Format(GGadget *g, GEvent *e) {
 	    } else if ( format==fv_eps || format==fv_epstemplate ||
 			format==fv_pdf || format==fv_pdftemplate ||
 			format==fv_svg || format==fv_svgtemplate ||
-			format==fv_glif || format==fv_gliftemplate ||
 			format>=fv_pythonbase ) {
 		GGadgetSetChecked(d->background,false);
 		GGadgetSetEnabled(d->background,true);

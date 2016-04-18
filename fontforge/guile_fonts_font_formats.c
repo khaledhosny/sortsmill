@@ -45,7 +45,6 @@ static _scm_symbol_func *symbol_lookup[] = {
   [ff_otfcid] = scm_symbol__otf_cid,    // otf-cid
   [ff_otfciddfont] = scm_symbol__otf_cid_dfont, // otf-cid-dfont
   [ff_svg] = scm_symbol__svg,   // svg
-  [ff_ufo] = scm_symbol__ufo,   // ufo
   [ff_woff] = scm_symbol__woff, // woff
   [ff_none] = scm_symbol__no_font       // no-font
 };

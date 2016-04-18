@@ -884,14 +884,13 @@ ArchiveParseTOC (char *listfile, enum archive_list_style ars, int *doall)
       return onlyname;
     }
 
-  /* Suppose they've got an archive of a directory format font? I mean a ufo */
-  /*  or a sfdir. It won't show up in the list of files (because either     */
+  /* Suppose they've got an archive of a directory format font? I mean */
+  /*  an sfdir. It won't show up in the list of files (because either     */
   /*  tar or I have removed all directories from that list) */
   pt = strrchr (files[0], '/');
   if (pt != NULL)
     {
-      if ((pt - files[0] > 4 && strncasecmp (pt - 4, ".ufo", 4) == 0)
-          || (pt - files[0] > 6 && strncasecmp (pt - 6, ".sfdir", 6) == 0))
+      if (pt - files[0] > 6 && strncasecmp (pt - 6, ".sfdir", 6) == 0)
         {
           /* Ok, looks like a potential directory font. Now is EVERYTHING */
           /*  in the archive inside this guy? */
@@ -1022,7 +1021,7 @@ Unarchive (char *name, char **_archivedir)
     }
 
   /* I tried sending everything to stdout, but that doesn't work if the */
-  /*  output is a directory file (ufo, sfdir) */
+  /*  output is a directory file (sfdir) */
   unarchivecmd = xmalloc (strlen (archivers[i].unarchive) + 1 +
                           strlen (archivers[i].listargs) + 1 +
                           strlen (name) + 1 +
@@ -1264,7 +1263,6 @@ _ReadSplineFont (FILE *file, const char *const_filename,
   sf = NULL;
   checked = false;
 /* checked == false => not checked */
-/* checked == 'u'   => UFO */
 /* checked == 't'   => TTF/OTF */
 /* checked == 'p'   => pfb/general postscript */
 /* checked == 'P'   => pdf */
@@ -1277,23 +1275,13 @@ _ReadSplineFont (FILE *file, const char *const_filename,
   if (!wasurl && GFileIsDir (strippedname))
     {
       char *temp =
-        xmalloc (strlen (strippedname) + strlen ("/glyphs/contents.plist") + 1);
+        xmalloc (strlen (strippedname) + strlen ("/font.props") + 1);
       strcpy (temp, strippedname);
-      strcat (temp, "/glyphs/contents.plist");
+      strcat (temp, "/font.props");
       if (GFileExists (temp))
         {
-          sf = SFReadUFO (strippedname, 0);
-          checked = 'u';
-        }
-      else
-        {
-          strcpy (temp, strippedname);
-          strcat (temp, "/font.props");
-          if (GFileExists (temp))
-            {
-              sf = SFDirRead (strippedname);
-              checked = 'F';
-            }
+          sf = SFDirRead (strippedname);
+          checked = 'F';
         }
       free (temp);
       if (file != NULL)
@@ -1420,11 +1408,6 @@ _ReadSplineFont (FILE *file, const char *const_filename,
            && checked != 'S')
     {
       sf = SFReadSVG (fullname, 0);
-    }
-  else if (strcasecmp (fullname + strlen (fullname) - 4, ".ufo") == 0
-           && checked != 'u')
-    {
-      sf = SFReadUFO (fullname, 0);
     }
   else if (strcasecmp (fullname + strlen (fullname) - 4, ".bdf") == 0
            && checked != 'b')

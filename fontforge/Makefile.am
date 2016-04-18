@@ -218,7 +218,6 @@ dist_libsortsmill_fontforge_la_SOURCES += tottfgpos.c
 dist_libsortsmill_fontforge_la_SOURCES += tottf.c
 dist_libsortsmill_fontforge_la_SOURCES += ttfinstrs.c
 dist_libsortsmill_fontforge_la_SOURCES += ttfspecial.c
-dist_libsortsmill_fontforge_la_SOURCES += ufo.c
 dist_libsortsmill_fontforge_la_SOURCES += unicoderange.c
 dist_libsortsmill_fontforge_la_SOURCES += winfonts.c
 dist_libsortsmill_fontforge_la_SOURCES += zapfnomen.c

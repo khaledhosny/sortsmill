@@ -56,20 +56,13 @@ GetFontNames (char *filename)
   if (GFileIsDir (filename))
     {
       char *temp =
-        xmalloc (strlen (filename) + strlen ("/glyphs/contents.plist") + 1);
+        xmalloc (strlen (filename) + strlen ("/font.props") + 1);
       strcpy (temp, filename);
-      strcat (temp, "/glyphs/contents.plist");
+      strcat (temp, "/font.props");
       if (GFileExists (temp))
-        ret = NamesReadUFO (filename);
-      else
-        {
-          strcpy (temp, filename);
-          strcat (temp, "/font.props");
-          if (GFileExists (temp))
-            ret = NamesReadSFD (temp);
-          /* The fonts.prop file will look just like an sfd file as far */
-          /* as fontnames are concerned, we don't need a separate routine */
-        }
+        ret = NamesReadSFD (temp);
+      /* The fonts.prop file will look just like an sfd file as far */
+      /* as fontnames are concerned, we don't need a separate routine */
       free (temp);
     }
   else

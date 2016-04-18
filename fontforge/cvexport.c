@@ -394,21 +394,6 @@ ExportSVG (char *filename, SplineChar *sc, int layer)
   return ret;
 }
 
-int
-ExportGlif (char *filename, SplineChar *sc, int layer)
-{
-  FILE *glif;
-  int ret;
-
-  glif = fopen (filename, "w");
-  if (glif == NULL)
-    {
-      return 0;
-    }
-  ret = _ExportGlif (glif, sc, layer);
-  return ret;
-}
-
 static void
 FigDumpPt (FILE *fig, BasePoint *me, real scale, real ascent)
 {
@@ -785,8 +770,6 @@ ScriptExport (SplineFont *sf, BDFFont *bdf, int format, int gid,
     good = ExportFig (buffer, sc, ly_fore);
   else if (format == 2)
     good = ExportSVG (buffer, sc, ly_fore);
-  else if (format == 3)
-    good = ExportGlif (buffer, sc, ly_fore);
   else if (format == 4)
     good = ExportPDF (buffer, sc, ly_fore);
   else if (format == 5)

@@ -1719,8 +1719,7 @@ DoGenerate (struct gfc_data *d, uint32_t *path)
           psfnlenwarned = true;
         }
     }
-  else if (oldformatstate != ff_none && oldformatstate != ff_svg &&
-           oldformatstate != ff_ufo)
+  else if (oldformatstate != ff_none && oldformatstate != ff_svg)
     {
       int val = d->sf->ascent + d->sf->descent;
       int bit;
@@ -2873,7 +2872,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       formattypes[ff_otf].disabled = true;
       formattypes[ff_otfcid].disabled = true;
       formattypes[ff_cffcid].disabled = true;
-      formattypes[ff_ufo].disabled = true;
       if (ofs != ff_svg)
         ofs = ff_ptype3;
     }
@@ -2883,7 +2881,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       formattypes[ff_ttfsym].disabled = true;
       formattypes[ff_ttfmacbin].disabled = true;
       formattypes[ff_ttfdfont].disabled = true;
-      formattypes[ff_ufo].disabled = true;
       if (ofs == ff_ttf || ofs == ff_ttfsym || ofs == ff_ttfmacbin
           || ofs == ff_ttfdfont)
         ofs = ff_otf;
@@ -2901,7 +2898,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
         ofs = ff_ttfmacbin;
       else if (ofs == ff_otf || ofs == ff_cff)
         ofs = ff_otfdfont;
-      else if (ofs == ff_ufo || ofs == ff_ttc)
+      else if (ofs == ff_ttc)
         ofs = ff_ttfdfont;
       formattypes[ff_pfa].disabled = true;
       formattypes[ff_pfb].disabled = true;
@@ -2919,7 +2916,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       formattypes[ff_cff].disabled = true;
       formattypes[ff_cffcid].disabled = true;
       formattypes[ff_svg].disabled = true;
-      formattypes[ff_ufo].disabled = true;
     }
   else if (family == gf_ttc)
     {

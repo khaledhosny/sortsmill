@@ -2717,7 +2717,6 @@ typedef enum fontformat
   ff_otfcid,
   ff_otfciddfont,
   ff_svg,
-  ff_ufo,
   ff_woff,
   ff_none                       // ff_none comes last.
 } FontFormat;
@@ -2817,8 +2816,6 @@ int WriteSVGFont (char *fontname, SplineFont *sf,
                   enum fontformat format, int flags, EncMap *enc, int layer);
 int _WriteSVGFont (FILE *file, SplineFont *sf, enum fontformat format,
                    int flags, EncMap *enc, int layer);
-int WriteUFOFont (char *fontname, SplineFont *sf,
-                  enum fontformat format, int flags, EncMap *enc, int layer);
 VISIBLE void SfListFree (struct sflist *sfs);
 VISIBLE void TTF_PSDupsDefault (SplineFont *sf);
 void DefaultTTFEnglishNames (struct ttflangname *dummy, SplineFont *sf);
@@ -3577,7 +3574,6 @@ SplineFont *_SFReadTTF (FILE *ttf, int flags, enum openflags openflags,
 SplineFont *SFReadTTF (char *filename, int flags, enum openflags openflags);
 SplineFont *SFReadSVG (char *filename, int flags);
 SplineFont *SFReadSVGMem (char *data, int flags);
-SplineFont *SFReadUFO (char *filename, int flags);
 SplineFont *_CFFParse (FILE *temp, int len, char *fontsetname);
 SplineFont *CFFParse (char *filename);
 SplineFont *SFReadMacBinary (char *filename, int flags,
@@ -3611,7 +3607,6 @@ char **NamesReadCFF (char *filename);
 char **NamesReadPostScript (char *filename);
 char **_NamesReadPostScript (FILE *ps);
 char **NamesReadSVG (char *filename);
-char **NamesReadUFO (char *filename);
 char **NamesReadMacBinary (char *filename);
 
 void SFSetOrder (SplineFont *sf, int order2);
@@ -3664,9 +3659,6 @@ VISIBLE void SFSetLayerWidthsStroked (SplineFont *sf, real strokewidth);
 SplineSet *SplinePointListInterpretSVG (char *filename, char *memory,
                                         int memlen, int em_size,
                                         int ascent, int stroked);
-SplineSet *SplinePointListInterpretGlif (char *filename, char *memory,
-                                         int memlen, int em_size,
-                                         int ascent, int stroked);
 #define UNDEFINED_WIDTH	-999999
 SplinePointList *SplinePointListInterpretPS (FILE *ps, int flags,
                                              int stroked, int *width);
@@ -4090,8 +4082,6 @@ VISIBLE void BDFOrigFixup (BDFFont *bdf, int orig_cnt, SplineFont *sf);
 
 VISIBLE void SCImportSVG (SplineChar *sc, int layer, char *path,
                           char *memory, int memlen, int doclear);
-VISIBLE void SCImportGlif (SplineChar *sc, int layer, char *path,
-                           char *memory, int memlen, int doclear);
 void SCImportPS (SplineChar *sc, int layer, char *path, int doclear, int flags);
 VISIBLE void SCImportPSFile (SplineChar *sc, int layer, FILE *ps,
                              int doclear, int flags);
@@ -4111,12 +4101,10 @@ VISIBLE int _ExportPlate (FILE *pdf, SplineChar *sc, int layer);
 VISIBLE int _ExportPDF (FILE *pdf, SplineChar *sc, int layer);
 VISIBLE int _ExportEPS (FILE *eps, SplineChar *sc, int layer, int gen_preview);
 VISIBLE int _ExportSVG (FILE *svg, SplineChar *sc, int layer);
-VISIBLE int _ExportGlif (FILE *glif, SplineChar *sc, int layer);
 VISIBLE int ExportEPS (char *filename, SplineChar *sc, int layer);
 VISIBLE int ExportPDF (char *filename, SplineChar *sc, int layer);
 VISIBLE int ExportPlate (char *filename, SplineChar *sc, int layer);
 VISIBLE int ExportSVG (char *filename, SplineChar *sc, int layer);
-VISIBLE int ExportGlif (char *filename, SplineChar *sc, int layer);
 VISIBLE int ExportFig (char *filename, SplineChar *sc, int layer);
 VISIBLE int BCExportXBM (char *filename, BDFChar *bdfc, int format);
 VISIBLE int ExportImage (char *filename, SplineChar *sc, int layer,
