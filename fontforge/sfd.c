@@ -1345,7 +1345,7 @@ SFDDumpRefs (FILE *sfd, RefChar * refs, char *name, EncMap * map,
         fprintf (sfd, "Refer: %d %d %c %g %g %g %g %g %g %d",
                  newgids !=
                  NULL ? newgids[ref->sc->orig_pos] : ref->sc->orig_pos,
-                 ref->sc->unicodeenc, ref->selected ? 'S' : 'N',
+                 ref->sc->unicodeenc, 'N',
                  (double) ref->transform[0], (double) ref->transform[1],
                  (double) ref->transform[2], (double) ref->transform[3],
                  (double) ref->transform[4], (double) ref->transform[5],
@@ -1967,7 +1967,7 @@ SFDDumpBitmapFont (FILE *sfd, BDFFont *bdf, EncMap * encm, int *newgids,
                    newgids != NULL ? newgids[bc->orig_pos] : bc->orig_pos,
                    newgids !=
                    NULL ? newgids[ref->bdfc->orig_pos] : ref->bdfc->orig_pos,
-                   ref->xoff, ref->yoff, ref->selected ? 'S' : 'N');
+                   ref->xoff, ref->yoff, 'N');
       }
   fprintf (sfd, "EndBitmapFont\n");
   return err;
@@ -4725,8 +4725,6 @@ SFDGetRef (FILE *sfd, int was_enc)
   if (getint (sfd, &temp))
     rf->unicode_enc = temp;
   while (isspace (ch = nlgetc (sfd)));
-  if (ch == 'S')
-    rf->selected = true;
   getreal (sfd, &rf->transform[0]);
   getreal (sfd, &rf->transform[1]);
   getreal (sfd, &rf->transform[2]);
@@ -5970,8 +5968,6 @@ SFDGetBitmapReference (FILE *sfd, BDFFont *bdf)
   ref = xcalloc (1, sizeof (BDFRefChar));
   ref->gid = rgid;
   ref->xoff = xoff, ref->yoff = yoff;
-  if (ch == 'S')
-    ref->selected = true;
   for (head = bc->refs; head != NULL && head->next != NULL;
        head = head->next);
   if (head == NULL)
