@@ -2698,14 +2698,6 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
       fprintf (sfd, "Grid\n");
       SFDDumpSplineSet (sfd, sf->grid.splines);
     }
-  if (sf->texdata.type != tex_unset)
-    {
-      fprintf (sfd, "TeXData: %d %d", (int) sf->texdata.type,
-               (int) ((sf->design_size << 19) + 2) / 5);
-      for (i = 0; i < 22; ++i)
-        fprintf (sfd, " %d", (int) sf->texdata.params[i]);
-      putc ('\n', sfd);
-    }
   if (sf->anchor != NULL)
     {
       AnchorClass *an;
@@ -8345,20 +8337,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
         }
       else if (strcasecmp (tok, "TeXData:") == 0)
         {
-          int temp;
-          getint (sfd, &temp);
-          sf->texdata.type = temp;
-          getint (sfd, &temp);
-          if (sf->design_size == 0)
-            {
-              sf->design_size = (5 * temp + (1 << 18)) >> 19;
-            }
-          for (i = 0; i < 22; ++i)
-            {
-              int foo;
-              getint (sfd, &foo);
-              sf->texdata.params[i] = foo;
-            }
+          LogError (_("TeX font dimentions no longer supported: \"%s\" ignored"), tok);
         }
       else if (strncasecmp (tok, "AnchorClass", 11) == 0)
         {
