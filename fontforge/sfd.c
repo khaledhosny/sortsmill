@@ -836,8 +836,7 @@ SFDDumpSplineSet (FILE *sfd, SplineSet * spl)
                      (double) sp->me.y);
 #endif
           fprintf (sfd, "%d",
-                   sp->pointtype | (sp->
-                                    selected << 2) | (sp->nextcpdef << 3) |
+                   sp->pointtype | (sp->nextcpdef << 3) |
                    (sp->prevcpdef << 4) | (sp->
                                            roundx << 5) | (sp->roundy << 6) |
                    (sp->ttfindex ==
@@ -4312,7 +4311,7 @@ SFDGetSplineSet (SplineFont *sf, FILE *sfd, int order2)
           int val;
           getint (sfd, &val);
           pt->pointtype = (val & 3);
-          pt->selected = val & 4 ? 1 : 0;
+          pt->selected = 0;
           pt->nextcpdef = val & 8 ? 1 : 0;
           pt->prevcpdef = val & 0x10 ? 1 : 0;
           pt->roundx = val & 0x20 ? 1 : 0;
