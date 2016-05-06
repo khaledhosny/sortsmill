@@ -1615,10 +1615,9 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
   if (sc->lig_caret_cnt_fixed)
     fprintf (sfd, "LigCaretCntFixed: %d\n", sc->lig_caret_cnt_fixed);
   if (sc->changedsincelasthinted || sc->manualhints || sc->widthset)
-    fprintf (sfd, "Flags: %s%s%s%s%s\n",
+    fprintf (sfd, "Flags: %s%s%s%s\n",
              sc->changedsincelasthinted ? "H" : "",
              sc->manualhints ? "M" : "", sc->widthset ? "W" : "",
-             sc->views != NULL ? "O" : "",
              sc->instructions_out_of_date ? "I" : "");
   if (sc->tex_height != TEX_UNDEF || sc->tex_depth != TEX_UNDEF)
     fprintf (sfd, "TeX: %d %d\n", sc->tex_height, sc->tex_depth);
@@ -5132,8 +5131,6 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                 sc->manualhints = true;
               else if (ch == 'W')
                 sc->widthset = true;
-              else if (ch == 'O')
-                sc->wasopen = true;
               else if (ch == 'I')
                 sc->instructions_out_of_date = true;
               ch = nlgetc (sfd);
