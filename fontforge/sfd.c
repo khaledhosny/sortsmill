@@ -2685,25 +2685,10 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
                  (int) remap->lastenc, (int) remap->infont);
     }
   if (sf->display_size != 0)
-    fprintf (sfd, "DisplaySize: %d\n", sf->display_size);
-  if (sf->display_layer != ly_fore)
-    fprintf (sfd, "DisplayLayer: %d\n", sf->display_layer);
-  fprintf (sfd, "AntiAlias: %d\n", sf->display_antialias);
-  fprintf (sfd, "FitToEm: %d\n", sf->display_bbsized);
   if (sf->extrema_bound != 0)
     fprintf (sfd, "ExtremaBound: %d\n", sf->extrema_bound);
   if (sf->width_separation != 0)
     fprintf (sfd, "WidthSeparation: %d\n", sf->width_separation);
-  {
-    int rc, cc, te;
-    if ((te = FVWinInfo (sf->fv, &cc, &rc)) != -1)
-      fprintf (sfd, "WinInfo: %d %d %d\n", te, cc, rc);
-    else if (sf->top_enc != -1)
-      fprintf (sfd, "WinInfo: %d %d %d\n", sf->top_enc, sf->desired_col_cnt,
-               sf->desired_row_cnt);
-  }
-  if (sf->onlybitmaps != 0)
-    fprintf (sfd, "OnlyBitmaps: %d\n", sf->onlybitmaps);
   if (sf->private != NULL)
     SFDDumpPrivate (sfd, sf->private);
   if (sf->grid.splines != NULL)
@@ -7837,14 +7822,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           getreal (sfd, &temp);
           sf->pfminfo.os2_upperopticalsize = point_to_twip (temp);
         }
-      else if (strcasecmp (tok, "DisplaySize:") == 0)
-        {
-          getint (sfd, &sf->display_size);
-        }
-      else if (strcasecmp (tok, "DisplayLayer:") == 0)
-        {
-          getint (sfd, &sf->display_layer);
-        }
       else if (strcasecmp (tok, "ExtremaBound:") == 0)
         {
           getint (sfd, &sf->extrema_bound);
@@ -7856,39 +7833,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strcasecmp (tok, "TopEncoding:") == 0)
         {                       /* Obsolete */
           getint (sfd, &sf->top_enc);
-        }
-      else if (strcasecmp (tok, "WinInfo:") == 0)
-        {
-          int temp1, temp2;
-          getint (sfd, &sf->top_enc);
-          getint (sfd, &temp1);
-          getint (sfd, &temp2);
-          if (sf->top_enc <= 0)
-            sf->top_enc = -1;
-          if (temp1 <= 0)
-            temp1 = 16;
-          if (temp2 <= 0)
-            temp2 = 4;
-          sf->desired_col_cnt = temp1;
-          sf->desired_row_cnt = temp2;
-        }
-      else if (strcasecmp (tok, "AntiAlias:") == 0)
-        {
-          int temp;
-          getint (sfd, &temp);
-          sf->display_antialias = temp;
-        }
-      else if (strcasecmp (tok, "FitToEm:") == 0)
-        {
-          int temp;
-          getint (sfd, &temp);
-          sf->display_bbsized = temp;
-        }
-      else if (strcasecmp (tok, "OnlyBitmaps:") == 0)
-        {
-          int temp;
-          getint (sfd, &temp);
-          sf->onlybitmaps = temp;
         }
       else if (strcasecmp (tok, "Ascent:") == 0)
         {
