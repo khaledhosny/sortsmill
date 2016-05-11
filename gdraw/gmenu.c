@@ -89,8 +89,6 @@ GMenuItem_nonempty (GMenuItem *mi)
 static void
 GMenuInit ()
 {
-  char *keystr, *end;
-
   GGadgetInit ();
   menu_font = menubar_font = _ggadget_default_font;
   _GGadgetCopyDefaultBox (&menubar_box);
