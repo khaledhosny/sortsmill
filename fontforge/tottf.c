@@ -3418,8 +3418,7 @@ sethead (struct head *head, SplineFont *sf, struct alltabs *at,
 
   time (&now);                  /* seconds since 1970, need to convert to seconds since 1904 */
   cvt_unix_to_1904 (now, head->modtime);
-  memcpy (head->createtime, head->modtime, sizeof (head->modtime));
-
+  cvt_unix_to_1904 (sf->creationtime, head->createtime);
 }
 
 static void
