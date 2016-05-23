@@ -2324,10 +2324,8 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   fprintf (sfd, "OS2_UseTypoMetrics: %d\n", sf->use_typo_metrics);
 #ifdef HAVE_LONG_LONG_INT
   fprintf (sfd, "CreationTime: %lld\n", sf->creationtime);
-  fprintf (sfd, "ModificationTime: %lld\n", sf->modificationtime);
 #else
   fprintf (sfd, "CreationTime: %ld\n", sf->creationtime);
-  fprintf (sfd, "ModificationTime: %ld\n", sf->modificationtime);
 #endif
   if (sf->pfminfo.pfmset)
     {
