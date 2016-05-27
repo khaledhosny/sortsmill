@@ -13834,6 +13834,20 @@ ff_gs_bit (weight_width_slope_only) ff_gs_bit (onlybitmaps)
 ff_gs_bit (hasvmetrics) ff_gs_bit (head_optimized_for_cleartype)
 
 static PyObject *
+PyFF_Font_get_creationtime (PyFF_Font *self, void *UNUSED (closure))
+{
+  if (CheckIfFontClosed (self))
+    return NULL;
+
+  SplineFont *sf = self->fv->sf;
+  time_t t = sf->creationtime;
+  const struct tm *tm = gmtime(&t);
+  char creationtime[200];
+  strftime (creationtime, sizeof (creationtime), "%Y/%m/%d %H:%M:%S", tm);
+  return Py_BuildValue ("s", creationtime);
+}
+
+static PyObject *
 PyFF_Font_get_OS2_loweropticalsize (PyFF_Font *self, void *UNUSED (closure))
 {
   if (CheckIfFontClosed (self))
@@ -15644,6 +15658,9 @@ static PyGetSetDef PyFF_Font_getset[] = {
   {"is_cid",
    (getter) PyFF_Font_get_is_cid, NULL,
    "Whether the font is a cid-keyed font. (readonly)", NULL},
+  {"creationtime",
+    (getter) PyFF_Font_get_creationtime, NULL,
+    "Font creation time. (readonly)", NULL},
   {"italicangle",
    (getter) PyFF_Font_get_italicangle, (setter) PyFF_Font_set_italicangle,
    "The Italic angle (skewedness) of the font", NULL},
