@@ -2140,48 +2140,13 @@ _FVRevert (FontViewBase *fv, int tobackup)
       /*  (sfd or not) so we use origname */
       char *buf = xmalloc (strlen (old->filename) + 20);
       strcpy (buf, old->filename);
-      if (old->compression != 0)
-        {
-          char *tmpfile;
-          strcat (buf, compressors[old->compression - 1].ext);
-          strcat (buf, "~");
-          tmpfile = Decompress (buf, old->compression - 1);
-          if (tmpfile == NULL)
-            temp = NULL;
-          else
-            {
-              temp = ReadSplineFont (tmpfile, 0);
-              unlink (tmpfile);
-              free (tmpfile);
-            }
-        }
-      else
-        {
-          strcat (buf, "~");
-          temp = ReadSplineFont (buf, 0);
-        }
+      strcat (buf, "~");
+      temp = ReadSplineFont (buf, 0);
       free (buf);
     }
   else
     {
-      if (old->compression != 0)
-        {
-          char *tmpfile;
-          char *buf = xmalloc (strlen (old->filename) + 20);
-          strcpy (buf, old->filename);
-          strcat (buf, compressors[old->compression - 1].ext);
-          tmpfile = Decompress (buf, old->compression - 1);
-          if (tmpfile == NULL)
-            temp = NULL;
-          else
-            {
-              temp = ReadSplineFont (tmpfile, 0);
-              unlink (tmpfile);
-              free (tmpfile);
-            }
-        }
-      else
-        temp = ReadSplineFont (old->origname, 0);
+      temp = ReadSplineFont (old->origname, 0);
     }
   if (temp == NULL)
     {
@@ -2197,7 +2162,6 @@ _FVRevert (FontViewBase *fv, int tobackup)
       free (temp->origname);
       temp->origname = xstrdup_or_null (old->origname);
     }
-  temp->compression = old->compression;
   temp->fv = old->fv;
   FVReattachCVs (old, temp);
   for (i = 0; i < old->subfontcnt; ++i)

@@ -2459,7 +2459,6 @@ typedef struct splinefont
   long creationtime;
   long modificationtime;
 #endif
-  short compression;            /* If we opened a compressed sfd file, then save it out compressed too */
   short gasp_version;           /* 0/1 currently */
   short gasp_cnt;
   struct gasp *gasp;
@@ -2629,29 +2628,6 @@ enum ps_flags
     (ps_flag_nohintsubs | ps_flag_noflex | ps_flag_afm | ps_flag_pfm |
      ps_flag_tfm | ps_flag_round)
 };
-
-struct compressors
-{
-  char *ext, *decomp, *recomp;
-};
-
-#define COMPRESSORS_EMPTY { NULL, NULL, NULL }
-
-VISIBLE extern struct compressors compressors[];
-
-enum archive_list_style
-{
-  ars_tar,
-  ars_zip
-};
-
-struct archivers
-{
-  char *ext, *unarchive, *archive, *listargs, *extractargs, *appendargs;
-  enum archive_list_style ars;
-};
-
-#define ARCHIVERS_EMPTY { NULL, NULL, NULL, NULL, NULL, NULL, 0 }
 
 struct fontdict;
 struct pschars;
@@ -3571,9 +3547,6 @@ VISIBLE SplineFont *_ReadSplineFont (FILE *file, const char *filename,
 SplineFont *ReadSplineFont (const char *filename, enum openflags);      /* Don't use this; use LoadSplineFont instead. */
 VISIBLE FILE *URLToTempFile (char *url, void *lock);
 int URLFromFile (char *url, FILE *from);
-void ArchiveCleanup (char *archivedir);
-char *Unarchive (char *name, char **_archivedir);
-char *Decompress (char *name, int compression);
 SplineFont *SFFromBDF (char *filename, int ispk, int toback);
 SplineFont *SFFromMF (char *filename);
 void SFCheckPSBitmap (SplineFont *sf);

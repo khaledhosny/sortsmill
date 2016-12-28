@@ -16030,10 +16030,9 @@ PyFFFont_importBitmaps (PyFF_Font *self, PyObject *args)
           return NULL;
         }
     }
-  if (strcasecmp (ext, ".bdf") == 0 || strcasecmp (ext - 4, ".bdf.gz") == 0)
+  if (strcasecmp (ext, ".bdf") == 0)
     format = fv_bdf;
-  else if (strcasecmp (ext, ".pcf") == 0
-           || strcasecmp (ext - 4, ".pcf.gz") == 0)
+  else if (strcasecmp (ext, ".pcf") == 0)
     format = fv_pcf;
   else if (strcasecmp (ext, ".ttf") == 0 || strcasecmp (ext, ".otf") == 0
            || strcasecmp (ext, ".otb") == 0)

@@ -3117,7 +3117,7 @@ SFDWrite (char *filename, SplineFont *sf, EncMap * map, EncMap * normal,
 int
 SFDWriteBak (SplineFont *sf, EncMap * map, EncMap * normal)
 {
-  char *buf, *buf2 = NULL /*, *pt, *bpt */ ;
+  char *buf;
   int ret;
 
   if (sf->save_to_dir)
@@ -3127,47 +3127,13 @@ SFDWriteBak (SplineFont *sf, EncMap * map, EncMap * normal)
       if (sf->cidmaster != NULL)
         sf = sf->cidmaster;
       buf = xmalloc (strlen (sf->filename) + 10);
-      if (sf->compression != 0)
-        {
-          buf2 = xmalloc (strlen (sf->filename) + 10);
-          strcpy (buf2, sf->filename);
-          strcat (buf2, compressors[sf->compression - 1].ext);
-          strcpy (buf, buf2);
-          strcat (buf, "~");
-          if (rename (buf2, buf) == 0)
-            sf->backedup = bs_backedup;
-        }
-      else
-        {
-#if 1
-          strcpy (buf, sf->filename);
-          strcat (buf, "~");
-#else
-          pt = strrchr (sf->filename, '.');
-          if (pt == NULL || pt < strrchr (sf->filename, '/'))
-            pt = sf->filename + strlen (sf->filename);
-          strcpy (buf, sf->filename);
-          bpt = buf + (pt - sf->filename);
-          *bpt++ = '~';
-          strcpy (bpt, pt);
-#endif
-          if (rename (sf->filename, buf) == 0)
-            sf->backedup = bs_backedup;
-        }
+      strcpy (buf, sf->filename);
+      strcat (buf, "~");
+      if (rename (sf->filename, buf) == 0)
+        sf->backedup = bs_backedup;
       free (buf);
 
       ret = SFDWrite (sf->filename, sf, map, normal, false);
-      if (ret && sf->compression != 0)
-        {
-          unlink (buf2);
-          buf = xmalloc (strlen (sf->filename) + 40);
-          sprintf (buf, "%s %s", compressors[sf->compression - 1].recomp,
-                   sf->filename);
-          if (system (buf) != 0)
-            sf->compression = 0;
-          free (buf);
-        }
-      free (buf2);
     }
   return ret;
 }
@@ -9227,9 +9193,7 @@ SFAutoSave (SplineFont *sf, EncMap * map)
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
   if (!sf->new && sf->origname != NULL) /* might be a new file */
-    fprintf (asfd, "Base: %s%s\n", sf->origname,
-             sf->compression ==
-             0 ? "" : compressors[sf->compression - 1].ext);
+    fprintf (asfd, "Base: %s%s\n", sf->origname, "");
   fprintf (asfd, "Encoding: %s\n", map->enc->enc_name);
   fprintf (asfd, "UnicodeInterp: %s\n", unicode_interp_names[sf->uni_interp]);
   fprintf (asfd, "LayerCount: %d\n", sf->layer_cnt);

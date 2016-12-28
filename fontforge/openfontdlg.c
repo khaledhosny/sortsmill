@@ -72,8 +72,7 @@ struct openfilefilters def_font_filters[] = {
    "bin," "hqx," "dfont," "mf," "ik," "fon," "fnt," "pcf," "pmf," "[0-9]*pk,"
 /* I used to say "*gf" but that also matched xgf (xgridfit) files -- which ff can't open */
    "[0-9]*gf," "pdb" "}"
-   /* With any of these methods of compression */
-   "{.gz,.Z,.bz2,.lzma,}"},
+  },
   {
    N_("Outline Fonts"),
    "*.{"
@@ -83,7 +82,7 @@ struct openfilefilters def_font_filters[] = {
    "pf3,"
    "ttc,"
    "gsf,"
-   "cid," "bin," "hqx," "dfont," "mf," "ik" "}" "{.gz,.Z,.bz2,.lzma,}"},
+   "cid," "bin," "hqx," "dfont," "mf," "ik" "}"},
   {
    N_("Bitmap Fonts"),
    "*.{"
@@ -92,21 +91,20 @@ struct openfilefilters def_font_filters[] = {
    "bin,"
    "hqx,"
    "fon,"
-   "fnt," "pcf," "pmf," "*pk," "*gf," "pdb" "}" "{.gz,.Z,.bz2,.lzma,}"},
+   "fnt," "pcf," "pmf," "*pk," "*gf," "pdb" "}"},
   {N_("ΤεΧ Bitmap Fonts"), "*{pk,gf}"},
   {N_("PostScript"),
-   "*.{pfa,pfb,t42,otf,cef,cff,gai,pf3,pt3,gsf,cid}{.gz,.Z,.bz,.bz2,.lzma,}"},
-  {N_("TrueType"), "*.{ttf,t42,ttc}{.gz,.Z,.bz,.bz2,.lzma,}"},
-  {N_("OpenType"), "*.{ttf,otf}{.gz,.Z,.bz,.bz2,.lzma,}"},
-  {N_("Type1"), "*.{pfa,pfb,gsf,cid}{.gz,.Z,.bz2,.lzma,}"},
-  {N_("Type2"), "*.{otf,cef,cff,gai}{.gz,.Z,.bz2,.lzma,}"},
-  {N_("Type3"), "*.{pf3,pt3}{.gz,.Z,.bz2,.lzma,}"},
-  {N_("SVG"), "*.svg{.gz,.Z,.bz2,.lzma,}"},
-  {N_("FontForge's SFD"), "*.sfd{.gz,.Z,.bz2,.lzma,}"},
+   "*.{pfa,pfb,t42,otf,cef,cff,gai,pf3,pt3,gsf,cid}"},
+  {N_("TrueType"), "*.{ttf,t42,ttc}"},
+  {N_("OpenType"), "*.{ttf,otf}"},
+  {N_("Type1"), "*.{pfa,pfb,gsf,cid}"},
+  {N_("Type2"), "*.{otf,cef,cff,gai}"},
+  {N_("Type3"), "*.{pf3,pt3}"},
+  {N_("SVG"), "*.svg"},
+  {N_("FontForge's SFD"), "*.sfd"},
   {N_("Backup SFD"), "*.sfd~"},
-  {N_("Extract from PDF"), "*.pdf{.gz,.Z,.bz2,.lzma,}"},
+  {N_("Extract from PDF"), "*.pdf"},
   {"-", NULL},
-  {N_("Archives"), "*.{zip,tgz,tbz,tbz2,tar.gz,tar.bz,tar.bz2,tar}"},
   {N_("All Files"), "*"},
   {NULL, NULL}
 };

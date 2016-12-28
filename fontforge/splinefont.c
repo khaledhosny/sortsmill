@@ -767,318 +767,6 @@ SFReadPostScript (char *filename)
   return sf;
 }
 
-struct archivers archivers[] = {
-  {".tar", "tar", "tar", "tf", "xf", "rf", ars_tar},
-  {".tgz", "tar", "tar", "tfz", "xfz", "rfz", ars_tar},
-  {".tar.gz", "tar", "tar", "tfz", "xfz", "rfz", ars_tar},
-  {".tar.bz2", "tar", "tar", "tfj", "xfj", "rfj", ars_tar},
-  {".tbz2", "tar", "tar", "tfj", "xfj", "rfj", ars_tar},
-  {".tbz", "tar", "tar", "tfj", "xfj", "rfj", ars_tar},
-  {".zip", "unzip", "zip", "-l", "", "", ars_zip},
-  /* { ".tar.lzma", ? } */
-  ARCHIVERS_EMPTY
-};
-
-void
-ArchiveCleanup (char *archivedir)
-{
-  /* Free this directory and all files within it */
-  char *cmd;
-
-  cmd = xmalloc (strlen (archivedir) + 20);
-  sprintf (cmd, "rm -rf %s", archivedir);
-  system (cmd);
-  free (cmd);
-  free (archivedir);
-}
-
-static char *
-ArchiveParseTOC (char *listfile, enum archive_list_style ars, int *doall)
-{
-  FILE *file;
-  int nlcnt, ch, linelen, linelenmax, fcnt, choice, i, def, def_prio, prio;
-  char **files, *linebuffer, *pt, *name;
-
-  *doall = false;
-  file = fopen (listfile, "r");
-  if (file == NULL)
-    return NULL;
-
-  nlcnt = linelenmax = linelen = 0;
-  while ((ch = getc (file)) != EOF)
-    {
-      if (ch == '\n')
-        {
-          ++nlcnt;
-          if (linelen > linelenmax)
-            linelenmax = linelen;
-          linelen = 0;
-        }
-      else
-        ++linelen;
-    }
-  rewind (file);
-
-  /* tar outputs its table of contents as a simple list of names */
-  /* zip includes a bunch of other info, headers (and lines for directories) */
-
-  linebuffer = xmalloc (linelenmax + 3);
-  fcnt = 0;
-  files = xmalloc ((nlcnt + 1) * sizeof (char *));
-
-  if (ars == ars_tar)
-    {
-      pt = linebuffer;
-      while ((ch = getc (file)) != EOF)
-        {
-          if (ch == '\n')
-            {
-              *pt = '\0';
-              /* Blessed if I know what encoded was used for filenames */
-              /*  inside the tar file. I shall assume utf8, faut de mieux */
-              files[fcnt++] = xstrdup_or_null (linebuffer);
-              pt = linebuffer;
-            }
-          else
-            *pt++ = ch;
-        }
-    }
-  else
-    {
-      /* Skip the first three lines, header info */
-      fgets (linebuffer, linelenmax + 3, file);
-      fgets (linebuffer, linelenmax + 3, file);
-      fgets (linebuffer, linelenmax + 3, file);
-      pt = linebuffer;
-      while ((ch = getc (file)) != EOF)
-        {
-          if (ch == '\n')
-            {
-              *pt = '\0';
-              if (linebuffer[0] == ' ' && linebuffer[1] == '-'
-                  && linebuffer[2] == '-')
-                break;          /* End of file list */
-              /* Blessed if I know what encoded was used for filenames */
-              /*  inside the zip file. I shall assume utf8, faut de mieux */
-              if (pt - linebuffer >= 28 && pt[-1] != '/')
-                files[fcnt++] = xstrdup_or_null (linebuffer + 28);
-              pt = linebuffer;
-            }
-          else
-            *pt++ = ch;
-        }
-    }
-  files[fcnt] = NULL;
-  fclose (file);
-
-  free (linebuffer);
-  if (fcnt == 0)
-    {
-      free (files);
-      return NULL;
-    }
-  else if (fcnt == 1)
-    {
-      char *onlyname = files[0];
-      free (files);
-      return onlyname;
-    }
-
-  /* Suppose they've got an archive of a directory format font? I mean */
-  /*  an sfdir. It won't show up in the list of files (because either     */
-  /*  tar or I have removed all directories from that list) */
-  pt = strrchr (files[0], '/');
-  if (pt != NULL)
-    {
-      if (pt - files[0] > 6 && strncasecmp (pt - 6, ".sfdir", 6) == 0)
-        {
-          /* Ok, looks like a potential directory font. Now is EVERYTHING */
-          /*  in the archive inside this guy? */
-          for (i = 0; i < fcnt; ++i)
-            if (strncmp (files[i], files[0], pt - files[0] + 1) != 0)
-              break;
-          if (i == fcnt)
-            {
-              char *onlydirfont = xstrndup_or_null (files[0],
-                                                    pt - files[0] + 1);
-              for (i = 0; i < fcnt; ++i)
-                free (files[i]);
-              free (files);
-              *doall = true;
-              return onlydirfont;
-            }
-        }
-    }
-
-  def = 0;
-  def_prio = -1;
-  for (i = 0; i < fcnt; ++i)
-    {
-      pt = strrchr (files[i], '.');
-      if (pt == NULL)
-        continue;
-      if (strcasecmp (pt, ".svg") == 0)
-        prio = 10;
-      else if (strcasecmp (pt, ".pfb") == 0 || strcasecmp (pt, ".pfa") == 0 ||
-               strcasecmp (pt, ".cff") == 0 || strcasecmp (pt, ".cid") == 0)
-        prio = 20;
-      else if (strcasecmp (pt, ".otf") == 0 || strcasecmp (pt, ".ttf") == 0
-               || strcasecmp (pt, ".ttc") == 0)
-        prio = 30;
-      else if (strcasecmp (pt, ".sfd") == 0)
-        prio = 40;
-      else
-        continue;
-      if (prio > def_prio)
-        {
-          def = i;
-          def_prio = prio;
-        }
-    }
-
-  choice = ff_choose (_("Which archived item should be opened?"),
-                      (const char **) files, fcnt, def,
-                      _("There are multiple files in this archive, pick one"));
-  if (choice == -1)
-    name = NULL;
-  else
-    name = xstrdup_or_null (files[choice]);
-
-  for (i = 0; i < fcnt; ++i)
-    free (files[i]);
-  free (files);
-  return name;
-}
-
-#define TOC_NAME	"ff-archive-table-of-contents"
-
-char *
-Unarchive (char *name, char **_archivedir)
-{
-  char *dir = getenv ("TMPDIR");
-  char *pt, *archivedir, *listfile, *listcommand, *unarchivecmd, *desiredfile;
-  char *finalfile;
-  int i;
-  int doall = false;
-  static int cnt = 0;
-
-  *_archivedir = NULL;
-
-  pt = strrchr (name, '.');
-  if (pt == NULL)
-    return NULL;
-  for (i = 0; archivers[i].ext != NULL; ++i)
-    if (strcmp (archivers[i].ext, pt) == 0)
-      break;
-  if (archivers[i].ext == NULL)
-    {
-      /* some of those endings have two extensions... */
-      while (pt > name && pt[-1] != '.')
-        --pt;
-      if (pt == name)
-        return NULL;
-      --pt;
-      for (i = 0; archivers[i].ext != NULL; ++i)
-        if (strcmp (archivers[i].ext, pt) == 0)
-          break;
-      if (archivers[i].ext == NULL)
-        return NULL;
-    }
-
-  if (dir == NULL)
-    dir = P_tmpdir;
-  archivedir = xmalloc (strlen (dir) + 100);
-  sprintf (archivedir, "%s/ffarchive-%jd-%d", dir, (intmax_t) getpid (), ++cnt);
-  if (GFileMkDir (archivedir) != 0)
-    {
-      free (archivedir);
-      return NULL;
-    }
-
-  listfile = xmalloc (strlen (archivedir) + strlen ("/" TOC_NAME) + 1);
-  sprintf (listfile, "%s/" TOC_NAME, archivedir);
-
-  listcommand = xmalloc (strlen (archivers[i].unarchive) + 1 +
-                         strlen (archivers[i].listargs) + 1 +
-                         strlen (name) + 3 + strlen (listfile) + 4);
-  sprintf (listcommand, "%s %s %s > %s", archivers[i].unarchive,
-           archivers[i].listargs, name, listfile);
-  if (system (listcommand) != 0)
-    {
-      free (listcommand);
-      free (listfile);
-      ArchiveCleanup (archivedir);
-      return NULL;
-    }
-  free (listcommand);
-
-  desiredfile = ArchiveParseTOC (listfile, archivers[i].ars, &doall);
-  free (listfile);
-  if (desiredfile == NULL)
-    {
-      ArchiveCleanup (archivedir);
-      return NULL;
-    }
-
-  /* I tried sending everything to stdout, but that doesn't work if the */
-  /*  output is a directory file (sfdir) */
-  unarchivecmd = xmalloc (strlen (archivers[i].unarchive) + 1 +
-                          strlen (archivers[i].listargs) + 1 +
-                          strlen (name) + 1 +
-                          strlen (desiredfile) + 3 + strlen (archivedir) + 30);
-  sprintf (unarchivecmd, "( cd %s ; %s %s %s %s ) > /dev/null", archivedir,
-           archivers[i].unarchive,
-           archivers[i].extractargs, name, doall ? "" : desiredfile);
-  if (system (unarchivecmd) != 0)
-    {
-      free (unarchivecmd);
-      free (desiredfile);
-      ArchiveCleanup (archivedir);
-      return NULL;
-    }
-  free (unarchivecmd);
-
-  finalfile = xmalloc (strlen (archivedir) + 1 + strlen (desiredfile) + 1);
-  sprintf (finalfile, "%s/%s", archivedir, desiredfile);
-  free (desiredfile);
-
-  *_archivedir = archivedir;
-  return finalfile;
-}
-
-struct compressors compressors[] = {
-  {".gz", "gunzip", "gzip"},
-  {".bz2", "bunzip2", "bzip2"},
-  {".bz", "bunzip2", "bzip2"},
-  {".Z", "gunzip", "compress"},
-  {".lzma", "unlzma", "lzma"},
-/* file types which are both archived and compressed (.tgz, .zip) are handled */
-/*  by the archiver above */
-  COMPRESSORS_EMPTY
-};
-
-char *
-Decompress (char *name, int compression)
-{
-  char *dir = getenv ("TMPDIR");
-  char buf[1500];
-  char *tmpfile;
-
-  if (dir == NULL)
-    dir = P_tmpdir;
-  tmpfile = xmalloc (strlen (dir) + strlen (GFileBaseName (name)) + 2);
-  strcpy (tmpfile, dir);
-  strcat (tmpfile, "/");
-  strcat (tmpfile, GFileBaseName (name));
-  *strrchr (tmpfile, '.') = '\0';
-  snprintf (buf, sizeof (buf), "%s < %s > %s", compressors[compression].decomp,
-            name, tmpfile);
-  if (system (buf) == 0)
-    return tmpfile;
-  free (tmpfile);
-  return NULL;
-}
-
 static char *
 ForceFileToHaveName (FILE *file, char *exten)
 {
@@ -1114,19 +802,15 @@ _ReadSplineFont (FILE *file, const char *const_filename,
   SplineFont *sf;
   char ubuf[250];
   int fromsfd = false;
-  int i;
   char *pt = NULL;
-  char *ext2 = NULL;
   char *strippedname = NULL;
   char *oldstrippedname = NULL;
   char *tmpfile = NULL;
   char *paren = NULL;
   char *rparen;
-  char *archivedir = NULL;
   int len;
   int checked;
-  int compression = 0;
-  int wasurl = false, nowlocal = true, wasarchived = false;
+  int wasurl = false, nowlocal = true;
 
   if (const_filename == NULL)
     return NULL;
@@ -1159,91 +843,13 @@ _ReadSplineFont (FILE *file, const char *const_filename,
     }
 
   pt = strrchr (strippedname, '.');
-  if (pt != NULL)
-    {
-      for (ext2 = pt - 1; ext2 > strippedname && *ext2 != '.'; --ext2);
-      for (i = 0; archivers[i].ext != NULL; ++i)
-        {
-          /* some of the archive "extensions" are actually two like ".tar.bz2" */
-          if (strcmp (archivers[i].ext, pt) == 0
-              || strcmp (archivers[i].ext, ext2) == 0)
-            {
-              if (file != NULL)
-                {
-                  char *spuriousname = ForceFileToHaveName (file,
-                                                            archivers[i].ext);
-                  strippedname = Unarchive (spuriousname, &archivedir);
-                  fclose (file);
-                  file = NULL;
-                  unlink (spuriousname);
-                  free (spuriousname);
-                }
-              else
-                strippedname = Unarchive (strippedname, &archivedir);
-              if (strippedname == NULL)
-                return NULL;
-              if (strippedname != filename && paren != NULL)
-                {
-                  fullname =
-                    xmalloc (strlen (strippedname) + strlen (paren) + 1);
-                  strcpy (fullname, strippedname);
-                  strcat (fullname, paren);
-                }
-              else
-                fullname = strippedname;
-              pt = strrchr (strippedname, '.');
-              wasarchived = true;
-              break;
-            }
-        }
-    }
-
-  i = -1;
-  if (pt != NULL)
-    for (i = 0; compressors[i].ext != NULL; ++i)
-      if (strcmp (compressors[i].ext, pt) == 0)
-        break;
   oldstrippedname = strippedname;
-  if (i == -1 || compressors[i].ext == NULL)
-    i = -1;
-  else
-    {
-      if (file != NULL)
-        {
-          char *spuriousname = ForceFileToHaveName (file, compressors[i].ext);
-          tmpfile = Decompress (spuriousname, i);
-          fclose (file);
-          file = NULL;
-          unlink (spuriousname);
-          free (spuriousname);
-        }
-      else
-        tmpfile = Decompress (strippedname, i);
-      if (tmpfile != NULL)
-        {
-          strippedname = tmpfile;
-        }
-      else
-        {
-          ff_post_error (_("Decompress Failed!"), _("Decompress Failed!"));
-          return NULL;
-        }
-      compression = i + 1;
-      if (strippedname != filename && paren != NULL)
-        {
-          fullname = xmalloc (strlen (strippedname) + strlen (paren) + 1);
-          strcpy (fullname, strippedname);
-          strcat (fullname, paren);
-        }
-      else
-        fullname = strippedname;
-    }
 
   /* If there are no pfaedit windows, give them something to look at */
   /*  immediately. Otherwise delay a bit */
   strcpy (ubuf, _("Loading font from "));
   len = strlen (ubuf);
-  if (!wasurl || i == -1)       /* If it wasn't compressed, or it wasn't an url, then the fullname is reasonable, else use the original name */
+  if (!wasurl)       /* If it wasn't a url, then the fullname is reasonable, else use the original name */
     strncat (ubuf, x_gc_u8_strconv_from_locale (GFileBaseName (fullname)), 100);
   else
     strncat (ubuf, x_gc_u8_strconv_from_locale (GFileBaseName (filename)), 100);
@@ -1479,23 +1085,8 @@ _ReadSplineFont (FILE *file, const char *const_filename,
   if (sf != NULL)
     {
       SplineFont *norm = sf->mm != NULL ? sf->mm->normal : sf;
-      if (compression != 0)
-        {
-          free (sf->filename);
-          *strrchr (oldstrippedname, '.') = '\0';
-          sf->filename = xstrdup_or_null (oldstrippedname);
-        }
-      if (fromsfd)
-        sf->compression = compression;
       free (norm->origname);
-      if (wasarchived)
-        {
-          norm->origname = NULL;
-          free (norm->filename);
-          norm->filename = NULL;
-          norm->new = true;
-        }
-      else if (sf->chosenname != NULL && strippedname == filename)
+      if (sf->chosenname != NULL && strippedname == filename)
         {
           norm->origname =
             xmalloc (strlen (filename) + strlen (sf->chosenname) + 8);
@@ -1542,8 +1133,6 @@ _ReadSplineFont (FILE *file, const char *const_filename,
       unlink (tmpfile);
       free (tmpfile);
     }
-  if (wasarchived)
-    ArchiveCleanup (archivedir);
   if ((openflags & of_fstypepermitted) && sf != NULL
       && (sf->pfminfo.fstype & 0xff) == 0x0002)
     {

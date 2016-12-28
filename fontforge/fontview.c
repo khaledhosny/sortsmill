@@ -803,7 +803,6 @@ _FVMenuSaveAs (FontView *fv)
   filename = utf82def_copy (ret);
   free (ret);
   FVFlattenAllBitmapSelections (fv);
-  fv->b.sf->compression = 0;
   ok = SFDWrite (filename, fv->b.sf, fv->b.map, fv->b.normal, s2d);
   if (ok)
     {
@@ -5229,8 +5228,6 @@ fllistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
                 {
                   char *buf = xmalloc (strlen (fv->b.sf->filename) + 20);
                   strcpy (buf, fv->b.sf->filename);
-                  if (fv->b.sf->compression != 0)
-                    strcat (buf, compressors[fv->b.sf->compression - 1].ext);
                   strcat (buf, "~");
                   if (access (buf, F_OK) == 0)
                     fv->b.sf->backedup = bs_backedup;
@@ -5245,8 +5242,7 @@ fllistcheck_fv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
         case MID_RevertGlyph:
           mi->ti.disabled = fv->b.sf->origname == NULL
-            || fv->b.sf->sfd_version < 2 || anychars == -1
-            || fv->b.sf->compression != 0;
+            || fv->b.sf->sfd_version < 2 || anychars == -1;
           break;
 
         case MID_Recent:

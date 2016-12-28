@@ -2747,63 +2747,6 @@ SFImportBDF (SplineFont *sf, char *filename, int ispk, int toback, EncMap *map)
   return b;
 }
 
-static BDFFont *
-_SFImportBDF (SplineFont *sf, char *filename, int ispk, int toback, EncMap *map)
-{
-  int i;
-  char *pt, *temp = NULL;
-  char buf[1500];
-  BDFFont *ret;
-
-  pt = strrchr (filename, '.');
-  i = -1;
-  if (pt != NULL)
-    for (i = 0; compressors[i].ext != NULL; ++i)
-      if (strcmp (compressors[i].ext, pt + 1) == 0)
-        break;
-  if (i == -1 || compressors[i].ext == NULL)
-    i = -1;
-  else
-    {
-      sprintf (buf, "%s %s", compressors[i].decomp, filename);
-      if (system (buf) == 0)
-        *pt = '\0';
-      else
-        {
-          /* Assume no write access to file */
-          char *dir = getenv ("TMPDIR");
-          if (dir == NULL)
-            dir = P_tmpdir;
-          temp = xmalloc (strlen (dir) + strlen (GFileBaseName (filename)) + 2);
-          strcpy (temp, dir);
-          strcat (temp, "/");
-          strcat (temp, GFileBaseName (filename));
-          *strrchr (temp, '.') = '\0';
-          sprintf (buf, "%s -c %s > %s", compressors[i].decomp, filename, temp);
-          if (system (buf) == 0)
-            filename = temp;
-          else
-            {
-              free (temp);
-              ff_post_error (_("Decompress Failed!"), _("Decompress Failed!"));
-              return NULL;
-            }
-        }
-    }
-  ret = SFImportBDF (sf, filename, ispk, toback, map);
-  if (temp != NULL)
-    {
-      unlink (temp);
-      free (temp);
-    }
-  else if (i != -1)
-    {
-      sprintf (buf, "%s %s", compressors[i].recomp, filename);
-      system (buf);
-    }
-  return ret;
-}
-
 static void
 SFSetupBitmap (SplineFont *sf, BDFFont *strike, EncMap *map)
 {
@@ -2918,7 +2861,7 @@ FVImportBDF (FontViewBase *fv, char *filename, int ispk, int toback)
       strcat (full, file);
       sprintf (buf, _("Loading font from %.100s"), filename);
       ff_progress_change_line1 (buf);
-      b = _SFImportBDF (fv->sf, full, ispk, toback, fv->map);
+      b = SFImportBDF (fv->sf, full, ispk, toback, fv->map);
       free (full);
       if (fpt != NULL)
         ff_progress_next_stage ();
