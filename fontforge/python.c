@@ -13806,7 +13806,7 @@ return( 0 );						\
 ff_gs_str (fontname) ff_gs_str (fullname) ff_gs_str (familyname)
 ff_gs_str (weight) ff_gs_str (version) ff_gs_strnull (comments)
 ff_gs_strnull (fontlog) ff_gs_strnull (copyright) ff_gs_strnull (xuid)
-ff_gs_strnull (fondname) ff_gs_strnull (woffMetadata)
+ff_gs_strnull (fondname)
 ff_gs_strnull (defbasefilename) ff_gs_cidstrnull (fontname)
 ff_gs_cidstrnull (familyname) ff_gs_cidstrnull (fullname)
 ff_gs_cidstrnull (weight) ff_gs_cidstrnull (copyright)
@@ -13956,94 +13956,6 @@ PyFF_Font_set_sfntRevision (PyFF_Font *self, PyObject *value,
   else
     {
       PyErr_Format (PyExc_TypeError, "Value must be a double, integer or None");
-      return -1;
-    }
-
-  return 0;
-}
-
-static PyObject *
-PyFF_Font_get_woffMajor (PyFF_Font *self, void *UNUSED (closure))
-{
-  int version;
-
-  if (CheckIfFontClosed (self))
-    return NULL;
-  version = self->fv->sf->woffMajor;
-  if (version == woffUnset)
-    Py_RETURN_NONE;
-
-  return Py_BuildValue ("i", version);
-}
-
-static int
-PyFF_Font_set_woffMajor (PyFF_Font *self, PyObject *value,
-                         void *UNUSED (closure))
-{
-  SplineFont *sf;
-
-  if (CheckIfFontClosed (self))
-    return -1;
-  sf = self->fv->sf;
-  if (value == Py_None)
-    {
-      sf->woffMajor = woffUnset;
-      sf->woffMinor = woffUnset;
-    }
-  else if (PyInt_Check (value))
-    {
-      int val = PyInt_AsLong (value);
-      sf->woffMajor = val;
-      if (sf->woffMinor == woffUnset)
-        sf->woffMinor = 0;
-    }
-  else
-    {
-      PyErr_Format (PyExc_TypeError, "Value must be an integer or None");
-      return -1;
-    }
-
-  return 0;
-}
-
-static PyObject *
-PyFF_Font_get_woffMinor (PyFF_Font *self, void *UNUSED (closure))
-{
-  SplineFont *sf;
-
-  if (CheckIfFontClosed (self))
-    return NULL;
-  sf = self->fv->sf;
-  if (sf->woffMajor == woffUnset)
-    Py_RETURN_NONE;
-
-  return Py_BuildValue ("i", sf->woffMinor);
-}
-
-static int
-PyFF_Font_set_woffMinor (PyFF_Font *self, PyObject *value,
-                         void *UNUSED (closure))
-{
-  SplineFont *sf;
-
-  if (CheckIfFontClosed (self))
-    return -1;
-  sf = self->fv->sf;
-  if (value == Py_None)
-    {
-      sf->woffMajor = woffUnset;
-      sf->woffMinor = woffUnset;
-    }
-  else if (PyInt_Check (value))
-    {
-      int val = PyInt_AsLong (value);
-      sf->woffMinor = val;
-      if (sf->woffMajor == woffUnset)
-        sf->woffMajor = 0;
-    }
-  else
-    {
-      PyErr_Format (PyExc_TypeError, "Value must be an integer or None");
       return -1;
     }
 
@@ -15693,15 +15605,6 @@ static PyGetSetDef PyFF_Font_getset[] = {
   {"sfntRevision",
    (getter) PyFF_Font_get_sfntRevision, (setter) PyFF_Font_set_sfntRevision,
    "sfnt revision number", NULL},
-  {"woffMajor",
-   (getter) PyFF_Font_get_woffMajor, (setter) PyFF_Font_set_woffMajor,
-   "woff major version number", NULL},
-  {"woffMinor",
-   (getter) PyFF_Font_get_woffMinor, (setter) PyFF_Font_set_woffMinor,
-   "woff minor version number", NULL},
-  {"woffMetadata",
-   (getter) PyFF_Font_get_woffMetadata, (setter) PyFF_Font_set_woffMetadata,
-   "woff meta data string (unparsed xml)", NULL},
   {"vertical_origin",
    (getter) PyFF_Font_get_vertical_origin,
    (setter) PyFF_Font_set_vertical_origin,

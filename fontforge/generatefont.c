@@ -962,9 +962,6 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
     case ff_otfciddfont:
       buf = x_gc_strdup (_("Generating CID keyed font"));
       break;
-    case ff_woff:
-      buf = x_gc_strdup (_("Generating WOFF Font"));
-      break;
     case ff_mma:
     case ff_mmb:
       buf = x_gc_strdup (_("Generating multi-master font"));
@@ -1023,10 +1020,6 @@ _DoGenerate (SplineFont *sf, char *newname, int32_t *sizes, int res,
           case ff_cffcid:
             oerr = !WriteTTFFont (newname, sf, oldformatstate, sizes, bmap,
                                   flags, map, layer);
-            break;
-          case ff_woff:
-            oerr = !WriteWOFFFont (newname, sf, oldformatstate, sizes, bmap,
-                                   flags, map, layer);
             break;
           case ff_pfbmacbin:
             oerr =

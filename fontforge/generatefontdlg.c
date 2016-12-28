@@ -2067,15 +2067,6 @@ GFD_FigureWhich (struct gfc_data *d)
     which = 1;                  /* truetype options *//* type42 also */
   else
     which = 2;                  /* opentype options */
-  if (fs == ff_woff)
-    {
-      SplineFont *sf = d->sf;
-      int layer = d->layer;
-      if (sf->layers[layer].order2)
-        which = 1;              /* truetype */
-      else
-        which = 2;              /* opentype */
-    }
   if (bf == bf_otb && which == 0)
     which = 3;                  /* postscript options with opentype bitmap options */
   d->sod_which = which;
@@ -2924,8 +2915,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       formattypes[ff_ttc].disabled = false;
       ofs = ff_ttc;
     }
-  if (!CanWoff ())
-    formattypes[ff_woff].disabled = true;
   for (i = 0; i < sizeof (formattypes) / sizeof (formattypes[0]); ++i)
     formattypes[i].selected = false;
   formattypes[ofs].selected = true;

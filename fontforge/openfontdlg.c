@@ -63,7 +63,7 @@ struct openfilefilters def_font_filters[] = {
    "pfa,"
    "pfb,"
    "pt3,"
-   "t42," "sfd," "ttf," "bdf," "otf," "otb," "cff," "cef," "gai," "woff,"
+   "t42," "sfd," "ttf," "bdf," "otf," "otb," "cff," "cef," "gai,"
    "svg,"
    "pf3,"
    "ttc,"
@@ -78,7 +78,7 @@ struct openfilefilters def_font_filters[] = {
    N_("Outline Fonts"),
    "*.{"
    "pfa,"
-   "pfb," "pt3," "t42," "sfd," "ttf," "otf," "cff," "cef," "gai," "woff,"
+   "pfb," "pt3," "t42," "sfd," "ttf," "otf," "cff," "cef," "gai,"
    "svg,"
    "pf3,"
    "ttc,"
@@ -98,7 +98,6 @@ struct openfilefilters def_font_filters[] = {
    "*.{pfa,pfb,t42,otf,cef,cff,gai,pf3,pt3,gsf,cid}{.gz,.Z,.bz,.bz2,.lzma,}"},
   {N_("TrueType"), "*.{ttf,t42,ttc}{.gz,.Z,.bz,.bz2,.lzma,}"},
   {N_("OpenType"), "*.{ttf,otf}{.gz,.Z,.bz,.bz2,.lzma,}"},
-  {N_("OpenType"), "*.{ttf,otf,woff}{.gz,.Z,.bz,.bz2,.lzma,}"},
   {N_("Type1"), "*.{pfa,pfb,gsf,cid}{.gz,.Z,.bz2,.lzma,}"},
   {N_("Type2"), "*.{otf,cef,cff,gai}{.gz,.Z,.bz2,.lzma,}"},
   {N_("Type3"), "*.{pf3,pt3}{.gz,.Z,.bz2,.lzma,}"},

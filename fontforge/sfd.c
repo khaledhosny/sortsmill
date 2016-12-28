@@ -2278,17 +2278,6 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   fprintf (sfd, "Descent: %d\n", sf->descent);
   if (sf->sfntRevision != sfntRevisionUnset)
     fprintf (sfd, "sfntRevision: 0x%08x\n", sf->sfntRevision);
-  if (sf->woffMajor != woffUnset)
-    {
-      fprintf (sfd, "woffMajor: %d\n", sf->woffMajor);
-      fprintf (sfd, "woffMinor: %d\n", sf->woffMinor);
-    }
-  if (sf->woffMetadata != NULL)
-    {
-      fprintf (sfd, "woffMetadata: ");
-      SFDDumpUTF7Str (sfd, sf->woffMetadata);
-      putc ('\n', sfd);
-    }
   fprintf (sfd, "LayerCount: %d\n", sf->layer_cnt);
   for (i = 0; i < sf->layer_cnt; ++i)
     {
@@ -7831,18 +7820,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strcasecmp (tok, "Descent:") == 0)
         {
           getint (sfd, &sf->descent);
-        }
-      else if (strcasecmp (tok, "woffMajor:") == 0)
-        {
-          getint (sfd, &sf->woffMajor);
-        }
-      else if (strcasecmp (tok, "woffMinor:") == 0)
-        {
-          getint (sfd, &sf->woffMinor);
-        }
-      else if (strcasecmp (tok, "woffMetadata:") == 0)
-        {
-          sf->woffMetadata = SFDReadUTF7Str (sfd);
         }
       else if (strcasecmp (tok, "sfntRevision:") == 0)
         {

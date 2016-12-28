@@ -45,11 +45,8 @@
 # Small programs some people might find useful. These are not built
 # from the top-level Makefile.
 
-noinst_PROGRAMS = findtable pfadecrypt rmligamarks stripttc woff	\
-	dewoff pcl2ttf showttf ttf2eps
-
-woff_LDADD = $(ZLIB_LIBS)
-dewoff_LDADD = $(ZLIB_LIBS)
+noinst_PROGRAMS = findtable pfadecrypt rmligamarks stripttc	\
+	pcl2ttf showttf ttf2eps
 
 EXTRA_DIST = README-ttf2eps
 

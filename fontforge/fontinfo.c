@@ -2933,10 +2933,6 @@ static struct langstyle *stylelist[] =
 #define CID_Namelist	1024
 #define CID_Revision	1025
 
-#define CID_WoffMajor	1050
-#define CID_WoffMinor	1051
-#define CID_WoffMetadata	1052
-
 #define CID_XUID	1113
 #define CID_Human	1114
 #define CID_SameAsFontname	1115
@@ -6047,8 +6043,7 @@ GFI_OK (GGadget *g, GEvent *e)
         GMatrixEditGet (GWidgetGetControl (d->gw, CID_Backgrounds),
                         &layer_cnt);
       int layer_flags;
-      int sfntRevision = sfntRevisionUnset, woffMajor = woffUnset, woffMinor =
-        woffUnset;
+      int sfntRevision = sfntRevisionUnset;
 
       if (strings == NULL || gasp == NULL || layers == NULL)
         return true;
@@ -6250,15 +6245,6 @@ GFI_OK (GGadget *g, GEvent *e)
         sfntRevision =
           rint (65536. *
                 GetReal8 (gw, CID_Revision, _("sfnt Revision:"), &err));
-      if (*_GGadgetGetTitle (GWidgetGetControl (gw, CID_WoffMajor)) != '\0')
-        {
-          woffMajor =
-            GetInt8 (gw, CID_WoffMajor, _("Woff Major Version:"), &err);
-          woffMinor = 0;
-          if (*_GGadgetGetTitle (GWidgetGetControl (gw, CID_WoffMinor)) != '\0')
-            woffMinor =
-              GetInt8 (gw, CID_WoffMinor, _("Woff Minor Version:"), &err);
-        }
       if (err)
         return true;
 
@@ -6529,14 +6515,6 @@ GFI_OK (GGadget *g, GEvent *e)
       sf->use_uniqueid = useuniqueid;
 
       sf->sfntRevision = sfntRevision;
-
-      free (sf->woffMetadata);
-      sf->woffMetadata = NULL;
-      if (*_GGadgetGetTitle (GWidgetGetControl (gw, CID_WoffMetadata)) != '\0')
-        sf->woffMetadata =
-          GGadgetGetTitle8 (GWidgetGetControl (gw, CID_WoffMetadata));
-      sf->woffMajor = woffMajor;
-      sf->woffMinor = woffMinor;
 
       free (sf->gasp);
       sf->gasp_cnt = gasprows;
@@ -10655,12 +10633,12 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     mcgcd[8], szgcd[19], mkgcd[7], metgcd[29], vagcd[3], ssgcd[23],
     xugcd[8], dgcd[6], ugcd[6], gaspgcd[5], gaspgcd_def[2], lksubgcd[2][4],
     lkgcd[2], lkbuttonsgcd[15], cgcd[12], lgcd[20], msgcd[7], ssngcd[8],
-    woffgcd[8], privategcd_def[4];
+    privategcd_def[4];
   GGadgetCreateData mb[2], mb2, nb[2], nb2, nb3, xub[2], psb[2], psb2[3],
     ppbox[4], vbox[4], metbox[2], ssbox[2], panbox[2], combox[2], mkbox[3],
     txbox[5], ubox[3], dbox[2], flogbox[2], mcbox[3], szbox[6],
     tnboxes[4], gaspboxes[3], lkbox[7], cbox[6], lbox[8], msbox[3],
-    ssboxes[4], woffbox[2];
+    ssboxes[4];
   GGadgetCreateData *marray[7], *marray2[9], *narray[29], *narray2[7],
     *narray3[3], *xuarray[20], *psarray[10], *psarray2[21], *psarray4[10],
     *pparray[6], *vradio[5], *varray[38], *metarray[46], *ssarray[58],
@@ -10671,20 +10649,19 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     *tnharray2[5], *gaspharray[6], *gaspvarray[3], *lkarray[2][7],
     *lkbuttonsarray[17], *lkharray[3], *charray1[4], *charray2[4],
     *charray3[4], *cvarray[9], *cvarray2[4], *larray[16], *larray2[25],
-    *larray3[6], *larray4[5], *uharray[4], *ssvarray[4], *woffarray[16];
+    *larray3[6], *larray4[5], *uharray[4], *ssvarray[4];
   GTextInfo mlabel[10], nlabel[18], pslabel[30], tnlabel[7], plabel[12],
     vlabel[21], panlabel[22], comlabel[3], txlabel[23],
     mclabel[8], szlabel[17], mklabel[7], metlabel[28], sslabel[23],
     xulabel[8], dlabel[5], ulabel[3], gasplabel[5], lkbuttonslabel[14],
     clabel[11], floglabel[3], llabel[20], mslabel[7], ssnlabel[7],
-    wofflabel[8], privatelabel_def[3];
+    privatelabel_def[3];
   GTextInfo *namelistnames;
   struct gfi_data *d;
   char iabuf[20], upbuf[20], uwbuf[20], asbuf[20], dsbuf[20],
     vbuf[20], uibuf[12], embuf[20];
   char dszbuf[20], dsbbuf[20], dstbuf[21], sibuf[20], swbuf[20], sfntrbuf[20];
   char ranges[40], codepages[40];
-  char woffmajorbuf[20], woffminorbuf[20];
   int i, j, k, g, psrow;
   int mcs;
   char title[130];
@@ -13410,90 +13387,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   msbox[0].gd.u.boxelements = msarray;
   msbox[0].creator = GVBoxCreate;
 /******************************************************************************/
-  memset (&wofflabel, 0, sizeof (wofflabel));
-  memset (&woffgcd, 0, sizeof (woffgcd));
-
-  wofflabel[0].text = (uint32_t *) _("Version, Major:");
-  wofflabel[0].text_is_1byte = true;
-  woffgcd[0].gd.label = &wofflabel[0];
-  woffgcd[0].gd.flags = gg_visible | gg_enabled;
-  woffgcd[0].creator = GLabelCreate;
-
-  woffmajorbuf[0] = '\0';
-  woffminorbuf[0] = '\0';
-  if (sf->woffMajor != woffUnset)
-    {
-      sprintf (woffmajorbuf, "%d", sf->woffMajor);
-      sprintf (woffminorbuf, "%d", sf->woffMinor);
-    }
-  woffgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-  wofflabel[1].text = (uint32_t *) woffmajorbuf;
-  wofflabel[1].text_is_1byte = true;
-  woffgcd[1].gd.label = &wofflabel[1];
-  woffgcd[1].gd.cid = CID_WoffMajor;
-  woffgcd[1].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("If you leave this field blank FontForge will use a default based on\neither the version string, or one in the 'name' table.");
-  woffgcd[1].creator = GTextFieldCreate;
-
-  wofflabel[2].text = (uint32_t *) _("Minor:");
-  wofflabel[2].text_is_1byte = true;
-  woffgcd[2].gd.label = &wofflabel[2];
-  woffgcd[2].gd.flags = gg_visible | gg_enabled;
-  woffgcd[2].creator = GLabelCreate;
-
-  woffgcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-  wofflabel[3].text = (uint32_t *) woffminorbuf;
-  wofflabel[3].text_is_1byte = true;
-  woffgcd[3].gd.label = &wofflabel[3];
-  woffgcd[3].gd.cid = CID_WoffMinor;
-  woffgcd[3].gd.popup_msg =
-    (uint32_t *)
-    _
-    ("If you leave this field blank FontForge will use a default based on\neither the version string, or one in the 'name' table.");
-  woffgcd[3].creator = GTextFieldCreate;
-
-  woffarray[0] = &woffgcd[0];
-  woffarray[1] = &woffgcd[1];
-  woffarray[2] = &woffgcd[2];
-  woffarray[3] = &woffgcd[3];
-  woffarray[4] = NULL;
-
-  wofflabel[4].text = (uint32_t *) _("Metadata (xml):");
-  wofflabel[4].text_is_1byte = true;
-  woffgcd[4].gd.label = &wofflabel[4];
-  woffgcd[4].gd.flags = gg_visible | gg_enabled;
-  woffgcd[4].creator = GLabelCreate;
-
-  woffarray[5] = &woffgcd[4];
-  woffarray[6] = GCD_ColSpan;
-  woffarray[7] = GCD_ColSpan;
-  woffarray[8] = GCD_ColSpan;
-  woffarray[9] = NULL;
-
-  woffgcd[5].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap;
-  if (sf->woffMetadata != NULL)
-    {
-      wofflabel[5].text = (uint32_t *) sf->woffMetadata;
-      wofflabel[5].text_is_1byte = true;
-      woffgcd[5].gd.label = &wofflabel[5];
-    }
-  woffgcd[5].gd.cid = CID_WoffMetadata;
-  woffgcd[5].creator = GTextAreaCreate;
-
-  woffarray[10] = &woffgcd[5];
-  woffarray[11] = GCD_ColSpan;
-  woffarray[12] = GCD_ColSpan;
-  woffarray[13] = GCD_ColSpan;
-  woffarray[14] = NULL;
-  woffarray[15] = NULL;
-
-  memset (woffbox, 0, sizeof (woffbox));
-  woffbox[0].gd.flags = gg_enabled | gg_visible;
-  woffbox[0].gd.u.boxelements = woffarray;
-  woffbox[0].creator = GHVBoxCreate;
-/******************************************************************************/
   memset (&txlabel, 0, sizeof (txlabel));
   memset (&txgcd, 0, sizeof (txgcd));
 
@@ -14394,10 +14287,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 /*  the letter "L" has more of a left-side bearing than it should. It is not */
 /*  a bug in the nesting level. Remember this next time it bugs me */
 
-  aspects[i].text = (uint32_t *) _("WOFF");
-  aspects[i].text_is_1byte = true;
-  aspects[i++].gcd = woffbox;
-
   aspects[i].text = (uint32_t *) _("Mac");
   aspects[i].text_is_1byte = true;
   aspects[i++].gcd = mcbox;
@@ -14545,8 +14434,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   GHVBoxSetExpandableCol (cbox[2].ret, gb_expandglue);
   GHVBoxSetExpandableCol (cbox[3].ret, gb_expandglue);
   GHVBoxSetExpandableRow (cbox[4].ret, gb_expandglue);
-
-  GHVBoxSetExpandableRow (woffbox[0].ret, 2);
 
   GHVBoxSetExpandableRow (mkbox[0].ret, 1);
   GMatrixEditSetBeforeDelete (mkgcd[1].ret, GFI_Mark_DeleteClass);

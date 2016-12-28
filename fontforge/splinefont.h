@@ -2484,10 +2484,6 @@ typedef struct splinefont
   int width_separation;
   int sfntRevision;
 #define sfntRevisionUnset	0x44445555
-  int woffMajor;
-#define woffUnset		0x4455
-  int woffMinor;
-  char *woffMetadata;
 } SplineFont;
 
 inline SplineChar *sfglyph (SplineFont *sf, ssize_t i);
@@ -2717,11 +2713,9 @@ typedef enum fontformat
   ff_otfcid,
   ff_otfciddfont,
   ff_svg,
-  ff_woff,
   ff_none                       // ff_none comes last.
 } FontFormat;
 
-VISIBLE int CanWoff (void);
 struct pschars *SplineFont2ChrsSubrs (SplineFont *sf, int iscjk,
                                       struct pschars *subrs, int flags,
                                       enum fontformat format, int layer);
@@ -2783,12 +2777,6 @@ int WritePSFont (char *fontname, SplineFont *sf,
                  SplineFont *fullsf, int layer);
 int WriteMacPSFont (char *fontname, SplineFont *sf,
                     enum fontformat format, int flags, EncMap *enc, int layer);
-int _WriteWOFFFont (FILE *ttf, SplineFont *sf, enum fontformat format,
-                    int32_t *bsizes, enum bitmapformat bf, int flags,
-                    EncMap *enc, int layer);
-int WriteWOFFFont (char *fontname, SplineFont *sf,
-                   enum fontformat format, int32_t *bsizes,
-                   enum bitmapformat bf, int flags, EncMap *enc, int layer);
 int _WriteTTFFont (FILE *ttf, SplineFont *sf, enum fontformat format,
                    int32_t *bsizes, enum bitmapformat bf, int flags,
                    EncMap *enc, int layer);
@@ -3566,9 +3554,6 @@ enum ttfflags
   ttf_onlynames = 8
 };
 
-SplineFont *_SFReadWOFF (FILE *woff, int flags,
-                         enum openflags openflags, char *filename,
-                         struct fontdict *fd);
 SplineFont *_SFReadTTF (FILE *ttf, int flags, enum openflags openflags,
                         char *filename, struct fontdict *fd);
 SplineFont *SFReadTTF (char *filename, int flags, enum openflags openflags);

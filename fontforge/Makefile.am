@@ -224,7 +224,6 @@ dist_libsortsmill_fontforge_la_SOURCES += zapfnomen.c
 dist_libsortsmill_fontforge_la_SOURCES += groups.c
 dist_libsortsmill_fontforge_la_SOURCES += langfreq.c
 dist_libsortsmill_fontforge_la_SOURCES += autowidth2.c
-dist_libsortsmill_fontforge_la_SOURCES += woff.c
 dist_libsortsmill_fontforge_la_SOURCES += activeinui.c
 dist_libsortsmill_fontforge_la_SOURCES += is_LIGATURE.c
 dist_libsortsmill_fontforge_la_SOURCES += flaglist.c

@@ -5053,8 +5053,6 @@ SplineFontEmpty (void)
   sf->display_size = -default_fv_font_size;
   sf->display_layer = ly_fore;
   sf->sfntRevision = sfntRevisionUnset;
-  sf->woffMajor = woffUnset;
-  sf->woffMinor = woffUnset;
   sf->pfminfo.winascent_add = sf->pfminfo.windescent_add = true;
   sf->pfminfo.hheadascent_add = sf->pfminfo.hheaddescent_add = true;
   sf->pfminfo.typoascent_add = sf->pfminfo.typodescent_add = true;
