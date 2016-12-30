@@ -163,49 +163,6 @@ return;
     fclose(ps);
 }
 
-void SCImportPDFFile(SplineChar *sc,int layer,FILE *pdf,int doclear,int flags) {
-    SplinePointList *spl, *espl;
-    SplineSet **head;
-
-    if ( pdf==NULL )
-return;
-
-    if ( sc->parent->multilayer && layer>ly_back ) {
-	SCAppendEntityLayers(sc, EntityInterpretPDFPage(pdf,-1));
-    } else {
-	spl = SplinesFromEntities(EntityInterpretPDFPage(pdf,-1),&flags,sc->parent->strokedfont);
-	if ( spl==NULL ) {
-	    ff_post_error( _("Too Complex or Bad"), _("I'm sorry this file is too complex for me to understand (or is erroneous, or is empty)") );
-return;
-	}
-	if ( sc->layers[layer].order2 )
-	    spl = SplineSetsConvertOrder(spl,true);
-	for ( espl=spl; espl->next!=NULL; espl = espl->next );
-	if ( layer==ly_grid )
-	    head = &sc->parent->grid.splines;
-	else {
-	    SCPreserveLayer(sc,layer,false);
-	    head = &sc->layers[layer].splines;
-	}
-	if ( doclear ) {
-	    SplinePointListsFree(*head);
-	    *head = NULL;
-	}
-	espl->next = *head;
-	*head = spl;
-    }
-    SCCharChangedUpdate(sc,layer);
-}
-
-void SCImportPDF(SplineChar *sc,int layer,char *path,int doclear, int flags) {
-    FILE *pdf = fopen(path,"r");
-
-    if ( pdf==NULL )
-return;
-    SCImportPDFFile(sc,layer,pdf,doclear,flags);
-    fclose(pdf);
-}
-
 void SCImportPlateFile(SplineChar *sc,int layer,FILE *plate,int doclear,int flags) {
     SplineSet **ly_head, *head, *cur, *last;
     spiro_cp *spiros=NULL;
@@ -956,9 +913,6 @@ return(false);
 	} else if ( format==fv_eps ) {
 	    SCImportPS(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);
 	    ++tot;
-	} else if ( format==fv_pdf ) {
-	    SCImportPDF(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);
-	    ++tot;
 #ifndef _NO_PYTHON
 	} else if ( format>=fv_pythonbase ) {
 	    PyFF_SCImport(sc,format-fv_pythonbase,start, toback?ly_back:fv->active_layer,flags&sf_clearbeforeinput);
@@ -1060,9 +1014,6 @@ return( false );
 	    SCAddScaleImage(sc,image,true,toback?ly_back:ly_fore);
 	} else if ( format==fv_svgtemplate ) {
 	    SCImportSVG(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
-	    ++tot;
-	} else if ( format==fv_pdftemplate ) {
-	    SCImportPDF(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);
 	    ++tot;
 	} else {
 	    SCImportPS(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);

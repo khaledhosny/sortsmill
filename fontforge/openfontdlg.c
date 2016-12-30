@@ -103,7 +103,6 @@ struct openfilefilters def_font_filters[] = {
   {N_("SVG"), "*.svg"},
   {N_("FontForge's SFD"), "*.sfd"},
   {N_("Backup SFD"), "*.sfd~"},
-  {N_("Extract from PDF"), "*.pdf"},
   {"-", NULL},
   {N_("All Files"), "*"},
   {NULL, NULL}

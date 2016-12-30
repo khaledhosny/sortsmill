@@ -49,7 +49,6 @@
 #include <time.h>
 #include "ustring.h"
 #include "gio.h"
-#include "print.h"              /* For pdf output routines */
 #include <utype.h>
 #include <sortsmill/core.h>
 
@@ -143,7 +142,7 @@ _ExportEPS (FILE *eps, SplineChar *sc, int layer, int preview)
   c_fprintf (eps, "%%%%Page \"%s\" 1\n", sc->name);
 
   c_fprintf (eps, "gsave newpath\n");
-  SC_PSDump ((void (*)(int, void *)) fputc, eps, sc, true, false, layer);
+  SC_PSDump ((void (*)(int, void *)) fputc, eps, sc, true, layer);
   if (sc->parent->multilayer)
     c_fprintf (eps, "grestore\n");
   else if (sc->parent->strokedfont)
@@ -171,148 +170,6 @@ ExportEPS (char *filename, SplineChar *sc, int layer)
   fclose (eps);
   return ret;
 }
-
-int
-_ExportPDF (FILE *pdf, SplineChar *sc, int layer)
-{
-  DBounds b;
-  time_t now;
-  struct tm *tm;
-  int ret;
-  int _objlocs[8], xrefloc, streamstart, streamlength, resid, nextobj;
-  int *objlocs = _objlocs;
-  const char *author = GetAuthor ();
-  int i;
-
-  SFUntickAll (sc->parent);
-
-  c_fprintf (pdf, "%%PDF-1.4\n%%\201\342\202\203\n");   /* Header comment + binary comment */
-  /* Every document contains a catalog which points to a page tree, which */
-  /*  in our case, points to a single page */
-  objlocs[1] = ftell (pdf);
-  c_fprintf (pdf,
-             "1 0 obj\n << /Type /Catalog\n    /Pages 2 0 R\n    /PageMode /UseNone\n >>\nendobj\n");
-  objlocs[2] = ftell (pdf);
-  c_fprintf (pdf,
-             "2 0 obj\n << /Type /Pages\n    /Kids [ 3 0 R ]\n    /Count 1\n >>\nendobj\n");
-  /* And our single page points to its contents */
-  objlocs[3] = ftell (pdf);
-  c_fprintf (pdf, "3 0 obj\n");
-  c_fprintf (pdf, " << /Type /Page\n");
-  c_fprintf (pdf, "    /Parent 2 0 R\n");
-  c_fprintf (pdf, "    /Resources ");
-  if (sc->parent->multilayer)
-    {
-      resid = ftell (pdf);
-      c_fprintf (pdf, "000000 0 R\n");
-    }
-  else
-    c_fprintf (pdf, "<< >>\n");
-  SplineCharLayerFindBounds (sc, layer, &b);
-  c_fprintf (pdf, "    /MediaBox [%g %g %g %g]\n", (double) b.minx,
-             (double) b.miny, (double) b.maxx, (double) b.maxy);
-  c_fprintf (pdf, "    /Contents 4 0 R\n");
-  c_fprintf (pdf, " >>\n");
-  c_fprintf (pdf, "endobj\n");
-  /* And the contents are the interesting stuff */
-  objlocs[4] = ftell (pdf);
-  c_fprintf (pdf, "4 0 obj\n");
-  c_fprintf (pdf, " << /Length 5 0 R >> \n");
-  c_fprintf (pdf, " stream \n");
-  streamstart = ftell (pdf);
-  SC_PSDump ((void (*)(int, void *)) fputc, pdf, sc, true, true, layer);
-  if (sc->parent->multilayer)
-    /* Already filled or stroked */ ;
-  else if (sc->parent->strokedfont)
-    c_fprintf (pdf, "%g w S\n", (double) sc->parent->strokewidth);
-  else
-    c_fprintf (pdf, "f\n");
-  streamlength = ftell (pdf) - streamstart;
-  c_fprintf (pdf, " endstream\n");
-  c_fprintf (pdf, "endobj\n");
-  objlocs[5] = ftell (pdf);
-  c_fprintf (pdf, "5 0 obj\n");
-  c_fprintf (pdf, " %d\n", (int) streamlength);
-  c_fprintf (pdf, "endobj\n");
-
-  /* Optional Info dict */
-  objlocs[6] = ftell (pdf);
-  c_fprintf (pdf, "6 0 obj\n");
-  c_fprintf (pdf, " <<\n");
-  c_fprintf (pdf, "    /Creator (FontForge)\n");
-  time (&now);
-  tm = localtime (&now);
-  c_fprintf (pdf, "    /CreationDate (D:%04d%02d%02d%02d%2d%02d",
-             1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
-             tm->tm_hour, tm->tm_min, tm->tm_sec);
-  tzset ();
-  if (timezone == 0)
-    c_fprintf (pdf, "Z)\n");
-  else
-    c_fprintf (pdf, "%+02d')\n", (int) timezone / 3600);        /* doesn't handle half-hour zones */
-  c_fprintf (pdf, "    /Title (%s from %s)\n", sc->name, sc->parent->fontname);
-  if (author != NULL)
-    c_fprintf (pdf, "    /Author (%s)\n", author);
-  c_fprintf (pdf, " >>\n");
-
-  nextobj = 7;
-  if (sc->parent->multilayer)
-    {
-      PI pi;
-      int resobj;
-      memset (&pi, 0, sizeof (pi));
-      pi.out = pdf;
-      pi.max_object = 100;
-      pi.object_offsets = xmalloc (pi.max_object * sizeof (int));
-      memcpy (pi.object_offsets, objlocs, nextobj * sizeof (int));
-      pi.next_object = nextobj;
-      resobj = PdfDumpGlyphResources (&pi, sc);
-      nextobj = pi.next_object;
-      objlocs = pi.object_offsets;
-      fseek (pdf, resid, SEEK_SET);
-      c_fprintf (pdf, "%06d", resobj);
-      fseek (pdf, 0, SEEK_END);
-    }
-
-  xrefloc = ftell (pdf);
-  c_fprintf (pdf, "xref\n");
-  c_fprintf (pdf, " 0 %d\n", nextobj);
-  c_fprintf (pdf, "0000000000 65535 f \n");
-  for (i = 1; i < nextobj; ++i)
-    c_fprintf (pdf, "%010d %05d n \n", (int) objlocs[i], 0);
-  c_fprintf (pdf, "trailer\n");
-  c_fprintf (pdf, " <<\n");
-  c_fprintf (pdf, "    /Size %d\n", nextobj);
-  c_fprintf (pdf, "    /Root 1 0 R\n");
-  c_fprintf (pdf, "    /Info 6 0 R\n");
-  c_fprintf (pdf, " >>\n");
-  c_fprintf (pdf, "startxref\n");
-  c_fprintf (pdf, "%d\n", (int) xrefloc);
-  c_fprintf (pdf, "%%%%EOF\n");
-
-  if (objlocs != _objlocs)
-    free (objlocs);
-
-  ret = !ferror (pdf);
-  return ret;
-}
-
-int
-ExportPDF (char *filename, SplineChar *sc, int layer)
-{
-  FILE *eps;
-  int ret;
-
-  eps = fopen (filename, "w");
-  if (eps == NULL)
-    {
-      return 0;
-    }
-  ret = _ExportPDF (eps, sc, layer);
-  fclose (eps);
-  return ret;
-}
-
 
 int
 _ExportPlate (FILE *plate, SplineChar *sc, int layer)
@@ -695,87 +552,4 @@ BCExportXBM (char *filename, BDFChar *bdfc, int format)
         ret = GImageWriteBmp (&gi, filename);
     }
   return ret;
-}
-
-static void
-MakeExportName (char *buffer, int blen, char *format_spec,
-                SplineChar *sc, EncMap *map)
-{
-  char *end = buffer + blen - 3;
-  char *pt, *bend;
-  const size_t unicode_size = 20;
-  char unicode[unicode_size];
-  int ch;
-
-  while (*format_spec && buffer < end)
-    {
-      if (*format_spec != '%')
-        *buffer++ = *format_spec++;
-      else
-        {
-          ++format_spec;
-          ch = *format_spec++;
-          if ((bend = buffer + 40) > end)
-            bend = end;
-          if (ch == 'n')
-            {
-              for (pt = sc->name; *pt != '\0' && buffer < bend;)
-                *buffer++ = *pt++;
-            }
-          else if (ch == 'f')
-            {
-              for (pt = sc->parent->fontname; *pt != '\0' && buffer < bend;)
-                *buffer++ = *pt++;
-            }
-          else if (ch == 'u' || ch == 'U')
-            {
-              if (sc->unicodeenc == -1)
-                strcpy (unicode, "xxxx");
-              else
-                sprintf (unicode, ch == 'u' ? "%04x" : "%04X", sc->unicodeenc);
-              for (pt = unicode; *pt != '\0' && buffer < bend;)
-                *buffer++ = *pt++;
-            }
-          else if (ch == 'e')
-            {
-              snprintf (unicode, unicode_size, "%zd",
-                        (ssize_t) gid_to_enc (map, sc->orig_pos));
-              for (pt = unicode; *pt != '\0' && buffer < bend;)
-                *buffer++ = *pt++;
-            }
-          else
-            *buffer++ = ch;
-        }
-    }
-  *buffer = '\0';
-}
-
-void
-ScriptExport (SplineFont *sf, BDFFont *bdf, int format, int gid,
-              char *format_spec, EncMap *map)
-{
-  char buffer[100];
-  SplineChar *sc = sfglyph (sf, gid);
-  BDFChar *bc = bdf != NULL ? bdf->glyphs[gid] : NULL;
-  int good = true;
-
-  if (sc == NULL)
-    return;
-
-  MakeExportName (buffer, sizeof (buffer), format_spec, sc, map);
-
-  if (format == 0)
-    good = ExportEPS (buffer, sc, ly_fore);
-  else if (format == 1)
-    good = ExportFig (buffer, sc, ly_fore);
-  else if (format == 2)
-    good = ExportSVG (buffer, sc, ly_fore);
-  else if (format == 4)
-    good = ExportPDF (buffer, sc, ly_fore);
-  else if (format == 5)
-    good = ExportPlate (buffer, sc, ly_fore);
-  else if (bc != NULL)
-    good = BCExportXBM (buffer, bc, format - 6);
-  if (!good)
-    ff_post_error (_("Save Failed"), _("Save Failed"));
 }

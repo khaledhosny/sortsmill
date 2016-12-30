@@ -4534,8 +4534,6 @@ PyFFLayer_export (PyFF_Layer * self, PyObject *args)
   if (strcasecmp (pt, ".eps") == 0 || strcasecmp (pt, ".ps") == 0
       || strcasecmp (pt, ".art") == 0)
     _ExportEPS (file, &sc, ly_fore, true);
-  else if (strcasecmp (pt, ".pdf") == 0)
-    _ExportPDF (file, &sc, ly_fore);
   else if (strcasecmp (pt, ".svg") == 0)
     _ExportSVG (file, &sc, ly_fore);
   else if (strcasecmp (pt, ".plate") == 0)
@@ -9180,8 +9178,6 @@ PyFFGlyph_export (PyObject *self, PyObject *args)
       if (strcasecmp (pt, ".eps") == 0 || strcasecmp (pt, ".ps") == 0
           || strcasecmp (pt, ".art") == 0)
         _ExportEPS (file, sc, layer, true);
-      else if (strcasecmp (pt, ".pdf") == 0)
-        _ExportPDF (file, sc, layer);
       else if (strcasecmp (pt, ".svg") == 0)
         _ExportSVG (file, sc, layer);
       else if (strcasecmp (pt, ".plate") == 0)

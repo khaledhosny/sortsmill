@@ -871,7 +871,6 @@ _ReadSplineFont (FILE *file, const char *const_filename,
 /* checked == false => not checked */
 /* checked == 't'   => TTF/OTF */
 /* checked == 'p'   => pfb/general postscript */
-/* checked == 'P'   => pdf */
 /* checked == 'c'   => cff */
 /* checked == 'S'   => svg */
 /* checked == 'f'   => sfd */
@@ -920,11 +919,6 @@ _ReadSplineFont (FILE *file, const char *const_filename,
         {                       /* PFB header */
           sf = _SFReadPostScript (file, fullname);
           checked = 'p';
-        }
-      else if (ch1 == '%' && ch2 == 'P' && ch3 == 'D' && ch4 == 'F')
-        {
-          sf = _SFReadPdfFont (file, fullname, openflags);
-          checked = 'P';
         }
       else if (ch1 == 1 && ch2 == 0 && ch3 == 4)
         {
@@ -1065,11 +1059,6 @@ _ReadSplineFont (FILE *file, const char *const_filename,
   else if (strcasecmp (fullname + strlen (fullname) - 3, ".mf") == 0)
     {
       sf = SFFromMF (fullname);
-    }
-  else if (strcasecmp (strippedname + strlen (strippedname) - 4, ".pdf") == 0
-           && checked != 'P')
-    {
-      sf = SFReadPdfFont (fullname, openflags);
     }
   else if (strcasecmp (fullname + strlen (fullname) - 3, ".ik") == 0
            && checked != 'i')

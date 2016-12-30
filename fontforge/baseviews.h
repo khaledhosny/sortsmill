@@ -403,8 +403,6 @@ enum fvformats
   fv_imgtemplate,
   fv_eps,
   fv_epstemplate,
-  fv_pdf,
-  fv_pdftemplate,
   fv_plate,
   fv_platetemplate,
   fv_svg,

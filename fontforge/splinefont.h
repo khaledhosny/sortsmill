@@ -2745,7 +2745,7 @@ int32_t filechecksum (FILE *file);
 VISIBLE const char *GetAuthor (void);
 SplineChar *SFFindExistingCharMac (SplineFont *, EncMap *map, int unienc);
 void SC_PSDump (void (*dumpchar) (int ch, void *data), void *data,
-                SplineChar *sc, int refs_to_splines, int pdfopers, int layer);
+                SplineChar *sc, int refs_to_splines, int layer);
 int _WritePSFont (FILE *out, SplineFont *sf, enum fontformat format,
                   int flags, EncMap *enc, SplineFont *fullsf, int layer);
 int WritePSFont (char *fontname, SplineFont *sf,
@@ -3554,11 +3554,7 @@ VISIBLE uint16_t _MacStyleCode (char *styles, SplineFont *sf,
                                 uint16_t *psstyle);
 VISIBLE uint16_t MacStyleCode (SplineFont *sf, uint16_t *psstyle);
 SplineFont *SFReadIkarus (char *fontname);
-SplineFont *_SFReadPdfFont (FILE *ttf, char *filename,
-                            enum openflags openflags);
-SplineFont *SFReadPdfFont (char *filename, enum openflags openflags);
 VISIBLE char **GetFontNames (char *filename);
-char **NamesReadPDF (char *filename);
 char **NamesReadSFD (char *filename);
 char **NamesReadTTF (char *filename);
 char **NamesReadCFF (char *filename);
@@ -4043,10 +4039,6 @@ VISIBLE void SCImportSVG (SplineChar *sc, int layer, char *path,
 void SCImportPS (SplineChar *sc, int layer, char *path, int doclear, int flags);
 VISIBLE void SCImportPSFile (SplineChar *sc, int layer, FILE *ps,
                              int doclear, int flags);
-void SCImportPDF (SplineChar *sc, int layer, char *path, int doclear,
-                  int flags);
-VISIBLE void SCImportPDFFile (SplineChar *sc, int layer, FILE *ps,
-                              int doclear, int flags);
 VISIBLE void SCImportPlateFile (SplineChar *sc, int layer, FILE *plate,
                                 int doclear, int flags);
 VISIBLE void SCAddScaleImage (SplineChar *sc, struct gimage *image,
@@ -4056,19 +4048,15 @@ void SCInsertImage (SplineChar *sc, struct gimage *image, real scale,
 VISIBLE void SCImportFig (SplineChar *sc, int layer, char *path, int doclear);
 
 VISIBLE int _ExportPlate (FILE *pdf, SplineChar *sc, int layer);
-VISIBLE int _ExportPDF (FILE *pdf, SplineChar *sc, int layer);
 VISIBLE int _ExportEPS (FILE *eps, SplineChar *sc, int layer, int gen_preview);
 VISIBLE int _ExportSVG (FILE *svg, SplineChar *sc, int layer);
 VISIBLE int ExportEPS (char *filename, SplineChar *sc, int layer);
-VISIBLE int ExportPDF (char *filename, SplineChar *sc, int layer);
 VISIBLE int ExportPlate (char *filename, SplineChar *sc, int layer);
 VISIBLE int ExportSVG (char *filename, SplineChar *sc, int layer);
 VISIBLE int ExportFig (char *filename, SplineChar *sc, int layer);
 VISIBLE int BCExportXBM (char *filename, BDFChar *bdfc, int format);
 VISIBLE int ExportImage (char *filename, SplineChar *sc, int layer,
                          int format, int pixelsize, int bitsperpixel);
-void ScriptExport (SplineFont *sf, BDFFont *bdf, int format, int gid,
-                   char *format_spec, EncMap *map);
 
 VISIBLE EncMap *EncMapFromEncoding (SplineFont *sf, Encoding *enc);
 void SFRemoveGlyph (SplineFont *sf, SplineChar *sc, int *flags);

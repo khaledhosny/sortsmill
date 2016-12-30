@@ -92,10 +92,6 @@ GetFontNames (char *filename)
             {                   /* PFB header */
               ret = NamesReadPostScript (filename);
             }
-          else if (ch1 == '%' && ch2 == 'P' && ch3 == 'D' && ch4 == 'F')
-            {
-              ret = NamesReadPDF (filename);
-            }
           else if (ch1 == '<' && ch2 == '?' && (ch3 == 'x' || ch3 == 'X')
                    && (ch4 == 'm' || ch4 == 'M'))
             {

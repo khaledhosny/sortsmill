@@ -59,15 +59,6 @@ return;
     fclose(ps);
 }
 
-static void ImportPDF(CharView *cv,char *path) {
-    FILE *pdf = fopen(path,"r");
-
-    if ( pdf==NULL )
-return;
-    SCImportPDFFile(cv->b.sc,CVLayer((CharViewBase *) cv),pdf,false,-1);
-    fclose(pdf);
-}
-
 static void ImportPlate(CharView *cv,char *path) {
     FILE *plate = fopen(path,"r");
 
@@ -212,11 +203,9 @@ static uint32_t wildtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','
 'x','p','m',',', 'x','b','m',',', 'b','m','p', '}', '\0' };
 /* Hmm. Mac seems to use the extension 'art' for eps files sometimes */
 static uint32_t wildepstemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', '{', 'p','s',',', 'e','p','s',',','a','r','t','}',  0 };
-static uint32_t wildpdftemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p', 'd','f',  0 };
 static uint32_t wildsvgtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 's', 'v','g',  0 };
 static uint32_t wildplatetemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p','l','a','t','e',  0 };
 static uint32_t wildps[] = { '*', '.', '{', 'p','s',',', 'e','p','s',',', 'a','r','t','}', '\0' };
-static uint32_t wildpdf[] = { '*', '.', 'p','d','f',  '\0' };
 static uint32_t wildsvg[] = { '*', '.', 's','v','g',  '\0' };
 static uint32_t wildplate[] = { '*', '.', 'p','l','a','t','e',  '\0' };
 static uint32_t wildfig[] = { '*', '.', '{', 'f','i','g',',','x','f','i','g','}',  '\0' };
@@ -227,14 +216,13 @@ static uint32_t wildpk[] = { '*', '{', 'p', 'k', ',', 'g', 'f', '}',  '\0' };		/
 static uint32_t wildmac[] = { '*', '{', 'b', 'i', 'n', ',', 'h', 'q', 'x', ',', 'd','f','o','n','t', '}',  '\0' };
 static uint32_t wildwin[] = { '*', '{', 'f', 'o', 'n', ',', 'f', 'n', 't', '}',  '\0' };
 static uint32_t wildpalm[] = { '*', 'p', 'd', 'b',  '\0' };
-static uint32_t *wildchr[] = { wildimg, wildps, wildpdf,
+static uint32_t *wildchr[] = { wildimg, wildps,
 wildsvg,
 wildplate,
 wildfig };
 static uint32_t *wildfnt[] = { wildbdf, wildttf, wildpk, wildpcf, wildmac,
 wildwin, wildpalm,
 wildimg, wildtemplate, wildps, wildepstemplate,
-wildpdf, wildpdftemplate,
 wildplate, wildplatetemplate,
 wildsvg, wildsvgtemplate,
 wildfig
@@ -405,7 +393,6 @@ struct gfc_data {
 static GTextInfo formats[] = {
     { (uint32_t *) N_("Image"), NULL, 0, 0, (void *) fv_image, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("EPS"), NULL, 0, 0, (void *) fv_eps, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Raph's plate files"), NULL, 0, 0, (void *) fv_plate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("XFig"), NULL, 0, 0, (void *) fv_fig, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
@@ -424,7 +411,6 @@ static GTextInfo fvformats[] = {
     { (uint32_t *) N_("Image Template"), NULL, 0, 0, (void *) fv_imgtemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("EPS"), NULL, 0, 0, (void *) fv_eps, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("EPS Template"), NULL, 0, 0, (void *) fv_epstemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("SVG Template"), NULL, 0, 0, (void *) fv_svgtemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
@@ -474,10 +460,6 @@ return( true );
 		d->done = FVImportImages((FontViewBase *) d->fv,temp,format,toback,-1);
 	    else if ( format==fv_epstemplate )
 		d->done = FVImportImageTemplate((FontViewBase *) d->fv,temp,format,toback,-1);
-	    else if ( format==fv_pdf )
-		d->done = FVImportImages((FontViewBase *) d->fv,temp,format,toback,-1);
-	    else if ( format==fv_pdftemplate )
-		d->done = FVImportImageTemplate((FontViewBase *) d->fv,temp,format,toback,-1);
 	    else if ( format==fv_svg )
 		d->done = FVImportImages((FontViewBase *) d->fv,temp,format,toback,-1);
 	    else if ( format==fv_svgtemplate )
@@ -492,8 +474,6 @@ return( true );
 		ImportImage(d->cv,temp);
 	    else if ( format==fv_eps )
 		ImportPS(d->cv,temp);
-	    else if ( format==fv_pdf )
-		ImportPDF(d->cv,temp);
 	    else if ( format==fv_plate )
 		ImportPlate(d->cv,temp);
 	    else if ( format==fv_svg )
@@ -552,7 +532,6 @@ static int GFD_Format(GGadget *g, GEvent *e) {
 		GGadgetSetChecked(d->background,true);
 		GGadgetSetEnabled(d->background,true);
 	    } else if ( format==fv_eps || format==fv_epstemplate ||
-			format==fv_pdf || format==fv_pdftemplate ||
 			format==fv_svg || format==fv_svgtemplate ||
 			format>=fv_pythonbase ) {
 		GGadgetSetChecked(d->background,false);
