@@ -3320,7 +3320,7 @@ PyFFContour_draw (PyFF_Contour * self, PyObject *args)
             xmalloc (self->pt_cnt * sizeof (struct PyFF_Point *));
           for (i = start; i < self->pt_cnt; ++i)
             points[i - start] = self->points[i];
-          off = i;
+          off = i - start;
           for (i = 0; i < start; ++i)
             points[i + off] = self->points[i];
         }
