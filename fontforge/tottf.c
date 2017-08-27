@@ -3728,8 +3728,6 @@ SFDefaultOS2Info (struct pfminfo *pfminfo, SplineFont *sf, char *fontname)
           pfminfo->vheadset = true;
           pfminfo->vlinegap = hold.vlinegap;
         }
-      pfminfo->os2_loweropticalsize = 0;
-      pfminfo->os2_upperopticalsize = 0xFFFF;
     }
   if (!pfminfo->subsuper_set)
     SFDefaultOS2SubSuper (pfminfo, sf->ascent + sf->descent, sf->italicangle);
@@ -4025,8 +4023,8 @@ setos2 (struct os2 *os2, struct alltabs *at, SplineFont *sf,
     os2->version = 3;
   if (sf->use_typo_metrics || sf->weight_width_slope_only)
     os2->version = 4;
-  if (sf->pfminfo.os2_loweropticalsize != 0 ||
-      sf->pfminfo.os2_upperopticalsize != 0xFFFF)
+  if (sf->pfminfo.os2_loweropticalsize != -1 ||
+      sf->pfminfo.os2_upperopticalsize != -1)
     os2->version = 5;
   if ((format >= ff_ttf && format <= ff_otfdfont)
       && (at->gi.flags & ttf_flag_symbol))
@@ -4075,8 +4073,18 @@ setos2 (struct os2 *os2, struct alltabs *at, SplineFont *sf,
     }
   if (os2->version >= 5)
     {
-      os2->lowerOpticalPointSize = umin(sf->pfminfo.os2_loweropticalsize, 0xFFFE);
-      os2->upperOpticalPointSize = umax(sf->pfminfo.os2_upperopticalsize, 2);
+      /* OS/2 optical sizes are in twips, but we store them in points */
+      if (sf->pfminfo.os2_loweropticalsize != -1)
+        os2->lowerOpticalPointSize =
+                umin(rint(sf->pfminfo.os2_loweropticalsize * 20), 0xFFFF);
+      else
+        os2->lowerOpticalPointSize = 0;
+
+      if (sf->pfminfo.os2_upperopticalsize != -1)
+        os2->upperOpticalPointSize =
+                umin(rint(sf->pfminfo.os2_upperopticalsize * 20), 0xFFFF);
+      else
+        os2->upperOpticalPointSize = 0xFFFF;
     }
 /* David Lemon @Adobe.COM
 1)  The sTypoAscender and sTypoDescender values should sum to 2048 in 

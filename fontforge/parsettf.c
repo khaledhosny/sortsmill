@@ -6538,8 +6538,9 @@ readttfos2metrics (FILE *ttf, struct ttfinfo *info)
 
   if (os2_version >= 5)
     {
-      info->pfminfo.os2_loweropticalsize = getushort (ttf);
-      info->pfminfo.os2_upperopticalsize = getushort (ttf);
+      /* OS/2 optical sizes are in twips, we convert them to points */
+      info->pfminfo.os2_loweropticalsize = getushort (ttf) / 20.0;
+      info->pfminfo.os2_upperopticalsize = getushort (ttf) / 20.0;
     }
   else
     {

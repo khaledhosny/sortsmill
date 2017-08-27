@@ -13772,6 +13772,23 @@ static int PyFF_Font_set_OS2_##name(PyFF_Font *self,PyObject *value, void *UNUSE
 return( PyFF_Font_set_int2(self,value,#name,offsetof(SplineFont,pfminfo)+offsetof(struct pfminfo,name)) );\
 }
 /* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
+#define ff_gs_os2real(name) \
+static PyObject *PyFF_Font_get_OS2_##name(PyFF_Font *self, void *UNUSED(closure)) { \
+    SplineFont *sf;					\
+    if ( CheckIfFontClosed(self) ) return NULL;		\
+    sf = self->fv->sf;					\
+    SFDefaultOS2(sf);					\
+return( Py_BuildValue("d", sf->pfminfo.name ));		\
+}							\
+							\
+static int PyFF_Font_set_OS2_##name(PyFF_Font *self,PyObject *value, void *UNUSED(closure)) {\
+    SplineFont *sf;					\
+    if ( CheckIfFontClosed(self) ) return -1;		\
+    sf = self->fv->sf;					\
+    SFDefaultOS2(sf);					\
+return( PyFF_Font_set_real(self,value,#name,offsetof(SplineFont,pfminfo)+offsetof(struct pfminfo,name)) );\
+}
+/* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 #define ff_gs_os2bit(name) \
 static PyObject *PyFF_Font_get_OS2_##name(PyFF_Font *self, void *UNUSED(closure)) { \
     SplineFont *sf;					\
@@ -13822,97 +13839,15 @@ ff_gs_os2int2 (os2_supxsize) ff_gs_os2int2 (os2_supxoff)
 ff_gs_os2int2 (os2_supysize) ff_gs_os2int2 (os2_supyoff)
 ff_gs_os2int2 (os2_strikeysize) ff_gs_os2int2 (os2_strikeypos)
 ff_gs_os2int2 (os2_family_class) ff_gs_os2bit (winascent_add)
+ff_gs_os2real (os2_loweropticalsize) ff_gs_os2real (os2_upperopticalsize)
 ff_gs_os2bit (windescent_add) ff_gs_os2bit (hheadascent_add)
 ff_gs_os2bit (hheaddescent_add) ff_gs_os2bit (typoascent_add)
 ff_gs_os2bit (typodescent_add) ff_gs_bit (changed) ff_gs_ro_bit (multilayer)
 ff_gs_bit (strokedfont) ff_gs_ro_bit (new) ff_gs_bit (use_typo_metrics)
 ff_gs_bit (weight_width_slope_only) ff_gs_bit (onlybitmaps)
 ff_gs_bit (hasvmetrics) ff_gs_bit (head_optimized_for_cleartype)
-
-static PyObject *
-PyFF_Font_get_creationtime (PyFF_Font *self, void *UNUSED (closure))
-{
-  if (CheckIfFontClosed (self))
-    return NULL;
-
-  SplineFont *sf = self->fv->sf;
-  time_t t = sf->creationtime;
-  const struct tm *tm = gmtime(&t);
-  char creationtime[200];
-  strftime (creationtime, sizeof (creationtime), "%Y/%m/%d %H:%M:%S", tm);
-  return Py_BuildValue ("s", creationtime);
-}
-
-static PyObject *
-PyFF_Font_get_OS2_loweropticalsize (PyFF_Font *self, void *UNUSED (closure))
-{
-  if (CheckIfFontClosed (self))
-    return NULL;
-
-  SplineFont *sf = self->fv->sf;
-  SFDefaultOS2 (sf);
-  return Py_BuildValue ("d", twip_to_point (sf->pfminfo.os2_loweropticalsize));
-}
-
-static int
-PyFF_Font_set_OS2_loweropticalsize (PyFF_Font *self, PyObject *value,
-                                    void *UNUSED (closure))
-{
-  if (CheckIfFontClosed (self))
-    return -1;
-
-  SplineFont *sf = self->fv->sf;
-  SFDefaultOS2 (sf);
-  double temp = PyFloat_AsDouble (value);
-
-  if (PyErr_Occurred () == NULL)
-    {
-      if (point_to_twip (temp) > 0xFFFE)
-        {
-          PyErr_Format (PyExc_TypeError,
-                        "The maximum valid value is %g", twip_to_point (0xFFFE));
-          return -1;
-        }
-      sf->pfminfo.os2_loweropticalsize = point_to_twip (temp);
-      return 0;
-    }
-  else
-    return -1;
-}
-
-static PyObject *
-PyFF_Font_get_OS2_upperopticalsize (PyFF_Font *self, void *UNUSED (closure))
-{
-  if (CheckIfFontClosed (self))
-    return NULL;
-
-  SplineFont *sf = self->fv->sf;
-  SFDefaultOS2 (sf);
-  return Py_BuildValue ("d", twip_to_point (sf->pfminfo.os2_upperopticalsize));
-}
-
-static int
-PyFF_Font_set_OS2_upperopticalsize (PyFF_Font *self, PyObject *value,
-                                    void *UNUSED (closure))
-{
-  if (CheckIfFontClosed (self))
-    return -1;
-
-  SplineFont *sf = self->fv->sf;
-  SFDefaultOS2 (sf);
-  double temp = PyFloat_AsDouble (value);
-
-  if (PyErr_Occurred () == NULL)
-    {
-      sf->pfminfo.os2_upperopticalsize = point_to_twip (temp);
-      return 0;
-    }
-  else
-    return -1;
-}
-
-static PyObject *
-PyFF_Font_get_sfntRevision (PyFF_Font *self, void *UNUSED (closure))
+     static PyObject *
+     PyFF_Font_get_sfntRevision (PyFF_Font *self, void *UNUSED (closure))
 {
   int version = self->fv->sf->sfntRevision;
 
@@ -13956,6 +13891,20 @@ PyFF_Font_set_sfntRevision (PyFF_Font *self, PyObject *value,
     }
 
   return 0;
+}
+
+static PyObject *
+PyFF_Font_get_creationtime (PyFF_Font *self, void *UNUSED (closure))
+{
+  if (CheckIfFontClosed (self))
+    return NULL;
+
+  SplineFont *sf = self->fv->sf;
+  time_t t = sf->creationtime;
+  const struct tm *tm = gmtime(&t);
+  char creationtime[200];
+  strftime (creationtime, sizeof (creationtime), "%Y/%m/%d %H:%M:%S", tm);
+  return Py_BuildValue ("s", creationtime);
 }
 
 static PyObject *
@@ -15797,12 +15746,12 @@ static PyGetSetDef PyFF_Font_getset[] = {
    (setter) PyFF_Font_set_os2unicoderanges,
    "The 4 element OS/2 unicode ranges tuple", NULL},
   {"os2_loweropticalsize",
-   (getter) PyFF_Font_get_OS2_loweropticalsize,
-   (setter) PyFF_Font_set_OS2_loweropticalsize,
+   (getter) PyFF_Font_get_OS2_os2_loweropticalsize,
+   (setter) PyFF_Font_set_OS2_os2_loweropticalsize,
    "OS/2 lower optical point size", NULL},
   {"os2_upperopticalsize",
-   (getter) PyFF_Font_get_OS2_upperopticalsize,
-   (setter) PyFF_Font_set_OS2_upperopticalsize,
+   (getter) PyFF_Font_get_OS2_os2_upperopticalsize,
+   (setter) PyFF_Font_set_OS2_os2_upperopticalsize,
    "OS/2 upper optical point size", NULL},
   {"os2_panose",
    (getter) PyFF_Font_get_OS2_panose, (setter) PyFF_Font_set_OS2_panose,
