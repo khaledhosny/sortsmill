@@ -5056,7 +5056,6 @@ SplineFontEmpty (void)
   sf->pfminfo.winascent_add = sf->pfminfo.windescent_add = true;
   sf->pfminfo.hheadascent_add = sf->pfminfo.hheaddescent_add = true;
   sf->pfminfo.typoascent_add = sf->pfminfo.typodescent_add = true;
-  sf->pfminfo.os2_loweropticalsize = sf->pfminfo.os2_upperopticalsize = -1;
   if (TTFFoundry != NULL)
     strncpy (sf->pfminfo.os2_vendor, TTFFoundry, 4);
   else
