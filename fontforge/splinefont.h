@@ -2275,6 +2275,7 @@ struct pfminfo
   int16_t os2_subxsize, os2_subysize, os2_subxoff, os2_subyoff;
   int16_t os2_supxsize, os2_supysize, os2_supxoff, os2_supyoff;
   int16_t os2_strikeysize, os2_strikeypos;
+  int16_t os2_capheight, os2_xheight;
   char os2_vendor[4];
   int16_t os2_family_class;
   uint32_t codepages[2];

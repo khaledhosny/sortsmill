@@ -2323,6 +2323,8 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
       fprintf (sfd, "TTFWidth: %d\n", sf->pfminfo.width);
       fprintf (sfd, "LineGap: %d\n", sf->pfminfo.linegap);
       fprintf (sfd, "VLineGap: %d\n", sf->pfminfo.vlinegap);
+      fprintf (sfd, "OS2CapHeight: %d\n", sf->pfminfo.os2_capheight);
+      fprintf (sfd, "OS2XHeight: %d\n", sf->pfminfo.os2_xheight);
       /*putc('\n',sfd); */
     }
   if (sf->pfminfo.panose_set)
@@ -7725,6 +7727,16 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strcasecmp (tok, "OS2StrikeYPos:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_strikeypos);
+        }
+      else if (strcasecmp (tok,"OS2CapHeight:") == 0)
+        {
+          getsint (sfd, &sf->pfminfo.os2_capheight);
+          sf->pfminfo.pfmset = true;
+        }
+      else if (strcasecmp (tok,"OS2XHeight:") == 0)
+        {
+          getsint (sfd, &sf->pfminfo.os2_xheight);
+          sf->pfminfo.pfmset = true;
         }
       else if (strcasecmp (tok, "OS2FamilyClass:") == 0)
         {

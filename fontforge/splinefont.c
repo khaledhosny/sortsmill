@@ -1915,6 +1915,9 @@ static uint32_t descender_str[] = { 'g', 'j', 'p', 'q', 'y',
 bigreal
 SFCapHeight (SplineFont *sf, int layer, int return_error)
 {
+  if (sf->pfminfo.pfmset && sf->pfminfo.os2_capheight)
+    return sf->pfminfo.os2_capheight;
+
   bigreal result = SFStandardHeight (sf, layer, true, capheight_str);
 
   if (result == -1e23 && !return_error)
@@ -1925,6 +1928,9 @@ SFCapHeight (SplineFont *sf, int layer, int return_error)
 bigreal
 SFXHeight (SplineFont *sf, int layer, int return_error)
 {
+  if (sf->pfminfo.pfmset && sf->pfminfo.os2_xheight)
+    return sf->pfminfo.os2_xheight;
+
   bigreal result = SFStandardHeight (sf, layer, true, xheight_str);
 
   if (result == -1e23 && !return_error)
